@@ -1,0 +1,56 @@
+#include <QDebug>
+#include "app.h"
+#include "documenttablemodel.h"
+#include "mysqlrelationaltablemodel.h"
+#include "document.h"
+
+class App;
+extern App* app;
+
+DocumentTableModel::DocumentTableModel(): MySqlRelationalTableModel() {
+    setBlockUpdate(true);
+}
+
+bool DocumentTableModel::submit(const QModelIndex& index) {
+    if (editStrategy() == QSqlTableModel::OnManualSubmit) {
+        if (database().transaction()) {
+            QList<int>::iterator key;
+            for (key = updateKeys.begin(); key != updateKeys.end(); key++) {
+                QString command;
+                foreach (int field, updateKeyFields.keys()) {
+                    if (*key == updateKeyFields[field]) {
+                        command.append(QString("%1=%2, ").arg(updateFields[field]).arg(record(index.row()).value(field).toString()));
+                    }
+                }
+                command.chop(2);
+                command = QString("UPDATE проводки SET %1 WHERE код=%2").arg(command).arg(record(index.row()).value(*key).toString());
+                QSqlQuery query;
+                if (!query.exec(command)) {
+                    database().rollback();
+                    app->showError(query.lastError().text());
+                    return false;
+                }
+//                command = QString("UPDATE документы SET сумма=%1 WHERE код=%2").arg(((Document*)parent)->getParent()->getValue("сумма").toString()).arg(((Document *)parent)->getDocId());
+//                if (!query.exec(command)) {
+//                    database().rollback();
+//                    app->showError(query.lastError().text());
+//                    return false;
+//                }
+            }
+            database().commit();
+            return true;
+        }
+    }
+    return false;
+}
+
+void DocumentTableModel::setUpdateInfo(int column, int keyColumn, QString fieldName) {
+    QStringList fields;
+    fields << "кол" << "цена" << "сумма";
+    if (fields.contains(fieldName)) {
+        if (!updateKeys.contains(keyColumn))
+            updateKeys.append(keyColumn);
+        updateKeyFields.insert(column, keyColumn);
+        updateFields.insert(column, fieldName);
+    }
+}

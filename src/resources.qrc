@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="buttonAdd">resources/new.png</file>
+        <file alias="buttonDelete">resources/delete.png</file>
+        <file alias="buttonRequery">resources/update.png</file>
+        <file alias="buttonView">resources/view.png</file>
+        <file alias="buttonPrint">resources/print.png</file>
+        <file alias="buttonOk">resources/ok.png</file>
+        <file alias="buttonCancel">resources/cancel.png</file>
+        <file alias="buttonCalendar">resources/calendar.png</file>
+        <file alias="buttonSave">resources/save.png</file>
+        <file alias="noimage">resources/noimage.png</file>
+        <file alias="searchparameters">resources/searchparameters.png</file>
+    </qresource>
+</RCC>

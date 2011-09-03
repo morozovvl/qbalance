@@ -1,0 +1,23 @@
+#ifndef SALDO_H
+#define SALDO_H
+
+#include "dictionary.h"
+#include "table.h"
+
+class Saldo : public Dictionary {
+public:
+    Saldo(QString, QString, QObject *parent = 0);
+    virtual QString transformSelectStatement(QString);
+    virtual QString objectName() { return "Saldo"; }
+    void setQuan(bool q) { quan = q; }
+    virtual void setLock(bool);
+    virtual void setMustShow(bool);
+protected:
+    virtual bool doOpen(int);
+private:
+    QString account;
+    QString dictionaryName;
+    bool quan;
+};
+
+#endif // SALDO_H

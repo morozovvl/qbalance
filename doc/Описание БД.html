@@ -1,0 +1,958 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 3.3  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Vladimir Morozov">
+	<META NAME="CREATED" CONTENT="20110901;16295600">
+	<META NAME="CHANGEDBY" CONTENT="Vladimir Morozov">
+	<META NAME="CHANGED" CONTENT="20110903;17273600">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21cm 29.7cm; margin-left: 1.98cm; margin-right: 1.98cm; margin-top: 2cm; margin-bottom: 2cm }
+		P { margin-bottom: 0.21cm }
+		A:link { color: #000080; so-language: zxx; text-decoration: underline }
+		A:visited { color: #800000; so-language: zxx; text-decoration: underline }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="ru-RU" LINK="#000080" VLINK="#800000" DIR="LTR">
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<FONT SIZE=3><B>Таблица &quot;счета&quot;</B></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-weight: normal"><FONT SIZE=2>Хранит
+бухгалтерский план счетов, т.е. список
+всех счетов, с которыми работает
+программа, в том числе забалансовых.
+Каждому счету можно сопоставить
+справочник. В таком случае счет становится
+аналитическим. В противном случае счет
+синтетический. В этой же таблице
+указывается, является ли счет балансовым
+или забалансовым и ведется ли на этом
+счете количественный учет.</FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<TABLE WIDTH=642 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=295>
+	<COL WIDTH=329>
+	<TR VALIGN=TOP>
+		<TD WIDTH=295 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>код</B>&quot; serial NOT NULL</FONT></P>
+		</TD>
+		<TD WIDTH=329 STYLE="; border: 1px solid #000000; padding: 0.1cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.04cm; margin-right: 0.01cm"><FONT SIZE=2>Уникальный
+			идентификатор счета</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=295 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>имя</B>&quot; character varying(200)
+			DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=329 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.04cm; margin-right: 0.01cm"><FONT SIZE=2>Наименование
+			счета, как это принято в плане счетов</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=295 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>счет</B>&quot; character(5) DEFAULT
+			''::bpchar</FONT></P>
+		</TD>
+		<TD WIDTH=329 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.04cm; margin-right: 0.01cm"><FONT SIZE=2>Номер
+			счета. Состоит из 5 символов. Например:
+			<SPAN STYLE="font-weight: normal">&quot;40&quot;, &quot;51&quot;,
+			&quot;10.3&quot;, &quot;41/1&quot; и  т.п. </SPAN></FONT>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=295 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>имясправочника</B>&quot;
+			character varying(50) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=329 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.04cm; margin-right: 0.01cm"><FONT SIZE=2>Наименование
+			справочника, который хранит объекты
+			учета для аналитического счета</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=295 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>баланс</B>&quot; boolean DEFAULT true</FONT></P>
+		</TD>
+		<TD WIDTH=329 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.04cm; margin-right: 0.01cm"><FONT SIZE=2>Флаг,
+			который обозначает, является ли счет
+			балансовым или забалансовым</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=295 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>количество</B>&quot; boolean
+			DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=329 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=LEFT STYLE="margin-left: 0.04cm; margin-right: 0.01cm"><FONT SIZE=2>Флаг,
+			который обозначает, ведется ли на
+			счете количественный учет</FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P ALIGN=LEFT STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+ 
+</P>
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<FONT SIZE=3><B>Таблица &quot;топер&quot;</B></FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 0.05cm; text-indent: 0.03cm; margin-bottom: 0cm; font-weight: normal">
+<FONT SIZE=2>Хранит описание бухгалтерской
+операции. Под операцией подразумевается
+набор проводок, соответствующих одной
+строке табличной части документа.
+Например, при приобретении товара по
+безналичному расчету, в случае учета
+по  покупной стоимости, для каждой
+приобретенной позиции делается проводка
+41/60 (с кредита 60 счета в дебет 41 счета).
+В данном случае операция состоит из
+одной проводки. В случае учета по
+продажным ценам для каждой позиции
+делается две проводки 41/60 и 41/42. В этом
+случае операция состоит из двух проводок.</FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 0.05cm; text-indent: 0.03cm; margin-bottom: 0cm; font-weight: normal">
+<FONT SIZE=2>Так же таблица хранит информацию,
+используемую при формировании внешнего
+вида формы документа.</FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<TABLE WIDTH=642 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=299>
+	<COL WIDTH=325>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>код</B>&quot; serial NOT NULL</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border: 1px solid #000000; padding: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Уникальный идентификатор
+			проводки</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>опер</B>&quot; integer</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Номер бухгалтерской
+			операции</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>номер</B>&quot; integer</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Номер проводки в
+			пределах операции</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>дбсчет</B>&quot; character varying(5)
+			DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Дебетовый счет</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="margin-left: 0.01cm; margin-right: 0.01cm; font-weight: normal">
+			<FONT SIZE=2>&quot;<B>крсчет</B>&quot; character varying(5)
+			DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Кредитовый счет</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>имя</B>&quot;
+			character varying(100) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Наименование операции.
+			Особое значение имеет для первой
+			проводки в операции, т.&nbsp;к. эта
+			информация отражается в меню операций
+			на стороне клиента.</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>итоги</B>&quot;
+			character varying(1) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Содержит знак «+»,
+			если сумму проводки нужно прибавлять
+			к итоговой сумме документа, или «-»,
+			если нужно вычитать. В остальных
+			случаях сумма проводки не отражается
+			на сумме документа.</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>меню</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Содержит True, если
+			операция отображается в списке операций
+			на стороне клиента. Имеет смысл для
+			первой проводки в операции</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>осндокумент</B>&quot;
+			character varying(20) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>нумератор</B>&quot;
+			character varying(40) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>однаоперация</B>&quot;
+			boolean</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Содержит True, если
+			документ может содержать только одну
+			строку в табличной части. Например,
+			платежное поручение</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>кол</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>дбпос</B>т&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Содержит True, если
+			дебетовый счет во всем документе
+			постоянный для данной проводки. В этом
+			случае справочник дебетового счета
+			помещается в шапку формы. Например,
+			при реализации товара за безналичный
+			расчет (проводка 60/41), контрагент в
+			пределах документа постоянный. В этом
+			случае поле должно содержать True</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>крпост</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Содержит True, если
+			кредитовый счет во всем документе
+			постоянный для данной проводки. </FONT>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>дбдобав</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>крдобав</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>дбвыбор</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>крвыбор</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>дбсалвиди</B>м&quot;
+			boolean DEFAULT true</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>крсалвидим</B>&quot;
+			boolean DEFAULT true</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>дбвидим</B>&quot;
+			boolean DEFAULT true</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>крвидим</B>&quot;
+			boolean DEFAULT true</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>форма</B>&quot;
+			character varying(50) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>независим</B>&quot;
+			boolean DEFAULT false</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>считать</B>&quot;
+			boolean DEFAULT true</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>переменные</B>&quot;
+			text</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=299 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>формулы</B>&quot;
+			text</FONT></P>
+		</TD>
+		<TD WIDTH=325 STYLE="; border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><BR>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm; font-weight: normal">
+<BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<FONT SIZE=3><B>Таблица &quot;сальдо&quot;</B></FONT></P>
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">Хранит
+количественные и суммовые обороты, а
+так же остатки и сальдо для каждого
+объекта учета на каждом бухгалтерском
+счете. Бухгалтерский счет задается
+последовательностью из 5 символов и
+соответствует списку счетов (плану
+счетов) в таблице </SPAN></FONT><B><FONT SIZE=2>счета</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">.
+Дебетовые и кредитовые обороты хранят
+значения оборотов для данного объекта
+учета за весь период существования БД
+и предназначены для быстрого вычисления
+текущих остатков и текущего сальдо. 
+Если нужно получить значения дебетовых
+и кредитовых оборотов за конкретный
+период, то нужно воспользоваться
+соответствующей хранимой процедурой.
+</SPAN></FONT></FONT>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=642 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=231>
+	<COL WIDTH=393>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>счет</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			character(5) NOT NULL</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border: 1px solid #000000; padding: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Бухгалтерский счет
+			объекта учета. Список счетов указан
+			в таблице <B>счета</B></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>код</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			integer NOT NULL</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Код объекта учета.
+			Действителен в пределах справочника,
+			который действует для указанного в
+			поле <B>счет</B><SPAN STYLE="font-weight: normal">
+			бухгалтерского счета. Имя такого
+			справочника можно прочитать в поле
+			</SPAN><B>имясправочника</B><SPAN STYLE="font-weight: normal">
+			в таблице </SPAN><B>счета</B><SPAN STYLE="font-weight: normal">.</SPAN></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>кол</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(10,3) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>ВОЗМОЖНО БУДЕТ УДАЛЕНО
+			ИЗ БАЗЫ!!!</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>сальдо</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>ВОЗМОЖНО БУДЕТ УДАЛЕНО
+			ИЗ БАЗЫ!!!</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>дбкол</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(10,3) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Дебетовый количественный
+			оборот за все время существования БД</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>дебет</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Дебетовый оборот за
+			все время существования БД</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>кркол</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(10,3) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Кредитовый количественный
+			оборот за все время существования БД</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>кредит</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Кредитовый оборот за
+			все время существования БД</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>конкол</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(10,3) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Остаток на текущий
+			момент</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>консальдо</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Сальдо на текущий
+			момент</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=231 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN></FONT><B><FONT SIZE=2>концена</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=393 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P ALIGN=JUSTIFY><FONT SIZE=2>Цена на текущий момент</FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.31cm; text-indent: -3.28cm; margin-bottom: 0cm">
+<FONT SIZE=3><FONT SIZE=2><SPAN STYLE="font-weight: normal">Имеет
+триггера:</SPAN></FONT></FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.31cm; text-indent: -3.28cm; margin-bottom: 0cm">
+<FONT SIZE=3><B><FONT SIZE=2>считатьконечноесальдо</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">
+— вычисляет конечный остаток и сальдо
+при изменении оборотов для объекта
+учета. Вызов, как правило, происходит
+при добавлении, изменении, удалении
+проводки, в которой упомянут соответствующий
+объект учета.</SPAN></FONT></FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.31cm; text-indent: -3.28cm; margin-bottom: 0cm">
+<FONT SIZE=3><B><FONT SIZE=2>testdeleting_сальдо</FONT></B><FONT SIZE=2><SPAN STYLE="font-weight: normal">
+— триггер вызывается при попытке
+удалении записи. Проверяет, имеются ли
+в БД проводки, которые ссылаются на эту
+запись. Если таковые имеются, то запись
+не удаляется, а пользователю отправляется
+соответствующее уведомление.</SPAN></FONT></FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.31cm; text-indent: -3.28cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.31cm; text-indent: -3.28cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=3><B>Таблица
+&quot;документы&quot;</B></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=2>Хранит описание
+основных реквизитов всех бухгалтерских
+документов</FONT></P>
+<P STYLE="margin-bottom: 0cm">  
+</P>
+<TABLE WIDTH=643 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=289>
+	<COL WIDTH=336>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>код</B>&quot; integer NOT NULL</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border: 1px solid #000000; padding: 0.1cm">
+			<P><FONT SIZE=2>Уникальный идентификатор
+			документа</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P> <FONT SIZE=2>&quot;<B>дата</B>&quot; date</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Дата документа</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>датавремя</B>&quot; timestamp
+			without time zone</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Дата и время создания документа</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>номер</B>&quot; character
+			varying(10) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Номер документа</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>комментарий</B>&quot;
+			character varying(100) DEFAULT ''::character varying</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Комментарий</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>сумма</B>&quot; numeric(14,2)
+			DEFAULT 0</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Сумма документа</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>описание</B>&quot; text</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>опер</B>&quot; integer</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Номер типовой бухгалтерской
+			операции. Номера возможных операций
+			хранятся в поле <B>опер</B> таблицы <B>топер</B></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>авто</B>&quot; integer</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=289 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2>&quot;<B>переменные</B>&quot; bytea</FONT></P>
+		</TD>
+		<TD WIDTH=336 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"> 
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=2>Имеет триггер
+<B>удалитьдокумент</B><SPAN STYLE="font-weight: normal">,
+который срабатывает при удалении
+документа и предназначен для удаления
+его содержимого (проводок).</SPAN></FONT></P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal"><BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=3><B>Таблица
+&quot;проводки&quot;</B></FONT></P>
+<P ALIGN=CENTER STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal"><FONT SIZE=2>Хранит
+все бухгалтерские проводки.</FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=642 CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=251>
+	<COL WIDTH=373>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P STYLE="font-weight: normal"><FONT SIZE=2>&quot;<B>код</B>&quot;
+			serial NOT NULL</FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="; border: 1px solid #000000; padding: 0.1cm">
+			<P><FONT SIZE=2>Уникальный идентификатор
+			проводки</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>дбсчет</B><SPAN STYLE="font-weight: normal">&quot;
+			character(5) NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Дебетовый счет проводки</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>дбкод</B><SPAN STYLE="font-weight: normal">&quot;
+			integer NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Код объекта учета на дебетовом
+			счете</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>крсчет</B><SPAN STYLE="font-weight: normal">&quot;
+			character(5) NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Кредитовый счет проводки</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>кркод</B><SPAN STYLE="font-weight: normal">&quot;
+			integer NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Код объекта учета на кредитовом
+			счете</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>кол</B><SPAN STYLE="font-weight: normal">&quot;
+			numeric(10,3) DEFAULT 0</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Количество</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>цена</B><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Цена</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>сумма</B><SPAN STYLE="font-weight: normal">&quot;
+			numeric(14,2) DEFAULT 0</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Сумма</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>стр</B><SPAN STYLE="font-weight: normal">&quot;
+			integer NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Номер строки в документе</FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>доккод</B><SPAN STYLE="font-weight: normal">&quot;
+			integer NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Ссылка на код документа в
+			таблице <B>документы</B></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>опер</B><SPAN STYLE="font-weight: normal">&quot;
+			numeric(3,0) NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Номер типовой бухгалтерской
+			операции. Номера возможных операций
+			хранятся в поле <B>опер</B> таблицы <B>топер</B></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=251 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<P><FONT SIZE=2><SPAN STYLE="font-weight: normal">&quot;</SPAN><B>номеропер</B><SPAN STYLE="font-weight: normal">&quot;
+			numeric(1,0) NOT NULL</SPAN></FONT></P>
+		</TD>
+		<TD WIDTH=373 STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<P><FONT SIZE=2>Номер проводки в пределах
+			бухгалтерской операции</FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal"><FONT SIZE=2>Имеет
+триггера:</FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-left: 3.49cm; text-indent: -3.47cm; margin-bottom: 0cm">
+<FONT SIZE=2><B>вставитьпроводку — </B><SPAN STYLE="font-weight: normal">срабатывает
+при добавлении новой проводки. Если
+поле </SPAN><B>топер.считать</B><SPAN STYLE="font-weight: normal">
+для этой проводки равно True, то есть
+проводку такого типа нужно проводить,
+то триггер добавляет записи в таблицу
+</SPAN><B>сальдо</B><SPAN STYLE="font-weight: normal"> для
+комбинации </SPAN><B>дбсчет+дбкод</B><SPAN STYLE="font-weight: normal">
+и </SPAN><B>крсчет+кркод</B><SPAN STYLE="font-weight: normal">
+при условии, что счета </SPAN><B>дбсчет</B><SPAN STYLE="font-weight: normal">
+или </SPAN><B>крсчет</B><SPAN STYLE="font-weight: normal">
+не являются забалансовыми. Если записи
+ </SPAN><B>дбсчет+дбкод</B><SPAN STYLE="font-weight: normal">
+или </SPAN><B>крсчет+кркод</B><SPAN STYLE="font-weight: normal">
+в таблице </SPAN><B>сальдо</B><SPAN STYLE="font-weight: normal">
+существуют, то они не добавляются. Если
+счет, который указан в поле </SPAN><B>дбсчет</B><SPAN STYLE="font-weight: normal">
+или </SPAN><B>кркод</B><SPAN STYLE="font-weight: normal"> по
+какой-либо причине отсутствует в таблице
+</SPAN><B>счета</B><SPAN STYLE="font-weight: normal">, то он
+в нее добавляется. После этого происходит
+вычисление остатков и сальдо для заданных
+комбинаций  </SPAN><B>дбсчет+дбкод</B><SPAN STYLE="font-weight: normal">
+и </SPAN><B>крсчет+кркод</B><SPAN STYLE="font-weight: normal">
+в два этапа. На первом этапе вычисляются
+обороты в таблице </SPAN><B>сальдо</B><SPAN STYLE="font-weight: normal">
+для каждой комбинации </SPAN><B>дбсчет+дбкод</B><SPAN STYLE="font-weight: normal">
+и </SPAN><B>крсчет+кркод</B><SPAN STYLE="font-weight: normal">.
+Оборот по количеству по дебету вычисляется
+как </SPAN><B>сальдо.дбкол = сальдо.дбкол +
+проводки.кол</B><SPAN STYLE="font-weight: normal">.
+Суммовой оборот по дебету вычисляется
+как </SPAN><B>сальдо.дебет = сальдо.дебет +
+проводки.сумма</B><SPAN STYLE="font-weight: normal">.
+Аналогично происходят вычисления
+кредитовых оборотов. На втором этапе
+срабатывает триггер </SPAN><B>считатьконечноесальдо</B><SPAN STYLE="font-weight: normal">
+в таблице </SPAN><B>сальдо</B><SPAN STYLE="font-weight: normal">,
+который вычисляет окончательное сальдо
+для указанных комбинаций.  Остаток
+вычисляется как сумма полей </SPAN><B>сальдо.конкол
+= сальдо.кол + сальдо.дбкол — сальдо.кркол</B><SPAN STYLE="font-weight: normal">.
+Аналогично вычисляется сальдо: 
+</SPAN><B>сальдо.сальдо = сальдо. сальдо+
+сальдо.дебет — сальдо.кредит</B><SPAN STYLE="font-weight: normal">.</SPAN></FONT></P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<FONT SIZE=2><B>считатьпроводку</B><SPAN STYLE="font-weight: normal">
+— срабатывает при изменении существующей
+проводки. Вычисления остатков и сальдо
+на соответствующих счетах происходит
+аналогично триггеру </SPAN><B>вставитьпроводку</B><SPAN STYLE="font-weight: normal">.
+Разница с ним заключается в том, что
+этот триггер обрабатывает и те случаи,
+когда изменилось значение полей </SPAN><B>дбсчет,
+дбкод, крсчет </B><SPAN STYLE="font-weight: normal">или
+</SPAN><B>кркод</B><SPAN STYLE="font-weight: normal">.</SPAN></FONT></P>
+<P STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<FONT SIZE=2><B>удалитьпроводку</B><SPAN STYLE="font-weight: normal">
+— срабатывает при удалении проводки. 
+Вычисления остатков и сальдо на
+соответствующих счетах происходит
+аналогично триггеру </SPAN><B>вставитьпроводку</B><SPAN STYLE="font-weight: normal">.
+Записи в таблице </SPAN><B>сальдо</B><SPAN STYLE="font-weight: normal">
+не удаляются.</SPAN></FONT></P>
+<P STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P ALIGN=CENTER STYLE="margin-left: 3.55cm; text-indent: -3.57cm; margin-bottom: 0cm">
+<BR>
+</P>
+</BODY>
+</HTML>
