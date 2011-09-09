@@ -7,7 +7,16 @@
 
 #include "passwordform.h"
 
-PassWordForm::PassWordForm() {
+PassWordForm::PassWordForm(QObject* parent/* = NULL*/)
+: Form(parent)
+{
+}
+
+bool PassWordForm::open(QWidget* pwgt/* = 0*/)
+// Создает форму ввода пароля на основе формы с кнопками "Ок" и "Cancel"
+{
+    if (Form::open(pwgt))
+    {
 	pcmbLogin = new QComboBox;
 	ptxtPassword = new QLineEdit;
 	ptxtPassword->setEchoMode(QLineEdit::Password);
@@ -24,7 +33,11 @@ PassWordForm::PassWordForm() {
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, ptopLayout);
-	}
+        return true;
+    }
+    return false;
+}
+
 
 void PassWordForm::addLogin(QString login) {
 	pcmbLogin->addItem(login);

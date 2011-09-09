@@ -10,7 +10,8 @@
 
 class PassWordForm: public Form {
 public:
-        PassWordForm();
+        PassWordForm(QObject* parent = NULL);
+        Q_INVOKABLE virtual bool open(QWidget* pwgt = 0);
         void addLogin(QString);
         void addLogin(QStringList);
         QString getLogin() { return login; }

@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     programNameFieldName = QObject::tr("имя");
     programResourcesFile = QDir::currentPath() + "/src/resources.qrc";
 
-    bool lResult = true;        // по умолчанию программа возвращает истину
+    int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
         lStart = readParameters(argc, argv);    // прочитаем их
@@ -111,4 +111,5 @@ int main(int argc, char **argv)
     if (programDebugMode)
         programDebugStream << QDateTime().currentDateTime().toString(programLogTimeFormat) << " Program shutdown.\n\n";
     application.quit();
+    return lResult;
 }

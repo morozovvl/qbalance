@@ -26,6 +26,7 @@ int GUIFactory::openDB() {
 //      -1: Пользователь нажал кнопку "Отмена"
 //      -2: Ошибка соединения с сервером
 //      -3: Неверно введен пароль
+
 /*
     QString login = "sa";
     QString password = "123456";
@@ -44,6 +45,7 @@ int GUIFactory::openDB() {
         lastPort = db->getPort();
         if (db->open("test", "*")) {
             PassWordForm frm;
+            frm.open();
             frm.addLogin(db->getUserList());
             db->close();
             if (frm.exec()) {
