@@ -2,24 +2,6 @@
 # Project created by QtCreator 2009-04-25T16:32:03
 # -------------------------------------------------
 
-#QT += sql
-#QT += xml
-#QT += core
-#QT += script
-#QT += gui
-#TARGET = enterprise
-#CONFIG += console
-#CONFIG += designer \
-#    plugin
-#CONFIG += qt \
-#    release
-#CONFIG += uitools
-#CONFIG -= app_bundle
-#TEMPLATE = subdirs
-#SUBDIRS = src src/plugins
-
-
-
 QT += sql
 QT += xml
 QT += core
@@ -29,7 +11,7 @@ TARGET = enterprise
 CONFIG += designer \
     plugin
 CONFIG += qt \
-    debug
+    release
 CONFIG += uitools
 CONFIG -= app_bundle
 TEMPLATE = app
@@ -111,3 +93,12 @@ HEADERS += src/custom.h \
     src/scriptengine.h \
     src/mysqlquery.h
 RESOURCES += src/resources.qrc
+
+unix:MOC_DIR = ./.moc
+win32:MOC_DIR = /.moc
+
+unix:OBJECTS_DIR = ./.obj
+win32:OBJECTS_DIR = /.obj
+
+unix:RCC_DIR = ./src
+win32:RCC_DIR = /src
