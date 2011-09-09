@@ -61,6 +61,7 @@ bool readParameters(int argc, char *argv[]) {
 }
 
 void test() {
+    // Процедура для тестирования на "утечки" памяти
     QString dictName("счета");
     for (int i = 0; i < 1; i++) {              // 50 раз откроем, закроем справочник
         Dictionaries* dicts = app->getDictionaries();

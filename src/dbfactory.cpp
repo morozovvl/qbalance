@@ -96,8 +96,8 @@ bool DBFactory::doOpen(QString login, QString password) {
 
 void DBFactory::doClose() {
     clearError();
-    db->removeDatabase("default");
     db->close();
+    db->removeDatabase("default");
     delete db;
 }
 

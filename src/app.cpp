@@ -47,15 +47,16 @@ bool App::doOpen() {
                 else
                     break;
             }
-            else if (result == -1) {
+            else if (result == -2) {
                 QString errorText = db->getErrorText();
                 showError(errorText);
                 if (gui->showMessage(QObject::tr("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
                                      QObject::tr("Попытаться создать новую БД?")) == QMessageBox::Yes)
-                    if (!db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort()))
-                            break;  // не удалось создать новую базу данных
+                    // Попытаемся создать новую БД
+                    if (db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort()))
+                        break;
             }
-            else if (result == -2)      // Пользователь нажал кнопку Отмена
+            else if (result == -1)      // Пользователь нажал кнопку Отмена
                 break;
 /*
             else {                   // База данных скорее всего отсутствует, спросим: надо ли ее создать?

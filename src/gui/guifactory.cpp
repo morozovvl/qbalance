@@ -21,6 +21,11 @@ extern QTextStream programDebugStream;
 extern QString programLogTimeFormat;
 
 int GUIFactory::openDB() {
+// Функция пытается создать соединение с БД. В случае удачи возвращает 0.
+// В случае неудачи возвращает следующие коды ошибок:
+//      -1: Пользователь нажал кнопку "Отмена"
+//      -2: Ошибка соединения с сервером
+//      -3: Неверно введен пароль
 /*
     QString login = "sa";
     QString password = "123456";
@@ -55,19 +60,20 @@ int GUIFactory::openDB() {
                     showCriticalError(QObject::tr("Неверно введен пароль."));
                     connForm->close();
                     delete connForm;
-                    return -1;
+                    return -3;
                     }
             }
         }
         else {
+            // Открыть нашу БД не удалось
             connForm->close();
             delete connForm;
-            return -1; // Ошибка соединения с сервером
+            return -2; // Ошибка соединения с сервером
         }
     }
     connForm->close();
     delete connForm;
-    return -2;  //  Пользователь нажал кнопку "Отмена"
+    return -1;  //  Пользователь нажал кнопку "Отмена"
 }
 
 void GUIFactory::closeDB() {
