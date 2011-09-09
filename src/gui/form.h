@@ -3,17 +3,17 @@
 
 #include <QtGui>
 #include <QDomDocument>
-#include <QMdiSubWindow>
 #include <QSettings>
 #include <QUuid>
 #include "../scriptengine.h"
 
 class Essence;
 
-class Form: public QObject {
+class Form: public QObject
+{
     Q_OBJECT
-
 public:
+    explicit Form(QObject* parent = NULL);
     Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
     Q_INVOKABLE virtual bool open(QString, QObject* form = 0);
     Q_INVOKABLE virtual void close();
@@ -42,16 +42,16 @@ public slots:
     virtual void cmdCancel();
 
 protected:
-//    QMdiSubWindow* mdiSubWindow;
-    QDialog* formWidget;
-    Essence* parent;
-    bool lSelected;
-    bool defaultForm;
-    QString configName;
-    bool iconsSeted;
+    QDialog*      formWidget;
+    Essence*      parent;
+    bool          lSelected;
+    bool          defaultForm;
+    QString       configName;
+    bool          iconsSeted;
+
     ScriptEngine* engine;
-    QString script;
-    QScriptValue scripts;
+    QString       script;
+    QScriptValue  scripts;
 
     QHBoxLayout* cmdButtonLayout;
     QVBoxLayout* vbxLayout;
@@ -62,10 +62,7 @@ protected:
     virtual void doShow();
     virtual void doHide();
     virtual void setIcons();
-//    virtual void keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш Ctrl-Enter и Escape
-//    virtual void closeEvent(QCloseEvent*);
     virtual QDomElement createWidgetsStructure();
-//    virtual QDomElement createConnectionsStructure();
     QDomElement createBoxLayoutElement(QLayout*);
     QDomElement createPushButtonElement(QWidget*);
     QDomElement createLabelElement(QString);
@@ -78,8 +75,6 @@ protected:
 private:
     bool uiCreated;
     void createForm(QString, QWidget* pwgt = 0);
-
-//    QDomElement getDomXmlWidgetProperty(QWidget *, QString);
 };
 
 #endif

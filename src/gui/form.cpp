@@ -14,6 +14,19 @@ class App;
 extern App* app;
 extern QString programResourcesFile;
 
+Form::Form(QObject* parent/* = NULL*/)
+: QObject(parent)
+, formWidget(NULL)
+, parent(NULL)
+, engine(NULL)
+, cmdButtonLayout(NULL)
+, vbxLayout(NULL)
+, buttonOk(NULL)
+, buttonCancel(NULL)
+{
+
+}
+
 bool Form::open(QWidget* pwgt, Essence* par) {
     parent = par;
     if (parent != 0) {

@@ -33,28 +33,27 @@ bool App::doOpen() {
     beginDate = endDate.addDays(-31);
     db = new DBFactory();
     gui = new GUIFactory(db);
-    if (gui->open()) {               // Попытаемся создать графический интерфейс
-        while (true) {
+    if (gui->open()) {// Попытаемся создать графический интерфейс
+        forever {
             int result = gui->openDB();
-            if (result == 0) {  // Попытаемся открыть базу данных
+            if (result == 0) {// Попытаемся открыть базу данных
                 dictionaryList = new Dictionaries;
                 topersList = new Topers;
                 if (dictionaryList->open() && topersList->open()) {
-                        db->getPeriod(beginDate, endDate);
-                        gui->getMainWindow()->showPeriod();
-                        return true;
-                    }
+                    db->getPeriod(beginDate, endDate);
+                    gui->getMainWindow()->showPeriod();
+                    return true;
+                }
                 else
                     break;
             }
             else if (result == -1) {
                 QString errorText = db->getErrorText();
                 showError(errorText);
-//                if (errorText.contains(QString("database \"%1\" does not exist").arg(gui->getLastDbName())))
-                    if (gui->showMessage(QObject::tr("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."), QObject::tr("Попытаться создать новую БД?")) == QMessageBox::Yes) {
-                        if (!db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort()))
+                if (gui->showMessage(QObject::tr("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
+                                     QObject::tr("Попытаться создать новую БД?")) == QMessageBox::Yes)
+                    if (!db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort()))
                             break;  // не удалось создать новую базу данных
-                    }
             }
             else if (result == -2)      // Пользователь нажал кнопку Отмена
                 break;

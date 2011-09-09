@@ -10,8 +10,6 @@ QT += gui
 TARGET = enterprise
 CONFIG += designer \
     plugin
-CONFIG += qt \
-    release
 CONFIG += uitools
 CONFIG -= app_bundle
 TEMPLATE = app

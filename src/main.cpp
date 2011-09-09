@@ -76,10 +76,10 @@ void test() {
 int main(int argc, char **argv)
 {
     QApplication application(argc, argv);
-#ifdef Q_OS_WIN32
-    codec = QTextCodec::codecForName("Windows-1251");
-#else
     codec = QTextCodec::codecForName("UTF-8");
+#ifdef Q_OS_WIN32
+    if (QSysInfo::windowsVersion() != QSysInfo::WV_WINDOWS7)
+        codec = QTextCodec::codecForName("Windows-1251");
 #endif
 
     QTextCodec::setCodecForTr(codec);
