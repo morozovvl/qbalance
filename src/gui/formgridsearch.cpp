@@ -9,6 +9,13 @@
 extern QString programIdFieldName;
 extern QString programNameFieldName;
 
+
+FormGridSearch::FormGridSearch(QObject* parent/* = NULL*/)
+: FormGrid(parent)
+,parameters(NULL)
+{
+}
+
 bool FormGridSearch::open(QWidget* pwgt, Essence* parent) {
     if (FormGrid::open(pwgt, parent)) {
         formWidget->resize(600, formWidget->height());

@@ -51,7 +51,8 @@ void Essence::setScriptForTable(QString scr) {
             engine = new ScriptEngine(this);
         }
         script = scr;
-        scripts = engine->evaluate(script);
+// Временно отключено, пока не сделаем скриптовый движок
+//        scripts = engine->evaluate(script);
     }
 }
 

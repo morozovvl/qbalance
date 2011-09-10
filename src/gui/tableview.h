@@ -1,7 +1,7 @@
 #ifndef TABLEVIEW_H
 #define TABLEVIEW_H
 
-#include <QTableWidget>
+#include <QTableView>
 #include <QWidget>
 #include <QAbstractItemDelegate>
 #include <QDebug>
@@ -10,12 +10,11 @@
 #include <QScriptEngine>
 #include "../mysqlrelationaltablemodel.h"
 #include "../dbfactory.h"
-//#include "app.h"
 
 class App;
 class FormGrid;
 
-class TableView : public QTableWidget {
+class TableView : public QTableView {
     Q_OBJECT
 public:
     QMap<int, fldType> columns;

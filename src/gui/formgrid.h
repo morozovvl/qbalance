@@ -21,6 +21,7 @@ class Picture;
 class FormGrid : public Form {
     Q_OBJECT
 public:
+    explicit FormGrid(QObject* parent = NULL);
     Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
     Q_INVOKABLE virtual void close();
     QString getColumnHeader(QString);
@@ -33,6 +34,7 @@ public:
     virtual void setShowFocus();
     virtual void readSettings();
     virtual void writeSettings();
+
 
 public slots:
     virtual void cmdAdd();

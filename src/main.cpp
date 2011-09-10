@@ -63,7 +63,7 @@ bool readParameters(int argc, char *argv[]) {
 void test() {
     // Процедура для тестирования на "утечки" памяти
     QString dictName("счета");
-    for (int i = 0; i < 1; i++) {              // 50 раз откроем, закроем справочник
+    for (int i = 0; i < 50; i++) {              // 50 раз откроем, закроем справочник
         Dictionaries* dicts = app->getDictionaries();
         dicts->addDictionary(dictName, 1);
         Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
         app = new App(&application);
         if (app->open()) {       // Если приложение удалось создать
             app->show();         // Тогда откроем его
-            test();
+//            test();
             lResult = application.exec();
             app->close();            // Закроем приложение
         }
