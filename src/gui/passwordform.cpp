@@ -41,12 +41,15 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 
 void PassWordForm::addLogin(QString login) {
 	pcmbLogin->addItem(login);
-        pcmbLogin->setCurrentIndex(pcmbLogin->currentIndex());
-	}
+        pcmbLogin->setCurrentIndex(0);
+        pcmbLogin->repaint();
+;	}
 
 void PassWordForm::addLogin(QStringList list) {
 	pcmbLogin->addItems(list);
-	}
+        pcmbLogin->setCurrentIndex(0);
+        pcmbLogin->repaint();
+        }
 
 void PassWordForm::cmdOk() {
     Form::cmdOk();

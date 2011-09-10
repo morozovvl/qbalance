@@ -15,67 +15,74 @@
 #include "passwordform.h"
 #include "../app.h"
 
+
 extern QString programName;
 extern bool programDebugMode;
 extern QTextStream programDebugStream;
 extern QString programLogTimeFormat;
 
-int GUIFactory::openDB() {
+
+int GUIFactory::openDB()
+{
 // Функция пытается создать соединение с БД. В случае удачи возвращает 0.
 // В случае неудачи возвращает следующие коды ошибок:
 //      -1: Пользователь нажал кнопку "Отмена"
 //      -2: Ошибка соединения с сервером
 //      -3: Неверно введен пароль
+//      -4: Пользователь отказался от ввода пароля
 
+    int returnCode = 0;     // По умолчанию будем считать, что удалось открыть БД
 /*
     QString login = "sa";
     QString password = "123456";
-    if (db->open(login, password)) {
+    if (db->open(login, password))
+    {
         mainWindow->setWindowTitle(programName + " - localhost - " + login);
-        return 0;
     }
-    return -2;
+    else
+        returnCode = -2;
 */
     ConnectionForm* connForm = new ConnectionForm();
     connForm->open();
     connForm->initForm(db->getHostName(), db->getDatabaseName(), db->getPort());
-    if (connForm->exec(db)) {
+    if (connForm->exec(db))
+    {
         lastHostName = db->getHostName();
         lastDbName = db->getDatabaseName();
         lastPort = db->getPort();
-        if (db->open("test", "*")) {
+        if (db->open("test", "*"))
+        {
             PassWordForm frm;
             frm.open();
             frm.addLogin(db->getUserList());
             db->close();
-            if (frm.exec()) {
+            frm.exec();
+            if (frm.selected())
+            {   // Пользователь нажал кнопку "Ok"
                 QString login = frm.getLogin();
                 QString password = frm.getPassword();
-                if (db->open(login, password)) {
+                if (db->open(login, password))
+                {
                     if (connForm->connectionName().size() > 0)
                         mainWindow->setWindowTitle(programName + " - " + connForm->connectionName() + " - " + login);
-                    connForm->close();
-                    delete connForm;
-                    return 0;
                 }
-                else {
+                else
+                {
                     showCriticalError(QObject::tr("Неверно введен пароль."));
-                    connForm->close();
-                    delete connForm;
-                    return -3;
-                    }
+                    returnCode = -3;
+                }
             }
+            else
+                returnCode = -4;  //  Пользователь нажал кнопку "Отмена"
         }
-        else {
-            // Открыть нашу БД не удалось
-            connForm->close();
-            delete connForm;
-            return -2; // Ошибка соединения с сервером
-        }
+        else
+            returnCode = -2; // Ошибка соединения с сервером
     }
+    else
+        returnCode = -1;  //  Пользователь нажал кнопку "Отмена"
     connForm->close();
     delete connForm;
-    return -1;  //  Пользователь нажал кнопку "Отмена"
+    return returnCode;
 }
 
 void GUIFactory::closeDB() {

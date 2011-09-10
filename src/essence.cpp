@@ -217,8 +217,8 @@ bool Essence::doOpen() {
 }
 
 void Essence::doClose() {
-    if (engine != 0)
-        delete engine;
+//    if (engine != 0)
+//        delete engine;
     form->closeFormEvent();
     form->writeSettings();
 //    form->setParent(0);

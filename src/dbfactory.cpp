@@ -25,6 +25,7 @@ DBFactory::DBFactory()
 
 
 bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
+// Создает новую БД на сервере, если она отсутствует
 {
     bool    lResult = false;
     QString defaultDatabase = getDatabaseName();
@@ -40,8 +41,10 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
         QString     password = frm.getPassword();
         if (open(login, password))
         {
-            QString initScriptFileName = QFileDialog::getOpenFileName(0, tr("Выберите файл инициализации"), "", "SQL (*.sql)");
-            if (initScriptFileName.size() > 0)
+            int scriptCounter = 0;
+            QDir* dir = new QDir();
+            QString initScriptFileName = QDir::currentPath() + QString("/src/initdb%1.sql").arg(scriptCounter);
+            if (dir->exists(initScriptFileName))
             {
 #ifdef Q_OS_WIN32
                 QString     encoding = "WIN1251";
@@ -51,20 +54,41 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
                 if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName).arg(encoding)))
                 {
                     close();
-                    QProcess* proc = new QProcess();
-                    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-                    env.insert("PGPASSWORD", password);
-                    proc->setProcessEnvironment(env);
-                    proc->start("psql", QStringList() << "-h" << hostName << "-p" << QString(port) << "-U" << "postgres" << "-f" << initScriptFileName << dbName);
-                    if (!proc->waitForStarted())
-                        app->showError(QObject::tr("Не удалось запустить psql"));                   // выдадим сообщение об ошибке
-                    else
-                        if (proc->waitForFinished())
-                            lResult = true;
+                    forever
+                    {
+                        QProcess* proc = new QProcess();
+                        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+                        env.insert("PGPASSWORD", password);
+                        proc->setProcessEnvironment(env);
+                        proc->start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName).arg(port).arg(initScriptFileName).arg(dbName));
+                        if (!proc->waitForStarted())
+                        {
+                            app->showError(QObject::tr("Не удалось запустить psql"));                   // выдадим сообщение об ошибке и выйдем из цикла
+                            break;
+                        }
+                        else
+                            if (proc->waitForFinished())
+                            {
+                                // Скрипт инициализации загрузился успешно, попробуем загрузить следующий
+                                scriptCounter++;
+                                initScriptFileName = QDir::currentPath() + QString("/src/initdb%1.sql").arg(scriptCounter);
+                                if (!dir->exists(initScriptFileName)) {
+                                    lResult = true;     // Больше скриптов инициалиализации нет, выходим, но считаем, что отработали успешно
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                app->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(initScriptFileName));
+                                break;
+                            }
+                    }
                 }
                 else
                     app->showError(getErrorText());
             }
+            else
+                app->showCriticalError(QString(QObject::tr("Не найден файл инициализации БД <%1>.")).arg(initScriptFileName));
        }
        else
           app->showCriticalError(QObject::tr("Не удалось создать соединение с сервером."));
@@ -119,7 +143,6 @@ void DBFactory::doClose()
     clearError();
     db->close();
     db->removeDatabase("default");
-    delete db;
 }
 
 

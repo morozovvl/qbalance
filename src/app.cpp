@@ -28,53 +28,42 @@ Documents* App::getDocuments(int opNumber) {
 }
 
 bool App::doOpen() {
+    bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
     organizationName = "Enterprise";
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
     db = new DBFactory();
     gui = new GUIFactory(db);
-    if (gui->open()) {// Попытаемся создать графический интерфейс
-        forever {
-            int result = gui->openDB();
-            if (result == 0) {// Попытаемся открыть базу данных
+    if (gui->open()) {  // Попытаемся открыть графический интерфейс
+        forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
+        {
+            int result = gui->openDB(); // Попытаемся открыть базу данных
+            if (result == 0)
+            {   // БД открыть удалось
                 dictionaryList = new Dictionaries;
                 topersList = new Topers;
-                if (dictionaryList->open() && topersList->open()) {
+                if (dictionaryList->open() && topersList->open())
+                {   // И удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();
-                    return true;
+                    lResult = true;     // Приложение удалось открыть
+                    break;  // Выйдем из бесконечного цикла открытия БД
                 }
-                else
-                    break;
             }
-            else if (result == -2) {
+            else if (result == -2)
+                {   // Произошла ошибка соединения с сервером
                 QString errorText = db->getErrorText();
                 showError(errorText);
                 if (gui->showMessage(QObject::tr("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
                                      QObject::tr("Попытаться создать новую БД?")) == QMessageBox::Yes)
                     // Попытаемся создать новую БД
-                    if (db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort()))
-                        break;
+                    db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
             }
             else if (result == -1)      // Пользователь нажал кнопку Отмена
-                break;
-/*
-            else {                   // База данных скорее всего отсутствует, спросим: надо ли ее создать?
-                if (db->isError()) {
-                    if (gui->showMessage(QObject::tr("База данных скорее всего отсутствует."), QObject::tr("Создать новую базу данных?")) == QMessageBox::Yes) {
-                        if (!gui->createNewDB())
-                            break;  // не удалось создать новую базу данных
-                    }
-                    else
-                        break;      // пользователь отказался создавать базу данных
-                }
-                else
-                    break;           // Выйдем из диалога не создавая базы данных
-            }
-*/
+                break;  // Выйдем из бесконечного цикла открытия БД
         }
     }
-    return false;
+    return lResult;
 }
 
 void App::doClose() {
