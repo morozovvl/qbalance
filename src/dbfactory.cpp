@@ -44,29 +44,30 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
             //Drake
             //Базу данных следует всегда создавать в UTF-8
             //т.к. есть возможность возвращать данные на клиент в нужной кодировке
-            const QString encoding = "UTF-8";
+            QString encoding = "UTF-8";
+#ifdef Q_OS_WIN32
+            encoding = "Windows-1251";
+#endif
             if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName).arg(encoding)))
             {
                 close();
+                const QStringList scripts = initializationScriptList();
                 //Drake
                 //Нет смысла создавать локальный временный экземпляр в куче
                 //Лучше на стеке - система его удалит
-
-                const QStringList scripts = initializationScriptList();
-
                 QDir dir;
 
                 for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
                 {
                     if (dir.exists(*script))
                     {
-                        QProcess* proc          = new QProcess();
+                        QProcess proc;
                         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
                         env.insert("PGPASSWORD", password);
-                        proc->setProcessEnvironment(env);
-                        proc->start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
+                        proc.setProcessEnvironment(env);
+                        proc.start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
 
-                        lResult = proc->waitForStarted();
+                        lResult = proc.waitForStarted();
 
                         if (!lResult)
                         {// выдадим сообщение об ошибке и выйдем из цикла
@@ -74,7 +75,7 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
                         }
                         else
                         {
-                            lResult = proc->waitForFinished();
+                            lResult = proc.waitForFinished();
                             if (!lResult)
                             {
                                 app->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
@@ -439,7 +440,7 @@ QStringList DBFactory::initializationScriptList() const
     QDir dir(initializationScriptPath());
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
     dir.setSorting(QDir::Name | QDir::IgnoreCase);
-    dir.setNameFilters(QStringList() << ".sql");
+    dir.setNameFilters(QStringList() << "*.sql");
     QFileInfoList files = dir.entryInfoList();
 
     for (QFileInfoList::const_iterator file = files.constBegin(); file != files.constEnd(); ++file)
