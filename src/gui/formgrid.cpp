@@ -18,12 +18,32 @@
 
 extern App* app;
 
-bool FormGrid::open(QWidget* pwgt, Essence* par) {
-    if (Form::open(pwgt, par)) {
+
+FormGrid::FormGrid(QObject* parent/* = NULL*/)
+: Form(parent)
+, grdTable(NULL)
+, tableModel(NULL)
+, tableLayout(NULL)
+, imageLayout(NULL)
+, picture(NULL)
+, buttonAdd(NULL)
+, buttonDelete(NULL)
+, buttonView(NULL)
+, buttonRequery(NULL)
+, buttonPrint(NULL)
+{
+}
+
+
+bool FormGrid::open(QWidget* pwgt, Essence* par)
+{
+    if (Form::open(pwgt, par))
+    {
         if (parent != 0)
             tableModel = parent->getMyRelationalTableModel();
 
-        if (defaultForm) {
+        if (defaultForm)
+        {   // Если форма создана автоматически
             grdTable = new TableView(this, formWidget);
             grdTable->setApp(app);
             grdTable->setObjectName("tableView");
@@ -36,10 +56,12 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
             if (vbxLayout != 0)
                 vbxLayout->insertLayout(0, tableLayout);
         }
-        else {
+        else
+        {   // Была загружена пользовательская форма
             tableLayout = (QHBoxLayout*)qFindChild<QHBoxLayout*>(formWidget, "tableLayout");
             grdTable = (TableView*)qFindChild<QTableWidget*>(formWidget, "tableView");
-            if (grdTable != 0) {
+            if (grdTable != 0)
+            {
                 grdTable->setApp(app);
                 grdTable->setParent(formWidget);
                 grdTable->setFormGrid(this);
@@ -53,15 +75,17 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
 
         if (parent != 0)
             photoPath = parent->getPhotoPath();
-        if (photoPath.size() > 0) {                                // Если есть фотографии, то будем отображать их
-            if (defaultForm) {
+        if (photoPath.size() > 0)
+        {                                // Если есть фотографии, то будем отображать их
+            if (defaultForm)
+            {
                 picture = new Picture(formWidget);
                 picture->setObjectName("picture");
             }
-            else {
+            else
                 picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
-            }
-            if (picture != 0) {
+            if (picture != 0)
+            {
                 imageLayout = new QVBoxLayout();
                 imageLayout->setObjectName("imageLayout");
                 imageLayout->addWidget(picture, 1, Qt::AlignTop);
@@ -73,16 +97,18 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
         }
 
         // Подключим кнопку "Печать"
-        if (parent != 0 && parent->isPrintable()) {
-            if (defaultForm) {
+        if (parent != 0 && parent->isPrintable())
+        {
+            if (defaultForm)
+            {
                 buttonPrint = new QPushButton(tr("&Печать"));
                 buttonPrint->setObjectName("buttonPrint");
             }
-            else {
+            else
                 if (formWidget != 0)
                     buttonPrint = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonPrint");
-            }
-            if (buttonPrint != 0) {
+            if (buttonPrint != 0)
+            {
                 connect(buttonPrint, SIGNAL(clicked()), this, SLOT(cmdPrint()));
                 cmdButtonLayout->insertWidget(0, buttonPrint);
             }
@@ -90,25 +116,30 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
                 parent->setPrintable(false);
         }
         // Подключим кнопку "Обновить"
-        if (defaultForm) {
+        if (defaultForm)
+        {
             buttonRequery = new QPushButton(tr("&Обновить"));
             buttonRequery->setObjectName("buttonRequery");
         }
         else
             buttonRequery = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonRequery");
-        if (buttonRequery != 0) {
+        if (buttonRequery != 0)
+        {
             connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
             cmdButtonLayout->insertWidget(0, buttonRequery);
         }
         // Подключим кнопку "Просмотреть"
-        if (parent != 0 && parent->isViewable()) {
-            if (defaultForm) {
+        if (parent != 0 && parent->isViewable())
+        {
+            if (defaultForm)
+            {
                 buttonView = new QPushButton(tr("&Просмотреть"));
                 buttonView->setObjectName("buttonView");
             }
             else
                 buttonView = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonView");
-            if (buttonView != 0) {
+            if (buttonView != 0)
+            {
                 connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
                 cmdButtonLayout->insertWidget(0, buttonView);
             }
@@ -116,14 +147,17 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
                 parent->setViewable(false);
         }
         // Подключим кнопку "Удалить"
-        if (parent != 0 && parent->isDeleteable()) {
-            if (defaultForm) {
+        if (parent != 0 && parent->isDeleteable())
+        {
+            if (defaultForm)
+            {
                 buttonDelete = new QPushButton(tr("&Удалить"));
                 buttonDelete->setObjectName("buttonDelete");
             }
             else
                 buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
-            if (buttonDelete != 0) {
+            if (buttonDelete != 0)
+            {
                 connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
                 cmdButtonLayout->insertWidget(0, buttonDelete);
             }
@@ -131,14 +165,17 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
                 parent->setDeleteable(false);
         }
         // Подключим кнопку "Добавить"
-        if (parent != 0 && parent->isInsertable()) {
-            if (defaultForm) {
+        if (parent != 0 && parent->isInsertable())
+        {
+            if (defaultForm)
+            {
                 buttonAdd = new QPushButton(tr("&Добавить"));
                 buttonAdd->setObjectName("buttonAdd");
             }
             else
                 buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
-            if (buttonAdd != 0) {
+            if (buttonAdd != 0)
+            {
                 connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
                 cmdButtonLayout->insertWidget(0, buttonAdd);
             }
@@ -150,7 +187,9 @@ bool FormGrid::open(QWidget* pwgt, Essence* par) {
     return false;
 }
 
-void FormGrid::close() {
+
+void FormGrid::close()
+{
     QItemSelectionModel* model = grdTable->selectionModel();
     delete model;
     if (defaultForm)
@@ -158,59 +197,81 @@ void FormGrid::close() {
     Form::close();
 }
 
-void FormGrid::doShow() {
+
+void FormGrid::doShow()
+{
     Form::doShow();
     setShowFocus();
 }
 
-void FormGrid::cmdAdd() {
+
+void FormGrid::cmdAdd()
+{
     if (parent != 0 && parent->add())
         add();
 }
 
-void FormGrid::cmdDelete() {
+
+void FormGrid::cmdDelete()
+{
     if (parent != 0 && parent->remove())
         remove();
 }
 
-void FormGrid::cmdView() {
+
+void FormGrid::cmdView()
+{
     if (parent != 0)
         parent->view();
 //    setShowFocus();
 }
 
-void FormGrid::showPhoto() {
-    if (picture && parent != 0) {
+
+void FormGrid::showPhoto()
+{
+    if (picture && parent != 0)
+    {
         QString photoFileName = photoPath + "/" + parent->getValue("код").toString().trimmed() + ".jpg";
         picture->show(photoFileName);
     }
 }
 
-QString FormGrid::getColumnHeader(QString columnName) {
+
+QString FormGrid::getColumnHeader(QString columnName)
+{
     return tableModel->headerData(tableModel->fieldIndex(columnName), Qt::Horizontal).toString();
 }
 
-int FormGrid::getCurrentRowIndex() {
+
+int FormGrid::getCurrentRowIndex()
+{
     QModelIndex index = grdTable->currentIndex();
     return index.row();
 }
 
-QVariant FormGrid::getValue(QString fieldName) {
+
+QVariant FormGrid::getValue(QString fieldName)
+{
     if (lSelected && parent != 0)
         return parent->getValue(fieldName);
     return QVariant();
 }
 
-int FormGrid::getHeaderIndex(QString headName) {
+
+int FormGrid::getHeaderIndex(QString headName)
+{
     QHeaderView* header = grdTable->horizontalHeader();
-    for (int i = 0; tableModel->columnCount(); i++) {
+    for (int i = 0; tableModel->columnCount(); i++)
+    {
         if (tableModel->headerData(i, Qt::Horizontal) == headName)
             return header->visualIndex(i);
     }
     return -1;
 }
 
+
 /*
+// Пока не будем использовать
 void FormGrid::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_F2) {
         cmdView();
@@ -220,30 +281,40 @@ void FormGrid::keyPressEvent(QKeyEvent* event) {
 }
 */
 
-void FormGrid::setGridFocus() {
+
+void FormGrid::setGridFocus()
+{
     formWidget->activateWindow();
     if (grdTable != 0)
         grdTable->setFocus();
 }
 
-void FormGrid::setShowFocus() {
+
+void FormGrid::setShowFocus()
+{
     setGridFocus();
 }
 
-void FormGrid::showEvent(QShowEvent* event) {
+
+void FormGrid::showEvent(QShowEvent* event)
+{
     Q_UNUSED(event);          // Просто избавимся от предупреждения о не используемой переменной
     setShowFocus();
 }
 
-void FormGrid::cmdPrint() {
+
+void FormGrid::cmdPrint()
+{
     QDir dir = QDir(REPORT_DIR);
     QStringList files = dir.entryList(QStringList(parent->getConfigName() + ".*.ods"), QDir::Files, QDir::Name);
     QStringList reports;
     QMenu* menu = new QMenu(formWidget);
     QAction* newReportAct = menu->addAction(QObject::tr("Создать новый отчет..."));
-    if (files.size() > 0) {
+    if (files.size() > 0)
+    {
         menu->addSeparator();
-        for (int i = 0; i < files.size(); i++) {
+        for (int i = 0; i < files.size(); i++)
+        {
             QString file = files.at(i);
             file.remove(parent->getConfigName() + ".", Qt::CaseInsensitive);
             file.remove(".ods", Qt::CaseInsensitive);
@@ -252,13 +323,17 @@ void FormGrid::cmdPrint() {
         }
     }
     QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
-    if (cmdButtonLayout != 0) {
+    if (cmdButtonLayout != 0)
+    {
         QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));
-        if (action > 0) {
-            if (action == newReportAct) {
+        if (action > 0)
+        {
+            if (action == newReportAct)
+            {
                 QString reportName;                         // Создадим имя отчета по умолчанию
                 int i = 1;
-                do {
+                do
+                {
                     reportName = QString("Отчет%1").arg(i++);
                 } while (reports.contains(reportName));
                 bool ok;
@@ -275,51 +350,63 @@ void FormGrid::cmdPrint() {
     FormGrid::setShowFocus();
 }
 
-void FormGrid::add() {
+
+void FormGrid::add()
+{
     cmdRequery();
-    if (parent->getIdFieldName().size() > 0) {         // Если существует ключевое поле
+    if (parent->getIdFieldName().size() > 0)
+    {         // Если существует ключевое поле
        int maxIndex = 0;
        qulonglong maxValue = 0;
-       for (int i = 0; i < parent->getMyRelationalTableModel()->rowCount(); i++) {
+       for (int i = 0; i < parent->getMyRelationalTableModel()->rowCount(); i++)
+       {
           qulonglong value = parent->getId(i);
-          if (value > maxValue) {
+          if (value > maxValue)
+          {
               maxValue = value;
               maxIndex = i;
           }
        }
        grdTable->selectRow(maxIndex);
     }
-    if (parent->getMyRelationalTableModel()->rowCount() > 0) {
+    if (parent->getMyRelationalTableModel()->rowCount() > 0)
+    {
         if (buttonDelete != 0)
             buttonDelete->setDisabled(false);
     }
 }
 
-void FormGrid::remove() {
+void FormGrid::remove()
+{
     int row = getCurrentRowIndex();
     cmdRequery();
     int rowCount = parent->getMyRelationalTableModel()->rowCount();
-    if (rowCount > 0) {
+    if (rowCount > 0)
+    {
         if (row < (rowCount - 1))
             grdTable->selectRow(row);
         else
             grdTable->selectRow((rowCount - 1));
     }
-    else {
+    else
         if (buttonDelete != 0)
             buttonDelete->setDisabled(true);
-    }
 }
 
-void FormGrid::query(QString param) {
+
+void FormGrid::query(QString param)
+{
     int currentRow = grdTable->currentIndex().row();
     parent->query(param);
     showGridLine(currentRow);
     FormGrid::setShowFocus();
 }
 
-void FormGrid::showGridLine(int currentRow) {
-    if (parent->getTableModel()->rowCount() > 0) {                      // Если есть что показывать
+
+void FormGrid::showGridLine(int currentRow)
+{
+    if (parent->getTableModel()->rowCount() > 0)
+    {                      // Если есть что показывать
         if ((currentRow >= 0) && (currentRow < parent->getTableModel()->rowCount()))
             grdTable->selectRow(currentRow);
         else
@@ -327,15 +414,20 @@ void FormGrid::showGridLine(int currentRow) {
     }
 }
 
-void FormGrid::readSettings() {
+
+void FormGrid::readSettings()
+{
     Form::readSettings();
-    if (grdTable != 0) {
+    if (grdTable != 0)
+    {
         QSettings settings;
-        if (settings.status() == QSettings::NoError) {
+        if (settings.status() == QSettings::NoError)
+        {
             settings.beginGroup(configName);
             int columnCount = settings.beginReadArray("grid");
             int i = 0;
-            while (i < columnCount) {
+            while (i < columnCount)
+            {
                 settings.setArrayIndex(i);
                 int width = settings.value("width", 100).toInt();
                 grdTable->setColumnWidth(i, (width == 0 ? 10: width));
@@ -347,15 +439,19 @@ void FormGrid::readSettings() {
     }
 }
 
-void FormGrid::writeSettings() {
+
+void FormGrid::writeSettings()
+{
     Form::writeSettings();
-    if (grdTable != 0) {
+    if (grdTable != 0)
+    {
         QSettings settings;
         int columnCount = grdTable->model()->columnCount();
         settings.beginGroup(configName);
         settings.beginWriteArray("grid", columnCount);
         int i = 0;
-        while (i < columnCount) {
+        while (i < columnCount)
+        {
             settings.setArrayIndex(i);
             settings.setValue("width", grdTable->columnWidth(i));
             i++;
@@ -365,36 +461,45 @@ void FormGrid::writeSettings() {
     }
 }
 
-QDomElement FormGrid::createWidgetsStructure() {
+
+QDomElement FormGrid::createWidgetsStructure()
+{
     QDomDocument doc;
     QDomElement vboxLayout = Form::createWidgetsStructure();
     QDomElement item, layout;
-    for (int i = 0; vboxLayout.childNodes().count(); i++) {
+    for (int i = 0; vboxLayout.childNodes().count(); i++)
+    {
         item = vboxLayout.childNodes().at(i).firstChildElement("widget");
         if (!item.isNull()) {
            layout = item.firstChildElement("layout");
-            if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0) {
-                if (buttonPrint != 0) {
+            if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0)
+            {
+                if (buttonPrint != 0)
+                {
                     item = doc.createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonPrint));
                     layout.insertBefore(item, QDomNode());
                 }
-                if (buttonRequery != 0) {
+                if (buttonRequery != 0)
+                {
                     item = doc.createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonRequery));
                     layout.insertBefore(item, QDomNode());
                 }
-                if (buttonView != 0) {
+                if (buttonView != 0)
+                {
                     item = doc.createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonView));
                     layout.insertBefore(item, QDomNode());
                 }
-                if (buttonDelete != 0) {
+                if (buttonDelete != 0)
+                {
                     item = doc.createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonDelete));
                     layout.insertBefore(item, QDomNode());
                 }
-                if (buttonAdd != 0) {
+                if (buttonAdd != 0)
+                {
                     item = doc.createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonAdd));
                     layout.insertBefore(item, QDomNode());
@@ -403,12 +508,14 @@ QDomElement FormGrid::createWidgetsStructure() {
             }
         }
     }
-    if (tableLayout != 0) {
+    if (tableLayout != 0)
+    {
         QDomElement widget, hlayout;
         hlayout = doc.createElement("layout");
         hlayout.setAttribute("class", "QHBoxLayout");
         hlayout.setAttribute("name", tableLayout->objectName());
-        if (grdTable != 0) {
+        if (grdTable != 0)
+        {
             widget = doc.createElement("widget");
             widget.setAttribute("class", grdTable->metaObject()->className());
             widget.setAttribute("name", grdTable->objectName());
@@ -416,7 +523,8 @@ QDomElement FormGrid::createWidgetsStructure() {
             item.appendChild(widget);
             hlayout.appendChild(item);
         }
-        if (picture != 0) {
+        if (picture != 0)
+        {
             widget = doc.createElement("widget");
             widget.setAttribute("class", picture->metaObject()->className());
             widget.setAttribute("name", picture->objectName());

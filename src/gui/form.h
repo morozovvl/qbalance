@@ -42,21 +42,21 @@ public slots:
     virtual void cmdCancel();
 
 protected:
-    QDialog*      formWidget;
-    Essence*      parent;
-    bool          lSelected;
-    bool          defaultForm;
-    QString       configName;
-    bool          iconsSeted;
+    QDialog*        formWidget;
+    Essence*        parent;
+    bool            lSelected;
+    bool            defaultForm;
+    QString         configName;
+    bool            iconsSeted;
 
-    ScriptEngine* engine;
-    QString       script;
-    QScriptValue  scripts;
+    ScriptEngine*   engine;
+    QString         script;
+    QScriptValue    scripts;
 
-    QHBoxLayout* cmdButtonLayout;
-    QVBoxLayout* vbxLayout;
-    QPushButton* buttonOk;
-    QPushButton* buttonCancel;
+    QHBoxLayout*    cmdButtonLayout;
+    QVBoxLayout*    vbxLayout;
+    QPushButton*    buttonOk;
+    QPushButton*    buttonCancel;
 
     virtual int doExec();
     virtual void doShow();
