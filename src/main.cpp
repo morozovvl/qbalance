@@ -20,12 +20,11 @@ QString         programNameFieldName;
 QString         programResourcesFile;
 
 App* app;
-QTextCodec* codec;
 
 bool readParameters(int argc, char *argv[]) {
     bool lContinue = true;
     QTextStream out(stdout);
-    out.setCodec(codec);
+    out.setCodec(App::codec());
     for (int i = 1; i < argc; i++) {
         if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0) {
@@ -77,19 +76,14 @@ void test() {
 int main(int argc, char **argv)
 {
     QApplication application(argc, argv);
-    codec = QTextCodec::codecForName("UTF-8");
-#ifdef Q_OS_WIN32
-    if (QSysInfo::windowsVersion() != QSysInfo::WV_WINDOWS7)
-        codec = QTextCodec::codecForName("Windows-1251");
-#endif
 
-    QTextCodec::setCodecForTr(codec);
-    QTextCodec::setCodecForCStrings(codec);
-    QTextCodec::setCodecForLocale(codec);
+    QTextCodec::setCodecForTr(App::codec());
+    QTextCodec::setCodecForCStrings(App::codec());
+    QTextCodec::setCodecForLocale(App::codec());
 
     // Инициируем переменные, которые нуждаются в этом
-    programMaxSumMask = programMaxSumMask.replace(".", QApplication::keyboardInputLocale().decimalPoint());
-    programIdFieldName = QObject::tr("код");
+    programMaxSumMask    = programMaxSumMask.replace(".", QApplication::keyboardInputLocale().decimalPoint());
+    programIdFieldName   = QObject::tr("код");
     programNameFieldName = QObject::tr("имя");
     programResourcesFile = QDir::currentPath() + "/src/resources.qrc";
 
