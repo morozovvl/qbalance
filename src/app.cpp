@@ -85,3 +85,17 @@ QString App::getFormsPath(QString formName) {
     return fileName;
 }
 
+QString App::encoding()
+{
+    QString result("UTF-8");
+#ifdef Q_OS_WIN32
+    if (QSysInfo::windowsVersion() != QSysInfo::WV_WINDOWS7)
+        result = "Windows-1251";
+#endif
+    return result;
+}
+
+QTextCodec* App::codec()
+{
+    return QTextCodec::codecForName(encoding().toLatin1());
+}

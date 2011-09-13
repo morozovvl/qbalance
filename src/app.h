@@ -50,6 +50,9 @@ public:
     void setBeginDate(QDate date) { beginDate = date; }
     void setEndDate(QDate date) { endDate = date; }
 
+    static QString encoding();
+    static QTextCodec* codec();
+
 public slots:
     void showError(QString error) { gui->showError(error); }
     void showCriticalError(QString error) { gui->showCriticalError(error); }
