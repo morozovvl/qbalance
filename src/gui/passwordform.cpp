@@ -1,6 +1,6 @@
 #include <QComboBox>
 #include <QLineEdit>
-#include <QGridLayout>
+#include <QFormLayout>
 #include <QLabel>
 #include <QString>
 #include <QStringList>
@@ -17,22 +17,18 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 {
     if (Form::open(pwgt))
     {
-	pcmbLogin = new QComboBox;
-	ptxtPassword = new QLineEdit;
-	ptxtPassword->setEchoMode(QLineEdit::Password);
+        LoginSelector = new QComboBox;
+        PasswordEditor = new QLineEdit;
+        PasswordEditor->setEchoMode(QLineEdit::Password);
 
-        QLabel* plblLogin = new QLabel(tr("Логин:"));
-        QLabel* plblPassword = new QLabel(tr("Пароль:"));
+        QFormLayout* layout = new QFormLayout;
 
-	QGridLayout* ptopLayout = new QGridLayout;
-	ptopLayout->addWidget(plblLogin, 0, 0, Qt::AlignRight);
-	ptopLayout->addWidget(plblPassword, 1, 0, Qt::AlignRight);
-	ptopLayout->addWidget(pcmbLogin, 0, 1);
-	ptopLayout->addWidget(ptxtPassword, 1, 1);
+        layout->addRow(tr("Логин:"), LoginSelector);
+        layout->addRow(tr("Пароль:"), PasswordEditor);
 
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
-            vbxLayout->insertLayout(0, ptopLayout);
+            vbxLayout->insertLayout(0, layout);
         return true;
     }
     return false;
@@ -40,21 +36,21 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 
 
 void PassWordForm::addLogin(QString login) {
-	pcmbLogin->addItem(login);
-        pcmbLogin->setCurrentIndex(0);
-        pcmbLogin->repaint();
+        LoginSelector->addItem(login);
+        LoginSelector->setCurrentIndex(0);
+        LoginSelector->repaint();
 ;	}
 
 void PassWordForm::addLogin(QStringList list) {
-	pcmbLogin->addItems(list);
-        pcmbLogin->setCurrentIndex(0);
-        pcmbLogin->repaint();
+        LoginSelector->addItems(list);
+        LoginSelector->setCurrentIndex(0);
+        LoginSelector->repaint();
         }
 
 void PassWordForm::cmdOk() {
     Form::cmdOk();
-    login = pcmbLogin->currentText();
-    password = ptxtPassword->text();
+    login = LoginSelector->currentText();
+    password = PasswordEditor->text();
     writeSettings();
 }
 
@@ -68,7 +64,7 @@ void PassWordForm::readSettings() {
     if (settings.status() == QSettings::NoError) {
         QString user = settings.value("defaultUser").toString();
         if (user.size() > 0)
-            pcmbLogin->setCurrentIndex(pcmbLogin->findText(user));
+            LoginSelector->setCurrentIndex(LoginSelector->findText(user));
     }
 }
 

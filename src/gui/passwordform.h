@@ -23,8 +23,8 @@ protected:
 private:
         QString login;
         QString password;
-        QComboBox* pcmbLogin;
-        QLineEdit* ptxtPassword;
+        QComboBox* LoginSelector;
+        QLineEdit* PasswordEditor;
         void cmdOk();
 };
 
