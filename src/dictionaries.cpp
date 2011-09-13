@@ -42,19 +42,19 @@ void Dictionaries::removeDictionary(QString dictName) {
 
 
 QVariant Dictionaries::getDictionaryProperty(QString dictName, QString property) {
-    if (dictionariesProperties.first()) {
-        do {
-            QSqlRecord rec = dictionariesProperties.record();
-            if (rec.field("таблица").value().toString().trimmed().toUpper() == dictName.trimmed().toUpper())
-                return rec.field(property).value().toString().trimmed();
-        } while (dictionariesProperties.next());
+    QVariant result;
+
+    for (dictionariesProperties.first(); result.isNull() && dictionariesProperties.isValid(); dictionariesProperties.next()) {
+        QSqlRecord record = dictionariesProperties.record();
+        if (record.field("таблица").value().toString().trimmed().toUpper() == dictName.trimmed().toUpper())
+            result = record.field(property).value().toString().trimmed();
     }
-    return "";
+    return result;
 }
 
 QString Dictionaries::getDictionaryTitle(QString dictName) {
     QString title = getDictionaryProperty(dictName, programNameFieldName).toString();
-    if (title.size() > 0)
+    if (!title.isEmpty())
         return title;
     return getDictionaryProperty(dictName, "таблица").toString();
 }

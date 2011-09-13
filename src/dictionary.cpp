@@ -147,7 +147,7 @@ bool Dictionary::doOpen(int deep) {
         }
     }
     QString dictTitle = app->getDictionaries()->getDictionaryTitle(tableName);
-    if (dictTitle.size() == 0)
+    if (dictTitle.isEmpty())
         dictTitle = tableName;
     showError(QString(QObject::tr("Запрещено просматривать справочник %1 пользователю %2. Либо справочник отсутствует.")).arg(dictTitle).arg(app->getLogin()));
     return false;
