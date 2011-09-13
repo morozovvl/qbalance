@@ -12,4 +12,7 @@
         <file alias="noimage">resources/noimage.png</file>
         <file alias="searchparameters">resources/searchparameters.png</file>
     </qresource>
+    <qresource prefix="/postgres">
+        <file>initdb0.sql</file>
+    </qresource>
 </RCC>
