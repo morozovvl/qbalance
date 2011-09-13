@@ -6,7 +6,6 @@
 #include <QtSql>
 #include <QDate>
 #include <QVariantList>
-//#include "table.h"
 
 class App;
 extern App* app;
@@ -61,6 +60,9 @@ public:
 
     bool isError() { return wasError; }
     QString getErrorText() { return errorText; }
+
+    QString initializationScriptPath() const;
+    QStringList initializationScriptList() const;
 
 private:
     QSqlDatabase* db;

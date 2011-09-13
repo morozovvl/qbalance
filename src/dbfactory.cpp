@@ -27,7 +27,7 @@ DBFactory::DBFactory()
 bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
 // Создает новую БД на сервере, если она отсутствует
 {
-    bool    lResult = false;
+    bool    lResult = true;
     QString defaultDatabase = getDatabaseName();
     setHostName(hostName);
     setDatabaseName("postgres");
@@ -37,58 +37,54 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
     frm.addLogin("postgres");
     if (frm.exec())
     {
-        QString     login = frm.getLogin();
-        QString     password = frm.getPassword();
+        const QString login = frm.getLogin();
+        const QString password = frm.getPassword();
         if (open(login, password))
         {
-            int scriptCounter = 0;
-            QDir* dir = new QDir();
-            QString initScriptFileName = QDir::currentPath() + QString("/src/initdb%1.sql").arg(scriptCounter);
-            if (dir->exists(initScriptFileName))
+            //Drake
+            //Базу данных следует всегда создавать в UTF-8
+            //т.к. есть возможность возвращать данные на клиент в нужной кодировке
+            const QString encoding = "UTF-8";
+            if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName).arg(encoding)))
             {
-#ifdef Q_OS_WIN32
-                QString     encoding = "WIN1251";
-#else
-                QString     encoding = "UTF-8";
-#endif
-                if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName).arg(encoding)))
+                close();
+                //Drake
+                //Нет смысла создавать локальный временный экземпляр в куче
+                //Лучше на стеке - система его удалит
+
+                const QStringList scripts = initializationScriptList();
+
+                QDir dir;
+
+                for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
                 {
-                    close();
-                    forever
+                    if (dir.exists(*script))
                     {
-                        QProcess* proc = new QProcess();
+                        QProcess* proc          = new QProcess();
                         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
                         env.insert("PGPASSWORD", password);
                         proc->setProcessEnvironment(env);
-                        proc->start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName).arg(port).arg(initScriptFileName).arg(dbName));
-                        if (!proc->waitForStarted())
-                        {
-                            app->showError(QObject::tr("Не удалось запустить psql"));                   // выдадим сообщение об ошибке и выйдем из цикла
-                            break;
+                        proc->start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
+
+                        lResult = proc->waitForStarted();
+
+                        if (!lResult)
+                        {// выдадим сообщение об ошибке и выйдем из цикла
+                            app->showError(QObject::tr("Не удалось запустить psql"));
                         }
                         else
-                            if (proc->waitForFinished())
+                        {
+                            lResult = proc->waitForFinished();
+                            if (!lResult)
                             {
-                                // Скрипт инициализации загрузился успешно, попробуем загрузить следующий
-                                scriptCounter++;
-                                initScriptFileName = QDir::currentPath() + QString("/src/initdb%1.sql").arg(scriptCounter);
-                                if (!dir->exists(initScriptFileName)) {
-                                    lResult = true;     // Больше скриптов инициалиализации нет, выходим, но считаем, что отработали успешно
-                                    break;
-                                }
+                                app->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
                             }
-                            else
-                            {
-                                app->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(initScriptFileName));
-                                break;
-                            }
+                        }
                     }
+                    else
+                        app->showCriticalError(QString(QObject::tr("Не найден файл инициализации БД <%1>.")).arg(*script));
                 }
-                else
-                    app->showError(getErrorText());
             }
-            else
-                app->showCriticalError(QString(QObject::tr("Не найден файл инициализации БД <%1>.")).arg(initScriptFileName));
        }
        else
           app->showCriticalError(QObject::tr("Не удалось создать соединение с сервером."));
@@ -426,4 +422,30 @@ void DBFactory::setConstDictId(QString fieldName, QVariant val, int docId, int o
 {
     clearError();
     exec(QString("UPDATE проводки SET %1 = %2 WHERE доккод = %3 AND опер = %4 AND номеропер = %5").arg(fieldName).arg(val.toString()).arg(docId).arg(oper).arg(operNum));
+}
+
+QString DBFactory::initializationScriptPath() const
+{
+    QString result = QCoreApplication::applicationDirPath();
+
+    result.append("/src/");
+
+    return result;
+}
+QStringList DBFactory::initializationScriptList() const
+{
+    QStringList result;
+
+    QDir dir(initializationScriptPath());
+    dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
+    dir.setSorting(QDir::Name | QDir::IgnoreCase);
+    dir.setNameFilters(QStringList() << ".sql");
+    QFileInfoList files = dir.entryInfoList();
+
+    for (QFileInfoList::const_iterator file = files.constBegin(); file != files.constEnd(); ++file)
+    {
+        result.append(file->canonicalFilePath());
+    }
+
+    return result;
 }
