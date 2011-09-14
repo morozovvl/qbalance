@@ -16,9 +16,9 @@ extern QString programNameFieldName;
 DBFactory::DBFactory()
 : Custom()
 {
-    cHostName = "localhost";
+    hostName = "localhost";
     port = 5432;
-    cDbName = "enterprise";
+    dbName = "enterprise";
     clearError();
     db = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL"));
 }
@@ -122,11 +122,12 @@ bool DBFactory::doOpen()
 bool DBFactory::doOpen(QString login, QString password)
 {
     clearError();
-    db->setHostName(cHostName);
-    db->setDatabaseName(cDbName);
+    db->setHostName(hostName);
+    db->setDatabaseName(dbName);
     db->setPort(port);
     if (db->open(login, password)) {
         currentLogin = login;
+        initObjectNames();              // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
         return true;
     }
     else
@@ -422,8 +423,9 @@ void DBFactory::getPeriod(QDate& begDate, QDate& endDate)
 void DBFactory::setConstDictId(QString fieldName, QVariant val, int docId, int oper, int operNum)
 {
     clearError();
-    exec(QString("UPDATE проводки SET %1 = %2 WHERE доккод = %3 AND опер = %4 AND номеропер = %5").arg(fieldName).arg(val.toString()).arg(docId).arg(oper).arg(operNum));
+    exec(QString("UPDATE %1 SET %2 = %3 WHERE доккод = %4 AND опер = %5 AND номеропер = %6").arg(getObjectName("проводки")).arg(fieldName).arg(val.toString()).arg(docId).arg(oper).arg(operNum));
 }
+
 
 QString DBFactory::initializationScriptPath() const
 {
@@ -433,6 +435,8 @@ QString DBFactory::initializationScriptPath() const
 
     return result;
 }
+
+
 QStringList DBFactory::initializationScriptList() const
 {
     QStringList result;
@@ -450,3 +454,24 @@ QStringList DBFactory::initializationScriptList() const
 
     return result;
 }
+
+
+void DBFactory::initObjectNames()
+{
+// Пока заполняем таблицу "один к одному" без изменения, чтобы можно было работать с существующей БД
+// Если объекты БД поменяют названия, то нужно будет поменять их здесь, либо переписать функцию
+    ObjectNames.insert("проводки", "проводки");
+}
+
+
+QString DBFactory::getObjectName(QString name) const
+// транслирует имена объектов БД из "внутренних" в реальные наименования
+{
+    QMap<QString, QString>::const_iterator i = ObjectNames.find(name);
+    if ( i == ObjectNames.end())
+    {
+        return QString();
+    }
+    return ObjectNames.value(i.key());
+}
+

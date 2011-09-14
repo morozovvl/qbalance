@@ -31,10 +31,10 @@ public:
     void clearError();
     bool createNewDB(QString, QString, int);
     bool open(QString login, QString password) { return doOpen(login, password); }
-    QString getHostName() { return cHostName; }
+    QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
     int getPort() { return port; }
-    QString getDatabaseName() { return cDbName; }
+    QString getDatabaseName() { return dbName; }
     QSqlQuery getColumnsHeaders(QString);
     QSqlQuery getDictionariesProperties();
     QStringList getFieldsList(QMap<int, fldType>*);
@@ -46,9 +46,9 @@ public:
     QString getPhotoDatabase();
     bool insertDictDefault(QString tableName, QStringList fields = QStringList(), QVariantList values = QVariantList());// Вставляет в справочник новую строку со значениями по умолчанию
     bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
-    void setHostName(QString name) { cHostName = name; }
+    void setHostName(QString name) { hostName = name; }
     void setPort(int portNum) { port = portNum; }
-    void setDatabaseName(QString name) { cDbName = name; }
+    void setDatabaseName(QString name) { dbName = name; }
     void setPeriod(QDate, QDate);
     void getPeriod(QDate&, QDate&);
     void setConstDictId(QString, QVariant, int, int, int);
@@ -64,18 +64,23 @@ public:
     QString initializationScriptPath() const;
     QStringList initializationScriptList() const;
 
+    QString getObjectName(QString) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
+
 private:
-    QSqlDatabase* db;
-    QString cHostName;
-    QString currentLogin;
-    int port;
-    QString cDbName;
-    bool wasError;
-    QString errorText;
+    QSqlDatabase*           db;
+    QString                 hostName;           // URL сервера
+    int                     port;               // порт сервера
+    QString                 currentLogin;       // логин, под которым работает пользователь
+    QString                 dbName;             // наименование базы, с которой работает пользователь
+    bool                    wasError;           // во время обращения к БД произошла ошибка
+    QString                 errorText;          // текст последней ошибки
+    QMap<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
+
     void setError(QString);
     virtual bool doOpen();
     virtual bool doOpen(QString, QString);
     virtual void doClose();
+    void initObjectNames();
 };
 
 #endif

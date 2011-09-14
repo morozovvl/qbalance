@@ -106,8 +106,8 @@ bool Dictionary::doOpen(int deep) {
                 int columnCount = fieldList.count();
                 for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
                     QString name = fieldList.at(i).toLower();
-                    if (name.left(4) == idFieldName + "_") {         // Если поле ссылается на другую таблицу
-                            name.remove(0, 4);                  // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                    if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                            name.remove(0, 4);                      // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                             app->getDictionaries()->addDictionary(name, deep--);
                             Dictionary* dict = app->getDictionaries()->getDictionary(name);
                             if (dict != NULL) {                 // Если удалось открыть справочник

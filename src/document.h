@@ -39,9 +39,10 @@ public:
 protected:
     virtual void setForm();
 private:
-    QMap<QString, Dictionary*>* dicts;              // Объекты справочников
-    Dictionaries* dictionaries;                    // Объекты справочников
-    Documents* parent;
+    QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
+    Dictionaries*                   dictionaries;       // Объекты справочников
+    Documents*                      parent;
+    DBFactory*                      DbFactory;
     int operNumber;
     int docId;
     int prv1;
