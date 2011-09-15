@@ -13,7 +13,9 @@ extern QString programErrorFileName;
 extern QString programIdFieldName;
 extern QString programNameFieldName;
 
-Document::Document(int oper, Documents* par) : Essence() {
+
+Document::Document(int oper, Documents* par) : Essence()
+{
     Dictionary* dict;
     DbFactory = app->getDBFactory();
     parent = par;
@@ -25,12 +27,13 @@ Document::Document(int oper, Documents* par) : Essence() {
     idFieldName = "p1__" + programIdFieldName;
 
     dictionaries = new Dictionaries;
-    if (dictionaries->open()) {
+    if (dictionaries->open())
+    {
         dicts = dictionaries->getDictionaries();
     }
 
     // Загрузим описание типовой операции
-    toper.setTable("vw_топер");
+    toper.setTable(DbFactory->getObjectName("vw_топер"));
     toper.setFilter(QString("опер=%1").arg(operNumber));
     toper.setSort(2, Qt::AscendingOrder);
     toper.setEditStrategy(QSqlTableModel::OnManualSubmit);
@@ -40,7 +43,8 @@ Document::Document(int oper, Documents* par) : Essence() {
     int i;
     QString dictName;
     QList<QString> spravList;
-    for (i = 0; i < toper.rowCount(); i++) {
+    for (i = 0; i < toper.rowCount(); i++)
+    {
         // получим имя дебетового справочника из описания проводок
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
 
@@ -65,9 +69,11 @@ Document::Document(int oper, Documents* par) : Essence() {
     }
 
     QModelIndex index;
-    for (i = 0; i < toper.rowCount(); i++) {
+    for (i = 0; i < toper.rowCount(); i++)
+    {
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
-        if (dictName.size() > 0) {
+        if (dictName.size() > 0)
+        {
             index = toper.index(i, toper.record().indexOf("дбсправалиас"));
             if (dicts->contains("дб" + dictName) && dicts->contains("кр" + dictName))
                 toper.setData(index, QVariant("дб" + dictName));
@@ -75,7 +81,8 @@ Document::Document(int oper, Documents* par) : Essence() {
                 toper.setData(index, QVariant(dictName));
         }
         dictName = toper.record(i).value("крсправ").toString().trimmed();
-        if (dictName.size() > 0) {
+        if (dictName.size() > 0)
+        {
             index = toper.index(i, toper.record().indexOf("крсправалиас"));
             if (dicts->contains("кр" + dictName) && dicts->contains("дб" + dictName))
                 toper.setData(index, QVariant("кр" + dictName));
@@ -88,12 +95,15 @@ Document::Document(int oper, Documents* par) : Essence() {
     for (i = 0; i < toper.rowCount(); i++) {
         dictName = toper.record(i).value("крсправ").toString().trimmed();
         if (dictName.size() > 0) {
-            if (toper.record(i).value("кркол").toBool()) {      // Если в кредитовом справочнике ведется количественный учет
+            if (toper.record(i).value("кркол").toBool())
+            {      // Если в кредитовом справочнике ведется количественный учет
                 cAccount = toper.record(i).value("крсчет").toString().trimmed();
                 alias = "saldo" + cAccount;
-                if (!dicts->contains(alias)) {
+                if (!dicts->contains(alias))
+                {
                     Saldo* sal = new Saldo(cAccount, dictName); // ... то заведем справочник сальдо по указанному счету
-                    if (sal->open(1)) {
+                    if (sal->open(1))
+                    {
                         sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
                         sal->setQuan(true);
                         sal->setDictionaries(dictionaries);
@@ -101,11 +111,14 @@ Document::Document(int oper, Documents* par) : Essence() {
                     }
                 }
             }
-            else {
+            else
+            {
                 alias = toper.record(i).value("крсправалиас").toString().trimmed();     // Если количественный учет не ведется
-                if (!dicts->contains(alias)) {
+                if (!dicts->contains(alias))
+                {
                     dict = new Dictionary(dictName, this);                        // ... то заведем обычный справочник
-                    if (dict->open(1)) {
+                    if (dict->open(1))
+                    {
                         dict->setConst(toper.record(i).value("крпост").toBool());
                         dict->setDictionaries(dictionaries);
                         dicts->insert(alias, dict);
@@ -114,13 +127,17 @@ Document::Document(int oper, Documents* par) : Essence() {
             }
         }
     }
-    for (i = 0; i < toper.rowCount(); i++) {
+    for (i = 0; i < toper.rowCount(); i++)
+    {
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
-        if (dictName.size() > 0) {
+        if (dictName.size() > 0)
+        {
             alias = toper.record(i).value("дбсправалиас").toString().trimmed();
-            if (!dicts->contains(alias)) {
+            if (!dicts->contains(alias))
+            {
                 dict = new Dictionary(dictName, this);
-                if (dict->open(1)) {
+                if (dict->open(1))
+                {
                     if (dict->isSet())              // если это набор
                         dict->setAutoAdd(true);     // ... то для дебетовых наборов - автоматическое добавление
                     dict->setDictionaries(dictionaries);
@@ -130,10 +147,12 @@ Document::Document(int oper, Documents* par) : Essence() {
         }
     }
 
-    foreach (QString dictName, dicts->keys()) {
+    foreach (QString dictName, dicts->keys())
+    {
         dict = dicts->value(dictName);
         dict->setCanShow(false);
-        if (QString(dict->objectName()).compare("Saldo", Qt::CaseInsensitive) != 0) {
+        if (QString(dict->objectName()).compare("Saldo", Qt::CaseInsensitive) != 0)
+        {
             dict->setAutoSelect(true);
             dict->setCanShow((dict->isConst() || dict->isSet())? false: true);
         }
@@ -145,6 +164,7 @@ Document::Document(int oper, Documents* par) : Essence() {
 
 Document::~Document() {
 }
+
 
 void Document::getCalculateProperties(const QModelIndex &index) {
     QVariant var;
@@ -179,13 +199,15 @@ void Document::getCalculateProperties(const QModelIndex &index) {
     }
 }
 
-void Document::setOldCalculateProperties(const QModelIndex &index) {
+
+void Document::setOldCalculateProperties(const QModelIndex &index)
+{
     QVariant var;
-    QString dictName;
     prvSaldo sal;
     Essence::setOldCalculateProperties(index);
     saldo.clear();
-    for (int i = 0; i < toper.rowCount(); i++) {
+    for (int i = 0; i < toper.rowCount(); i++)
+    {
         int prv = toper.record(i).value("номер").toInt();
         var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("дбсальдо%1__конкол").arg(prv))));
         sal.dbQuan = (var.isValid() ? var.toDouble() : 0);
@@ -196,18 +218,21 @@ void Document::setOldCalculateProperties(const QModelIndex &index) {
         var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("крсальдо%1__консальдо").arg(prv))));
         sal.crSaldo = (var.isValid() ? var.toDouble() : 0);
         var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("p%1__кол").arg(prv))));
-        if (var.isValid()) {
+        if (var.isValid())
+        {
             sal.dbQuan = sal.dbQuan - var.toDouble();
             sal.crQuan = sal.crQuan + var.toDouble();
         }
         var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("p%1__сумма").arg(prv))));
-        if (var.isValid()) {
+        if (var.isValid())
+        {
             sal.dbSaldo = sal.dbSaldo - var.toDouble();
             sal.crSaldo = sal.crSaldo + var.toDouble();
         }
         saldo.insert(i, sal);
     }
 }
+
 
 bool Document::calculate(const QModelIndex& index) {
     bool lResult = true;
@@ -237,6 +262,7 @@ bool Document::calculate(const QModelIndex& index) {
     return lResult;
 }
 
+
 bool Document::add() {
     unlock();
     foreach (QString dictName, dicts->keys()) {
@@ -251,6 +277,7 @@ bool Document::add() {
     return false;
 }
 
+
 bool Document::remove() {
     if (lDeleteable) {
         if (Essence::remove()) {
@@ -263,7 +290,9 @@ bool Document::remove() {
     return false;
 }
 
-void Document::show() {
+
+void Document::show()
+{
     query();
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
@@ -288,7 +317,9 @@ void Document::show() {
     Essence::show();
 }
 
-void Document::setConstDictId(QString dName, QVariant id) {
+
+void Document::setConstDictId(QString dName, QVariant id)
+{
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
@@ -314,11 +345,15 @@ void Document::setConstDictId(QString dName, QVariant id) {
     Essence::show();
 }
 
-QSqlQuery Document::getColumnsHeaders() {
+
+QSqlQuery Document::getColumnsHeaders()
+{
     return DbFactory->getColumnsHeaders(configName);
 }
 
-bool Document::doOpen() {
+
+bool Document::doOpen()
+{
     lInsertable = app->getDictionaryProperty(tableName, "insertable").toBool();
     lDeleteable = app->getDictionaryProperty(tableName, "deleteable").toBool();
     lUpdateable = app->getDictionaryProperty(tableName, "updateable").toBool();
@@ -329,28 +364,40 @@ bool Document::doOpen() {
     return false;
 }
 
-void Document::doClose() {
+
+void Document::doClose()
+{
     foreach(QString dictName, dicts->keys()) {
         dicts->value(dictName)->close();
     }
     Essence::doClose();
 }
 
-QString Document::transformSelectStatement(QString string) {
+
+void Document::setForm()
+{
+    form = new FormDocument();
+    form->open(parentForm, (Document*)this);
+}
+
+
+void Document::query(QString filter)
+{
+    Essence::query(filter);
+}
+
+
+QString Document::transformSelectStatement(QString string)
+{   // Модифицирует команду SELECT... заменяя пустую секцию WHERE реальным фильтром с номером текущего документа
+    // Вызывается перед каждым запросом содержимого табличной части документа
     string.replace(" WHERE", QString(" WHERE p%3.доккод=%1 AND p%3.опер=%2 AND p%3.номеропер=%3").arg(docId).arg(operNumber).arg(prv1));
     return string;
 }
 
-void Document::setForm() {
-    form = new FormDocument();
-    form->open(parentForm, this);
-}
 
-void Document::query(QString filter) {
-    Essence::query(filter);
-}
-
-void Document::setTableModel() {
+void Document::setTableModel()
+{   // Генерирует заготовку запроса для получения данных для табличной части документа
+    // Вызывается 1 раз
     tableModel = new DocumentTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
@@ -362,36 +409,57 @@ void Document::setTableModel() {
     int keyColumn = 0;
     QStringList updateFields;
     updateFields << "кол" << "цена" << "сумма";
-//    getColumnsProperties()->clear();
     QMap<int, fldType> fields;
-    DbFactory->getColumnsProperties(&fields, DbFactory->getObjectName("проводки"));
-    for (i = 0; i < toper.rowCount(); i++) {
-        prv = toper.record(i).value("номер").toInt();
-        foreach (QString field, prvFieldsList) {
+    DbFactory->getColumnsProperties(&fields, tableName);
+    // Создадим клаузу проводок в секции SELECT
+    for (i = 0; i < toper.rowCount(); i++)
+    {   // Для всех проводок данной типовой операции
+        prv = toper.record(i).value("номер").toInt();       // получим номер проводки в типовой операции
+        foreach (QString field, prvFieldsList)
+        {   // Для всех полей таблицы "проводки"
             if (selectClause.size() > 0)
+            {   // Если уже что-то писали в эту клаузу, то добавим запятую
                 selectClause.append(',');
-            selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));
+            }
+            selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
             if (field == "код")
-                keyColumn = columnCount;
-            if (updateFields.contains(field))                   // Если поле входит в список сохраняемых полей
-                tableModel->setUpdateInfo(columnCount, keyColumn, field);
-            columnCount++;
+            {   // Если в списке полей встретилось поле ключа
+                keyColumn = columnCount;    // Запомним номер столбца с ключом
+            }
+            if (updateFields.contains(field))
+            {    // Если поле входит в список сохраняемых полей
+                tableModel->setUpdateInfo(columnCount, keyColumn, field);   // То сохраним информацию, необходимую для генерации команды сохранения этого поля (номер столбца поля, номер столбца ключа и имя поля)
+            }
+            columnCount++;      // Считаем столбцы
             foreach(int i, fields.keys())
+            {
                 if (fields.value(i).name == field)
+                {
                     DbFactory->addColumnProperties(&fields, QString("p%1__%2").arg(prv).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, fields.value(i).readOnly);
+                }
+            }
         }
-        if (i == 0) {
-            fromClause = QString(" FROM %1 p%2").arg(DbFactory->getObjectName("проводки")).arg(prv);
+        if (i == 0)
+        {
+            fromClause = QString(" FROM %1 p%2").arg(tableName).arg(prv);
             prv1 = prv;
-            whereClause = " WHERE";
+            whereClause = " WHERE";     // Создадим пометку в команде с пустой секцией WHERE.
+                                        // Непосредственно перед отправкой команды на сервер
+                                        // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
+                                        // в фунции transformSelectStatement(QString)
         }
         else
-            fromClause.append(QString(" LEFT OUTER JOIN %1 p%2 ON p%3.доккод=p%2.доккод AND p%3.стр=p%2.стр AND p%3.опер=p%2.опер AND p%2.номеропер=%2").arg(DbFactory->getObjectName("проводки")).arg(prv).arg(prv1));
+        {
+            fromClause.append(QString(" LEFT OUTER JOIN %1 p%2 ON p%3.доккод=p%2.доккод AND p%3.стр=p%2.стр AND p%3.опер=p%2.опер AND p%2.номеропер=%2").arg(tableName).arg(prv).arg(prv1));
+        }
     }
+    // Соберем команду SELECT для проводок табличной части документа
     selectClause = QString("SELECT ").append(selectClause);
     selectStatement = selectClause + fromClause + whereClause;
     selectClause = "SELECT DISTINCT p.*";
     fromClause = " FROM (" + selectStatement + ") p";
+
+    // Приступим к генерации секции SELECT более высокого уровня
     QString dictName;
     QStringList dictsNames;
     Dictionary* dict;
@@ -470,7 +538,6 @@ void Document::setTableModel() {
     }
     selectStatement = selectClause + fromClause + " ORDER BY p.p1__стр ASC";
     tableModel->setSelectStatement(selectStatement);
-    qDebug() << selectStatement;
     DbFactory->getColumnsRestrictions(configName, &columnsProperties);
     // Заполним модель пустыми данными. Это необходимо только в случае, если мы сами генерировали команду запроса для модели.
     int oldDocId = docId;
@@ -479,7 +546,9 @@ void Document::setTableModel() {
     docId = oldDocId;
 }
 
-bool Document::showNextDict() {             // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документе
+
+bool Document::showNextDict()
+{             // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документе
     bool anyShown = true;
     foreach (QString dictName, dicts->keys()) {
         Dictionary* dict = dicts->value(dictName);
@@ -502,29 +571,37 @@ bool Document::showNextDict() {             // функция решает, по
     return anyShown;
 }
 
-void Document::unlock() {
+
+void Document::unlock()
+{
     Dictionary* dict;
-    foreach (QString dictName, dicts->keys()) {
+    foreach (QString dictName, dicts->keys())
+    {
         dict = dicts->value(dictName);
         if (!dict->isConst())
             dict->unlock();
     }
 }
 
-void Document::insertDocString() {
+
+void Document::insertDocString()
+{
     Dictionary* dict;
     QString dictName, parameter;
     qulonglong dbId, crId;
-    for (int i = 0; i < toper.rowCount(); i++) {
+    for (int i = 0; i < toper.rowCount(); i++)
+    {
         dbId = 0;
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
-        if (dictName.size() > 0) {
+        if (dictName.size() > 0)
+        {
             dict = dicts->value(dictName);
             dbId = dict->getId();
         }
         crId = 0;
         dictName = toper.record(i).value("крсправ").toString().trimmed();
-        if (dictName.size() > 0) {
+        if (dictName.size() > 0)
+        {
             dict = dicts->value(dictName);
             crId = dict->getId();
         }

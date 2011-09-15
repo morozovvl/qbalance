@@ -11,119 +11,146 @@
 #define LABEL_DATE     tr("Дата:")
 #define LABEL_NUMBER   tr("Номер:")
 
+
 extern QString programMaxSumMask;
 extern QString programIdFieldName;
 extern QString programNameFieldName;
 
-bool FormDocument::open(QWidget* pwgt, Document* par) {
-    if (FormGrid::open(pwgt, par)) {
-        bool docParams = false;
-        formWidget->resize(600, formWidget->height());
-        foreach (QString dictName, par->getDictionaries()->keys())
-            if (par->getDictionaries()->value(dictName)->isConst()) {
-                docParams = true;
-                break;
-            }
-        if (defaultForm) {
-            if (vbxLayout != 0) {
-                // Вставим строчку "Итого"
-                QHBoxLayout* phbxItogLayout = new QHBoxLayout();
-                phbxItogLayout->setObjectName("phbxItogLayout");
-                phbxItogLayout->addStretch(1);
-                phbxItogLayout->addWidget(new QLabel(LABEL_ITOG, formWidget), 0, Qt::AlignRight);
-                // Создадим и вставим строчку с ИТОГО документа
-                itogNumeric = new NumericEdit();
-                itogNumeric->setReadOnly(true);
-                QFont font = itogNumeric->font();
-                font.setBold(true);
-                font.setPointSize(font.pointSize() + 2);
-                itogNumeric->setFont(font);
-                itogNumeric->setObjectName("itogNumeric");
-                phbxItogLayout->addWidget(itogNumeric, 0, Qt::AlignRight);
-                vbxLayout->insertLayout(1, phbxItogLayout);
-                if (docParams) {
-                    parameters = new DocParameters();
-                    parameters->setObjectName("docParameters");
-                }
-                if (parameters != 0) {
-                    QHBoxLayout* phbxLayout = new QHBoxLayout();
-                    phbxLayout->setObjectName("phbxLayout");
-                    phbxLayout->insertWidget(0, parameters);
-                    if (vbxLayout != 0)
-                        vbxLayout->insertLayout(0, phbxLayout);
-                }
-                QHBoxLayout* hbxDateLayout = new QHBoxLayout();
-                hbxDateLayout->setObjectName("hbxDateLayout");
-                hbxDateLayout->addWidget(new QLabel(LABEL_DATE, formWidget));
-                dateEdit = new QDateEdit();
-                dateEdit->setObjectName("dateEdit");
-                hbxDateLayout->addWidget(dateEdit);
-                hbxDateLayout->addWidget(new QLabel(LABEL_NUMBER, formWidget));
-                numberEdit = new QLineEdit();
-                numberEdit->setObjectName("numberEdit");
-                hbxDateLayout->addWidget(numberEdit);
-                hbxDateLayout->addStretch(1);
-                vbxLayout->insertLayout(0, hbxDateLayout);
-            }
-        }
-        else {
-            if (docParams)
-                parameters = (DocParameters*)qFindChild<QFrame*>(formWidget, "docParameters");
-            dateEdit = qFindChild<QDateEdit*>(formWidget, "dateEdit");
-            numberEdit = qFindChild<QLineEdit*>(formWidget, "numberEdit");
-            itogNumeric = (NumericEdit*)qFindChild<QLineEdit*>(formWidget, "itogNumeric");
-        }
-        if (parameters != 0) {
-            parameters->setParent(formWidget->parentWidget());
-            parameters->setDictionaries(par->getDictionaries());
-            parameters->setFormDocument(this);
-            parameters->setApp(app);
-            parameters->setProgramIdFieldName(programIdFieldName);
-            parameters->setProgramNameFieldName(programNameFieldName);
-            foreach (QString dictName, par->getDictionaries()->keys())
-                if (par->getDictionaries()->value(dictName)->isConst())
-                    parameters->addString(dictName);
-        }
-        if (dateEdit != 0) {
-            dateEdit->setParent(formWidget->parentWidget());
-            dateEdit->setDisplayFormat("dd.MM.yyyy");
-        }
-        if (numberEdit != 0) {
-            numberEdit->setParent(formWidget->parentWidget());
-        }
-        if (itogNumeric != 0) {
-            itogNumeric->setParent(formWidget->parentWidget());
-        }
-        return true;
-    }
-    return false;
+
+FormDocument::FormDocument()
+: FormGrid()
+, dateEdit(NULL)
+, numberEdit(NULL)
+, parameters(NULL)
+, itogNumeric(NULL)
+{
 }
 
-void FormDocument::doShow() {
+
+void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
+{
+    FormGrid::createForm(fileName, pwgt);
+
+    bool docParams = false;
+    formWidget->resize(600, formWidget->height());
+    foreach (QString dictName, getParent()->getDictionaries()->keys())
+    {   // Просмотрим список справочников, с которыми работает форма документа
+        if (getParent()->getDictionaries()->value(dictName)->isConst())
+        {   // Если есть хоть один справочник текущее значение которого одинаково для всех строк табличной части
+            docParams = true;   // то создадим виджет с параметрами документа
+            break;
+        }
+    }
+    if (defaultForm)
+    {
+        if (vbxLayout != 0)
+        {
+            // Вставим строчку "Итого"
+            QHBoxLayout* phbxItogLayout = new QHBoxLayout();
+            phbxItogLayout->setObjectName("phbxItogLayout");
+            phbxItogLayout->addStretch(1);
+            phbxItogLayout->addWidget(new QLabel(LABEL_ITOG, formWidget), 0, Qt::AlignRight);
+            // Создадим и вставим строчку с ИТОГО документа
+            itogNumeric = new NumericEdit();
+            itogNumeric->setReadOnly(true);
+            QFont font = itogNumeric->font();
+            font.setBold(true);
+            font.setPointSize(font.pointSize() + 2);
+            itogNumeric->setFont(font);
+            itogNumeric->setObjectName("itogNumeric");
+            phbxItogLayout->addWidget(itogNumeric, 0, Qt::AlignRight);
+            vbxLayout->insertLayout(1, phbxItogLayout);
+            if (docParams)
+            {
+                parameters = new DocParameters();
+                parameters->setObjectName("docParameters");
+            }
+            if (parameters != 0)
+            {
+                QHBoxLayout* phbxLayout = new QHBoxLayout();
+                phbxLayout->setObjectName("phbxLayout");
+                phbxLayout->insertWidget(0, parameters);
+                if (vbxLayout != 0)
+                {
+                    vbxLayout->insertLayout(0, phbxLayout);
+                }
+            }
+            QHBoxLayout* hbxDateLayout = new QHBoxLayout();
+            hbxDateLayout->setObjectName("hbxDateLayout");
+            hbxDateLayout->addWidget(new QLabel(LABEL_DATE, formWidget));
+            dateEdit = new QDateEdit();
+            dateEdit->setObjectName("dateEdit");
+            dateEdit->setDisplayFormat("dd.MM.yyyy");
+            hbxDateLayout->addWidget(dateEdit);
+            hbxDateLayout->addWidget(new QLabel(LABEL_NUMBER, formWidget));
+            numberEdit = new QLineEdit();
+            numberEdit->setObjectName("numberEdit");
+            hbxDateLayout->addWidget(numberEdit);
+            hbxDateLayout->addStretch(1);
+            vbxLayout->insertLayout(0, hbxDateLayout);
+        }
+    }
+    else
+    {
+        if (docParams)
+        {
+            parameters = (DocParameters*)qFindChild<QFrame*>(formWidget, "docParameters");
+        }
+        dateEdit = qFindChild<QDateEdit*>(formWidget, "dateEdit");
+        numberEdit = qFindChild<QLineEdit*>(formWidget, "numberEdit");
+        itogNumeric = (NumericEdit*)qFindChild<QLineEdit*>(formWidget, "itogNumeric");
+    }
+    if (parameters != 0)
+    {
+        parameters->setDictionaries(getParent()->getDictionaries());
+        parameters->setFormDocument(this);
+        parameters->setApp(app);
+        parameters->setProgramIdFieldName(programIdFieldName);
+        parameters->setProgramNameFieldName(programNameFieldName);
+        foreach (QString dictName, getParent()->getDictionaries()->keys())
+        {
+            if (getParent()->getDictionaries()->value(dictName)->isConst())
+            {
+                parameters->addString(dictName);
+            }
+        }
+    }
+}
+
+
+void FormDocument::doShow()
+{
     if (dateEdit != 0)
         dateEdit->setDate(getParent()->getParent()->getValue("дата").toDate());
     if (numberEdit != 0)
         numberEdit->setText(getParent()->getParent()->getValue("номер").toString());
     if (itogNumeric != 0)
         itogNumeric->setValue(getParent()->getParent()->getValue("сумма"));
-    if (parameters != 0) {
+    if (parameters != 0)
+    {
         foreach (QString dictName, parameters->getKeys())
             parameters->showText(dictName);
     }
     FormGrid::doShow();
 }
 
-void FormDocument::doHide() {
+
+void FormDocument::doHide()
+{
     getParent()->getParent()->getForm()->getForm()->activateWindow();
     FormGrid::doHide();
 }
 
-void FormDocument::remove() {
+
+void FormDocument::remove()
+{
     FormGrid::remove();
-    parent->calculate(QModelIndex());
+    getParent()->calculate(QModelIndex());
 }
 
-void FormDocument::cmdOk() {
+
+void FormDocument::cmdOk()
+{
     if (dateEdit != 0)
         getParent()->getParent()->setValue("дата", QVariant(dateEdit->date()));
     if (numberEdit != 0)
@@ -133,17 +160,23 @@ void FormDocument::cmdOk() {
     FormGrid::cmdOk();
 }
 
-QDomElement FormDocument::createWidgetsStructure() {
+
+QDomElement FormDocument::createWidgetsStructure()
+{
     QDomDocument doc;
     QDomElement vboxLayout = FormGrid::createWidgetsStructure();
-    if (vbxLayout != 0) {
+    if (vbxLayout != 0)
+    {
         QDomElement item, widget, layout, hlayout, element;
         if (itogNumeric != 0)
-            for (int i = 0; vboxLayout.childNodes().count(); i++) {
+            for (int i = 0; vboxLayout.childNodes().count(); i++)
+            {
                 item = vboxLayout.childNodes().at(i).firstChildElement("widget");
-                if (!item.isNull()) {
+                if (!item.isNull())
+                {
                    layout = item.firstChildElement("layout");
-                    if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0) {
+                    if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0)
+                    {
                         hlayout = doc.createElement("layout");
                         hlayout.setAttribute("class", "QHBoxLayout");
                         hlayout.setAttribute("name", "phbxItogLayout");
@@ -165,7 +198,8 @@ QDomElement FormDocument::createWidgetsStructure() {
 
                         vboxLayout.insertBefore(item, vboxLayout.childNodes().at(i));
 
-                        if (parameters != 0) {
+                        if (parameters != 0)
+                        {
                             widget = doc.createElement("widget");
                             widget.setAttribute("class", parameters->metaObject()->className());
                             widget.setAttribute("name", parameters->objectName());
