@@ -11,11 +11,16 @@ extern bool programDebugMode;
 extern QTextStream programDebugStream;
 extern QString programLogTimeFormat;
 
-Table::Table(QString name, QObject *parent) : Custom(parent) {
+Table::Table(QString name, QObject *parent)
+: Custom(parent)
+, tableModel(NULL)
+{
     tableName = name.trimmed();
+    tagName = tableName;
 }
 
-Table::~Table() {
+Table::~Table()
+{
 }
 
 /*
@@ -42,11 +47,13 @@ void Table::addColumnProperties(QString name, QString type, int length, int prec
 }
 */
 
-bool Table::relationsIsEmpty() {
+bool Table::relationsIsEmpty()
+{
     return tableModel->relationsIsEmpty();
 }
 
-void Table::query(QString filter) {
+void Table::query(QString filter)
+{
     tableModel->setFilter(filter);
     tableModel->select();
     if (programDebugMode) {
@@ -54,10 +61,12 @@ void Table::query(QString filter) {
     }
 }
 
-bool Table::doOpen() {
+bool Table::doOpen()
+{
     app->getDBFactory()->getColumnsProperties(&columnsProperties, tableName);
     setTableModel();
-    if (tableModel->lastError().type() == QSqlError::NoError) {
+    if (tableModel->lastError().type() == QSqlError::NoError)
+    {
         return Custom::doOpen();
     }
     // Не удалось открыть таблицу, сообщим об ошибке
@@ -66,18 +75,21 @@ bool Table::doOpen() {
     return false;
 }
 
-void Table::doClose() {
+void Table::doClose()
+{
     tableModel->clear();
     delete tableModel;
 }
 
-void Table::setTableModel() {
+void Table::setTableModel()
+{
     tableModel = new MySqlRelationalTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
 }
 
-QStringList Table::getFieldsList() {
+QStringList Table::getFieldsList()
+{
     return app->getDBFactory()->getFieldsList(&columnsProperties);
 /*
     QStringList fieldList;

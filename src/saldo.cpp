@@ -5,9 +5,9 @@
 extern App* app;
 
 Saldo::Saldo(QString cAcc, QString dictName, QObject *parent):Dictionary(dictName, parent) {
-    configName = "saldo" + cAcc;
     account = cAcc;
     dictionaryName = dictName;
+    tagName = "saldo" + cAcc;
     quan = false;
     QSqlQuery accRecord = app->getDBFactory()->execQuery(QString("SELECT количество FROM счета WHERE счет LIKE '%1'").arg(cAcc));
     if (accRecord.first())

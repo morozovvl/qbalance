@@ -6,7 +6,6 @@
 extern App* app;
 
 Topers::Topers(QObject *parent): Dictionary("vw_доступ_к_топер", parent) {
-    configName = formTitle;
     topersProperties = app->getDBFactory()->getTopersProperties();
 }
 

@@ -12,7 +12,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     lViewable = true;
     tableName = "документы";
     operNumber = opNumber;
-    configName = QString("СписокДокументов%1").arg(operNumber);
+    tagName = QString("СписокДокументов%1").arg(operNumber);
     formTitle = QString("%1 - %2").arg(app->getToperProperty(operNumber, programNameFieldName).toString()).arg(QObject::tr("Список документов"));
 }
 
@@ -33,10 +33,6 @@ bool Documents::add() {
             date = app->getEndDate();
     }
     return app->getDBFactory()->addDoc(operNumber, date);
-}
-
-QSqlQuery Documents::getColumnsHeaders() {
-    return app->getDBFactory()->getColumnsHeaders(configName);
 }
 
 bool Documents::remove() {

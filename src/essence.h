@@ -32,7 +32,6 @@ public:
     virtual bool calculate(const QModelIndex &);
     virtual void setOldCalculateProperties(const QModelIndex &);
     virtual void revertCalculateProperties(const QModelIndex &);
-    QString getConfigName() { return configName; }
     virtual qulonglong getId(int row = 0);
     virtual void setId(qulonglong);
     QString getIdFieldName() { return idFieldName; }
@@ -73,7 +72,6 @@ protected:
     FormGrid* form;
     QWidget* parentForm;
     QString formTitle;
-    QString configName;
     QString idFieldName;
     ScriptEngine* engine;
     QString script;

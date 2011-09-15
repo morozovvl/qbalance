@@ -17,7 +17,6 @@ public:
     virtual bool remove();
     virtual void view();
     virtual void query(QString filter = "");
-    virtual QSqlQuery getColumnsHeaders();
     int getCurrentRow() { return currentRow; }
 protected:
     virtual bool doOpen();

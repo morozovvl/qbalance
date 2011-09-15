@@ -149,6 +149,7 @@ bool ReportTemplate::writeDefaultDocument(QString fileName) {
 }
 
 void ReportTemplate::writeTableHeader(QDomNode node) {
+/* Временно заблокируем
     QSqlQuery query = parent->getColumnsHeaders();
     while (query.next()) {
         QDomElement cellElement = doc.createElement("table:table-cell");
@@ -156,6 +157,7 @@ void ReportTemplate::writeTableHeader(QDomNode node) {
         writeCellAnnotation(cellElement, QString("%1:%2").arg(HEAD_ANNOTATION).arg(query.record().value("столбец").toString().trimmed()));
         node.appendChild(cellElement);
         }
+*/
 }
 
 void ReportTemplate::writeTableBody(QDomNode firstRowNode, int pos) {

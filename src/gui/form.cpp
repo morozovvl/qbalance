@@ -30,7 +30,7 @@ Form::Form(QObject* parent/* = NULL*/)
 bool Form::open(QWidget* pwgt, Essence* par) {
     parent = par;
     if (parent != 0) {
-        createForm(parent->getConfigName() + "/mainform", pwgt);
+        createForm("mainform", pwgt);
     }
     else
         createForm("", pwgt);
@@ -40,7 +40,7 @@ bool Form::open(QWidget* pwgt, Essence* par) {
 bool Form::open(QString fileName, QObject* form) {
     parent = 0;
     if (form != 0)
-        createForm(((Form*)form)->getParent()->getConfigName() + "/" + fileName, ((Form*)form)->getForm());
+        createForm(fileName, ((Form*)form)->getForm());
     else
         createForm(fileName);
     return true;
@@ -54,7 +54,14 @@ void Form::close() {
 }
 
 void Form::createForm(QString fileName, QWidget* pwgt) {
-    configName = "Form";
+    if (parent != 0)
+    {
+        configName = getParent()->getTagName();
+    }
+    else
+    {
+        configName = "Form";
+    }
     setObjectName(configName);
     uiCreated = false;
     iconsSeted = false;
@@ -62,7 +69,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     defaultForm = true;
     script = "";
     engine = 0;                                 // По умолчанию не создается никакой скриптовый движок
-    fileName = app->getFormsPath(fileName);
+    fileName = app->getFormsPath(configName + "/" + fileName);
     QFile file(fileName + ".ui");
     if (file.open(QIODevice::ReadOnly)) {
         QUiLoader loader;
@@ -534,8 +541,8 @@ void Form::createUi() {
 #else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
 #endif
-    if (getParent()->getConfigName().size() > 0) {
-        QString fileName = "./defaultforms/" + getParent()->getConfigName() + ".ui";
+    if (getConfigName().size() > 0) {
+        QString fileName = "./defaultforms/" + getParent()->getTagName() + ".ui";
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly)) {
             QTextStream text(&file);

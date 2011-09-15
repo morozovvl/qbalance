@@ -235,7 +235,6 @@ void Essence::setForm() {
 
 void Essence::initForm() {
     setForm();
-    form->setConfigName(configName);
     form->readSettings();
     setFormTitle(formTitle);
     form->initFormEvent();

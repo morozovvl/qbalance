@@ -16,13 +16,13 @@ extern QString programNameFieldName;
 
 Document::Document(int oper, Documents* par) : Essence()
 {
+    parent = par;
+    operNumber = oper;
     Dictionary* dict;
     DbFactory = app->getDBFactory();
-    parent = par;
     lPrintable = true;
     tableName = DbFactory->getObjectName("проводки");
-    operNumber = oper;
-    configName = QString("Документ%1").arg(oper);
+    tagName = QString("Документ%1").arg(oper);
     formTitle = app->getToperProperty(oper, programNameFieldName).toString();
     idFieldName = "p1__" + programIdFieldName;
 
@@ -346,12 +346,6 @@ void Document::setConstDictId(QString dName, QVariant id)
 }
 
 
-QSqlQuery Document::getColumnsHeaders()
-{
-    return DbFactory->getColumnsHeaders(configName);
-}
-
-
 bool Document::doOpen()
 {
     lInsertable = app->getDictionaryProperty(tableName, "insertable").toBool();
@@ -538,7 +532,7 @@ void Document::setTableModel()
     }
     selectStatement = selectClause + fromClause + " ORDER BY p.p1__стр ASC";
     tableModel->setSelectStatement(selectStatement);
-    DbFactory->getColumnsRestrictions(configName, &columnsProperties);
+    DbFactory->getColumnsRestrictions(tagName, &columnsProperties);
     // Заполним модель пустыми данными. Это необходимо только в случае, если мы сами генерировали команду запроса для модели.
     int oldDocId = docId;
     docId = 0;
