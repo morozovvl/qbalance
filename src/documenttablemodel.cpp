@@ -30,12 +30,6 @@ bool DocumentTableModel::submit(const QModelIndex& index) {
                     app->showError(query.lastError().text());
                     return false;
                 }
-//                command = QString("UPDATE документы SET сумма=%1 WHERE код=%2").arg(((Document*)parent)->getParent()->getValue("сумма").toString()).arg(((Document *)parent)->getDocId());
-//                if (!query.exec(command)) {
-//                    database().rollback();
-//                    app->showError(query.lastError().text());
-//                    return false;
-//                }
             }
             database().commit();
             return true;

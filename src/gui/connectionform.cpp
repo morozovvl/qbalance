@@ -26,7 +26,7 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     ptxtPort = new QLineEdit(port);
     QIntValidator* validator = new QIntValidator(1, 65535, this);        // Разрешенный диапазон портов
     ptxtPort->setValidator(validator);
-    ptxtDatabase = new QLineEdit(dbName, formWidget);
+    ptxtDatabase = new QLineEdit(dbName);
     ptopLayout->addWidget(plblConnection, 0, 0, Qt::AlignRight);
     ptopLayout->addWidget(plblHost, 1, 0, Qt::AlignRight);
     ptopLayout->addWidget(plblPort, 2, 0, Qt::AlignRight);

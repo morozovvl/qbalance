@@ -34,158 +34,186 @@ FormGrid::FormGrid(QObject* parent/* = NULL*/)
 {
 }
 
-
-bool FormGrid::open(QWidget* pwgt, Essence* par)
+void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
-    if (Form::open(pwgt, par))
+    Form::createForm(fileName, pwgt);
+    if (parent != 0)
     {
-        if (parent != 0)
-            tableModel = parent->getMyRelationalTableModel();
+       tableModel = parent->getMyRelationalTableModel();
+    }
 
-        if (defaultForm)
-        {// Если форма создана автоматически
-            grdTable = new TableView(this, formWidget);
+     if (defaultForm)
+     {   // Если форма создана автоматически
+        grdTable = new TableView(this, formWidget);
+        grdTable->setApp(app);
+        grdTable->setObjectName("tableView");
+        grdTable->setModel(tableModel);
+        grdTable->horizontalHeader()->setClickable(false);
+        grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+        tableLayout = new QHBoxLayout();
+        tableLayout->setObjectName("tableLayout");
+        tableLayout->addWidget(grdTable);
+        if (vbxLayout != 0)
+        {
+            vbxLayout->insertLayout(0, tableLayout);
+        }
+    }
+    else
+    {   // Была загружена пользовательская форма
+        tableLayout = (QHBoxLayout*)qFindChild<QHBoxLayout*>(formWidget, "tableLayout");
+        grdTable = (TableView*)qFindChild<QTableWidget*>(formWidget, "tableView");
+        if (grdTable != 0)
+        {
             grdTable->setApp(app);
-            grdTable->setObjectName("tableView");
+            grdTable->setParent(formWidget);
+            grdTable->setFormGrid(this);
             grdTable->setModel(tableModel);
             grdTable->horizontalHeader()->setClickable(false);
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-            grdTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-            tableLayout = new QHBoxLayout();
-            tableLayout->setObjectName("tableLayout");
-            tableLayout->addWidget(grdTable);
-            if (vbxLayout != 0)
-                vbxLayout->insertLayout(0, tableLayout);
-        }
-        else
-        {// Была загружена пользовательская форма
-            tableLayout = (QHBoxLayout*)qFindChild<QHBoxLayout*>(formWidget, "tableLayout");
-            grdTable = (TableView*)qFindChild<QTableWidget*>(formWidget, "tableView");
-            if (grdTable != 0)
+            if (tableLayout != 0)
             {
-                grdTable->setApp(app);
-                grdTable->setParent(formWidget);
-                grdTable->setFormGrid(this);
-                grdTable->setModel(tableModel);
-                grdTable->horizontalHeader()->setClickable(false);
-                grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-                if (tableLayout != 0)
-                    tableLayout->addWidget(grdTable);
+                tableLayout->addWidget(grdTable);
             }
         }
+    }
 
-        if (parent != 0)
-            photoPath = parent->getPhotoPath();
-        if (photoPath.size() > 0)
-        {// Если есть фотографии, то будем отображать их
-            if (defaultForm)
-            {
-                picture = new Picture(formWidget);
-                picture->setObjectName("picture");
-            }
-            else
-                picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
-            if (picture != 0)
-            {
-                imageLayout = new QVBoxLayout();
-                imageLayout->setObjectName("imageLayout");
-                imageLayout->addWidget(picture, 1, Qt::AlignTop);
-                if (tableLayout != 0)
-                    tableLayout->addLayout(imageLayout);
-                if (grdTable != 0)
-                    connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
-            }
-        }
-
-        // Подключим кнопку "Печать"
-        if (parent != 0 && parent->isPrintable())
-        {
-            if (defaultForm)
-            {
-                buttonPrint = new QPushButton(tr("&Печать"));
-                buttonPrint->setObjectName("buttonPrint");
-            }
-            else
-                if (formWidget != 0)
-                    buttonPrint = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonPrint");
-            if (buttonPrint != 0)
-            {
-                connect(buttonPrint, SIGNAL(clicked()), this, SLOT(cmdPrint()));
-                cmdButtonLayout->insertWidget(0, buttonPrint);
-            }
-            else
-                parent->setPrintable(false);
-        }
-        // Подключим кнопку "Обновить"
+    if (parent != 0)
+    {
+        photoPath = parent->getPhotoPath();
+    }
+    if (photoPath.size() > 0)
+    {                                // Если есть фотографии, то будем отображать их
         if (defaultForm)
         {
-            buttonRequery = new QPushButton(tr("&Обновить"));
-            buttonRequery->setObjectName("buttonRequery");
+            picture = new Picture(formWidget);
+            picture->setObjectName("picture");
         }
         else
-            buttonRequery = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonRequery");
-        if (buttonRequery != 0)
         {
-            connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
-            cmdButtonLayout->insertWidget(0, buttonRequery);
+            picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
         }
-        // Подключим кнопку "Просмотреть"
-        if (parent != 0 && parent->isViewable())
+        if (picture != 0)
         {
-            if (defaultForm)
+            imageLayout = new QVBoxLayout();
+            imageLayout->setObjectName("imageLayout");
+            imageLayout->addWidget(picture, 1, Qt::AlignTop);
+            if (tableLayout != 0)
             {
-                buttonView = new QPushButton(tr("&Просмотреть"));
-                buttonView->setObjectName("buttonView");
+                tableLayout->addLayout(imageLayout);
             }
-            else
-                buttonView = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonView");
-            if (buttonView != 0)
+            if (grdTable != 0)
             {
-                connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
-                cmdButtonLayout->insertWidget(0, buttonView);
+                connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
             }
-            else
-                parent->setViewable(false);
         }
-        // Подключим кнопку "Удалить"
-        if (parent != 0 && parent->isDeleteable())
-        {
-            if (defaultForm)
-            {
-                buttonDelete = new QPushButton(tr("&Удалить"));
-                buttonDelete->setObjectName("buttonDelete");
-            }
-            else
-                buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
-            if (buttonDelete != 0)
-            {
-                connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
-                cmdButtonLayout->insertWidget(0, buttonDelete);
-            }
-            else
-                parent->setDeleteable(false);
-        }
-        // Подключим кнопку "Добавить"
-        if (parent != 0 && parent->isInsertable())
-        {
-            if (defaultForm)
-            {
-                buttonAdd = new QPushButton(tr("&Добавить"));
-                buttonAdd->setObjectName("buttonAdd");
-            }
-            else
-                buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
-            if (buttonAdd != 0)
-            {
-                connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
-                cmdButtonLayout->insertWidget(0, buttonAdd);
-            }
-            else
-                parent->setInsertable(false);
-        }
-        return true;
     }
-    return false;
+
+    // Подключим кнопку "Печать"
+    if (parent != 0 && parent->isPrintable())
+    {
+        if (defaultForm)
+        {
+            buttonPrint = new QPushButton(tr("&Печать"));
+            buttonPrint->setObjectName("buttonPrint");
+        }
+        else
+        {
+            if (formWidget != 0)
+            {
+                buttonPrint = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonPrint");
+            }
+        }
+        if (buttonPrint != 0)
+        {
+            connect(buttonPrint, SIGNAL(clicked()), this, SLOT(cmdPrint()));
+            cmdButtonLayout->insertWidget(0, buttonPrint);
+        }
+        else
+        {
+            parent->setPrintable(false);
+        }
+    }
+    // Подключим кнопку "Обновить"
+    if (defaultForm)
+    {
+        buttonRequery = new QPushButton(tr("&Обновить"));
+        buttonRequery->setObjectName("buttonRequery");
+    }
+    else
+    {
+        buttonRequery = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonRequery");
+    }
+    if (buttonRequery != 0)
+    {
+        connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
+        cmdButtonLayout->insertWidget(0, buttonRequery);
+    }
+    // Подключим кнопку "Просмотреть"
+    if (parent != 0 && parent->isViewable())
+    {
+        if (defaultForm)
+        {
+            buttonView = new QPushButton(tr("&Просмотреть"));
+            buttonView->setObjectName("buttonView");
+        }
+        else
+        {
+            buttonView = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonView");
+        }
+        if (buttonView != 0)
+        {
+            connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
+            cmdButtonLayout->insertWidget(0, buttonView);
+        }
+        else
+        {
+            parent->setViewable(false);
+        }
+    }
+        // Подключим кнопку "Удалить"
+    if (parent != 0 && parent->isDeleteable())
+    {
+        if (defaultForm)
+        {
+            buttonDelete = new QPushButton(tr("&Удалить"));
+            buttonDelete->setObjectName("buttonDelete");
+        }
+        else
+        {
+            buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
+        }
+        if (buttonDelete != 0)
+        {
+            connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
+            cmdButtonLayout->insertWidget(0, buttonDelete);
+        }
+        else
+        {
+            parent->setDeleteable(false);
+        }
+    }
+    // Подключим кнопку "Добавить"
+    if (parent != 0 && parent->isInsertable())
+    {
+        if (defaultForm)
+        {
+            buttonAdd = new QPushButton(tr("&Добавить"));
+            buttonAdd->setObjectName("buttonAdd");
+        }
+        else
+        {
+            buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
+        }
+        if (buttonAdd != 0)
+        {
+            connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
+            cmdButtonLayout->insertWidget(0, buttonAdd);
+        }
+        else
+        {
+            parent->setInsertable(false);
+        }
+    }
 }
 
 

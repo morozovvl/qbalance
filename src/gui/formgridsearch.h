@@ -20,16 +20,16 @@ class FormGridSearch : public FormGrid {
 
 public:
     explicit FormGridSearch(QObject* parent = NULL);
-    Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
     Q_INVOKABLE virtual void close();
     Dictionary* getParent() { return (Dictionary*)parent; }
     virtual void setShowFocus();
     SearchParameters* getSearchParameters() { return parameters; }
 
 private:
+    SearchParameters*   parameters;
+    QVector<sParam>     searchParameters;
     void query(QString param = "");
-    SearchParameters* parameters;
-    QVector<sParam> searchParameters;
+    virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 
 };

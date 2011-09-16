@@ -22,7 +22,6 @@ class FormGrid : public Form {
     Q_OBJECT
 public:
     explicit FormGrid(QObject* parent = NULL);
-    Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
     Q_INVOKABLE virtual void close();
     QString getColumnHeader(QString);
     QVariant getValue(QString);
@@ -45,17 +44,16 @@ public slots:
     virtual void showPhoto();
 
 protected:
-    TableView* grdTable;
-    MySqlRelationalTableModel* tableModel;
-
-    QHBoxLayout* tableLayout;
-    QVBoxLayout* imageLayout;
-    Picture* picture;
-    QPushButton* buttonAdd;
-    QPushButton* buttonDelete;
-    QPushButton* buttonView;
-    QPushButton* buttonRequery;
-    QPushButton* buttonPrint;
+    TableView*                  grdTable;
+    MySqlRelationalTableModel*  tableModel;
+    QHBoxLayout*                tableLayout;
+    QVBoxLayout*                imageLayout;
+    Picture*                    picture;
+    QPushButton*                buttonAdd;
+    QPushButton*                buttonDelete;
+    QPushButton*                buttonView;
+    QPushButton*                buttonRequery;
+    QPushButton*                buttonPrint;
 
     void showEvent(QShowEvent*);
     void showGridLine(int currentRow = 0);   // Подсвечивает первую (или текущую) строку Grid после обновления данных, если до этого ни одна строка не была подсвечена
@@ -63,10 +61,11 @@ protected:
     virtual void add();
     virtual void remove();
     virtual void query(QString param = "");
+    virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 
 private:
-    QString photoPath;
+    QString             photoPath;
     int getHeaderIndex(QString);
 //    virtual void keyPressEvent(QKeyEvent*);
 

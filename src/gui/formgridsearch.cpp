@@ -16,36 +16,40 @@ FormGridSearch::FormGridSearch(QObject* parent/* = NULL*/)
 {
 }
 
-bool FormGridSearch::open(QWidget* pwgt, Essence* parent) {
-    if (FormGrid::open(pwgt, parent)) {
-        formWidget->resize(600, formWidget->height());
-        if (defaultForm) {
-            if (vbxLayout != 0) {
-                QHBoxLayout* hbxLayout = new QHBoxLayout();
-                parameters = new SearchParameters();
-                parameters->setObjectName("searchParameters");
-                hbxLayout->insertWidget(0, parameters);
-                QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
-                hbxLayout->insertWidget(0, label);
-                vbxLayout->insertLayout(0, hbxLayout);
-            }
+
+void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
+{
+    FormGrid::createForm(fileName, pwgt);
+    formWidget->resize(600, formWidget->height());
+    if (defaultForm)
+    {
+        if (vbxLayout != 0)
+        {
+            QHBoxLayout* hbxLayout = new QHBoxLayout();
+            parameters = new SearchParameters();
+            parameters->setObjectName("searchParameters");
+            hbxLayout->insertWidget(0, parameters);
+            QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
+            hbxLayout->insertWidget(0, label);
+            vbxLayout->insertLayout(0, hbxLayout);
         }
-        else {
-            parameters = (SearchParameters*)qFindChild<QFrame*>(formWidget, "searchParameters");
-        }
-        if (parameters != 0) {
-            parameters->setApp(app);
-            parameters->setParent(formWidget);
-            parameters->setFormGrid(this);
-            parameters->setProgramIdFieldName(programIdFieldName);
-            parameters->setProgramNameFieldName(programNameFieldName);
-            parameters->setFieldsList(parent->getFieldsList());
-            connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
-        }
-        return true;
     }
-    return false;
+    else
+    {
+        parameters = (SearchParameters*)qFindChild<QFrame*>(formWidget, "searchParameters");
+    }
+    if (parameters != 0)
+    {
+        parameters->setApp(app);
+        parameters->setParent(formWidget);
+        parameters->setFormGrid(this);
+        parameters->setProgramIdFieldName(programIdFieldName);
+        parameters->setProgramNameFieldName(programNameFieldName);
+        parameters->setFieldsList(parent->getFieldsList());
+        connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
+    }
 }
+
 
 void FormGridSearch::close() {
     if (!defaultForm)
@@ -55,6 +59,7 @@ void FormGridSearch::close() {
         }
     FormGrid::close();
 }
+
 
 void FormGridSearch::query(QString param) {
     param = "";

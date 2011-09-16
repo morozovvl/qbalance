@@ -10,7 +10,7 @@ class DocParameters;
 
 class FormDocument : public FormGrid {
 public:
-    Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Document* parent = 0);
+    FormDocument();
     Document* getParent() { return (Document*)parent; }
 public slots:
     virtual void cmdOk();
@@ -19,10 +19,11 @@ protected:
     virtual void doHide();
     virtual void remove();
 private:
-    QDateEdit* dateEdit;
-    QLineEdit* numberEdit;
-    DocParameters* parameters;
-    NumericEdit* itogNumeric;
+    QDateEdit*      dateEdit;
+    QLineEdit*      numberEdit;
+    DocParameters*  parameters;
+    NumericEdit*    itogNumeric;
+    virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 };
 

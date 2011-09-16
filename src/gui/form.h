@@ -62,6 +62,7 @@ protected:
     virtual void doShow();
     virtual void doHide();
     virtual void setIcons();
+    virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
     QDomElement createBoxLayoutElement(QLayout*);
     QDomElement createPushButtonElement(QWidget*);
@@ -74,7 +75,6 @@ protected:
 
 private:
     bool uiCreated;
-    void createForm(QString, QWidget* pwgt = 0);
 };
 
 #endif
