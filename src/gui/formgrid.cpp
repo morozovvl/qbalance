@@ -43,13 +43,14 @@ bool FormGrid::open(QWidget* pwgt, Essence* par)
             tableModel = parent->getMyRelationalTableModel();
 
         if (defaultForm)
-        {   // Если форма создана автоматически
+        {// Если форма создана автоматически
             grdTable = new TableView(this, formWidget);
             grdTable->setApp(app);
             grdTable->setObjectName("tableView");
             grdTable->setModel(tableModel);
             grdTable->horizontalHeader()->setClickable(false);
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+            grdTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
             tableLayout = new QHBoxLayout();
             tableLayout->setObjectName("tableLayout");
             tableLayout->addWidget(grdTable);
@@ -57,7 +58,7 @@ bool FormGrid::open(QWidget* pwgt, Essence* par)
                 vbxLayout->insertLayout(0, tableLayout);
         }
         else
-        {   // Была загружена пользовательская форма
+        {// Была загружена пользовательская форма
             tableLayout = (QHBoxLayout*)qFindChild<QHBoxLayout*>(formWidget, "tableLayout");
             grdTable = (TableView*)qFindChild<QTableWidget*>(formWidget, "tableView");
             if (grdTable != 0)
@@ -76,7 +77,7 @@ bool FormGrid::open(QWidget* pwgt, Essence* par)
         if (parent != 0)
             photoPath = parent->getPhotoPath();
         if (photoPath.size() > 0)
-        {                                // Если есть фотографии, то будем отображать их
+        {// Если есть фотографии, то будем отображать их
             if (defaultForm)
             {
                 picture = new Picture(formWidget);

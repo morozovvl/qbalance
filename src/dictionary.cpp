@@ -100,29 +100,29 @@ bool Dictionary::doOpen(int deep) {
         lInsertable = app->getDictionaryProperty(tableName, "insertable").toBool();
         lDeleteable = app->getDictionaryProperty(tableName, "deleteable").toBool();
         lUpdateable = app->getDictionaryProperty(tableName, "updateable").toBool();
-        if (Essence::doOpen()) {     // Откроем этот справочник
+        if (Essence::doOpen()) {// Откроем этот справочник
             QStringList fieldList = getFieldsList();
             if (deep > 0) {              // Если нужно открыть подсправочники
                 int columnCount = fieldList.count();
                 for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
                     QString name = fieldList.at(i).toLower();
                     if (name.left(4) == idFieldName + "_") {         // Если поле ссылается на другую таблицу
-                            name.remove(0, 4);                  // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                            app->getDictionaries()->addDictionary(name, deep--);
-                            Dictionary* dict = app->getDictionaries()->getDictionary(name);
-                            if (dict != NULL) {                 // Если удалось открыть справочник
-                                QStringList relFieldList = dict->getFieldsList();
-                                tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
-                                for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
-                                    if (relFieldList.at(j) != "код") {
-                                        tableModel->insertColumns(columnCount, 1);
-                                        tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
-                                        tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
-                                        columnCount++;
-                                    }
+                        name.remove(0, 4);                  // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                        app->getDictionaries()->addDictionary(name, deep--);
+                        Dictionary* dict = app->getDictionaries()->getDictionary(name);
+                        if (dict != NULL) {                 // Если удалось открыть справочник
+                            QStringList relFieldList = dict->getFieldsList();
+                            tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
+                            for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
+                                if (relFieldList.at(j) != "код") {
+                                    tableModel->insertColumns(columnCount, 1);
+                                    tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
+                                    tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
+                                    columnCount++;
                                 }
                             }
                         }
+                    }
                 }
             }
 
