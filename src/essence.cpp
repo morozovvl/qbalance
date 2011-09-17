@@ -75,7 +75,6 @@ bool Essence::calculate(const QModelIndex &index) {
             index = index.sibling(form->getCurrentRowIndex(), i);
             tableModel->setData(index, tableModel->data(index));
         }
-        return true;
     }
     return true;
 }
