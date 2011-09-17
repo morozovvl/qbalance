@@ -7,8 +7,7 @@
 #include "essence.h"
 #include "dictionaries.h"
 
-class App;
-extern App* app;
+class TApplication;
 class Documents;
 class DocumentTableModel;
 

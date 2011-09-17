@@ -7,10 +7,9 @@
 #include <QDate>
 #include <QVariantList>
 
-class App;
-extern App* app;
+class TApplication;
 
-struct fldType {
+struct FieldType {
     QString name;
     QString type;
     int length;
@@ -37,10 +36,10 @@ public:
     QString getDatabaseName() { return dbName; }
     QSqlQuery getColumnsHeaders(QString);
     QSqlQuery getDictionariesProperties();
-    QStringList getFieldsList(QMap<int, fldType>*);
-    Q_INVOKABLE virtual void getColumnsProperties(QMap<int, fldType>*, QString);
-    void getColumnsRestrictions(QString, QMap<int, fldType>*);
-    void addColumnProperties(QMap<int, fldType>*, QString, QString, int, int, bool readOnly = false);
+    QStringList getFieldsList(QMap<int, FieldType>*);
+    Q_INVOKABLE virtual void getColumnsProperties(QMap<int, FieldType>*, QString);
+    void getColumnsRestrictions(QString, QMap<int, FieldType>*);
+    void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
     QSqlQuery getTopersProperties();
     QSqlQuery getToper(int);
     QString getPhotoDatabase();
@@ -65,7 +64,9 @@ public:
     QString initializationScriptPath() const;
     QStringList initializationScriptList() const;
 
-    QString getObjectName(QString) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
+    QString getObjectName(const QString&) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
+
+    static QString storageEncoding();
 
 private:
     QSqlDatabase*           db;

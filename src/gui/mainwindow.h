@@ -3,8 +3,7 @@
 
 #include <QtGui>
 
-class App;
-extern App* app;
+class TApplication;
 
 class MainWindow:public QMainWindow {
       Q_OBJECT

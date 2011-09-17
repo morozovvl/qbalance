@@ -4,11 +4,8 @@
 #include "gui/formgridsearch.h"
 #include "gui/mainwindow.h"
 
-extern App* app;
-extern QString programNameFieldName;
-
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
-    dictionariesProperties = app->getDBFactory()->getDictionariesProperties();
+    dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
     lInsertable = false;                    // Список справочников нельзя редактировать
     lDeleteable = false;
     lUpdateable = false;
@@ -53,7 +50,7 @@ QVariant Dictionaries::getDictionaryProperty(QString dictName, QString property)
 }
 
 QString Dictionaries::getDictionaryTitle(QString dictName) {
-    QString title = getDictionaryProperty(dictName, programNameFieldName).toString();
+    QString title = getDictionaryProperty(dictName, TApplication::nameFieldName()).toString();
     if (!title.isEmpty())
         return title;
     return getDictionaryProperty(dictName, "таблица").toString();
@@ -63,7 +60,7 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
 bool Dictionaries::doOpen() {
     if (Essence::doOpen()) {
         initForm();
-        formTitle = app->getDictionaries()->getDictionaryTitle(tableName);
+        formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
         return true;
     }
     return false;
@@ -87,8 +84,8 @@ void Dictionaries::cmdOk() {
     Dictionary::cmdOk();
     QString dictName = getValue("таблица").toString().trimmed();
     if (dictName.size() > 0) {
-        app->getDictionaries()->addDictionary(dictName, 1);
-        Dictionary* dict = app->getDictionaries()->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
+        TApplication::exemplar()->getDictionaries()->addDictionary(dictName, 1);
+        Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
         if (dict != 0)
             dict->show();
     }

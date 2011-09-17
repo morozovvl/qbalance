@@ -13,7 +13,7 @@
 #include "guifactory.h"
 #include "../app.h"
 
-class App;
+class TApplication;
 class FormGridSearch;
 struct sParam;
 
@@ -27,7 +27,7 @@ public:
     void setFieldsList(QStringList);
     void setFocus();
     void setFormGrid(FormGridSearch* par) { parentForm = par; }
-    void setApp(App* a) { app = a; }
+    void setApp(TApplication* a) { app = a; }
     void setProgramIdFieldName(QString s) { programIdFieldName = s; }
     void setProgramNameFieldName(QString s) { programNameFieldName = s; }
 
@@ -39,7 +39,7 @@ public slots:
     void comboBoxEnterPressed(QWidget*);
 
 private:
-    App* app;
+    TApplication* app;
     QString programIdFieldName;
     QString programNameFieldName;
     QGridLayout* gridLayout;

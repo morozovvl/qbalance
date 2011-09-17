@@ -7,10 +7,6 @@
 #include "mysqlrelationaltablemodel.h"
 #include "app.h"
 
-extern bool programDebugMode;
-extern QTextStream programDebugStream;
-extern QString programLogTimeFormat;
-
 Table::Table(QString name, QObject *parent)
 : Custom(parent)
 , tableModel(NULL)
@@ -56,14 +52,12 @@ void Table::query(QString filter)
 {
     tableModel->setFilter(filter);
     tableModel->select();
-    if (programDebugMode) {
-        programDebugStream << QDateTime().currentDateTime().toString(programLogTimeFormat) << " Query: " << tableModel->selectStatement() << "\n";
-    }
+    TApplication::debug(" Query: " + tableModel->selectStatement() + "\n");
 }
 
 bool Table::doOpen()
 {
-    app->getDBFactory()->getColumnsProperties(&columnsProperties, tableName);
+    TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columnsProperties, tableName);
     setTableModel();
     if (tableModel->lastError().type() == QSqlError::NoError)
     {
@@ -71,7 +65,7 @@ bool Table::doOpen()
     }
     // Не удалось открыть таблицу, сообщим об ошибке
     QSqlError error = tableModel->lastError();
-    app->showError(error.text());
+    TApplication::exemplar()->showError(error.text());
     return false;
 }
 
@@ -90,7 +84,7 @@ void Table::setTableModel()
 
 QStringList Table::getFieldsList()
 {
-    return app->getDBFactory()->getFieldsList(&columnsProperties);
+    return TApplication::exemplar()->getDBFactory()->getFieldsList(&columnsProperties);
 /*
     QStringList fieldList;
     foreach (int i, columnsProperties.keys())

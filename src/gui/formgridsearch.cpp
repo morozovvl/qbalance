@@ -6,10 +6,6 @@
 
 #define LABEL_SEARCH_PARAMETERS     tr("Параметры для поиска:")
 
-extern QString programIdFieldName;
-extern QString programNameFieldName;
-
-
 FormGridSearch::FormGridSearch(QObject* parent/* = NULL*/)
 : FormGrid(parent)
 ,parameters(NULL)
@@ -40,11 +36,11 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     if (parameters != 0)
     {
-        parameters->setApp(app);
+        parameters->setApp(TApplication::exemplar());
         parameters->setParent(formWidget);
         parameters->setFormGrid(this);
-        parameters->setProgramIdFieldName(programIdFieldName);
-        parameters->setProgramNameFieldName(programNameFieldName);
+        parameters->setProgramIdFieldName(TApplication::idFieldName());
+        parameters->setProgramNameFieldName(TApplication::nameFieldName());
         parameters->setFieldsList(parent->getFieldsList());
         connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
     }
@@ -66,14 +62,14 @@ void FormGridSearch::query(QString param) {
     if (parameters != 0) {
         parameters->getParameters(searchParameters);
         for (int i = 0; i < searchParameters.size(); i++) {
-            if ((searchParameters[i].field == programNameFieldName) && searchParameters[i].value.toString().size() > 0) {
+            if ((searchParameters[i].field == TApplication::nameFieldName()) && searchParameters[i].value.toString().size() > 0) {
                 QString str = searchParameters[i].value.toString().trimmed() + " ";
                 while (str.contains("  "))                    // Уберем лишние пробелы
                     str.replace("  ", " ");
                 while (str.size() > 0) {
                     if (param.size() > 0)
                         param.append(" AND ");
-                    param.append(searchParameters[i].table).append("." + programNameFieldName).append(" ILIKE '%" + str.left(str.indexOf(' ')) + "%'");
+                    param.append(searchParameters[i].table).append("." + TApplication::nameFieldName()).append(" ILIKE '%" + str.left(str.indexOf(' ')) + "%'");
                     str = str.remove(0, str.indexOf(' ') + 1);
                 }
             }

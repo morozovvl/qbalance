@@ -17,9 +17,6 @@
 #include "../essence.h"
 #include "../document.h"
 
-extern QString programIdFieldName;
-extern QString programNameFieldName;
-
 DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt) {
     setLineWidth(2);
     setFrameStyle(QFrame::Panel | QFrame::Raised);

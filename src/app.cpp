@@ -9,14 +9,34 @@
 #include "gui/formgrid.h"
 #include "gui/mainwindow.h"
 
-App::App(QApplication* appl) {
-    organizationName = "Enterprise";
-    application = appl;
-    appl->setOrganizationName(organizationName);
-    appl->setApplicationName(organizationName);
+QString TApplication::MaxSumMask       = "9999999999.99";
+QString TApplication::IdFieldName      = QObject::trUtf8("код");
+QString TApplication::NameFieldName    = QObject::trUtf8("имя");
+QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
+QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
+bool    TApplication::DebugMode        = false;
+TApplication* TApplication::Exemplar   = NULL;
+
+TApplication::TApplication(QApplication* application) {
+    Application = application;
+    Application->setOrganizationName(TApplication::name());
+    Application->setApplicationName(TApplication::name());
+    db  = new DBFactory();
+    gui = new GUIFactory(db);
+
+    if (!Exemplar)
+    {
+        Exemplar = this;
+        TApplication::MaxSumMask = TApplication::MaxSumMask.replace(".", QApplication::keyboardInputLocale().decimalPoint());
+    }
 }
 
-Documents* App::getDocuments(int opNumber) {
+TApplication::~TApplication()
+{
+
+}
+
+Documents* TApplication::getDocuments(int opNumber) {
     QString operName = QString("oper%1").arg(opNumber);
     if (!documents.contains(operName)) {             // Если справочник с таким именем не существует, то попробуем его создать
         Documents* doc = new Documents(opNumber);
@@ -27,13 +47,10 @@ Documents* App::getDocuments(int opNumber) {
     return documents[operName];
 }
 
-bool App::doOpen() {
+bool TApplication::doOpen() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
-    organizationName = "Enterprise";
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
-    db = new DBFactory();
-    gui = new GUIFactory(db);
     if (gui->open()) {  // Попытаемся открыть графический интерфейс
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
@@ -73,7 +90,7 @@ bool App::doOpen() {
     return lResult;
 }
 
-void App::doClose() {
+void TApplication::doClose() {
     foreach(Documents* doc, documents) {
         doc->close();
     }
@@ -87,12 +104,12 @@ void App::doClose() {
     delete db;
 }
 
-QString App::getFormsPath(QString formName) {
+QString TApplication::getFormsPath(QString formName) {
     QString fileName = getHomePath() + "/forms" + "/" + formName;
     return fileName;
 }
 
-QString App::encoding()
+QString TApplication::encoding()
 {
     QString result("UTF-8");
 #ifdef Q_OS_WIN32
@@ -102,7 +119,37 @@ QString App::encoding()
     return result;
 }
 
-QTextCodec* App::codec()
+QTextCodec* TApplication::codec()
 {
     return QTextCodec::codecForName(encoding().toLatin1());
+}
+
+bool TApplication::setDebugMode(const bool& value)
+{
+    bool result = true;
+    if (value && !debugMode())
+    {
+        result = debugFile().open(QFile::WriteOnly | QFile::Append);
+    }
+    else if (!value && debugMode())
+    {
+        debugFile().close();
+    }
+
+    DebugMode = value;
+
+    return result;
+}
+
+void TApplication::debug(const QString& value)
+{
+    if (debugMode())
+    {
+        TApplication::debugStream() << QDateTime::currentDateTime().toString(logTimeFormat()) << value;
+    }
+}
+
+TApplication* TApplication::exemplar()
+{
+    return Exemplar;
 }

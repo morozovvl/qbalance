@@ -16,9 +16,6 @@
 #include "../mysqlrelationaltablemodel.h"
 #include "../table.h"
 
-extern App* app;
-
-
 FormGrid::FormGrid(QObject* parent/* = NULL*/)
 : Form(parent)
 , grdTable(NULL)
@@ -46,7 +43,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
      if (defaultForm)
      {   // Если форма создана автоматически
         grdTable = new TableView(this, formWidget);
-        grdTable->setApp(app);
+        grdTable->setApp(TApplication::exemplar());
         grdTable->setObjectName("tableView");
         grdTable->setModel(tableModel);
         grdTable->horizontalHeader()->setClickable(false);
@@ -65,7 +62,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable = (TableView*)qFindChild<QTableWidget*>(formWidget, "tableView");
         if (grdTable != 0)
         {
-            grdTable->setApp(app);
+            grdTable->setApp(TApplication::exemplar());
             grdTable->setParent(formWidget);
             grdTable->setFormGrid(this);
             grdTable->setModel(tableModel);

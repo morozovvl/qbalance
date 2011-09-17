@@ -19,21 +19,17 @@
 #include "gui/formgridsearch.h"
 #include "gui/mainwindow.h"
 
-extern App* app;
-extern QString programErrorFileName;
-extern QString programIdFieldName;
-
 Essence::Essence(QString name, QObject *parent) : Table(name, parent) {
-    form = 0;
-    parentForm = app->getMainWindow()->centralWidget();
-    formTitle = "";
+    form        = 0;
+    parentForm  = TApplication::exemplar()->getMainWindow()->centralWidget();
+    formTitle   = "";
     lInsertable = false;
     lDeleteable = false;
-    lViewable = false;
+    lViewable   = false;
     lUpdateable = false;
-    lPrintable = false;
-    idFieldName = programIdFieldName;
-    connect(this, SIGNAL(showError(QString)), app, SLOT(showError(QString)));
+    lPrintable  = false;
+    idFieldName = TApplication::idFieldName();
+    connect(this, SIGNAL(showError(QString)), TApplication::exemplar(), SLOT(showError(QString)));
 }
 
 Essence::~Essence() {
@@ -85,7 +81,7 @@ void Essence::getCalculateProperties(const QModelIndex &index) {
         int col;
         QString fieldName;
         foreach (QString field, getFieldsList()) {
-            QVariant var = engine->evaluate(QString("Table[\"%1\"]").arg(field), programErrorFileName).toVariant();
+            QVariant var = engine->evaluate(QString("Table[\"%1\"]").arg(field), TApplication::errorFileName()).toVariant();
             col = tableModel->record().indexOf(field);
             if (col > -1)
                 tableModel->setData(index.sibling(index.row(), col), var);
@@ -99,7 +95,7 @@ void Essence::setCalculateProperties(const QModelIndex &index) {
         foreach (QString field, getFieldsList()) {
             QVariant var(tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(field))));
             engine->globalObject().setProperty("__temp__", engine->newVariant(var));
-            engine->evaluate(QString("Table[\"%1\"] = __temp__").arg(field), programErrorFileName);
+            engine->evaluate(QString("Table[\"%1\"] = __temp__").arg(field), TApplication::errorFileName());
         }
         engine->globalObject().setProperty("__Column_Name__", engine->newVariant(tableModel->record().fieldName(index.column())));
     }
@@ -112,7 +108,7 @@ void Essence::setOldCalculateProperties(const QModelIndex &index) {
         foreach (QString field, getFieldsList()) {
             var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(field)));
             engine->globalObject().setProperty("__temp__", engine->newVariant(var));
-            engine->evaluate(QString("OldTable[\"%1\"] = __temp__").arg(field), programErrorFileName);
+            engine->evaluate(QString("OldTable[\"%1\"] = __temp__").arg(field), TApplication::errorFileName());
         }
     }
 }
@@ -120,7 +116,7 @@ void Essence::setOldCalculateProperties(const QModelIndex &index) {
 void Essence::revertCalculateProperties(const QModelIndex &index) {
     if (engine != 0) {
         foreach (QString field, getFieldsList()) {
-            QVariant var = engine->evaluate(QString("OldTable[\"%1\"]").arg(field), programErrorFileName).toVariant();
+            QVariant var = engine->evaluate(QString("OldTable[\"%1\"]").arg(field), TApplication::errorFileName()).toVariant();
             tableModel->setData(index.sibling(index.row(), tableModel->record().indexOf(field)), var);
         }
     }
@@ -151,7 +147,7 @@ qulonglong Essence::getId(int row) {
 void Essence::setId(qulonglong id) {
     if (id > 0) {
         QModelIndex index = form->getCurrentIndex();
-        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(programIdFieldName).arg(id));
+        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::errorFileName()).arg(id));
         for (int i = 0; i < tableModel->rowCount(); i++) {
             form->getGridTable()->selectRow(i);
             if (getId() == id) {
@@ -165,15 +161,15 @@ void Essence::setId(qulonglong id) {
 }
 
 QSqlQuery Essence::getColumnsHeaders() {
-    return app->getDBFactory()->getColumnsHeaders(tableName);
+    return TApplication::exemplar()->getDBFactory()->getColumnsHeaders(tableName);
 }
 
 QString Essence::getPhotoPath() {
-    QString path = app->getDBFactory()->getPhotoPath(tableName);
-    if (path.size() > 0) {
+    QString path = TApplication::exemplar()->getDBFactory()->getPhotoPath(tableName);
+    if (!path.isEmpty()) {
         if (path.left(1) == "~") {
             path.remove(0, 1);
-            path = app->getHomePath() + path;
+            path = TApplication::exemplar()->getHomePath() + path;
         }
     }
     return path;
@@ -181,9 +177,7 @@ QString Essence::getPhotoPath() {
 
 
 bool Essence::remove() {
-    if (app->getGUIFactory()->showYesNo("Удалить запись? Вы уверены?") == QMessageBox::Yes)
-        return true;
-    return false;
+    return TApplication::exemplar()->getGUIFactory()->showYesNo("Удалить запись? Вы уверены?") == QMessageBox::Yes;
 }
 
 int Essence::exec() {

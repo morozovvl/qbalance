@@ -9,8 +9,7 @@
 #include "form.h"
 #include "../dbfactory.h"
 
-class App;
-extern App* app;
+class TApplication;
 
 class ConnectionForm : public Form {
     Q_OBJECT

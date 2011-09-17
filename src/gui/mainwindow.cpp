@@ -24,15 +24,15 @@ void MainWindow::closeEvent() {
 }
 
 void MainWindow::showDictionaries() {
-    app->showDictionaries();
+    TApplication::exemplar()->showDictionaries();
 }
 
 void MainWindow::showDocuments() {
-    app->showDocuments();
+    TApplication::exemplar()->showDocuments();
 }
 
 void MainWindow::showReports() {
-    app->showReports();
+    TApplication::exemplar()->showReports();
 }
 
 void MainWindow::newRecord() {
@@ -114,13 +114,13 @@ void MainWindow::createStatusBar()
 }
 
 void MainWindow::setPeriod() {
-    app->setPeriod();
+    TApplication::exemplar()->setPeriod();
     showPeriod();
 }
 
 void MainWindow::showPeriod() {
     QString period;
-    period = app->getBeginDate().toString("dd.MM.yyyy") + " - " + app->getEndDate().toString("dd.MM.yyyy");
+    period = TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy") + " - " + TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy");
     periodAct->setIconText(period);
 }
 

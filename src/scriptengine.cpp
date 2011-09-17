@@ -11,8 +11,6 @@
 #include "mysqlrelationaltablemodel.h"
 #include "mysqlquery.h"
 
-extern App* app;
-
 Q_DECLARE_METATYPE(Table*)
 Q_DECLARE_METATYPE(Dictionary*)
 Q_DECLARE_METATYPE(Essence*)
@@ -142,7 +140,7 @@ ScriptEngine::ScriptEngine(QObject *parent) : QScriptEngine(parent) {
     installTranslatorFunctions(QScriptValue());
 
     // Объявим глобальный объект App
-    globalObject().setProperty("App", newQObject(app));
+    globalObject().setProperty("App", newQObject(TApplication::exemplar()));
 
     // Объявим класс Essence
     qScriptRegisterMetaType(this, EssenceToScriptValue, EssenceFromScriptValue);
@@ -180,5 +178,5 @@ ScriptEngine::ScriptEngine(QObject *parent) : QScriptEngine(parent) {
 }
 
 int ScriptEngine::showError(QString text) {
-    return app->getGUIFactory()->showError(text);
+    return TApplication::exemplar()->getGUIFactory()->showError(text);
 }

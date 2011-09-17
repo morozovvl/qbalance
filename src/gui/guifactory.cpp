@@ -15,13 +15,6 @@
 #include "passwordform.h"
 #include "../app.h"
 
-
-extern QString programName;
-extern bool programDebugMode;
-extern QTextStream programDebugStream;
-extern QString programLogTimeFormat;
-
-
 int GUIFactory::openDB()
 {
 // Функция пытается создать соединение с БД. В случае удачи возвращает 0.
@@ -64,7 +57,7 @@ int GUIFactory::openDB()
                 if (db->open(login, password))
                 {
                     if (connForm->connectionName().size() > 0)
-                        mainWindow->setWindowTitle(programName + " - " + connForm->connectionName() + " - " + login);
+                        mainWindow->setWindowTitle(TApplication::name() + " - " + connForm->connectionName() + " - " + login);
                 }
                 else
                 {
@@ -92,15 +85,16 @@ void GUIFactory::setPeriod() {
     CalendarForm* calendar = new CalendarForm();
     calendar->open(mainWindow->centralWidget());
     calendar->readSettings();
-    calendar->setBeginDate(app->getBeginDate());
-    calendar->setEndDate(app->getEndDate());
+    calendar->setBeginDate(TApplication::exemplar()->getBeginDate());
+    calendar->setEndDate(TApplication::exemplar()->getEndDate());
     calendar->exec();
     if (calendar->selected()) {
-        app->setBeginDate(calendar->getBeginDate());
-        app->setEndDate(calendar->getEndDate());
-        app->getDBFactory()->setPeriod(calendar->getBeginDate(), calendar->getEndDate());
+        TApplication::exemplar()->setBeginDate(calendar->getBeginDate());
+        TApplication::exemplar()->setEndDate(calendar->getEndDate());
+        TApplication::exemplar()->getDBFactory()->setPeriod(calendar->getBeginDate(), calendar->getEndDate());
     }
     calendar->writeSettings();
+    delete calendar;
 }
 
 void GUIFactory::show() {

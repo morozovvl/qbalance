@@ -7,8 +7,7 @@
 #include <QHash>
 #include "mysqlrelationaltablemodel.h"
 
-class App;
-extern App* app;
+class TApplication;
 
 class DocumentTableModel : public MySqlRelationalTableModel {
     Q_OBJECT

@@ -8,8 +8,6 @@
 #include "essence.h"
 #include "reportengine.h"
 
-extern App* app;
-
 ReportTemplate::ReportTemplate(Essence* par, ReportEngine* eng, QString fileName) {
     parent = par;
     engine = eng;
@@ -32,7 +30,7 @@ bool ReportTemplate::startOpenOffice(QString fileName) {
     ooProcess->setWorkingDirectory(REPORT_DIR);
     ooProcess->start("soffice", QStringList() << fileName);
     if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning)) {   // Подождем 1 секунду и если процесс не запустился
-        app->showError(QObject::tr("Не удалось запустить") + " Open Office");                   // выдадим сообщение об ошибке
+        TApplication::exemplar()->showError(QObject::tr("Не удалось запустить") + " Open Office");                   // выдадим сообщение об ошибке
         result = false;
     }
     return result;
@@ -78,16 +76,16 @@ QString ReportTemplate::prepareDefaultDocument(QString fileName) {
                     result = tmpDir.path() + "/" + file.fileName();
                 }
                 else
-                    app->showError(QObject::tr("Не удалось запустить программу") + " zip");
+                    TApplication::exemplar()->showError(QObject::tr("Не удалось запустить программу") + " zip");
             }
             else
-                app->showError(QObject::tr("Не удалось изменить содержимое шаблона") + " <" + fileName + ">");
+                TApplication::exemplar()->showError(QObject::tr("Не удалось изменить содержимое шаблона") + " <" + fileName + ">");
         }
         else
-            app->showError(QObject::tr("Не удалось запустить программу") + " unzip");
+            TApplication::exemplar()->showError(QObject::tr("Не удалось запустить программу") + " unzip");
     }
     else
-        app->showError(QString(QObject::tr("Не удалось скопировать шаблон <%1> в каталог %2")).arg(fileName).arg(tmpDir.path()));
+        TApplication::exemplar()->showError(QString(QObject::tr("Не удалось скопировать шаблон <%1> в каталог %2")).arg(fileName).arg(tmpDir.path()));
     srcFile.close();
     return result;
 }
@@ -136,15 +134,15 @@ bool ReportTemplate::writeDefaultDocument(QString fileName) {
                 result = true;
             }
             else
-                app->showError(QObject::tr("Не удалось открыть для записи шаблон") + " <" + fileName + ">");
+                TApplication::exemplar()->showError(QObject::tr("Не удалось открыть для записи шаблон") + " <" + fileName + ">");
         }
         else {
-            app->showError(QObject::tr("Не удалось загрузить содержимое шаблона") + " <" + fileName + ">");
+            TApplication::exemplar()->showError(QObject::tr("Не удалось загрузить содержимое шаблона") + " <" + fileName + ">");
             file.close();
         }
     }
     else
-        app->showError(QObject::tr("Не удалось открыть шаблон") + " <" + fileName + ">");
+        TApplication::exemplar()->showError(QObject::tr("Не удалось открыть шаблон") + " <" + fileName + ">");
     return result;
 }
 
@@ -301,7 +299,7 @@ void ReportTemplate::writeVariables() {
                 if (!engine->getEngine()->hasUncaughtException() && !var.isNull())                          // Если не было ошибок
                     writeCell(cells.at(i).parentNode().toElement(), var);
                 else
-                    app->showError(QString(QObject::tr("Неизвестное выражение %1 в шаблоне <%2>.")).arg(cellText).arg(templateFileName));
+                    TApplication::exemplar()->showError(QString(QObject::tr("Неизвестное выражение %1 в шаблоне <%2>.")).arg(cellText).arg(templateFileName));
             }
         }
     }

@@ -3,8 +3,7 @@
 
 #include "form.h"
 
-class App;
-extern App* app;
+class TApplication;
 
 class CalendarForm : public Form {
 public:

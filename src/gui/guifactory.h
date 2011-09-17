@@ -8,7 +8,7 @@
 #include <QMessageBox>
 #include <QDesktopWidget>
 
-class App;
+class TApplication;
 class MainWindow;
 
 class GUIFactory: public Custom {

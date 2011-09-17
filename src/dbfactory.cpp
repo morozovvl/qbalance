@@ -1,17 +1,9 @@
 #include <QObject>
-#include <QtGui>
-#include <QApplication>
 #include <QTextStream>
 #include <QDateTime>
-#include "gui/passwordform.h"
 #include "dbfactory.h"
 #include "app.h"
-
-extern bool programDebugMode;
-extern QTextStream programDebugStream;
-extern QString programLogTimeFormat;
-extern QString programNameFieldName;
-
+#include "gui/passwordform.h"
 
 DBFactory::DBFactory()
 : Custom()
@@ -44,11 +36,7 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
             //Drake
             //Базу данных следует всегда создавать в UTF-8
             //т.к. есть возможность возвращать данные на клиент в нужной кодировке
-            QString encoding = "UTF-8";
-#ifdef Q_OS_WIN32
-            encoding = "Windows-1251";
-#endif
-            if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName).arg(encoding)))
+            if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName, DBFactory::storageEncoding())))
             {
                 close();
                 const QStringList scripts = initializationScriptList();
@@ -64,6 +52,7 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
                         QProcess proc;
                         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
                         env.insert("PGPASSWORD", password);
+                        env.insert("PGCLIENTENCODING", TApplication::encoding() );
                         proc.setProcessEnvironment(env);
                         proc.start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
 
@@ -71,24 +60,24 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
 
                         if (!lResult)
                         {// выдадим сообщение об ошибке и выйдем из цикла
-                            app->showError(QObject::tr("Не удалось запустить psql"));
+                            TApplication::exemplar()->showError(QObject::tr("Не удалось запустить psql"));
                         }
                         else
                         {
                             lResult = proc.waitForFinished();
                             if (!lResult)
                             {
-                                app->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
+                                TApplication::exemplar()->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
                             }
                         }
                     }
                     else
-                        app->showCriticalError(QString(QObject::tr("Не найден файл инициализации БД <%1>.")).arg(*script));
+                        TApplication::exemplar()->showCriticalError(QString(QObject::tr("Не найден файл инициализации БД <%1>.")).arg(*script));
                 }
             }
        }
        else
-          app->showCriticalError(QObject::tr("Не удалось создать соединение с сервером."));
+          TApplication::exemplar()->showCriticalError(QObject::tr("Не удалось создать соединение с сервером."));
     }
     setDatabaseName(defaultDatabase);
     return lResult;
@@ -106,9 +95,9 @@ void DBFactory::setError(QString errText)
 {
     wasError = true;
     errorText = errText;
-    if (programDebugMode)
+    if (TApplication::debugMode())
     {
-        programDebugStream << QDateTime().currentDateTime().toString(programLogTimeFormat) << " Error: " << errorText << "\n";
+        TApplication::debugStream() << QDateTime().currentDateTime().toString(TApplication::logTimeFormat()) << " Error: " << errorText << "\n";
     }
 }
 
@@ -125,9 +114,10 @@ bool DBFactory::doOpen(QString login, QString password)
     db->setHostName(hostName);
     db->setDatabaseName(dbName);
     db->setPort(port);
+    db->setConnectOptions("client_encoding = " + TApplication::encoding());
     if (db->open(login, password)) {
         currentLogin = login;
-        initObjectNames();              // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
+        initObjectNames();// Инициируем переводчик имен объектов из внутренних наименований в наименования БД
         return true;
     }
     else
@@ -146,23 +136,23 @@ void DBFactory::doClose()
 
 bool DBFactory::exec(QString str)
 {
-    if (programDebugMode)
-        programDebugStream << QDateTime().currentDateTime().toString(programLogTimeFormat) << " Query: " << str << "\n";
+    TApplication::debug(" Query: " + str + "\n");
+
     clearError();
     QSqlQuery query;
     bool lResult = query.exec(str);
     if (!lResult)
+    {
         setError(query.lastError().text());
+    }
     return lResult;
 }
 
 
 QSqlQuery DBFactory::execQuery(QString str)
 {
-    if (programDebugMode)
-    {
-        programDebugStream << QDateTime().currentDateTime().toString(programLogTimeFormat) << " Query: " << str << "\n";
-    }
+    TApplication::debug(" Query: " + str + "\n");
+
     clearError();
     QSqlQuery query;
     bool lResult = query.exec(str);
@@ -176,17 +166,19 @@ QSqlQuery DBFactory::execQuery(QString str)
 
 QStringList DBFactory::getUserList()
 {
+    static const QString clause = QString("SELECT %1 FROM vw_пользователи ORDER BY %1").arg(TApplication::nameFieldName());
+    static short index          = 0;
+
     clearError();
-    QStringList list;
-    QSqlQuery query;
-    QSqlRecord rec;
-    query = execQuery("SELECT * FROM vw_пользователи ORDER BY " + programNameFieldName);
-    rec = query.record();
+        QStringList result;
+    QSqlQuery query = execQuery(clause);
+
     while (query.next())
     {
-        list << query.value(rec.indexOf(programNameFieldName)).toString();
+        result << query.value(index).toString();
     }
-    return list;
+
+    return result;
 }
 
 
@@ -197,46 +189,39 @@ QSqlQuery DBFactory::getDictionariesProperties()
 }
 
 
-QStringList DBFactory::getFieldsList(QMap<int, fldType>* columnsProperties)
+QStringList DBFactory::getFieldsList(QMap<int, FieldType>* columnsProperties)
 {
-    QStringList fieldList;
+    QStringList result;
     foreach (int i, columnsProperties->keys())
-        fieldList << columnsProperties->value(i).name;
-    return fieldList;
+        result << columnsProperties->value(i).name;
+    return result;
 }
 
 
-void DBFactory::getColumnsProperties(QMap<int, fldType>* result, QString table)
+void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table)
 {
     clearError();
     QString command(QString("SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable FROM information_schema.columns WHERE table_name LIKE '%1' ORDER BY ordinal_position").arg(table.trimmed()));
     QSqlQuery query = execQuery(command);
-    if (query.first())
+    for (query.first(); query.isValid(); query.next())
     {
-        do
-        {
-            if (query.isValid())
-            {
-                fldType fld;
-                fld.name = query.value(1).toString().trimmed();
-                fld.type = query.value(2).toString().trimmed();
-                fld.length = query.value(3).toInt();
-                fld.precision = query.value(4).toInt();
-                fld.readOnly = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
-                result->insert(query.value(0).toInt(), fld);
-            }
-        } while (query.next());
+        FieldType fld;
+        fld.name      = query.value(1).toString().trimmed();
+        fld.type      = query.value(2).toString().trimmed();
+        fld.length    = query.value(3).toInt();
+        fld.precision = query.value(4).toInt();
+        fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
+        result->insert(query.value(0).toInt(), fld);
     }
     if (QString().compare(table, "сальдо", Qt::CaseInsensitive) == 0)
         foreach (int i, result->keys())
-            if ((QString(result->value(i).name).compare("конкол", Qt::CaseInsensitive) == 0) ||
-                (QString(result->value(i).name).compare("концена", Qt::CaseInsensitive) == 0) ||
+            if ((QString(result->value(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+                (QString(result->value(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
                 (QString(result->value(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
                     addColumnProperties(result, result->value(i).name, result->value(i).type, result->value(i).length, result->value(i).precision, result->value(i).readOnly);
 }
 
-
-void DBFactory::addColumnProperties(QMap<int, fldType>* columnsProperties, QString name, QString type, int length, int precision, bool read)
+void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read)
 {
     int maxKey = 0;
     if (columnsProperties->count() > 0)
@@ -246,7 +231,7 @@ void DBFactory::addColumnProperties(QMap<int, fldType>* columnsProperties, QStri
                 maxKey = i;
         maxKey++;
     }
-    fldType fld;
+    FieldType fld;
     fld.name = name;
     fld.type = type;
     fld.length = length;
@@ -256,7 +241,7 @@ void DBFactory::addColumnProperties(QMap<int, fldType>* columnsProperties, QStri
 }
 
 
-void DBFactory::getColumnsRestrictions(QString table, QMap<int, fldType>* columns)
+void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* columns)
 {
     clearError();
     QSqlQuery query = execQuery(QString("SELECT имя, доступ FROM доступ WHERE код_типыобъектов=5 AND (пользователь ILIKE '\%'||\"current_user\"()::text||'%' OR пользователь ILIKE '\%*\%') AND имя ILIKE '%1.\%'").arg(table.trimmed()));
@@ -268,16 +253,16 @@ void DBFactory::getColumnsRestrictions(QString table, QMap<int, fldType>* column
             {
                 if (query.value(1).toString().contains("ro", Qt::CaseInsensitive))
                 {
-                    fldType fld = columns->value(i);
+                    FieldType fld = columns->value(i);
                     fld.readOnly = true;
                     columns->remove(i);
                     columns->insert(i, fld);
                     break;
                 } else if (query.value(1).toString().contains("hide", Qt::CaseInsensitive))
-                        {
-                        columns->remove(i);
-                        break;
-                        }
+                {
+                    columns->remove(i);
+                    break;
+                }
             }
         }
     }
@@ -404,14 +389,15 @@ bool DBFactory::removeDocStr(int docId, int nDocStr)
 void DBFactory::setPeriod(QDate begDate, QDate endDate)
 {
     clearError();
-    exec(QString("UPDATE блокпериоды SET начало='%1', конец='%2' WHERE пользователь='%3'").arg(begDate.toString(Qt::LocaleDate)).arg(endDate.toString(Qt::LocaleDate)).arg(app->getLogin()));
+    exec(QString("UPDATE блокпериоды SET начало='%1', конец='%2' WHERE пользователь='%3'").arg(
+        begDate.toString(Qt::LocaleDate), endDate.toString(Qt::LocaleDate), TApplication::exemplar()->getLogin()));
 }
 
 
 void DBFactory::getPeriod(QDate& begDate, QDate& endDate)
 {
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT начало, конец FROM блокпериоды WHERE пользователь='%1'").arg(app->getLogin()));
+    QSqlQuery query = execQuery(QString("SELECT начало, конец FROM блокпериоды WHERE пользователь='%1'").arg(TApplication::exemplar()->getLogin()));
     if (query.first())
     {
         begDate = query.record().field(0).value().toDate();
@@ -432,6 +418,8 @@ QString DBFactory::initializationScriptPath() const
     QString result = QCoreApplication::applicationDirPath();
 
     result.append("/src/");
+
+    qDebug() << "DBFactory::initializationScriptPath() : " << result;
 
     return result;
 }
@@ -470,14 +458,23 @@ void DBFactory::initObjectNames()
 }
 
 
-QString DBFactory::getObjectName(QString name) const
+QString DBFactory::getObjectName(const QString& name) const
 // транслирует имена объектов БД из "внутренних" в реальные наименования
 {
+    QString result;
     QMap<QString, QString>::const_iterator i = ObjectNames.find(name);
-    if ( i == ObjectNames.end())
+    if (i != ObjectNames.end())
     {
-        return QString();
+        result = i.value();
     }
-    return ObjectNames.value(i.key());
+    return result;
 }
 
+QString DBFactory::storageEncoding()
+{
+    QString result("UTF-8");
+#ifdef Q_OS_WIN32
+    result = "Windows-1251";
+#endif
+    return result;
+}

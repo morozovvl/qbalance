@@ -32,7 +32,7 @@ void CalendarForm::cmdOk() {
     beginDate = pBeginCalendar->selectedDate();
     endDate = pEndCalendar->selectedDate();
     if (beginDate > endDate)
-        app->getGUIFactory()->showError(tr("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
+        TApplication::exemplar()->getGUIFactory()->showError(tr("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
     else
         Form::cmdOk();
 }

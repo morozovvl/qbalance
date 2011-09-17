@@ -5,9 +5,6 @@
 #include "gui/mainwindow.h"
 #include "gui/searchparameters.h"
 
-extern App* app;
-extern QString programNameFieldName;
-
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     formTitle = "";
     lPrintable = true;
@@ -26,7 +23,9 @@ Dictionary::~Dictionary() {
 
 bool Dictionary::add() {
     if (!lInsertable) {
-        showError(QString(QObject::tr("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(app->getDictionaries()->getDictionaryTitle(tableName)).arg(app->getLogin()));
+        showError(QString(QObject::tr("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
+                      TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
+                      TApplication::exemplar()->getLogin()));
         return false;
     }
     SearchParameters* parameters = (SearchParameters*)qFindChild<QFrame*>(form->getForm(), "searchParameters");
@@ -43,27 +42,29 @@ bool Dictionary::add() {
                 }
             else {
                 if (searchParameters[i].value.toString().size() > 0) {
-                    Dictionary* dict = app->getDictionaries()->getDictionary(searchParameters[i].table);
-                    if (dict != 0 && !dict->getValue(programNameFieldName).toString().contains(searchParameters[i].value.toString().trimmed(), Qt::CaseInsensitive))
+                    Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(searchParameters[i].table);
+                    if (dict != 0 && !dict->getValue(TApplication::nameFieldName()).toString().contains(searchParameters[i].value.toString().trimmed(), Qt::CaseInsensitive))
                         lAddDict = false;
                     }
             }
         }
         if (lAddDict)
-            return app->getDBFactory()->insertDictDefault(getTableName(), fields, values);
+            return TApplication::exemplar()->getDBFactory()->insertDictDefault(getTableName(), fields, values);
     }
-    return app->getDBFactory()->insertDictDefault(getTableName());
+    return TApplication::exemplar()->getDBFactory()->insertDictDefault(getTableName());
 }
 
 bool Dictionary::remove() {
     if (lDeleteable) {
         if (Essence::remove()) {
-            app->getDBFactory()->removeDictValue(tableName, getId());
+            TApplication::exemplar()->getDBFactory()->removeDictValue(tableName, getId());
             return true;
         }
     }
     else
-        showError(QString(QObject::tr("Запрещено удалять записи из справочника %1 пользователю %2")).arg(app->getDictionaries()->getDictionaryTitle(tableName)).arg(app->getLogin()));
+        showError(QString(QObject::tr("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
+            TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
+            TApplication::exemplar()->getLogin()));
     return false;
 }
 
@@ -94,11 +95,11 @@ void Dictionary::setForm() {
 }
 
 bool Dictionary::doOpen(int deep) {
-    formTitle = app->getDictionaries()->getDictionaryTitle(tableName);
-    if (app->getDictionaryProperty(tableName, "selectable").toBool()) {
-        lInsertable = app->getDictionaryProperty(tableName, "insertable").toBool();
-        lDeleteable = app->getDictionaryProperty(tableName, "deleteable").toBool();
-        lUpdateable = app->getDictionaryProperty(tableName, "updateable").toBool();
+    formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
+    if (TApplication::exemplar()->getDictionaryProperty(tableName, "selectable").toBool()) {
+        lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
+        lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
+        lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
         if (Essence::doOpen()) {     // Откроем этот справочник
             QStringList fieldList = getFieldsList();
             if (deep > 0) {              // Если нужно открыть подсправочники
@@ -106,30 +107,30 @@ bool Dictionary::doOpen(int deep) {
                 for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
                     QString name = fieldList.at(i).toLower();
                     if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
-                            name.remove(0, 4);                      // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                            app->getDictionaries()->addDictionary(name, deep--);
-                            Dictionary* dict = app->getDictionaries()->getDictionary(name);
-                            if (dict != NULL) {                 // Если удалось открыть справочник
-                                QStringList relFieldList = dict->getFieldsList();
-                                tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
-                                for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
-                                    if (relFieldList.at(j) != "код") {
-                                        tableModel->insertColumns(columnCount, 1);
-                                        tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
-                                        tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
-                                        columnCount++;
-                                    }
+                        name.remove(0, 4);                      // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                        TApplication::exemplar()->getDictionaries()->addDictionary(name, deep--);
+                        Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(name);
+                        if (dict != NULL) {                 // Если удалось открыть справочник
+                            QStringList relFieldList = dict->getFieldsList();
+                            tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
+                            for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
+                                if (relFieldList.at(j) != "код") {
+                                    tableModel->insertColumns(columnCount, 1);
+                                    tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
+                                    tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
+                                    columnCount++;
                                 }
                             }
                         }
+                    }
                 }
             }
 
             // Установим порядок сортировки и стратегию сохранения данных на сервере
-            tableModel->setSort(tableModel->fieldIndex(programNameFieldName), Qt::AscendingOrder);
+            tableModel->setSort(tableModel->fieldIndex(TApplication::nameFieldName()), Qt::AscendingOrder);
 
             // определим, это набор или обычный справочник
-            if (fieldList.contains(programNameFieldName, Qt::CaseInsensitive)) {
+            if (fieldList.contains(TApplication::nameFieldName(), Qt::CaseInsensitive)) {
                 lIsSet = false;                                     // это справочник, т.к. есть поле ИМЯ
             }
             else {
@@ -139,16 +140,17 @@ bool Dictionary::doOpen(int deep) {
                         break;
                     }
                 }
-            app->getDBFactory()->getColumnsRestrictions(tableName, &columnsProperties);
+            TApplication::exemplar()->getDBFactory()->getColumnsRestrictions(tableName, &columnsProperties);
             initForm();
             dictDeep = deep;
             return true;
         }
     }
-    QString dictTitle = app->getDictionaries()->getDictionaryTitle(tableName);
+    QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
     if (dictTitle.isEmpty())
         dictTitle = tableName;
-    showError(QString(QObject::tr("Запрещено просматривать справочник %1 пользователю %2. Либо справочник отсутствует.")).arg(dictTitle).arg(app->getLogin()));
+    showError(QString(QObject::tr("Запрещено просматривать справочник %1 пользователю %2. Либо справочник отсутствует.")).arg(
+        dictTitle, TApplication::exemplar()->getLogin()));
     return false;
 }
 
