@@ -78,11 +78,13 @@ bool Documents::doOpen() {
     return false;
 }
 
+
 void Documents::doClose() {
     currentDocument->close();
     delete currentDocument;
     Dictionary::doClose();
 }
+
 
 void Documents::setForm() {
     form = new FormGrid();

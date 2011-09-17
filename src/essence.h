@@ -69,13 +69,13 @@ signals:
     void showError(const QString &);
 
 protected:
-    FormGrid* form;
-    QWidget* parentForm;
-    QString formTitle;
-    QString idFieldName;
-    ScriptEngine* engine;
-    QString script;
-    QScriptValue scripts;
+    QString             formTitle;
+    QString             idFieldName;
+    FormGrid*           form;
+    QWidget*            parentForm;
+    ScriptEngine*       engine;
+    QString             script;
+    QScriptValue        scripts;
     bool lInsertable;
     bool lDeleteable;
     bool lViewable;
@@ -87,6 +87,7 @@ protected:
     virtual void doClose();
     virtual void getCalculateProperties(const QModelIndex &);
     virtual void setCalculateProperties(const QModelIndex &);
+    virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
 };
 
 #endif // ESSENCE_H

@@ -43,11 +43,18 @@ bool App::doOpen() {
                 dictionaryList = new Dictionaries;
                 topersList = new Topers;
                 if (dictionaryList->open() && topersList->open())
-                {   // И удалось открыть спосок справочников и типовых операций
-                    db->getPeriod(beginDate, endDate);
-                    gui->getMainWindow()->showPeriod();
-                    lResult = true;     // Приложение удалось открыть
-                    break;  // Выйдем из бесконечного цикла открытия БД
+                {   // Удалось открыть спосок справочников и типовых операций
+                    // Откроем справочник констант
+                    QString constDictionaryName = "константы";
+                    dictionaryList->addDictionary(db->getObjectName(constDictionaryName));
+                    if (dictionaryList->isMember(constDictionaryName))
+                    {
+                        dictionaryList->getDictionary(constDictionaryName)->query();    // Прочитаем содержимое справочника констант
+                        db->getPeriod(beginDate, endDate);
+                        gui->getMainWindow()->showPeriod();
+                        lResult = true;     // Приложение удалось открыть
+                        break;  // Выйдем из бесконечного цикла открытия БД
+                    }
                 }
             }
             else if (result == -2)

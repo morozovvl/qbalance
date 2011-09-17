@@ -604,3 +604,51 @@ void Document::insertDocString()
     DbFactory->addDocStr(operNumber, docId, parameter);
 }
 
+
+void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
+{
+    // Зарядим константы
+    QString constDictionaryName = app->getDBFactory()->getObjectName("константы");
+    QString constNameField = app->getDBFactory()->getObjectName(constDictionaryName + ".имя");
+    QString constValueField = app->getDBFactory()->getObjectName(constDictionaryName + ".значение");
+    Dictionary* dict = app->getDictionaries()->getDictionary(constDictionaryName);
+    QSqlTableModel* model = dict->getTableModel();
+    for (int i = 0; i < model->rowCount(); i++)
+    {
+        QSqlRecord rec = model->record(i);
+        printValues->insert(QString("[%1.%2]").arg(constDictionaryName).arg(rec.value(constNameField).toString()), rec.value(constValueField));
+    }
+    // Зарядим постоянные справочники
+    foreach (QString dictName, dicts->keys())
+    {
+        dict = dicts->value(dictName);
+        if (dict->isConst())
+        {   // Нам нужны только постоянные справочники
+            foreach(QString field, dict->getFieldsList())
+            {
+                if (field.left(4) != app->getDBFactory()->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
+                {
+                    printValues->insert(QString("[%1.%2]").arg(dictName).arg(field), dict->getValue(field));
+                }
+            }
+        }
+    }
+    // Зарядим реквизиты документа
+    foreach(QString field, getParent()->getFieldsList())
+    {
+        printValues->insert(QString("[%1.%2]").arg(getParent()->getTableName()).arg(field), getParent()->getValue(field));
+    }
+    // Зарядим таблицу
+    model = getTableModel();
+    for (int i = 1; i <= model->rowCount(); i++)
+    {
+        QSqlRecord rec = model->record(i);
+        foreach(QString field, getFieldsList())
+        {
+            printValues->insert(QString("[Таблица%1.%2]").arg(i).arg(field), rec.value(field));
+        }
+    }
+
+}
+
+

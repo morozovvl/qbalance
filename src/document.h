@@ -37,6 +37,7 @@ public:
     virtual void setConstDictId(QString, QVariant);
 protected:
     virtual void setForm();
+    virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
 private:
     QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
     Dictionaries*                   dictionaries;       // Объекты справочников

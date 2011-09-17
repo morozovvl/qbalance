@@ -248,13 +248,29 @@ bool Essence::isFormSelected() {
     return form->selected();
 }
 
-void Essence::print(QString file) {
-    ReportEngine report(this, file);
-    report.open();
-}
-
 void Essence::cmdOk() {
 }
 
 void Essence::cmdCancel() {
 }
+
+
+void Essence::preparePrintValues(QMap<QString, QVariant>* printValues)
+{
+    Q_UNUSED(printValues)
+}
+
+
+void Essence::print(QString file)
+{
+
+//    ReportEngine report(this, file);
+//    report.open();
+    QMap<QString, QVariant> printValues;
+    preparePrintValues(&printValues);
+    for (QMap<QString, QVariant>::iterator i = printValues.begin(); i != printValues.end(); i++)
+    {
+        qDebug() << i.key() << " " << i.value();
+    }
+}
+

@@ -57,6 +57,7 @@ public:
     Q_INVOKABLE QSqlQuery execQuery(QString);
     QStringList getUserList();
     QString getPhotoPath(QString);
+    QString getIdFieldPrefix() { return "код_"; }
 
     bool isError() { return wasError; }
     QString getErrorText() { return errorText; }
