@@ -13,7 +13,9 @@ CONFIG += designer \
 CONFIG += uitools
 CONFIG -= app_bundle
 TEMPLATE = app
-SUBDIRS = src src/plugins
+#SUBDIRS = src/storage \
+#    src/engine \
+#    src/kernel
 SOURCES += src/main.cpp \
     src/app.cpp \
     src/dbfactory.cpp \
