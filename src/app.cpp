@@ -47,6 +47,25 @@ Documents* TApplication::getDocuments(int opNumber) {
     return documents[operName];
 }
 
+
+Dictionaries* TApplication::getDictionaries()
+{
+    return dictionaryList;
+}
+
+
+QVariant TApplication::getDictionaryProperty(QString dictName, const char* property)
+{
+    return dictionaryList->getDictionaryProperty(dictName, property);
+}
+
+
+QVariant TApplication::getToperProperty(int operNumber, QString property)
+{
+    return topersList->getToperProperty(operNumber, property);
+}
+
+
 bool TApplication::doOpen() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
     endDate = QDate::currentDate();

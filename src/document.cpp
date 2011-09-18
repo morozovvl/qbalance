@@ -288,24 +288,32 @@ bool Document::remove() {
 
 
 void Document::show()
-{
+{   // Перед открытием документа запрашивается его содержимое, а для постоянных справочников в документе устанавливаются их значения
     query();
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
-        for (int i = 0; i < toper.rowCount(); i++) {
-            dictName = toper.record(i).value("дбсправ").toString().trimmed();
-            if (dicts->contains(dictName)) {
+        for (int i = 0; i < toper.rowCount(); i++)
+        {
+            int prvNumber = toper.record(i).value("номер").toInt();
+            dictName = toper.record(i).value("дбсправ").toString().trimmed();   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+            if (dicts->contains(dictName))
+            {   // если этот справочник открыт в локальных справочниках документа...
                 dict = dicts->value(dictName);
-                if (dict->isConst()) {
-                    dict->setId(tableModel->record(0).value(QString("p%1__дбкод").arg(i + 1)).toULongLong());
+                if (dict->isConst())
+                {   // ... и помечен как "постоянный"
+                    // то установим его значение, которое актуально для всего документа
+                    dict->setId(tableModel->record(0).value(QString("p%1__дбкод").arg(prvNumber)).toULongLong());
                 }
             }
-            dictName = toper.record(i).value("крсправ").toString().trimmed();
-            if (dicts->contains(dictName)) {
+            dictName = toper.record(i).value("крсправ").toString().trimmed();   // то же самое для справочников по кредиту проводок
+            if (dicts->contains(dictName))
+            {   // если этот справочник открыт в локальных справочниках документа...
                 dict = dicts->value(dictName);
-                if (dict->isConst()) {
-                    dict->setId(tableModel->record(0).value(QString("p%1__кркод").arg(i + 1)).toULongLong());
+                if (dict->isConst())
+                {   // ... и помечен как "постоянный"
+                    // то установим его значение, которое актуально для всего документа
+                    dict->setId(tableModel->record(0).value(QString("p%1__кркод").arg(prvNumber)).toULongLong());
                 }
             }
         }
@@ -368,12 +376,6 @@ void Document::setForm()
 {
     form = new FormDocument();
     form->open(parentForm, (Document*)this);
-}
-
-
-void Document::query(QString filter)
-{
-    Essence::query(filter);
 }
 
 
@@ -606,10 +608,10 @@ void Document::insertDocString()
 void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
 {
     // Зарядим константы
-    QString constDictionaryName = app->getDBFactory()->getObjectName("константы");
-    QString constNameField = app->getDBFactory()->getObjectName(constDictionaryName + ".имя");
-    QString constValueField = app->getDBFactory()->getObjectName(constDictionaryName + ".значение");
-    Dictionary* dict = app->getDictionaries()->getDictionary(constDictionaryName);
+    QString constDictionaryName = TApplication::exemplar()->getDBFactory()->getObjectName("константы");
+    QString constNameField = TApplication::exemplar()->getDBFactory()->getObjectName(constDictionaryName + ".имя");
+    QString constValueField = TApplication::exemplar()->getDBFactory()->getObjectName(constDictionaryName + ".значение");
+    Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(constDictionaryName);
     QSqlTableModel* model = dict->getTableModel();
     for (int i = 0; i < model->rowCount(); i++)
     {
@@ -624,7 +626,7 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
         {   // Нам нужны только постоянные справочники
             foreach(QString field, dict->getFieldsList())
             {
-                if (field.left(4) != app->getDBFactory()->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
+                if (field.left(4) != TApplication::exemplar()->getDBFactory()->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
                 {
                     printValues->insert(QString("[%1.%2]").arg(dictName).arg(field), dict->getValue(field));
                 }

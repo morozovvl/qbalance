@@ -114,8 +114,13 @@ bool DBFactory::doOpen(QString login, QString password)
     db->setHostName(hostName);
     db->setDatabaseName(dbName);
     db->setPort(port);
-    db->setConnectOptions("client_encoding = " + TApplication::encoding());
+//  Владимир.
+//  У меня этот вариант не работает ...
+//    db->setConnectOptions("client_encoding=" + TApplication::encoding());
+//    if (db->open(login, password)) {
+//  поэтому пришлось сделать так:
     if (db->open(login, password)) {
+        exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         currentLogin = login;
         initObjectNames();// Инициируем переводчик имен объектов из внутренних наименований в наименования БД
         return true;
@@ -447,7 +452,7 @@ QStringList DBFactory::initializationScriptList() const
 void DBFactory::initObjectNames()
 {
 // Пока заполняем таблицу "один к одному" без изменения, чтобы можно было работать с существующей БД
-// Если объекты БД поменяют названия, то нужно будет поменять их здесь, либо переписать функцию
+// Если объекты БД поменяют названия, то нужно будет поменять их здесь, либо переписать функцию, чтобы она получала соответствия из БД
     ObjectNames.insert("документы", "документы");
     ObjectNames.insert("документы.переменные", "переменные");
     ObjectNames.insert("проводки", "проводки");

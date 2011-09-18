@@ -125,7 +125,7 @@ void TableView::setModel(MySqlRelationalTableModel* model)
         delete oldModel;
         if (app != 0)
         {
-            app->getDBFactory()->getColumnsProperties(&columns, tableModel->tableName());
+            TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columns, tableModel->tableName());
             setColumnsDelegates();
             setColumnsHeaders();
         }
@@ -140,7 +140,7 @@ void TableView::setColumnsHeaders()
     header->setSortIndicatorShown(true);
 //    connect(header, SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sortIndicatorChanged(int, Qt::SortOrder)));
     if (parent != 0) {
-        QSqlQuery headers = app->getDBFactory()->getColumnsHeaders(parent->getParent()->getTagName());
+        QSqlQuery headers = TApplication::exemplar()->getDBFactory()->getColumnsHeaders(parent->getParent()->getTagName());
         if (headers.size() > 0)
         {   // Если удалось прочитать описание столбцов, то установим столбцы в соответствии с описанием
             int i;
@@ -166,7 +166,7 @@ void TableView::setColumnsHeaders()
             return;
         }
     }
-    QStringList fields = app->getDBFactory()->getFieldsList(&columns);
+    QStringList fields = TApplication::exemplar()->getDBFactory()->getFieldsList(&columns);
     for (int i = 0; i < fields.count(); i++)
     {
         tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));

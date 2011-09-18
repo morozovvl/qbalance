@@ -43,7 +43,7 @@ void DocParameters::addString(QString name) {
     gridLayout->addWidget(button, strNum, 2, 1, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));        // При нажатии этой кнопки будем показывать связанный справочник
     lineEdit->setObjectName(name);
-    QString labelName = app->getDictionaryProperty(name, __NAME_IN_FORM__).toString();
+    QString labelName = TApplication::exemplar()->getDictionaryProperty(name, __NAME_IN_FORM__).toString();
     if (labelName.size() == 0)
         labelName = name;
     QLabel* label = new QLabel(labelName + ":");
@@ -87,10 +87,13 @@ void DocParameters::dictionaryButtonPressed() {
     parentForm->setShowFocus();
 }
 
-void DocParameters::showText(QString dName) {
+
+void DocParameters::showText(QString dName)
+{   // На форме документа выводит текущие значения поля ИМЯ постоянных справочников
     foreach (QString dictName, dictionaries->keys()) {
-        if (dictName.compare(dName, Qt::CaseInsensitive) == 0) {
-            QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);
+        if (dictName.compare(dName, Qt::CaseInsensitive) == 0)
+        {   // В списке локальных для документа справочников разыщем справочник <dName>
+            QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);       // На форме документа разыщем строку, в которой будем отображать поле ИМЯ
             QVariant id = dictionaries->value(dictName)->getValue(programIdFieldName);
             dictionaries->value(dictName)->setId(id.toULongLong());;
             lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
@@ -98,6 +101,7 @@ void DocParameters::showText(QString dName) {
         }
     }
 }
+
 
 void DocParameters::setFocus() {
     QWidget* widget = gridLayout->itemAtPosition(0, 1)->widget();

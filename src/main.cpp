@@ -4,6 +4,7 @@
 #include <QResource>
 #include "app.h"
 
+
 bool readParameters(int argc, char *argv[]) {
     bool lContinue = true;
     QTextStream out(stdout);
@@ -43,6 +44,7 @@ bool readParameters(int argc, char *argv[]) {
     return lContinue;
 }
 
+
 void test() {
     // Процедура для тестирования на "утечки" памяти
     QString dictName("счета");
@@ -56,6 +58,7 @@ void test() {
         qDebug() << i;
     }
 }
+
 
 int main(int argc, char **argv)
 {

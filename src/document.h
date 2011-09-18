@@ -22,7 +22,6 @@ class Document : public Essence {
 public:
     Document(int, Documents*);
     virtual ~Document();
-    virtual void query(QString filter = "");
     int getDocId() { return docId; }
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dicts; }

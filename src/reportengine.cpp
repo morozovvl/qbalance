@@ -36,9 +36,6 @@ bool ReportEngine::doOpen() {
         TApplication::exemplar()->showError(QString(QObject::tr("Ошибка в строке %1 в программе %2")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFileName));
         lResult = false;
     }
-//    }
-//    else
-//        app->showError(QObject::tr("Не удалось открыть файл со скриптами отчета") + " " + scriptFileName);
     return lResult;
 }
 

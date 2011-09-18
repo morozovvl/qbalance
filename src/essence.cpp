@@ -146,8 +146,7 @@ qulonglong Essence::getId(int row) {
 
 void Essence::setId(qulonglong id) {
     if (id > 0) {
-        QModelIndex index = form->getCurrentIndex();
-        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::errorFileName()).arg(id));
+        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::idFieldName()).arg(id));
         for (int i = 0; i < tableModel->rowCount(); i++) {
             form->getGridTable()->selectRow(i);
             if (getId() == id) {
@@ -156,7 +155,10 @@ void Essence::setId(qulonglong id) {
         }
 
         if (tableModel->rowCount() > 0)
+        {
+            QModelIndex index = form->getCurrentIndex();
             form->setCurrentIndex(index.sibling(0, 0));
+        }
     }
 }
 

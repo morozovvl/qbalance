@@ -17,7 +17,8 @@ MyLineEdit::MyLineEdit(DelegateTypes type, QWidget* par, QObject* parForm, QMode
     parent = ((FormGrid*)parentForm)->getParent();
     index = idx;
     oldValue = parent->getMyRelationalTableModel()->data(index);
-    parent->setOldCalculateProperties(index);
+// Уберем, пока не разберемся со скриптами
+//    parent->setOldCalculateProperties(index);
     calculated = false;
 }
 

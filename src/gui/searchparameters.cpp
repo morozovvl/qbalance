@@ -56,13 +56,13 @@ void SearchParameters::addString(QString name, int strNum) {
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
-        labelName = app->getDictionaries()->getDictionaryProperty(name, "имя_в_форме").toString();
+        labelName = TApplication::exemplar()->getDictionaries()->getDictionaryProperty(name, "имя_в_форме").toString();
         name = name + "." + programNameFieldName;
         if (labelName.size() == 0)
             labelName = name;
     }
     else {
-        labelName = app->getDictionaries()->getDictionaryProperty(parentForm->getParent()->getTableName(), "имя_в_форме").toString();
+        labelName = TApplication::exemplar()->getDictionaries()->getDictionaryProperty(parentForm->getParent()->getTableName(), "имя_в_форме").toString();
         if (labelName.size() == 0)
             labelName = "Наименование";
         name = parentForm->getParent()->getTableName() + "." + programNameFieldName;
@@ -113,8 +113,8 @@ void SearchParameters::getParameters(QVector<sParam> &param) {
         if (par.table != parentForm->getParent()->getTableName()) {
             par.field = programIdFieldName + "_" + par.table;
             par.value = 0;
-            if (app->getDictionaries()->isMember(par.table))              // Если такой справочник существует
-                par.value = app->getDictionaries()->getDictionary(par.table)->getId();                          // то возьмем идентификатор его текущей записи
+            if (TApplication::exemplar()->getDictionaries()->isMember(par.table))              // Если такой справочник существует
+                par.value = TApplication::exemplar()->getDictionaries()->getDictionary(par.table)->getId();                          // то возьмем идентификатор его текущей записи
             par.table = parentForm->getParent()->getTableName();
             if (par.value.toLongLong() > 0)
                 param.append(par);
@@ -123,8 +123,8 @@ void SearchParameters::getParameters(QVector<sParam> &param) {
 }
 
 void SearchParameters::dictionaryButtonPressed() {
-    app->getDictionaries()->addDictionary(sender()->objectName(), 0);
-    Dictionary* dict = app->getDictionaries()->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
+    TApplication::exemplar()->getDictionaries()->addDictionary(sender()->objectName(), 0);
+    Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
     if (dict != 0) {
         dict->exec();
         if (dict->isFormSelected()) {

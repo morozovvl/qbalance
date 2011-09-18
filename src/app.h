@@ -29,9 +29,9 @@ public:
     TApplication(QApplication*);
     virtual ~TApplication();
     QApplication* getApplication() { return Application; }
-    Q_INVOKABLE Dictionaries* getDictionaries() { return dictionaryList; }
-    QVariant getDictionaryProperty(QString dictName, const char* property) { return dictionaryList->getDictionaryProperty(dictName, property); }
-    QVariant getToperProperty(int operNumber, QString property) { return topersList->getToperProperty(operNumber, property); }
+    Q_INVOKABLE Dictionaries* getDictionaries();
+    QVariant getDictionaryProperty(QString, const char*);
+    QVariant getToperProperty(int, QString);
     Q_INVOKABLE Documents* getDocuments(int);
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }
     GUIFactory* getGUIFactory() { return gui; }
