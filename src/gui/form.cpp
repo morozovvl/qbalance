@@ -9,10 +9,7 @@
 #include "../essence.h"
 #include "mainwindow.h"
 
-
-class App;
-extern App* app;
-extern QString programResourcesFile;
+class TApplication;
 
 Form::Form(QObject* parent/* = NULL*/)
 : QObject(parent)
@@ -61,8 +58,8 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     formWidget = 0;
     defaultForm = true;
     script = "";
-    engine = 0;                                 // По умолчанию не создается никакой скриптовый движок
-    fileName = app->getFormsPath(fileName);
+    engine = 0; // По умолчанию не создается никакой скриптовый движок
+    fileName = TApplication::exemplar()->getFormsPath(fileName);
     QFile file(fileName + ".ui");
     if (file.open(QIODevice::ReadOnly)) {
         QUiLoader loader;
@@ -319,7 +316,7 @@ QDomElement Form::createPushButtonElement(QWidget* obj) {
     icon.setAttribute("name", "icon");
     QDomElement str1, str2;
     str1 = doc.createElement("iconset");
-    str1.setAttribute("resource", programResourcesFile);
+    str1.setAttribute("resource", TApplication::resourcesFile());
     str2 = doc.createElement("normalon");
     str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
@@ -583,7 +580,7 @@ void Form::createUi() {
             root.appendChild(cl);
             QDomElement resources = doc.createElement("resources");
             QDomElement include = doc.createElement("include");
-            include.setAttribute("location", programResourcesFile);
+            include.setAttribute("location", TApplication::resourcesFile());
             resources.appendChild(include);
             root.appendChild(resources);
             doc.appendChild(root);

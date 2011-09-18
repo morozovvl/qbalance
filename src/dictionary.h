@@ -6,8 +6,7 @@
 #include "essence.h"
 #include "gui/formgridsearch.h"
 
-class App;
-extern App* app;
+class TApplication;
 class Dictionaries;
 
 class Dictionary : public Essence {

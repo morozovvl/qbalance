@@ -8,7 +8,6 @@
 
 class Dictionary;
 class SearchParameters;
-extern App* app;
 
 struct sParam {
     QString field;

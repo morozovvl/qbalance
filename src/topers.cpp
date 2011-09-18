@@ -3,22 +3,23 @@
 #include "topers.h"
 #include "gui/formgridsearch.h"
 
-extern App* app;
-
 Topers::Topers(QObject *parent): Dictionary("vw_доступ_к_топер", parent) {
     configName = formTitle;
-    topersProperties = app->getDBFactory()->getTopersProperties();
+    topersProperties = TApplication::exemplar()->getDBFactory()->getTopersProperties();
 }
 
 QVariant Topers::getToperProperty(int operNumber, QString property) {
-    if (topersProperties.first()) {
-        do {
-            QSqlRecord rec = topersProperties.record();
-            if (rec.field("опер").value().toInt() == operNumber)
-                return rec.field(property).value();
-        } while (topersProperties.next());
+    QVariant result;
+
+    QSqlRecord record = topersProperties.record();
+
+    for (topersProperties.first(); topersProperties.isValid(); topersProperties.next()) {
+        if (record.field("опер").value().toInt() == operNumber){
+            result = record.field(property).value();
+            break;
+        }
     }
-    return "";
+    return result;
 }
 
 void Topers::cmdOk() {
@@ -27,7 +28,7 @@ void Topers::cmdOk() {
 
 void Topers::addDocuments(int opNumber) {
     if (opNumber > 0) {
-        Documents* doc = app->getDocuments(opNumber);
+        Documents* doc = TApplication::exemplar()->getDocuments(opNumber);
         if (doc != NULL) {
             doc->show();
         }

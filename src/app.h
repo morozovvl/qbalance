@@ -20,15 +20,15 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 
-class App : public Custom {
+class TApplication : public Custom {
     Q_OBJECT
 
 public:
     QMap<QString, Documents*> documents;                        // Объекты списков документов
 
-    App(QApplication*);
-    virtual ~App() { ; }
-    QApplication* getApplication() { return application; }
+    TApplication(QApplication*);
+    virtual ~TApplication();
+    QApplication* getApplication() { return Application; }
     Q_INVOKABLE Dictionaries* getDictionaries() { return dictionaryList; }
     QVariant getDictionaryProperty(QString dictName, const char* property) { return dictionaryList->getDictionaryProperty(dictName, property); }
     QVariant getToperProperty(int operNumber, QString property) { return topersList->getToperProperty(operNumber, property); }
@@ -53,6 +53,24 @@ public:
     static QString encoding();
     static QTextCodec* codec();
 
+    static QString name()          { return "Enterprise";}
+    static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
+    static QString version()       { return "0.01";}
+    static bool debugMode()        { return false;}
+    static QTextStream& debugStream(){ return *DebugStream;}
+    static QString debugFileName() { return "debug.log";}
+    static QString errorFileName() { return "error.log";}
+    static QFile&  debugFile()     { return *DebugFile;}
+    static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss";}
+    static QString maxSumMask()    { return MaxSumMask;}
+    static QString idFieldName()   { return IdFieldName;}
+    static QString nameFieldName() { return NameFieldName;}
+    static QString resourcesFile() { return QDir::currentPath() + "/src/resources.qrc";}
+    static bool setDebugMode(const bool& value);
+
+    static void debug(const QString& value);
+
+    static TApplication* exemplar();
 public slots:
     void showError(QString error) { gui->showError(error); }
     void showCriticalError(QString error) { gui->showCriticalError(error); }
@@ -62,7 +80,7 @@ private:
     Topers* topersList;                                   // Форма со списком операций
     DBFactory* db;
     GUIFactory* gui;
-    QApplication* application;
+    QApplication* Application;
     QString organizationName;
     QDate beginDate;
     QDate endDate;
@@ -70,6 +88,14 @@ private:
     bool doOpen();
     void doClose();
     void loadConsts();
+
+    static QFile*        DebugFile;
+    static bool          DebugMode;
+    static QTextStream*  DebugStream;
+    static QString       MaxSumMask;
+    static QString IdFieldName;
+    static QString NameFieldName;
+    static TApplication* Exemplar;
 };
 
 #endif

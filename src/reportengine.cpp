@@ -8,8 +8,6 @@
 #include "essence.h"
 #include "reportcontextfunctions.cpp"
 
-extern App* app;
-
 ReportEngine::ReportEngine(Essence* par, QString name) {
     parent = par;
     engine = new QScriptEngine();
@@ -35,7 +33,7 @@ bool ReportEngine::doOpen() {
         lResult = true;
     }
     else {
-        app->showError(QString(QObject::tr("Ошибка в строке %1 в программе %2")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFileName));
+        TApplication::exemplar()->showError(QString(QObject::tr("Ошибка в строке %1 в программе %2")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFileName));
         lResult = false;
     }
 //    }

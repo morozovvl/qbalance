@@ -14,7 +14,7 @@
 #include "formgridsearch.h"
 #include "../app.h"
 
-class App;
+class TApplication;
 class FormDocument;
 
 class DocParameters : public QFrame {
@@ -32,7 +32,7 @@ public:
     void setFormDocument(FormDocument* doc) { parentForm = doc; }
     void showText(QString);
     int count() { return strNum; }
-    void setApp(App* a) { app = a; }
+    void setApp(TApplication* a) { app = a; }
     void setProgramIdFieldName(QString s) { programIdFieldName = s; }
     void setProgramNameFieldName(QString s) { programNameFieldName = s; }
 
@@ -40,7 +40,7 @@ public slots:
     void dictionaryButtonPressed();
 
 private:
-    App* app;
+    TApplication* app;
     QString programIdFieldName;
     QString programNameFieldName;
     QMap<QString, Dictionary*>* dictionaries;

@@ -11,12 +11,6 @@
 #define LABEL_DATE     tr("Дата:")
 #define LABEL_NUMBER   tr("Номер:")
 
-
-extern QString programMaxSumMask;
-extern QString programIdFieldName;
-extern QString programNameFieldName;
-
-
 FormDocument::FormDocument()
 : FormGrid()
 , dateEdit(NULL)
@@ -104,9 +98,9 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         parameters->setDictionaries(getParent()->getDictionaries());
         parameters->setFormDocument(this);
-        parameters->setApp(app);
-        parameters->setProgramIdFieldName(programIdFieldName);
-        parameters->setProgramNameFieldName(programNameFieldName);
+        parameters->setApp(TApplication::exemplar());
+        parameters->setProgramIdFieldName(TApplication::idFieldName());
+        parameters->setProgramNameFieldName(TApplication::nameFieldName());
         foreach (QString dictName, getParent()->getDictionaries()->keys())
         {
             if (getParent()->getDictionaries()->value(dictName)->isConst())

@@ -11,20 +11,20 @@
 #include "../mysqlrelationaltablemodel.h"
 #include "../dbfactory.h"
 
-class App;
+class TApplication;
 class FormGrid;
 
 class TableView : public QTableView {
     Q_OBJECT
 public:
-    QMap<int, fldType> columns;
+    QMap<int, FieldType> columns;
     TableView(FormGrid*, QWidget* parentWidget = 0);
     TableView(QWidget* parentWidget = 0);
     ~TableView();
     void setFormGrid(FormGrid* par) { parent = par; }
     Q_INVOKABLE QVariant getValue();
     Q_INVOKABLE void setModel(MySqlRelationalTableModel*);
-    void setApp(App* a) { app = a; }
+    void setApp(TApplication* a) { app = a; }
 signals:
     void rowChanged();
 protected slots:
@@ -35,7 +35,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void currentChanged(const QModelIndex &, const QModelIndex &);
 private:
-    App* app;
+    TApplication* app;
     MySqlRelationalTableModel* tableModel;
     bool isFieldExists(QString);
     void setColumnsHeaders();

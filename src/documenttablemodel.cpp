@@ -4,8 +4,7 @@
 #include "mysqlrelationaltablemodel.h"
 #include "document.h"
 
-class App;
-extern App* app;
+class TApplication;
 
 DocumentTableModel::DocumentTableModel(): MySqlRelationalTableModel() {
     setBlockUpdate(true);
@@ -27,7 +26,7 @@ bool DocumentTableModel::submit(const QModelIndex& index) {
                 QSqlQuery query;
                 if (!query.exec(command)) {
                     database().rollback();
-                    app->showError(query.lastError().text());
+                    TApplication::exemplar()->showError(query.lastError().text());
                     return false;
                 }
             }

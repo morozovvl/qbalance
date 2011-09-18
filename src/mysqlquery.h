@@ -8,8 +8,9 @@ class MySqlQuery : public QObject {
     Q_OBJECT
 
 public:
-    MySqlQuery(QString);
-    MySqlQuery(QSqlQuery);
+    MySqlQuery(const QString&);
+    MySqlQuery(const QSqlQuery&);
+    ~MySqlQuery();
     Q_INVOKABLE int size() { return query->size(); }
 
 private:

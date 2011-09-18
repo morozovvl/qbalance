@@ -18,8 +18,7 @@
 #include "table.h"
 #include "scriptengine.h"
 
-class App;
-extern App* app;
+class TApplication;
 
 class FormGrid;
 

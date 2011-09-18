@@ -8,23 +8,17 @@
 #include "gui/mainwindow.h"
 #include "mysqlrelationaltablemodel.h"
 
-extern App* app;
-extern QString programErrorFileName;
-extern QString programIdFieldName;
-extern QString programNameFieldName;
-
-
 Document::Document(int oper, Documents* par) : Essence()
 {
     Dictionary* dict;
-    DbFactory = app->getDBFactory();
+    DbFactory = TApplication::exemplar()->getDBFactory();
     parent = par;
     lPrintable = true;
     tableName = DbFactory->getObjectName("проводки");
     operNumber = oper;
     configName = QString("Документ%1").arg(oper);
-    formTitle = app->getToperProperty(oper, programNameFieldName).toString();
-    idFieldName = "p1__" + programIdFieldName;
+    formTitle = TApplication::exemplar()->getToperProperty(oper, TApplication::nameFieldName()).toString();
+    idFieldName = "p1__" + TApplication::idFieldName();
 
     dictionaries = new Dictionaries;
     if (dictionaries->open())
@@ -286,7 +280,7 @@ bool Document::remove() {
         }
     }
     else
-        showError(QString(QObject::tr("Запрещено удалять строки в документах пользователю %2")).arg(app->getLogin()));
+        showError(QString(QObject::tr("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
     return false;
 }
 
@@ -354,9 +348,9 @@ QSqlQuery Document::getColumnsHeaders()
 
 bool Document::doOpen()
 {
-    lInsertable = app->getDictionaryProperty(tableName, "insertable").toBool();
-    lDeleteable = app->getDictionaryProperty(tableName, "deleteable").toBool();
-    lUpdateable = app->getDictionaryProperty(tableName, "updateable").toBool();
+    lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
+    lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
+    lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
     if (Essence::doOpen()) {
         initForm();
         return true;
@@ -409,7 +403,7 @@ void Document::setTableModel()
     int keyColumn = 0;
     QStringList updateFields;
     updateFields << "кол" << "цена" << "сумма";
-    QMap<int, fldType> fields;
+    QMap<int, FieldType> fields;
     DbFactory->getColumnsProperties(&fields, tableName);
     // Создадим клаузу проводок в секции SELECT
     for (i = 0; i < toper.rowCount(); i++)

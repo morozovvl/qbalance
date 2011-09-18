@@ -2,14 +2,13 @@
 #include "saldo.h"
 #include "mysqlrelationaltablemodel.h"
 
-extern App* app;
-
-Saldo::Saldo(QString cAcc, QString dictName, QObject *parent):Dictionary(dictName, parent) {
+Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
+: Dictionary(dictName, parent) {
     configName = "saldo" + cAcc;
     account = cAcc;
     dictionaryName = dictName;
     quan = false;
-    QSqlQuery accRecord = app->getDBFactory()->execQuery(QString("SELECT количество FROM счета WHERE счет LIKE '%1'").arg(cAcc));
+    QSqlQuery accRecord = TApplication::exemplar()->getDBFactory()->execQuery(QString("SELECT количество FROM счета WHERE счет LIKE '%1'").arg(cAcc));
     if (accRecord.first())
        quan = accRecord.record().value("количество").toBool();
 }

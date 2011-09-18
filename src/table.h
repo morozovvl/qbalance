@@ -10,8 +10,7 @@
 #include "custom.h"
 #include "dbfactory.h"
 
-class App;
-extern App* app;
+class TApplication;
 
 class MySqlRelationalTableModel;
 
@@ -36,7 +35,7 @@ public:
 protected:
     MySqlRelationalTableModel* tableModel;
 //    QStringList fieldList;
-    QMap<int, fldType> columnsProperties;
+    QMap<int, FieldType> columnsProperties;
     virtual bool doOpen();
     virtual void doClose();
     virtual void setTableModel();
