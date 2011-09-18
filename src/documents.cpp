@@ -1,4 +1,4 @@
-#include <QString>
+﻿#include <QString>
 #include "app.h"
 #include "document.h"
 #include "documents.h"
@@ -9,7 +9,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     lViewable = true;
     tableName = "документы";
     operNumber = opNumber;
-    configName = QString("СписокДокументов%1").arg(operNumber);
+    tagName = QString("СписокДокументов%1").arg(operNumber);
     formTitle = QString("%1 - %2").arg(TApplication::exemplar()->getToperProperty(operNumber, TApplication::nameFieldName()).toString()).arg(QObject::tr("Список документов"));
 }
 

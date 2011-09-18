@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE virtual bool open(QString, QObject* form = 0);
     Q_INVOKABLE virtual void close();
     void setConfigName(QString name) { configName = name; setObjectName(configName); }
+    QString getConfigName() { return configName; }
     virtual void readSettings();
     virtual void writeSettings();
     virtual void createUi();

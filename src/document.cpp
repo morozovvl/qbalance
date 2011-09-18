@@ -1,4 +1,4 @@
-#include <QModelIndex>
+﻿#include <QModelIndex>
 #include "app.h"
 #include "dictionary.h"
 #include "saldo.h"
@@ -15,8 +15,7 @@ Document::Document(int oper, Documents* par) : Essence()
     parent = par;
     lPrintable = true;
     tableName = DbFactory->getObjectName("проводки");
-    operNumber = oper;
-    configName = QString("Документ%1").arg(oper);
+    tagName = QString("Документ%1").arg(oper);
     formTitle = TApplication::exemplar()->getToperProperty(oper, TApplication::nameFieldName()).toString();
     idFieldName = "p1__" + TApplication::idFieldName();
 
@@ -340,12 +339,6 @@ void Document::setConstDictId(QString dName, QVariant id)
 }
 
 
-QSqlQuery Document::getColumnsHeaders()
-{
-    return DbFactory->getColumnsHeaders(configName);
-}
-
-
 bool Document::doOpen()
 {
     lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
@@ -532,7 +525,7 @@ void Document::setTableModel()
     }
     selectStatement = selectClause + fromClause + " ORDER BY p.p1__стр ASC";
     tableModel->setSelectStatement(selectStatement);
-    DbFactory->getColumnsRestrictions(configName, &columnsProperties);
+    DbFactory->getColumnsRestrictions(tagName, &columnsProperties);
     // Заполним модель пустыми данными. Это необходимо только в случае, если мы сами генерировали команду запроса для модели.
     int oldDocId = docId;
     docId = 0;

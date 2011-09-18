@@ -7,7 +7,6 @@
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     formTitle = "";
-    configName = "Справочник." + tableName;
     lPrintable = true;
     lIsSet = false;
     lCanShow = true;

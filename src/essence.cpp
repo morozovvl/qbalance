@@ -71,7 +71,6 @@ bool Essence::calculate(const QModelIndex &index) {
             index = index.sibling(form->getCurrentRowIndex(), i);
             tableModel->setData(index, tableModel->data(index));
         }
-        return true;
     }
     return true;
 }
@@ -229,7 +228,6 @@ void Essence::setForm() {
 
 void Essence::initForm() {
     setForm();
-    form->setConfigName(configName);
     form->readSettings();
     setFormTitle(formTitle);
     form->initFormEvent();

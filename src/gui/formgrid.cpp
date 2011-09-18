@@ -31,6 +31,7 @@ FormGrid::FormGrid(QObject* parent/* = NULL*/)
 {
 }
 
+
 void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     Form::createForm(fileName, pwgt);
@@ -332,7 +333,7 @@ void FormGrid::showEvent(QShowEvent* event)
 void FormGrid::cmdPrint()
 {
     QDir dir = QDir(REPORT_DIR);
-    QStringList files = dir.entryList(QStringList(parent->getConfigName() + ".*.ods"), QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList(getConfigName() + ".*.ods"), QDir::Files, QDir::Name);
     QStringList reports;
     QMenu* menu = new QMenu(formWidget);
     QAction* newReportAct = menu->addAction(QObject::tr("Создать новый отчет..."));
@@ -342,7 +343,7 @@ void FormGrid::cmdPrint()
         for (int i = 0; i < files.size(); i++)
         {
             QString file = files.at(i);
-            file.remove(parent->getConfigName() + ".", Qt::CaseInsensitive);
+            file.remove(getConfigName() + ".", Qt::CaseInsensitive);
             file.remove(".ods", Qt::CaseInsensitive);
             reports << file;
             menu->addAction(file);
@@ -367,10 +368,10 @@ void FormGrid::cmdPrint()
                                               tr("Наименование отчета:"), QLineEdit::Normal,
                                               reportName, &ok);
                 if (ok && !reportName.isEmpty())
-                    parent->print(REPORT_DIR + parent->getConfigName() + "." + reportName);
+                    parent->print(REPORT_DIR + getConfigName() + "." + reportName);
             }
             else
-                parent->print(REPORT_DIR + parent->getConfigName() + "." + action->text());
+                parent->print(REPORT_DIR + getConfigName() + "." + action->text());
         }
     }
     FormGrid::setShowFocus();

@@ -56,8 +56,8 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
     return getDictionaryProperty(dictName, "таблица").toString();
 }
 
+
 bool Dictionaries::doOpen() {
-    configName = formTitle;
     if (Essence::doOpen()) {
         initForm();
         formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);

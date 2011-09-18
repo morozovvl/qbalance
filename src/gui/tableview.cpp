@@ -139,35 +139,37 @@ void TableView::setColumnsHeaders()
     header->setMovable(true);
     header->setSortIndicatorShown(true);
 //    connect(header, SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sortIndicatorChanged(int, Qt::SortOrder)));
-    QSqlQuery headers = app->getDBFactory()->getColumnsHeaders(tableModel->tableName());
-    if (headers.size() > 0)
-    {
-        int i;                                                          // Если удалось прочитать описание столбцов, то установим столбцы в соответствии с описанием
-        for (i = 0; i < app->getDBFactory()->getFieldsList(&columns).count(); i++)       // Скроем все столбцы
-            hideColumn(i);
-        QString columnName;                 // Расположим их по порядку, как они идут в описании и дадим им правильные заголовки
-        QSqlRecord rec;
-        int k;
-        i = 0;
-        if (headers.first())
-        {
-            do
+    if (parent != 0) {
+        QSqlQuery headers = app->getDBFactory()->getColumnsHeaders(parent->getParent()->getTagName());
+        if (headers.size() > 0)
+        {   // Если удалось прочитать описание столбцов, то установим столбцы в соответствии с описанием
+            int i;
+            for (i = 0; i < tableModel->columnCount(); i++)       // Скроем все столбцы
+                hideColumn(i);
+            QString columnName;                 // Расположим их по порядку, как они идут в описании и дадим им правильные заголовки
+            QSqlRecord rec;
+            int k;
+            i = 0;
+            if (headers.first())
             {
-                rec = headers.record();
-                columnName = rec.value("столбец").toString().trimmed();
-                k = tableModel->fieldIndex(columnName);
-                header->showSection(k);
-                tableModel->setHeaderData(k, Qt::Horizontal, rec.value("заголовок").toString().trimmed());
-                header->moveSection(header->visualIndex(k), i);
-                i++;
-            } while (headers.next());
+                do
+                {
+                    rec = headers.record();
+                    columnName = rec.value("столбец").toString().trimmed();
+                    k = tableModel->fieldIndex(columnName);
+                    header->showSection(k);
+                    tableModel->setHeaderData(k, Qt::Horizontal, rec.value("заголовок").toString().trimmed());
+                    header->moveSection(header->visualIndex(k), i);
+                    i++;
+                } while (headers.next());
+            }
+            return;
         }
     }
-    else
+    QStringList fields = app->getDBFactory()->getFieldsList(&columns);
+    for (int i = 0; i < fields.count(); i++)
     {
-        QStringList fields = app->getDBFactory()->getFieldsList(&columns);
-        for (int i = 0; i < fields.count(); i++)
-            tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));
+        tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));
     }
 }
 

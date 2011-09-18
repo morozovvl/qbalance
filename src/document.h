@@ -23,7 +23,6 @@ public:
     Document(int, Documents*);
     virtual ~Document();
     virtual void query(QString filter = "");
-    virtual QSqlQuery getColumnsHeaders();
     int getDocId() { return docId; }
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dicts; }

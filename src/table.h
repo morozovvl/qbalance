@@ -1,4 +1,4 @@
-#ifndef TABLE_H
+﻿#ifndef TABLE_H
 #define TABLE_H
 
 #include <QDebug>
@@ -30,16 +30,19 @@ public:
 
     Q_INVOKABLE QStringList getFieldsList();
     Q_INVOKABLE QString getTableName() { return tableName; }
+    QString getTagName() { return tagName; }
     Q_INVOKABLE virtual void query(QString filter = "");
 
 protected:
-    MySqlRelationalTableModel* tableModel;
-//    QStringList fieldList;
+    QString                     tableName;
+    QString                     tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
+    MySqlRelationalTableModel*  tableModel;
+    QMap<int, fldType>          columnsProperties;
+
     QMap<int, FieldType> columnsProperties;
     virtual bool doOpen();
     virtual void doClose();
     virtual void setTableModel();
-    QString tableName;
 };
 
 #endif // TABLE_H
