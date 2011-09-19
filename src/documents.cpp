@@ -1,4 +1,4 @@
-﻿#include <QString>
+#include <QString>
 #include "app.h"
 #include "document.h"
 #include "documents.h"
@@ -32,9 +32,9 @@ bool Documents::add() {
     return TApplication::exemplar()->getDBFactory()->addDoc(operNumber, date);
 }
 
-QSqlQuery Documents::getColumnsHeaders() {
-    return TApplication::exemplar()->getDBFactory()->getColumnsHeaders(configName);
-}
+//QSqlQuery Documents::getColumnsHeaders() {
+//    return TApplication::exemplar()->getDBFactory()->getColumnsHeaders(configName);
+//}
 
 bool Documents::remove() {
     if (lDeleteable) {

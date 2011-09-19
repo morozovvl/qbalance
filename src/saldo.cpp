@@ -4,7 +4,7 @@
 
 Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
 : Dictionary(dictName, parent) {
-    configName = "saldo" + cAcc;
+    //configName = "saldo" + cAcc;
     account = cAcc;
     dictionaryName = dictName;
     tagName = "saldo" + cAcc;

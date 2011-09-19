@@ -170,7 +170,7 @@ QStringList DBFactory::getUserList()
     static short index          = 0;
 
     clearError();
-    QStringList result;
+        QStringList result;
     QSqlQuery query = execQuery(clause);
 
     while (query.next())
@@ -453,15 +453,16 @@ void DBFactory::initObjectNames()
 }
 
 
-QString DBFactory::getObjectName(QString name) const
+QString DBFactory::getObjectName(const QString& name) const
 // транслирует имена объектов БД из "внутренних" в реальные наименования
 {
+    QString result;
     QMap<QString, QString>::const_iterator i = ObjectNames.find(name);
-    if ( i == ObjectNames.end())
+    if (i != ObjectNames.end())
     {
-        return QString();
+        result = i.value();
     }
-    return ObjectNames.value(i.key());
+    return result;
 }
 
 QString DBFactory::storageEncoding()

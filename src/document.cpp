@@ -1,4 +1,4 @@
-﻿#include <QModelIndex>
+#include <QModelIndex>
 #include "app.h"
 #include "dictionary.h"
 #include "saldo.h"
@@ -8,11 +8,13 @@
 #include "gui/mainwindow.h"
 #include "mysqlrelationaltablemodel.h"
 
-Document::Document(int oper, Documents* par) : Essence()
+Document::Document(int oper, Documents* par)
+: Essence()
+, parent(par)
+, operNumber(oper)
 {
     Dictionary* dict;
     DbFactory = TApplication::exemplar()->getDBFactory();
-    parent = par;
     lPrintable = true;
     tableName = DbFactory->getObjectName("проводки");
     tagName = QString("Документ%1").arg(oper);
@@ -32,11 +34,12 @@ Document::Document(int oper, Documents* par) : Essence()
     toper.setEditStrategy(QSqlTableModel::OnManualSubmit);
     toper.select();
 
+    qDebug() << " Строк в справочнике: " + QString::number(toper.rowCount());
+
     // Составим список справочников, которые используются при работе с документом
-    int i;
     QString dictName;
     QList<QString> spravList;
-    for (i = 0; i < toper.rowCount(); i++)
+    for (int i = 0; i < toper.rowCount(); i++)
     {
         // получим имя дебетового справочника из описания проводок
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
@@ -51,7 +54,7 @@ Document::Document(int oper, Documents* par) : Essence()
         dictName = toper.record(i).value("крсправ").toString().trimmed();
 
         // если имя справочника не пустое, этот справочник "видим" и еще не содержится в списке
-        if (dictName.size() > 0 && toper.record(i).value("крвидим").toBool() && !spravList.contains("кр" + dictName))
+        if (!dictName.isEmpty() && toper.record(i).value("крвидим").toBool() && !spravList.contains("кр" + dictName))
 
             // и если в кредитовом справочнике не ведется количественный учет
             if (!toper.record(i).value("кркол").toBool())
@@ -62,10 +65,10 @@ Document::Document(int oper, Documents* par) : Essence()
     }
 
     QModelIndex index;
-    for (i = 0; i < toper.rowCount(); i++)
+    for (int i = 0; i < toper.rowCount(); i++)
     {
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
-        if (dictName.size() > 0)
+        if (!dictName.isEmpty())
         {
             index = toper.index(i, toper.record().indexOf("дбсправалиас"));
             if (dicts->contains("дб" + dictName) && dicts->contains("кр" + dictName))
@@ -74,7 +77,7 @@ Document::Document(int oper, Documents* par) : Essence()
                 toper.setData(index, QVariant(dictName));
         }
         dictName = toper.record(i).value("крсправ").toString().trimmed();
-        if (dictName.size() > 0)
+        if (!dictName.isEmpty())
         {
             index = toper.index(i, toper.record().indexOf("крсправалиас"));
             if (dicts->contains("кр" + dictName) && dicts->contains("дб" + dictName))
@@ -85,7 +88,7 @@ Document::Document(int oper, Documents* par) : Essence()
     }
 
     QString cAccount, alias;
-    for (i = 0; i < toper.rowCount(); i++) {
+    for (int i = 0; i < toper.rowCount(); i++) {
         dictName = toper.record(i).value("крсправ").toString().trimmed();
         if (dictName.size() > 0) {
             if (toper.record(i).value("кркол").toBool())
@@ -120,7 +123,7 @@ Document::Document(int oper, Documents* par) : Essence()
             }
         }
     }
-    for (i = 0; i < toper.rowCount(); i++)
+    for (int i = 0; i < toper.rowCount(); i++)
     {
         dictName = toper.record(i).value("дбсправ").toString().trimmed();
         if (dictName.size() > 0)
@@ -388,33 +391,35 @@ void Document::setTableModel()
     tableModel = new DocumentTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
-    int i;
+
     QString selectClause, fromClause, whereClause;
     QStringList prvFieldsList = tableModel->getFieldsList();
     int prv;
     int columnCount = 0;
-    int keyColumn = 0;
+    int keyColumn   = 0;
+
     QStringList updateFields;
     updateFields << "кол" << "цена" << "сумма";
+
     QMap<int, FieldType> fields;
     DbFactory->getColumnsProperties(&fields, tableName);
     // Создадим клаузу проводок в секции SELECT
-    for (i = 0; i < toper.rowCount(); i++)
+    for (int i = 0; i < toper.rowCount(); i++)
     {   // Для всех проводок данной типовой операции
         prv = toper.record(i).value("номер").toInt();       // получим номер проводки в типовой операции
-        foreach (QString field, prvFieldsList)
-        {   // Для всех полей таблицы "проводки"
-            if (selectClause.size() > 0)
+        foreach (const QString field, prvFieldsList)
+        {// Для всех полей таблицы "проводки"
+            if (!selectClause.isEmpty())
             {   // Если уже что-то писали в эту клаузу, то добавим запятую
                 selectClause.append(',');
             }
             selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
             if (field == "код")
-            {   // Если в списке полей встретилось поле ключа
-                keyColumn = columnCount;    // Запомним номер столбца с ключом
+            {// Если в списке полей встретилось поле ключа
+                keyColumn = columnCount;// Запомним номер столбца с ключом
             }
             if (updateFields.contains(field))
-            {    // Если поле входит в список сохраняемых полей
+            {// Если поле входит в список сохраняемых полей
                 tableModel->setUpdateInfo(columnCount, keyColumn, field);   // То сохраним информацию, необходимую для генерации команды сохранения этого поля (номер столбца поля, номер столбца ключа и имя поля)
             }
             columnCount++;      // Считаем столбцы
@@ -450,7 +455,7 @@ void Document::setTableModel()
     QString dictName;
     QStringList dictsNames;
     Dictionary* dict;
-    for (i = 0; i < toper.rowCount(); i++) {
+    for (int i = 0; i < toper.rowCount(); i++) {
         prv = toper.record(i).value("номер").toInt();
         dictName = toper.record(i).value("дбсправалиас").toString();
         if (!dictsNames.contains(dictName) && dictName.size() > 0 && dicts->contains(dictName)) {

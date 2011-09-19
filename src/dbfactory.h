@@ -63,7 +63,7 @@ public:
     QString initializationScriptPath() const;
     QStringList initializationScriptList() const;
 
-    QString getObjectName(QString) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
+    QString getObjectName(const QString&) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
 
     static QString storageEncoding();
 
