@@ -275,14 +275,9 @@ void Essence::preparePrintValues(QMap<QString, QVariant>* printValues)
 
 void Essence::print(QString file)
 {
-
-//    ReportEngine report(this, file);
-//    report.open();
     QMap<QString, QVariant> printValues;
     preparePrintValues(&printValues);
-    for (QMap<QString, QVariant>::iterator i = printValues.begin(); i != printValues.end(); i++)
-    {
-        qDebug() << i.key() << " " << i.value();
-    }
+    ReportEngine report(this, file);
+    report.open();
 }
 

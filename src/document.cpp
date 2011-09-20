@@ -460,31 +460,37 @@ void Document::setTableModel()
     Dictionary* dict;
     for (int i = 0; i < toper.rowCount(); i++) {
         prv = toper.record(i).value("номер").toInt();
-        dictName = toper.record(i).value("дбсправалиас").toString();
-        if (!dictsNames.contains(dictName) && dictName.size() > 0 && dicts->contains(dictName)) {
-            DbFactory->getColumnsProperties(&fields, dictName);
-            dict = dicts->value(dictName);
-            foreach (QString field, dict->getFieldsList()) {
-                selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                foreach(int i, fields.keys())
-                    if (fields.value(i).name == field)
-                        DbFactory->addColumnProperties(&columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+        if (toper.record(i).value("дбвидим").toBool())
+        {
+            dictName = toper.record(i).value("дбсправалиас").toString();
+            if (!dictsNames.contains(dictName) && dictName.size() > 0 && dicts->contains(dictName)) {
+                DbFactory->getColumnsProperties(&fields, dictName);
+                dict = dicts->value(dictName);
+                foreach (QString field, dict->getFieldsList()) {
+                    selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                    foreach(int i, fields.keys())
+                        if (fields.value(i).name == field)
+                            DbFactory->addColumnProperties(&columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                }
+                fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__дбкод=%1.код").arg(dictName).arg(prv));
+                dictsNames << dictName;
             }
-            fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__дбкод=%1.код").arg(dictName).arg(prv));
-            dictsNames << dictName;
         }
-        dictName = toper.record(i).value("крсправалиас").toString();
-        if (!dictsNames.contains(dictName) && dictName.size() > 0 && dicts->contains(dictName)) {
-            DbFactory->getColumnsProperties(&fields, dictName);
-            dict = dicts->value(dictName);
-            foreach (QString field, dict->getFieldsList()) {
-                selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                foreach(int i, fields.keys())
-                    if (fields.value(i).name == field)
-                        DbFactory->addColumnProperties(&columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+        if (toper.record(i).value("крвидим").toBool())
+        {
+            dictName = toper.record(i).value("крсправалиас").toString();
+            if (!dictsNames.contains(dictName) && dictName.size() > 0 && dicts->contains(dictName)) {
+                DbFactory->getColumnsProperties(&fields, dictName);
+                dict = dicts->value(dictName);
+                foreach (QString field, dict->getFieldsList()) {
+                    selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                    foreach(int i, fields.keys())
+                        if (fields.value(i).name == field)
+                            DbFactory->addColumnProperties(&columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                }
+                fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__кркод=%1.код").arg(dictName).arg(prv));
+                dictsNames << dictName;
             }
-            fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__кркод=%1.код").arg(dictName).arg(prv));
-            dictsNames << dictName;
         }
         DbFactory->getColumnsProperties(&fields, "сальдо");
         QString field;
@@ -630,13 +636,25 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
         printValues->insert(QString("[%1.%2]").arg(getParent()->getTableName()).arg(field), getParent()->getValue(field));
     }
     // Зарядим таблицу
-    QSqlTableModel* model = getTableModel();
-    for (int i = 0; i < model->rowCount(); i++)
+    QStringList EnabledPrvFields;
+    EnabledPrvFields << "кол" << "цена" << "сумма";     // список полей таблицы "проводки", которые актуальны при печати документа
+    for (int i = 0; i < getTableModel()->rowCount(); i++)
     {
-        QSqlRecord rec = model->record(i);
+        QSqlRecord rec = getTableModel()->record(i);
         foreach(QString field, getFieldsList())
         {
-            printValues->insert(QString("[Таблица%1.%2]").arg(i+1).arg(field), rec.value(field));
+            if (field.at(0) == 'p' && field.at(1).isDigit())      // если в списке полей встретилось поле, начинающееся с "p<цифра>...",
+            {   // т.е. это поле из таблицы "проводки"
+                QString fld = field.section("__", 1);               // проверим, актуально ли это поле для печати
+                if (EnabledPrvFields.contains(fld))
+                {
+                    printValues->insert(QString("[Таблица%1.%2]").arg(i+1).arg(field), rec.value(field));
+                }
+            }
+            else
+            {
+                printValues->insert(QString("[Таблица%1.%2]").arg(i+1).arg(field), rec.value(field));
+            }
         }
     }
 

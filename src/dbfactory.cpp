@@ -464,6 +464,18 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("документы", "документы");
     ObjectNames.insert("документы.переменные", "переменные");
     ObjectNames.insert("проводки", "проводки");
+    ObjectNames.insert("проводки.код", "код");
+    ObjectNames.insert("проводки.дбкод", "дбкод");
+    ObjectNames.insert("проводки.дбсчет", "дбсчет");
+    ObjectNames.insert("проводки.кркод", "кркод");
+    ObjectNames.insert("проводки.крсчет", "крсчет");
+    ObjectNames.insert("проводки.кол", "кол");
+    ObjectNames.insert("проводки.цена", "цена");
+    ObjectNames.insert("проводки.сумма", "сумма");
+    ObjectNames.insert("проводки.стр", "стр");
+    ObjectNames.insert("проводки.доккод", "доккод");
+    ObjectNames.insert("проводки.опер", "опер");
+    ObjectNames.insert("проводки.номеропер", "номеропер");
     ObjectNames.insert("vw_топер", "vw_топер");
     ObjectNames.insert("константы", "константы");
     ObjectNames.insert("константы.имя", "имя");

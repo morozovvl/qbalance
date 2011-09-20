@@ -4,11 +4,14 @@
 #include <QApplication>
 #include "mybooleanitemdelegate.h"
 
-MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent): MyItemDelegate(parent) {
+MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent): MyItemDelegate(parent)
+{
     delegateType = Boolean;
 }
 
-QWidget* MyBooleanItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+
+QWidget* MyBooleanItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
     Q_UNUSED(option)
     Q_UNUSED(index)
     return new QCheckBox(parent);
