@@ -19,29 +19,12 @@ Table::~Table()
 {
 }
 
-/*
-QMap<int,fldType>* Table::getColumnsProperties() {
+
+QMap<int, FieldType>* Table::getColumnsProperties()
+{
     return &columnsProperties;
 }
-*/
-/*
-void Table::addColumnProperties(QString name, QString type, int length, int precision, bool read) {
-    int maxKey = 0;
-    if (columnsProperties.count() > 0) {
-        foreach (int i, columnsProperties.keys())
-            if (i > maxKey)
-                maxKey = i;
-            maxKey++;
-        }
-    fldType fld;
-    fld.name = name;
-    fld.type = type;
-    fld.length = length;
-    fld.precision = precision;
-    fld.readOnly = read;
-    columnsProperties.insert(maxKey, fld);
-}
-*/
+
 
 bool Table::relationsIsEmpty()
 {
@@ -92,3 +75,4 @@ QStringList Table::getFieldsList()
     return fieldList;
 */
 }
+

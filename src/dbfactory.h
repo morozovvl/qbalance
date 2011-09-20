@@ -37,9 +37,9 @@ public:
     QSqlQuery getColumnsHeaders(QString);
     QSqlQuery getDictionariesProperties();
     QStringList getFieldsList(QMap<int, FieldType>*);
+    void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
     Q_INVOKABLE virtual void getColumnsProperties(QMap<int, FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
-    void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
     QSqlQuery getTopersProperties();
     QSqlQuery getToper(int);
     QString getPhotoDatabase();
@@ -56,7 +56,7 @@ public:
     Q_INVOKABLE QSqlQuery execQuery(QString);
     QStringList getUserList();
     QString getPhotoPath(QString);
-    QString getIdFieldPrefix() { return "код_"; }
+    QString getIdFieldPrefix() { return getObjectName("код_"); }      // возвращает префикс в именах полей, которые используются как ссылки на другие справочники
 
     bool isError() { return wasError; }
     QString getErrorText() { return errorText; }

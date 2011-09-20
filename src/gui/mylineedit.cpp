@@ -29,7 +29,8 @@ MyLineEdit::~MyLineEdit() {
 void MyLineEdit::calculate() {
     if (text().toDouble() != oldValue.toDouble()) {
         parent->getMyRelationalTableModel()->setData(index, QVariant(text().toDouble()));
-        calculated = parent->calculate(index);
+// Уберем, пока не разберемся со скриптами
+//        calculated = parent->calculate(index);
     }
 }
 

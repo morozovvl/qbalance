@@ -219,12 +219,19 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
         result->insert(query.value(0).toInt(), fld);
     }
     if (QString().compare(table, "сальдо", Qt::CaseInsensitive) == 0)
+    {
         foreach (int i, result->keys())
+        {
             if ((QString(result->value(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
                 (QString(result->value(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
                 (QString(result->value(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+            {
                     addColumnProperties(result, result->value(i).name, result->value(i).type, result->value(i).length, result->value(i).precision, result->value(i).readOnly);
+            }
+        }
+    }
 }
+
 
 void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read)
 {
@@ -453,6 +460,7 @@ void DBFactory::initObjectNames()
 {
 // Пока заполняем таблицу "один к одному" без изменения, чтобы можно было работать с существующей БД
 // Если объекты БД поменяют названия, то нужно будет поменять их здесь, либо переписать функцию, чтобы она получала соответствия из БД
+    ObjectNames.insert("код_", "код_");
     ObjectNames.insert("документы", "документы");
     ObjectNames.insert("документы.переменные", "переменные");
     ObjectNames.insert("проводки", "проводки");

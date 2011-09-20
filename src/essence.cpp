@@ -252,8 +252,24 @@ void Essence::cmdCancel() {
 
 
 void Essence::preparePrintValues(QMap<QString, QVariant>* printValues)
-{
-    Q_UNUSED(printValues)
+{   // Зарядим константы в контекст печати
+    DBFactory* db = TApplication::exemplar()->getDBFactory();
+    QString constDictionaryName = db->getObjectName("константы");
+    QString constNameField = db->getObjectName(constDictionaryName + ".имя");
+    QString constValueField = db->getObjectName(constDictionaryName + ".значение");
+    // Откроем справочник констант
+    TApplication::exemplar()->getDictionaries()->addDictionary(db->getObjectName(constDictionaryName));
+    if (TApplication::exemplar()->getDictionaries()->isMember(constDictionaryName))
+    {
+        Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(constDictionaryName);
+        dict->query();    // Прочитаем содержимое справочника констант
+        QSqlTableModel* model = dict->getTableModel();
+        for (int i = 0; i < model->rowCount(); i++)
+        {
+            QSqlRecord rec = model->record(i);
+            printValues->insert(QString("[%1.%2]").arg(constDictionaryName).arg(rec.value(constNameField).toString()), rec.value(constValueField));
+        }
+    }
 }
 
 

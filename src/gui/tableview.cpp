@@ -19,7 +19,7 @@ TableView::TableView(FormGrid* par, QWidget* parentWidget/* = 0*/)
     parent = par;
     name = "TableView";
     app = 0;
-    columns.clear();
+    columns = parent->getParent()->getColumnsProperties();
 }
 
 
@@ -32,7 +32,7 @@ TableView::TableView(QWidget* parentWidget/* = 0*/)
     parent = 0;
     name = "TableView";
     app = 0;
-    columns.clear();
+    columns = parent->getParent()->getColumnsProperties();
 }
 
 
@@ -118,14 +118,13 @@ void TableView::setModel(MySqlRelationalTableModel* model)
 {
     if (model != 0)
     {
-        columns.clear();
         tableModel = model;
         QItemSelectionModel *oldModel = selectionModel();
         QTableView::setModel(model);
         delete oldModel;
         if (app != 0)
         {
-            TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columns, tableModel->tableName());
+//            TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columns, tableModel->tableName());
             setColumnsDelegates();
             setColumnsHeaders();
         }
@@ -166,7 +165,7 @@ void TableView::setColumnsHeaders()
             return;
         }
     }
-    QStringList fields = TApplication::exemplar()->getDBFactory()->getFieldsList(&columns);
+    QStringList fields = TApplication::exemplar()->getDBFactory()->getFieldsList(columns);
     for (int i = 0; i < fields.count(); i++)
     {
         tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));
@@ -182,27 +181,27 @@ void TableView::sortIndicatorChanged(int logicalIndex, Qt::SortOrder order) {
 
 void TableView::setColumnsDelegates()
 {
-    foreach (int fld, columns.keys())
+    foreach (int fld, columns->keys())
     {
-        if (columns.value(fld).type.toUpper() == "NUMERIC" ||
-            columns.value(fld).type.toUpper() == "INTEGER")
+        if (columns->value(fld).type.toUpper() == "NUMERIC" ||
+            columns->value(fld).type.toUpper() == "INTEGER")
         {     // для числовых полей зададим свой самодельный делегат
             MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parent);
-            numericDelegate->setLength(columns.value(fld).length);
-            numericDelegate->setPrecision(columns.value(fld).precision);
-            numericDelegate->setReadOnly(columns.value(fld).readOnly);
+            numericDelegate->setLength(columns->value(fld).length);
+            numericDelegate->setPrecision(columns->value(fld).precision);
+            numericDelegate->setReadOnly(columns->value(fld).readOnly);
             setItemDelegateForColumn(fld, numericDelegate);
-        } else if (columns.value(fld).type.toUpper() == "BOOLEAN")
+        } else if (columns->value(fld).type.toUpper() == "BOOLEAN")
             {
                 MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parent);
-                booleanDelegate->setReadOnly(columns.value(fld).readOnly);
+                booleanDelegate->setReadOnly(columns->value(fld).readOnly);
                 setItemDelegateForColumn(fld, booleanDelegate);
             } else
             {
-            if (columns.value(fld).type.toUpper() == "CHARACTER" ||
-                columns.value(fld).type.toUpper() == "CHARACTER VARYING") {
+            if (columns->value(fld).type.toUpper() == "CHARACTER" ||
+                columns->value(fld).type.toUpper() == "CHARACTER VARYING") {
                 MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parent);
-                textDelegate->setReadOnly(columns.value(fld).readOnly);
+                textDelegate->setReadOnly(columns->value(fld).readOnly);
                 setItemDelegateForColumn(fld, textDelegate);
             }
         }

@@ -21,9 +21,7 @@ public:
     Table(QString table = "", QObject *parent = 0);
     ~Table();
     virtual bool relationsIsEmpty();
-//    void addColumnProperties(QString, QString, int, int, bool readOnly = false);
-//    QSqlRecord getColumnsProperties(int);
-//    QSqlRecord getColumnsProperties(QString);
+    QMap<int,FieldType>* getColumnsProperties();
     MySqlRelationalTableModel* getMyRelationalTableModel() { return tableModel; }
     QSqlTableModel* getTableModel() { return (QSqlTableModel*)tableModel; }
     virtual QString transformSelectStatement(QString string) { return string; }

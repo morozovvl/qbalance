@@ -14,22 +14,17 @@ QWidget* MyBooleanItemDelegate::createEditor(QWidget* parent, const QStyleOption
     return new QCheckBox(parent);
 }
 
-void MyBooleanItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
-    MyItemDelegate::paint(painter, option, QModelIndex());
-    QStyleOptionButton optionButton;
-    optionButton.rect = option.rect;
-    Qt::CheckState state = (Qt::CheckState)index.data().toInt();
-    switch(state) {
-        case Qt::Unchecked:
-            optionButton.state = QStyle::State_Off;
-            break;
-        case Qt::PartiallyChecked:
-            optionButton.state = QStyle::State_NoChange;
-            break;
-        case Qt::Checked:
-            optionButton.state = QStyle::State_On;
-            break;
-    }
-    QApplication::style()->drawControl(QStyle::CE_CheckBox, &optionButton, painter);
+
+void MyBooleanItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
+{
+    QStyleOptionButton BtnStyle;
+    BtnStyle.state = QStyle::State_Enabled;
+    if (index.model()->data(index, Qt::DisplayRole).toBool())
+        BtnStyle.state |= QStyle::State_On;
+    else
+        BtnStyle.state |= QStyle::State_Off;
+    BtnStyle.direction = QApplication::layoutDirection();
+    BtnStyle.rect = option.rect;
+    QApplication::style()->drawControl(QStyle::CE_CheckBox,&BtnStyle,painter);
 }
 

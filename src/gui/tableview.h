@@ -17,7 +17,7 @@ class FormGrid;
 class TableView : public QTableView {
     Q_OBJECT
 public:
-    QMap<int, FieldType> columns;
+    QMap<int, FieldType>*   columns;
     TableView(FormGrid*, QWidget* parentWidget = 0);
     TableView(QWidget* parentWidget = 0);
     ~TableView();
@@ -30,13 +30,13 @@ signals:
 protected slots:
     virtual void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint);
 protected:
-    QString name;
-    FormGrid* parent;
+    QString         name;
+    FormGrid*       parent;
     virtual void keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void currentChanged(const QModelIndex &, const QModelIndex &);
 private:
-    TApplication* app;
-    MySqlRelationalTableModel* tableModel;
+    TApplication*               app;
+    MySqlRelationalTableModel*  tableModel;
     bool isFieldExists(QString);
     void setColumnsHeaders();
     void setColumnsDelegates();
