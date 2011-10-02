@@ -18,7 +18,7 @@ bool ReportTemplate::doOpen() {
     bool result = false;
     QString file;
     file = prepareDefaultDocument(templateFileName);
-    if (file.size() > 0) {                // Если с файлом отчета все нормально
+    if (file.size() > 0) {                      // Если с файлом отчета все нормально
         result = startOpenOffice(file);          // то запустим Open Office
     }
     return result;
@@ -55,7 +55,6 @@ QString ReportTemplate::prepareDefaultDocument(QString fileName) {
     QFile srcFile(fileName);
     if (!srcFile.exists()) {            // Если файл отчета не существует, то создадим его из пустого шаблона
         QString file1Name = REPORT_DIR;
-        file1Name += "/";
         file1Name += DEFAULT_REPORT;
         QFile file1(file1Name);
         file1.copy(fileName);

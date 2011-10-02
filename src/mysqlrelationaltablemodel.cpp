@@ -22,7 +22,6 @@ MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableMode
     relIsEmpty = true;                           // по умолчанию нет реляционных отношений
     sortClause = "";
     isPrepared = false;
-    blockSetData = false;
     blockUpdate = false;
     preparedStatementName = "";
     preparedStatement = "";
@@ -52,30 +51,37 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const {
     return -1;
 }
 
-bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    bool lResult;
-    if (blockSetData)
-        return true;
-    if (indexInQuery(index).isValid() && !insertedColumns.contains(index.column())) {                            // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
-        QVariant val = QVariant(data(index));
-            if (val != value) {
-                lResult = QSqlRelationalTableModel::setData(index, value, role);
-                if (lResult) {
-                    QSqlRecord rec = record(index.row());
-                    rec.setValue(index.column(), value);
-                    rec.setGenerated(index.column(), true);
-                    for (int i = insertedColumns.count() - 1; i >= 0; i--)              // Уберем добавленные столбцы из записи
-                        rec.remove(insertedColumns[i]);                                 // для корректной генерации команды сохранения
-                    lResult = updateRowInTable(index.row(), rec);
+bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+//    Q_UNUSED(role)
+    bool lResult = false;
+    if (indexInQuery(index).isValid() && !insertedColumns.contains(index.column()))
+    {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
+        if (!blockUpdate && value != data(index))
+        {   // Если данные разрешено модифицировать
+            // и новые данные не равны старым
+            QSqlRecord rec = record(index.row());
+//            if (rec.indexOf("код") != index.column())
+//            {   // Если мы не пытаемся поменять значение ключевого столбца
+                rec.setValue(index.column(), value);
+                rec.setGenerated(index.column(), true);
+                for (int i = insertedColumns.count() - 1; i >= 0; i--)
+                {   // Для корректной генерации команды сохранения
+                    // уберем добавленные столбцы из записи
+                    rec.remove(insertedColumns[i]);
                 }
-            }
-            else
-                lResult = true;
+//                lResult = updateRowInTable(index.row(), rec);
+                QSqlRelationalTableModel::setData(index, value, role);
+//            }
+        }
+        else
+        {
+            lResult = true;
+        }
     }
-    else
-        lResult = false;
     return lResult;
 }
+
 
 bool MySqlRelationalTableModel::updateRowInTable(int row, const QSqlRecord &values) {
     if (!blockUpdate)
@@ -180,6 +186,7 @@ QString MySqlRelationalTableModel::selectStatement() const {
     return query;
 }
 
+/*  Не понял, для чего. Вроде нигде не вызывается
 QString MySqlRelationalTableModel::getPreparedSelectStatement() const {
     if (preparedStatementName == "") {
         preparedStatementName = tableName().append('-').append(QUuid().createUuid().toString().remove('{').remove('}'));
@@ -189,6 +196,7 @@ QString MySqlRelationalTableModel::getPreparedSelectStatement() const {
         return preparedStatement;
     return QString();
 }
+*/
 
 QString MySqlRelationalTableModel::getSelectClause() const {
     QString query;

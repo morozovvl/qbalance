@@ -33,7 +33,6 @@ public:
     void setSelectClause(QString string = "");
     void setSelectStatement(QString string = "");
     void setSortClause(QString sort) { sortClause = sort; }
-    void setBlockSetData(bool block) { blockSetData = block; }
     void setBlockUpdate(bool block) { blockUpdate = block; }
     virtual void setUpdateInfo(int, int, QString) { ; }
     virtual void setSort(int, Qt::SortOrder);
@@ -42,7 +41,7 @@ public:
     bool relationsIsEmpty() { return relIsEmpty; }
     QString escapedRelationField(const QString &, const QString &) const;
     virtual QString selectStatement() const;
-    virtual QString getPreparedSelectStatement() const;
+//    virtual QString getPreparedSelectStatement() const;
 //    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return QSqlRelationalTableModel::submit(); }
     virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return true; }
     virtual bool updateRowInTable(int, const QSqlRecord&);
@@ -67,7 +66,6 @@ private:
     mutable QString preparedStatement;
     bool relIsEmpty;
     bool isPrepared;
-    bool blockSetData;
     bool blockUpdate;
     int sortColumn;
     Qt::SortOrder sortOrder;

@@ -64,14 +64,6 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 }
 
 
-
-void TableView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
-{
-    QTableView::closeEditor(editor, hint);
-}
-
-
-
 void TableView::keyPressEvent(QKeyEvent* event)
 {
     if (event->modifiers() == Qt::ControlModifier)

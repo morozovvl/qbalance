@@ -43,7 +43,6 @@ SOURCES += src/main.cpp \
     src/table.cpp \
     src/documenttablemodel.cpp \
     src/gui/tableview.cpp \
-    src/gui/mylineedit.cpp \
     src/gui/mynumericitemdelegate.cpp \
     src/gui/mybooleanitemdelegate.cpp \
     src/saldo.cpp \
@@ -80,7 +79,6 @@ HEADERS += src/custom.h \
     src/table.h \
     src/documenttablemodel.h \
     src/gui/tableview.h \
-    src/gui/mylineedit.h \
     src/gui/mynumericitemdelegate.h \
     src/gui/mybooleanitemdelegate.h \
     src/saldo.h \

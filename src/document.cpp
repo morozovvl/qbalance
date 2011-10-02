@@ -8,6 +8,7 @@
 #include "gui/mainwindow.h"
 #include "mysqlrelationaltablemodel.h"
 
+
 Document::Document(int oper, Documents* par)
 : Essence()
 , parent(par)
@@ -155,7 +156,7 @@ Document::Document(int oper, Documents* par)
         else
             dict->setCanShow(true);
     }
-    setScriptForTable(toper.record(0).value("формулы").toString());
+//    setScriptForTable(toper.record(0).value("формулы").toString());
 }
 
 Document::~Document() {
@@ -393,6 +394,7 @@ void Document::setTableModel()
     tableModel = new DocumentTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
+    tableModel->setBlockUpdate(!isUpdateable());
 
     QString selectClause, fromClause, whereClause;
     QStringList prvFieldsList = tableModel->getFieldsList();
