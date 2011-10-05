@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QObject>
 #include "dictionary.h"
+#include "essence.h"
 
 class Document;
 

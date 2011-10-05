@@ -79,24 +79,24 @@ public slots:
     void showCriticalError(QString error) { gui->showCriticalError(error); }
 
 private:
-    Dictionaries* dictionaryList;                         // Форма со списком справочников
-    Topers* topersList;                                   // Форма со списком операций
-    DBFactory* db;
-    GUIFactory* gui;
-    QApplication* Application;
-    QString organizationName;
-    QDate beginDate;
-    QDate endDate;
+    Dictionaries*           dictionaryList;                         // Форма со списком справочников
+    Topers*                 topersList;                                   // Форма со списком операций
+    DBFactory*              db;
+    GUIFactory*             gui;
+    QApplication*           Application;
+    QString                 organizationName;
+    QDate                   beginDate;
+    QDate                   endDate;
 
     void loadConsts();
 
-    static QFile*        DebugFile;
-    static bool          DebugMode;
-    static QTextStream*  DebugStream;
-    static QString       MaxSumMask;
-    static QString IdFieldName;
-    static QString NameFieldName;
-    static TApplication* Exemplar;
+    static QFile*           DebugFile;
+    static bool             DebugMode;
+    static QTextStream*     DebugStream;
+    static QString          MaxSumMask;
+    static QString          IdFieldName;
+    static QString          NameFieldName;
+    static TApplication*    Exemplar;
 };
 
 #endif

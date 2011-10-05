@@ -52,7 +52,9 @@ SOURCES += src/main.cpp \
     src/gui/mylineitemdelegate.cpp \
     src/gui/picture.cpp \
     src/scriptengine.cpp \
-    src/mysqlquery.cpp
+    src/mysqlquery.cpp \
+    src/report.cpp \
+    src/reports.cpp
 HEADERS += src/app.h \
     src/dbfactory.h \
     src/gui/guifactory.h \
@@ -88,7 +90,9 @@ HEADERS += src/app.h \
     src/definitions.h \
     src/gui/picture.h \
     src/scriptengine.h \
-    src/mysqlquery.h
+    src/mysqlquery.h \
+    src/report.h \
+    src/reports.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

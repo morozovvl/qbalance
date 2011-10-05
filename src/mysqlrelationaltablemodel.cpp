@@ -257,7 +257,9 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
     return database().driver()->escapeIdentifier(esc, QSqlDriver::FieldName);
 }
 
+
 MySqlQuery* MySqlRelationalTableModel::query() {
     QSqlQuery query(QSqlRelationalTableModel::query());
     return new MySqlQuery(query);
 }
+

@@ -18,57 +18,67 @@ class MySqlRelationalTableModel : public QSqlRelationalTableModel {
     Q_OBJECT
 public:
     MySqlRelationalTableModel();
-    QStringList getFieldsList();
-    Q_INVOKABLE QString getSelectStatement() { return selectStatement(); }
-    QString getSelectClause() const;
+    void setParent(Table* par) { parent = par; }
+    Q_INVOKABLE void setTable(const QString& str) { QSqlRelationalTableModel::setTable(str.toUtf8()); }
+
+// Функции, помогающие усовершенствовать механизм создания реляционных отношений
     bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
     int fieldIndex(const QString &) const;
-    QString orderByClause() const;
-    void setAlias(QString alias) { tableAlias = alias; }
-    void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
-    virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
-//    void setFieldsList(QStringList);
+    bool relationsIsEmpty() { return relIsEmpty; }
     void setRelation(int, const QSqlRelation &);
     void setRelation(int, int, const QSqlRelation &);
+    void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
+    virtual void setUpdateInfo(int, int, QString) { ; }
+
+// Функции, помогающие в генерации SQL запросов и работающие с ним
+    Q_INVOKABLE QString getSelectStatement() { return selectStatement(); }
+    QString getSelectClause() const;
+    QString orderByClause() const;
+    QString escapedRelationField(const QString &, const QString &) const;
+    virtual QString selectStatement() const;
     void setSelectClause(QString string = "");
     void setSelectStatement(QString string = "");
     void setSortClause(QString sort) { sortClause = sort; }
-    void setBlockUpdate(bool block) { blockUpdate = block; }
-    virtual void setUpdateInfo(int, int, QString) { ; }
     virtual void setSort(int, Qt::SortOrder);
     void setPrepared(bool p = true) { isPrepared = p; }
-    void setParent(Table* par) { parent = par; }
-    bool relationsIsEmpty() { return relIsEmpty; }
-    QString escapedRelationField(const QString &, const QString &) const;
-    virtual QString selectStatement() const;
-//    virtual QString getPreparedSelectStatement() const;
-//    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return QSqlRelationalTableModel::submit(); }
-    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return true; }
-    virtual bool updateRowInTable(int, const QSqlRecord&);
-    Q_INVOKABLE void setTable(const QString& str) { QSqlRelationalTableModel::setTable(str.toUtf8()); }
-    Q_INVOKABLE MySqlQuery* query();
-    Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter.toUtf8()); }
+    Q_INVOKABLE MySqlQuery* query();
+    Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
+
+// Функции для сохранения данных
+    virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
+    void setBlockUpdate(bool block) { blockUpdate = block; }
+    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return true; }
+    virtual bool updateRowInTable(int, const QSqlRecord&);
+
+// Прочие функции
+    QStringList getFieldsList();
+    void setAlias(QString alias) { tableAlias = alias; }
 
 protected:
-    Table* parent;
+    Table*                  parent;
 private:
-    QMap<int, int> keyColumns;
-    QList<int> insertedColumns;
-    QMap<int, QString> tablesAliases;
-    QStringList fieldsList;
-    QString tableAlias;
-    QString selectClause;
-    QString selectCommand;
-    QString sortClause;
-    mutable QString preparedStatementName;
-    mutable QString preparedStatement;
+// Свойства для механизма реляционных отношений
+    QMap<int, int>          keyColumns;
+    QList<int>              insertedColumns;
+    QMap<int, QString>      tablesAliases;
     bool relIsEmpty;
-    bool isPrepared;
-    bool blockUpdate;
-    int sortColumn;
-    Qt::SortOrder sortOrder;
+
+// Свойства для обслуживания SQL запросов
+    QString                 selectClause;
+    QString                 selectCommand;
+    QString                 sortClause;
+    mutable QString         preparedStatementName;
+    mutable QString         preparedStatement;
+    bool                    isPrepared;
+    int                     sortColumn;
+    Qt::SortOrder           sortOrder;
+
+// Прочие свойства
+    QStringList             fieldsList;
+    QString                 tableAlias;
+    bool                    blockUpdate;
 };
 
 #endif // MYSQLRELATIONALTABLEMODEL_H
