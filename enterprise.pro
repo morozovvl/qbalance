@@ -53,8 +53,7 @@ SOURCES += src/main.cpp \
     src/gui/picture.cpp \
     src/scriptengine.cpp \
     src/mysqlquery.cpp
-HEADERS += src/custom.h \
-    src/app.h \
+HEADERS += src/app.h \
     src/dbfactory.h \
     src/gui/guifactory.h \
     src/gui/passwordform.h \

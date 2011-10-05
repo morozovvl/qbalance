@@ -14,7 +14,7 @@ ReportTemplate::ReportTemplate(Essence* par, ReportEngine* eng, QString fileName
     templateFileName = fileName;
 }
 
-bool ReportTemplate::doOpen() {
+bool ReportTemplate::open() {
     bool result = false;
     QString file;
     file = prepareDefaultDocument(templateFileName);

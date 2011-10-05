@@ -8,9 +8,10 @@
 #include "app.h"
 
 Table::Table(QString name, QObject *parent)
-: Custom(parent)
+: QObject(parent)
 , tableModel(NULL)
 {
+    opened = false;
     tableName = name.trimmed();
     tagName = tableName;
 }
@@ -38,24 +39,27 @@ void Table::query(QString filter)
     TApplication::debug(" Query: " + tableModel->selectStatement() + "\n");
 }
 
-bool Table::doOpen()
+bool Table::open()
 {
     TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columnsProperties, tableName);
     setTableModel();
     if (tableModel->lastError().type() == QSqlError::NoError)
     {
-        return Custom::doOpen();
+        opened = true;
     }
-    // Не удалось открыть таблицу, сообщим об ошибке
-    QSqlError error = tableModel->lastError();
-    TApplication::exemplar()->showError(error.text());
-    return false;
+    else
+    {// Не удалось открыть таблицу, сообщим об ошибке
+        QSqlError error = tableModel->lastError();
+        TApplication::exemplar()->showError(error.text());
+    }
+    return opened;
 }
 
-void Table::doClose()
+void Table::close()
 {
     tableModel->clear();
     delete tableModel;
+    opened = false;
 }
 
 void Table::setTableModel()

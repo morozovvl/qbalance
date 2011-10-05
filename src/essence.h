@@ -64,6 +64,9 @@ public:
     Q_INVOKABLE virtual void hide();
     Q_INVOKABLE void setFormTitle(QString);
     Q_INVOKABLE virtual QDialog* getFormWidget();
+
+    Q_INVOKABLE virtual void close();
+
 signals:
     void showError(const QString &);
 
@@ -82,8 +85,6 @@ protected:
     bool lPrintable;
     virtual void setForm();
     void initForm();
-    virtual bool doOpen();
-    virtual void doClose();
     virtual void getCalculateProperties(const QModelIndex &);
     virtual void setCalculateProperties(const QModelIndex &);
     virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати

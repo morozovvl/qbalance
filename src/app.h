@@ -6,7 +6,6 @@
 #include <QDate>
 #include <QString>
 #include <QDir>
-#include "custom.h"
 #include "dictionary.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -20,7 +19,7 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 
-class TApplication : public Custom {
+class TApplication : public QObject {
     Q_OBJECT
 
 public:
@@ -71,6 +70,10 @@ public:
     static void debug(const QString& value);
 
     static TApplication* exemplar();
+
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
+
 public slots:
     void showError(QString error) { gui->showError(error); }
     void showCriticalError(QString error) { gui->showCriticalError(error); }
@@ -85,8 +88,6 @@ private:
     QDate beginDate;
     QDate endDate;
 
-    bool doOpen();
-    void doClose();
     void loadConsts();
 
     static QFile*        DebugFile;

@@ -11,16 +11,15 @@ class Documents : public Dictionary {
 public:
     Documents(int, QObject *parent = 0);
     virtual ~Documents();
-    bool open() { return doOpen(); }
     virtual void show();
     virtual bool add();
     virtual bool remove();
     virtual void view();
     virtual void query(QString filter = "");
     int getCurrentRow() { return currentRow; }
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
 protected:
-    virtual bool doOpen();
-    virtual void doClose();
     virtual void setForm();
 private:
     int operNumber;

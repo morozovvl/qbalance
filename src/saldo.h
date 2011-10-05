@@ -12,8 +12,7 @@ public:
     void setQuan(bool q) { quan = q; }
     virtual void setLock(bool);
     virtual void setMustShow(bool);
-protected:
-    virtual bool doOpen(int);
+    Q_INVOKABLE virtual bool open(int);
 private:
     QString account;
     QString dictionaryName;

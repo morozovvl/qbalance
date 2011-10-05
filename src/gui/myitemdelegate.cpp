@@ -46,6 +46,7 @@ void MyItemDelegate::calculate(QWidget* editor)
     QVariant value = ((QLineEdit*)editor)->text();
     MySqlRelationalTableModel* model;
     model = parent->getMyRelationalTableModel();
-    model->setData(currentIndex.sibling(currentIndex.row(), currentIndex.column()), value);
+    qDebug() << model->metaObject()->className();
+    model->setData(currentIndex, value);
     parent->calculate(currentIndex);
 }

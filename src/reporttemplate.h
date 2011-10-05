@@ -6,7 +6,6 @@
 #include <QDomNode>
 #include <QString>
 #include <QScriptValue>
-#include "custom.h"
 #include "essence.h"
 #include "reportengine.h"
 
@@ -20,10 +19,11 @@
 class Essence;
 class ReportEngine;
 
-class ReportTemplate : public Custom {
+class ReportTemplate : public QObject {
 public:
     ReportTemplate(Essence*, ReportEngine*, QString fileName = DEFAULT_REPORT);
     virtual ~ReportTemplate() { ; }
+    Q_INVOKABLE virtual bool open();
 private:
     QList<QString> columns;
     QDomDocument doc;
@@ -32,7 +32,6 @@ private:
     Essence* parent;
     QString templateFileName;
     ReportEngine* engine;
-    bool doOpen();
     bool startOpenOffice(QString fileName = DEFAULT_REPORT);          // Запускает Open Office и загружает в него заданный в параметрах файл
     QString prepareDefaultDocument(QString fileName = DEFAULT_REPORT);   // Готовит документ по умолчанию: берет пустую копию, разархивирует ее, заполняет данными (через метод writeDefaultDocument()), архивирует, передает в каталог с документами
     bool writeDefaultDocument(QString);                                  // Заполняет распакованный документ в XML формате содержимым отчета

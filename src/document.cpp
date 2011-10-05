@@ -351,12 +351,12 @@ void Document::setConstDictId(QString dName, QVariant id)
 }
 
 
-bool Document::doOpen()
+bool Document::open()
 {
     lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
     lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
     lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
-    if (Essence::doOpen()) {
+    if (Essence::open()) {
         initForm();
         return true;
     }
@@ -364,12 +364,12 @@ bool Document::doOpen()
 }
 
 
-void Document::doClose()
+void Document::close()
 {
     foreach(QString dictName, dicts->keys()) {
         dicts->value(dictName)->close();
     }
-    Essence::doClose();
+    Essence::close();
 }
 
 

@@ -227,11 +227,7 @@ void Essence::view() {
         form->getForm()->setFocus(Qt::OtherFocusReason);
 }
 
-bool Essence::doOpen() {
-    return Table::doOpen();
-}
-
-void Essence::doClose() {
+void Essence::close() {
 //    if (engine != 0)
 //        delete engine;
     form->closeFormEvent();
@@ -239,7 +235,7 @@ void Essence::doClose() {
 //    form->setParent(0);
     form->close();
     delete form;
-    Table::doClose();
+    Table::close();
 }
 
 void Essence::setForm() {

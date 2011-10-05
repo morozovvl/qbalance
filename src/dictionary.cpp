@@ -94,13 +94,13 @@ void Dictionary::setForm() {
     form->open(parentForm, this);
 }
 
-bool Dictionary::doOpen(int deep) {
+bool Dictionary::open(int deep) {
     formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
     if (TApplication::exemplar()->getDictionaryProperty(tableName, "selectable").toBool()) {
         lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
         lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
         lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
-        if (Essence::doOpen()) {     // Откроем этот справочник
+        if (Essence::open()) {     // Откроем этот справочник
             QStringList fieldList = getFieldsList();
             if (deep > 0) {              // Если нужно открыть подсправочники
                 int columnCount = fieldList.count();

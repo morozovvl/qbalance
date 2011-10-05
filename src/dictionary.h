@@ -36,7 +36,7 @@ public:
     int getDeep() { return dictDeep; }
 
     Q_INVOKABLE virtual bool open() { return open(0); }
-    Q_INVOKABLE virtual bool open(int i) { return doOpen(i); }          // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
+    Q_INVOKABLE virtual bool open(int i);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
 protected:
     Dictionaries* dictionaries;
     bool lIsSet;
@@ -48,7 +48,6 @@ protected:
     bool lAutoAdd;
     int dictDeep;
     virtual void setForm();
-    virtual bool doOpen(int);
 };
 
 #endif // DICTIONARY_H
