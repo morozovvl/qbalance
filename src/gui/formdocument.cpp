@@ -45,7 +45,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             phbxItogLayout->addStretch(1);
             phbxItogLayout->addWidget(new QLabel(LABEL_ITOG, formWidget), 0, Qt::AlignRight);
             // Создадим и вставим строчку с ИТОГО документа
-            itogNumeric = new NumericEdit();
+            itogNumeric = new MyNumericEdit();
             itogNumeric->setReadOnly(true);
             QFont font = itogNumeric->font();
             font.setBold(true);
@@ -92,7 +92,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
         dateEdit = qFindChild<QDateEdit*>(formWidget, "dateEdit");
         numberEdit = qFindChild<QLineEdit*>(formWidget, "numberEdit");
-        itogNumeric = (NumericEdit*)qFindChild<QLineEdit*>(formWidget, "itogNumeric");
+        itogNumeric = (MyNumericEdit*)qFindChild<QLineEdit*>(formWidget, "itogNumeric");
     }
     if (parameters != 0)
     {

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "formgrid.h"
-#include "numericedit.h"
+#include "mynumericedit.h"
 
 class Document;
 class DocParameters;
@@ -22,7 +22,7 @@ private:
     QDateEdit*      dateEdit;
     QLineEdit*      numberEdit;
     DocParameters*  parameters;
-    NumericEdit*    itogNumeric;
+    MyNumericEdit*    itogNumeric;
     virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 };

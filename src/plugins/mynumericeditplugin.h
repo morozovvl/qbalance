@@ -1,16 +1,16 @@
-#ifndef NUMERICEDITPLUGIN_H
-#define NUMERICEDITPLUGIN_H
+#ifndef MYNUMERICEDITPLUGIN_H
+#define MYNUMERICEDITPLUGIN_H
 
 #include <QLineEdit>
 #include <QDesignerCustomWidgetInterface>
 
-class NumericEditPlugin : public QObject, public QDesignerCustomWidgetInterface
+class MyNumericEditPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    NumericEditPlugin( QObject *parent = 0 );
+    MyNumericEditPlugin( QObject *parent = 0 );
 
     bool isContainer() const;
     bool isInitialized() const;
@@ -28,6 +28,6 @@ public:
 private:
     bool m_initialized;
 };
-#endif // NUMERICEDITPLUGIN_H
+#endif // MYNUMERICEDITPLUGIN_H
 
 

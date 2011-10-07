@@ -251,7 +251,7 @@ bool Document::calculate(const QModelIndex& index) {
                     itog -= sum;
             }
         }
-        NumericEdit* itogWidget = (NumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
+        MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
         if (itogWidget != 0)
             itogWidget->setValue(itog);
         parent->getMyRelationalTableModel()->setData(parent->getMyRelationalTableModel()->index(parent->getCurrentRow(), parent->getMyRelationalTableModel()->record().indexOf("сумма")), itog);

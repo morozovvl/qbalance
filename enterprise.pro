@@ -13,6 +13,11 @@ CONFIG += designer \
 CONFIG += uitools
 CONFIG -= app_bundle
 TEMPLATE = app
+
+#SUBDIRS = plugins
+#plugins.subdir = lib
+#plugins.file = src/plugins/plugins.pro
+
 #SUBDIRS = src/storage \
 #    src/engine \
 #    src/kernel
@@ -47,14 +52,14 @@ SOURCES += src/main.cpp \
     src/gui/mybooleanitemdelegate.cpp \
     src/saldo.cpp \
     src/gui/docparameters.cpp \
-    src/gui/numericedit.cpp \
     src/gui/myitemdelegate.cpp \
     src/gui/mylineitemdelegate.cpp \
     src/gui/picture.cpp \
     src/scriptengine.cpp \
     src/mysqlquery.cpp \
     src/report.cpp \
-    src/reports.cpp
+    src/reports.cpp \
+    src/gui/mynumericedit.cpp
 HEADERS += src/app.h \
     src/dbfactory.h \
     src/gui/guifactory.h \
@@ -84,7 +89,6 @@ HEADERS += src/app.h \
     src/gui/mybooleanitemdelegate.h \
     src/saldo.h \
     src/gui/docparameters.h \
-    src/gui/numericedit.h \
     src/gui/myitemdelegate.h \
     src/gui/mylineitemdelegate.h \
     src/definitions.h \
@@ -92,7 +96,8 @@ HEADERS += src/app.h \
     src/scriptengine.h \
     src/mysqlquery.h \
     src/report.h \
-    src/reports.h
+    src/reports.h \
+    src/gui/mynumericedit.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc
@@ -103,3 +108,5 @@ win32:OBJECTS_DIR = /.obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src
+
+
