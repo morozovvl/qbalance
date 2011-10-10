@@ -10,12 +10,12 @@
 #include <QLineEdit>
 #include "../definitions.h"
 #include "docparameters.h"
-#include "../dictionary.h"
+#include "../kernel/dictionary.h"
 #include "formgrid.h"
 #include "formdocument.h"
-#include "../app.h"
-#include "../essence.h"
-#include "../document.h"
+#include "app.h"
+#include "../kernel/essence.h"
+#include "../kernel/document.h"
 
 DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt) {
     setLineWidth(2);

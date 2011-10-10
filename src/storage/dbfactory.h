@@ -2,7 +2,7 @@
 #define DBFACTORY_H
 
 #include <QObject>
-#include "custom.h"
+#include "../kernel/custom.h"
 #include <QtSql>
 #include <QDate>
 #include <QVariantList>

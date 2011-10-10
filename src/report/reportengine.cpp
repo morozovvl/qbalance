@@ -2,10 +2,10 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QString>
+#include "../gui/app.h"
+#include "../kernel/essence.h"
 #include "reportengine.h"
 #include "reporttemplate.h"
-#include "app.h"
-#include "essence.h"
 #include "reportcontextfunctions.cpp"
 
 ReportEngine::ReportEngine(Essence* par, QString name) {

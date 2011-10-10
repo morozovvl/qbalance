@@ -7,7 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include "custom.h"
+#include "../kernel/custom.h"
 #include "dbfactory.h"
 
 class TApplication;

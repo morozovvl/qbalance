@@ -8,7 +8,7 @@
 #include "myitemdelegate.h"
 #include "form.h"
 #include "formgrid.h"
-#include "../essence.h"
+#include "../kernel/essence.h"
 
 MyLineEdit::MyLineEdit(DelegateTypes type, QWidget* par, QObject* parForm, QModelIndex &idx): QLineEdit(par) {
     delegateType = type;

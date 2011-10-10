@@ -1,11 +1,13 @@
-#include <QSqlRecord>
-#include <QSqlError>
-#include <QScriptClass>
-#include <QUuid>
-#include <QDateTime>
 #include "table.h"
+
+#include <QUuid>
+#include <QSqlError>
+#include <QDateTime>
+#include <QSqlRecord>
+#include <QScriptClass>
+
+#include "../gui/app.h"
 #include "mysqlrelationaltablemodel.h"
-#include "app.h"
 
 Table::Table(QString name, QObject *parent)
 : Custom(parent)

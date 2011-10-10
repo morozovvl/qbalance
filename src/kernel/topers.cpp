@@ -1,7 +1,7 @@
 #include <QString>
-#include "app.h"
 #include "topers.h"
-#include "gui/formgridsearch.h"
+#include "../gui/app.h"
+#include "../gui/formgridsearch.h"
 
 Topers::Topers(QObject *parent): Dictionary("vw_доступ_к_топер", parent) {
     topersProperties = TApplication::exemplar()->getDBFactory()->getTopersProperties();

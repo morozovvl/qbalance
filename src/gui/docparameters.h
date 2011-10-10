@@ -2,17 +2,17 @@
 #define DOCPARAMETERS_H
 
 #include <QtGui>
-#include <QFrame>
-#include <QVBoxLayout>
-#include <QString>
-#include <QList>
-#include <QWidget>
-#include <QObject>
 #include <QMap>
+#include <QList>
+#include <QFrame>
+#include <QString>
+#include <QObject>
+#include <QWidget>
+#include <QVBoxLayout>
 #include <QStringList>
+#include "app.h"
 #include "mycombobox.h"
 #include "formgridsearch.h"
-#include "../app.h"
 
 class TApplication;
 class FormDocument;

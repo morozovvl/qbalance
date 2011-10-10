@@ -12,12 +12,12 @@
 #include <QDebug>
 #include <QUiLoader>
 #include "essence.h"
-#include "app.h"
-#include "reporttemplate.h"
-#include "reportengine.h"
-#include "gui/form.h"
-#include "gui/formgridsearch.h"
-#include "gui/mainwindow.h"
+#include "../gui/app.h"
+#include "../report/reporttemplate.h"
+#include "../report/reportengine.h"
+#include "../gui/form.h"
+#include "../gui/formgridsearch.h"
+#include "../gui/mainwindow.h"
 
 Essence::Essence(QString name, QObject *parent) : Table(name, parent) {
     form        = 0;
@@ -171,7 +171,7 @@ QString Essence::getPhotoPath() {
     if (!path.isEmpty()) {
         if (path.left(1) == "~") {
             path.remove(0, 1);
-            path = TApplication::exemplar()->getHomePath() + path;
+            path = TApplication::exemplar()->applicationDirPath() + path;
         }
     }
     return path;

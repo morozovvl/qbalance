@@ -1,8 +1,8 @@
 #include <QString>
-#include "app.h"
 #include "dictionaries.h"
-#include "gui/formgridsearch.h"
-#include "gui/mainwindow.h"
+#include "../gui/app.h"
+#include "../gui/mainwindow.h"
+#include "../gui/formgridsearch.h"
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
     dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();

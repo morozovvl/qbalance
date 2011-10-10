@@ -1,6 +1,6 @@
-#include "app.h"
 #include "saldo.h"
-#include "mysqlrelationaltablemodel.h"
+#include "../gui/app.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 
 Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
 : Dictionary(dictName, parent) {

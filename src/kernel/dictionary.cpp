@@ -1,9 +1,9 @@
-#include "app.h"
 #include "dictionary.h"
-#include "mysqlrelationaltablemodel.h"
-#include "gui/formgridsearch.h"
-#include "gui/mainwindow.h"
-#include "gui/searchparameters.h"
+#include "../gui/app.h"
+#include "../gui/mainwindow.h"
+#include "../gui/formgridsearch.h"
+#include "../gui/searchparameters.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     formTitle = "";

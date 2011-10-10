@@ -2,7 +2,7 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QResource>
-#include "app.h"
+#include "gui/app.h"
 
 
 bool readParameters(int argc, char *argv[]) {
@@ -21,8 +21,8 @@ bool readParameters(int argc, char *argv[]) {
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--version", Qt::CaseInsensitive) == 0) {
-            out << QString(QObject::tr("Название программы: %1\n")).arg(TApplication::name());
-            out << QString(QObject::tr("Версия: %1\n")).arg(TApplication::version());
+            out << QString(QObject::tr("Название программы: %1\n")).arg(TApplication::exemplar()->applicationName());
+            out << QString(QObject::tr("Версия: %1\n")).arg(TApplication::exemplar()->applicationVersion());
             out << QString(QObject::tr("Авторы: %1\n")).arg(TApplication::authors());
             lContinue = false;
         }
@@ -62,8 +62,7 @@ void test() {
 
 int main(int argc, char **argv)
 {
-    QApplication application(argc, argv);
-
+    TApplication application(argc, argv);
     QTextCodec::setCodecForTr(TApplication::codec());
     QTextCodec::setCodecForLocale(TApplication::codec());
     QTextCodec::setCodecForCStrings(TApplication::codec());
@@ -75,14 +74,11 @@ int main(int argc, char **argv)
     if (argc > 1)                               // были заданы какие-то аргументы
         lStart = readParameters(argc, argv);    // прочитаем их
     if (lStart) {
-        TApplication* wrapper = new TApplication(&application);
-        if (wrapper->open()) {       // Если приложение удалось создать
-            wrapper->show();         // Тогда откроем его
+        if (application.open()) {       // Если приложение удалось создать
+            application.show();         // Тогда откроем его
             lResult = application.exec();
-            wrapper->close();            // Закроем приложение
+            application.close();            // Закроем приложение
         }
-        delete wrapper;
-
     }
 
     TApplication::debug(" Program shutdown.\n\n");

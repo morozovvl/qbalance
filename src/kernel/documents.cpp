@@ -1,16 +1,16 @@
 #include <QString>
-#include "app.h"
-#include "document.h"
 #include "documents.h"
-#include "gui/formgridsearch.h"
-#include "gui/mainwindow.h"
+#include "document.h"
+#include "../gui/app.h"
+#include "../gui/mainwindow.h"
+#include "../gui/formgridsearch.h"
 
 Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
-    lViewable = true;
-    tableName = "документы";
+    lViewable  = true;
+    tableName  = "документы";
     operNumber = opNumber;
-    tagName = QString("СписокДокументов%1").arg(operNumber);
-    formTitle = QString("%1 - %2").arg(TApplication::exemplar()->getToperProperty(operNumber, TApplication::nameFieldName()).toString()).arg(QObject::tr("Список документов"));
+    tagName    = QString("СписокДокументов%1").arg(operNumber);
+    formTitle  = QString("%1 - %2").arg(TApplication::exemplar()->getToperProperty(operNumber, TApplication::nameFieldName()).toString()).arg(QObject::tr("Список документов"));
 }
 
 Documents::~Documents() {

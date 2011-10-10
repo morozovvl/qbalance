@@ -2,8 +2,8 @@
 #include <QTextStream>
 #include <QDateTime>
 #include "dbfactory.h"
-#include "app.h"
-#include "gui/passwordform.h"
+#include "../gui/app.h"
+#include "../gui/passwordform.h"
 
 DBFactory::DBFactory()
 : Custom()

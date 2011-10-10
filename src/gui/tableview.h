@@ -8,8 +8,8 @@
 #include <QScriptValue>
 #include <QScriptContext>
 #include <QScriptEngine>
-#include "../mysqlrelationaltablemodel.h"
-#include "../dbfactory.h"
+#include "../storage/mysqlrelationaltablemodel.h"
+#include "../storage/dbfactory.h"
 
 class TApplication;
 class FormGrid;

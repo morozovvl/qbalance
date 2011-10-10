@@ -1,13 +1,13 @@
+#include "tableview.h"
 #include <QDebug>
 #include <QLineEdit>
 #include <QTableView>
 #include <QScriptContextInfo>
-#include "tableview.h"
+#include "app.h"
 #include "formgrid.h"
+#include "mylineitemdelegate.h"
 #include "mynumericitemdelegate.h"
 #include "mybooleanitemdelegate.h"
-#include "mylineitemdelegate.h"
-#include "../app.h"
 
 
 TableView::TableView(FormGrid* par, QWidget* parentWidget/* = 0*/)

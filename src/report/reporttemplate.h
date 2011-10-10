@@ -6,8 +6,8 @@
 #include <QDomNode>
 #include <QString>
 #include <QScriptValue>
-#include "custom.h"
-#include "essence.h"
+#include "../kernel/custom.h"
+#include "../kernel/essence.h"
 #include "reportengine.h"
 
 //#define DEFAULT_DICT_REPORT "default_dict_report.ods"          // Отчет будем готовить в формате Open Office 1.0 (запакованный ZIP-ом каталог с XML файлами)

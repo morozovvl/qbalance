@@ -3,10 +3,10 @@
 #include <QProcess>
 #include <QScriptValue>
 #include <QSqlTableModel>
-#include "reporttemplate.h"
-#include "app.h"
-#include "essence.h"
+#include "../gui/app.h"
+#include "../kernel/essence.h"
 #include "reportengine.h"
+#include "reporttemplate.h"
 
 ReportTemplate::ReportTemplate(Essence* par, ReportEngine* eng, QString fileName) {
     parent = par;

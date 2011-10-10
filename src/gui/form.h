@@ -5,7 +5,7 @@
 #include <QDomDocument>
 #include <QSettings>
 #include <QUuid>
-#include "../scriptengine.h"
+#include "../engine/scriptengine.h"
 
 class Essence;
 
