@@ -55,7 +55,6 @@ QWidget* MyNumericItemDelegate::createEditor(QWidget* parent, const QStyleOption
 {
     Q_UNUSED(option)
     if (!readOnly) {
-        currentIndex = index;
         QLineEdit* editor = new QLineEdit();
         editor->setParent(parent);
         editor->setAlignment(alignment);

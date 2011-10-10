@@ -9,11 +9,10 @@ MyItemDelegate::MyItemDelegate(QObject* par)
 : QItemDelegate(((FormGrid*)par)->getForm())
 {
     parentForm = par;
-    parent = ((FormGrid*)parentForm)->getParent();
     columnMask = "";
     delegateType = String;
     readOnly = false;
-    connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate(QWidget*)));
+    connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
 }
 
 
@@ -41,8 +40,7 @@ QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem opti
 }
 
 
-void MyItemDelegate::calculate(QWidget* editor)
+void MyItemDelegate::calculate()
 {
-    Q_UNUSED(editor)
-    parent->calculate(currentIndex);
+    ((FormGrid*)parentForm)->calculate();
 }

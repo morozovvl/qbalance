@@ -32,7 +32,7 @@ public:
     virtual void setShowFocus();
     virtual void readSettings();
     virtual void writeSettings();
-
+    virtual bool calculate();
 
 public slots:
     virtual void cmdAdd();

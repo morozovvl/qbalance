@@ -250,7 +250,6 @@ void FormGrid::cmdView()
 {
     if (parent != 0)
         parent->view();
-//    setShowFocus();
 }
 
 
@@ -261,6 +260,16 @@ void FormGrid::showPhoto()
         QString photoFileName = photoPath + "/" + parent->getValue("код").toString().trimmed() + ".jpg";
         picture->show(photoFileName);
     }
+}
+
+
+bool FormGrid::calculate()
+{
+    QModelIndex index = getCurrentIndex();
+    bool result = parent->calculate(index);
+    setCurrentIndex(index);
+    FormGrid::setShowFocus();
+    return result;
 }
 
 
@@ -419,9 +428,9 @@ void FormGrid::remove()
 
 void FormGrid::query(QString param)
 {
-    int currentRow = grdTable->currentIndex().row();
+    QModelIndex index = getCurrentIndex();
     parent->query(param);
-    showGridLine(currentRow);
+    setCurrentIndex(index);
     FormGrid::setShowFocus();
 }
 
