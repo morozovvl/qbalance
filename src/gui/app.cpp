@@ -69,7 +69,7 @@ QVariant TApplication::getToperProperty(int operNumber, QString property)
 }
 
 
-bool TApplication::doOpen() {
+bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
@@ -105,7 +105,7 @@ bool TApplication::doOpen() {
     return lResult;
 }
 
-void TApplication::doClose() {
+void TApplication::close() {
     foreach(Documents* doc, documents) {
         doc->close();
     }

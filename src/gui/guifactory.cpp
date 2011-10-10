@@ -144,13 +144,13 @@ int GUIFactory::showYesNo(QString question) {
     return showMessage("", question);
 }
 
-bool GUIFactory::doOpen() {
+bool GUIFactory::open() {
     mainWindow = new MainWindow();
     mainWindow->open();
     return true;
 }
 
-void GUIFactory::doClose() {
+void GUIFactory::close() {
     closeDB();
 //    mainWindow->close();
 }

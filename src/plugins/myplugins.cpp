@@ -5,7 +5,7 @@ MyPlugins::MyPlugins(QObject *parent) : QObject(parent) {
     widgets.append(new TableViewPlugin(this));
     widgets.append(new SearchParametersPlugin(this));
     widgets.append(new DocParametersPlugin(this));
-    widgets.append(new NumericEditPlugin(this));
+    widgets.append(new MyNumericEditPlugin(this));
 }
 
 QList<QDesignerCustomWidgetInterface*> MyPlugins::customWidgets() const {

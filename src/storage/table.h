@@ -7,14 +7,13 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include "../kernel/custom.h"
 #include "dbfactory.h"
 
 class TApplication;
 
 class MySqlRelationalTableModel;
 
-class Table : public Custom {
+class Table : public QObject {
     Q_OBJECT
 
 public:
@@ -31,13 +30,16 @@ public:
     QString getTagName() { return tagName; }
     Q_INVOKABLE virtual void query(QString filter = "");
 
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
+    Q_INVOKABLE bool isOpened() { return opened; }
+
 protected:
+    bool                        opened;
     QString                     tableName;
     QString                     tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
     MySqlRelationalTableModel*  tableModel;
     QMap<int, FieldType>        columnsProperties;
-    virtual bool doOpen();
-    virtual void doClose();
     virtual void setTableModel();
 };
 

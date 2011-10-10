@@ -163,8 +163,8 @@ void Form::doShow() {
         setIcons();
         beforeShowFormEvent();
         formWidget->show();
-//        if (!uiCreated && defaultForm)
-//            createUi();
+        if (!uiCreated && defaultForm)
+            createUi();
     }
 }
 

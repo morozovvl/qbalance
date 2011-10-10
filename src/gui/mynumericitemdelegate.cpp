@@ -1,60 +1,75 @@
 #include <QDoubleValidator>
 #include <QStyleOptionViewItemV2>
 #include "mynumericitemdelegate.h"
-#include "mylineedit.h"
 #include "formgrid.h"
 
-/*
-MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent): MyItemDelegate(parent) {
-    length = 1;
-    precision = 0;
-    delegateType = Numeric;
-    setMask();
-    setAlignment(Qt::AlignRight);
-}
-*/
-
-MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, int len, int prec): MyItemDelegate(parent) {
+MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, int len, int prec)
+: MyItemDelegate(parent)
+{
     length = len;
     precision = prec;
     delegateType = Numeric;
-    setMask();
+    setColumnMask();
     setAlignment(Qt::AlignRight);
 }
 
-void MyNumericItemDelegate::setLength(int len) {
+
+MyNumericItemDelegate::~MyNumericItemDelegate()
+{
+}
+
+
+void MyNumericItemDelegate::setLength(int len)
+{
     length = len;
-    setMask();
+    setColumnMask();
 }
 
-void MyNumericItemDelegate::setPrecision(int prec) {
+
+void MyNumericItemDelegate::setPrecision(int prec)
+{
     precision = prec;
-    setMask();
+    setColumnMask();
 }
 
-void MyNumericItemDelegate::setMask() {
-    QString mask = QString("%1").arg(QString().fill('9', length - precision));
-    if (precision > 0)
-        mask = QString(mask + "%1%2").arg(QLocale().decimalPoint()).arg(QString().fill('9', precision));
-    setColumnMask(mask);
+
+void MyNumericItemDelegate::setColumnMask(QString mask/* = ""*/)
+{
+    if (mask.size() == 0)
+    {
+        QString m = QString("%1").arg(QString().fill('9', length - precision));
+        if (precision > 0)
+        {
+            m = QString(m + "%1%2").arg(QLocale().decimalPoint()).arg(QString().fill('9', precision));
+        }
+        MyItemDelegate::setColumnMask(m);
+    }
+    else
+    {
+        MyItemDelegate::setColumnMask(mask);
+    }
 }
 
-QWidget* MyNumericItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex &index) const {
+
+QWidget* MyNumericItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex &index) const
+{
     Q_UNUSED(option)
     if (!readOnly) {
-        QModelIndex idx = index;
-        MyLineEdit* editor = new MyLineEdit(delegateType, parent, parentForm, idx);
+        currentIndex = index;
+        QLineEdit* editor = new QLineEdit();
+        editor->setParent(parent);
+        editor->setAlignment(alignment);
         QDoubleValidator* validator = new QDoubleValidator(editor);
-        editor->setValidator(validator);
         validator->setDecimals(precision);
         validator->setRange(-columnMask.toDouble(), columnMask.toDouble(), precision);
-        qobject_cast<QLineEdit *>(editor)->setAlignment(alignment);
+        editor->setValidator(validator);
         return editor;
     }
     return 0;
 }
 
-void MyNumericItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
+void MyNumericItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
+{
     QStyleOptionViewItemV2 opt;
     QLocale locale;
     locale.setNumberOptions(QLocale::OmitGroupSeparator);

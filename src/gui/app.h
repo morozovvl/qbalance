@@ -6,6 +6,17 @@
 #include <QDate>
 #include <QString>
 #include <QDir>
+#include "custom.h"
+#include "dictionary.h"
+#include "dictionaries.h"
+#include "documents.h"
+#include "topers.h"
+#include "gui/guifactory.h"
+#include "dictionary.h"
+#include "dictionaries.h"
+#include "documents.h"
+#include "topers.h"
+#include "gui/guifactory.h"
 #include "../kernel/custom.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/dictionaries.h"
@@ -70,6 +81,10 @@ public:
     static void debug(const QString& value);
 
     static TApplication* exemplar();
+
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
+
 public slots:
     void showError(QString error) { gui->showError(error); }
     void showCriticalError(QString error) { gui->showCriticalError(error); }
@@ -82,8 +97,6 @@ private:
     QDate beginDate;
     QDate endDate;
 
-    bool doOpen();
-    void doClose();
     void loadConsts();
 
     static QFile*        DebugFile;

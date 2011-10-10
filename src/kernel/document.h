@@ -33,6 +33,8 @@ public:
     virtual bool calculate(const QModelIndex &);
     virtual void setOldCalculateProperties(const QModelIndex &);
     virtual void setConstDictId(QString, QVariant);
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
 protected:
     virtual void setForm();
     virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
@@ -47,8 +49,6 @@ private:
     QSqlTableModel toper;
     QString selectStatement;
     QHash<int, prvSaldo> saldo;                   // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
-    virtual bool doOpen();
-    virtual void doClose();
     virtual void setTableModel();
     bool showNextDict();
     void unlock();

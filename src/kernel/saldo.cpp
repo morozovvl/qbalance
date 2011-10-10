@@ -38,8 +38,8 @@ void Saldo::setMustShow(bool mustShow) {
     Dictionary::setMustShow(mustShow);
 }
 
-bool Saldo::doOpen(int deep) {
-    bool result = Dictionary::doOpen(deep);
+bool Saldo::open(int deep) {
+    bool result = Dictionary::open(deep);
     formTitle = QString(QObject::tr("Остатки на %1 счете").arg(account));
     return result;
 }

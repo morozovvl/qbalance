@@ -8,6 +8,7 @@
 #include "../storage/documenttablemodel.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
+
 Document::Document(int oper, Documents* par)
 : Essence()
 , parent(par)
@@ -155,7 +156,7 @@ Document::Document(int oper, Documents* par)
         else
             dict->setCanShow(true);
     }
-    setScriptForTable(toper.record(0).value("формулы").toString());
+//    setScriptForTable(toper.record(0).value("формулы").toString());
 }
 
 Document::~Document() {
@@ -250,7 +251,7 @@ bool Document::calculate(const QModelIndex& index) {
                     itog -= sum;
             }
         }
-        NumericEdit* itogWidget = (NumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
+        MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
         if (itogWidget != 0)
             itogWidget->setValue(itog);
         parent->getMyRelationalTableModel()->setData(parent->getMyRelationalTableModel()->index(parent->getCurrentRow(), parent->getMyRelationalTableModel()->record().indexOf("сумма")), itog);
@@ -350,12 +351,12 @@ void Document::setConstDictId(QString dName, QVariant id)
 }
 
 
-bool Document::doOpen()
+bool Document::open()
 {
     lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
     lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
     lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
-    if (Essence::doOpen()) {
+    if (Essence::open()) {
         initForm();
         return true;
     }
@@ -363,12 +364,12 @@ bool Document::doOpen()
 }
 
 
-void Document::doClose()
+void Document::close()
 {
     foreach(QString dictName, dicts->keys()) {
         dicts->value(dictName)->close();
     }
-    Essence::doClose();
+    Essence::close();
 }
 
 
@@ -393,6 +394,7 @@ void Document::setTableModel()
     tableModel = new DocumentTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
+    tableModel->setBlockUpdate(!isUpdateable());
 
     QString selectClause, fromClause, whereClause;
     QStringList prvFieldsList = tableModel->getFieldsList();

@@ -5,7 +5,7 @@
 #include "tableviewplugin.h"
 #include "searchparametersplugin.h"
 #include "docparametersplugin.h"
-#include "numericeditplugin.h"
+#include "mynumericeditplugin.h"
 
 #include <QtDesigner/QtDesigner>
 #include <QtCore/qplugin.h>

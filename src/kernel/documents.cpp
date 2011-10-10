@@ -62,11 +62,11 @@ void Documents::query(QString filter) {
         QString::number(operNumber)));
 }
 
-bool Documents::doOpen() {
+bool Documents::open() {
     lInsertable = TApplication::exemplar()->getToperProperty(operNumber, "insertable").toBool();
     lDeleteable = TApplication::exemplar()->getToperProperty(operNumber, "deleteable").toBool();
     lUpdateable = TApplication::exemplar()->getToperProperty(operNumber, "updateable").toBool();
-    if (Essence::doOpen()) {     // Откроем этот справочник
+    if (Essence::open()) {     // Откроем этот справочник
 
         // Установим форму для отображения справочника
 
@@ -85,10 +85,10 @@ bool Documents::doOpen() {
 }
 
 
-void Documents::doClose() {
+void Documents::close() {
     currentDocument->close();
     delete currentDocument;
-    Dictionary::doClose();
+    Dictionary::close();
 }
 
 

@@ -1,14 +1,14 @@
 #include <QVariant>
 #include <QLocale>
 #include <QDebug>
-#include "numericedit.h"
+#include "mynumericedit.h"
 
-NumericEdit::NumericEdit(QWidget *parent): QLineEdit(parent) {
+MyNumericEdit::MyNumericEdit(QWidget *parent): QLineEdit(parent) {
     setAlignment(Qt::AlignRight);
     setValue(0);
 }
 
-void NumericEdit::setValue(QVariant val) {
+void MyNumericEdit::setValue(QVariant val) {
     value = val;
     QLocale locale;
     locale.setNumberOptions(QLocale::OmitGroupSeparator);

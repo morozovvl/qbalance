@@ -2,7 +2,6 @@
 #define DBFACTORY_H
 
 #include <QObject>
-#include "../kernel/custom.h"
 #include <QtSql>
 #include <QDate>
 #include <QVariantList>
@@ -17,7 +16,7 @@ struct FieldType {
     bool readOnly;
 };
 
-class DBFactory : public Custom {
+class DBFactory : public QObject {
     Q_OBJECT
 
 public:
@@ -29,7 +28,6 @@ public:
     bool removeDocStr(int, int);
     void clearError();
     bool createNewDB(QString, QString, int);
-    bool open(QString login, QString password) { return doOpen(login, password); }
     QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
     int getPort() { return port; }
@@ -68,6 +66,10 @@ public:
 
     static QString storageEncoding();
 
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual bool open(QString, QString);
+    Q_INVOKABLE virtual void close();
+
 private:
     QSqlDatabase*           db;
     QString                 hostName;           // URL сервера
@@ -79,9 +81,6 @@ private:
     QMap<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
 
     void setError(QString);
-    virtual bool doOpen();
-    virtual bool doOpen(QString, QString);
-    virtual void doClose();
     void initObjectNames();
 };
 

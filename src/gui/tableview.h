@@ -27,8 +27,6 @@ public:
     void setApp(TApplication* a) { app = a; }
 signals:
     void rowChanged();
-protected slots:
-    virtual void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint);
 protected:
     QString         name;
     FormGrid*       parent;

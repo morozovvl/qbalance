@@ -20,6 +20,11 @@ CONFIG += designer \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = app
+
+#SUBDIRS = plugins
+#plugins.subdir = lib
+#plugins.file = src/plugins/plugins.pro
+
 #SUBDIRS = src/storage \
 #    src/engine \
 #    src/kernel
@@ -50,12 +55,10 @@ SOURCES += src/main.cpp \
     src/storage/table.cpp \
     src/storage/documenttablemodel.cpp \
     src/gui/tableview.cpp \
-    src/gui/mylineedit.cpp \
     src/gui/mynumericitemdelegate.cpp \
     src/gui/mybooleanitemdelegate.cpp \
     src/kernel/saldo.cpp \
     src/gui/docparameters.cpp \
-    src/gui/numericedit.cpp \
     src/gui/myitemdelegate.cpp \
     src/gui/mylineitemdelegate.cpp \
     src/gui/picture.cpp \
@@ -87,12 +90,10 @@ HEADERS += src/kernel/custom.h \
     src/storage/table.h \
     src/storage/documenttablemodel.h \
     src/gui/tableview.h \
-    src/gui/mylineedit.h \
     src/gui/mynumericitemdelegate.h \
     src/gui/mybooleanitemdelegate.h \
     src/kernel/saldo.h \
     src/gui/docparameters.h \
-    src/gui/numericedit.h \
     src/gui/myitemdelegate.h \
     src/gui/mylineitemdelegate.h \
     src/definitions.h \
@@ -109,3 +110,5 @@ win32:OBJECTS_DIR = /.obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src
+
+

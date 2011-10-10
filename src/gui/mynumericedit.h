@@ -7,11 +7,11 @@
 #include <QWidget>
 #include <QAbstractItemDelegate>
 
-class NumericEdit : public QLineEdit {
+class MyNumericEdit : public QLineEdit {
     Q_OBJECT
 public:
-//    explicit NumericEdit(QWidget *parent = 0);
-    NumericEdit(QWidget *parent = 0);
+//    explicit MyNumericEdit(QWidget *parent = 0);
+    MyNumericEdit(QWidget *parent = 0);
     void setValue(QVariant);
     QVariant getValue() { return value; }
 private:

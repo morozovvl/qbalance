@@ -6,7 +6,7 @@
 #include "../gui/passwordform.h"
 
 DBFactory::DBFactory()
-: Custom()
+: QObject()
 {
     hostName = "localhost";
     port = 5432;
@@ -102,13 +102,13 @@ void DBFactory::setError(QString errText)
 }
 
 
-bool DBFactory::doOpen()
+bool DBFactory::open()
 {
-    return DBFactory::doOpen("", "");
+    return DBFactory::open("", "");
 }
 
 
-bool DBFactory::doOpen(QString login, QString password)
+bool DBFactory::open(QString login, QString password)
 {
     clearError();
     db->setHostName(hostName);
@@ -131,7 +131,7 @@ bool DBFactory::doOpen(QString login, QString password)
 }
 
 
-void DBFactory::doClose()
+void DBFactory::close()
 {
     clearError();
     db->close();

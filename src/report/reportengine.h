@@ -16,7 +16,7 @@ public:
     ReportEngine(Essence*, QString);
     QScriptEngine* getEngine() { return engine; }
     QScriptValue* getContext() { return &context; }
-    bool open() { return doOpen(); }
+    Q_INVOKABLE virtual bool open();
 private:
     Essence* parent;
     QScriptEngine* engine;
@@ -25,7 +25,6 @@ private:
     QString templateFileName;
     QScriptValue context;
 
-    bool doOpen();
     void loadContextFunctions();
 };
 

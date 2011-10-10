@@ -5,7 +5,6 @@ QT += gui
 QT += xml
 CONFIG += designer \
     plugin
-CONFIG += release
 TARGET = ../../plugins/plugins
 TEMPLATE = lib
 HEADERS = tableviewplugin.h \
@@ -18,8 +17,8 @@ HEADERS = tableviewplugin.h \
     ../gui/mycombobox.h \
     docparametersplugin.h \
     ../gui/docparameters.h \
-    numericeditplugin.h \
-    ../gui/numericedit.h \
+    mynumericeditplugin.h \
+    ../gui/mynumericedit.h \
     ../gui/mynumericitemdelegate.h \
     ../gui/myitemdelegate.h
 SOURCES = tableviewplugin.cpp \
@@ -32,7 +31,17 @@ SOURCES = tableviewplugin.cpp \
     ../gui/mycombobox.cpp \
     docparametersplugin.cpp \
     ../gui/docparameters.cpp \
-    numericeditplugin.cpp \
-    ../gui/numericedit.cpp \
+    mynumericeditplugin.cpp \
+    ../gui/mynumericedit.cpp \
     ../gui/mynumericitemdelegate.cpp \
     ../gui/myitemdelegate.cpp
+
+unix:MOC_DIR = ../../.moc
+win32:MOC_DIR = ../../.moc
+
+unix:OBJECTS_DIR = ../../.obj
+win32:OBJECTS_DIR = ../../.obj
+
+unix:RCC_DIR = ../src
+win32:RCC_DIR = ../src
+

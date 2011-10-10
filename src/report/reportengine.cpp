@@ -16,7 +16,7 @@ ReportEngine::ReportEngine(Essence* par, QString name) {
     templateFileName = reportName + ".ods";
 }
 
-bool ReportEngine::doOpen() {
+bool ReportEngine::open() {
     bool lResult = false;
     context = engine->globalObject();
     loadContextFunctions();

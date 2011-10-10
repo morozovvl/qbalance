@@ -57,8 +57,8 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
 }
 
 
-bool Dictionaries::doOpen() {
-    if (Essence::doOpen()) {
+bool Dictionaries::open() {
+    if (Essence::open()) {
         initForm();
         formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
         return true;
@@ -66,11 +66,11 @@ bool Dictionaries::doOpen() {
     return false;
 }
 
-void Dictionaries::doClose() {
+void Dictionaries::close() {
     foreach(Dictionary* dict, dictionaries) {
         dict->getForm()->writeSettings();
     }
-    Essence::doClose();
+    Essence::close();
 }
 
 void Dictionaries::query(QString filter) {

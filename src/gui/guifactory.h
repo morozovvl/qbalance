@@ -10,7 +10,7 @@
 class TApplication;
 class MainWindow;
 
-class GUIFactory: public Custom {
+class GUIFactory: public QObject {
 public:
     GUIFactory(DBFactory *d) { db = d; }
     MainWindow* getMainWindow() { return mainWindow; }
@@ -28,14 +28,14 @@ public:
                     QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::StandardButton defButton = QMessageBox::No);      // Вывести сообщение пользователю и возможно задать вопрос
     int showYesNo(QString);
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
 private:
     DBFactory* db;
     MainWindow* mainWindow;
     QString lastHostName;
     QString lastDbName;
     int lastPort;
-    bool doOpen();
-    void doClose();
 };
 
 #endif // GUIFACTORY_H

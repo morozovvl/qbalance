@@ -18,10 +18,10 @@ public:
     void query(QString);
     QMap<QString, Dictionary*>* getDictionaries() { return &dictionaries; }
     virtual void cmdOk();
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
 private:
     QSqlQuery dictionariesProperties;
-    virtual bool doOpen();
-    virtual void doClose();
 };
 
 //Q_DECLARE_METATYPE(Dictionaries)
