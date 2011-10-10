@@ -112,7 +112,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 }
 
 
-void FormDocument::doShow()
+void FormDocument::show()
 {
     if (dateEdit != 0)
         dateEdit->setDate(getParent()->getParent()->getValue("дата").toDate());
@@ -125,14 +125,14 @@ void FormDocument::doShow()
         foreach (QString dictName, parameters->getKeys())
             parameters->showText(dictName);
     }
-    FormGrid::doShow();
+    FormGrid::show();
 }
 
 
-void FormDocument::doHide()
+void FormDocument::hide()
 {
     getParent()->getParent()->getForm()->getForm()->activateWindow();
-    FormGrid::doHide();
+    FormGrid::hide();
 }
 
 

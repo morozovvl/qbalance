@@ -49,7 +49,7 @@ bool Documents::remove() {
 }
 
 void Documents::view() {
-    currentRow = getForm()->getCurrentRowIndex();
+    currentRow = getForm()->getCurrentIndex().row();
     currentDocument->setDocId(getValue("код").toInt());
     currentDocument->show();
 }

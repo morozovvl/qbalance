@@ -225,9 +225,9 @@ void FormGrid::close()
 }
 
 
-void FormGrid::doShow()
+void FormGrid::show()
 {
-    Form::doShow();
+    Form::show();
     setShowFocus();
 }
 
@@ -267,13 +267,6 @@ void FormGrid::showPhoto()
 QString FormGrid::getColumnHeader(QString columnName)
 {
     return tableModel->headerData(tableModel->fieldIndex(columnName), Qt::Horizontal).toString();
-}
-
-
-int FormGrid::getCurrentRowIndex()
-{
-    QModelIndex index = grdTable->currentIndex();
-    return index.row();
 }
 
 
@@ -380,6 +373,7 @@ void FormGrid::cmdPrint()
 
 void FormGrid::add()
 {
+    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
     cmdRequery();
     if (parent->getIdFieldName().size() > 0)
     {         // Если существует ключевое поле
@@ -394,26 +388,28 @@ void FormGrid::add()
               maxIndex = i;
           }
        }
-       grdTable->selectRow(maxIndex);
+       grdTable->selectRow(maxIndex);   // установим курсор на последнюю добавленную запись
     }
+    setCurrentIndex(index.sibling(getCurrentIndex().row(), index.column()));    // Поставим курсор на новую строку в старой колонке
     if (parent->getMyRelationalTableModel()->rowCount() > 0)
-    {
+    {   // Если записей стало больше 0, то активируем кнопку "Удалить"
         if (buttonDelete != 0)
             buttonDelete->setDisabled(false);
     }
 }
 
+
 void FormGrid::remove()
 {
-    int row = getCurrentRowIndex();
+    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
     cmdRequery();
     int rowCount = parent->getMyRelationalTableModel()->rowCount();
     if (rowCount > 0)
-    {
-        if (row < (rowCount - 1))
-            grdTable->selectRow(row);
+    {   // Если после удаления строки в таблице остались еще записи
+        if (index.row() < (rowCount - 1))
+            setCurrentIndex(index);
         else
-            grdTable->selectRow((rowCount - 1));
+            setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
     }
     else
         if (buttonDelete != 0)

@@ -14,9 +14,9 @@ public:
     Document* getParent() { return (Document*)parent; }
 public slots:
     virtual void cmdOk();
+    Q_INVOKABLE virtual void show();
+    Q_INVOKABLE virtual void hide();
 protected:
-    virtual void doShow();
-    virtual void doHide();
     virtual void remove();
 private:
     QDateEdit*      dateEdit;

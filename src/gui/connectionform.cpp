@@ -61,6 +61,7 @@ int ConnectionForm::exec(DBFactory* d) {
     db = d;
     readDefaultSettings();
     readSettings(pcmbConnection->itemText(pcmbConnection->currentIndex()));
+    Form::setIcons();
     lResult = Form::exec();
     db->setHostName(ptxtHost->text());
     db->setDatabaseName(ptxtDatabase->text());

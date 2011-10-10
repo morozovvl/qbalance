@@ -43,10 +43,6 @@ QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem opti
 
 void MyItemDelegate::calculate(QWidget* editor)
 {
-    QVariant value = ((QLineEdit*)editor)->text();
-    MySqlRelationalTableModel* model;
-    model = parent->getMyRelationalTableModel();
-    qDebug() << model->metaObject()->className();
-    model->setData(currentIndex, value);
+    Q_UNUSED(editor)
     parent->calculate(currentIndex);
 }

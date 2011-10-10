@@ -126,7 +126,6 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
 
 void Form::setIcons() {
     if (!iconsSeted) {
-//        QList<QPushButton*> widgets = formWidget->findChildren<QPushButton*>();
         QList<QPushButton*> widgets = qFindChildren<QPushButton*>(formWidget);
         for (int i = 0; i < widgets.size(); i++)
             widgets.at(i)->setIcon(QIcon(":" + widgets.at(i)->objectName()));
@@ -146,10 +145,9 @@ void Form::cmdCancel() {
     hide();
 }
 
-int Form::doExec() {
+int Form::exec() {
     if (formWidget != 0) {
         lSelected = false;
-        setIcons();
         beforeShowFormEvent();
         formWidget->exec();
         return lSelected;
@@ -157,18 +155,17 @@ int Form::doExec() {
     return 0;
 }
 
-void Form::doShow() {
+void Form::show() {
     if (formWidget != 0) {
         lSelected = false;
-        setIcons();
         beforeShowFormEvent();
         formWidget->show();
-        if (!uiCreated && defaultForm)
-            createUi();
+//        if (!uiCreated && defaultForm)
+//            createUi();
     }
 }
 
-void Form::doHide() {
+void Form::hide() {
     if (formWidget != 0) {
         formWidget->hide();
         afterHideFormEvent();

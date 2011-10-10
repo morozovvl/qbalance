@@ -23,6 +23,7 @@ bool CalendarForm::open(QWidget* pwgt) {
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, ptopLayout);
+        Form::setIcons();
         return true;
     }
     return false;

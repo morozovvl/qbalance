@@ -7,6 +7,7 @@
 class TApplication;
 
 DocumentTableModel::DocumentTableModel(): MySqlRelationalTableModel() {
+    setEditStrategy(QSqlTableModel::OnManualSubmit);
     setBlockUpdate(true);
 }
 
