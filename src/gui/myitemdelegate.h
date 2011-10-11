@@ -8,7 +8,7 @@
 #include <QStyleOptionViewItemV2>
 #include <QModelIndex>
 #include <QPalette>
-#include "../essence.h"
+//#include "../essence.h"
 
 enum DelegateTypes {Numeric, Boolean, String};
 

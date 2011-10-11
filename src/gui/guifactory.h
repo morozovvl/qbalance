@@ -1,7 +1,7 @@
 #ifndef GUIFACTORY_H
 #define GUIFACTORY_H
 
-#include "../kernel/custom.h"
+//#include "../kernel/custom.h"
 #include "../storage/dbfactory.h"
 #include <QString>
 #include <QMessageBox>

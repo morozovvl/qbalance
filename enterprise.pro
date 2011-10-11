@@ -3,10 +3,10 @@
 # -------------------------------------------------
 
 QT += sql \
-    xml \
-    core \
-    script \
-    gui
+      xml \
+      core \
+      script \
+      gui
 
 CONFIG(debug) {
     DESTDIR = bin/debug
@@ -21,13 +21,6 @@ CONFIG += designer \
 CONFIG -= app_bundle
 TEMPLATE = app
 
-#SUBDIRS = plugins
-#plugins.subdir = lib
-#plugins.file = src/plugins/plugins.pro
-
-#SUBDIRS = src/storage \
-#    src/engine \
-#    src/kernel
 SOURCES += src/main.cpp \
     src/gui/app.cpp \
     src/storage/dbfactory.cpp \
@@ -110,5 +103,3 @@ win32:OBJECTS_DIR = /.obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src
-
-
