@@ -9,11 +9,10 @@ MyItemDelegate::MyItemDelegate(QObject* par)
 : QItemDelegate(((FormGrid*)par)->getForm())
 {
     parentForm = par;
-    parent = ((FormGrid*)parentForm)->getParent();
     columnMask = "";
     delegateType = String;
     readOnly = false;
-    connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate(QWidget*)));
+    connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
 }
 
 
@@ -41,12 +40,7 @@ QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem opti
 }
 
 
-void MyItemDelegate::calculate(QWidget* editor)
+void MyItemDelegate::calculate()
 {
-    QVariant value = ((QLineEdit*)editor)->text();
-    MySqlRelationalTableModel* model;
-    model = parent->getMyRelationalTableModel();
-    qDebug() << model->metaObject()->className();
-    model->setData(currentIndex, value);
-    parent->calculate(currentIndex);
+    ((FormGrid*)parentForm)->calculate();
 }

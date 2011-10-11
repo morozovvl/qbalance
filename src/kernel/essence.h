@@ -30,6 +30,7 @@ public:
     ~Essence();
 // Функции для получения, сохранения данных модели
     virtual qulonglong getId(int row = 0);
+    virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     virtual void setId(qulonglong);
     QString getIdFieldName() { return idFieldName; }
     virtual bool isFieldExists(QString field) { return getFieldsList().contains(field); }

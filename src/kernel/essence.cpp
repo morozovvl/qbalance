@@ -53,6 +53,13 @@ void Essence::setScriptForTable(QString scr) {
     }
 }
 
+
+bool Essence::setData(const QModelIndex & index, const QVariant & value, int role/* = Qt::EditRole*/)
+{
+    return tableModel->setData(index, value, role);
+}
+
+
 bool Essence::calculate(const QModelIndex &index)
 {
     if (engine != 0)
@@ -69,18 +76,7 @@ bool Essence::calculate(const QModelIndex &index)
             getCalculateProperties(index);
         }
     }
-    if (!tableModel->submit(index))
-    {
-//    revertCalculateProperties(index);
-        return false;
-    }
-//        for (int i = 0; i < tableModel->record().count(); i++) {
-//            QModelIndex index = form->getCurrentIndex();
-//            index = index.sibling(form->getCurrentRowIndex(), i);
-//            tableModel->setData(index, tableModel->data(index));
-//        }
-//    }
-    return true;
+    return tableModel->submit(index);
 }
 
 
@@ -141,11 +137,13 @@ void Essence::revertCalculateProperties(const QModelIndex &index)
 }
 
 
-QVariant Essence::getValue(QString name, int row) {
+QVariant Essence::getValue(QString name, int row)
+{
     if (row >= 0)
         return tableModel->record(row).value(name);
-    return tableModel->record(form->getCurrentRowIndex()).value(name);
+    return tableModel->record(form->getCurrentIndex().row()).value(name);
 }
+
 
 bool Essence::setValue(QString name, QVariant value, int row) {
     int col = tableModel->record().indexOf(name);
@@ -153,14 +151,14 @@ bool Essence::setValue(QString name, QVariant value, int row) {
     if (row >= 0)
         index = index.sibling(row, col);
     else
-        index = index.sibling(form->getCurrentRowIndex(), col);
+        index = index.sibling(form->getCurrentIndex().row(), col);
     return tableModel->setData(index, value);
 }
 
 qulonglong Essence::getId(int row) {
     if (row > 0)
         return getValue(idFieldName, row).toULongLong();
-    return getValue(idFieldName, form->getCurrentRowIndex()).toULongLong();
+    return getValue(idFieldName, form->getCurrentIndex().row()).toULongLong();
 }
 
 void Essence::setId(qulonglong id) {
@@ -245,6 +243,7 @@ void Essence::setForm() {
 
 void Essence::initForm() {
     setForm();
+    form->setIcons();
     form->readSettings();
     setFormTitle(formTitle);
     form->initFormEvent();

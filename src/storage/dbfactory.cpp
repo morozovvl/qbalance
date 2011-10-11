@@ -431,8 +431,6 @@ QString DBFactory::initializationScriptPath() const
 
     result.append("/src/");
 
-    qDebug() << "DBFactory::initializationScriptPath() : " << result;
-
     return result;
 }
 

@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE virtual void close();
     void setConfigName(QString name) { configName = name; setObjectName(configName); }
     QString getConfigName() { return configName; }
+    virtual void setIcons();
     virtual void readSettings();
     virtual void writeSettings();
     virtual void createUi();
@@ -36,9 +37,9 @@ public:
     Q_INVOKABLE bool opened() { return (formWidget != 0) ? true : false; }
 
 public slots:
-    Q_INVOKABLE virtual int exec() { return doExec(); }
-    Q_INVOKABLE virtual void show() { doShow(); }
-    Q_INVOKABLE virtual void hide() { doHide(); }
+    Q_INVOKABLE virtual int exec();
+    Q_INVOKABLE virtual void show();
+    Q_INVOKABLE virtual void hide();
     virtual void cmdOk();
     virtual void cmdCancel();
 
@@ -59,10 +60,6 @@ protected:
     QPushButton*    buttonOk;
     QPushButton*    buttonCancel;
 
-    virtual int doExec();
-    virtual void doShow();
-    virtual void doHide();
-    virtual void setIcons();
     virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
     QDomElement createBoxLayoutElement(QLayout*);

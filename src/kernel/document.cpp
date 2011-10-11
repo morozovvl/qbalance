@@ -35,8 +35,6 @@ Document::Document(int oper, Documents* par)
     toper.setEditStrategy(QSqlTableModel::OnManualSubmit);
     toper.select();
 
-    qDebug() << " Строк в справочнике: " + QString::number(toper.rowCount());
-
     // Составим список справочников, которые используются при работе с документом
     QString dictName;
     QList<QString> spravList;
@@ -260,14 +258,18 @@ bool Document::calculate(const QModelIndex& index) {
 }
 
 
-bool Document::add() {
-    unlock();
-    foreach (QString dictName, dicts->keys()) {
+bool Document::add()
+{
+    unlock();               // разблокировать все связанные справочники
+    foreach (QString dictName, dicts->keys())
+    {
         Dictionary* dict = dicts->value(dictName);
-        dict->setMustShow(dict->isConst()? false: dict->canShow());
-        dict->setMustShow(dict->getDeep() == 0 ? true : false);
+        dict->setMustShow(dict->isConst()? false: dict->canShow()); // Если справочник документа является постоянным, то не показывать его при добавлении новой записи в документ
+                                                                    // иначе это справочник должен быть показан, если может быть показан
+        dict->setMustShow(dict->getDeep() == 0 ? true : false);     // Если это зависимый справочник, то он не показывается
     }
-    if (showNextDict()) {
+    if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
+    {
         insertDocString();
         return true;
     }

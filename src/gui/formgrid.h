@@ -27,13 +27,12 @@ public:
     QVariant getValue(QString);
     QModelIndex getCurrentIndex() { return grdTable->currentIndex(); }
     void setCurrentIndex(QModelIndex index) { grdTable->setCurrentIndex(index); }
-    int getCurrentRowIndex();
     TableView* getGridTable() { return grdTable; }
     virtual void setGridFocus();
     virtual void setShowFocus();
     virtual void readSettings();
     virtual void writeSettings();
-
+    virtual bool calculate();
 
 public slots:
     virtual void cmdAdd();
@@ -42,6 +41,7 @@ public slots:
     virtual void cmdRequery(QString param = "") { query(param); }
     virtual void cmdPrint();
     virtual void showPhoto();
+    Q_INVOKABLE virtual void show();
 
 protected:
     TableView*                  grdTable;
@@ -57,7 +57,6 @@ protected:
 
     void showEvent(QShowEvent*);
     void showGridLine(int currentRow = 0);   // Подсвечивает первую (или текущую) строку Grid после обновления данных, если до этого ни одна строка не была подсвечена
-    virtual void doShow();
     virtual void add();
     virtual void remove();
     virtual void query(QString param = "");

@@ -49,7 +49,7 @@ public:
 // Функции для сохранения данных
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     void setBlockUpdate(bool block) { blockUpdate = block; }
-    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return true; }
+    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return QSqlRelationalTableModel::submit(); }
     virtual bool updateRowInTable(int, const QSqlRecord&);
 
 // Прочие функции

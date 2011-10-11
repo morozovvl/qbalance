@@ -26,11 +26,9 @@ public:
     virtual QVariant convertType(QVariant var) { return var; }
     void setReadOnly(bool val) { readOnly = val; }
 public slots:
-    virtual void calculate(QWidget*);
+    virtual void calculate();
 protected:
-    Essence*                parent;
     QObject*                parentForm;
-    mutable QModelIndex     currentIndex;
     QString                 columnMask;
     Qt::Alignment           alignment;
     DelegateTypes           delegateType;

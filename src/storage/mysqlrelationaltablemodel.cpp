@@ -16,9 +16,10 @@
 #include "table.h"
 #include "mysqlquery.h"
 
-MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableModel() {
+
+MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableModel()
+{
     parent = NULL;
-    setEditStrategy(QSqlTableModel::OnManualSubmit);
     relIsEmpty = true;                           // по умолчанию нет реляционных отношений
     sortClause = "";
     isPrepared = false;
@@ -27,7 +28,9 @@ MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableMode
     preparedStatement = "";
 }
 
-bool MySqlRelationalTableModel::insertColumns(int column, int count, const QModelIndex & parent) {
+
+bool MySqlRelationalTableModel::insertColumns(int column, int count, const QModelIndex & parent)
+{
     if (QSqlQueryModel::insertColumns(column, count, parent)) {
         for (int i = 0; i < count; i++)
             insertedColumns.append(column + i);
@@ -36,7 +39,9 @@ bool MySqlRelationalTableModel::insertColumns(int column, int count, const QMode
     return false;
 }
 
-int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const {
+
+int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
+{
     int result;
     result = QSqlTableModel::fieldIndex(fieldName);
     if (result >= 0)
@@ -50,6 +55,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const {
         return fieldsList.indexOf(fieldName);
     return -1;
 }
+
 
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
@@ -71,7 +77,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
                     rec.remove(insertedColumns[i]);
                 }
 //                lResult = updateRowInTable(index.row(), rec);
-                QSqlRelationalTableModel::setData(index, value, role);
+                lResult = QSqlRelationalTableModel::setData(index, value, role);
 //            }
         }
         else

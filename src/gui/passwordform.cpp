@@ -54,9 +54,10 @@ void PassWordForm::cmdOk() {
     writeSettings();
 }
 
-int PassWordForm::doExec() {
+int PassWordForm::exec() {
     readSettings();
-    return Form::doExec();
+    Form::setIcons();
+    return Form::exec();
 }
 
 void PassWordForm::readSettings() {

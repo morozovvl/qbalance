@@ -16,8 +16,8 @@ public:
         void addLogin(QStringList);
         QString getLogin() { return login; }
         QString getPassword() { return password; }
+        int exec();
 protected:
-        virtual int doExec();
         virtual void readSettings();
         virtual void writeSettings();
 private:
