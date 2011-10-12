@@ -1,6 +1,6 @@
 #ifndef REPORT_H
 #define REPORT_H
-#include "essence.h"
+#include "../kernel/essence.h"
 
 class Report : public Essence
 {

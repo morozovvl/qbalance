@@ -39,9 +39,7 @@ public:
     QString getFormsPath(QString formName = "");
     MainWindow* getMainWindow() { return gui->getMainWindow(); }
 
-    bool open() { return doOpen(); }
     void show() { gui->show(); }
-    void close(){ doClose();}
 
     void showDictionaries() { dictionaryList->show(); }
     void showDocuments() { topersList->show(); }

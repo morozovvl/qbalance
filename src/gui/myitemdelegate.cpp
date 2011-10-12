@@ -1,6 +1,6 @@
 #include <QObject>
 #include <QDebug>
-#include "../mysqlrelationaltablemodel.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 #include "myitemdelegate.h"
 #include "formgrid.h"
 

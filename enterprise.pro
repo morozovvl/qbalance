@@ -56,7 +56,9 @@ SOURCES += src/main.cpp \
     src/gui/mylineitemdelegate.cpp \
     src/gui/picture.cpp \
     src/engine/scriptengine.cpp \
-    src/storage/mysqlquery.cpp
+    src/storage/mysqlquery.cpp \
+    src/gui/mynumericedit.cpp \
+    src/report/reports.cpp
 HEADERS += src/kernel/custom.h \
     src/gui/app.h \
     src/storage/dbfactory.h \
@@ -92,7 +94,9 @@ HEADERS += src/kernel/custom.h \
     src/definitions.h \
     src/gui/picture.h \
     src/engine/scriptengine.h \
-    src/storage/mysqlquery.h
+    src/storage/mysqlquery.h \
+    src/gui/mynumericedit.h \
+    src/report/reports.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc
@@ -103,3 +107,7 @@ win32:OBJECTS_DIR = /.obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src
+
+
+
+
