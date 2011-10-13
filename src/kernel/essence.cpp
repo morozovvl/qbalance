@@ -13,7 +13,6 @@
 #include <QUiLoader>
 #include "essence.h"
 #include "../gui/app.h"
-#include "../report/reporttemplate.h"
 #include "../report/reportengine.h"
 #include "../gui/form.h"
 #include "../gui/formgridsearch.h"
@@ -291,7 +290,7 @@ void Essence::print(QString file)
 {
     QMap<QString, QVariant> printValues;
     preparePrintValues(&printValues);
-    ReportEngine report(this, &printValues, file, "ods");
-    report.open();
+//    ReportEngine report(this, &printValues, file, "ods");
+//    report.open();
 }
 

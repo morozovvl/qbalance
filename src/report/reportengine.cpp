@@ -4,8 +4,8 @@
 #include <QString>
 #include "../gui/app.h"
 #include "../kernel/essence.h"
+#include "../engine/reportscriptengine.h"
 #include "reportengine.h"
-#include "reporttemplate.h"
 #include "reportcontextfunctions.cpp"
 
 
@@ -25,7 +25,6 @@ ReportEngine::ReportEngine(Essence* par, QMap<QString, QVariant>* context, QStri
 bool ReportEngine::open()
 {
     bool result = true;
-    scriptContext = scriptEngine->globalObject();
     QString scriptFileName = reportName + ".js";
     QFile scriptFile(scriptFileName);
     if (scriptFile.open(QIODevice::ReadOnly))

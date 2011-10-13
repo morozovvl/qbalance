@@ -13,7 +13,7 @@ class Essence;
 class ReportEngine : public QObject {
     Q_OBJECT
 public:
-    ReportEngine(Essence*, QString);
+    ReportEngine(Essence*, QMap<QString, QVariant>*, QString, QString);
     Q_INVOKABLE virtual bool open();
 private:
     Essence*                    parent;

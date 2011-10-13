@@ -37,7 +37,6 @@ SOURCES += src/main.cpp \
     src/kernel/dictionary.cpp \
     src/kernel/dictionaries.cpp \
     src/gui/mycombobox.cpp \
-    src/report/reporttemplate.cpp \
     src/report/reportengine.cpp \
     src/report/reportcontextfunctions.cpp \
     src/gui/formdocument.cpp \
@@ -58,9 +57,9 @@ SOURCES += src/main.cpp \
     src/engine/scriptengine.cpp \
     src/storage/mysqlquery.cpp \
     src/gui/mynumericedit.cpp \
-    src/report/reports.cpp
-HEADERS += src/kernel/custom.h \
-    src/gui/app.h \
+    src/report/reports.cpp \
+    src/engine/reportscriptengine.cpp
+HEADERS += src/gui/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
     src/gui/passwordform.h \
@@ -75,7 +74,6 @@ HEADERS += src/kernel/custom.h \
     src/kernel/dictionary.h \
     src/kernel/dictionaries.h \
     src/gui/mycombobox.h \
-    src/report/reporttemplate.h \
     src/report/reportengine.h \
     src/gui/formdocument.h \
     src/kernel/documents.h \
@@ -96,7 +94,9 @@ HEADERS += src/kernel/custom.h \
     src/engine/scriptengine.h \
     src/storage/mysqlquery.h \
     src/gui/mynumericedit.h \
-    src/report/reports.h
+    src/report/reports.h \
+    src/engine/reportscriptengine.h \
+    src/engine/reportscriptengine.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc
