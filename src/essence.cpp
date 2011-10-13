@@ -291,7 +291,7 @@ void Essence::print(QString file)
 {
     QMap<QString, QVariant> printValues;
     preparePrintValues(&printValues);
-//    ReportEngine report(this, file);
-//    report.open();
+    ReportEngine report(this, &printValues, file, "ods");
+    report.open();
 }
 

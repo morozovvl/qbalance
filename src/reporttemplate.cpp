@@ -294,8 +294,8 @@ void ReportTemplate::writeVariables() {
                 cellText = cellText.remove("&lt;:");
                 cellText = cellText.remove("<:");
                 cellText = cellText.remove(":>");
-                QVariant var = engine->getEngine()->evaluate(cellText).toVariant();
-                if (!engine->getEngine()->hasUncaughtException() && !var.isNull())                          // Если не было ошибок
+                QVariant var = scriptEngine->getEngine()->evaluate(cellText).toVariant();
+                if (!scriptEngine->getEngine()->hasUncaughtException() && !var.isNull())                          // Если не было ошибок
                     writeCell(cells.at(i).parentNode().toElement(), var);
                 else
                     TApplication::exemplar()->showError(QString(QObject::tr("Неизвестное выражение %1 в шаблоне <%2>.")).arg(cellText).arg(templateFileName));

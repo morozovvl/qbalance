@@ -1,4 +1,4 @@
-﻿#include <QObject>
+#include <QObject>
 #include <QTextStream>
 #include <QFormBuilder>
 #include <QResource>

@@ -2,46 +2,78 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QString>
+#include "reportscripengine.h"
 #include "reportengine.h"
 #include "reporttemplate.h"
 #include "app.h"
 #include "essence.h"
 #include "reportcontextfunctions.cpp"
 
-ReportEngine::ReportEngine(Essence* par, QString name) {
+
+ReportEngine::ReportEngine(Essence* par, QMap<QString, QVariant>* context, QString name, QString ext)
+:QObject()
+, parent(NULL)
+, scriptEngine(NULL)
+{
     parent = par;
-    engine = new QScriptEngine();
+    scriptEngine = new ReportScriptEngine();
+    printContext = context;
     reportName = name;
-    scriptFileName = reportName + ".js";
-    templateFileName = reportName + ".ods";
+    reportExt = ext;
 }
 
-bool ReportEngine::open() {
-    bool lResult = false;
-    context = engine->globalObject();
-    loadContextFunctions();
+
+bool ReportEngine::open()
+{
+    bool result = true;
+    scriptContext = scriptEngine->globalObject();
+    QString scriptFileName = reportName + ".js";
     QFile scriptFile(scriptFileName);
-    if (scriptFile.open(QIODevice::ReadOnly)) {
+    if (scriptFile.open(QIODevice::ReadOnly))
+    {   // Если существуют скрипты к этому файлу, то запустить скрипты
         QTextStream stream(&scriptFile);
         QString contents = stream.readAll();
         scriptFile.close();
-        engine->evaluate(contents, scriptFileName);
+        scriptEngine->evaluate(contents, scriptFileName);
+        if (scriptEngine->hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            TApplication::exemplar()->showError(QString(QObject::tr("Ошибка в строке %1 в программе %2")).arg(scriptEngine->uncaughtExceptionLineNumber()).arg(scriptFileName));
+            result = false;
+        }
     }
-    if (!engine->hasUncaughtException()) {                          // Если не было ошибок
-        ReportTemplate report(parent, this, templateFileName);
-        report.open();
-        lResult = true;
+    if (result)
+    {
+        openExternEngine();
     }
-    else {
-        TApplication::exemplar()->showError(QString(QObject::tr("Ошибка в строке %1 в программе %2")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFileName));
-        lResult = false;
-    }
-    return lResult;
+    return result;
 }
 
-void ReportEngine::loadContextFunctions() {
-// Загрузим в контекст отчета функций, определенные в файле reportcontextfunctions.cpp
-    context.setProperty("SumToString", engine->newFunction(SumToString));
-}
 
+void ReportEngine::openExternEngine()
+{
+    QTemporaryFile file;
+    file.setAutoRemove(true);
+    file.setFileTemplate("tmp_XXXXXX");
+    if (file.open())
+    {
+        QTextStream out(&file);
+        foreach (QString key, printContext->keys()) {
+//            out << key << printContext.value(key);
+            qDebug() << key << printContext->value(key);
+        }
+/*
+        if (reportExt == "ods")
+        {
+            QProcess* ooProcess = new QProcess();
+            ooProcess->setWorkingDirectory(REPORT_DIR);
+            ooProcess->start("soffice -invisible -quickstart", QStringList() << fileName);
+            if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))
+            {   // Подождем 1 секунду и если процесс не запустился
+                TApplication::exemplar()->showError(QObject::tr("Не удалось запустить") + " Open Office");                   // выдадим сообщение об ошибке
+                result = false;
+            }
+        }
+*/
+    }
+}
 

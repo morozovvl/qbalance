@@ -59,7 +59,9 @@ SOURCES += src/main.cpp \
     src/mysqlquery.cpp \
     src/report.cpp \
     src/reports.cpp \
-    src/gui/mynumericedit.cpp
+    src/gui/mynumericedit.cpp \
+    src/reportscripengine.cpp \
+    src/formscriptengine.cpp
 HEADERS += src/app.h \
     src/dbfactory.h \
     src/gui/guifactory.h \
@@ -97,7 +99,9 @@ HEADERS += src/app.h \
     src/mysqlquery.h \
     src/report.h \
     src/reports.h \
-    src/gui/mynumericedit.h
+    src/gui/mynumericedit.h \
+    src/reportscripengine.h \
+    src/formscriptengine.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc
@@ -108,5 +112,3 @@ win32:OBJECTS_DIR = /.obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src
-
-

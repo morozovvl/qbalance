@@ -9,7 +9,9 @@ class ScriptEngine : public QScriptEngine {
 public:
     explicit ScriptEngine(QObject *parent = 0);
     virtual int showError(QString);
-private:
+    QScriptValue* getScriptContext() { return &scriptContext; }
+protected:
+    QScriptValue scriptContext;
 };
 
 
