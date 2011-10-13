@@ -2,7 +2,6 @@
 #define SALDO_H
 
 #include "dictionary.h"
-#include "table.h"
 
 class Saldo : public Dictionary {
 public:

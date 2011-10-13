@@ -1,8 +1,8 @@
 #ifndef GUIFACTORY_H
 #define GUIFACTORY_H
 
-#include "../dbfactory.h"
-//#include "mainwindow.h"
+//#include "../kernel/custom.h"
+#include "../storage/dbfactory.h"
 #include <QString>
 #include <QMessageBox>
 #include <QDesktopWidget>

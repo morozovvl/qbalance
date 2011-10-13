@@ -1,5 +1,5 @@
 #include "calendarform.h"
-#include "../app.h"
+#include "app.h"
 
 bool CalendarForm::open(QWidget* pwgt) {
     if (Form::open(pwgt)) {

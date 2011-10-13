@@ -11,7 +11,6 @@
 #include "mycombobox.h"
 #include "formgridsearch.h"
 #include "guifactory.h"
-#include "../app.h"
 
 class TApplication;
 class FormGridSearch;

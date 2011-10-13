@@ -2,10 +2,10 @@
 #include <QFont>
 #include "formdocument.h"
 #include "docparameters.h"
-#include "../document.h"
-#include "../essence.h"
-#include "../dictionary.h"
-#include "../documents.h"
+#include "../kernel/document.h"
+#include "../kernel/essence.h"
+#include "../kernel/dictionary.h"
+#include "../kernel/documents.h"
 
 #define LABEL_ITOG     tr("Итого:")
 #define LABEL_DATE     tr("Дата:")

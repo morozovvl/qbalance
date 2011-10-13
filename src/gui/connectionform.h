@@ -7,7 +7,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include "form.h"
-#include "../dbfactory.h"
+#include "../storage/dbfactory.h"
 
 class TApplication;
 

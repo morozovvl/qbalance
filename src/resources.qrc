@@ -14,5 +14,7 @@
     </qresource>
     <qresource prefix="/postgres">
         <file>initdb0.sql</file>
+        <file>initdb1.sql</file>
+        <file>initdb2.sql</file>
     </qresource>
 </RCC>

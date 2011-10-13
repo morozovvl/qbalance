@@ -1,6 +1,6 @@
 #include <QHBoxLayout>
-#include "../app.h"
-#include "../dictionary.h"
+#include "app.h"
+#include "../kernel/dictionary.h"
 #include "formgridsearch.h"
 #include "searchparameters.h"
 

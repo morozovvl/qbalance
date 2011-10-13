@@ -6,7 +6,7 @@
 #include <QScriptEngine>
 #include <QScriptValue>
 #include <QScriptContext>
-#include "essence.h"
+#include "../kernel/essence.h"
 
 class Essence;
 

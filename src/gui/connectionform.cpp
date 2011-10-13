@@ -2,7 +2,7 @@
 #include <QSettings>
 #include <QStringList>
 #include "connectionform.h"
-#include "../app.h"
+#include "app.h"
 
 bool ConnectionForm::open(QWidget* pwgt, Essence* par) {
     return Form::open(pwgt, par);

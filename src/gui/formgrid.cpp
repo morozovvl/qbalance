@@ -11,10 +11,10 @@
 #include "formgrid.h"
 #include "picture.h"
 #include "tableview.h"
-#include "../essence.h"
-#include "../app.h"
-#include "../mysqlrelationaltablemodel.h"
-#include "../table.h"
+#include "../kernel/essence.h"
+#include "app.h"
+#include "../storage/mysqlrelationaltablemodel.h"
+#include "../storage/table.h"
 
 FormGrid::FormGrid(QObject* parent/* = NULL*/)
 : Form(parent)

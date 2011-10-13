@@ -1,12 +1,12 @@
 #include <QModelIndex>
-#include "app.h"
 #include "dictionary.h"
 #include "saldo.h"
 #include "document.h"
-#include "documenttablemodel.h"
-#include "gui/formdocument.h"
-#include "gui/mainwindow.h"
-#include "mysqlrelationaltablemodel.h"
+#include "../gui/app.h"
+#include "../gui/mainwindow.h"
+#include "../gui/formdocument.h"
+#include "../storage/documenttablemodel.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 
 
 Document::Document(int oper, Documents* par)

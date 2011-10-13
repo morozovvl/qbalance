@@ -8,12 +8,12 @@
 #include <QLayout>
 #include <QKeyEvent>
 #include "searchparameters.h"
-#include "../dictionary.h"
-#include "../dictionaries.h"
+#include "../kernel/dictionary.h"
+#include "../kernel/dictionaries.h"
 #include "formgrid.h"
 #include "formgridsearch.h"
-#include "../essence.h"
-
+#include "../kernel/essence.h"
+#include "app.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     gridLayout = 0;

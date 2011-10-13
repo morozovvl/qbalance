@@ -1,12 +1,12 @@
 #include <QAbstractItemModel>
 #include "scriptengine.h"
-#include "app.h"
-#include "table.h"
-#include "dictionary.h"
-#include "essence.h"
-#include "dbfactory.h"
-#include "mysqlrelationaltablemodel.h"
-#include "mysqlquery.h"
+#include "../gui/app.h"
+#include "../kernel/essence.h"
+#include "../kernel/dictionary.h"
+#include "../storage/table.h"
+#include "../storage/dbfactory.h"
+#include "../storage/mysqlquery.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 
 Q_DECLARE_METATYPE(Table*)
 Q_DECLARE_METATYPE(Dictionary*)

@@ -13,7 +13,7 @@
 #include "calendarform.h"
 #include "connectionform.h"
 #include "passwordform.h"
-#include "../app.h"
+#include "app.h"
 
 int GUIFactory::openDB()
 {
@@ -57,7 +57,7 @@ int GUIFactory::openDB()
                 if (db->open(login, password))
                 {
                     if (connForm->connectionName().size() > 0)
-                        mainWindow->setWindowTitle(TApplication::name() + " - " + connForm->connectionName() + " - " + login);
+                        mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + " - " + login);
                 }
                 else
                 {

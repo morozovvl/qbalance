@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 #include "essence.h"
-#include "gui/formgridsearch.h"
+#include "../gui/formgridsearch.h"
 
 class TApplication;
 class Dictionaries;

@@ -6,11 +6,11 @@
 #include <QDate>
 #include <QString>
 #include <QDir>
-#include "dictionary.h"
-#include "dictionaries.h"
-#include "documents.h"
-#include "topers.h"
-#include "gui/guifactory.h"
+#include "../kernel/dictionary.h"
+#include "../kernel/dictionaries.h"
+#include "../kernel/documents.h"
+#include "../kernel/topers.h"
+#include "guifactory.h"
 
 class Dictionaries;
 class Topers;
@@ -19,15 +19,14 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 
-class TApplication : public QObject {
+class TApplication : public QApplication {
     Q_OBJECT
 
 public:
     QMap<QString, Documents*> documents;                        // Объекты списков документов
 
-    TApplication(QApplication*);
+    TApplication(int& argc, char** argv);
     virtual ~TApplication();
-    QApplication* getApplication() { return Application; }
     Q_INVOKABLE Dictionaries* getDictionaries();
     QVariant getDictionaryProperty(QString, const char*);
     QVariant getToperProperty(int, QString);
@@ -37,11 +36,11 @@ public:
     QString getLogin() { return db->getLogin(); }
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
-    QString getOrganizationName() { return organizationName; }
-    QString getHomePath() { return QDir().currentPath(); }
     QString getFormsPath(QString formName = "");
     MainWindow* getMainWindow() { return gui->getMainWindow(); }
+
     void show() { gui->show(); }
+
     void showDictionaries() { dictionaryList->show(); }
     void showDocuments() { topersList->show(); }
     void showReports() { ; }
@@ -52,9 +51,7 @@ public:
     static QString encoding();
     static QTextCodec* codec();
 
-    static QString name()          { return "Enterprise";}
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
-    static QString version()       { return "0.01";}
     static bool debugMode()        { return false;}
     static QTextStream& debugStream(){ return *DebugStream;}
     static QString debugFileName() { return "debug.log";}
@@ -79,24 +76,23 @@ public slots:
     void showCriticalError(QString error) { gui->showCriticalError(error); }
 
 private:
-    Dictionaries*           dictionaryList;                         // Форма со списком справочников
-    Topers*                 topersList;                                   // Форма со списком операций
-    DBFactory*              db;
-    GUIFactory*             gui;
-    QApplication*           Application;
-    QString                 organizationName;
-    QDate                   beginDate;
-    QDate                   endDate;
+    Dictionaries* dictionaryList;                         // Форма со списком справочников
+    Topers* topersList;                                   // Форма со списком операций
+    DBFactory* db;
+    GUIFactory* gui;
+    QDate beginDate;
+    QDate endDate;
 
     void loadConsts();
 
-    static QFile*           DebugFile;
-    static bool             DebugMode;
-    static QTextStream*     DebugStream;
-    static QString          MaxSumMask;
-    static QString          IdFieldName;
-    static QString          NameFieldName;
-    static TApplication*    Exemplar;
+    static QFile*        DebugFile;
+    static bool          DebugMode;
+    static QTextStream*  DebugStream;
+    static QString       MaxSumMask;
+    static QString IdFieldName;
+    static QString NameFieldName;
+
+    static TApplication* Exemplar;
 };
 
 #endif

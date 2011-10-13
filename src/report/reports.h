@@ -2,7 +2,7 @@
 #define REPORTS_H
 
 #include <QMap>
-#include "dictionaries.h"
+#include "../kernel/dictionaries.h"
 #include "report.h"
 
 class Reports : public Dictionaries

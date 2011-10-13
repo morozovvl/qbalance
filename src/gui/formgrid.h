@@ -7,8 +7,8 @@
 #include <QSqlIndex>
 #include <QVariant>
 #include <QItemDelegate>
-#include "../essence.h"
-#include "../mysqlrelationaltablemodel.h"
+#include "../kernel/essence.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 #include "tableview.h"
 #include "mynumericitemdelegate.h"
 #include "mybooleanitemdelegate.h"

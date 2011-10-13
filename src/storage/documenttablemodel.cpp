@@ -1,8 +1,8 @@
-#include <QDebug>
-#include "app.h"
 #include "documenttablemodel.h"
+#include <QDebug>
+#include "../gui/app.h"
+#include "../kernel/document.h"
 #include "mysqlrelationaltablemodel.h"
-#include "document.h"
 
 class TApplication;
 

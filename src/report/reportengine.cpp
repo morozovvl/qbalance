@@ -2,11 +2,10 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QString>
-#include "reportscripengine.h"
+#include "../gui/app.h"
+#include "../kernel/essence.h"
 #include "reportengine.h"
 #include "reporttemplate.h"
-#include "app.h"
-#include "essence.h"
 #include "reportcontextfunctions.cpp"
 
 

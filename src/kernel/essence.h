@@ -15,8 +15,8 @@
 #include <QSqlRecord>
 #include <QDebug>
 #include <QDialog>
-#include "table.h"
-#include "scriptengine.h"
+#include "../storage/table.h"
+#include "../engine/scriptengine.h"
 
 class TApplication;
 

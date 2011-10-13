@@ -2,12 +2,12 @@
 #include <QMessageBox>
 #include <QObject>
 #include "app.h"
-#include "dictionaries.h"
-#include "documents.h"
-#include "gui/guifactory.h"
-#include "gui/passwordform.h"
-#include "gui/formgrid.h"
-#include "gui/mainwindow.h"
+#include "../kernel/dictionaries.h"
+#include "../kernel/documents.h"
+#include "guifactory.h"
+#include "passwordform.h"
+#include "formgrid.h"
+#include "mainwindow.h"
 
 QString TApplication::MaxSumMask       = "9999999999.99";
 QString TApplication::IdFieldName      = QObject::trUtf8("код");
@@ -17,10 +17,13 @@ QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile
 bool    TApplication::DebugMode        = false;
 TApplication* TApplication::Exemplar   = NULL;
 
-TApplication::TApplication(QApplication* application) {
-    Application = application;
-    Application->setOrganizationName(TApplication::name());
-    Application->setApplicationName(TApplication::name());
+TApplication::TApplication(int & argc, char** argv)
+    : QApplication(argc, argv)
+{
+    setOrganizationName("Enterprise");
+    setApplicationName("Enterprise");
+    setApplicationVersion("0.01");
+
     db  = new DBFactory();
     gui = new GUIFactory(db);
 
@@ -117,7 +120,7 @@ void TApplication::close() {
 }
 
 QString TApplication::getFormsPath(QString formName) {
-    QString fileName = getHomePath() + "/forms" + "/" + formName;
+    QString fileName = applicationDirPath() + "/forms" + "/" + formName;
     return fileName;
 }
 

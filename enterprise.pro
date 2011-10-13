@@ -2,106 +2,101 @@
 # Project created by QtCreator 2009-04-25T16:32:03
 # -------------------------------------------------
 
-QT += sql
-QT += xml
-QT += core
-QT += script
-QT += gui
+QT += sql \
+      xml \
+      core \
+      script \
+      gui
+
+CONFIG(debug) {
+    DESTDIR = bin/debug
+} else {
+    DESTDIR = bin/debug
+}
+
 TARGET = enterprise
 CONFIG += designer \
-    plugin
-CONFIG += uitools
+    plugin \
+    uitools
 CONFIG -= app_bundle
 TEMPLATE = app
 
-#SUBDIRS = plugins
-#plugins.subdir = lib
-#plugins.file = src/plugins/plugins.pro
-
-#SUBDIRS = src/storage \
-#    src/engine \
-#    src/kernel
 SOURCES += src/main.cpp \
-    src/app.cpp \
-    src/dbfactory.cpp \
+    src/gui/app.cpp \
+    src/storage/dbfactory.cpp \
     src/gui/passwordform.cpp \
     src/gui/form.cpp \
     src/gui/guifactory.cpp \
     src/gui/connectionform.cpp \
     src/gui/mainwindow.cpp \
     src/gui/calendarform.cpp \
-    src/essence.cpp \
+    src/kernel/essence.cpp \
     src/gui/searchparameters.cpp \
     src/gui/formgrid.cpp \
     src/gui/formgridsearch.cpp \
-    src/dictionary.cpp \
-    src/dictionaries.cpp \
+    src/kernel/dictionary.cpp \
+    src/kernel/dictionaries.cpp \
     src/gui/mycombobox.cpp \
-    src/reporttemplate.cpp \
-    src/reportengine.cpp \
-    src/reportcontextfunctions.cpp \
+    src/report/reporttemplate.cpp \
+    src/report/reportengine.cpp \
+    src/report/reportcontextfunctions.cpp \
     src/gui/formdocument.cpp \
-    src/documents.cpp \
-    src/mysqlrelationaltablemodel.cpp \
-    src/topers.cpp \
-    src/document.cpp \
-    src/table.cpp \
-    src/documenttablemodel.cpp \
+    src/kernel/documents.cpp \
+    src/storage/mysqlrelationaltablemodel.cpp \
+    src/kernel/topers.cpp \
+    src/kernel/document.cpp \
+    src/storage/table.cpp \
+    src/storage/documenttablemodel.cpp \
     src/gui/tableview.cpp \
     src/gui/mynumericitemdelegate.cpp \
     src/gui/mybooleanitemdelegate.cpp \
-    src/saldo.cpp \
+    src/kernel/saldo.cpp \
     src/gui/docparameters.cpp \
     src/gui/myitemdelegate.cpp \
     src/gui/mylineitemdelegate.cpp \
     src/gui/picture.cpp \
-    src/scriptengine.cpp \
-    src/mysqlquery.cpp \
-    src/report.cpp \
-    src/reports.cpp \
+    src/engine/scriptengine.cpp \
+    src/storage/mysqlquery.cpp \
     src/gui/mynumericedit.cpp \
-    src/reportscripengine.cpp \
-    src/formscriptengine.cpp
-HEADERS += src/app.h \
-    src/dbfactory.h \
+    src/report/reports.cpp
+HEADERS += src/kernel/custom.h \
+    src/gui/app.h \
+    src/storage/dbfactory.h \
     src/gui/guifactory.h \
     src/gui/passwordform.h \
     src/gui/form.h \
     src/gui/connectionform.h \
     src/gui/mainwindow.h \
     src/gui/calendarform.h \
-    src/essence.h \
+    src/kernel/essence.h \
     src/gui/searchparameters.h \
     src/gui/formgrid.h \
     src/gui/formgridsearch.h \
-    src/dictionary.h \
-    src/dictionaries.h \
+    src/kernel/dictionary.h \
+    src/kernel/dictionaries.h \
     src/gui/mycombobox.h \
-    src/reporttemplate.h \
-    src/reportengine.h \
+    src/report/reporttemplate.h \
+    src/report/reportengine.h \
     src/gui/formdocument.h \
-    src/documents.h \
-    src/mysqlrelationaltablemodel.h \
-    src/topers.h \
-    src/document.h \
-    src/table.h \
-    src/documenttablemodel.h \
+    src/kernel/documents.h \
+    src/storage/mysqlrelationaltablemodel.h \
+    src/kernel/topers.h \
+    src/kernel/document.h \
+    src/storage/table.h \
+    src/storage/documenttablemodel.h \
     src/gui/tableview.h \
     src/gui/mynumericitemdelegate.h \
     src/gui/mybooleanitemdelegate.h \
-    src/saldo.h \
+    src/kernel/saldo.h \
     src/gui/docparameters.h \
     src/gui/myitemdelegate.h \
     src/gui/mylineitemdelegate.h \
     src/definitions.h \
     src/gui/picture.h \
-    src/scriptengine.h \
-    src/mysqlquery.h \
-    src/report.h \
-    src/reports.h \
+    src/engine/scriptengine.h \
+    src/storage/mysqlquery.h \
     src/gui/mynumericedit.h \
-    src/reportscripengine.h \
-    src/formscriptengine.h
+    src/report/reports.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc
