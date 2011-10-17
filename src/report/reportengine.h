@@ -14,14 +14,12 @@ class ReportEngine : public QObject {
     Q_OBJECT
 public:
     ReportEngine(Essence*, QMap<QString, QVariant>*, QString, QString);
-    Q_INVOKABLE virtual bool open();
-private:
+    virtual bool open() { return true; }
+protected:
     Essence*                    parent;
-    QScriptEngine*              scriptEngine;
     QMap<QString, QVariant>*    printContext;
     QString                     reportName;
     QString                     reportExt;
-    void openExternEngine();
 };
 
 #endif // REPORTENGINE_H

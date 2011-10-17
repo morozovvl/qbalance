@@ -2,7 +2,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include "dbfactory.h"
-#include "../gui/app.h"
+#include "../kernel/app.h"
 #include "../gui/passwordform.h"
 
 DBFactory::DBFactory()

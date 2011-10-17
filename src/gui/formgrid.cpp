@@ -12,7 +12,7 @@
 #include "picture.h"
 #include "tableview.h"
 #include "../kernel/essence.h"
-#include "app.h"
+#include "../kernel/app.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/table.h"
 
@@ -335,7 +335,8 @@ void FormGrid::showEvent(QShowEvent* event)
 void FormGrid::cmdPrint()
 {
     QDir dir = QDir(REPORT_DIR);
-    QStringList files = dir.entryList(QStringList(getConfigName() + ".*.ods"), QDir::Files, QDir::Name);
+    QString ext = "." + TApplication::exemplar()->getReportTemplateExt();
+    QStringList files = dir.entryList(QStringList(getConfigName() + ".*" + ext), QDir::Files, QDir::Name);
     QStringList reports;
     QMenu* menu = new QMenu(formWidget);
     QAction* newReportAct = menu->addAction(QObject::tr("Создать новый отчет..."));
@@ -346,7 +347,7 @@ void FormGrid::cmdPrint()
         {
             QString file = files.at(i);
             file.remove(getConfigName() + ".", Qt::CaseInsensitive);
-            file.remove(".ods", Qt::CaseInsensitive);
+            file.remove(ext, Qt::CaseInsensitive);
             reports << file;
             menu->addAction(file);
         }

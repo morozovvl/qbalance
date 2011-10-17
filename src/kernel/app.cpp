@@ -2,12 +2,12 @@
 #include <QMessageBox>
 #include <QObject>
 #include "app.h"
-#include "../kernel/dictionaries.h"
-#include "../kernel/documents.h"
-#include "guifactory.h"
-#include "passwordform.h"
-#include "formgrid.h"
-#include "mainwindow.h"
+#include "dictionaries.h"
+#include "documents.h"
+#include "../gui/guifactory.h"
+#include "../gui/passwordform.h"
+#include "../gui/formgrid.h"
+#include "../gui/mainwindow.h"
 
 QString TApplication::MaxSumMask       = "9999999999.99";
 QString TApplication::IdFieldName      = QObject::trUtf8("код");
@@ -26,6 +26,8 @@ TApplication::TApplication(int & argc, char** argv)
 
     db  = new DBFactory();
     gui = new GUIFactory(db);
+
+    reportTemplateType = 1;             // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
 
     if (!Exemplar)
     {
@@ -66,6 +68,13 @@ QVariant TApplication::getDictionaryProperty(QString dictName, const char* prope
 QVariant TApplication::getToperProperty(int operNumber, QString property)
 {
     return topersList->getToperProperty(operNumber, property);
+}
+
+
+QString TApplication::getReportTemplateExt()
+{
+    // сюда вставить другие расширения файлов шаблонов
+    return "ods";
 }
 
 

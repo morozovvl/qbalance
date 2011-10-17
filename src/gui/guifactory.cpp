@@ -4,16 +4,14 @@
 #include <QProcess>
 #include <QObject>
 #include <QIODevice>
-#include <QFile>
 #include <QDir>
-#include <QFileDialog>
 #include "guifactory.h"
 #include "connectionform.h"
 #include "mainwindow.h"
 #include "calendarform.h"
 #include "connectionform.h"
 #include "passwordform.h"
-#include "app.h"
+#include "../kernel/app.h"
 
 int GUIFactory::openDB()
 {

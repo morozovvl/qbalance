@@ -13,7 +13,7 @@
 #include "../kernel/dictionary.h"
 #include "formgrid.h"
 #include "formdocument.h"
-#include "app.h"
+#include "../kernel/app.h"
 #include "../kernel/essence.h"
 #include "../kernel/document.h"
 

@@ -22,7 +22,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += src/main.cpp \
-    src/gui/app.cpp \
+    src/kernel/app.cpp \
     src/storage/dbfactory.cpp \
     src/gui/passwordform.cpp \
     src/gui/form.cpp \
@@ -58,8 +58,9 @@ SOURCES += src/main.cpp \
     src/storage/mysqlquery.cpp \
     src/gui/mynumericedit.cpp \
     src/report/reports.cpp \
-    src/engine/reportscriptengine.cpp
-HEADERS += src/gui/app.h \
+    src/engine/reportscriptengine.cpp \
+    src/report/ooreportengine.cpp
+HEADERS += src/kernel/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
     src/gui/passwordform.h \
@@ -96,7 +97,8 @@ HEADERS += src/gui/app.h \
     src/gui/mynumericedit.h \
     src/report/reports.h \
     src/engine/reportscriptengine.h \
-    src/engine/reportscriptengine.h
+    src/engine/reportscriptengine.h \
+    src/report/ooreportengine.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

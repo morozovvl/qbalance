@@ -5,7 +5,7 @@
 #include <QUiLoader>
 #include <QTextCodec>
 #include "form.h"
-#include "app.h"
+#include "../kernel/app.h"
 #include "../kernel/essence.h"
 #include "mainwindow.h"
 

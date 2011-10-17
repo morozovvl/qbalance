@@ -6,7 +6,7 @@
 #include <QSqlRecord>
 #include <QScriptClass>
 
-#include "../gui/app.h"
+#include "../kernel/app.h"
 #include "mysqlrelationaltablemodel.h"
 
 Table::Table(QString name, QObject *parent)

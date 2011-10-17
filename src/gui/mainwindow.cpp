@@ -1,5 +1,6 @@
-#include "app.h"
+#include "../kernel/app.h"
 #include "mainwindow.h"
+
 
 MainWindow::MainWindow() {
     createActions();

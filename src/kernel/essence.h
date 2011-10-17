@@ -1,7 +1,6 @@
 #ifndef ESSENCE_H
 #define ESSENCE_H
 
-#define DEFAULT_REPORT "default_report.ods"          // Отчет будем готовить в формате Open Office 1.0 (запакованный ZIP-ом каталог с XML файлами)
 #define REPORT_DIR      "./reports/"
 #define TMP_DIR         "./tmp/"
 

@@ -2,7 +2,8 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QResource>
-#include "gui/app.h"
+#include <QDebug>
+#include "kernel/app.h"
 
 
 bool readParameters(int argc, char *argv[]) {

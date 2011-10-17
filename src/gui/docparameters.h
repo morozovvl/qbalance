@@ -10,7 +10,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QStringList>
-#include "app.h"
+#include "../kernel/app.h"
 #include "mycombobox.h"
 #include "formgridsearch.h"
 

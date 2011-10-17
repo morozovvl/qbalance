@@ -3,8 +3,6 @@
 #include <QSqlError>
 #include <QMap>
 #include <QDir>
-#include <QFileDialog>
-#include <QFileInfo>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QMessageBox>
@@ -12,11 +10,13 @@
 #include <QDebug>
 #include <QUiLoader>
 #include "essence.h"
-#include "../gui/app.h"
-#include "../report/reportengine.h"
+#include "../kernel/app.h"
 #include "../gui/form.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/mainwindow.h"
+#include "../report/reportengine.h"
+#include "../report/ooreportengine.h"
+#include "../engine/reportscriptengine.h"
 
 Essence::Essence(QString name, QObject *parent) : Table(name, parent) {
     form        = 0;
@@ -290,7 +290,17 @@ void Essence::print(QString file)
 {
     QMap<QString, QVariant> printValues;
     preparePrintValues(&printValues);
-//    ReportEngine report(this, &printValues, file, "ods");
-//    report.open();
+    QString ext = TApplication::exemplar()->getReportTemplateExt();
+    ReportScriptEngine* scriptEngine = new ReportScriptEngine(&printValues, file + "." + ext);
+    scriptEngine->open();
+    switch (TApplication::exemplar()->getReportTemplateType())
+    {
+        case 1:
+            {
+                OOReportEngine report(this, &printValues, file, ext);
+                report.open();
+            }
+            break;
+    }
 }
 

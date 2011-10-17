@@ -1,5 +1,5 @@
 #include "dictionary.h"
-#include "../gui/app.h"
+#include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/searchparameters.h"

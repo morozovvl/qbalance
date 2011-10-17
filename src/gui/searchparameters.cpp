@@ -13,7 +13,7 @@
 #include "formgrid.h"
 #include "formgridsearch.h"
 #include "../kernel/essence.h"
-#include "app.h"
+#include "../kernel/app.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     gridLayout = 0;

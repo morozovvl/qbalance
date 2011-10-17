@@ -3,7 +3,7 @@
 #include <QLineEdit>
 #include <QTableView>
 #include <QScriptContextInfo>
-#include "app.h"
+#include "../kernel/app.h"
 #include "formgrid.h"
 #include "mylineitemdelegate.h"
 #include "mynumericitemdelegate.h"

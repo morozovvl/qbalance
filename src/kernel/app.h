@@ -6,11 +6,11 @@
 #include <QDate>
 #include <QString>
 #include <QDir>
-#include "../kernel/dictionary.h"
-#include "../kernel/dictionaries.h"
-#include "../kernel/documents.h"
-#include "../kernel/topers.h"
-#include "guifactory.h"
+#include "dictionary.h"
+#include "dictionaries.h"
+#include "documents.h"
+#include "topers.h"
+#include "../gui/guifactory.h"
 
 class Dictionaries;
 class Topers;
@@ -71,28 +71,32 @@ public:
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
 
+    int getReportTemplateType() { return reportTemplateType; }
+    QString getReportTemplateExt();
+
 public slots:
     void showError(QString error) { gui->showError(error); }
     void showCriticalError(QString error) { gui->showCriticalError(error); }
 
 private:
-    Dictionaries* dictionaryList;                         // Форма со списком справочников
-    Topers* topersList;                                   // Форма со списком операций
-    DBFactory* db;
-    GUIFactory* gui;
-    QDate beginDate;
-    QDate endDate;
+    Dictionaries*           dictionaryList;                               // Форма со списком справочников
+    Topers*                 topersList;                                   // Форма со списком операций
+    DBFactory*              db;
+    GUIFactory*             gui;
+    QDate                   beginDate;
+    QDate                   endDate;
+    static QFile*           DebugFile;
+    static bool             DebugMode;
+    static QTextStream*     DebugStream;
+    static QString          MaxSumMask;
+    static QString          IdFieldName;
+    static QString          NameFieldName;
+    static TApplication*    Exemplar;
+
+    // Свойства, устанавливаемые из настроек приложения
+    int                     reportTemplateType;                        // тип шаблона печати
 
     void loadConsts();
-
-    static QFile*        DebugFile;
-    static bool          DebugMode;
-    static QTextStream*  DebugStream;
-    static QString       MaxSumMask;
-    static QString IdFieldName;
-    static QString NameFieldName;
-
-    static TApplication* Exemplar;
 };
 
 #endif

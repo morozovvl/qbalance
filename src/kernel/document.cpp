@@ -2,7 +2,7 @@
 #include "dictionary.h"
 #include "saldo.h"
 #include "document.h"
-#include "../gui/app.h"
+#include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
 #include "../storage/documenttablemodel.h"
@@ -631,13 +631,18 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
         }
     }
     // Зарядим реквизиты документа
+    QStringList enabledFields;
+    enabledFields << "дата" << "датавремя" << "номер" << "комментарий" << "сумма";
     foreach(QString field, getParent()->getFieldsList())
     {
-        printValues->insert(QString("[%1.%2]").arg(getParent()->getTableName()).arg(field), getParent()->getValue(field));
+        if (enabledFields.contains(field))
+        {
+            printValues->insert(QString("[%1.%2]").arg(getParent()->getTableName()).arg(field), getParent()->getValue(field));
+        }
     }
-    // Зарядим таблицу
-    QStringList EnabledPrvFields;
-    EnabledPrvFields << "кол" << "цена" << "сумма";     // список полей таблицы "проводки", которые актуальны при печати документа
+    // Зарядим таблицу проводок
+    enabledFields.clear();
+    enabledFields << "кол" << "цена" << "сумма";     // список полей таблицы "проводки", которые актуальны при печати документа
     for (int i = 0; i < getTableModel()->rowCount(); i++)
     {
         QSqlRecord rec = getTableModel()->record(i);
@@ -646,7 +651,7 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
             if (field.at(0) == 'p' && field.at(1).isDigit())      // если в списке полей встретилось поле, начинающееся с "p<цифра>...",
             {   // т.е. это поле из таблицы "проводки"
                 QString fld = field.section("__", 1);               // проверим, актуально ли это поле для печати
-                if (EnabledPrvFields.contains(fld))
+                if (enabledFields.contains(fld))
                 {
                     printValues->insert(QString("[Таблица%1.%2]").arg(i+1).arg(field), rec.value(field));
                 }

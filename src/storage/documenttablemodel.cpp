@@ -1,6 +1,6 @@
 #include "documenttablemodel.h"
 #include <QDebug>
-#include "../gui/app.h"
+#include "../kernel/app.h"
 #include "../kernel/document.h"
 #include "mysqlrelationaltablemodel.h"
 

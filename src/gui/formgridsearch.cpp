@@ -1,5 +1,5 @@
 #include <QHBoxLayout>
-#include "app.h"
+#include "../kernel/app.h"
 #include "../kernel/dictionary.h"
 #include "formgridsearch.h"
 #include "searchparameters.h"

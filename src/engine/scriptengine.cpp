@@ -1,6 +1,6 @@
 #include <QAbstractItemModel>
 #include "scriptengine.h"
-#include "../gui/app.h"
+#include "../kernel/app.h"
 #include "../kernel/essence.h"
 #include "../kernel/dictionary.h"
 #include "../storage/table.h"
