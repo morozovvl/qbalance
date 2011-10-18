@@ -13,13 +13,12 @@ class Essence;
 class ReportEngine : public QObject {
     Q_OBJECT
 public:
-    ReportEngine(Essence*, QMap<QString, QVariant>*, QString, QString);
+    ReportEngine(QMap<QString, QVariant>*, QString, QString);
     virtual bool open() { return true; }
 protected:
-    Essence*                    parent;
-    QMap<QString, QVariant>*    printContext;
-    QString                     reportName;
-    QString                     reportExt;
+    QMap<QString, QVariant>*            reportContext;
+    QString                             reportName;
+    QString                             reportExt;
 };
 
 #endif // REPORTENGINE_H

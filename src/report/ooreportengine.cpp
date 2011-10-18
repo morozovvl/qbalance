@@ -1,8 +1,8 @@
 #include "../kernel/app.h"
 #include "ooreportengine.h"
 
-OOReportEngine::OOReportEngine(Essence* par, QMap<QString, QVariant>* context, QString name, QString ext)
-:ReportEngine(par, context, name, ext)
+OOReportEngine::OOReportEngine(QMap<QString, QVariant>* context, QString name, QString ext)
+:ReportEngine(context, name, ext)
 {
 }
 
@@ -16,9 +16,9 @@ bool OOReportEngine::open()
     {
         // Сохраним контекст печати во временном файле
         QTextStream out(&file);
-        foreach (QString key, printContext->keys())
+        foreach (QString key, reportContext->keys())
         {
-            QString value = printContext->value(key).toString();
+            QString value = reportContext->value(key).toString();
             if (value.size() > 0)
             {
                 out << key.toLower() << ";" << value << endl;

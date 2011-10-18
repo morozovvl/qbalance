@@ -6,15 +6,12 @@
 #include "../kernel/essence.h"
 #include "../engine/reportscriptengine.h"
 #include "reportengine.h"
-#include "reportcontextfunctions.cpp"
 
 
-ReportEngine::ReportEngine(Essence* par, QMap<QString, QVariant>* context, QString name, QString ext)
+ReportEngine::ReportEngine(QMap<QString, QVariant>* context, QString name, QString ext)
 :QObject()
-, parent(NULL)
 {
-    parent = par;
-    printContext = context;
+    reportContext = context;
     reportName = name;
     reportExt = ext;
 }

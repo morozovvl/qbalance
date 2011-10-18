@@ -17,6 +17,7 @@
 #include "../report/reportengine.h"
 #include "../report/ooreportengine.h"
 #include "../engine/reportscriptengine.h"
+#include "../engine/reportcontext.h"
 
 Essence::Essence(QString name, QObject *parent) : Table(name, parent) {
     form        = 0;
@@ -288,19 +289,22 @@ void Essence::preparePrintValues(QMap<QString, QVariant>* printValues)
 
 void Essence::print(QString file)
 {
+    // Подготовим данные для печати
     QMap<QString, QVariant> printValues;
     preparePrintValues(&printValues);
     QString ext = TApplication::exemplar()->getReportTemplateExt();
     ReportScriptEngine* scriptEngine = new ReportScriptEngine(&printValues, file + "." + ext);
-    scriptEngine->open();
-    switch (TApplication::exemplar()->getReportTemplateType())
+    if (scriptEngine->open())
     {
-        case 1:
-            {
-                OOReportEngine report(this, &printValues, file, ext);
-                report.open();
-            }
-            break;
+        switch (TApplication::exemplar()->getReportTemplateType())
+        {
+            case 1:
+                {
+                    OOReportEngine report(&printValues, file, ext);
+                    report.open();
+                }
+                break;
+        }
     }
 }
 

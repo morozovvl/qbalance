@@ -10,8 +10,6 @@ QT += sql \
 
 CONFIG(debug) {
     DESTDIR = bin/debug
-} else {
-    DESTDIR = bin/debug
 }
 
 TARGET = enterprise
@@ -38,7 +36,7 @@ SOURCES += src/main.cpp \
     src/kernel/dictionaries.cpp \
     src/gui/mycombobox.cpp \
     src/report/reportengine.cpp \
-    src/report/reportcontextfunctions.cpp \
+    src/engine/reportcontextfunctions.cpp \
     src/gui/formdocument.cpp \
     src/kernel/documents.cpp \
     src/storage/mysqlrelationaltablemodel.cpp \
@@ -59,7 +57,8 @@ SOURCES += src/main.cpp \
     src/gui/mynumericedit.cpp \
     src/report/reports.cpp \
     src/engine/reportscriptengine.cpp \
-    src/report/ooreportengine.cpp
+    src/report/ooreportengine.cpp \
+    src/engine/reportcontext.cpp
 HEADERS += src/kernel/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
@@ -98,7 +97,8 @@ HEADERS += src/kernel/app.h \
     src/report/reports.h \
     src/engine/reportscriptengine.h \
     src/engine/reportscriptengine.h \
-    src/report/ooreportengine.h
+    src/report/ooreportengine.h \
+    src/engine/reportcontext.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

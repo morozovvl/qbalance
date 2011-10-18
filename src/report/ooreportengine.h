@@ -5,10 +5,11 @@
 #include "reportengine.h"
 
 
+
 class OOReportEngine : public ReportEngine
 {
 public:
-    OOReportEngine(Essence* par, QMap<QString, QVariant>* context, QString name, QString ext);
+    OOReportEngine(QMap<QString, QVariant>* context, QString name, QString ext);
     virtual bool open();
 };
 
