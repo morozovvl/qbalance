@@ -14,7 +14,6 @@
 #include <QLocale>
 #include "mysqlrelationaltablemodel.h"
 #include "table.h"
-#include "mysqlquery.h"
 
 
 MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableModel()
@@ -262,10 +261,3 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
     esc.append(tableName).append(QLatin1Char('.')).append(fieldName);
     return database().driver()->escapeIdentifier(esc, QSqlDriver::FieldName);
 }
-
-
-MySqlQuery* MySqlRelationalTableModel::query() {
-    QSqlQuery query(QSqlRelationalTableModel::query());
-    return new MySqlQuery(query);
-}
-

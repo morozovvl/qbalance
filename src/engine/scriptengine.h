@@ -7,9 +7,13 @@
 class ScriptEngine : public QScriptEngine {
     Q_OBJECT
 public:
-    explicit ScriptEngine(QObject *parent = 0);
-    virtual bool open() { return true; }
-    virtual int showError(QString);
+    explicit ScriptEngine(QString file = "", QObject *parent = 0);
+    bool open();
+    void showError(QString);
+protected:
+    virtual void loadScriptObjects();
+private:
+    QString     scriptFile;
 };
 
 

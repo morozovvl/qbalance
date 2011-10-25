@@ -196,15 +196,9 @@ void Form::closeFormEvent() {
 }
 
 void Form::setScriptForForm(QString scr) {
-    QFile file(scr);
-    if (file.open(QFile::ReadOnly)) {
-       if (engine == 0) {
-          engine = new ScriptEngine(this);
+    if (engine == 0) {
+       engine = new ScriptEngine(scr, this);
 //          engine->setParentForm();
-       }
-       engine->globalObject().setProperty("MainForm", engine->newQObject(formWidget));
-       script = file.readAll();
-       scripts = engine->evaluate(script);
     }
 }
 

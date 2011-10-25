@@ -31,12 +31,13 @@ public:
     QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
     int getPort() { return port; }
-    QString getDatabaseName() { return dbName; }
+    Q_INVOKABLE QString getDatabaseName() { return dbName; }
+    QSqlDatabase* getDB() { return db; }
     QSqlQuery getColumnsHeaders(QString);
     QSqlQuery getDictionariesProperties();
     QStringList getFieldsList(QMap<int, FieldType>*);
     void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
-    Q_INVOKABLE virtual void getColumnsProperties(QMap<int, FieldType>*, QString);
+    virtual void getColumnsProperties(QMap<int, FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
     QSqlQuery getTopersProperties();
     QSqlQuery getToper(int);
@@ -66,9 +67,9 @@ public:
 
     static QString storageEncoding();
 
-    Q_INVOKABLE virtual bool open();
-    Q_INVOKABLE virtual bool open(QString, QString);
-    Q_INVOKABLE virtual void close();
+    virtual bool open();
+    virtual bool open(QString, QString);
+    virtual void close();
 
 private:
     QSqlDatabase*           db;

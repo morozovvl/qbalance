@@ -53,12 +53,15 @@ SOURCES += src/main.cpp \
     src/gui/mylineitemdelegate.cpp \
     src/gui/picture.cpp \
     src/engine/scriptengine.cpp \
-    src/storage/mysqlquery.cpp \
     src/gui/mynumericedit.cpp \
     src/report/reports.cpp \
     src/engine/reportscriptengine.cpp \
     src/report/ooreportengine.cpp \
-    src/engine/reportcontext.cpp
+    src/engine/reportcontext.cpp \
+    src/engine/formscriptengine.cpp \
+    src/storage/mysqlrecord.cpp \
+    src/engine/sqlqueryclass.cpp \
+    src/engine/sqlqueryprototype.cpp
 HEADERS += src/kernel/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
@@ -92,13 +95,16 @@ HEADERS += src/kernel/app.h \
     src/definitions.h \
     src/gui/picture.h \
     src/engine/scriptengine.h \
-    src/storage/mysqlquery.h \
     src/gui/mynumericedit.h \
     src/report/reports.h \
     src/engine/reportscriptengine.h \
     src/engine/reportscriptengine.h \
     src/report/ooreportengine.h \
-    src/engine/reportcontext.h
+    src/engine/reportcontext.h \
+    src/engine/formscriptengine.h \
+    src/storage/mysqlrecord.h \
+    src/engine/sqlqueryclass.h \
+    src/engine/sqlqueryprototype.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

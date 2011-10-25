@@ -10,7 +10,6 @@
 #include <QStringList>
 
 #include "table.h"
-#include "mysqlquery.h"
 
 class Table;
 
@@ -43,7 +42,6 @@ public:
     void setPrepared(bool p = true) { isPrepared = p; }
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter.toUtf8()); }
-    Q_INVOKABLE MySqlQuery* query();
     Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
 
 // Функции для сохранения данных

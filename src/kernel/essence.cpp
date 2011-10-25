@@ -43,14 +43,11 @@ QDialog* Essence::getFormWidget() {
 }
 
 void Essence::setScriptForTable(QString scr) {
-    if (scr.size() > 0) {
-        if (engine == 0) {
-            engine = new ScriptEngine(this);
+    if (engine == 0) {
+        engine = new ScriptEngine(scr, this);
         }
-        script = scr;
 // Временно отключено, пока не сделаем скриптовый движок
 //        scripts = engine->evaluate(script);
-    }
 }
 
 
@@ -299,7 +296,7 @@ void Essence::print(QString file)
         switch (TApplication::exemplar()->getReportTemplateType())
         {
             case 1:
-                {
+                {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                     OOReportEngine report(&printValues, file, ext);
                     report.open();
                 }
