@@ -121,7 +121,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
         connect(formWidget, SIGNAL(finished(int)), this, SLOT(cmdCancel()));
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
-    setScriptForForm(fileName + ".js");
+//    setScriptForForm(fileName + ".js");
 }
 
 void Form::setIcons() {
@@ -196,10 +196,10 @@ void Form::closeFormEvent() {
 }
 
 void Form::setScriptForForm(QString scr) {
-    if (engine == 0) {
-       engine = new ScriptEngine(scr, this);
+//    if (engine == 0) {
+//       engine = new ScriptEngine(scr, this);
 //          engine->setParentForm();
-    }
+//    }
 }
 
 void Form::removeScriptForForm() {

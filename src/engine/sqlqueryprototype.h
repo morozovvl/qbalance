@@ -6,15 +6,15 @@
 #include <QScriptValue>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
 #include <QVariant>
+#include "sqlrecordclass.h"
 
 
 class SqlQueryPrototype : public QObject, public QScriptable
 {
     Q_OBJECT
 public:
-    SqlQueryPrototype(QObject *parent = 0);
+    SqlQueryPrototype(QObject*, SqlRecordClass*);
     ~SqlQueryPrototype();
 
 public slots:
@@ -56,6 +56,7 @@ public slots:
                 numericalPrecisionPolicy() const { return thisSqlQuery()->numericalPrecisionPolicy(); }
     bool	prepare(const QString &query)   { return thisSqlQuery()->prepare(query); }
     bool	previous()                      { return thisSqlQuery()->previous(); }
+    QScriptValue record()                       { return sqlRecordClass->newInstance(thisSqlQuery()->record()); }
     bool	seek(int index, bool relative = false)
                                                 { return thisSqlQuery()->seek(index, relative); }
     void	setForwardOnly (bool forward)   { return thisSqlQuery()->setForwardOnly(forward); }
@@ -68,12 +69,12 @@ public slots:
     QMap<QString, QVariant>	boundValues () const
     const QSqlDriver *	driver () const
     QSqlError	lastError () const
-    QSqlRecord	record () const
     const QSqlResult *	result () const
 */
 
 private:
-    QSqlQuery *thisSqlQuery() const;
+    SqlRecordClass*     sqlRecordClass;
+    QSqlQuery*          thisSqlQuery() const;
 };
 
 #endif // SQLQUERYPROTOTYPE_H

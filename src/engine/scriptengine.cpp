@@ -4,16 +4,26 @@
 #include "../kernel/app.h"
 #include "../storage/dbfactory.h"
 #include "../storage/mysqlrecord.h"
-#include "sqlqueryclass.h"
 
 //================================================================================================
 // Реализация класса
 ScriptEngine::ScriptEngine(QString file/* = ""*/, QObject *parent/* = 0*/) : QScriptEngine(parent)
 {
     scriptFile = file;
+    sqlFieldClass = new SqlFieldClass(this);
+    sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
+    sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
 }
 
-void ScriptEngine::showError(QString text) {
+ScriptEngine::~ScriptEngine()
+{
+    delete sqlQueryClass;
+    delete sqlRecordClass;
+    delete sqlFieldClass;
+}
+
+void ScriptEngine::showError(QString text)
+{
     TApplication::exemplar()->showError(text);
 }
 
@@ -48,9 +58,10 @@ void ScriptEngine::loadScriptObjects()
 {
     installTranslatorFunctions(QScriptValue());
 
-    // Объявим класс SqlQuery
-    SqlQueryClass *sqlQueryClass = new SqlQueryClass(this);                 // Не нравится эта конструкция
-    globalObject().setProperty("SqlQuery", sqlQueryClass->constructor());   // но походу так надо заряжать класс
+    // Объявим классы
+    globalObject().setProperty(sqlRecordClass->name(), sqlRecordClass->constructor());
+    globalObject().setProperty(sqlFieldClass->name(), sqlFieldClass->constructor());
+    globalObject().setProperty(sqlQueryClass->name(), sqlQueryClass->constructor());
 
     // Объявим глобальные переменные и объекты
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта

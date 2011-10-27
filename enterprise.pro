@@ -61,7 +61,11 @@ SOURCES += src/main.cpp \
     src/engine/formscriptengine.cpp \
     src/storage/mysqlrecord.cpp \
     src/engine/sqlqueryclass.cpp \
-    src/engine/sqlqueryprototype.cpp
+    src/engine/sqlqueryprototype.cpp \
+    src/engine/sqlrecordclass.cpp \
+    src/engine/sqlrecordprototype.cpp \
+    src/engine/sqlfieldclass.cpp \
+    src/engine/sqlfieldprototype.cpp
 HEADERS += src/kernel/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
@@ -104,7 +108,11 @@ HEADERS += src/kernel/app.h \
     src/engine/formscriptengine.h \
     src/storage/mysqlrecord.h \
     src/engine/sqlqueryclass.h \
-    src/engine/sqlqueryprototype.h
+    src/engine/sqlqueryprototype.h \
+    src/engine/sqlrecordclass.h \
+    src/engine/sqlrecordprototype.h \
+    src/engine/sqlfieldclass.h \
+    src/engine/sqlfieldprototype.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

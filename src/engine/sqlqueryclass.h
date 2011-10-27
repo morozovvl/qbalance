@@ -5,17 +5,19 @@
 #include <QScriptClass>
 #include <QScriptEngine>
 #include <QSqlQuery>
+#include "sqlrecordclass.h"
 
 class SqlQueryClass : public QObject, QScriptClass
 {
 public:
-    SqlQueryClass(QScriptEngine *engine);
+    SqlQueryClass(QScriptEngine*, SqlRecordClass*);
     ~SqlQueryClass();
     QScriptValue constructor();
     QScriptValue newInstance(const QString s = "");
     QScriptValue newInstance(const QSqlQuery &);
     QScriptValue prototype() const;
-
+    QString name() const { return "SqlQuery"; }
+    QScriptEngine* getEngine() { return engine(); }
 private:
     QScriptValue proto;
     QScriptValue ctor;

@@ -11,6 +11,11 @@ ReportScriptEngine::ReportScriptEngine(QMap<QString, QVariant>* context, QString
     reportContext = new ReportContext(context);
 }
 
+ReportScriptEngine::~ReportScriptEngine()
+{
+    delete reportContext;
+}
+
 void ReportScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();

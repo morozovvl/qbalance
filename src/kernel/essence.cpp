@@ -22,7 +22,7 @@
 Essence::Essence(QString name, QObject *parent) : Table(name, parent) {
     form        = 0;
     parentForm  = TApplication::exemplar()->getMainWindow()->centralWidget();
-    engine      = 0;
+//    engine      = 0;
     formTitle   = "";
     lInsertable = false;
     lDeleteable = false;
@@ -43,9 +43,9 @@ QDialog* Essence::getFormWidget() {
 }
 
 void Essence::setScriptForTable(QString scr) {
-    if (engine == 0) {
-        engine = new ScriptEngine(scr, this);
-        }
+//    if (engine == 0) {
+//        engine = new ScriptEngine(scr, this);
+//        }
 // Временно отключено, пока не сделаем скриптовый движок
 //        scripts = engine->evaluate(script);
 }
@@ -59,6 +59,7 @@ bool Essence::setData(const QModelIndex & index, const QVariant & value, int rol
 
 bool Essence::calculate(const QModelIndex &index)
 {
+/*
     if (engine != 0)
     {
         setCalculateProperties(index);
@@ -73,12 +74,14 @@ bool Essence::calculate(const QModelIndex &index)
             getCalculateProperties(index);
         }
     }
+*/
     return tableModel->submit(index);
 }
 
 
 void Essence::getCalculateProperties(const QModelIndex &index)
 {
+/*
     if (engine != 0)
     {
         QVariant var;
@@ -92,11 +95,13 @@ void Essence::getCalculateProperties(const QModelIndex &index)
                 tableModel->setData(index.sibling(index.row(), col), var);
         }
     }
+*/
 }
 
 
 void Essence::setCalculateProperties(const QModelIndex &index)
 {
+/*
     if (engine != 0)
     {
         engine->globalObject().setProperty("Table", engine->newArray());
@@ -108,9 +113,11 @@ void Essence::setCalculateProperties(const QModelIndex &index)
         }
         engine->globalObject().setProperty("__Column_Name__", engine->newVariant(tableModel->record().fieldName(index.column())));
     }
+*/
 }
 
 void Essence::setOldCalculateProperties(const QModelIndex &index) {
+/*
     if (engine != 0) {
         QVariant var;
         engine->globalObject().setProperty("OldTable", engine->newArray());
@@ -120,17 +127,20 @@ void Essence::setOldCalculateProperties(const QModelIndex &index) {
             engine->evaluate(QString("OldTable[\"%1\"] = __temp__").arg(field), TApplication::errorFileName());
         }
     }
+*/
 }
 
 
 void Essence::revertCalculateProperties(const QModelIndex &index)
 {
+/*
     if (engine != 0) {
         foreach (QString field, getFieldsList()) {
             QVariant var = engine->evaluate(QString("OldTable[\"%1\"]").arg(field), TApplication::errorFileName()).toVariant();
             tableModel->setData(index.sibling(index.row(), tableModel->record().indexOf(field)), var);
         }
     }
+*/
 }
 
 

@@ -81,7 +81,7 @@ protected:
     QString             idFieldName;
     FormGrid*           form;
     QWidget*            parentForm;
-    ScriptEngine*       engine;
+//    ScriptEngine*       engine;
     QString             script;
     QScriptValue        scripts;
     bool                lInsertable;

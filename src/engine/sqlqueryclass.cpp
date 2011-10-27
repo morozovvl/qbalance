@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QScriptEngine>
 #include "sqlqueryclass.h"
 #include "sqlqueryprototype.h"
@@ -9,13 +8,11 @@ Q_DECLARE_METATYPE(QSqlQuery*)
 Q_DECLARE_METATYPE(SqlQueryClass*)
 
 
-SqlQueryClass::SqlQueryClass(QScriptEngine *engine)
+SqlQueryClass::SqlQueryClass(QScriptEngine* engine, SqlRecordClass* recordClass)
      : QObject(engine), QScriptClass(engine)
 {
-    proto = engine->newQObject(new SqlQueryPrototype(this),
-                                QScriptEngine::ScriptOwnership);
+    proto = engine->newQObject(new SqlQueryPrototype(this, recordClass), QScriptEngine::ScriptOwnership);
     proto.setPrototype(engine->globalObject().property("Object").property("prototype"));
-
     ctor = engine->newFunction(construct, proto);
     ctor.setData(qScriptValueFromValue(engine, this));
 }

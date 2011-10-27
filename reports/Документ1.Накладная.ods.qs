@@ -2,19 +2,15 @@ reportContext.setValue("[документы.сумма_прописью]", SumTo
 query = SqlQuery("SELECT * FROM номенклатура;");
 query.exec();
 query.first();
-print(query.value(1));
-/*
-var query = SqlQuery("SELECT * FROM номенклатура;");
-if (query.exec() < 0) {
-    print(query.lastError());
+//print(query.value(1));
+record = query.record();
+//print(record.value("имя"));
+//print(record.count());
+//print(record.field("имя").fieldName());
+field = record.field("имя");
+for (i = 0; i < record.count(); i++) {
+    print(record.fieldName(i));
 }
-else {
-    print(query.size());
-    query.first();
-    print(query.value(1));
-    }
-*/    
-//print(record.value(0));
 scriptResult = false;
 
 
