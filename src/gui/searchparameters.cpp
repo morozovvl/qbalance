@@ -139,7 +139,7 @@ void SearchParameters::dictionaryButtonPressed() {
             }
         }
     }
-    parentForm->setShowFocus();
+//    parentForm->setShowFocus();
 }
 
 void SearchParameters::comboBoxEnterPressed(QWidget* wdgt) {    // Была нажата кнопка Enter на одной из ComboBox

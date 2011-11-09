@@ -4,7 +4,7 @@
 #include "formgridsearch.h"
 #include "searchparameters.h"
 
-#define LABEL_SEARCH_PARAMETERS     tr("Параметры для поиска:")
+#define LABEL_SEARCH_PARAMETERS     QObject::trUtf8("Параметры для поиска:")
 
 FormGridSearch::FormGridSearch(QObject* parent/* = NULL*/)
 : FormGrid(parent)
@@ -78,11 +78,13 @@ void FormGridSearch::query(QString param) {
     FormGrid::query(param);
 }
 
+/*
 void FormGridSearch::setShowFocus() {
     FormGrid::setShowFocus();
     if (parameters != 0)
         parameters->setFocus();
 }
+*/
 
 QDomElement FormGridSearch::createWidgetsStructure() {
     QDomDocument doc;

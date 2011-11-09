@@ -10,7 +10,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     tableName  = "документы";
     operNumber = opNumber;
     tagName    = QString("СписокДокументов%1").arg(operNumber);
-    formTitle  = QString("%1 - %2").arg(TApplication::exemplar()->getToperProperty(operNumber, TApplication::nameFieldName()).toString()).arg(QObject::tr("Список документов"));
+    formTitle  = QString("%1 - %2").arg(TApplication::exemplar()->getToperProperty(operNumber, TApplication::nameFieldName()).toString()).arg(QObject::trUtf8("Список документов"));
 }
 
 Documents::~Documents() {
@@ -44,7 +44,7 @@ bool Documents::remove() {
         }
     }
     else
-        showError(QString(QObject::tr("Запрещено удалять документы пользователю %2")).arg(TApplication::exemplar()->getLogin()));
+        showError(QString(QObject::trUtf8("Запрещено удалять документы пользователю %2")).arg(TApplication::exemplar()->getLogin()));
     return false;
 }
 
@@ -78,7 +78,7 @@ bool Documents::open() {
             initForm();
             return true;
     }
-    showError(QString(QObject::tr("Запрещено просматривать операцию <%1> пользователю %2")).arg(
+    showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(
                   formTitle,
                   TApplication::exemplar()->getLogin()));
     return false;

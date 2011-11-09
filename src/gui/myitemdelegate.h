@@ -10,7 +10,12 @@
 #include <QPalette>
 //#include "../essence.h"
 
-enum DelegateTypes {Numeric, Boolean, String};
+enum DelegateTypes
+{
+    Numeric,
+    Boolean,
+    String
+};
 
 class MyItemDelegate : public QItemDelegate {
     Q_OBJECT
@@ -25,8 +30,6 @@ public:
     Qt::Alignment getAlignment() { return alignment; }
     virtual QVariant convertType(QVariant var) { return var; }
     void setReadOnly(bool val) { readOnly = val; }
-public slots:
-    virtual void calculate();
 protected:
     QObject*                parentForm;
     QString                 columnMask;

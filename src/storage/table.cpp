@@ -64,6 +64,7 @@ void Table::close()
     opened = false;
 }
 
+
 void Table::setTableModel()
 {
     tableModel = new MySqlRelationalTableModel();
@@ -71,14 +72,14 @@ void Table::setTableModel()
     tableModel->setTable(tableName);
 }
 
+
 QStringList Table::getFieldsList()
 {
-    return TApplication::exemplar()->getDBFactory()->getFieldsList(&columnsProperties);
-/*
-    QStringList fieldList;
-    foreach (int i, columnsProperties.keys())
-        fieldList << columnsProperties.value(i).name;
-    return fieldList;
-*/
+    return tableModel->getFieldsList();
 }
 
+
+QString Table::getFieldName(int i)
+{
+    return tableModel->getFieldName(i);
+}

@@ -21,7 +21,7 @@ public:
     explicit FormGridSearch(QObject* parent = NULL);
     Q_INVOKABLE virtual void close();
     Dictionary* getParent() { return (Dictionary*)parent; }
-    virtual void setShowFocus();
+//    virtual void setShowFocus();
     SearchParameters* getSearchParameters() { return parameters; }
 
 private:

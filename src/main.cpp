@@ -13,18 +13,18 @@ bool readParameters(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0) {
-            out << QObject::tr("Использование программы: enterprise [Параметр]\n");
-            out << QObject::tr("Параметры:\n");
-            out << QObject::tr("  -v | --version    - Вывести номер версии программы\n");
-            out << QObject::tr("  -d | --debug      - Запустить программу в режиме отладки комманд запросов (файл debug.log)\n");
-            out << QObject::tr("  -h | --help       - Вывести список параметров запуска программы\n");
+            out << QObject::trUtf8("Использование программы: enterprise [Параметр]\n");
+            out << QObject::trUtf8("Параметры:\n");
+            out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
+            out << QObject::trUtf8("  -d | --debug      - Запустить программу в режиме отладки комманд запросов (файл debug.log)\n");
+            out << QObject::trUtf8("  -h | --help       - Вывести список параметров запуска программы\n");
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--version", Qt::CaseInsensitive) == 0) {
-            out << QString(QObject::tr("Название программы: %1\n")).arg(TApplication::exemplar()->applicationName());
-            out << QString(QObject::tr("Версия: %1\n")).arg(TApplication::exemplar()->applicationVersion());
-            out << QString(QObject::tr("Авторы: %1\n")).arg(TApplication::authors());
+            out << QString(QObject::trUtf8("Название программы: %1\n")).arg(TApplication::exemplar()->applicationName());
+            out << QString(QObject::trUtf8("Версия: %1\n")).arg(TApplication::exemplar()->applicationVersion());
+            out << QString(QObject::trUtf8("Авторы: %1\n")).arg(TApplication::authors());
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-d", Qt::CaseInsensitive) == 0 ||
@@ -36,7 +36,7 @@ bool readParameters(int argc, char *argv[]) {
             }
             else
             {
-                out << QObject::tr("Не могу открыть файл журнала отладки.\n");
+                out << QObject::trUtf8("Не могу открыть файл журнала отладки.\n");
                 lContinue = false;
             }
 

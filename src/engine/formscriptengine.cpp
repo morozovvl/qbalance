@@ -4,24 +4,8 @@
 #include "formscriptengine.h"
 #include "../gui/form.h"
 
-Q_DECLARE_METATYPE(Form*)
 Q_DECLARE_METATYPE(QDialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
-
-// класс Form
-QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
-     Form *object = new Form();
-     object->open(context->argument(0).toString(), engine->parent());
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
-}
-
-QScriptValue FormToScriptValue(QScriptEngine *engine, Form* const &in) {
-    return engine->newQObject(in);
-}
-
-void FormFromScriptValue(const QScriptValue &object, Form* &out) {
-    out = qobject_cast<Form*>(object.toQObject());
-}
 
 // класс QDialog
 QScriptValue qDialogConstructor(QScriptContext *, QScriptEngine *engine) {
@@ -47,8 +31,8 @@ void qLineEditFromScriptValue(const QScriptValue &object, QLineEdit* &out) {
 }
 
 
-FormScriptEngine::FormScriptEngine(QString file/* = ""*/, QObject *parent/* = 0*/)
-:ScriptEngine(file, parent)
+FormScriptEngine::FormScriptEngine(QObject *parent/* = 0*/)
+:ScriptEngine(parent)
 {
 }
 
@@ -56,10 +40,6 @@ FormScriptEngine::FormScriptEngine(QString file/* = ""*/, QObject *parent/* = 0*
 void FormScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
-
-    // Объявим класс Form
-    qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
-    globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
 
     // Объявим класс QDialog
     qScriptRegisterMetaType(this, qDialogToScriptValue, qDialogFromScriptValue);

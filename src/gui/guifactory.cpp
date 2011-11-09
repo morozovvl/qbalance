@@ -59,7 +59,7 @@ int GUIFactory::openDB()
                 }
                 else
                 {
-                    showCriticalError(QObject::tr("Неверно введен пароль."));
+                    showCriticalError(QObject::trUtf8("Неверно введен пароль."));
                     returnCode = -3;
                 }
             }
@@ -101,7 +101,7 @@ void GUIFactory::show() {
 
 int GUIFactory::showError(QString errorText) {
     QErrorMessage msgBox(mainWindow->centralWidget());
-    msgBox.setWindowTitle(QObject::tr("Ошибка!"));
+    msgBox.setWindowTitle(QObject::trUtf8("Ошибка!"));
     msgBox.showMessage(errorText);
 //    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.exec();
@@ -110,7 +110,7 @@ int GUIFactory::showError(QString errorText) {
 
 int GUIFactory::showCriticalError(QString errorText) {
     QMessageBox msgBox(mainWindow->centralWidget());
-    msgBox.setWindowTitle(QObject::tr("Критическая ошибка!"));
+    msgBox.setWindowTitle(QObject::trUtf8("Критическая ошибка!"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText(errorText);
 //    msgBox.setWindowModality(Qt::ApplicationModal);
@@ -120,7 +120,7 @@ int GUIFactory::showCriticalError(QString errorText) {
 
 int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
     QMessageBox msgBox;
-    msgBox.setWindowTitle(QObject::tr("Внимание!"));
+    msgBox.setWindowTitle(QObject::trUtf8("Внимание!"));
     msgBox.setText(message);
     if (question.size() > 0) {          // Если пользователю задан вопрос, то предусмотреть варианты ответа
         msgBox.setIcon(QMessageBox::Question);

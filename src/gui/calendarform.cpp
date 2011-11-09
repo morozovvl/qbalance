@@ -6,15 +6,15 @@ bool CalendarForm::open(QWidget* pwgt) {
 
         formWidget->move(100, 100);
 
-        formWidget->setWindowTitle(tr("Рабочий период"));
+        formWidget->setWindowTitle(QObject::trUtf8("Рабочий период"));
 
-        QLabel* plblBegin = new QLabel(tr("Начало периода"));
-        QLabel* plblEnd = new QLabel(tr("Конец периода"));
+        QLabel* plblBegin = new QLabel(QObject::trUtf8("Начало периода"));
+        QLabel* plblEnd = new QLabel(QObject::trUtf8("Конец периода"));
 
         pBeginCalendar = new QCalendarWidget();
         pEndCalendar = new QCalendarWidget();
 
-        QGridLayout* ptopLayout = new QGridLayout;
+        QGridLayout* ptopLayout = new QGridLayout();
         ptopLayout->addWidget(plblBegin, 0, 0, Qt::AlignCenter);
         ptopLayout->addWidget(plblEnd, 0, 1, Qt::AlignCenter);
         ptopLayout->addWidget(pBeginCalendar, 1, 0, Qt::AlignCenter);
@@ -23,7 +23,7 @@ bool CalendarForm::open(QWidget* pwgt) {
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, ptopLayout);
-        Form::setIcons();
+        setIcons();
         return true;
     }
     return false;
@@ -33,7 +33,7 @@ void CalendarForm::cmdOk() {
     beginDate = pBeginCalendar->selectedDate();
     endDate = pEndCalendar->selectedDate();
     if (beginDate > endDate)
-        TApplication::exemplar()->getGUIFactory()->showError(tr("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
+        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
     else
         Form::cmdOk();
 }

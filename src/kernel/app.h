@@ -19,6 +19,14 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 
+
+enum  ReportTemplateTypes
+{
+    OOreportTemplate,
+    ORPTreportTemplate
+};
+
+
 class TApplication : public QApplication {
     Q_OBJECT
 
@@ -44,6 +52,7 @@ public:
     void showDictionaries() { dictionaryList->show(); }
     void showDocuments() { topersList->show(); }
     void showReports() { ; }
+    void showConfigs();
     void setPeriod() { gui->setPeriod(); }                                               // Установим рабочий интервал
     void setBeginDate(QDate date) { beginDate = date; }
     void setEndDate(QDate date) { endDate = date; }
@@ -94,7 +103,7 @@ private:
     static TApplication*    Exemplar;
 
     // Свойства, устанавливаемые из настроек приложения
-    int                     reportTemplateType;                        // тип шаблона печати
+    ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
 
     void loadConsts();
 };

@@ -111,7 +111,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonPrint = new QPushButton(tr("&Печать"));
+            buttonPrint = new QPushButton(QObject::trUtf8("&Печать"));
             buttonPrint->setObjectName("buttonPrint");
         }
         else
@@ -134,7 +134,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     // Подключим кнопку "Обновить"
     if (defaultForm)
     {
-        buttonRequery = new QPushButton(tr("&Обновить"));
+        buttonRequery = new QPushButton(QObject::trUtf8("&Обновить"));
         buttonRequery->setObjectName("buttonRequery");
     }
     else
@@ -151,7 +151,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonView = new QPushButton(tr("&Просмотреть"));
+            buttonView = new QPushButton(QObject::trUtf8("&Просмотреть"));
             buttonView->setObjectName("buttonView");
         }
         else
@@ -173,7 +173,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonDelete = new QPushButton(tr("&Удалить"));
+            buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
             buttonDelete->setObjectName("buttonDelete");
         }
         else
@@ -195,7 +195,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonAdd = new QPushButton(tr("&Добавить"));
+            buttonAdd = new QPushButton(QObject::trUtf8("&Добавить"));
             buttonAdd->setObjectName("buttonAdd");
         }
         else
@@ -228,7 +228,7 @@ void FormGrid::close()
 void FormGrid::show()
 {
     Form::show();
-    setShowFocus();
+//    setShowFocus();
 }
 
 
@@ -263,13 +263,10 @@ void FormGrid::showPhoto()
 }
 
 
-bool FormGrid::calculate()
+void FormGrid::calculate()
 {
-    QModelIndex index = getCurrentIndex();
-    bool result = parent->calculate(index);
-    setCurrentIndex(index);
-    FormGrid::setShowFocus();
-    return result;
+    parent->calculate(getCurrentIndex());
+//    FormGrid::setShowFocus();
 }
 
 
@@ -318,17 +315,17 @@ void FormGrid::setGridFocus()
         grdTable->setFocus();
 }
 
-
+/*
 void FormGrid::setShowFocus()
 {
     setGridFocus();
 }
-
+*/
 
 void FormGrid::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);          // Просто избавимся от предупреждения о не используемой переменной
-    setShowFocus();
+//    setShowFocus();
 }
 
 
@@ -339,7 +336,7 @@ void FormGrid::cmdPrint()
     QStringList files = dir.entryList(QStringList(getConfigName() + ".*" + ext), QDir::Files, QDir::Name);
     QStringList reports;
     QMenu* menu = new QMenu(formWidget);
-    QAction* newReportAct = menu->addAction(QObject::tr("Создать новый отчет..."));
+    QAction* newReportAct = menu->addAction(QObject::trUtf8("Создать новый отчет..."));
     if (files.size() > 0)
     {
         menu->addSeparator();
@@ -367,8 +364,8 @@ void FormGrid::cmdPrint()
                     reportName = QString("Отчет%1").arg(i++);
                 } while (reports.contains(reportName));
                 bool ok;
-                reportName = QInputDialog::getText(formWidget, tr("Создать новый отчет"),
-                                              tr("Наименование отчета:"), QLineEdit::Normal,
+                reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый отчет"),
+                                              QObject::trUtf8("Наименование отчета:"), QLineEdit::Normal,
                                               reportName, &ok);
                 if (ok && !reportName.isEmpty())
                     parent->print(REPORT_DIR + getConfigName() + "." + reportName);
@@ -377,7 +374,7 @@ void FormGrid::cmdPrint()
                 parent->print(REPORT_DIR + getConfigName() + "." + action->text());
         }
     }
-    FormGrid::setShowFocus();
+//    FormGrid::setShowFocus();
 }
 
 
@@ -432,7 +429,7 @@ void FormGrid::query(QString param)
     QModelIndex index = getCurrentIndex();
     parent->query(param);
     setCurrentIndex(index);
-    FormGrid::setShowFocus();
+//    FormGrid::setShowFocus();
 }
 
 

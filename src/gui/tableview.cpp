@@ -98,7 +98,7 @@ bool TableView::isFieldExists(QString field)
         int pos = str.mid(str.indexOf(" at ") + 4).toInt();
         if (pos > 0)
         {
-            engine->showError(str + ": " + QString(QObject::tr("Не найдено поле %1.")).arg(field));
+            engine->showError(str + ": " + QString(QObject::trUtf8("Не найдено поле %1.")).arg(field));
             break;
         }
     }

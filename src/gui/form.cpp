@@ -4,6 +4,7 @@
 #include <QResource>
 #include <QUiLoader>
 #include <QTextCodec>
+#include <QList>
 #include "form.h"
 #include "../kernel/app.h"
 #include "../kernel/essence.h"
@@ -31,15 +32,17 @@ bool Form::open(QWidget* pwgt, Essence* par) {
     }
     else
         createForm("", pwgt);
+    setButtonsSignals();
     return true;
 }
 
-bool Form::open(QString fileName, QObject* form) {
+bool Form::open(QString fileName, QWidget* pwgt) {
     parent = 0;
-    if (form != 0)
-        createForm(fileName, ((Form*)form)->getForm());
+    if (pwgt != 0)
+        createForm(fileName, pwgt);
     else
         createForm(fileName);
+    setButtonsSignals();
     return true;
 }
 
@@ -98,9 +101,9 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     if (formWidget == 0) {
         formWidget = new QDialog(pwgt);
         formWidget->setVisible(false);
-        buttonOk = new QPushButton(tr("&Принять"));
+        buttonOk = new QPushButton(QObject::trUtf8("&Принять"));
         buttonOk->setObjectName("buttonOk");
-        buttonCancel = new QPushButton(tr("&Отменить"));
+        buttonCancel = new QPushButton(QObject::trUtf8("&Отменить"));
         buttonCancel->setObjectName("buttonCancel");
 
         cmdButtonLayout = new QHBoxLayout();
@@ -111,17 +114,17 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
 
         vbxLayout = new QVBoxLayout();
         vbxLayout->setObjectName("vbxLayout");
+
         vbxLayout->addLayout(cmdButtonLayout);
         formWidget->setLayout(vbxLayout);
     }
     if (buttonOk != 0)
-        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
+        connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
     if (buttonCancel != 0) {
-        connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
-        connect(formWidget, SIGNAL(finished(int)), this, SLOT(cmdCancel()));
+        connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
+        connect(formWidget, SIGNAL(finished(int)), SLOT(cmdCancel()));
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
-//    setScriptForForm(fileName + ".js");
 }
 
 void Form::setIcons() {
@@ -160,6 +163,8 @@ void Form::show() {
         lSelected = false;
         beforeShowFormEvent();
         formWidget->show();
+        formWidget->activateWindow();
+        formWidget->raise();
 //        if (!uiCreated && defaultForm)
 //            createUi();
     }
@@ -172,27 +177,37 @@ void Form::hide() {
     }
 }
 
-void Form::initFormEvent() {
-    if (engine != 0) {
-        engine->globalObject().property("initForm").call();
+
+void Form::setButtonsSignals()
+{
+    QList<QPushButton*> allButtons = formWidget->findChildren<QPushButton*>();
+    foreach (QPushButton* button, allButtons)
+    {
+        connect(button, SIGNAL(clicked()), SLOT(buttonPressedSignalSend()));
     }
+}
+
+void Form::initFormEvent() {
+//    if (engine != 0) {
+//        engine->globalObject().property("initForm").call();
+//    }
 }
 
 void Form::beforeShowFormEvent() {
-    if (engine != 0) {
-        engine->globalObject().property("beforeShowForm").call();
-    }
+//    if (engine != 0) {
+//        engine->globalObject().property("beforeShowForm").call();
+//    }
 }
 
 void Form::afterHideFormEvent() {
-    if (engine != 0)
-        engine->globalObject().property("afterHideForm").call();
+//    if (engine != 0)
+//        engine->globalObject().property("afterHideForm").call();
 }
 
 void Form::closeFormEvent() {
-    if (engine != 0) {
-        engine->globalObject().property("closeForm").call();
-    }
+//    if (engine != 0) {
+//        engine->globalObject().property("closeForm").call();
+//    }
 }
 
 void Form::setScriptForForm(QString scr) {

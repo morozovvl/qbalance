@@ -12,7 +12,7 @@ MyItemDelegate::MyItemDelegate(QObject* par)
     columnMask = "";
     delegateType = String;
     readOnly = false;
-    connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+    connect(this, SIGNAL(closeEditor(QWidget*)), parentForm, SLOT(calculate()));
 }
 
 
@@ -20,6 +20,7 @@ MyItemDelegate::~MyItemDelegate()
 {
     disconnect(this, 0, this, 0);
 }
+
 
 void MyItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
@@ -37,10 +38,4 @@ QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem opti
         opt.showDecorationSelected = true;
     }
     return opt;
-}
-
-
-void MyItemDelegate::calculate()
-{
-    ((FormGrid*)parentForm)->calculate();
 }

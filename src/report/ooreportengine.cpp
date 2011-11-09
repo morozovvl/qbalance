@@ -37,7 +37,7 @@ bool OOReportEngine::open()
             ooProcess->start(command);
             if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))
             {   // Подождем 1 секунду и если процесс не запустился
-                TApplication::exemplar()->showError(QObject::tr("Не удалось запустить") + " Open Office");                   // выдадим сообщение об ошибке
+                TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                   // выдадим сообщение об ошибке
             }
             else
             {
@@ -46,11 +46,11 @@ bool OOReportEngine::open()
         }
         else
         {
-            TApplication::exemplar()->showError(QObject::tr("Не удалось скопировать шаблон во временный файл."));
+            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось скопировать шаблон во временный файл."));
         }
     }
     else {
-        TApplication::exemplar()->showError(QObject::tr("Не удалось создать временный файл."));
+        TApplication::exemplar()->showError(QObject::trUtf8("Не удалось создать временный файл."));
     }
     return result;
  }

@@ -7,9 +7,9 @@
 #include "../kernel/dictionary.h"
 #include "../kernel/documents.h"
 
-#define LABEL_ITOG     tr("Итого:")
-#define LABEL_DATE     tr("Дата:")
-#define LABEL_NUMBER   tr("Номер:")
+#define LABEL_ITOG     QObject::trUtf8("Итого:")
+#define LABEL_DATE     QObject::trUtf8("Дата:")
+#define LABEL_NUMBER   QObject::trUtf8("Номер:")
 
 FormDocument::FormDocument()
 : FormGrid()

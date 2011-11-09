@@ -19,10 +19,12 @@
 #include "../engine/reportscriptengine.h"
 #include "../engine/reportcontext.h"
 
-Essence::Essence(QString name, QObject *parent) : Table(name, parent) {
-    form        = 0;
+Essence::Essence(QString name, QObject *parent): Table(name, parent),
+form(NULL),
+parentForm(NULL),
+scriptEngine(NULL)
+{
     parentForm  = TApplication::exemplar()->getMainWindow()->centralWidget();
-//    engine      = 0;
     formTitle   = "";
     lInsertable = false;
     lDeleteable = false;
@@ -42,15 +44,6 @@ QDialog* Essence::getFormWidget() {
     return form->getForm();
 }
 
-void Essence::setScriptForTable(QString scr) {
-//    if (engine == 0) {
-//        engine = new ScriptEngine(scr, this);
-//        }
-// Временно отключено, пока не сделаем скриптовый движок
-//        scripts = engine->evaluate(script);
-}
-
-
 bool Essence::setData(const QModelIndex & index, const QVariant & value, int role/* = Qt::EditRole*/)
 {
     return tableModel->setData(index, value, role);
@@ -59,88 +52,13 @@ bool Essence::setData(const QModelIndex & index, const QVariant & value, int rol
 
 bool Essence::calculate(const QModelIndex &index)
 {
-/*
-    if (engine != 0)
+    if (scriptEngine != 0)
     {
-        setCalculateProperties(index);
-        QScriptValue value = engine->globalObject().property("calcTable").call();
-        if (value.isError())
-        {
-            revertCalculateProperties(index);
-            showError(value.toString());
-            return false;
-        }
-        else {
-            getCalculateProperties(index);
-        }
+        currentFieldName = tableModel->getFieldName(index.column());
+        scriptEngine->calcTable();
+        return tableModel->submit(index);
     }
-*/
-    return tableModel->submit(index);
-}
-
-
-void Essence::getCalculateProperties(const QModelIndex &index)
-{
-/*
-    if (engine != 0)
-    {
-        QVariant var;
-        int col;
-        QString fieldName;
-        foreach (QString field, getFieldsList())
-        {
-            QVariant var = engine->evaluate(QString("Table[\"%1\"]").arg(field), TApplication::errorFileName()).toVariant();
-            col = tableModel->record().indexOf(field);
-            if (col > -1)
-                tableModel->setData(index.sibling(index.row(), col), var);
-        }
-    }
-*/
-}
-
-
-void Essence::setCalculateProperties(const QModelIndex &index)
-{
-/*
-    if (engine != 0)
-    {
-        engine->globalObject().setProperty("Table", engine->newArray());
-        foreach (QString field, getFieldsList())
-        {
-            QVariant var(tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(field))));
-            engine->globalObject().setProperty("__temp__", engine->newVariant(var));
-            engine->evaluate(QString("Table[\"%1\"] = __temp__").arg(field), TApplication::errorFileName());
-        }
-        engine->globalObject().setProperty("__Column_Name__", engine->newVariant(tableModel->record().fieldName(index.column())));
-    }
-*/
-}
-
-void Essence::setOldCalculateProperties(const QModelIndex &index) {
-/*
-    if (engine != 0) {
-        QVariant var;
-        engine->globalObject().setProperty("OldTable", engine->newArray());
-        foreach (QString field, getFieldsList()) {
-            var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(field)));
-            engine->globalObject().setProperty("__temp__", engine->newVariant(var));
-            engine->evaluate(QString("OldTable[\"%1\"] = __temp__").arg(field), TApplication::errorFileName());
-        }
-    }
-*/
-}
-
-
-void Essence::revertCalculateProperties(const QModelIndex &index)
-{
-/*
-    if (engine != 0) {
-        foreach (QString field, getFieldsList()) {
-            QVariant var = engine->evaluate(QString("OldTable[\"%1\"]").arg(field), TApplication::errorFileName()).toVariant();
-            tableModel->setData(index.sibling(index.row(), tableModel->record().indexOf(field)), var);
-        }
-    }
-*/
+    return true;
 }
 
 
@@ -152,7 +70,8 @@ QVariant Essence::getValue(QString name, int row)
 }
 
 
-bool Essence::setValue(QString name, QVariant value, int row) {
+bool Essence::setValue(QString name, QVariant value, int row)
+{
     int col = tableModel->record().indexOf(name);
     QModelIndex index = form->getCurrentIndex();
     if (row >= 0)
@@ -162,13 +81,17 @@ bool Essence::setValue(QString name, QVariant value, int row) {
     return tableModel->setData(index, value);
 }
 
-qulonglong Essence::getId(int row) {
+
+qulonglong Essence::getId(int row)
+{
     if (row > 0)
         return getValue(idFieldName, row).toULongLong();
     return getValue(idFieldName, form->getCurrentIndex().row()).toULongLong();
 }
 
-void Essence::setId(qulonglong id) {
+
+void Essence::setId(qulonglong id)
+{
     if (id > 0) {
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::idFieldName()).arg(id));
         for (int i = 0; i < tableModel->rowCount(); i++) {
@@ -186,11 +109,15 @@ void Essence::setId(qulonglong id) {
     }
 }
 
-QSqlQuery Essence::getColumnsHeaders() {
+
+QSqlQuery Essence::getColumnsHeaders()
+{
     return TApplication::exemplar()->getDBFactory()->getColumnsHeaders(tableName);
 }
 
-QString Essence::getPhotoPath() {
+
+QString Essence::getPhotoPath()
+{
     QString path = TApplication::exemplar()->getDBFactory()->getPhotoPath(tableName);
     if (!path.isEmpty()) {
         if (path.left(1) == "~") {
@@ -202,11 +129,14 @@ QString Essence::getPhotoPath() {
 }
 
 
-bool Essence::remove() {
+bool Essence::remove()
+{
     return TApplication::exemplar()->getGUIFactory()->showYesNo("Удалить запись? Вы уверены?") == QMessageBox::Yes;
 }
 
-int Essence::exec() {
+
+int Essence::exec()
+{
     if (!opened) open();
     if (opened && form != 0) {
         return form->exec();
@@ -214,39 +144,69 @@ int Essence::exec() {
     return 0;
 }
 
-void Essence::show() {
+void Essence::show()
+{
     if (!opened) open();
     if (opened && form != 0) {
         form->show();
     }
 }
 
-void Essence::hide() {
+
+void Essence::hide()
+{
     if (opened && form != 0) {
         form->hide();
     }
 }
 
-void Essence::view() {
+
+void Essence::view()
+{
     if (form != 0)
         form->getForm()->setFocus(Qt::OtherFocusReason);
 }
 
-void Essence::close() {
+
+bool Essence::open()
+{
+    if (Table::open())
+    {
+        return true;
+    }
+    return false;
+}
+
+
+void Essence::close()
+{
 //    if (engine != 0)
 //        delete engine;
-    form->closeFormEvent();
-    form->writeSettings();
-//    form->setParent(0);
-    form->close();
+    if (form != 0)
+    {
+        form->closeFormEvent();
+        form->writeSettings();
+        //    form->setParent(0);
+        form->close();
+    }
+    delete scriptEngine;
     delete form;
     Table::close();
 }
 
-void Essence::setForm() {
+
+void Essence::setForm()
+{
     form = new FormGrid();
     form->open(parentForm, this);
 }
+
+
+void Essence::setScriptEngine()
+{
+    scriptEngine = new ScriptEngine();
+}
+
 
 void Essence::initForm() {
     setForm();
@@ -300,12 +260,12 @@ void Essence::print(QString file)
     QMap<QString, QVariant> printValues;
     preparePrintValues(&printValues);
     QString ext = TApplication::exemplar()->getReportTemplateExt();
-    ReportScriptEngine* scriptEngine = new ReportScriptEngine(&printValues, file + "." + ext);
-    if (scriptEngine->open())
+    ReportScriptEngine scriptEngine(&printValues);
+    if (scriptEngine.open(file + "." + ext))
     {
         switch (TApplication::exemplar()->getReportTemplateType())
         {
-            case 1:
+            case OOreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                     OOReportEngine report(&printValues, file, ext);
                     report.open();

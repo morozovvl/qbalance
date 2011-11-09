@@ -23,7 +23,7 @@ Dictionary::~Dictionary() {
 
 bool Dictionary::add() {
     if (!lInsertable) {
-        showError(QString(QObject::tr("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
+        showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
                       TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
                       TApplication::exemplar()->getLogin()));
         return false;
@@ -62,7 +62,7 @@ bool Dictionary::remove() {
         }
     }
     else
-        showError(QString(QObject::tr("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
+        showError(QString(QObject::trUtf8("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
             TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
             TApplication::exemplar()->getLogin()));
     return false;
@@ -141,15 +141,19 @@ bool Dictionary::open(int deep) {
                     }
                 }
             TApplication::exemplar()->getDBFactory()->getColumnsRestrictions(tableName, &columnsProperties);
-            initForm();
             dictDeep = deep;
+            initForm();
+            if (scriptEngine != 0)
+            {
+                return scriptEngine->open("", "");
+            }
             return true;
         }
     }
     QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
     if (dictTitle.isEmpty())
         dictTitle = tableName;
-    showError(QString(QObject::tr("Запрещено просматривать справочник %1 пользователю %2. Либо справочник отсутствует.")).arg(
+    showError(QString(QObject::trUtf8("Запрещено просматривать справочник %1 пользователю %2. Либо справочник отсутствует.")).arg(
         dictTitle, TApplication::exemplar()->getLogin()));
     return false;
 }

@@ -52,6 +52,7 @@ public:
 
 // Прочие функции
     QStringList getFieldsList();
+    QString getFieldName(int i) { return record().fieldName(i); }
     void setAlias(QString alias) { tableAlias = alias; }
 
 protected:

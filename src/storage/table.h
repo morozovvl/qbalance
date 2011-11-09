@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QMap>
 #include "dbfactory.h"
+#include "mysqlrelationaltablemodel.h"
 
 class TApplication;
 
@@ -26,6 +27,7 @@ public:
     virtual QString transformSelectStatement(QString string) { return string; }
 
     Q_INVOKABLE QStringList getFieldsList();
+    Q_INVOKABLE QString getFieldName(int);
     Q_INVOKABLE QString getTableName() { return tableName; }
     QString getTagName() { return tagName; }
     Q_INVOKABLE virtual void query(QString filter = "");

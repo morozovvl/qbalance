@@ -2,6 +2,7 @@
 #include "dictionary.h"
 #include "saldo.h"
 #include "document.h"
+#include "../engine/documentscriptengine.h"
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
@@ -158,78 +159,9 @@ Document::Document(int oper, Documents* par)
         dict->setMustShow(dict->getDeep() == 0 ? true : false);     // Если это зависимый справочник, то он не показывается
     }
 
-//    setScriptForTable(toper.record(0).value("формулы").toString());
 }
 
 Document::~Document() {
-}
-
-
-void Document::getCalculateProperties(const QModelIndex &index) {
-    QVariant var;
-    int col;
-    QString fieldName;
-    Essence::getCalculateProperties(index);
-    for (int i = 0; i < toper.rowCount(); i++) {
-        int prv = toper.record(i).value("номер").toInt();
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("p%1__кол").arg(prv))));
-        if (var.isValid()) {
-            fieldName = QString("дбсальдо%1__конкол").arg(prv);
-            col = tableModel->record().indexOf(fieldName);
-            if (col > -1)
-                tableModel->setData(index.sibling(index.row(), col), saldo.value(i).dbQuan + var.toDouble());
-            fieldName = QString("крсальдо%1__конкол").arg(prv);
-            col = tableModel->record().indexOf(fieldName);
-            if (col > -1) {
-                tableModel->setData(index.sibling(index.row(), col), saldo.value(i).crQuan - var.toDouble());
-            }
-        }
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("p%1__сумма").arg(prv))));
-        if (var.isValid()) {
-            fieldName = QString("дбсальдо%1__консальдо").arg(prv);
-            col = tableModel->record().indexOf(fieldName);
-            if (col > -1)
-                tableModel->setData(index.sibling(index.row(), col), saldo.value(i).dbSaldo + var.toDouble());
-            fieldName = QString("крсальдо%1__консальдо").arg(prv);
-            col = tableModel->record().indexOf(fieldName);
-            if (col > -1)
-                tableModel->setData(index.sibling(index.row(), col), saldo.value(i).crSaldo - var.toDouble());
-        }
-    }
-}
-
-
-void Document::setOldCalculateProperties(const QModelIndex &index)
-{
-    QVariant var;
-    prvSaldo sal;
-    Essence::setOldCalculateProperties(index);
-    saldo.clear();
-    for (int i = 0; i < toper.rowCount(); i++)
-    {
-        int prv = toper.record(i).value("номер").toInt();
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("дбсальдо%1__конкол").arg(prv))));
-        sal.dbQuan = (var.isValid() ? var.toDouble() : 0);
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("дбсальдо%1__консальдо").arg(prv))));
-        sal.dbSaldo = (var.isValid() ? var.toDouble() : 0);
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("крсальдо%1__конкол").arg(prv))));
-        sal.crQuan = (var.isValid() ? var.toDouble() : 0);
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("крсальдо%1__консальдо").arg(prv))));
-        sal.crSaldo = (var.isValid() ? var.toDouble() : 0);
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("p%1__кол").arg(prv))));
-        if (var.isValid())
-        {
-            sal.dbQuan = sal.dbQuan - var.toDouble();
-            sal.crQuan = sal.crQuan + var.toDouble();
-        }
-        var = tableModel->data(index.sibling(index.row(), tableModel->record().indexOf(QString("p%1__сумма").arg(prv))));
-        if (var.isValid())
-        {
-            sal.dbSaldo = sal.dbSaldo - var.toDouble();
-            sal.crSaldo = sal.crSaldo + var.toDouble();
-        }
-        saldo.insert(i, sal);
-    }
 }
 
 
@@ -257,6 +189,7 @@ bool Document::calculate(const QModelIndex& index) {
         if (itogWidget != 0)
             itogWidget->setValue(itog);
         parent->getMyRelationalTableModel()->setData(parent->getMyRelationalTableModel()->index(parent->getCurrentRow(), parent->getMyRelationalTableModel()->record().indexOf("сумма")), itog);
+        return parent->getTableModel()->submit();
     }
     return lResult;
 }
@@ -264,6 +197,7 @@ bool Document::calculate(const QModelIndex& index) {
 
 bool Document::add()
 {
+    unlock();               // Разблокируем все связанные справочники, чтобы можно было показать те, которые надо показать
     if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         insertDocString();
@@ -281,7 +215,7 @@ bool Document::remove() {
         }
     }
     else
-        showError(QString(QObject::tr("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
+        showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
     return false;
 }
 
@@ -356,6 +290,11 @@ bool Document::open()
     lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
     if (Essence::open()) {
         initForm();
+        setScriptEngine();
+        if (scriptEngine != 0)
+        {
+            return scriptEngine->open(SCRIPT_DIR + QString("формулы%1").arg(operNumber));
+        }
         return true;
     }
     return false;
@@ -375,6 +314,12 @@ void Document::setForm()
 {
     form = new FormDocument();
     form->open(parentForm, (Document*)this);
+}
+
+
+void Document::setScriptEngine()
+{
+    scriptEngine = new DocumentScriptEngine(this);
 }
 
 
@@ -549,7 +494,7 @@ void Document::setTableModel()
 
 
 bool Document::showNextDict()
-{             // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документе
+{  // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документе
     bool anyShown = true;
     foreach (QString dictName, dicts->keys()) {
         Dictionary* dict = dicts->value(dictName);
@@ -560,7 +505,6 @@ bool Document::showNextDict()
                     anyShown = false;                               // то считать, что этот справочник не был показан и не давать добавить строчку в документ
                     break;
                 }
-                dict->setMustShow(false);
                 dict->setLock(true);    // заблокируем справочник, чтобы повторно его не вводить
             }
             else {

@@ -275,7 +275,7 @@ QScriptValue SumToString(QScriptContext* context, QScriptEngine* engine) {
             sResult = QString(QString(str).left(1) + QString(str).right(str.size() - 1));
         }
         else
-            sResult = QObject::tr("Слишком большое число");
+            sResult = QObject::trUtf8("Слишком большое число");
     }
     return QScriptValue(engine, sResult);
 }

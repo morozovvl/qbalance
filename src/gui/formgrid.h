@@ -29,12 +29,12 @@ public:
     void setCurrentIndex(QModelIndex index) { grdTable->setCurrentIndex(index); }
     TableView* getGridTable() { return grdTable; }
     virtual void setGridFocus();
-    virtual void setShowFocus();
+//    virtual void setShowFocus();
     virtual void readSettings();
     virtual void writeSettings();
-    virtual bool calculate();
 
 public slots:
+    virtual void calculate();
     virtual void cmdAdd();
     virtual void cmdDelete();
     virtual void cmdView();

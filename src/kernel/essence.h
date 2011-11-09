@@ -2,6 +2,7 @@
 #define ESSENCE_H
 
 #define REPORT_DIR      "./reports/"
+#define SCRIPT_DIR      "./scripts/"
 #define TMP_DIR         "./tmp/"
 
 #include <QVariant>
@@ -29,15 +30,16 @@ public:
     Essence(QString name = "", QObject *parent = 0);
     ~Essence();
 // Функции для получения, сохранения данных модели
-    virtual qulonglong getId(int row = 0);
+    Q_INVOKABLE virtual qulonglong getId(int row = 0);
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     virtual void setId(qulonglong);
+    Q_INVOKABLE QString getCurrentFieldName() { return currentFieldName; }
     QString getIdFieldName() { return idFieldName; }
-    virtual bool isFieldExists(QString field) { return getFieldsList().contains(field); }
-    virtual QVariant getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
-    virtual bool setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
-    virtual bool add() { return false; }        // Добавление записи
-    virtual bool remove();                      // Удаление записи
+    Q_INVOKABLE virtual bool isFieldExists(QString field) { return getFieldsList().contains(field); }
+    Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual bool setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual bool add() { return false; }        // Добавление записи
+    Q_INVOKABLE virtual bool remove();                      // Удаление записи
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm() { return form; }
@@ -64,13 +66,12 @@ public:
 
 // Функции для обеспечения работы скриптов
     virtual bool calculate(const QModelIndex &);
-    virtual void setOldCalculateProperties(const QModelIndex &);
-    virtual void revertCalculateProperties(const QModelIndex &);
-    void setScriptForTable(QString);
+    virtual void setScriptEngine();
 
 // Прочие функции
     virtual QSqlQuery getColumnsHeaders();
     QString getPhotoPath();
+    Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
 
 signals:
@@ -79,21 +80,18 @@ signals:
 protected:
     QString             formTitle;
     QString             idFieldName;
+    QString             currentFieldName;                   // имя поля, в котором был вызван метод calculate()
     FormGrid*           form;
     QWidget*            parentForm;
-//    ScriptEngine*       engine;
-    QString             script;
-    QScriptValue        scripts;
+    ScriptEngine*       scriptEngine;
     bool                lInsertable;
     bool                lDeleteable;
     bool                lViewable;
     bool                lUpdateable;
     bool                lPrintable;
-    virtual void setForm();
-    void initForm();
-    virtual void getCalculateProperties(const QModelIndex &);
-    virtual void setCalculateProperties(const QModelIndex &);
-    virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
+    virtual void        setForm();
+    void                initForm();
+    virtual void        preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
 };
 
 #endif // ESSENCE_H

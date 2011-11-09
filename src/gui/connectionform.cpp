@@ -10,13 +10,13 @@ bool ConnectionForm::open(QWidget* pwgt, Essence* par) {
 
 
 void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, bool readSettings) {
-    formWidget->setWindowTitle(tr("Параметры соединения"));
-    QGridLayout* ptopLayout = new QGridLayout;
-    QLabel* plblConnection = new QLabel(tr("Имя соединения:"));
-    QLabel* plblHost = new QLabel(tr("Адрес сервера:"));
-    QLabel* plblPort = new QLabel(tr("Номер порта:"));
-    QLabel* plblDatabase = new QLabel(tr("Наименование БД:"));
-    pcmbConnection = new QComboBox;
+    formWidget->setWindowTitle(QObject::trUtf8("Параметры соединения"));
+    QGridLayout* ptopLayout = new QGridLayout();
+    QLabel* plblConnection = new QLabel(QObject::trUtf8("Имя соединения:"));
+    QLabel* plblHost = new QLabel(QObject::trUtf8("Адрес сервера:"));
+    QLabel* plblPort = new QLabel(QObject::trUtf8("Номер порта:"));
+    QLabel* plblDatabase = new QLabel(QObject::trUtf8("Наименование БД:"));
+    pcmbConnection = new QComboBox();
     if (readSettings)
         pcmbConnection->setEditable(true);
     connect(pcmbConnection, SIGNAL(activated(int)), this, SLOT(connectionChanged(int)));
@@ -40,11 +40,11 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
         vbxLayout->insertLayout(0, ptopLayout);
         QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
         if (cmdButtonLayout != 0) {
-            QPushButton* buttonDelete = new QPushButton(tr("&Удалить"));
+            QPushButton* buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
             buttonDelete->setObjectName("buttonDelete");
             connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
             cmdButtonLayout->insertWidget(0, buttonDelete);
-            QPushButton* cmdSave = new QPushButton(tr("&Сохранить"));
+            QPushButton* cmdSave = new QPushButton(QObject::trUtf8("&Сохранить"));
             cmdSave->setObjectName("buttonSave");
             connect(cmdSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
             cmdButtonLayout->insertWidget(0, cmdSave);
@@ -61,7 +61,7 @@ int ConnectionForm::exec(DBFactory* d) {
     db = d;
     readDefaultSettings();
     readSettings(pcmbConnection->itemText(pcmbConnection->currentIndex()));
-    Form::setIcons();
+    setIcons();
     lResult = Form::exec();
     db->setHostName(ptxtHost->text());
     db->setDatabaseName(ptxtDatabase->text());

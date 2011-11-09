@@ -60,24 +60,24 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
 
                         if (!lResult)
                         {// выдадим сообщение об ошибке и выйдем из цикла
-                            TApplication::exemplar()->showError(QObject::tr("Не удалось запустить psql"));
+                            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить psql"));
                         }
                         else
                         {
                             lResult = proc.waitForFinished();
                             if (!lResult)
                             {
-                                TApplication::exemplar()->showCriticalError(QString(QObject::tr("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
+                                TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
                             }
                         }
                     }
                     else
-                        TApplication::exemplar()->showCriticalError(QString(QObject::tr("Не найден файл инициализации БД <%1>.")).arg(*script));
+                        TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Не найден файл инициализации БД <%1>.")).arg(*script));
                 }
             }
        }
        else
-          TApplication::exemplar()->showCriticalError(QObject::tr("Не удалось создать соединение с сервером."));
+          TApplication::exemplar()->showCriticalError(QObject::trUtf8("Не удалось создать соединение с сервером."));
     }
     setDatabaseName(defaultDatabase);
     return lResult;
@@ -160,8 +160,7 @@ QSqlQuery DBFactory::execQuery(QString str)
 
     clearError();
     QSqlQuery query;
-    bool lResult = query.exec(str);
-    if (!lResult)
+    if (!query.exec(str))
     {
         setError(query.lastError().text());
     }
@@ -353,7 +352,7 @@ bool DBFactory::insertDictDefault(QString tableName, QStringList fields, QVarian
         else
         {
             wasError = true;
-            errorText = QObject::tr("Количество полей записи не равно количеству аргументов.");
+            errorText = QObject::trUtf8("Количество полей записи не равно количеству аргументов.");
         }
     }
     else
@@ -492,6 +491,20 @@ QString DBFactory::getObjectName(const QString& name) const
     }
     return result;
 }
+
+
+QByteArray DBFactory::getFile(QString fileName, FileType type)
+{
+    QString text = QString("SELECT * FROM файлы WHERE имя = '%1' AND тип = %2").arg(fileName).arg(type);
+    QSqlQuery query = execQuery(text);
+    if (query.isActive())
+    {
+        query.first();
+        return query.value(query.record().indexOf("значение")).toByteArray();
+    }
+    return QByteArray();
+}
+
 
 QString DBFactory::storageEncoding()
 {

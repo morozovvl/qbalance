@@ -8,6 +8,7 @@
 #include "../gui/passwordform.h"
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
+#include "../gui/configform.h"
 
 QString TApplication::MaxSumMask       = "9999999999.99";
 QString TApplication::IdFieldName      = QObject::trUtf8("код");
@@ -27,7 +28,7 @@ TApplication::TApplication(int & argc, char** argv)
     db  = new DBFactory();
     gui = new GUIFactory(db);
 
-    reportTemplateType = 1;             // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
+    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
 
     if (!Exemplar)
     {
@@ -102,8 +103,8 @@ bool TApplication::open() {
                 {   // Произошла ошибка соединения с сервером
                 QString errorText = db->getErrorText();
                 showError(errorText);
-                if (gui->showMessage(QObject::tr("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
-                                     QObject::tr("Попытаться создать новую БД?")) == QMessageBox::Yes)
+                if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
+                                     QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
                     // Попытаемся создать новую БД
                     db->createNewDB(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
             }
@@ -127,6 +128,16 @@ void TApplication::close() {
     db->close();
     delete db;
 }
+
+
+void TApplication::showConfigs() {
+    ConfigForm form;
+    if (form.open(getMainWindow())) {
+        form.exec();
+        form.close();
+    }
+}
+
 
 QString TApplication::getFormsPath(QString formName) {
     QString fileName = applicationDirPath() + "/forms" + "/" + formName;

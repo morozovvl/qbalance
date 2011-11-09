@@ -23,8 +23,8 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 
         QFormLayout* layout = new QFormLayout;
 
-        layout->addRow(tr("Логин:"), LoginSelector);
-        layout->addRow(tr("Пароль:"), PasswordEditor);
+        layout->addRow(QObject::trUtf8("Логин:"), LoginSelector);
+        layout->addRow(QObject::trUtf8("Пароль:"), PasswordEditor);
 
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
@@ -56,7 +56,7 @@ void PassWordForm::cmdOk() {
 
 int PassWordForm::exec() {
     readSettings();
-    Form::setIcons();
+    setIcons();
     return Form::exec();
 }
 

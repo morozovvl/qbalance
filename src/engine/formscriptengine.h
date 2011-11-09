@@ -6,7 +6,7 @@
 class FormScriptEngine : public ScriptEngine
 {
 public:
-    FormScriptEngine(QString file = "", QObject *parent = 0);
+    FormScriptEngine(QObject *parent = 0);
 protected:
     virtual void loadScriptObjects();
 };

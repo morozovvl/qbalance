@@ -40,6 +40,6 @@ void Saldo::setMustShow(bool mustShow) {
 
 bool Saldo::open(int deep) {
     bool result = Dictionary::open(deep);
-    formTitle = QString(QObject::tr("Остатки на %1 счете").arg(account));
+    formTitle = QString(QObject::trUtf8("Остатки на %1 счете").arg(account));
     return result;
 }

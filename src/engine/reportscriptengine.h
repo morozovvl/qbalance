@@ -8,7 +8,7 @@
 class ReportScriptEngine : public ScriptEngine
 {
 public:
-    ReportScriptEngine(QMap<QString, QVariant>*, QString, QObject *parent = 0);
+    ReportScriptEngine(QMap<QString, QVariant>*, QObject *parent = 0);
     ~ReportScriptEngine();
 protected:
     virtual void loadScriptObjects();

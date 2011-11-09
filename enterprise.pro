@@ -65,7 +65,10 @@ SOURCES += src/main.cpp \
     src/engine/sqlrecordclass.cpp \
     src/engine/sqlrecordprototype.cpp \
     src/engine/sqlfieldclass.cpp \
-    src/engine/sqlfieldprototype.cpp
+    src/engine/sqlfieldprototype.cpp \
+    src/engine/eventloop.cpp \
+    src/engine/documentscriptengine.cpp \
+    src/gui/configform.cpp
 HEADERS += src/kernel/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
@@ -112,7 +115,10 @@ HEADERS += src/kernel/app.h \
     src/engine/sqlrecordclass.h \
     src/engine/sqlrecordprototype.h \
     src/engine/sqlfieldclass.h \
-    src/engine/sqlfieldprototype.h
+    src/engine/sqlfieldprototype.h \
+    src/engine/eventloop.h \
+    src/engine/documentscriptengine.h \
+    src/gui/configform.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

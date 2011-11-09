@@ -5,8 +5,8 @@
 #include "reportcontextfunctions.cpp"
 
 
-ReportScriptEngine::ReportScriptEngine(QMap<QString, QVariant>* context, QString reportName, QObject *parent/* = 0*/)
-:ScriptEngine(reportName, parent)
+ReportScriptEngine::ReportScriptEngine(QMap<QString, QVariant>* context, QObject *parent/* = 0*/)
+:ScriptEngine(parent)
 {
     reportContext = new ReportContext(context);
 }

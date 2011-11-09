@@ -5,16 +5,27 @@
 #include <QtSql>
 #include <QDate>
 #include <QVariantList>
+#include <QByteArray>
 
 class TApplication;
 
-struct FieldType {
+
+enum FileType           // Типы данных, которые хранятся в таблице "файлы"
+{
+    Script,
+    ReportTemplate
+};
+
+
+struct FieldType
+{
     QString name;
     QString type;
     int length;
     int precision;
     bool readOnly;
 };
+
 
 class DBFactory : public QObject {
     Q_OBJECT
@@ -30,6 +41,7 @@ public:
     bool createNewDB(QString, QString, int);
     QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
+    QByteArray getFile(QString, FileType);
     int getPort() { return port; }
     Q_INVOKABLE QString getDatabaseName() { return dbName; }
     QSqlDatabase* getDB() { return db; }

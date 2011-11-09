@@ -181,8 +181,7 @@ CREATE TABLE топер (
     форма CHARACTER VARYING(50) DEFAULT ''::CHARACTER VARYING,
     независим BOOLEAN DEFAULT FALSE,
     считать BOOLEAN DEFAULT TRUE, 
-    переменные TEXT,
-    формулы TEXT
+    переменные TEXT
 );
 
 
@@ -544,8 +543,8 @@ CREATE TABLE справочники (
     имя_в_списке CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING,
     имя_в_форме CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING,
     форма CHARACTER VARYING(50) DEFAULT ''::CHARACTER VARYING,
-    преформулы TEXT,
-    формулы TEXT,
+    преформулы TEXT, 
+    формулы TEXT, 
     постформулы TEXT,
     фото CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING
 );
@@ -620,6 +619,18 @@ ALTER SEQUENCE столбцы_код_seq OWNED BY столбцы.код;
 
 ALTER TABLE столбцы ALTER COLUMN код SET DEFAULT nextval('столбцы_код_seq'::regclass);
 
+
+--------------------------------------------------------------------------------------------------------------------------------
+CREATE TABLE файлы (
+  код serial NOT NULL,
+  имя CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING,
+  тип INTEGER,
+  значение bytea,
+  CONSTRAINT файлы_pkey PRIMARY KEY ("код")
+)
+WITH (
+  OIDS=FALSE
+);
 
 --------------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE прайсы (
@@ -726,7 +737,7 @@ CREATE VIEW vw_проводки AS
 
 --------------------------------------------------------------------------------------------------------------------------------
 CREATE VIEW vw_топер AS
- SELECT топер.код, топер.опер, топер.номер, топер.имя, счета.счет AS дбсчет, счета.имясправочника AS дбсправ, '                                        '::bpchar AS дбсправалиас, счета.количество AS дбкол, топер.дбпост, топер.дбсалвидим, топер.дбвидим, счета1.счет AS крсчет, счета1.имясправочника AS крсправ, '                                        '::bpchar AS крсправалиас, счета1.количество AS кркол, топер.однаоперация, топер.итоги, топер.крпост, топер.крсалвидим, топер.крвидим, топер.независим, топер.считать, топер.переменные, топер.формулы
+ SELECT топер.код, топер.опер, топер.номер, топер.имя, счета.счет AS дбсчет, счета.имясправочника AS дбсправ, '                                        '::bpchar AS дбсправалиас, счета.количество AS дбкол, топер.дбпост, топер.дбсалвидим, топер.дбвидим, счета1.счет AS крсчет, счета1.имясправочника AS крсправ, '                                        '::bpchar AS крсправалиас, счета1.количество AS кркол, топер.однаоперация, топер.итоги, топер.крпост, топер.крсалвидим, топер.крвидим, топер.независим, топер.считать, топер.переменные
    FROM топер
    LEFT JOIN счета счета ON топер.дбсчет::bpchar = счета.счет
    LEFT JOIN счета счета1 ON топер.крсчет::bpchar = счета1.счет;
@@ -1966,6 +1977,9 @@ GRANT SELECT ON TABLE типыобъектов TO bookkeeper;
 REVOKE ALL ON TABLE прайсы FROM PUBLIC;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE прайсы TO sa;
 GRANT SELECT ON TABLE прайсы TO bookkeeper;
+
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE файлы TO sa;
+GRANT SELECT ON TABLE файлы TO public;
 
 REVOKE ALL ON FUNCTION sp_calcaccoborot(cacc CHARACTER VARYING, cdate1 CHARACTER VARYING, cdate2 CHARACTER VARYING) FROM PUBLIC;
 GRANT ALL ON FUNCTION sp_calcaccoborot(cacc CHARACTER VARYING, cdate1 CHARACTER VARYING, cdate2 CHARACTER VARYING) TO sa;

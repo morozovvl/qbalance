@@ -15,11 +15,11 @@ class Form: public QObject
 public:
     explicit Form(QObject* parent = NULL);
     Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
-    Q_INVOKABLE virtual bool open(QString, QObject* form = 0);
+    Q_INVOKABLE virtual bool open(QString, QWidget* form = 0);
     Q_INVOKABLE virtual void close();
     void setConfigName(QString name) { configName = name; setObjectName(configName); }
     QString getConfigName() { return configName; }
-    virtual void setIcons();
+    Q_INVOKABLE virtual void setIcons();
     virtual void readSettings();
     virtual void writeSettings();
     virtual void createUi();
@@ -30,6 +30,7 @@ public:
     void closeFormEvent();
     void setScriptForForm(QString);
     void removeScriptForForm();
+    void setButtonsSignals();
 
     Q_INVOKABLE QDialog* getForm() { return formWidget; }
     Q_INVOKABLE Essence* getParent() { return parent; }
@@ -40,8 +41,12 @@ public slots:
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void hide();
-    virtual void cmdOk();
-    virtual void cmdCancel();
+    Q_INVOKABLE virtual void cmdOk();
+    Q_INVOKABLE virtual void cmdCancel();
+    void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
+
+signals:
+    void buttonPressed(QString);
 
 protected:
     QDialog*        formWidget;

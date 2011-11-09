@@ -36,6 +36,10 @@ void MainWindow::showReports() {
     TApplication::exemplar()->showReports();
 }
 
+void MainWindow::showConfigs() {
+    TApplication::exemplar()->showConfigs();
+}
+
 void MainWindow::newRecord() {
 }
 
@@ -44,8 +48,8 @@ void MainWindow::deleteRecord() {
 
 void MainWindow::about()
 {
-      QMessageBox::about(this, tr("About Application"),
-            tr("The <b>Application</b> example demonstrates how to "
+      QMessageBox::about(this, QObject::trUtf8("About Application"),
+            QObject::trUtf8("The <b>Application</b> example demonstrates how to "
                   "write modern GUI applications using Qt, with a menu bar, "
                   "toolbars, and a status bar."));
 }
@@ -53,23 +57,23 @@ void MainWindow::about()
 void MainWindow::createActions()
 {
       dictionariesAct = new QAction(this);
-      dictionariesAct->setShortcut(tr("Ctrl+N"));
-      dictionariesAct->setStatusTip(tr("Открыть список справочников"));
+      dictionariesAct->setShortcut(QObject::trUtf8("Ctrl+N"));
+      dictionariesAct->setStatusTip(QObject::trUtf8("Открыть список справочников"));
       connect(dictionariesAct, SIGNAL(triggered()), this, SLOT(showDictionaries()));
 
       newAct = new QAction(QIcon(":buttonAdd"), "", this);
-      newAct->setShortcut(tr("Ctrl+N"));
-      newAct->setStatusTip(tr("Добавить новую запись"));
+      newAct->setShortcut(QObject::trUtf8("Ctrl+N"));
+      newAct->setStatusTip(QObject::trUtf8("Добавить новую запись"));
       connect(newAct, SIGNAL(triggered()), this, SLOT(newRecord()));
 
       deleteAct = new QAction(QIcon(":buttonDelete"), "", this);
-      deleteAct->setShortcut(tr("Ctrl+D"));
-      deleteAct->setStatusTip(tr("Удалить запись"));
+      deleteAct->setShortcut(QObject::trUtf8("Ctrl+D"));
+      deleteAct->setStatusTip(QObject::trUtf8("Удалить запись"));
       connect(deleteAct, SIGNAL(triggered()), this, SLOT(deleteRecord()));
 
       periodAct = new QAction(QIcon(":buttonCalendar"), "", this);
-      periodAct->setStatusTip(tr("Установить рабочий период"));
-      periodAct->setToolTip(tr("Текущий рабочий период"));
+      periodAct->setStatusTip(QObject::trUtf8("Установить рабочий период"));
+      periodAct->setToolTip(QObject::trUtf8("Текущий рабочий период"));
       QFont periodFont;
       periodFont.setBold(true);
       periodAct->setFont(periodFont);
@@ -79,30 +83,33 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
-    dictAct = menuBar()->addAction(tr("&Справочники"));
+    dictAct = menuBar()->addAction(QObject::trUtf8("&Справочники"));
     connect(dictAct, SIGNAL(triggered()), this, SLOT(showDictionaries()));
 
-    operAct = menuBar()->addAction(tr("&Операции"));
+    operAct = menuBar()->addAction(QObject::trUtf8("&Операции"));
     connect(operAct, SIGNAL(triggered()), this, SLOT(showDocuments()));
 
-    reportAct = menuBar()->addAction(tr("&Отчеты"));
+    reportAct = menuBar()->addAction(QObject::trUtf8("&Отчеты"));
     connect(reportAct, SIGNAL(triggered()), this, SLOT(showReports()));
 
-    infoMenu = menuBar()->addMenu(tr("&Справка"));
+    configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
+    connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
 
-//    aboutAct = infoMenu->addAction(tr("О &программе..."));
+    infoMenu = menuBar()->addMenu(QObject::trUtf8("&Справка"));
+
+//    aboutAct = infoMenu->addAction(QObject::trUtf8("О &программе..."));
 //    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    aboutQtAct = infoMenu->addAction(tr("О &библиотеке Qt..."));
+    aboutQtAct = infoMenu->addAction(QObject::trUtf8("О &библиотеке Qt..."));
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
-    exitAct = menuBar()->addAction(tr("&Выход"));
+    exitAct = menuBar()->addAction(QObject::trUtf8("&Выход"));
     connect(exitAct, SIGNAL(triggered()), this, SLOT(closeEvent()));
 }
 
 void MainWindow::createToolBars()
 {
-      editToolBar = addToolBar(tr("Edit"));
+      editToolBar = addToolBar(QObject::trUtf8("Edit"));
 //      editToolBar->addAction(newAct);
 //      editToolBar->addAction(deleteAct);
       editToolBar->addAction(periodAct);
@@ -111,7 +118,7 @@ void MainWindow::createToolBars()
 
 void MainWindow::createStatusBar()
 {
-//      statusBar()->showMessage(tr("Готово"));
+//      statusBar()->showMessage(QObject::trUtf8("Готово"));
 }
 
 void MainWindow::setPeriod() {
