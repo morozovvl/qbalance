@@ -31,6 +31,8 @@ Q_DECLARE_METATYPE(Form*)
 QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
      Form *object = new Form();
      object->open(context->argument(0).toString(), TApplication::exemplar()->getMainWindow()->centralWidget());
+     object->setIcons();
+     object->setButtonsSignals();
      return engine->newQObject(object, QScriptEngine::AutoOwnership);
 //     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }

@@ -3,11 +3,14 @@
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
+#include "../gui/adddictionarywizard.h"
+
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
     dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
-    lInsertable = false;                    // Список справочников нельзя редактировать
-    lDeleteable = false;
+    lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
+    lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
+    lDeleteable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
     lUpdateable = false;
     lPrintable = false;
 }
@@ -54,6 +57,44 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
     if (!title.isEmpty())
         return title;
     return getDictionaryProperty(dictName, "таблица").toString();
+}
+
+
+bool Dictionaries::add()
+{
+    AddDictionaryWizard wizard;
+    wizard.open(TApplication::exemplar()->getMainWindow());
+    wizard.getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
+    wizard.exec();
+    wizard.close();
+    if (wizard.getResult())
+    {   // Если удалось создать справочник, то обновим список справочников
+        dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+        return true;
+    }
+    return false;
+}
+
+
+void Dictionaries::view()
+{
+    AddDictionaryWizard wizard;
+    wizard.open(TApplication::exemplar()->getMainWindow());
+    wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
+    wizard.getData(getValue("таблица").toString().trimmed());
+    wizard.exec();
+    wizard.close();
+}
+
+
+bool Dictionaries::remove()
+{
+    if (TApplication::exemplar()->getDBFactory()->removeDictionary(getValue("таблица").toString().trimmed()))
+    {   // если удалось удалить справочник, то обновим список справочников
+        dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+        return true;
+    }
+    return false;
 }
 
 

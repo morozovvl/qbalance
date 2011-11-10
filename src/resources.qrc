@@ -11,6 +11,8 @@
         <file alias="buttonSave">resources/save.png</file>
         <file alias="noimage">resources/noimage.png</file>
         <file alias="searchparameters">resources/searchparameters.png</file>
+        <file alias="buttonBackward">resources/back.png</file>
+        <file alias="buttonForward">resources/forward.png</file>
     </qresource>
     <qresource prefix="/postgres">
         <file>initdb0.sql</file>

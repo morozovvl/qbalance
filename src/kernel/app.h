@@ -42,6 +42,7 @@ public:
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }
     GUIFactory* getGUIFactory() { return gui; }
     QString getLogin() { return db->getLogin(); }
+    bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
     QString getFormsPath(QString formName = "");

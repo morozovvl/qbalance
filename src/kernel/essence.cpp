@@ -199,6 +199,7 @@ void Essence::setForm()
 {
     form = new FormGrid();
     form->open(parentForm, this);
+    form->setButtonsSignals();
 }
 
 

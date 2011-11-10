@@ -32,7 +32,6 @@ bool Form::open(QWidget* pwgt, Essence* par) {
     }
     else
         createForm("", pwgt);
-    setButtonsSignals();
     return true;
 }
 
@@ -42,7 +41,6 @@ bool Form::open(QString fileName, QWidget* pwgt) {
         createForm(fileName, pwgt);
     else
         createForm(fileName);
-    setButtonsSignals();
     return true;
 }
 

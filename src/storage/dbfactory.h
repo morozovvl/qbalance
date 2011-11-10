@@ -47,6 +47,10 @@ public:
     QSqlDatabase* getDB() { return db; }
     QSqlQuery getColumnsHeaders(QString);
     QSqlQuery getDictionariesProperties();
+    int getDictionaryTypeId();
+    bool isTableExists(QString);
+    bool createNewDictionary(QString, QString = "", bool = true);
+    bool removeDictionary(QString);
     QStringList getFieldsList(QMap<int, FieldType>*);
     void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
     virtual void getColumnsProperties(QMap<int, FieldType>*, QString);
@@ -85,6 +89,7 @@ public:
 
 private:
     QSqlDatabase*           db;
+    QSqlQuery               objectTypes;
     QString                 hostName;           // URL сервера
     int                     port;               // порт сервера
     QString                 currentLogin;       // логин, под которым работает пользователь

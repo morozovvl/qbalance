@@ -4,6 +4,8 @@
 #include <QSizePolicy>
 #include "configform.h"
 #include "../kernel/app.h"
+#include "guifactory.h"
+#include "mainwindow.h"
 
 ConfigForm::ConfigForm(QObject* parent/* = NULL*/): Form(parent)
 {

@@ -43,7 +43,7 @@ public slots:
     Q_INVOKABLE virtual void hide();
     Q_INVOKABLE virtual void cmdOk();
     Q_INVOKABLE virtual void cmdCancel();
-    void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
+    virtual void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
 
 signals:
     void buttonPressed(QString);

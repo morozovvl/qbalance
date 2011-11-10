@@ -40,6 +40,8 @@ public:
     Q_INVOKABLE virtual bool setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     Q_INVOKABLE virtual bool add() { return false; }        // Добавление записи
     Q_INVOKABLE virtual bool remove();                      // Удаление записи
+    Q_INVOKABLE virtual void view();
+    virtual void print(QString);
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm() { return form; }
@@ -51,8 +53,6 @@ public:
     Q_INVOKABLE virtual void hide();                // Скрыть форму
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
     Q_INVOKABLE virtual QDialog* getFormWidget();
-    virtual void view();
-    virtual void print(QString);
     bool isInsertable() { return lInsertable; }         // Получить/установить ...
     bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     bool isViewable() { return lViewable; }             // ... кнопок на форме

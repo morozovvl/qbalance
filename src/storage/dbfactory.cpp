@@ -123,6 +123,7 @@ bool DBFactory::open(QString login, QString password)
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         currentLogin = login;
         initObjectNames();// Инициируем переводчик имен объектов из внутренних наименований в наименования БД
+        objectTypes = execQuery(QString("SELECT * FROM %1").arg(getObjectName("типыобъектов")));
         return true;
     }
     else
@@ -277,6 +278,124 @@ void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* colu
             }
         }
     }
+}
+
+
+int DBFactory::getDictionaryTypeId()
+{
+    QString dict = getObjectName("типыобъектов.справочник").toLower();
+    while (objectTypes.next()) {
+        if (objectTypes.value(1).toString().toLower() == dict)
+        {
+            return objectTypes.value(0).toInt();
+        }
+    }
+    return 0;
+}
+
+
+bool DBFactory::isTableExists(QString tName)
+{
+    return execQuery(QString("SELECT * FROM pg_tables WHERE schemaname = 'public' AND tablename = '%1'").arg(tName)).size() > 0 ? true : false;
+}
+
+
+bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool menu)
+{
+    if (!isTableExists(tName))
+    {   // Если такой таблицы не существует, то добавим ее
+        exec("BEGIN;");
+        QString command = QString("CREATE TABLE \"%1\" ("    \
+                                  "\"%2\" SERIAL NOT NULL," \
+                                  "\"%3\" CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING)" \
+                                  "WITH (OIDS=FALSE);" \
+                                  "REVOKE ALL ON \"%1\" FROM PUBLIC;"    \
+                                  "GRANT ALL ON \"%1\" TO %4;" \
+                                  "ALTER TABLE \"%1\" ADD CONSTRAINT \"%1_pkey\" PRIMARY KEY(\"%2\");")
+                                  .arg(tName)
+                                  .arg(TApplication::idFieldName())
+                                  .arg(TApplication::nameFieldName())
+                                  .arg(getLogin());
+        if (exec(command))
+        {
+            command = QString("INSERT INTO \"%1\" (%2, %3, %4, %5) VALUES (%6, %7, '%8', '%9');")
+                        .arg(getObjectName("доступ"))
+                        .arg(getObjectName("доступ.меню"))
+                        .arg(getObjectName("доступ.код_типыобъектов"))
+                        .arg(getObjectName("доступ.пользователь"))
+                        .arg(getObjectName("доступ.имя"))
+                        .arg(menu ? "true" : "false")
+                        .arg(getDictionaryTypeId())
+                        .arg(getLogin())
+                        .arg(tName);
+            if (exec(command))
+            {
+                command = QString("INSERT INTO \"%1\" (%2, %3) VALUES ('%4', '%5');")
+                            .arg(getObjectName("справочники"))
+                            .arg(getObjectName("справочники.имя"))
+                            .arg(getObjectName("справочники.имя_в_списке"))
+                            .arg(tName)
+                            .arg(tTitle);
+                if (exec(command))
+                {
+                    command = QString("CREATE TRIGGER \"testdeleting_%1\" "  \
+                                      "BEFORE DELETE ON \"%1\" " \
+                                      "FOR EACH ROW " \
+                                      "EXECUTE PROCEDURE testdeletingdictobject();")
+                                    .arg(tName);
+                    if (exec(command))
+                    {
+                        exec("COMMIT;");
+                        return true;
+                    }
+                }
+
+            }
+        }
+        exec("ROLLBACK;");
+        return false;
+
+    }
+    return true;
+}
+
+
+bool DBFactory::removeDictionary(QString tName)
+{
+    if (isTableExists(tName))
+    {
+        exec("BEGIN;");
+        QString command = QString("DROP TABLE \"%1\";")
+                                  .arg(tName);
+        if (exec(command))
+        {
+            command = QString("DELETE FROM \"%1\" WHERE %2 = %3 AND %4 = '%5' AND %6 = '%7';")
+                        .arg(getObjectName("доступ"))
+                        .arg(getObjectName("доступ.код_типыобъектов"))
+                        .arg(getDictionaryTypeId())
+                        .arg(getObjectName("доступ.пользователь"))
+                        .arg(getLogin())
+                        .arg(getObjectName("доступ.имя"))
+                        .arg(tName);
+            if (exec(command))
+            {
+                command = QString("DELETE FROM \"%1\" WHERE %2 = '%3';")
+                            .arg(getObjectName("справочники"))
+                            .arg(getObjectName("справочники.имя"))
+                            .arg(tName);
+                if (exec(command))
+                {
+                    exec("COMMIT;");
+                    return true;
+                }
+
+            }
+        }
+        exec("ROLLBACK;");
+        return false;
+
+    }
+    return true;
 }
 
 
@@ -477,6 +596,17 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("константы", "константы");
     ObjectNames.insert("константы.имя", "имя");
     ObjectNames.insert("константы.значение", "значение");
+    ObjectNames.insert("типыобъектов", "типыобъектов");
+    ObjectNames.insert("типыобъектов.имя", "имя");
+    ObjectNames.insert("типыобъектов.справочник", "справочник");
+    ObjectNames.insert("доступ", "доступ");
+    ObjectNames.insert("доступ.меню", "меню");
+    ObjectNames.insert("доступ.код_типыобъектов", "код_типыобъектов");
+    ObjectNames.insert("доступ.пользователь", "пользователь");
+    ObjectNames.insert("доступ.имя", "имя");
+    ObjectNames.insert("справочники", "справочники");
+    ObjectNames.insert("справочники.имя", "имя");
+    ObjectNames.insert("справочники.имя_в_списке", "имя_в_списке");
 }
 
 

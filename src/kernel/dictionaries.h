@@ -18,6 +18,9 @@ public:
     void query(QString);
     QMap<QString, Dictionary*>* getDictionaries() { return &dictionaries; }
     virtual void cmdOk();
+    Q_INVOKABLE virtual bool add();        // Добавление справочника
+    Q_INVOKABLE virtual bool remove();     // Удаление справочника
+    Q_INVOKABLE virtual void view();       // Исправление свойств справочника
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
 private:
