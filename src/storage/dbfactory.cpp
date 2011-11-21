@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QTextStream>
 #include <QDateTime>
+#include <QMap>
 #include "dbfactory.h"
 #include "../kernel/app.h"
 #include "../gui/passwordform.h"
@@ -206,8 +207,20 @@ QStringList DBFactory::getFieldsList(QMap<int, FieldType>* columnsProperties)
 void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table)
 {
     clearError();
-    QString command(QString("SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable FROM information_schema.columns WHERE table_name LIKE '%1' ORDER BY ordinal_position").arg(table.trimmed()));
+    QString command(QString("SELECT s.*, COALESCE(c.заголовок, '') AS header, COALESCE(c.номер, 0) AS number " \
+                            "FROM (SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable " \
+                                   "FROM information_schema.columns " \
+                                   "WHERE table_name LIKE '%1') s " \
+                                   "LEFT OUTER JOIN " \
+                                   "(SELECT столбцы.имя, столбцы.заголовок, столбцы.номер "\
+                                    "FROM столбцы " \
+                                    "INNER JOIN справочники " \
+                                    "ON столбцы.код_vw_справочники_со_столбцами = справочники.код " \
+                                    "WHERE справочники.имя = '%1' " \
+                                    ") c ON s.name = c.имя " \
+                                    "ORDER BY s.column;").arg(table.trimmed()));
     QSqlQuery query = execQuery(command);
+    int i = 0;
     for (query.first(); query.isValid(); query.next())
     {
         FieldType fld;
@@ -216,9 +229,12 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
         fld.length    = query.value(3).toInt();
         fld.precision = query.value(4).toInt();
         fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
-        result->insert(query.value(0).toInt(), fld);
+        fld.header    = query.value(6).toString().trimmed();
+        fld.number    = query.value(7).toInt();
+        result->insert(i, fld);
+        i++;
     }
-    if (QString().compare(table, "сальдо", Qt::CaseInsensitive) == 0)
+    if (QString::compare(table, "сальдо", Qt::CaseInsensitive) == 0)
     {
         foreach (int i, result->keys())
         {
@@ -226,9 +242,20 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
                 (QString(result->value(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
                 (QString(result->value(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
             {
-                    addColumnProperties(result, result->value(i).name, result->value(i).type, result->value(i).length, result->value(i).precision, result->value(i).readOnly);
+                  addColumnProperties(result, result->value(i).name, result->value(i).type, result->value(i).length, result->value(i).precision, result->value(i).readOnly);
             }
         }
+    }
+}
+
+
+void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table)
+{   // Просто возвращает свойства колонок в виде QList, а не QMap
+    QMap<int, FieldType> fields;
+    getColumnsProperties(&fields, table);
+    foreach (FieldType fld, fields.values())
+    {
+        result->append(fld);
     }
 }
 
@@ -304,7 +331,6 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
 {
     if (!isTableExists(tName))
     {   // Если такой таблицы не существует, то добавим ее
-        exec("BEGIN;");
         QString command = QString("CREATE TABLE \"%1\" ("    \
                                   "\"%2\" SERIAL NOT NULL," \
                                   "\"%3\" CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING)" \
@@ -345,16 +371,13 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                                     .arg(tName);
                     if (exec(command))
                     {
-                        exec("COMMIT;");
                         return true;
                     }
                 }
 
             }
         }
-        exec("ROLLBACK;");
         return false;
-
     }
     return true;
 }
@@ -364,7 +387,7 @@ bool DBFactory::removeDictionary(QString tName)
 {
     if (isTableExists(tName))
     {
-        exec("BEGIN;");
+        beginTransaction();
         QString command = QString("DROP TABLE \"%1\";")
                                   .arg(tName);
         if (exec(command))
@@ -385,17 +408,63 @@ bool DBFactory::removeDictionary(QString tName)
                             .arg(tName);
                 if (exec(command))
                 {
-                    exec("COMMIT;");
+                    commitTransaction();
                     return true;
                 }
 
             }
         }
-        exec("ROLLBACK;");
+        rollbackTransaction();
         return false;
 
     }
     return true;
+}
+
+
+void DBFactory::renameTableColumn(QString table, QString oldColumnName, QString newColumnName)
+{
+    clearError();
+    exec(QString("ALTER TABLE %1 RENAME COLUMN %2 TO %3;").arg(table).arg(oldColumnName).arg(newColumnName));
+    QSqlQuery dict = execQuery("SELECT код FROM справочники WHERE имя = '" + table + "';");
+    dict.first();
+    if (dict.isValid())
+    {
+        execQuery(QString("UPDATE столбцы SET имя = '%1' WHERE код_vw_справочники_со_столбцами = %2 AND имя = '%3';").arg(newColumnName).arg(dict.value(0).toInt()).arg(oldColumnName));
+    }
+}
+
+
+void DBFactory::setTableColumnHeaderOrder(QString table, QString columnName, int order)
+{
+    clearError();
+    QSqlQuery query = execQuery("SELECT код FROM справочники WHERE имя = '" + table + "';");
+    query.first();
+    if (query.isValid())
+    {
+        execQuery(QString("UPDATE столбцы SET номер = %1 WHERE код_vw_справочники_со_столбцами = %2 AND имя = '%3';").arg(order).arg(query.value(0).toInt()).arg(columnName));
+    }
+}
+
+
+void DBFactory::alterTableColumn(QString table, QString columnName, QString type)
+{
+    clearError();
+    exec(QString("ALTER TABLE %1 ALTER COLUMN %2 TYPE %3;").arg(table).arg(columnName).arg(type));
+}
+
+
+void DBFactory::addTableColumn(QString table, QString columnName, QString type)
+{
+    clearError();
+    exec(QString("ALTER TABLE %1 ADD COLUMN %2 %3;").arg(table).arg(columnName).arg(type));
+}
+
+
+void DBFactory::dropTableColumn(QString table, QString columnName)
+{
+    clearError();
+    exec(QString("ALTER TABLE %1 DROP COLUMN %2;").arg(table).arg(columnName));
 }
 
 
@@ -437,7 +506,35 @@ QString DBFactory::getPhotoPath(QString tableName)
 QSqlQuery DBFactory::getColumnsHeaders(QString tableName)
 {
     clearError();
-    return execQuery("SELECT столбец, заголовок FROM vw_столбцы WHERE справочник = '" + tableName + "' ORDER BY номер");
+    return execQuery("SELECT столбец, заголовок FROM vw_столбцы WHERE справочник = '" + tableName + "' ORDER BY номер;");
+}
+
+
+void DBFactory::appendColumnHeader(QString tableName, QString column, QString header)
+{
+    clearError();
+    QString command = "SELECT код FROM справочники WHERE имя = '" + tableName + "';";
+    QSqlQuery dict = execQuery(command);
+    dict.first();
+    if (dict.isValid())
+    {  // Если есть запись о справочнике
+        command = QString("INSERT INTO столбцы (код_vw_справочники_со_столбцами, имя, заголовок, номер) VALUES (%1, '%2', '%3', 999);").arg(dict.value(0).toInt()).arg(column).arg(header);
+        execQuery(command);
+    }
+}
+
+
+void DBFactory::updateColumnHeader(QString tableName, QString column, QString header)
+{
+    clearError();
+    QString command = "SELECT код FROM справочники WHERE имя = '" + tableName + "';";
+    QSqlQuery dict = execQuery(command);
+    dict.first();
+    if (dict.isValid())
+    {  // Если есть запись о справочнике
+        command = QString("UPDATE столбцы SET заголовок = %1 WHERE код_vw_справочники_со_столбцами = %2 AND имя = '%3';").arg(header).arg(dict.value(0).toInt()).arg(column);
+        execQuery(command);
+    }
 }
 
 
@@ -633,6 +730,18 @@ QByteArray DBFactory::getFile(QString fileName, FileType type)
         return query.value(query.record().indexOf("значение")).toByteArray();
     }
     return QByteArray();
+}
+
+
+QSqlQuery DBFactory::getDataTypes()
+{
+    return execQuery("SELECT t.typname as name, t.typlen as len " \
+                                "FROM pg_type t "\
+                                "LEFT JOIN   pg_catalog.pg_namespace n ON n.oid = t.typnamespace " \
+                                "WHERE (t.typrelid = 0 OR (SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid)) " \
+                                "AND NOT EXISTS(SELECT 1 FROM pg_catalog.pg_type el WHERE el.oid = t.typelem AND el.typarray = t.oid)" \
+                                "AND n.nspname IN ('pg_catalog', 'information_schema')" \
+                                "ORDER BY t.typname;");
 }
 
 

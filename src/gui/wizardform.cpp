@@ -12,34 +12,60 @@ bool WizardForm::open(QWidget* pwgt)
 {
     if (Form::open(pwgt))
     {
-        formWidget->setMinimumSize(500, 300);
-        // добавим кнопки "Вперед" и "Назад"
-        buttonForward = new QPushButton(QObject::trUtf8("&Вперед"));
-        buttonForward->setObjectName("buttonForward");
-        connect(buttonForward, SIGNAL(clicked()), this, SLOT(cmdForward()));
-        cmdButtonLayout->insertWidget(0, buttonForward);
-        buttonBackward = new QPushButton(QObject::trUtf8("&Назад"));
-        buttonBackward->setObjectName("buttonBackward");
-        connect(buttonBackward, SIGNAL(clicked()), this, SLOT(cmdBackward()));
-        cmdButtonLayout->insertWidget(0, buttonBackward);
-        setIcons();
+        getData();
+        // Инициализируем страницы
         initFrames();
-        currentFrame = frames.at(0);
-        currentFrame->show();
-        QFrame* line = new QFrame(formWidget);
-        line->setFrameShape(QFrame::HLine);
-        line->setFrameShadow(QFrame::Sunken);
-        vbxLayout->insertWidget(0, line);
-        vbxLayout->insertWidget(0, currentFrame);
-        setButtonsEnabled();
-        return true;
+        if (frames.count() > 0)
+        {
+            formWidget->setMinimumSize(700, 400);
+            // добавим кнопку "Вперед"
+            buttonForward = new QPushButton(QObject::trUtf8("&Вперед"));
+            buttonForward->setObjectName("buttonForward");
+            connect(buttonForward, SIGNAL(clicked()), this, SLOT(cmdForward()));
+            cmdButtonLayout->insertWidget(0, buttonForward);
+            // и кнопку "Назад"
+            buttonBackward = new QPushButton(QObject::trUtf8("&Назад"));
+            buttonBackward->setObjectName("buttonBackward");
+            connect(buttonBackward, SIGNAL(clicked()), this, SLOT(cmdBackward()));
+            cmdButtonLayout->insertWidget(0, buttonBackward);
+            // установим иконки
+            setIcons();
+            // Вставим разделительную линию
+            QFrame* line = new QFrame(formWidget);
+            line->setFrameShape(QFrame::HLine);
+            line->setFrameShadow(QFrame::Sunken);
+            vbxLayout->insertWidget(0, line);
+            // Установим текущий фрейм
+            currentFrame = frames.at(0);
+            frameActivated(0);
+            currentFrame->show();
+            vbxLayout->insertWidget(0, currentFrame);
+            // Установим кнопки
+            setButtonsEnabled();
+            return true;
+        }
     }
     return false;
 }
 
 
-void WizardForm::addFrame(QFrame* frame)
+void WizardForm::addFrame(QVBoxLayout* layout, QString title/* = ""*/)
 {
+    if (title.size() > 0)
+    {
+        // Вставим разделительную линию
+        QFrame* line = new QFrame(formWidget);
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+        layout->insertWidget(0, line);
+        QLabel* label = new QLabel(title);
+        label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        layout->insertWidget(0, label);
+    }
+    QFrame* frame = new QFrame(formWidget);
+    frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addStretch();
+    frame->setLayout(layout);
     frame->hide();
     frames.append(frame);
 }
@@ -48,16 +74,16 @@ void WizardForm::addFrame(QFrame* frame)
 void WizardForm::cmdForward()
 {
     frameIndex++;
-    setButtonsEnabled();
     setFrame();
+    setButtonsEnabled();
 }
 
 
 void WizardForm::cmdBackward()
 {
     frameIndex--;
-    setButtonsEnabled();
     setFrame();
+    setButtonsEnabled();
 }
 
 
@@ -102,6 +128,7 @@ void WizardForm::setFrame()
     currentFrame->hide();
     vbxLayout->removeWidget(currentFrame);
     currentFrame = frames.at(frameIndex);
+    frameActivated(frameIndex);
     currentFrame->show();
     vbxLayout->insertWidget(0, currentFrame);
 }

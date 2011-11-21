@@ -13,6 +13,8 @@
         <file alias="searchparameters">resources/searchparameters.png</file>
         <file alias="buttonBackward">resources/back.png</file>
         <file alias="buttonForward">resources/forward.png</file>
+        <file alias="buttonUp">resources/up.png</file>
+        <file alias="buttonDown">resources/down.png</file>
     </qresource>
     <qresource prefix="/postgres">
         <file>initdb0.sql</file>

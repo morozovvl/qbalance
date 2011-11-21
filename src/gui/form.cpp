@@ -22,8 +22,19 @@ Form::Form(QObject* parent/* = NULL*/)
 , buttonOk(NULL)
 , buttonCancel(NULL)
 {
-
 }
+
+
+Form::~Form()
+{
+/*
+    buttonOk->deleteLater();
+    buttonCancel->deleteLater();
+    cmdButtonLayout->deleteLater();
+    vbxLayout->deleteLater();
+*/
+}
+
 
 bool Form::open(QWidget* pwgt, Essence* par) {
     parent = par;

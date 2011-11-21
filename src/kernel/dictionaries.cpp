@@ -62,7 +62,7 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
 
 bool Dictionaries::add()
 {
-    AddDictionaryWizard wizard;
+    AddDictionaryWizard wizard(true);
     wizard.open(TApplication::exemplar()->getMainWindow());
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
     wizard.exec();
@@ -78,12 +78,16 @@ bool Dictionaries::add()
 
 void Dictionaries::view()
 {
+    QString dictName = getValue("таблица").toString().trimmed();
     AddDictionaryWizard wizard;
-    wizard.open(TApplication::exemplar()->getMainWindow());
+    wizard.open(TApplication::exemplar()->getMainWindow(), dictName);
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
-    wizard.getData(getValue("таблица").toString().trimmed());
     wizard.exec();
     wizard.close();
+    if (wizard.selected())
+    {
+        removeDictionary(dictName);
+    }
 }
 
 

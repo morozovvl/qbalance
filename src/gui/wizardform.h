@@ -18,15 +18,17 @@ protected:
     QList<QFrame*>              frames;
     QPushButton*                buttonForward;
     QPushButton*                buttonBackward;
-    void                        addFrame(QFrame*);
+    void                        addFrame(QVBoxLayout*, QString = "");
     virtual void                initFrames() { ; }
     virtual bool                execute() { return true; }
+    virtual void                frameActivated(int) { ; }
 private:
     bool                        result;
     int                         frameIndex;
     QWidget*                    currentFrame;
     void                        setButtonsEnabled();
     void                        setFrame();
+    virtual void                getData() { ; }
 };
 
 #endif // WIZARDFORM_H

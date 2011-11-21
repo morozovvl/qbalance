@@ -18,7 +18,7 @@ class TableView : public QTableView {
     Q_OBJECT
 public:
     QMap<int, FieldType>*   columns;
-    TableView(FormGrid*, QWidget* parentWidget = 0);
+    TableView(FormGrid*, QWidget* = 0);
     TableView(QWidget* parentWidget = 0);
     ~TableView();
     void setFormGrid(FormGrid* par) { parent = par; }
@@ -33,6 +33,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void currentChanged(const QModelIndex &, const QModelIndex &);
 private:
+    QWidget*        parentWidget;
     TApplication*               app;
     MySqlRelationalTableModel*  tableModel;
     bool isFieldExists(QString);

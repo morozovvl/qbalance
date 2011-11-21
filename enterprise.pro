@@ -70,7 +70,9 @@ SOURCES += src/main.cpp \
     src/engine/documentscriptengine.cpp \
     src/gui/configform.cpp \
     src/gui/wizardform.cpp \
-    src/gui/adddictionarywizard.cpp
+    src/gui/adddictionarywizard.cpp \
+    src/gui/mybuttonlineedit.cpp \
+    src/gui/mybuttonlineedititemdelegate.cpp
 HEADERS += src/kernel/app.h \
     src/storage/dbfactory.h \
     src/gui/guifactory.h \
@@ -122,7 +124,9 @@ HEADERS += src/kernel/app.h \
     src/engine/documentscriptengine.h \
     src/gui/configform.h \
     src/gui/wizardform.h \
-    src/gui/adddictionarywizard.h
+    src/gui/adddictionarywizard.h \
+    src/gui/mybuttonlineedit.h \
+    src/gui/mybuttonlineedititemdelegate.h
 RESOURCES += src/resources.qrc
 
 unix:MOC_DIR = ./.moc

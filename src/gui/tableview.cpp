@@ -10,13 +10,14 @@
 #include "mybooleanitemdelegate.h"
 
 
-TableView::TableView(FormGrid* par, QWidget* parentWidget/* = 0*/)
-: QTableView(parentWidget)
+TableView::TableView(FormGrid* par, QWidget* pwgt/* = 0*/)
+: QTableView(pwgt)
 , parent(NULL)
 , app(NULL)
 , tableModel(NULL)
 {
     parent = par;
+    parentWidget = pwgt;
     name = "TableView";
     app = 0;
     columns = parent->getParent()->getColumnsProperties();
@@ -116,7 +117,6 @@ void TableView::setModel(MySqlRelationalTableModel* model)
         delete oldModel;
         if (app != 0)
         {
-//            TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columns, tableModel->tableName());
             setColumnsDelegates();
             setColumnsHeaders();
         }
@@ -178,22 +178,25 @@ void TableView::setColumnsDelegates()
         if (columns->value(fld).type.toUpper() == "NUMERIC" ||
             columns->value(fld).type.toUpper() == "INTEGER")
         {     // для числовых полей зададим свой самодельный делегат
-            MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parent);
+            MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parentWidget);
             numericDelegate->setLength(columns->value(fld).length);
             numericDelegate->setPrecision(columns->value(fld).precision);
             numericDelegate->setReadOnly(columns->value(fld).readOnly);
+            connect(numericDelegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
             setItemDelegateForColumn(fld, numericDelegate);
         } else if (columns->value(fld).type.toUpper() == "BOOLEAN")
             {
-                MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parent);
+                MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
                 booleanDelegate->setReadOnly(columns->value(fld).readOnly);
+                connect(booleanDelegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
                 setItemDelegateForColumn(fld, booleanDelegate);
             } else
             {
             if (columns->value(fld).type.toUpper() == "CHARACTER" ||
                 columns->value(fld).type.toUpper() == "CHARACTER VARYING") {
-                MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parent);
+                MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parentWidget);
                 textDelegate->setReadOnly(columns->value(fld).readOnly);
+                connect(textDelegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
                 setItemDelegateForColumn(fld, textDelegate);
             }
         }

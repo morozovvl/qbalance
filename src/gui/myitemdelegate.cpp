@@ -6,13 +6,12 @@
 
 
 MyItemDelegate::MyItemDelegate(QObject* par)
-: QItemDelegate(((FormGrid*)par)->getForm())
+: QItemDelegate(par)
 {
     parentForm = par;
     columnMask = "";
     delegateType = String;
     readOnly = false;
-    connect(this, SIGNAL(closeEditor(QWidget*)), parentForm, SLOT(calculate()));
 }
 
 

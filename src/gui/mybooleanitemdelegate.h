@@ -4,6 +4,7 @@
 #include <QItemDelegate>
 #include <QCheckBox>
 #include "myitemdelegate.h"
+#include "mybooleanitemdelegate.h"
 
 class MyBooleanItemDelegate : public MyItemDelegate {
     Q_OBJECT

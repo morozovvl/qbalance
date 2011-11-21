@@ -14,6 +14,7 @@ class Form: public QObject
     Q_OBJECT
 public:
     explicit Form(QObject* parent = NULL);
+    ~Form();
     Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
     Q_INVOKABLE virtual bool open(QString, QWidget* form = 0);
     Q_INVOKABLE virtual void close();

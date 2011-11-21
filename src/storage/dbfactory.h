@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QVariantList>
 #include <QByteArray>
+#include <QList>
 
 class TApplication;
 
@@ -24,6 +25,8 @@ struct FieldType
     int length;
     int precision;
     bool readOnly;
+    QString header;
+    int number;
 };
 
 
@@ -51,9 +54,17 @@ public:
     bool isTableExists(QString);
     bool createNewDictionary(QString, QString = "", bool = true);
     bool removeDictionary(QString);
+    void renameTableColumn(QString, QString, QString);
+    void alterTableColumn(QString, QString, QString);
+    void addTableColumn(QString, QString, QString);
+    void dropTableColumn(QString, QString);
+    void appendColumnHeader(QString, QString, QString);
+    void updateColumnHeader(QString, QString, QString);
+    void setTableColumnHeaderOrder(QString, QString, int);
     QStringList getFieldsList(QMap<int, FieldType>*);
     void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
-    virtual void getColumnsProperties(QMap<int, FieldType>*, QString);
+    void getColumnsProperties(QMap<int, FieldType>*, QString);
+    void getColumnsProperties(QList<FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
     QSqlQuery getTopersProperties();
     QSqlQuery getToper(int);
@@ -86,6 +97,12 @@ public:
     virtual bool open();
     virtual bool open(QString, QString);
     virtual void close();
+
+    void beginTransaction()     { exec("BEGIN;"); }
+    void commitTransaction()    { exec("COMMIT;"); }
+    void rollbackTransaction()  { exec("ROLLBACK;"); }
+
+    QSqlQuery getDataTypes();
 
 private:
     QSqlDatabase*           db;
