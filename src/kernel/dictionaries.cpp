@@ -3,7 +3,7 @@
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
-#include "../gui/adddictionarywizard.h"
+#include "../gui/wizarddictionary.h"
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
@@ -17,7 +17,7 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_сп
 
 Dictionary* Dictionaries::getDictionary(QString dictName) {
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        return 0;
+        addDictionary(dictName);
     }
     return dictionaries[dictName];
 }
@@ -41,28 +41,14 @@ void Dictionaries::removeDictionary(QString dictName) {
 }
 
 
-QVariant Dictionaries::getDictionaryProperty(QString dictName, QString property) {
-    QVariant result;
-
-    for (dictionariesProperties.first(); result.isNull() && dictionariesProperties.isValid(); dictionariesProperties.next()) {
-        QSqlRecord record = dictionariesProperties.record();
-        if (record.field("таблица").value().toString().trimmed().toUpper() == dictName.trimmed().toUpper())
-            result = record.field(property).value().toString().trimmed();
-    }
-    return result;
-}
-
 QString Dictionaries::getDictionaryTitle(QString dictName) {
-    QString title = getDictionaryProperty(dictName, TApplication::nameFieldName()).toString();
-    if (!title.isEmpty())
-        return title;
-    return getDictionaryProperty(dictName, "таблица").toString();
+    return TApplication::exemplar()->getDBFactory()->getDictionariesProperties(dictName).value(TApplication::nameFieldName()).toString();
 }
 
 
 bool Dictionaries::add()
 {
-    AddDictionaryWizard wizard(true);
+    WizardDictionary wizard(true);
     wizard.open(TApplication::exemplar()->getMainWindow());
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
     wizard.exec();
@@ -79,7 +65,7 @@ bool Dictionaries::add()
 void Dictionaries::view()
 {
     QString dictName = getValue("таблица").toString().trimmed();
-    AddDictionaryWizard wizard;
+    WizardDictionary wizard;
     wizard.open(TApplication::exemplar()->getMainWindow(), dictName);
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
     wizard.exec();

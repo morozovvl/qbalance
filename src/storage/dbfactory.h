@@ -13,8 +13,9 @@ class TApplication;
 
 enum FileType           // Типы данных, которые хранятся в таблице "файлы"
 {
-    Script,
-    ReportTemplate
+    ScriptFileType,
+    ReportTemplateFileType,
+    PictureFileType
 };
 
 
@@ -45,29 +46,26 @@ public:
     QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
     QByteArray getFile(QString, FileType);
+    void setFile(QString, FileType, QByteArray);
     int getPort() { return port; }
     Q_INVOKABLE QString getDatabaseName() { return dbName; }
     QSqlDatabase* getDB() { return db; }
     QSqlQuery getColumnsHeaders(QString);
     QSqlQuery getDictionariesProperties();
+    QSqlRecord getDictionariesProperties(QString tableName);
+    QSqlQuery getTopersProperties();
+    QSqlRecord getTopersProperties(int operNumber);
+    QSqlQuery getToper(int operNumber);
     int getDictionaryTypeId();
+    int getDictionaryId(QString dictName);
     bool isTableExists(QString);
     bool createNewDictionary(QString, QString = "", bool = true);
     bool removeDictionary(QString);
-    void renameTableColumn(QString, QString, QString);
-    void alterTableColumn(QString, QString, QString);
-    void addTableColumn(QString, QString, QString);
-    void dropTableColumn(QString, QString);
-    void appendColumnHeader(QString, QString, QString);
-    void updateColumnHeader(QString, QString, QString);
-    void setTableColumnHeaderOrder(QString, QString, int);
     QStringList getFieldsList(QMap<int, FieldType>*);
     void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
     void getColumnsProperties(QMap<int, FieldType>*, QString);
     void getColumnsProperties(QList<FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
-    QSqlQuery getTopersProperties();
-    QSqlQuery getToper(int);
     QString getPhotoDatabase();
     bool insertDictDefault(QString tableName, QStringList fields = QStringList(), QVariantList values = QVariantList());// Вставляет в справочник новую строку со значениями по умолчанию
     bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
@@ -103,6 +101,16 @@ public:
     void rollbackTransaction()  { exec("ROLLBACK;"); }
 
     QSqlQuery getDataTypes();
+
+    // Функции для мастера создания новых (свойств старых) справочников
+    bool setTableGuiName(QString tableName, QString menuName, QString formName);
+    bool addTableColumn(QString, QString, QString);
+    bool dropTableColumn(QString, QString);
+    bool renameTableColumn(QString, QString, QString);
+    bool alterTableColumn(QString, QString, QString);
+    bool appendColumnHeader(int, QString, QString);
+    bool updateColumnHeader(int, QString, QString);
+    bool setTableColumnHeaderOrder(int, QString, int);
 
 private:
     QSqlDatabase*           db;

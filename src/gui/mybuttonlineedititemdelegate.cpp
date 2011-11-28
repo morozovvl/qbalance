@@ -3,7 +3,7 @@
 #include "mybuttonlineedititemdelegate.h"
 
 
-MyButtonLineEditItemDelegate::MyButtonLineEditItemDelegate()
+MyButtonLineEditItemDelegate::MyButtonLineEditItemDelegate(): MyItemDelegate()
 {
 }
 
@@ -17,6 +17,7 @@ QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyl
 Q_UNUSED(option)
 Q_UNUSED(index)
 MyButtonLineEdit* editor = new MyButtonLineEdit(parent);
+editor->setFormOnPushButton(buttonForm);
 return editor;
 }
 

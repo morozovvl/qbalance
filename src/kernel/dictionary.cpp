@@ -16,6 +16,15 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     lAutoSelect = false;
     lAutoAdd = false;
     dictionaries = 0;
+    QSqlRecord tableProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
+    if (!tableProperties.isEmpty())
+    {
+        formTitle = tableProperties.value(TApplication::nameFieldName()).toString();
+        lSelectable = tableProperties.value("selectable").toBool();
+        lInsertable = tableProperties.value("insertable").toBool();
+        lDeleteable = tableProperties.value("deleteable").toBool();
+        lUpdateable = tableProperties.value("updateable").toBool();
+    }
 }
 
 Dictionary::~Dictionary() {
@@ -95,11 +104,7 @@ void Dictionary::setForm() {
 }
 
 bool Dictionary::open(int deep) {
-    formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
-    if (TApplication::exemplar()->getDictionaryProperty(tableName, "selectable").toBool()) {
-        lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
-        lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
-        lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
+    if (lSelectable) {
         if (Essence::open()) {     // Откроем этот справочник
             QStringList fieldList = getFieldsList();
             if (deep > 0) {              // Если нужно открыть подсправочники
@@ -145,7 +150,7 @@ bool Dictionary::open(int deep) {
             initForm();
             if (scriptEngine != 0)
             {
-                return scriptEngine->open("", "");
+                return scriptEngine->open("");
             }
             return true;
         }

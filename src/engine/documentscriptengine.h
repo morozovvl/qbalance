@@ -1,6 +1,7 @@
 #ifndef DOCUMENTSCRIPTENGINE_H
 #define DOCUMENTSCRIPTENGINE_H
 
+#include <QScriptValue>
 #include "scriptengine.h"
 
 

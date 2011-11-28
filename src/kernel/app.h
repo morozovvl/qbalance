@@ -36,8 +36,6 @@ public:
     TApplication(int& argc, char** argv);
     virtual ~TApplication();
     Q_INVOKABLE Dictionaries* getDictionaries();
-    QVariant getDictionaryProperty(QString, const char*);
-    QVariant getToperProperty(int, QString);
     Q_INVOKABLE Documents* getDocuments(int);
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }
     GUIFactory* getGUIFactory() { return gui; }

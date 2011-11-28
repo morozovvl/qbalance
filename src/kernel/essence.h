@@ -17,6 +17,7 @@
 #include <QDialog>
 #include "../storage/table.h"
 #include "../engine/scriptengine.h"
+#include "../gui/form.h"
 
 
 class TApplication;
@@ -31,6 +32,7 @@ public:
     ~Essence();
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong getId(int row = 0);
+    Q_INVOKABLE virtual QString getName(int row = 0);
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     virtual void setId(qulonglong);
     Q_INVOKABLE QString getCurrentFieldName() { return currentFieldName; }
@@ -80,6 +82,7 @@ signals:
 protected:
     QString             formTitle;
     QString             idFieldName;
+    QString             nameFieldName;
     QString             currentFieldName;                   // имя поля, в котором был вызван метод calculate()
     FormGrid*           form;
     QWidget*            parentForm;

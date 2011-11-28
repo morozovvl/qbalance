@@ -32,6 +32,7 @@ scriptEngine(NULL)
     lUpdateable = false;
     lPrintable  = false;
     idFieldName = TApplication::idFieldName();
+    nameFieldName = TApplication::nameFieldName();
     connect(this, SIGNAL(showError(QString)), TApplication::exemplar(), SLOT(showError(QString)));
 }
 
@@ -87,6 +88,14 @@ qulonglong Essence::getId(int row)
     if (row > 0)
         return getValue(idFieldName, row).toULongLong();
     return getValue(idFieldName, form->getCurrentIndex().row()).toULongLong();
+}
+
+
+QString Essence::getName(int row)
+{
+    if (row > 0)
+        return getValue(nameFieldName, row).toString();
+    return getValue(nameFieldName, form->getCurrentIndex().row()).toString();
 }
 
 

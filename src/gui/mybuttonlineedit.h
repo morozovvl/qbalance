@@ -3,6 +3,7 @@
 
 #include <QLineEdit>
 #include <QPushButton>
+#include "form.h"
 
 class MyButtonLineEdit : public QWidget
 {
@@ -13,11 +14,15 @@ public:
     ~MyButtonLineEdit();
     QString value() { return lineEdit->text(); }
     void setValue(QString text) { lineEdit->setText(text); }
+    void setFormOnPushButton(QString (*form)());
 protected:
     virtual void paintEvent(QPaintEvent*);
 private:
+    QString         (*buttonForm)();
     QLineEdit*      lineEdit;
     QPushButton*    pushButton;
+private slots:
+    void            showForm();
 };
 
 #endif // MYBUTTONLINEEDIT_H

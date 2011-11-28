@@ -7,13 +7,13 @@
 class Topers : public Dictionary {
 public:
     Topers(QObject *parent = 0);
-    QVariant getToperProperty(int, QString);
-    QString getDocumentTitle(QString);
     void cmdOk();
-
+    Q_INVOKABLE virtual bool add();
+//    Q_INVOKABLE virtual bool remove();
+    Q_INVOKABLE virtual void view();
 private:
-    QSqlQuery topersProperties;
-    void addDocuments(int);
+    void addDocument(int);
+    void removeDocument(int opNumber);
 };
 
 #endif // TOPERS_H

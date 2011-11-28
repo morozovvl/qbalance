@@ -16,8 +16,8 @@ public:
     Dictionary(QObject *parent = 0) { Dictionary("", parent); }
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
-    Q_INVOKABLE virtual bool open() { return open(0); }
-    Q_INVOKABLE virtual bool open(int i);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
+//    Q_INVOKABLE virtual bool open() { return open(0); }
+    Q_INVOKABLE virtual bool open(int i = 0);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
 
 // Функции для работы с моделью данных
     virtual bool add();
@@ -47,14 +47,15 @@ public:
 
 protected:
     Dictionaries* dictionaries;
-    bool lIsSet;
-    bool lCanShow;
-    bool lMustShow;
-    bool lIsLocked;
-    bool lIsConst;
-    bool lAutoSelect;
-    bool lAutoAdd;
-    int dictDeep;
+    bool            lSelectable;
+    bool            lIsSet;
+    bool            lCanShow;
+    bool            lMustShow;
+    bool            lIsLocked;
+    bool            lIsConst;
+    bool            lAutoSelect;
+    bool            lAutoAdd;
+    int             dictDeep;
     virtual void setForm();
 };
 

@@ -13,12 +13,13 @@ class ScriptEngine : public QScriptEngine {
 public:
     explicit ScriptEngine(QObject *parent = 0);
     ~ScriptEngine();
-    bool open(QString fileName = "", QString script = "");
+    bool open(QString fileName = "");
     void showError(QString);
     void calcTable();
 protected:
     virtual void loadScriptObjects();
 private:
+    QString             script;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;

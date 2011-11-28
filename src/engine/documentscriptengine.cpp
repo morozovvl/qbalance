@@ -1,4 +1,5 @@
 #include "documentscriptengine.h"
+#include "../kernel/document.h"
 
 
 DocumentScriptEngine::DocumentScriptEngine(QObject *parent/* = 0*/)

@@ -4,7 +4,7 @@
 #include <QApplication>
 #include "mybooleanitemdelegate.h"
 
-MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent): MyItemDelegate(parent)
+MyBooleanItemDelegate::MyBooleanItemDelegate(): MyItemDelegate()
 {
     delegateType = Boolean;
 }

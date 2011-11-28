@@ -3,11 +3,15 @@
 #include <QPainter>
 #include <QDebug>
 #include "mybuttonlineedit.h"
+#include "../kernel/essence.h"
+#include "../kernel/app.h"
 
-MyButtonLineEdit::MyButtonLineEdit(QWidget *parent) :
-    QWidget(parent)
+MyButtonLineEdit::MyButtonLineEdit(QWidget *parent)
+: QWidget(parent)
+, buttonForm(NULL)
 {
     lineEdit = new QLineEdit(parent);
+    lineEdit->setReadOnly(true);
     pushButton = new QPushButton(parent);
     pushButton->setText("...");
     pushButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -34,3 +38,16 @@ MyButtonLineEdit::~MyButtonLineEdit()
 }
 
 
+void MyButtonLineEdit::setFormOnPushButton(QString (*form)())
+{
+    buttonForm = form;
+    connect(pushButton, SIGNAL(clicked()), this, SLOT(showForm()));
+}
+
+
+void MyButtonLineEdit::showForm()
+{
+    QString result = (*buttonForm)();
+    if (result.size() > 0)
+        lineEdit->setText(result);
+}

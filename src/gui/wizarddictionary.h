@@ -1,14 +1,14 @@
-#ifndef ADDDICTIONARYWIZARD_H
-#define ADDDICTIONARYWIZARD_H
+#ifndef WIZARDDICTIONARY_H
+#define WIZARDDICTIONARY_H
 
 #include "wizardform.h"
 #include "../storage/dbfactory.h"
 
-class AddDictionaryWizard : public WizardForm
+class WizardDictionary : public WizardForm
 {
     Q_OBJECT
 public:
-    AddDictionaryWizard(bool = false);
+    WizardDictionary(bool = false);
     virtual bool open(QWidget* pwgt = NULL, QString = "");
 protected:
     virtual void   initFrames();
@@ -19,10 +19,12 @@ private:
     QString             table;
     QLineEdit*          tableName;              // Как таблица будет называться в БД
     QLineEdit*          tableMenuName;          // Как справочник будет называться в меню
+    QLineEdit*          tableFormName;          // Как справочник будет называться в форме
     QCheckBox*          chbMenu;                // Справочник доступен в меню справочников
     QTableWidget*       fieldsTable;            // Список полей таблицы
     QListWidget*        headers;                // Заголовки колонок
     virtual void        getData();
+    friend QString      showTypesForm();
 private slots:
     void                addColumn();
     void                deleteColumn();
@@ -31,4 +33,4 @@ private slots:
     virtual void        frameActivated(int);
 };
 
-#endif // ADDDICTIONARYWIZARD_H
+#endif // WIZARDDICTIONARY_H

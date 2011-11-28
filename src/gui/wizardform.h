@@ -19,7 +19,7 @@ protected:
     QPushButton*                buttonForward;
     QPushButton*                buttonBackward;
     void                        addFrame(QVBoxLayout*, QString = "");
-    virtual void                initFrames() { ; }
+    virtual void                initFrames() = 0;
     virtual bool                execute() { return true; }
     virtual void                frameActivated(int) { ; }
 private:

@@ -18,6 +18,9 @@ public:
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setEditorData(QWidget* editor, const QModelIndex &index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const;
+    void setFormOnPushButton(QString (*form)()) { buttonForm = form; }
+private:
+    QString       (*buttonForm)();
 };
 
 #endif // MYBUTTONLINEEDITITEMDELEGATE_H

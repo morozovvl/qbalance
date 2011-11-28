@@ -186,7 +186,7 @@ void TableView::setColumnsDelegates()
             setItemDelegateForColumn(fld, numericDelegate);
         } else if (columns->value(fld).type.toUpper() == "BOOLEAN")
             {
-                MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
+                MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate();
                 booleanDelegate->setReadOnly(columns->value(fld).readOnly);
                 connect(booleanDelegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
                 setItemDelegateForColumn(fld, booleanDelegate);

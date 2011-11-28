@@ -43,7 +43,7 @@ void DocParameters::addString(QString name) {
     gridLayout->addWidget(button, strNum, 2, 1, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));        // При нажатии этой кнопки будем показывать связанный справочник
     lineEdit->setObjectName(name);
-    QString labelName = TApplication::exemplar()->getDictionaryProperty(name, __NAME_IN_FORM__).toString();
+    QString labelName = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(name).value(__NAME_IN_FORM__).toString();
     if (labelName.size() == 0)
         labelName = name;
     QLabel* label = new QLabel(labelName + ":");

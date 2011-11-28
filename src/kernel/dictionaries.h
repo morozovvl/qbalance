@@ -12,7 +12,6 @@ public:
     virtual Dictionary* getDictionary(QString);
     Q_INVOKABLE virtual void addDictionary(QString, int = 0);
     Q_INVOKABLE virtual void removeDictionary(QString);
-    virtual QVariant getDictionaryProperty(QString, QString);
     QString getDictionaryTitle(QString);
     bool isMember(QString dictName) { return dictionaries.contains(dictName); }
     void query(QString);

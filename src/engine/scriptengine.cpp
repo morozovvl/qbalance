@@ -9,6 +9,23 @@
 #include "eventloop.h"
 
 
+QScriptValue value(QScriptContext* context, QScriptEngine* engine) {
+    QScriptValue fieldName = context->argument(0);
+    if (fieldName.isString())
+    {
+        if (engine->evaluate("table").isValid())
+        {
+            QScriptValue value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName.toString()));
+            if (value.isValid())
+            {
+                return value;
+            }
+        }
+    }
+    return QScriptValue();
+}
+
+
 // класс EventLoop
 Q_DECLARE_METATYPE(EventLoop*)
 
@@ -48,11 +65,13 @@ void FormFromScriptValue(const QScriptValue &object, Form* &out) {
 
 //================================================================================================
 // Реализация класса
+
 ScriptEngine::ScriptEngine(QObject *parent/* = 0*/) : QScriptEngine(parent)
 {
     sqlFieldClass = new SqlFieldClass(this);
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
+
 }
 
 
@@ -70,13 +89,13 @@ void ScriptEngine::showError(QString text)
 }
 
 
-bool ScriptEngine::open(QString scriptFile, QString script)
+bool ScriptEngine::open(QString scriptFile)
 {
     if (scriptFile.size() > 0)
     {   // Если в параметрах дано имя файла
         QString scriptFileName = scriptFile + ".qs";
         // Попытаемся сначала получить скрипты на сервере
-        script = QString(TApplication::exemplar()->getDBFactory()->getFile(scriptFileName, Script));
+        script = QString(TApplication::exemplar()->getDBFactory()->getFile(scriptFileName, ScriptFileType));
         if (script.size() == 0)
         {
             QFile file(scriptFileName);
@@ -136,10 +155,14 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("DBFactory", newQObject(TApplication::exemplar()->getDBFactory()));
 
+    globalObject().setProperty("value", newFunction(value));
 }
 
 
 void ScriptEngine::calcTable()
 {
-    globalObject().property("calcTable").call();
+//    globalObject().property("calcTable").call();
+    evaluate(script);
 }
+
+

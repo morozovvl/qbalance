@@ -20,7 +20,7 @@ Document::Document(int oper, Documents* par)
     lPrintable = true;
     tableName = DbFactory->getObjectName("проводки");
     tagName = QString("Документ%1").arg(oper);
-    formTitle = TApplication::exemplar()->getToperProperty(oper, TApplication::nameFieldName()).toString();
+    formTitle = TApplication::exemplar()->getDBFactory()->getTopersProperties(oper).value(TApplication::nameFieldName()).toString();
     idFieldName = "p1__" + TApplication::idFieldName();
 
     dictionaries = new Dictionaries;
@@ -159,6 +159,10 @@ Document::Document(int oper, Documents* par)
         dict->setMustShow(dict->getDeep() == 0 ? true : false);     // Если это зависимый справочник, то он не показывается
     }
 
+    QSqlRecord docProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
+    lInsertable = docProperties.value("insertable").toBool();
+    lDeleteable = docProperties.value("deleteable").toBool();
+    lUpdateable = docProperties.value("updateable").toBool();
 }
 
 Document::~Document() {
@@ -285,9 +289,6 @@ void Document::setConstDictId(QString dName, QVariant id)
 
 bool Document::open()
 {
-    lInsertable = TApplication::exemplar()->getDictionaryProperty(tableName, "insertable").toBool();
-    lDeleteable = TApplication::exemplar()->getDictionaryProperty(tableName, "deleteable").toBool();
-    lUpdateable = TApplication::exemplar()->getDictionaryProperty(tableName, "updateable").toBool();
     if (Essence::open()) {
         initForm();
         setScriptEngine();

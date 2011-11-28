@@ -10,7 +10,11 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     tableName  = "документы";
     operNumber = opNumber;
     tagName    = QString("СписокДокументов%1").arg(operNumber);
-    formTitle  = QString("%1 - %2").arg(TApplication::exemplar()->getToperProperty(operNumber, TApplication::nameFieldName()).toString()).arg(QObject::trUtf8("Список документов"));
+    QSqlRecord operProperties = TApplication::exemplar()->getDBFactory()->getTopersProperties(operNumber);
+    formTitle  = QString("%1 - %2").arg(operProperties.value(TApplication::nameFieldName()).toString()).arg(QObject::trUtf8("Список документов"));
+    lInsertable = operProperties.value("insertable").toBool();
+    lDeleteable = operProperties.value("deleteable").toBool();
+    lUpdateable = operProperties.value("updateable").toBool();
 }
 
 Documents::~Documents() {
@@ -63,9 +67,6 @@ void Documents::query(QString filter) {
 }
 
 bool Documents::open() {
-    lInsertable = TApplication::exemplar()->getToperProperty(operNumber, "insertable").toBool();
-    lDeleteable = TApplication::exemplar()->getToperProperty(operNumber, "deleteable").toBool();
-    lUpdateable = TApplication::exemplar()->getToperProperty(operNumber, "updateable").toBool();
     if (Essence::open()) {     // Откроем этот справочник
 
         // Установим форму для отображения справочника

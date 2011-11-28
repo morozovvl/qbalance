@@ -1,12 +1,21 @@
 #include <QDebug>
 #include <QMap>
 #include <QVariant>
-#include "adddictionarywizard.h"
+#include "wizarddictionary.h"
 #include "../kernel/app.h"
 #include "mybuttonlineedit.h"
 #include "mybuttonlineedititemdelegate.h"
+#include "../definitions.h"
 
-AddDictionaryWizard::AddDictionaryWizard(bool addDict): WizardForm()
+
+QString showTypesForm()
+{
+    qDebug() << "showTypesForm()";
+    return "";
+}
+
+
+WizardDictionary::WizardDictionary(bool addDict): WizardForm()
   , tableName(NULL)
   , tableMenuName(NULL)
 {
@@ -14,21 +23,20 @@ AddDictionaryWizard::AddDictionaryWizard(bool addDict): WizardForm()
 }
 
 
-bool AddDictionaryWizard::open(QWidget* pwgt, QString t/* = ""*/)
+bool WizardDictionary::open(QWidget* pwgt, QString t/* = ""*/)
 {
     table = t;
     return WizardForm::open(pwgt);
 }
 
 
-void AddDictionaryWizard::initFrames()
+void WizardDictionary::initFrames()
 {
     // Добавим страницы мастера
     QVBoxLayout* layout = 0;
     layout = new QVBoxLayout();
     // 1-я страница
     QGridLayout* gridLayout = new QGridLayout();
-    gridLayout->setSizeConstraint(QLayout::SetMaximumSize);
     QLabel* lblTableName = new QLabel(QObject::trUtf8("Наименование на сервере:"), formWidget);
     gridLayout->addWidget(lblTableName, 0, 0, Qt::AlignRight);
     gridLayout->addWidget(tableName, 0, 1, Qt::AlignLeft);
@@ -37,10 +45,14 @@ void AddDictionaryWizard::initFrames()
     gridLayout->addWidget(lblMenuTableName, 1, 0, Qt::AlignRight);
     gridLayout->addWidget(tableMenuName, 1, 1, Qt::AlignLeft);
 
+    QLabel* lblFormTableName = new QLabel(QObject::trUtf8("Наименование в форме:"), formWidget);
+    gridLayout->addWidget(lblFormTableName, 2, 0, Qt::AlignRight);
+    gridLayout->addWidget(tableFormName, 2, 1, Qt::AlignLeft);
+
     QLabel* lblMenu = new QLabel(QObject::trUtf8("Доступен в меню:"), formWidget);
     chbMenu = new QCheckBox(formWidget);
-    gridLayout->addWidget(lblMenu, 2, 0, Qt::AlignRight);
-    gridLayout->addWidget(chbMenu, 2, 1, Qt::AlignLeft);
+    gridLayout->addWidget(lblMenu, 3, 0, Qt::AlignRight);
+    gridLayout->addWidget(chbMenu, 3, 1, Qt::AlignLeft);
     gridLayout->setColumnStretch(1, 1);
 
     layout->addLayout(gridLayout);
@@ -87,7 +99,7 @@ void AddDictionaryWizard::initFrames()
 }
 
 
-void AddDictionaryWizard::getData()
+void WizardDictionary::getData()
 {
     if (table.size() > 0)
     {   // Если известно, с какой таблицей будем работать
@@ -96,6 +108,8 @@ void AddDictionaryWizard::getData()
         tableName->setEnabled(false);
         tableMenuName = new QLineEdit();
         tableMenuName->setText(TApplication::exemplar()->getDictionaries()->getDictionaryTitle(table));
+        tableFormName = new QLineEdit();
+        tableFormName->setText(TApplication::exemplar()->getDBFactory()->getDictionariesProperties(table).value(__NAME_IN_FORM__).toString());
         // Получим список полей таблицы
         TApplication::exemplar()->getDBFactory()->getColumnsProperties(&fields, table);
         // Создадим таблицу столбцов
@@ -124,7 +138,8 @@ void AddDictionaryWizard::getData()
 
         MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate();
         fieldsTable->setItemDelegateForColumn(1, buttonEditDelegate);
-        MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(formWidget);
+        buttonEditDelegate->setFormOnPushButton(&showTypesForm);
+        MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate();
         fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
 
         // Создадим список заголовков столбцов
@@ -132,119 +147,145 @@ void AddDictionaryWizard::getData()
 }
 
 
-bool AddDictionaryWizard::execute()
+bool WizardDictionary::execute()
 {   // Сохранение данных на сервере
     tableName->setText(tableName->text().trimmed());
     tableMenuName->setText(tableMenuName->text().trimmed());
     TApplication::exemplar()->getDBFactory()->beginTransaction();
     if (addDictionary)
     {   // Если нужно, то создадим новый справочник
-        if (!TApplication::exemplar()->getDBFactory()->createNewDictionary(tableName->text(),
-                                                                           tableMenuName->text(),
-                                                                           chbMenu->isChecked()))
+        if (!TApplication::exemplar()->getDBFactory()->createNewDictionary(tableName->text(), tableMenuName->text(), chbMenu->isChecked()))
         {
             TApplication::exemplar()->getDBFactory()->rollbackTransaction();
             return false;
         }
     }
-    // Удалим поля, помеченные к удалению
-    int i = 0;
-    while (i < fields.count())
-    {
-        if (fields.value(i).type.size() == 0)
+    // Получим код справочника, с которым работаем
+    int tableId = TApplication::exemplar()->getDBFactory()->getDictionaryId(table);
+    if (tableId > 0) {
+        // Установим пользовательские наименования справочника
+        if (!TApplication::exemplar()->getDBFactory()->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
         {
-            TApplication::exemplar()->getDBFactory()->dropTableColumn(tableName->text(),
-                                                                      fields.value(i).name);
-            fields.removeAt(i);
+                TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                return false;
         }
-        else
-            i++;
-    }
-    // Прошерстим список полей, сравним с исходным. Если что изменялось, то меняем и в БД
-    for (int i = 0; i < fieldsTable->rowCount(); i++)
-    {
-        QString fieldName = fieldsTable->item(i, 0)->text().trimmed();
-        QString sType = fieldsTable->item(i, 1)->text();
-        int nLength = fieldsTable->item(i, 2)->text().toInt();
-        int nPrecision = fieldsTable->item(i, 3)->text().toInt();
-        QString sHeader = fieldsTable->item(i, 4)->text().trimmed();
-        QString length, precision;
-        if (nPrecision > 0)
-        { //f Если указана точность
-            precision = QString(", %1").arg(nPrecision);
-        }
-        if (nLength > 0)
-        {   // Если указана длина
-            length = QString("(%1%2)").arg(nLength).arg(precision);
-        }
-        QString type = QString("%1%2").arg(fieldsTable->item(i, 1)->text().trimmed()).arg(length);
-        if (i < fields.count())
-        {   // Если мы просматриваем поля таблицы, которые уже были
-            if (QString::compare(fieldName, fields.value(i).name) != 0)
-            {   // Если пользователь изменил наименование поля
-                TApplication::exemplar()->getDBFactory()->renameTableColumn(tableName->text(),
-                                                                            fields.value(i).name,
-                                                                            fieldName);
-            }
-            if (QString::compare(sType, fields.value(i).type, Qt::CaseInsensitive) != 0 ||
-                nLength != fields.value(i).length ||
-                nPrecision != fields.value(i).precision)
-            {   // Если изменились тип, длина или точность
-                TApplication::exemplar()->getDBFactory()->alterTableColumn(tableName->text(),
-                                                                           fieldName,
-                                                                           type);
-            }
-            // Проверим, изменил ли пользователь заголовок столбца
-            if (QString::compare(sHeader, fields.value(i).header, Qt::CaseSensitive) != 0)
-            {
-                if (fields.value(i).header.size() > 0)
-                {  // Если заголовок для этого столбца уже был
-                    TApplication::exemplar()->getDBFactory()->updateColumnHeader(tableName->text(),
-                                                                                 fieldName,
-                                                                                 sHeader);
-                }
-                else
-                {
-                    TApplication::exemplar()->getDBFactory()->appendColumnHeader(tableName->text(),
-                                                                                 fieldName,
-                                                                                 sHeader);
-                }
-            }
-        }
-        else
-        {   // Если мы добавляем новые поля
-            TApplication::exemplar()->getDBFactory()->addTableColumn(tableName->text(),
-                                                                       fieldName,
-                                                                       type);
-            if (sHeader.size() > 0)
-            {
-                TApplication::exemplar()->getDBFactory()->appendColumnHeader(tableName->text(),
-                                                                             fieldName,
-                                                                             sHeader);
-            }
-        }
-    }
-    // Установим наименование полей
-    if (headers->count() > 0)
-    {
-        for (int i = 0; i < headers->count(); i++)
+        // Удалим поля, помеченные к удалению
+        int i = 0;
+        while (i < fields.count())
         {
-            for (int j = 0; j < fieldsTable->rowCount(); j++)
+            if (fields.value(i).type.size() == 0)
             {
-                if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
+                if (!TApplication::exemplar()->getDBFactory()->dropTableColumn(tableName->text(), fields.value(i).name))
                 {
-                     TApplication::exemplar()->getDBFactory()->setTableColumnHeaderOrder(tableName->text(), fieldsTable->item(j, 0)->text(), i + 1);
+                        TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                        return false;
+                }
+                fields.removeAt(i);
+            }
+            else
+                i++;
+        }
+        // Прошерстим список полей, сравним с исходным. Если что изменялось, то меняем и в БД
+        for (int i = 0; i < fieldsTable->rowCount(); i++)
+        {
+            QString fieldName = fieldsTable->item(i, 0)->text().trimmed();
+            QString sType = fieldsTable->item(i, 1)->text();
+            int nLength = fieldsTable->item(i, 2)->text().toInt();
+            int nPrecision = fieldsTable->item(i, 3)->text().toInt();
+            QString sHeader = fieldsTable->item(i, 4)->text().trimmed();
+            QString length, precision;
+            if (nPrecision > 0)
+            { //f Если указана точность
+                precision = QString(", %1").arg(nPrecision);
+            }
+            if (nLength > 0)
+            {   // Если указана длина
+                length = QString("(%1%2)").arg(nLength).arg(precision);
+            }
+            QString type = QString("%1%2").arg(fieldsTable->item(i, 1)->text().trimmed()).arg(length);
+            if (i < fields.count())
+            {   // Если мы просматриваем поля таблицы, которые уже были
+                if (QString::compare(fieldName, fields.value(i).name) != 0)
+                {   // Если пользователь изменил наименование поля
+                    if (!TApplication::exemplar()->getDBFactory()->renameTableColumn(tableName->text(), fields.value(i).name, fieldName))
+                    {
+                            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                            return false;
+                    }
+                }
+                if (QString::compare(sType, fields.value(i).type, Qt::CaseInsensitive) != 0 ||
+                    nLength != fields.value(i).length ||
+                    nPrecision != fields.value(i).precision)
+                {   // Если изменились тип, длина или точность
+                    if (!TApplication::exemplar()->getDBFactory()->alterTableColumn(tableName->text(), fieldName, type))
+                    {
+                            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                            return false;
+                    }
+                }
+                // Проверим, изменил ли пользователь заголовок столбца
+                if (QString::compare(sHeader, fields.value(i).header, Qt::CaseSensitive) != 0)
+                {
+                    if (fields.value(i).header.size() > 0)
+                    {  // Если заголовок для этого столбца уже был
+                        if (!TApplication::exemplar()->getDBFactory()->updateColumnHeader(tableId, fieldName, sHeader))
+                        {
+                                TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!TApplication::exemplar()->getDBFactory()->appendColumnHeader(tableId, fieldName, sHeader))
+                        {
+                                TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                return false;
+                        }
+                    }
+                }
+            }
+            else
+            {   // Если мы добавляем новые поля
+                if (!TApplication::exemplar()->getDBFactory()->addTableColumn(tableName->text(), fieldName, type))
+                {
+                        TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                        return false;
+                }
+                if (sHeader.size() > 0)
+                {
+                    if (!TApplication::exemplar()->getDBFactory()->appendColumnHeader(tableId, fieldName, sHeader))
+                    {
+                            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                            return false;
+                    }
+                }
+            }
+        }
+        // Установим наименование полей
+        if (headers->count() > 0)
+        {
+            for (int i = 0; i < headers->count(); i++)
+            {
+                for (int j = 0; j < fieldsTable->rowCount(); j++)
+                {
+                    if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
+                    {
+                         if (!TApplication::exemplar()->getDBFactory()->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), i + 1))
+                         {
+                                 TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                 return false;
+                         }
+                    }
                 }
             }
         }
     }
-
     TApplication::exemplar()->getDBFactory()->commitTransaction();
     return true;
 }
 
 
-void AddDictionaryWizard::addColumn()
+void WizardDictionary::addColumn()
 {
     fieldsTable->setRowCount(fieldsTable->rowCount() + 1);
     for (int i = 0; i < fieldsTable->columnCount(); i++)
@@ -257,7 +298,7 @@ void AddDictionaryWizard::addColumn()
 }
 
 
-void AddDictionaryWizard::deleteColumn()
+void WizardDictionary::deleteColumn()
 {
     if (fieldsTable->rowCount() > 1)
     {   // Можно удалять все столбцы, кроме первого (КОД)
@@ -271,7 +312,7 @@ void AddDictionaryWizard::deleteColumn()
 }
 
 
-void AddDictionaryWizard::headerUp()
+void WizardDictionary::headerUp()
 {
     headers->setFocus(Qt::OtherFocusReason);
     int currentRow = headers->currentRow();
@@ -284,7 +325,7 @@ void AddDictionaryWizard::headerUp()
 }
 
 
-void AddDictionaryWizard::headerDown()
+void WizardDictionary::headerDown()
 {
     headers->setFocus(Qt::OtherFocusReason);
     int currentRow = headers->currentRow();
@@ -297,7 +338,7 @@ void AddDictionaryWizard::headerDown()
 }
 
 
-void AddDictionaryWizard::frameActivated(int frameNumber)
+void WizardDictionary::frameActivated(int frameNumber)
 {
     if (frameNumber == 2)
     {   // Если активизирован фрейм списка заголовков

@@ -60,18 +60,6 @@ Dictionaries* TApplication::getDictionaries()
 }
 
 
-QVariant TApplication::getDictionaryProperty(QString dictName, const char* property)
-{
-    return dictionaryList->getDictionaryProperty(dictName, property);
-}
-
-
-QVariant TApplication::getToperProperty(int operNumber, QString property)
-{
-    return topersList->getToperProperty(operNumber, property);
-}
-
-
 QString TApplication::getReportTemplateExt()
 {
     // сюда вставить другие расширения файлов шаблонов

@@ -56,13 +56,13 @@ void SearchParameters::addString(QString name, int strNum) {
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
-        labelName = TApplication::exemplar()->getDictionaries()->getDictionaryProperty(name, "имя_в_форме").toString();
+        labelName = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(name).value("имя_в_форме").toString();
         name = name + "." + programNameFieldName;
         if (labelName.size() == 0)
             labelName = name;
     }
     else {
-        labelName = TApplication::exemplar()->getDictionaries()->getDictionaryProperty(parentForm->getParent()->getTableName(), "имя_в_форме").toString();
+        labelName = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(parentForm->getParent()->getTableName()).value("имя_в_форме").toString();
         if (labelName.size() == 0)
             labelName = "Наименование";
         name = parentForm->getParent()->getTableName() + "." + programNameFieldName;
