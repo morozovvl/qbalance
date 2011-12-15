@@ -3,14 +3,17 @@
 
 #include <QSqlQuery>
 #include "dictionary.h"
+#include "saldo.h"
 
 class Dictionaries : public Dictionary {
     Q_OBJECT
 public:
     QMap<QString, Dictionary*> dictionaries;                    // Объекты справочников
     Dictionaries(QObject *parent = 0);
-    virtual Dictionary* getDictionary(QString);
-    Q_INVOKABLE virtual void addDictionary(QString, int = 0);
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString, QString = "");
+    Q_INVOKABLE virtual Saldo* getSaldo(QString acc, QString dictName);
+    Q_INVOKABLE virtual bool addDictionary(QString, int = 0, QString = "");
+    Q_INVOKABLE virtual bool addSaldo(QString acc, QString dictName);
     Q_INVOKABLE virtual void removeDictionary(QString);
     QString getDictionaryTitle(QString);
     bool isMember(QString dictName) { return dictionaries.contains(dictName); }

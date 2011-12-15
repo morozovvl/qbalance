@@ -31,7 +31,6 @@ public:
     virtual QVariant convertType(QVariant var) { return var; }
     void setReadOnly(bool val) { readOnly = val; }
 protected:
-    QObject*                parentForm;
     QString                 columnMask;
     Qt::Alignment           alignment;
     DelegateTypes           delegateType;

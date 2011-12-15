@@ -263,10 +263,12 @@ void FormGrid::showPhoto()
 }
 
 
-void FormGrid::calculate()
+void FormGrid::calculate(QWidget*, QAbstractItemDelegate::EndEditHint hint)
 {
-    parent->calculate(getCurrentIndex());
-//    FormGrid::setShowFocus();
+    if (hint == QAbstractItemDelegate::SubmitModelCache)
+    {
+        parent->calculate(getCurrentIndex());
+    }
 }
 
 

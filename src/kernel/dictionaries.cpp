@@ -15,22 +15,52 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_сп
     lPrintable = false;
 }
 
-Dictionary* Dictionaries::getDictionary(QString dictName) {
+Dictionary* Dictionaries::getDictionary(QString dictName, QString realName) {
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        addDictionary(dictName);
+        if (!addDictionary(dictName, 0, realName))
+            return 0;
     }
     return dictionaries[dictName];
 }
 
-void Dictionaries::addDictionary(QString dictName, int deep) {
+
+Saldo* Dictionaries::getSaldo(QString acc, QString dictName) {
+    if (!dictionaries.contains("saldo" + acc)) {             // Если справочник с таким именем не существует, то попробуем его создать
+        if (!addSaldo(acc, dictName))
+            return 0;
+    }
+    return (Saldo*)dictionaries["saldo" + acc];
+}
+
+
+bool Dictionaries::addDictionary(QString dictName, int deep, QString realName) {
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        Dictionary* dict = new Dictionary(dictName, this);
+        Dictionary* dict;
+        if (realName.size() == 0)
+            dict = new Dictionary(dictName, this);
+        else
+            dict = new Dictionary(realName, this);
         if (dict->open(deep)) {
             dictionaries.insert(dictName, dict);
             dict->setDictionaries(this);
+            return true;
         }
     }
+    return false;
 }
+
+bool Dictionaries::addSaldo(QString acc, QString dictName) {
+    if (!dictionaries.contains("saldo" + acc)) {
+        Saldo* saldo = new Saldo(acc, dictName);
+        if (saldo->open()) {
+            dictionaries.insert("saldo" + acc, saldo);
+            saldo->setDictionaries(this);
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void Dictionaries::removeDictionary(QString dictName) {
     if (dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
@@ -70,7 +100,7 @@ void Dictionaries::view()
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
     wizard.exec();
     wizard.close();
-    if (wizard.selected())
+    if (wizard.getResult())
     {
         removeDictionary(dictName);
     }

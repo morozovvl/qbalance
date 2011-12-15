@@ -7,7 +7,6 @@
 #include <QList>
 #include "form.h"
 #include "../kernel/app.h"
-#include "../kernel/essence.h"
 #include "mainwindow.h"
 
 class TApplication;
@@ -16,7 +15,6 @@ Form::Form(QObject* parent/* = NULL*/)
 : QObject(parent)
 , formWidget(NULL)
 , parent(NULL)
-, engine(NULL)
 , cmdButtonLayout(NULL)
 , vbxLayout(NULL)
 , buttonOk(NULL)
@@ -77,7 +75,6 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     formWidget = 0;
     defaultForm = true;
     script = "";
-    engine = 0; // По умолчанию не создается никакой скриптовый движок
     fileName = TApplication::exemplar()->getFormsPath(fileName);
     QFile file(fileName + ".ui");
     if (file.open(QIODevice::ReadOnly)) {
@@ -160,7 +157,8 @@ void Form::cmdCancel() {
 int Form::exec() {
     if (formWidget != 0) {
         lSelected = false;
-        beforeShowFormEvent();
+        if (parent != 0)
+            beforeShowFormEvent();
         formWidget->exec();
         return lSelected;
     }
@@ -170,7 +168,8 @@ int Form::exec() {
 void Form::show() {
     if (formWidget != 0) {
         lSelected = false;
-        beforeShowFormEvent();
+        if (parent != 0)
+            beforeShowFormEvent();
         formWidget->show();
         formWidget->activateWindow();
         formWidget->raise();
@@ -182,7 +181,8 @@ void Form::show() {
 void Form::hide() {
     if (formWidget != 0) {
         formWidget->hide();
-        afterHideFormEvent();
+        if (parent != 0)
+            afterHideFormEvent();
     }
 }
 
@@ -197,38 +197,26 @@ void Form::setButtonsSignals()
 }
 
 void Form::initFormEvent() {
-//    if (engine != 0) {
-//        engine->globalObject().property("initForm").call();
-//    }
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->globalObject().property("initForm").call();
+    }
 }
 
 void Form::beforeShowFormEvent() {
-//    if (engine != 0) {
-//        engine->globalObject().property("beforeShowForm").call();
-//    }
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->globalObject().property("beforeShowForm").call();
+    }
 }
 
 void Form::afterHideFormEvent() {
-//    if (engine != 0)
-//        engine->globalObject().property("afterHideForm").call();
+    if (getParent()->getScriptEngine() != 0)
+        getParent()->getScriptEngine()->globalObject().property("afterHideForm").call();
 }
 
 void Form::closeFormEvent() {
-//    if (engine != 0) {
-//        engine->globalObject().property("closeForm").call();
-//    }
-}
-
-void Form::setScriptForForm(QString scr) {
-//    if (engine == 0) {
-//       engine = new ScriptEngine(scr, this);
-//          engine->setParentForm();
-//    }
-}
-
-void Form::removeScriptForForm() {
-    if (engine != 0)
-        delete engine;
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->globalObject().property("closeForm").call();
+    }
 }
 
 /*

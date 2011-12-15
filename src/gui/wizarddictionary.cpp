@@ -5,12 +5,13 @@
 #include "../kernel/app.h"
 #include "mybuttonlineedit.h"
 #include "mybuttonlineedititemdelegate.h"
+#include "mybooleanitemdelegate.h"
+#include "mylineitemdelegate.h"
 #include "../definitions.h"
 
 
 QString showTypesForm()
 {
-    qDebug() << "showTypesForm()";
     return "";
 }
 
@@ -136,13 +137,11 @@ void WizardDictionary::getData()
             fieldsTable->setItem(i, 5, visibleItem);
         }
 
-        MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate();
+        MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getForm());
         fieldsTable->setItemDelegateForColumn(1, buttonEditDelegate);
         buttonEditDelegate->setFormOnPushButton(&showTypesForm);
-        MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate();
+        MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
         fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
-
-        // Создадим список заголовков столбцов
     }
 }
 

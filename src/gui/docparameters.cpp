@@ -84,6 +84,7 @@ void DocParameters::dictionaryButtonPressed() {
         }
     }
     parentForm->getForm()->activateWindow();
+    parentForm->parametersChangedEvent();
 //    parentForm->setShowFocus();
 }
 

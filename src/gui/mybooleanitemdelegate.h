@@ -4,12 +4,11 @@
 #include <QItemDelegate>
 #include <QCheckBox>
 #include "myitemdelegate.h"
-#include "mybooleanitemdelegate.h"
 
 class MyBooleanItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
-    MyBooleanItemDelegate();
+    MyBooleanItemDelegate(QObject* parent = 0);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 };

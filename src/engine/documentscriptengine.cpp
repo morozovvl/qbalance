@@ -2,7 +2,19 @@
 #include "../kernel/document.h"
 
 
-DocumentScriptEngine::DocumentScriptEngine(QObject *parent/* = 0*/)
+QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
+    QScriptValue dictName = context->argument(0);
+    if (dictName.isString() && engine->evaluate("document").isValid())
+    {
+        QScriptValue value = engine->evaluate(QString("document.getDictionary('%1')").arg(dictName.toString()));
+        if (value.isValid())
+            return value;
+    }
+    return QScriptValue();
+}
+
+
+DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 :ScriptEngine(parent)
 {
 }
@@ -12,7 +24,9 @@ void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
     globalObject().setProperty("table", newQObject(parent()));
-    globalObject().setProperty("documents", newQObject(parent()->parent()));
+    globalObject().setProperty("document", newQObject((Document*)parent()));
+    globalObject().setProperty("documents", newQObject((QObject*)((Document*)parent())->getParent()));
+    globalObject().setProperty("getDictionary", newFunction(getDictionary));
 }
 
 

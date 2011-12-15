@@ -12,6 +12,7 @@ class FormDocument : public FormGrid {
 public:
     FormDocument();
     Document* getParent() { return (Document*)parent; }
+    void parametersChangedEvent();
 public slots:
     virtual void cmdOk();
     Q_INVOKABLE virtual void show();

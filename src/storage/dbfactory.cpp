@@ -219,6 +219,17 @@ QStringList DBFactory::getFieldsList(QMap<int, FieldType>* columnsProperties)
 }
 
 
+QStringList DBFactory::getFieldsList(QString tableName)
+{
+    QStringList result;
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1 LIMIT 0;").arg(tableName));
+    for (int i = 0; i < query.record().count(); i++)
+        result << query.record().fieldName(i);
+    return result;
+}
+
+
 void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table)
 {
     clearError();
@@ -275,7 +286,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table)
 }
 
 
-void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read)
+void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read, int number)
 {
     int maxKey = 0;
     if (columnsProperties->count() > 0)
@@ -291,6 +302,7 @@ void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QSt
     fld.length = length;
     fld.precision = precision;
     fld.readOnly = read;
+    fld.number = number;
     columnsProperties->insert(maxKey, fld);
 }
 
@@ -323,11 +335,11 @@ void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* colu
 }
 
 
-int DBFactory::getDictionaryTypeId()
+int DBFactory::getTypeId(QString dict)
 {
-    QString dict = getObjectName("типыобъектов.справочник").toLower();
+    objectTypes.first();
     while (objectTypes.next()) {
-        if (objectTypes.value(1).toString().toLower() == dict)
+        if (objectTypes.value(1).toString().toLower() == dict.toLower())
         {
             return objectTypes.value(0).toInt();
         }
@@ -339,10 +351,32 @@ int DBFactory::getDictionaryTypeId()
 int DBFactory::getDictionaryId(QString dictName)
 {
     clearError();
-    QSqlQuery query = execQuery("SELECT код FROM справочники WHERE имя = '" + dictName + "';");
+    QSqlQuery query = execQuery("SELECT код FROM vw_справочники_со_столбцами WHERE имя = '" + dictName + "';");
     query.first();
     if (query.isValid()) {
         return query.value(0).toInt();
+    }
+    if (dictName.left(16) == "СписокДокументов")
+    {
+        int number = 1000000;
+        clearError();
+        QSqlQuery query = execQuery(QString("SELECT MAX(код) FROM vw_справочники_со_столбцами WHERE имя LIKE 'СписокДокументов%'"));
+        if (query.first())
+        {
+            return query.value(0).toInt() + 1;
+        }
+        return number;
+    }
+    if (dictName.left(8) == "Документ")
+    {
+        int number = 2000000;
+        clearError();
+        QSqlQuery query = execQuery(QString("SELECT MAX(код) FROM vw_справочники_со_столбцами WHERE имя LIKE 'Документ%'"));
+        if (query.first())
+        {
+            return query.value(0).toInt() + 1;
+        }
+        return number;
     }
     return 0;
 }
@@ -378,7 +412,7 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                         .arg(getObjectName("доступ.пользователь"))
                         .arg(getObjectName("доступ.имя"))
                         .arg(menu ? "true" : "false")
-                        .arg(getDictionaryTypeId())
+                        .arg(getTypeId(getObjectName("типыобъектов.справочник")))
                         .arg(getLogin())
                         .arg(tName);
             if (exec(command))
@@ -422,7 +456,7 @@ bool DBFactory::removeDictionary(QString tName)
             command = QString("DELETE FROM \"%1\" WHERE %2 = %3 AND %4 = '%5' AND %6 = '%7';")
                         .arg(getObjectName("доступ"))
                         .arg(getObjectName("доступ.код_типыобъектов"))
-                        .arg(getDictionaryTypeId())
+                        .arg(getTypeId(getObjectName("типыобъектов.справочник")))
                         .arg(getObjectName("доступ.пользователь"))
                         .arg(getLogin())
                         .arg(getObjectName("доступ.имя"))
@@ -509,7 +543,7 @@ QSqlRecord DBFactory::getTopersProperties(int operNumber)
 {
     clearError();
     QSqlRecord result;
-    QSqlQuery query = execQuery(QString("SELECT * FROM vw_доступ_к_топер WHERE опер = %1").arg(operNumber));
+    QSqlQuery query = execQuery(QString("SELECT * FROM vw_доступ_к_топер WHERE опер = %1;").arg(operNumber));
     if (query.first())
         result = query.record();
     return result;
@@ -519,7 +553,59 @@ QSqlRecord DBFactory::getTopersProperties(int operNumber)
 QSqlQuery DBFactory::getToper(int operNumber)
 {
     clearError();
-    return execQuery(QString("SELECT * FROM топер WHERE опер = %1 ORDER BY номер").arg(operNumber));
+    return execQuery(QString("SELECT * FROM топер WHERE опер = %1 ORDER BY номер;").arg(operNumber));
+}
+
+
+bool DBFactory::deleteToper(int operNumber)
+{
+    clearError();
+    return exec(QString("DELETE FROM топер WHERE опер = %1;").arg(operNumber));
+}
+
+
+bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
+{
+    int number = 1;
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT MAX(номер) FROM топер WHERE опер = %1;").arg(operNumber));
+    if (query.first())
+    {
+        number = query.record().value(0).toInt() + 1;
+    }
+    QString command = QString("INSERT INTO топер (опер, номер, имя, дбсчет, дбпост, крсчет, крпост, итоги) VALUES (%1, %2, '%3', '%4', %5, '%6', %7, '%8');").arg(operNumber).arg(number).arg(name).arg(dbAcc).arg(dbAccConst ? "true" : "false").arg(crAcc).arg(crAccConst ? "true" : "false").arg(itog);
+    qDebug() << command;
+    return exec(command);
+}
+
+
+int DBFactory::getNewToper()
+{
+    int number = 1;
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT MAX(опер) FROM топер;"));
+    if (query.first())
+    {
+        number = query.record().value(0).toInt() + 1;
+    }
+    return number;
+}
+
+
+bool DBFactory::createNewToperPermission(QString oper, bool menu)
+{
+    clearError();
+    QString command = QString("INSERT INTO \"%1\" (%2, %3, %4, %5) VALUES (%6, %7, '%8', '%9');")
+                .arg(getObjectName("доступ"))
+                .arg(getObjectName("доступ.меню"))
+                .arg(getObjectName("доступ.код_типыобъектов"))
+                .arg(getObjectName("доступ.пользователь"))
+                .arg(getObjectName("доступ.имя"))
+                .arg(menu ? "true" : "false")
+                .arg(getTypeId(getObjectName("типыобъектов.топер")))
+                .arg(getLogin())
+                .arg(oper);
+    return exec(command);
 }
 
 
@@ -527,7 +613,7 @@ QString DBFactory::getPhotoDatabase()
 {
     clearError();
     QString result;
-    QSqlQuery query = execQuery(QString("SELECT значение FROM vw_константы WHERE имя = 'база_фото'"));
+    QSqlQuery query = execQuery(QString("SELECT значение FROM vw_константы WHERE имя = 'база_фото';"));
     if (query.first())
         result = query.record().field(0).value().toString();
     return result;
@@ -537,7 +623,7 @@ QString DBFactory::getPhotoPath(QString tableName)
 {
     clearError();
     QString result;
-    QSqlQuery query = execQuery(QString("SELECT фото FROM справочники WHERE имя = '" + tableName + "'"));
+    QSqlQuery query = execQuery(QString("SELECT фото FROM справочники WHERE имя = '" + tableName + "';"));
     if (query.first())
         result = query.record().field(0).value().toString().trimmed();
     return result;
@@ -547,7 +633,7 @@ QString DBFactory::getPhotoPath(QString tableName)
 QSqlQuery DBFactory::getColumnsHeaders(QString tableName)
 {
     clearError();
-    return execQuery("SELECT столбец, заголовок FROM vw_столбцы WHERE справочник = '" + tableName + "' ORDER BY номер;");
+    return execQuery("SELECT столбец, заголовок, номер FROM vw_столбцы WHERE справочник = '" + tableName + "' ORDER BY номер;");
 }
 
 
@@ -717,12 +803,22 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("проводки.опер", "опер");
     ObjectNames.insert("проводки.номеропер", "номеропер");
     ObjectNames.insert("vw_топер", "vw_топер");
+    ObjectNames.insert("vw_топер.код", "код");
+    ObjectNames.insert("vw_топер.опер", "опер");
+    ObjectNames.insert("vw_топер.номер", "номер");
+    ObjectNames.insert("vw_топер.дбвидим", "дбвидим");
+    ObjectNames.insert("vw_топер.крвидим", "крвидим");
+    ObjectNames.insert("vw_топер.дбсалвидим", "дбсалвидим");
+    ObjectNames.insert("vw_топер.крсалвидим", "крсалвидим");
+    ObjectNames.insert("vw_топер.дбкол", "дбкол");
+    ObjectNames.insert("vw_топер.кркол", "кркол");
     ObjectNames.insert("константы", "константы");
     ObjectNames.insert("константы.имя", "имя");
     ObjectNames.insert("константы.значение", "значение");
     ObjectNames.insert("типыобъектов", "типыобъектов");
     ObjectNames.insert("типыобъектов.имя", "имя");
     ObjectNames.insert("типыобъектов.справочник", "справочник");
+    ObjectNames.insert("типыобъектов.топер", "топер");
     ObjectNames.insert("доступ", "доступ");
     ObjectNames.insert("доступ.меню", "меню");
     ObjectNames.insert("доступ.код_типыобъектов", "код_типыобъектов");
@@ -746,6 +842,17 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("топер.крпост", "крпост");
     ObjectNames.insert("счета", "счета");
     ObjectNames.insert("счета.счет", "счет");
+    ObjectNames.insert("сальдо", "сальдо");
+    ObjectNames.insert("сальдо.счет", "счет");
+    ObjectNames.insert("сальдо.код", "код");
+    ObjectNames.insert("сальдо.конкол", "конкол");
+    ObjectNames.insert("сальдо.концена", "концена");
+    ObjectNames.insert("сальдо.консальдо", "консальдо");
+    ObjectNames.insert("vw_столбцы", "vw_столбцы");
+    ObjectNames.insert("vw_столбцы.справочник", "справочник");
+    ObjectNames.insert("vw_столбцы.столбец", "столбец");
+    ObjectNames.insert("vw_столбцы.заголовок", "заголовок");
+    ObjectNames.insert("vw_столбцы.номер", "номер");
 }
 
 
@@ -753,6 +860,11 @@ QString DBFactory::getObjectName(const QString& name) const
 // транслирует имена объектов БД из "внутренних" в реальные наименования
 {
     QString result;
+    // Присвоим результату значение по умолчанию
+    if (name.contains('.'))
+        result = name.mid(name.indexOf('.') + 1);
+    else
+        result = name;
     QMap<QString, QString>::const_iterator i = ObjectNames.find(name);
     if (i != ObjectNames.end())
     {
@@ -801,6 +913,7 @@ void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData)
 
 QSqlQuery DBFactory::getDataTypes()
 {
+    clearError();
     return execQuery("SELECT t.typname as name, t.typlen as len " \
                                 "FROM pg_type t "\
                                 "LEFT JOIN   pg_catalog.pg_namespace n ON n.oid = t.typnamespace " \
@@ -818,4 +931,283 @@ QString DBFactory::storageEncoding()
     result = "Windows-1251";
 #endif
     return result;
+}
+
+
+QSqlQuery DBFactory::getToperDicts(int oper, QMap<QString, DictType>* dictsList/* = 0*/)
+{
+    QString dictName, alias;
+    DictType dict;
+    QList<QString> spravList;
+    clearError();
+    QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4").arg(getObjectName("vw_топер")).arg(getObjectName("vw_топер.опер")).arg(oper).arg(getObjectName("vw_топер.номер")));
+    // Сначала проверим справочники на предмет присутствия одного и того же справочника и по дебету и по кредиту
+    toper.first();
+    while (toper.isValid())
+    {
+        // получим имя дебетового справочника из описания проводок
+        dictName = toper.record().value("дбсправ").toString().trimmed();
+        // если имя справочника не пустое
+        if (dictName.size() > 0 && toper.record().value("дбвидим").toBool())
+        {
+            dictName = "дб" + dictName;
+            // этот справочник еще не содержится в списке по дебету
+            if (!spravList.contains(dictName))
+            // .. то добавим его в список
+                spravList << dictName;
+        }
+        // получим имя кредитового справочника из описания проводок
+        dictName = toper.record().value("крсправ").toString().trimmed();
+        // если имя справочника не пустое
+        if (dictName.size() > 0 && toper.record().value("крвидим").toBool())
+        {
+            dictName = "кр" + dictName;
+            // этот справочник еще не содержится в списке по кредиту
+            if (!spravList.contains(dictName))
+            {
+                // и если в кредитовом справочнике не ведется количественный учет
+                // (т.к. в этом случае вместо справочника будет подставляться таблица сальдо
+                if (!toper.record().value("кркол").toBool())
+                    // .. то добавим его в список
+                    spravList << dictName;
+            }
+        }
+        toper.next();
+    }
+    if (spravList.size() > 0)
+    {   // Если мы нашли какие-то справочники
+        toper.first();
+        while (toper.isValid())
+        {
+            dictName = toper.record().value("дбсправ").toString().trimmed();
+            if (dictName.size() > 0)
+            {
+                dict.name = dictName;
+                alias = dictName;
+                if (spravList.contains("дб" + dictName) && spravList.contains("кр" + dictName))
+                    // Если один и тот же справочники присутствует и по дебету и по кредиту,
+                    // то дебетовый справочник обозначим с префиксом "дб"
+                {
+                    dict.prefix = "дб";
+                    alias = dict.prefix + dictName;
+                }
+                dict.isConst = false;
+                if (dictsList != 0 && !dictsList->contains(alias))
+                    dictsList->insert(alias, dict);
+            }
+            dictName = toper.record().value("крсправ").toString().trimmed();
+            if (dictName.size() > 0)
+            {
+                if (toper.record().value("кркол").toBool())
+                {      // Если в кредитовом справочнике ведется количественный учет
+                    dict.name = dictName;
+                    alias = "saldo";
+                    dict.acc = toper.record().value("крсчет").toString().trimmed();
+                    dict.isConst = false;
+                }
+                else
+                {
+                    dict.name = dictName;
+                    alias = dictName;
+                    if (spravList.contains("дб" + dictName) && spravList.contains("кр" + dictName))
+                        // Если один и тот же справочники присутствует и по дебету и по кредиту,
+                        // то дебетовый справочник обозначим с префиксом "кр"
+                    {
+                        dict.prefix = "кр";
+                        alias = dict.prefix + dictName;
+                    }
+                    dict.isConst = toper.record().value("крпост").toBool();
+                }
+                if (dictsList != 0 && !dictsList->contains(alias))
+                    dictsList->insert(alias, dict);
+            }
+            toper.next();
+        }
+    }
+    return toper;
+}
+
+
+QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>* columnsProperties, int* retPrv1)
+{
+    QString selectStatement;
+    QMap<QString, DictType> dictsList;
+    QSqlQuery toper = getToperDicts(oper, &dictsList);
+    toper.first();
+    if (toper.isValid())
+    {
+
+        QString selectClause, fromClause, whereClause;
+        int prv, prv1;
+        if (columnsProperties != 0)
+            columnsProperties->clear();
+        QString tableName = getObjectName("проводки");
+        QStringList prvFieldsList = getFieldsList(tableName);
+        QMap<int, FieldType> fields;
+        getColumnsProperties(&fields, tableName);
+        // Создадим клаузу проводок в секции SELECT
+        int i = 0;
+        while (toper.isValid())
+        {   // Для всех проводок данной типовой операции
+            prv = toper.record().value(getObjectName("vw_топер.номер")).toInt();       // получим номер проводки в типовой операции
+            foreach (const QString field, prvFieldsList)
+            {// Для всех полей таблицы "проводки"
+                selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
+                selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
+                foreach(int i, fields.keys())
+                {
+                    if (fields.value(i).name == field && columnsProperties != 0)
+                        addColumnProperties(columnsProperties, QString("p%1__%2").arg(prv).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, fields.value(i).readOnly);
+                }
+            }
+            if (i == 0)
+            {
+                fromClause = QString(" FROM %1 p%2").arg(tableName).arg(prv);
+                prv1 = prv;
+                whereClause = " WHERE";     // Создадим пометку в команде с пустой секцией WHERE.
+                                            // Непосредственно перед отправкой команды на сервер
+                                            // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
+                                            // в фунции transformSelectStatement(QString)
+            }
+            else
+            {
+                fromClause.append(QString(" LEFT OUTER JOIN %1 p%2 ON p%3.%4=p%2.%4 AND p%3.%5=p%2.%5 AND p%3.%6=p%2.%6 AND p%2.%7=%2").arg(tableName).arg(prv).arg(prv1).arg(getObjectName("проводки.доккод")).arg(getObjectName("проводки.стр")).arg(getObjectName("проводки.опер")).arg(getObjectName("проводки.номеропер")));
+            }
+            toper.next();
+            i++;
+        }
+        // Соберем команду SELECT для проводок табличной части документа
+        selectClause = QString("SELECT ").append(selectClause);
+        selectStatement = selectClause + fromClause + whereClause;
+        selectClause = "SELECT DISTINCT p.*";
+        fromClause = " FROM (" + selectStatement + ") p";
+         // Приступим к генерации секции SELECT более высокого уровня
+        QString dictName;
+        QStringList dictsNames;
+        toper.first();
+        while (toper.isValid())
+        {
+            prv = toper.record().value(getObjectName("vw_топер.номер")).toInt();
+            if (toper.record().value(getObjectName("vw_топер.дбвидим")).toBool())
+            {
+                dictName = getDictName(&dictsList, toper.record().value(getObjectName("vw_топер.дбсправ")).toString(), "дб");
+                if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
+                    getColumnsProperties(&fields, dictName);
+                    foreach (QString field, getFieldsList(dictName)) {
+                        selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                        foreach(int i, fields.keys())
+                            if (fields.value(i).name == field && columnsProperties != 0)
+                                addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    }
+                    fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
+                    dictsNames << dictName;
+                }
+            }
+            if (toper.record().value(getObjectName("vw_топер.крвидим")).toBool())
+            {
+                dictName = getDictName(&dictsList, toper.record().value(getObjectName("vw_топер.крсправ")).toString(), "кр");
+                if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
+                    getColumnsProperties(&fields, dictName);
+                    foreach (QString field, getFieldsList(dictName)) {
+                        selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                        foreach(int i, fields.keys())
+                            if (fields.value(i).name == field && columnsProperties != 0)
+                                addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    }
+                    fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
+                    dictsNames << dictName;
+                }
+            }
+            getColumnsProperties(&fields, getObjectName("сальдо"));
+            QString field;
+            if (toper.record().value(getObjectName("vw_топер.дбсалвидим")).toBool()) {
+                dictName = QString("дбсальдо%1").arg(prv);
+                if (toper.record().value(getObjectName("vw_топер.дбкол")).toBool()) {
+                    field = getObjectName("сальдо.конкол");
+                    selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                    foreach(int i, fields.keys())
+                        if (fields.value(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    field = getObjectName("сальдо.концена");
+                    selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                    foreach(int i, fields.keys())
+                        if (fields.value(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                }
+                field = getObjectName("сальдо.консальдо");
+                selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                foreach(int i, fields.keys())
+                    if (fields.value(i).name == field && columnsProperties != 0)
+                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо").arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.дбкод")).arg(getObjectName("сальдо.код"))));
+            }
+            if (toper.record().value(getObjectName("vw_топер.крсалвидим")).toBool()) {
+                dictName = QString("крсальдо%1").arg(prv);
+                if (toper.record().value(getObjectName("vw_топер.кркол")).toBool()) {
+                    field = getObjectName("сальдо.конкол");
+                    selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                    foreach(int i, fields.keys())
+                        if (fields.value(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    field = getObjectName("сальдо.концена");
+                    selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                    foreach(int i, fields.keys())
+                        if (fields.value(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                }
+                field = getObjectName("сальдо.консальдо");
+                selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                foreach(int i, fields.keys())
+                    if (fields.value(i).name == field && columnsProperties != 0)
+                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.крсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.кркод")).arg(getObjectName("сальдо.код")));
+            }
+            toper.next();
+        }
+        if (retPrv1 != 0)
+            *retPrv1 = prv1;
+        selectStatement = selectClause + fromClause + QString(" ORDER BY p.p1__%1 ASC").arg(getObjectName("проводки.стр"));
+
+        QString tagName = QString("Документ%1").arg(oper);
+        QSqlQuery headers = getColumnsHeaders(tagName);
+        headers.first();
+        while (headers.isValid())
+        {
+            QString header = headers.record().value(0).toString();
+            foreach (int i, columnsProperties->keys())
+            {
+                if (columnsProperties->value(i).name == header)
+                {
+                    FieldType fld;
+                    fld = columnsProperties->value(i);
+                    fld.header = headers.record().value(1).toString();
+                    fld.number = headers.record().value(2).toInt();
+                    columnsProperties->remove(i);
+                    columnsProperties->insert(i, fld);
+                    break;
+                }
+            }
+            headers.next();
+        }
+
+    }
+    return selectStatement;
+}
+
+
+QString DBFactory::getDictName(QMap<QString, DictType>* dictsList, QString dictName, QString prefix)
+{
+    // Сначала поищем с префиксом "дб" или "кр"
+    foreach(QString dict, dictsList->keys())
+    {
+        if (dictsList->value(dict).name == dictName && dictsList->value(dict).prefix == prefix)
+            return dict;
+    }
+    // Потом без префикса
+    foreach(QString dict, dictsList->keys())
+    {
+        if (dictsList->value(dict).name == dictName)
+            return dict;
+    }
+    return "";
 }

@@ -5,14 +5,16 @@
 #include "../storage/dbfactory.h"
 #include <QString>
 #include <QMessageBox>
+#include <QErrorMessage>
 #include <QDesktopWidget>
 
 class TApplication;
 class MainWindow;
 
 class GUIFactory: public QObject {
+    Q_OBJECT
 public:
-    GUIFactory(DBFactory *d) { db = d; }
+    GUIFactory(DBFactory *d);
     MainWindow* getMainWindow() { return mainWindow; }
     QString getLastDbName() { return lastDbName; }
     QString getLastHostName() { return lastHostName; }
@@ -36,6 +38,7 @@ private:
     QString lastHostName;
     QString lastDbName;
     int lastPort;
+    QErrorMessage msgBox;
 };
 
 #endif // GUIFACTORY_H

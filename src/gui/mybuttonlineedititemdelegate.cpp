@@ -3,7 +3,7 @@
 #include "mybuttonlineedititemdelegate.h"
 
 
-MyButtonLineEditItemDelegate::MyButtonLineEditItemDelegate(): MyItemDelegate()
+MyButtonLineEditItemDelegate::MyButtonLineEditItemDelegate(QObject* parent): MyItemDelegate(parent)
 {
 }
 

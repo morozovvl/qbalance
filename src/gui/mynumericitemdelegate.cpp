@@ -1,7 +1,7 @@
 #include <QDoubleValidator>
 #include <QStyleOptionViewItemV2>
+#include <QLineEdit>
 #include "mynumericitemdelegate.h"
-#include "formgrid.h"
 
 MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, int len, int prec)
 : MyItemDelegate(parent)

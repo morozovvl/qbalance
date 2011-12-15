@@ -17,7 +17,6 @@
 #include <QDialog>
 #include "../storage/table.h"
 #include "../engine/scriptengine.h"
-#include "../gui/form.h"
 
 
 class TApplication;
@@ -31,15 +30,15 @@ public:
     Essence(QString name = "", QObject *parent = 0);
     ~Essence();
 // Функции для получения, сохранения данных модели
-    Q_INVOKABLE virtual qulonglong getId(int row = 0);
-    Q_INVOKABLE virtual QString getName(int row = 0);
+    Q_INVOKABLE virtual qulonglong getId(int row = -1);
+    Q_INVOKABLE virtual QString getName(int row = -1);
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     virtual void setId(qulonglong);
     Q_INVOKABLE QString getCurrentFieldName() { return currentFieldName; }
     QString getIdFieldName() { return idFieldName; }
     Q_INVOKABLE virtual bool isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
-    Q_INVOKABLE virtual bool setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual void setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     Q_INVOKABLE virtual bool add() { return false; }        // Добавление записи
     Q_INVOKABLE virtual bool remove();                      // Удаление записи
     Q_INVOKABLE virtual void view();
@@ -69,9 +68,9 @@ public:
 // Функции для обеспечения работы скриптов
     virtual bool calculate(const QModelIndex &);
     virtual void setScriptEngine();
+    ScriptEngine* getScriptEngine();
 
 // Прочие функции
-    virtual QSqlQuery getColumnsHeaders();
     QString getPhotoPath();
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();

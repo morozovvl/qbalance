@@ -14,12 +14,16 @@ public:
     explicit ScriptEngine(QObject *parent = 0);
     ~ScriptEngine();
     bool open(QString fileName = "");
-    void showError(QString);
-    void calcTable();
+    bool evaluate();
+    QString getErrorMessage() { return errorMessage; }
+    bool getScriptResult() { return scriptResult; }
 protected:
     virtual void loadScriptObjects();
 private:
+    bool                scriptResult;
     QString             script;
+    QString             errorMessage;
+    QString             scriptFileName;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;

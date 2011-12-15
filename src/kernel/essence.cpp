@@ -33,6 +33,7 @@ scriptEngine(NULL)
     lPrintable  = false;
     idFieldName = TApplication::idFieldName();
     nameFieldName = TApplication::nameFieldName();
+    scriptEngine = 0;
     connect(this, SIGNAL(showError(QString)), TApplication::exemplar(), SLOT(showError(QString)));
 }
 
@@ -53,13 +54,21 @@ bool Essence::setData(const QModelIndex & index, const QVariant & value, int rol
 
 bool Essence::calculate(const QModelIndex &index)
 {
+    bool lResult = true;
     if (scriptEngine != 0)
     {
         currentFieldName = tableModel->getFieldName(index.column());
-        scriptEngine->calcTable();
-        return tableModel->submit(index);
+        lResult = scriptEngine->evaluate();
+        if (lResult)
+        {
+            lResult = tableModel->submit(index);
+        }
+        else
+        {
+            tableModel->revertAll();
+        }
     }
-    return true;
+    return lResult;
 }
 
 
@@ -71,21 +80,25 @@ QVariant Essence::getValue(QString name, int row)
 }
 
 
-bool Essence::setValue(QString name, QVariant value, int row)
+void Essence::setValue(QString name, QVariant value, int row)
 {
-    int col = tableModel->record().indexOf(name);
     QModelIndex index = form->getCurrentIndex();
+    int col = tableModel->record().indexOf(name);
     if (row >= 0)
+    {
         index = index.sibling(row, col);
+    }
     else
-        index = index.sibling(form->getCurrentIndex().row(), col);
-    return tableModel->setData(index, value);
+    {
+        index = index.sibling(index.row(), col);
+    }
+    tableModel->setData(index, value);
 }
 
 
 qulonglong Essence::getId(int row)
 {
-    if (row > 0)
+    if (row >= 0)
         return getValue(idFieldName, row).toULongLong();
     return getValue(idFieldName, form->getCurrentIndex().row()).toULongLong();
 }
@@ -93,7 +106,7 @@ qulonglong Essence::getId(int row)
 
 QString Essence::getName(int row)
 {
-    if (row > 0)
+    if (row >= 0)
         return getValue(nameFieldName, row).toString();
     return getValue(nameFieldName, form->getCurrentIndex().row()).toString();
 }
@@ -116,12 +129,6 @@ void Essence::setId(qulonglong id)
             form->setCurrentIndex(index.sibling(0, 0));
         }
     }
-}
-
-
-QSqlQuery Essence::getColumnsHeaders()
-{
-    return TApplication::exemplar()->getDBFactory()->getColumnsHeaders(tableName);
 }
 
 
@@ -181,6 +188,7 @@ bool Essence::open()
 {
     if (Table::open())
     {
+        setScriptEngine();
         return true;
     }
     return false;
@@ -189,13 +197,10 @@ bool Essence::open()
 
 void Essence::close()
 {
-//    if (engine != 0)
-//        delete engine;
     if (form != 0)
     {
         form->closeFormEvent();
         form->writeSettings();
-        //    form->setParent(0);
         form->close();
     }
     delete scriptEngine;
@@ -218,6 +223,12 @@ void Essence::setScriptEngine()
 }
 
 
+ScriptEngine* Essence::getScriptEngine()
+{
+    return scriptEngine;
+}
+
+
 void Essence::initForm() {
     setForm();
     form->setIcons();
@@ -226,17 +237,21 @@ void Essence::initForm() {
     form->initFormEvent();
 }
 
+
 void Essence::setFormTitle(QString title) {
     formTitle = title;
     form->getForm()->setWindowTitle(title);
 }
 
+
 bool Essence::isFormSelected() {
     return form->selected();
 }
 
+
 void Essence::cmdOk() {
 }
+
 
 void Essence::cmdCancel() {
 }

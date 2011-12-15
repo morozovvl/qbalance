@@ -6,7 +6,6 @@
 #include <QDate>
 #include <QString>
 #include <QDir>
-#include "dictionary.h"
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
@@ -37,6 +36,7 @@ public:
     virtual ~TApplication();
     Q_INVOKABLE Dictionaries* getDictionaries();
     Q_INVOKABLE Documents* getDocuments(int);
+    void removeDocuments(int opNumber);
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }
     GUIFactory* getGUIFactory() { return gui; }
     QString getLogin() { return db->getLogin(); }

@@ -9,6 +9,7 @@
 class Document;
 
 class Documents : public Dictionary {
+    Q_OBJECT
 public:
     Documents(int, QObject *parent = 0);
     virtual ~Documents();
@@ -17,14 +18,12 @@ public:
     virtual bool remove();
     virtual void view();
     virtual void query(QString filter = "");
-    int getCurrentRow() { return currentRow; }
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
 protected:
     virtual void setForm();
 private:
     int operNumber;
-    int currentRow;
     Document* currentDocument;
 };
 

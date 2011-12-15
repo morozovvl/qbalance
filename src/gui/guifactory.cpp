@@ -1,6 +1,7 @@
 #include <QtGui>
 #include <QString>
 #include <QMessageBox>
+#include <QErrorMessage>
 #include <QProcess>
 #include <QObject>
 #include <QIODevice>
@@ -12,6 +13,13 @@
 #include "connectionform.h"
 #include "passwordform.h"
 #include "../kernel/app.h"
+
+
+GUIFactory::GUIFactory(DBFactory *d)
+{
+    db = d;
+}
+
 
 int GUIFactory::openDB()
 {
@@ -99,12 +107,14 @@ void GUIFactory::show() {
     mainWindow->show();
 }
 
+
 int GUIFactory::showError(QString errorText) {
-    QErrorMessage msgBox(mainWindow->centralWidget());
-    msgBox.setWindowTitle(QObject::trUtf8("Ошибка!"));
+//    QErrorMessage msgBox(mainWindow->centralWidget());
     msgBox.showMessage(errorText);
 //    msgBox.setWindowModality(Qt::ApplicationModal);
-    msgBox.exec();
+//    msgBox.setParent(mainWindow->centralWidget());
+    msgBox.setModal(true);
+    msgBox.show();
     return 0;
 }
 
@@ -145,6 +155,8 @@ int GUIFactory::showYesNo(QString question) {
 bool GUIFactory::open() {
     mainWindow = new MainWindow();
     mainWindow->open();
+    msgBox.setVisible(false);
+    msgBox.setWindowTitle(QObject::trUtf8("Ошибка!"));
     return true;
 }
 

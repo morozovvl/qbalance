@@ -7,9 +7,12 @@
 #include <QVariantList>
 #include <QByteArray>
 #include <QList>
+//#include "mysqlrelationaltablemodel.h"
+//#include "../kernel/dictionary.h"
 
 class TApplication;
-
+class MySqlRelationalTableModel;
+class Dictionary;
 
 enum FileType           // Типы данных, которые хранятся в таблице "файлы"
 {
@@ -28,6 +31,15 @@ struct FieldType
     bool readOnly;
     QString header;
     int number;
+};
+
+
+struct DictType
+{
+    QString name;       // Исходное наименование справочника
+    QString prefix;     // Префикс "дб" или "кр"
+    QString acc;        // на случай, если справочником будет сальдо, то здесь будет номер счета
+    bool    isConst;
 };
 
 
@@ -56,13 +68,14 @@ public:
     QSqlQuery getTopersProperties();
     QSqlRecord getTopersProperties(int operNumber);
     QSqlQuery getToper(int operNumber);
-    int getDictionaryTypeId();
+    int getTypeId(QString);
     int getDictionaryId(QString dictName);
     bool isTableExists(QString);
     bool createNewDictionary(QString, QString = "", bool = true);
     bool removeDictionary(QString);
     QStringList getFieldsList(QMap<int, FieldType>*);
-    void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false);
+    QStringList getFieldsList(QString tableName);
+    void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
     void getColumnsProperties(QMap<int, FieldType>*, QString);
     void getColumnsProperties(QList<FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
@@ -102,6 +115,12 @@ public:
 
     QSqlQuery getDataTypes();
 
+    QSqlQuery getToperDicts(int oper, QMap<QString, DictType>* dictsList = 0);     // Создает список справочников, которые используются в типовой операции
+
+    QString getDocumentSqlSelectStatement(int oper,
+                                          QMap<int, FieldType>* = 0,
+                                          int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
+
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);
     bool addTableColumn(QString, QString, QString);
@@ -111,6 +130,11 @@ public:
     bool appendColumnHeader(int, QString, QString);
     bool updateColumnHeader(int, QString, QString);
     bool setTableColumnHeaderOrder(int, QString, int);
+    bool deleteToper(int operNumber);
+    bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
+    int getNewToper();
+    bool createNewToperPermission(QString, bool);
+
 
 private:
     QSqlDatabase*           db;
@@ -125,6 +149,7 @@ private:
 
     void setError(QString);
     void initObjectNames();
+    QString getDictName(QMap<QString, DictType>* dictsList, QString dictName, QString prefix);
 };
 
 #endif

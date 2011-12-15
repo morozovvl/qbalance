@@ -13,6 +13,7 @@
 
 class TApplication;
 class FormGrid;
+struct FieldType;
 
 class TableView : public QTableView {
     Q_OBJECT
@@ -33,10 +34,10 @@ protected:
     virtual void keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void currentChanged(const QModelIndex &, const QModelIndex &);
 private:
-    QWidget*        parentWidget;
+    QWidget*                    parentWidget;
     TApplication*               app;
     MySqlRelationalTableModel*  tableModel;
-    bool isFieldExists(QString);
+    QStringList                 visibleColumns;
     void setColumnsHeaders();
     void setColumnsDelegates();
 private slots:

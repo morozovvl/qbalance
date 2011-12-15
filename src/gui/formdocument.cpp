@@ -151,7 +151,16 @@ void FormDocument::cmdOk()
         getParent()->getParent()->setValue("номер", QVariant(numberEdit->text()));
     if (itogNumeric != 0)
         getParent()->getParent()->setValue("сумма", QVariant(itogNumeric->getValue()));
+    getParent()->getParent()->getTableModel()->submit();
     FormGrid::cmdOk();
+}
+
+
+void FormDocument::parametersChangedEvent()
+{
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->globalObject().property("parametersChanged").call();
+    }
 }
 
 

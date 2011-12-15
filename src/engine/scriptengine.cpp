@@ -2,6 +2,7 @@
 #include <QSqlQuery>
 #include "scriptengine.h"
 #include "../kernel/app.h"
+#include "../kernel/dictionary.h"
 #include "../storage/dbfactory.h"
 #include "../storage/mysqlrecord.h"
 #include "../gui/mainwindow.h"
@@ -9,18 +10,38 @@
 #include "eventloop.h"
 
 
-QScriptValue value(QScriptContext* context, QScriptEngine* engine) {
-    QScriptValue fieldName = context->argument(0);
-    if (fieldName.isString())
+// Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
+
+QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine) {
+    if (engine->evaluate("table").isValid())
     {
-        if (engine->evaluate("table").isValid())
-        {
-            QScriptValue value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName.toString()));
-            if (value.isValid())
-            {
-                return value;
-            }
-        }
+        QScriptValue value = engine->evaluate(QString("table.getCurrentFieldName()"));
+        if (value.isValid())
+            return value;
+    }
+    return QScriptValue();
+}
+
+
+QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
+    QScriptValue fieldName = context->argument(0);
+    if (fieldName.isString() && engine->evaluate("table").isValid())
+    {
+        QScriptValue value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName.toString()));
+        if (value.isValid())
+            return value;
+    }
+    return QScriptValue();
+}
+
+
+QScriptValue setValue(QScriptContext* context, QScriptEngine* engine) {
+    QScriptValue fieldName = context->argument(0);
+    if (fieldName.isString() && engine->evaluate("table").isValid())
+    {
+        QScriptValue value = engine->evaluate(QString("table.setValue('%1', %2)").arg(fieldName.toString()).arg(context->argument(1).toString()));
+        if (value.isValid())
+            return value;
     }
     return QScriptValue();
 }
@@ -40,6 +61,22 @@ QScriptValue EventLoopToScriptValue(QScriptEngine *engine, EventLoop* const &in)
 
 void EventLoopFromScriptValue(const QScriptValue &object, EventLoop* &out) {
     out = qobject_cast<EventLoop*>(object.toQObject());
+}
+
+// класс Dictionary
+Q_DECLARE_METATYPE(Dictionary*)
+
+QScriptValue DictionaryConstructor(QScriptContext *context, QScriptEngine *engine) {
+     Dictionary* object = new Dictionary(context->argument(0).toString());
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue DictionaryToScriptValue(QScriptEngine *engine, Dictionary* const &in) {
+    return engine->newQObject(in);
+}
+
+void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
+    out = qobject_cast<Dictionary*>(object.toQObject());
 }
 
 // класс Form
@@ -83,17 +120,11 @@ ScriptEngine::~ScriptEngine()
 }
 
 
-void ScriptEngine::showError(QString text)
-{
-    TApplication::exemplar()->showError(text);
-}
-
-
 bool ScriptEngine::open(QString scriptFile)
 {
     if (scriptFile.size() > 0)
     {   // Если в параметрах дано имя файла
-        QString scriptFileName = scriptFile + ".qs";
+        scriptFileName = scriptFile + ".qs";
         // Попытаемся сначала получить скрипты на сервере
         script = QString(TApplication::exemplar()->getDBFactory()->getFile(scriptFileName, ScriptFileType));
         if (script.size() == 0)
@@ -107,30 +138,6 @@ bool ScriptEngine::open(QString scriptFile)
                 file.close();
             }
         }
-        if (script.size() > 0)
-        {
-            loadScriptObjects();
-            evaluate(script);
-            if (hasUncaughtException())
-            {   // Если в скриптах произошла ошибка
-                showError(QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName));
-                return false;
-            }
-            return globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
-        }
-        showError(QString(QObject::trUtf8("Не удалось открыть скрипт %1")).arg(scriptFileName));
-        return false;
-    }
-    if (script.size() > 0)
-    {   // Если задан текст скрипта, то в первую очередь выполним его
-        loadScriptObjects();
-        evaluate(script);
-        if (hasUncaughtException())
-        {   // Если в скриптах произошла ошибка
-           showError(QString(QObject::trUtf8("Ошибка в строке %1 скрипта")).arg(uncaughtExceptionLineNumber()));
-           return false;
-        }
-        return globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
     }
     return true;
 }
@@ -150,19 +157,35 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
     globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
+    qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
+    globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
 
     // Объявим глобальные переменные и объекты
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("DBFactory", newQObject(TApplication::exemplar()->getDBFactory()));
 
-    globalObject().setProperty("value", newFunction(value));
+    globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
+    globalObject().setProperty("getValue", newFunction(getValue));
+    globalObject().setProperty("setValue", newFunction(setValue));
 }
 
 
-void ScriptEngine::calcTable()
+bool ScriptEngine::evaluate()
 {
-//    globalObject().property("calcTable").call();
-    evaluate(script);
+    scriptResult = true;
+    if (script.size() > 0)
+    {
+        loadScriptObjects();
+        QScriptEngine::evaluate(script);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
+            return false;
+        }
+        scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
+        return scriptResult;
+    }
+    return true;
 }
 
 

@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE int getDocId() { return docId; }
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dicts; }
+    Q_INVOKABLE Dictionary* getDictionary(QString dictName) { return dictionaries->getDictionary(dictName); }
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void show();
@@ -48,7 +49,7 @@ private:
     int operNumber;
     int docId;
     int prv1;
-    QSqlTableModel toper;
+    QSqlQuery                       toper;
     QString selectStatement;
     QHash<int, prvSaldo> saldo;                   // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     virtual void setTableModel();

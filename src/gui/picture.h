@@ -5,7 +5,6 @@
 #include <QString>
 #include <QImage>
 #include <QPaintEvent>
-#include "formgrid.h"
 
 class Picture: public QFrame {
     Q_OBJECT

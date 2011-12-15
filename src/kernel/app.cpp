@@ -44,13 +44,23 @@ TApplication::~TApplication()
 
 Documents* TApplication::getDocuments(int opNumber) {
     QString operName = QString("oper%1").arg(opNumber);
-    if (!documents.contains(operName)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    if (!documents.contains(operName)) {
         Documents* doc = new Documents(opNumber);
         if (!doc->open())
             return NULL;
         documents.insert(operName, doc);
     }
     return documents[operName];
+}
+
+
+void TApplication::removeDocuments(int opNumber) {
+    QString operName = QString("oper%1").arg(opNumber);
+    if (documents.contains(operName)) {
+        Documents* doc = documents.value(operName);
+        doc->close();
+        documents.remove(operName);
+    }
 }
 
 

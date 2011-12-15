@@ -10,13 +10,8 @@
 #include "../kernel/essence.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "tableview.h"
-#include "mynumericitemdelegate.h"
-#include "mybooleanitemdelegate.h"
-#include "mylineitemdelegate.h"
 #include "form.h"
 #include "picture.h"
-
-class Picture;
 
 class FormGrid : public Form {
     Q_OBJECT
@@ -34,7 +29,7 @@ public:
     virtual void writeSettings();
 
 public slots:
-    virtual void calculate();
+    virtual void calculate(QWidget*, QAbstractItemDelegate::EndEditHint);
     virtual void cmdAdd();
     virtual void cmdDelete();
     virtual void cmdView();

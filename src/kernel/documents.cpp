@@ -17,13 +17,16 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     lUpdateable = operProperties.value("updateable").toBool();
 }
 
+
 Documents::~Documents() {
 }
+
 
 void Documents::show() {
     query();
     Dictionary::show();
 }
+
 
 bool Documents::add() {
     QDate date = QDate().currentDate();
@@ -36,9 +39,6 @@ bool Documents::add() {
     return TApplication::exemplar()->getDBFactory()->addDoc(operNumber, date);
 }
 
-//QSqlQuery Documents::getColumnsHeaders() {
-//    return TApplication::exemplar()->getDBFactory()->getColumnsHeaders(configName);
-//}
 
 bool Documents::remove() {
     if (lDeleteable) {
@@ -52,11 +52,12 @@ bool Documents::remove() {
     return false;
 }
 
+
 void Documents::view() {
-    currentRow = getForm()->getCurrentIndex().row();
     currentDocument->setDocId(getValue("код").toInt());
     currentDocument->show();
 }
+
 
 void Documents::query(QString filter) {
     Q_UNUSED(filter)
@@ -65,6 +66,7 @@ void Documents::query(QString filter) {
         TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy"),
         QString::number(operNumber)));
 }
+
 
 bool Documents::open() {
     if (Essence::open()) {     // Откроем этот справочник

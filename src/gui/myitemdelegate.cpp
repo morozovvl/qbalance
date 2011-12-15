@@ -8,7 +8,6 @@
 MyItemDelegate::MyItemDelegate(QObject* par)
 : QItemDelegate(par)
 {
-    parentForm = par;
     columnMask = "";
     delegateType = String;
     readOnly = false;

@@ -31,18 +31,9 @@ void Topers::addDocument(int opNumber) {
 
 void Topers::removeDocument(int opNumber) {
     if (opNumber > 0) {
-/*
-        Documents* doc = TApplication::exemplar()->getDocuments(opNumber);
-        doc->close();
-        TApplication::exemplar()->documents.remove()
-    if (dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        Dictionary* dict = getDictionary(dictName);
-        dict->close();
-        dictionaries.remove(dictName);
-*/
+        TApplication::exemplar()->removeDocuments(opNumber);
     }
 }
-
 
 
 bool Topers::add()
@@ -62,14 +53,15 @@ bool Topers::add()
 
 void Topers::view()
 {
+    int operNumber = getValue("опер").toInt();
     WizardOperation wizard;
-    wizard.open(TApplication::exemplar()->getMainWindow(), getValue("опер").toInt());
+    wizard.open(TApplication::exemplar()->getMainWindow(), operNumber);
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства операции"));
     wizard.exec();
     wizard.close();
-    if (wizard.selected())
+    if (wizard.getResult())
     {
-//        removeDictionary(dictName);
+        removeDocument(operNumber);
     }
 }
 

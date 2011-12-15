@@ -1,3 +1,5 @@
+#include <QDir>
+#include <QPainter>
 #include "picture.h"
 
 Picture::Picture(QWidget* parent): QFrame(parent) {

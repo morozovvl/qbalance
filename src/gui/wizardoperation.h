@@ -20,14 +20,21 @@ private:
     QSqlQuery       prvs;               // Проводки
     QLineEdit*      operName;              // Как будет называться операция
     QTableWidget*   prvTable;             // Список проводок операции
+    QTableWidget*   fieldsTable;
     MyTextEdit*     textEditor;
     MySyntaxHighlighter* highlighter;
+    QListWidget*        headers;          // Заголовки колонок
+    QList<FieldType>    fields;           // Первоначальный список полей
     virtual void    getData();
     friend QString  showAccounts();
+    bool            savePrvTable();
 private slots:
     void            addPrv();
     void            deletePrv();
+    void            headerUp();
+    void            headerDown();
     void            showAccountForm();
+    virtual void    frameActivated(int frameNumber);
 };
 
 #endif // WIZARDOPERATION_H

@@ -6,8 +6,7 @@
 #include <QSettings>
 #include <QUuid>
 #include "../engine/scriptengine.h"
-
-class Essence;
+#include "../kernel/essence.h"
 
 class Form: public QObject
 {
@@ -24,14 +23,12 @@ public:
     virtual void readSettings();
     virtual void writeSettings();
     virtual void createUi();
-    ScriptEngine* getScriptEngine() { return engine; }
     void initFormEvent();
     void beforeShowFormEvent();
     void afterHideFormEvent();
     void closeFormEvent();
-    void setScriptForForm(QString);
-    void removeScriptForForm();
     void setButtonsSignals();
+    ScriptEngine* getScriptEngine() { return parent->getScriptEngine(); }
 
     Q_INVOKABLE QDialog* getForm() { return formWidget; }
     Q_INVOKABLE Essence* getParent() { return parent; }
@@ -57,7 +54,6 @@ protected:
     QString         configName;
     bool            iconsSeted;
 
-    ScriptEngine*   engine;
     QString         script;
     QScriptValue    scripts;
 

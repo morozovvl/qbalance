@@ -13,7 +13,7 @@ class MyButtonLineEditItemDelegate : public MyItemDelegate
 {
     Q_OBJECT
 public:
-    MyButtonLineEditItemDelegate();
+    MyButtonLineEditItemDelegate(QObject* parent = 0);
     virtual ~MyButtonLineEditItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setEditorData(QWidget* editor, const QModelIndex &index) const;
