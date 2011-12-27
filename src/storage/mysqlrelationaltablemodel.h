@@ -18,7 +18,7 @@ class MySqlRelationalTableModel : public QSqlRelationalTableModel {
 public:
     MySqlRelationalTableModel();
     void setParent(Table* par) { parent = par; }
-    Q_INVOKABLE void setTable(const QString& str) { QSqlRelationalTableModel::setTable(str.toUtf8()); }
+    Q_INVOKABLE void setTable(const QString& str) { QSqlRelationalTableModel::setTable(str); }
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений
     bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
@@ -41,7 +41,7 @@ public:
     virtual void setSort(int, Qt::SortOrder);
     void setPrepared(bool p = true) { isPrepared = p; }
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
-    Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter.toUtf8()); }
+    Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
     Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
 
 // Функции для сохранения данных
