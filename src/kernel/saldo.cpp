@@ -9,7 +9,7 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
     dictionaryName = dictName;
     tagName = "saldo" + cAcc;
     quan = false;
-    QSqlQuery accRecord = TApplication::exemplar()->getDBFactory()->execQuery(QString("SELECT количество FROM счета WHERE счет LIKE '%1'").arg(cAcc));
+    QSqlQuery accRecord = TApplication::exemplar()->getDBFactory()->getAccountRecord(cAcc);
     if (accRecord.first())
        quan = accRecord.record().value("количество").toBool();
 }

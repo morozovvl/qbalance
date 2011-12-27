@@ -107,9 +107,11 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     if (formWidget == 0) {
         formWidget = new QDialog(pwgt);
         formWidget->setVisible(false);
-        buttonOk = new QPushButton(QObject::trUtf8("&Принять"));
+//        buttonOk = new QPushButton(QObject::trUtf8("&Принять"));
+        buttonOk = new QPushButton();
         buttonOk->setObjectName("buttonOk");
-        buttonCancel = new QPushButton(QObject::trUtf8("&Отменить"));
+//        buttonCancel = new QPushButton(QObject::trUtf8("&Отменить"));
+        buttonCancel = new QPushButton();
         buttonCancel->setObjectName("buttonCancel");
 
         cmdButtonLayout = new QHBoxLayout();

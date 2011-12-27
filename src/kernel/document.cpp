@@ -29,10 +29,12 @@ Document::Document(int oper, Documents* par)
         dicts = dictionaries->getDictionaries();
     }
 
+    QMap<QString, DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
+    DbFactory->getToperData(operNumber, &topersList);
+    DbFactory->setTopersDictAliases(&dictsList, &topersList);
+
     // Создадим локальный для документа список справочников
     Dictionary* dict;
-    QMap<QString, DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
-    toper = DbFactory->getToperDicts(operNumber, &dictsList);
     foreach (QString dictName, dictsList.keys())
     {
         if (dictName == "saldo")
@@ -82,14 +84,12 @@ bool Document::calculate(const QModelIndex& index) {
         lResult = Essence::calculate(index);
     if (lResult) {
         double itog = 0;
-        int i = 0;
-        toper.first();
-        while (toper.isValid())
+        for (int i = 0; i < topersList.count(); i++)
         {
-            QString sign = toper.record().value("итоги").toString().trimmed();
+            QString sign = topersList.at(i).itog;
             if (sign == "+" || sign == "-") {
                 double sum = 0;
-                int col = tableModel->record().indexOf(QString("p%1__сумма").arg(i + 1));
+                int col = tableModel->record().indexOf(QString("p%1__сумма").arg(topersList.at(i).number));
                 for (int j = 0; j < tableModel->rowCount(); j++) {
                     sum += tableModel->data(tableModel->index(j, col)).toDouble();
                 }
@@ -98,8 +98,6 @@ bool Document::calculate(const QModelIndex& index) {
                 else
                     itog -= sum;
             }
-            toper.next();
-            i++;
         }
         MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
         if (itogWidget != 0)
@@ -148,11 +146,10 @@ void Document::show()
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
-        toper.first();
-        while (toper.isValid())
+        for (int i = 0; i < topersList.count(); i++)
         {
-            int prvNumber = toper.record().value("номер").toInt();
-            dictName = toper.record().value("дбсправ").toString().trimmed();   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+            int prvNumber = topersList.at(i).number;
+            dictName = topersList.at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
             if (dicts->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
                 dict = dicts->value(dictName);
@@ -162,7 +159,7 @@ void Document::show()
                     dict->setId(tableModel->record(0).value(QString("p%1__дбкод").arg(prvNumber)).toULongLong());
                 }
             }
-            dictName = toper.record().value("крсправ").toString().trimmed();   // то же самое для справочников по кредиту проводок
+            dictName = topersList.at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
             if (dicts->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
                 dict = dicts->value(dictName);
@@ -172,7 +169,6 @@ void Document::show()
                     dict->setId(tableModel->record(0).value(QString("p%1__кркод").arg(prvNumber)).toULongLong());
                 }
             }
-            toper.next();
         }
     }
     Essence::show();
@@ -184,26 +180,24 @@ void Document::setConstDictId(QString dName, QVariant id)
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
-        toper.first();
-        while (toper.isValid())
+        for (int i = 0; i < topersList.count(); i++)
         {
-            dictName = toper.record().value("дбсправ").toString().trimmed();
+            dictName = topersList.at(i).dbDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0) {
                 dict = dicts->value(dictName);
                 if (dict->isConst()) {
-                    DbFactory->setConstDictId("дбкод", id, docId, operNumber, toper.record().value("номер").toInt());
+                    DbFactory->setConstDictId("дбкод", id, docId, operNumber, topersList.at(i).number);
                     dict->setId(id.toULongLong());
                 }
             }
-            dictName = toper.record().value("крсправ").toString().trimmed();
+            dictName = topersList.at(i).crDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0) {
                 dict = dicts->value(dictName);
                 if (dict->isConst()) {
-                    DbFactory->setConstDictId("кркод", id, docId, operNumber, toper.record().value("номер").toInt());
+                    DbFactory->setConstDictId("кркод", id, docId, operNumber, topersList.at(i).number);
                     dict->setId(id.toULongLong());
                 }
             }
-            toper.next();
         }
     }
     Essence::show();
@@ -265,7 +259,8 @@ void Document::setTableModel()
     tableModel->setTable(tableName);
     tableModel->setBlockUpdate(!isUpdateable());
     QStringList prvFieldsList = tableModel->getFieldsList();
-    selectStatement = DbFactory->getDocumentSqlSelectStatement(operNumber, &columnsProperties, &prv1);
+    QList<ToperType> topersList;
+    selectStatement = DbFactory->getDocumentSqlSelectStatement(operNumber, &topersList, &columnsProperties, &prv1);
     if (selectStatement.size() > 0)
     {
         tableModel->setSelectStatement(selectStatement);
@@ -339,25 +334,23 @@ void Document::insertDocString()
     Dictionary* dict;
     QString dictName, parameter;
     qulonglong dbId, crId;
-    toper.first();
-    while (toper.isValid())
+    for (int i = 0; i < topersList.count(); i++)
     {
         dbId = 0;
-        dictName = toper.record().value("дбсправ").toString().trimmed();
+        dictName = topersList.at(i).dbDictAlias;
         if (dictName.size() > 0)
         {
             dict = dicts->value(dictName);
             dbId = dict->getId();
         }
         crId = 0;
-        dictName = toper.record().value("крсправ").toString().trimmed();
+        dictName = topersList.at(i).crDictAlias;
         if (dictName.size() > 0)
         {
             dict = dicts->value(dictName);
             crId = dict->getId();
         }
         parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
-        toper.next();
     }
     DbFactory->addDocStr(operNumber, docId, parameter);
 }

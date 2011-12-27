@@ -83,6 +83,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             hbxDateLayout->addStretch(1);
             vbxLayout->insertLayout(0, hbxDateLayout);
         }
+        buttonCancel->hide();
     }
     else
     {

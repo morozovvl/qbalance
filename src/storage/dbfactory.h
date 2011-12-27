@@ -43,6 +43,27 @@ struct DictType
 };
 
 
+struct ToperType
+{
+    int         number;         // Порядковый номер проводки в типовой операции
+    QString     dbAcc;          // Дебетовый счет
+    QString     dbDict;         // Имя дебетового справочника
+    QString     dbDictAlias;    // Псевдоним дебетового справочника в списке справочников
+    bool        dbQuan;         // По дебетовому счету ведется количественный учет
+    bool        dbConst;        // Дебетовый справочник является постоянным
+    bool        dbSaldoVisible; // Сальдо по дебетовому справочнику видно
+    bool        dbDictVisible;  // Дебетовый справочник видим
+    QString     crAcc;          // Кредитовый счет
+    QString     crDict;         // Имя кредитового справочника
+    QString     crDictAlias;    // Псевдоним кредитового справочника в списке справочников
+    bool        crQuan;         // По кредитовому счету ведется количественный учет
+    bool        crConst;        // Кредитовый справочник является постоянным
+    bool        crSaldoVisible; // Сальдо по кредитовому справочнику видно
+    bool        crDictVisible;  // Кредитовый справочник видим
+    QString     itog;           //
+};
+
+
 class DBFactory : public QObject {
     Q_OBJECT
 
@@ -107,6 +128,8 @@ public:
 
     virtual bool open();
     virtual bool open(QString, QString);
+    void initDBFactory();
+
     virtual void close();
 
     void beginTransaction()     { exec("BEGIN;"); }
@@ -115,11 +138,14 @@ public:
 
     QSqlQuery getDataTypes();
 
-    QSqlQuery getToperDicts(int oper, QMap<QString, DictType>* dictsList = 0);     // Создает список справочников, которые используются в типовой операции
+    void getToperData(int oper, QList<ToperType>* topersList);
 
+    void setTopersDictAliases(QMap<QString, DictType>* dictsList, QList<ToperType>* topersList);     // Создает список справочников, которые используются в типовой операции
     QString getDocumentSqlSelectStatement(int oper,
+                                          QList<ToperType>*,
                                           QMap<int, FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
+    QSqlQuery getAccountRecord(QString cAcc);
 
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);
@@ -131,7 +157,8 @@ public:
     bool updateColumnHeader(int, QString, QString);
     bool setTableColumnHeaderOrder(int, QString, int);
     bool deleteToper(int operNumber);
-    bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
+    bool addToperPrv(QString tmpTable, int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
+    bool createTempToperTable(QString tmpTable);
     int getNewToper();
     bool createNewToperPermission(QString, bool);
 
@@ -149,7 +176,6 @@ private:
 
     void setError(QString);
     void initObjectNames();
-    QString getDictName(QMap<QString, DictType>* dictsList, QString dictName, QString prefix);
 };
 
 #endif

@@ -92,7 +92,6 @@ void ConfigForm::dictAdd() {
     vLayout->addWidget(lblTableName, 0, 0, Qt::AlignRight);
     vLayout->addWidget(lnEdit, 0, 1, Qt::AlignRight);
     frame->setLayout(vLayout);
-    qDebug() << "dictAdd()";
 }
 
 
@@ -101,7 +100,6 @@ void ConfigForm::dictProperties() {
     if (layout != 0) {
         delete layout;
     }
-    qDebug() << "dictProperties()";
 }
 
 
@@ -110,7 +108,6 @@ void ConfigForm::dictColumns() {
     if (layout != 0) {
         delete layout;
     }
-    qDebug() << "dictColumns()";
 }
 
 
@@ -119,7 +116,6 @@ void ConfigForm::dictPermissions() {
     if (layout != 0) {
         delete layout;
     }
-    qDebug() << "dictPermissions()";
 }
 
 

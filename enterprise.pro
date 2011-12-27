@@ -8,9 +8,9 @@ QT += sql \
       script \
       gui
 
-CONFIG(debug) {
-    DESTDIR = bin/debug
-}
+#CONFIG(debug) {
+#    DESTDIR = bin/debug
+#}
 
 TARGET = enterprise
 CONFIG += designer \

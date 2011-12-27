@@ -49,7 +49,7 @@ private:
     int operNumber;
     int docId;
     int prv1;
-    QSqlQuery                       toper;
+    QList<ToperType>                topersList;
     QString selectStatement;
     QHash<int, prvSaldo> saldo;                   // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     virtual void setTableModel();

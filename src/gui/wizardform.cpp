@@ -73,6 +73,7 @@ void WizardForm::addFrame(QVBoxLayout* layout, QString title/* = ""*/)
 
 void WizardForm::cmdForward()
 {
+    oldFrameIndex = frameIndex;
     frameIndex++;
     setFrame();
     setButtonsEnabled();
@@ -81,6 +82,7 @@ void WizardForm::cmdForward()
 
 void WizardForm::cmdBackward()
 {
+    oldFrameIndex = frameIndex;
     frameIndex--;
     setFrame();
     setButtonsEnabled();
@@ -125,6 +127,7 @@ void WizardForm::setButtonsEnabled()
 
 void WizardForm::setFrame()
 {
+    frameDeactivated(oldFrameIndex);
     currentFrame->hide();
     vbxLayout->removeWidget(currentFrame);
     currentFrame = frames.at(frameIndex);

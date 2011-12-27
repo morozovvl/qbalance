@@ -14,9 +14,12 @@ public:
 protected:
     virtual void   initFrames();
     virtual bool   execute();
+    virtual void    frameActivated(int frameNumber);
+    virtual void    frameDeactivated(int frameNumber);
 private:
     int             oper;               // Номер операции, с которой работает мастер
     bool            addOperation;
+    bool            prvTableChanged;
     QSqlQuery       prvs;               // Проводки
     QLineEdit*      operName;              // Как будет называться операция
     QTableWidget*   prvTable;             // Список проводок операции
@@ -27,14 +30,13 @@ private:
     QList<FieldType>    fields;           // Первоначальный список полей
     virtual void    getData();
     friend QString  showAccounts();
-    bool            savePrvTable();
 private slots:
     void            addPrv();
     void            deletePrv();
     void            headerUp();
     void            headerDown();
     void            showAccountForm();
-    virtual void    frameActivated(int frameNumber);
+    void            toperTableChanged();
 };
 
 #endif // WIZARDOPERATION_H

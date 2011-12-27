@@ -75,7 +75,7 @@ void WizardOperation::initFrames()
     layout->addLayout(buttonLayout);
     addFrame(layout, QObject::trUtf8("Список проводок"));
 
-    // 3-я страница
+    // 3-я страница (список столбцов)
     layout = new QVBoxLayout();
     // Добавим таблицу проводок
     layout->addWidget(fieldsTable);
@@ -111,12 +111,7 @@ bool WizardOperation::execute()
     TApplication::exemplar()->getDBFactory()->beginTransaction();
     int tableId = TApplication::exemplar()->getDBFactory()->getDictionaryId(QString("Документ%1").arg(oper));
     if (tableId > 0) {
-        // Сохраним проводки
-        if (!savePrvTable())
-        {
-            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
-            return false;
-        }
+        // Сохраним таблицу проводок проводки
         // Установим наименование полей
         if (headers->count() > 0)
         {
@@ -153,6 +148,7 @@ void WizardOperation::getData()
 
     // Создадим таблицу проводок
     prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 5);
+    connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
     prvTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Дебет")
                                                       << QObject::trUtf8("Дб.постоянный")
                                                       << QObject::trUtf8("Кредит")
@@ -187,8 +183,9 @@ void WizardOperation::getData()
      prvTable->setItemDelegateForColumn(crConstField, crConstBooleanDelegate);
 
      // Создадим таблицу столбцов
+     QList<ToperType> topersList;
      QMap<int, FieldType> flds;
-     TApplication::exemplar()->getDBFactory()->getDocumentSqlSelectStatement(oper, &flds);
+     TApplication::exemplar()->getDBFactory()->getDocumentSqlSelectStatement(oper, &topersList, &flds);
 
      fieldsTable = new QTableWidget(flds.count(), 6);
      fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
@@ -281,6 +278,12 @@ void WizardOperation::headerDown()
 }
 
 
+void WizardOperation::toperTableChanged()
+{
+    prvTableChanged = true;
+}
+
+
 void WizardOperation::frameActivated(int frameNumber)
 {
     if (frameNumber == 3)
@@ -314,29 +317,35 @@ void WizardOperation::frameActivated(int frameNumber)
 }
 
 
-bool WizardOperation::savePrvTable()
-{  // Сохранить проводки
-    if (TApplication::exemplar()->getDBFactory()->deleteToper(oper))
+void WizardOperation::frameDeactivated(int frameNumber)
+{
+    if (frameNumber == 1 && prvTableChanged)
     {
+        QList<ToperType> topersList;
         for (int i = 0; i < prvTable->rowCount(); i++)
         {
-            QString dbAcc = prvTable->item(i, debetField) != 0 ? prvTable->item(i, debetField)->text().trimmed() : "";
-            bool dbAccConst = prvTable->item(i, dbConstField) == 0 || prvTable->item(i, dbConstField)->text() == "false" ? false : true;
-            QString crAcc = prvTable->item(i, creditField) != 0 ? prvTable->item(i, creditField)->text().trimmed() : "";
-            bool crAccConst = (prvTable->item(i, crConstField) == 0 || prvTable->item(i, crConstField)->text() == "false" ? false : true);
-            QString itog = prvTable->item(i, itogField) != 0 ? prvTable->item(i, itogField)->text() : "";
-            qDebug() << dbAcc << dbAccConst << crAcc << crAccConst << itog;
-            if (!TApplication::exemplar()->getDBFactory()->addToperPrv(oper, operName->text(),
-                                                                  dbAcc,
-                                                                  dbAccConst,
-                                                                  crAcc,
-                                                                  crAccConst,
-                                                                  itog))
-                return false;
+            ToperType toperT;
+            QTableWidgetItem* item;
+            toperT.number = i + 1;
+            item = prvTable->item(i, debetField);
+            if (item != 0)
+                toperT.dbAcc = item->text().trimmed();
+            item = prvTable->item(i, dbConstField);
+            if (item != 0)
+                toperT.dbConst = (QString(item->text()).compare("true") == 0) ? true : false;
+            item = prvTable->item(i, creditField);
+            if (item != 0)
+                toperT.crAcc = item->text().trimmed();
+            item = prvTable->item(i, crConstField);
+            if (item != 0)
+                toperT.crConst = (QString(item->text()).compare("true") == 0) ? true : false;
+            item = prvTable->item(i, itogField);
+            if (item != 0)
+                toperT.itog = item->text().trimmed();
+            topersList.append(toperT);
         }
-        return TApplication::exemplar()->getDBFactory()->createNewToperPermission(QString(oper), true);
+        QMap<int, FieldType> flds;
     }
-    return false;
 }
 
 

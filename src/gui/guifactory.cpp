@@ -62,6 +62,7 @@ int GUIFactory::openDB()
                 QString password = frm.getPassword();
                 if (db->open(login, password))
                 {
+                    db->initDBFactory();
                     if (connForm->connectionName().size() > 0)
                         mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + " - " + login);
                 }
@@ -109,12 +110,11 @@ void GUIFactory::show() {
 
 
 int GUIFactory::showError(QString errorText) {
-//    QErrorMessage msgBox(mainWindow->centralWidget());
+    QErrorMessage msgBox(mainWindow->centralWidget());
     msgBox.showMessage(errorText);
 //    msgBox.setWindowModality(Qt::ApplicationModal);
-//    msgBox.setParent(mainWindow->centralWidget());
-    msgBox.setModal(true);
-    msgBox.show();
+//    msgBox.setModal(true);
+    msgBox.exec();
     return 0;
 }
 

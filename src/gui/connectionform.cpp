@@ -40,11 +40,13 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
         vbxLayout->insertLayout(0, ptopLayout);
         QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
         if (cmdButtonLayout != 0) {
-            QPushButton* buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
+//            QPushButton* buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
+            QPushButton* buttonDelete = new QPushButton();
             buttonDelete->setObjectName("buttonDelete");
             connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
             cmdButtonLayout->insertWidget(0, buttonDelete);
-            QPushButton* cmdSave = new QPushButton(QObject::trUtf8("&Сохранить"));
+//            QPushButton* cmdSave = new QPushButton(QObject::trUtf8("&Сохранить"));
+            QPushButton* cmdSave = new QPushButton();
             cmdSave->setObjectName("buttonSave");
             connect(cmdSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
             cmdButtonLayout->insertWidget(0, cmdSave);

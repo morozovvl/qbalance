@@ -87,8 +87,8 @@ bool TApplication::open() {
             int result = gui->openDB(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
-                dictionaryList = new Dictionaries;
-                topersList = new Topers;
+                dictionaryList = new Dictionaries();
+                topersList = new Topers();
                 if (dictionaryList->open() && topersList->open())
                 {   // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
@@ -99,8 +99,6 @@ bool TApplication::open() {
             }
             else if (result == -2)
                 {   // Произошла ошибка соединения с сервером
-                QString errorText = db->getErrorText();
-                showError(errorText);
                 if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
                                      QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
                     // Попытаемся создать новую БД

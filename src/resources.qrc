@@ -16,9 +16,4 @@
         <file alias="buttonUp">resources/up.png</file>
         <file alias="buttonDown">resources/down.png</file>
     </qresource>
-    <qresource prefix="/postgres">
-        <file>initdb0.sql</file>
-        <file>initdb1.sql</file>
-        <file>initdb2.sql</file>
-    </qresource>
 </RCC>

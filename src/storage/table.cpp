@@ -18,6 +18,7 @@ Table::Table(QString name, QObject *parent)
     tagName = tableName;
 }
 
+
 Table::~Table()
 {
 }
@@ -34,12 +35,14 @@ bool Table::relationsIsEmpty()
     return tableModel->relationsIsEmpty();
 }
 
+
 void Table::query(QString filter)
 {
     tableModel->setFilter(filter);
     tableModel->select();
     TApplication::debug(" Query: " + tableModel->selectStatement() + "\n");
 }
+
 
 bool Table::open()
 {
@@ -56,6 +59,7 @@ bool Table::open()
     }
     return opened;
 }
+
 
 void Table::close()
 {

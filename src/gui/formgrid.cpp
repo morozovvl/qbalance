@@ -111,7 +111,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonPrint = new QPushButton(QObject::trUtf8("&Печать"));
+//            buttonPrint = new QPushButton(QObject::trUtf8("&Печать"));
+            buttonPrint = new QPushButton();
             buttonPrint->setObjectName("buttonPrint");
         }
         else
@@ -134,7 +135,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     // Подключим кнопку "Обновить"
     if (defaultForm)
     {
-        buttonRequery = new QPushButton(QObject::trUtf8("&Обновить"));
+//        buttonRequery = new QPushButton(QObject::trUtf8("&Обновить"));
+        buttonRequery = new QPushButton();
         buttonRequery->setObjectName("buttonRequery");
     }
     else
@@ -151,7 +153,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonView = new QPushButton(QObject::trUtf8("&Просмотреть"));
+//            buttonView = new QPushButton(QObject::trUtf8("&Просмотреть"));
+            buttonView = new QPushButton();
             buttonView->setObjectName("buttonView");
         }
         else
@@ -173,7 +176,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
+//            buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
+            buttonDelete = new QPushButton();
             buttonDelete->setObjectName("buttonDelete");
         }
         else
@@ -195,7 +199,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-            buttonAdd = new QPushButton(QObject::trUtf8("&Добавить"));
+//            buttonAdd = new QPushButton(QObject::trUtf8("&Добавить"));
+            buttonAdd = new QPushButton();
             buttonAdd->setObjectName("buttonAdd");
         }
         else

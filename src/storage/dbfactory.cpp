@@ -34,48 +34,54 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
         const QString password = frm.getPassword();
         if (open(login, password))
         {
-            //Drake
-            //Базу данных следует всегда создавать в UTF-8
-            //т.к. есть возможность возвращать данные на клиент в нужной кодировке
-            if (exec(QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName, DBFactory::storageEncoding())))
+            const QStringList scripts = initializationScriptList();
+            if (scripts.size() > 0)
             {
-                close();
-                const QStringList scripts = initializationScriptList();
                 //Drake
-                //Нет смысла создавать локальный временный экземпляр в куче
-                //Лучше на стеке - система его удалит
-                QDir dir;
-
-                for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
+                //Базу данных следует всегда создавать в UTF-8
+                //т.к. есть возможность возвращать данные на клиент в нужной кодировке
+                QString command = QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName, DBFactory::storageEncoding());
+                if (exec(command))
                 {
-                    if (dir.exists(*script))
+                    //Drake
+                    //Нет смысла создавать локальный временный экземпляр в куче
+                    //Лучше на стеке - система его удалит
+                    QDir dir;
+
+                    for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
                     {
-                        QProcess proc;
-                        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-                        env.insert("PGPASSWORD", password);
-                        env.insert("PGCLIENTENCODING", TApplication::encoding() );
-                        proc.setProcessEnvironment(env);
-                        proc.start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
-
-                        lResult = proc.waitForStarted();
-
-                        if (!lResult)
-                        {// выдадим сообщение об ошибке и выйдем из цикла
-                            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить psql"));
-                        }
-                        else
+                        if (dir.exists(*script))
                         {
-                            lResult = proc.waitForFinished();
+                            QProcess proc;
+                            QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+                            env.insert("PGPASSWORD", password);
+                            env.insert("PGCLIENTENCODING", TApplication::encoding() );
+                            proc.setProcessEnvironment(env);
+                            proc.start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
+
+                            lResult = proc.waitForStarted();
+
                             if (!lResult)
+                            {// выдадим сообщение об ошибке и выйдем из цикла
+                                TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить psql"));
+                            }
+                            else
                             {
-                                TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
+                                lResult = proc.waitForFinished();
+                                if (!lResult)
+                                {
+                                    TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
+                                }
                             }
                         }
                     }
-                    else
-                        TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Не найден файл инициализации БД <%1>.")).arg(*script));
+                    command = QString("ALTER DATABASE %1 OWNER TO %2;").arg(dbName).arg("sa");
+                    exec(command);
                 }
             }
+            else
+                TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
+            close();
        }
        else
           TApplication::exemplar()->showCriticalError(QObject::trUtf8("Не удалось создать соединение с сервером."));
@@ -124,13 +130,18 @@ bool DBFactory::open(QString login, QString password)
     if (db->open(login, password)) {
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         currentLogin = login;
-        initObjectNames();// Инициируем переводчик имен объектов из внутренних наименований в наименования БД
-        objectTypes = execQuery(QString("SELECT * FROM %1").arg(getObjectName("типыобъектов")));
         return true;
     }
-    else
-        setError(db->lastError().text());
+//    else
+//        setError(db->lastError().text());
     return false;
+}
+
+
+void DBFactory::initDBFactory()
+{
+    initObjectNames();                  // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
+    objectTypes = execQuery(QString("SELECT * FROM %1").arg(getObjectName("типыобъектов")));
 }
 
 
@@ -564,7 +575,7 @@ bool DBFactory::deleteToper(int operNumber)
 }
 
 
-bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
+bool DBFactory::addToperPrv(QString tmpTable, int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
 {
     int number = 1;
     clearError();
@@ -573,8 +584,17 @@ bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool db
     {
         number = query.record().value(0).toInt() + 1;
     }
-    QString command = QString("INSERT INTO топер (опер, номер, имя, дбсчет, дбпост, крсчет, крпост, итоги) VALUES (%1, %2, '%3', '%4', %5, '%6', %7, '%8');").arg(operNumber).arg(number).arg(name).arg(dbAcc).arg(dbAccConst ? "true" : "false").arg(crAcc).arg(crAccConst ? "true" : "false").arg(itog);
-    qDebug() << command;
+    if (tmpTable.size() == 0)
+        tmpTable = "топер";
+    QString command;
+    command = QString("INSERT INTO %1 (опер, номер, имя, дбсчет, дбпост, крсчет, крпост, итоги) VALUES (%2, %3, '%4', '%5', %6, '%7', %8, '%9');").arg(tmpTable).arg(operNumber).arg(number).arg(name).arg(dbAcc).arg(dbAccConst ? "true" : "false").arg(crAcc).arg(crAccConst ? "true" : "false").arg(itog);
+    return exec(command);
+}
+
+
+bool DBFactory::createTempToperTable(QString tmpTable)
+{
+    QString command = QString("CREATE TEMPORARY TABLE %1 AS SELECT * FROM топер LIMIT 0;").arg(tmpTable);
     return exec(command);
 }
 
@@ -934,109 +954,123 @@ QString DBFactory::storageEncoding()
 }
 
 
-QSqlQuery DBFactory::getToperDicts(int oper, QMap<QString, DictType>* dictsList/* = 0*/)
+void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 {
-    QString dictName, alias;
-    DictType dict;
-    QList<QString> spravList;
     clearError();
     QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4").arg(getObjectName("vw_топер")).arg(getObjectName("vw_топер.опер")).arg(oper).arg(getObjectName("vw_топер.номер")));
-    // Сначала проверим справочники на предмет присутствия одного и того же справочника и по дебету и по кредиту
     toper.first();
+    // Сначала составим список справочников и проверим на предмет присутствия одного и того же справочника и по дебету и по кредиту
     while (toper.isValid())
     {
-        // получим имя дебетового справочника из описания проводок
-        dictName = toper.record().value("дбсправ").toString().trimmed();
-        // если имя справочника не пустое
-        if (dictName.size() > 0 && toper.record().value("дбвидим").toBool())
-        {
-            dictName = "дб" + dictName;
-            // этот справочник еще не содержится в списке по дебету
-            if (!spravList.contains(dictName))
-            // .. то добавим его в список
-                spravList << dictName;
-        }
-        // получим имя кредитового справочника из описания проводок
-        dictName = toper.record().value("крсправ").toString().trimmed();
-        // если имя справочника не пустое
-        if (dictName.size() > 0 && toper.record().value("крвидим").toBool())
-        {
-            dictName = "кр" + dictName;
-            // этот справочник еще не содержится в списке по кредиту
-            if (!spravList.contains(dictName))
-            {
-                // и если в кредитовом справочнике не ведется количественный учет
-                // (т.к. в этом случае вместо справочника будет подставляться таблица сальдо
-                if (!toper.record().value("кркол").toBool())
-                    // .. то добавим его в список
-                    spravList << dictName;
-            }
-        }
+        ToperType toperT;
+        toperT.number = toper.record().value("номер").toInt();
+        toperT.dbAcc = toper.record().value("дбсчет").toString();
+        toperT.dbDict = toper.record().value("дбсправ").toString().trimmed();
+        toperT.dbQuan = toper.record().value("дбкол").toBool();
+        toperT.dbConst = toper.record().value("дбпост").toBool();
+        toperT.dbSaldoVisible = toper.record().value("дбсалвидим").toBool();
+        toperT.dbDictVisible = toper.record().value("дбвидим").toBool();
+        toperT.crAcc = toper.record().value("крсчет").toString();
+        toperT.crDict = toper.record().value("крсправ").toString().trimmed();
+        toperT.crQuan = toper.record().value("кркол").toBool();
+        toperT.crConst = toper.record().value("крпост").toBool();
+        toperT.crSaldoVisible = toper.record().value("крсалвидим").toBool();
+        toperT.crDictVisible = toper.record().value("крвидим").toBool();
+        toperT.itog = toper.record().value("итоги").toString();
+        topersList->append(toperT);
         toper.next();
     }
-    if (spravList.size() > 0)
-    {   // Если мы нашли какие-то справочники
-        toper.first();
-        while (toper.isValid())
-        {
-            dictName = toper.record().value("дбсправ").toString().trimmed();
-            if (dictName.size() > 0)
-            {
-                dict.name = dictName;
-                alias = dictName;
-                if (spravList.contains("дб" + dictName) && spravList.contains("кр" + dictName))
-                    // Если один и тот же справочники присутствует и по дебету и по кредиту,
-                    // то дебетовый справочник обозначим с префиксом "дб"
-                {
-                    dict.prefix = "дб";
-                    alias = dict.prefix + dictName;
-                }
-                dict.isConst = false;
-                if (dictsList != 0 && !dictsList->contains(alias))
-                    dictsList->insert(alias, dict);
-            }
-            dictName = toper.record().value("крсправ").toString().trimmed();
-            if (dictName.size() > 0)
-            {
-                if (toper.record().value("кркол").toBool())
-                {      // Если в кредитовом справочнике ведется количественный учет
-                    dict.name = dictName;
-                    alias = "saldo";
-                    dict.acc = toper.record().value("крсчет").toString().trimmed();
-                    dict.isConst = false;
-                }
-                else
-                {
-                    dict.name = dictName;
-                    alias = dictName;
-                    if (spravList.contains("дб" + dictName) && spravList.contains("кр" + dictName))
-                        // Если один и тот же справочники присутствует и по дебету и по кредиту,
-                        // то дебетовый справочник обозначим с префиксом "кр"
-                    {
-                        dict.prefix = "кр";
-                        alias = dict.prefix + dictName;
-                    }
-                    dict.isConst = toper.record().value("крпост").toBool();
-                }
-                if (dictsList != 0 && !dictsList->contains(alias))
-                    dictsList->insert(alias, dict);
-            }
-            toper.next();
-        }
-    }
-    return toper;
 }
 
 
-QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>* columnsProperties, int* retPrv1)
+void DBFactory::setTopersDictAliases(QMap<QString, DictType>* dictsList, QList<ToperType>* topersList)
+{
+    QString dictName, alias;
+    for (int i = 0; i < topersList->count(); i++)
+    {
+        DictType dict;
+        ToperType toperT;
+        toperT = topersList->at(i);
+        dictName = toperT.dbDict;
+        if (dictName.size() == 0)
+        {
+            QSqlQuery accRecord = getAccountRecord(toperT.dbAcc);
+            if (accRecord.first())
+            {
+               dictName = accRecord.record().value("имясправочника").toString();
+               toperT.dbDict = dictName;
+               toperT.dbQuan = accRecord.record().value("количество").toBool();
+            }
+        }
+        alias = dictName;
+        if (dictName.size() > 0)
+        {
+            dict.name = dictName;
+            if (dictsList->contains("дб" + dictName) && dictsList->contains("кр" + dictName))
+                // Если один и тот же справочники присутствует и по дебету и по кредиту,
+                // то дебетовый справочник обозначим с префиксом "дб"
+            {
+                dict.prefix = "дб";
+                alias = dict.prefix + dictName;
+            }
+            dict.isConst = toperT.dbConst;
+            if (dictsList != 0 && !dictsList->contains(alias))
+                dictsList->insert(alias, dict);
+        }
+        toperT.dbDictAlias = alias;
+
+        dictName = toperT.crDict;
+        if (dictName.size() == 0)
+        {
+            QSqlQuery accRecord = getAccountRecord(toperT.crAcc);
+            if (accRecord.first())
+            {
+                dictName = accRecord.record().value("имясправочника").toString();
+                toperT.crDict = dictName;
+                toperT.crQuan = accRecord.record().value("количество").toBool();
+            }
+        }
+        alias = dictName;
+        if (dictName.size() > 0)
+        {
+            if (toperT.crQuan)
+            {      // Если в кредитовом справочнике ведется количественный учет
+                dict.name = dictName;
+                alias = "saldo";
+            }
+            else
+            {
+                dict.name = dictName;
+                if (dictsList->contains("дб" + dictName) && dictsList->contains("кр" + dictName))
+                    // Если один и тот же справочники присутствует и по дебету и по кредиту,
+                    // то дебетовый справочник обозначим с префиксом "кр"
+                {
+                    dict.prefix = "кр";
+                    alias = dict.prefix + dictName;
+                }
+            }
+            dict.isConst = toperT.crConst;
+            if (dictsList != 0 && !dictsList->contains(alias))
+                dictsList->insert(alias, dict);
+        }
+        toperT.crDictAlias = alias;
+        topersList->removeAt(i);
+        topersList->append(toperT);
+    }
+}
+
+
+QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QMap<int, FieldType>* columnsProperties, int* retPrv1)
 {
     QString selectStatement;
     QMap<QString, DictType> dictsList;
-    QSqlQuery toper = getToperDicts(oper, &dictsList);
-    toper.first();
-    if (toper.isValid())
+    if (topersList->count() == 0)
     {
-
+        getToperData(oper, topersList);
+    }
+    if (topersList->count() > 0)
+    {
+        setTopersDictAliases(&dictsList, topersList);
         QString selectClause, fromClause, whereClause;
         int prv, prv1;
         if (columnsProperties != 0)
@@ -1046,10 +1080,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
         QMap<int, FieldType> fields;
         getColumnsProperties(&fields, tableName);
         // Создадим клаузу проводок в секции SELECT
-        int i = 0;
-        while (toper.isValid())
+        for (int i = 0; i < topersList->count(); i++)
         {   // Для всех проводок данной типовой операции
-            prv = toper.record().value(getObjectName("vw_топер.номер")).toInt();       // получим номер проводки в типовой операции
+            prv = topersList->at(i).number;                     // получим номер проводки в типовой операции
             foreach (const QString field, prvFieldsList)
             {// Для всех полей таблицы "проводки"
                 selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
@@ -1073,8 +1106,6 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
             {
                 fromClause.append(QString(" LEFT OUTER JOIN %1 p%2 ON p%3.%4=p%2.%4 AND p%3.%5=p%2.%5 AND p%3.%6=p%2.%6 AND p%2.%7=%2").arg(tableName).arg(prv).arg(prv1).arg(getObjectName("проводки.доккод")).arg(getObjectName("проводки.стр")).arg(getObjectName("проводки.опер")).arg(getObjectName("проводки.номеропер")));
             }
-            toper.next();
-            i++;
         }
         // Соберем команду SELECT для проводок табличной части документа
         selectClause = QString("SELECT ").append(selectClause);
@@ -1084,13 +1115,12 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
          // Приступим к генерации секции SELECT более высокого уровня
         QString dictName;
         QStringList dictsNames;
-        toper.first();
-        while (toper.isValid())
+        for (int i = 0; i < topersList->count(); i++)
         {
-            prv = toper.record().value(getObjectName("vw_топер.номер")).toInt();
-            if (toper.record().value(getObjectName("vw_топер.дбвидим")).toBool())
-            {
-                dictName = getDictName(&dictsList, toper.record().value(getObjectName("vw_топер.дбсправ")).toString(), "дб");
+            prv = topersList->at(i).number + 1;
+//            if (topersList->at(i).dbDictVisible)
+//            {
+                dictName = topersList->at(i).dbDictAlias;
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
                     foreach (QString field, getFieldsList(dictName)) {
@@ -1102,10 +1132,10 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
                     fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
                     dictsNames << dictName;
                 }
-            }
-            if (toper.record().value(getObjectName("vw_топер.крвидим")).toBool())
-            {
-                dictName = getDictName(&dictsList, toper.record().value(getObjectName("vw_топер.крсправ")).toString(), "кр");
+//            }
+//            if (topersList->at(i).crDictVisible)
+//            {
+                dictName = topersList->at(i).crDictAlias;
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
                     foreach (QString field, getFieldsList(dictName)) {
@@ -1117,12 +1147,12 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
                     fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
                     dictsNames << dictName;
                 }
-            }
+//            }
             getColumnsProperties(&fields, getObjectName("сальдо"));
             QString field;
-            if (toper.record().value(getObjectName("vw_топер.дбсалвидим")).toBool()) {
+            if (topersList->at(i).dbSaldoVisible) {
                 dictName = QString("дбсальдо%1").arg(prv);
-                if (toper.record().value(getObjectName("vw_топер.дбкол")).toBool()) {
+                if (topersList->at(i).dbQuan) {
                     field = getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                     foreach(int i, fields.keys())
@@ -1141,9 +1171,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
                         addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо").arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.дбкод")).arg(getObjectName("сальдо.код"))));
             }
-            if (toper.record().value(getObjectName("vw_топер.крсалвидим")).toBool()) {
+            if (topersList->at(i).crSaldoVisible) {
                 dictName = QString("крсальдо%1").arg(prv);
-                if (toper.record().value(getObjectName("vw_топер.кркол")).toBool()) {
+                if (topersList->at(i).crQuan) {
                     field = getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                     foreach(int i, fields.keys())
@@ -1162,8 +1192,8 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
                         addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.крсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.кркод")).arg(getObjectName("сальдо.код")));
             }
-            toper.next();
         }
+
         if (retPrv1 != 0)
             *retPrv1 = prv1;
         selectStatement = selectClause + fromClause + QString(" ORDER BY p.p1__%1 ASC").arg(getObjectName("проводки.стр"));
@@ -1195,19 +1225,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QMap<int, FieldType>
 }
 
 
-QString DBFactory::getDictName(QMap<QString, DictType>* dictsList, QString dictName, QString prefix)
+QSqlQuery DBFactory::getAccountRecord(QString cAcc)
 {
-    // Сначала поищем с префиксом "дб" или "кр"
-    foreach(QString dict, dictsList->keys())
-    {
-        if (dictsList->value(dict).name == dictName && dictsList->value(dict).prefix == prefix)
-            return dict;
-    }
-    // Потом без префикса
-    foreach(QString dict, dictsList->keys())
-    {
-        if (dictsList->value(dict).name == dictName)
-            return dict;
-    }
-    return "";
+    clearError();
+    QString command = QString("SELECT * FROM счета WHERE trim(счет) = '%1'").arg(cAcc);
+    return execQuery(command);
 }

@@ -22,9 +22,11 @@ protected:
     virtual void                initFrames() = 0;
     virtual bool                execute() { return true; }
     virtual void                frameActivated(int) { ; }
+    virtual void                frameDeactivated(int) { ; }
 private:
     bool                        result;
     int                         frameIndex;
+    int                         oldFrameIndex;
     QWidget*                    currentFrame;
     void                        setButtonsEnabled();
     void                        setFrame();

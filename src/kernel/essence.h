@@ -30,19 +30,19 @@ public:
     Essence(QString name = "", QObject *parent = 0);
     ~Essence();
 // Функции для получения, сохранения данных модели
-    Q_INVOKABLE virtual qulonglong getId(int row = -1);
-    Q_INVOKABLE virtual QString getName(int row = -1);
-    virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
-    virtual void setId(qulonglong);
-    Q_INVOKABLE QString getCurrentFieldName() { return currentFieldName; }
-    QString getIdFieldName() { return idFieldName; }
-    Q_INVOKABLE virtual bool isFieldExists(QString field) { return getFieldsList().contains(field); }
-    Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
-    Q_INVOKABLE virtual void setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
-    Q_INVOKABLE virtual bool add() { return false; }        // Добавление записи
-    Q_INVOKABLE virtual bool remove();                      // Удаление записи
-    Q_INVOKABLE virtual void view();
-    virtual void print(QString);
+    Q_INVOKABLE virtual qulonglong      getId(int row = -1);
+    Q_INVOKABLE virtual QString         getName(int row = -1);
+    virtual bool                        setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
+    virtual void                        setId(qulonglong);
+    Q_INVOKABLE QString                 getCurrentFieldName() { return currentFieldName; }
+    QString                             getIdFieldName() { return idFieldName; }
+    Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
+    Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual bool            add() { return false; }        // Добавление записи
+    Q_INVOKABLE virtual bool            remove();                      // Удаление записи
+    Q_INVOKABLE virtual void            view();
+    virtual void                        print(QString);
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm() { return form; }
