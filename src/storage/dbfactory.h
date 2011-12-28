@@ -138,9 +138,8 @@ public:
 
     QSqlQuery getDataTypes();
 
-    void getToperData(int oper, QList<ToperType>* topersList);
+    void getToperData(int oper, QList<ToperType>* topersList, QMap<QString, DictType>* dictsList);
 
-    void setTopersDictAliases(QMap<QString, DictType>* dictsList, QList<ToperType>* topersList);     // Создает список справочников, которые используются в типовой операции
     QString getDocumentSqlSelectStatement(int oper,
                                           QList<ToperType>*,
                                           QMap<int, FieldType>* = 0,

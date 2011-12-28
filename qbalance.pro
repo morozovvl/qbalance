@@ -12,7 +12,7 @@ QT += sql \
 #    DESTDIR = bin/debug
 #}
 
-TARGET = enterprise
+TARGET = qbalance
 CONFIG += designer \
     plugin \
     uitools
@@ -143,3 +143,20 @@ win32:OBJECTS_DIR = /.obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src
+
+unix {
+ isEmpty(PREFIX) {
+  PREFIX =   /usr
+  }
+  BINDIR =   $$PREFIX/bin
+  DATAROOT =   $$PREFIX/share
+  DESKTOPDIR =   $$DATAROOT/applications
+  PIXMAPSDIR =   $$DATAROOT/pixmaps
+ target.path =  $$BINDIR
+ desktop.path =  $$DESKTOPDIR
+ desktop.files =  qbalance.desktop
+ icons.path =  $$PIXMAPSDIR
+ icons.files =  qbalance.png
+ INSTALLS +=  target  desktop  icons
+}
+CONFIG += debug_and_release

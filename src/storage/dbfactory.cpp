@@ -11,7 +11,7 @@ DBFactory::DBFactory()
 {
     hostName = "localhost";
     port = 5432;
-    dbName = "enterprise";
+    dbName = "qbalance";
     clearError();
     db = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL"));
 }
@@ -954,7 +954,7 @@ QString DBFactory::storageEncoding()
 }
 
 
-void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
+void DBFactory::getToperData(int oper, QList<ToperType>* topersList, QMap<QString, DictType>* dictsList)
 {
     clearError();
     QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4").arg(getObjectName("vw_топер")).arg(getObjectName("vw_топер.опер")).arg(oper).arg(getObjectName("vw_топер.номер")));
@@ -977,20 +977,10 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.crSaldoVisible = toper.record().value("крсалвидим").toBool();
         toperT.crDictVisible = toper.record().value("крвидим").toBool();
         toperT.itog = toper.record().value("итоги").toString();
-        topersList->append(toperT);
-        toper.next();
-    }
-}
 
-
-void DBFactory::setTopersDictAliases(QMap<QString, DictType>* dictsList, QList<ToperType>* topersList)
-{
-    QString dictName, alias;
-    for (int i = 0; i < topersList->count(); i++)
-    {
+        // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
+        QString dictName, alias;
         DictType dict;
-        ToperType toperT;
-        toperT = topersList->at(i);
         dictName = toperT.dbDict;
         if (dictName.size() == 0)
         {
@@ -1054,8 +1044,9 @@ void DBFactory::setTopersDictAliases(QMap<QString, DictType>* dictsList, QList<T
                 dictsList->insert(alias, dict);
         }
         toperT.crDictAlias = alias;
-        topersList->removeAt(i);
+
         topersList->append(toperT);
+        toper.next();
     }
 }
 
@@ -1066,11 +1057,10 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
     QMap<QString, DictType> dictsList;
     if (topersList->count() == 0)
     {
-        getToperData(oper, topersList);
+        getToperData(oper, topersList, &dictsList);
     }
     if (topersList->count() > 0)
     {
-        setTopersDictAliases(&dictsList, topersList);
         QString selectClause, fromClause, whereClause;
         int prv, prv1;
         if (columnsProperties != 0)

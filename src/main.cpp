@@ -13,7 +13,7 @@ bool readParameters(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0) {
-            out << QObject::trUtf8("Использование программы: enterprise [Параметр]\n");
+            out << QObject::trUtf8("Использование программы: qbalance [Параметр]\n");
             out << QObject::trUtf8("Параметры:\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
             out << QObject::trUtf8("  -d | --debug      - Запустить программу в режиме отладки комманд запросов (файл debug.log)\n");
@@ -67,6 +67,21 @@ int main(int argc, char **argv)
     QTextCodec::setCodecForTr(TApplication::codec());
     QTextCodec::setCodecForLocale(TApplication::codec());
     QTextCodec::setCodecForCStrings(TApplication::codec());
+
+    qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
+    qDebug() << "QLibraryInfo::DocumentationPath" << QLibraryInfo::location(QLibraryInfo::DocumentationPath);
+    qDebug() << "QLibraryInfo::HeadersPath" << QLibraryInfo::location(QLibraryInfo::HeadersPath);
+    qDebug() << "QLibraryInfo::LibrariesPath" << QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    qDebug() << "QLibraryInfo::BinariesPath" << QLibraryInfo::location(QLibraryInfo::BinariesPath);
+    qDebug() << "QLibraryInfo::PluginsPath" << QLibraryInfo::location(QLibraryInfo::PluginsPath);
+    qDebug() << "QLibraryInfo::ImportsPath" << QLibraryInfo::location(QLibraryInfo::ImportsPath);
+    qDebug() << "QLibraryInfo::DataPath" << QLibraryInfo::location(QLibraryInfo::DataPath);
+    qDebug() << "QLibraryInfo::TranslationsPath" << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    qDebug() << "QLibraryInfo::SettingsPath" << QLibraryInfo::location(QLibraryInfo::SettingsPath);
+    qDebug() << "QLibraryInfo::ExamplesPath" << QLibraryInfo::location(QLibraryInfo::ExamplesPath);
+    qDebug() << "QLibraryInfo::DemosPath" << QLibraryInfo::location(QLibraryInfo::DemosPath);
+    qDebug() << "QCoreApplication.applicationDirPath()" << QCoreApplication::applicationDirPath();
+    qDebug() << "QCoreApplication.applicationFilePath()" << QCoreApplication::applicationFilePath();
 
     // Инициируем переменные, которые нуждаются в этом
 

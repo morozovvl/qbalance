@@ -30,8 +30,7 @@ Document::Document(int oper, Documents* par)
     }
 
     QMap<QString, DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
-    DbFactory->getToperData(operNumber, &topersList);
-    DbFactory->setTopersDictAliases(&dictsList, &topersList);
+    DbFactory->getToperData(operNumber, &topersList, &dictsList);
 
     // Создадим локальный для документа список справочников
     Dictionary* dict;
@@ -258,7 +257,6 @@ void Document::setTableModel()
     tableModel->setParent(this);
     tableModel->setTable(tableName);
     tableModel->setBlockUpdate(!isUpdateable());
-    QStringList prvFieldsList = tableModel->getFieldsList();
     QList<ToperType> topersList;
     selectStatement = DbFactory->getDocumentSqlSelectStatement(operNumber, &topersList, &columnsProperties, &prv1);
     if (selectStatement.size() > 0)
@@ -271,9 +269,11 @@ void Document::setTableModel()
         updateFields << DbFactory->getObjectName("проводки.кол") << DbFactory->getObjectName("проводки.цена") << DbFactory->getObjectName("проводки.сумма");
         int columnCount = 0;
         int keyColumn   = 0;
-        foreach (const QString field, prvFieldsList)
+        for (int i = 0; i < columnsProperties.count(); i++)
         {
-            if (field == DbFactory->getObjectName("vw_топер.код"))
+            QString field = columnsProperties.value(i).name;
+            field = field.mid(field.indexOf("__") + 2);
+            if (field == DbFactory->getObjectName("проводки.код"))
             {// Если в списке полей встретилось поле ключа
                 keyColumn = columnCount;                                    // Запомним номер столбца с ключом
             }
