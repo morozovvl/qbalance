@@ -38,7 +38,7 @@ void Topers::removeDocument(int opNumber) {
 
 bool Topers::add()
 {
-    WizardOperation wizard(true);
+    WizardOperation wizard;
     wizard.open(TApplication::exemplar()->getMainWindow());
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Новая операция"));
     wizard.exec();

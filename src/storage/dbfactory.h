@@ -138,7 +138,8 @@ public:
 
     QSqlQuery getDataTypes();
 
-    void getToperData(int oper, QList<ToperType>* topersList, QMap<QString, DictType>* dictsList);
+    void getToperData(int oper, QList<ToperType>* topersList);
+    void setToperDictAliases(QList<ToperType>* topersList, QMap<QString, DictType>* dictsList);
 
     QString getDocumentSqlSelectStatement(int oper,
                                           QList<ToperType>*,
@@ -156,8 +157,7 @@ public:
     bool updateColumnHeader(int, QString, QString);
     bool setTableColumnHeaderOrder(int, QString, int);
     bool deleteToper(int operNumber);
-    bool addToperPrv(QString tmpTable, int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
-    bool createTempToperTable(QString tmpTable);
+    bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
     int getNewToper();
     bool createNewToperPermission(QString, bool);
 

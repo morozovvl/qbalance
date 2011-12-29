@@ -467,7 +467,7 @@ void FormGrid::readSettings()
             {
                 settings.setArrayIndex(i);
                 int width = settings.value("width", 100).toInt();
-                grdTable->setColumnWidth(i, (width == 0 ? 10: width));
+                grdTable->setColumnWidth(i, (width == 0 ? 50: width));
                 i++;
             }
             settings.endArray();

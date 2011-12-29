@@ -1,3 +1,4 @@
+#include <QVariant>
 #include "wizardoperation.h"
 #include "mybuttonlineedititemdelegate.h"
 #include "mybooleanitemdelegate.h"
@@ -14,7 +15,7 @@ enum fields {debetField = 0,
 
 QString showAccounts()
 {
-    FormGrid* accForm = TApplication::exemplar()->getDictionaries()->getDictionary( TApplication::exemplar()->getDBFactory()->getObjectName("счета"))->getForm();
+    FormGrid* accForm = TApplication::exemplar()->getDictionaries()->getDictionary(TApplication::exemplar()->getDBFactory()->getObjectName("счета"))->getForm();
     accForm->getParent()->query();
     accForm->exec();
     if (accForm->selected())
@@ -25,16 +26,18 @@ QString showAccounts()
 }
 
 
-WizardOperation::WizardOperation(bool addOp): WizardForm()
+WizardOperation::WizardOperation(): WizardForm()
 {
-    addOperation = addOp;
+    fieldsTable = new QTableWidget();
+    connect(fieldsTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
+    db = TApplication::exemplar()->getDBFactory();
 }
 
 
 bool WizardOperation::open(QWidget* pwgt, int op/* = 0*/)
 {
     if (op == 0)
-        op = TApplication::exemplar()->getDBFactory()->getNewToper();
+        op = db->getNewToper();
     oper = op;
     return WizardForm::open(pwgt);
 }
@@ -108,10 +111,33 @@ void WizardOperation::initFrames()
 
 bool WizardOperation::execute()
 {
-    TApplication::exemplar()->getDBFactory()->beginTransaction();
-    int tableId = TApplication::exemplar()->getDBFactory()->getDictionaryId(QString("Документ%1").arg(oper));
+    db->beginTransaction();
+    int tableId = db->getDictionaryId(QString("Документ%1").arg(oper));
     if (tableId > 0) {
-        // Сохраним таблицу проводок проводки
+        // Сохраним таблицу проводок
+        db->deleteToper(oper);
+        for (int i = 0; i < prvTable->rowCount(); i++)
+        {
+            QString opName = operName->text().trimmed();
+            QString dbAcc = prvTable->item(i, debetField)->text().trimmed();
+            bool dbConstAcc = false;
+            qDebug() << "dbConstField" << prvTable->item(i, dbConstField)->text();
+            QString crAcc = prvTable->item(i, creditField)->text().trimmed();
+            bool crConstAcc = false;
+            qDebug() << "crConstField" << prvTable->item(i, crConstField)->text();
+            QString itog = prvTable->item(i, itogField)->text().trimmed();
+            if (!db->addToperPrv(oper,
+                            opName,
+                            dbAcc,
+                            dbConstAcc,
+                            crAcc,
+                            crConstAcc,
+                            itog))
+            {
+                db->rollbackTransaction();
+                return false;
+            }
+        }
         // Установим наименование полей
         if (headers->count() > 0)
         {
@@ -121,9 +147,9 @@ bool WizardOperation::execute()
                 {
                     if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
                     {
-                         if (!TApplication::exemplar()->getDBFactory()->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), i + 1))
+                         if (!db->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), i + 1))
                          {
-                                 TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                 db->rollbackTransaction();
                                  return false;
                          }
                     }
@@ -133,8 +159,8 @@ bool WizardOperation::execute()
     }
 
     // Сохраним скрипты
-    TApplication::exemplar()->getDBFactory()->setFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
-    TApplication::exemplar()->getDBFactory()->commitTransaction();
+    db->setFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
+    db->commitTransaction();
     return true;
 }
 
@@ -143,7 +169,6 @@ void WizardOperation::getData()
 {
     operName = new QLineEdit();
     // Получим список проводок
-    DBFactory* db = TApplication::exemplar()->getDBFactory();
     prvs = db->getToper(oper);
 
     // Создадим таблицу проводок
@@ -182,43 +207,13 @@ void WizardOperation::getData()
      MyBooleanItemDelegate* crConstBooleanDelegate = new MyBooleanItemDelegate();
      prvTable->setItemDelegateForColumn(crConstField, crConstBooleanDelegate);
 
-     // Создадим таблицу столбцов
-     QList<ToperType> topersList;
-     QMap<int, FieldType> flds;
-     TApplication::exemplar()->getDBFactory()->getDocumentSqlSelectStatement(oper, &topersList, &flds);
-
-     fieldsTable = new QTableWidget(flds.count(), 6);
-     fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
-                                                          << QObject::trUtf8("Тип")
-                                                          << QObject::trUtf8("Длина")
-                                                          << QObject::trUtf8("Точность")
-                                                          << QObject::trUtf8("Заголовок")
-                                                          << QObject::trUtf8("Видимость"));
-     for (int i = 0; i < flds.count(); i++)
-     {
-         QTableWidgetItem* nameItem = new QTableWidgetItem(flds.value(i).name);
-         fieldsTable->setItem(i, 0, nameItem);
-         QTableWidgetItem* typeItem = new QTableWidgetItem(flds.value(i).type);
-         fieldsTable->setItem(i, 1, typeItem);
-         QTableWidgetItem* lengthItem = new QTableWidgetItem(QString("%1").arg(flds.value(i).length));
-         fieldsTable->setItem(i, 2, lengthItem);
-         QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(flds.value(i).precision));
-         fieldsTable->setItem(i, 3, precisionItem);
-         QTableWidgetItem* headerItem = new QTableWidgetItem(flds.value(i).header);
-         fieldsTable->setItem(i, 4, headerItem);
-         QTableWidgetItem* visibleItem = new QTableWidgetItem(flds.value(i).number > 0 ? "true" : "false");
-         fieldsTable->setItem(i, 5, visibleItem);
-         fields << flds.value(i);
-     }
-
-//     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
-     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
-     fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
+     topersList.clear();
+     getFieldsTable();
 
      // Инициализируем текстовый редактор
      textEditor = new MyTextEdit(formWidget);
      highlighter = new MySyntaxHighlighter(textEditor->document());
-     textEditor->setText(QString(TApplication::exemplar()->getDBFactory()->getFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType)));
+     textEditor->setText(QString(db->getFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType)));
 }
 
 
@@ -284,36 +279,46 @@ void WizardOperation::toperTableChanged()
 }
 
 
-void WizardOperation::frameActivated(int frameNumber)
+void WizardOperation::fieldsTableChanged()
 {
-    if (frameNumber == 3)
-    {   // Если активизирован фрейм списка заголовков
-        headers->clear();
-        // Отсортируем колонки
-        QList<int> headersOrder;
-        for (int i = 0; i < fields.count(); i++)
-        {
-            if (fields.value(i).number > 0)
-                headersOrder << fields.value(i).number;
-        }
-        qSort(headersOrder.begin(), headersOrder.end());
-        for (int i = 0; i < headersOrder.count(); i++)
-        {
-            for (int j = 0; j < fields.count(); j++)
-            {
-                if (fieldsTable->item(j, 5)->text() == "true")
-                {
-                    if (fields.value(j).number == headersOrder.value(i))
-                    {
-                        if (fieldsTable->item(j, 4)->text().size() > 0)
-                            headers->addItem(fieldsTable->item(j, 4)->text());
-                        else
-                            headers->addItem(fieldsTable->item(j, 0)->text());
-                    }
-                }
-            }
-        }
+    fldsTableChanged = true;
+}
+
+
+void WizardOperation::getFieldsTable()
+{
+    // Создадим таблицу столбцов
+    QMap<int, FieldType> flds;
+    db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
+    fieldsTable->setRowCount(flds.count());
+    fieldsTable->setColumnCount(6);
+
+    fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
+                                                         << QObject::trUtf8("Тип")
+                                                         << QObject::trUtf8("Длина")
+                                                         << QObject::trUtf8("Точность")
+                                                         << QObject::trUtf8("Заголовок")
+                                                         << QObject::trUtf8("Видимость"));
+    foreach (int i, flds.keys())
+    {
+        QTableWidgetItem* nameItem = new QTableWidgetItem(flds.value(i).name);
+        fieldsTable->setItem(i, 0, nameItem);
+        QTableWidgetItem* typeItem = new QTableWidgetItem(flds.value(i).type);
+        fieldsTable->setItem(i, 1, typeItem);
+        QTableWidgetItem* lengthItem = new QTableWidgetItem(QString("%1").arg(flds.value(i).length));
+        fieldsTable->setItem(i, 2, lengthItem);
+        QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(flds.value(i).precision));
+        fieldsTable->setItem(i, 3, precisionItem);
+        QTableWidgetItem* headerItem = new QTableWidgetItem(flds.value(i).header);
+        fieldsTable->setItem(i, 4, headerItem);
+        QTableWidgetItem* visibleItem = new QTableWidgetItem(flds.value(i).number > 0 ? "true" : "false");
+        fieldsTable->setItem(i, 5, visibleItem);
+        fields << flds.value(i);
     }
+
+//     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
+    MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
+    fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
 }
 
 
@@ -321,7 +326,6 @@ void WizardOperation::frameDeactivated(int frameNumber)
 {
     if (frameNumber == 1 && prvTableChanged)
     {
-        QList<ToperType> topersList;
         for (int i = 0; i < prvTable->rowCount(); i++)
         {
             ToperType toperT;
@@ -344,7 +348,44 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 toperT.itog = item->text().trimmed();
             topersList.append(toperT);
         }
-        QMap<int, FieldType> flds;
+        getFieldsTable();
+        prvTableChanged = false;
+    }
+    if (frameNumber == 2 && fldsTableChanged)
+    {
+        int num = 1;
+        FieldType fieldT;
+        fields.clear();
+        for (int i = 0; i < fieldsTable->rowCount(); i++)
+        {
+            if (QString(fieldsTable->item(i, 5)->text()).compare("true") == 0)
+            {
+                fieldT.header = fieldsTable->item(i, 4)->text().trimmed();
+                fieldT.number = num;
+                fields.append(fieldT);
+                num++;
+            }
+        }
+        headers->clear();
+        // Отсортируем колонки
+        QList<int> headersOrder;
+        for (int i = 0; i < fields.count(); i++)
+        {
+            if (fields.value(i).number > 0)
+                headersOrder << fields.value(i).number;
+        }
+        qSort(headersOrder.begin(), headersOrder.end());
+        for (int i = 0; i < headersOrder.count(); i++)
+        {
+            for (int j = 0; j < fields.count(); j++)
+            {
+                if (fields.at(j).number == headersOrder.at(i))
+                {
+                    headers->addItem(fields.at(j).header);
+                }
+            }
+        }
+        fldsTableChanged = false;
     }
 }
 

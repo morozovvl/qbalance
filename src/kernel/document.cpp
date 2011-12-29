@@ -30,7 +30,9 @@ Document::Document(int oper, Documents* par)
     }
 
     QMap<QString, DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
-    DbFactory->getToperData(operNumber, &topersList, &dictsList);
+    DbFactory->getToperData(operNumber, &topersList);
+    DbFactory->setToperDictAliases(&topersList, &dictsList);
+
 
     // Создадим локальный для документа список справочников
     Dictionary* dict;

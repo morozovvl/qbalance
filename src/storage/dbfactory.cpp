@@ -303,8 +303,13 @@ void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QSt
     if (columnsProperties->count() > 0)
     {
         foreach (int i, columnsProperties->keys())
+        {
+            if (columnsProperties->value(i).name == name &&
+                columnsProperties->value(i).type == type)
+                return;
             if (i > maxKey)
                 maxKey = i;
+        }
         maxKey++;
     }
     FieldType fld;
@@ -575,7 +580,7 @@ bool DBFactory::deleteToper(int operNumber)
 }
 
 
-bool DBFactory::addToperPrv(QString tmpTable, int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
+bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
 {
     int number = 1;
     clearError();
@@ -584,17 +589,8 @@ bool DBFactory::addToperPrv(QString tmpTable, int operNumber, QString name, QStr
     {
         number = query.record().value(0).toInt() + 1;
     }
-    if (tmpTable.size() == 0)
-        tmpTable = "топер";
     QString command;
-    command = QString("INSERT INTO %1 (опер, номер, имя, дбсчет, дбпост, крсчет, крпост, итоги) VALUES (%2, %3, '%4', '%5', %6, '%7', %8, '%9');").arg(tmpTable).arg(operNumber).arg(number).arg(name).arg(dbAcc).arg(dbAccConst ? "true" : "false").arg(crAcc).arg(crAccConst ? "true" : "false").arg(itog);
-    return exec(command);
-}
-
-
-bool DBFactory::createTempToperTable(QString tmpTable)
-{
-    QString command = QString("CREATE TEMPORARY TABLE %1 AS SELECT * FROM топер LIMIT 0;").arg(tmpTable);
+    command = QString("INSERT INTO %1 (опер, номер, имя, дбсчет, дбпост, крсчет, крпост, итоги) VALUES (%2, %3, '%4', '%5', %6, '%7', %8, '%9');").arg(getObjectName("топер")).arg(operNumber).arg(number).arg(name).arg(dbAcc).arg(dbAccConst ? "true" : "false").arg(crAcc).arg(crAccConst ? "true" : "false").arg(itog);
     return exec(command);
 }
 
@@ -865,6 +861,12 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("сальдо", "сальдо");
     ObjectNames.insert("сальдо.счет", "счет");
     ObjectNames.insert("сальдо.код", "код");
+    ObjectNames.insert("сальдо.кол", "кол");
+    ObjectNames.insert("сальдо.сальдо", "сальдо");
+    ObjectNames.insert("сальдо.дбкол", "дбкол");
+    ObjectNames.insert("сальдо.дебет", "дебет");
+    ObjectNames.insert("сальдо.дбкол", "дбкол");
+    ObjectNames.insert("сальдо.кркол", "кркол");
     ObjectNames.insert("сальдо.конкол", "конкол");
     ObjectNames.insert("сальдо.концена", "концена");
     ObjectNames.insert("сальдо.консальдо", "консальдо");
@@ -954,7 +956,7 @@ QString DBFactory::storageEncoding()
 }
 
 
-void DBFactory::getToperData(int oper, QList<ToperType>* topersList, QMap<QString, DictType>* dictsList)
+void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 {
     clearError();
     QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4").arg(getObjectName("vw_топер")).arg(getObjectName("vw_топер.опер")).arg(oper).arg(getObjectName("vw_топер.номер")));
@@ -977,10 +979,21 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList, QMap<QStrin
         toperT.crSaldoVisible = toper.record().value("крсалвидим").toBool();
         toperT.crDictVisible = toper.record().value("крвидим").toBool();
         toperT.itog = toper.record().value("итоги").toString();
+        topersList->append(toperT);
+        toper.next();
+    }
+}
 
+
+void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QMap<QString, DictType>* dictsList)
+{
+    QString dictName, alias;
+    DictType dict;
+    ToperType toperT;
+    for (int i = 0; i < topersList->count(); i++)
+    {
+        toperT = topersList->at(i);
         // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
-        QString dictName, alias;
-        DictType dict;
         dictName = toperT.dbDict;
         if (dictName.size() == 0)
         {
@@ -1044,12 +1057,10 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList, QMap<QStrin
                 dictsList->insert(alias, dict);
         }
         toperT.crDictAlias = alias;
-
-        topersList->append(toperT);
-        toper.next();
+        topersList->removeAt(i);
+        topersList->insert(i, toperT);
     }
 }
-
 
 QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QMap<int, FieldType>* columnsProperties, int* retPrv1)
 {
@@ -1057,10 +1068,11 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
     QMap<QString, DictType> dictsList;
     if (topersList->count() == 0)
     {
-        getToperData(oper, topersList, &dictsList);
+        getToperData(oper, topersList);
     }
     if (topersList->count() > 0)
     {
+        setToperDictAliases(topersList, &dictsList);
         QString selectClause, fromClause, whereClause;
         int prv, prv1;
         if (columnsProperties != 0)
@@ -1107,9 +1119,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         QStringList dictsNames;
         for (int i = 0; i < topersList->count(); i++)
         {
-            prv = topersList->at(i).number + 1;
-//            if (topersList->at(i).dbDictVisible)
-//            {
+            prv = topersList->at(i).number;
+            if (!topersList->at(i).dbConst)
+            {
                 dictName = topersList->at(i).dbDictAlias;
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
@@ -1122,9 +1134,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
                     dictsNames << dictName;
                 }
-//            }
-//            if (topersList->at(i).crDictVisible)
-//            {
+            }
+            if (!topersList->at(i).crConst)
+            {
                 dictName = topersList->at(i).crDictAlias;
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
@@ -1137,7 +1149,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
                     dictsNames << dictName;
                 }
-//            }
+            }
             getColumnsProperties(&fields, getObjectName("сальдо"));
             QString field;
             if (topersList->at(i).dbSaldoVisible) {
@@ -1159,7 +1171,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                 foreach(int i, fields.keys())
                     if (fields.value(i).name == field && columnsProperties != 0)
                         addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
-                fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо").arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.дбкод")).arg(getObjectName("сальдо.код"))));
+                fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.дбкод")).arg(getObjectName("сальдо.код")));
             }
             if (topersList->at(i).crSaldoVisible) {
                 dictName = QString("крсальдо%1").arg(prv);

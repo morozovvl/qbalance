@@ -22,8 +22,8 @@ TApplication::TApplication(int & argc, char** argv)
     : QApplication(argc, argv)
 {
     setOrganizationName("Enterprise");
-    setApplicationName("Enterprise");
-    setApplicationVersion("0.01");
+    setApplicationName("QBalance");
+    setApplicationVersion("0.0.1");
 
     db  = new DBFactory();
     gui = new GUIFactory(db);
