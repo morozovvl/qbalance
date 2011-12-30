@@ -235,6 +235,25 @@ void Document::setForm()
 {
     form = new FormDocument();
     form->open(parentForm, (Document*)this);
+    if (form->isDefaultForm())
+    {
+        QPushButton* button;
+        button = form->getButtonOk();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Закрыть документ"));
+        button = form->getButtonAdd();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Добавить строку в документ"));
+        button = form->getButtonDelete();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Удалить строку из документа"));
+        button = form->getButtonRequery();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Обновить документ (загрузить повторно с сервера)"));
+        button = form->getButtonPrint();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Распечатать документ"));
+    }
 }
 
 

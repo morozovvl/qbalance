@@ -66,6 +66,37 @@ void Topers::view()
 }
 
 
+void Topers::setForm()
+{
+    Dictionary::setForm();
+    if (form->isDefaultForm())
+    {
+        QPushButton* button;
+        button = form->getButtonPrint();
+        if (button != NULL)
+            button->hide();
+        button = form->getButtonOk();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Открыть список документов"));
+        button = form->getButtonCancel();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Закрыть список типовых операций"));
+        button = form->getButtonAdd();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Создать новую типовую операцию"));
+        button = form->getButtonDelete();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Удалить типовую операцию"));
+        button = form->getButtonView();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Свойства типовой операции"));
+        button = form->getButtonRequery();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Обновить список типовых операций (загрузить повторно с сервера)"));
+    }
+}
+
+
 /*
 bool Topers::remove()
 {

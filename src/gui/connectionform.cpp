@@ -44,18 +44,22 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
             QPushButton* buttonDelete = new QPushButton();
             buttonDelete->setObjectName("buttonDelete");
             connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
-            cmdButtonLayout->insertWidget(0, buttonDelete);
+//            cmdButtonLayout->insertWidget(0, buttonDelete);
 //            QPushButton* cmdSave = new QPushButton(QObject::trUtf8("&Сохранить"));
             QPushButton* cmdSave = new QPushButton();
             cmdSave->setObjectName("buttonSave");
+            cmdSave->setToolTip(trUtf8("Сохранить настройки подключения"));
             connect(cmdSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
             cmdButtonLayout->insertWidget(0, cmdSave);
         }
     }
+    buttonOk->setToolTip(trUtf8("Подключиться к серверу"));
+    buttonCancel->setToolTip(trUtf8("Не подключаться к серверу и выйти из программы"));
     formWidget->setMinimumHeight(200);
     formWidget->setMinimumWidth(350);
     if (readSettings)
         readConnectionsList();
+    formWidget->setWindowModality(Qt::WindowModal);
 }
 
 int ConnectionForm::exec(DBFactory* d) {
@@ -72,7 +76,13 @@ int ConnectionForm::exec(DBFactory* d) {
 }
 
 void ConnectionForm::cmdSave() {
-    writeSettings();
+    if (pcmbConnection->currentText().trimmed().size() > 0)
+    {
+        writeSettings();
+        readConnectionsList();
+    }
+    else
+        TApplication::exemplar()->getGUIFactory()->showError(trUtf8("Укажите наименование соединения!"));
 }
 
 void ConnectionForm::cmdDelete() {

@@ -151,3 +151,32 @@ void Dictionaries::cmdOk() {
             dict->show();
     }
 }
+
+
+void Dictionaries::setForm()
+{
+    Dictionary::setForm();
+    if (form->isDefaultForm())
+    {
+        QPushButton* button;
+        button = form->getButtonOk();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Открыть справочник"));
+        button = form->getButtonCancel();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Закрыть список справочников"));;
+        button = form->getButtonAdd();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Создать новый справочник"));
+        button = form->getButtonDelete();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Удалить справочник"));
+        button = form->getButtonView();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Просмотреть свойства справочника"));
+        button = form->getButtonRequery();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Обновить список справочников (загрузить повторно с сервера)"));
+    }
+}
+

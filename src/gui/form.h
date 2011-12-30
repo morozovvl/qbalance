@@ -35,6 +35,10 @@ public:
     Q_INVOKABLE bool selected() { return lSelected; }
     Q_INVOKABLE bool opened() { return (formWidget != 0) ? true : false; }
 
+    bool isDefaultForm() { return defaultForm; }
+    QPushButton*    getButtonOk() { return buttonOk; }
+    QPushButton*    getButtonCancel() { return buttonCancel; }
+
 public slots:
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();

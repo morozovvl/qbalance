@@ -98,4 +98,26 @@ void Documents::close() {
 void Documents::setForm() {
     form = new FormGrid();
     form->open(parentForm, this);
+    if (form->isDefaultForm())
+    {
+        QPushButton* button;
+        button = form->getButtonCancel();
+        if (button != NULL)
+            button->hide();
+        button = form->getButtonOk();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Закрыть список документов"));
+        button = form->getButtonAdd();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Создать новый документ"));
+        button = form->getButtonDelete();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Удалить документ"));
+        button = form->getButtonView();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Просмотреть документ"));
+        button = form->getButtonRequery();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Обновить список документов (загрузить повторно с сервера)"));
+    }
 }

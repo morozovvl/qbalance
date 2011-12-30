@@ -25,6 +25,8 @@ public:
     Q_INVOKABLE virtual void view();       // Исправление свойств справочника
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
+protected:
+    virtual void setForm();
 private:
     QSqlQuery dictionariesProperties;
 };

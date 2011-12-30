@@ -111,8 +111,9 @@ void GUIFactory::show() {
 
 int GUIFactory::showError(QString errorText) {
     QErrorMessage msgBox(mainWindow->centralWidget());
+//    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint & Qt::X11BypassWindowManagerHint);
     msgBox.showMessage(errorText);
-//    msgBox.setWindowModality(Qt::ApplicationModal);
+    msgBox.setWindowModality(Qt::ApplicationModal);
 //    msgBox.setModal(true);
     msgBox.exec();
     return 0;

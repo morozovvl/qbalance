@@ -101,6 +101,28 @@ void Dictionary::setLock(bool lock) {
 void Dictionary::setForm() {
     form = new FormGridSearch();
     form->open(parentForm, this);
+    if (form->isDefaultForm())
+    {
+        QPushButton* button;
+        button = form->getButtonCancel();
+        if (button != NULL)
+            form->getButtonCancel()->hide();
+        button = form->getButtonOk();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Закрыть справочник"));
+        button = form->getButtonAdd();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Создать новую запись в справочнике"));
+        button = form->getButtonDelete();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Удалить запись из справочника"));
+        button = form->getButtonPrint();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Распечатать выбранные записи из справочника"));
+        button = form->getButtonRequery();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Обновить справочник (загрузить повторно с сервера)"));
+    }
 }
 
 bool Dictionary::open(int deep) {

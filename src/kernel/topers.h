@@ -11,6 +11,8 @@ public:
     Q_INVOKABLE virtual bool add();
 //    Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void view();
+protected:
+    virtual void setForm();
 private:
     void addDocument(int);
     void removeDocument(int opNumber);

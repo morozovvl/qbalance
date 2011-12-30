@@ -28,6 +28,12 @@ public:
     virtual void readSettings();
     virtual void writeSettings();
 
+    QPushButton*                getButtonAdd() { return buttonAdd; }
+    QPushButton*                getButtonDelete() { return buttonDelete; }
+    QPushButton*                getButtonView() { return buttonView; }
+    QPushButton*                getButtonRequery() { return buttonRequery; }
+    QPushButton*                getButtonPrint() { return buttonPrint; }
+
 public slots:
     virtual void calculate(QWidget*, QAbstractItemDelegate::EndEditHint);
     virtual void cmdAdd();
