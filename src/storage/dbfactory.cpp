@@ -257,6 +257,7 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
                                     ") c ON s.name = c.имя " \
                                     "ORDER BY s.column;").arg(table.trimmed()));
     QSqlQuery query = execQuery(command);
+    result->clear();
     int i = 0;
     for (query.first(); query.isValid(); query.next())
     {
@@ -290,6 +291,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table)
 {   // Просто возвращает свойства колонок в виде QList, а не QMap
     QMap<int, FieldType> fields;
     getColumnsProperties(&fields, table);
+    result->clear();
     foreach (FieldType fld, fields.values())
     {
         result->append(fld);
@@ -520,10 +522,18 @@ bool DBFactory::renameTableColumn(QString table, QString oldColumnName, QString 
 }
 
 
-bool DBFactory::setTableColumnHeaderOrder(int tableId, QString columnName, int order)
+bool DBFactory::setTableColumnHeaderOrder(int tableId, QString column, QString header, int number)
 {
+    QString command;
     clearError();
-    return exec(QString("UPDATE столбцы SET номер = %1 WHERE код_vw_справочники_со_столбцами = %2 AND имя = '%3';").arg(order).arg(tableId).arg(columnName));
+    command = QString("SELECT * FROM столбцы WHERE код_vw_справочники_со_столбцами = %1 AND имя = '%2';").arg(tableId).arg(column);
+    QSqlQuery query = execQuery(command);
+    query.first();
+    if (query.isValid())
+    {
+        return updateColumnHeader(tableId, column, header, number);
+    }
+    return appendColumnHeader(tableId, column, header, number);
 }
 
 
@@ -653,17 +663,19 @@ QSqlQuery DBFactory::getColumnsHeaders(QString tableName)
 }
 
 
-bool DBFactory::appendColumnHeader(int tableId, QString column, QString header)
+bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, int number)
 {
     clearError();
-    return exec(QString("INSERT INTO столбцы (код_vw_справочники_со_столбцами, имя, заголовок, номер) VALUES (%1, '%2', '%3', 999);").arg(tableId).arg(column).arg(header));
+    return exec(QString("INSERT INTO столбцы (код_vw_справочники_со_столбцами, имя, заголовок, номер) VALUES (%1, '%2', '%3', %4);").arg(tableId).arg(column).arg(header).arg(number));
 }
 
 
-bool DBFactory::updateColumnHeader(int tableId, QString column, QString header)
+bool DBFactory::updateColumnHeader(int tableId, QString column, QString header, int number)
 {
     clearError();
-    return exec(QString("UPDATE столбцы SET заголовок = %1 WHERE код_vw_справочники_со_столбцами = %2 AND имя = '%3';").arg(header).arg(tableId).arg(column));
+    if (number == 0)
+        return exec(QString("UPDATE столбцы SET заголовок = '%1' WHERE код_vw_справочники_со_столбцами = %2 AND имя = '%3';").arg(header).arg(tableId).arg(column));
+    return exec(QString("UPDATE столбцы SET заголовок = '%1', номер = %2 WHERE код_vw_справочники_со_столбцами = %3 AND имя = '%4';").arg(header).arg(number).arg(tableId).arg(column));
 }
 
 
@@ -840,6 +852,8 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("доступ.код_типыобъектов", "код_типыобъектов");
     ObjectNames.insert("доступ.пользователь", "пользователь");
     ObjectNames.insert("доступ.имя", "имя");
+    ObjectNames.insert("vw_доступ_к_топер", "vw_доступ_к_топер");
+    ObjectNames.insert("vw_доступ_к_топер.имя", "имя");
     ObjectNames.insert("справочники", "справочники");
     ObjectNames.insert("справочники.имя", "имя");
     ObjectNames.insert("справочники.имя_в_списке", "имя_в_списке");
@@ -1077,11 +1091,12 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         int prv, prv1;
         if (columnsProperties != 0)
             columnsProperties->clear();
+
+        // Создадим клаузу проводок в секции SELECT
         QString tableName = getObjectName("проводки");
         QStringList prvFieldsList = getFieldsList(tableName);
         QMap<int, FieldType> fields;
         getColumnsProperties(&fields, tableName);
-        // Создадим клаузу проводок в секции SELECT
         for (int i = 0; i < topersList->count(); i++)
         {   // Для всех проводок данной типовой операции
             prv = topersList->at(i).number;                     // получим номер проводки в типовой операции

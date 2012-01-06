@@ -153,9 +153,9 @@ public:
     bool dropTableColumn(QString, QString);
     bool renameTableColumn(QString, QString, QString);
     bool alterTableColumn(QString, QString, QString);
-    bool appendColumnHeader(int, QString, QString);
-    bool updateColumnHeader(int, QString, QString);
-    bool setTableColumnHeaderOrder(int, QString, int);
+    bool appendColumnHeader(int, QString, QString, int = 999);
+    bool updateColumnHeader(int, QString, QString, int = 0);
+    bool setTableColumnHeaderOrder(int, QString, QString, int);
     bool deleteToper(int operNumber);
     bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
     int getNewToper();

@@ -64,7 +64,6 @@ void WizardForm::addFrame(QVBoxLayout* layout, QString title/* = ""*/)
     }
     QFrame* frame = new QFrame(formWidget);
     frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addStretch();
     frame->setLayout(layout);
     frame->hide();
     frames.append(frame);
@@ -91,8 +90,8 @@ void WizardForm::cmdBackward()
 
 void WizardForm::cmdOk()
 {
-    Form::cmdOk();
-    result = execute();
+    if (execute())
+        Form::cmdOk();
 }
 
 

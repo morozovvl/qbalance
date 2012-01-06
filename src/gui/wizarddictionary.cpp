@@ -57,6 +57,7 @@ void WizardDictionary::initFrames()
     gridLayout->setColumnStretch(1, 1);
 
     layout->addLayout(gridLayout);
+    layout->addStretch();
     addFrame(layout, QObject::trUtf8("Наименование справочника"));
 
     // 2-я страница
@@ -269,7 +270,7 @@ bool WizardDictionary::execute()
                 {
                     if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
                     {
-                         if (!TApplication::exemplar()->getDBFactory()->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), i + 1))
+                         if (!TApplication::exemplar()->getDBFactory()->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), fieldsTable->item(j, 4)->text(), i + 1))
                          {
                                  TApplication::exemplar()->getDBFactory()->rollbackTransaction();
                                  return false;

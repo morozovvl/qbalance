@@ -19,27 +19,33 @@ private:
     int             oper;               // Номер операции, с которой работает мастер
     bool            prvTableChanged;
     bool            fldsTableChanged;
+    bool            docListFldsTableChanged;
     DBFactory*      db;
     QSqlQuery       prvs;               // Проводки
     QLineEdit*      operName;              // Как будет называться операция
     QTableWidget*   prvTable;             // Список проводок операции
     QTableWidget*   fieldsTable;
+    QTableWidget*   docListFieldsTable;
     MyTextEdit*     textEditor;
     MySyntaxHighlighter* highlighter;
-    QListWidget*        headers;          // Заголовки колонок
+    QListWidget*        headers;          // Заголовки колонок документа
+    QListWidget*        docListHeaders;   // Заголовки колонок списка документов
     QList<FieldType>    fields;           // Первоначальный список полей
     QList<ToperType> topersList;
     virtual void    getData();
     friend QString  showAccounts();
-    void            getFieldsTable();
+    void            getFieldsTable(QMap<int, FieldType>,  QTableWidget*);
 private slots:
     void            addPrv();
     void            deletePrv();
     void            headerUp();
     void            headerDown();
+    void            docListHeaderUp();
+    void            docListHeaderDown();
     void            showAccountForm();
     void            toperTableChanged();
     void            fieldsTableChanged();
+    void            docListFieldsTableChanged();
 };
 
 #endif // WIZARDOPERATION_H

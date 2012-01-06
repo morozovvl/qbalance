@@ -30,6 +30,10 @@ WizardOperation::WizardOperation(): WizardForm()
 {
     fieldsTable = new QTableWidget();
     connect(fieldsTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
+    fldsTableChanged = false;
+    docListFieldsTable = new QTableWidget();
+    connect(docListFieldsTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(docListFieldsTableChanged()));
+    docListFldsTableChanged = false;
     db = TApplication::exemplar()->getDBFactory();
 }
 
@@ -55,6 +59,7 @@ void WizardOperation::initFrames()
     gridLayout->addWidget(lblOperName, 0, 0, Qt::AlignRight);
     gridLayout->addWidget(operName, 0, 1, Qt::AlignLeft);
     layout->addLayout(gridLayout);
+    layout->addStretch();
     addFrame(layout, QObject::trUtf8("Наименование операции"));
 
     // 2-я страница
@@ -78,11 +83,11 @@ void WizardOperation::initFrames()
     layout->addLayout(buttonLayout);
     addFrame(layout, QObject::trUtf8("Список проводок"));
 
-    // 3-я страница (список столбцов)
+    // 3-я страница (список столбцов документа)
     layout = new QVBoxLayout();
     // Добавим таблицу проводок
     layout->addWidget(fieldsTable);
-    addFrame(layout, QObject::trUtf8("Список столбцов"));
+    addFrame(layout, QObject::trUtf8("Столбцы документа"));
 
     // 4-я страница
     layout = new QVBoxLayout();
@@ -100,17 +105,56 @@ void WizardOperation::initFrames()
     layout1->addWidget(headers);
     layout1->addLayout(buttonLayout1);
     layout->addLayout(layout1);
-    addFrame(layout, QObject::trUtf8("Порядок столбцов"));
+    addFrame(layout, QObject::trUtf8("Порядок столбцов документа"));
 
     // 5-я страница
     layout = new QVBoxLayout();
     layout->addWidget(textEditor);
     addFrame(layout, QObject::trUtf8("Скрипты"));
+
+    // 6-я страница (список столбцов списка документов)
+    layout = new QVBoxLayout();
+    layout->addWidget(docListFieldsTable);
+    addFrame(layout, QObject::trUtf8("Столбцы списка документов"));
+
+    // 7-я страница
+    layout = new QVBoxLayout();
+    docListHeaders = new QListWidget();
+    buttonLayout1 = new QVBoxLayout();
+    button = new QPushButton();
+    button->setObjectName("buttonUp");
+    connect(button, SIGNAL(clicked()), this, SLOT(docListHeaderUp()));
+    buttonLayout1->addWidget(button);
+    button = new QPushButton();
+    button->setObjectName("buttonDown");
+    connect(button, SIGNAL(clicked()), this, SLOT(docListHeaderDown()));
+    buttonLayout1->addWidget(button);
+    layout1 = new QHBoxLayout();
+    layout1->addWidget(docListHeaders);
+    layout1->addLayout(buttonLayout1);
+    layout->addLayout(layout1);
+    addFrame(layout, QObject::trUtf8("Порядок столбцов списка документов"));
 }
 
 
 bool WizardOperation::execute()
 {
+    QString opName = operName->text().trimmed();
+    if (opName.size() == 0)
+    {
+        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("Укажите наименование типовой операции."));
+        return false;
+    }
+    if (prvTable->rowCount() == 0)
+    {
+        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("В типовой операции должна быть хотя бы одна проводка."));
+        return false;
+    }
+    if (headers->count() == 0)
+    {
+        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("В документе должен отображаться хотя бы один столбец."));
+        return false;
+    }
     db->beginTransaction();
     int tableId = db->getDictionaryId(QString("Документ%1").arg(oper));
     if (tableId > 0) {
@@ -118,13 +162,35 @@ bool WizardOperation::execute()
         db->deleteToper(oper);
         for (int i = 0; i < prvTable->rowCount(); i++)
         {
-            QString opName = operName->text().trimmed();
-            QString dbAcc = prvTable->item(i, debetField)->text().trimmed();
+            QTableWidgetItem* item;
+            QString dbAcc;
             bool dbConstAcc = false;
-            qDebug() << "dbConstField" << prvTable->item(i, dbConstField)->text();
-            QString crAcc = prvTable->item(i, creditField)->text().trimmed();
+            QString crAcc;
             bool crConstAcc = false;
-            qDebug() << "crConstField" << prvTable->item(i, crConstField)->text();
+            dbAcc = "";
+            item = prvTable->item(i, debetField);
+            if (item != 0)
+                dbAcc = item->text().trimmed();
+            if (dbAcc.size() == 0)
+            {
+                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан дебетовый счет в проводке № %1")).arg(i+1));
+                return false;
+            }
+            item = prvTable->item(i, dbConstField);
+            if (item != 0)
+                dbConstAcc = item->text().compare("true") == 0 ? true : false;
+            crAcc = "";
+            item = prvTable->item(i, creditField);
+            if (item != 0)
+                crAcc = item->text().trimmed();
+            if (crAcc.size() == 0)
+            {
+                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан кредитовый счет в проводке № %1")).arg(i+1));
+                return false;
+            }
+            item = prvTable->item(i, crConstField);
+            if (item != 0)
+                crConstAcc = item->text().compare("true") == 0 ? true : false;
             QString itog = prvTable->item(i, itogField)->text().trimmed();
             if (!db->addToperPrv(oper,
                             opName,
@@ -138,16 +204,32 @@ bool WizardOperation::execute()
                 return false;
             }
         }
-        // Установим наименование полей
-        if (headers->count() > 0)
+        // Установим наименование полей документа
+        for (int i = 0; i < headers->count(); i++)
         {
-            for (int i = 0; i < headers->count(); i++)
+            for (int j = 0; j < fieldsTable->rowCount(); j++)
             {
-                for (int j = 0; j < fieldsTable->rowCount(); j++)
+                if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
                 {
-                    if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
+                     if (!db->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), fieldsTable->item(j, 4)->text(), i + 1))
+                     {
+                             db->rollbackTransaction();
+                             return false;
+                     }
+                }
+            }
+        }
+        // Установим наименование полей списка документов
+        tableId = db->getDictionaryId(QString("СписокДокументов%1").arg(oper));
+        if (tableId)
+        {
+            for (int i = 0; i < docListHeaders->count(); i++)
+            {
+                for (int j = 0; j < docListFieldsTable->rowCount(); j++)
+                {
+                    if (QString::compare(docListFieldsTable->item(j, 4)->text(), docListHeaders->item(i)->data(Qt::DisplayRole).toString()) == 0)
                     {
-                         if (!db->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), i + 1))
+                         if (!db->setTableColumnHeaderOrder(tableId, docListFieldsTable->item(j, 0)->text(), docListFieldsTable->item(j, 4)->text(), i + 1))
                          {
                                  db->rollbackTransaction();
                                  return false;
@@ -168,6 +250,8 @@ bool WizardOperation::execute()
 void WizardOperation::getData()
 {
     operName = new QLineEdit();
+    operName->setText(db->getTopersProperties(oper).value(db->getObjectName("vw_доступ_к_топер.имя")).toString());
+
     // Получим список проводок
     prvs = db->getToper(oper);
 
@@ -208,7 +292,11 @@ void WizardOperation::getData()
      prvTable->setItemDelegateForColumn(crConstField, crConstBooleanDelegate);
 
      topersList.clear();
-     getFieldsTable();
+     QMap<int, FieldType> flds;
+     db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
+     getFieldsTable(flds, fieldsTable);
+     db->getColumnsProperties(&flds, db->getObjectName("документы"));
+     getFieldsTable(flds, docListFieldsTable);
 
      // Инициализируем текстовый редактор
      textEditor = new MyTextEdit(formWidget);
@@ -273,6 +361,32 @@ void WizardOperation::headerDown()
 }
 
 
+void WizardOperation::docListHeaderUp()
+{
+    docListHeaders->setFocus(Qt::OtherFocusReason);
+    int currentRow = docListHeaders->currentRow();
+    if (currentRow > 0)
+    {
+        QListWidgetItem* item = docListHeaders->takeItem(currentRow);
+        docListHeaders->insertItem(currentRow - 1, item);
+        docListHeaders->setCurrentRow(currentRow - 1);
+    }
+}
+
+
+void WizardOperation::docListHeaderDown()
+{
+    docListHeaders->setFocus(Qt::OtherFocusReason);
+    int currentRow = docListHeaders->currentRow();
+    if (currentRow < docListHeaders->count() - 1)
+    {
+        QListWidgetItem* item = docListHeaders->takeItem(currentRow);
+        docListHeaders->insertItem(currentRow + 1, item);
+        docListHeaders->setCurrentRow(currentRow + 1);
+    }
+}
+
+
 void WizardOperation::toperTableChanged()
 {
     prvTableChanged = true;
@@ -285,11 +399,15 @@ void WizardOperation::fieldsTableChanged()
 }
 
 
-void WizardOperation::getFieldsTable()
+void WizardOperation::docListFieldsTableChanged()
+{
+    docListFldsTableChanged = true;
+}
+
+
+void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* fieldsTable)
 {
     // Создадим таблицу столбцов
-    QMap<int, FieldType> flds;
-    db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
     fieldsTable->setRowCount(flds.count());
     fieldsTable->setColumnCount(6);
 
@@ -348,7 +466,9 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 toperT.itog = item->text().trimmed();
             topersList.append(toperT);
         }
-        getFieldsTable();
+        QMap<int, FieldType> flds;
+        db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
+        getFieldsTable(flds, fieldsTable);
         prvTableChanged = false;
     }
     if (frameNumber == 2 && fldsTableChanged)
@@ -382,6 +502,42 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 if (fields.at(j).number == headersOrder.at(i))
                 {
                     headers->addItem(fields.at(j).header);
+                }
+            }
+        }
+        fldsTableChanged = false;
+    }
+    if (frameNumber == 5 && docListFldsTableChanged)
+    {
+        int num = 1;
+        FieldType fieldT;
+        fields.clear();
+        for (int i = 0; i < docListFieldsTable->rowCount(); i++)
+        {
+            if (QString(docListFieldsTable->item(i, 5)->text()).compare("true") == 0)
+            {
+                fieldT.header = docListFieldsTable->item(i, 4)->text().trimmed();
+                fieldT.number = num;
+                fields.append(fieldT);
+                num++;
+            }
+        }
+        docListHeaders->clear();
+        // Отсортируем колонки
+        QList<int> headersOrder;
+        for (int i = 0; i < fields.count(); i++)
+        {
+            if (fields.value(i).number > 0)
+                headersOrder << fields.value(i).number;
+        }
+        qSort(headersOrder.begin(), headersOrder.end());
+        for (int i = 0; i < headersOrder.count(); i++)
+        {
+            for (int j = 0; j < fields.count(); j++)
+            {
+                if (fields.at(j).number == headersOrder.at(i))
+                {
+                    docListHeaders->addItem(fields.at(j).header);
                 }
             }
         }
