@@ -241,21 +241,24 @@ QStringList DBFactory::getFieldsList(QString tableName)
 }
 
 
-void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table)
+void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table, int oper)
 {
     clearError();
+    QString tableName;
+    if (oper == 0)
+        tableName = table.trimmed();
+    else
+        tableName = QString("СписокДокументов%1").arg(oper);
     QString command(QString("SELECT s.*, COALESCE(c.заголовок, '') AS header, COALESCE(c.номер, 0) AS number " \
                             "FROM (SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable " \
                                    "FROM information_schema.columns " \
                                    "WHERE table_name LIKE '%1') s " \
                                    "LEFT OUTER JOIN " \
-                                   "(SELECT столбцы.имя, столбцы.заголовок, столбцы.номер "\
-                                    "FROM столбцы " \
-                                    "INNER JOIN справочники " \
-                                    "ON столбцы.код_vw_справочники_со_столбцами = справочники.код " \
-                                    "WHERE справочники.имя = '%1' " \
+                                   "(SELECT столбец AS имя, заголовок, номер "\
+                                    "FROM vw_столбцы " \
+                                    "WHERE справочник = '%2' " \
                                     ") c ON s.name = c.имя " \
-                                    "ORDER BY s.column;").arg(table.trimmed()));
+                                    "ORDER BY s.column;").arg(table.trimmed()).arg(tableName));
     QSqlQuery query = execQuery(command);
     result->clear();
     int i = 0;
@@ -925,7 +928,7 @@ QByteArray DBFactory::getFile(QString fileName, FileType type)
 void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData)
 {
     clearError();
-    QString text = QString("SELECT COUNT(*) FROM файлы WHERE имя = '%1' AND тип = %2").arg(fileName).arg(type);
+    QString text = QString("SELECT * FROM файлы WHERE имя = '%1' AND тип = %2").arg(fileName).arg(type);
     QSqlQuery query = execQuery(text);
     if (query.first())
     {

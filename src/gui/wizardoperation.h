@@ -31,10 +31,11 @@ private:
     QListWidget*        headers;          // Заголовки колонок документа
     QListWidget*        docListHeaders;   // Заголовки колонок списка документов
     QList<FieldType>    fields;           // Первоначальный список полей
+    QList<FieldType>    docListFields;    // Первоначальный список полей
     QList<ToperType> topersList;
     virtual void    getData();
     friend QString  showAccounts();
-    void            getFieldsTable(QMap<int, FieldType>,  QTableWidget*);
+    void            getFieldsTable(QMap<int, FieldType>,  QTableWidget*, QList<FieldType>*);
 private slots:
     void            addPrv();
     void            deletePrv();
@@ -46,6 +47,7 @@ private slots:
     void            toperTableChanged();
     void            fieldsTableChanged();
     void            docListFieldsTableChanged();
+    void            sortHeaders(QListWidget*, QList<FieldType>*);
 };
 
 #endif // WIZARDOPERATION_H

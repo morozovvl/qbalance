@@ -30,3 +30,22 @@ void DocumentScriptEngine::loadScriptObjects()
 }
 
 
+// События
+void DocumentScriptEngine::eventParametersChanged()
+{
+    globalObject().property("EventParametersChanged").call();
+}
+
+
+QList<EventFunction>* DocumentScriptEngine::getEventsList()
+{
+    if (eventsList.size() == 0)
+    {// Зарядим список событий
+        ScriptEngine::getEventsList();
+        EventFunction func;
+        func.name = "EventParametersChanged";
+        func.comment = "// " + QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
+        eventsList.append(func);
+    }
+    return &eventsList;
+}

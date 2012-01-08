@@ -200,24 +200,24 @@ void Form::setButtonsSignals()
 
 void Form::initFormEvent() {
     if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->globalObject().property("initForm").call();
+        getParent()->getScriptEngine()->eventInitForm();
     }
 }
 
 void Form::beforeShowFormEvent() {
     if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->globalObject().property("beforeShowForm").call();
+        getParent()->getScriptEngine()->eventBeforeShowForm();
     }
 }
 
 void Form::afterHideFormEvent() {
     if (getParent()->getScriptEngine() != 0)
-        getParent()->getScriptEngine()->globalObject().property("afterHideForm").call();
+        getParent()->getScriptEngine()->eventAfterHideForm();
 }
 
 void Form::closeFormEvent() {
     if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->globalObject().property("closeForm").call();
+        getParent()->getScriptEngine()->eventCloseForm();
     }
 }
 

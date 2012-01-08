@@ -97,7 +97,7 @@ public:
     QStringList getFieldsList(QMap<int, FieldType>*);
     QStringList getFieldsList(QString tableName);
     void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
-    void getColumnsProperties(QMap<int, FieldType>*, QString);
+    void getColumnsProperties(QMap<int, FieldType>*, QString, int = 0);
     void getColumnsProperties(QList<FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
     QString getPhotoDatabase();

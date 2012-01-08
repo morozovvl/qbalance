@@ -160,7 +160,7 @@ void FormDocument::cmdOk()
 void FormDocument::parametersChangedEvent()
 {
     if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->globalObject().property("parametersChanged").call();
+        getParent()->getScriptEngine()->eventParametersChanged();
     }
 }
 

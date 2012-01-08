@@ -8,6 +8,16 @@
 #include "sqlfieldclass.h"
 
 
+struct EventFunction {
+    EventFunction() { keyWord = "function"; begin = "{"; end = "}"; }
+    QString     keyWord;
+    QString     name;
+    QString     begin;
+    QString     end;
+    QString     comment;
+};
+
+
 class ScriptEngine : public QScriptEngine {
     Q_OBJECT
 public:
@@ -17,7 +27,14 @@ public:
     bool evaluate();
     QString getErrorMessage() { return errorMessage; }
     bool getScriptResult() { return scriptResult; }
+// События
+    static QList<EventFunction>* getEventsList();
+    void eventInitForm();
+    void eventBeforeShowForm();
+    void eventAfterHideForm();
+    void eventCloseForm();
 protected:
+    static QList<EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     virtual void loadScriptObjects();
 private:
     bool                scriptResult;

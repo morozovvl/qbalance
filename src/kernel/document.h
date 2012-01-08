@@ -6,6 +6,7 @@
 #include <QMap>
 #include "essence.h"
 #include "dictionaries.h"
+#include "../engine/documentscriptengine.h"
 
 
 class TApplication;
@@ -38,6 +39,7 @@ public:
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine();
+    DocumentScriptEngine* getScriptEngine();
 protected:
     virtual void setForm();
     virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати

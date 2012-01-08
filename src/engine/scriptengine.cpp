@@ -103,12 +103,14 @@ void FormFromScriptValue(const QScriptValue &object, Form* &out) {
 //================================================================================================
 // Реализация класса
 
+QList<EventFunction> ScriptEngine::eventsList;          // Список доступных в скриптах событий с комментариями
+
+
 ScriptEngine::ScriptEngine(QObject *parent/* = 0*/) : QScriptEngine(parent)
 {
     sqlFieldClass = new SqlFieldClass(this);
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
-
 }
 
 
@@ -188,4 +190,56 @@ bool ScriptEngine::evaluate()
     return true;
 }
 
+
+// События
+void ScriptEngine::eventInitForm()
+{
+    globalObject().property("EventInitForm").call();
+}
+
+
+void ScriptEngine::eventBeforeShowForm()
+{
+    globalObject().property("EventBeforeShowForm").call();
+}
+
+
+void ScriptEngine::eventAfterHideForm()
+{
+    globalObject().property("EventAfterHideForm").call();
+}
+
+
+void ScriptEngine::eventCloseForm()
+{
+    globalObject().property("EventCloseForm").call();
+}
+
+
+QList<EventFunction>* ScriptEngine::getEventsList()
+{
+    if (eventsList.size() == 0)
+    {// Зарядим список событий
+
+        EventFunction func;
+
+        func.name = "EventInitForm";
+        func.comment = "// " + QObject::trUtf8("Событие происходит сразу после создания формы документа");
+        eventsList.append(func);
+
+        func.name = "EventBeforeShowForm";
+        func.comment = "// " + QObject::trUtf8("Событие происходит перед открытием формы документа");
+        eventsList.append(func);
+
+        func.name = "EventAfterHideForm";
+        func.comment = "// " + QObject::trUtf8("Событие происходит после закрытия формы документа");
+        eventsList.append(func);
+
+        func.name = "EventCloseForm";
+        func.comment = "// " + QObject::trUtf8("Событие происходит перед удалением формы документа");
+        eventsList.append(func);
+
+    }
+    return &eventsList;
+}
 

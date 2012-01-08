@@ -4,9 +4,10 @@
 #include "mybooleanitemdelegate.h"
 #include "../kernel/app.h"
 #include "../storage/dbfactory.h"
+#include "../engine/documentscriptengine.h"
 
 
-enum fields {debetField = 0,
+enum fieldsEnums {debetField = 0,
              dbConstField = 1,
              creditField = 2,
              crConstField = 3,
@@ -29,12 +30,12 @@ QString showAccounts()
 WizardOperation::WizardOperation(): WizardForm()
 {
     fieldsTable = new QTableWidget();
-    connect(fieldsTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
     fldsTableChanged = false;
     docListFieldsTable = new QTableWidget();
-    connect(docListFieldsTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(docListFieldsTableChanged()));
     docListFldsTableChanged = false;
     db = TApplication::exemplar()->getDBFactory();
+    headers = new QListWidget();
+    docListHeaders = new QListWidget();
 }
 
 
@@ -91,7 +92,6 @@ void WizardOperation::initFrames()
 
     // 4-я страница
     layout = new QVBoxLayout();
-    headers = new QListWidget();
     QVBoxLayout* buttonLayout1 = new QVBoxLayout();
     button = new QPushButton();
     button->setObjectName("buttonUp");
@@ -119,7 +119,6 @@ void WizardOperation::initFrames()
 
     // 7-я страница
     layout = new QVBoxLayout();
-    docListHeaders = new QListWidget();
     buttonLayout1 = new QVBoxLayout();
     button = new QPushButton();
     button->setObjectName("buttonUp");
@@ -294,14 +293,33 @@ void WizardOperation::getData()
      topersList.clear();
      QMap<int, FieldType> flds;
      db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
-     getFieldsTable(flds, fieldsTable);
-     db->getColumnsProperties(&flds, db->getObjectName("документы"));
-     getFieldsTable(flds, docListFieldsTable);
+     getFieldsTable(flds, fieldsTable, &fields);
+     sortHeaders(headers, &fields);
+     db->getColumnsProperties(&flds, db->getObjectName("документы"), oper);
+     getFieldsTable(flds, docListFieldsTable, &docListFields);
+     sortHeaders(docListHeaders, &docListFields);
 
      // Инициализируем текстовый редактор
      textEditor = new MyTextEdit(formWidget);
      highlighter = new MySyntaxHighlighter(textEditor->document());
-     textEditor->setText(QString(db->getFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType)));
+     QString scripts = QString(db->getFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType));
+     if (scripts.size() == 0)
+     {
+        // создадим пустой скрипт с событиями
+        QTextStream stream(&scripts, QIODevice::Text);
+        QList<EventFunction>* events = DocumentScriptEngine::getEventsList();
+        for (int i = 0; i < events->count(); i++)
+        {
+            stream << events->at(i).keyWord << " " << events->at(i).name << endl;
+            stream << events->at(i).begin << " " << events->at(i).comment << endl;
+            stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
+            stream << events->at(i).end << endl;
+            stream << endl << endl;
+        }
+     }
+     textEditor->setText(scripts);
+     connect(fieldsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
+     connect(docListFieldsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(docListFieldsTableChanged()));
 }
 
 
@@ -405,7 +423,30 @@ void WizardOperation::docListFieldsTableChanged()
 }
 
 
-void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* fieldsTable)
+void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields) {
+    headers->clear();
+    // Отсортируем колонки
+    QList<int> headersOrder;
+    for (int i = 0; i < fields->count(); i++)
+    {
+        if (fields->value(i).number > 0)
+            headersOrder << fields->value(i).number;
+    }
+    qSort(headersOrder.begin(), headersOrder.end());
+    for (int i = 0; i < headersOrder.count(); i++)
+    {
+        for (int j = 0; j < fields->count(); j++)
+        {
+            if (fields->at(j).number == headersOrder.at(i))
+            {
+                headers->addItem(fields->at(j).header);
+            }
+        }
+    }
+}
+
+
+void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* fieldsTable, QList<FieldType>* fields)
 {
     // Создадим таблицу столбцов
     fieldsTable->setRowCount(flds.count());
@@ -431,7 +472,7 @@ void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* f
         fieldsTable->setItem(i, 4, headerItem);
         QTableWidgetItem* visibleItem = new QTableWidgetItem(flds.value(i).number > 0 ? "true" : "false");
         fieldsTable->setItem(i, 5, visibleItem);
-        fields << flds.value(i);
+        (*fields) << flds.value(i);
     }
 
 //     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
@@ -468,7 +509,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
         }
         QMap<int, FieldType> flds;
         db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
-        getFieldsTable(flds, fieldsTable);
+        getFieldsTable(flds, fieldsTable, &fields);
         prvTableChanged = false;
     }
     if (frameNumber == 2 && fldsTableChanged)
@@ -486,62 +527,26 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 num++;
             }
         }
-        headers->clear();
-        // Отсортируем колонки
-        QList<int> headersOrder;
-        for (int i = 0; i < fields.count(); i++)
-        {
-            if (fields.value(i).number > 0)
-                headersOrder << fields.value(i).number;
-        }
-        qSort(headersOrder.begin(), headersOrder.end());
-        for (int i = 0; i < headersOrder.count(); i++)
-        {
-            for (int j = 0; j < fields.count(); j++)
-            {
-                if (fields.at(j).number == headersOrder.at(i))
-                {
-                    headers->addItem(fields.at(j).header);
-                }
-            }
-        }
+        sortHeaders(headers, &fields);
         fldsTableChanged = false;
     }
     if (frameNumber == 5 && docListFldsTableChanged)
     {
         int num = 1;
         FieldType fieldT;
-        fields.clear();
+        docListFields.clear();
         for (int i = 0; i < docListFieldsTable->rowCount(); i++)
         {
             if (QString(docListFieldsTable->item(i, 5)->text()).compare("true") == 0)
             {
                 fieldT.header = docListFieldsTable->item(i, 4)->text().trimmed();
                 fieldT.number = num;
-                fields.append(fieldT);
+                docListFields.append(fieldT);
                 num++;
             }
         }
-        docListHeaders->clear();
-        // Отсортируем колонки
-        QList<int> headersOrder;
-        for (int i = 0; i < fields.count(); i++)
-        {
-            if (fields.value(i).number > 0)
-                headersOrder << fields.value(i).number;
-        }
-        qSort(headersOrder.begin(), headersOrder.end());
-        for (int i = 0; i < headersOrder.count(); i++)
-        {
-            for (int j = 0; j < fields.count(); j++)
-            {
-                if (fields.at(j).number == headersOrder.at(i))
-                {
-                    docListHeaders->addItem(fields.at(j).header);
-                }
-            }
-        }
-        fldsTableChanged = false;
+        sortHeaders(docListHeaders, &docListFields);
+        docListFldsTableChanged = false;
     }
 }
 

@@ -263,6 +263,12 @@ void Document::setScriptEngine()
 }
 
 
+DocumentScriptEngine* Document::getScriptEngine()
+{
+    return (DocumentScriptEngine*)scriptEngine;
+}
+
+
 QString Document::transformSelectStatement(QString string)
 {   // Модифицирует команду SELECT... заменяя пустую секцию WHERE реальным фильтром с номером текущего документа
     // Вызывается перед каждым запросом содержимого табличной части документа

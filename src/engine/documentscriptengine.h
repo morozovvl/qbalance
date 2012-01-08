@@ -9,6 +9,9 @@ class DocumentScriptEngine : public ScriptEngine
 {
 public:
     DocumentScriptEngine(QObject *parent = 0);
+// События
+    void eventParametersChanged();
+    static QList<EventFunction>* getEventsList();
 protected:
     virtual void loadScriptObjects();
 };
