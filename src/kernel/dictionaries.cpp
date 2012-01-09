@@ -25,11 +25,11 @@ Dictionary* Dictionaries::getDictionary(QString dictName, QString realName) {
 
 
 Saldo* Dictionaries::getSaldo(QString acc, QString dictName) {
-    if (!dictionaries.contains("saldo" + acc)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    if (!dictionaries.contains("сальдо" + acc)) {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc, dictName))
             return 0;
     }
-    return (Saldo*)dictionaries["saldo" + acc];
+    return (Saldo*)dictionaries["сальдо" + acc];
 }
 
 
@@ -50,10 +50,10 @@ bool Dictionaries::addDictionary(QString dictName, int deep, QString realName) {
 }
 
 bool Dictionaries::addSaldo(QString acc, QString dictName) {
-    if (!dictionaries.contains("saldo" + acc)) {
+    if (!dictionaries.contains("сальдо" + acc)) {
         Saldo* saldo = new Saldo(acc, dictName);
         if (saldo->open()) {
-            dictionaries.insert("saldo" + acc, saldo);
+            dictionaries.insert("сальдо" + acc, saldo);
             saldo->setDictionaries(this);
             return true;
         }

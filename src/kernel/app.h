@@ -70,6 +70,7 @@ public:
     static QString idFieldName()   { return IdFieldName;}
     static QString nameFieldName() { return NameFieldName;}
     static QString resourcesFile() { return QDir::currentPath() + "/src/resources.qrc";}
+    static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
     static bool setDebugMode(const bool& value);
 
     static void debug(const QString& value);

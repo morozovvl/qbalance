@@ -4,6 +4,7 @@
 #include "wizarddictionary.h"
 #include "mytextedit.h"
 #include "mysyntaxhighlighter.h"
+#include "mybuttonlineedit.h"
 
 class WizardOperation : public WizardForm
 {
@@ -23,6 +24,8 @@ private:
     DBFactory*      db;
     QSqlQuery       prvs;               // Проводки
     QLineEdit*      operName;              // Как будет называться операция
+    QCheckBox*      chbSingleString;      // В документе можно создать только одну строку
+    MyButtonLineEdit*   bleNumerator;     // Нумератор операции
     QTableWidget*   prvTable;             // Список проводок операции
     QTableWidget*   fieldsTable;
     QTableWidget*   docListFieldsTable;

@@ -156,10 +156,15 @@ public:
     bool appendColumnHeader(int, QString, QString, int = 999);
     bool updateColumnHeader(int, QString, QString, int = 0);
     bool setTableColumnHeaderOrder(int, QString, QString, int);
-    bool deleteToper(int operNumber);
+    bool deleteToper(int operNumber);               // Удаляет записи о типовой операции только в таблице типовых операций
+    bool deleteAllToperInfo(int operNumber);        // Удаляет всю информацию о типовой операции, если по ней уже не созданы документы
     bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
     int getNewToper();
     bool createNewToperPermission(QString, bool);
+    bool getToperSingleString(int);
+    bool setToperSignleString(int, bool);
+    QString getToperNumerator(int);
+    bool setToperNumerator(int, QString);
 
 
 private:

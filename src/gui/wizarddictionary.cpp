@@ -40,20 +40,20 @@ void WizardDictionary::initFrames()
     QGridLayout* gridLayout = new QGridLayout();
     QLabel* lblTableName = new QLabel(QObject::trUtf8("Наименование на сервере:"), formWidget);
     gridLayout->addWidget(lblTableName, 0, 0, Qt::AlignRight);
-    gridLayout->addWidget(tableName, 0, 1, Qt::AlignLeft);
+    gridLayout->addWidget(tableName, 0, 1);
 
     QLabel* lblMenuTableName = new QLabel(QObject::trUtf8("Наименование в меню:"), formWidget);
     gridLayout->addWidget(lblMenuTableName, 1, 0, Qt::AlignRight);
-    gridLayout->addWidget(tableMenuName, 1, 1, Qt::AlignLeft);
+    gridLayout->addWidget(tableMenuName, 1, 1);
 
     QLabel* lblFormTableName = new QLabel(QObject::trUtf8("Наименование в форме:"), formWidget);
     gridLayout->addWidget(lblFormTableName, 2, 0, Qt::AlignRight);
-    gridLayout->addWidget(tableFormName, 2, 1, Qt::AlignLeft);
+    gridLayout->addWidget(tableFormName, 2, 1);
 
     QLabel* lblMenu = new QLabel(QObject::trUtf8("Доступен в меню:"), formWidget);
     chbMenu = new QCheckBox(formWidget);
     gridLayout->addWidget(lblMenu, 3, 0, Qt::AlignRight);
-    gridLayout->addWidget(chbMenu, 3, 1, Qt::AlignLeft);
+    gridLayout->addWidget(chbMenu, 3, 1);
     gridLayout->setColumnStretch(1, 1);
 
     layout->addLayout(gridLayout);

@@ -593,6 +593,28 @@ bool DBFactory::deleteToper(int operNumber)
 }
 
 
+bool DBFactory::deleteAllToperInfo(int operNumber)
+{
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT count(*) FROM документы WHERE опер = %1;").arg(operNumber));
+    if (query.first())
+    {
+        if (query.value(0).toInt() > 0)
+        {   // Если есть документы для данной типовой операции
+            errorText = QObject::trUtf8("Нельзя удалить типовую операцию, т.к. по ней уже созданы документы");
+            TApplication::exemplar()->showError(errorText);
+            return false;
+        }
+    beginTransaction();
+    exec(QString("DELETE FROM столбцы WHERE код_vw_справочники_со_столбцами = %1;").arg(getDictionaryId(QString("Документ%1").arg(operNumber))));
+    exec(QString("DELETE FROM топер WHERE опер = %1;").arg(operNumber));
+    exec(QString("DELETE FROM файлы WHERE имя = '%1';").arg(TApplication::exemplar()->getScriptFileName(operNumber)));
+    commitTransaction();
+    }
+    return true;
+}
+
+
 bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
 {
     int number = 1;
@@ -892,6 +914,8 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("vw_столбцы.столбец", "столбец");
     ObjectNames.insert("vw_столбцы.заголовок", "заголовок");
     ObjectNames.insert("vw_столбцы.номер", "номер");
+    ObjectNames.insert("нумераторы", "нумераторы");
+    ObjectNames.insert("нумераторы.имя", "имя");
 }
 
 
@@ -1056,7 +1080,7 @@ void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QMap<QString, 
             if (toperT.crQuan)
             {      // Если в кредитовом справочнике ведется количественный учет
                 dict.name = dictName;
-                alias = "saldo";
+                alias = "сальдо";
             }
             else
             {
@@ -1250,4 +1274,52 @@ QSqlQuery DBFactory::getAccountRecord(QString cAcc)
     clearError();
     QString command = QString("SELECT * FROM счета WHERE trim(счет) = '%1'").arg(cAcc);
     return execQuery(command);
+}
+
+
+bool DBFactory::getToperSingleString(int operNumber)
+{
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT однаоперация FROM vw_топер WHERE опер = %1 AND номер = 1;").arg(operNumber));
+    if (query.first())
+    {
+        return query.value(0).toBool();
+    }
+    return false;
+}
+
+
+bool DBFactory::setToperSignleString(int operNumber, bool singleString)
+{
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT * FROM vw_топер WHERE опер = %1 AND номер = 1;").arg(operNumber));
+    if (query.first())
+    {   // Если операция существует
+        return exec(QString("UPDATE топер SET однаоперация = %1 WHERE опер = %2 AND номер = 1;").arg(singleString ? "true" : "false").arg(operNumber));
+    }
+    return false;
+}
+
+
+QString DBFactory::getToperNumerator(int operNumber)
+{
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT нумератор FROM топер WHERE опер = %1 AND номер = 1;").arg(operNumber));
+    if (query.first())
+    {
+        return query.value(0).toString();
+    }
+    return "";
+}
+
+
+bool DBFactory::setToperNumerator(int operNumber, QString numerator)
+{
+    clearError();
+    QSqlQuery query = execQuery(QString("SELECT * FROM топер WHERE опер = %1 AND номер = 1;").arg(operNumber));
+    if (query.first())
+    {   // Если операция существует
+        return exec(QString("UPDATE топер SET нумератор = '%1' WHERE опер = %2 AND номер = 1;").arg(numerator.trimmed()).arg(operNumber));
+    }
+    return false;
 }

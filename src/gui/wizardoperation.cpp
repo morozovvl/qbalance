@@ -27,8 +27,22 @@ QString showAccounts()
 }
 
 
+QString showNumerators()
+{
+    FormGrid* numeratorForm = TApplication::exemplar()->getDictionaries()->getDictionary(TApplication::exemplar()->getDBFactory()->getObjectName("нумераторы"))->getForm();
+    numeratorForm->getParent()->query();
+    numeratorForm->exec();
+    if (numeratorForm->selected())
+    {
+        return numeratorForm->getParent()->getValue(TApplication::exemplar()->getDBFactory()->getObjectName("нумераторы.имя")).toString();
+    }
+    return "";
+}
+
+
 WizardOperation::WizardOperation(): WizardForm()
 {
+    operName = new QLineEdit();
     fieldsTable = new QTableWidget();
     fldsTableChanged = false;
     docListFieldsTable = new QTableWidget();
@@ -36,6 +50,9 @@ WizardOperation::WizardOperation(): WizardForm()
     db = TApplication::exemplar()->getDBFactory();
     headers = new QListWidget();
     docListHeaders = new QListWidget();
+    chbSingleString = new QCheckBox();
+    bleNumerator = new MyButtonLineEdit();
+    bleNumerator->setFormOnPushButton(&showNumerators);
 }
 
 
@@ -58,7 +75,15 @@ void WizardOperation::initFrames()
     QGridLayout* gridLayout = new QGridLayout();
     QLabel* lblOperName = new QLabel(QObject::trUtf8("Наименование операции:"), formWidget);
     gridLayout->addWidget(lblOperName, 0, 0, Qt::AlignRight);
-    gridLayout->addWidget(operName, 0, 1, Qt::AlignLeft);
+    gridLayout->addWidget(operName, 0, 1);
+    QLabel* lblSingleString = new QLabel(QObject::trUtf8("В документе одна строка:"), formWidget);
+    gridLayout->addWidget(lblSingleString, 1, 0, Qt::AlignRight);
+    gridLayout->addWidget(chbSingleString, 1, 1);
+    QLabel* lblNumerator = new QLabel(QObject::trUtf8("Нумератор:"), formWidget);
+    gridLayout->addWidget(lblNumerator, 2, 0, Qt::AlignRight);
+    gridLayout->addWidget(bleNumerator, 2, 1);
+    gridLayout->setColumnStretch(1, 1);
+
     layout->addLayout(gridLayout);
     layout->addStretch();
     addFrame(layout, QObject::trUtf8("Наименование операции"));
@@ -203,6 +228,18 @@ bool WizardOperation::execute()
                 return false;
             }
         }
+        // Установим флажок одной строки в документе
+        if (!db->setToperSignleString(oper, chbSingleString->isChecked()))
+        {
+            db->rollbackTransaction();
+            return false;
+        }
+        // Установим нумератор для операции
+        if (!db->setToperNumerator(oper, bleNumerator->value()))
+        {
+            db->rollbackTransaction();
+            return false;
+        }
         // Установим наименование полей документа
         for (int i = 0; i < headers->count(); i++)
         {
@@ -240,7 +277,7 @@ bool WizardOperation::execute()
     }
 
     // Сохраним скрипты
-    db->setFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
+    db->setFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
     return true;
 }
@@ -248,11 +285,16 @@ bool WizardOperation::execute()
 
 void WizardOperation::getData()
 {
-    operName = new QLineEdit();
     operName->setText(db->getTopersProperties(oper).value(db->getObjectName("vw_доступ_к_топер.имя")).toString());
 
     // Получим список проводок
     prvs = db->getToper(oper);
+
+    // Установим флажок одной строки в документе
+    chbSingleString->setCheckState(db->getToperSingleString(oper) ? Qt::Checked : Qt::Unchecked);
+
+    // Установим нумератор
+    bleNumerator->setValue(db->getToperNumerator(oper));
 
     // Создадим таблицу проводок
     prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 5);
@@ -302,20 +344,10 @@ void WizardOperation::getData()
      // Инициализируем текстовый редактор
      textEditor = new MyTextEdit(formWidget);
      highlighter = new MySyntaxHighlighter(textEditor->document());
-     QString scripts = QString(db->getFile(QString("./scripts/формулы%1.qs").arg(oper), ScriptFileType));
+     QString scripts = QString(db->getFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType));
      if (scripts.size() == 0)
      {
-        // создадим пустой скрипт с событиями
-        QTextStream stream(&scripts, QIODevice::Text);
-        QList<EventFunction>* events = DocumentScriptEngine::getEventsList();
-        for (int i = 0; i < events->count(); i++)
-        {
-            stream << events->at(i).keyWord << " " << events->at(i).name << endl;
-            stream << events->at(i).begin << " " << events->at(i).comment << endl;
-            stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
-            stream << events->at(i).end << endl;
-            stream << endl << endl;
-        }
+         scripts = DocumentScriptEngine::getBlankScripts();
      }
      textEditor->setText(scripts);
      connect(fieldsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
@@ -460,18 +492,23 @@ void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* f
                                                          << QObject::trUtf8("Видимость"));
     foreach (int i, flds.keys())
     {
-        QTableWidgetItem* nameItem = new QTableWidgetItem(flds.value(i).name);
-        fieldsTable->setItem(i, 0, nameItem);
-        QTableWidgetItem* typeItem = new QTableWidgetItem(flds.value(i).type);
-        fieldsTable->setItem(i, 1, typeItem);
-        QTableWidgetItem* lengthItem = new QTableWidgetItem(QString("%1").arg(flds.value(i).length));
-        fieldsTable->setItem(i, 2, lengthItem);
-        QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(flds.value(i).precision));
-        fieldsTable->setItem(i, 3, precisionItem);
-        QTableWidgetItem* headerItem = new QTableWidgetItem(flds.value(i).header);
-        fieldsTable->setItem(i, 4, headerItem);
-        QTableWidgetItem* visibleItem = new QTableWidgetItem(flds.value(i).number > 0 ? "true" : "false");
-        fieldsTable->setItem(i, 5, visibleItem);
+        QTableWidgetItem* item;
+        item = new QTableWidgetItem(flds.value(i).name);
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        fieldsTable->setItem(i, 0, item);
+        item = new QTableWidgetItem(flds.value(i).type);
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        fieldsTable->setItem(i, 1, item);
+        item = new QTableWidgetItem(QString("%1").arg(flds.value(i).length));
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        fieldsTable->setItem(i, 2, item);
+        item = new QTableWidgetItem(QString("%1").arg(flds.value(i).precision));
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        fieldsTable->setItem(i, 3, item);
+        item = new QTableWidgetItem(flds.value(i).header);
+        fieldsTable->setItem(i, 4, item);
+        item = new QTableWidgetItem(flds.value(i).number > 0 ? "true" : "false");
+        fieldsTable->setItem(i, 5, item);
         (*fields) << flds.value(i);
     }
 

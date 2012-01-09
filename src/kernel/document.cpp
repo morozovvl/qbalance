@@ -38,7 +38,7 @@ Document::Document(int oper, Documents* par)
     Dictionary* dict;
     foreach (QString dictName, dictsList.keys())
     {
-        if (dictName == "saldo")
+        if (dictName == "сальдо")
         {
             Saldo* sal = dictionaries->getSaldo(dictsList.value(dictName).acc, dictsList.value(dictName).name);
             if (sal != 0)
@@ -211,7 +211,7 @@ bool Document::open()
         initForm();
         if (scriptEngine != 0)
         {
-            bool result = scriptEngine->open(SCRIPT_DIR + QString("формулы%1").arg(operNumber));
+            bool result = scriptEngine->open(TApplication::exemplar()->getScriptFileName(operNumber));
             if (result)
                 scriptEngine->evaluate();
             return result;

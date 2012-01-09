@@ -216,6 +216,24 @@ void ScriptEngine::eventCloseForm()
 }
 
 
+QString ScriptEngine::getBlankScripts()
+{
+    // создадим пустой скрипт с событиями
+    QString scripts;
+    QTextStream stream(&scripts, QIODevice::Text);
+    QList<EventFunction>* events = getEventsList();
+    for (int i = 0; i < events->count(); i++)
+    {
+        stream << "function " << events->at(i).name << endl;
+        stream << "{ " << events->at(i).comment << endl;
+        stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
+        stream << "}" << endl;
+        stream << endl << endl;
+    }
+    return scripts;
+}
+
+
 QList<EventFunction>* ScriptEngine::getEventsList()
 {
     if (eventsList.size() == 0)

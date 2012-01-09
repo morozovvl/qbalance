@@ -9,11 +9,7 @@
 
 
 struct EventFunction {
-    EventFunction() { keyWord = "function"; begin = "{"; end = "}"; }
-    QString     keyWord;
     QString     name;
-    QString     begin;
-    QString     end;
     QString     comment;
 };
 
@@ -29,6 +25,7 @@ public:
     bool getScriptResult() { return scriptResult; }
 // События
     static QList<EventFunction>* getEventsList();
+    static QString getBlankScripts();
     void eventInitForm();
     void eventBeforeShowForm();
     void eventAfterHideForm();

@@ -97,15 +97,13 @@ void Topers::setForm()
 }
 
 
-/*
 bool Topers::remove()
 {
-    if (TApplication::exemplar()->getDBFactory()->removeDictionary(getValue("таблица").toString().trimmed()))
-    {   // если удалось удалить справочник, то обновим список справочников
-        dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+    int operNumber = getValue("опер").toInt();
+    if (TApplication::exemplar()->getDBFactory()->deleteAllToperInfo(operNumber))
+    {   // если удалось удалить типовую операцию
         return true;
     }
     return false;
 }
-*/
 

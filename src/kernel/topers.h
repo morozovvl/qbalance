@@ -9,7 +9,7 @@ public:
     Topers(QObject *parent = 0);
     void cmdOk();
     Q_INVOKABLE virtual bool add();
-//    Q_INVOKABLE virtual bool remove();
+    Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void view();
 protected:
     virtual void setForm();

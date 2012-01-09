@@ -2,7 +2,6 @@
 #define ESSENCE_H
 
 #define REPORT_DIR      "./reports/"
-#define SCRIPT_DIR      "./scripts/"
 #define TMP_DIR         "./tmp/"
 
 #include <QVariant>
