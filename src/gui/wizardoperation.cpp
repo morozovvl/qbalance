@@ -9,9 +9,13 @@
 
 enum fieldsEnums {debetField = 0,
              dbConstField = 1,
-             creditField = 2,
-             crConstField = 3,
-             itogField = 4};
+             dbVisible = 2,
+             dbSalVisField = 3,
+             creditField = 4,
+             crConstField = 5,
+             crVisible = 6,
+             crSalVisField = 7,
+             itogField = 8};
 
 
 QString showAccounts()
@@ -189,8 +193,13 @@ bool WizardOperation::execute()
             QTableWidgetItem* item;
             QString dbAcc;
             bool dbConstAcc = false;
+            bool dbVisib = false;
+            bool dbSalVisible = false;
             QString crAcc;
             bool crConstAcc = false;
+            bool crVisib = false;
+            bool crSalVisible = false;
+
             dbAcc = "";
             item = prvTable->item(i, debetField);
             if (item != 0)
@@ -200,9 +209,19 @@ bool WizardOperation::execute()
                 TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан дебетовый счет в проводке № %1")).arg(i+1));
                 return false;
             }
+
             item = prvTable->item(i, dbConstField);
             if (item != 0)
                 dbConstAcc = item->text().compare("true") == 0 ? true : false;
+
+            item = prvTable->item(i, dbVisible);
+            if (item != 0)
+                dbVisib = item->text().compare("true") == 0 ? true : false;
+
+            item = prvTable->item(i, dbSalVisField);
+            if (item != 0)
+                dbSalVisible = item->text().compare("true") == 0 ? true : false;
+
             crAcc = "";
             item = prvTable->item(i, creditField);
             if (item != 0)
@@ -212,16 +231,30 @@ bool WizardOperation::execute()
                 TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан кредитовый счет в проводке № %1")).arg(i+1));
                 return false;
             }
+
             item = prvTable->item(i, crConstField);
             if (item != 0)
                 crConstAcc = item->text().compare("true") == 0 ? true : false;
+
+            item = prvTable->item(i, crVisible);
+            if (item != 0)
+                crVisib = item->text().compare("true") == 0 ? true : false;
+
+            item = prvTable->item(i, crSalVisField);
+            if (item != 0)
+                crSalVisible = item->text().compare("true") == 0 ? true : false;
+
             QString itog = prvTable->item(i, itogField)->text().trimmed();
             if (!db->addToperPrv(oper,
                             opName,
                             dbAcc,
                             dbConstAcc,
+                            dbVisib,
+                            dbSalVisible,
                             crAcc,
                             crConstAcc,
+                            crVisib,
+                            crSalVisible,
                             itog))
             {
                 db->rollbackTransaction();
@@ -297,40 +330,64 @@ void WizardOperation::getData()
     bleNumerator->setValue(db->getToperNumerator(oper));
 
     // Создадим таблицу проводок
-    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 5);
+    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 9);
     connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
     prvTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Дебет")
                                                       << QObject::trUtf8("Дб.постоянный")
+                                                      << QObject::trUtf8("Дб.спр.видим")
+                                                      << QObject::trUtf8("Дб.сал.видимо")
                                                       << QObject::trUtf8("Кредит")
                                                       << QObject::trUtf8("Кр.постоянный")
+                                                      << QObject::trUtf8("Кр.спр.видим")
+                                                      << QObject::trUtf8("Кр.сал.видимо")
                                                       << QObject::trUtf8("Итоги"));
      for (int i = 0; i < prvs.size(); i++)
      {
          prvs.seek(i);
-         QTableWidgetItem* debetItem = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбсчет")).toString());
-         prvTable->setItem(i, debetField, debetItem);
-         QTableWidgetItem* dbConstItem = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбпост")).toString());
-         prvTable->setItem(i, dbConstField, dbConstItem);
-         QTableWidgetItem* creditItem = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.крсчет")).toString());
-         prvTable->setItem(i, creditField, creditItem);
-         QTableWidgetItem* crConstItem = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.крпост")).toString());
-         prvTable->setItem(i, crConstField, crConstItem);
-         QTableWidgetItem* itogItem = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.итоги")).toString());
-         prvTable->setItem(i, itogField, itogItem);
+         QTableWidgetItem* item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбсчет")).toString());
+         prvTable->setItem(i, debetField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбпост")).toString());
+         prvTable->setItem(i, dbConstField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбвидим")).toString());
+         prvTable->setItem(i, dbVisible, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.дбсалвидим")).toString());
+         prvTable->setItem(i, dbSalVisField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.крсчет")).toString());
+         prvTable->setItem(i, creditField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.крпост")).toString());
+         prvTable->setItem(i, crConstField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.крвидим")).toString());
+         prvTable->setItem(i, crVisible, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.крсалвидим")).toString());
+         prvTable->setItem(i, crSalVisField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.итоги")).toString());
+         prvTable->setItem(i, itogField, item);
      }
      MyButtonLineEditItemDelegate* dbEditDelegate = new MyButtonLineEditItemDelegate();
      dbEditDelegate->setFormOnPushButton(&showAccounts);
      prvTable->setItemDelegateForColumn(debetField, dbEditDelegate);
 
-     MyBooleanItemDelegate* dbConstBooleanDelegate = new MyBooleanItemDelegate();
-     prvTable->setItemDelegateForColumn(dbConstField, dbConstBooleanDelegate);
+     MyBooleanItemDelegate* boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(dbConstField, boolDelegate);
+
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(dbSalVisField, boolDelegate);
+
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(dbVisible, boolDelegate);
 
      MyButtonLineEditItemDelegate* crEditDelegate = new MyButtonLineEditItemDelegate();
      crEditDelegate->setFormOnPushButton(&showAccounts);
      prvTable->setItemDelegateForColumn(creditField, crEditDelegate);
 
-     MyBooleanItemDelegate* crConstBooleanDelegate = new MyBooleanItemDelegate();
-     prvTable->setItemDelegateForColumn(crConstField, crConstBooleanDelegate);
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(crConstField, boolDelegate);
+
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(crVisible, boolDelegate);
+
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(crSalVisField, boolDelegate);
 
      topersList.clear();
      QMap<int, FieldType> flds;
@@ -533,6 +590,9 @@ void WizardOperation::frameDeactivated(int frameNumber)
             item = prvTable->item(i, dbConstField);
             if (item != 0)
                 toperT.dbConst = (QString(item->text()).compare("true") == 0) ? true : false;
+            item = prvTable->item(i, dbSalVisField);
+            if (item != 0)
+                toperT.dbSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
             item = prvTable->item(i, creditField);
             if (item != 0)
                 toperT.crAcc = item->text().trimmed();
@@ -540,6 +600,9 @@ void WizardOperation::frameDeactivated(int frameNumber)
             if (item != 0)
                 toperT.crConst = (QString(item->text()).compare("true") == 0) ? true : false;
             item = prvTable->item(i, itogField);
+            item = prvTable->item(i, crSalVisField);
+            if (item != 0)
+                toperT.crSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
             if (item != 0)
                 toperT.itog = item->text().trimmed();
             topersList.append(toperT);

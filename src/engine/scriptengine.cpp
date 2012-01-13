@@ -126,7 +126,7 @@ bool ScriptEngine::open(QString scriptFile)
 {
     if (scriptFile.size() > 0)
     {   // Если в параметрах дано имя файла
-        scriptFileName = scriptFile + ".qs";
+        scriptFileName = scriptFile;
         // Попытаемся сначала получить скрипты на сервере
         script = QString(TApplication::exemplar()->getDBFactory()->getFile(scriptFileName, ScriptFileType));
         if (script.size() == 0)

@@ -38,11 +38,12 @@ Document::Document(int oper, Documents* par)
     Dictionary* dict;
     foreach (QString dictName, dictsList.keys())
     {
-        if (dictName == "сальдо")
+        if (dictsList.value(dictName).isSaldo)
         {
             Saldo* sal = dictionaries->getSaldo(dictsList.value(dictName).acc, dictsList.value(dictName).name);
             if (sal != 0)
             {
+                sal->setPrototypeName(dictsList.value(dictName).prototype);
                 sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
                 sal->setQuan(true);
                 sal->setCanShow((dictsList.value(dictName).isConst || sal->isSet())? false: true);
@@ -50,9 +51,10 @@ Document::Document(int oper, Documents* par)
         }
         else
         {
-            dict = dictionaries->getDictionary(dictName, dictsList.value(dictName).name);
+            dict = dictionaries->getDictionary(dictsList.value(dictName).name);
             if (dict != 0)
             {
+                dict->setPrototypeName(dictsList.value(dictName).prototype);
                 if (dict->isSet())              // если это набор
                     dict->setAutoAdd(true);     // ... то для дебетовых наборов - автоматическое добавление
                 dict->setCanShow(true);
@@ -333,6 +335,15 @@ bool Document::showNextDict()
                     break;
                 }
                 dict->setLock(true);    // заблокируем справочник, чтобы повторно его не вводить
+                // Заблокируем все справочники, у которых прототип совпадает
+                foreach (QString dictName, dicts->keys())
+                {
+                    if (dicts->value(dictName)->getPrototypeName() == dict->getPrototypeName())
+                    {
+                        dicts->value(dictName)->setId(dict->getId());
+                        dicts->value(dictName)->setLock(true);
+                    }
+                }
             }
             else {
                 anyShown = false;    // пользователь отказался от работы со справочниками. Прекратим процесс добавления записи

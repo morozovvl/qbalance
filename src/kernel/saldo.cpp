@@ -9,10 +9,10 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
     dictionaryName = dictName;
     tagName = "saldo" + cAcc;
     quan = false;
-    QSqlQuery accRecord = TApplication::exemplar()->getDBFactory()->getAccountRecord(cAcc);
-    if (accRecord.first())
-       quan = accRecord.record().value("количество").toBool();
+    QSqlRecord accRecord = TApplication::exemplar()->getDBFactory()->getAccountRecord(cAcc);
+    quan = accRecord.value("количество").toBool();
 }
+
 
 QString Saldo::transformSelectStatement(QString statement) {
     QString command = statement;
@@ -41,5 +41,16 @@ void Saldo::setMustShow(bool mustShow) {
 bool Saldo::open(int deep) {
     bool result = Dictionary::open(deep);
     formTitle = QString(QObject::trUtf8("Остатки на %1 счете").arg(account));
+    QMap<int, FieldType> saldoFields;
+    TApplication::exemplar()->getDBFactory()->getColumnsProperties(&saldoFields, "сальдо");
+    foreach (int i, saldoFields.keys())
+    {
+        if ((QString(saldoFields.value(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+            (QString(saldoFields.value(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+            (QString(saldoFields.value(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+        {
+            TApplication::exemplar()->getDBFactory()->addColumnProperties(&columnsProperties, saldoFields.value(i).name, saldoFields.value(i).type, saldoFields.value(i).length, saldoFields.value(i).precision, saldoFields.value(i).readOnly);
+        }
+    }
     return result;
 }

@@ -15,9 +15,9 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_сп
     lPrintable = false;
 }
 
-Dictionary* Dictionaries::getDictionary(QString dictName, QString realName) {
+Dictionary* Dictionaries::getDictionary(QString dictName) {
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addDictionary(dictName, 0, realName))
+        if (!addDictionary(dictName, 0))
             return 0;
     }
     return dictionaries[dictName];
@@ -25,21 +25,19 @@ Dictionary* Dictionaries::getDictionary(QString dictName, QString realName) {
 
 
 Saldo* Dictionaries::getSaldo(QString acc, QString dictName) {
-    if (!dictionaries.contains("сальдо" + acc)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    QString alias = "saldo" + acc;
+    if (!dictionaries.contains(alias)) {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc, dictName))
             return 0;
     }
-    return (Saldo*)dictionaries["сальдо" + acc];
+    return (Saldo*)dictionaries[alias];
 }
 
 
-bool Dictionaries::addDictionary(QString dictName, int deep, QString realName) {
+bool Dictionaries::addDictionary(QString dictName, int deep) {
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict;
-        if (realName.size() == 0)
-            dict = new Dictionary(dictName, this);
-        else
-            dict = new Dictionary(realName, this);
+        dict = new Dictionary(dictName, this);
         if (dict->open(deep)) {
             dictionaries.insert(dictName, dict);
             dict->setDictionaries(this);
@@ -50,10 +48,11 @@ bool Dictionaries::addDictionary(QString dictName, int deep, QString realName) {
 }
 
 bool Dictionaries::addSaldo(QString acc, QString dictName) {
-    if (!dictionaries.contains("сальдо" + acc)) {
+    QString alias = "saldo" + acc;
+    if (!dictionaries.contains(alias)) {
         Saldo* saldo = new Saldo(acc, dictName);
         if (saldo->open()) {
-            dictionaries.insert("сальдо" + acc, saldo);
+            dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
             return true;
         }
@@ -121,11 +120,12 @@ bool Dictionaries::remove()
 bool Dictionaries::open() {
     if (Essence::open()) {
         initForm();
-        formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
+        // formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
         return true;
     }
     return false;
 }
+
 
 void Dictionaries::close() {
     foreach(Dictionary* dict, dictionaries) {
@@ -134,12 +134,14 @@ void Dictionaries::close() {
     Essence::close();
 }
 
+
 void Dictionaries::query(QString filter) {
     if (filter.size() > 0)
         filter += " and ";
     filter += "меню=true";
     Essence::query(filter);
 }
+
 
 void Dictionaries::cmdOk() {
     Dictionary::cmdOk();

@@ -73,6 +73,7 @@ public:
     QString getPhotoPath();
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
+    void                initForm();
 
 signals:
     void showError(const QString &);
@@ -91,7 +92,6 @@ protected:
     bool                lUpdateable;
     bool                lPrintable;
     virtual void        setForm();
-    void                initForm();
     virtual void        preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
 };
 

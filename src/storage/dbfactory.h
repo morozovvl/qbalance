@@ -37,8 +37,9 @@ struct FieldType
 struct DictType
 {
     QString name;       // Исходное наименование справочника
-    QString prefix;     // Префикс "дб" или "кр"
-    QString acc;        // на случай, если справочником будет сальдо, то здесь будет номер счета
+    QString acc;
+    QString prototype;  // Справочник - прототип - справочник, который является основой для этого справочника и коды позиций в которых совпадают
+    bool    isSaldo;
     bool    isConst;
 };
 
@@ -145,7 +146,7 @@ public:
                                           QList<ToperType>*,
                                           QMap<int, FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
-    QSqlQuery getAccountRecord(QString cAcc);
+    QSqlRecord getAccountRecord(QString cAcc);
 
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);
@@ -158,7 +159,7 @@ public:
     bool setTableColumnHeaderOrder(int, QString, QString, int);
     bool deleteToper(int operNumber);               // Удаляет записи о типовой операции только в таблице типовых операций
     bool deleteAllToperInfo(int operNumber);        // Удаляет всю информацию о типовой операции, если по ней уже не созданы документы
-    bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog);
+    bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, bool dbVisible, bool dbSalVisible, QString crAcc, bool crAccConst, bool crVisible, bool crSalVisible, QString itog);
     int getNewToper();
     bool createNewToperPermission(QString, bool);
     bool getToperSingleString(int);

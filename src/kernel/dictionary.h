@@ -44,9 +44,12 @@ public:
 
     virtual QString objectName() { return "Dictionary"; }
     int getDeep() { return dictDeep; }
+    QString getPrototypeName() { return prototypeName; }
+    void setPrototypeName(QString prototype) { prototypeName = prototype; }
 
 protected:
     Dictionaries* dictionaries;
+    QString         prototypeName;          // Имя справочника - прототипа
     bool            lSelectable;
     bool            lIsSet;
     bool            lCanShow;

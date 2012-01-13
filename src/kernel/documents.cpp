@@ -78,7 +78,6 @@ bool Documents::open() {
 
         currentDocument = new Document(operNumber, this);
         if (currentDocument->open())
-            initForm();
             return true;
     }
     showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(

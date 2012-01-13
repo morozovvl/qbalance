@@ -615,7 +615,7 @@ bool DBFactory::deleteAllToperInfo(int operNumber)
 }
 
 
-bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, QString crAcc, bool crAccConst, QString itog)
+bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, bool dbVisible, bool dbSalVisible, QString crAcc, bool crAccConst, bool crVisible, bool crSalVisible, QString itog)
 {
     int number = 1;
     clearError();
@@ -625,7 +625,20 @@ bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool db
         number = query.record().value(0).toInt() + 1;
     }
     QString command;
-    command = QString("INSERT INTO %1 (опер, номер, имя, дбсчет, дбпост, крсчет, крпост, итоги) VALUES (%2, %3, '%4', '%5', %6, '%7', %8, '%9');").arg(getObjectName("топер")).arg(operNumber).arg(number).arg(name).arg(dbAcc).arg(dbAccConst ? "true" : "false").arg(crAcc).arg(crAccConst ? "true" : "false").arg(itog);
+    command = QString("INSERT INTO %1 (опер, номер, имя, дбсчет, дбпост, дбвидим, дбсалвидим, крсчет, крпост, крвидим, крсалвидим, итоги) " \
+                      "VALUES (%2, %3, '%4', '%5', %6, %7, %8, '%9', %10, %11, %12, '%13');").arg(getObjectName("топер"))
+                                                                                             .arg(operNumber)
+                                                                                             .arg(number)
+                                                                                             .arg(name)
+                                                                                             .arg(dbAcc)
+                                                                                             .arg(dbAccConst ? "true" : "false")
+                                                                                             .arg(dbVisible ? "true" : "false")
+                                                                                             .arg(dbSalVisible ? "true" : "false")
+                                                                                             .arg(crAcc)
+                                                                                             .arg(crAccConst ? "true" : "false")
+                                                                                             .arg(crVisible ? "true" : "false")
+                                                                                             .arg(crSalVisible ? "true" : "false")
+                                                                                             .arg(itog);
     return exec(command);
 }
 
@@ -895,8 +908,20 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("топер.однаоперация", "однаоперация");
     ObjectNames.insert("топер.дбпост", "дбпост");
     ObjectNames.insert("топер.крпост", "крпост");
+    ObjectNames.insert("топер.дбвидим", "дбвидим");
+    ObjectNames.insert("топер.крвидим", "крвидим");
+    ObjectNames.insert("топер.дбсалвидим", "дбсалвидим");
+    ObjectNames.insert("топер.крсалвидим", "крсалвидим");
     ObjectNames.insert("счета", "счета");
     ObjectNames.insert("счета.счет", "счет");
+    ObjectNames.insert("vw_счета", "vw_счета");
+    ObjectNames.insert("vw_счета.код", "код");
+    ObjectNames.insert("vw_счета.счет", "счет");
+    ObjectNames.insert("vw_счета.имя", "имя");
+    ObjectNames.insert("vw_счета.имясправочника", "имясправочника");
+    ObjectNames.insert("vw_счета.баланс", "баланс");
+    ObjectNames.insert("vw_счета.количество", "количество");
+    ObjectNames.insert("vw_счета.прототип", "прототип");
     ObjectNames.insert("сальдо", "сальдо");
     ObjectNames.insert("сальдо.счет", "счет");
     ObjectNames.insert("сальдо.код", "код");
@@ -1007,13 +1032,13 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
     {
         ToperType toperT;
         toperT.number = toper.record().value("номер").toInt();
-        toperT.dbAcc = toper.record().value("дбсчет").toString();
+        toperT.dbAcc = toper.record().value("дбсчет").toString().trimmed();
         toperT.dbDict = toper.record().value("дбсправ").toString().trimmed();
         toperT.dbQuan = toper.record().value("дбкол").toBool();
         toperT.dbConst = toper.record().value("дбпост").toBool();
         toperT.dbSaldoVisible = toper.record().value("дбсалвидим").toBool();
         toperT.dbDictVisible = toper.record().value("дбвидим").toBool();
-        toperT.crAcc = toper.record().value("крсчет").toString();
+        toperT.crAcc = toper.record().value("крсчет").toString().trimmed();
         toperT.crDict = toper.record().value("крсправ").toString().trimmed();
         toperT.crQuan = toper.record().value("кркол").toBool();
         toperT.crConst = toper.record().value("крпост").toBool();
@@ -1028,76 +1053,79 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 
 void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QMap<QString, DictType>* dictsList)
 {
-    QString dictName, alias;
-    DictType dict;
-    ToperType toperT;
+    QString dictName;
+    QStringList dictList;
+    // Составим список справочников, которые нам необходимы
     for (int i = 0; i < topersList->count(); i++)
     {
+        dictName = topersList->at(i).dbDict;
+        if (dictName.size() > 0 && topersList->at(i).dbDictVisible && !dictList.contains("дб" + dictName))
+            dictList.append("дб" + dictName);
+        dictName = topersList->at(i).crDict;
+        if (dictName.size() > 0 && topersList->at(i).crDictVisible && !dictList.contains("кр" + dictName))
+        {
+            if (!topersList->at(i).crQuan)
+                dictList.append("кр" + dictName);
+        }
+    }
+    // Укажем, как обращаться к справочникам для заполнения кодов в проводках
+    for (int i = 0; i < topersList->count(); i++)
+    {
+        ToperType toperT;
+        DictType dict;
         toperT = topersList->at(i);
         // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
-        dictName = toperT.dbDict;
-        if (dictName.size() == 0)
-        {
-            QSqlQuery accRecord = getAccountRecord(toperT.dbAcc);
-            if (accRecord.first())
-            {
-               dictName = accRecord.record().value("имясправочника").toString();
-               toperT.dbDict = dictName;
-               toperT.dbQuan = accRecord.record().value("количество").toBool();
-            }
-        }
-        alias = dictName;
+        QSqlRecord accRecord = getAccountRecord(toperT.dbAcc);
+        dictName = accRecord.value(getObjectName("vw_счета.имясправочника")).toString();
+        toperT.dbDict = dictName;
+        toperT.dbQuan = accRecord.value(getObjectName("vw_счета.количество")).toBool();
         if (dictName.size() > 0)
         {
             dict.name = dictName;
-            if (dictsList->contains("дб" + dictName) && dictsList->contains("кр" + dictName))
+            dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
+            if (dict.prototype.size() == 0)
+                dict.prototype = dict.name;
+            if (dictList.contains("дб" + dictName) && dictList.contains("кр" + dictName))
                 // Если один и тот же справочники присутствует и по дебету и по кредиту,
                 // то дебетовый справочник обозначим с префиксом "дб"
-            {
-                dict.prefix = "дб";
-                alias = dict.prefix + dictName;
-            }
+                toperT.dbDictAlias = "дб" + dictName;
+            else
+                toperT.dbDictAlias = dictName;
+            dict.isSaldo = false;
             dict.isConst = toperT.dbConst;
-            if (dictsList != 0 && !dictsList->contains(alias))
-                dictsList->insert(alias, dict);
+            if (dictsList != 0)
+                dictsList->insert(toperT.dbDictAlias, dict);
         }
-        toperT.dbDictAlias = alias;
 
-        dictName = toperT.crDict;
-        if (dictName.size() == 0)
-        {
-            QSqlQuery accRecord = getAccountRecord(toperT.crAcc);
-            if (accRecord.first())
-            {
-                dictName = accRecord.record().value("имясправочника").toString();
-                toperT.crDict = dictName;
-                toperT.crQuan = accRecord.record().value("количество").toBool();
-            }
-        }
-        alias = dictName;
+        accRecord = getAccountRecord(toperT.crAcc);
+        dictName = accRecord.value(getObjectName("vw_счета.имясправочника")).toString();
+        toperT.crDict = dictName;
+        toperT.crQuan = accRecord.value(getObjectName("vw_счета.количество")).toBool();
         if (dictName.size() > 0)
         {
+            dict.name = dictName;
             if (toperT.crQuan)
             {      // Если в кредитовом справочнике ведется количественный учет
-                dict.name = dictName;
-                alias = "сальдо";
+                dict.acc = toperT.crAcc;
+                dict.isSaldo = true;
             }
             else
             {
-                dict.name = dictName;
-                if (dictsList->contains("дб" + dictName) && dictsList->contains("кр" + dictName))
-                    // Если один и тот же справочники присутствует и по дебету и по кредиту,
-                    // то дебетовый справочник обозначим с префиксом "кр"
-                {
-                    dict.prefix = "кр";
-                    alias = dict.prefix + dictName;
-                }
+                dict.isSaldo = false;
             }
+            if (dictList.contains("дб" + dictName) && dictList.contains("кр" + dictName))
+               // Если один и тот же справочники присутствует и по дебету и по кредиту,
+               // то дебетовый справочник обозначим с префиксом "кр"
+                toperT.crDictAlias = "кр" + dictName;
+            else
+                toperT.crDictAlias = dictName;
+            dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
+            if (dict.prototype.size() == 0)
+                dict.prototype = dict.name;
             dict.isConst = toperT.crConst;
-            if (dictsList != 0 && !dictsList->contains(alias))
-                dictsList->insert(alias, dict);
+            if (dictsList != 0)
+            dictsList->insert(toperT.crDictAlias, dict);
         }
-        toperT.crDictAlias = alias;
         topersList->removeAt(i);
         topersList->insert(i, toperT);
     }
@@ -1108,7 +1136,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
     QString selectStatement;
     QMap<QString, DictType> dictsList;
     if (topersList->count() == 0)
-    {
+    {   // В случае, если таблица проводок типовой операции пустая, то запрашиваем ее с сервера. Но она может быть и не пустая, если ее сформировал мастер
         getToperData(oper, topersList);
     }
     if (topersList->count() > 0)
@@ -1164,7 +1192,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             prv = topersList->at(i).number;
             if (!topersList->at(i).dbConst)
             {
-                dictName = topersList->at(i).dbDictAlias;
+                dictName = topersList->at(i).dbDict;
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
                     foreach (QString field, getFieldsList(dictName)) {
@@ -1179,7 +1207,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             }
             if (!topersList->at(i).crConst)
             {
-                dictName = topersList->at(i).crDictAlias;
+                dictName = topersList->at(i).crDict;
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
                     foreach (QString field, getFieldsList(dictName)) {
@@ -1269,11 +1297,13 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
 }
 
 
-QSqlQuery DBFactory::getAccountRecord(QString cAcc)
+QSqlRecord DBFactory::getAccountRecord(QString cAcc)
 {
     clearError();
-    QString command = QString("SELECT * FROM счета WHERE trim(счет) = '%1'").arg(cAcc);
-    return execQuery(command);
+    QString command = QString("SELECT * FROM vw_счета WHERE trim(счет) = '%1';").arg(cAcc.trimmed());
+    QSqlQuery query = execQuery(command);
+    query.first();
+    return query.record();
 }
 
 

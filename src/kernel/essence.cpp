@@ -42,7 +42,10 @@ Essence::~Essence() {
 }
 
 QDialog* Essence::getFormWidget() {
-    if (!opened) open();
+    if (!opened)
+    {
+        open();
+    }
     return form->getForm();
 }
 
@@ -153,7 +156,10 @@ bool Essence::remove()
 
 int Essence::exec()
 {
-    if (!opened) open();
+    if (!opened)
+    {
+        open();
+    }
     if (opened && form != 0) {
         return form->exec();
     }
@@ -188,6 +194,7 @@ bool Essence::open()
 {
     if (Table::open())
     {
+        initForm();
         setScriptEngine();
         return true;
     }
