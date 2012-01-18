@@ -269,7 +269,10 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
         fld.type      = query.value(2).toString().trimmed();
         fld.length    = query.value(3).toInt();
         fld.precision = query.value(4).toInt();
-        fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
+        if (fld.name.toLower() == "код")
+            fld.readOnly = true;
+        else
+            fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
         fld.header    = query.value(6).toString().trimmed();
         fld.number    = query.value(7).toInt();
         result->insert(i, fld);
@@ -359,12 +362,12 @@ void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* colu
 int DBFactory::getTypeId(QString dict)
 {
     objectTypes.first();
-    while (objectTypes.next()) {
-        if (objectTypes.value(1).toString().toLower() == dict.toLower())
+    do {
+        if (objectTypes.value(1).toString().trimmed().toLower() == dict.toLower())
         {
             return objectTypes.value(0).toInt();
         }
-    }
+    } while (objectTypes.next());
     return 0;
 }
 
@@ -941,6 +944,11 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("vw_столбцы.номер", "номер");
     ObjectNames.insert("нумераторы", "нумераторы");
     ObjectNames.insert("нумераторы.имя", "имя");
+    ObjectNames.insert("vw_доступ_к_справочникам", "vw_доступ_к_справочникам");
+    ObjectNames.insert("vw_доступ_к_справочникам.имя", "имя");
+    ObjectNames.insert("vw_доступ_к_справочникам.имя_в_форме", "имя_в_форме");
+    ObjectNames.insert("vw_доступ_к_справочникам.таблица", "таблица");
+    ObjectNames.insert("vw_доступ_к_справочникам.меню", "меню");
 }
 
 
@@ -1051,23 +1059,9 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 }
 
 
-void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QMap<QString, DictType>* dictsList)
+void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList)
 {
     QString dictName;
-    QStringList dictList;
-    // Составим список справочников, которые нам необходимы
-    for (int i = 0; i < topersList->count(); i++)
-    {
-        dictName = topersList->at(i).dbDict;
-        if (dictName.size() > 0 && topersList->at(i).dbDictVisible && !dictList.contains("дб" + dictName))
-            dictList.append("дб" + dictName);
-        dictName = topersList->at(i).crDict;
-        if (dictName.size() > 0 && topersList->at(i).crDictVisible && !dictList.contains("кр" + dictName))
-        {
-            if (!topersList->at(i).crQuan)
-                dictList.append("кр" + dictName);
-        }
-    }
     // Укажем, как обращаться к справочникам для заполнения кодов в проводках
     for (int i = 0; i < topersList->count(); i++)
     {
@@ -1085,16 +1079,11 @@ void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QMap<QString, 
             dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
             if (dict.prototype.size() == 0)
                 dict.prototype = dict.name;
-            if (dictList.contains("дб" + dictName) && dictList.contains("кр" + dictName))
-                // Если один и тот же справочники присутствует и по дебету и по кредиту,
-                // то дебетовый справочник обозначим с префиксом "дб"
-                toperT.dbDictAlias = "дб" + dictName;
-            else
-                toperT.dbDictAlias = dictName;
+            toperT.dbDictAlias = dictName;
             dict.isSaldo = false;
             dict.isConst = toperT.dbConst;
             if (dictsList != 0)
-                dictsList->insert(toperT.dbDictAlias, dict);
+                dictsList->append(dict);
         }
 
         accRecord = getAccountRecord(toperT.crAcc);
@@ -1108,33 +1097,30 @@ void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QMap<QString, 
             {      // Если в кредитовом справочнике ведется количественный учет
                 dict.acc = toperT.crAcc;
                 dict.isSaldo = true;
+                toperT.crDictAlias = dictName;
             }
             else
             {
                 dict.isSaldo = false;
+                toperT.crDictAlias = "saldo" + toperT.crAcc;
             }
-            if (dictList.contains("дб" + dictName) && dictList.contains("кр" + dictName))
-               // Если один и тот же справочники присутствует и по дебету и по кредиту,
-               // то дебетовый справочник обозначим с префиксом "кр"
-                toperT.crDictAlias = "кр" + dictName;
-            else
-                toperT.crDictAlias = dictName;
             dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
             if (dict.prototype.size() == 0)
                 dict.prototype = dict.name;
             dict.isConst = toperT.crConst;
             if (dictsList != 0)
-            dictsList->insert(toperT.crDictAlias, dict);
+            dictsList->append(dict);
         }
         topersList->removeAt(i);
         topersList->insert(i, toperT);
     }
 }
 
+
 QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QMap<int, FieldType>* columnsProperties, int* retPrv1)
 {
     QString selectStatement;
-    QMap<QString, DictType> dictsList;
+    QList<DictType> dictsList;
     if (topersList->count() == 0)
     {   // В случае, если таблица проводок типовой операции пустая, то запрашиваем ее с сервера. Но она может быть и не пустая, если ее сформировал мастер
         getToperData(oper, topersList);

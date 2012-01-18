@@ -30,6 +30,7 @@ public:
     void eventBeforeShowForm();
     void eventAfterHideForm();
     void eventCloseForm();
+    friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
     static QList<EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     virtual void loadScriptObjects();

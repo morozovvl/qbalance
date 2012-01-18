@@ -28,7 +28,7 @@ void MyItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 
 QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem option) const {
     QStyleOptionViewItemV2 opt(option);
-    if (option.state.testFlag(QStyle::State_HasFocus)) {
+    if (!readOnly && option.state.testFlag(QStyle::State_HasFocus)) {
         QPalette p = opt.palette;
         p.setColor(QPalette::Active, QPalette::Highlight, Qt::darkBlue);
         p.setColor(QPalette::Active, QPalette::HighlightedText, Qt::white);;

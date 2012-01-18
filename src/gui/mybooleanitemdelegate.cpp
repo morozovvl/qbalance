@@ -14,6 +14,7 @@ QWidget* MyBooleanItemDelegate::createEditor(QWidget* parent, const QStyleOption
 {
     Q_UNUSED(option)
     Q_UNUSED(index)
+    saveOldValue(index.data());
     return new QCheckBox(parent);
 }
 

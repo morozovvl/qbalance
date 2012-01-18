@@ -21,6 +21,11 @@ WizardDictionary::WizardDictionary(bool addDict): WizardForm()
   , tableMenuName(NULL)
 {
     addDictionary = addDict;
+    tableName = new QLineEdit();
+    tableMenuName = new QLineEdit();
+    tableFormName = new QLineEdit();
+    db = TApplication::exemplar()->getDBFactory();
+    chbMenu = new QCheckBox(formWidget);
 }
 
 
@@ -34,8 +39,7 @@ bool WizardDictionary::open(QWidget* pwgt, QString t/* = ""*/)
 void WizardDictionary::initFrames()
 {
     // Добавим страницы мастера
-    QVBoxLayout* layout = 0;
-    layout = new QVBoxLayout();
+    QVBoxLayout* layout = new QVBoxLayout();
     // 1-я страница
     QGridLayout* gridLayout = new QGridLayout();
     QLabel* lblTableName = new QLabel(QObject::trUtf8("Наименование на сервере:"), formWidget);
@@ -51,7 +55,6 @@ void WizardDictionary::initFrames()
     gridLayout->addWidget(tableFormName, 2, 1);
 
     QLabel* lblMenu = new QLabel(QObject::trUtf8("Доступен в меню:"), formWidget);
-    chbMenu = new QCheckBox(formWidget);
     gridLayout->addWidget(lblMenu, 3, 0, Qt::AlignRight);
     gridLayout->addWidget(chbMenu, 3, 1);
     gridLayout->setColumnStretch(1, 1);
@@ -103,47 +106,84 @@ void WizardDictionary::initFrames()
 
 void WizardDictionary::getData()
 {
-    if (table.size() > 0)
-    {   // Если известно, с какой таблицей будем работать
-        tableName = new QLineEdit();
-        tableName->setText(table);
-        tableName->setEnabled(false);
-        tableMenuName = new QLineEdit();
-        tableMenuName->setText(TApplication::exemplar()->getDictionaries()->getDictionaryTitle(table));
-        tableFormName = new QLineEdit();
-        tableFormName->setText(TApplication::exemplar()->getDBFactory()->getDictionariesProperties(table).value(__NAME_IN_FORM__).toString());
-        // Получим список полей таблицы
-        TApplication::exemplar()->getDBFactory()->getColumnsProperties(&fields, table);
-        // Создадим таблицу столбцов
-        fieldsTable = new QTableWidget(fields.count(), 6);
-        fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
-                                                             << QObject::trUtf8("Тип")
-                                                             << QObject::trUtf8("Длина")
-                                                             << QObject::trUtf8("Точность")
-                                                             << QObject::trUtf8("Заголовок")
-                                                             << QObject::trUtf8("Видимость"));
-        for (int i = 0; i < fields.count(); i++)
-        {
-            QTableWidgetItem* nameItem = new QTableWidgetItem(fields.value(i).name);
-            fieldsTable->setItem(i, 0, nameItem);
-            QTableWidgetItem* typeItem = new QTableWidgetItem(fields.value(i).type);
-            fieldsTable->setItem(i, 1, typeItem);
-            QTableWidgetItem* lengthItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).length));
-            fieldsTable->setItem(i, 2, lengthItem);
-            QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).precision));
-            fieldsTable->setItem(i, 3, precisionItem);
-            QTableWidgetItem* headerItem = new QTableWidgetItem(fields.value(i).header);
-            fieldsTable->setItem(i, 4, headerItem);
-            QTableWidgetItem* visibleItem = new QTableWidgetItem(fields.value(i).number > 0 ? "true" : "false");
-            fieldsTable->setItem(i, 5, visibleItem);
-        }
 
-        MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getForm());
-        fieldsTable->setItemDelegateForColumn(1, buttonEditDelegate);
-        buttonEditDelegate->setFormOnPushButton(&showTypesForm);
-        MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
-        fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
+    if (table.size() == 0)
+    {
+        for (int i = 1; true; i++)
+        {
+            table = QString("справочник%1").arg(i);
+            if (!db->isTableExists(table))
+            {
+                break;
+            }
+        }
+        QString menuName = table;
+        menuName.replace(0, 1, menuName.left(1).toUpper());   // Первую букву названия справочника переведем в верхний регистр
+        tableMenuName->setText(menuName);
+        tableFormName->setText(menuName);
+        tableName->setEnabled(true);
+        chbMenu->setCheckState(Qt::Checked);
+
+        FieldType field;
+        field.name = "код";
+        field.type = "integer";
+        field.length = 32;
+        field.precision = 0;
+        field.header = "Код";
+        field.number = 1;
+        fields.append(field);
+
+        field.name = "имя";
+        field.type = "character varying";
+        field.length = 100;
+        field.precision = 0;
+        field.header = "Наименование";
+        field.number = 2;
+        fields.append(field);
     }
+    else
+    {   // Получим список полей таблицы
+        db->getColumnsProperties(&fields, table);
+        tableMenuName->setText(TApplication::exemplar()->getDictionaries()->getDictionaryTitle(table));
+        QSqlRecord dictProperties = db->getDictionariesProperties(table);
+        tableFormName->setText(dictProperties.value(__NAME_IN_FORM__).toString());
+        if (dictProperties.value(db->getObjectName("vw_доступ_к_справочникам.меню")).toBool())
+            chbMenu->setCheckState(Qt::Checked);
+        else
+            chbMenu->setCheckState(Qt::Unchecked);
+        tableName->setEnabled(false);
+    }
+    fieldsTable = new QTableWidget(fields.count(), 6);
+    // Если известно, с какой таблицей будем работать
+    tableName->setText(table);
+    // Создадим таблицу столбцов
+    fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
+                                                         << QObject::trUtf8("Тип")
+                                                         << QObject::trUtf8("Длина")
+                                                         << QObject::trUtf8("Точность")
+                                                         << QObject::trUtf8("Заголовок")
+                                                         << QObject::trUtf8("Видимость"));
+    for (int i = 0; i < fields.count(); i++)
+    {
+        QTableWidgetItem* nameItem = new QTableWidgetItem(fields.value(i).name);
+        fieldsTable->setItem(i, 0, nameItem);
+        QTableWidgetItem* typeItem = new QTableWidgetItem(fields.value(i).type);
+        fieldsTable->setItem(i, 1, typeItem);
+        QTableWidgetItem* lengthItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).length));
+        fieldsTable->setItem(i, 2, lengthItem);
+        QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).precision));
+        fieldsTable->setItem(i, 3, precisionItem);
+        QTableWidgetItem* headerItem = new QTableWidgetItem(fields.value(i).header);
+        fieldsTable->setItem(i, 4, headerItem);
+        QTableWidgetItem* visibleItem = new QTableWidgetItem(fields.value(i).number > 0 ? "true" : "false");
+        fieldsTable->setItem(i, 5, visibleItem);
+    }
+
+    MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getForm());
+    fieldsTable->setItemDelegateForColumn(1, buttonEditDelegate);
+    buttonEditDelegate->setFormOnPushButton(&showTypesForm);
+    MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
+    fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
 }
 
 
@@ -151,22 +191,22 @@ bool WizardDictionary::execute()
 {   // Сохранение данных на сервере
     tableName->setText(tableName->text().trimmed());
     tableMenuName->setText(tableMenuName->text().trimmed());
-    TApplication::exemplar()->getDBFactory()->beginTransaction();
+    db->beginTransaction();
     if (addDictionary)
     {   // Если нужно, то создадим новый справочник
-        if (!TApplication::exemplar()->getDBFactory()->createNewDictionary(tableName->text(), tableMenuName->text(), chbMenu->isChecked()))
+        if (!db->createNewDictionary(tableName->text(), tableMenuName->text(), chbMenu->isChecked()))
         {
-            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+            db->rollbackTransaction();
             return false;
         }
     }
     // Получим код справочника, с которым работаем
-    int tableId = TApplication::exemplar()->getDBFactory()->getDictionaryId(table);
+    int tableId = db->getDictionaryId(table);
     if (tableId > 0) {
         // Установим пользовательские наименования справочника
-        if (!TApplication::exemplar()->getDBFactory()->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
+        if (!db->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
         {
-                TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                db->rollbackTransaction();
                 return false;
         }
         // Удалим поля, помеченные к удалению
@@ -175,9 +215,9 @@ bool WizardDictionary::execute()
         {
             if (fields.value(i).type.size() == 0)
             {
-                if (!TApplication::exemplar()->getDBFactory()->dropTableColumn(tableName->text(), fields.value(i).name))
+                if (!db->dropTableColumn(tableName->text(), fields.value(i).name))
                 {
-                        TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                        db->rollbackTransaction();
                         return false;
                 }
                 fields.removeAt(i);
@@ -207,9 +247,9 @@ bool WizardDictionary::execute()
             {   // Если мы просматриваем поля таблицы, которые уже были
                 if (QString::compare(fieldName, fields.value(i).name) != 0)
                 {   // Если пользователь изменил наименование поля
-                    if (!TApplication::exemplar()->getDBFactory()->renameTableColumn(tableName->text(), fields.value(i).name, fieldName))
+                    if (!db->renameTableColumn(tableName->text(), fields.value(i).name, fieldName))
                     {
-                            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                            db->rollbackTransaction();
                             return false;
                     }
                 }
@@ -217,9 +257,9 @@ bool WizardDictionary::execute()
                     nLength != fields.value(i).length ||
                     nPrecision != fields.value(i).precision)
                 {   // Если изменились тип, длина или точность
-                    if (!TApplication::exemplar()->getDBFactory()->alterTableColumn(tableName->text(), fieldName, type))
+                    if (!db->alterTableColumn(tableName->text(), fieldName, type))
                     {
-                            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                            db->rollbackTransaction();
                             return false;
                     }
                 }
@@ -228,17 +268,17 @@ bool WizardDictionary::execute()
                 {
                     if (fields.value(i).header.size() > 0)
                     {  // Если заголовок для этого столбца уже был
-                        if (!TApplication::exemplar()->getDBFactory()->updateColumnHeader(tableId, fieldName, sHeader))
+                        if (!db->updateColumnHeader(tableId, fieldName, sHeader))
                         {
-                                TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                db->rollbackTransaction();
                                 return false;
                         }
                     }
                     else
                     {
-                        if (!TApplication::exemplar()->getDBFactory()->appendColumnHeader(tableId, fieldName, sHeader))
+                        if (!db->appendColumnHeader(tableId, fieldName, sHeader))
                         {
-                                TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                db->rollbackTransaction();
                                 return false;
                         }
                     }
@@ -246,16 +286,16 @@ bool WizardDictionary::execute()
             }
             else
             {   // Если мы добавляем новые поля
-                if (!TApplication::exemplar()->getDBFactory()->addTableColumn(tableName->text(), fieldName, type))
+                if (!db->addTableColumn(tableName->text(), fieldName, type))
                 {
-                        TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                        db->rollbackTransaction();
                         return false;
                 }
                 if (sHeader.size() > 0)
                 {
-                    if (!TApplication::exemplar()->getDBFactory()->appendColumnHeader(tableId, fieldName, sHeader))
+                    if (!db->appendColumnHeader(tableId, fieldName, sHeader))
                     {
-                            TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                            db->rollbackTransaction();
                             return false;
                     }
                 }
@@ -270,9 +310,9 @@ bool WizardDictionary::execute()
                 {
                     if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
                     {
-                         if (!TApplication::exemplar()->getDBFactory()->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), fieldsTable->item(j, 4)->text(), i + 1))
+                         if (!db->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), fieldsTable->item(j, 4)->text(), i + 1))
                          {
-                                 TApplication::exemplar()->getDBFactory()->rollbackTransaction();
+                                 db->rollbackTransaction();
                                  return false;
                          }
                     }
@@ -280,7 +320,7 @@ bool WizardDictionary::execute()
             }
         }
     }
-    TApplication::exemplar()->getDBFactory()->commitTransaction();
+    db->commitTransaction();
     return true;
 }
 

@@ -68,6 +68,8 @@ public:
     virtual bool calculate(const QModelIndex &);
     virtual void setScriptEngine();
     ScriptEngine* getScriptEngine();
+    void setOldValue(QVariant value) { oldValue = value; }
+    Q_INVOKABLE virtual QVariant getOldValue() { return oldValue; }
 
 // Прочие функции
     QString getPhotoPath();
@@ -93,6 +95,8 @@ protected:
     bool                lPrintable;
     virtual void        setForm();
     virtual void        preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
+private:
+    QVariant            oldValue;
 };
 
 #endif // ESSENCE_H

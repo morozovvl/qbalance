@@ -27,8 +27,10 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     }
 }
 
+
 Dictionary::~Dictionary() {
 }
+
 
 bool Dictionary::add() {
     if (!lInsertable) {
@@ -63,6 +65,7 @@ bool Dictionary::add() {
     return TApplication::exemplar()->getDBFactory()->insertDictDefault(getTableName());
 }
 
+
 bool Dictionary::remove() {
     if (lDeleteable) {
         if (Essence::remove()) {
@@ -76,6 +79,7 @@ bool Dictionary::remove() {
             TApplication::exemplar()->getLogin()));
     return false;
 }
+
 
 void Dictionary::setLock(bool lock) {
     if (lock) {                             // Если блокируем все связанные справочники
@@ -97,6 +101,7 @@ void Dictionary::setLock(bool lock) {
     }
     lIsLocked = true;
 }
+
 
 void Dictionary::setForm() {
     form = new FormGridSearch();
@@ -124,6 +129,7 @@ void Dictionary::setForm() {
             button->setToolTip(trUtf8("Обновить справочник (загрузить повторно с сервера)"));
     }
 }
+
 
 bool Dictionary::open(int deep) {
     if (lSelectable) {

@@ -155,7 +155,8 @@ void TableView::setColumnsDelegates()
 {
     foreach (int fld, columns->keys())
     {
-        if (!columns->value(fld).readOnly && visibleColumns.contains(columns->value(fld).name))
+//        if (!columns->value(fld).readOnly && visibleColumns.contains(columns->value(fld).name))
+        if (visibleColumns.contains(columns->value(fld).name))
         {
             if (columns->value(fld).type.toUpper() == "NUMERIC" ||
                 columns->value(fld).type.toUpper() == "INTEGER")
@@ -166,12 +167,14 @@ void TableView::setColumnsDelegates()
                 numericDelegate->setReadOnly(columns->value(fld).readOnly);
                 connect(numericDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
                 setItemDelegateForColumn(fld, numericDelegate);
+                numericDelegate->setReadOnly(columns->value(fld).readOnly);
             } else if (columns->value(fld).type.toUpper() == "BOOLEAN")
                 {
                     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
                     booleanDelegate->setReadOnly(columns->value(fld).readOnly);
                     connect(booleanDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
                     setItemDelegateForColumn(fld, booleanDelegate);
+                    booleanDelegate->setReadOnly(columns->value(fld).readOnly);
                 } else
                 {
                 if (columns->value(fld).type.toUpper() == "CHARACTER" ||
@@ -180,6 +183,7 @@ void TableView::setColumnsDelegates()
                     textDelegate->setReadOnly(columns->value(fld).readOnly);
                     connect(textDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
                     setItemDelegateForColumn(fld, textDelegate);
+                    textDelegate->setReadOnly(columns->value(fld).readOnly);
                 }
             }
         }

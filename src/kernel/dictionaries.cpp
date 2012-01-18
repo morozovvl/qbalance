@@ -108,10 +108,13 @@ void Dictionaries::view()
 
 bool Dictionaries::remove()
 {
-    if (TApplication::exemplar()->getDBFactory()->removeDictionary(getValue("таблица").toString().trimmed()))
-    {   // если удалось удалить справочник, то обновим список справочников
-        dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
-        return true;
+    if (Essence::remove())
+    {
+        if (TApplication::exemplar()->getDBFactory()->removeDictionary(getValue("таблица").toString().trimmed()))
+        {   // если удалось удалить справочник, то обновим список справочников
+            dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+            return true;
+        }
     }
     return false;
 }

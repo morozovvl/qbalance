@@ -23,7 +23,6 @@ DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
-    globalObject().setProperty("table", newQObject(parent()));
     globalObject().setProperty("document", newQObject((Document*)parent()));
     globalObject().setProperty("documents", newQObject((QObject*)((Document*)parent())->getParent()));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));

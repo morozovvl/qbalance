@@ -41,7 +41,7 @@ void Table::query(QString filter)
     tableModel->setFilter(filter);
     tableModel->select();
     TApplication::debug(" Query: " + tableModel->selectStatement() + "\n");
-}
+ }
 
 
 bool Table::open()

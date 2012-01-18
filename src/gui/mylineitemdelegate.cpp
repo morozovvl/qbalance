@@ -18,6 +18,7 @@ QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionVie
     Q_UNUSED(option)
     Q_UNUSED(index)
     if (!readOnly) {
+        saveOldValue(index.data());
         QLineEdit* editor = new QLineEdit();
         editor->setParent(parent);
         editor->setAlignment(alignment);

@@ -29,36 +29,36 @@ Document::Document(int oper, Documents* par)
         dicts = dictionaries->getDictionaries();
     }
 
-    QMap<QString, DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
+    QList<DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
     DbFactory->getToperData(operNumber, &topersList);
     DbFactory->setToperDictAliases(&topersList, &dictsList);
 
 
     // Создадим локальный для документа список справочников
     Dictionary* dict;
-    foreach (QString dictName, dictsList.keys())
+    for (int i = 0; i < dictsList.count(); i++)
     {
-        if (dictsList.value(dictName).isSaldo)
+        if (dictsList.at(i).isSaldo)
         {
-            Saldo* sal = dictionaries->getSaldo(dictsList.value(dictName).acc, dictsList.value(dictName).name);
+            Saldo* sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name);
             if (sal != 0)
             {
-                sal->setPrototypeName(dictsList.value(dictName).prototype);
+                sal->setPrototypeName(dictsList.at(i).prototype);
                 sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
                 sal->setQuan(true);
-                sal->setCanShow((dictsList.value(dictName).isConst || sal->isSet())? false: true);
+                sal->setCanShow((dictsList.at(i).isConst || sal->isSet())? false: true);
             }
         }
         else
         {
-            dict = dictionaries->getDictionary(dictsList.value(dictName).name);
+            dict = dictionaries->getDictionary(dictsList.at(i).name);
             if (dict != 0)
             {
-                dict->setPrototypeName(dictsList.value(dictName).prototype);
+                dict->setPrototypeName(dictsList.at(i).prototype);
                 if (dict->isSet())              // если это набор
                     dict->setAutoAdd(true);     // ... то для дебетовых наборов - автоматическое добавление
                 dict->setCanShow(true);
-                dict->setConst(dictsList.value(dictName).isConst);
+                dict->setConst(dictsList.at(i).isConst);
             }
         }
     }
@@ -86,6 +86,7 @@ bool Document::calculate(const QModelIndex& index) {
     if (index.isValid())
         lResult = Essence::calculate(index);
     if (lResult) {
+        selectCurrentRow();                     // Обновим содержимое строки
         double itog = 0;
         for (int i = 0; i < topersList.count(); i++)
         {
@@ -274,7 +275,8 @@ DocumentScriptEngine* Document::getScriptEngine()
 QString Document::transformSelectStatement(QString string)
 {   // Модифицирует команду SELECT... заменяя пустую секцию WHERE реальным фильтром с номером текущего документа
     // Вызывается перед каждым запросом содержимого табличной части документа
-    string.replace(" WHERE", QString(" WHERE p%3.доккод=%1 AND p%3.опер=%2 AND p%3.номеропер=%3").arg(docId).arg(operNumber).arg(prv1));
+    QString whereClause = QString(" WHERE p%3.доккод=%1 AND p%3.опер=%2 AND p%3.номеропер=%3").arg(docId).arg(operNumber).arg(prv1);
+    string.replace(" WHERE", whereClause);
     return string;
 }
 
@@ -336,12 +338,12 @@ bool Document::showNextDict()
                 }
                 dict->setLock(true);    // заблокируем справочник, чтобы повторно его не вводить
                 // Заблокируем все справочники, у которых прототип совпадает
-                foreach (QString dictName, dicts->keys())
+                foreach (QString dName, dicts->keys())
                 {
-                    if (dicts->value(dictName)->getPrototypeName() == dict->getPrototypeName())
+                    if (dName != dictName && (dName == dict->getPrototypeName() || dicts->value(dName)->getPrototypeName() == dict->getPrototypeName()))
                     {
-                        dicts->value(dictName)->setId(dict->getId());
-                        dicts->value(dictName)->setLock(true);
+                        dicts->value(dName)->setId(dict->getId());
+                        dicts->value(dName)->setLock(true);
                     }
                 }
             }
@@ -391,6 +393,25 @@ void Document::insertDocString()
         parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
     }
     DbFactory->addDocStr(operNumber, docId, parameter);
+}
+
+
+void Document::selectCurrentRow()
+{   // Делает запрос к БД по одной строке документа. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
+    // Применяется после работы формул для изменения полей в строке, которые косвенно изменились (например сальдо).
+    QString command = tableModel->getSelectStatement();
+    command.replace(" WHERE ", QString(" WHERE p1.стр=%1 AND ").arg(getValue("p1__стр").toInt()));
+    QSqlQuery query = TApplication::exemplar()->getDBFactory()->execQuery(command);
+    if (query.first())
+    {
+        for (int i = 0; i < query.record().count(); i++)
+        {
+            QString fieldName = query.record().fieldName(i);
+            QVariant value = query.record().value(fieldName);
+            if (value != getValue(fieldName))
+                setValue(fieldName, value);
+        }
+    }
 }
 
 

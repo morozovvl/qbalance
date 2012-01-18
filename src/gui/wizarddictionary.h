@@ -15,6 +15,7 @@ protected:
     virtual bool   execute();
 private:
     bool                addDictionary;
+    DBFactory*          db;
     QList<FieldType>    fields;                // Первоначальный список полей
     QString             table;
     QLineEdit*          tableName;              // Как таблица будет называться в БД

@@ -12,6 +12,19 @@
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
 
+bool isNumeric(ScriptEngine* engine, QString field = "")
+{
+    QString fieldName;
+    if (field.size() == 0)
+        fieldName = ((Essence*)engine->parent())->getCurrentFieldName();
+    else
+        fieldName = field;
+    if (((Essence*)engine->parent())->getValue(fieldName).canConvert(QVariant::Double))
+        return true;
+    return false;
+}
+
+
 QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine) {
     if (engine->evaluate("table").isValid())
     {
@@ -27,9 +40,15 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue fieldName = context->argument(0);
     if (fieldName.isString() && engine->evaluate("table").isValid())
     {
-        QScriptValue value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName.toString()));
+        QScriptValue value;
+        if (isNumeric((ScriptEngine*)engine, fieldName.toString()))
+            value = engine->evaluate(QString("parseFloat(table.getValue('%1'))").arg(fieldName.toString()));
+        else
+            value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName.toString()));
         if (value.isValid())
+        {
             return value;
+        }
     }
     return QScriptValue();
 }
@@ -42,6 +61,23 @@ QScriptValue setValue(QScriptContext* context, QScriptEngine* engine) {
         QScriptValue value = engine->evaluate(QString("table.setValue('%1', %2)").arg(fieldName.toString()).arg(context->argument(1).toString()));
         if (value.isValid())
             return value;
+    }
+    return QScriptValue();
+}
+
+
+QScriptValue getOldValue(QScriptContext*, QScriptEngine* engine) {
+    if (engine->evaluate("table").isValid())
+    {
+        QScriptValue value;
+        if (isNumeric((ScriptEngine*)engine))
+            value = engine->evaluate(QString("parseFloat(table.getOldValue())"));
+        else
+            value = engine->evaluate(QString("table.getOldValue()"));
+        if (value.isValid())
+        {
+            return value;
+        }
     }
     return QScriptValue();
 }
@@ -163,12 +199,13 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
 
     // Объявим глобальные переменные и объекты
+    globalObject().setProperty("table", newQObject(parent()));
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("DBFactory", newQObject(TApplication::exemplar()->getDBFactory()));
-
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("setValue", newFunction(setValue));
+    globalObject().setProperty("getOldValue", newFunction(getOldValue));
 }
 
 
@@ -224,7 +261,7 @@ QString ScriptEngine::getBlankScripts()
     QList<EventFunction>* events = getEventsList();
     for (int i = 0; i < events->count(); i++)
     {
-        stream << "function " << events->at(i).name << endl;
+        stream << "function " << events->at(i).name << "()" << endl;
         stream << "{ " << events->at(i).comment << endl;
         stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
         stream << "}" << endl;

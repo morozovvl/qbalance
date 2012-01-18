@@ -11,6 +11,7 @@
 #include "formgrid.h"
 #include "picture.h"
 #include "tableview.h"
+#include "myitemdelegate.h"
 #include "../kernel/essence.h"
 #include "../kernel/app.h"
 #include "../storage/mysqlrelationaltablemodel.h"
@@ -272,6 +273,7 @@ void FormGrid::calculate(QWidget*, QAbstractItemDelegate::EndEditHint hint)
 {
     if (hint == QAbstractItemDelegate::SubmitModelCache)
     {
+        parent->setOldValue(((MyItemDelegate*)sender())->getOldValue());
         parent->calculate(getCurrentIndex());
     }
 }

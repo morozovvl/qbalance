@@ -58,6 +58,7 @@ private:
     bool showNextDict();
     void unlock();
     void insertDocString();
+    void selectCurrentRow();
 };
 
 #endif // DOCUMENT_H

@@ -140,7 +140,7 @@ public:
     QSqlQuery getDataTypes();
 
     void getToperData(int oper, QList<ToperType>* topersList);
-    void setToperDictAliases(QList<ToperType>* topersList, QMap<QString, DictType>* dictsList);
+    void setToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList);
 
     QString getDocumentSqlSelectStatement(int oper,
                                           QList<ToperType>*,

@@ -16,6 +16,7 @@ MyButtonLineEditItemDelegate::~MyButtonLineEditItemDelegate()
 QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 Q_UNUSED(option)
 Q_UNUSED(index)
+saveOldValue(index.data());
 MyButtonLineEdit* editor = new MyButtonLineEdit(parent);
 editor->setFormOnPushButton(buttonForm);
 return editor;
