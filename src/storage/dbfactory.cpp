@@ -5,6 +5,8 @@
 #include "dbfactory.h"
 #include "../kernel/app.h"
 #include "../gui/passwordform.h"
+#include "../kernel/dictionaries.h"
+
 
 DBFactory::DBFactory()
 : QObject()
@@ -553,7 +555,8 @@ bool DBFactory::alterTableColumn(QString table, QString columnName, QString type
 bool DBFactory::addTableColumn(QString table, QString columnName, QString type)
 {
     clearError();
-    return exec(QString("ALTER TABLE %1 ADD COLUMN %2 %3;").arg(table).arg(columnName).arg(type));
+    QString command = QString("ALTER TABLE %1 ADD COLUMN %2 %3;").arg(table).arg(columnName).arg(type);
+    return exec(command);
 }
 
 
@@ -898,6 +901,7 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("справочники", "справочники");
     ObjectNames.insert("справочники.имя", "имя");
     ObjectNames.insert("справочники.имя_в_списке", "имя_в_списке");
+    ObjectNames.insert("справочники.прототип", "прототип");
     ObjectNames.insert("топер", "топер");
     ObjectNames.insert("топер.код", "код");
     ObjectNames.insert("топер.имя", "имя");
@@ -949,6 +953,11 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("vw_доступ_к_справочникам.имя_в_форме", "имя_в_форме");
     ObjectNames.insert("vw_доступ_к_справочникам.таблица", "таблица");
     ObjectNames.insert("vw_доступ_к_справочникам.меню", "меню");
+    ObjectNames.insert("vw_types", "vw_types");
+    ObjectNames.insert("vw_types.код", "код");
+    ObjectNames.insert("vw_types.имя", "имя");
+    ObjectNames.insert("vw_types.тип", "тип");
+    ObjectNames.insert("vw_types.длина", "длина");
 }
 
 
@@ -1117,7 +1126,7 @@ void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QList<DictType
 }
 
 
-QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QMap<int, FieldType>* columnsProperties, int* retPrv1)
+QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictionaries, QList<ToperType>* topersList, QMap<int, FieldType>* columnsProperties, int* retPrv1)
 {
     QString selectStatement;
     QList<DictType> dictsList;
@@ -1173,12 +1182,18 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
          // Приступим к генерации секции SELECT более высокого уровня
         QString dictName;
         QStringList dictsNames;
+        Dictionary* dict;
         for (int i = 0; i < topersList->count(); i++)
         {
             prv = topersList->at(i).number;
             if (!topersList->at(i).dbConst)
             {
                 dictName = topersList->at(i).dbDict;
+                dict = dictionaries->getDictionary(dictName);
+                if (dict != 0 && dict->isSet())
+                {
+                    qDebug() << "Это набор" << dictName;
+                }
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
                     foreach (QString field, getFieldsList(dictName)) {
@@ -1194,6 +1209,11 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             if (!topersList->at(i).crConst)
             {
                 dictName = topersList->at(i).crDict;
+                dict = dictionaries->getDictionary(dictName);
+                if (dict != 0 && dict->isSet())
+                {
+                    qDebug() << "Это набор" << dictName;
+                }
                 if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
                     getColumnsProperties(&fields, dictName);
                     foreach (QString field, getFieldsList(dictName)) {
@@ -1339,3 +1359,5 @@ bool DBFactory::setToperNumerator(int operNumber, QString numerator)
     }
     return false;
 }
+
+

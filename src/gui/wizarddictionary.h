@@ -10,6 +10,8 @@ class WizardDictionary : public WizardForm
 public:
     WizardDictionary(bool = false);
     virtual bool open(QWidget* pwgt = NULL, QString = "");
+    static WizardDictionary* exemplar();
+
 protected:
     virtual void   initFrames();
     virtual bool   execute();
@@ -26,6 +28,8 @@ private:
     QListWidget*        headers;                // Заголовки колонок
     virtual void        getData();
     friend QString      showTypesForm();
+    static WizardDictionary*    Exemplar;
+
 private slots:
     void                addColumn();
     void                deleteColumn();

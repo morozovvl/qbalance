@@ -10,7 +10,7 @@ class Dictionaries : public Dictionary {
 public:
     QMap<QString, Dictionary*> dictionaries;                    // Объекты справочников
     Dictionaries(QObject *parent = 0);
-    Q_INVOKABLE virtual Dictionary* getDictionary(QString);
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString, int = 0);
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc, QString dictName);
     Q_INVOKABLE virtual bool addDictionary(QString, int = 0);
     Q_INVOKABLE virtual bool addSaldo(QString acc, QString dictName);
@@ -28,7 +28,9 @@ public:
 protected:
     virtual void setForm();
 private:
+    DBFactory* db;
     QSqlQuery dictionariesProperties;
+    Dictionary* dictListDict;
 };
 
 //Q_DECLARE_METATYPE(Dictionaries)

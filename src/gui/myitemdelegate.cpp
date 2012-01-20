@@ -10,7 +10,7 @@ MyItemDelegate::MyItemDelegate(QObject* par)
 {
     columnMask = "";
     delegateType = String;
-    readOnly = false;
+    setReadOnly(false);
 }
 
 
@@ -36,4 +36,10 @@ QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem opti
         opt.showDecorationSelected = true;
     }
     return opt;
+}
+
+
+void MyItemDelegate::setReadOnly(bool val)
+{
+    readOnly = val;
 }

@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.1
 -- Dumped by pg_dump version 9.1.1
--- Started on 2012-01-18 19:02:36 MSK
+-- Started on 2012-01-20 20:21:06 MSK
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -13,7 +13,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 236 (class 3079 OID 12249)
+-- TOC entry 239 (class 3079 OID 12249)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -21,8 +21,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2991 (class 0 OID 0)
--- Dependencies: 236
+-- TOC entry 3005 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -32,7 +32,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 577 (class 1247 OID 25257)
+-- TOC entry 580 (class 1247 OID 25257)
 -- Dependencies: 6 161
 -- Name: sp_calcaccoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
@@ -58,7 +58,7 @@ CREATE TYPE sp_calcaccoborot_fret AS (
 ALTER TYPE public.sp_calcaccoborot_fret OWNER TO sa;
 
 --
--- TOC entry 579 (class 1247 OID 25260)
+-- TOC entry 582 (class 1247 OID 25260)
 -- Dependencies: 6 162
 -- Name: sp_calcobjoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
@@ -89,7 +89,7 @@ CREATE TYPE sp_calcobjoborot_fret AS (
 ALTER TYPE public.sp_calcobjoborot_fret OWNER TO sa;
 
 --
--- TOC entry 581 (class 1247 OID 25263)
+-- TOC entry 584 (class 1247 OID 25263)
 -- Dependencies: 6 163
 -- Name: sp_calcoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
@@ -118,8 +118,8 @@ CREATE TYPE sp_calcoborot_fret AS (
 ALTER TYPE public.sp_calcoborot_fret OWNER TO sa;
 
 --
--- TOC entry 248 (class 1255 OID 25264)
--- Dependencies: 6 577 709
+-- TOC entry 251 (class 1255 OID 25264)
+-- Dependencies: 6 717 580
 -- Name: sp_calcaccoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -180,8 +180,8 @@ $$;
 ALTER FUNCTION public.sp_calcaccoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 249 (class 1255 OID 25265)
--- Dependencies: 709 6
+-- TOC entry 252 (class 1255 OID 25265)
+-- Dependencies: 6 717
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -229,8 +229,8 @@ $$;
 ALTER FUNCTION public.sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 257 (class 1255 OID 25266)
--- Dependencies: 579 6 709
+-- TOC entry 260 (class 1255 OID 25266)
+-- Dependencies: 6 717 582
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -363,8 +363,8 @@ $$;
 ALTER FUNCTION public.sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 266 (class 1255 OID 25267)
--- Dependencies: 581 709 6
+-- TOC entry 269 (class 1255 OID 25267)
+-- Dependencies: 6 717 584
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -419,8 +419,8 @@ $$;
 ALTER FUNCTION public.sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 250 (class 1255 OID 25268)
--- Dependencies: 6 709
+-- TOC entry 253 (class 1255 OID 25268)
+-- Dependencies: 717 6
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -457,8 +457,8 @@ $$;
 ALTER FUNCTION public.sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 251 (class 1255 OID 25269)
--- Dependencies: 6 709
+-- TOC entry 254 (class 1255 OID 25269)
+-- Dependencies: 717 6
 -- Name: sp_deletedoc(integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -475,8 +475,8 @@ $$;
 ALTER FUNCTION public.sp_deletedoc(ndocid integer) OWNER TO sa;
 
 --
--- TOC entry 252 (class 1255 OID 25270)
--- Dependencies: 709 6
+-- TOC entry 255 (class 1255 OID 25270)
+-- Dependencies: 717 6
 -- Name: sp_deletedocstr(integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -492,8 +492,8 @@ $$;
 ALTER FUNCTION public.sp_deletedocstr(ndocid integer, ndocstr integer) OWNER TO sa;
 
 --
--- TOC entry 253 (class 1255 OID 25271)
--- Dependencies: 709 6
+-- TOC entry 256 (class 1255 OID 25271)
+-- Dependencies: 6 717
 -- Name: sp_insertdoc(integer, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -529,8 +529,8 @@ $$;
 ALTER FUNCTION public.sp_insertdoc(noper integer, cdate character varying) OWNER TO sa;
 
 --
--- TOC entry 254 (class 1255 OID 25272)
--- Dependencies: 6 709
+-- TOC entry 257 (class 1255 OID 25272)
+-- Dependencies: 6 717
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -602,8 +602,8 @@ $$;
 ALTER FUNCTION public.sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) OWNER TO sa;
 
 --
--- TOC entry 256 (class 1255 OID 25273)
--- Dependencies: 6 709
+-- TOC entry 259 (class 1255 OID 25273)
+-- Dependencies: 6 717
 -- Name: sp_islockedperiod(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -627,8 +627,8 @@ $$;
 ALTER FUNCTION public.sp_islockedperiod(cdate character varying) OWNER TO sa;
 
 --
--- TOC entry 267 (class 1255 OID 25274)
--- Dependencies: 709 6
+-- TOC entry 270 (class 1255 OID 25274)
+-- Dependencies: 717 6
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -696,8 +696,8 @@ $$;
 ALTER FUNCTION public.sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 258 (class 1255 OID 25275)
--- Dependencies: 709 6
+-- TOC entry 261 (class 1255 OID 25275)
+-- Dependencies: 6 717
 -- Name: testdeleting_сальдо(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -719,8 +719,8 @@ $$;
 ALTER FUNCTION public."testdeleting_сальдо"() OWNER TO sa;
 
 --
--- TOC entry 259 (class 1255 OID 25276)
--- Dependencies: 6 709
+-- TOC entry 262 (class 1255 OID 25276)
+-- Dependencies: 6 717
 -- Name: testdeletingdictobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -819,8 +819,8 @@ $$;
 ALTER FUNCTION public.testdeletingdictobject() OWNER TO sa;
 
 --
--- TOC entry 260 (class 1255 OID 25277)
--- Dependencies: 709 6
+-- TOC entry 263 (class 1255 OID 25277)
+-- Dependencies: 717 6
 -- Name: testdeletingtoperobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -908,8 +908,8 @@ $$;
 ALTER FUNCTION public.testdeletingtoperobject() OWNER TO sa;
 
 --
--- TOC entry 261 (class 1255 OID 25278)
--- Dependencies: 709 6
+-- TOC entry 264 (class 1255 OID 25278)
+-- Dependencies: 6 717
 -- Name: tsvectorupdate(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -926,8 +926,8 @@ $$;
 ALTER FUNCTION public.tsvectorupdate() OWNER TO sa;
 
 --
--- TOC entry 262 (class 1255 OID 25279)
--- Dependencies: 709 6
+-- TOC entry 265 (class 1255 OID 25279)
+-- Dependencies: 717 6
 -- Name: вставитьпроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -971,8 +971,8 @@ $$;
 ALTER FUNCTION public."вставитьпроводку"() OWNER TO sa;
 
 --
--- TOC entry 263 (class 1255 OID 25280)
--- Dependencies: 6 709
+-- TOC entry 266 (class 1255 OID 25280)
+-- Dependencies: 717 6
 -- Name: считатьконечноесальдо(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -995,8 +995,8 @@ $$;
 ALTER FUNCTION public."считатьконечноесальдо"() OWNER TO sa;
 
 --
--- TOC entry 264 (class 1255 OID 25281)
--- Dependencies: 709 6
+-- TOC entry 267 (class 1255 OID 25281)
+-- Dependencies: 717 6
 -- Name: считатьпроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1059,8 +1059,8 @@ $$;
 ALTER FUNCTION public."считатьпроводку"() OWNER TO sa;
 
 --
--- TOC entry 265 (class 1255 OID 25282)
--- Dependencies: 709 6
+-- TOC entry 268 (class 1255 OID 25282)
+-- Dependencies: 717 6
 -- Name: удалитьдокумент(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1077,8 +1077,8 @@ $$;
 ALTER FUNCTION public."удалитьдокумент"() OWNER TO sa;
 
 --
--- TOC entry 255 (class 1255 OID 25283)
--- Dependencies: 6 709
+-- TOC entry 258 (class 1255 OID 25283)
+-- Dependencies: 717 6
 -- Name: удалитьпроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1109,7 +1109,7 @@ ALTER FUNCTION public."удалитьпроводку"() OWNER TO sa;
 
 --
 -- TOC entry 164 (class 1259 OID 25284)
--- Dependencies: 2678 6
+-- Dependencies: 2686 6
 -- Name: vw_tables; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1119,13 +1119,25 @@ CREATE VIEW vw_tables AS
 
 ALTER TABLE public.vw_tables OWNER TO sa;
 
+--
+-- TOC entry 236 (class 1259 OID 25904)
+-- Dependencies: 2707 6
+-- Name: vw_types; Type: VIEW; Schema: public; Owner: sa
+--
+
+CREATE VIEW vw_types AS
+    SELECT dummy.oid AS "код", dummy.typname AS "имя", dummy.typname_orig AS "тип", dummy.typlen AS "длина" FROM ((SELECT format_type(t.oid, NULL::integer) AS typname, t.typname AS typname_orig, CASE WHEN (t.typelem > (0)::oid) THEN t.typelem ELSE t.oid END AS elemoid, t.typlen, t.typtype, t.oid, nsp.nspname, ((SELECT count(1) AS count FROM pg_type t2 WHERE (t2.typname = t.typname)) > 1) AS isdup FROM (pg_type t JOIN pg_namespace nsp ON ((t.typnamespace = nsp.oid))) WHERE ((((((NOT ((t.typname = 'unknown'::name) AND (nsp.nspname = 'pg_catalog'::name))) AND t.typisdefined) AND (t.typtype = ANY (ARRAY['b'::"char", 'c'::"char", 'd'::"char", 'e'::"char"]))) AND (NOT (EXISTS (SELECT 1 FROM pg_class WHERE (((pg_class.relnamespace = t.typnamespace) AND (pg_class.relname = t.typname)) AND (pg_class.relkind <> 'c'::"char")))))) AND ((t.typname !~~ '_%'::text) OR (NOT (EXISTS (SELECT 1 FROM pg_class WHERE (((pg_class.relnamespace = t.typnamespace) AND (pg_class.relname = ("substring"((t.typname)::text, 2))::name)) AND (pg_class.relkind <> 'c'::"char"))))))) AND (nsp.nspname <> 'information_schema'::name)) UNION SELECT 'bigserial'::text AS text, 'bigserial'::text AS text, 0, 8, 'b'::"char" AS "char", 0, 'pg_catalog'::name AS name, false AS bool) UNION SELECT 'serial'::text AS text, 'serial'::text AS text, 0, 4, 'b'::"char" AS "char", 0, 'pg_catalog'::name AS name, false AS bool) dummy ORDER BY (dummy.nspname <> 'pg_catalog'::name), (dummy.nspname <> 'public'::name), dummy.nspname, dummy.oid;
+
+
+ALTER TABLE public.vw_types OWNER TO sa;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
 -- TOC entry 165 (class 1259 OID 25288)
--- Dependencies: 2699 2700 2701 2702 2703 2704 2705 2706 2707 6
+-- Dependencies: 2708 2709 2710 2711 2712 2713 2714 2715 2716 6
 -- Name: сальдо; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1148,7 +1160,7 @@ ALTER TABLE public."сальдо" OWNER TO sa;
 
 --
 -- TOC entry 166 (class 1259 OID 25300)
--- Dependencies: 2708 2709 2710 2711 2712 6
+-- Dependencies: 2717 2718 2719 2720 2721 6
 -- Name: счета; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1166,7 +1178,7 @@ ALTER TABLE public."счета" OWNER TO sa;
 
 --
 -- TOC entry 167 (class 1259 OID 25308)
--- Dependencies: 2679 6
+-- Dependencies: 2687 6
 -- Name: vw_баланс; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1178,7 +1190,7 @@ ALTER TABLE public."vw_баланс" OWNER TO sa;
 
 --
 -- TOC entry 168 (class 1259 OID 25313)
--- Dependencies: 2714 2715 2716 2717 6
+-- Dependencies: 2723 2724 2725 2726 6
 -- Name: блокпериоды; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1196,7 +1208,7 @@ ALTER TABLE public."блокпериоды" OWNER TO sa;
 
 --
 -- TOC entry 169 (class 1259 OID 25320)
--- Dependencies: 2680 6
+-- Dependencies: 2688 6
 -- Name: vw_блокпериоды; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1208,7 +1220,7 @@ ALTER TABLE public."vw_блокпериоды" OWNER TO sa;
 
 --
 -- TOC entry 170 (class 1259 OID 25324)
--- Dependencies: 2719 2720 2721 2722 2723 2724 2725 2726 2727 2728 2729 2730 6
+-- Dependencies: 2728 2729 2730 2731 2732 2733 2734 2735 2736 2737 2738 2739 6
 -- Name: контрагенты; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1235,7 +1247,7 @@ ALTER TABLE public."контрагенты" OWNER TO sa;
 
 --
 -- TOC entry 171 (class 1259 OID 25342)
--- Dependencies: 2681 6
+-- Dependencies: 2689 6
 -- Name: vw_грузополучатели; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1247,7 +1259,7 @@ ALTER TABLE public."vw_грузополучатели" OWNER TO sa;
 
 --
 -- TOC entry 172 (class 1259 OID 25346)
--- Dependencies: 2732 2733 2734 6
+-- Dependencies: 2741 2742 2743 6
 -- Name: документы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1269,7 +1281,7 @@ ALTER TABLE public."документы" OWNER TO sa;
 
 --
 -- TOC entry 173 (class 1259 OID 25355)
--- Dependencies: 2682 6
+-- Dependencies: 2690 6
 -- Name: vw_документы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1281,7 +1293,7 @@ ALTER TABLE public."vw_документы" OWNER TO sa;
 
 --
 -- TOC entry 174 (class 1259 OID 25359)
--- Dependencies: 2683 6
+-- Dependencies: 2691 6
 -- Name: vw_пользователи; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1293,7 +1305,7 @@ ALTER TABLE public."vw_пользователи" OWNER TO sa;
 
 --
 -- TOC entry 175 (class 1259 OID 25363)
--- Dependencies: 2736 2737 2738 2739 2740 6
+-- Dependencies: 2745 2746 2747 2748 2749 6
 -- Name: доступ; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1312,7 +1324,7 @@ ALTER TABLE public."доступ" OWNER TO sa;
 
 --
 -- TOC entry 176 (class 1259 OID 25371)
--- Dependencies: 2684 6
+-- Dependencies: 2692 6
 -- Name: vw_доступ; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1324,7 +1336,7 @@ ALTER TABLE public."vw_доступ" OWNER TO sa;
 
 --
 -- TOC entry 177 (class 1259 OID 25376)
--- Dependencies: 2685 6
+-- Dependencies: 2693 6
 -- Name: vw_доступ_к_оборотам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1336,7 +1348,7 @@ ALTER TABLE public."vw_доступ_к_оборотам" OWNER TO sa;
 
 --
 -- TOC entry 178 (class 1259 OID 25380)
--- Dependencies: 2686 6
+-- Dependencies: 2694 6
 -- Name: vw_доступ_к_сальдо; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1348,7 +1360,7 @@ ALTER TABLE public."vw_доступ_к_сальдо" OWNER TO sa;
 
 --
 -- TOC entry 179 (class 1259 OID 25384)
--- Dependencies: 2742 2743 2744 2745 2746 6
+-- Dependencies: 2751 2752 2753 2754 2755 6
 -- Name: справочники; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1370,7 +1382,7 @@ ALTER TABLE public."справочники" OWNER TO sa;
 
 --
 -- TOC entry 180 (class 1259 OID 25395)
--- Dependencies: 2687 6
+-- Dependencies: 2695 6
 -- Name: vw_доступ_к_справочникам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1382,7 +1394,7 @@ ALTER TABLE public."vw_доступ_к_справочникам" OWNER TO sa;
 
 --
 -- TOC entry 181 (class 1259 OID 25399)
--- Dependencies: 2748 2749 2750 2751 2752 2753 2754 2755 2756 2757 2758 2759 2760 2761 2762 2763 2764 2765 2766 2767 6
+-- Dependencies: 2757 2758 2759 2760 2761 2762 2763 2764 2765 2766 2767 2768 2769 2770 2771 2772 2773 2774 2775 2776 6
 -- Name: топер; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1419,7 +1431,7 @@ ALTER TABLE public."топер" OWNER TO sa;
 
 --
 -- TOC entry 182 (class 1259 OID 25425)
--- Dependencies: 2688 6
+-- Dependencies: 2696 6
 -- Name: vw_доступ_к_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1431,7 +1443,7 @@ ALTER TABLE public."vw_доступ_к_топер" OWNER TO sa;
 
 --
 -- TOC entry 183 (class 1259 OID 25430)
--- Dependencies: 2769 2770 6
+-- Dependencies: 2778 2779 6
 -- Name: журнал; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1449,7 +1461,7 @@ ALTER TABLE public."журнал" OWNER TO sa;
 
 --
 -- TOC entry 184 (class 1259 OID 25435)
--- Dependencies: 2689 6
+-- Dependencies: 2697 6
 -- Name: vw_журнал; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1461,7 +1473,7 @@ ALTER TABLE public."vw_журнал" OWNER TO sa;
 
 --
 -- TOC entry 185 (class 1259 OID 25439)
--- Dependencies: 2772 2773 6
+-- Dependencies: 2781 2782 6
 -- Name: константы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1477,7 +1489,7 @@ ALTER TABLE public."константы" OWNER TO sa;
 
 --
 -- TOC entry 186 (class 1259 OID 25444)
--- Dependencies: 2690 6
+-- Dependencies: 2698 6
 -- Name: vw_константы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1489,7 +1501,7 @@ ALTER TABLE public."vw_константы" OWNER TO sa;
 
 --
 -- TOC entry 187 (class 1259 OID 25448)
--- Dependencies: 2691 6
+-- Dependencies: 2699 6
 -- Name: vw_контрагенты; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1501,7 +1513,7 @@ ALTER TABLE public."vw_контрагенты" OWNER TO sa;
 
 --
 -- TOC entry 188 (class 1259 OID 25452)
--- Dependencies: 2775 2776 6
+-- Dependencies: 2784 2785 6
 -- Name: материалы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1516,7 +1528,7 @@ ALTER TABLE public."материалы" OWNER TO sa;
 
 --
 -- TOC entry 189 (class 1259 OID 25457)
--- Dependencies: 2692 6
+-- Dependencies: 2700 6
 -- Name: vw_материалы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1528,7 +1540,7 @@ ALTER TABLE public."vw_материалы" OWNER TO sa;
 
 --
 -- TOC entry 190 (class 1259 OID 25461)
--- Dependencies: 2778 2779 2780 2781 2782 2783 2784 6
+-- Dependencies: 2787 2788 2789 2790 2791 2792 2793 6
 -- Name: номенклатура; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1550,7 +1562,7 @@ ALTER TABLE public."номенклатура" OWNER TO sa;
 
 --
 -- TOC entry 191 (class 1259 OID 25474)
--- Dependencies: 2693 6
+-- Dependencies: 2701 6
 -- Name: vw_номенклатура; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1562,7 +1574,7 @@ ALTER TABLE public."vw_номенклатура" OWNER TO sa;
 
 --
 -- TOC entry 192 (class 1259 OID 25478)
--- Dependencies: 2786 2787 2788 6
+-- Dependencies: 2795 2796 2797 6
 -- Name: проводки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1586,7 +1598,7 @@ ALTER TABLE public."проводки" OWNER TO sa;
 
 --
 -- TOC entry 193 (class 1259 OID 25484)
--- Dependencies: 2694 6
+-- Dependencies: 2702 6
 -- Name: vw_проводки; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1598,7 +1610,7 @@ ALTER TABLE public."vw_проводки" OWNER TO sa;
 
 --
 -- TOC entry 194 (class 1259 OID 25488)
--- Dependencies: 2695 6
+-- Dependencies: 2703 6
 -- Name: vw_справочники_со_столбцами; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1610,7 +1622,7 @@ ALTER TABLE public."vw_справочники_со_столбцами" OWNER TO 
 
 --
 -- TOC entry 195 (class 1259 OID 25493)
--- Dependencies: 2790 2791 6
+-- Dependencies: 2799 2800 6
 -- Name: столбцы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1627,7 +1639,7 @@ ALTER TABLE public."столбцы" OWNER TO sa;
 
 --
 -- TOC entry 196 (class 1259 OID 25498)
--- Dependencies: 2696 6
+-- Dependencies: 2704 6
 -- Name: vw_столбцы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1639,7 +1651,7 @@ ALTER TABLE public."vw_столбцы" OWNER TO sa;
 
 --
 -- TOC entry 233 (class 1259 OID 25772)
--- Dependencies: 2698 6
+-- Dependencies: 2706 6
 -- Name: vw_счета; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1651,7 +1663,7 @@ ALTER TABLE public."vw_счета" OWNER TO sa;
 
 --
 -- TOC entry 197 (class 1259 OID 25502)
--- Dependencies: 2697 6
+-- Dependencies: 2705 6
 -- Name: vw_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1663,7 +1675,7 @@ ALTER TABLE public."vw_топер" OWNER TO sa;
 
 --
 -- TOC entry 235 (class 1259 OID 25865)
--- Dependencies: 2837 6
+-- Dependencies: 2846 6
 -- Name: адрес; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1677,7 +1689,7 @@ ALTER TABLE public."адрес" OWNER TO sa;
 
 --
 -- TOC entry 234 (class 1259 OID 25863)
--- Dependencies: 6 235
+-- Dependencies: 235 6
 -- Name: адрес_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1692,7 +1704,7 @@ CREATE SEQUENCE "адрес_код_seq"
 ALTER TABLE public."адрес_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3034 (class 0 OID 0)
+-- TOC entry 3048 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: адрес_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1701,17 +1713,17 @@ ALTER SEQUENCE "адрес_код_seq" OWNED BY "адрес"."код";
 
 
 --
--- TOC entry 3035 (class 0 OID 0)
+-- TOC entry 3049 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: адрес_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"адрес_код_seq"', 1, false);
+SELECT pg_catalog.setval('"адрес_код_seq"', 1, true);
 
 
 --
 -- TOC entry 198 (class 1259 OID 25507)
--- Dependencies: 2793 2794 2795 2796 6
+-- Dependencies: 2802 2803 2804 2805 6
 -- Name: банки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1743,7 +1755,7 @@ CREATE SEQUENCE "банки_код_seq"
 ALTER TABLE public."банки_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3037 (class 0 OID 0)
+-- TOC entry 3051 (class 0 OID 0)
 -- Dependencies: 199
 -- Name: банки_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1752,7 +1764,7 @@ ALTER SEQUENCE "банки_код_seq" OWNED BY "банки"."код";
 
 
 --
--- TOC entry 3038 (class 0 OID 0)
+-- TOC entry 3052 (class 0 OID 0)
 -- Dependencies: 199
 -- Name: банки_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -1762,7 +1774,7 @@ SELECT pg_catalog.setval('"банки_код_seq"', 1, false);
 
 --
 -- TOC entry 200 (class 1259 OID 25516)
--- Dependencies: 2798 2799 6
+-- Dependencies: 2807 2808 6
 -- Name: банковские_счета; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1778,7 +1790,7 @@ ALTER TABLE public."банковские_счета" OWNER TO sa;
 
 --
 -- TOC entry 201 (class 1259 OID 25521)
--- Dependencies: 200 6
+-- Dependencies: 6 200
 -- Name: банковские_счета_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1793,7 +1805,7 @@ CREATE SEQUENCE "банковские_счета_код_seq"
 ALTER TABLE public."банковские_счета_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3040 (class 0 OID 0)
+-- TOC entry 3054 (class 0 OID 0)
 -- Dependencies: 201
 -- Name: банковские_счета_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1802,7 +1814,7 @@ ALTER SEQUENCE "банковские_счета_код_seq" OWNED BY "банко
 
 
 --
--- TOC entry 3041 (class 0 OID 0)
+-- TOC entry 3055 (class 0 OID 0)
 -- Dependencies: 201
 -- Name: банковские_счета_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -1827,7 +1839,7 @@ CREATE SEQUENCE "блокпериоды_код_seq"
 ALTER TABLE public."блокпериоды_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3042 (class 0 OID 0)
+-- TOC entry 3056 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: блокпериоды_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1836,7 +1848,7 @@ ALTER SEQUENCE "блокпериоды_код_seq" OWNED BY "блокперио�
 
 
 --
--- TOC entry 3043 (class 0 OID 0)
+-- TOC entry 3057 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: блокпериоды_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -1846,7 +1858,7 @@ SELECT pg_catalog.setval('"блокпериоды_код_seq"', 2, true);
 
 --
 -- TOC entry 203 (class 1259 OID 25525)
--- Dependencies: 2801 6
+-- Dependencies: 2810 6
 -- Name: виды_расходов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1875,7 +1887,7 @@ CREATE SEQUENCE "виды_расходов_код_seq"
 ALTER TABLE public."виды_расходов_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3045 (class 0 OID 0)
+-- TOC entry 3059 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: виды_расходов_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1884,7 +1896,7 @@ ALTER SEQUENCE "виды_расходов_код_seq" OWNED BY "виды_рас�
 
 
 --
--- TOC entry 3046 (class 0 OID 0)
+-- TOC entry 3060 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: виды_расходов_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -1894,7 +1906,7 @@ SELECT pg_catalog.setval('"виды_расходов_код_seq"', 1, false);
 
 --
 -- TOC entry 205 (class 1259 OID 25531)
--- Dependencies: 2803 2804 6
+-- Dependencies: 2812 2813 6
 -- Name: группы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1909,7 +1921,7 @@ ALTER TABLE public."группы" OWNER TO sa;
 
 --
 -- TOC entry 206 (class 1259 OID 25536)
--- Dependencies: 205 6
+-- Dependencies: 6 205
 -- Name: группы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1924,7 +1936,7 @@ CREATE SEQUENCE "группы_код_seq"
 ALTER TABLE public."группы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3047 (class 0 OID 0)
+-- TOC entry 3061 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: группы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1933,7 +1945,7 @@ ALTER SEQUENCE "группы_код_seq" OWNED BY "группы"."код";
 
 
 --
--- TOC entry 3048 (class 0 OID 0)
+-- TOC entry 3062 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: группы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -1958,7 +1970,7 @@ CREATE SEQUENCE "документы_код_seq"
 ALTER TABLE public."документы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3049 (class 0 OID 0)
+-- TOC entry 3063 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: документы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -1967,7 +1979,7 @@ ALTER SEQUENCE "документы_код_seq" OWNED BY "документы"."к
 
 
 --
--- TOC entry 3050 (class 0 OID 0)
+-- TOC entry 3064 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: документы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -1977,7 +1989,7 @@ SELECT pg_catalog.setval('"документы_код_seq"', 11, true);
 
 --
 -- TOC entry 208 (class 1259 OID 25540)
--- Dependencies: 175 6
+-- Dependencies: 6 175
 -- Name: доступ_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1992,7 +2004,7 @@ CREATE SEQUENCE "доступ_код_seq"
 ALTER TABLE public."доступ_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3051 (class 0 OID 0)
+-- TOC entry 3065 (class 0 OID 0)
 -- Dependencies: 208
 -- Name: доступ_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2001,12 +2013,12 @@ ALTER SEQUENCE "доступ_код_seq" OWNED BY "доступ"."код";
 
 
 --
--- TOC entry 3052 (class 0 OID 0)
+-- TOC entry 3066 (class 0 OID 0)
 -- Dependencies: 208
 -- Name: доступ_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"доступ_код_seq"', 39, true);
+SELECT pg_catalog.setval('"доступ_код_seq"', 60, true);
 
 
 --
@@ -2026,7 +2038,7 @@ CREATE SEQUENCE "журнал_код_seq"
 ALTER TABLE public."журнал_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3053 (class 0 OID 0)
+-- TOC entry 3067 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: журнал_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2035,7 +2047,7 @@ ALTER SEQUENCE "журнал_код_seq" OWNED BY "журнал"."код";
 
 
 --
--- TOC entry 3054 (class 0 OID 0)
+-- TOC entry 3068 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: журнал_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2045,7 +2057,7 @@ SELECT pg_catalog.setval('"журнал_код_seq"', 1, false);
 
 --
 -- TOC entry 210 (class 1259 OID 25544)
--- Dependencies: 6 185
+-- Dependencies: 185 6
 -- Name: константы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2060,7 +2072,7 @@ CREATE SEQUENCE "константы_код_seq"
 ALTER TABLE public."константы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3055 (class 0 OID 0)
+-- TOC entry 3069 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: константы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2069,7 +2081,7 @@ ALTER SEQUENCE "константы_код_seq" OWNED BY "константы"."к
 
 
 --
--- TOC entry 3056 (class 0 OID 0)
+-- TOC entry 3070 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: константы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2079,7 +2091,7 @@ SELECT pg_catalog.setval('"константы_код_seq"', 5, true);
 
 --
 -- TOC entry 211 (class 1259 OID 25546)
--- Dependencies: 170 6
+-- Dependencies: 6 170
 -- Name: контрагенты_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2094,7 +2106,7 @@ CREATE SEQUENCE "контрагенты_код_seq"
 ALTER TABLE public."контрагенты_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3057 (class 0 OID 0)
+-- TOC entry 3071 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: контрагенты_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2103,7 +2115,7 @@ ALTER SEQUENCE "контрагенты_код_seq" OWNED BY "контраген�
 
 
 --
--- TOC entry 3058 (class 0 OID 0)
+-- TOC entry 3072 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: контрагенты_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2113,7 +2125,7 @@ SELECT pg_catalog.setval('"контрагенты_код_seq"', 3, true);
 
 --
 -- TOC entry 212 (class 1259 OID 25548)
--- Dependencies: 6 188
+-- Dependencies: 188 6
 -- Name: материалы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2128,7 +2140,7 @@ CREATE SEQUENCE "материалы_код_seq"
 ALTER TABLE public."материалы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3059 (class 0 OID 0)
+-- TOC entry 3073 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: материалы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2137,12 +2149,61 @@ ALTER SEQUENCE "материалы_код_seq" OWNED BY "материалы"."к
 
 
 --
--- TOC entry 3060 (class 0 OID 0)
+-- TOC entry 3074 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: материалы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
 SELECT pg_catalog.setval('"материалы_код_seq"', 1, false);
+
+
+--
+-- TOC entry 238 (class 1259 OID 26099)
+-- Dependencies: 6
+-- Name: набор1; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "набор1" (
+    "код" integer NOT NULL,
+    "код_vw_номенклатура" integer,
+    "код_адрес" integer
+);
+
+
+ALTER TABLE public."набор1" OWNER TO sa;
+
+--
+-- TOC entry 237 (class 1259 OID 26097)
+-- Dependencies: 6 238
+-- Name: набор1_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "набор1_код_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."набор1_код_seq" OWNER TO sa;
+
+--
+-- TOC entry 3076 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: набор1_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "набор1_код_seq" OWNED BY "набор1"."код";
+
+
+--
+-- TOC entry 3077 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: набор1_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"набор1_код_seq"', 7, true);
 
 
 --
@@ -2162,7 +2223,7 @@ CREATE SEQUENCE "номенклатура_код_seq"
 ALTER TABLE public."номенклатура_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3061 (class 0 OID 0)
+-- TOC entry 3078 (class 0 OID 0)
 -- Dependencies: 213
 -- Name: номенклатура_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2171,17 +2232,17 @@ ALTER SEQUENCE "номенклатура_код_seq" OWNED BY "номенкла�
 
 
 --
--- TOC entry 3062 (class 0 OID 0)
+-- TOC entry 3079 (class 0 OID 0)
 -- Dependencies: 213
 -- Name: номенклатура_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"номенклатура_код_seq"', 36, true);
+SELECT pg_catalog.setval('"номенклатура_код_seq"', 37, true);
 
 
 --
 -- TOC entry 214 (class 1259 OID 25552)
--- Dependencies: 2806 2807 6
+-- Dependencies: 2815 2816 6
 -- Name: нумераторы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2196,7 +2257,7 @@ ALTER TABLE public."нумераторы" OWNER TO sa;
 
 --
 -- TOC entry 215 (class 1259 OID 25557)
--- Dependencies: 6 214
+-- Dependencies: 214 6
 -- Name: нумераторы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2211,7 +2272,7 @@ CREATE SEQUENCE "нумераторы_код_seq"
 ALTER TABLE public."нумераторы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3064 (class 0 OID 0)
+-- TOC entry 3081 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: нумераторы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2220,17 +2281,17 @@ ALTER SEQUENCE "нумераторы_код_seq" OWNED BY "нумераторы"
 
 
 --
--- TOC entry 3065 (class 0 OID 0)
+-- TOC entry 3082 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: нумераторы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"нумераторы_код_seq"', 3, true);
+SELECT pg_catalog.setval('"нумераторы_код_seq"', 4, true);
 
 
 --
 -- TOC entry 216 (class 1259 OID 25559)
--- Dependencies: 2809 2810 2811 2812 2813 2814 2815 6
+-- Dependencies: 2818 2819 2820 2821 2822 2823 2824 6
 -- Name: персонал; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2268,7 +2329,7 @@ CREATE SEQUENCE "персонал_код_seq"
 ALTER TABLE public."персонал_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3067 (class 0 OID 0)
+-- TOC entry 3084 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: персонал_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2277,7 +2338,7 @@ ALTER SEQUENCE "персонал_код_seq" OWNED BY "персонал"."код
 
 
 --
--- TOC entry 3068 (class 0 OID 0)
+-- TOC entry 3085 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: персонал_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2287,7 +2348,7 @@ SELECT pg_catalog.setval('"персонал_код_seq"', 1, false);
 
 --
 -- TOC entry 218 (class 1259 OID 25571)
--- Dependencies: 2817 2818 2819 2820 2821 2822 2823 2824 2825 6
+-- Dependencies: 2826 2827 2828 2829 2830 2831 2832 2833 2834 6
 -- Name: прайсы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2314,7 +2375,7 @@ ALTER TABLE public."прайсы" OWNER TO sa;
 
 --
 -- TOC entry 219 (class 1259 OID 25586)
--- Dependencies: 6 218
+-- Dependencies: 218 6
 -- Name: прайсы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2329,7 +2390,7 @@ CREATE SEQUENCE "прайсы_код_seq"
 ALTER TABLE public."прайсы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3070 (class 0 OID 0)
+-- TOC entry 3087 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: прайсы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2338,7 +2399,7 @@ ALTER SEQUENCE "прайсы_код_seq" OWNED BY "прайсы"."код";
 
 
 --
--- TOC entry 3071 (class 0 OID 0)
+-- TOC entry 3088 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: прайсы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2348,7 +2409,7 @@ SELECT pg_catalog.setval('"прайсы_код_seq"', 1, false);
 
 --
 -- TOC entry 220 (class 1259 OID 25588)
--- Dependencies: 2827 2828 6
+-- Dependencies: 2836 2837 6
 -- Name: предметы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2378,7 +2439,7 @@ CREATE SEQUENCE "предметы_код_seq"
 ALTER TABLE public."предметы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3073 (class 0 OID 0)
+-- TOC entry 3090 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: предметы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2387,7 +2448,7 @@ ALTER SEQUENCE "предметы_код_seq" OWNED BY "предметы"."код
 
 
 --
--- TOC entry 3074 (class 0 OID 0)
+-- TOC entry 3091 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: предметы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2397,7 +2458,7 @@ SELECT pg_catalog.setval('"предметы_код_seq"', 1, false);
 
 --
 -- TOC entry 222 (class 1259 OID 25595)
--- Dependencies: 192 6
+-- Dependencies: 6 192
 -- Name: проводки_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2412,7 +2473,7 @@ CREATE SEQUENCE "проводки_код_seq"
 ALTER TABLE public."проводки_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3075 (class 0 OID 0)
+-- TOC entry 3092 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: проводки_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2421,17 +2482,17 @@ ALTER SEQUENCE "проводки_код_seq" OWNED BY "проводки"."код
 
 
 --
--- TOC entry 3076 (class 0 OID 0)
+-- TOC entry 3093 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: проводки_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"проводки_код_seq"', 88, true);
+SELECT pg_catalog.setval('"проводки_код_seq"', 102, true);
 
 
 --
 -- TOC entry 223 (class 1259 OID 25597)
--- Dependencies: 2830 6
+-- Dependencies: 2839 6
 -- Name: справочник; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2445,7 +2506,7 @@ ALTER TABLE public."справочник" OWNER TO sa;
 
 --
 -- TOC entry 224 (class 1259 OID 25601)
--- Dependencies: 6 223
+-- Dependencies: 223 6
 -- Name: справочник_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2460,7 +2521,7 @@ CREATE SEQUENCE "справочник_код_seq"
 ALTER TABLE public."справочник_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3077 (class 0 OID 0)
+-- TOC entry 3094 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: справочник_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2469,7 +2530,7 @@ ALTER SEQUENCE "справочник_код_seq" OWNED BY "справочник"
 
 
 --
--- TOC entry 3078 (class 0 OID 0)
+-- TOC entry 3095 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: справочник_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2479,7 +2540,7 @@ SELECT pg_catalog.setval('"справочник_код_seq"', 1, false);
 
 --
 -- TOC entry 225 (class 1259 OID 25603)
--- Dependencies: 179 6
+-- Dependencies: 6 179
 -- Name: справочники_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2494,7 +2555,7 @@ CREATE SEQUENCE "справочники_код_seq"
 ALTER TABLE public."справочники_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3079 (class 0 OID 0)
+-- TOC entry 3096 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: справочники_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2503,12 +2564,12 @@ ALTER SEQUENCE "справочники_код_seq" OWNED BY "справочни�
 
 
 --
--- TOC entry 3080 (class 0 OID 0)
+-- TOC entry 3097 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: справочники_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"справочники_код_seq"', 31, true);
+SELECT pg_catalog.setval('"справочники_код_seq"', 51, true);
 
 
 --
@@ -2528,7 +2589,7 @@ CREATE SEQUENCE "столбцы_код_seq"
 ALTER TABLE public."столбцы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3081 (class 0 OID 0)
+-- TOC entry 3098 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: столбцы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2537,7 +2598,7 @@ ALTER SEQUENCE "столбцы_код_seq" OWNED BY "столбцы"."код";
 
 
 --
--- TOC entry 3082 (class 0 OID 0)
+-- TOC entry 3099 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: столбцы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2547,7 +2608,7 @@ SELECT pg_catalog.setval('"столбцы_код_seq"', 106, true);
 
 --
 -- TOC entry 227 (class 1259 OID 25607)
--- Dependencies: 6 166
+-- Dependencies: 166 6
 -- Name: счета_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2562,7 +2623,7 @@ CREATE SEQUENCE "счета_код_seq"
 ALTER TABLE public."счета_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3083 (class 0 OID 0)
+-- TOC entry 3100 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: счета_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2571,7 +2632,7 @@ ALTER SEQUENCE "счета_код_seq" OWNED BY "счета"."код";
 
 
 --
--- TOC entry 3084 (class 0 OID 0)
+-- TOC entry 3101 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: счета_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2581,7 +2642,7 @@ SELECT pg_catalog.setval('"счета_код_seq"', 105, true);
 
 --
 -- TOC entry 228 (class 1259 OID 25609)
--- Dependencies: 2832 6
+-- Dependencies: 2841 6
 -- Name: типыобъектов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2610,7 +2671,7 @@ CREATE SEQUENCE "типыобъектов_код_seq"
 ALTER TABLE public."типыобъектов_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3086 (class 0 OID 0)
+-- TOC entry 3103 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: типыобъектов_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2619,7 +2680,7 @@ ALTER SEQUENCE "типыобъектов_код_seq" OWNED BY "типыобъе�
 
 
 --
--- TOC entry 3087 (class 0 OID 0)
+-- TOC entry 3104 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: типыобъектов_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2644,7 +2705,7 @@ CREATE SEQUENCE "топер_код_seq"
 ALTER TABLE public."топер_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3088 (class 0 OID 0)
+-- TOC entry 3105 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: топер_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2653,7 +2714,7 @@ ALTER SEQUENCE "топер_код_seq" OWNED BY "топер"."код";
 
 
 --
--- TOC entry 3089 (class 0 OID 0)
+-- TOC entry 3106 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: топер_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2663,7 +2724,7 @@ SELECT pg_catalog.setval('"топер_код_seq"', 50, true);
 
 --
 -- TOC entry 231 (class 1259 OID 25617)
--- Dependencies: 2834 6
+-- Dependencies: 2843 6
 -- Name: файлы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2679,7 +2740,7 @@ ALTER TABLE public."файлы" OWNER TO sa;
 
 --
 -- TOC entry 232 (class 1259 OID 25624)
--- Dependencies: 231 6
+-- Dependencies: 6 231
 -- Name: файлы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2694,7 +2755,7 @@ CREATE SEQUENCE "файлы_код_seq"
 ALTER TABLE public."файлы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3091 (class 0 OID 0)
+-- TOC entry 3108 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: файлы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
@@ -2703,7 +2764,7 @@ ALTER SEQUENCE "файлы_код_seq" OWNED BY "файлы"."код";
 
 
 --
--- TOC entry 3092 (class 0 OID 0)
+-- TOC entry 3109 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: файлы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
@@ -2712,8 +2773,8 @@ SELECT pg_catalog.setval('"файлы_код_seq"', 4, true);
 
 
 --
--- TOC entry 2836 (class 2604 OID 25868)
--- Dependencies: 234 235 235
+-- TOC entry 2845 (class 2604 OID 25868)
+-- Dependencies: 235 234 235
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -2721,7 +2782,7 @@ ALTER TABLE "адрес" ALTER COLUMN "код" SET DEFAULT nextval('"адрес_
 
 
 --
--- TOC entry 2797 (class 2604 OID 25626)
+-- TOC entry 2806 (class 2604 OID 25626)
 -- Dependencies: 199 198
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2730,7 +2791,7 @@ ALTER TABLE "банки" ALTER COLUMN "код" SET DEFAULT nextval('"банки_
 
 
 --
--- TOC entry 2800 (class 2604 OID 25627)
+-- TOC entry 2809 (class 2604 OID 25627)
 -- Dependencies: 201 200
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2739,7 +2800,7 @@ ALTER TABLE "банковские_счета" ALTER COLUMN "код" SET DEFAULT 
 
 
 --
--- TOC entry 2718 (class 2604 OID 25628)
+-- TOC entry 2727 (class 2604 OID 25628)
 -- Dependencies: 202 168
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2748,7 +2809,7 @@ ALTER TABLE "блокпериоды" ALTER COLUMN "код" SET DEFAULT nextval('
 
 
 --
--- TOC entry 2802 (class 2604 OID 25629)
+-- TOC entry 2811 (class 2604 OID 25629)
 -- Dependencies: 204 203
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2757,7 +2818,7 @@ ALTER TABLE "виды_расходов" ALTER COLUMN "код" SET DEFAULT nextva
 
 
 --
--- TOC entry 2805 (class 2604 OID 25630)
+-- TOC entry 2814 (class 2604 OID 25630)
 -- Dependencies: 206 205
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2766,7 +2827,7 @@ ALTER TABLE "группы" ALTER COLUMN "код" SET DEFAULT nextval('"груп�
 
 
 --
--- TOC entry 2735 (class 2604 OID 25631)
+-- TOC entry 2744 (class 2604 OID 25631)
 -- Dependencies: 207 172
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2775,7 +2836,7 @@ ALTER TABLE "документы" ALTER COLUMN "код" SET DEFAULT nextval('"д�
 
 
 --
--- TOC entry 2741 (class 2604 OID 25632)
+-- TOC entry 2750 (class 2604 OID 25632)
 -- Dependencies: 208 175
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2784,7 +2845,7 @@ ALTER TABLE "доступ" ALTER COLUMN "код" SET DEFAULT nextval('"дост�
 
 
 --
--- TOC entry 2771 (class 2604 OID 25633)
+-- TOC entry 2780 (class 2604 OID 25633)
 -- Dependencies: 209 183
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2793,7 +2854,7 @@ ALTER TABLE "журнал" ALTER COLUMN "код" SET DEFAULT nextval('"журн�
 
 
 --
--- TOC entry 2774 (class 2604 OID 25634)
+-- TOC entry 2783 (class 2604 OID 25634)
 -- Dependencies: 210 185
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2802,7 +2863,7 @@ ALTER TABLE "константы" ALTER COLUMN "код" SET DEFAULT nextval('"к�
 
 
 --
--- TOC entry 2731 (class 2604 OID 25635)
+-- TOC entry 2740 (class 2604 OID 25635)
 -- Dependencies: 211 170
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2811,7 +2872,7 @@ ALTER TABLE "контрагенты" ALTER COLUMN "код" SET DEFAULT nextval('
 
 
 --
--- TOC entry 2777 (class 2604 OID 25636)
+-- TOC entry 2786 (class 2604 OID 25636)
 -- Dependencies: 212 188
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2820,7 +2881,16 @@ ALTER TABLE "материалы" ALTER COLUMN "код" SET DEFAULT nextval('"м�
 
 
 --
--- TOC entry 2785 (class 2604 OID 25637)
+-- TOC entry 2847 (class 2604 OID 26102)
+-- Dependencies: 238 237 238
+-- Name: код; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "набор1" ALTER COLUMN "код" SET DEFAULT nextval('"набор1_код_seq"'::regclass);
+
+
+--
+-- TOC entry 2794 (class 2604 OID 25637)
 -- Dependencies: 213 190
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2829,7 +2899,7 @@ ALTER TABLE "номенклатура" ALTER COLUMN "код" SET DEFAULT nextval
 
 
 --
--- TOC entry 2808 (class 2604 OID 25638)
+-- TOC entry 2817 (class 2604 OID 25638)
 -- Dependencies: 215 214
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2838,7 +2908,7 @@ ALTER TABLE "нумераторы" ALTER COLUMN "код" SET DEFAULT nextval('"�
 
 
 --
--- TOC entry 2816 (class 2604 OID 25639)
+-- TOC entry 2825 (class 2604 OID 25639)
 -- Dependencies: 217 216
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2847,7 +2917,7 @@ ALTER TABLE "персонал" ALTER COLUMN "код" SET DEFAULT nextval('"пе�
 
 
 --
--- TOC entry 2826 (class 2604 OID 25640)
+-- TOC entry 2835 (class 2604 OID 25640)
 -- Dependencies: 219 218
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2856,7 +2926,7 @@ ALTER TABLE "прайсы" ALTER COLUMN "код" SET DEFAULT nextval('"прай�
 
 
 --
--- TOC entry 2829 (class 2604 OID 25641)
+-- TOC entry 2838 (class 2604 OID 25641)
 -- Dependencies: 221 220
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2865,7 +2935,7 @@ ALTER TABLE "предметы" ALTER COLUMN "код" SET DEFAULT nextval('"пр�
 
 
 --
--- TOC entry 2789 (class 2604 OID 25642)
+-- TOC entry 2798 (class 2604 OID 25642)
 -- Dependencies: 222 192
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2874,7 +2944,7 @@ ALTER TABLE "проводки" ALTER COLUMN "код" SET DEFAULT nextval('"пр�
 
 
 --
--- TOC entry 2831 (class 2604 OID 25643)
+-- TOC entry 2840 (class 2604 OID 25643)
 -- Dependencies: 224 223
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2883,7 +2953,7 @@ ALTER TABLE "справочник" ALTER COLUMN "код" SET DEFAULT nextval('"�
 
 
 --
--- TOC entry 2747 (class 2604 OID 25644)
+-- TOC entry 2756 (class 2604 OID 25644)
 -- Dependencies: 225 179
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2892,7 +2962,7 @@ ALTER TABLE "справочники" ALTER COLUMN "код" SET DEFAULT nextval('
 
 
 --
--- TOC entry 2792 (class 2604 OID 25645)
+-- TOC entry 2801 (class 2604 OID 25645)
 -- Dependencies: 226 195
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2901,7 +2971,7 @@ ALTER TABLE "столбцы" ALTER COLUMN "код" SET DEFAULT nextval('"сто�
 
 
 --
--- TOC entry 2713 (class 2604 OID 25646)
+-- TOC entry 2722 (class 2604 OID 25646)
 -- Dependencies: 227 166
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2910,7 +2980,7 @@ ALTER TABLE "счета" ALTER COLUMN "код" SET DEFAULT nextval('"счета_
 
 
 --
--- TOC entry 2833 (class 2604 OID 25647)
+-- TOC entry 2842 (class 2604 OID 25647)
 -- Dependencies: 229 228
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2919,7 +2989,7 @@ ALTER TABLE "типыобъектов" ALTER COLUMN "код" SET DEFAULT nextval
 
 
 --
--- TOC entry 2768 (class 2604 OID 25648)
+-- TOC entry 2777 (class 2604 OID 25648)
 -- Dependencies: 230 181
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2928,7 +2998,7 @@ ALTER TABLE "топер" ALTER COLUMN "код" SET DEFAULT nextval('"топер_
 
 
 --
--- TOC entry 2835 (class 2604 OID 25649)
+-- TOC entry 2844 (class 2604 OID 25649)
 -- Dependencies: 232 231
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
@@ -2937,17 +3007,18 @@ ALTER TABLE "файлы" ALTER COLUMN "код" SET DEFAULT nextval('"файлы_
 
 
 --
--- TOC entry 2985 (class 0 OID 25865)
+-- TOC entry 2998 (class 0 OID 25865)
 -- Dependencies: 235
 -- Data for Name: адрес; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "адрес" ("код", "имя") FROM stdin;
+1	0
 \.
 
 
 --
--- TOC entry 2974 (class 0 OID 25507)
+-- TOC entry 2987 (class 0 OID 25507)
 -- Dependencies: 198
 -- Data for Name: банки; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -2957,7 +3028,7 @@ COPY "банки" ("код", "имя", "бик", "корсчет", "счет") F
 
 
 --
--- TOC entry 2975 (class 0 OID 25516)
+-- TOC entry 2988 (class 0 OID 25516)
 -- Dependencies: 200
 -- Data for Name: банковские_счета; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -2967,7 +3038,7 @@ COPY "банковские_счета" ("код", "имя", "счет", "код_
 
 
 --
--- TOC entry 2962 (class 0 OID 25313)
+-- TOC entry 2975 (class 0 OID 25313)
 -- Dependencies: 168
 -- Data for Name: блокпериоды; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -2978,7 +3049,7 @@ COPY "блокпериоды" ("код", "имя", "блокконец", "нач
 
 
 --
--- TOC entry 2976 (class 0 OID 25525)
+-- TOC entry 2989 (class 0 OID 25525)
 -- Dependencies: 203
 -- Data for Name: виды_расходов; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -2988,7 +3059,7 @@ COPY "виды_расходов" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 2977 (class 0 OID 25531)
+-- TOC entry 2990 (class 0 OID 25531)
 -- Dependencies: 205
 -- Data for Name: группы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -2999,7 +3070,7 @@ COPY "группы" ("код", "имя", "цены_снижать") FROM stdin;
 
 
 --
--- TOC entry 2964 (class 0 OID 25346)
+-- TOC entry 2977 (class 0 OID 25346)
 -- Dependencies: 172
 -- Data for Name: документы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3016,7 +3087,7 @@ COPY "документы" ("код", "дата", "датавремя", "номе
 
 
 --
--- TOC entry 2965 (class 0 OID 25363)
+-- TOC entry 2978 (class 0 OID 25363)
 -- Dependencies: 175
 -- Data for Name: доступ; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3048,11 +3119,13 @@ COPY "доступ" ("код", "меню", "комментарий", "код_т�
 24	t		1	sa	блокпериоды	
 31	t		3	sa	3	
 39	t		1	sa	адрес	
+40	t		1	sa	vw_types	
+60	t		1	sa	набор1	
 \.
 
 
 --
--- TOC entry 2968 (class 0 OID 25430)
+-- TOC entry 2981 (class 0 OID 25430)
 -- Dependencies: 183
 -- Data for Name: журнал; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3062,7 +3135,7 @@ COPY "журнал" ("код", "имя", "датавремя", "содержан
 
 
 --
--- TOC entry 2969 (class 0 OID 25439)
+-- TOC entry 2982 (class 0 OID 25439)
 -- Dependencies: 185
 -- Data for Name: константы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3076,7 +3149,7 @@ COPY "константы" ("код", "имя", "значение", "коммен
 
 
 --
--- TOC entry 2963 (class 0 OID 25324)
+-- TOC entry 2976 (class 0 OID 25324)
 -- Dependencies: 170
 -- Data for Name: контрагенты; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3088,7 +3161,7 @@ COPY "контрагенты" ("код", "имя", "адрес", "телефон
 
 
 --
--- TOC entry 2970 (class 0 OID 25452)
+-- TOC entry 2983 (class 0 OID 25452)
 -- Dependencies: 188
 -- Data for Name: материалы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3098,7 +3171,24 @@ COPY "материалы" ("код", "имя", "едизм") FROM stdin;
 
 
 --
--- TOC entry 2971 (class 0 OID 25461)
+-- TOC entry 2999 (class 0 OID 26099)
+-- Dependencies: 238
+-- Data for Name: набор1; Type: TABLE DATA; Schema: public; Owner: sa
+--
+
+COPY "набор1" ("код", "код_vw_номенклатура", "код_адрес") FROM stdin;
+1	34	1
+2	8	1
+3	4	1
+4	31	1
+5	24	1
+6	33	1
+7	25	1
+\.
+
+
+--
+-- TOC entry 2984 (class 0 OID 25461)
 -- Dependencies: 190
 -- Data for Name: номенклатура; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3139,11 +3229,12 @@ COPY "номенклатура" ("код", "имя", "едизм", "артику
 25	шатун 2108, 21099, 1111	шт	2108-1004045-00	1	470.00	0		3	\N
 32	шестерня КПП 5-й передачи 2108, 2110	шт	2108-1701158/64	1	361.00	0		3	\N
 36				\N	0.00	0		3	\N
+37				\N	0.00	0		3	\N
 \.
 
 
 --
--- TOC entry 2978 (class 0 OID 25552)
+-- TOC entry 2991 (class 0 OID 25552)
 -- Dependencies: 214
 -- Data for Name: нумераторы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3151,11 +3242,12 @@ COPY "номенклатура" ("код", "имя", "едизм", "артику
 COPY "нумераторы" ("код", "имя", "значение") FROM stdin;
 1	Накладная	4
 2	Накладная1	1
+4	ТоварныйЧек	0
 \.
 
 
 --
--- TOC entry 2979 (class 0 OID 25559)
+-- TOC entry 2992 (class 0 OID 25559)
 -- Dependencies: 216
 -- Data for Name: персонал; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3165,7 +3257,7 @@ COPY "персонал" ("код", "имя", "инн", "паспорт_сери�
 
 
 --
--- TOC entry 2980 (class 0 OID 25571)
+-- TOC entry 2993 (class 0 OID 25571)
 -- Dependencies: 218
 -- Data for Name: прайсы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3175,7 +3267,7 @@ COPY "прайсы" ("код", "имя", "код_фирмы", "кодвпрай�
 
 
 --
--- TOC entry 2981 (class 0 OID 25588)
+-- TOC entry 2994 (class 0 OID 25588)
 -- Dependencies: 220
 -- Data for Name: предметы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3185,84 +3277,91 @@ COPY "предметы" ("код", "имя", "едизм") FROM stdin;
 
 
 --
--- TOC entry 2972 (class 0 OID 25478)
+-- TOC entry 2985 (class 0 OID 25478)
 -- Dependencies: 192
 -- Data for Name: проводки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "проводки" ("код", "дбсчет", "дбкод", "крсчет", "кркод", "кол", "цена", "сумма", "стр", "доккод", "опер", "номеропер") FROM stdin;
-79	41.2 	31	41.1 	31	2.000	13.00	26.00	4	11	2	1
-80	41.2 	24	41.1 	24	2.000	20.00	40.00	5	11	2	1
 43	41.1 	25	42   	25	0.000	0.00	0.00	3	1	1	2
 60	41.1 	4	60   	1	3.000	130.00	390.00	10	1	1	1
 39	41.1 	24	42   	24	0.000	0.00	0.00	1	1	1	2
 61	41.1 	4	42   	4	0.000	0.00	0.00	10	1	1	2
-81	41.2 	33	41.1 	33	5.000	20.00	100.00	6	11	2	1
 42	41.1 	25	60   	1	5.000	150.00	750.00	3	1	1	1
 38	41.1 	24	60   	1	2.000	20.00	40.00	1	1	1	1
 40	41.1 	34	60   	1	2.000	50.00	100.00	2	1	1	1
 41	41.1 	34	42   	34	0.000	0.00	0.00	2	1	1	2
-88	41.2 	25	41.1 	25	5.000	150.00	750.00	7	11	2	1
 44	41.1 	8	60   	1	3.000	120.00	360.00	4	1	1	1
 45	41.1 	8	42   	8	0.000	0.00	0.00	4	1	1	2
 55	41.1 	33	60   	1	5.000	20.00	100.00	8	1	1	1
 56	41.1 	33	42   	33	0.000	0.00	0.00	8	1	1	2
 57	41.1 	31	60   	1	2.000	13.00	26.00	9	1	1	1
 58	41.1 	31	42   	31	0.000	0.00	0.00	9	1	1	2
-76	41.2 	34	41.1 	34	2.000	50.00	100.00	1	11	2	1
-77	41.2 	8	41.1 	8	3.000	120.00	360.00	2	11	2	1
-78	41.2 	4	41.1 	4	3.000	130.00	390.00	3	11	2	1
+95	41.2 	1	41.1 	34	2.000	50.00	100.00	1	11	2	1
+96	41.2 	2	41.1 	8	3.000	120.00	360.00	2	11	2	1
+97	41.2 	3	41.1 	4	3.000	130.00	390.00	3	11	2	1
+98	41.2 	4	41.1 	31	2.000	13.00	26.00	4	11	2	1
+99	41.2 	5	41.1 	24	2.000	20.00	40.00	5	11	2	1
+100	41.2 	6	41.1 	33	5.000	20.00	100.00	6	11	2	1
+102	41.2 	7	41.1 	25	5.000	150.00	750.00	7	11	2	1
 \.
 
 
 --
--- TOC entry 2960 (class 0 OID 25288)
+-- TOC entry 2973 (class 0 OID 25288)
 -- Dependencies: 165
 -- Data for Name: сальдо; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "сальдо" ("счет", "код", "кол", "сальдо", "дбкол", "дебет", "кркол", "кредит", "конкол", "консальдо", "концена") FROM stdin;
 42   	25	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.2 	34	0.000	0.00	2.000	100.00	0.000	0.00	2.000	100.00	50.00
 42   	24	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 41.2 	27	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 41.1 	27	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	0	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.1 	1	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	31	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.2 	8	0.000	0.00	3.000	360.00	0.000	0.00	3.000	360.00	120.00
-41.1 	8	0.000	0.00	3.000	360.00	3.000	360.00	0.000	0.00	0.00
+41.2 	1	0.000	0.00	2.000	100.00	0.000	0.00	2.000	100.00	50.00
+41.1 	34	0.000	0.00	2.000	100.00	2.000	100.00	0.000	0.00	0.00
 41.1 	3	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	3	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.2 	4	0.000	0.00	3.000	390.00	0.000	0.00	3.000	390.00	130.00
+41.2 	2	0.000	0.00	3.000	360.00	0.000	0.00	3.000	360.00	120.00
+41.1 	8	0.000	0.00	3.000	360.00	3.000	360.00	0.000	0.00	0.00
 41.1 	5	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	5	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.1 	4	0.000	0.00	3.000	390.00	3.000	390.00	0.000	0.00	0.00
 41.1 	15	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 60   	2	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.1 	1	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	1	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.2 	31	0.000	0.00	2.000	26.00	0.000	0.00	2.000	26.00	13.00
-41.1 	31	0.000	0.00	2.000	26.00	2.000	26.00	0.000	0.00	0.00
+41.2 	3	0.000	0.00	3.000	390.00	0.000	0.00	3.000	390.00	130.00
+41.1 	4	0.000	0.00	3.000	390.00	3.000	390.00	0.000	0.00	0.00
 60   	0	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	0	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.2 	24	0.000	0.00	2.000	40.00	0.000	0.00	2.000	40.00	20.00
+41.2 	4	0.000	0.00	2.000	26.00	0.000	0.00	2.000	26.00	13.00
+41.1 	31	0.000	0.00	2.000	26.00	2.000	26.00	0.000	0.00	0.00
+41.2 	5	0.000	0.00	2.000	40.00	0.000	0.00	2.000	40.00	20.00
 41.1 	24	0.000	0.00	2.000	40.00	2.000	40.00	0.000	0.00	0.00
-41.2 	33	0.000	0.00	5.000	100.00	0.000	0.00	5.000	100.00	20.00
-41.1 	33	0.000	0.00	5.000	100.00	5.000	100.00	0.000	0.00	0.00
-41.2 	0	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 41.1 	0	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
-41.2 	25	0.000	0.00	5.000	750.00	0.000	0.00	5.000	750.00	150.00
-41.1 	25	0.000	0.00	5.000	750.00	5.000	750.00	0.000	0.00	0.00
+41.2 	6	0.000	0.00	5.000	100.00	0.000	0.00	5.000	100.00	20.00
+41.1 	33	0.000	0.00	5.000	100.00	5.000	100.00	0.000	0.00	0.00
+41.2 	25	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	8	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	33	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	24	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	31	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	8	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	33	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	34	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 42   	4	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 60   	1	0.000	0.00	0.000	0.00	22.000	1766.00	-22.000	-1766.00	80.27
-41.1 	34	0.000	0.00	2.000	100.00	2.000	100.00	0.000	0.00	0.00
 42   	34	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
+41.2 	7	0.000	0.00	5.000	750.00	0.000	0.00	5.000	750.00	150.00
+41.1 	25	0.000	0.00	5.000	750.00	5.000	750.00	0.000	0.00	0.00
+41.1 	6	0.000	0.00	0.000	0.00	0.000	0.00	0.000	0.00	0.00
 \.
 
 
 --
--- TOC entry 2982 (class 0 OID 25597)
+-- TOC entry 2995 (class 0 OID 25597)
 -- Dependencies: 223
 -- Data for Name: справочник; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3272,7 +3371,7 @@ COPY "справочник" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 2966 (class 0 OID 25384)
+-- TOC entry 2979 (class 0 OID 25384)
 -- Dependencies: 179
 -- Data for Name: справочники; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3297,12 +3396,13 @@ COPY "справочники" ("код", "имя", "имя_в_списке", "и
 10	номенклатура	Справочник. Номенклатура	Номенклатура		\N	\N	\N	~/photo/nomenklatura	\N
 1	справочники	Справочники			\N	\N	\N		\N
 15	vw_номенклатура	Просмотр. Номенклатура	Номенклатура		\N	\N	\N		номенклатура
-31	адрес	Справочник. Адреса хранения			\N	\N	\N		\N
+31	адрес	Справочник. Адреса хранения	Адреса хранения		\N	\N	\N		\N
+51	набор1	Набор1	Набор1		\N	\N	\N		\N
 \.
 
 
 --
--- TOC entry 2973 (class 0 OID 25493)
+-- TOC entry 2986 (class 0 OID 25493)
 -- Dependencies: 195
 -- Data for Name: столбцы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3412,7 +3512,7 @@ COPY "столбцы" ("код", "код_vw_справочники_со_стол
 
 
 --
--- TOC entry 2961 (class 0 OID 25300)
+-- TOC entry 2974 (class 0 OID 25300)
 -- Dependencies: 166
 -- Data for Name: счета; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3521,12 +3621,12 @@ COPY "счета" ("код", "имя", "счет", "имясправочника
 108	Прибыли и убытки	99   		t	f
 18	Материалы. Покупные полуфабрикаты и комплектующие изделия, конструкции и детали	10.2 		t	t
 19	Материалы. Топливо	10.3 		t	t
-43	Товары. Товары в розничной торговле	41.2 	vw_номенклатура	t	t
+43	Товары. Товары в розничной торговле	41.2 	набор1	t	t
 \.
 
 
 --
--- TOC entry 2983 (class 0 OID 25609)
+-- TOC entry 2996 (class 0 OID 25609)
 -- Dependencies: 228
 -- Data for Name: типыобъектов; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3541,7 +3641,7 @@ COPY "типыобъектов" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 2967 (class 0 OID 25399)
+-- TOC entry 2980 (class 0 OID 25399)
 -- Dependencies: 181
 -- Data for Name: топер; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3554,7 +3654,7 @@ COPY "топер" ("код", "опер", "номер", "дбсчет", "крсч
 
 
 --
--- TOC entry 2984 (class 0 OID 25617)
+-- TOC entry 2997 (class 0 OID 25617)
 -- Dependencies: 231
 -- Data for Name: файлы; Type: TABLE DATA; Schema: public; Owner: sa
 --
@@ -3566,7 +3666,7 @@ COPY "файлы" ("код", "имя", "тип", "значение") FROM stdin;
 
 
 --
--- TOC entry 2940 (class 2606 OID 25871)
+-- TOC entry 2950 (class 2606 OID 25871)
 -- Dependencies: 235 235
 -- Name: адрес_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3576,7 +3676,7 @@ ALTER TABLE ONLY "адрес"
 
 
 --
--- TOC entry 2893 (class 2606 OID 25651)
+-- TOC entry 2903 (class 2606 OID 25651)
 -- Dependencies: 198 198
 -- Name: банки_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3586,7 +3686,7 @@ ALTER TABLE ONLY "банки"
 
 
 --
--- TOC entry 2897 (class 2606 OID 25653)
+-- TOC entry 2907 (class 2606 OID 25653)
 -- Dependencies: 200 200
 -- Name: банковские_счета_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3596,7 +3696,7 @@ ALTER TABLE ONLY "банковские_счета"
 
 
 --
--- TOC entry 2844 (class 2606 OID 25655)
+-- TOC entry 2854 (class 2606 OID 25655)
 -- Dependencies: 168 168
 -- Name: блокпериоды_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3606,7 +3706,7 @@ ALTER TABLE ONLY "блокпериоды"
 
 
 --
--- TOC entry 2901 (class 2606 OID 25657)
+-- TOC entry 2911 (class 2606 OID 25657)
 -- Dependencies: 203 203
 -- Name: виды_расходов_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3616,7 +3716,7 @@ ALTER TABLE ONLY "виды_расходов"
 
 
 --
--- TOC entry 2905 (class 2606 OID 25659)
+-- TOC entry 2915 (class 2606 OID 25659)
 -- Dependencies: 205 205
 -- Name: группы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3626,7 +3726,7 @@ ALTER TABLE ONLY "группы"
 
 
 --
--- TOC entry 2852 (class 2606 OID 25661)
+-- TOC entry 2862 (class 2606 OID 25661)
 -- Dependencies: 172 172
 -- Name: документы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3636,7 +3736,7 @@ ALTER TABLE ONLY "документы"
 
 
 --
--- TOC entry 2858 (class 2606 OID 25663)
+-- TOC entry 2868 (class 2606 OID 25663)
 -- Dependencies: 175 175
 -- Name: доступ_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3646,7 +3746,7 @@ ALTER TABLE ONLY "доступ"
 
 
 --
--- TOC entry 2866 (class 2606 OID 25665)
+-- TOC entry 2876 (class 2606 OID 25665)
 -- Dependencies: 183 183
 -- Name: журнал_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3656,7 +3756,7 @@ ALTER TABLE ONLY "журнал"
 
 
 --
--- TOC entry 2868 (class 2606 OID 25667)
+-- TOC entry 2878 (class 2606 OID 25667)
 -- Dependencies: 185 185
 -- Name: константы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3666,7 +3766,7 @@ ALTER TABLE ONLY "константы"
 
 
 --
--- TOC entry 2848 (class 2606 OID 25669)
+-- TOC entry 2858 (class 2606 OID 25669)
 -- Dependencies: 170 170
 -- Name: контрагенты_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3676,7 +3776,7 @@ ALTER TABLE ONLY "контрагенты"
 
 
 --
--- TOC entry 2872 (class 2606 OID 25671)
+-- TOC entry 2882 (class 2606 OID 25671)
 -- Dependencies: 188 188
 -- Name: материалы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3686,7 +3786,17 @@ ALTER TABLE ONLY "материалы"
 
 
 --
--- TOC entry 2876 (class 2606 OID 25673)
+-- TOC entry 2952 (class 2606 OID 26105)
+-- Dependencies: 238 238
+-- Name: набор1_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "набор1"
+    ADD CONSTRAINT "набор1_pkey" PRIMARY KEY ("код");
+
+
+--
+-- TOC entry 2886 (class 2606 OID 25673)
 -- Dependencies: 190 190
 -- Name: номенклатура_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3696,7 +3806,7 @@ ALTER TABLE ONLY "номенклатура"
 
 
 --
--- TOC entry 2909 (class 2606 OID 25675)
+-- TOC entry 2919 (class 2606 OID 25675)
 -- Dependencies: 214 214
 -- Name: нумераторы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3706,7 +3816,7 @@ ALTER TABLE ONLY "нумераторы"
 
 
 --
--- TOC entry 2913 (class 2606 OID 25677)
+-- TOC entry 2923 (class 2606 OID 25677)
 -- Dependencies: 216 216
 -- Name: персонал_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3716,7 +3826,7 @@ ALTER TABLE ONLY "персонал"
 
 
 --
--- TOC entry 2918 (class 2606 OID 25679)
+-- TOC entry 2928 (class 2606 OID 25679)
 -- Dependencies: 218 218
 -- Name: прайсы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3726,7 +3836,7 @@ ALTER TABLE ONLY "прайсы"
 
 
 --
--- TOC entry 2928 (class 2606 OID 25681)
+-- TOC entry 2938 (class 2606 OID 25681)
 -- Dependencies: 220 220
 -- Name: предметы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3736,7 +3846,7 @@ ALTER TABLE ONLY "предметы"
 
 
 --
--- TOC entry 2880 (class 2606 OID 25683)
+-- TOC entry 2890 (class 2606 OID 25683)
 -- Dependencies: 192 192
 -- Name: проводки_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3746,7 +3856,7 @@ ALTER TABLE ONLY "проводки"
 
 
 --
--- TOC entry 2932 (class 2606 OID 25685)
+-- TOC entry 2942 (class 2606 OID 25685)
 -- Dependencies: 223 223
 -- Name: справочник_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3756,7 +3866,7 @@ ALTER TABLE ONLY "справочник"
 
 
 --
--- TOC entry 2862 (class 2606 OID 25687)
+-- TOC entry 2872 (class 2606 OID 25687)
 -- Dependencies: 179 179
 -- Name: справочники_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3766,7 +3876,7 @@ ALTER TABLE ONLY "справочники"
 
 
 --
--- TOC entry 2891 (class 2606 OID 25689)
+-- TOC entry 2901 (class 2606 OID 25689)
 -- Dependencies: 195 195
 -- Name: столбцы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3776,7 +3886,7 @@ ALTER TABLE ONLY "столбцы"
 
 
 --
--- TOC entry 2840 (class 2606 OID 25691)
+-- TOC entry 2850 (class 2606 OID 25691)
 -- Dependencies: 166 166
 -- Name: счета_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3786,7 +3896,7 @@ ALTER TABLE ONLY "счета"
 
 
 --
--- TOC entry 2934 (class 2606 OID 25693)
+-- TOC entry 2944 (class 2606 OID 25693)
 -- Dependencies: 228 228
 -- Name: типыобъектов_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3796,7 +3906,7 @@ ALTER TABLE ONLY "типыобъектов"
 
 
 --
--- TOC entry 2864 (class 2606 OID 25695)
+-- TOC entry 2874 (class 2606 OID 25695)
 -- Dependencies: 181 181
 -- Name: топер_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3806,7 +3916,7 @@ ALTER TABLE ONLY "топер"
 
 
 --
--- TOC entry 2938 (class 2606 OID 25697)
+-- TOC entry 2948 (class 2606 OID 25697)
 -- Dependencies: 231 231
 -- Name: файлы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3816,7 +3926,7 @@ ALTER TABLE ONLY "файлы"
 
 
 --
--- TOC entry 2894 (class 1259 OID 25698)
+-- TOC entry 2904 (class 1259 OID 25698)
 -- Dependencies: 198
 -- Name: банки_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3825,7 +3935,7 @@ CREATE INDEX "банки_имя_idx" ON "банки" USING btree ("имя");
 
 
 --
--- TOC entry 2895 (class 1259 OID 25699)
+-- TOC entry 2905 (class 1259 OID 25699)
 -- Dependencies: 198
 -- Name: банки_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3834,7 +3944,7 @@ CREATE INDEX "банки_код_idx" ON "банки" USING btree ("код");
 
 
 --
--- TOC entry 2898 (class 1259 OID 25700)
+-- TOC entry 2908 (class 1259 OID 25700)
 -- Dependencies: 200
 -- Name: банковские_счета_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3843,7 +3953,7 @@ CREATE INDEX "банковские_счета_имя_idx" ON "банковски
 
 
 --
--- TOC entry 2899 (class 1259 OID 25701)
+-- TOC entry 2909 (class 1259 OID 25701)
 -- Dependencies: 200
 -- Name: банковские_счета_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3852,7 +3962,7 @@ CREATE INDEX "банковские_счета_код_idx" ON "банковски
 
 
 --
--- TOC entry 2845 (class 1259 OID 25702)
+-- TOC entry 2855 (class 1259 OID 25702)
 -- Dependencies: 168
 -- Name: блокпериоды_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3861,7 +3971,7 @@ CREATE INDEX "блокпериоды_имя_idx" ON "блокпериоды" USI
 
 
 --
--- TOC entry 2846 (class 1259 OID 25703)
+-- TOC entry 2856 (class 1259 OID 25703)
 -- Dependencies: 168
 -- Name: блокпериоды_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3870,7 +3980,7 @@ CREATE INDEX "блокпериоды_код_idx" ON "блокпериоды" USI
 
 
 --
--- TOC entry 2902 (class 1259 OID 25704)
+-- TOC entry 2912 (class 1259 OID 25704)
 -- Dependencies: 203
 -- Name: виды_расходов_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3879,7 +3989,7 @@ CREATE INDEX "виды_расходов_имя_idx" ON "виды_расходо�
 
 
 --
--- TOC entry 2903 (class 1259 OID 25705)
+-- TOC entry 2913 (class 1259 OID 25705)
 -- Dependencies: 203
 -- Name: виды_расходов_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3888,7 +3998,7 @@ CREATE INDEX "виды_расходов_код_idx" ON "виды_расходо�
 
 
 --
--- TOC entry 2906 (class 1259 OID 25706)
+-- TOC entry 2916 (class 1259 OID 25706)
 -- Dependencies: 205
 -- Name: группы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3897,7 +4007,7 @@ CREATE INDEX "группы_имя_idx" ON "группы" USING btree ("имя");
 
 
 --
--- TOC entry 2907 (class 1259 OID 25707)
+-- TOC entry 2917 (class 1259 OID 25707)
 -- Dependencies: 205
 -- Name: группы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3906,7 +4016,7 @@ CREATE INDEX "группы_код_idx" ON "группы" USING btree ("код");
 
 
 --
--- TOC entry 2853 (class 1259 OID 25708)
+-- TOC entry 2863 (class 1259 OID 25708)
 -- Dependencies: 172 172 172
 -- Name: документы_авто_опер_дата_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3915,7 +4025,7 @@ CREATE INDEX "документы_авто_опер_дата_idx" ON "докум�
 
 
 --
--- TOC entry 2854 (class 1259 OID 25709)
+-- TOC entry 2864 (class 1259 OID 25709)
 -- Dependencies: 172
 -- Name: документы_дата_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3924,7 +4034,7 @@ CREATE INDEX "документы_дата_idx" ON "документы" USING btr
 
 
 --
--- TOC entry 2855 (class 1259 OID 25710)
+-- TOC entry 2865 (class 1259 OID 25710)
 -- Dependencies: 172 172 172
 -- Name: документы_дата_опер_авто_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3933,7 +4043,7 @@ CREATE INDEX "документы_дата_опер_авто_idx" ON "докум�
 
 
 --
--- TOC entry 2856 (class 1259 OID 25711)
+-- TOC entry 2866 (class 1259 OID 25711)
 -- Dependencies: 172
 -- Name: документы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3942,7 +4052,7 @@ CREATE INDEX "документы_код_idx" ON "документы" USING btree
 
 
 --
--- TOC entry 2859 (class 1259 OID 25712)
+-- TOC entry 2869 (class 1259 OID 25712)
 -- Dependencies: 175
 -- Name: доступ_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3951,7 +4061,7 @@ CREATE INDEX "доступ_имя_idx" ON "доступ" USING btree ("имя");
 
 
 --
--- TOC entry 2860 (class 1259 OID 25713)
+-- TOC entry 2870 (class 1259 OID 25713)
 -- Dependencies: 175
 -- Name: доступ_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3960,7 +4070,7 @@ CREATE INDEX "доступ_код_idx" ON "доступ" USING btree ("код");
 
 
 --
--- TOC entry 2869 (class 1259 OID 25714)
+-- TOC entry 2879 (class 1259 OID 25714)
 -- Dependencies: 185
 -- Name: константы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3969,7 +4079,7 @@ CREATE INDEX "константы_имя_idx" ON "константы" USING btree
 
 
 --
--- TOC entry 2870 (class 1259 OID 25715)
+-- TOC entry 2880 (class 1259 OID 25715)
 -- Dependencies: 185
 -- Name: константы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3978,7 +4088,7 @@ CREATE INDEX "константы_код_idx" ON "константы" USING btree
 
 
 --
--- TOC entry 2849 (class 1259 OID 25716)
+-- TOC entry 2859 (class 1259 OID 25716)
 -- Dependencies: 170
 -- Name: контрагенты_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3987,7 +4097,7 @@ CREATE INDEX "контрагенты_имя_idx" ON "контрагенты" USI
 
 
 --
--- TOC entry 2850 (class 1259 OID 25717)
+-- TOC entry 2860 (class 1259 OID 25717)
 -- Dependencies: 170
 -- Name: контрагенты_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -3996,7 +4106,7 @@ CREATE INDEX "контрагенты_код_idx" ON "контрагенты" USI
 
 
 --
--- TOC entry 2873 (class 1259 OID 25718)
+-- TOC entry 2883 (class 1259 OID 25718)
 -- Dependencies: 188
 -- Name: материалы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4005,7 +4115,7 @@ CREATE INDEX "материалы_имя_idx" ON "материалы" USING btree
 
 
 --
--- TOC entry 2874 (class 1259 OID 25719)
+-- TOC entry 2884 (class 1259 OID 25719)
 -- Dependencies: 188
 -- Name: материалы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4014,7 +4124,7 @@ CREATE INDEX "материалы_код_idx" ON "материалы" USING btree
 
 
 --
--- TOC entry 2877 (class 1259 OID 25720)
+-- TOC entry 2887 (class 1259 OID 25720)
 -- Dependencies: 190
 -- Name: номенклатура_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4023,7 +4133,7 @@ CREATE INDEX "номенклатура_имя_idx" ON "номенклатура"
 
 
 --
--- TOC entry 2878 (class 1259 OID 25721)
+-- TOC entry 2888 (class 1259 OID 25721)
 -- Dependencies: 190
 -- Name: номенклатура_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4032,7 +4142,7 @@ CREATE INDEX "номенклатура_код_idx" ON "номенклатура"
 
 
 --
--- TOC entry 2910 (class 1259 OID 25722)
+-- TOC entry 2920 (class 1259 OID 25722)
 -- Dependencies: 214
 -- Name: нумераторы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4041,7 +4151,7 @@ CREATE INDEX "нумераторы_имя_idx" ON "нумераторы" USING b
 
 
 --
--- TOC entry 2911 (class 1259 OID 25723)
+-- TOC entry 2921 (class 1259 OID 25723)
 -- Dependencies: 214
 -- Name: нумераторы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4050,7 +4160,7 @@ CREATE INDEX "нумераторы_код_idx" ON "нумераторы" USING b
 
 
 --
--- TOC entry 2914 (class 1259 OID 25724)
+-- TOC entry 2924 (class 1259 OID 25724)
 -- Dependencies: 216
 -- Name: персонал_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4059,7 +4169,7 @@ CREATE INDEX "персонал_имя_idx" ON "персонал" USING btree ("�
 
 
 --
--- TOC entry 2915 (class 1259 OID 25725)
+-- TOC entry 2925 (class 1259 OID 25725)
 -- Dependencies: 216
 -- Name: персонал_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4068,7 +4178,7 @@ CREATE INDEX "персонал_код_idx" ON "персонал" USING btree ("�
 
 
 --
--- TOC entry 2916 (class 1259 OID 25726)
+-- TOC entry 2926 (class 1259 OID 25726)
 -- Dependencies: 218
 -- Name: прайсы_fts_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4077,7 +4187,7 @@ CREATE INDEX "прайсы_fts_idx" ON "прайсы" USING gin (fts);
 
 
 --
--- TOC entry 2919 (class 1259 OID 25727)
+-- TOC entry 2929 (class 1259 OID 25727)
 -- Dependencies: 218
 -- Name: прайсы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4086,7 +4196,7 @@ CREATE INDEX "прайсы_имя_idx" ON "прайсы" USING btree ("имя" v
 
 
 --
--- TOC entry 2920 (class 1259 OID 25728)
+-- TOC entry 2930 (class 1259 OID 25728)
 -- Dependencies: 218
 -- Name: прайсы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4095,7 +4205,7 @@ CREATE INDEX "прайсы_код_idx" ON "прайсы" USING btree ("код");
 
 
 --
--- TOC entry 2921 (class 1259 OID 25729)
+-- TOC entry 2931 (class 1259 OID 25729)
 -- Dependencies: 218
 -- Name: прайсы_код_товар; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4104,7 +4214,7 @@ CREATE INDEX "прайсы_код_товар" ON "прайсы" USING btree ("к
 
 
 --
--- TOC entry 2922 (class 1259 OID 25730)
+-- TOC entry 2932 (class 1259 OID 25730)
 -- Dependencies: 218 218
 -- Name: прайсы_код_товар_код_фирмы; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4113,7 +4223,7 @@ CREATE INDEX "прайсы_код_товар_код_фирмы" ON "прайсы
 
 
 --
--- TOC entry 2923 (class 1259 OID 25731)
+-- TOC entry 2933 (class 1259 OID 25731)
 -- Dependencies: 218
 -- Name: прайсы_код_фирмы_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4122,7 +4232,7 @@ CREATE INDEX "прайсы_код_фирмы_idx" ON "прайсы" USING btree 
 
 
 --
--- TOC entry 2924 (class 1259 OID 25732)
+-- TOC entry 2934 (class 1259 OID 25732)
 -- Dependencies: 218 218
 -- Name: прайсы_код_фирмы_имя; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4131,7 +4241,7 @@ CREATE INDEX "прайсы_код_фирмы_имя" ON "прайсы" USING btr
 
 
 --
--- TOC entry 2925 (class 1259 OID 25733)
+-- TOC entry 2935 (class 1259 OID 25733)
 -- Dependencies: 218 218
 -- Name: прайсы_код_фирмы_кодвпрайсе; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4140,7 +4250,7 @@ CREATE INDEX "прайсы_код_фирмы_кодвпрайсе" ON "прай�
 
 
 --
--- TOC entry 2926 (class 1259 OID 25734)
+-- TOC entry 2936 (class 1259 OID 25734)
 -- Dependencies: 218
 -- Name: прайсы_кодвпрайсе; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4149,7 +4259,7 @@ CREATE INDEX "прайсы_кодвпрайсе" ON "прайсы" USING btree (
 
 
 --
--- TOC entry 2929 (class 1259 OID 25735)
+-- TOC entry 2939 (class 1259 OID 25735)
 -- Dependencies: 220
 -- Name: предметы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4158,7 +4268,7 @@ CREATE INDEX "предметы_имя_idx" ON "предметы" USING btree ("�
 
 
 --
--- TOC entry 2930 (class 1259 OID 25736)
+-- TOC entry 2940 (class 1259 OID 25736)
 -- Dependencies: 220
 -- Name: предметы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4167,7 +4277,7 @@ CREATE INDEX "предметы_код_idx" ON "предметы" USING btree ("�
 
 
 --
--- TOC entry 2881 (class 1259 OID 25737)
+-- TOC entry 2891 (class 1259 OID 25737)
 -- Dependencies: 192 192 192
 -- Name: проводки_дбкод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4176,7 +4286,7 @@ CREATE INDEX "проводки_дбкод_idx" ON "проводки" USING btree
 
 
 --
--- TOC entry 2882 (class 1259 OID 25738)
+-- TOC entry 2892 (class 1259 OID 25738)
 -- Dependencies: 192 192
 -- Name: проводки_дбсчет_опер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4185,7 +4295,7 @@ CREATE INDEX "проводки_дбсчет_опер_idx" ON "проводки" 
 
 
 --
--- TOC entry 2883 (class 1259 OID 25739)
+-- TOC entry 2893 (class 1259 OID 25739)
 -- Dependencies: 192
 -- Name: проводки_доккод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4194,7 +4304,7 @@ CREATE INDEX "проводки_доккод_idx" ON "проводки" USING btr
 
 
 --
--- TOC entry 2884 (class 1259 OID 25740)
+-- TOC entry 2894 (class 1259 OID 25740)
 -- Dependencies: 192 192 192
 -- Name: проводки_доккод_опер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4203,7 +4313,7 @@ CREATE INDEX "проводки_доккод_опер_idx" ON "проводки" 
 
 
 --
--- TOC entry 2885 (class 1259 OID 25741)
+-- TOC entry 2895 (class 1259 OID 25741)
 -- Dependencies: 192 192
 -- Name: проводки_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4212,7 +4322,7 @@ CREATE INDEX "проводки_доккод_стр_idx" ON "проводки" US
 
 
 --
--- TOC entry 2886 (class 1259 OID 25742)
+-- TOC entry 2896 (class 1259 OID 25742)
 -- Dependencies: 192
 -- Name: проводки_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4221,7 +4331,7 @@ CREATE INDEX "проводки_код_idx" ON "проводки" USING btree ("�
 
 
 --
--- TOC entry 2887 (class 1259 OID 25743)
+-- TOC entry 2897 (class 1259 OID 25743)
 -- Dependencies: 192 192 192
 -- Name: проводки_кркод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4230,7 +4340,7 @@ CREATE INDEX "проводки_кркод_idx" ON "проводки" USING btree
 
 
 --
--- TOC entry 2888 (class 1259 OID 25744)
+-- TOC entry 2898 (class 1259 OID 25744)
 -- Dependencies: 192 192
 -- Name: проводки_крсчет_опер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4239,7 +4349,7 @@ CREATE INDEX "проводки_крсчет_опер_idx" ON "проводки" 
 
 
 --
--- TOC entry 2889 (class 1259 OID 25745)
+-- TOC entry 2899 (class 1259 OID 25745)
 -- Dependencies: 192 192
 -- Name: проводки_опер_номеропер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4248,7 +4358,7 @@ CREATE INDEX "проводки_опер_номеропер_idx" ON "провод
 
 
 --
--- TOC entry 2838 (class 1259 OID 25746)
+-- TOC entry 2848 (class 1259 OID 25746)
 -- Dependencies: 165 165
 -- Name: сальдо_счет_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4257,7 +4367,7 @@ CREATE INDEX "сальдо_счет_код_idx" ON "сальдо" USING btree ("
 
 
 --
--- TOC entry 2841 (class 1259 OID 25747)
+-- TOC entry 2851 (class 1259 OID 25747)
 -- Dependencies: 166
 -- Name: счета_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4266,7 +4376,7 @@ CREATE INDEX "счета_имя_idx" ON "счета" USING btree ("имя");
 
 
 --
--- TOC entry 2842 (class 1259 OID 25748)
+-- TOC entry 2852 (class 1259 OID 25748)
 -- Dependencies: 166
 -- Name: счета_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4275,7 +4385,7 @@ CREATE INDEX "счета_код_idx" ON "счета" USING btree ("код");
 
 
 --
--- TOC entry 2935 (class 1259 OID 25749)
+-- TOC entry 2945 (class 1259 OID 25749)
 -- Dependencies: 228
 -- Name: типыобъектов_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4284,7 +4394,7 @@ CREATE INDEX "типыобъектов_имя_idx" ON "типыобъектов"
 
 
 --
--- TOC entry 2936 (class 1259 OID 25750)
+-- TOC entry 2946 (class 1259 OID 25750)
 -- Dependencies: 228
 -- Name: типыобъектов_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
@@ -4293,8 +4403,8 @@ CREATE INDEX "типыобъектов_код_idx" ON "типыобъектов"
 
 
 --
--- TOC entry 2959 (class 2620 OID 25872)
--- Dependencies: 235 259
+-- TOC entry 2971 (class 2620 OID 25872)
+-- Dependencies: 235 262
 -- Name: testdeleting_адрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4302,8 +4412,8 @@ CREATE TRIGGER "testdeleting_адрес" BEFORE DELETE ON "адрес" FOR EACH 
 
 
 --
--- TOC entry 2952 (class 2620 OID 25751)
--- Dependencies: 198 259
+-- TOC entry 2964 (class 2620 OID 25751)
+-- Dependencies: 198 262
 -- Name: testdeleting_банки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4311,8 +4421,8 @@ CREATE TRIGGER "testdeleting_банки" BEFORE DELETE ON "банки" FOR EACH 
 
 
 --
--- TOC entry 2953 (class 2620 OID 25752)
--- Dependencies: 200 259
+-- TOC entry 2965 (class 2620 OID 25752)
+-- Dependencies: 200 262
 -- Name: testdeleting_банковские_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4320,8 +4430,8 @@ CREATE TRIGGER "testdeleting_банковские_счета" BEFORE DELETE ON "
 
 
 --
--- TOC entry 2943 (class 2620 OID 25753)
--- Dependencies: 168 259
+-- TOC entry 2955 (class 2620 OID 25753)
+-- Dependencies: 262 168
 -- Name: testdeleting_блокпериоды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4329,8 +4439,8 @@ CREATE TRIGGER "testdeleting_блокпериоды" BEFORE DELETE ON "блок�
 
 
 --
--- TOC entry 2954 (class 2620 OID 25754)
--- Dependencies: 259 203
+-- TOC entry 2966 (class 2620 OID 25754)
+-- Dependencies: 262 203
 -- Name: testdeleting_виды_расходов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4338,8 +4448,8 @@ CREATE TRIGGER "testdeleting_виды_расходов" BEFORE DELETE ON "вид
 
 
 --
--- TOC entry 2946 (class 2620 OID 25755)
--- Dependencies: 175 259
+-- TOC entry 2958 (class 2620 OID 25755)
+-- Dependencies: 175 262
 -- Name: testdeleting_доступ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4347,8 +4457,8 @@ CREATE TRIGGER "testdeleting_доступ" BEFORE DELETE ON "доступ" FOR E
 
 
 --
--- TOC entry 2947 (class 2620 OID 25756)
--- Dependencies: 185 259
+-- TOC entry 2959 (class 2620 OID 25756)
+-- Dependencies: 185 262
 -- Name: testdeleting_константы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4356,8 +4466,8 @@ CREATE TRIGGER "testdeleting_константы" BEFORE DELETE ON "конста�
 
 
 --
--- TOC entry 2944 (class 2620 OID 25757)
--- Dependencies: 259 170
+-- TOC entry 2956 (class 2620 OID 25757)
+-- Dependencies: 262 170
 -- Name: testdeleting_контрагенты; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4365,8 +4475,8 @@ CREATE TRIGGER "testdeleting_контрагенты" BEFORE DELETE ON "конт�
 
 
 --
--- TOC entry 2948 (class 2620 OID 25758)
--- Dependencies: 259 188
+-- TOC entry 2960 (class 2620 OID 25758)
+-- Dependencies: 188 262
 -- Name: testdeleting_материалы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4374,8 +4484,17 @@ CREATE TRIGGER "testdeleting_материалы" BEFORE DELETE ON "матери�
 
 
 --
--- TOC entry 2955 (class 2620 OID 25759)
--- Dependencies: 214 259
+-- TOC entry 2972 (class 2620 OID 26106)
+-- Dependencies: 238 262
+-- Name: testdeleting_набор1; Type: TRIGGER; Schema: public; Owner: sa
+--
+
+CREATE TRIGGER "testdeleting_набор1" BEFORE DELETE ON "набор1" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+
+
+--
+-- TOC entry 2967 (class 2620 OID 25759)
+-- Dependencies: 262 214
 -- Name: testdeleting_нумераторы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4383,8 +4502,8 @@ CREATE TRIGGER "testdeleting_нумераторы" BEFORE DELETE ON "нумер�
 
 
 --
--- TOC entry 2956 (class 2620 OID 25760)
--- Dependencies: 216 259
+-- TOC entry 2968 (class 2620 OID 25760)
+-- Dependencies: 262 216
 -- Name: testdeleting_персонал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4392,8 +4511,8 @@ CREATE TRIGGER "testdeleting_персонал" BEFORE DELETE ON "персона�
 
 
 --
--- TOC entry 2941 (class 2620 OID 25761)
--- Dependencies: 258 165
+-- TOC entry 2953 (class 2620 OID 25761)
+-- Dependencies: 261 165
 -- Name: testdeleting_сальдо; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4401,8 +4520,8 @@ CREATE TRIGGER "testdeleting_сальдо" BEFORE DELETE ON "сальдо" FOR E
 
 
 --
--- TOC entry 2958 (class 2620 OID 25762)
--- Dependencies: 259 228
+-- TOC entry 2970 (class 2620 OID 25762)
+-- Dependencies: 262 228
 -- Name: testdeleting_типыобъектов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4410,8 +4529,8 @@ CREATE TRIGGER "testdeleting_типыобъектов" BEFORE DELETE ON "тип�
 
 
 --
--- TOC entry 2957 (class 2620 OID 25763)
--- Dependencies: 261 218
+-- TOC entry 2969 (class 2620 OID 25763)
+-- Dependencies: 264 218
 -- Name: tsvectorupdate_прайсы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4419,8 +4538,8 @@ CREATE TRIGGER "tsvectorupdate_прайсы" BEFORE INSERT OR UPDATE ON "пра�
 
 
 --
--- TOC entry 2949 (class 2620 OID 25764)
--- Dependencies: 192 262
+-- TOC entry 2961 (class 2620 OID 25764)
+-- Dependencies: 265 192
 -- Name: вставитьпроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4428,8 +4547,8 @@ CREATE TRIGGER "вставитьпроводку" BEFORE INSERT ON "провод
 
 
 --
--- TOC entry 2942 (class 2620 OID 25765)
--- Dependencies: 165 263
+-- TOC entry 2954 (class 2620 OID 25765)
+-- Dependencies: 165 266
 -- Name: считатьконечноесальдо; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4437,8 +4556,8 @@ CREATE TRIGGER "считатьконечноесальдо" BEFORE INSERT OR UPD
 
 
 --
--- TOC entry 2950 (class 2620 OID 25766)
--- Dependencies: 264 192
+-- TOC entry 2962 (class 2620 OID 25766)
+-- Dependencies: 192 267
 -- Name: считатьпроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4446,8 +4565,8 @@ CREATE TRIGGER "считатьпроводку" BEFORE UPDATE ON "проводк
 
 
 --
--- TOC entry 2945 (class 2620 OID 25767)
--- Dependencies: 265 172
+-- TOC entry 2957 (class 2620 OID 25767)
+-- Dependencies: 172 268
 -- Name: удалитьдокумент; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4455,8 +4574,8 @@ CREATE TRIGGER "удалитьдокумент" BEFORE DELETE ON "докумен
 
 
 --
--- TOC entry 2951 (class 2620 OID 25768)
--- Dependencies: 192 255
+-- TOC entry 2963 (class 2620 OID 25768)
+-- Dependencies: 258 192
 -- Name: удалитьпроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4464,7 +4583,7 @@ CREATE TRIGGER "удалитьпроводку" BEFORE DELETE ON "проводк
 
 
 --
--- TOC entry 2990 (class 0 OID 0)
+-- TOC entry 3004 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -4476,8 +4595,8 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- TOC entry 2992 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 3006 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: sp_calcaccoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4488,8 +4607,8 @@ GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character varying, cdate1 character 
 
 
 --
--- TOC entry 2993 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 3007 (class 0 OID 0)
+-- Dependencies: 252
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4500,8 +4619,8 @@ GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character 
 
 
 --
--- TOC entry 2994 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 3008 (class 0 OID 0)
+-- Dependencies: 260
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4512,8 +4631,8 @@ GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cd
 
 
 --
--- TOC entry 2995 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 3009 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4524,8 +4643,8 @@ GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character var
 
 
 --
--- TOC entry 2996 (class 0 OID 0)
--- Dependencies: 250
+-- TOC entry 3010 (class 0 OID 0)
+-- Dependencies: 253
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4536,8 +4655,8 @@ GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname cha
 
 
 --
--- TOC entry 2997 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 3011 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: sp_deletedoc(integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4548,8 +4667,8 @@ GRANT ALL ON FUNCTION sp_deletedoc(ndocid integer) TO bookkeeper;
 
 
 --
--- TOC entry 2998 (class 0 OID 0)
--- Dependencies: 252
+-- TOC entry 3012 (class 0 OID 0)
+-- Dependencies: 255
 -- Name: sp_deletedocstr(integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4560,8 +4679,8 @@ GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO bookke
 
 
 --
--- TOC entry 2999 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 3013 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: sp_insertdoc(integer, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4572,8 +4691,8 @@ GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO bo
 
 
 --
--- TOC entry 3000 (class 0 OID 0)
--- Dependencies: 254
+-- TOC entry 3014 (class 0 OID 0)
+-- Dependencies: 257
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4584,8 +4703,8 @@ GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam cha
 
 
 --
--- TOC entry 3001 (class 0 OID 0)
--- Dependencies: 256
+-- TOC entry 3015 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: sp_islockedperiod(character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4596,8 +4715,8 @@ GRANT ALL ON FUNCTION sp_islockedperiod(cdate character varying) TO bookkeeper;
 
 
 --
--- TOC entry 3002 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 3016 (class 0 OID 0)
+-- Dependencies: 270
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4608,7 +4727,7 @@ GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictn
 
 
 --
--- TOC entry 3003 (class 0 OID 0)
+-- TOC entry 3017 (class 0 OID 0)
 -- Dependencies: 165
 -- Name: сальдо; Type: ACL; Schema: public; Owner: sa
 --
@@ -4620,7 +4739,7 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "сальдо" TO bookkeeper;
 
 
 --
--- TOC entry 3004 (class 0 OID 0)
+-- TOC entry 3018 (class 0 OID 0)
 -- Dependencies: 166
 -- Name: счета; Type: ACL; Schema: public; Owner: sa
 --
@@ -4632,7 +4751,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "счета" TO bookkeeper;
 
 
 --
--- TOC entry 3005 (class 0 OID 0)
+-- TOC entry 3019 (class 0 OID 0)
 -- Dependencies: 167
 -- Name: vw_баланс; Type: ACL; Schema: public; Owner: sa
 --
@@ -4644,7 +4763,7 @@ GRANT SELECT ON TABLE "vw_баланс" TO bookkeeper;
 
 
 --
--- TOC entry 3006 (class 0 OID 0)
+-- TOC entry 3020 (class 0 OID 0)
 -- Dependencies: 168
 -- Name: блокпериоды; Type: ACL; Schema: public; Owner: sa
 --
@@ -4656,7 +4775,7 @@ GRANT SELECT,UPDATE ON TABLE "блокпериоды" TO bookkeeper;
 
 
 --
--- TOC entry 3007 (class 0 OID 0)
+-- TOC entry 3021 (class 0 OID 0)
 -- Dependencies: 169
 -- Name: vw_блокпериоды; Type: ACL; Schema: public; Owner: sa
 --
@@ -4668,7 +4787,7 @@ GRANT SELECT ON TABLE "vw_блокпериоды" TO bookkeeper;
 
 
 --
--- TOC entry 3008 (class 0 OID 0)
+-- TOC entry 3022 (class 0 OID 0)
 -- Dependencies: 170
 -- Name: контрагенты; Type: ACL; Schema: public; Owner: sa
 --
@@ -4680,7 +4799,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "контрагенты" TO bookkeepe
 
 
 --
--- TOC entry 3009 (class 0 OID 0)
+-- TOC entry 3023 (class 0 OID 0)
 -- Dependencies: 171
 -- Name: vw_грузополучатели; Type: ACL; Schema: public; Owner: sa
 --
@@ -4692,7 +4811,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "vw_грузополучатели" T
 
 
 --
--- TOC entry 3010 (class 0 OID 0)
+-- TOC entry 3024 (class 0 OID 0)
 -- Dependencies: 172
 -- Name: документы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4704,7 +4823,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "документы" TO bookkeeper;
 
 
 --
--- TOC entry 3011 (class 0 OID 0)
+-- TOC entry 3025 (class 0 OID 0)
 -- Dependencies: 174
 -- Name: vw_пользователи; Type: ACL; Schema: public; Owner: sa
 --
@@ -4716,7 +4835,7 @@ GRANT SELECT ON TABLE "vw_пользователи" TO test;
 
 
 --
--- TOC entry 3012 (class 0 OID 0)
+-- TOC entry 3026 (class 0 OID 0)
 -- Dependencies: 175
 -- Name: доступ; Type: ACL; Schema: public; Owner: sa
 --
@@ -4727,7 +4846,7 @@ GRANT ALL ON TABLE "доступ" TO sa;
 
 
 --
--- TOC entry 3013 (class 0 OID 0)
+-- TOC entry 3027 (class 0 OID 0)
 -- Dependencies: 177
 -- Name: vw_доступ_к_оборотам; Type: ACL; Schema: public; Owner: sa
 --
@@ -4739,7 +4858,7 @@ GRANT SELECT ON TABLE "vw_доступ_к_оборотам" TO PUBLIC;
 
 
 --
--- TOC entry 3014 (class 0 OID 0)
+-- TOC entry 3028 (class 0 OID 0)
 -- Dependencies: 178
 -- Name: vw_доступ_к_сальдо; Type: ACL; Schema: public; Owner: sa
 --
@@ -4751,7 +4870,7 @@ GRANT SELECT ON TABLE "vw_доступ_к_сальдо" TO PUBLIC;
 
 
 --
--- TOC entry 3015 (class 0 OID 0)
+-- TOC entry 3029 (class 0 OID 0)
 -- Dependencies: 179
 -- Name: справочники; Type: ACL; Schema: public; Owner: sa
 --
@@ -4763,7 +4882,7 @@ GRANT SELECT ON TABLE "справочники" TO bookkeeper;
 
 
 --
--- TOC entry 3016 (class 0 OID 0)
+-- TOC entry 3030 (class 0 OID 0)
 -- Dependencies: 180
 -- Name: vw_доступ_к_справочникам; Type: ACL; Schema: public; Owner: sa
 --
@@ -4775,7 +4894,7 @@ GRANT SELECT ON TABLE "vw_доступ_к_справочникам" TO PUBLIC;
 
 
 --
--- TOC entry 3017 (class 0 OID 0)
+-- TOC entry 3031 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: топер; Type: ACL; Schema: public; Owner: sa
 --
@@ -4787,7 +4906,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "топер" TO bookkeeper;
 
 
 --
--- TOC entry 3018 (class 0 OID 0)
+-- TOC entry 3032 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: vw_доступ_к_топер; Type: ACL; Schema: public; Owner: sa
 --
@@ -4799,7 +4918,7 @@ GRANT SELECT ON TABLE "vw_доступ_к_топер" TO PUBLIC;
 
 
 --
--- TOC entry 3019 (class 0 OID 0)
+-- TOC entry 3033 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: vw_журнал; Type: ACL; Schema: public; Owner: sa
 --
@@ -4810,7 +4929,7 @@ GRANT ALL ON TABLE "vw_журнал" TO sa;
 
 
 --
--- TOC entry 3020 (class 0 OID 0)
+-- TOC entry 3034 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: константы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4821,7 +4940,7 @@ GRANT ALL ON TABLE "константы" TO sa;
 
 
 --
--- TOC entry 3021 (class 0 OID 0)
+-- TOC entry 3035 (class 0 OID 0)
 -- Dependencies: 186
 -- Name: vw_константы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4834,7 +4953,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "vw_константы" TO bookkeeper
 
 
 --
--- TOC entry 3022 (class 0 OID 0)
+-- TOC entry 3036 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: vw_контрагенты; Type: ACL; Schema: public; Owner: sa
 --
@@ -4846,7 +4965,7 @@ GRANT ALL ON TABLE "vw_контрагенты" TO bookkeeper;
 
 
 --
--- TOC entry 3023 (class 0 OID 0)
+-- TOC entry 3037 (class 0 OID 0)
 -- Dependencies: 188
 -- Name: материалы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4858,7 +4977,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "материалы" TO bookkeeper;
 
 
 --
--- TOC entry 3024 (class 0 OID 0)
+-- TOC entry 3038 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: vw_материалы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4870,7 +4989,7 @@ GRANT ALL ON TABLE "vw_материалы" TO bookkeeper;
 
 
 --
--- TOC entry 3025 (class 0 OID 0)
+-- TOC entry 3039 (class 0 OID 0)
 -- Dependencies: 190
 -- Name: номенклатура; Type: ACL; Schema: public; Owner: sa
 --
@@ -4882,7 +5001,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "номенклатура" TO bookkee
 
 
 --
--- TOC entry 3026 (class 0 OID 0)
+-- TOC entry 3040 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: vw_номенклатура; Type: ACL; Schema: public; Owner: sa
 --
@@ -4894,7 +5013,7 @@ GRANT ALL ON TABLE "vw_номенклатура" TO bookkeeper;
 
 
 --
--- TOC entry 3027 (class 0 OID 0)
+-- TOC entry 3041 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: проводки; Type: ACL; Schema: public; Owner: sa
 --
@@ -4906,7 +5025,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "проводки" TO bookkeeper;
 
 
 --
--- TOC entry 3028 (class 0 OID 0)
+-- TOC entry 3042 (class 0 OID 0)
 -- Dependencies: 194
 -- Name: vw_справочники_со_столбцами; Type: ACL; Schema: public; Owner: sa
 --
@@ -4918,7 +5037,7 @@ GRANT SELECT ON TABLE "vw_справочники_со_столбцами" TO boo
 
 
 --
--- TOC entry 3029 (class 0 OID 0)
+-- TOC entry 3043 (class 0 OID 0)
 -- Dependencies: 195
 -- Name: столбцы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4930,7 +5049,7 @@ GRANT SELECT ON TABLE "столбцы" TO bookkeeper;
 
 
 --
--- TOC entry 3030 (class 0 OID 0)
+-- TOC entry 3044 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: vw_столбцы; Type: ACL; Schema: public; Owner: sa
 --
@@ -4942,7 +5061,7 @@ GRANT SELECT ON TABLE "vw_столбцы" TO bookkeeper;
 
 
 --
--- TOC entry 3031 (class 0 OID 0)
+-- TOC entry 3045 (class 0 OID 0)
 -- Dependencies: 233
 -- Name: vw_счета; Type: ACL; Schema: public; Owner: sa
 --
@@ -4954,7 +5073,7 @@ GRANT SELECT ON TABLE "vw_счета" TO bookkeeper;
 
 
 --
--- TOC entry 3032 (class 0 OID 0)
+-- TOC entry 3046 (class 0 OID 0)
 -- Dependencies: 197
 -- Name: vw_топер; Type: ACL; Schema: public; Owner: sa
 --
@@ -4966,7 +5085,7 @@ GRANT SELECT ON TABLE "vw_топер" TO bookkeeper;
 
 
 --
--- TOC entry 3033 (class 0 OID 0)
+-- TOC entry 3047 (class 0 OID 0)
 -- Dependencies: 235
 -- Name: адрес; Type: ACL; Schema: public; Owner: sa
 --
@@ -4977,7 +5096,7 @@ GRANT ALL ON TABLE "адрес" TO sa;
 
 
 --
--- TOC entry 3036 (class 0 OID 0)
+-- TOC entry 3050 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: банки; Type: ACL; Schema: public; Owner: sa
 --
@@ -4989,7 +5108,7 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "банки" TO bookkeeper;
 
 
 --
--- TOC entry 3039 (class 0 OID 0)
+-- TOC entry 3053 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: банковские_счета; Type: ACL; Schema: public; Owner: sa
 --
@@ -5001,7 +5120,7 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "банковские_счета" TO bookkee
 
 
 --
--- TOC entry 3044 (class 0 OID 0)
+-- TOC entry 3058 (class 0 OID 0)
 -- Dependencies: 203
 -- Name: виды_расходов; Type: ACL; Schema: public; Owner: sa
 --
@@ -5013,7 +5132,18 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "виды_расходов" TO bookke
 
 
 --
--- TOC entry 3063 (class 0 OID 0)
+-- TOC entry 3075 (class 0 OID 0)
+-- Dependencies: 238
+-- Name: набор1; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "набор1" FROM PUBLIC;
+REVOKE ALL ON TABLE "набор1" FROM sa;
+GRANT ALL ON TABLE "набор1" TO sa;
+
+
+--
+-- TOC entry 3080 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: нумераторы; Type: ACL; Schema: public; Owner: sa
 --
@@ -5025,7 +5155,7 @@ GRANT SELECT,UPDATE ON TABLE "нумераторы" TO bookkeeper;
 
 
 --
--- TOC entry 3066 (class 0 OID 0)
+-- TOC entry 3083 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: персонал; Type: ACL; Schema: public; Owner: sa
 --
@@ -5037,7 +5167,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "персонал" TO bookkeeper;
 
 
 --
--- TOC entry 3069 (class 0 OID 0)
+-- TOC entry 3086 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: прайсы; Type: ACL; Schema: public; Owner: sa
 --
@@ -5049,7 +5179,7 @@ GRANT SELECT ON TABLE "прайсы" TO bookkeeper;
 
 
 --
--- TOC entry 3072 (class 0 OID 0)
+-- TOC entry 3089 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: предметы; Type: ACL; Schema: public; Owner: sa
 --
@@ -5061,7 +5191,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "предметы" TO bookkeeper;
 
 
 --
--- TOC entry 3085 (class 0 OID 0)
+-- TOC entry 3102 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: типыобъектов; Type: ACL; Schema: public; Owner: sa
 --
@@ -5074,7 +5204,7 @@ GRANT SELECT ON TABLE "типыобъектов" TO bookkeeper;
 
 
 --
--- TOC entry 3090 (class 0 OID 0)
+-- TOC entry 3107 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: файлы; Type: ACL; Schema: public; Owner: sa
 --
@@ -5085,7 +5215,7 @@ GRANT ALL ON TABLE "файлы" TO sa;
 GRANT SELECT ON TABLE "файлы" TO PUBLIC;
 
 
--- Completed on 2012-01-18 19:02:37 MSK
+-- Completed on 2012-01-20 20:21:06 MSK
 
 --
 -- PostgreSQL database dump complete

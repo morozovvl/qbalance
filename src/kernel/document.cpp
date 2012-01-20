@@ -51,13 +51,19 @@ Document::Document(int oper, Documents* par)
         }
         else
         {
-            dict = dictionaries->getDictionary(dictsList.at(i).name);
+            dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
             if (dict != 0)
             {
-                dict->setPrototypeName(dictsList.at(i).prototype);
+//                dict->setPrototypeName(dictsList.at(i).prototype);
                 if (dict->isSet())              // если это набор
+                {
                     dict->setAutoAdd(true);     // ... то для дебетовых наборов - автоматическое добавление
-                dict->setCanShow(true);
+                    dict->setCanShow(false);
+                }
+                else
+                {
+                    dict->setCanShow(true);
+                }
                 dict->setConst(dictsList.at(i).isConst);
             }
         }
@@ -289,7 +295,7 @@ void Document::setTableModel()
     tableModel->setTable(tableName);
     tableModel->setBlockUpdate(!isUpdateable());
     QList<ToperType> topersList;
-    selectStatement = DbFactory->getDocumentSqlSelectStatement(operNumber, &topersList, &columnsProperties, &prv1);
+    selectStatement = DbFactory->getDocumentSqlSelectStatement(operNumber, dictionaries, &topersList, &columnsProperties, &prv1);
     if (selectStatement.size() > 0)
     {
         tableModel->setSelectStatement(selectStatement);
@@ -340,7 +346,11 @@ bool Document::showNextDict()
                 // Заблокируем все справочники, у которых прототип совпадает
                 foreach (QString dName, dicts->keys())
                 {
-                    if (dName != dictName && (dName == dict->getPrototypeName() || dicts->value(dName)->getPrototypeName() == dict->getPrototypeName()))
+                    if (dName != dictName &&
+                        dict->getPrototypeName().size() > 0 &&
+                        (dName == dict->getPrototypeName() ||
+                         dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
+                        )
                     {
                         dicts->value(dName)->setId(dict->getId());
                         dicts->value(dName)->setLock(true);

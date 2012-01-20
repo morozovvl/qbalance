@@ -391,7 +391,7 @@ void WizardOperation::getData()
 
      topersList.clear();
      QMap<int, FieldType> flds;
-     db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
+     db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
      getFieldsTable(flds, fieldsTable, &fields);
      sortHeaders(headers, &fields);
      db->getColumnsProperties(&flds, db->getObjectName("документы"), oper);
@@ -608,7 +608,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
             topersList.append(toperT);
         }
         QMap<int, FieldType> flds;
-        db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
+        db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
         getFieldsTable(flds, fieldsTable, &fields);
         prvTableChanged = false;
     }

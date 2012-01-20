@@ -7,7 +7,8 @@
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
-    dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+    db = TApplication::exemplar()->getDBFactory();
+    dictionariesProperties = db->getDictionariesProperties();
     lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
     lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
     lDeleteable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
@@ -15,9 +16,11 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_сп
     lPrintable = false;
 }
 
-Dictionary* Dictionaries::getDictionary(QString dictName) {
+Dictionary* Dictionaries::getDictionary(QString dictName, int deep) {
+    if (dictName.size() == 0)
+        return 0;
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addDictionary(dictName, 0))
+        if (!addDictionary(dictName, deep))
             return 0;
     }
     return dictionaries[dictName];
@@ -25,6 +28,8 @@ Dictionary* Dictionaries::getDictionary(QString dictName) {
 
 
 Saldo* Dictionaries::getSaldo(QString acc, QString dictName) {
+    if (acc.size() == 0)
+        return 0;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc, dictName))
@@ -35,10 +40,22 @@ Saldo* Dictionaries::getSaldo(QString acc, QString dictName) {
 
 
 bool Dictionaries::addDictionary(QString dictName, int deep) {
+    if (dictName.size() == 0)
+        return false;
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict;
         dict = new Dictionary(dictName, this);
+        dict->setDictionaries(this);
         if (dict->open(deep)) {
+            if (dictListDict != NULL)
+            {
+                QString sprName = db->getObjectName("справочники.имя");
+                dictListDict->query(QString("%1='%2'").arg(sprName).arg(dictName));
+                QString prototype = dictListDict->getValue(db->getObjectName("справочники.прототип"), 0).toString();
+                if (prototype.size() > 0)
+                    dict->setPrototypeName(prototype);
+            }
+
             dictionaries.insert(dictName, dict);
             dict->setDictionaries(this);
             return true;
@@ -48,9 +65,12 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
 }
 
 bool Dictionaries::addSaldo(QString acc, QString dictName) {
+    if (acc.size() == 0)
+        return false;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {
         Saldo* saldo = new Saldo(acc, dictName);
+        saldo->setDictionaries(this);
         if (saldo->open()) {
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
@@ -62,6 +82,8 @@ bool Dictionaries::addSaldo(QString acc, QString dictName) {
 
 
 void Dictionaries::removeDictionary(QString dictName) {
+    if (dictName.size() == 0)
+        return;
     if (dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict = getDictionary(dictName);
         dict->close();
@@ -122,6 +144,8 @@ bool Dictionaries::remove()
 
 bool Dictionaries::open() {
     if (Essence::open()) {
+        dictListDict = new Dictionary(db->getObjectName("справочники"), this);
+        dictListDict->open();
         initForm();
         // formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
         return true;

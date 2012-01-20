@@ -10,8 +10,32 @@
 #include "../definitions.h"
 
 
+WizardDictionary* WizardDictionary::Exemplar   = NULL;
+
+
 QString showTypesForm()
 {
+    FormGrid* typeForm = TApplication::exemplar()->getDictionaries()->getDictionary(TApplication::exemplar()->getDBFactory()->getObjectName("vw_types"))->getForm();
+    typeForm->exec();
+    if (typeForm->selected())
+    {
+        int length = typeForm->getParent()->getValue(TApplication::exemplar()->getDBFactory()->getObjectName("vw_types.длина")).toInt();
+        QTableWidgetItem* item = WizardDictionary::exemplar()->fieldsTable->item(WizardDictionary::exemplar()->fieldsTable->currentRow(), 2);
+        Qt::ItemFlags flags = item->flags();
+        if (length < 0)
+        {
+            flags |= Qt::ItemIsSelectable;
+            flags |= Qt::ItemIsEnabled;
+        }
+        else
+        {
+            flags &= (~Qt::ItemIsSelectable);
+            flags &= (~Qt::ItemIsEnabled);
+        }
+        item->setFlags(flags);
+        item->setText("");
+        return typeForm->getParent()->getValue(TApplication::exemplar()->getDBFactory()->getObjectName("vw_types.тип")).toString();
+    }
     return "";
 }
 
@@ -26,6 +50,16 @@ WizardDictionary::WizardDictionary(bool addDict): WizardForm()
     tableFormName = new QLineEdit();
     db = TApplication::exemplar()->getDBFactory();
     chbMenu = new QCheckBox(formWidget);
+    if (!Exemplar)
+    {
+        Exemplar = this;
+    }
+}
+
+
+WizardDictionary* WizardDictionary::exemplar()
+{
+    return Exemplar;
 }
 
 
@@ -126,8 +160,8 @@ void WizardDictionary::getData()
 
         FieldType field;
         field.name = "код";
-        field.type = "integer";
-        field.length = 32;
+        field.type = "int4";
+        field.length = 0;
         field.precision = 0;
         field.header = "Код";
         field.number = 1;
@@ -201,7 +235,7 @@ bool WizardDictionary::execute()
         }
     }
     // Получим код справочника, с которым работаем
-    int tableId = db->getDictionaryId(table);
+    int tableId = db->getDictionaryId(tableName->text());
     if (tableId > 0) {
         // Установим пользовательские наименования справочника
         if (!db->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
@@ -242,7 +276,8 @@ bool WizardDictionary::execute()
             {   // Если указана длина
                 length = QString("(%1%2)").arg(nLength).arg(precision);
             }
-            QString type = QString("%1%2").arg(fieldsTable->item(i, 1)->text().trimmed()).arg(length);
+            QString type = fieldsTable->item(i, 1)->text().trimmed();
+            type = QString("%1%2").arg(type).arg(length);
             if (i < fields.count())
             {   // Если мы просматриваем поля таблицы, которые уже были
                 if (QString::compare(fieldName, fields.value(i).name) != 0)

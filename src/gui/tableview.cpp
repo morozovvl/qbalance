@@ -155,7 +155,6 @@ void TableView::setColumnsDelegates()
 {
     foreach (int fld, columns->keys())
     {
-//        if (!columns->value(fld).readOnly && visibleColumns.contains(columns->value(fld).name))
         if (visibleColumns.contains(columns->value(fld).name))
         {
             if (columns->value(fld).type.toUpper() == "NUMERIC" ||
@@ -164,26 +163,23 @@ void TableView::setColumnsDelegates()
                 MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parentWidget);
                 numericDelegate->setLength(columns->value(fld).length);
                 numericDelegate->setPrecision(columns->value(fld).precision);
-                numericDelegate->setReadOnly(columns->value(fld).readOnly);
                 connect(numericDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                setItemDelegateForColumn(fld, numericDelegate);
                 numericDelegate->setReadOnly(columns->value(fld).readOnly);
+                setItemDelegateForColumn(fld, numericDelegate);
             } else if (columns->value(fld).type.toUpper() == "BOOLEAN")
                 {
                     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
-                    booleanDelegate->setReadOnly(columns->value(fld).readOnly);
                     connect(booleanDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                    setItemDelegateForColumn(fld, booleanDelegate);
                     booleanDelegate->setReadOnly(columns->value(fld).readOnly);
+                    setItemDelegateForColumn(fld, booleanDelegate);
                 } else
                 {
                 if (columns->value(fld).type.toUpper() == "CHARACTER" ||
                     columns->value(fld).type.toUpper() == "CHARACTER VARYING") {
                     MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parentWidget);
-                    textDelegate->setReadOnly(columns->value(fld).readOnly);
                     connect(textDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                    setItemDelegateForColumn(fld, textDelegate);
                     textDelegate->setReadOnly(columns->value(fld).readOnly);
+                    setItemDelegateForColumn(fld, textDelegate);
                 }
             }
         }

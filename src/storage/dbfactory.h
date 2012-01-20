@@ -7,12 +7,11 @@
 #include <QVariantList>
 #include <QByteArray>
 #include <QList>
-//#include "mysqlrelationaltablemodel.h"
-//#include "../kernel/dictionary.h"
 
 class TApplication;
 class MySqlRelationalTableModel;
 class Dictionary;
+class Dictionaries;
 
 enum FileType           // Типы данных, которые хранятся в таблице "файлы"
 {
@@ -143,6 +142,7 @@ public:
     void setToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList);
 
     QString getDocumentSqlSelectStatement(int oper,
+                                          Dictionaries* dictionaries,
                                           QList<ToperType>*,
                                           QMap<int, FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
@@ -166,7 +166,6 @@ public:
     bool setToperSignleString(int, bool);
     QString getToperNumerator(int);
     bool setToperNumerator(int, QString);
-
 
 private:
     QSqlDatabase*           db;

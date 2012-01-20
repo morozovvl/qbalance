@@ -15,7 +15,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     lIsConst = false;
     lAutoSelect = false;
     lAutoAdd = false;
-    dictionaries = 0;
+    dictionaries = TApplication::exemplar()->getDictionaries();
     QSqlRecord tableProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
     {
@@ -46,17 +46,36 @@ bool Dictionary::add() {
         QVector<sParam> searchParameters;
         parameters->getParameters(searchParameters);
         bool lAddDict = true;
-        for (int i = 0; i < searchParameters.size(); i++) {
-            if (searchParameters[i].table == getTableName()) {
-                fields << searchParameters[i].field;
-                values << searchParameters[i].value;
-                }
-            else {
-                if (searchParameters[i].value.toString().size() > 0) {
-                    Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(searchParameters[i].table);
-                    if (dict != 0 && !dict->getValue(TApplication::nameFieldName()).toString().contains(searchParameters[i].value.toString().trimmed(), Qt::CaseInsensitive))
-                        lAddDict = false;
+        if (searchParameters.size() > 0)
+        {
+            for (int i = 0; i < searchParameters.size(); i++) {
+                if (searchParameters[i].table == getTableName()) {
+                    fields << searchParameters[i].field;
+                    values << searchParameters[i].value;
                     }
+                else {
+                    if (searchParameters[i].value.toString().size() > 0) {
+                        Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(searchParameters[i].table);
+                        if (dict != 0 && !dict->getValue(TApplication::nameFieldName()).toString().contains(searchParameters[i].value.toString().trimmed(), Qt::CaseInsensitive))
+                            lAddDict = false;
+                        }
+                }
+            }
+        }
+        else
+        {
+            QStringList fieldList = getFieldsList();
+            for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
+                QString fieldName = fieldList.at(i).toLower();
+                if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                    QString dictName = fieldName;
+                    dictName.remove(0, 4);
+                    Dictionary* dict = dictionaries->getDictionary(dictName);
+                    if (dict != NULL) {                      // Если удалось открыть справочник
+                        fields << fieldName;
+                        values << dict->getId();
+                    }
+                }
             }
         }
         if (lAddDict)
@@ -134,6 +153,7 @@ void Dictionary::setForm() {
 bool Dictionary::open(int deep) {
     if (lSelectable) {
         if (Essence::open()) {     // Откроем этот справочник
+            // Найдем имя прототипа для этого справочника
             QStringList fieldList = getFieldsList();
             if (deep > 0) {              // Если нужно открыть подсправочники
                 int columnCount = fieldList.count();
@@ -141,9 +161,8 @@ bool Dictionary::open(int deep) {
                     QString name = fieldList.at(i).toLower();
                     if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
                         name.remove(0, 4);                      // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                        TApplication::exemplar()->getDictionaries()->addDictionary(name, deep--);
-                        Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(name);
-                        if (dict != NULL) {                 // Если удалось открыть справочник
+                        Dictionary* dict = dictionaries->getDictionary(name, deep--);
+                        if (dict != NULL) {                      // Если удалось открыть справочник
                             QStringList relFieldList = dict->getFieldsList();
                             tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
                             for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
@@ -191,3 +210,39 @@ bool Dictionary::open(int deep) {
     return false;
 }
 
+
+qulonglong Dictionary::getId(int row)
+{
+    if (!isLocked() && isSet())
+    {
+        QString filter;
+        QStringList fieldList = getFieldsList();
+        for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
+            QString fieldName = fieldList.at(i).toLower();
+            if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                QString dictName = fieldName;
+                dictName.remove(0, 4);
+                Dictionary* dict = dictionaries->getDictionary(dictName);
+                if (dict != NULL) {                      // Если удалось открыть справочник
+                    if (filter.size() > 0)
+                        filter.append(" AND ");
+                    filter.append(QString("%1=%2").arg(fieldName).arg(dict->getId()));
+                }
+            }
+        }
+        query(filter);
+        qulonglong result = Essence::getId(0);
+        if (result == 0)
+        {
+            if (add())
+            {
+                query(filter);
+                return Essence::getId(0);
+            }
+            return 0;
+        }
+        return result;
+
+    }
+    return Essence::getId(row);
+}

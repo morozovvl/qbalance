@@ -271,11 +271,11 @@ void FormGrid::showPhoto()
 
 void FormGrid::calculate(QWidget*, QAbstractItemDelegate::EndEditHint hint)
 {
-    if (hint == QAbstractItemDelegate::SubmitModelCache)
-    {
+//    if (hint == QAbstractItemDelegate::SubmitModelCache)
+//    {
         parent->setOldValue(((MyItemDelegate*)sender())->getOldValue());
         parent->calculate(getCurrentIndex());
-    }
+//    }
 }
 
 

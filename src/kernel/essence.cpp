@@ -62,15 +62,11 @@ bool Essence::calculate(const QModelIndex &index)
     {
         currentFieldName = tableModel->getFieldName(index.column());
         lResult = scriptEngine->evaluate();
-        if (lResult)
-        {
-            lResult = tableModel->submit(index);
-        }
-        else
-        {
-            tableModel->revertAll();
-        }
     }
+    if (lResult)
+        lResult = tableModel->submit(index);
+    else
+        tableModel->revertAll();
     return lResult;
 }
 

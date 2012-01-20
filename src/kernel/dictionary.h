@@ -22,6 +22,8 @@ public:
 // Функции для работы с моделью данных
     virtual bool add();
     virtual bool remove();
+    Q_INVOKABLE virtual qulonglong      getId(int row = -1);
+
 
 // Функции для работы справочника в составе документа
 // Используются в момент добавления новых записей в документ

@@ -31,7 +31,7 @@ public:
     void setAlignment(Qt::Alignment align) { alignment = align; }
     Qt::Alignment getAlignment() { return alignment; }
     virtual QVariant convertType(QVariant var) { return var; }
-    void        setReadOnly(bool val) { readOnly = val; }
+    void        setReadOnly(bool val);
     QVariant    getOldValue() { return oldValue; }
 protected:
     QString                 columnMask;
