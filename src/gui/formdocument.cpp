@@ -6,6 +6,7 @@
 #include "../kernel/essence.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/documents.h"
+#include "../storage/documenttablemodel.h"
 
 #define LABEL_ITOG     QObject::trUtf8("Итого:")
 #define LABEL_DATE     QObject::trUtf8("Дата:")
@@ -134,6 +135,16 @@ void FormDocument::hide()
 {
     getParent()->getParent()->getForm()->getForm()->activateWindow();
     FormGrid::hide();
+}
+
+
+void FormDocument::add()
+{
+    FormGrid::add();
+    getParent()->getEventAfterAddString();
+    QModelIndex index = getCurrentIndex();
+    if (index.row() >= 0)
+        ((DocumentTableModel*)getParent()->getTableModel())->submit(index);
 }
 
 

@@ -96,6 +96,7 @@ public:
     bool removeDictionary(QString);
     QStringList getFieldsList(QMap<int, FieldType>*);
     QStringList getFieldsList(QString tableName);
+    bool isSet(QString tableName);
     void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
     void getColumnsProperties(QMap<int, FieldType>*, QString, int = 0);
     void getColumnsProperties(QList<FieldType>*, QString);
@@ -157,15 +158,26 @@ public:
     bool appendColumnHeader(int, QString, QString, int = 999);
     bool updateColumnHeader(int, QString, QString, int = 0);
     bool setTableColumnHeaderOrder(int, QString, QString, int);
-    bool deleteToper(int operNumber);               // Удаляет записи о типовой операции только в таблице типовых операций
-    bool deleteAllToperInfo(int operNumber);        // Удаляет всю информацию о типовой операции, если по ней уже не созданы документы
-    bool addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, bool dbVisible, bool dbSalVisible, QString crAcc, bool crAccConst, bool crVisible, bool crSalVisible, QString itog);
-    int getNewToper();
-    bool createNewToperPermission(QString, bool);
-    bool getToperSingleString(int);
-    bool setToperSignleString(int, bool);
-    QString getToperNumerator(int);
-    bool setToperNumerator(int, QString);
+
+    // Функции для мастера создания новый (редактирования старых) типовых операций
+    bool deleteToper(int operNumber);                           // Удаляет записи о типовой операции в таблице типовых операций
+    bool deleteAllToperInfo(int operNumber);                    // Удаляет всю информацию о типовой операции, если по ней уже не созданы документы
+    bool addToperPrv(int operNumber,                            // Создает новую проводку для заданной типовой операции
+                     QString name,
+                     QString dbAcc,
+                     bool dbAccConst,
+                     bool dbVisible,
+                     bool dbSalVisible,
+                     QString crAcc,
+                     bool crAccConst,
+                     bool crVisible,
+                     bool crSalVisible,
+                     QString itog);
+    int getNewToper();                                          // Получает свободный номер для новой типовой операции
+    bool getToperSingleString(int);                             // Получает значение флага "одна строка в документе" для типовой операции
+    bool setToperSignleString(int, bool);                       // Устанавливает значение флага "одна строка в документе" для типовой операции
+    QString getToperNumerator(int);                             // Получает значение свойства "нумератор" типовой операции
+    bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
 
 private:
     QSqlDatabase*           db;

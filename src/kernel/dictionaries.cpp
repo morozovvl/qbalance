@@ -27,12 +27,12 @@ Dictionary* Dictionaries::getDictionary(QString dictName, int deep) {
 }
 
 
-Saldo* Dictionaries::getSaldo(QString acc, QString dictName) {
+Saldo* Dictionaries::getSaldo(QString acc, QString dictName, int deep) {
     if (acc.size() == 0)
         return 0;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addSaldo(acc, dictName))
+        if (!addSaldo(acc, dictName, deep))
             return 0;
     }
     return (Saldo*)dictionaries[alias];
@@ -64,14 +64,15 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
     return false;
 }
 
-bool Dictionaries::addSaldo(QString acc, QString dictName) {
+bool Dictionaries::addSaldo(QString acc, QString dictName, int deep) {
     if (acc.size() == 0)
         return false;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
-        if (saldo->open()) {
+        if (saldo->open(deep)) {
+            saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
             return true;

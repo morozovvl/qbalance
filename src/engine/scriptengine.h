@@ -24,15 +24,15 @@ public:
     QString getErrorMessage() { return errorMessage; }
     bool getScriptResult() { return scriptResult; }
 // События
-    static QList<EventFunction>* getEventsList();
-    static QString getBlankScripts();
+    virtual QList<EventFunction>* getEventsList();
+    QString getBlankScripts();
     void eventInitForm();
     void eventBeforeShowForm();
     void eventAfterHideForm();
     void eventCloseForm();
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
-    static QList<EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
+    QList<EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     virtual void loadScriptObjects();
 private:
     bool                scriptResult;

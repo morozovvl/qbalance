@@ -18,6 +18,7 @@ public slots:
     Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void hide();
 protected:
+    virtual void add();
     virtual void remove();
 private:
     QDateEdit*      dateEdit;

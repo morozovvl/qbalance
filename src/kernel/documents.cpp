@@ -5,6 +5,7 @@
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
 
+
 Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     lViewable  = true;
     tableName  = "документы";

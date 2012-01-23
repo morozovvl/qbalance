@@ -243,6 +243,29 @@ QStringList DBFactory::getFieldsList(QString tableName)
 }
 
 
+bool DBFactory::isSet(QString tableName)
+{
+    bool result = false;
+    if (tableName.size() > 0)
+    {
+        // Найдем имя прототипа для этого справочника
+        QStringList fieldList = getFieldsList(tableName);
+        // определим, это набор или обычный справочник
+        if (fieldList.contains(TApplication::nameFieldName(), Qt::CaseInsensitive)) {
+            result = false;                                     // это справочник, т.к. есть поле ИМЯ
+        }
+        else {
+            for (int k = 0; k < fieldList.count(); k++)
+                if (QString(fieldList.at(k)).contains(TApplication::idFieldName() + "_", Qt::CaseInsensitive)) {
+                    result = true;                              // это набор, т.к. нет поля ИМЯ и есть поля-ссылки на другие справочники
+                    break;
+                }
+            }
+    }
+    return result;
+}
+
+
 void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table, int oper)
 {
     clearError();
@@ -659,23 +682,6 @@ int DBFactory::getNewToper()
         number = query.record().value(0).toInt() + 1;
     }
     return number;
-}
-
-
-bool DBFactory::createNewToperPermission(QString oper, bool menu)
-{
-    clearError();
-    QString command = QString("INSERT INTO \"%1\" (%2, %3, %4, %5) VALUES (%6, %7, '%8', '%9');")
-                .arg(getObjectName("доступ"))
-                .arg(getObjectName("доступ.меню"))
-                .arg(getObjectName("доступ.код_типыобъектов"))
-                .arg(getObjectName("доступ.пользователь"))
-                .arg(getObjectName("доступ.имя"))
-                .arg(menu ? "true" : "false")
-                .arg(getTypeId(getObjectName("типыобъектов.топер")))
-                .arg(getLogin())
-                .arg(oper);
-    return exec(command);
 }
 
 
@@ -1106,12 +1112,12 @@ void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QList<DictType
             {      // Если в кредитовом справочнике ведется количественный учет
                 dict.acc = toperT.crAcc;
                 dict.isSaldo = true;
-                toperT.crDictAlias = dictName;
+                toperT.crDictAlias = "saldo" + dict.acc;
             }
             else
             {
                 dict.isSaldo = false;
-                toperT.crDictAlias = "saldo" + toperT.crAcc;
+                toperT.crDictAlias = dictName;
             }
             dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
             if (dict.prototype.size() == 0)
@@ -1179,50 +1185,100 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         selectStatement = selectClause + fromClause + whereClause;
         selectClause = "SELECT DISTINCT p.*";
         fromClause = " FROM (" + selectStatement + ") p";
-         // Приступим к генерации секции SELECT более высокого уровня
+
+        // Приступим к генерации секции SELECT, которая относится к задействованным в типовой операции справочникам
         QString dictName;
         QStringList dictsNames;
         Dictionary* dict;
+        QString idFieldName = TApplication::idFieldName();
         for (int i = 0; i < topersList->count(); i++)
         {
             prv = topersList->at(i).number;
             if (!topersList->at(i).dbConst)
-            {
+            {   // Если счет не является постоянным, т.е. он фигурирует в табличной части
                 dictName = topersList->at(i).dbDict;
-                dict = dictionaries->getDictionary(dictName);
-                if (dict != 0 && dict->isSet())
-                {
-                    qDebug() << "Это набор" << dictName;
-                }
-                if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
-                    getColumnsProperties(&fields, dictName);
-                    foreach (QString field, getFieldsList(dictName)) {
-                        selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                        foreach(int i, fields.keys())
-                            if (fields.value(i).name == field && columnsProperties != 0)
-                                addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                if (dictName.size() > 0 && !dictsNames.contains(dictName))
+                {   // Если в по дебетовому счету указан какой-либо справочник и этот справочник мы еще не обрабатывали
+                    dict = dictionaries->getDictionary(dictName);
+                    if (dict != 0 && dict->isSet())
+                    { // Это набор (справочников)
+                      // Сгенерируем команду SELECT для набора и входящих в него справочников
+                        QString setSelectClause, setFromClause;
+                        foreach (QString fieldName, getFieldsList(dictName)) {
+                            if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                                QString setDictName = fieldName;
+                                setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
+                                getColumnsProperties(&fields, setDictName);
+                                foreach (QString setDictFieldName, getFieldsList(setDictName)) {
+                                    setSelectClause.append(QString(",%1.%2 AS %1__%2").arg(setDictName).arg(setDictFieldName));
+                                    selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName).arg(setDictFieldName)));
+                                    foreach(int i, fields.keys())
+                                        if (fields.value(i).name == setDictFieldName && columnsProperties != 0)
+                                            addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                                }
+                                setFromClause.append(QString(" LEFT OUTER JOIN %1 ON %2.%3=%1.код").arg(setDictName).arg(dictName).arg(fieldName));
+                            }
+                        }
+                        setSelectClause = QString("SELECT %1.код").arg(dictName).append(setSelectClause);
+                        setFromClause = QString(" FROM %1").arg(dictName).append(setFromClause);
+                        setSelectClause.append(setFromClause);
+                        fromClause.append(QString(" LEFT OUTER JOIN (%1) %2 ON p.p%3__%4=%2.код").arg(setSelectClause).arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
                     }
-                    fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
+                    else
+                    {  // Это обычный справочник
+                        getColumnsProperties(&fields, dictName);
+                        foreach (QString field, getFieldsList(dictName)) {
+                            selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                            foreach(int i, fields.keys())
+                                if (fields.value(i).name == field && columnsProperties != 0)
+                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                        }
+                        fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
+                    }
                     dictsNames << dictName;
                 }
             }
             if (!topersList->at(i).crConst)
-            {
+            {   // Если счет не является постоянным, т.е. он фигурирует в табличной части
                 dictName = topersList->at(i).crDict;
-                dict = dictionaries->getDictionary(dictName);
-                if (dict != 0 && dict->isSet())
-                {
-                    qDebug() << "Это набор" << dictName;
-                }
-                if (dictName.size() > 0 && !dictsNames.contains(dictName)) {
-                    getColumnsProperties(&fields, dictName);
-                    foreach (QString field, getFieldsList(dictName)) {
-                        selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                        foreach(int i, fields.keys())
-                            if (fields.value(i).name == field && columnsProperties != 0)
-                                addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                if (dictName.size() > 0 && !dictsNames.contains(dictName))
+                {   // Если в по кредитовому счету указан какой-либо справочник и этот справочник мы еще не обрабатывали
+                    dict = dictionaries->getDictionary(dictName);
+                    if (dict != 0 && dict->isSet())
+                    {  // Это набор (справочников)
+                        // Сгенерируем команду SELECT для набора и входящих в него справочников
+                          QString setSelectClause, setFromClause;
+                          foreach (QString fieldName, getFieldsList(dictName)) {
+                              if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                                  QString setDictName = fieldName;
+                                  setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
+                                  getColumnsProperties(&fields, setDictName);
+                                  foreach (QString setDictFieldName, getFieldsList(setDictName)) {
+                                      setSelectClause.append(QString(",%1.%2 AS %1__%2").arg(setDictName).arg(setDictFieldName));
+                                      selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName).arg(setDictFieldName)));
+                                      foreach(int i, fields.keys())
+                                          if (fields.value(i).name == setDictFieldName && columnsProperties != 0)
+                                              addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                                  }
+                                  setFromClause.append(QString(" LEFT OUTER JOIN %1 ON %2.%3=%1.код").arg(setDictName).arg(dictName).arg(fieldName));
+                              }
+                          }
+                          setSelectClause = QString("SELECT %1.код").arg(dictName).append(setSelectClause);
+                          setFromClause = QString(" FROM %1").arg(dictName).append(setFromClause);
+                          setSelectClause.append(setFromClause);
+                          fromClause.append(QString(" LEFT OUTER JOIN (%1) %2 ON p.p%3__%4=%2.код").arg(setSelectClause).arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
                     }
-                    fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
+                    else
+                    {  // Это обычный справочник
+                        getColumnsProperties(&fields, dictName);
+                        foreach (QString field, getFieldsList(dictName)) {
+                            selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
+                            foreach(int i, fields.keys())
+                                if (fields.value(i).name == field && columnsProperties != 0)
+                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                        }
+                        fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
+                    }
                     dictsNames << dictName;
                 }
             }

@@ -14,6 +14,9 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
+// QList<EventFunction> DocumentScriptEngine::eventsList;          // Список доступных в скриптах событий с комментариями
+
+
 DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 :ScriptEngine(parent)
 {
@@ -36,15 +39,35 @@ void DocumentScriptEngine::eventParametersChanged()
 }
 
 
+void DocumentScriptEngine::eventBeforeAddString()
+{
+    globalObject().property("EventBeforeAddString").call();
+}
+
+
+void DocumentScriptEngine::eventAfterAddString()
+{
+    globalObject().property("EventAfterAddString").call();
+}
+
+
 QList<EventFunction>* DocumentScriptEngine::getEventsList()
 {
-    if (eventsList.size() == 0)
+   if (eventsList.size() == 0)
     {// Зарядим список событий
         ScriptEngine::getEventsList();
         EventFunction func;
         func.name = "EventParametersChanged";
         func.comment = "// " + QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
         eventsList.append(func);
+        func.name = "EventBeforeAddString";
+        func.comment = "// " + QObject::trUtf8("Событие происходит перед добавлением строки в документ");
+        eventsList.append(func);
+        func.name = "EventAfterAddString";
+        func.comment = "// " + QObject::trUtf8("Событие происходит после добавления строки в документ");
+        eventsList.append(func);
     }
     return &eventsList;
 }
+
+

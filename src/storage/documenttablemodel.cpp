@@ -23,11 +23,10 @@ bool DocumentTableModel::submit(const QModelIndex& index) {
                     }
                 }
                 command.chop(2);
-                command = QString("UPDATE проводки SET %1 WHERE код=%2").arg(command).arg(record(index.row()).value(*key).toString());
-                QSqlQuery query;
-                if (!query.exec(command)) {
+                command = QString("UPDATE проводки SET %1 WHERE код=%2;").arg(command).arg(record(index.row()).value(*key).toString());
+                if (!TApplication::exemplar()->getDBFactory()->exec(command))
+                {
                     database().rollback();
-                    TApplication::exemplar()->showError(query.lastError().text());
                     return false;
                 }
             }

@@ -36,6 +36,7 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     if (parameters != 0)
     {
+        parameters->setDictionaries(((Dictionary*)parent)->getDictionaries());
         parameters->setApp(TApplication::exemplar());
         parameters->setParent(formWidget);
         parameters->setFormGrid(this);

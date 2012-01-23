@@ -2,6 +2,7 @@
 #include "../kernel/app.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
+
 Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
 : Dictionary(dictName, parent) {
     //configName = "saldo" + cAcc;
@@ -26,20 +27,10 @@ QString Saldo::transformSelectStatement(QString statement) {
     return command;
 }
 
-void Saldo::setLock(bool lock) {
-    Dictionary* dict = dictionaries->getDictionary(dictionaryName);
-    dict->setId(getId());
-    Dictionary::setLock(lock);
-}
-
-void Saldo::setMustShow(bool mustShow) {
-    Dictionary* dict = dictionaries->getDictionary(dictionaryName);
-    dict->setMustShow(mustShow);
-    Dictionary::setMustShow(mustShow);
-}
 
 bool Saldo::open(int deep) {
     bool result = Dictionary::open(deep);
+    lIsSet = false;                              // Сальдо не может быть набором
     formTitle = QString(QObject::trUtf8("Остатки на %1 счете").arg(account));
     QMap<int, FieldType> saldoFields;
     TApplication::exemplar()->getDBFactory()->getColumnsProperties(&saldoFields, "сальдо");

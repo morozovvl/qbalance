@@ -139,7 +139,7 @@ void FormFromScriptValue(const QScriptValue &object, Form* &out) {
 //================================================================================================
 // Реализация класса
 
-QList<EventFunction> ScriptEngine::eventsList;          // Список доступных в скриптах событий с комментариями
+// QList<EventFunction> ScriptEngine::eventsList;          // Список доступных в скриптах событий с комментариями
 
 
 ScriptEngine::ScriptEngine(QObject *parent/* = 0*/) : QScriptEngine(parent)

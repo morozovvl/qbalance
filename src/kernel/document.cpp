@@ -40,41 +40,36 @@ Document::Document(int oper, Documents* par)
     {
         if (dictsList.at(i).isSaldo)
         {
-            Saldo* sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name);
+            Saldo* sal;
+            if (dictsList.at(i).name.size() > 0 &&
+                DbFactory->isSet(dictsList.at(i).name))
+                   sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name, 1);
+            else
+                sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name, 0);
             if (sal != 0)
             {
                 sal->setPrototypeName(dictsList.at(i).prototype);
                 sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
                 sal->setQuan(true);
-                sal->setCanShow((dictsList.at(i).isConst || sal->isSet())? false: true);
+                sal->setConst(dictsList.at(i).isConst);
             }
         }
         else
         {
-            dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
-            if (dict != 0)
-            {
-//                dict->setPrototypeName(dictsList.at(i).prototype);
-                if (dict->isSet())              // если это набор
-                {
-                    dict->setAutoAdd(true);     // ... то для дебетовых наборов - автоматическое добавление
-                    dict->setCanShow(false);
-                }
-                else
-                {
-                    dict->setCanShow(true);
-                }
-                dict->setConst(dictsList.at(i).isConst);
-            }
+            if (dictsList.at(i).isConst)
+                dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
+            else
+                dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
         }
     }
 
     foreach (QString dictName, dicts->keys())
     {
         dict = dicts->value(dictName);
-        dict->setMustShow(dict->isConst()? false: dict->canShow()); // Если справочник документа является постоянным, то не показывать его при добавлении новой записи в документ
-                                                                    // иначе это справочник должен быть показан, если может быть показан
-        dict->setMustShow(dict->getDeep() == 0 ? dict->isMustShow() : false);     // Если это зависимый справочник, то он не показывается
+        if (dict->isConst() || dict->isSet())
+            dict->setMustShow(false); // Если справочник документа является постоянным или это набор, то не показывать его при добавлении новой записи в документ
+        else
+            dict->setMustShow(true);
     }
 
     QSqlRecord docProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
@@ -116,9 +111,9 @@ bool Document::calculate(const QModelIndex& index) {
     }
     else
     {
-        if (scriptEngine->getScriptResult())
+        if (((DocumentScriptEngine*)scriptEngine)->getScriptResult())
         {
-            TApplication::exemplar()->showError(scriptEngine->getErrorMessage());
+            TApplication::exemplar()->showError(((DocumentScriptEngine*)scriptEngine)->getErrorMessage());
         }
     }
     return lResult;
@@ -127,13 +122,19 @@ bool Document::calculate(const QModelIndex& index) {
 
 bool Document::add()
 {
-    unlock();               // Разблокируем все связанные справочники, чтобы можно было показать те, которые надо показать
     if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
+        ((DocumentScriptEngine*)scriptEngine)->eventBeforeAddString();
         insertDocString();
         return true;
     }
     return false;
+}
+
+
+void Document::getEventAfterAddString()
+{
+    ((DocumentScriptEngine*)scriptEngine)->eventAfterAddString();
 }
 
 
@@ -220,9 +221,9 @@ bool Document::open()
         initForm();
         if (scriptEngine != 0)
         {
-            bool result = scriptEngine->open(TApplication::exemplar()->getScriptFileName(operNumber));
+            bool result = ((DocumentScriptEngine*)scriptEngine)->open(TApplication::exemplar()->getScriptFileName(operNumber));
             if (result)
-                scriptEngine->evaluate();
+                ((DocumentScriptEngine*)scriptEngine)->evaluate();
             return result;
         }
         return true;
@@ -335,25 +336,23 @@ bool Document::showNextDict()
     bool anyShown = true;
     foreach (QString dictName, dicts->keys()) {
         Dictionary* dict = dicts->value(dictName);
-        if (dict->isMustShow() && !dict->isLocked()) {
+        if (dict->isMustShow()) {
             dict->exec();
             if (dict->isFormSelected()) {
                 if (dict->getTableModel()->rowCount() == 0) {       // Если в выбранном справочнике нет записей
                     anyShown = false;                               // то считать, что этот справочник не был показан и не давать добавить строчку в документ
                     break;
                 }
-                dict->setLock(true);    // заблокируем справочник, чтобы повторно его не вводить
-                // Заблокируем все справочники, у которых прототип совпадает
+                // Не будем показывать те справочники, у которых прототип совпадает
                 foreach (QString dName, dicts->keys())
                 {
                     if (dName != dictName &&
                         dict->getPrototypeName().size() > 0 &&
                         (dName == dict->getPrototypeName() ||
-                         dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
-                        )
+                        dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
+                       )
                     {
-                        dicts->value(dName)->setId(dict->getId());
-                        dicts->value(dName)->setLock(true);
+                            dicts->value(dName)->setMustShow(false);
                     }
                 }
             }
@@ -363,19 +362,30 @@ bool Document::showNextDict()
             }
         }
     }
-    return anyShown;
-}
-
-
-void Document::unlock()
-{
-    Dictionary* dict;
-    foreach (QString dictName, dicts->keys())
+    if (anyShown)
     {
-        dict = dicts->value(dictName);
-        if (!dict->isConst())
-            dict->unlock();
+        foreach (QString dictName, dicts->keys())
+        {
+            Dictionary* dict = dicts->value(dictName);
+            if (dict->isMustShow())
+            {
+                foreach (QString dName, dicts->keys())
+                {
+                    if (dName != dictName &&
+                        dict->getPrototypeName().size() > 0 &&
+                        (dName == dict->getPrototypeName() ||
+                        dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
+                       )
+                    {
+                        qulonglong id = dict->getId();
+                        dicts->value(dName)->setId(id);
+                    }
+                }
+            }
+
+        }
     }
+    return anyShown;
 }
 
 

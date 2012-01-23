@@ -17,6 +17,7 @@
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     gridLayout = 0;
+    dictionaries = TApplication::exemplar()->getDictionaries();
 }
 
 void SearchParameters::close() {
@@ -31,8 +32,11 @@ void SearchParameters::setFieldsList(QStringList fldList) {
     int strNum = 0;
     for (int i = 0; i < fldList.count(); i++) {
         QString field = fldList.at(i);
-        if (field.toLower() == programNameFieldName ||
-            (field.left(4).toLower() == (programIdFieldName + "_") && !parentForm->getParent()->relationsIsEmpty()))                          // Если это поле - столбец ИМЯ, то это справочник
+// Непонятно, для чего здесь  && !parentForm->getParent()->relationsIsEmpty()
+//        if (field.toLower() == programNameFieldName ||
+//            (field.left(4).toLower() == (programIdFieldName + "_") && !parentForm->getParent()->relationsIsEmpty()))                          // Если это поле - столбец ИМЯ, то это справочник
+            if (field.toLower() == programNameFieldName ||
+                (field.left(4).toLower() == (programIdFieldName + "_")))                          // Если это поле - столбец ИМЯ, то это справочник
             addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
     }
     setLayout(gridLayout);
@@ -113,8 +117,8 @@ void SearchParameters::getParameters(QVector<sParam> &param) {
         if (par.table != parentForm->getParent()->getTableName()) {
             par.field = programIdFieldName + "_" + par.table;
             par.value = 0;
-            if (TApplication::exemplar()->getDictionaries()->isMember(par.table))              // Если такой справочник существует
-                par.value = TApplication::exemplar()->getDictionaries()->getDictionary(par.table)->getId();                          // то возьмем идентификатор его текущей записи
+            if (dictionaries->isMember(par.table))              // Если такой справочник существует
+                par.value = dictionaries->getDictionary(par.table)->getId();                          // то возьмем идентификатор его текущей записи
             par.table = parentForm->getParent()->getTableName();
             if (par.value.toLongLong() > 0)
                 param.append(par);
@@ -123,8 +127,8 @@ void SearchParameters::getParameters(QVector<sParam> &param) {
 }
 
 void SearchParameters::dictionaryButtonPressed() {
-    TApplication::exemplar()->getDictionaries()->addDictionary(sender()->objectName(), 0);
-    Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
+    dictionaries->addDictionary(sender()->objectName(), 0);
+    Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
     if (dict != 0) {
         dict->exec();
         if (dict->isFormSelected()) {

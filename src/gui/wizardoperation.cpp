@@ -244,7 +244,10 @@ bool WizardOperation::execute()
             if (item != 0)
                 crSalVisible = item->text().compare("true") == 0 ? true : false;
 
-            QString itog = prvTable->item(i, itogField)->text().trimmed();
+
+            QString itog;
+            if (prvTable->item(i, itogField) != 0)
+                itog = prvTable->item(i, itogField)->text().trimmed();
             if (!db->addToperPrv(oper,
                             opName,
                             dbAcc,
@@ -404,7 +407,8 @@ void WizardOperation::getData()
      QString scripts = QString(db->getFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType));
      if (scripts.size() == 0)
      {
-         scripts = DocumentScriptEngine::getBlankScripts();
+         DocumentScriptEngine engine;
+         scripts = engine.getBlankScripts();
      }
      textEditor->setText(scripts);
      connect(fieldsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));

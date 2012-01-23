@@ -40,6 +40,7 @@ public:
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine();
     DocumentScriptEngine* getScriptEngine();
+    void getEventAfterAddString();
 protected:
     virtual void setForm();
     virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
@@ -56,7 +57,6 @@ private:
     QHash<int, prvSaldo> saldo;                   // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     virtual void setTableModel();
     bool showNextDict();
-    void unlock();
     void insertDocString();
     void selectCurrentRow();
 };

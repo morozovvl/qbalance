@@ -29,6 +29,7 @@ public:
     void setApp(TApplication* a) { app = a; }
     void setProgramIdFieldName(QString s) { programIdFieldName = s; }
     void setProgramNameFieldName(QString s) { programNameFieldName = s; }
+    void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
 
 signals:
     void requery();
@@ -38,12 +39,13 @@ public slots:
     void comboBoxEnterPressed(QWidget*);
 
 private:
-    TApplication* app;
-    QString programIdFieldName;
-    QString programNameFieldName;
-    QGridLayout* gridLayout;
-    QStringList parameters;
-    FormGridSearch* parentForm;
+    TApplication*       app;
+    Dictionaries*       dictionaries;
+    QString             programIdFieldName;
+    QString             programNameFieldName;
+    QGridLayout*        gridLayout;
+    QStringList         parameters;
+    FormGridSearch*     parentForm;
     void addString(QString, int);
     void removeString(int);
 };

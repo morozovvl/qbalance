@@ -19,6 +19,7 @@
 #include "../engine/reportscriptengine.h"
 #include "../engine/reportcontext.h"
 
+
 Essence::Essence(QString name, QObject *parent): Table(name, parent),
 form(NULL),
 parentForm(NULL),
@@ -37,9 +38,11 @@ scriptEngine(NULL)
     connect(this, SIGNAL(showError(QString)), TApplication::exemplar(), SLOT(showError(QString)));
 }
 
+
 Essence::~Essence() {
     disconnect(this, 0, 0, 0);
 }
+
 
 QDialog* Essence::getFormWidget() {
     if (!opened)
@@ -48,6 +51,7 @@ QDialog* Essence::getFormWidget() {
     }
     return form->getForm();
 }
+
 
 bool Essence::setData(const QModelIndex & index, const QVariant & value, int role/* = Qt::EditRole*/)
 {

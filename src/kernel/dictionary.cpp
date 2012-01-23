@@ -5,16 +5,15 @@
 #include "../gui/searchparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
+
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     formTitle = "";
     lPrintable = true;
     lIsSet = false;
     lCanShow = true;
     lMustShow = false;
-    lIsLocked = false;
     lIsConst = false;
     lAutoSelect = false;
-    lAutoAdd = false;
     dictionaries = TApplication::exemplar()->getDictionaries();
     QSqlRecord tableProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
@@ -25,6 +24,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
         lDeleteable = tableProperties.value("deleteable").toBool();
         lUpdateable = tableProperties.value("updateable").toBool();
     }
+    lIsSet = TApplication::exemplar()->getDBFactory()->isSet(tableName);
 }
 
 
@@ -100,28 +100,6 @@ bool Dictionary::remove() {
 }
 
 
-void Dictionary::setLock(bool lock) {
-    if (lock) {                             // Если блокируем все связанные справочники
-        if (dictionaries != 0) {
-            QStringList columns = getFieldsList();
-            foreach (QString column, columns) {
-                if (column.left(4) == idFieldName + "_") {
-                    qulonglong id = getValue(column).toULongLong();
-                    column.remove(0, 4);
-                    Dictionary* dict = dictionaries->getDictionary(column);
-                    if (dict != 0) {
-                        dict->setId(id);
-                        dict->setCanShow(canShow());
-                        dict->setLock(lock);
-                    }
-                }
-            }
-        }
-    }
-    lIsLocked = true;
-}
-
-
 void Dictionary::setForm() {
     form = new FormGridSearch();
     form->open(parentForm, this);
@@ -153,9 +131,7 @@ void Dictionary::setForm() {
 bool Dictionary::open(int deep) {
     if (lSelectable) {
         if (Essence::open()) {     // Откроем этот справочник
-            // Найдем имя прототипа для этого справочника
-            QStringList fieldList = getFieldsList();
-            if (deep > 0) {              // Если нужно открыть подсправочники
+            if (lIsSet && deep > 0) {              // Если нужно открыть подсправочники
                 int columnCount = fieldList.count();
                 for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
                     QString name = fieldList.at(i).toLower();
@@ -181,17 +157,6 @@ bool Dictionary::open(int deep) {
             // Установим порядок сортировки и стратегию сохранения данных на сервере
             tableModel->setSort(tableModel->fieldIndex(TApplication::nameFieldName()), Qt::AscendingOrder);
 
-            // определим, это набор или обычный справочник
-            if (fieldList.contains(TApplication::nameFieldName(), Qt::CaseInsensitive)) {
-                lIsSet = false;                                     // это справочник, т.к. есть поле ИМЯ
-            }
-            else {
-                for (int k = 0; k < fieldList.count(); k++)
-                    if (QString(fieldList.at(k)).contains(idFieldName + "_", Qt::CaseInsensitive)) {
-                        lIsSet = true;                              // это набор, т.к. нет поля ИМЯ и есть поля-ссылки на другие справочники
-                        break;
-                    }
-                }
             TApplication::exemplar()->getDBFactory()->getColumnsRestrictions(tableName, &columnsProperties);
             dictDeep = deep;
             initForm();
@@ -213,7 +178,7 @@ bool Dictionary::open(int deep) {
 
 qulonglong Dictionary::getId(int row)
 {
-    if (!isLocked() && isSet())
+    if (isSet())
     {
         QString filter;
         QStringList fieldList = getFieldsList();
@@ -242,7 +207,6 @@ qulonglong Dictionary::getId(int row)
             return 0;
         }
         return result;
-
     }
     return Essence::getId(row);
 }

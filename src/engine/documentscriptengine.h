@@ -11,7 +11,9 @@ public:
     DocumentScriptEngine(QObject *parent = 0);
 // События
     void eventParametersChanged();
-    static QList<EventFunction>* getEventsList();
+    void eventBeforeAddString();
+    void eventAfterAddString();
+    virtual QList<EventFunction>* getEventsList();
 protected:
     virtual void loadScriptObjects();
 };

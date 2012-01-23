@@ -32,17 +32,13 @@ public:
     void setCanShow(bool can) { lCanShow = can; }
     bool isMustShow() { return lMustShow; }
     virtual void setMustShow(bool must) { lMustShow = must; }
-    bool isLocked() { return lIsLocked; }
-    virtual void setLock(bool);
-    void unlock() { lIsLocked = false; }
     bool isConst() { return lIsConst; }
     bool isSet() { return lIsSet; }
     void setConst(bool con) { lIsConst = con; }
     void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
-    bool isAutoAdd() { return lAutoAdd; }
-    void setAutoAdd(bool add) { lAutoAdd = add; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
                                                                             // которые будут блокироваться при добавлении записи в документ
+    Dictionaries* getDictionaries() { return dictionaries; }
 
     virtual QString objectName() { return "Dictionary"; }
     int getDeep() { return dictDeep; }
@@ -50,18 +46,18 @@ public:
     void setPrototypeName(QString prototype) { prototypeName = prototype; }
 
 protected:
-    Dictionaries* dictionaries;
+    Dictionaries*   dictionaries;
     QString         prototypeName;          // Имя справочника - прототипа
     bool            lSelectable;
     bool            lIsSet;
     bool            lCanShow;
     bool            lMustShow;
-    bool            lIsLocked;
     bool            lIsConst;
     bool            lAutoSelect;
-    bool            lAutoAdd;
     int             dictDeep;
     virtual void setForm();
+private:
+    QStringList     fieldList;
 };
 
 #endif // DICTIONARY_H
