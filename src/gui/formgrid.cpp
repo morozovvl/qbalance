@@ -389,10 +389,8 @@ void FormGrid::cmdPrint()
 
 void FormGrid::add()
 {
-    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
     cmdRequery();
     grdTable->selectRow(grdTable->model()->rowCount() - 1);   // установим курсор на последнюю добавленную запись
-    setCurrentIndex(index.sibling(getCurrentIndex().row(), index.column()));    // Поставим курсор на новую строку в старой колонке
     if (parent->getMyRelationalTableModel()->rowCount() > 0)
     {   // Если записей стало больше 0, то активируем кнопку "Удалить"
         if (buttonDelete != 0)

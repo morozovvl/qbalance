@@ -131,13 +131,14 @@ void Dictionary::setForm() {
 bool Dictionary::open(int deep) {
     if (lSelectable) {
         if (Essence::open()) {     // Откроем этот справочник
+            fieldList = getFieldsList();
             if (lIsSet && deep > 0) {              // Если нужно открыть подсправочники
                 int columnCount = fieldList.count();
                 for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
                     QString name = fieldList.at(i).toLower();
                     if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
                         name.remove(0, 4);                      // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                        Dictionary* dict = dictionaries->getDictionary(name, deep--);
+                        Dictionary* dict = dictionaries->getDictionary(name, deep - 1);
                         if (dict != NULL) {                      // Если удалось открыть справочник
                             QStringList relFieldList = dict->getFieldsList();
                             tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
@@ -152,6 +153,7 @@ bool Dictionary::open(int deep) {
                         }
                     }
                 }
+                deep--;
             }
 
             // Установим порядок сортировки и стратегию сохранения данных на сервере

@@ -165,7 +165,7 @@ void WizardOperation::initFrames()
 }
 
 
-bool WizardOperation::execute()
+bool WizardOperation::setData()
 {
     QString opName = operName->text().trimmed();
     if (opName.size() == 0)
@@ -310,6 +310,8 @@ bool WizardOperation::execute()
                 }
             }
         }
+        // Установим доступ к операции
+        db->setToperPermition(oper, TApplication::exemplar()->getLogin().toLower(), true);
     }
 
     // Сохраним скрипты

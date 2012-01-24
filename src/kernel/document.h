@@ -41,6 +41,7 @@ public:
     virtual void setScriptEngine();
     DocumentScriptEngine* getScriptEngine();
     void getEventAfterAddString();
+    bool getIsSingleString() { return isSingleString; }
 protected:
     virtual void setForm();
     virtual void preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
@@ -49,12 +50,13 @@ private:
     Dictionaries*                   dictionaries;       // Объекты справочников
     Documents*                      parent;
     DBFactory*                      DbFactory;
-    int operNumber;
-    int docId;
-    int prv1;
+    int                             operNumber;
+    int                             docId;
+    int                             prv1;
+    bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
     QList<ToperType>                topersList;
-    QString selectStatement;
-    QHash<int, prvSaldo> saldo;                   // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
+    QString                         selectStatement;
+    QHash<int, prvSaldo>            saldo;             // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     virtual void setTableModel();
     bool showNextDict();
     void insertDocString();

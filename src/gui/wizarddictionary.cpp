@@ -221,7 +221,7 @@ void WizardDictionary::getData()
 }
 
 
-bool WizardDictionary::execute()
+bool WizardDictionary::setData()
 {   // Сохранение данных на сервере
     tableName->setText(tableName->text().trimmed());
     tableMenuName->setText(tableMenuName->text().trimmed());

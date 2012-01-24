@@ -16,11 +16,16 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_сп
     lPrintable = false;
 }
 
-Dictionary* Dictionaries::getDictionary(QString dictName, int deep) {
+Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add) {
     if (dictName.size() == 0)
         return 0;
     if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addDictionary(dictName, deep))
+        if (add)
+        {
+            if (!addDictionary(dictName, deep))
+                return 0;
+        }
+        else
             return 0;
     }
     return dictionaries[dictName];

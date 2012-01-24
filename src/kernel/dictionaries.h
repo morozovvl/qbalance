@@ -10,7 +10,7 @@ class Dictionaries : public Dictionary {
 public:
     QMap<QString, Dictionary*> dictionaries;                    // Объекты справочников
     Dictionaries(QObject *parent = 0);
-    Q_INVOKABLE virtual Dictionary* getDictionary(QString, int = 0);
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString, int = 0, bool add = true);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc, QString dictName, int deep = 0);
     Q_INVOKABLE virtual bool addDictionary(QString, int = 0);
     Q_INVOKABLE virtual bool addSaldo(QString acc, QString dictName, int deep = 0);

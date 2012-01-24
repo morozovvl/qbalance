@@ -14,7 +14,7 @@ public:
 
 protected:
     virtual void   initFrames();
-    virtual bool   execute();
+    virtual bool   setData();
 private:
     bool                addDictionary;
     DBFactory*          db;

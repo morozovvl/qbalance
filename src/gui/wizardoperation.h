@@ -14,7 +14,7 @@ public:
     bool open(QWidget* pwgt = NULL, int oper = 0);
 protected:
     virtual void   initFrames();
-    virtual bool   execute();
+    virtual bool   setData();
     virtual void    frameDeactivated(int frameNumber);
 private:
     int             oper;               // Номер операции, с которой работает мастер

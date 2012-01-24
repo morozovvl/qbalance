@@ -111,6 +111,12 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             }
         }
     }
+    // Если в документе должна быть только одна строка, то заблокируем кнопки "Добавить" и "Удалить"
+    if (getParent()->getIsSingleString())
+    {
+        getButtonAdd()->hide();
+        getButtonDelete()->hide();
+    }
 }
 
 

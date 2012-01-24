@@ -33,6 +33,8 @@ Document::Document(int oper, Documents* par)
     DbFactory->getToperData(operNumber, &topersList);
     DbFactory->setToperDictAliases(&topersList, &dictsList);
 
+    // Проверим, должна ли быть в документе только одна строка
+    isSingleString = topersList.at(0).isSingleString;
 
     // Создадим локальный для документа список справочников
     Dictionary* dict;
@@ -57,7 +59,11 @@ Document::Document(int oper, Documents* par)
         else
         {
             if (dictsList.at(i).isConst)
+            {
                 dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
+                if (dict != 0)
+                    dict->setConst(true);
+            }
             else
                 dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
         }
@@ -182,6 +188,14 @@ void Document::show()
             }
         }
     }
+    else
+    {
+        if (getIsSingleString())
+        {   // Если в документе должна быть только одна строка, но нет ни одной, то добавим пустую строку
+            insertDocString();
+            query();
+        }
+    }
     Essence::show();
 }
 
@@ -235,7 +249,10 @@ bool Document::open()
 void Document::close()
 {
     foreach(QString dictName, dicts->keys()) {
-        dicts->value(dictName)->close();
+        Dictionary* dict;
+        dict = dicts->value(dictName);
+        if (dict != 0)
+            dict->close();
     }
     Essence::close();
 }
@@ -352,7 +369,18 @@ bool Document::showNextDict()
                         dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
                        )
                     {
-                            dicts->value(dName)->setMustShow(false);
+                            Dictionary* dict = dicts->value(dName);
+                            dict->setMustShow(false);
+                            // Не будем показывать связанные справочники
+                            QStringList fieldList = dict->getFieldsList();
+                            for (int i = 0; i < fieldList.count(); i++) {           // Просмотрим список полей
+                                QString fieldName = fieldList.at(i).toLower();
+                                if (fieldName.left(4) == TApplication::idFieldName() + "_") {        // Если поле ссылается на другую таблицу
+                                    Dictionary* dict = dictionaries->getDictionary(fieldName.remove(0, 4), 0, false);
+                                    if (dict != 0)
+                                        dict->setMustShow(false);
+                                }
+                            }
                     }
                 }
             }
@@ -367,18 +395,25 @@ bool Document::showNextDict()
         foreach (QString dictName, dicts->keys())
         {
             Dictionary* dict = dicts->value(dictName);
-            if (dict->isMustShow())
+            if (dict != 0)
             {
-                foreach (QString dName, dicts->keys())
+                if (dict->isMustShow())
                 {
-                    if (dName != dictName &&
-                        dict->getPrototypeName().size() > 0 &&
-                        (dName == dict->getPrototypeName() ||
-                        dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
-                       )
+                    foreach (QString dName, dicts->keys())
                     {
-                        qulonglong id = dict->getId();
-                        dicts->value(dName)->setId(id);
+                        Dictionary* d = dicts->value(dName);
+                        if (d != 0)
+                        {
+                            if (dName != dictName &&
+                                dict->getPrototypeName().size() > 0 &&
+                                (dName == dict->getPrototypeName() ||
+                                d->getPrototypeName() == dict->getPrototypeName())
+                               )
+                            {
+                                qulonglong id = dict->getId();
+                                dicts->value(dName)->setId(id);
+                            }
+                        }
                     }
                 }
             }

@@ -90,7 +90,7 @@ void WizardForm::cmdBackward()
 
 void WizardForm::cmdOk()
 {
-    if (execute())
+    if (setData())
         Form::cmdOk();
 }
 

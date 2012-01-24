@@ -60,6 +60,7 @@ struct ToperType
     bool        crConst;        // Кредитовый справочник является постоянным
     bool        crSaldoVisible; // Сальдо по кредитовому справочнику видно
     bool        crDictVisible;  // Кредитовый справочник видим
+    bool        isSingleString; // В документе должна быть только одна строка
     QString     itog;           //
 };
 
@@ -178,6 +179,7 @@ public:
     bool setToperSignleString(int, bool);                       // Устанавливает значение флага "одна строка в документе" для типовой операции
     QString getToperNumerator(int);                             // Получает значение свойства "нумератор" типовой операции
     bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
+    void setToperPermition(int operNumber, QString user, bool menu);
 
 private:
     QSqlDatabase*           db;

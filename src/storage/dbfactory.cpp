@@ -1067,6 +1067,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.crConst = toper.record().value("крпост").toBool();
         toperT.crSaldoVisible = toper.record().value("крсалвидим").toBool();
         toperT.crDictVisible = toper.record().value("крвидим").toBool();
+        toperT.isSingleString = toper.record().value("однаоперация").toBool();
         toperT.itog = toper.record().value("итоги").toString();
         topersList->append(toperT);
         toper.next();
@@ -1417,3 +1418,20 @@ bool DBFactory::setToperNumerator(int operNumber, QString numerator)
 }
 
 
+void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
+    clearError();
+    QString command;
+    command = QString("SELECT * FROM доступ WHERE код_типыобъектов = %1 AND имя = '%2' AND пользователь = '%3';").arg(getTypeId("топер")).arg(operNumber).arg(user);
+    QSqlQuery query = execQuery(command);
+    if (query.first())
+    {   // Если операция существует
+        command = QString("UPDATE доступ SET меню = %1 WHERE код_типыобъектов = %2 AND имя = '%3' AND пользователь = '%4';").arg(menu ? "true" : "false").arg(getTypeId("топер")).arg(operNumber).arg(user);
+        exec(command);
+    }
+    else
+    {
+        command = QString("INSERT INTO доступ (код_типыобъектов, имя, пользователь, меню) VALUES (%1, '%2', '%3', %4);").arg(getTypeId("топер")).arg(operNumber).arg(user).arg(menu ? "true" : "false");
+        exec(command);
+    }
+
+}
