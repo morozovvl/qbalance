@@ -15,5 +15,6 @@
         <file alias="buttonForward">resources/forward.png</file>
         <file alias="buttonUp">resources/up.png</file>
         <file alias="buttonDown">resources/down.png</file>
+        <file alias="buttonLoad">resources/load.png</file>
     </qresource>
 </RCC>

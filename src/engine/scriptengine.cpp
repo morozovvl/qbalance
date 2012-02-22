@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include "scriptengine.h"
@@ -7,6 +26,7 @@
 #include "../storage/mysqlrecord.h"
 #include "../gui/mainwindow.h"
 #include "../gui/form.h"
+#include "../gui/formgrid.h"
 #include "eventloop.h"
 
 
@@ -124,7 +144,6 @@ QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
      object->setIcons();
      object->setButtonsSignals();
      return engine->newQObject(object, QScriptEngine::AutoOwnership);
-//     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue FormToScriptValue(QScriptEngine *engine, Form* const &in) {
@@ -135,6 +154,86 @@ void FormFromScriptValue(const QScriptValue &object, Form* &out) {
     out = qobject_cast<Form*>(object.toQObject());
 }
 
+
+// класс FormGrid
+Q_DECLARE_METATYPE(FormGrid*)
+
+QScriptValue FormGridConstructor(QScriptContext *context, QScriptEngine *engine) {
+     FormGrid *object = new FormGrid();
+     object->open(context->argument(0).toString(), TApplication::exemplar()->getMainWindow()->centralWidget());
+     object->setIcons();
+     object->setButtonsSignals();
+     return engine->newQObject(object, QScriptEngine::AutoOwnership);
+}
+
+QScriptValue FormGridToScriptValue(QScriptEngine *engine, FormGrid* const &in) {
+    return engine->newQObject(in);
+}
+
+void FormGridFromScriptValue(const QScriptValue &object, FormGrid* &out) {
+    out = qobject_cast<FormGrid*>(object.toQObject());
+}
+
+
+// класс QPushButton
+Q_DECLARE_METATYPE(QPushButton*)
+
+QScriptValue QPushButtonConstructor(QScriptContext *, QScriptEngine *engine) {
+     QPushButton* object = new QPushButton();
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue QPushButtonToScriptValue(QScriptEngine *engine, QPushButton* const &in) {
+    return engine->newQObject(in);
+}
+
+void QPushButtonFromScriptValue(const QScriptValue &object, QPushButton* &out) {
+    out = qobject_cast<QPushButton*>(object.toQObject());
+}
+
+
+// класс QFileDialog
+Q_DECLARE_METATYPE(QFileDialog*)
+
+QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engine) {
+    QFileDialog* object;
+    if (context->argumentCount() > 0)
+    {
+        if (context->argument(0).isString())
+        {
+            object = new QFileDialog(0,
+                                     context->argument(0).toString(),
+                                     context->argument(1).toString(),
+                                     context->argument(2).toString());
+        }
+        else
+        {
+            object = new QFileDialog(((FormGrid*)context->argument(0).toQObject())->getForm(),
+                                     Qt::SubWindow);
+
+        }
+    }
+    else
+    {
+        object = new QFileDialog(TApplication::exemplar()->getMainWindow()->centralWidget(), Qt::SubWindow);
+    }
+    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+
+QScriptValue QFileDialogToScriptValue(QScriptEngine *engine, QFileDialog* const &in) {
+    return engine->newQObject(in);
+}
+
+void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out) {
+    out = qobject_cast<QFileDialog*>(object.toQObject());
+}
+
+
+QScriptValue importExtension(QScriptContext *context, QScriptEngine *engine)
+{
+    return engine->importExtension(context->argument(0).toString());
+}
 
 //================================================================================================
 // Реализация класса
@@ -195,17 +294,42 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
     globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
+    qScriptRegisterMetaType(this, FormGridToScriptValue, FormGridFromScriptValue);
+    globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
+
+//    globalObject().setProperty("QPushButton", newQMetaObject(&QObject::staticMetaObject, newFunction(QPushButtonConstructor)));
+//    qScriptRegisterMetaType(this, QPushButtonToScriptValue, QPushButtonFromScriptValue);
+//    globalObject().setProperty("QFileDialog", newQMetaObject(&QObject::staticMetaObject, newFunction(QFileDialogConstructor)));
+//    qScriptRegisterMetaType(this, QFileDialogToScriptValue, QFileDialogFromScriptValue);
 
     // Объявим глобальные переменные и объекты
     globalObject().setProperty("table", newQObject(parent()));
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
-    globalObject().setProperty("DBFactory", newQObject(TApplication::exemplar()->getDBFactory()));
+    globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("setValue", newFunction(setValue));
     globalObject().setProperty("getOldValue", newFunction(getOldValue));
+
+    QStringList extensions;
+    extensions << "qt.core"
+               << "qt.gui"
+               << "qt.xml"
+               << "qt.svg"
+               << "qt.network"
+               << "qt.sql"
+               << "qt.opengl"
+               << "qt.webkit"
+               << "qt.xmlpatterns"
+               << "qt.uitools";
+    QStringList failExtensions;
+    foreach (const QString &ext, extensions) {
+        QScriptValue ret = importExtension(ext);
+        if (ret.isError())
+            failExtensions.append(ext);
+    }
 }
 
 
@@ -229,27 +353,51 @@ bool ScriptEngine::evaluate()
 
 
 // События
-void ScriptEngine::eventInitForm()
+void ScriptEngine::eventInitForm(Form* form)
 {
-    globalObject().property("EventInitForm").call();
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventInitForm").call(QScriptValue(), args);
 }
 
 
-void ScriptEngine::eventBeforeShowForm()
+void ScriptEngine::eventBeforeShowForm(Form* form)
 {
-    globalObject().property("EventBeforeShowForm").call();
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventBeforeShowForm").call(QScriptValue(), args);
 }
 
 
-void ScriptEngine::eventAfterHideForm()
+void ScriptEngine::eventAfterHideForm(Form* form)
 {
-    globalObject().property("EventAfterHideForm").call();
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventAfterHideForm").call(QScriptValue(), args);
 }
 
 
-void ScriptEngine::eventCloseForm()
+void ScriptEngine::eventCloseForm(Form* form)
 {
-    globalObject().property("EventCloseForm").call();
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventCloseForm").call(QScriptValue(), args);
+}
+
+
+void ScriptEngine::eventImport(Form* form)
+{
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventImport").call(QScriptValue(), args);
+}
+
+
+void ScriptEngine::eventExport(Form* form)
+{
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventExport").call(QScriptValue(), args);
 }
 
 
@@ -294,6 +442,13 @@ QList<EventFunction>* ScriptEngine::getEventsList()
         func.comment = "// " + QObject::trUtf8("Событие происходит перед удалением формы документа");
         eventsList.append(func);
 
+        func.name = "EventImport";
+        func.comment = "// " + QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
+        eventsList.append(func);
+
+        func.name = "EventExport";
+        func.comment = "// " + QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
+        eventsList.append(func);
     }
     return &eventsList;
 }

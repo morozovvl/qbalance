@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #ifndef ESSENCE_H
 #define ESSENCE_H
 
@@ -16,6 +35,7 @@
 #include <QDialog>
 #include "../storage/table.h"
 #include "../engine/scriptengine.h"
+#include "../engine/reportscriptengine.h"
 
 
 class TApplication;
@@ -31,14 +51,13 @@ public:
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
-    virtual bool                        setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
-    virtual void                        setId(qulonglong);
+    Q_INVOKABLE virtual void            setId(qulonglong);
     Q_INVOKABLE QString                 getCurrentFieldName() { return currentFieldName; }
     QString                             getIdFieldName() { return idFieldName; }
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
-    Q_INVOKABLE virtual bool            add() { return false; }        // Добавление записи
+    Q_INVOKABLE virtual bool            add();
     Q_INVOKABLE virtual bool            remove();                      // Удаление записи
     Q_INVOKABLE virtual void            view();
     virtual void                        print(QString);
@@ -52,6 +71,7 @@ public:
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void hide();                // Скрыть форму
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
+    Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
     Q_INVOKABLE virtual QDialog* getFormWidget();
     bool isInsertable() { return lInsertable; }         // Получить/установить ...
     bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
@@ -94,7 +114,7 @@ protected:
     bool                lUpdateable;
     bool                lPrintable;
     virtual void        setForm();
-    virtual void        preparePrintValues(QMap<QString, QVariant>*);     // Готовит значения для печати
+    virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
 private:
     QVariant            oldValue;
 };

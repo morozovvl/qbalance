@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QObject>
 #include <QTextStream>
 #include <QFormBuilder>
@@ -107,10 +126,8 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     if (formWidget == 0) {
         formWidget = new QDialog(pwgt);
         formWidget->setVisible(false);
-//        buttonOk = new QPushButton(QObject::trUtf8("&Принять"));
         buttonOk = new QPushButton();
         buttonOk->setObjectName("buttonOk");
-//        buttonCancel = new QPushButton(QObject::trUtf8("&Отменить"));
         buttonCancel = new QPushButton();
         buttonCancel->setObjectName("buttonCancel");
 
@@ -172,11 +189,8 @@ void Form::show() {
         lSelected = false;
         if (parent != 0)
             beforeShowFormEvent();
-        formWidget->show();
         formWidget->activateWindow();
-        formWidget->raise();
-//        if (!uiCreated && defaultForm)
-//            createUi();
+        formWidget->show();
     }
 }
 
@@ -188,6 +202,28 @@ void Form::hide() {
     }
 }
 
+void Form::initFormEvent() {
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->eventInitForm(this);
+    }
+}
+
+void Form::beforeShowFormEvent() {
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->eventBeforeShowForm(this);
+    }
+}
+
+void Form::afterHideFormEvent() {
+    if (getParent()->getScriptEngine() != 0)
+        getParent()->getScriptEngine()->eventAfterHideForm(this);
+}
+
+void Form::closeFormEvent() {
+    if (getParent()->getScriptEngine() != 0) {
+        getParent()->getScriptEngine()->eventCloseForm(this);
+    }
+}
 
 void Form::setButtonsSignals()
 {
@@ -195,29 +231,6 @@ void Form::setButtonsSignals()
     foreach (QPushButton* button, allButtons)
     {
         connect(button, SIGNAL(clicked()), SLOT(buttonPressedSignalSend()));
-    }
-}
-
-void Form::initFormEvent() {
-    if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->eventInitForm();
-    }
-}
-
-void Form::beforeShowFormEvent() {
-    if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->eventBeforeShowForm();
-    }
-}
-
-void Form::afterHideFormEvent() {
-    if (getParent()->getScriptEngine() != 0)
-        getParent()->getScriptEngine()->eventAfterHideForm();
-}
-
-void Form::closeFormEvent() {
-    if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->eventCloseForm();
     }
 }
 

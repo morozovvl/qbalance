@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QHBoxLayout>
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
@@ -58,35 +77,6 @@ void FormGridSearch::close() {
 }
 
 
-void FormGridSearch::query(QString param) {
-    param = "";
-    if (parameters != 0) {
-        parameters->getParameters(searchParameters);
-        for (int i = 0; i < searchParameters.size(); i++) {
-            if ((searchParameters[i].field == TApplication::nameFieldName()) && searchParameters[i].value.toString().size() > 0) {
-                QString str = searchParameters[i].value.toString().trimmed() + " ";
-                while (str.contains("  "))                    // Уберем лишние пробелы
-                    str.replace("  ", " ");
-                while (str.size() > 0) {
-                    if (param.size() > 0)
-                        param.append(" AND ");
-                    param.append(searchParameters[i].table).append("." + TApplication::nameFieldName()).append(" ILIKE '%" + str.left(str.indexOf(' ')) + "%'");
-                    str = str.remove(0, str.indexOf(' ') + 1);
-                }
-            }
-        }
-    }
-    FormGrid::query(param);
-}
-
-/*
-void FormGridSearch::setShowFocus() {
-    FormGrid::setShowFocus();
-    if (parameters != 0)
-        parameters->setFocus();
-}
-*/
-
 QDomElement FormGridSearch::createWidgetsStructure() {
     QDomDocument doc;
     QDomElement vboxLayout = FormGrid::createWidgetsStructure();
@@ -111,5 +101,19 @@ QDomElement FormGridSearch::createWidgetsStructure() {
         vboxLayout.insertBefore(item, QDomNode());
     }
     return vboxLayout;
+}
+
+
+int FormGridSearch::exec()
+{
+    parameters->setFocus();
+    return Form::exec();
+}
+
+
+void FormGridSearch::show()
+{
+    parameters->setFocus();
+    Form::show();
 }
 

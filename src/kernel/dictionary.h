@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 
@@ -23,6 +42,7 @@ public:
     virtual bool add();
     virtual bool remove();
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
+    Q_INVOKABLE virtual void query(QString filter = "");
 
 
 // Функции для работы справочника в составе документа
@@ -30,6 +50,7 @@ public:
 // блокируют открытие связанных справочников и др.подобные функции
     bool canShow() { return lCanShow; }
     void setCanShow(bool can) { lCanShow = can; }
+
     bool isMustShow() { return lMustShow; }
     virtual void setMustShow(bool must) { lMustShow = must; }
     bool isConst() { return lIsConst; }

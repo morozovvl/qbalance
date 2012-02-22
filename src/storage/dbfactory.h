@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #ifndef DBFACTORY_H
 #define DBFACTORY_H
 
@@ -62,6 +81,7 @@ struct ToperType
     bool        crDictVisible;  // Кредитовый справочник видим
     bool        isSingleString; // В документе должна быть только одна строка
     QString     itog;           //
+    bool        freePrv;        // Свободная проводка
 };
 
 
@@ -103,7 +123,7 @@ public:
     void getColumnsProperties(QList<FieldType>*, QString);
     void getColumnsRestrictions(QString, QMap<int, FieldType>*);
     QString getPhotoDatabase();
-    bool insertDictDefault(QString tableName, QStringList fields = QStringList(), QVariantList values = QVariantList());// Вставляет в справочник новую строку со значениями по умолчанию
+    bool insertDictDefault(QString tableName, QMap<QString, QVariant>* values);                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
     void setHostName(QString name) { hostName = name; }
     void setPort(int portNum) { port = portNum; }
@@ -173,7 +193,8 @@ public:
                      bool crAccConst,
                      bool crVisible,
                      bool crSalVisible,
-                     QString itog);
+                     QString itog,
+                     bool freePrv);
     int getNewToper();                                          // Получает свободный номер для новой типовой операции
     bool getToperSingleString(int);                             // Получает значение флага "одна строка в документе" для типовой операции
     bool setToperSignleString(int, bool);                       // Устанавливает значение флага "одна строка в документе" для типовой операции

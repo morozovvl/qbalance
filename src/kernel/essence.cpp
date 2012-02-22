@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QVariant>
 #include <QSqlRecord>
 #include <QSqlError>
@@ -53,12 +72,6 @@ QDialog* Essence::getFormWidget() {
 }
 
 
-bool Essence::setData(const QModelIndex & index, const QVariant & value, int role/* = Qt::EditRole*/)
-{
-    return tableModel->setData(index, value, role);
-}
-
-
 bool Essence::calculate(const QModelIndex &index)
 {
     bool lResult = true;
@@ -83,19 +96,11 @@ QVariant Essence::getValue(QString name, int row)
 }
 
 
-void Essence::setValue(QString name, QVariant value, int row)
+void Essence::setValue(QString name, QVariant value, int r)
 {
-    QModelIndex index = form->getCurrentIndex();
+    int row = (r >= 0 ? r : form->getCurrentIndex().row());
     int col = tableModel->record().indexOf(name);
-    if (row >= 0)
-    {
-        index = index.sibling(row, col);
-    }
-    else
-    {
-        index = index.sibling(index.row(), col);
-    }
-    tableModel->setData(index, value);
+    tableModel->setData(tableModel->index(row, col), value);
 }
 
 
@@ -117,11 +122,12 @@ QString Essence::getName(int row)
 
 void Essence::setId(qulonglong id)
 {
-    if (id > 0) {
+    if (id >= 0) {
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::idFieldName()).arg(id));
         for (int i = 0; i < tableModel->rowCount(); i++) {
             form->getGridTable()->selectRow(i);
             if (getId() == id) {
+                form->setCurrentIndex(form->getCurrentIndex().sibling(i, 0));
                 return;
             }
         }
@@ -148,9 +154,19 @@ QString Essence::getPhotoPath()
 }
 
 
+bool Essence::add()
+{
+    return false;
+}
+
+
 bool Essence::remove()
 {
-    return TApplication::exemplar()->getGUIFactory()->showYesNo("Удалить запись? Вы уверены?") == QMessageBox::Yes;
+    if (TApplication::exemplar()->getGUIFactory()->showYesNo("Удалить запись? Вы уверены?") == QMessageBox::Yes)
+    {
+        return true;
+    }
+    return false;
 }
 
 
@@ -241,13 +257,18 @@ void Essence::initForm() {
     form->setIcons();
     form->readSettings();
     setFormTitle(formTitle);
-    form->initFormEvent();
 }
 
 
 void Essence::setFormTitle(QString title) {
     formTitle = title;
     form->getForm()->setWindowTitle(title);
+}
+
+
+QString Essence::getFormTitle()
+{
+    return form->getForm()->windowTitle();
 }
 
 
@@ -264,7 +285,7 @@ void Essence::cmdCancel() {
 }
 
 
-void Essence::preparePrintValues(QMap<QString, QVariant>* printValues)
+void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
 {   // Зарядим константы в контекст печати
     DBFactory* db = TApplication::exemplar()->getDBFactory();
     QString constDictionaryName = db->getObjectName("константы");
@@ -280,7 +301,7 @@ void Essence::preparePrintValues(QMap<QString, QVariant>* printValues)
         for (int i = 0; i < model->rowCount(); i++)
         {
             QSqlRecord rec = model->record(i);
-            printValues->insert(QString("[%1.%2]").arg(constDictionaryName).arg(rec.value(constNameField).toString()), rec.value(constValueField));
+            reportEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString()), rec.value(constValueField));
         }
     }
 }
@@ -290,15 +311,17 @@ void Essence::print(QString file)
 {
     // Подготовим данные для печати
     QMap<QString, QVariant> printValues;
-    preparePrintValues(&printValues);
-    QString ext = TApplication::exemplar()->getReportTemplateExt();
     ReportScriptEngine scriptEngine(&printValues);
-    if (scriptEngine.open(file + "." + ext))
+    preparePrintValues(&scriptEngine);
+    QString ext = TApplication::exemplar()->getReportTemplateExt();
+    if (scriptEngine.open(file + "." + ext + ".qs") && scriptEngine.evaluate())
     {
         switch (TApplication::exemplar()->getReportTemplateType())
         {
             case OOreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                    foreach(QString key, printValues.keys())
+                        qDebug() << key << printValues.value(key);
                     OOReportEngine report(&printValues, file, ext);
                     report.open();
                 }

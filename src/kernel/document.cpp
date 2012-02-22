@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QModelIndex>
 #include "dictionary.h"
 #include "saldo.h"
@@ -22,6 +41,7 @@ Document::Document(int oper, Documents* par)
     tagName = QString("Документ%1").arg(oper);
     formTitle = TApplication::exemplar()->getDBFactory()->getTopersProperties(oper).value(TApplication::nameFieldName()).toString();
     idFieldName = "p1__" + TApplication::idFieldName();
+    freePrv = 0;
 
     dictionaries = new Dictionaries();
     if (dictionaries->open())
@@ -35,6 +55,15 @@ Document::Document(int oper, Documents* par)
 
     // Проверим, должна ли быть в документе только одна строка
     isSingleString = topersList.at(0).isSingleString;
+
+    // Проверим, есть ли в документе "свободная" проводка
+    for (int i = 0; i < topersList.count(); i++)
+        if (topersList.at(i).freePrv)
+        {
+            freePrv = topersList.at(i).number;
+            break;
+        }
+
 
     // Создадим локальный для документа список справочников
     Dictionary* dict;
@@ -89,31 +118,15 @@ Document::~Document() {
 
 
 bool Document::calculate(const QModelIndex& index) {
-    bool lResult = true;
-    if (index.isValid())
-        lResult = Essence::calculate(index);
+    bool lResult = Essence::calculate(index);
     if (lResult) {
-        selectCurrentRow();                     // Обновим содержимое строки
-        double itog = 0;
-        for (int i = 0; i < topersList.count(); i++)
+        if (freePrv)    // Если есть "свободная" проводка
         {
-            QString sign = topersList.at(i).itog;
-            if (sign == "+" || sign == "-") {
-                double sum = 0;
-                int col = tableModel->record().indexOf(QString("p%1__сумма").arg(topersList.at(i).number));
-                for (int j = 0; j < tableModel->rowCount(); j++) {
-                    sum += tableModel->data(tableModel->index(j, col)).toDouble();
-                }
-                if (sign == "+")
-                    itog += sum;
-                else
-                    itog -= sum;
-            }
+            ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
+            tableModel->submit(tableModel->index(0, 0));
         }
-        MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
-        if (itogWidget != 0)
-            itogWidget->setValue(itog);
-        parent->setValue("сумма", itog);
+        selectCurrentRow();                     // Обновим содержимое строки
+        calcItog();
     }
     else
     {
@@ -126,28 +139,64 @@ bool Document::calculate(const QModelIndex& index) {
 }
 
 
+void Document::calcItog()
+{
+    double itog = 0;
+    for (int i = 0; i < topersList.count(); i++)
+    {
+        QString sign = topersList.at(i).itog;
+        if (sign == "+" || sign == "-") {
+            double sum = 0;
+            int col = tableModel->record().indexOf(QString("p%1__сумма").arg(topersList.at(i).number));
+            for (int j = 0; j < tableModel->rowCount(); j++) {
+                sum += tableModel->data(tableModel->index(j, col)).toDouble();
+            }
+            if (sign == "+")
+                itog += sum;
+            else
+                itog -= sum;
+        }
+    }
+    parent->setValue("сумма", itog);
+    showItog();
+}
+
+
+void Document::showItog()
+{
+    MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
+    if (itogWidget != 0)
+        itogWidget->setValue(parent->getValue("сумма"));
+}
+
+
 bool Document::add()
 {
     if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         ((DocumentScriptEngine*)scriptEngine)->eventBeforeAddString();
-        insertDocString();
+        appendDocString();
+        query();
+        form->getGridTable()->selectRow(tableModel->rowCount() - 1);
+        ((DocumentScriptEngine*)scriptEngine)->eventAfterAddString();
         return true;
     }
     return false;
 }
 
 
-void Document::getEventAfterAddString()
-{
-    ((DocumentScriptEngine*)scriptEngine)->eventAfterAddString();
-}
-
-
 bool Document::remove() {
     if (lDeleteable) {
+        int strNum = getValue("p1__стр").toInt();
         if (Essence::remove()) {
-            DbFactory->removeDocStr(docId, getValue("p1__стр").toInt());
+            DbFactory->removeDocStr(docId, strNum);
+            query();
+            if (tableModel->rowCount() > 0 && freePrv)    // Если есть "свободная" проводка
+            {
+                ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
+                tableModel->submit(tableModel->index(0, 0));
+            }
+            calcItog();
             return true;
         }
     }
@@ -155,6 +204,34 @@ bool Document::remove() {
         showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
     return false;
 }
+
+
+void Document::setValue(QString name, QVariant value, int row)
+{   // Функция по-особому обрабатывает "свободные" проводки
+    if (name.left(1) == "p")
+    {
+        int __pos = name.indexOf("__");
+        int operNum = name.mid(1, __pos - 1).toInt();
+        if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
+            Essence::setValue(name, value, 0);  // Т.к. свободная проводка находится всегда в первой строке документа
+        else
+            Essence::setValue(name, value, row);
+        return;
+    }
+    Essence::setValue(name, value, row);
+}
+
+
+QVariant Document::getSumValue(QString name)
+{
+    double sum = 0;
+    int col = tableModel->record().indexOf(name);
+    for (int j = 0; j < tableModel->rowCount(); j++) {
+        sum += tableModel->data(tableModel->index(j, col)).toDouble();
+    }
+    return QVariant(sum);
+}
+
 
 
 void Document::show()
@@ -192,7 +269,7 @@ void Document::show()
     {
         if (getIsSingleString())
         {   // Если в документе должна быть только одна строка, но нет ни одной, то добавим пустую строку
-            insertDocString();
+            appendDocString();
             query();
         }
     }
@@ -225,24 +302,22 @@ void Document::setConstDictId(QString dName, QVariant id)
             }
         }
     }
-    Essence::show();
 }
 
 
 bool Document::open()
 {
+    bool result = false;
     if (Essence::open()) {
-        initForm();
         if (scriptEngine != 0)
         {
-            bool result = ((DocumentScriptEngine*)scriptEngine)->open(TApplication::exemplar()->getScriptFileName(operNumber));
+            result = ((DocumentScriptEngine*)scriptEngine)->open(TApplication::exemplar()->getScriptFileName(operNumber));
             if (result)
                 ((DocumentScriptEngine*)scriptEngine)->evaluate();
-            return result;
+            form->initFormEvent();
         }
-        return true;
     }
-    return false;
+    return result;
 }
 
 
@@ -280,6 +355,12 @@ void Document::setForm()
         button = form->getButtonPrint();
         if (button != NULL)
             button->setToolTip(trUtf8("Распечатать документ"));
+        button = form->getButtonSave();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Экспорт документа"));
+        button = form->getButtonLoad();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Импорт документа"));
     }
 }
 
@@ -424,7 +505,7 @@ bool Document::showNextDict()
 }
 
 
-void Document::insertDocString()
+void Document::appendDocString()
 {
     Dictionary* dict;
     QString dictName, parameter;
@@ -445,9 +526,17 @@ void Document::insertDocString()
             dict = dicts->value(dictName);
             crId = dict->getId();
         }
-        parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
+        parameter.append(QString("%1,%2,").arg(dbId).arg(crId));
+        QString value;
+        value = prvValues.value(QString("p%1__кол").arg(i+1)).toString();
+        parameter.append(value.size() > 0 ? value : "0").append(",");
+        value = prvValues.value(QString("p%1__цена").arg(i+1)).toString();
+        parameter.append(value.size() > 0 ? value : "0").append(",");
+        value = prvValues.value(QString("p%1__сумма").arg(i+1)).toString();
+        parameter.append(value.size() > 0 ? value : "0").append(",");
     }
     DbFactory->addDocStr(operNumber, docId, parameter);
+    prvValues.clear();
 }
 
 
@@ -470,9 +559,9 @@ void Document::selectCurrentRow()
 }
 
 
-void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
+void Document::preparePrintValues(ReportScriptEngine* reportEngine)
 {
-    Essence::preparePrintValues(printValues);
+    Essence::preparePrintValues(reportEngine);
     // Зарядим постоянные справочники
     foreach (QString dictName, dicts->keys())
     {
@@ -483,7 +572,7 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
             {
                 if (field.left(4) != TApplication::exemplar()->getDBFactory()->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
                 {
-                    printValues->insert(QString("[%1.%2]").arg(dictName).arg(field), dict->getValue(field));
+                    reportEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field), dict->getValue(field));
                 }
             }
         }
@@ -495,7 +584,7 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
     {
         if (enabledFields.contains(field))
         {
-            printValues->insert(QString("[%1.%2]").arg(getParent()->getTableName()).arg(field), getParent()->getValue(field));
+            reportEngine->getReportContext()->setValue(QString("%1.%2").arg(getParent()->getTableName()).arg(field), getParent()->getValue(field));
         }
     }
     // Зарядим таблицу проводок
@@ -511,16 +600,15 @@ void Document::preparePrintValues(QMap<QString, QVariant>* printValues)
                 QString fld = field.section("__", 1);               // проверим, актуально ли это поле для печати
                 if (enabledFields.contains(fld))
                 {
-                    printValues->insert(QString("[Таблица%1.%2]").arg(i+1).arg(field), rec.value(field));
+                    reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i+1).arg(field), rec.value(field));
                 }
             }
             else
             {
-                printValues->insert(QString("[Таблица%1.%2]").arg(i+1).arg(field), rec.value(field));
+                reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i+1).arg(field), rec.value(field));
             }
         }
     }
-
 }
 
 

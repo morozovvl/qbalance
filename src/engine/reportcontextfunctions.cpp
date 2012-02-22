@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #ifndef REPORTFUNCTIONS_CPP
 #define REPORTFUNCTIONS_CPP
 
@@ -5,6 +24,7 @@
 #include <QScriptValue>
 #include <QScriptContext>
 #include <QScriptEngine>
+#include <QDebug>
 
 //-- функция SumToString -----------------------------------------------------------------------------------------------------
 QString str0_9(QString n9, int strS) {
@@ -137,8 +157,8 @@ QScriptValue SumToString(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue sumNum = context->argument(0);
     if (!sumNum.isNull() && sumNum.toNumber() != 0) {
         if (qAbs(sumNum.toInt32()) < 1000000000) {
-            int nCop = ((int)sumNum.toNumber() - (int)sumNum.toInt32()) * 100;
             long long int nSumNum = int(sumNum.toInt32());
+            int nCop = QVariant((sumNum.toNumber() - nSumNum) * 100).toInt();
             QString minus, unit1, unit2, unit3, unit4, unit5, unit6, strMld, strN_Mld, strMln, strN_Mln, strTh, strNTh, strHun, str, str1, str10, str100, strCop, sNum;
             minus = "";
             unit1 = "рубль";

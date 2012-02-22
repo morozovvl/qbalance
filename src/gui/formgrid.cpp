@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QApplication>
 #include <QSqlTableModel>
 #include <QStringList>
@@ -29,6 +48,8 @@ FormGrid::FormGrid(QObject* parent/* = NULL*/)
 , buttonView(NULL)
 , buttonRequery(NULL)
 , buttonPrint(NULL)
+, buttonLoad(NULL)
+, buttonSave(NULL)
 {
 }
 
@@ -107,12 +128,57 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
     }
 
+    // Подключим кнопку "Загрузить"
+    if (parent != 0)
+    {
+        if (defaultForm)
+        {
+            buttonLoad = new QPushButton();
+            buttonLoad->setObjectName("buttonLoad");
+        }
+        else
+        {
+            if (formWidget != 0)
+            {
+                buttonLoad = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonLoad");
+            }
+        }
+        if (buttonLoad != 0)
+        {
+            connect(buttonLoad, SIGNAL(clicked()), this, SLOT(cmdLoad()));
+            cmdButtonLayout->insertWidget(0, buttonLoad);
+            buttonLoad->hide();
+        }
+    }
+
+    // Подключим кнопку "Выгрузить"
+    if (parent != 0)
+    {
+        if (defaultForm)
+        {
+            buttonSave = new QPushButton();
+            buttonSave->setObjectName("buttonSave");
+        }
+        else
+        {
+            if (formWidget != 0)
+            {
+                buttonSave = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonSave");
+            }
+        }
+        if (buttonSave != 0)
+        {
+            connect(buttonSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
+            cmdButtonLayout->insertWidget(0, buttonSave);
+            buttonSave->hide();
+        }
+    }
+
     // Подключим кнопку "Печать"
     if (parent != 0 && parent->isPrintable())
     {
         if (defaultForm)
         {
-//            buttonPrint = new QPushButton(QObject::trUtf8("&Печать"));
             buttonPrint = new QPushButton();
             buttonPrint->setObjectName("buttonPrint");
         }
@@ -136,7 +202,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     // Подключим кнопку "Обновить"
     if (defaultForm)
     {
-//        buttonRequery = new QPushButton(QObject::trUtf8("&Обновить"));
         buttonRequery = new QPushButton();
         buttonRequery->setObjectName("buttonRequery");
     }
@@ -154,7 +219,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-//            buttonView = new QPushButton(QObject::trUtf8("&Просмотреть"));
             buttonView = new QPushButton();
             buttonView->setObjectName("buttonView");
         }
@@ -177,7 +241,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-//            buttonDelete = new QPushButton(QObject::trUtf8("&Удалить"));
             buttonDelete = new QPushButton();
             buttonDelete->setObjectName("buttonDelete");
         }
@@ -200,7 +263,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (defaultForm)
         {
-//            buttonAdd = new QPushButton(QObject::trUtf8("&Добавить"));
             buttonAdd = new QPushButton();
             buttonAdd->setObjectName("buttonAdd");
         }
@@ -231,24 +293,50 @@ void FormGrid::close()
 }
 
 
+int FormGrid::exec()
+{
+    grdTable->setFocus();
+    return Form::exec();
+}
+
+
 void FormGrid::show()
 {
+    grdTable->setFocus();
     Form::show();
-//    setShowFocus();
 }
 
 
 void FormGrid::cmdAdd()
 {
     if (parent != 0 && parent->add())
-        add();
+    {
+        if (parent->getMyRelationalTableModel()->rowCount() > 0)
+        {   // Если записей стало больше 0, то активируем кнопку "Удалить"
+            if (buttonDelete != 0)
+                buttonDelete->setDisabled(false);
+        }
+    }
 }
 
 
 void FormGrid::cmdDelete()
 {
     if (parent != 0 && parent->remove())
-        remove();
+    {
+        QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
+        int rowCount = parent->getMyRelationalTableModel()->rowCount();
+        if (rowCount > 0)
+        {   // Если после удаления строки в таблице остались еще записи
+            if (index.row() < (rowCount - 1))
+                setCurrentIndex(index);
+            else
+                setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
+        }
+        else
+            if (buttonDelete != 0)
+                buttonDelete->setDisabled(true);
+    }
 }
 
 
@@ -256,6 +344,17 @@ void FormGrid::cmdView()
 {
     if (parent != 0)
         parent->view();
+}
+
+
+void FormGrid::cmdRequery(QString param)
+{
+    QModelIndex index = getCurrentIndex();
+    parent->query(param);
+    if (index.row() == -1 || (index.row() + 1) > parent->getTableModel()->rowCount())
+        index = tableModel->index(0, 0);
+    setCurrentIndex(index);
+    grdTable->setFocus();
 }
 
 
@@ -337,7 +436,6 @@ void FormGrid::showEvent(QShowEvent* event)
 //    setShowFocus();
 }
 
-
 void FormGrid::cmdPrint()
 {
     QDir dir = QDir(REPORT_DIR);
@@ -387,36 +485,19 @@ void FormGrid::cmdPrint()
 }
 
 
-void FormGrid::add()
+void FormGrid::cmdLoad()
 {
-    cmdRequery();
-    grdTable->selectRow(grdTable->model()->rowCount() - 1);   // установим курсор на последнюю добавленную запись
-    if (parent->getMyRelationalTableModel()->rowCount() > 0)
-    {   // Если записей стало больше 0, то активируем кнопку "Удалить"
-        if (buttonDelete != 0)
-            buttonDelete->setDisabled(false);
-    }
+    getScriptEngine()->eventImport(this);
 }
 
 
-void FormGrid::remove()
+void FormGrid::cmdSave()
 {
-    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
-    cmdRequery();
-    int rowCount = parent->getMyRelationalTableModel()->rowCount();
-    if (rowCount > 0)
-    {   // Если после удаления строки в таблице остались еще записи
-        if (index.row() < (rowCount - 1))
-            setCurrentIndex(index);
-        else
-            setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
-    }
-    else
-        if (buttonDelete != 0)
-            buttonDelete->setDisabled(true);
+    getScriptEngine()->eventExport(this);
 }
 
 
+/*
 void FormGrid::query(QString param)
 {
     QModelIndex index = getCurrentIndex();
@@ -424,7 +505,7 @@ void FormGrid::query(QString param)
     setCurrentIndex(index);
 //    FormGrid::setShowFocus();
 }
-
+*/
 
 void FormGrid::showGridLine(int currentRow)
 {

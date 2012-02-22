@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include "../kernel/app.h"
 #include "ooreportengine.h"
 
@@ -18,10 +37,17 @@ bool OOReportEngine::open()
         QTextStream out(&file);
         foreach (QString key, reportContext->keys())
         {
-            QString value = reportContext->value(key).toString();
-            if (value.size() > 0)
+            if (!reportContext->value(key).isNull())
             {
-                out << key.toLower() << ";" << value << endl;
+                QString value;
+                if (reportContext->value(key).type() == QVariant::Double)
+                {
+                    value = QString("%1").arg(reportContext->value(key).toDouble());
+                    value.replace(".", ",");        // В числовых значениях заменим точку на запятую, т.к. OpenOffice не правильно воспринимает точку
+                }
+                else
+                    value = reportContext->value(key).toString();
+                out << "[" << key.toLower() << "]" << ";" << value << endl;
             }
         }
         file.close();

@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QString>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -100,31 +119,46 @@ void SearchParameters::removeString(int strNum) {
     }
 }
 
-void SearchParameters::getParameters(QVector<sParam> &param) {
-    param.clear();
+QVector<sParam> SearchParameters::getParameters() {
+    QVector<sParam> param;
     for(int i = 0; i < parameters.size(); i++) {
         QString field = parameters.at(i);
         MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, field);
         QString text = cmb->currentText().trimmed();
-        while (text.contains("  "))                                   // Если есть пробелы, идущие подряд
-            text.replace("  ", " ");                                  // то уберем их
+        while (text.contains("  ")) // Если есть пробелы, идущие подряд
+            text.replace("  ", " "); // то уберем их
         sParam par;
         par.table = field.replace("." + programNameFieldName, "");
         par.field = programNameFieldName;
         par.value = text;
         if (text.size() > 0)
             param.append(par);
-        if (par.table != parentForm->getParent()->getTableName()) {
-            par.field = programIdFieldName + "_" + par.table;
-            par.value = 0;
-            if (dictionaries->isMember(par.table))              // Если такой справочник существует
-                par.value = dictionaries->getDictionary(par.table)->getId();                          // то возьмем идентификатор его текущей записи
-            par.table = parentForm->getParent()->getTableName();
-            if (par.value.toLongLong() > 0)
-                param.append(par);
+    }
+    return param;
+}
+
+
+QString SearchParameters::getFilter()
+{
+    QString result;
+    for(int i = 0; i < parameters.size(); i++) {
+        QString field = parameters.at(i);
+        MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, field);
+        QString text = cmb->currentText().trimmed();
+        while (text.contains("  "))                                   // Если есть пробелы, идущие подряд
+            text.replace("  ", " ");                                  // то уберем их
+        if (text.size() > 0)
+        {
+            if (result.size() > 0)
+                result.append(" AND ");
+            text = " " + text + " ";
+            text.replace(" ", "%");
+            result.append(QString("%1 LIKE '%2'").arg(cmb->objectName()).arg(text));
         }
     }
+    return result;
 }
+
 
 void SearchParameters::dictionaryButtonPressed() {
     dictionaries->addDictionary(sender()->objectName(), 0);

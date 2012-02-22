@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QVariant>
 #include "wizardoperation.h"
 #include "mybuttonlineedititemdelegate.h"
@@ -15,7 +34,8 @@ enum fieldsEnums {debetField = 0,
              crConstField = 5,
              crVisible = 6,
              crSalVisField = 7,
-             itogField = 8};
+             itogField = 8,
+             freeField = 9};
 
 
 QString showAccounts()
@@ -80,12 +100,12 @@ void WizardOperation::initFrames()
     QLabel* lblOperName = new QLabel(QObject::trUtf8("Наименование операции:"), formWidget);
     gridLayout->addWidget(lblOperName, 0, 0, Qt::AlignRight);
     gridLayout->addWidget(operName, 0, 1);
-    QLabel* lblSingleString = new QLabel(QObject::trUtf8("В документе одна строка:"), formWidget);
-    gridLayout->addWidget(lblSingleString, 1, 0, Qt::AlignRight);
-    gridLayout->addWidget(chbSingleString, 1, 1);
     QLabel* lblNumerator = new QLabel(QObject::trUtf8("Нумератор:"), formWidget);
-    gridLayout->addWidget(lblNumerator, 2, 0, Qt::AlignRight);
-    gridLayout->addWidget(bleNumerator, 2, 1);
+    gridLayout->addWidget(lblNumerator, 1, 0, Qt::AlignRight);
+    gridLayout->addWidget(bleNumerator, 1, 1);
+    QLabel* lblSingleString = new QLabel(QObject::trUtf8("В документе одна строка:"), formWidget);
+    gridLayout->addWidget(lblSingleString, 2, 0, Qt::AlignRight);
+    gridLayout->addWidget(chbSingleString, 2, 1);
     gridLayout->setColumnStretch(1, 1);
 
     layout->addLayout(gridLayout);
@@ -199,6 +219,7 @@ bool WizardOperation::setData()
             bool crConstAcc = false;
             bool crVisib = false;
             bool crSalVisible = false;
+            bool freePrv = false;
 
             dbAcc = "";
             item = prvTable->item(i, debetField);
@@ -244,6 +265,9 @@ bool WizardOperation::setData()
             if (item != 0)
                 crSalVisible = item->text().compare("true") == 0 ? true : false;
 
+            item = prvTable->item(i, freeField);
+            if (item != 0)
+                freePrv = item->text().compare("true") == 0 ? true : false;
 
             QString itog;
             if (prvTable->item(i, itogField) != 0)
@@ -258,7 +282,8 @@ bool WizardOperation::setData()
                             crConstAcc,
                             crVisib,
                             crSalVisible,
-                            itog))
+                            itog,
+                            freePrv))
             {
                 db->rollbackTransaction();
                 return false;
@@ -335,7 +360,7 @@ void WizardOperation::getData()
     bleNumerator->setValue(db->getToperNumerator(oper));
 
     // Создадим таблицу проводок
-    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 9);
+    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 10);
     connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
     prvTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Дебет")
                                                       << QObject::trUtf8("Дб.постоянный")
@@ -345,7 +370,8 @@ void WizardOperation::getData()
                                                       << QObject::trUtf8("Кр.постоянный")
                                                       << QObject::trUtf8("Кр.спр.видим")
                                                       << QObject::trUtf8("Кр.сал.видимо")
-                                                      << QObject::trUtf8("Итоги"));
+                                                      << QObject::trUtf8("Итоги")
+                                                      << QObject::trUtf8("Независим."));
      for (int i = 0; i < prvs.size(); i++)
      {
          prvs.seek(i);
@@ -367,6 +393,8 @@ void WizardOperation::getData()
          prvTable->setItem(i, crSalVisField, item);
          item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.итоги")).toString());
          prvTable->setItem(i, itogField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.независим")).toString());
+         prvTable->setItem(i, freeField, item);
      }
      MyButtonLineEditItemDelegate* dbEditDelegate = new MyButtonLineEditItemDelegate();
      dbEditDelegate->setFormOnPushButton(&showAccounts);
@@ -393,6 +421,9 @@ void WizardOperation::getData()
 
      boolDelegate = new MyBooleanItemDelegate();
      prvTable->setItemDelegateForColumn(crSalVisField, boolDelegate);
+
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(freeField, boolDelegate);
 
      topersList.clear();
      QMap<int, FieldType> flds;

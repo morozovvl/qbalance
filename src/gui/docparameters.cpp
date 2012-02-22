@@ -1,3 +1,22 @@
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include <QString>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -74,11 +93,7 @@ void DocParameters::dictionaryButtonPressed() {
         if (dictName.compare(sender()->objectName(), Qt::CaseInsensitive) == 0) {
             dictionaries->value(dictName)->exec();
             if (dictionaries->value(dictName)->isFormSelected()) {
-                QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);
-                QVariant id = dictionaries->value(dictName)->getValue(programIdFieldName);
-                dictionaries->value(dictName)->setId(id.toULongLong());;
-                parentForm->getParent()->setConstDictId(dictName, id);
-                lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
+                showText(dictName);
             }
             break;
         }
@@ -89,18 +104,15 @@ void DocParameters::dictionaryButtonPressed() {
 }
 
 
-void DocParameters::showText(QString dName)
+void DocParameters::showText(QString dictName)
 {   // На форме документа выводит текущие значения поля ИМЯ постоянных справочников
-    foreach (QString dictName, dictionaries->keys()) {
-        if (dictName.compare(dName, Qt::CaseInsensitive) == 0)
-        {   // В списке локальных для документа справочников разыщем справочник <dName>
-            QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);       // На форме документа разыщем строку, в которой будем отображать поле ИМЯ
-            QVariant id = dictionaries->value(dictName)->getValue(programIdFieldName);
-            dictionaries->value(dictName)->setId(id.toULongLong());;
-            lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
-            break;
-        }
-    }
+    QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);
+/*
+    QVariant id = dictionaries->value(dictName)->getValue(programIdFieldName);
+    dictionaries->value(dictName)->setId(id.toULongLong());;
+    parentForm->getParent()->setConstDictId(dictName, id);
+*/
+    lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
 }
 
 
