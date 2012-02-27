@@ -155,9 +155,16 @@ void TApplication::showConfigs() {
 
 
 QString TApplication::getFormsPath(QString formName) {
-    QString fileName = applicationDirPath() + "/forms" + "/" + formName;
+    QString fileName = applicationDirPath() + "/forms/" + formName;
     return fileName;
 }
+
+
+QString TApplication::getReportsPath(QString reportName) {
+    QString fileName = applicationDirPath() + "/reports/" + reportName;
+    return fileName;
+}
+
 
 QString TApplication::encoding()
 {

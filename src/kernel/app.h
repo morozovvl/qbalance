@@ -63,6 +63,7 @@ public:
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
     QString getFormsPath(QString formName = "");
+    QString getReportsPath(QString reportName = "");
     MainWindow* getMainWindow() { return gui->getMainWindow(); }
 
     void show() { gui->show(); }

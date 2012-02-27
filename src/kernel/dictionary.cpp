@@ -93,8 +93,8 @@ bool Dictionary::add() {
             query();
             return true;
         }
-        return false;
     }
+    return false;
 }
 
 
@@ -183,11 +183,10 @@ bool Dictionary::open(int deep) {
             return true;
         }
     }
-    QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
+    QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.isEmpty())
         dictTitle = tableName;
-    showError(QString(QObject::trUtf8("Запрещено просматривать справочник %1 пользователю %2. Либо справочник отсутствует.")).arg(
-        dictTitle, TApplication::exemplar()->getLogin()));
+    showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
     return false;
 }
 
@@ -238,13 +237,16 @@ void Dictionary::query(QString defaultFilter)
         QString filter;
         QVector<sParam> searchParameters = ((FormGridSearch*)form)->getSearchParameters()->getParameters();
         for (int i = 0; i < searchParameters.size(); i++) {
-            if (filter.size() > 0)
-                filter.append(" AND ");
             QString text = searchParameters[i].value.toString();
-            while (text.contains("  "))                                   // Если есть пробелы, идущие подряд
-                text.replace("  ", " ");                                  // то уберем их
-            text = "%" + text.replace(" ", "%") + "%";
-            filter.append(QString("%1.%2 ILIKE '%3'").arg(searchParameters[i].table).arg(searchParameters[i].field).arg(text));
+            QStringList paramList = text.split(QRegExp("\\s+"));
+            foreach (QString param, paramList)
+            {
+                if (filter.size() > 0)
+                    filter.append(" AND ");
+                filter.append(QString("%1.%2 ILIKE '%3'").arg(searchParameters[i].table)
+                              .arg(searchParameters[i].field)
+                              .arg("%" + param + "%"));
+            }
         }
         Essence::query(filter);
     }

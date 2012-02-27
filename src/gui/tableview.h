@@ -36,10 +36,11 @@ struct FieldType;
 
 class TableView : public QTableView {
     Q_OBJECT
+
 public:
     QMap<int, FieldType>*   columns;
-    TableView(FormGrid*, QWidget* = 0);
     TableView(QWidget* parentWidget = 0);
+    TableView(FormGrid*, QWidget* = 0);
     ~TableView();
     void setFormGrid(FormGrid* par) { parent = par; }
     Q_INVOKABLE QVariant getValue();
@@ -59,8 +60,6 @@ private:
     QStringList                 visibleColumns;
     void setColumnsHeaders();
     void setColumnsDelegates();
-private slots:
-//    void sortIndicatorChanged(int, Qt::SortOrder);
 };
 
 #endif // TABLEVIEW_H

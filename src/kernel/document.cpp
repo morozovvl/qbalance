@@ -274,6 +274,7 @@ void Document::show()
         }
     }
     Essence::show();
+    getForm()->createUi();
 }
 
 
@@ -510,22 +511,24 @@ void Document::appendDocString()
     Dictionary* dict;
     QString dictName, parameter;
     qulonglong dbId, crId;
+    // Просмотрим все проводки типовой операции
     for (int i = 0; i < topersList.count(); i++)
     {
         dbId = 0;
         dictName = topersList.at(i).dbDictAlias;
-        if (dictName.size() > 0)
+        if (dictName.size() > 0)    // Если у текущей проводки указан дебетовый справочник
         {
             dict = dicts->value(dictName);
-            dbId = dict->getId();
+            dbId = dict->getId();   // То получим код текущего значения справочника
         }
         crId = 0;
         dictName = topersList.at(i).crDictAlias;
-        if (dictName.size() > 0)
+        if (dictName.size() > 0)    // У текущей проводки указан кредитовый справочник
         {
             dict = dicts->value(dictName);
-            crId = dict->getId();
+            crId = dict->getId();   // Получим код текущего значения кредитового справочника
         }
+        // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
         parameter.append(QString("%1,%2,").arg(dbId).arg(crId));
         QString value;
         value = prvValues.value(QString("p%1__кол").arg(i+1)).toString();
@@ -535,6 +538,7 @@ void Document::appendDocString()
         value = prvValues.value(QString("p%1__сумма").arg(i+1)).toString();
         parameter.append(value.size() > 0 ? value : "0").append(",");
     }
+    // Добавим строку в документ с параметрами всех проводок операции
     DbFactory->addDocStr(operNumber, docId, parameter);
     prvValues.clear();
 }

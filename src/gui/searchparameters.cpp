@@ -36,12 +36,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     gridLayout = 0;
-    dictionaries = TApplication::exemplar()->getDictionaries();
+    dictionaries = 0;
+    app = 0;
 }
 
 void SearchParameters::close() {
     for(int i = gridLayout->rowCount() - 1; i >= 0; i--)
         removeString(i);
+}
+
+
+void SearchParameters::setApp(TApplication* a)
+{
+    app = a;
+    dictionaries = app->getDictionaries();
 }
 
 void SearchParameters::setFieldsList(QStringList fldList) {
@@ -79,16 +87,22 @@ void SearchParameters::addString(QString name, int strNum) {
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
-        labelName = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(name).value("имя_в_форме").toString();
         name = name + "." + programNameFieldName;
-        if (labelName.size() == 0)
-            labelName = name;
+        if (app != 0)
+        {
+            labelName = app->getDBFactory()->getDictionariesProperties(name).value("имя_в_форме").toString();
+            if (labelName.size() == 0)
+                labelName = name;
+        }
     }
     else {
-        labelName = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(parentForm->getParent()->getTableName()).value("имя_в_форме").toString();
-        if (labelName.size() == 0)
-            labelName = "Наименование";
         name = parentForm->getParent()->getTableName() + "." + programNameFieldName;
+        if (app != 0)
+        {
+            labelName = app->getDBFactory()->getDictionariesProperties(parentForm->getParent()->getTableName()).value("имя_в_форме").toString();
+            if (labelName.size() == 0)
+                labelName = "Наименование";
+        }
     }
     comboBox->setObjectName(name);
     parameters << name;
@@ -161,23 +175,25 @@ QString SearchParameters::getFilter()
 
 
 void SearchParameters::dictionaryButtonPressed() {
-    dictionaries->addDictionary(sender()->objectName(), 0);
-    Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
-    if (dict != 0) {
-        dict->exec();
-        if (dict->isFormSelected()) {
-            MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, sender()->objectName() + "." + programNameFieldName);
-            QString text = dict->getValue(programNameFieldName).toString();
-            int index = cmb->findText(text);
-            if (index > 0)
-                cmb->setCurrentIndex(index);
-            else {
-                cmb->insertItem(0, text);
-                cmb->setCurrentIndex(0);
+    if (dictionaries != 0)
+    {
+        dictionaries->addDictionary(sender()->objectName(), 0);
+        Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
+        if (dict != 0) {
+            dict->exec();
+            if (dict->isFormSelected()) {
+                MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, sender()->objectName() + "." + programNameFieldName);
+                QString text = dict->getValue(programNameFieldName).toString();
+                int index = cmb->findText(text);
+                if (index > 0)
+                    cmb->setCurrentIndex(index);
+                else {
+                    cmb->insertItem(0, text);
+                    cmb->setCurrentIndex(0);
+                }
             }
         }
     }
-//    parentForm->setShowFocus();
 }
 
 void SearchParameters::comboBoxEnterPressed(QWidget* wdgt) {    // Была нажата кнопка Enter на одной из ComboBox

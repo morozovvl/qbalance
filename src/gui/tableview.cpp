@@ -29,29 +29,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mybooleanitemdelegate.h"
 
 
-TableView::TableView(FormGrid* par, QWidget* pwgt/* = 0*/)
-: QTableView(pwgt)
-, parent(NULL)
-, app(NULL)
-, tableModel(NULL)
+TableView::TableView(QWidget* parentWidget/* = 0*/): QTableView(parentWidget)
+{
+    parent = 0;
+    parentWidget = 0;
+    app = 0;
+    tableModel = 0;
+    name = "TableView";
+    columns = 0;
+}
+
+
+TableView::TableView(FormGrid* par, QWidget* pwgt): QTableView(pwgt)
 {
     parent = par;
     parentWidget = pwgt;
     name = "TableView";
     app = 0;
-    columns = parent->getParent()->getColumnsProperties();
-}
-
-
-TableView::TableView(QWidget* parentWidget/* = 0*/)
-: QTableView(parentWidget)
-, parent(NULL)
-, app(NULL)
-, tableModel(NULL)
-{
-    parent = 0;
-    name = "TableView";
-    app = 0;
+    tableModel = 0;
     columns = parent->getParent()->getColumnsProperties();
 }
 
@@ -129,7 +124,7 @@ void TableView::setColumnsHeaders()
     header->setMovable(true);
     header->setSortIndicatorShown(true);
     if (parent != 0) {
-        QSqlQuery headers = TApplication::exemplar()->getDBFactory()->getColumnsHeaders(parent->getParent()->getTagName());
+        QSqlQuery headers = app->getDBFactory()->getColumnsHeaders(parent->getParent()->getTagName());
         if (headers.size() > 0)
         {   // Если удалось прочитать описание столбцов, то установим столбцы в соответствии с описанием
             int i;
@@ -156,19 +151,12 @@ void TableView::setColumnsHeaders()
             return;
         }
     }
-    QStringList fields = TApplication::exemplar()->getDBFactory()->getFieldsList(columns);
+    QStringList fields = app->getDBFactory()->getFieldsList(columns);
     for (int i = 0; i < fields.count(); i++)
     {
         tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));
     }
 }
-
-/*
-void TableView::sortIndicatorChanged(int logicalIndex, Qt::SortOrder order) {
-    tableModel->setSort(logicalIndex, order);
-//    query();
-}
-*/
 
 void TableView::setColumnsDelegates()
 {
@@ -204,3 +192,4 @@ void TableView::setColumnsDelegates()
         }
     }
 }
+

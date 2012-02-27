@@ -50,16 +50,6 @@ int GUIFactory::openDB()
 //      -4: Пользователь отказался от ввода пароля
 
     int returnCode = 0;     // По умолчанию будем считать, что удалось открыть БД
-/*
-    QString login = "sa";
-    QString password = "123456";
-    if (db->open(login, password))
-    {
-        mainWindow->setWindowTitle(programName + " - localhost - " + login);
-    }
-    else
-        returnCode = -2;
-*/
     ConnectionForm* connForm = new ConnectionForm();
     connForm->open();
     connForm->initForm(db->getHostName(), db->getDatabaseName(), db->getPort());

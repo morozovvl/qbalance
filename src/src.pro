@@ -159,7 +159,6 @@ unix {
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
 }
-CONFIG += debug_and_release
 
 
 

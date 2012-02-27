@@ -63,6 +63,7 @@ bool Form::open(QWidget* pwgt, Essence* par) {
     return true;
 }
 
+
 bool Form::open(QString fileName, QWidget* pwgt) {
     parent = 0;
     if (pwgt != 0)
@@ -71,6 +72,7 @@ bool Form::open(QString fileName, QWidget* pwgt) {
         createForm(fileName);
     return true;
 }
+
 
 void Form::close() {
     disconnect(formWidget, 0, 0, 0);
@@ -95,6 +97,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     defaultForm = true;
     script = "";
     fileName = TApplication::exemplar()->getFormsPath(fileName);
+    qDebug() << fileName;
     QFile file(fileName + ".ui");
     if (file.open(QIODevice::ReadOnly)) {
         QUiLoader loader;

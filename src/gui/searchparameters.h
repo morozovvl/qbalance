@@ -45,7 +45,7 @@ public:
     void setFieldsList(QStringList);
     void setFocus();
     void setFormGrid(FormGridSearch* par) { parentForm = par; }
-    void setApp(TApplication* a) { app = a; }
+    void setApp(TApplication* a);
     void setProgramIdFieldName(QString s) { programIdFieldName = s; }
     void setProgramNameFieldName(QString s) { programNameFieldName = s; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }

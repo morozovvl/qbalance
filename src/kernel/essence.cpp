@@ -122,21 +122,18 @@ QString Essence::getName(int row)
 
 void Essence::setId(qulonglong id)
 {
-    if (id >= 0) {
-        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::idFieldName()).arg(id));
-        for (int i = 0; i < tableModel->rowCount(); i++) {
-            form->getGridTable()->selectRow(i);
-            if (getId() == id) {
-                form->setCurrentIndex(form->getCurrentIndex().sibling(i, 0));
-                return;
-            }
+    query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::idFieldName()).arg(id));
+    for (int i = 0; i < tableModel->rowCount(); i++) {
+        form->getGridTable()->selectRow(i);
+        if (getId() == id) {
+            form->setCurrentIndex(form->getCurrentIndex().sibling(i, 0));
+            return;
         }
-
-        if (tableModel->rowCount() > 0)
-        {
-            QModelIndex index = form->getCurrentIndex();
-            form->setCurrentIndex(index.sibling(0, 0));
-        }
+    }
+    if (tableModel->rowCount() > 0)
+    {
+        QModelIndex index = form->getCurrentIndex();
+        form->setCurrentIndex(index.sibling(0, 0));
     }
 }
 
@@ -320,8 +317,6 @@ void Essence::print(QString file)
         {
             case OOreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                    foreach(QString key, printValues.keys())
-                        qDebug() << key << printValues.value(key);
                     OOReportEngine report(&printValues, file, ext);
                     report.open();
                 }

@@ -41,33 +41,33 @@ class DocParameters : public QFrame {
 
 public:
     DocParameters(QWidget* pwgt = 0);
+
     ~DocParameters();
     void addString(QString);
     void removeString(int);
+    void setFocus();
+    void showText(QString);
     QStringList getKeys() { return dictList; }
     Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
     void setDictionaries(QMap<QString, Dictionary*>* dicts) { dictionaries = dicts; }
-    void setFocus();
     void setFormDocument(FormDocument* doc) { parentForm = doc; }
-    void showText(QString);
     int count() { return strNum; }
     void setApp(TApplication* a) { app = a; }
     void setProgramIdFieldName(QString s) { programIdFieldName = s; }
     void setProgramNameFieldName(QString s) { programNameFieldName = s; }
-
 public slots:
     void dictionaryButtonPressed();
 
 private:
-    TApplication* app;
-    QString programIdFieldName;
-    QString programNameFieldName;
-    QMap<QString, Dictionary*>* dictionaries;
-    int strNum;
-    QGridLayout* gridLayout;
-    QStringList parameters;
-    QStringList dictList;
-    FormDocument* parentForm;
+    TApplication*                   app;
+    QMap<QString, Dictionary*>*     dictionaries;
+    QGridLayout*                    gridLayout;
+    FormDocument*                   parentForm;
+    QString                         programIdFieldName;
+    QString                         programNameFieldName;
+    int                             strNum;
+    QStringList                     parameters;
+    QStringList                     dictList;
 
 };
 

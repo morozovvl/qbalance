@@ -56,7 +56,10 @@ bool OOReportEngine::open()
         templateFile.open();
         QString tmpFileName = QDir().tempPath() + "/" + templateFile.fileName();
         templateFile.close();
-        if (QFile().copy(reportName + "." + reportExt, tmpFileName))
+        QString destFile = reportName + "." + reportExt;
+        if (!QDir().exists(destFile))
+            QFile().copy(QDir::currentPath() + "/reports/default_report." + reportExt, destFile);
+        if (QFile().copy(destFile, tmpFileName))
         {
             QString command = QString("soffice -invisible -quickstart %1 ""macro://./Standard.Main.Main(%2)""").arg(tmpFileName).arg(file.fileName());
             QProcess* ooProcess = new QProcess();

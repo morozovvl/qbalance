@@ -37,18 +37,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/document.h"
 
 DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt) {
+    app = 0;            // По умолчанию нет ссылки на приложение. Ссылку устанавливает само приложение
+    dictionaries = 0;
+    parentForm = 0;
+    strNum = 0;
     setLineWidth(2);
     setFrameStyle(QFrame::Panel | QFrame::Raised);
     gridLayout = new QGridLayout(this);
-    strNum = 0;
     setLayout(gridLayout);
     gridLayout->setColumnStretch(1, 1);
 }
 
+
 DocParameters::~DocParameters() {
-    for(int i = gridLayout->rowCount() - 1; i >= 0; i--)
+    for(int i = 0; i < strNum; i++)
         removeString(i);
 }
+
 
 void DocParameters::addString(QString name) {
     QLineEdit* lineEdit = new QLineEdit();
@@ -62,14 +67,18 @@ void DocParameters::addString(QString name) {
     gridLayout->addWidget(button, strNum, 2, 1, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));        // При нажатии этой кнопки будем показывать связанный справочник
     lineEdit->setObjectName(name);
-    QString labelName = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(name).value(__NAME_IN_FORM__).toString();
-    if (labelName.size() == 0)
-        labelName = name;
-    QLabel* label = new QLabel(labelName + ":");
-    gridLayout->addWidget(label, strNum, 0, 1, 1, Qt::AlignRight);
-    dictList << name;
-    strNum++;
+    if (app != 0)
+    {
+        QString labelName = app->getDBFactory()->getDictionariesProperties(name).value(__NAME_IN_FORM__).toString();
+        if (labelName.size() == 0)
+            labelName = name;
+        QLabel* label = new QLabel(labelName + ":");
+        gridLayout->addWidget(label, strNum, 0, 1, 1, Qt::AlignRight);
+        dictList << name;
+        strNum++;
+    }
 }
+
 
 void DocParameters::removeString(int strNum) {
     QLabel* label = (QLabel*)gridLayout->itemAtPosition(strNum, 0)->widget();                   // удалим Label
@@ -100,19 +109,16 @@ void DocParameters::dictionaryButtonPressed() {
     }
     parentForm->getForm()->activateWindow();
     parentForm->parametersChangedEvent();
-//    parentForm->setShowFocus();
 }
 
 
 void DocParameters::showText(QString dictName)
 {   // На форме документа выводит текущие значения поля ИМЯ постоянных справочников
-    QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);
-/*
-    QVariant id = dictionaries->value(dictName)->getValue(programIdFieldName);
-    dictionaries->value(dictName)->setId(id.toULongLong());;
-    parentForm->getParent()->setConstDictId(dictName, id);
-*/
-    lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
+    if (dictionaries != 0)
+    {
+        QLineEdit* lineEdit = qFindChild<QLineEdit*>(this, dictName);
+        lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
+    }
 }
 
 
@@ -120,3 +126,4 @@ void DocParameters::setFocus() {
     QWidget* widget = gridLayout->itemAtPosition(0, 1)->widget();
     widget->setFocus();
 }
+

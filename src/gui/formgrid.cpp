@@ -368,7 +368,7 @@ void FormGrid::showPhoto()
 }
 
 
-void FormGrid::calculate(QWidget*, QAbstractItemDelegate::EndEditHint hint)
+void FormGrid::calculate(QWidget*, QAbstractItemDelegate::EndEditHint)
 {
 //    if (hint == QAbstractItemDelegate::SubmitModelCache)
 //    {

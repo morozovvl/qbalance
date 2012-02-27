@@ -12,13 +12,14 @@ QT += sql \
 # DESTDIR = bin/debug
 #}
 
+CONFIG = release
 TARGET = qbalance
 CONFIG += designer \
     plugin \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = subdirs
-SUBDIRS = src
+SUBDIRS = src src/plugins
 
 unix:MOC_DIR = ./.moc
 win32:MOC_DIR = /.moc
@@ -44,4 +45,3 @@ unix {
  icons.files = qbalance.png
  INSTALLS += target desktop icons
 }
-CONFIG += debug_and_release
