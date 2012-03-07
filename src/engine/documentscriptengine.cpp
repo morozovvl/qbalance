@@ -33,11 +33,21 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-// QList<EventFunction> DocumentScriptEngine::eventsList;          // Список доступных в скриптах событий с комментариями
-
-
 QScriptValue getSumValue(QScriptContext* context, QScriptEngine* engine) {
     return engine->evaluate(QString("document.getSumValue('%1')").arg(context->argument(0).toString()));
+}
+
+
+QScriptValue saveVariable(QScriptContext* context, QScriptEngine* engine) {
+    if (!context->argument(1).isString())
+        return engine->evaluate(QString("document.saveVariable('%1', %2)").arg(context->argument(0).toString()).arg(context->argument(1).toString()));
+    else
+        return engine->evaluate(QString("document.saveVariable('%1', '%2')").arg(context->argument(0).toString()).arg(context->argument(1).toString()));
+}
+
+
+QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
+    return engine->evaluate(QString("document.restoreVariable('%1')").arg(context->argument(0).toString()));
 }
 
 
@@ -50,10 +60,13 @@ DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
+    globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()->getForm()));
     globalObject().setProperty("document", newQObject((Document*)parent()));
     globalObject().setProperty("documents", newQObject((QObject*)((Document*)parent())->getParent()));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
     globalObject().setProperty("getSumValue", newFunction(getSumValue));
+    globalObject().setProperty("saveVariable", newFunction(saveVariable));
+    globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
 }
 
 

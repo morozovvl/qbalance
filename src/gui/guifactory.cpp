@@ -95,6 +95,7 @@ int GUIFactory::openDB()
 }
 
 void GUIFactory::closeDB() {
+    db->close();
 }
 
 void GUIFactory::setPeriod() {

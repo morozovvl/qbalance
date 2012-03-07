@@ -33,12 +33,15 @@ class Form: public QObject
 public:
     explicit Form(QObject* parent = NULL);
     ~Form();
-    Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
-    Q_INVOKABLE virtual bool open(QString, QWidget* form = 0);
+    Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0, QString fileName = "");
     Q_INVOKABLE virtual void close();
+    Q_INVOKABLE virtual void setIcons();
+    Q_INVOKABLE QDialog* getForm() { return formWidget; }
+    Q_INVOKABLE Essence* getParent() { return parent; }
+    Q_INVOKABLE bool selected() { return lSelected; }
+    Q_INVOKABLE bool opened() { return (formWidget != 0) ? true : false; }
     void setConfigName(QString name) { configName = name; setObjectName(configName); }
     QString getConfigName() { return configName; }
-    Q_INVOKABLE virtual void setIcons();
     virtual void readSettings();
     virtual void writeSettings();
     virtual void createUi();
@@ -48,11 +51,6 @@ public:
     void closeFormEvent();
     void setButtonsSignals();
     ScriptEngine* getScriptEngine() { return parent->getScriptEngine(); }
-
-    Q_INVOKABLE QDialog* getForm() { return formWidget; }
-    Q_INVOKABLE Essence* getParent() { return parent; }
-    Q_INVOKABLE bool selected() { return lSelected; }
-    Q_INVOKABLE bool opened() { return (formWidget != 0) ? true : false; }
     bool isDefaultForm() { return defaultForm; }
     QPushButton*    getButtonOk() {  return buttonOk; }
     QPushButton*    getButtonCancel() { return buttonCancel; }
@@ -69,6 +67,7 @@ signals:
     void buttonPressed(QString);
 
 protected:
+    DBFactory*      db;
     QDialog*        formWidget;
     Essence*        parent;
     bool            lSelected;

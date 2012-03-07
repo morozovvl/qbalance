@@ -82,11 +82,6 @@ void test() {
 
 int main(int argc, char **argv)
 {
-    TApplication application(argc, argv);
-    QTextCodec::setCodecForTr(TApplication::codec());
-    QTextCodec::setCodecForLocale(TApplication::codec());
-    QTextCodec::setCodecForCStrings(TApplication::codec());
-
  /*
     qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
     qDebug() << "QLibraryInfo::DocumentationPath" << QLibraryInfo::location(QLibraryInfo::DocumentationPath);
@@ -104,27 +99,31 @@ int main(int argc, char **argv)
     qDebug() << "QCoreApplication.applicationFilePath()" << QCoreApplication::applicationFilePath();
 */
 
-    QDir dir(QApplication::applicationDirPath());
-    QStringList paths = application.libraryPaths();
-    paths << dir.absolutePath() + "/plugins";
-    paths << dir.absolutePath() + "/qtscriptgenerator/plugins";
-    application.setLibraryPaths(paths);
 
     // Инициируем переменные, которые нуждаются в этом
 
+    QTextCodec::setCodecForTr(TApplication::codec());
+    QTextCodec::setCodecForLocale(TApplication::codec());
+    QTextCodec::setCodecForCStrings(TApplication::codec());
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
         lStart = readParameters(argc, argv);    // прочитаем их
     if (lStart) {
+        TApplication application(argc, argv);
+        QDir dir(QApplication::applicationDirPath());
+        QStringList paths = application.libraryPaths();
+        paths << dir.absolutePath() + "/plugins";
+        paths << dir.absolutePath() + "/qtscriptgenerator/plugins";
+        application.setLibraryPaths(paths);
         if (application.open()) {       // Если приложение удалось создать
             application.show();         // Тогда откроем его
             lResult = application.exec();
             application.close();            // Закроем приложение
         }
+        application.quit();
     }
 
     TApplication::debug(" Program shutdown.\n\n");
-    application.quit();
     return lResult;
 }

@@ -59,8 +59,8 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         parameters->setApp(TApplication::exemplar());
         parameters->setParent(formWidget);
         parameters->setFormGrid(this);
-        parameters->setProgramIdFieldName(TApplication::idFieldName());
-        parameters->setProgramNameFieldName(TApplication::nameFieldName());
+        parameters->setProgramIdFieldName(db->getObjectName("код").toLower());
+        parameters->setProgramNameFieldName(db->getObjectName("имя").toLower());
         parameters->setFieldsList(parent->getFieldsList());
         connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
     }
@@ -106,14 +106,16 @@ QDomElement FormGridSearch::createWidgetsStructure() {
 
 int FormGridSearch::exec()
 {
-    parameters->setFocus();
+    if (parameters != 0)
+        parameters->setFocus();
     return Form::exec();
 }
 
 
 void FormGridSearch::show()
 {
-    parameters->setFocus();
+    if (parameters != 0)
+        parameters->setFocus();
     Form::show();
 }
 

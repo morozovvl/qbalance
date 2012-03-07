@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
-    db = TApplication::exemplar()->getDBFactory();
     dictionariesProperties = db->getDictionariesProperties();
     lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
     lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
@@ -118,7 +117,7 @@ void Dictionaries::removeDictionary(QString dictName) {
 
 
 QString Dictionaries::getDictionaryTitle(QString dictName) {
-    return TApplication::exemplar()->getDBFactory()->getDictionariesProperties(dictName).value(TApplication::nameFieldName()).toString();
+    return db->getDictionariesProperties(dictName).value(db->getObjectName("имя")).toString();
 }
 
 
@@ -131,7 +130,7 @@ bool Dictionaries::add()
     wizard.close();
     if (wizard.getResult())
     {   // Если удалось создать справочник, то обновим список справочников
-        dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+        dictionariesProperties = db->getDictionariesProperties();
         return true;
     }
     return false;
@@ -157,9 +156,9 @@ bool Dictionaries::remove()
 {
     if (Essence::remove())
     {
-        if (TApplication::exemplar()->getDBFactory()->removeDictionary(getValue("таблица").toString().trimmed()))
+        if (db->removeDictionary(getValue("таблица").toString().trimmed()))
         {   // если удалось удалить справочник, то обновим список справочников
-            dictionariesProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties();
+            dictionariesProperties = db->getDictionariesProperties();
             return true;
         }
     }
@@ -187,11 +186,8 @@ void Dictionaries::close() {
 }
 
 
-void Dictionaries::query(QString filter) {
-    if (filter.size() > 0)
-        filter += " and ";
-    filter += "меню=true";
-    Essence::query(filter);
+void Dictionaries::query(QString) {
+    Dictionary::query(QString("%1=true").arg(db->getObjectName("vw_доступ_к_справочникам.меню")));
 }
 
 
@@ -199,8 +195,9 @@ void Dictionaries::cmdOk() {
     Dictionary::cmdOk();
     QString dictName = getValue("таблица").toString().trimmed();
     if (dictName.size() > 0) {
-        TApplication::exemplar()->getDictionaries()->addDictionary(dictName, 1);
-        Dictionary* dict = TApplication::exemplar()->getDictionaries()->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
+        Dictionaries* dicts = TApplication::exemplar()->getDictionaries();
+        dicts->addDictionary(dictName);
+        Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
         if (dict != 0)
             dict->show();
     }

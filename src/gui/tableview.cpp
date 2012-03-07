@@ -29,13 +29,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mybooleanitemdelegate.h"
 
 
-TableView::TableView(QWidget* parentWidget/* = 0*/): QTableView(parentWidget)
+TableView::TableView(QWidget* pwgt): QTableView(pwgt)
 {
     parent = 0;
-    parentWidget = 0;
+    parentWidget = pwgt;
+    name = "TableView";
     app = 0;
     tableModel = 0;
-    name = "TableView";
     columns = 0;
 }
 
@@ -47,7 +47,7 @@ TableView::TableView(FormGrid* par, QWidget* pwgt): QTableView(pwgt)
     name = "TableView";
     app = 0;
     tableModel = 0;
-    columns = parent->getParent()->getColumnsProperties();
+    columns = 0;
 }
 
 
@@ -109,8 +109,9 @@ void TableView::setModel(MySqlRelationalTableModel* model)
         QItemSelectionModel *oldModel = selectionModel();
         QTableView::setModel(model);
         delete oldModel;
-        if (app != 0)
+        if (parent != 0)
         {
+            columns = parent->getParent()->getColumnsProperties();
             setColumnsHeaders();
             setColumnsDelegates();
         }
@@ -157,6 +158,7 @@ void TableView::setColumnsHeaders()
         tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));
     }
 }
+
 
 void TableView::setColumnsDelegates()
 {

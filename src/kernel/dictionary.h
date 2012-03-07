@@ -62,7 +62,8 @@ public:
     Dictionaries* getDictionaries() { return dictionaries; }
 
     virtual QString objectName() { return "Dictionary"; }
-    int getDeep() { return dictDeep; }
+    bool isDependent() { return isDepend; }
+    void setDependent(bool d) { isDepend = d; }
     QString getPrototypeName() { return prototypeName; }
     void setPrototypeName(QString prototype) { prototypeName = prototype; }
 
@@ -75,7 +76,7 @@ protected:
     bool            lMustShow;
     bool            lIsConst;
     bool            lAutoSelect;
-    int             dictDeep;
+    bool            isDepend;
     virtual void setForm();
 private:
     QStringList     fieldList;

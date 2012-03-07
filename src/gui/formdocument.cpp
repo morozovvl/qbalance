@@ -120,8 +120,8 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         parameters->setDictionaries(getParent()->getDictionaries());
         parameters->setFormDocument(this);
         parameters->setApp(TApplication::exemplar());
-        parameters->setProgramIdFieldName(TApplication::idFieldName());
-        parameters->setProgramNameFieldName(TApplication::nameFieldName());
+        parameters->setProgramIdFieldName(db->getObjectName("код").toLower());
+        parameters->setProgramNameFieldName(db->getObjectName("имя").toLower());
         foreach (QString dictName, getParent()->getDictionaries()->keys())
         {
             if (getParent()->getDictionaries()->value(dictName)->isConst())
@@ -160,6 +160,7 @@ void FormDocument::hide()
 {
     getParent()->getParent()->getForm()->getForm()->activateWindow();
     FormGrid::hide();
+    getParent()->saveVariablesToDB();
 }
 
 

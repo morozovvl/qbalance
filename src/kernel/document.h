@@ -69,6 +69,10 @@ public:
     Q_INVOKABLE void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void calcItog();
+    Q_INVOKABLE void saveVariable(QString, QVariant);
+    Q_INVOKABLE QVariant restoreVariable(QString);
+    void saveVariablesToDB();
+    void restoreVariablesFromDB();
 
 protected:
     virtual void setForm();
@@ -76,9 +80,9 @@ protected:
 private:
     QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
     QMap<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
+    QMap<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
     Dictionaries*                   dictionaries;       // Объекты справочников
     Documents*                      parent;
-    DBFactory*                      DbFactory;
     int                             operNumber;
     int                             docId;
     int                             prv1;

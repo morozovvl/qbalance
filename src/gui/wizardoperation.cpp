@@ -71,7 +71,6 @@ WizardOperation::WizardOperation(): WizardForm()
     fldsTableChanged = false;
     docListFieldsTable = new QTableWidget();
     docListFldsTableChanged = false;
-    db = TApplication::exemplar()->getDBFactory();
     headers = new QListWidget();
     docListHeaders = new QListWidget();
     chbSingleString = new QCheckBox();
@@ -475,7 +474,6 @@ void WizardOperation::deletePrv()
 
 void WizardOperation::showAccountForm()
 {
-    qDebug() << "showAccountForm()";
 }
 
 

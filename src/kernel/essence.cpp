@@ -39,11 +39,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/reportcontext.h"
 
 
-Essence::Essence(QString name, QObject *parent): Table(name, parent),
-form(NULL),
-parentForm(NULL),
-scriptEngine(NULL)
+Essence::Essence(QString name, QObject *parent): Table(name, parent)
 {
+    form = 0;
+    parentForm = 0;
+    scriptEngine = 0;
     parentForm  = TApplication::exemplar()->getMainWindow()->centralWidget();
     formTitle   = "";
     lInsertable = false;
@@ -51,8 +51,8 @@ scriptEngine(NULL)
     lViewable   = false;
     lUpdateable = false;
     lPrintable  = false;
-    idFieldName = TApplication::idFieldName();
-    nameFieldName = TApplication::nameFieldName();
+    idFieldName = db->getObjectName("код");
+    nameFieldName = db->getObjectName("имя");
     scriptEngine = 0;
     connect(this, SIGNAL(showError(QString)), TApplication::exemplar(), SLOT(showError(QString)));
 }
@@ -122,7 +122,7 @@ QString Essence::getName(int row)
 
 void Essence::setId(qulonglong id)
 {
-    query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(TApplication::idFieldName()).arg(id));
+    query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(db->getObjectName("код")).arg(id));
     for (int i = 0; i < tableModel->rowCount(); i++) {
         form->getGridTable()->selectRow(i);
         if (getId() == id) {
@@ -140,7 +140,7 @@ void Essence::setId(qulonglong id)
 
 QString Essence::getPhotoPath()
 {
-    QString path = TApplication::exemplar()->getDBFactory()->getPhotoPath(tableName);
+    QString path = db->getPhotoPath(tableName);
     if (!path.isEmpty()) {
         if (path.left(1) == "~") {
             path.remove(0, 1);
@@ -284,7 +284,6 @@ void Essence::cmdCancel() {
 
 void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
 {   // Зарядим константы в контекст печати
-    DBFactory* db = TApplication::exemplar()->getDBFactory();
     QString constDictionaryName = db->getObjectName("константы");
     QString constNameField = db->getObjectName(constDictionaryName + ".имя");
     QString constValueField = db->getObjectName(constDictionaryName + ".значение");

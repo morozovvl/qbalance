@@ -87,8 +87,6 @@ public:
     static QFile&  debugFile()     { return *DebugFile;}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss";}
     static QString maxSumMask()    { return MaxSumMask;}
-    static QString idFieldName()   { return IdFieldName;}
-    static QString nameFieldName() { return NameFieldName;}
     static QString resourcesFile() { return QDir::currentPath() + "/src/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
     static bool setDebugMode(const bool& value);
@@ -118,8 +116,6 @@ private:
     static bool             DebugMode;
     static QTextStream*     DebugStream;
     static QString          MaxSumMask;
-    static QString          IdFieldName;
-    static QString          NameFieldName;
     static TApplication*    Exemplar;
 
     // Свойства, устанавливаемые из настроек приложения

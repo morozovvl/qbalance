@@ -38,6 +38,12 @@ DBFactory::DBFactory()
 }
 
 
+DBFactory::~DBFactory()
+{
+    delete db;
+}
+
+
 bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
 // Создает новую БД на сервере, если она отсутствует
 {
@@ -207,7 +213,7 @@ QSqlQuery DBFactory::execQuery(QString str)
 
 QStringList DBFactory::getUserList()
 {
-    static const QString clause = QString("SELECT %1 FROM %2 ORDER BY %1").arg(TApplication::nameFieldName())
+    static const QString clause = QString("SELECT %1 FROM %2 ORDER BY %1").arg(getObjectName("имя"))
                                                                           .arg(getObjectName("vw_пользователи"));
     static short index          = 0;
 
@@ -275,12 +281,12 @@ bool DBFactory::isSet(QString tableName)
         // Найдем имя прототипа для этого справочника
         QStringList fieldList = getFieldsList(tableName);
         // определим, это набор или обычный справочник
-        if (fieldList.contains(TApplication::nameFieldName(), Qt::CaseInsensitive)) {
+        if (fieldList.contains(getObjectName("имя"), Qt::CaseInsensitive)) {
             result = false;                                     // это справочник, т.к. есть поле ИМЯ
         }
         else {
             for (int k = 0; k < fieldList.count(); k++)
-                if (QString(fieldList.at(k)).contains(TApplication::idFieldName() + "_", Qt::CaseInsensitive)) {
+                if (QString(fieldList.at(k)).contains(getObjectName("код") + "_", Qt::CaseInsensitive)) {
                     result = true;                              // это набор, т.к. нет поля ИМЯ и есть поля-ссылки на другие справочники
                     break;
                 }
@@ -500,8 +506,8 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                                   "GRANT ALL ON \"%1\" TO %4;" \
                                   "ALTER TABLE \"%1\" ADD CONSTRAINT \"%1_pkey\" PRIMARY KEY(\"%2\");")
                                   .arg(tName)
-                                  .arg(TApplication::idFieldName())
-                                  .arg(TApplication::nameFieldName())
+                                  .arg(getObjectName("код"))
+                                  .arg(getObjectName("имя"))
                                   .arg(getLogin());
         if (exec(command))
         {
@@ -877,7 +883,7 @@ bool DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* va
         }
         fieldsList.chop(1);
         valuesList.chop(1);
-        QString command = QString("INSERT INTO %1 (%2) VALUES (%3)").arg(tableName).arg(fieldsList).arg(valuesList);
+        QString command = QString("INSERT INTO %1 (\"%2\") VALUES (%3)").arg(tableName).arg(fieldsList).arg(valuesList);
         execQuery(command);
     }
     else
@@ -889,7 +895,7 @@ bool DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* va
 bool DBFactory::removeDictValue(QString tableName, qulonglong id)
 {
     clearError();
-    execQuery(QString("DELETE FROM %1 WHERE код = %2").arg(tableName).arg(id));
+    execQuery(QString("DELETE FROM %1 WHERE %2 = %3").arg(tableName).arg(getObjectName("код")).arg(id));
     return !wasError;
 }
 
@@ -1007,10 +1013,19 @@ void DBFactory::initObjectNames()
         return;
     }
     // Если нет определения имен объектов, то заполним по умолчанию
-    ObjectNames.insert("код_", "код_");
+    ObjectNames.insert("код", "код");
+    ObjectNames.insert("имя", "имя");
     ObjectNames.insert("документы", "документы");
-    ObjectNames.insert("документы.переменные", "переменные");
+    ObjectNames.insert("документы.код", "код");
+    ObjectNames.insert("документы.дата", "дата");
+    ObjectNames.insert("документы.датавремя", "датавремя");
+    ObjectNames.insert("документы.номер", "номер");
+    ObjectNames.insert("документы.комментарий", "комментарий");
+    ObjectNames.insert("документы.сумма", "сумма");
     ObjectNames.insert("документы.опер", "опер");
+    ObjectNames.insert("документы.описание", "описание");
+    ObjectNames.insert("документы.авто", "авто");
+    ObjectNames.insert("документы.переменные", "переменные");
     ObjectNames.insert("проводки", "проводки");
     ObjectNames.insert("проводки.код", "код");
     ObjectNames.insert("проводки.дбкод", "дбкод");
@@ -1381,7 +1396,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         QString dictName;
         QStringList dictsNames;
         Dictionary* dict;
-        QString idFieldName = TApplication::idFieldName();
+        QString idFieldName = getObjectName("код");
         for (int i = 0; i < topersList->count(); i++)
         {
             prv = topersList->at(i).number;
@@ -1671,5 +1686,38 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
                                                                                          .arg(menu ? "true" : "false");
         exec(command);
     }
+
+}
+
+
+void DBFactory::saveDocumentVariables(int docId, QString xml)
+{
+    QByteArray ba;
+    QSqlQuery query;
+    ba.append(xml);
+    QString command = QString("UPDATE %1 SET %2 = (:value) WHERE %3 = %4;").arg(getObjectName("документы"))
+                                                                           .arg(getObjectName("документы.переменные"))
+                                                                           .arg(getObjectName("документы.код"))
+                                                                           .arg(docId);
+    query.prepare(command);
+    query.bindValue(":value", ba, QSql::In & QSql::Binary);
+    if (!query.exec())
+    {
+        setError(query.lastError().text());
+    }
+}
+
+
+QString DBFactory::restoreDocumentVariables(int docId)
+{
+    QString result;
+    QString command = QString("SELECT %1 FROM %2 WHERE %3 = %4;").arg(getObjectName("документы.переменные"))
+                                                              .arg(getObjectName("документы"))
+                                                              .arg(getObjectName("документы.код"))
+                                                              .arg(docId);
+    QSqlQuery query = execQuery(command);
+    if (query.first())
+        result = QString(query.record().field(0).value().toByteArray());
+    return result;
 
 }

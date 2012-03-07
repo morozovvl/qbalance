@@ -38,19 +38,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 FormGrid::FormGrid(QObject* parent/* = NULL*/)
 : Form(parent)
-, grdTable(NULL)
-, tableModel(NULL)
-, tableLayout(NULL)
-, imageLayout(NULL)
-, picture(NULL)
-, buttonAdd(NULL)
-, buttonDelete(NULL)
-, buttonView(NULL)
-, buttonRequery(NULL)
-, buttonPrint(NULL)
-, buttonLoad(NULL)
-, buttonSave(NULL)
 {
+    grdTable = 0;
+    tableModel = 0;
+    tableLayout = 0;
+    imageLayout = 0;
+    picture = 0;
+    buttonAdd = 0;
+    buttonDelete = 0;
+    buttonView = 0;
+    buttonRequery = 0;
+    buttonPrint = 0;
+    buttonLoad = 0;
+    buttonSave = 0;
 }
 
 
@@ -81,7 +81,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     else
     {   // Была загружена пользовательская форма
         tableLayout = (QHBoxLayout*)qFindChild<QHBoxLayout*>(formWidget, "tableLayout");
-        grdTable = (TableView*)qFindChild<QTableWidget*>(formWidget, "tableView");
+        grdTable = (TableView*)qFindChild<TableView*>(formWidget, "tableView");
         if (grdTable != 0)
         {
             grdTable->setApp(TApplication::exemplar());
@@ -287,8 +287,7 @@ void FormGrid::close()
 {
     QItemSelectionModel* model = grdTable->selectionModel();
     delete model;
-    if (defaultForm)
-        delete grdTable;
+    delete grdTable;
     Form::close();
 }
 

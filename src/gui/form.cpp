@@ -30,15 +30,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 
-Form::Form(QObject* parent/* = NULL*/)
-: QObject(parent)
-, formWidget(NULL)
-, parent(NULL)
-, cmdButtonLayout(NULL)
-, vbxLayout(NULL)
-, buttonOk(NULL)
-, buttonCancel(NULL)
+Form::Form(QObject* par/* = NULL*/): QObject(par)
 {
+    parent = 0;
+    formWidget = 0;
+    cmdButtonLayout = 0;
+    vbxLayout = 0;
+    buttonOk = 0;
+    buttonCancel = 0;
+    db = TApplication::exemplar()->getDBFactory();
 }
 
 
@@ -53,26 +53,14 @@ Form::~Form()
 }
 
 
-bool Form::open(QWidget* pwgt, Essence* par) {
+bool Form::open(QWidget* pwgt, Essence* par, QString fileName) {
     parent = par;
-    if (parent != 0) {
+    if (fileName.size() == 0)
         createForm("mainform", pwgt);
-    }
     else
-        createForm("", pwgt);
-    return true;
-}
-
-
-bool Form::open(QString fileName, QWidget* pwgt) {
-    parent = 0;
-    if (pwgt != 0)
         createForm(fileName, pwgt);
-    else
-        createForm(fileName);
     return true;
 }
-
 
 void Form::close() {
     disconnect(formWidget, 0, 0, 0);
@@ -97,7 +85,6 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     defaultForm = true;
     script = "";
     fileName = TApplication::exemplar()->getFormsPath(fileName);
-    qDebug() << fileName;
     QFile file(fileName + ".ui");
     if (file.open(QIODevice::ReadOnly)) {
         QUiLoader loader;

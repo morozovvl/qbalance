@@ -30,8 +30,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/configform.h"
 
 QString TApplication::MaxSumMask       = "9999999999.99";
-QString TApplication::IdFieldName      = QObject::trUtf8("код");
-QString TApplication::NameFieldName    = QObject::trUtf8("имя");
 QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
 QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
 bool    TApplication::DebugMode        = false;
@@ -58,7 +56,8 @@ TApplication::TApplication(int & argc, char** argv)
 
 TApplication::~TApplication()
 {
-
+    delete gui;
+    delete db;
 }
 
 Documents* TApplication::getDocuments(int opNumber) {
@@ -139,9 +138,7 @@ void TApplication::close() {
     topersList->close();
     delete topersList;
     gui->close();
-    delete gui;
     db->close();
-    delete db;
 }
 
 

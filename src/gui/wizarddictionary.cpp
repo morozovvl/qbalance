@@ -67,7 +67,6 @@ WizardDictionary::WizardDictionary(bool addDict): WizardForm()
     tableName = new QLineEdit();
     tableMenuName = new QLineEdit();
     tableFormName = new QLineEdit();
-    db = TApplication::exemplar()->getDBFactory();
     chbMenu = new QCheckBox(formWidget);
     if (!Exemplar)
     {

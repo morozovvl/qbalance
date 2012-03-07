@@ -35,12 +35,11 @@ Document::Document(int oper, Documents* par)
 , parent(par)
 , operNumber(oper)
 {
-    DbFactory = TApplication::exemplar()->getDBFactory();
     lPrintable = true;
-    tableName = DbFactory->getObjectName("проводки");
+    tableName = db->getObjectName("проводки");
     tagName = QString("Документ%1").arg(oper);
-    formTitle = TApplication::exemplar()->getDBFactory()->getTopersProperties(oper).value(TApplication::nameFieldName()).toString();
-    idFieldName = "p1__" + TApplication::idFieldName();
+    formTitle = db->getTopersProperties(oper).value(db->getObjectName("имя")).toString();
+    idFieldName = "p1__" + db->getObjectName("код");
     freePrv = 0;
 
     dictionaries = new Dictionaries();
@@ -50,8 +49,8 @@ Document::Document(int oper, Documents* par)
     }
 
     QList<DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
-    DbFactory->getToperData(operNumber, &topersList);
-    DbFactory->setToperDictAliases(&topersList, &dictsList);
+    db->getToperData(operNumber, &topersList);
+    db->setToperDictAliases(&topersList, &dictsList);
 
     // Проверим, должна ли быть в документе только одна строка
     isSingleString = topersList.at(0).isSingleString;
@@ -73,7 +72,7 @@ Document::Document(int oper, Documents* par)
         {
             Saldo* sal;
             if (dictsList.at(i).name.size() > 0 &&
-                DbFactory->isSet(dictsList.at(i).name))
+                db->isSet(dictsList.at(i).name))
                    sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name, 1);
             else
                 sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name, 0);
@@ -101,13 +100,13 @@ Document::Document(int oper, Documents* par)
     foreach (QString dictName, dicts->keys())
     {
         dict = dicts->value(dictName);
-        if (dict->isConst() || dict->isSet())
-            dict->setMustShow(false); // Если справочник документа является постоянным или это набор, то не показывать его при добавлении новой записи в документ
+        if (dict->isConst() || dict->isSet() || dict->isDependent())
+            dict->setMustShow(false); // Если справочник документа является постоянным или это набор или дочерний (вторичный) справочник, то не показывать его при добавлении новой записи в документ
         else
             dict->setMustShow(true);
     }
 
-    QSqlRecord docProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
+    QSqlRecord docProperties = db->getDictionariesProperties(tableName);
     lInsertable = docProperties.value("insertable").toBool();
     lDeleteable = docProperties.value("deleteable").toBool();
     lUpdateable = docProperties.value("updateable").toBool();
@@ -130,10 +129,10 @@ bool Document::calculate(const QModelIndex& index) {
     }
     else
     {
-        if (((DocumentScriptEngine*)scriptEngine)->getScriptResult())
-        {
+//        if (((DocumentScriptEngine*)scriptEngine)->getScriptResult())
+//        {
             TApplication::exemplar()->showError(((DocumentScriptEngine*)scriptEngine)->getErrorMessage());
-        }
+//        }
     }
     return lResult;
 }
@@ -189,7 +188,7 @@ bool Document::remove() {
     if (lDeleteable) {
         int strNum = getValue("p1__стр").toInt();
         if (Essence::remove()) {
-            DbFactory->removeDocStr(docId, strNum);
+            db->removeDocStr(docId, strNum);
             query();
             if (tableModel->rowCount() > 0 && freePrv)    // Если есть "свободная" проводка
             {
@@ -203,6 +202,68 @@ bool Document::remove() {
     else
         showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
     return false;
+}
+
+
+void Document::saveVariable(QString name, QVariant value)
+{
+    if (variables.contains(name))
+        variables.remove(name);
+    variables.insert(name, value);
+    qDebug() << name << value;
+    qDebug() << variables;
+}
+
+
+QVariant Document::restoreVariable(QString name)
+{
+    QVariant value;
+    if (variables.contains(name))
+        value = variables.value(name);
+    return value;
+}
+
+
+void Document::saveVariablesToDB()
+{
+    QString xml;
+    QXmlStreamWriter xmlWriter(&xml);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("variables");
+    foreach (QString name, variables.keys())
+    {
+        xmlWriter.writeStartElement("variable");
+        xmlWriter.writeAttribute("name", name);
+        xmlWriter.writeAttribute("type", QString("%1").arg(variables.value(name).type()));
+        xmlWriter.writeAttribute("value", variables.value(name).toString());
+        xmlWriter.writeEndElement();
+    }
+    xmlWriter.writeEndElement();
+    xmlWriter.writeEndDocument();
+    db->saveDocumentVariables(docId, xml);
+    qDebug() << xml;
+}
+
+
+void Document::restoreVariablesFromDB()
+{
+    variables.clear();
+    QString xml = db->restoreDocumentVariables(docId);
+    qDebug() << xml;
+    QXmlStreamReader xmlReader(xml);
+    while (!xmlReader.atEnd())
+    {
+        if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "variable")
+        {
+            QVariant val(xmlReader.attributes().value("value").toString());
+            if (val.convert((QVariant::Type)QString(xmlReader.attributes().value("type").toString()).toInt()))
+            {
+                variables.insert(xmlReader.attributes().value("name").toString(), val);
+            }
+        }
+        xmlReader.readNext();
+    }
 }
 
 
@@ -264,6 +325,7 @@ void Document::show()
                 }
             }
         }
+        restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
     }
     else
     {
@@ -274,7 +336,7 @@ void Document::show()
         }
     }
     Essence::show();
-    getForm()->createUi();
+//    getForm()->createUi();
 }
 
 
@@ -289,7 +351,7 @@ void Document::setConstDictId(QString dName, QVariant id)
             if (dictName.compare(dName, Qt::CaseSensitive) == 0) {
                 dict = dicts->value(dictName);
                 if (dict->isConst()) {
-                    DbFactory->setConstDictId("дбкод", id, docId, operNumber, topersList.at(i).number);
+                    db->setConstDictId("дбкод", id, docId, operNumber, topersList.at(i).number);
                     dict->setId(id.toULongLong());
                 }
             }
@@ -297,7 +359,7 @@ void Document::setConstDictId(QString dName, QVariant id)
             if (dictName.compare(dName, Qt::CaseSensitive) == 0) {
                 dict = dicts->value(dictName);
                 if (dict->isConst()) {
-                    DbFactory->setConstDictId("кркод", id, docId, operNumber, topersList.at(i).number);
+                    db->setConstDictId("кркод", id, docId, operNumber, topersList.at(i).number);
                     dict->setId(id.toULongLong());
                 }
             }
@@ -337,7 +399,7 @@ void Document::close()
 void Document::setForm()
 {
     form = new FormDocument();
-    form->open(parentForm, (Document*)this);
+    form->open(parentForm, (Document*)this, QString("Документ%1").arg(operNumber));
     if (form->isDefaultForm())
     {
         QPushButton* button;
@@ -395,22 +457,22 @@ void Document::setTableModel()
     tableModel->setTable(tableName);
     tableModel->setBlockUpdate(!isUpdateable());
     QList<ToperType> topersList;
-    selectStatement = DbFactory->getDocumentSqlSelectStatement(operNumber, dictionaries, &topersList, &columnsProperties, &prv1);
+    selectStatement = db->getDocumentSqlSelectStatement(operNumber, dictionaries, &topersList, &columnsProperties, &prv1);
     if (selectStatement.size() > 0)
     {
         tableModel->setSelectStatement(selectStatement);
-        DbFactory->getColumnsRestrictions(tagName, &columnsProperties);
+        db->getColumnsRestrictions(tagName, &columnsProperties);
 
         // Соберем информацию об обновляемых полях таблицы "проводки"
         QStringList updateFields;
-        updateFields << DbFactory->getObjectName("проводки.кол") << DbFactory->getObjectName("проводки.цена") << DbFactory->getObjectName("проводки.сумма");
+        updateFields << db->getObjectName("проводки.кол") << db->getObjectName("проводки.цена") << db->getObjectName("проводки.сумма");
         int columnCount = 0;
         int keyColumn   = 0;
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             QString field = columnsProperties.value(i).name;
             field = field.mid(field.indexOf("__") + 2);
-            if (field == DbFactory->getObjectName("проводки.код"))
+            if (field == db->getObjectName("проводки.код"))
             {// Если в списке полей встретилось поле ключа
                 keyColumn = columnCount;                                    // Запомним номер столбца с ключом
             }
@@ -457,7 +519,7 @@ bool Document::showNextDict()
                             QStringList fieldList = dict->getFieldsList();
                             for (int i = 0; i < fieldList.count(); i++) {           // Просмотрим список полей
                                 QString fieldName = fieldList.at(i).toLower();
-                                if (fieldName.left(4) == TApplication::idFieldName() + "_") {        // Если поле ссылается на другую таблицу
+                                if (fieldName.left(4) == db->getObjectName("код") + "_") {        // Если поле ссылается на другую таблицу
                                     Dictionary* dict = dictionaries->getDictionary(fieldName.remove(0, 4), 0, false);
                                     if (dict != 0)
                                         dict->setMustShow(false);
@@ -539,7 +601,7 @@ void Document::appendDocString()
         parameter.append(value.size() > 0 ? value : "0").append(",");
     }
     // Добавим строку в документ с параметрами всех проводок операции
-    DbFactory->addDocStr(operNumber, docId, parameter);
+    db->addDocStr(operNumber, docId, parameter);
     prvValues.clear();
 }
 
@@ -549,7 +611,7 @@ void Document::selectCurrentRow()
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились (например сальдо).
     QString command = tableModel->getSelectStatement();
     command.replace(" WHERE ", QString(" WHERE p1.стр=%1 AND ").arg(getValue("p1__стр").toInt()));
-    QSqlQuery query = TApplication::exemplar()->getDBFactory()->execQuery(command);
+    QSqlQuery query = db->execQuery(command);
     if (query.first())
     {
         for (int i = 0; i < query.record().count(); i++)
@@ -574,7 +636,7 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
         {   // Нам нужны только постоянные справочники
             foreach(QString field, dict->getFieldsList())
             {
-                if (field.left(4) != TApplication::exemplar()->getDBFactory()->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
+                if (field.left(4) != db->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
                 {
                     reportEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field), dict->getValue(field));
                 }

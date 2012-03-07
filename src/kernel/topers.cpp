@@ -119,7 +119,7 @@ void Topers::setForm()
 bool Topers::remove()
 {
     int operNumber = getValue("опер").toInt();
-    if (TApplication::exemplar()->getDBFactory()->deleteAllToperInfo(operNumber))
+    if (db->deleteAllToperInfo(operNumber))
     {   // если удалось удалить типовую операцию
         return true;
     }

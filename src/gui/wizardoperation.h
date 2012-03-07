@@ -40,7 +40,6 @@ private:
     bool            prvTableChanged;
     bool            fldsTableChanged;
     bool            docListFldsTableChanged;
-    DBFactory*      db;
     QSqlQuery       prvs;               // Проводки
     QLineEdit*      operName;              // Как будет называться операция
     QCheckBox*      chbSingleString;      // В документе можно создать только одну строку

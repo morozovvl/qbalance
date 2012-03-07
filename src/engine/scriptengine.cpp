@@ -140,7 +140,7 @@ Q_DECLARE_METATYPE(Form*)
 
 QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
      Form *object = new Form();
-     object->open(context->argument(0).toString(), TApplication::exemplar()->getMainWindow()->centralWidget());
+     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
      object->setIcons();
      object->setButtonsSignals();
      return engine->newQObject(object, QScriptEngine::AutoOwnership);
@@ -160,7 +160,7 @@ Q_DECLARE_METATYPE(FormGrid*)
 
 QScriptValue FormGridConstructor(QScriptContext *context, QScriptEngine *engine) {
      FormGrid *object = new FormGrid();
-     object->open(context->argument(0).toString(), TApplication::exemplar()->getMainWindow()->centralWidget());
+     object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
      object->setIcons();
      object->setButtonsSignals();
      return engine->newQObject(object, QScriptEngine::AutoOwnership);

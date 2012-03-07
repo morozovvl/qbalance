@@ -33,17 +33,18 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     lMustShow = false;
     lIsConst = false;
     lAutoSelect = false;
+    isDepend = false;
     dictionaries = TApplication::exemplar()->getDictionaries();
-    QSqlRecord tableProperties = TApplication::exemplar()->getDBFactory()->getDictionariesProperties(tableName);
+    QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
     {
-        formTitle = tableProperties.value(TApplication::nameFieldName()).toString();
+        formTitle = tableProperties.value(db->getObjectName("имя")).toString();
         lSelectable = tableProperties.value("selectable").toBool();
         lInsertable = tableProperties.value("insertable").toBool();
         lDeleteable = tableProperties.value("deleteable").toBool();
         lUpdateable = tableProperties.value("updateable").toBool();
     }
-    lIsSet = TApplication::exemplar()->getDBFactory()->isSet(tableName);
+    lIsSet = db->isSet(tableName);
 }
 
 
@@ -74,7 +75,10 @@ bool Dictionary::add() {
                         Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
                         dict->query(QString("%1='%2'").arg(nameFieldName).arg(searchParameters[i].value.toString()));
                         if (dict->getTableModel()->rowCount() == 1)
-                            values.insert(idFieldName + "_" + searchParameters[i].table, dict->getId(0));
+                            // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
+                            // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
+                            values.insert(db->getObjectName(QString("%1.%2").arg(searchParameters[i].value.toString())
+                                                                            .arg(idFieldName.toLower() + "_" + searchParameters[i].table)), dict->getId(0));
                         else
                         {
                             TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::tr("Уточните, пожалуйста, значение связанного справочника <%1>.")).arg(dict->getFormTitle()));
@@ -88,7 +92,7 @@ bool Dictionary::add() {
     }
     if (lAddDict)
     {
-        if (TApplication::exemplar()->getDBFactory()->insertDictDefault(getTableName(), &values))
+        if (db->insertDictDefault(getTableName(), &values))
         {
             query();
             return true;
@@ -101,7 +105,7 @@ bool Dictionary::add() {
 bool Dictionary::remove() {
     if (lDeleteable) {
         if (Essence::remove()) {
-            TApplication::exemplar()->getDBFactory()->removeDictValue(tableName, getId());
+            db->removeDictValue(tableName, getId());
             query();
             return true;
         }
@@ -143,45 +147,43 @@ void Dictionary::setForm() {
 
 
 bool Dictionary::open(int deep) {
-    if (lSelectable) {
-        if (Essence::open()) {     // Откроем этот справочник
-            fieldList = getFieldsList();
-            if (deep > 0) {              // Если нужно открыть подсправочники
-                int columnCount = fieldList.count();
-                for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
-                    QString name = fieldList.at(i).toLower();
-                    if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
-                        name.remove(0, 4);                      // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                        Dictionary* dict = dictionaries->getDictionary(name, deep - 1);
-                        if (dict != NULL) {                      // Если удалось открыть справочник
-                            QStringList relFieldList = dict->getFieldsList();
-                            tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
-                            for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
-                                if (relFieldList.at(j) != "код") {
-                                    tableModel->insertColumns(columnCount, 1);
-                                    tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
-                                    tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
-                                    columnCount++;
-                                }
+    if (Essence::open()) {     // Откроем этот справочник
+        fieldList = getFieldsList();
+        if (deep > 0) {              // Если нужно открыть подсправочники
+            int columnCount = fieldList.count();
+            for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
+                QString name = fieldList.at(i).toLower();
+                if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                    name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                    name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                    Dictionary* dict = dictionaries->getDictionary(name, deep - 1);
+                    if (dict != NULL) {                      // Если удалось открыть справочник
+                        dict->setDependent(true);
+                        QStringList relFieldList = dict->getFieldsList();
+                        tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
+                        for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
+                            if (relFieldList.at(j) != "код") {
+                                tableModel->insertColumns(columnCount, 1);
+                                tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
+                                tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
+                                columnCount++;
                             }
                         }
                     }
                 }
-                deep--;
             }
-
-            // Установим порядок сортировки и стратегию сохранения данных на сервере
-            tableModel->setSort(tableModel->fieldIndex(TApplication::nameFieldName()), Qt::AscendingOrder);
-
-            TApplication::exemplar()->getDBFactory()->getColumnsRestrictions(tableName, &columnsProperties);
-            dictDeep = deep;
-            if (scriptEngine != 0)
-            {
-                form->initFormEvent();
-                return scriptEngine->open("");
-            }
-            return true;
+            deep--;
         }
+
+        // Установим порядок сортировки и стратегию сохранения данных на сервере
+        tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
+        db->getColumnsRestrictions(tableName, &columnsProperties);
+        if (scriptEngine != 0)
+        {
+            form->initFormEvent();
+            return scriptEngine->open("");
+        }
+        return true;
     }
     QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.isEmpty())
@@ -232,24 +234,19 @@ qulonglong Dictionary::getId(int row)
 
 void Dictionary::query(QString defaultFilter)
 {
-    if (defaultFilter.size() == 0)
-    {
-        QString filter;
-        QVector<sParam> searchParameters = ((FormGridSearch*)form)->getSearchParameters()->getParameters();
-        for (int i = 0; i < searchParameters.size(); i++) {
-            QString text = searchParameters[i].value.toString();
-            QStringList paramList = text.split(QRegExp("\\s+"));
-            foreach (QString param, paramList)
-            {
-                if (filter.size() > 0)
-                    filter.append(" AND ");
-                filter.append(QString("%1.%2 ILIKE '%3'").arg(searchParameters[i].table)
-                              .arg(searchParameters[i].field)
-                              .arg("%" + param + "%"));
-            }
+    QString filter = defaultFilter;
+    QVector<sParam> searchParameters = ((FormGridSearch*)form)->getSearchParameters()->getParameters();
+    for (int i = 0; i < searchParameters.size(); i++) {
+        QString text = searchParameters[i].value.toString();
+        QStringList paramList = text.split(QRegExp("\\s+"));
+        foreach (QString param, paramList)
+        {
+            if (filter.size() > 0)
+                filter.append(" AND ");
+            filter.append(QString("%1.%2 ILIKE '%3'").arg(db->getObjectName(searchParameters[i].table))
+                                                     .arg(db->getObjectName(searchParameters[i].field))
+                                                     .arg("%" + param + "%"));
         }
-        Essence::query(filter);
     }
-    else
-        Essence::query(defaultFilter);
+    Essence::query(filter);
 }

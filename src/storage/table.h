@@ -56,6 +56,7 @@ public:
     Q_INVOKABLE bool isOpened() { return opened; }
 
 protected:
+    DBFactory*          db;
     bool                        opened;
     QString                     tableName;
     QString                     tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части

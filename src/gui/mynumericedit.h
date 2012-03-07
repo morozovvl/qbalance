@@ -31,8 +31,8 @@ class MyNumericEdit : public QLineEdit {
 public:
     explicit MyNumericEdit(QWidget *parent = 0);
 //    MyNumericEdit(QWidget *parent = 0);
-    void setValue(QVariant);
-    QVariant getValue() { return value; }
+    Q_INVOKABLE void setValue(QVariant);
+    Q_INVOKABLE QVariant getValue() { return value; }
 private:
     QVariant value;
 };

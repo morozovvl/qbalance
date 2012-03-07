@@ -30,8 +30,8 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     tableName  = "документы";
     operNumber = opNumber;
     tagName    = QString("СписокДокументов%1").arg(operNumber);
-    QSqlRecord operProperties = TApplication::exemplar()->getDBFactory()->getTopersProperties(operNumber);
-    formTitle  = QString("%1 - %2").arg(operProperties.value(TApplication::nameFieldName()).toString()).arg(QObject::trUtf8("Список документов"));
+    QSqlRecord operProperties = db->getTopersProperties(operNumber);
+    formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString()).arg(QObject::trUtf8("Список документов"));
     lInsertable = operProperties.value("insertable").toBool();
     lDeleteable = operProperties.value("deleteable").toBool();
     lUpdateable = operProperties.value("updateable").toBool();
@@ -56,7 +56,7 @@ bool Documents::add() {
         else if (date > TApplication::exemplar()->getEndDate())
             date = TApplication::exemplar()->getEndDate();
     }
-    if (TApplication::exemplar()->getDBFactory()->addDoc(operNumber, date))
+    if (db->addDoc(operNumber, date))
     {
         query();
         return true;
@@ -68,7 +68,7 @@ bool Documents::add() {
 bool Documents::remove() {
     if (lDeleteable) {
         if (Essence::remove()) {
-            TApplication::exemplar()->getDBFactory()->removeDoc(getValue("код").toInt());
+            db->removeDoc(getValue("код").toInt());
             query();
             return true;
         }
@@ -100,7 +100,7 @@ bool Documents::open() {
         // Установим форму для отображения справочника
 
         // Установим порядок сортировки и стратегию сохранения данных на сервере
-        tableModel->setSort(tableModel->fieldIndex(TApplication::nameFieldName()), Qt::AscendingOrder);
+        tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
 
         currentDocument = new Document(operNumber, this);
         if (currentDocument->open())

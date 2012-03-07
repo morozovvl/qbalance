@@ -81,6 +81,7 @@ void SearchParameters::addString(QString name, int strNum) {
     if (name.toLower() != programNameFieldName) {      // Параметр name в этом методе может принимать значения только либо ИМЯ, либо "КОД_..."
                                         // поэтому в эту точку можно попасть, если name = "КОД_..."
         name.remove(0, 4);              // выделим из ссылки на справочник имя связанного справочника
+        name = name.toLower();
         QPushButton* button = new QPushButton("...", parentWidget());   // Создадим пользовательскую кнопку для связанного справочника
         button->setObjectName(name);                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
         button->setFixedSize(comboBox->height() * 1.2, comboBox->height());
@@ -196,6 +197,7 @@ void SearchParameters::dictionaryButtonPressed() {
     }
 }
 
+
 void SearchParameters::comboBoxEnterPressed(QWidget* wdgt) {    // Была нажата кнопка Enter на одной из ComboBox
     int i = 0;
     while (i < gridLayout->rowCount()) {                        // Пока мы не достигли последней ComboBox в параметрах поиска
@@ -209,8 +211,9 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt) {    // Была на
     }
 }
 
+
 void SearchParameters::setFocus() {
-    if (gridLayout != 0) {
+    if (gridLayout != 0 && gridLayout->rowCount() > 0) {
         QWidget* widget = gridLayout->itemAtPosition(0, 1)->widget();
         widget->setFocus();
     }

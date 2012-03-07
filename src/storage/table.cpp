@@ -34,6 +34,7 @@ Table::Table(QString name, QObject *parent)
     opened = false;
     tableName = name.trimmed();
     tagName = tableName;
+    db = TApplication::exemplar()->getDBFactory();
 }
 
 
@@ -67,7 +68,7 @@ void Table::query(QString filter)
 
 bool Table::open()
 {
-    TApplication::exemplar()->getDBFactory()->getColumnsProperties(&columnsProperties, tableName);
+    db->getColumnsProperties(&columnsProperties, tableName);
     setTableModel();
     if (tableModel->lastError().type() == QSqlError::NoError)
     {

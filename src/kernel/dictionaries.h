@@ -47,7 +47,6 @@ public:
 protected:
     virtual void setForm();
 private:
-    DBFactory* db;
     QSqlQuery dictionariesProperties;
     Dictionary* dictListDict;
 };

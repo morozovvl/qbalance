@@ -90,7 +90,7 @@ class DBFactory : public QObject {
 
 public:
     DBFactory();
-    virtual ~DBFactory() { ; }
+    ~DBFactory();
     bool addDoc(int, QDate);
     bool removeDoc(int);
     bool addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
@@ -169,6 +169,8 @@ public:
                                           QMap<int, FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
     QSqlRecord getAccountRecord(QString cAcc);
+    void saveDocumentVariables(int docId, QString xml);
+    QString restoreDocumentVariables(int docId);
 
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);
