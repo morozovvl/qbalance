@@ -656,7 +656,10 @@ void WizardOperation::frameDeactivated(int frameNumber)
         {
             if (QString(fieldsTable->item(i, 5)->text()).compare("true") == 0)
             {
-                fieldT.header = fieldsTable->item(i, 4)->text().trimmed();
+                QString fldHeader = fieldsTable->item(i, 4)->text().trimmed();
+                if (fldHeader.size() == 0)
+                    fldHeader = fieldsTable->item(i, 0)->text().trimmed();
+                fieldT.header = fldHeader;
                 fieldT.number = num;
                 fields.append(fieldT);
                 num++;

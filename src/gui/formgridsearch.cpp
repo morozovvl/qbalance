@@ -78,28 +78,29 @@ void FormGridSearch::close() {
 
 
 QDomElement FormGridSearch::createWidgetsStructure() {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement vboxLayout = FormGrid::createWidgetsStructure();
     if (vbxLayout != 0) {
         QDomElement item, widget, hlayout;
-        hlayout = doc.createElement("layout");
+        hlayout = doc->createElement("layout");
         hlayout.setAttribute("class", "QHBoxLayout");
         widget = createLabelElement(LABEL_SEARCH_PARAMETERS);
-        item = doc.createElement("item");
+        item = doc->createElement("item");
         item.appendChild(widget);
         hlayout.appendChild(item);
         if (parameters != 0) {
-            widget = doc.createElement("widget");
+            widget = doc->createElement("widget");
             widget.setAttribute("class", parameters->metaObject()->className());
             widget.setAttribute("name", parameters->objectName());
-            item = doc.createElement("item");
+            item = doc->createElement("item");
             item.appendChild(widget);
             hlayout.appendChild(item);
         }
-        item = doc.createElement("item");
+        item = doc->createElement("item");
         item.appendChild(hlayout);
         vboxLayout.insertBefore(item, QDomNode());
     }
+    delete doc;
     return vboxLayout;
 }
 

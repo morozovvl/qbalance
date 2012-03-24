@@ -41,8 +41,8 @@ class DocParameters : public QFrame {
 
 public:
     DocParameters(QWidget* pwgt = 0);
-
     ~DocParameters();
+
     void addString(QString);
     void removeString(int);
     void setFocus();
@@ -51,10 +51,8 @@ public:
     Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
     void setDictionaries(QMap<QString, Dictionary*>* dicts) { dictionaries = dicts; }
     void setFormDocument(FormDocument* doc) { parentForm = doc; }
-    int count() { return strNum; }
-    void setApp(TApplication* a) { app = a; }
-    void setProgramIdFieldName(QString s) { programIdFieldName = s; }
-    void setProgramNameFieldName(QString s) { programNameFieldName = s; }
+    void setApp(TApplication*);
+
 public slots:
     void dictionaryButtonPressed();
 

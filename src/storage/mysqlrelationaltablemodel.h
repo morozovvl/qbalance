@@ -46,7 +46,6 @@ public:
     void setRelation(int, const QSqlRelation &);
     void setRelation(int, int, const QSqlRelation &);
     void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
-    virtual void setUpdateInfo(int, int, QString) { ; }
 
 // Функции, помогающие в генерации SQL запросов и работающие с ним
     Q_INVOKABLE QString getSelectStatement() { return selectStatement(); }
@@ -68,11 +67,14 @@ public:
     void setBlockUpdate(bool block) { blockUpdate = block; }
     virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return QSqlRelationalTableModel::submit(); }
     virtual bool updateRowInTable(int, const QSqlRecord&);
+    virtual void setUpdateInfo(int, int, QString) { ; }
+
 
 // Прочие функции
     QStringList getFieldsList();
     QString getFieldName(int i) { return record().fieldName(i); }
     void setAlias(QString alias) { tableAlias = alias; }
+
 
 protected:
     Table*                  parent;

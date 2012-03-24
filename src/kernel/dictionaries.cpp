@@ -72,8 +72,8 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
         if (dict->open(deep)) {
             if (dictListDict != NULL)
             {
-                QString sprName = db->getObjectName("справочники.имя");
-                dictListDict->query(QString("%1='%2'").arg(sprName).arg(dictName));
+                dictListDict->query(QString("%1='%2'").arg(db->getObjectName("справочники.имя"))
+                                                      .arg(dictName));
                 QString prototype = dictListDict->getValue(db->getObjectName("справочники.прототип"), 0).toString();
                 if (prototype.size() > 0)
                     dict->setPrototypeName(prototype);
@@ -117,7 +117,7 @@ void Dictionaries::removeDictionary(QString dictName) {
 
 
 QString Dictionaries::getDictionaryTitle(QString dictName) {
-    return db->getDictionariesProperties(dictName).value(db->getObjectName("имя")).toString();
+    return db->getDictionariesProperties(dictName).value(db->getObjectName("имя")).toString().trimmed();
 }
 
 
@@ -166,12 +166,12 @@ bool Dictionaries::remove()
 }
 
 
-bool Dictionaries::open() {
+bool Dictionaries::open(bool openForm) {
     if (Essence::open()) {
         dictListDict = new Dictionary(db->getObjectName("справочники"), this);
         dictListDict->open();
-        initForm();
-        // formTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName);
+        if (openForm)
+            initForm();
         return true;
     }
     return false;
@@ -196,8 +196,7 @@ void Dictionaries::cmdOk() {
     QString dictName = getValue("таблица").toString().trimmed();
     if (dictName.size() > 0) {
         Dictionaries* dicts = TApplication::exemplar()->getDictionaries();
-        dicts->addDictionary(dictName);
-        Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
+        Dictionary* dict = dicts->getDictionary(dictName, 1);         // Откроем справочник и подсправочники 1-го уровня
         if (dict != 0)
             dict->show();
     }

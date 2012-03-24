@@ -134,6 +134,7 @@ void MySqlRelationalTableModel::setRelation(int column, const QSqlRelation &rela
     QSqlRelationalTableModel::setRelation(column, relation);
 }
 
+
 void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSqlRelation &relation) {
     relIsEmpty = false;
 // устанавливает реляционную связь relation для колонки column на основании ключа в колонке keyColumn
@@ -145,10 +146,12 @@ void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSq
     }
 }
 
+
 void MySqlRelationalTableModel::setSort(int column, Qt::SortOrder order) {
     sortColumn = column;
     sortOrder = order;
 }
+
 
 QString MySqlRelationalTableModel::orderByClause() const {
     if (sortClause.size() > 0)
@@ -177,6 +180,7 @@ QString MySqlRelationalTableModel::orderByClause() const {
     return s;
 }
 
+
 void MySqlRelationalTableModel::setSelectClause(QString string) {
     if (string.size() == 0)
         selectClause = getSelectClause();
@@ -184,9 +188,11 @@ void MySqlRelationalTableModel::setSelectClause(QString string) {
         selectClause = string;
 }
 
+
 void MySqlRelationalTableModel::setSelectStatement(QString string) {
     selectCommand = string;
 }
+
 
 QString MySqlRelationalTableModel::selectStatement() const {
     QString query;
@@ -274,9 +280,12 @@ QString MySqlRelationalTableModel::getSelectClause() const {
     return query;
 }
 
+
 QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName, const QString &fieldName) const {
     QString esc;
     esc.reserve(tableName.size() + fieldName.size() + 1);
     esc.append(tableName).append(QLatin1Char('.')).append(fieldName);
     return database().driver()->escapeIdentifier(esc, QSqlDriver::FieldName);
 }
+
+

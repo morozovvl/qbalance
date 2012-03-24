@@ -97,6 +97,14 @@ void DocParameters::removeString(int strNum) {
 }
 
 
+void DocParameters::setApp(TApplication* a)
+{
+    app = a;
+    programIdFieldName = app->getDBFactory()->getObjectName("код").toLower();
+    programNameFieldName = app->getDBFactory()->getObjectName("имя").toLower();
+}
+
+
 void DocParameters::dictionaryButtonPressed() {
     foreach (QString dictName, dictionaries->keys()) {
         if (dictName.compare(sender()->objectName(), Qt::CaseInsensitive) == 0) {

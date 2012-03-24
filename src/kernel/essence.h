@@ -47,6 +47,12 @@ class Essence : public Table {
 public:
     Essence(QString name = "", QObject *parent = 0);
     ~Essence();
+
+    Q_INVOKABLE virtual bool            add();                          // Добавление записи
+    Q_INVOKABLE virtual bool            remove();                       // Удаление записи
+    Q_INVOKABLE virtual void            view();                         // Просмотр записи
+    virtual void                        print(QString);                 // Печать
+
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
@@ -56,10 +62,6 @@ public:
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
-    Q_INVOKABLE virtual bool            add();
-    Q_INVOKABLE virtual bool            remove();                      // Удаление записи
-    Q_INVOKABLE virtual void            view();
-    virtual void                        print(QString);
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm() { return form; }

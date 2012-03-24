@@ -39,30 +39,30 @@ class Table : public QObject {
 public:
     Table(QString table = "", QObject *parent = 0);
     ~Table();
-    virtual bool relationsIsEmpty();
-    virtual QMap<int, FieldType>* getColumnsProperties();
-    MySqlRelationalTableModel* getMyRelationalTableModel() { return tableModel; }
-    QSqlTableModel* getTableModel() { return (QSqlTableModel*)tableModel; }
-    virtual QString transformSelectStatement(QString string) { return string; }
 
-    Q_INVOKABLE QStringList getFieldsList();
-    Q_INVOKABLE QString getFieldName(int);
-    Q_INVOKABLE QString getTableName() { return tableName; }
-    QString getTagName() { return tagName; }
-    Q_INVOKABLE virtual void query(QString filter = "");
+    Q_INVOKABLE virtual bool            open();
+    Q_INVOKABLE virtual void            close();
+    Q_INVOKABLE virtual void            query(QString filter = "");
 
-    Q_INVOKABLE virtual bool open();
-    Q_INVOKABLE virtual void close();
-    Q_INVOKABLE bool isOpened() { return opened; }
+    virtual bool                        relationsIsEmpty();
+    virtual QMap<int, FieldType>*       getColumnsProperties();
+    MySqlRelationalTableModel*          getMyRelationalTableModel() { return tableModel; }
+    QSqlTableModel*                     getTableModel() { return (QSqlTableModel*)tableModel; }
+    virtual QString                     transformSelectStatement(QString string) { return string; }
+
+    Q_INVOKABLE QStringList             getFieldsList();
+    Q_INVOKABLE QString                 getFieldName(int);
+    Q_INVOKABLE QString                 getTableName() { return tableName; }
+    QString                             getTagName() { return tagName; }
 
 protected:
-    DBFactory*          db;
-    bool                        opened;
-    QString                     tableName;
-    QString                     tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
-    MySqlRelationalTableModel*  tableModel;
-    QMap<int, FieldType>        columnsProperties;
-    virtual void setTableModel();
+    DBFactory*                          db;
+    bool                                opened;
+    QString                             tableName;
+    QString                             tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
+    MySqlRelationalTableModel*          tableModel;
+    QMap<int, FieldType>                columnsProperties;
+    virtual void                        setTableModel();
 };
 
 #endif // TABLE_H

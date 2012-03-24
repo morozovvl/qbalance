@@ -49,7 +49,7 @@ public slots:
 private:
     SearchParameters*   parameters;
     QVector<sParam>     searchParameters;
-    virtual void createForm(QString, QWidget* pwgt = 0);
+    virtual void        createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 
 };

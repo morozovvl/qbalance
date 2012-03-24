@@ -38,7 +38,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
     {
-        formTitle = tableProperties.value(db->getObjectName("имя")).toString();
+        formTitle = tableProperties.value(db->getObjectName("имя")).toString().trimmed();
         lSelectable = tableProperties.value("selectable").toBool();
         lInsertable = tableProperties.value("insertable").toBool();
         lDeleteable = tableProperties.value("deleteable").toBool();
@@ -120,7 +120,7 @@ bool Dictionary::remove() {
 
 void Dictionary::setForm() {
     form = new FormGridSearch();
-    form->open(parentForm, this);
+    form->open(parentForm, this, getTagName());
     if (form->isDefaultForm())
     {
         QPushButton* button;
@@ -147,24 +147,26 @@ void Dictionary::setForm() {
 
 
 bool Dictionary::open(int deep) {
-    if (Essence::open()) {     // Откроем этот справочник
+    if (Table::open()) {     // Откроем этот справочник
         fieldList = getFieldsList();
+        QString idField = db->getObjectName("код");
         if (deep > 0) {              // Если нужно открыть подсправочники
             int columnCount = fieldList.count();
             for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
-                QString name = fieldList.at(i).toLower();
+                QString name = fieldList.at(i);
                 if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
                     name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                     name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                     Dictionary* dict = dictionaries->getDictionary(name, deep - 1);
                     if (dict != NULL) {                      // Если удалось открыть справочник
-                        dict->setDependent(true);
+                        if (!lIsSet)
+                            dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
                         QStringList relFieldList = dict->getFieldsList();
-                        tableModel->setRelation(i, QSqlRelation(name, "код", "код"));
+                        tableModel->setRelation(i, QSqlRelation(name, idField, idField));
                         for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
-                            if (relFieldList.at(j) != "код") {
+                            if (relFieldList.at(j) != idField) {
                                 tableModel->insertColumns(columnCount, 1);
-                                tableModel->setRelation(columnCount, i, QSqlRelation(name, "код", relFieldList.at(j)));
+                                tableModel->setRelation(columnCount, i, QSqlRelation(name, idField, relFieldList.at(j)));
                                 tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
                                 columnCount++;
                             }
@@ -178,6 +180,10 @@ bool Dictionary::open(int deep) {
         // Установим порядок сортировки и стратегию сохранения данных на сервере
         tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
         db->getColumnsRestrictions(tableName, &columnsProperties);
+        // Т.к. мы добавили новые столбцы в модель, то сначала завершим создавать модель (выше), а сейчас откроем пользовательскую форму
+        initForm();
+        setScriptEngine();
+//        form->createUi();
         if (scriptEngine != 0)
         {
             form->initFormEvent();
@@ -197,24 +203,6 @@ qulonglong Dictionary::getId(int row)
 {
     if (isSet())
     {
-/*
-        QString filter;
-        QStringList fieldList = getFieldsList();
-        for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
-            QString fieldName = fieldList.at(i).toLower();
-            if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
-                QString dictName = fieldName;
-                dictName.remove(0, 4);
-                Dictionary* dict = dictionaries->getDictionary(dictName);
-                if (dict != NULL) {                      // Если удалось открыть справочник
-                    if (filter.size() > 0)
-                        filter.append(" AND ");
-                    filter.append(QString("%1=%2").arg(fieldName).arg(dict->getId()));
-                }
-            }
-        }
-        query(filter);
-*/
         query();
         qulonglong result = Essence::getId(0);
         if (result == 0)
@@ -234,19 +222,14 @@ qulonglong Dictionary::getId(int row)
 
 void Dictionary::query(QString defaultFilter)
 {
-    QString filter = defaultFilter;
-    QVector<sParam> searchParameters = ((FormGridSearch*)form)->getSearchParameters()->getParameters();
-    for (int i = 0; i < searchParameters.size(); i++) {
-        QString text = searchParameters[i].value.toString();
-        QStringList paramList = text.split(QRegExp("\\s+"));
-        foreach (QString param, paramList)
-        {
-            if (filter.size() > 0)
-                filter.append(" AND ");
-            filter.append(QString("%1.%2 ILIKE '%3'").arg(db->getObjectName(searchParameters[i].table))
-                                                     .arg(db->getObjectName(searchParameters[i].field))
-                                                     .arg("%" + param + "%"));
-        }
+    QString resFilter = defaultFilter;
+    QString filter = ((FormGridSearch*)form)->getSearchParameters()->getFilter();
+    if (filter.size() > 0)
+    {
+        if (resFilter.size() > 0)
+            resFilter.append(" AND " + filter);
+        else
+            resFilter = filter;
     }
-    Essence::query(filter);
+    Essence::query(resFilter);
 }

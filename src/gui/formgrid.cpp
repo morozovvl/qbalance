@@ -70,7 +70,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable->setModel(tableModel);
         grdTable->horizontalHeader()->setClickable(false);
         grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-        tableLayout = new QHBoxLayout();
+        tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
         tableLayout->addWidget(grdTable);
         if (vbxLayout != 0)
@@ -80,7 +80,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     else
     {   // Была загружена пользовательская форма
-        tableLayout = (QHBoxLayout*)qFindChild<QHBoxLayout*>(formWidget, "tableLayout");
+        tableLayout = (QVBoxLayout*)qFindChild<QVBoxLayout*>(formWidget, "tableLayout");
         grdTable = (TableView*)qFindChild<TableView*>(formWidget, "tableView");
         if (grdTable != 0)
         {
@@ -90,10 +90,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->setModel(tableModel);
             grdTable->horizontalHeader()->setClickable(false);
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-            if (tableLayout != 0)
-            {
-                tableLayout->addWidget(grdTable);
-            }
         }
     }
 
@@ -112,19 +108,9 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
         }
-        if (picture != 0)
+        if (picture != 0 && grdTable != 0)
         {
-            imageLayout = new QVBoxLayout();
-            imageLayout->setObjectName("imageLayout");
-            imageLayout->addWidget(picture, 1, Qt::AlignTop);
-            if (tableLayout != 0)
-            {
-                tableLayout->addLayout(imageLayout);
-            }
-            if (grdTable != 0)
-            {
-                connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
-            }
+            connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
         }
     }
 
@@ -346,10 +332,10 @@ void FormGrid::cmdView()
 }
 
 
-void FormGrid::cmdRequery(QString param)
+void FormGrid::cmdRequery()
 {
     QModelIndex index = getCurrentIndex();
-    parent->query(param);
+    parent->query();
     if (index.row() == -1 || (index.row() + 1) > parent->getTableModel()->rowCount())
         index = tableModel->index(0, 0);
     setCurrentIndex(index);
@@ -377,29 +363,11 @@ void FormGrid::calculate(QWidget*, QAbstractItemDelegate::EndEditHint)
 }
 
 
-QString FormGrid::getColumnHeader(QString columnName)
-{
-    return tableModel->headerData(tableModel->fieldIndex(columnName), Qt::Horizontal).toString();
-}
-
-
 QVariant FormGrid::getValue(QString fieldName)
 {
     if (lSelected && parent != 0)
         return parent->getValue(fieldName);
     return QVariant();
-}
-
-
-int FormGrid::getHeaderIndex(QString headName)
-{
-    QHeaderView* header = grdTable->horizontalHeader();
-    for (int i = 0; tableModel->columnCount(); i++)
-    {
-        if (tableModel->headerData(i, Qt::Horizontal) == headName)
-            return header->visualIndex(i);
-    }
-    return -1;
 }
 
 
@@ -496,16 +464,6 @@ void FormGrid::cmdSave()
 }
 
 
-/*
-void FormGrid::query(QString param)
-{
-    QModelIndex index = getCurrentIndex();
-    parent->query(param);
-    setCurrentIndex(index);
-//    FormGrid::setShowFocus();
-}
-*/
-
 void FormGrid::showGridLine(int currentRow)
 {
     if (parent->getTableModel()->rowCount() > 0)
@@ -567,7 +525,7 @@ void FormGrid::writeSettings()
 
 QDomElement FormGrid::createWidgetsStructure()
 {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement vboxLayout = Form::createWidgetsStructure();
     QDomElement item, layout;
     for (int i = 0; vboxLayout.childNodes().count(); i++)
@@ -579,31 +537,31 @@ QDomElement FormGrid::createWidgetsStructure()
             {
                 if (buttonPrint != 0)
                 {
-                    item = doc.createElement("item");
+                    item = doc->createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonPrint));
                     layout.insertBefore(item, QDomNode());
                 }
                 if (buttonRequery != 0)
                 {
-                    item = doc.createElement("item");
+                    item = doc->createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonRequery));
                     layout.insertBefore(item, QDomNode());
                 }
                 if (buttonView != 0)
                 {
-                    item = doc.createElement("item");
+                    item = doc->createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonView));
                     layout.insertBefore(item, QDomNode());
                 }
                 if (buttonDelete != 0)
                 {
-                    item = doc.createElement("item");
+                    item = doc->createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonDelete));
                     layout.insertBefore(item, QDomNode());
                 }
                 if (buttonAdd != 0)
                 {
-                    item = doc.createElement("item");
+                    item = doc->createElement("item");
                     item.appendChild(createPushButtonElement((QWidget*)buttonAdd));
                     layout.insertBefore(item, QDomNode());
                 }
@@ -614,31 +572,32 @@ QDomElement FormGrid::createWidgetsStructure()
     if (tableLayout != 0)
     {
         QDomElement widget, hlayout;
-        hlayout = doc.createElement("layout");
-        hlayout.setAttribute("class", "QHBoxLayout");
+        hlayout = doc->createElement("layout");
+        hlayout.setAttribute("class", "QVBoxLayout");
         hlayout.setAttribute("name", tableLayout->objectName());
         if (grdTable != 0)
         {
-            widget = doc.createElement("widget");
+            widget = doc->createElement("widget");
             widget.setAttribute("class", grdTable->metaObject()->className());
             widget.setAttribute("name", grdTable->objectName());
-            item = doc.createElement("item");
+            item = doc->createElement("item");
             item.appendChild(widget);
             hlayout.appendChild(item);
         }
         if (picture != 0)
         {
-            widget = doc.createElement("widget");
+            widget = doc->createElement("widget");
             widget.setAttribute("class", picture->metaObject()->className());
             widget.setAttribute("name", picture->objectName());
-            item = doc.createElement("item");
+            item = doc->createElement("item");
             item.appendChild(widget);
             hlayout.appendChild(item);
         }
-        item = doc.createElement("item");
+        item = doc->createElement("item");
         item.appendChild(hlayout);
         vboxLayout.insertBefore(item, QDomNode());
     }
+    delete doc;
     return vboxLayout;
 }
 

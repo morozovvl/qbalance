@@ -35,14 +35,13 @@ public:
     Dictionary(QObject *parent = 0) { Dictionary("", parent); }
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
-//    Q_INVOKABLE virtual bool open() { return open(0); }
     Q_INVOKABLE virtual bool open(int i = 0);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
 
 // Функции для работы с моделью данных
     virtual bool add();
     virtual bool remove();
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
-    Q_INVOKABLE virtual void query(QString filter = "");
+    Q_INVOKABLE virtual void            query(QString filter = "");
 
 
 // Функции для работы справочника в составе документа
@@ -77,7 +76,7 @@ protected:
     bool            lIsConst;
     bool            lAutoSelect;
     bool            isDepend;
-    virtual void setForm();
+    virtual void    setForm();
 private:
     QStringList     fieldList;
 };

@@ -39,27 +39,32 @@ class TableView : public QTableView {
 
 public:
     QMap<int, FieldType>*   columns;
+
     TableView(QWidget* parentWidget = 0);
     TableView(FormGrid*, QWidget* = 0);
     ~TableView();
-    void setFormGrid(FormGrid* par) { parent = par; }
-    Q_INVOKABLE QVariant getValue();
-    Q_INVOKABLE void setModel(MySqlRelationalTableModel*);
-    void setApp(TApplication* a) { app = a; }
+
+    void                        setFormGrid(FormGrid* par) { parent = par; }
+    void                        setModel(MySqlRelationalTableModel*);
+    void                        setApp(TApplication* a) { app = a; }
+
 signals:
-    void rowChanged();
+    void                        rowChanged();
+
 protected:
-    QString         name;
-    FormGrid*       parent;
-    virtual void keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
-    virtual void currentChanged(const QModelIndex &, const QModelIndex &);
+    virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
+    virtual void                currentChanged(const QModelIndex &, const QModelIndex &);
+
 private:
+    QString                     name;
+    FormGrid*                   parent;
     QWidget*                    parentWidget;
     TApplication*               app;
     MySqlRelationalTableModel*  tableModel;
     QStringList                 visibleColumns;
-    void setColumnsHeaders();
-    void setColumnsDelegates();
+
+    void                        setColumnsHeaders();
+    void                        setColumnsDelegates();
 };
 
 #endif // TABLEVIEW_H

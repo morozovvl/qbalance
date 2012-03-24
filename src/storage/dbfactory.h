@@ -161,7 +161,7 @@ public:
     QSqlQuery getDataTypes();
 
     void getToperData(int oper, QList<ToperType>* topersList);
-    void setToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList);
+    void getToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList);
 
     QString getDocumentSqlSelectStatement(int oper,
                                           Dictionaries* dictionaries,
@@ -217,6 +217,7 @@ private:
 
     void setError(QString);
     void initObjectNames();
+    QSqlQuery               getColumnsPropertiesQuery(QMap<int, FieldType>*, QString, QString = "", QString = "");
 };
 
 #endif

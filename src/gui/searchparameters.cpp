@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "formgridsearch.h"
 #include "../kernel/essence.h"
 #include "../kernel/app.h"
+#include "../storage/dbfactory.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     gridLayout = 0;
@@ -155,23 +156,22 @@ QVector<sParam> SearchParameters::getParameters() {
 
 QString SearchParameters::getFilter()
 {
-    QString result;
-    for(int i = 0; i < parameters.size(); i++) {
-        QString field = parameters.at(i);
-        MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, field);
-        QString text = cmb->currentText().trimmed();
-        while (text.contains("  "))                                   // Если есть пробелы, идущие подряд
-            text.replace("  ", " ");                                  // то уберем их
-        if (text.size() > 0)
+    DBFactory* db = app->getDBFactory();
+    QString filter;
+    QVector<sParam> searchParameters = getParameters();
+    for (int i = 0; i < searchParameters.size(); i++) {
+        QString text = searchParameters[i].value.toString();
+        QStringList paramList = text.split(QRegExp("\\s+"));
+        foreach (QString param, paramList)
         {
-            if (result.size() > 0)
-                result.append(" AND ");
-            text = " " + text + " ";
-            text.replace(" ", "%");
-            result.append(QString("%1 LIKE '%2'").arg(cmb->objectName()).arg(text));
+            if (filter.size() > 0)
+                filter.append(" AND ");
+            filter.append(QString("%1.%2 ILIKE '%3'").arg(db->getObjectName(searchParameters[i].table))
+                                                     .arg(db->getObjectName(searchParameters[i].field))
+                                                     .arg("%" + param + "%"));
         }
     }
-    return result;
+    return filter;
 }
 
 

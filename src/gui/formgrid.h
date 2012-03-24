@@ -37,7 +37,6 @@ class FormGrid : public Form {
 public:
     explicit FormGrid(QObject* parent = NULL);
     Q_INVOKABLE virtual void close();
-    QString getColumnHeader(QString);
     QVariant getValue(QString);
     QModelIndex getCurrentIndex() { return grdTable->currentIndex(); }
     void setCurrentIndex(QModelIndex index) { grdTable->setCurrentIndex(index); }
@@ -61,7 +60,7 @@ public slots:
     virtual void cmdAdd();
     virtual void cmdDelete();
     virtual void cmdView();
-    virtual void cmdRequery(QString param = "");
+    virtual void cmdRequery();
     virtual void cmdPrint();
     virtual void cmdLoad();
     virtual void cmdSave();
@@ -72,8 +71,8 @@ public slots:
 protected:
     TableView*                  grdTable;
     MySqlRelationalTableModel*  tableModel;
-    QHBoxLayout*                tableLayout;
-    QVBoxLayout*                imageLayout;
+    QVBoxLayout*                tableLayout;
+    QHBoxLayout*                imageLayout;
     Picture*                    picture;
     QPushButton*                buttonAdd;
     QPushButton*                buttonDelete;
@@ -85,13 +84,11 @@ protected:
 
     void showEvent(QShowEvent*);
     void showGridLine(int currentRow = 0);   // Подсвечивает первую (или текущую) строку Grid после обновления данных, если до этого ни одна строка не была подсвечена
-//    virtual void query(QString param = "");
     virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 
 private:
     QString             photoPath;
-    int getHeaderIndex(QString);
 //    virtual void keyPressEvent(QKeyEvent*);
 
 };

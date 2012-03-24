@@ -62,12 +62,14 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fileName) {
     return true;
 }
 
+
 void Form::close() {
     disconnect(formWidget, 0, 0, 0);
     if (defaultForm) {
         delete formWidget;
     }
 }
+
 
 void Form::createForm(QString fileName, QWidget* pwgt) {
     if (parent != 0)
@@ -142,6 +144,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     formWidget->setFocusPolicy(Qt::StrongFocus);
 }
 
+
 void Form::setIcons() {
     if (!iconsSeted) {
         QList<QPushButton*> widgets = qFindChildren<QPushButton*>(formWidget);
@@ -151,6 +154,7 @@ void Form::setIcons() {
     }
 }
 
+
 void Form::cmdOk() {
     lSelected = true;
     if (parent != 0)
@@ -158,10 +162,12 @@ void Form::cmdOk() {
     hide();
 }
 
+
 void Form::cmdCancel() {
     lSelected = false;
     hide();
 }
+
 
 int Form::exec() {
     if (formWidget != 0) {
@@ -174,6 +180,7 @@ int Form::exec() {
     return 0;
 }
 
+
 void Form::show() {
     if (formWidget != 0) {
         lSelected = false;
@@ -184,6 +191,7 @@ void Form::show() {
     }
 }
 
+
 void Form::hide() {
     if (formWidget != 0) {
         formWidget->hide();
@@ -192,11 +200,13 @@ void Form::hide() {
     }
 }
 
+
 void Form::initFormEvent() {
     if (getParent()->getScriptEngine() != 0) {
         getParent()->getScriptEngine()->eventInitForm(this);
     }
 }
+
 
 void Form::beforeShowFormEvent() {
     if (getParent()->getScriptEngine() != 0) {
@@ -204,16 +214,19 @@ void Form::beforeShowFormEvent() {
     }
 }
 
+
 void Form::afterHideFormEvent() {
     if (getParent()->getScriptEngine() != 0)
         getParent()->getScriptEngine()->eventAfterHideForm(this);
 }
+
 
 void Form::closeFormEvent() {
     if (getParent()->getScriptEngine() != 0) {
         getParent()->getScriptEngine()->eventCloseForm(this);
     }
 }
+
 
 void Form::setButtonsSignals()
 {
@@ -223,6 +236,7 @@ void Form::setButtonsSignals()
         connect(button, SIGNAL(clicked()), SLOT(buttonPressedSignalSend()));
     }
 }
+
 
 /*
 void Form::keyPressEvent(QKeyEvent* event) {
@@ -255,6 +269,7 @@ void Form::readSettings() {
     }
 }
 
+
 void Form::writeSettings() {
     QSettings settings;
     settings.beginGroup(configName);
@@ -265,32 +280,35 @@ void Form::writeSettings() {
     settings.endGroup();
 }
 
+
 QDomElement Form::createBoxLayoutElement(QLayout* obj) {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement element;
-    element = doc.createElement("widget");
+    element = doc->createElement("widget");
     element.setAttribute("class", "QWidget");
     if (obj->objectName().size() > 0)
         element.setAttribute("name", obj->objectName());
-    QDomElement geometry = doc.createElement("property");
+    QDomElement geometry = doc->createElement("property");
     geometry.setAttribute("name", "geometry");
-    QDomElement rect = doc.createElement("rect");
-    QDomElement x = doc.createElement("x");
-    x.appendChild(doc.createTextNode(QString("%1").arg(obj->geometry().x())));
+    QDomElement rect = doc->createElement("rect");
+    QDomElement x = doc->createElement("x");
+    x.appendChild(doc->createTextNode(QString("%1").arg(obj->geometry().x())));
     rect.appendChild(x);
-    QDomElement y = doc.createElement("y");
-    y.appendChild(doc.createTextNode(QString("%1").arg(obj->geometry().y())));
+    QDomElement y = doc->createElement("y");
+    y.appendChild(doc->createTextNode(QString("%1").arg(obj->geometry().y())));
     rect.appendChild(y);
-    QDomElement width = doc.createElement("width");
-    width.appendChild(doc.createTextNode(QString("%1").arg(obj->geometry().width())));
+    QDomElement width = doc->createElement("width");
+    width.appendChild(doc->createTextNode(QString("%1").arg(obj->geometry().width())));
     rect.appendChild(width);
-    QDomElement height = doc.createElement("height");
-    height.appendChild(doc.createTextNode(QString("%1").arg(obj->geometry().height())));
+    QDomElement height = doc->createElement("height");
+    height.appendChild(doc->createTextNode(QString("%1").arg(obj->geometry().height())));
     rect.appendChild(height);
     geometry.appendChild(rect);
     element.appendChild(geometry);
+    delete doc;
     return element;
 }
+
 
 QDomElement Form::createPushButtonElement(QWidget* obj) {
 #ifdef Q_OS_WIN32
@@ -298,62 +316,64 @@ QDomElement Form::createPushButtonElement(QWidget* obj) {
 #else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
 #endif
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement element;
-    element = doc.createElement("widget");
+    element = doc->createElement("widget");
     element.setAttribute("class", "QPushButton");
     if (obj->objectName().size() > 0)
         element.setAttribute("name", obj->objectName());
-    QDomElement geometry = doc.createElement("property");
+    QDomElement geometry = doc->createElement("property");
     geometry.setAttribute("name", "geometry");
-    QDomElement rect = doc.createElement("rect");
-    QDomElement x = doc.createElement("x");
-    x.appendChild(doc.createTextNode(QString("%1").arg(obj->x())));
+    QDomElement rect = doc->createElement("rect");
+    QDomElement x = doc->createElement("x");
+    x.appendChild(doc->createTextNode(QString("%1").arg(obj->x())));
     rect.appendChild(x);
-    QDomElement y = doc.createElement("y");
-    y.appendChild(doc.createTextNode(QString("%1").arg(obj->y())));
+    QDomElement y = doc->createElement("y");
+    y.appendChild(doc->createTextNode(QString("%1").arg(obj->y())));
     rect.appendChild(y);
-    QDomElement width = doc.createElement("width");
-    width.appendChild(doc.createTextNode(QString("%1").arg(obj->width())));
+    QDomElement width = doc->createElement("width");
+    width.appendChild(doc->createTextNode(QString("%1").arg(obj->width())));
     rect.appendChild(width);
-    QDomElement height = doc.createElement("height");
-    height.appendChild(doc.createTextNode(QString("%1").arg(obj->height())));
+    QDomElement height = doc->createElement("height");
+    height.appendChild(doc->createTextNode(QString("%1").arg(obj->height())));
     rect.appendChild(height);
     geometry.appendChild(rect);
     element.appendChild(geometry);
-    QDomElement text = doc.createElement("property");
+    QDomElement text = doc->createElement("property");
     text.setAttribute("name", "text");
-    QDomElement textString = doc.createElement("string");
-    textString.appendChild(doc.createTextNode(QString(codec->toUnicode(((QPushButton*)obj)->text().toUtf8()))));
+    QDomElement textString = doc->createElement("string");
+    textString.appendChild(doc->createTextNode(QString(codec->toUnicode(((QPushButton*)obj)->text().toUtf8()))));
     text.appendChild(textString);
     element.appendChild(text);
-    QDomElement icon = doc.createElement("property");
+    QDomElement icon = doc->createElement("property");
     icon.setAttribute("name", "icon");
     QDomElement str1, str2;
-    str1 = doc.createElement("iconset");
+    str1 = doc->createElement("iconset");
     str1.setAttribute("resource", TApplication::resourcesFile());
-    str2 = doc.createElement("normalon");
-    str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
+    str2 = doc->createElement("normalon");
+    str2.appendChild(doc->createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
-    str2 = doc.createElement("normaloff");
-    str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
+    str2 = doc->createElement("normaloff");
+    str2.appendChild(doc->createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
-    str2 = doc.createElement("activeon");
-    str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
+    str2 = doc->createElement("activeon");
+    str2.appendChild(doc->createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
-    str2 = doc.createElement("activeoff");
-    str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
+    str2 = doc->createElement("activeoff");
+    str2.appendChild(doc->createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
-    str2 = doc.createElement("selectedon");
-    str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
+    str2 = doc->createElement("selectedon");
+    str2.appendChild(doc->createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
-    str2 = doc.createElement("selectedoff");
-    str2.appendChild(doc.createTextNode(":" + ((QPushButton*)obj)->objectName()));
+    str2 = doc->createElement("selectedoff");
+    str2.appendChild(doc->createTextNode(":" + ((QPushButton*)obj)->objectName()));
     str1.appendChild(str2);
     icon.appendChild(str1);
     element.appendChild(icon);
+    delete doc;
     return element;
 }
+
 
 QDomElement Form::createLabelElement(QString label) {
 #ifdef Q_OS_WIN32
@@ -361,166 +381,176 @@ QDomElement Form::createLabelElement(QString label) {
 #else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
 #endif
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement item, widget;
-    widget = doc.createElement("widget");
+    widget = doc->createElement("widget");
     widget.setAttribute("class", "QLabel");
     widget.setAttribute("name", "label");
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "sizePolicy");
-    QDomElement sizePolicy = doc.createElement("sizePolicy");
+    QDomElement sizePolicy = doc->createElement("sizePolicy");
     sizePolicy.setAttribute("hsizetype", "Fixed");
     sizePolicy.setAttribute("vsizetype", "Fixed");
     item.appendChild(sizePolicy);
     widget.appendChild(item);
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "text");
-    QDomElement textString = doc.createElement("string");
-    textString.appendChild(doc.createTextNode(QString(codec->toUnicode(label.toUtf8()))));
+    QDomElement textString = doc->createElement("string");
+    textString.appendChild(doc->createTextNode(QString(codec->toUnicode(label.toUtf8()))));
     item.appendChild(textString);
     widget.appendChild(item);
+    delete doc;
     return widget;
 }
+
 
 QDomElement Form::createLineEditElement(QLineEdit* obj) {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement item, element, widget;
-    widget = doc.createElement("widget");
+    widget = doc->createElement("widget");
     widget.setAttribute("class", obj->metaObject()->className());
     widget.setAttribute("name", obj->objectName());
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "sizePolicy");
-    QDomElement sizePolicy = doc.createElement("sizePolicy");
+    QDomElement sizePolicy = doc->createElement("sizePolicy");
     sizePolicy.setAttribute("hsizetype", "Fixed");
     sizePolicy.setAttribute("vsizetype", "Fixed");
     item.appendChild(sizePolicy);
     widget.appendChild(item);
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "font");
-    QDomElement font = doc.createElement("font");
-    element = doc.createElement("pointsize");
-    element.appendChild(doc.createTextNode(QString("%1").arg(obj->font().pointSize())));
+    QDomElement font = doc->createElement("font");
+    element = doc->createElement("pointsize");
+    element.appendChild(doc->createTextNode(QString("%1").arg(obj->font().pointSize())));
     font.appendChild(element);
-    element = doc.createElement("bold");
-    element.appendChild(doc.createTextNode(QString(obj->font().bold() ? "true" : "false")));
+    element = doc->createElement("bold");
+    element.appendChild(doc->createTextNode(QString(obj->font().bold() ? "true" : "false")));
     font.appendChild(element);
     item.appendChild(font);
     widget.appendChild(item);
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "readOnly");
-    element = doc.createElement("bool");
-    element.appendChild(doc.createTextNode(QString(obj->isReadOnly() ? "true" : "false")));
+    element = doc->createElement("bool");
+    element.appendChild(doc->createTextNode(QString(obj->isReadOnly() ? "true" : "false")));
     item.appendChild(element);
     widget.appendChild(item);
+    delete doc;
     return widget;
 }
+
 
 QDomElement Form::createDateEditElement(QDateEdit* obj) {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement item, element, widget;
-    widget = doc.createElement("widget");
+    widget = doc->createElement("widget");
     widget.setAttribute("class", obj->metaObject()->className());
     widget.setAttribute("name", obj->objectName());
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "sizePolicy");
-    QDomElement sizePolicy = doc.createElement("sizePolicy");
+    QDomElement sizePolicy = doc->createElement("sizePolicy");
     sizePolicy.setAttribute("hsizetype", "Fixed");
     sizePolicy.setAttribute("vsizetype", "Fixed");
     item.appendChild(sizePolicy);
     widget.appendChild(item);
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "font");
-    QDomElement font = doc.createElement("font");
-    element = doc.createElement("pointsize");
-    element.appendChild(doc.createTextNode(QString("%1").arg(obj->font().pointSize())));
+    QDomElement font = doc->createElement("font");
+    element = doc->createElement("pointsize");
+    element.appendChild(doc->createTextNode(QString("%1").arg(obj->font().pointSize())));
     font.appendChild(element);
-    element = doc.createElement("bold");
-    element.appendChild(doc.createTextNode(QString(obj->font().bold() ? "true" : "false")));
+    element = doc->createElement("bold");
+    element.appendChild(doc->createTextNode(QString(obj->font().bold() ? "true" : "false")));
     font.appendChild(element);
     item.appendChild(font);
     widget.appendChild(item);
-    item = doc.createElement("property");
+    item = doc->createElement("property");
     item.setAttribute("name", "readOnly");
-    element = doc.createElement("bool");
-    element.appendChild(doc.createTextNode(QString(obj->isReadOnly() ? "true" : "false")));
+    element = doc->createElement("bool");
+    element.appendChild(doc->createTextNode(QString(obj->isReadOnly() ? "true" : "false")));
     item.appendChild(element);
     widget.appendChild(item);
+    delete doc;
     return widget;
 }
 
+
 QDomElement Form::createHStretchElement() {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement element, str1;
-    element = doc.createElement("spacer");
+    element = doc->createElement("spacer");
     element.setAttribute("name", "horizontalSpacer");
-    QDomElement orientation = doc.createElement("property");
+    QDomElement orientation = doc->createElement("property");
     orientation.setAttribute("name", "orientation");
-    str1 = doc.createElement("enum");
-    str1.appendChild(doc.createTextNode("Qt::Horizontal"));
+    str1 = doc->createElement("enum");
+    str1.appendChild(doc->createTextNode("Qt::Horizontal"));
     orientation.appendChild(str1);
     element.appendChild(orientation);
-    QDomElement sizeHint = doc.createElement("property");
+    QDomElement sizeHint = doc->createElement("property");
     sizeHint.setAttribute("name", "sizeHint");
     sizeHint.setAttribute("stdset", "0");
-    QDomElement size = doc.createElement("size");
-    QDomElement width = doc.createElement("width");
-    width.appendChild(doc.createTextNode(QString("%1").arg(40)));
+    QDomElement size = doc->createElement("size");
+    QDomElement width = doc->createElement("width");
+    width.appendChild(doc->createTextNode(QString("%1").arg(40)));
     size.appendChild(width);
-    QDomElement height = doc.createElement("height");
-    height.appendChild(doc.createTextNode(QString("%1").arg(20)));
+    QDomElement height = doc->createElement("height");
+    height.appendChild(doc->createTextNode(QString("%1").arg(20)));
     size.appendChild(height);
     sizeHint.appendChild(size);
     element.appendChild(sizeHint);
+    delete doc;
     return element;
 }
+
 
 QDomElement Form::createVStretchElement() {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement element, str1;
-    element = doc.createElement("spacer");
+    element = doc->createElement("spacer");
     element.setAttribute("name", "vertucalSpacer");
-    QDomElement orientation = doc.createElement("property");
+    QDomElement orientation = doc->createElement("property");
     orientation.setAttribute("name", "orientation");
-    str1 = doc.createElement("enum");
-    str1.appendChild(doc.createTextNode("Qt::Vertical"));
+    str1 = doc->createElement("enum");
+    str1.appendChild(doc->createTextNode("Qt::Vertical"));
     orientation.appendChild(str1);
     element.appendChild(orientation);
-    QDomElement sizeHint = doc.createElement("property");
+    QDomElement sizeHint = doc->createElement("property");
     sizeHint.setAttribute("name", "sizeHint");
     sizeHint.setAttribute("stdset", "0");
-    QDomElement size = doc.createElement("size");
-    QDomElement width = doc.createElement("width");
-    width.appendChild(doc.createTextNode(QString("%1").arg(40)));
+    QDomElement size = doc->createElement("size");
+    QDomElement width = doc->createElement("width");
+    width.appendChild(doc->createTextNode(QString("%1").arg(40)));
     size.appendChild(width);
-    QDomElement height = doc.createElement("height");
-    height.appendChild(doc.createTextNode(QString("%1").arg(20)));
+    QDomElement height = doc->createElement("height");
+    height.appendChild(doc->createTextNode(QString("%1").arg(20)));
     size.appendChild(height);
     sizeHint.appendChild(size);
     element.appendChild(sizeHint);
+    delete doc;
     return element;
 }
 
+
 QDomElement Form::createWidgetsStructure() {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement item;
 
     // создадим горизонтальный лейаут с кнопками
     QDomElement hboxLayout,
                 hlayout;
     if (cmdButtonLayout != 0) {
-        hlayout = doc.createElement("layout");
+        hlayout = doc->createElement("layout");
         hlayout.setAttribute("class", "QHBoxLayout");
         hlayout.setAttribute("name", cmdButtonLayout->objectName());
-        item = doc.createElement("item");
+        item = doc->createElement("item");
         item.appendChild(createHStretchElement());
         hlayout.appendChild(item);
         if (buttonOk != 0) {
-            item = doc.createElement("item");
+            item = doc->createElement("item");
             item.appendChild(createPushButtonElement((QWidget*)buttonOk));
             hlayout.appendChild(item);
         }
         if (buttonCancel != 0) {
-            item = doc.createElement("item");
+            item = doc->createElement("item");
             item.appendChild(createPushButtonElement((QWidget*)buttonCancel));
             hlayout.appendChild(item);
         }
@@ -530,15 +560,17 @@ QDomElement Form::createWidgetsStructure() {
 
     QDomElement vlayout;
     if (vbxLayout != 0) {
-       vlayout = doc.createElement("layout");
+       vlayout = doc->createElement("layout");
        vlayout.setAttribute("class", "QVBoxLayout");
        vlayout.setAttribute("name", vbxLayout->objectName());
-       item = doc.createElement("item");
+       item = doc->createElement("item");
        item.appendChild(hboxLayout);
        vlayout.appendChild(item);
     }
+    delete doc;
     return vlayout;
 }
+
 
 void Form::createUi() {
 #ifdef Q_OS_WIN32
@@ -551,59 +583,60 @@ void Form::createUi() {
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly)) {
             QTextStream text(&file);
-            QDomDocument doc;
+            QDomDocument* doc = new QDomDocument();
             QDomElement root, cl;
-            root = doc.createElement("UI");
+            root = doc->createElement("UI");
             root.setAttribute("version", "4.0");
             root.setAttribute("stdsetdef", "1");
-            cl = doc.createElement("class");
-            cl.appendChild(doc.createTextNode("Dialog"));
+            cl = doc->createElement("class");
+            cl.appendChild(doc->createTextNode("Dialog"));
             root.appendChild(cl);
-            cl = doc.createElement("widget");
+            cl = doc->createElement("widget");
             cl.setAttribute("class", "QDialog");
             cl.setAttribute("name", formWidget->objectName());
-            QDomElement nameString = doc.createElement("string");
-            nameString.appendChild(doc.createTextNode(QString(codec->toUnicode(configName.toUtf8()))));
-            QDomElement name = doc.createElement("property");
+            QDomElement nameString = doc->createElement("string");
+            nameString.appendChild(doc->createTextNode(QString(codec->toUnicode(configName.toUtf8()))));
+            QDomElement name = doc->createElement("property");
             name.setAttribute("name", "name");
             name.appendChild(nameString);
             cl.appendChild(name);
-            QDomElement geometry = doc.createElement("property");
+            QDomElement geometry = doc->createElement("property");
             geometry.setAttribute("name", "geometry");
-            QDomElement rect = doc.createElement("rect");
-            QDomElement xForm = doc.createElement("x");
-            xForm.appendChild(doc.createTextNode(QString("%1").arg(formWidget->x())));
+            QDomElement rect = doc->createElement("rect");
+            QDomElement xForm = doc->createElement("x");
+            xForm.appendChild(doc->createTextNode(QString("%1").arg(formWidget->x())));
             rect.appendChild(xForm);
-            QDomElement yForm = doc.createElement("y");
-            yForm.appendChild(doc.createTextNode(QString("%1").arg(formWidget->y())));
+            QDomElement yForm = doc->createElement("y");
+            yForm.appendChild(doc->createTextNode(QString("%1").arg(formWidget->y())));
             rect.appendChild(yForm);
-            QDomElement widthForm = doc.createElement("width");
-            widthForm.appendChild(doc.createTextNode(QString("%1").arg(formWidget->width())));
+            QDomElement widthForm = doc->createElement("width");
+            widthForm.appendChild(doc->createTextNode(QString("%1").arg(formWidget->width())));
             rect.appendChild(widthForm);
-            QDomElement heightForm = doc.createElement("height");
-            heightForm.appendChild(doc.createTextNode(QString("%1").arg(formWidget->height())));
+            QDomElement heightForm = doc->createElement("height");
+            heightForm.appendChild(doc->createTextNode(QString("%1").arg(formWidget->height())));
             rect.appendChild(heightForm);
             geometry.appendChild(rect);
             cl.appendChild(geometry);
-            QDomElement caption = doc.createElement("property");
+            QDomElement caption = doc->createElement("property");
             caption.setAttribute("name", "caption");
-            QDomElement captionString = doc.createElement("string");
-            captionString.appendChild(doc.createTextNode(QString(codec->toUnicode(formWidget->windowTitle().toUtf8()))));
+            QDomElement captionString = doc->createElement("string");
+            captionString.appendChild(doc->createTextNode(QString(codec->toUnicode(formWidget->windowTitle().toUtf8()))));
             caption.appendChild(captionString);
             cl.appendChild(caption);
             cl.appendChild(createWidgetsStructure());
             root.appendChild(cl);
-            QDomElement resources = doc.createElement("resources");
-            QDomElement include = doc.createElement("include");
+            QDomElement resources = doc->createElement("resources");
+            QDomElement include = doc->createElement("include");
             include.setAttribute("location", TApplication::resourcesFile());
             resources.appendChild(include);
             root.appendChild(resources);
-            doc.appendChild(root);
-            text << "<?xml " + doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"").data() + "?>" << endl;
-            text << doc.toString();
-//            doc.save(text, 4);
+            doc->appendChild(root);
+            text << "<?xml " + doc->createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"").data() + "?>" << endl;
+            text << doc->toString();
+//            doc->save(text, 4);
             file.close();
             uiCreated = true;
+            delete doc;
         }
     }
 }

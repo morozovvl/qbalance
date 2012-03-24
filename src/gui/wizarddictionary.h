@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define WIZARDDICTIONARY_H
 
 #include "wizardform.h"
+#include "mytextedit.h"
+#include "mysyntaxhighlighter.h"
 #include "../storage/dbfactory.h"
 
 class WizardDictionary : public WizardForm
@@ -36,7 +38,6 @@ protected:
     virtual bool   setData();
 private:
     bool                addDictionary;
-    DBFactory*          db;
     QList<FieldType>    fields;                // Первоначальный список полей
     QString             table;
     QLineEdit*          tableName;              // Как таблица будет называться в БД
@@ -45,6 +46,8 @@ private:
     QCheckBox*          chbMenu;                // Справочник доступен в меню справочников
     QTableWidget*       fieldsTable;            // Список полей таблицы
     QListWidget*        headers;                // Заголовки колонок
+    MyTextEdit*         textEditor;
+    MySyntaxHighlighter* highlighter;
     virtual void        getData();
     friend QString      showTypesForm();
     static WizardDictionary*    Exemplar;

@@ -68,8 +68,8 @@ void Table::query(QString filter)
 
 bool Table::open()
 {
-    db->getColumnsProperties(&columnsProperties, tableName);
     setTableModel();
+    db->getColumnsProperties(&columnsProperties, tableName);
     if (tableModel->lastError().type() == QSqlError::NoError)
     {
         opened = true;

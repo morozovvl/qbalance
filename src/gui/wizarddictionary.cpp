@@ -27,6 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mybooleanitemdelegate.h"
 #include "mylineitemdelegate.h"
 #include "../definitions.h"
+#include "../engine/documentscriptengine.h"
+
 
 
 WizardDictionary* WizardDictionary::Exemplar   = NULL;
@@ -153,6 +155,11 @@ void WizardDictionary::initFrames()
     layout1->addLayout(buttonLayout1);
     layout->addLayout(layout1);
     addFrame(layout, QObject::trUtf8("Порядок столбцов"));
+
+    // 4-я страница
+    layout = new QVBoxLayout();
+    layout->addWidget(textEditor);
+    addFrame(layout, QObject::trUtf8("Скрипты"));
 }
 
 
@@ -160,7 +167,8 @@ void WizardDictionary::getData()
 {
 
     if (table.size() == 0)
-    {
+    {   // Если имя справочника не задано, т.е. это может быть новый справочник
+        // то создадим новый справочник с именем <справочник<n>>
         for (int i = 1; true; i++)
         {
             table = QString("справочник%1").arg(i);
@@ -176,6 +184,7 @@ void WizardDictionary::getData()
         tableName->setEnabled(true);
         chbMenu->setCheckState(Qt::Checked);
 
+        // Создадим первых два поля справочника - "код" и "имя"
         FieldType field;
         field.name = "код";
         field.type = "int4";
@@ -236,6 +245,18 @@ void WizardDictionary::getData()
     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
     fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
+
+    // Инициализируем текстовый редактор
+    textEditor = new MyTextEdit(formWidget);
+    highlighter = new MySyntaxHighlighter(textEditor->document());
+    QString scripts = QString(db->getFile(table + ".qs", ScriptFileType));
+    if (scripts.size() == 0)
+    {
+        DocumentScriptEngine engine;
+        scripts = engine.getBlankScripts();
+    }
+    textEditor->setText(scripts);
+    connect(fieldsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
 }
 
 
@@ -373,6 +394,8 @@ bool WizardDictionary::setData()
             }
         }
     }
+    // Сохраним скрипты
+    db->setFile(table + ".qs", ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
     return true;
 }

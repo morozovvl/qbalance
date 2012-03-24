@@ -37,6 +37,8 @@ TableView::TableView(QWidget* pwgt): QTableView(pwgt)
     app = 0;
     tableModel = 0;
     columns = 0;
+    if (verticalHeader()->minimumSectionSize() > 0)
+        verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
 }
 
 
@@ -48,6 +50,8 @@ TableView::TableView(FormGrid* par, QWidget* pwgt): QTableView(pwgt)
     app = 0;
     tableModel = 0;
     columns = 0;
+    if (verticalHeader()->minimumSectionSize() > 0)
+        verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
 }
 
 
@@ -56,17 +60,6 @@ TableView::~TableView()
     QItemSelectionModel *oldModel = selectionModel();
     delete oldModel;
 }
-
-
-QVariant TableView::getValue()
-{
-    QScriptContext* context = parent->getScriptEngine()->currentContext();
-    QString field = context->argument(0).toString();
-    if (parent->getParent()->isFieldExists(field))
-        return parent->getParent()->getValue(field, context->argument(1).toInteger() - 1);
-    return QVariant();
-}
-
 
 void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
@@ -106,9 +99,9 @@ void TableView::setModel(MySqlRelationalTableModel* model)
     if (model != 0)
     {
         tableModel = model;
-        QItemSelectionModel *oldModel = selectionModel();
+//        QItemSelectionModel *oldModel = selectionModel();
         QTableView::setModel(model);
-        delete oldModel;
+//        delete oldModel;
         if (parent != 0)
         {
             columns = parent->getParent()->getColumnsProperties();
@@ -129,8 +122,10 @@ void TableView::setColumnsHeaders()
         if (headers.size() > 0)
         {   // Если удалось прочитать описание столбцов, то установим столбцы в соответствии с описанием
             int i;
-            for (i = 0; i < tableModel->columnCount(); i++)       // Скроем все столбцы
-                hideColumn(i);
+            for (i = 0; i < tableModel->columnCount(); i++)
+            {
+                setColumnHidden(i, true);
+            }
             QString columnName;                 // Расположим их по порядку, как они идут в описании и дадим им правильные заголовки
             QSqlRecord rec;
             int k;

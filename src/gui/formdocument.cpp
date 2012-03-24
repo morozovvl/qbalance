@@ -120,8 +120,6 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         parameters->setDictionaries(getParent()->getDictionaries());
         parameters->setFormDocument(this);
         parameters->setApp(TApplication::exemplar());
-        parameters->setProgramIdFieldName(db->getObjectName("код").toLower());
-        parameters->setProgramNameFieldName(db->getObjectName("имя").toLower());
         foreach (QString dictName, getParent()->getDictionaries()->keys())
         {
             if (getParent()->getDictionaries()->value(dictName)->isConst())
@@ -193,7 +191,7 @@ void FormDocument::parametersChangedEvent()
 
 QDomElement FormDocument::createWidgetsStructure()
 {
-    QDomDocument doc;
+    QDomDocument* doc = new QDomDocument();
     QDomElement vboxLayout = FormGrid::createWidgetsStructure();
     if (vbxLayout != 0)
     {
@@ -207,61 +205,61 @@ QDomElement FormDocument::createWidgetsStructure()
                    layout = item.firstChildElement("layout");
                     if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0)
                     {
-                        hlayout = doc.createElement("layout");
+                        hlayout = doc->createElement("layout");
                         hlayout.setAttribute("class", "QHBoxLayout");
                         hlayout.setAttribute("name", "phbxItogLayout");
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createHStretchElement());
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createLabelElement(LABEL_ITOG));
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createLineEditElement(itogNumeric));
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(hlayout);
 
                         vboxLayout.insertBefore(item, vboxLayout.childNodes().at(i));
 
                         if (parameters != 0)
                         {
-                            widget = doc.createElement("widget");
+                            widget = doc->createElement("widget");
                             widget.setAttribute("class", parameters->metaObject()->className());
                             widget.setAttribute("name", parameters->objectName());
-                            item = doc.createElement("item");
+                            item = doc->createElement("item");
                             item.appendChild(widget);
                             vboxLayout.insertBefore(item, QDomNode());
                         }
 
-                        hlayout = doc.createElement("layout");
+                        hlayout = doc->createElement("layout");
                         hlayout.setAttribute("class", "QHBoxLayout");
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createLabelElement(LABEL_DATE));
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createDateEditElement(dateEdit));
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createLabelElement(LABEL_NUMBER));
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createLineEditElement(numberEdit));
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(createHStretchElement());
                         hlayout.appendChild(item);
 
-                        item = doc.createElement("item");
+                        item = doc->createElement("item");
                         item.appendChild(hlayout);
                         vboxLayout.insertBefore(item, QDomNode());
                         break;
@@ -269,6 +267,7 @@ QDomElement FormDocument::createWidgetsStructure()
                 }
             }
     }
+    delete doc;
     return vboxLayout;
 }
 

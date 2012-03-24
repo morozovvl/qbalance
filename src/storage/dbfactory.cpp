@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 DBFactory::DBFactory()
 : QObject()
 {
+    errorText.clear();
     hostName = "localhost";
     port = 5432;
     dbName = "qbalance";
@@ -121,7 +122,7 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
 void DBFactory::clearError()
 {
     wasError = false;
-    errorText = "";
+    errorText.clear();
 }
 
 
@@ -170,7 +171,7 @@ bool DBFactory::open(QString login, QString password)
 void DBFactory::initDBFactory()
 {
     initObjectNames();                  // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
-    objectTypes = execQuery(QString("SELECT * FROM %1").arg(getObjectName("типыобъектов")));
+    objectTypes = execQuery(QString("SELECT * FROM %1;").arg(getObjectName("типыобъектов")));
 }
 
 
@@ -213,7 +214,7 @@ QSqlQuery DBFactory::execQuery(QString str)
 
 QStringList DBFactory::getUserList()
 {
-    static const QString clause = QString("SELECT %1 FROM %2 ORDER BY %1").arg(getObjectName("имя"))
+    static const QString clause = QString("SELECT %1 FROM %2 ORDER BY %1;").arg(getObjectName("имя"))
                                                                           .arg(getObjectName("vw_пользователи"));
     static short index          = 0;
 
@@ -233,7 +234,7 @@ QStringList DBFactory::getUserList()
 QSqlQuery DBFactory::getDictionariesProperties()
 {
     clearError();
-    return execQuery(QString("SELECT * FROM %1").arg(getObjectName("vw_доступ_к_справочникам")));
+    return execQuery(QString("SELECT * FROM %1;").arg(getObjectName("vw_доступ_к_справочникам")));
 }
 
 
@@ -241,9 +242,10 @@ QSqlRecord DBFactory::getDictionariesProperties(QString tableName/* = ""*/)
 {
     QSqlRecord result;
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = '%3'").arg(getObjectName("vw_доступ_к_справочникам"))
-                                                                           .arg(getObjectName("vw_доступ_к_справочникам.таблица"))
-                                                                           .arg(tableName));
+    QString command = QString("SELECT * FROM %1 WHERE %2 = '%3';").arg(getObjectName("vw_доступ_к_справочникам"))
+            .arg(getObjectName("vw_доступ_к_справочникам.таблица"))
+            .arg(tableName);
+    QSqlQuery query = execQuery(command);
     query.first();
     if (query.isValid())
     {
@@ -296,14 +298,9 @@ bool DBFactory::isSet(QString tableName)
 }
 
 
-void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table, int oper)
+QSqlQuery DBFactory::getColumnsPropertiesQuery(QMap<int, FieldType>* result, QString table, QString tblName, QString prefix)
 {
-    clearError();
-    QString tableName;
-    if (oper == 0)
-        tableName = table.trimmed();
-    else
-        tableName = QString("СписокДокументов%1").arg(oper);
+    QString tableName = (tblName.size() == 0 ? table : tblName);
     QString command(QString("SELECT DISTINCT s.*, COALESCE(c.%4, '') AS header, COALESCE(c.%5, 0) AS number " \
                             "FROM (SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable " \
                                    "FROM information_schema.columns " \
@@ -311,9 +308,9 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
                                    "LEFT OUTER JOIN " \
                                    "(SELECT %2 AS %3, %4, %5 "\
                                     "FROM %6 " \
-                                    "WHERE %7 = '%8' " \
+                                    "WHERE trim(%7) = '%8' " \
                                     ") c ON s.name = c.%3 " \
-                                    "ORDER BY s.column;").arg(table.trimmed())
+                                    "ORDER BY s.column;").arg(table)
                                                          .arg(getObjectName("vw_столбцы.столбец"))
                                                          .arg(getObjectName("vw_столбцы.имя"))
                                                          .arg(getObjectName("vw_столбцы.заголовок"))
@@ -322,16 +319,15 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
                                                          .arg(getObjectName("vw_столбцы.справочник"))
                                                          .arg(tableName));
     QSqlQuery query = execQuery(command);
-    result->clear();
-    int i = 0;
+    int i = result->count();
     for (query.first(); query.isValid(); query.next())
     {
         FieldType fld;
-        fld.name      = query.value(1).toString().trimmed();
+        fld.name      = prefix + query.value(1).toString().trimmed();
         fld.type      = query.value(2).toString().trimmed();
         fld.length    = query.value(3).toInt();
         fld.precision = query.value(4).toInt();
-        if (fld.name.toLower() == "код")
+        if (fld.name == getObjectName("код"))
             fld.readOnly = true;
         else
             fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
@@ -340,7 +336,30 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
         result->insert(i, fld);
         i++;
     }
-    if (QString::compare(table, "сальдо", Qt::CaseInsensitive) == 0)
+    return query;
+}
+
+
+void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table, int oper)
+{
+    clearError();
+    table = table.trimmed();
+    QString tableName = (oper == 0 ? table : QString("СписокДокументов%1").arg(oper));
+    result->clear();
+    QSqlQuery query = getColumnsPropertiesQuery(result, table, tableName, "");
+    // Просмотрим поля зависимых справочников
+    for (query.first(); query.isValid(); query.next())
+    {
+        QString fieldName = query.value(1).toString().trimmed();
+        if (fieldName.left(4) == getObjectName("код") + "_")    // Если это поле - ссылка на другой справочник
+        {
+            QString setDictName = fieldName;
+            setDictName.remove(0, 4);               // Получим имя связанного справочника
+            setDictName = setDictName.toLower();
+            getColumnsPropertiesQuery(result, setDictName, "", setDictName + ".");
+        }
+    }
+    if (QString::compare(table, getObjectName("сальдо"), Qt::CaseInsensitive) == 0)
     {
         foreach (int i, result->keys())
         {
@@ -358,8 +377,8 @@ void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table
 void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table)
 {   // Просто возвращает свойства колонок в виде QList, а не QMap
     QMap<int, FieldType> fields;
-    getColumnsProperties(&fields, table);
     result->clear();
+    getColumnsProperties(&fields, table);
     foreach (FieldType fld, fields.values())
     {
         result->append(fld);
@@ -483,6 +502,17 @@ int DBFactory::getDictionaryId(QString dictionaryName)
             return query.value(0).toInt() + 1;
         }
         return number;
+    }
+    dict = getObjectName("справочники");
+    dictId = getObjectName("справочники.код");
+    dictName = getObjectName("справочники.имя");
+    query = execQuery(QString("SELECT %1 FROM %2 WHERE trim(%3) = '%4';").arg(dictId)
+                                                                   .arg(dict)
+                                                                   .arg(dictName)
+                                                                   .arg(dictionaryName));
+    query.first();
+    if (query.isValid()) {
+        return query.value(0).toInt();
     }
     return 0;
 }
@@ -612,7 +642,7 @@ bool DBFactory::renameTableColumn(QString table, QString oldColumnName, QString 
     dict.first();
     if (dict.isValid())
     {
-        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE %4 = %5 AND %2 = '%3';").arg(getObjectName("столбцы"))
+        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %2 = '%3';").arg(getObjectName("столбцы"))
                                                                                    .arg(getObjectName("столбцы.имя"))
                                                                                    .arg(newColumnName)
                                                                                    .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
@@ -627,7 +657,7 @@ bool DBFactory::setTableColumnHeaderOrder(int tableId, QString column, QString h
 {
     QString command;
     clearError();
-    command = QString("SELECT * FROM %1 WHERE %2 = %3 AND %4 = '%5';").arg(getObjectName("столбцы"))
+    command = QString("SELECT * FROM %1 WHERE \"%2\" = %3 AND %4 = '%5';").arg(getObjectName("столбцы"))
                                                                      .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
                                                                      .arg(tableId)
                                                                      .arg(getObjectName("столбцы.имя"))
@@ -718,7 +748,7 @@ bool DBFactory::deleteAllToperInfo(int operNumber)
             return false;
         }
     beginTransaction();
-    exec(QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectName("столбцы"))
+    exec(QString("DELETE FROM %1 WHERE \"%2\" = %3;").arg(getObjectName("столбцы"))
                                                 .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
                                                 .arg(getDictionaryId(QString("Документ%1").arg(operNumber))));
     exec(QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectName("топер"))
@@ -807,10 +837,11 @@ QString DBFactory::getPhotoDatabase()
 QString DBFactory::getPhotoPath(QString tableName)
 {
     clearError();
-    QString result;
-    QSqlQuery query = execQuery(QString("SELECT %1 FROM %2 WHERE %3 = '" + tableName + "';").arg(getObjectName("справочники.фото"))
-                                                                                            .arg(getObjectName("справочники"))
-                                                                                            .arg(getObjectName("справочники.имя")));
+    QString result, command;
+    command = QString("SELECT %1 FROM %2 WHERE trim(%3) = '" + tableName + "';").arg(getObjectName("справочники.фото"))
+            .arg(getObjectName("справочники"))
+            .arg(getObjectName("справочники.имя"));
+    QSqlQuery query = execQuery(command);
     if (query.first())
         result = query.record().field(0).value().toString().trimmed();
     return result;
@@ -820,26 +851,28 @@ QString DBFactory::getPhotoPath(QString tableName)
 QSqlQuery DBFactory::getColumnsHeaders(QString tableName)
 {
     clearError();
-    return execQuery(QString("SELECT %1, %2, %3 FROM %4 WHERE %5 = '" + tableName + "' ORDER BY %3;").arg(getObjectName("vw_столбцы.столбец"))
-                                                                                                     .arg(getObjectName("vw_столбцы.заголовок"))
-                                                                                                     .arg(getObjectName("vw_столбцы.номер"))
-                                                                                                     .arg(getObjectName("vw_столбцы"))
-                                                                                                     .arg(getObjectName("vw_столбцы.справочник")));
+    QString command = QString("SELECT %1, %2, %3 FROM %4 WHERE trim(%5) = '" + tableName + "' ORDER BY %3;").arg(getObjectName("vw_столбцы.столбец"))
+            .arg(getObjectName("vw_столбцы.заголовок"))
+            .arg(getObjectName("vw_столбцы.номер"))
+            .arg(getObjectName("vw_столбцы"))
+            .arg(getObjectName("vw_столбцы.справочник"));
+    return execQuery(command);
 }
 
 
 bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, int number)
 {
     clearError();
-    return exec(QString("INSERT INTO %1 (%2, %3, %4, %5) VALUES (%6, '%7', '%8', %9);").arg(getObjectName("столбцы"))
-                                                                                       .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
-                                                                                       .arg(getObjectName("столбцы.имя"))
-                                                                                       .arg(getObjectName("столбцы.заголовок"))
-                                                                                       .arg(getObjectName("столбцы.номер"))
-                                                                                       .arg(tableId)
-                                                                                       .arg(column)
-                                                                                       .arg(header)
-                                                                                       .arg(number));
+    QString command = QString("INSERT INTO %1 (\"%2\", %3, %4, %5) VALUES (%6, '%7', '%8', %9);").arg(getObjectName("столбцы"))
+            .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
+            .arg(getObjectName("столбцы.имя"))
+            .arg(getObjectName("столбцы.заголовок"))
+            .arg(getObjectName("столбцы.номер"))
+            .arg(tableId)
+            .arg(column)
+            .arg(header)
+            .arg(number);
+    return exec(command);
 }
 
 
@@ -847,14 +880,14 @@ bool DBFactory::updateColumnHeader(int tableId, QString column, QString header, 
 {
     clearError();
     if (number == 0)
-        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE %4 = %5 AND %6 = '%7';").arg(getObjectName("столбцы"))
+        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %6 = '%7';").arg(getObjectName("столбцы"))
                     .arg(getObjectName("столбцы.заголовок"))
                     .arg(header)
                     .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
                     .arg(tableId)
                     .arg(getObjectName("столбцы.имя"))
                     .arg(column));
-    return exec(QString("UPDATE %1 SET %2 = '%3', %4 = %5 WHERE %6 = %7 AND %8 = '%9';").arg(getObjectName("столбцы"))
+    return exec(QString("UPDATE %1 SET %2 = '%3', %4 = %5 WHERE \"%6\" = %7 AND %8 = '%9';").arg(getObjectName("столбцы"))
                 .arg(getObjectName("столбцы.заголовок"))
                 .arg(header)
                 .arg(getObjectName("столбцы.номер"))
@@ -1066,6 +1099,7 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("vw_доступ_к_топер.имя", "имя");
     ObjectNames.insert("vw_доступ_к_топер.опер", "опер");
     ObjectNames.insert("справочники", "справочники");
+    ObjectNames.insert("справочники.код", "КОД");
     ObjectNames.insert("справочники.имя", "имя");
     ObjectNames.insert("справочники.имя_в_списке", "имя_в_списке");
     ObjectNames.insert("справочники.имя_в_форме", "имя_в_форме");
@@ -1280,7 +1314,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 }
 
 
-void DBFactory::setToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList)
+void DBFactory::getToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList)
 {
     QString dictName;
     // Укажем, как обращаться к справочникам для заполнения кодов в проводках
@@ -1348,7 +1382,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
     }
     if (topersList->count() > 0)
     {
-        setToperDictAliases(topersList, &dictsList);
+        getToperDictAliases(topersList, &dictsList);
         QString selectClause, fromClause, whereClause;
         int prv, prv1 = 0;
         if (columnsProperties != 0)
