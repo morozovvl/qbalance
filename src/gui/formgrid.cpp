@@ -64,7 +64,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
      if (defaultForm)
      {   // Если форма создана автоматически
-        grdTable = new TableView(this, formWidget);
+        grdTable = new TableView(formWidget, this);
         grdTable->setApp(TApplication::exemplar());
         grdTable->setObjectName("tableView");
         grdTable->setModel(tableModel);
@@ -103,6 +103,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             picture = new Picture(formWidget);
             picture->setObjectName("picture");
+            tableLayout->addWidget(picture);
         }
         else
         {

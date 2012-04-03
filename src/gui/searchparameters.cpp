@@ -42,8 +42,7 @@ SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) 
 }
 
 void SearchParameters::close() {
-    for(int i = gridLayout->rowCount() - 1; i >= 0; i--)
-        removeString(i);
+    delete gridLayout;
 }
 
 
@@ -60,9 +59,6 @@ void SearchParameters::setFieldsList(QStringList fldList) {
     int strNum = 0;
     for (int i = 0; i < fldList.count(); i++) {
         QString field = fldList.at(i);
-// Непонятно, для чего здесь  && !parentForm->getParent()->relationsIsEmpty()
-//        if (field.toLower() == programNameFieldName ||
-//            (field.left(4).toLower() == (programIdFieldName + "_") && !parentForm->getParent()->relationsIsEmpty()))                          // Если это поле - столбец ИМЯ, то это справочник
             if (field.toLower() == programNameFieldName ||
                 (field.left(4).toLower() == (programIdFieldName + "_")))                          // Если это поле - столбец ИМЯ, то это справочник
             addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
@@ -105,6 +101,15 @@ void SearchParameters::addString(QString name, int strNum) {
             if (labelName.size() == 0)
                 labelName = "Наименование";
         }
+        // Проверим, имеется ли в связанном справочнике полнотекстовый поиск
+        if (parentForm->getParent()->isFtsEnabled())
+        {
+            QCheckBox* checkBox = new QCheckBox(QObject::trUtf8("ПТП"), parentWidget());
+            checkBox->setToolTip(QObject::trUtf8("Использовать ПолноТекстовый Поиск"));
+            checkBox->setTristate(false);
+            checkBox->setObjectName(parentForm->getParent()->getTableName());                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
+            gridLayout->addWidget(checkBox, strNum, 2, 1, 1);
+        }
     }
     comboBox->setObjectName(name);
     parameters << name;
@@ -112,28 +117,6 @@ void SearchParameters::addString(QString name, int strNum) {
     gridLayout->addWidget(label, strNum, 0, 1, 1, Qt::AlignRight);
 }
 
-void SearchParameters::removeString(int strNum) {
-    QWidget* widget;
-    if (gridLayout->itemAtPosition(strNum, 0) != 0) {
-        widget = gridLayout->itemAtPosition(strNum, 0)->widget();
-        if (widget != 0)
-            gridLayout->removeWidget(widget);
-    }
-    if (gridLayout->itemAtPosition(strNum, 1) != 0) {
-        widget = gridLayout->itemAtPosition(strNum, 1)->widget();       // удалим ComboBox
-        if (widget != 0) {
-            disconnect(widget, 0, 0, 0);
-            gridLayout->removeWidget(widget);
-        }
-    }
-    if (gridLayout->itemAtPosition(strNum, 2) != 0) {
-        widget = gridLayout->itemAtPosition(strNum, 2)->widget();       // удалим PushButton
-        if (widget != 0) {
-            disconnect(widget, 0, 0, 0);
-            gridLayout->removeWidget(widget);
-        }
-    }
-}
 
 QVector<sParam> SearchParameters::getParameters() {
     QVector<sParam> param;
@@ -147,6 +130,9 @@ QVector<sParam> SearchParameters::getParameters() {
         par.table = field.replace("." + programNameFieldName, "");
         par.field = programNameFieldName;
         par.value = text;
+        // Определим, включен ли полнотекстовый поиск
+        QCheckBox* chb = (QCheckBox*)qFindChild<QCheckBox*>(this, field);
+        par.isFtsEnabled = (chb != 0 ? chb->isChecked(): false);
         if (text.size() > 0)
             param.append(par);
     }
@@ -162,13 +148,30 @@ QString SearchParameters::getFilter()
     for (int i = 0; i < searchParameters.size(); i++) {
         QString text = searchParameters[i].value.toString();
         QStringList paramList = text.split(QRegExp("\\s+"));
-        foreach (QString param, paramList)
+        if (searchParameters[i].isFtsEnabled)   // Если включен полнотектовый поиск
         {
             if (filter.size() > 0)
                 filter.append(" AND ");
-            filter.append(QString("%1.%2 ILIKE '%3'").arg(db->getObjectName(searchParameters[i].table))
-                                                     .arg(db->getObjectName(searchParameters[i].field))
-                                                     .arg("%" + param + "%"));
+            filter.append(searchParameters[i].table + ".FTS @@ to_tsquery('");
+            QString f = "";
+            foreach (QString param, paramList)
+            {
+                if (f.size() > 0)
+                    f.append("&");
+                f.append(param);
+            }
+            filter.append(f + "')");
+        }
+        else
+        { // Если полнотекстовый поиск отключен
+            foreach (QString param, paramList)
+            {
+                if (filter.size() > 0)
+                    filter.append(" AND ");
+                filter.append(QString("%1.%2 ILIKE '%3'").arg(db->getObjectName(searchParameters[i].table))
+                                                         .arg(db->getObjectName(searchParameters[i].field))
+                                                         .arg("%" + param + "%"));
+            }
         }
     }
     return filter;
@@ -178,13 +181,12 @@ QString SearchParameters::getFilter()
 void SearchParameters::dictionaryButtonPressed() {
     if (dictionaries != 0)
     {
-        dictionaries->addDictionary(sender()->objectName(), 0);
-        Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
+        Dictionary* dict = dictionaries->getDictionary(sender()->objectName(), 0);    // Поместим связанный справочник в список справочников приложения
         if (dict != 0) {
             dict->exec();
             if (dict->isFormSelected()) {
                 MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, sender()->objectName() + "." + programNameFieldName);
-                QString text = dict->getValue(programNameFieldName).toString();
+                QString text = dict->getValue(programNameFieldName).toString().trimmed();
                 int index = cmb->findText(text);
                 if (index > 0)
                     cmb->setCurrentIndex(index);

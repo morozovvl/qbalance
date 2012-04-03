@@ -49,11 +49,7 @@ bool readParameters(int argc, char *argv[]) {
         else if (QString(argv[i]).compare("-d", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--debug", Qt::CaseInsensitive) == 0) {
 
-            if (TApplication::setDebugMode(true))
-            {
-                TApplication::debug(" Program startup.\n");
-            }
-            else
+            if (!TApplication::setDebugMode(true))
             {
                 out << QObject::trUtf8("Не могу открыть файл журнала отладки.\n");
                 lContinue = false;

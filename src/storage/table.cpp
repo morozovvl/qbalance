@@ -62,7 +62,7 @@ void Table::query(QString filter)
     {
         tableModel->select();
     }
-    TApplication::debug(" Query: " + tableModel->selectStatement() + "\n");
+    TApplication::debug("Query: " + tableModel->selectStatement() + "\n");
  }
 
 

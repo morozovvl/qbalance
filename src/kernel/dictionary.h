@@ -65,6 +65,8 @@ public:
     void setDependent(bool d) { isDepend = d; }
     QString getPrototypeName() { return prototypeName; }
     void setPrototypeName(QString prototype) { prototypeName = prototype; }
+    bool isFtsEnabled() { return ftsEnabled; }
+    Q_INVOKABLE QString getTest() { return "Test Ok"; }
 
 protected:
     Dictionaries*   dictionaries;
@@ -78,6 +80,7 @@ protected:
     bool            isDepend;
     virtual void    setForm();
 private:
+    bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
     QStringList     fieldList;
 };
 

@@ -40,8 +40,7 @@ class TableView : public QTableView {
 public:
     QMap<int, FieldType>*   columns;
 
-    TableView(QWidget* parentWidget = 0);
-    TableView(FormGrid*, QWidget* = 0);
+    TableView(QWidget* = 0, FormGrid* = 0);
     ~TableView();
 
     void                        setFormGrid(FormGrid* par) { parent = par; }

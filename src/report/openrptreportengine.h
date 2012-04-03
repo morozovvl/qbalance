@@ -17,42 +17,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef FORMGRIDSEARCH_H
-#define FORMGRIDSEARCH_H
+#ifndef OPENRPTPORTENGINE_H
+#define OPENRPTPORTENGINE_H
+#include <QMap>
+#include <QStandardItemModel>
+#include "../kernel/essence.h"
+#include "reportengine.h"
+#include "../../openrpt/openrpt/report/report.h"
+#include "../../openrpt/openrpt/report/wrapper.h"
+#include "../../openrpt/openrpt/report/templategenerator.h"
 
-#include <QWidget>
-#include <QSqlTableModel>
-#include <QShowEvent>
-#include "formgrid.h"
 
-class Dictionary;
-class SearchParameters;
-
-struct sParam {
-    QString field;
-    QString table;
-    QVariant value;
-    bool    isFtsEnabled;
-};
-
-class FormGridSearch : public FormGrid {
-
+class OpenRPTreportEngine : public ReportEngine
+{
+    Q_OBJECT
 public:
-    explicit FormGridSearch(QObject* parent = NULL);
-    Q_INVOKABLE virtual void close();
-    Dictionary* getParent() { return (Dictionary*)parent; }
-    SearchParameters* getSearchParameters() { return parameters; }
-
-public slots:
-    Q_INVOKABLE virtual int exec();
-    Q_INVOKABLE virtual void show();
-
+    OpenRPTreportEngine(QMap<QString, QVariant>* context, QString name, QString ext);
+    virtual bool open();
 private:
-    SearchParameters*   parameters;
-    QVector<sParam>     searchParameters;
-    virtual void        createForm(QString, QWidget* pwgt = 0);
-    virtual QDomElement createWidgetsStructure();
-
+    QAbstractItemModel*     model;
+    IDataSource*            source;
+    void prepareData(TReport*);
 };
 
-#endif // FORMGRIDSEARCH_H
+#endif // OPENRPTPORTENGINE_H

@@ -135,6 +135,22 @@ void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
     out = qobject_cast<Dictionary*>(object.toQObject());
 }
 
+// класс Dictionaries
+Q_DECLARE_METATYPE(Dictionaries*)
+
+QScriptValue DictionariesConstructor(QScriptContext*, QScriptEngine *engine) {
+     Dictionaries* object = new Dictionaries();
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue DictionariesToScriptValue(QScriptEngine *engine, Dictionaries* const &in) {
+    return engine->newQObject(in);
+}
+
+void DictionariesFromScriptValue(const QScriptValue &object, Dictionaries* &out) {
+    out = qobject_cast<Dictionaries*>(object.toQObject());
+}
+
 // класс Form
 Q_DECLARE_METATYPE(Form*)
 
@@ -298,6 +314,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
+    qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
+    globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
 
 //    globalObject().setProperty("QPushButton", newQMetaObject(&QObject::staticMetaObject, newFunction(QPushButtonConstructor)));
 //    qScriptRegisterMetaType(this, QPushButtonToScriptValue, QPushButtonFromScriptValue);
@@ -305,9 +323,11 @@ void ScriptEngine::loadScriptObjects()
 //    qScriptRegisterMetaType(this, QFileDialogToScriptValue, QFileDialogFromScriptValue);
 
     // Объявим глобальные переменные и объекты
+    globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()->getForm()));
     globalObject().setProperty("table", newQObject(parent()));
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
+    globalObject().setProperty("app", newQObject(TApplication::exemplar()));
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("setValue", newFunction(setValue));

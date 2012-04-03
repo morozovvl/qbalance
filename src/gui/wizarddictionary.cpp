@@ -205,9 +205,9 @@ void WizardDictionary::getData()
     else
     {   // Получим список полей таблицы
         db->getColumnsProperties(&fields, table);
-        tableMenuName->setText(TApplication::exemplar()->getDictionaries()->getDictionaryTitle(table));
         QSqlRecord dictProperties = db->getDictionariesProperties(table);
-        tableFormName->setText(dictProperties.value(__NAME_IN_FORM__).toString());
+        tableMenuName->setText(dictProperties.value(db->getObjectName("имя")).toString().trimmed());
+        tableFormName->setText(dictProperties.value(db->getObjectName("имя_в_форме")).toString().trimmed());
         if (dictProperties.value(db->getObjectName("vw_доступ_к_справочникам.меню")).toBool())
             chbMenu->setCheckState(Qt::Checked);
         else
@@ -215,6 +215,9 @@ void WizardDictionary::getData()
         tableName->setEnabled(false);
     }
     fieldsTable = new QTableWidget(fields.count(), 6);
+    if (fieldsTable->verticalHeader()->minimumSectionSize() > 0)
+        fieldsTable->verticalHeader()->setDefaultSectionSize(fieldsTable->verticalHeader()->minimumSectionSize());
+
     // Если известно, с какой таблицей будем работать
     tableName->setText(table);
     // Создадим таблицу столбцов
@@ -256,7 +259,6 @@ void WizardDictionary::getData()
         scripts = engine.getBlankScripts();
     }
     textEditor->setText(scripts);
-    connect(fieldsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(fieldsTableChanged()));
 }
 
 

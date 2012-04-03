@@ -12,7 +12,6 @@ QT += sql \
 # DESTDIR = bin/debug
 #}
 
-CONFIG = debug
 TARGET = qbalance
 CONFIG += designer \
     plugin \

@@ -68,8 +68,12 @@ WizardOperation::WizardOperation(): WizardForm()
 {
     operName = new QLineEdit();
     fieldsTable = new QTableWidget();
+    if (fieldsTable->verticalHeader()->minimumSectionSize() > 0)
+        fieldsTable->verticalHeader()->setDefaultSectionSize(fieldsTable->verticalHeader()->minimumSectionSize());
     fldsTableChanged = false;
     docListFieldsTable = new QTableWidget();
+    if (docListFieldsTable->verticalHeader()->minimumSectionSize() > 0)
+        docListFieldsTable->verticalHeader()->setDefaultSectionSize(docListFieldsTable->verticalHeader()->minimumSectionSize());
     docListFldsTableChanged = false;
     headers = new QListWidget();
     docListHeaders = new QListWidget();
@@ -360,6 +364,8 @@ void WizardOperation::getData()
 
     // Создадим таблицу проводок
     prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 10);
+    if (prvTable->verticalHeader()->minimumSectionSize() > 0)
+        prvTable->verticalHeader()->setDefaultSectionSize(prvTable->verticalHeader()->minimumSectionSize());
     connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
     prvTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Дебет")
                                                       << QObject::trUtf8("Дб.постоянный")

@@ -29,20 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mybooleanitemdelegate.h"
 
 
-TableView::TableView(QWidget* pwgt): QTableView(pwgt)
-{
-    parent = 0;
-    parentWidget = pwgt;
-    name = "TableView";
-    app = 0;
-    tableModel = 0;
-    columns = 0;
-    if (verticalHeader()->minimumSectionSize() > 0)
-        verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
-}
-
-
-TableView::TableView(FormGrid* par, QWidget* pwgt): QTableView(pwgt)
+TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
 {
     parent = par;
     parentWidget = pwgt;

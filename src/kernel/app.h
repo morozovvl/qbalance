@@ -41,7 +41,7 @@ class MainWindow;
 enum  ReportTemplateTypes
 {
     OOreportTemplate,
-    ORPTreportTemplate
+    OpenRPTreportTemplate
 };
 
 
@@ -80,7 +80,7 @@ public:
     static QTextCodec* codec();
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
-    static bool debugMode()        { return false;}
+    static bool debugMode()        { return DebugMode;}
     static QTextStream& debugStream(){ return *DebugStream;}
     static QString debugFileName() { return "debug.log";}
     static QString errorFileName() { return "error.log";}

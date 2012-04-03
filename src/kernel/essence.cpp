@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../report/reportengine.h"
 #include "../report/ooreportengine.h"
+#include "../report/openrptreportengine.h"
 #include "../engine/reportscriptengine.h"
 #include "../engine/reportcontext.h"
 
@@ -239,7 +240,7 @@ void Essence::setForm()
 
 void Essence::setScriptEngine()
 {
-    scriptEngine = new ScriptEngine();
+    scriptEngine = new ScriptEngine(this);
 }
 
 
@@ -309,6 +310,7 @@ void Essence::print(QString file)
     QMap<QString, QVariant> printValues;
     ReportScriptEngine scriptEngine(&printValues);
     preparePrintValues(&scriptEngine);
+    qDebug() << printValues;
     QString ext = TApplication::exemplar()->getReportTemplateExt();
     if (scriptEngine.open(file + "." + ext + ".qs") && scriptEngine.evaluate())
     {
@@ -317,6 +319,12 @@ void Essence::print(QString file)
             case OOreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                     OOReportEngine report(&printValues, file, ext);
+                    report.open();
+                }
+                break;
+            case OpenRPTreportTemplate:
+                {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                    OpenRPTreportEngine report(&printValues, file, ext);
                     report.open();
                 }
                 break;

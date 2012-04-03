@@ -45,7 +45,8 @@ TApplication::TApplication(int & argc, char** argv)
     db  = new DBFactory();
     gui = new GUIFactory(db);
 
-    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
+//    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
+    reportTemplateType = OpenRPTreportTemplate;
 
     if (!Exemplar)
     {
@@ -90,13 +91,23 @@ Dictionaries* TApplication::getDictionaries()
 
 QString TApplication::getReportTemplateExt()
 {
-    // сюда вставить другие расширения файлов шаблонов
-    return "ods";
+    switch (getReportTemplateType())
+    {
+        case OOreportTemplate:
+            return "ods";
+        case OpenRPTreportTemplate:
+            return "xml";
+    }
+    return "";
 }
 
 
 bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
+    if (debugMode())
+    {
+        TApplication::debug("Program startup.\n");
+    }
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
     if (gui->open()) {  // Попытаемся открыть графический интерфейс
@@ -130,7 +141,8 @@ bool TApplication::open() {
 }
 
 void TApplication::close() {
-    foreach(Documents* doc, documents) {
+    foreach(Documents* doc, documents)
+    {
         doc->close();
     }
     dictionaryList->close();
@@ -139,6 +151,11 @@ void TApplication::close() {
     delete topersList;
     gui->close();
     db->close();
+    if (debugMode())
+    {
+        TApplication::debug("Program shutdown.\n");
+        TApplication::DebugFile->close();
+    }
 }
 
 
@@ -199,7 +216,7 @@ void TApplication::debug(const QString& value)
 {
     if (debugMode())
     {
-        TApplication::debugStream() << QDateTime::currentDateTime().toString(logTimeFormat()) << value;
+        TApplication::debugStream() << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value;
     }
 }
 

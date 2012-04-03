@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgridsearch.h"
 #include "../gui/searchparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
+#include "../engine/documentscriptengine.h"
+
 
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
@@ -34,6 +36,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
     lIsConst = false;
     lAutoSelect = false;
     isDepend = false;
+    ftsEnabled = false;
     dictionaries = TApplication::exemplar()->getDictionaries();
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
@@ -176,7 +179,8 @@ bool Dictionary::open(int deep) {
             }
             deep--;
         }
-
+        // Проверим, имеется ли в справочнике полнотекстовый поиск
+        ftsEnabled = fieldList.contains("FTS", Qt::CaseInsensitive);
         // Установим порядок сортировки и стратегию сохранения данных на сервере
         tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
         db->getColumnsRestrictions(tableName, &columnsProperties);
@@ -186,8 +190,13 @@ bool Dictionary::open(int deep) {
 //        form->createUi();
         if (scriptEngine != 0)
         {
-            form->initFormEvent();
-            return scriptEngine->open("");
+            if (scriptEngine->open(tableName + ".qs"))
+            {
+                scriptEngine->evaluate();
+                form->initFormEvent();
+                return true;
+            }
+            return false;
         }
         return true;
     }
@@ -233,3 +242,6 @@ void Dictionary::query(QString defaultFilter)
     }
     Essence::query(resFilter);
 }
+
+
+

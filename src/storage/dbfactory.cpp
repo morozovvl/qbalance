@@ -185,8 +185,7 @@ void DBFactory::close()
 
 bool DBFactory::exec(QString str)
 {
-    TApplication::debug(" Query: " + str + "\n");
-
+    TApplication::debug("Exec: " + str + "\n");
     clearError();
     QSqlQuery query;
     bool lResult = query.exec(str);
@@ -200,8 +199,7 @@ bool DBFactory::exec(QString str)
 
 QSqlQuery DBFactory::execQuery(QString str)
 {
-    TApplication::debug(" Query: " + str + "\n");
-
+    TApplication::debug("Query: " + str + "\n");
     clearError();
     QSqlQuery query;
     if (!query.exec(str))
@@ -301,6 +299,7 @@ bool DBFactory::isSet(QString tableName)
 QSqlQuery DBFactory::getColumnsPropertiesQuery(QMap<int, FieldType>* result, QString table, QString tblName, QString prefix)
 {
     QString tableName = (tblName.size() == 0 ? table : tblName);
+/*
     QString command(QString("SELECT DISTINCT s.*, COALESCE(c.%4, '') AS header, COALESCE(c.%5, 0) AS number " \
                             "FROM (SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable " \
                                    "FROM information_schema.columns " \
@@ -318,12 +317,18 @@ QSqlQuery DBFactory::getColumnsPropertiesQuery(QMap<int, FieldType>* result, QSt
                                                          .arg(getObjectName("vw_столбцы"))
                                                          .arg(getObjectName("vw_столбцы.справочник"))
                                                          .arg(tableName));
+*/
+    QString command(QString("SELECT table_name, name, type, length, precision, header, number FROM vw_столбцы_типы WHERE trim(base_table) = '%1';").arg(tableName));
     QSqlQuery query = execQuery(command);
     int i = result->count();
     for (query.first(); query.isValid(); query.next())
     {
         FieldType fld;
-        fld.name      = prefix + query.value(1).toString().trimmed();
+        fld.name      = query.value(1).toString().trimmed();
+        if (query.value(0).toString().trimmed() != table)
+        {
+            fld.name = table + "." + fld.name;
+        }
         fld.type      = query.value(2).toString().trimmed();
         fld.length    = query.value(3).toInt();
         fld.precision = query.value(4).toInt();
@@ -333,6 +338,7 @@ QSqlQuery DBFactory::getColumnsPropertiesQuery(QMap<int, FieldType>* result, QSt
             fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
         fld.header    = query.value(6).toString().trimmed();
         fld.number    = query.value(7).toInt();
+        qDebug() << tblName << table << fld.name;
         result->insert(i, fld);
         i++;
     }
@@ -879,23 +885,28 @@ bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, 
 bool DBFactory::updateColumnHeader(int tableId, QString column, QString header, int number)
 {
     clearError();
+    QString command;
     if (number == 0)
-        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %6 = '%7';").arg(getObjectName("столбцы"))
-                    .arg(getObjectName("столбцы.заголовок"))
-                    .arg(header)
-                    .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
-                    .arg(tableId)
-                    .arg(getObjectName("столбцы.имя"))
-                    .arg(column));
-    return exec(QString("UPDATE %1 SET %2 = '%3', %4 = %5 WHERE \"%6\" = %7 AND %8 = '%9';").arg(getObjectName("столбцы"))
+    {
+        command = QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %6 = '%7';").arg(getObjectName("столбцы"))
                 .arg(getObjectName("столбцы.заголовок"))
                 .arg(header)
-                .arg(getObjectName("столбцы.номер"))
-                .arg(number)
                 .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
                 .arg(tableId)
                 .arg(getObjectName("столбцы.имя"))
-                .arg(column));
+                .arg(column);
+        return exec(command);
+    }
+    command = QString("UPDATE %1 SET %2 = '%3', %4 = %5 WHERE \"%6\" = %7 AND %8 = '%9';").arg(getObjectName("столбцы"))
+            .arg(getObjectName("столбцы.заголовок"))
+            .arg(header)
+            .arg(getObjectName("столбцы.номер"))
+            .arg(number)
+            .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
+            .arg(tableId)
+            .arg(getObjectName("столбцы.имя"))
+            .arg(column);
+    return exec(command);
 }
 
 
