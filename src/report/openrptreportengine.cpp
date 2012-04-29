@@ -87,14 +87,8 @@ void OpenRPTreportEngine::prepareData(TReport* report)
     for (int i = 0; i < headers.count(); i++)
     {
         QString columnName = headers.at(i);
-        qDebug() << columnName;
         model->insertColumn(i);
         model->setHeaderData(i, Qt::Horizontal, columnName);
-    }
-
-    for (int i = 0; i < headers.count(); i++)
-    {
-        qDebug() << model->headerData(i, Qt::Horizontal).toString();
     }
 
     // Заполним модель данными

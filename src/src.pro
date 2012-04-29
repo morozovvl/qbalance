@@ -19,7 +19,7 @@ CONFIG += designer \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = app
-LIBS += ../openrpt/debug/dll/libreport.so
+#LIBS += ../openrpt/debug/dll/libreport.so
 
 SOURCES += main.cpp \
     kernel/app.cpp \
@@ -77,8 +77,8 @@ SOURCES += main.cpp \
     gui/wizarddictionary.cpp \
     gui/wizardoperation.cpp \
     gui/mytextedit.cpp \
-    gui/mysyntaxhighlighter.cpp \
-    report/openrptreportengine.cpp
+    gui/mysyntaxhighlighter.cpp
+#    report/openrptreportengine.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -135,10 +135,10 @@ HEADERS += kernel/app.h \
     gui/wizarddictionary.h \
     gui/wizardoperation.h \
     gui/mytextedit.h \
-    gui/mysyntaxhighlighter.h \
-    report/openrptreportengine.h \
-    ./../openrpt/openrpt/report/report.h \
-    ./../openrpt/openrpt/report/wrapper.h
+    gui/mysyntaxhighlighter.h
+#    report/openrptreportengine.h \
+#    ./../openrpt/openrpt/report/report.h \
+#    ./../openrpt/openrpt/report/wrapper.h
 RESOURCES += resources.qrc
 
 unix:MOC_DIR = ../.moc

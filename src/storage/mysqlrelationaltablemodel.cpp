@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QLocale>
 #include "mysqlrelationaltablemodel.h"
 #include "table.h"
+#include "../kernel/app.h"
 
 
 MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableModel()
@@ -65,7 +66,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
     if (result >= 0)
         return result;
     for (int i = 0; i < insertedColumns.size(); i++) {
-        QString fldName = relation(insertedColumns[i]).tableName() + "." + relation(insertedColumns[i]).displayColumn();
+        QString fldName = relation(insertedColumns[i]).tableName() + "__" + relation(insertedColumns[i]).displayColumn();
         if (fieldName == fldName)
             return insertedColumns[i];
     }
@@ -150,6 +151,7 @@ void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSq
 void MySqlRelationalTableModel::setSort(int column, Qt::SortOrder order) {
     sortColumn = column;
     sortOrder = order;
+    QSqlRelationalTableModel::setSort(column, order);
 }
 
 
@@ -216,17 +218,6 @@ QString MySqlRelationalTableModel::selectStatement() const {
     return query;
 }
 
-/*  Не понял, для чего. Вроде нигде не вызывается
-QString MySqlRelationalTableModel::getPreparedSelectStatement() const {
-    if (preparedStatementName == "") {
-        preparedStatementName = tableName().append('-').append(QUuid().createUuid().toString().remove('{').remove('}'));
-        preparedStatement = QString("EXECUTE %1()").arg(preparedStatementName);
-    }
-    if (preparedStatement.length() > 0)
-        return preparedStatement;
-    return QString();
-}
-*/
 
 QString MySqlRelationalTableModel::getSelectClause() const {
     QString query;

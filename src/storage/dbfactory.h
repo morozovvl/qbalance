@@ -42,12 +42,15 @@ enum FileType           // Типы данных, которые хранятс�
 
 struct FieldType
 {
+    QString table;
     QString name;
+    QString column;
     QString type;
     int length;
     int precision;
     bool readOnly;
     QString header;
+    bool headerExist;
     int number;
 };
 
@@ -118,10 +121,10 @@ public:
     QStringList getFieldsList(QMap<int, FieldType>*);
     QStringList getFieldsList(QString tableName);
     bool isSet(QString tableName);
-    void addColumnProperties(QMap<int, FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
-    void getColumnsProperties(QMap<int, FieldType>*, QString, int = 0);
-    void getColumnsProperties(QList<FieldType>*, QString);
-    void getColumnsRestrictions(QString, QMap<int, FieldType>*);
+    void addColumnProperties(QList<FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
+//    void getColumnsProperties(QList<FieldType>*, QString, int = 0);
+    void getColumnsProperties(QList<FieldType>*, QString, QString = "", int = 0);
+    void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
     bool insertDictDefault(QString tableName, QMap<QString, QVariant>* values);                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
@@ -166,7 +169,7 @@ public:
     QString getDocumentSqlSelectStatement(int oper,
                                           Dictionaries* dictionaries,
                                           QList<ToperType>*,
-                                          QMap<int, FieldType>* = 0,
+                                          QList<FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
     QSqlRecord getAccountRecord(QString cAcc);
     void saveDocumentVariables(int docId, QString xml);
@@ -178,7 +181,7 @@ public:
     bool dropTableColumn(QString, QString);
     bool renameTableColumn(QString, QString, QString);
     bool alterTableColumn(QString, QString, QString);
-    bool appendColumnHeader(int, QString, QString, int = 999);
+    bool appendColumnHeader(int, QString, QString, int = 0);
     bool updateColumnHeader(int, QString, QString, int = 0);
     bool setTableColumnHeaderOrder(int, QString, QString, int);
 
@@ -217,7 +220,6 @@ private:
 
     void setError(QString);
     void initObjectNames();
-    QSqlQuery               getColumnsPropertiesQuery(QMap<int, FieldType>*, QString, QString = "", QString = "");
 };
 
 #endif

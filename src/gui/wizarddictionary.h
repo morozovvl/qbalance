@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mysyntaxhighlighter.h"
 #include "../storage/dbfactory.h"
 
+
 class WizardDictionary : public WizardForm
 {
     Q_OBJECT
@@ -38,6 +39,7 @@ protected:
     virtual bool   setData();
 private:
     bool                addDictionary;
+    bool                columnsRecordsExists;
     QList<FieldType>    fields;                // Первоначальный список полей
     QString             table;
     QLineEdit*          tableName;              // Как таблица будет называться в БД
@@ -51,13 +53,14 @@ private:
     virtual void        getData();
     friend QString      showTypesForm();
     static WizardDictionary*    Exemplar;
+    virtual void        frameActivated(int);
+    virtual void        frameDeactivated(int);
 
 private slots:
     void                addColumn();
     void                deleteColumn();
     void                headerUp();
     void                headerDown();
-    virtual void        frameActivated(int);
 };
 
 #endif // WIZARDDICTIONARY_H

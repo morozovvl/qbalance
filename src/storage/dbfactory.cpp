@@ -295,40 +295,42 @@ bool DBFactory::isSet(QString tableName)
     return result;
 }
 
-
-QSqlQuery DBFactory::getColumnsPropertiesQuery(QMap<int, FieldType>* result, QString table, QString tblName, QString prefix)
-{
-    QString tableName = (tblName.size() == 0 ? table : tblName);
 /*
-    QString command(QString("SELECT DISTINCT s.*, COALESCE(c.%4, '') AS header, COALESCE(c.%5, 0) AS number " \
-                            "FROM (SELECT ordinal_position-1 AS column, column_name AS name, data_type AS type, COALESCE(character_maximum_length, 0) + COALESCE(numeric_precision, 0) AS length, COALESCE(numeric_scale, 0) AS precision, is_updatable " \
-                                   "FROM information_schema.columns " \
-                                   "WHERE table_name LIKE '%1') s " \
-                                   "LEFT OUTER JOIN " \
-                                   "(SELECT %2 AS %3, %4, %5 "\
-                                    "FROM %6 " \
-                                    "WHERE trim(%7) = '%8' " \
-                                    ") c ON s.name = c.%3 " \
-                                    "ORDER BY s.column;").arg(table)
-                                                         .arg(getObjectName("vw_столбцы.столбец"))
-                                                         .arg(getObjectName("vw_столбцы.имя"))
-                                                         .arg(getObjectName("vw_столбцы.заголовок"))
-                                                         .arg(getObjectName("vw_столбцы.номер"))
-                                                         .arg(getObjectName("vw_столбцы"))
-                                                         .arg(getObjectName("vw_столбцы.справочник"))
-                                                         .arg(tableName));
+void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, int oper)
+{
+    clearError();
+    table = table.trimmed();
+    QString tableName = (oper == 0 ? table : QString("СписокДокументов%1").arg(oper));
+    result->clear();
+    getColumnsPropertiesNew(result, table);
+    if (QString::compare(table, getObjectName("сальдо"), Qt::CaseInsensitive) == 0)
+    {
+        for (int i = 0; i < result->count(); i++)
+        {
+            if ((QString(result->at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+                (QString(result->at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+                (QString(result->at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+            {
+                  addColumnProperties(result, result->at(i).name, result->at(i).type, result->at(i).length, result->at(i).precision, result->at(i).readOnly);
+            }
+        }
+    }
+}
 */
-    QString command(QString("SELECT table_name, name, type, length, precision, header, number FROM vw_столбцы_типы WHERE trim(base_table) = '%1';").arg(tableName));
-    QSqlQuery query = execQuery(command);
-    int i = result->count();
+
+void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
+{
+    QString command = "SELECT DISTINCT ins.ordinal_position::integer - 1 AS \"order\", ins.column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
+                            "FROM information_schema.columns ins " \
+                            "WHERE table_name = '%1' " \
+                            "ORDER BY \"order\";";
+
+    QSqlQuery query = execQuery(QString(command).arg(table));
     for (query.first(); query.isValid(); query.next())
     {
         FieldType fld;
+        fld.table  = table;
         fld.name      = query.value(1).toString().trimmed();
-        if (query.value(0).toString().trimmed() != table)
-        {
-            fld.name = table + "." + fld.name;
-        }
         fld.type      = query.value(2).toString().trimmed();
         fld.length    = query.value(3).toInt();
         fld.precision = query.value(4).toInt();
@@ -336,71 +338,50 @@ QSqlQuery DBFactory::getColumnsPropertiesQuery(QMap<int, FieldType>* result, QSt
             fld.readOnly = true;
         else
             fld.readOnly  = query.value(5).toString().trimmed().toUpper() == "YES" ? false : true;
-        fld.header    = query.value(6).toString().trimmed();
-        fld.number    = query.value(7).toInt();
-        qDebug() << tblName << table << fld.name;
-        result->insert(i, fld);
-        i++;
-    }
-    return query;
-}
 
+        // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
+        if (originTable.size() > 0 && originTable != table)
+            fld.column = table + "__" + fld.name;
+        else
+            fld.column = fld.name;
+        fld.header = fld.column;
+        fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
 
-void DBFactory::getColumnsProperties(QMap<int, FieldType>* result, QString table, int oper)
-{
-    clearError();
-    table = table.trimmed();
-    QString tableName = (oper == 0 ? table : QString("СписокДокументов%1").arg(oper));
-    result->clear();
-    QSqlQuery query = getColumnsPropertiesQuery(result, table, tableName, "");
-    // Просмотрим поля зависимых справочников
-    for (query.first(); query.isValid(); query.next())
-    {
-        QString fieldName = query.value(1).toString().trimmed();
-        if (fieldName.left(4) == getObjectName("код") + "_")    // Если это поле - ссылка на другой справочник
+        fld.number    = 0;
+        result->append(fld);
+        if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
         {
-            QString setDictName = fieldName;
-            setDictName.remove(0, 4);               // Получим имя связанного справочника
-            setDictName = setDictName.toLower();
-            getColumnsPropertiesQuery(result, setDictName, "", setDictName + ".");
+            QString dictName = fld.name;
+            dictName.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+            dictName = dictName.toLower();                  // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+            getColumnsProperties(result, dictName, table, level + 1);
         }
-    }
-    if (QString::compare(table, getObjectName("сальдо"), Qt::CaseInsensitive) == 0)
-    {
-        foreach (int i, result->keys())
+        if (QString::compare(table, getObjectName("сальдо"), Qt::CaseInsensitive) == 0)
         {
-            if ((QString(result->value(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
-                (QString(result->value(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
-                (QString(result->value(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+            for (int i = 0; i < result->count(); i++)
             {
-                  addColumnProperties(result, result->value(i).name, result->value(i).type, result->value(i).length, result->value(i).precision, result->value(i).readOnly);
+                if ((QString(result->at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+                    (QString(result->at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+                    (QString(result->at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+                {
+                      addColumnProperties(result, result->at(i).name, result->at(i).type, result->at(i).length, result->at(i).precision, result->at(i).readOnly);
+                }
             }
         }
     }
 }
 
 
-void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table)
-{   // Просто возвращает свойства колонок в виде QList, а не QMap
-    QMap<int, FieldType> fields;
-    result->clear();
-    getColumnsProperties(&fields, table);
-    foreach (FieldType fld, fields.values())
-    {
-        result->append(fld);
-    }
-}
 
-
-void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read, int number)
+void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read, int number)
 {
     int maxKey = 0;
     if (columnsProperties->count() > 0)
     {
-        foreach (int i, columnsProperties->keys())
+        for (int i = 0; i < columnsProperties->count(); i++)
         {
-            if (columnsProperties->value(i).name == name &&
-                columnsProperties->value(i).type == type)
+            if (columnsProperties->at(i).name == name &&
+                columnsProperties->at(i).type == type)
                 return;
             if (i > maxKey)
                 maxKey = i;
@@ -418,7 +399,7 @@ void DBFactory::addColumnProperties(QMap<int, FieldType>* columnsProperties, QSt
 }
 
 
-void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* columns)
+void DBFactory::getColumnsRestrictions(QString table, QList<FieldType>* columns)
 {
     clearError();
     QSqlQuery query = execQuery(QString("SELECT %1, %2 " \
@@ -434,7 +415,7 @@ void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* colu
                                                                .arg(table.trimmed()));
     while (query.next()) {
         QString field = QString(query.value(0).toString()).remove(table.trimmed() + ".", Qt::CaseInsensitive).trimmed().toLower();
-        foreach (int i, columns->keys())
+        for (int i = 0; i < columns->count(); i++)
         {
             if (columns->value(i).name.toLower() == field)
             {
@@ -442,12 +423,12 @@ void DBFactory::getColumnsRestrictions(QString table, QMap<int, FieldType>* colu
                 {
                     FieldType fld = columns->value(i);
                     fld.readOnly = true;
-                    columns->remove(i);
+                    columns->removeAt(i);
                     columns->insert(i, fld);
                     break;
                 } else if (query.value(1).toString().contains("hide", Qt::CaseInsensitive))
                 {
-                    columns->remove(i);
+                    columns->removeAt(i);
                     break;
                 }
             }
@@ -857,11 +838,12 @@ QString DBFactory::getPhotoPath(QString tableName)
 QSqlQuery DBFactory::getColumnsHeaders(QString tableName)
 {
     clearError();
-    QString command = QString("SELECT %1, %2, %3 FROM %4 WHERE trim(%5) = '" + tableName + "' ORDER BY %3;").arg(getObjectName("vw_столбцы.столбец"))
+    QString command = QString("SELECT %1, %2, %3 FROM %4 WHERE trim(%5) = '%6' ORDER BY %3;").arg(getObjectName("vw_столбцы.столбец"))
             .arg(getObjectName("vw_столбцы.заголовок"))
             .arg(getObjectName("vw_столбцы.номер"))
             .arg(getObjectName("vw_столбцы"))
-            .arg(getObjectName("vw_столбцы.справочник"));
+            .arg(getObjectName("vw_столбцы.справочник"))
+            .arg(tableName);
     return execQuery(command);
 }
 
@@ -886,17 +868,6 @@ bool DBFactory::updateColumnHeader(int tableId, QString column, QString header, 
 {
     clearError();
     QString command;
-    if (number == 0)
-    {
-        command = QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %6 = '%7';").arg(getObjectName("столбцы"))
-                .arg(getObjectName("столбцы.заголовок"))
-                .arg(header)
-                .arg(getObjectName("столбцы.код_vw_справочники_со_столбцами"))
-                .arg(tableId)
-                .arg(getObjectName("столбцы.имя"))
-                .arg(column);
-        return exec(command);
-    }
     command = QString("UPDATE %1 SET %2 = '%3', %4 = %5 WHERE \"%6\" = %7 AND %8 = '%9';").arg(getObjectName("столбцы"))
             .arg(getObjectName("столбцы.заголовок"))
             .arg(header)
@@ -1383,7 +1354,7 @@ void DBFactory::getToperDictAliases(QList<ToperType>* topersList, QList<DictType
 }
 
 
-QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictionaries, QList<ToperType>* topersList, QMap<int, FieldType>* columnsProperties, int* retPrv1)
+QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictionaries, QList<ToperType>* topersList, QList<FieldType>* columnsProperties, int* retPrv1)
 {
     QString selectStatement;
     QList<DictType> dictsList;
@@ -1402,7 +1373,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         // Создадим клаузу проводок в секции SELECT
         QString tableName = getObjectName("проводки");
         QStringList prvFieldsList = getFieldsList(tableName);
-        QMap<int, FieldType> fields;
+        QList<FieldType> fields;
         getColumnsProperties(&fields, tableName);
         for (int i = 0; i < topersList->count(); i++)
         {   // Для всех проводок данной типовой операции
@@ -1411,10 +1382,10 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
             {// Для всех полей таблицы "проводки"
                 selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
                 selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
-                foreach(int i, fields.keys())
+                for (int i = 0; i < fields.count(); i++)
                 {
-                    if (fields.value(i).name == field && columnsProperties != 0)
-                        addColumnProperties(columnsProperties, QString("p%1__%2").arg(prv).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, fields.value(i).readOnly);
+                    if (fields.at(i).name == field && columnsProperties != 0)
+                        addColumnProperties(columnsProperties, QString("p%1__%2").arg(prv).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, fields.at(i).readOnly);
                 }
             }
             if (i == 0)
@@ -1463,9 +1434,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                                 foreach (QString setDictFieldName, getFieldsList(setDictName)) {
                                     setSelectClause.append(QString(",%1.%2 AS %1__%2").arg(setDictName).arg(setDictFieldName));
                                     selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName).arg(setDictFieldName)));
-                                    foreach(int i, fields.keys())
-                                        if (fields.value(i).name == setDictFieldName && columnsProperties != 0)
-                                            addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                                    for (int i = 0; i < fields.count(); i++)
+                                        if (fields.at(i).name == setDictFieldName && columnsProperties != 0)
+                                            addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                                 }
                                 setFromClause.append(QString(" LEFT OUTER JOIN %1 ON %2.%3=%1.код").arg(setDictName).arg(dictName).arg(fieldName));
                             }
@@ -1480,9 +1451,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                         getColumnsProperties(&fields, dictName);
                         foreach (QString field, getFieldsList(dictName)) {
                             selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                            foreach(int i, fields.keys())
-                                if (fields.value(i).name == field && columnsProperties != 0)
-                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                            for (int i = 0; i < fields.count(); i++)
+                                if (fields.at(i).name == field && columnsProperties != 0)
+                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                         }
                         fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
                     }
@@ -1507,9 +1478,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                                   foreach (QString setDictFieldName, getFieldsList(setDictName)) {
                                       setSelectClause.append(QString(",%1.%2 AS %1__%2").arg(setDictName).arg(setDictFieldName));
                                       selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName).arg(setDictFieldName)));
-                                      foreach(int i, fields.keys())
-                                          if (fields.value(i).name == setDictFieldName && columnsProperties != 0)
-                                              addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                                      for (int i = 0; i < fields.count(); i++)
+                                          if (fields.at(i).name == setDictFieldName && columnsProperties != 0)
+                                              addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                                   }
                                   setFromClause.append(QString(" LEFT OUTER JOIN %1 ON %2.%3=%1.код").arg(setDictName).arg(dictName).arg(fieldName));
                               }
@@ -1524,9 +1495,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                         getColumnsProperties(&fields, dictName);
                         foreach (QString field, getFieldsList(dictName)) {
                             selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                            foreach(int i, fields.keys())
-                                if (fields.value(i).name == field && columnsProperties != 0)
-                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                            for (int i = 0; i < fields.count(); i++)
+                                if (fields.at(i).name == field && columnsProperties != 0)
+                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                         }
                         fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
                     }
@@ -1540,20 +1511,20 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 if (topersList->at(i).dbQuan) {
                     field = getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                    foreach(int i, fields.keys())
-                        if (fields.value(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    for (int i  = 0; i < fields.count(); i++)
+                        if (fields.at(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                     field = getObjectName("сальдо.концена");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                    foreach(int i, fields.keys())
-                        if (fields.value(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    for (int i  = 0; i < fields.count(); i++)
+                        if (fields.at(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 }
                 field = getObjectName("сальдо.консальдо");
                 selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                foreach(int i, fields.keys())
-                    if (fields.value(i).name == field && columnsProperties != 0)
-                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                for (int i  = 0; i < fields.count(); i++)
+                    if (fields.at(i).name == field && columnsProperties != 0)
+                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.дбкод")).arg(getObjectName("сальдо.код")));
             }
             if (topersList->at(i).crSaldoVisible) {
@@ -1561,20 +1532,20 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 if (topersList->at(i).crQuan) {
                     field = getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                    foreach(int i, fields.keys())
-                        if (fields.value(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    for (int i  = 0; i < fields.count(); i++)
+                        if (fields.at(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                     field = getObjectName("сальдо.концена");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                    foreach(int i, fields.keys())
-                        if (fields.value(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                    for (int i  = 0; i < fields.count(); i++)
+                        if (fields.at(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 }
                 field = getObjectName("сальдо.консальдо");
                 selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
-                foreach(int i, fields.keys())
-                    if (fields.value(i).name == field && columnsProperties != 0)
-                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.value(i).type, fields.value(i).length, fields.value(i).precision, true);
+                for (int i  = 0; i < fields.count(); i++)
+                    if (fields.at(i).name == field && columnsProperties != 0)
+                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectName("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.крсчет")).arg(getObjectName("сальдо.счет")).arg(getObjectName("проводки.кркод")).arg(getObjectName("сальдо.код")));
             }
         }
@@ -1589,15 +1560,15 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         while (headers.isValid())
         {
             QString header = headers.record().value(0).toString();
-            foreach (int i, columnsProperties->keys())
+            for (int i = 0; i < columnsProperties->count(); i++)
             {
-                if (columnsProperties->value(i).name == header)
+                if (columnsProperties->at(i).name == header)
                 {
                     FieldType fld;
-                    fld = columnsProperties->value(i);
+                    fld = columnsProperties->at(i);
                     fld.header = headers.record().value(1).toString();
                     fld.number = headers.record().value(2).toInt();
-                    columnsProperties->remove(i);
+                    columnsProperties->removeAt(i);
                     columnsProperties->insert(i, fld);
                     break;
                 }

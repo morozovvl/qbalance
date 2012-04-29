@@ -30,6 +30,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/documentscriptengine.h"
 
 
+enum dictFieldsEnums {tableField = 0,
+                      columnField = 1,
+                      typeField = 2,
+                      lengthField = 3,
+                      precisionField = 4,
+                      headerField = 5,
+                      visibleField = 6};
+
 
 WizardDictionary* WizardDictionary::Exemplar   = NULL;
 
@@ -70,6 +78,7 @@ WizardDictionary::WizardDictionary(bool addDict): WizardForm()
     tableMenuName = new QLineEdit();
     tableFormName = new QLineEdit();
     chbMenu = new QCheckBox(formWidget);
+    columnsRecordsExists = true;
     if (!Exemplar)
     {
         Exemplar = this;
@@ -165,7 +174,6 @@ void WizardDictionary::initFrames()
 
 void WizardDictionary::getData()
 {
-
     if (table.size() == 0)
     {   // Если имя справочника не задано, т.е. это может быть новый справочник
         // то создадим новый справочник с именем <справочник<n>>
@@ -205,6 +213,30 @@ void WizardDictionary::getData()
     else
     {   // Получим список полей таблицы
         db->getColumnsProperties(&fields, table);
+        // Прочитаем данные о заголовках столбцов
+        QSqlQuery columnsHeaders = db->getColumnsHeaders(table);
+        // Свяжем заголовки столбцов со столбцами
+        for (columnsHeaders.first(); columnsHeaders.isValid(); columnsHeaders.next())
+        {
+            int number = columnsHeaders.record().value(db->getObjectName("vw_столбцы.номер")).toInt();
+            if (number > 0)
+            {
+                for (int i = 0; i < fields.count(); i++)
+                {
+                    QString column1 = columnsHeaders.record().value(db->getObjectName("vw_столбцы.столбец")).toString();
+                    if (column1 == fields.at(i).column)
+                    {
+                        // Заголовок для столбца найден
+                        FieldType field = fields.at(i);
+                        field.header = columnsHeaders.record().value(db->getObjectName("vw_столбцы.заголовок")).toString();
+                        field.number = number;
+                        field.headerExist = true;   // Для столбца найден заголовок
+                        fields.removeAt(i);
+                        fields.insert(i, field);
+                    }
+                }
+            }
+        }
         QSqlRecord dictProperties = db->getDictionariesProperties(table);
         tableMenuName->setText(dictProperties.value(db->getObjectName("имя")).toString().trimmed());
         tableFormName->setText(dictProperties.value(db->getObjectName("имя_в_форме")).toString().trimmed());
@@ -214,14 +246,15 @@ void WizardDictionary::getData()
             chbMenu->setCheckState(Qt::Unchecked);
         tableName->setEnabled(false);
     }
-    fieldsTable = new QTableWidget(fields.count(), 6);
+    fieldsTable = new QTableWidget(fields.count(), 7);
     if (fieldsTable->verticalHeader()->minimumSectionSize() > 0)
         fieldsTable->verticalHeader()->setDefaultSectionSize(fieldsTable->verticalHeader()->minimumSectionSize());
 
     // Если известно, с какой таблицей будем работать
     tableName->setText(table);
     // Создадим таблицу столбцов
-    fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
+    fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Таблица")
+                                                         << QObject::trUtf8("Столбец")
                                                          << QObject::trUtf8("Тип")
                                                          << QObject::trUtf8("Длина")
                                                          << QObject::trUtf8("Точность")
@@ -229,25 +262,37 @@ void WizardDictionary::getData()
                                                          << QObject::trUtf8("Видимость"));
     for (int i = 0; i < fields.count(); i++)
     {
-        QTableWidgetItem* nameItem = new QTableWidgetItem(fields.value(i).name);
-        fieldsTable->setItem(i, 0, nameItem);
+        QTableWidgetItem* tableItem = new QTableWidgetItem(fields.value(i).table);
+        QTableWidgetItem* columnItem = new QTableWidgetItem(fields.value(i).name);
         QTableWidgetItem* typeItem = new QTableWidgetItem(fields.value(i).type);
-        fieldsTable->setItem(i, 1, typeItem);
         QTableWidgetItem* lengthItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).length));
-        fieldsTable->setItem(i, 2, lengthItem);
         QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).precision));
-        fieldsTable->setItem(i, 3, precisionItem);
         QTableWidgetItem* headerItem = new QTableWidgetItem(fields.value(i).header);
-        fieldsTable->setItem(i, 4, headerItem);
         QTableWidgetItem* visibleItem = new QTableWidgetItem(fields.value(i).number > 0 ? "true" : "false");
-        fieldsTable->setItem(i, 5, visibleItem);
+
+        tableItem->setFlags(tableItem->flags() & ~Qt::ItemIsEditable);
+        if (QString::compare(fields.value(i).table, tableName->text()) != 0)
+        {
+            columnItem->setFlags(columnItem->flags() & ~Qt::ItemIsEditable);
+            typeItem->setFlags(typeItem->flags() & ~Qt::ItemIsEditable);
+            lengthItem->setFlags(lengthItem->flags() & ~Qt::ItemIsEditable);
+            precisionItem->setFlags(precisionItem->flags() & ~Qt::ItemIsEditable);
+        }
+
+        fieldsTable->setItem(i, tableField, tableItem);
+        fieldsTable->setItem(i, columnField, columnItem);
+        fieldsTable->setItem(i, typeField, typeItem);
+        fieldsTable->setItem(i, lengthField, lengthItem);
+        fieldsTable->setItem(i, precisionField, precisionItem);
+        fieldsTable->setItem(i, headerField, headerItem);
+        fieldsTable->setItem(i, visibleField, visibleItem);
     }
 
     MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getForm());
-    fieldsTable->setItemDelegateForColumn(1, buttonEditDelegate);
+    fieldsTable->setItemDelegateForColumn(typeField, buttonEditDelegate);
     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
-    fieldsTable->setItemDelegateForColumn(5, booleanDelegate);
+    fieldsTable->setItemDelegateForColumn(visibleField, booleanDelegate);
 
     // Инициализируем текстовый редактор
     textEditor = new MyTextEdit(formWidget);
@@ -276,13 +321,18 @@ bool WizardDictionary::setData()
         }
     }
     // Получим код справочника, с которым работаем
-    int tableId = db->getDictionaryId(tableName->text());
-    if (tableId > 0) {
+    int mainTableId = db->getDictionaryId(tableName->text());
+    if (mainTableId > 0) {
         // Установим пользовательские наименования справочника
-        if (!db->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
+        if (tableName->isModified() ||
+                tableMenuName->isModified() ||
+                tableFormName->isModified())
         {
-                db->rollbackTransaction();
-                return false;
+            if (!db->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
+            {
+                    db->rollbackTransaction();
+                    return false;
+            }
         }
         // Удалим поля, помеченные к удалению
         int i = 0;
@@ -303,22 +353,21 @@ bool WizardDictionary::setData()
         // Прошерстим список полей, сравним с исходным. Если что изменялось, то меняем и в БД
         for (int i = 0; i < fieldsTable->rowCount(); i++)
         {
-            QString fieldName = fieldsTable->item(i, 0)->text().trimmed();
-            QString sType = fieldsTable->item(i, 1)->text();
-            int nLength = fieldsTable->item(i, 2)->text().toInt();
-            int nPrecision = fieldsTable->item(i, 3)->text().toInt();
-            QString sHeader = fieldsTable->item(i, 4)->text().trimmed();
+            QString tblName = fieldsTable->item(i, tableField)->text().trimmed();
+            QString fieldName = fieldsTable->item(i, columnField)->text().trimmed();
+            QString sType = fieldsTable->item(i, typeField)->text();
+            int nLength = fieldsTable->item(i, lengthField)->text().toInt();
+            int nPrecision = fieldsTable->item(i, precisionField)->text().toInt();
+            QString sHeader = fieldsTable->item(i, headerField)->text().trimmed();
             QString length, precision;
-            if (nPrecision > 0)
-            { //f Если указана точность
+            if (nPrecision > 0)          // Если указана точность
                 precision = QString(", %1").arg(nPrecision);
-            }
-            if (nLength > 0)
-            {   // Если указана длина
+            if (nLength > 0)           // Если указана длина
                 length = QString("(%1%2)").arg(nLength).arg(precision);
-            }
-            QString type = fieldsTable->item(i, 1)->text().trimmed();
+            QString type = fieldsTable->item(i, typeField)->text().trimmed();
             type = QString("%1%2").arg(type).arg(length);
+
+            // Если мы работаем со старыми полями, т.е. теми, которые уже были в таблице
             if (i < fields.count())
             {   // Если мы просматриваем поля таблицы, которые уже были
                 if (QString::compare(fieldName, fields.value(i).name) != 0)
@@ -339,20 +388,20 @@ bool WizardDictionary::setData()
                             return false;
                     }
                 }
-                // Проверим, изменил ли пользователь заголовок столбца
-                if (QString::compare(sHeader, fields.value(i).header, Qt::CaseSensitive) != 0)
+                if (fields.value(i).number > 0)
                 {
-                    if (fields.value(i).header.size() > 0)
-                    {  // Если заголовок для этого столбца уже был
-                        if (!db->updateColumnHeader(tableId, fieldName, sHeader))
+
+                    if (fields.value(i).headerExist)      // Заголовок для этого столбца скорее всего уже был в базе
+                    {
+                        if (!db->updateColumnHeader(mainTableId, fields.value(i).column, sHeader, fields.value(i).number))
                         {
-                                db->rollbackTransaction();
-                                return false;
+                            db->rollbackTransaction();
+                            return false;
                         }
                     }
                     else
                     {
-                        if (!db->appendColumnHeader(tableId, fieldName, sHeader))
+                        if (!db->appendColumnHeader(mainTableId, fields.value(i).column, sHeader, fields.value(i).number))
                         {
                                 db->rollbackTransaction();
                                 return false;
@@ -369,28 +418,10 @@ bool WizardDictionary::setData()
                 }
                 if (sHeader.size() > 0)
                 {
-                    if (!db->appendColumnHeader(tableId, fieldName, sHeader))
+                    if (!db->appendColumnHeader(mainTableId, fieldName, sHeader, fields.value(i).number + 1))
                     {
                             db->rollbackTransaction();
                             return false;
-                    }
-                }
-            }
-        }
-        // Установим наименование полей
-        if (headers->count() > 0)
-        {
-            for (int i = 0; i < headers->count(); i++)
-            {
-                for (int j = 0; j < fieldsTable->rowCount(); j++)
-                {
-                    if (QString::compare(fieldsTable->item(j, 4)->text(), headers->item(i)->data(Qt::DisplayRole).toString()) == 0)
-                    {
-                         if (!db->setTableColumnHeaderOrder(tableId, fieldsTable->item(j, 0)->text(), fieldsTable->item(j, 4)->text(), i + 1))
-                         {
-                                 db->rollbackTransaction();
-                                 return false;
-                         }
                     }
                 }
             }
@@ -461,30 +492,47 @@ void WizardDictionary::frameActivated(int frameNumber)
     if (frameNumber == 2)
     {   // Если активизирован фрейм списка заголовков
         headers->clear();
-        // Отсортируем колонки
-        QList<int> headersOrder;
         for (int i = 0; i < fields.count(); i++)
         {
-            if (fields.value(i).number > 0)
-                headersOrder << fields.value(i).number;
-        }
-        qSort(headersOrder.begin(), headersOrder.end());
-        for (int i = 0; i < fields.count(); i++)
-        {
-            for (int j = 0; j < fieldsTable->rowCount(); j++)
+            for (int j = 0; j < fields.count(); j++)
             {
-                if (fieldsTable->item(j, 5)->text() == "true")
+                if (fieldsTable->item(j, visibleField)->text() == "true")
                 {
-                    if (j < fields.count())
+                    int number = (fields.at(j).number == 0 ? fields.count() : fields.at(j).number);
+                    if (number == i + 1)
                     {
-                        if (QString::compare(fieldsTable->item(j, 0)->text().trimmed(), fields.value(i).name) == 0)
+                        if (QString::compare(fieldsTable->item(j, tableField)->text().trimmed(), fields.value(j).table) == 0 &&
+                            QString::compare(fieldsTable->item(j, columnField)->text().trimmed(), fields.value(j).name) == 0)
                         {
-                            headers->addItem(fieldsTable->item(j, 4)->text());
+                            QListWidgetItem* item = new QListWidgetItem(fieldsTable->item(j, headerField)->text(), headers);
+                            item->setData(Qt::UserRole, QVariant(fields.at(j).column));
+                            headers->addItem(item);
                         }
                     }
-                    else
+                }
+            }
+        }
+    }
+}
+
+
+void WizardDictionary::frameDeactivated(int frameNumber)
+{
+    if (frameNumber == 2)
+    {
+        if (headers->count() > 0)
+        {
+            for (int i = 0; i < headers->count(); i++)
+            {
+                QString column = headers->item(i)->data(Qt::UserRole).toString();
+                for (int j = 0; j < fields.count(); j++)
+                {
+                    if (fields.at(j).column == column)
                     {
-                        headers->addItem(fieldsTable->item(j, 4)->text());
+                        FieldType field = fields.at(j);
+                        field.number = i + 1;
+                        fields.removeAt(j);
+                        fields.insert(j, field);
                     }
                 }
             }

@@ -56,7 +56,7 @@ private:
     QList<ToperType> topersList;
     virtual void    getData();
     friend QString  showAccounts();
-    void            getFieldsTable(QMap<int, FieldType>,  QTableWidget*, QList<FieldType>*);
+    void            getFieldsTable(QList<FieldType>,  QTableWidget*, QList<FieldType>*);
 private slots:
     void            addPrv();
     void            deletePrv();

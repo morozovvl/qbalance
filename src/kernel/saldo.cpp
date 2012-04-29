@@ -51,15 +51,15 @@ bool Saldo::open(int deep) {
     bool result = Dictionary::open(deep);
     lIsSet = false;                              // Сальдо не может быть набором
     formTitle = QString(QObject::trUtf8("Остатки на %1 счете").arg(account));
-    QMap<int, FieldType> saldoFields;
+    QList<FieldType> saldoFields;
     db->getColumnsProperties(&saldoFields, "сальдо");
-    foreach (int i, saldoFields.keys())
+    for (int i = 0; i < saldoFields.count(); i++)
     {
-        if ((QString(saldoFields.value(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
-            (QString(saldoFields.value(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
-            (QString(saldoFields.value(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+        if ((QString(saldoFields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+            (QString(saldoFields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+            (QString(saldoFields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
         {
-            db->addColumnProperties(&columnsProperties, saldoFields.value(i).name, saldoFields.value(i).type, saldoFields.value(i).length, saldoFields.value(i).precision, saldoFields.value(i).readOnly);
+            db->addColumnProperties(&columnsProperties, saldoFields.at(i).name, saldoFields.at(i).type, saldoFields.at(i).length, saldoFields.at(i).precision, saldoFields.at(i).readOnly);
         }
     }
     return result;

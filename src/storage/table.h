@@ -45,7 +45,7 @@ public:
     Q_INVOKABLE virtual void            query(QString filter = "");
 
     virtual bool                        relationsIsEmpty();
-    virtual QMap<int, FieldType>*       getColumnsProperties();
+    virtual QList<FieldType>*           getColumnsProperties();
     MySqlRelationalTableModel*          getMyRelationalTableModel() { return tableModel; }
     QSqlTableModel*                     getTableModel() { return (QSqlTableModel*)tableModel; }
     virtual QString                     transformSelectStatement(QString string) { return string; }
@@ -61,7 +61,8 @@ protected:
     QString                             tableName;
     QString                             tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
     MySqlRelationalTableModel*          tableModel;
-    QMap<int, FieldType>                columnsProperties;
+//***    QMap<int, FieldType>                columnsProperties;
+    QList<FieldType>                    columnsProperties;
     virtual void                        setTableModel();
 };
 

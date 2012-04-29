@@ -92,7 +92,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         }
     }
-
     if (parent != 0)
     {
         photoPath = parent->getPhotoPath();

@@ -310,7 +310,6 @@ void Essence::print(QString file)
     QMap<QString, QVariant> printValues;
     ReportScriptEngine scriptEngine(&printValues);
     preparePrintValues(&scriptEngine);
-    qDebug() << printValues;
     QString ext = TApplication::exemplar()->getReportTemplateExt();
     if (scriptEngine.open(file + "." + ext + ".qs") && scriptEngine.evaluate())
     {
@@ -324,8 +323,8 @@ void Essence::print(QString file)
                 break;
             case OpenRPTreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                    OpenRPTreportEngine report(&printValues, file, ext);
-                    report.open();
+//                    OpenRPTreportEngine report(&printValues, file, ext);
+//                    report.open();
                 }
                 break;
         }

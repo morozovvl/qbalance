@@ -2,9 +2,9 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.1.1
--- Dumped by pg_dump version 9.1.1
--- Started on 2012-04-03 16:37:17 MSK
+-- Dumped from database version 9.1.3
+-- Dumped by pg_dump version 9.1.3
+-- Started on 2012-04-29 22:28:38 MSK
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -13,7 +13,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 241 (class 3079 OID 12249)
+-- TOC entry 241 (class 3079 OID 12223)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -21,7 +21,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 3016 (class 0 OID 0)
+-- TOC entry 3043 (class 0 OID 0)
 -- Dependencies: 241
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -32,7 +32,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 582 (class 1247 OID 26688)
+-- TOC entry 582 (class 1247 OID 16392)
 -- Dependencies: 6 161
 -- Name: sp_calcaccoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
@@ -58,7 +58,7 @@ CREATE TYPE sp_calcaccoborot_fret AS (
 ALTER TYPE public.sp_calcaccoborot_fret OWNER TO sa;
 
 --
--- TOC entry 584 (class 1247 OID 26691)
+-- TOC entry 585 (class 1247 OID 16395)
 -- Dependencies: 6 162
 -- Name: sp_calcobjoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
@@ -89,7 +89,7 @@ CREATE TYPE sp_calcobjoborot_fret AS (
 ALTER TYPE public.sp_calcobjoborot_fret OWNER TO sa;
 
 --
--- TOC entry 586 (class 1247 OID 26694)
+-- TOC entry 588 (class 1247 OID 16398)
 -- Dependencies: 6 163
 -- Name: sp_calcoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
@@ -118,8 +118,8 @@ CREATE TYPE sp_calcoborot_fret AS (
 ALTER TYPE public.sp_calcoborot_fret OWNER TO sa;
 
 --
--- TOC entry 266 (class 1255 OID 26695)
--- Dependencies: 582 6 723
+-- TOC entry 268 (class 1255 OID 16399)
+-- Dependencies: 582 777 6
 -- Name: sp_calcaccoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -180,8 +180,8 @@ $$;
 ALTER FUNCTION public.sp_calcaccoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 253 (class 1255 OID 26696)
--- Dependencies: 6 723
+-- TOC entry 253 (class 1255 OID 16400)
+-- Dependencies: 777 6
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -229,8 +229,8 @@ $$;
 ALTER FUNCTION public.sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 265 (class 1255 OID 26697)
--- Dependencies: 723 6 584
+-- TOC entry 269 (class 1255 OID 16401)
+-- Dependencies: 6 585 777
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -363,8 +363,8 @@ $$;
 ALTER FUNCTION public.sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 267 (class 1255 OID 26698)
--- Dependencies: 586 6 723
+-- TOC entry 270 (class 1255 OID 16402)
+-- Dependencies: 6 588 777
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -419,8 +419,8 @@ $$;
 ALTER FUNCTION public.sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 268 (class 1255 OID 26699)
--- Dependencies: 6 723
+-- TOC entry 255 (class 1255 OID 16403)
+-- Dependencies: 6 777
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -457,8 +457,8 @@ $$;
 ALTER FUNCTION public.sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 256 (class 1255 OID 26700)
--- Dependencies: 6 723
+-- TOC entry 254 (class 1255 OID 16404)
+-- Dependencies: 777 6
 -- Name: sp_deletedoc(integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -475,8 +475,8 @@ $$;
 ALTER FUNCTION public.sp_deletedoc(ndocid integer) OWNER TO sa;
 
 --
--- TOC entry 272 (class 1255 OID 26701)
--- Dependencies: 6 723
+-- TOC entry 256 (class 1255 OID 16405)
+-- Dependencies: 6 777
 -- Name: sp_deletedocstr(integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -509,8 +509,8 @@ $$;
 ALTER FUNCTION public.sp_deletedocstr(ndocid integer, ndocstr integer) OWNER TO sa;
 
 --
--- TOC entry 269 (class 1255 OID 26702)
--- Dependencies: 6 723
+-- TOC entry 257 (class 1255 OID 16406)
+-- Dependencies: 777 6
 -- Name: sp_insertdoc(integer, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -546,8 +546,8 @@ $$;
 ALTER FUNCTION public.sp_insertdoc(noper integer, cdate character varying) OWNER TO sa;
 
 --
--- TOC entry 271 (class 1255 OID 26703)
--- Dependencies: 723 6
+-- TOC entry 258 (class 1255 OID 16407)
+-- Dependencies: 6 777
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -628,8 +628,8 @@ $$;
 ALTER FUNCTION public.sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) OWNER TO sa;
 
 --
--- TOC entry 255 (class 1255 OID 26704)
--- Dependencies: 6 723
+-- TOC entry 271 (class 1255 OID 16408)
+-- Dependencies: 777 6
 -- Name: sp_islockedperiod(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -653,8 +653,8 @@ $$;
 ALTER FUNCTION public.sp_islockedperiod(cdate character varying) OWNER TO sa;
 
 --
--- TOC entry 270 (class 1255 OID 26705)
--- Dependencies: 6 723
+-- TOC entry 272 (class 1255 OID 16409)
+-- Dependencies: 6 777
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -722,8 +722,8 @@ $$;
 ALTER FUNCTION public.sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 257 (class 1255 OID 26706)
--- Dependencies: 6 723
+-- TOC entry 259 (class 1255 OID 16410)
+-- Dependencies: 6 777
 -- Name: testdeleting_сальдо(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -745,8 +745,8 @@ $$;
 ALTER FUNCTION public."testdeleting_сальдо"() OWNER TO sa;
 
 --
--- TOC entry 258 (class 1255 OID 26707)
--- Dependencies: 723 6
+-- TOC entry 260 (class 1255 OID 16411)
+-- Dependencies: 6 777
 -- Name: testdeletingdictobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -845,8 +845,8 @@ $$;
 ALTER FUNCTION public.testdeletingdictobject() OWNER TO sa;
 
 --
--- TOC entry 259 (class 1255 OID 26708)
--- Dependencies: 6 723
+-- TOC entry 261 (class 1255 OID 16412)
+-- Dependencies: 777 6
 -- Name: testdeletingtoperobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -934,8 +934,8 @@ $$;
 ALTER FUNCTION public.testdeletingtoperobject() OWNER TO sa;
 
 --
--- TOC entry 263 (class 1255 OID 26709)
--- Dependencies: 723 6
+-- TOC entry 262 (class 1255 OID 16413)
+-- Dependencies: 777 6
 -- Name: tsvectorupdate(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -952,8 +952,8 @@ $$;
 ALTER FUNCTION public.tsvectorupdate() OWNER TO sa;
 
 --
--- TOC entry 260 (class 1255 OID 26710)
--- Dependencies: 6 723
+-- TOC entry 263 (class 1255 OID 16414)
+-- Dependencies: 777 6
 -- Name: вставитьпроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -997,8 +997,8 @@ $$;
 ALTER FUNCTION public."вставитьпроводку"() OWNER TO sa;
 
 --
--- TOC entry 261 (class 1255 OID 26711)
--- Dependencies: 6 723
+-- TOC entry 264 (class 1255 OID 16415)
+-- Dependencies: 777 6
 -- Name: считатьконечноесальдо(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1021,8 +1021,8 @@ $$;
 ALTER FUNCTION public."считатьконечноесальдо"() OWNER TO sa;
 
 --
--- TOC entry 254 (class 1255 OID 26712)
--- Dependencies: 6 723
+-- TOC entry 265 (class 1255 OID 16416)
+-- Dependencies: 6 777
 -- Name: считатьпроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1085,8 +1085,8 @@ $$;
 ALTER FUNCTION public."считатьпроводку"() OWNER TO sa;
 
 --
--- TOC entry 262 (class 1255 OID 26713)
--- Dependencies: 723 6
+-- TOC entry 266 (class 1255 OID 16417)
+-- Dependencies: 6 777
 -- Name: удалитьдокумент(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1103,8 +1103,8 @@ $$;
 ALTER FUNCTION public."удалитьдокумент"() OWNER TO sa;
 
 --
--- TOC entry 264 (class 1255 OID 26714)
--- Dependencies: 723 6
+-- TOC entry 267 (class 1255 OID 16418)
+-- Dependencies: 6 777
 -- Name: удалитьпроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1138,7 +1138,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 238 (class 1259 OID 27312)
+-- TOC entry 164 (class 1259 OID 16419)
 -- Dependencies: 6
 -- Name: objectnames; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
@@ -1152,8 +1152,8 @@ CREATE TABLE objectnames (
 ALTER TABLE public.objectnames OWNER TO sa;
 
 --
--- TOC entry 164 (class 1259 OID 26715)
--- Dependencies: 2692 6
+-- TOC entry 165 (class 1259 OID 16422)
+-- Dependencies: 2719 6
 -- Name: vw_tables; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1164,8 +1164,8 @@ CREATE VIEW vw_tables AS
 ALTER TABLE public.vw_tables OWNER TO sa;
 
 --
--- TOC entry 165 (class 1259 OID 26719)
--- Dependencies: 2693 6
+-- TOC entry 166 (class 1259 OID 16426)
+-- Dependencies: 2720 6
 -- Name: vw_types; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1176,8 +1176,8 @@ CREATE VIEW vw_types AS
 ALTER TABLE public.vw_types OWNER TO sa;
 
 --
--- TOC entry 166 (class 1259 OID 26724)
--- Dependencies: 2715 2716 2717 2718 2719 2720 2721 2722 2723 6
+-- TOC entry 167 (class 1259 OID 16431)
+-- Dependencies: 2742 2743 2744 2745 2746 2747 2748 2749 2750 6
 -- Name: сальдо; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1199,8 +1199,8 @@ CREATE TABLE "сальдо" (
 ALTER TABLE public."сальдо" OWNER TO sa;
 
 --
--- TOC entry 167 (class 1259 OID 26736)
--- Dependencies: 2724 2725 2726 2727 2728 6
+-- TOC entry 168 (class 1259 OID 16443)
+-- Dependencies: 2751 2752 2753 2754 2755 6
 -- Name: счета; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1217,8 +1217,8 @@ CREATE TABLE "счета" (
 ALTER TABLE public."счета" OWNER TO sa;
 
 --
--- TOC entry 168 (class 1259 OID 26744)
--- Dependencies: 2694 6
+-- TOC entry 169 (class 1259 OID 16451)
+-- Dependencies: 2721 6
 -- Name: vw_баланс; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1229,8 +1229,8 @@ CREATE VIEW "vw_баланс" AS
 ALTER TABLE public."vw_баланс" OWNER TO sa;
 
 --
--- TOC entry 169 (class 1259 OID 26749)
--- Dependencies: 2730 2731 2732 2733 6
+-- TOC entry 170 (class 1259 OID 16456)
+-- Dependencies: 2757 2758 2759 2760 6
 -- Name: блокпериоды; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1247,8 +1247,8 @@ CREATE TABLE "блокпериоды" (
 ALTER TABLE public."блокпериоды" OWNER TO sa;
 
 --
--- TOC entry 170 (class 1259 OID 26756)
--- Dependencies: 2695 6
+-- TOC entry 171 (class 1259 OID 16463)
+-- Dependencies: 2722 6
 -- Name: vw_блокпериоды; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1259,8 +1259,8 @@ CREATE VIEW "vw_блокпериоды" AS
 ALTER TABLE public."vw_блокпериоды" OWNER TO sa;
 
 --
--- TOC entry 171 (class 1259 OID 26760)
--- Dependencies: 2735 2736 2737 2738 2739 2740 2741 2742 2743 2744 2745 2746 6
+-- TOC entry 172 (class 1259 OID 16467)
+-- Dependencies: 2762 2763 2764 2765 2766 2767 2768 2769 2770 2771 2772 2773 6
 -- Name: контрагенты; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1287,8 +1287,8 @@ CREATE TABLE "контрагенты" (
 ALTER TABLE public."контрагенты" OWNER TO sa;
 
 --
--- TOC entry 172 (class 1259 OID 26778)
--- Dependencies: 2696 6
+-- TOC entry 173 (class 1259 OID 16485)
+-- Dependencies: 2723 6
 -- Name: vw_грузополучатели; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1299,8 +1299,8 @@ CREATE VIEW "vw_грузополучатели" AS
 ALTER TABLE public."vw_грузополучатели" OWNER TO sa;
 
 --
--- TOC entry 173 (class 1259 OID 26782)
--- Dependencies: 2748 2749 2750 6
+-- TOC entry 174 (class 1259 OID 16489)
+-- Dependencies: 2775 2776 2777 6
 -- Name: документы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1321,8 +1321,8 @@ CREATE TABLE "документы" (
 ALTER TABLE public."документы" OWNER TO sa;
 
 --
--- TOC entry 174 (class 1259 OID 26791)
--- Dependencies: 2697 6
+-- TOC entry 175 (class 1259 OID 16498)
+-- Dependencies: 2724 6
 -- Name: vw_документы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1333,8 +1333,8 @@ CREATE VIEW "vw_документы" AS
 ALTER TABLE public."vw_документы" OWNER TO sa;
 
 --
--- TOC entry 175 (class 1259 OID 26795)
--- Dependencies: 2698 6
+-- TOC entry 176 (class 1259 OID 16502)
+-- Dependencies: 2725 6
 -- Name: vw_пользователи; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1345,8 +1345,8 @@ CREATE VIEW "vw_пользователи" AS
 ALTER TABLE public."vw_пользователи" OWNER TO sa;
 
 --
--- TOC entry 176 (class 1259 OID 26799)
--- Dependencies: 2752 2753 2754 2755 2756 6
+-- TOC entry 177 (class 1259 OID 16506)
+-- Dependencies: 2779 2780 2781 2782 2783 6
 -- Name: доступ; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1364,8 +1364,8 @@ CREATE TABLE "доступ" (
 ALTER TABLE public."доступ" OWNER TO sa;
 
 --
--- TOC entry 177 (class 1259 OID 26807)
--- Dependencies: 2699 6
+-- TOC entry 178 (class 1259 OID 16514)
+-- Dependencies: 2726 6
 -- Name: vw_доступ; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1376,8 +1376,8 @@ CREATE VIEW "vw_доступ" AS
 ALTER TABLE public."vw_доступ" OWNER TO sa;
 
 --
--- TOC entry 178 (class 1259 OID 26812)
--- Dependencies: 2700 6
+-- TOC entry 179 (class 1259 OID 16519)
+-- Dependencies: 2727 6
 -- Name: vw_доступ_к_оборотам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1388,8 +1388,8 @@ CREATE VIEW "vw_доступ_к_оборотам" AS
 ALTER TABLE public."vw_доступ_к_оборотам" OWNER TO sa;
 
 --
--- TOC entry 179 (class 1259 OID 26816)
--- Dependencies: 2701 6
+-- TOC entry 180 (class 1259 OID 16523)
+-- Dependencies: 2728 6
 -- Name: vw_доступ_к_сальдо; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1400,8 +1400,8 @@ CREATE VIEW "vw_доступ_к_сальдо" AS
 ALTER TABLE public."vw_доступ_к_сальдо" OWNER TO sa;
 
 --
--- TOC entry 180 (class 1259 OID 26820)
--- Dependencies: 2758 2759 2760 2761 2762 6
+-- TOC entry 181 (class 1259 OID 16527)
+-- Dependencies: 2785 2786 2787 2788 2789 6
 -- Name: справочники; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1422,8 +1422,8 @@ CREATE TABLE "справочники" (
 ALTER TABLE public."справочники" OWNER TO sa;
 
 --
--- TOC entry 181 (class 1259 OID 26831)
--- Dependencies: 2702 6
+-- TOC entry 182 (class 1259 OID 16538)
+-- Dependencies: 2729 6
 -- Name: vw_доступ_к_справочникам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1434,8 +1434,8 @@ CREATE VIEW "vw_доступ_к_справочникам" AS
 ALTER TABLE public."vw_доступ_к_справочникам" OWNER TO sa;
 
 --
--- TOC entry 182 (class 1259 OID 26836)
--- Dependencies: 2764 2765 2766 2767 2768 2769 2770 2771 2772 2773 2774 2775 2776 2777 2778 2779 2780 2781 2782 2783 6
+-- TOC entry 183 (class 1259 OID 16543)
+-- Dependencies: 2791 2792 2793 2794 2795 2796 2797 2798 2799 2800 2801 2802 2803 2804 2805 2806 2807 2808 2809 2810 6
 -- Name: топер; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1471,8 +1471,8 @@ CREATE TABLE "топер" (
 ALTER TABLE public."топер" OWNER TO sa;
 
 --
--- TOC entry 183 (class 1259 OID 26862)
--- Dependencies: 2703 6
+-- TOC entry 184 (class 1259 OID 16569)
+-- Dependencies: 2730 6
 -- Name: vw_доступ_к_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1483,8 +1483,8 @@ CREATE VIEW "vw_доступ_к_топер" AS
 ALTER TABLE public."vw_доступ_к_топер" OWNER TO sa;
 
 --
--- TOC entry 184 (class 1259 OID 26867)
--- Dependencies: 2785 2786 6
+-- TOC entry 185 (class 1259 OID 16574)
+-- Dependencies: 2812 2813 6
 -- Name: журнал; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1501,8 +1501,8 @@ CREATE TABLE "журнал" (
 ALTER TABLE public."журнал" OWNER TO sa;
 
 --
--- TOC entry 185 (class 1259 OID 26872)
--- Dependencies: 2704 6
+-- TOC entry 186 (class 1259 OID 16579)
+-- Dependencies: 2731 6
 -- Name: vw_журнал; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1513,8 +1513,8 @@ CREATE VIEW "vw_журнал" AS
 ALTER TABLE public."vw_журнал" OWNER TO sa;
 
 --
--- TOC entry 186 (class 1259 OID 26876)
--- Dependencies: 2788 2789 6
+-- TOC entry 187 (class 1259 OID 16583)
+-- Dependencies: 2815 2816 6
 -- Name: константы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1529,8 +1529,8 @@ CREATE TABLE "константы" (
 ALTER TABLE public."константы" OWNER TO sa;
 
 --
--- TOC entry 187 (class 1259 OID 26881)
--- Dependencies: 2705 6
+-- TOC entry 188 (class 1259 OID 16588)
+-- Dependencies: 2732 6
 -- Name: vw_константы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1541,8 +1541,8 @@ CREATE VIEW "vw_константы" AS
 ALTER TABLE public."vw_константы" OWNER TO sa;
 
 --
--- TOC entry 188 (class 1259 OID 26885)
--- Dependencies: 2706 6
+-- TOC entry 189 (class 1259 OID 16592)
+-- Dependencies: 2733 6
 -- Name: vw_контрагенты; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1553,8 +1553,8 @@ CREATE VIEW "vw_контрагенты" AS
 ALTER TABLE public."vw_контрагенты" OWNER TO sa;
 
 --
--- TOC entry 189 (class 1259 OID 26889)
--- Dependencies: 2791 2792 6
+-- TOC entry 190 (class 1259 OID 16596)
+-- Dependencies: 2818 2819 6
 -- Name: материалы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1568,8 +1568,8 @@ CREATE TABLE "материалы" (
 ALTER TABLE public."материалы" OWNER TO sa;
 
 --
--- TOC entry 190 (class 1259 OID 26894)
--- Dependencies: 2707 6
+-- TOC entry 191 (class 1259 OID 16601)
+-- Dependencies: 2734 6
 -- Name: vw_материалы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1580,8 +1580,8 @@ CREATE VIEW "vw_материалы" AS
 ALTER TABLE public."vw_материалы" OWNER TO sa;
 
 --
--- TOC entry 191 (class 1259 OID 26898)
--- Dependencies: 2794 2795 2796 2797 2798 2799 2800 6
+-- TOC entry 192 (class 1259 OID 16605)
+-- Dependencies: 2821 2822 2823 2824 2825 2826 2827 6
 -- Name: номенклатура; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1602,8 +1602,8 @@ CREATE TABLE "номенклатура" (
 ALTER TABLE public."номенклатура" OWNER TO sa;
 
 --
--- TOC entry 192 (class 1259 OID 26911)
--- Dependencies: 2708 6
+-- TOC entry 193 (class 1259 OID 16618)
+-- Dependencies: 2735 6
 -- Name: vw_номенклатура; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1614,8 +1614,8 @@ CREATE VIEW "vw_номенклатура" AS
 ALTER TABLE public."vw_номенклатура" OWNER TO sa;
 
 --
--- TOC entry 193 (class 1259 OID 26915)
--- Dependencies: 2802 2803 2804 6
+-- TOC entry 194 (class 1259 OID 16622)
+-- Dependencies: 2829 2830 2831 6
 -- Name: проводки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1638,8 +1638,8 @@ CREATE TABLE "проводки" (
 ALTER TABLE public."проводки" OWNER TO sa;
 
 --
--- TOC entry 194 (class 1259 OID 26921)
--- Dependencies: 2709 6
+-- TOC entry 195 (class 1259 OID 16628)
+-- Dependencies: 2736 6
 -- Name: vw_проводки; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1650,8 +1650,8 @@ CREATE VIEW "vw_проводки" AS
 ALTER TABLE public."vw_проводки" OWNER TO sa;
 
 --
--- TOC entry 195 (class 1259 OID 26925)
--- Dependencies: 2710 6
+-- TOC entry 196 (class 1259 OID 16632)
+-- Dependencies: 2737 6
 -- Name: vw_справочники_со_столбцами; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1662,8 +1662,8 @@ CREATE VIEW "vw_справочники_со_столбцами" AS
 ALTER TABLE public."vw_справочники_со_столбцами" OWNER TO sa;
 
 --
--- TOC entry 196 (class 1259 OID 26930)
--- Dependencies: 2806 2807 6
+-- TOC entry 197 (class 1259 OID 16637)
+-- Dependencies: 2833 2834 6
 -- Name: столбцы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1679,8 +1679,8 @@ CREATE TABLE "столбцы" (
 ALTER TABLE public."столбцы" OWNER TO sa;
 
 --
--- TOC entry 239 (class 1259 OID 44895)
--- Dependencies: 2713 6
+-- TOC entry 198 (class 1259 OID 16642)
+-- Dependencies: 2738 6
 -- Name: vw_столбцы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1691,8 +1691,8 @@ CREATE VIEW "vw_столбцы" AS
 ALTER TABLE public."vw_столбцы" OWNER TO sa;
 
 --
--- TOC entry 240 (class 1259 OID 46127)
--- Dependencies: 2714 6 510 511 511 514
+-- TOC entry 199 (class 1259 OID 16647)
+-- Dependencies: 2739 511 6 514 510 511
 -- Name: vw_столбцы_типы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1703,8 +1703,8 @@ CREATE VIEW "vw_столбцы_типы" AS
 ALTER TABLE public."vw_столбцы_типы" OWNER TO sa;
 
 --
--- TOC entry 197 (class 1259 OID 26939)
--- Dependencies: 2711 6
+-- TOC entry 200 (class 1259 OID 16652)
+-- Dependencies: 2740 6
 -- Name: vw_счета; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1715,8 +1715,8 @@ CREATE VIEW "vw_счета" AS
 ALTER TABLE public."vw_счета" OWNER TO sa;
 
 --
--- TOC entry 198 (class 1259 OID 26943)
--- Dependencies: 2712 6
+-- TOC entry 201 (class 1259 OID 16656)
+-- Dependencies: 2741 6
 -- Name: vw_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1727,8 +1727,8 @@ CREATE VIEW "vw_топер" AS
 ALTER TABLE public."vw_топер" OWNER TO sa;
 
 --
--- TOC entry 199 (class 1259 OID 26948)
--- Dependencies: 2809 6
+-- TOC entry 202 (class 1259 OID 16661)
+-- Dependencies: 2836 6
 -- Name: адрес; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1741,8 +1741,8 @@ CREATE TABLE "адрес" (
 ALTER TABLE public."адрес" OWNER TO sa;
 
 --
--- TOC entry 200 (class 1259 OID 26952)
--- Dependencies: 6 199
+-- TOC entry 203 (class 1259 OID 16665)
+-- Dependencies: 202 6
 -- Name: адрес_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1757,8 +1757,8 @@ CREATE SEQUENCE "адрес_код_seq"
 ALTER TABLE public."адрес_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3060 (class 0 OID 0)
--- Dependencies: 200
+-- TOC entry 3087 (class 0 OID 0)
+-- Dependencies: 203
 -- Name: адрес_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -1766,8 +1766,8 @@ ALTER SEQUENCE "адрес_код_seq" OWNED BY "адрес"."код";
 
 
 --
--- TOC entry 3061 (class 0 OID 0)
--- Dependencies: 200
+-- TOC entry 3088 (class 0 OID 0)
+-- Dependencies: 203
 -- Name: адрес_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -1775,8 +1775,8 @@ SELECT pg_catalog.setval('"адрес_код_seq"', 1, true);
 
 
 --
--- TOC entry 201 (class 1259 OID 26954)
--- Dependencies: 2811 2812 2813 2814 6
+-- TOC entry 204 (class 1259 OID 16667)
+-- Dependencies: 2838 2839 2840 2841 6
 -- Name: банки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1792,8 +1792,8 @@ CREATE TABLE "банки" (
 ALTER TABLE public."банки" OWNER TO sa;
 
 --
--- TOC entry 202 (class 1259 OID 26961)
--- Dependencies: 6 201
+-- TOC entry 205 (class 1259 OID 16674)
+-- Dependencies: 204 6
 -- Name: банки_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1808,8 +1808,8 @@ CREATE SEQUENCE "банки_код_seq"
 ALTER TABLE public."банки_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3063 (class 0 OID 0)
--- Dependencies: 202
+-- TOC entry 3090 (class 0 OID 0)
+-- Dependencies: 205
 -- Name: банки_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -1817,8 +1817,8 @@ ALTER SEQUENCE "банки_код_seq" OWNED BY "банки"."код";
 
 
 --
--- TOC entry 3064 (class 0 OID 0)
--- Dependencies: 202
+-- TOC entry 3091 (class 0 OID 0)
+-- Dependencies: 205
 -- Name: банки_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -1826,8 +1826,8 @@ SELECT pg_catalog.setval('"банки_код_seq"', 1, false);
 
 
 --
--- TOC entry 203 (class 1259 OID 26963)
--- Dependencies: 2816 2817 6
+-- TOC entry 206 (class 1259 OID 16676)
+-- Dependencies: 2843 2844 6
 -- Name: банковские_счета; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1842,8 +1842,8 @@ CREATE TABLE "банковские_счета" (
 ALTER TABLE public."банковские_счета" OWNER TO sa;
 
 --
--- TOC entry 204 (class 1259 OID 26968)
--- Dependencies: 6 203
+-- TOC entry 207 (class 1259 OID 16681)
+-- Dependencies: 206 6
 -- Name: банковские_счета_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1858,8 +1858,8 @@ CREATE SEQUENCE "банковские_счета_код_seq"
 ALTER TABLE public."банковские_счета_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3066 (class 0 OID 0)
--- Dependencies: 204
+-- TOC entry 3093 (class 0 OID 0)
+-- Dependencies: 207
 -- Name: банковские_счета_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -1867,8 +1867,8 @@ ALTER SEQUENCE "банковские_счета_код_seq" OWNED BY "банко
 
 
 --
--- TOC entry 3067 (class 0 OID 0)
--- Dependencies: 204
+-- TOC entry 3094 (class 0 OID 0)
+-- Dependencies: 207
 -- Name: банковские_счета_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -1876,8 +1876,8 @@ SELECT pg_catalog.setval('"банковские_счета_код_seq"', 1, fals
 
 
 --
--- TOC entry 205 (class 1259 OID 26970)
--- Dependencies: 6 169
+-- TOC entry 208 (class 1259 OID 16683)
+-- Dependencies: 6 170
 -- Name: блокпериоды_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1892,8 +1892,8 @@ CREATE SEQUENCE "блокпериоды_код_seq"
 ALTER TABLE public."блокпериоды_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3068 (class 0 OID 0)
--- Dependencies: 205
+-- TOC entry 3095 (class 0 OID 0)
+-- Dependencies: 208
 -- Name: блокпериоды_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -1901,8 +1901,8 @@ ALTER SEQUENCE "блокпериоды_код_seq" OWNED BY "блокперио�
 
 
 --
--- TOC entry 3069 (class 0 OID 0)
--- Dependencies: 205
+-- TOC entry 3096 (class 0 OID 0)
+-- Dependencies: 208
 -- Name: блокпериоды_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -1910,8 +1910,8 @@ SELECT pg_catalog.setval('"блокпериоды_код_seq"', 2, true);
 
 
 --
--- TOC entry 206 (class 1259 OID 26972)
--- Dependencies: 2819 6
+-- TOC entry 209 (class 1259 OID 16685)
+-- Dependencies: 2846 6
 -- Name: виды_расходов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1924,8 +1924,8 @@ CREATE TABLE "виды_расходов" (
 ALTER TABLE public."виды_расходов" OWNER TO sa;
 
 --
--- TOC entry 207 (class 1259 OID 26976)
--- Dependencies: 206 6
+-- TOC entry 210 (class 1259 OID 16689)
+-- Dependencies: 209 6
 -- Name: виды_расходов_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1940,8 +1940,8 @@ CREATE SEQUENCE "виды_расходов_код_seq"
 ALTER TABLE public."виды_расходов_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3071 (class 0 OID 0)
--- Dependencies: 207
+-- TOC entry 3098 (class 0 OID 0)
+-- Dependencies: 210
 -- Name: виды_расходов_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -1949,8 +1949,8 @@ ALTER SEQUENCE "виды_расходов_код_seq" OWNED BY "виды_рас�
 
 
 --
--- TOC entry 3072 (class 0 OID 0)
--- Dependencies: 207
+-- TOC entry 3099 (class 0 OID 0)
+-- Dependencies: 210
 -- Name: виды_расходов_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -1958,8 +1958,8 @@ SELECT pg_catalog.setval('"виды_расходов_код_seq"', 1, false);
 
 
 --
--- TOC entry 208 (class 1259 OID 26978)
--- Dependencies: 2821 2822 6
+-- TOC entry 211 (class 1259 OID 16691)
+-- Dependencies: 2848 2849 6
 -- Name: группы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1973,8 +1973,8 @@ CREATE TABLE "группы" (
 ALTER TABLE public."группы" OWNER TO sa;
 
 --
--- TOC entry 209 (class 1259 OID 26983)
--- Dependencies: 6 208
+-- TOC entry 212 (class 1259 OID 16696)
+-- Dependencies: 6 211
 -- Name: группы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -1989,8 +1989,8 @@ CREATE SEQUENCE "группы_код_seq"
 ALTER TABLE public."группы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3073 (class 0 OID 0)
--- Dependencies: 209
+-- TOC entry 3100 (class 0 OID 0)
+-- Dependencies: 212
 -- Name: группы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -1998,8 +1998,8 @@ ALTER SEQUENCE "группы_код_seq" OWNED BY "группы"."код";
 
 
 --
--- TOC entry 3074 (class 0 OID 0)
--- Dependencies: 209
+-- TOC entry 3101 (class 0 OID 0)
+-- Dependencies: 212
 -- Name: группы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2007,8 +2007,8 @@ SELECT pg_catalog.setval('"группы_код_seq"', 3, true);
 
 
 --
--- TOC entry 210 (class 1259 OID 26985)
--- Dependencies: 173 6
+-- TOC entry 213 (class 1259 OID 16698)
+-- Dependencies: 174 6
 -- Name: документы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2023,8 +2023,8 @@ CREATE SEQUENCE "документы_код_seq"
 ALTER TABLE public."документы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3075 (class 0 OID 0)
--- Dependencies: 210
+-- TOC entry 3102 (class 0 OID 0)
+-- Dependencies: 213
 -- Name: документы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2032,8 +2032,8 @@ ALTER SEQUENCE "документы_код_seq" OWNED BY "документы"."к
 
 
 --
--- TOC entry 3076 (class 0 OID 0)
--- Dependencies: 210
+-- TOC entry 3103 (class 0 OID 0)
+-- Dependencies: 213
 -- Name: документы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2041,8 +2041,8 @@ SELECT pg_catalog.setval('"документы_код_seq"', 55, true);
 
 
 --
--- TOC entry 211 (class 1259 OID 26987)
--- Dependencies: 176 6
+-- TOC entry 214 (class 1259 OID 16700)
+-- Dependencies: 6 177
 -- Name: доступ_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2057,8 +2057,8 @@ CREATE SEQUENCE "доступ_код_seq"
 ALTER TABLE public."доступ_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3077 (class 0 OID 0)
--- Dependencies: 211
+-- TOC entry 3104 (class 0 OID 0)
+-- Dependencies: 214
 -- Name: доступ_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2066,8 +2066,8 @@ ALTER SEQUENCE "доступ_код_seq" OWNED BY "доступ"."код";
 
 
 --
--- TOC entry 3078 (class 0 OID 0)
--- Dependencies: 211
+-- TOC entry 3105 (class 0 OID 0)
+-- Dependencies: 214
 -- Name: доступ_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2075,8 +2075,8 @@ SELECT pg_catalog.setval('"доступ_код_seq"', 66, true);
 
 
 --
--- TOC entry 212 (class 1259 OID 26989)
--- Dependencies: 6 184
+-- TOC entry 215 (class 1259 OID 16702)
+-- Dependencies: 185 6
 -- Name: журнал_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2091,8 +2091,8 @@ CREATE SEQUENCE "журнал_код_seq"
 ALTER TABLE public."журнал_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3079 (class 0 OID 0)
--- Dependencies: 212
+-- TOC entry 3106 (class 0 OID 0)
+-- Dependencies: 215
 -- Name: журнал_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2100,8 +2100,8 @@ ALTER SEQUENCE "журнал_код_seq" OWNED BY "журнал"."код";
 
 
 --
--- TOC entry 3080 (class 0 OID 0)
--- Dependencies: 212
+-- TOC entry 3107 (class 0 OID 0)
+-- Dependencies: 215
 -- Name: журнал_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2109,8 +2109,8 @@ SELECT pg_catalog.setval('"журнал_код_seq"', 1, false);
 
 
 --
--- TOC entry 213 (class 1259 OID 26991)
--- Dependencies: 186 6
+-- TOC entry 216 (class 1259 OID 16704)
+-- Dependencies: 187 6
 -- Name: константы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2125,8 +2125,8 @@ CREATE SEQUENCE "константы_код_seq"
 ALTER TABLE public."константы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3081 (class 0 OID 0)
--- Dependencies: 213
+-- TOC entry 3108 (class 0 OID 0)
+-- Dependencies: 216
 -- Name: константы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2134,8 +2134,8 @@ ALTER SEQUENCE "константы_код_seq" OWNED BY "константы"."к
 
 
 --
--- TOC entry 3082 (class 0 OID 0)
--- Dependencies: 213
+-- TOC entry 3109 (class 0 OID 0)
+-- Dependencies: 216
 -- Name: константы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2143,8 +2143,8 @@ SELECT pg_catalog.setval('"константы_код_seq"', 5, true);
 
 
 --
--- TOC entry 214 (class 1259 OID 26993)
--- Dependencies: 171 6
+-- TOC entry 217 (class 1259 OID 16706)
+-- Dependencies: 172 6
 -- Name: контрагенты_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2159,8 +2159,8 @@ CREATE SEQUENCE "контрагенты_код_seq"
 ALTER TABLE public."контрагенты_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3083 (class 0 OID 0)
--- Dependencies: 214
+-- TOC entry 3110 (class 0 OID 0)
+-- Dependencies: 217
 -- Name: контрагенты_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2168,8 +2168,8 @@ ALTER SEQUENCE "контрагенты_код_seq" OWNED BY "контраген�
 
 
 --
--- TOC entry 3084 (class 0 OID 0)
--- Dependencies: 214
+-- TOC entry 3111 (class 0 OID 0)
+-- Dependencies: 217
 -- Name: контрагенты_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2177,8 +2177,8 @@ SELECT pg_catalog.setval('"контрагенты_код_seq"', 8, true);
 
 
 --
--- TOC entry 215 (class 1259 OID 26995)
--- Dependencies: 189 6
+-- TOC entry 218 (class 1259 OID 16708)
+-- Dependencies: 6 190
 -- Name: материалы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2193,8 +2193,8 @@ CREATE SEQUENCE "материалы_код_seq"
 ALTER TABLE public."материалы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3085 (class 0 OID 0)
--- Dependencies: 215
+-- TOC entry 3112 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: материалы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2202,8 +2202,8 @@ ALTER SEQUENCE "материалы_код_seq" OWNED BY "материалы"."к
 
 
 --
--- TOC entry 3086 (class 0 OID 0)
--- Dependencies: 215
+-- TOC entry 3113 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: материалы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2211,7 +2211,7 @@ SELECT pg_catalog.setval('"материалы_код_seq"', 1, false);
 
 
 --
--- TOC entry 216 (class 1259 OID 26997)
+-- TOC entry 219 (class 1259 OID 16710)
 -- Dependencies: 6
 -- Name: набор1; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
@@ -2226,8 +2226,8 @@ CREATE TABLE "набор1" (
 ALTER TABLE public."набор1" OWNER TO sa;
 
 --
--- TOC entry 217 (class 1259 OID 27000)
--- Dependencies: 6 216
+-- TOC entry 220 (class 1259 OID 16713)
+-- Dependencies: 6 219
 -- Name: набор1_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2242,8 +2242,8 @@ CREATE SEQUENCE "набор1_код_seq"
 ALTER TABLE public."набор1_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3088 (class 0 OID 0)
--- Dependencies: 217
+-- TOC entry 3115 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: набор1_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2251,8 +2251,8 @@ ALTER SEQUENCE "набор1_код_seq" OWNED BY "набор1"."код";
 
 
 --
--- TOC entry 3089 (class 0 OID 0)
--- Dependencies: 217
+-- TOC entry 3116 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: набор1_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2260,8 +2260,8 @@ SELECT pg_catalog.setval('"набор1_код_seq"', 33, true);
 
 
 --
--- TOC entry 218 (class 1259 OID 27002)
--- Dependencies: 6 191
+-- TOC entry 221 (class 1259 OID 16715)
+-- Dependencies: 6 192
 -- Name: номенклатура_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2276,8 +2276,8 @@ CREATE SEQUENCE "номенклатура_код_seq"
 ALTER TABLE public."номенклатура_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3090 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3117 (class 0 OID 0)
+-- Dependencies: 221
 -- Name: номенклатура_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2285,8 +2285,8 @@ ALTER SEQUENCE "номенклатура_код_seq" OWNED BY "номенкла�
 
 
 --
--- TOC entry 3091 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3118 (class 0 OID 0)
+-- Dependencies: 221
 -- Name: номенклатура_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2294,8 +2294,8 @@ SELECT pg_catalog.setval('"номенклатура_код_seq"', 57, true);
 
 
 --
--- TOC entry 219 (class 1259 OID 27004)
--- Dependencies: 2825 2826 6
+-- TOC entry 222 (class 1259 OID 16717)
+-- Dependencies: 2852 2853 6
 -- Name: нумераторы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2309,8 +2309,8 @@ CREATE TABLE "нумераторы" (
 ALTER TABLE public."нумераторы" OWNER TO sa;
 
 --
--- TOC entry 220 (class 1259 OID 27009)
--- Dependencies: 6 219
+-- TOC entry 223 (class 1259 OID 16722)
+-- Dependencies: 6 222
 -- Name: нумераторы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2325,8 +2325,8 @@ CREATE SEQUENCE "нумераторы_код_seq"
 ALTER TABLE public."нумераторы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3093 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3120 (class 0 OID 0)
+-- Dependencies: 223
 -- Name: нумераторы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2334,8 +2334,8 @@ ALTER SEQUENCE "нумераторы_код_seq" OWNED BY "нумераторы"
 
 
 --
--- TOC entry 3094 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3121 (class 0 OID 0)
+-- Dependencies: 223
 -- Name: нумераторы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2343,8 +2343,8 @@ SELECT pg_catalog.setval('"нумераторы_код_seq"', 5, true);
 
 
 --
--- TOC entry 221 (class 1259 OID 27011)
--- Dependencies: 2828 2829 2830 2831 2832 2833 2834 6
+-- TOC entry 224 (class 1259 OID 16724)
+-- Dependencies: 2855 2856 2857 2858 2859 2860 2861 6
 -- Name: персонал; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2366,8 +2366,8 @@ CREATE TABLE "персонал" (
 ALTER TABLE public."персонал" OWNER TO sa;
 
 --
--- TOC entry 222 (class 1259 OID 27021)
--- Dependencies: 6 221
+-- TOC entry 225 (class 1259 OID 16734)
+-- Dependencies: 224 6
 -- Name: персонал_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2382,8 +2382,8 @@ CREATE SEQUENCE "персонал_код_seq"
 ALTER TABLE public."персонал_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3096 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 3123 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: персонал_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2391,8 +2391,8 @@ ALTER SEQUENCE "персонал_код_seq" OWNED BY "персонал"."код
 
 
 --
--- TOC entry 3097 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 3124 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: персонал_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2400,8 +2400,8 @@ SELECT pg_catalog.setval('"персонал_код_seq"', 1, false);
 
 
 --
--- TOC entry 223 (class 1259 OID 27023)
--- Dependencies: 2836 2837 2838 2839 2840 2841 2842 2843 2844 2846 6
+-- TOC entry 226 (class 1259 OID 16736)
+-- Dependencies: 2863 2864 2865 2866 2867 2868 2869 2870 2871 2872 6
 -- Name: прайсы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2427,8 +2427,8 @@ CREATE TABLE "прайсы" (
 ALTER TABLE public."прайсы" OWNER TO sa;
 
 --
--- TOC entry 224 (class 1259 OID 27038)
--- Dependencies: 223 6
+-- TOC entry 227 (class 1259 OID 16752)
+-- Dependencies: 6 226
 -- Name: прайсы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2443,8 +2443,8 @@ CREATE SEQUENCE "прайсы_код_seq"
 ALTER TABLE public."прайсы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3099 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 3126 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: прайсы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2452,8 +2452,8 @@ ALTER SEQUENCE "прайсы_код_seq" OWNED BY "прайсы"."код";
 
 
 --
--- TOC entry 3100 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 3127 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: прайсы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2461,8 +2461,8 @@ SELECT pg_catalog.setval('"прайсы_код_seq"', 288, true);
 
 
 --
--- TOC entry 225 (class 1259 OID 27040)
--- Dependencies: 2847 2848 6
+-- TOC entry 228 (class 1259 OID 16754)
+-- Dependencies: 2874 2875 6
 -- Name: предметы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2476,8 +2476,8 @@ CREATE TABLE "предметы" (
 ALTER TABLE public."предметы" OWNER TO sa;
 
 --
--- TOC entry 226 (class 1259 OID 27045)
--- Dependencies: 6 225
+-- TOC entry 229 (class 1259 OID 16759)
+-- Dependencies: 6 228
 -- Name: предметы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2492,8 +2492,8 @@ CREATE SEQUENCE "предметы_код_seq"
 ALTER TABLE public."предметы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3102 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 3129 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: предметы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2501,8 +2501,8 @@ ALTER SEQUENCE "предметы_код_seq" OWNED BY "предметы"."код
 
 
 --
--- TOC entry 3103 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 3130 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: предметы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2510,8 +2510,8 @@ SELECT pg_catalog.setval('"предметы_код_seq"', 1, false);
 
 
 --
--- TOC entry 227 (class 1259 OID 27047)
--- Dependencies: 6 193
+-- TOC entry 230 (class 1259 OID 16761)
+-- Dependencies: 6 194
 -- Name: проводки_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2526,8 +2526,8 @@ CREATE SEQUENCE "проводки_код_seq"
 ALTER TABLE public."проводки_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3104 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3131 (class 0 OID 0)
+-- Dependencies: 230
 -- Name: проводки_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2535,8 +2535,8 @@ ALTER SEQUENCE "проводки_код_seq" OWNED BY "проводки"."код
 
 
 --
--- TOC entry 3105 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3132 (class 0 OID 0)
+-- Dependencies: 230
 -- Name: проводки_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2544,8 +2544,8 @@ SELECT pg_catalog.setval('"проводки_код_seq"', 570, true);
 
 
 --
--- TOC entry 228 (class 1259 OID 27049)
--- Dependencies: 6 180
+-- TOC entry 231 (class 1259 OID 16763)
+-- Dependencies: 6 181
 -- Name: справочники_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2560,8 +2560,8 @@ CREATE SEQUENCE "справочники_код_seq"
 ALTER TABLE public."справочники_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3106 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 3133 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: справочники_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2569,8 +2569,8 @@ ALTER SEQUENCE "справочники_код_seq" OWNED BY "справочни�
 
 
 --
--- TOC entry 3107 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 3134 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: справочники_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2578,8 +2578,8 @@ SELECT pg_catalog.setval('"справочники_код_seq"', 54, true);
 
 
 --
--- TOC entry 229 (class 1259 OID 27051)
--- Dependencies: 6 196
+-- TOC entry 232 (class 1259 OID 16765)
+-- Dependencies: 6 197
 -- Name: столбцы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2594,8 +2594,8 @@ CREATE SEQUENCE "столбцы_код_seq"
 ALTER TABLE public."столбцы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3108 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3135 (class 0 OID 0)
+-- Dependencies: 232
 -- Name: столбцы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2603,17 +2603,17 @@ ALTER SEQUENCE "столбцы_код_seq" OWNED BY "столбцы"."код";
 
 
 --
--- TOC entry 3109 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3136 (class 0 OID 0)
+-- Dependencies: 232
 -- Name: столбцы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"столбцы_код_seq"', 245, true);
+SELECT pg_catalog.setval('"столбцы_код_seq"', 252, true);
 
 
 --
--- TOC entry 230 (class 1259 OID 27053)
--- Dependencies: 6 167
+-- TOC entry 233 (class 1259 OID 16767)
+-- Dependencies: 168 6
 -- Name: счета_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2628,8 +2628,8 @@ CREATE SEQUENCE "счета_код_seq"
 ALTER TABLE public."счета_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3110 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 3137 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: счета_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2637,8 +2637,8 @@ ALTER SEQUENCE "счета_код_seq" OWNED BY "счета"."код";
 
 
 --
--- TOC entry 3111 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 3138 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: счета_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2646,8 +2646,8 @@ SELECT pg_catalog.setval('"счета_код_seq"', 105, true);
 
 
 --
--- TOC entry 231 (class 1259 OID 27055)
--- Dependencies: 2850 6
+-- TOC entry 234 (class 1259 OID 16769)
+-- Dependencies: 2877 6
 -- Name: типыобъектов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2660,8 +2660,8 @@ CREATE TABLE "типыобъектов" (
 ALTER TABLE public."типыобъектов" OWNER TO sa;
 
 --
--- TOC entry 232 (class 1259 OID 27059)
--- Dependencies: 231 6
+-- TOC entry 235 (class 1259 OID 16773)
+-- Dependencies: 6 234
 -- Name: типыобъектов_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2676,8 +2676,8 @@ CREATE SEQUENCE "типыобъектов_код_seq"
 ALTER TABLE public."типыобъектов_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3113 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 3140 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: типыобъектов_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2685,8 +2685,8 @@ ALTER SEQUENCE "типыобъектов_код_seq" OWNED BY "типыобъе�
 
 
 --
--- TOC entry 3114 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 3141 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: типыобъектов_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2694,8 +2694,8 @@ SELECT pg_catalog.setval('"типыобъектов_код_seq"', 6, true);
 
 
 --
--- TOC entry 233 (class 1259 OID 27061)
--- Dependencies: 182 6
+-- TOC entry 236 (class 1259 OID 16775)
+-- Dependencies: 183 6
 -- Name: топер_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2710,8 +2710,8 @@ CREATE SEQUENCE "топер_код_seq"
 ALTER TABLE public."топер_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3115 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 3142 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: топер_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2719,17 +2719,17 @@ ALTER SEQUENCE "топер_код_seq" OWNED BY "топер"."код";
 
 
 --
--- TOC entry 3116 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 3143 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: топер_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"топер_код_seq"', 465, true);
+SELECT pg_catalog.setval('"топер_код_seq"', 466, true);
 
 
 --
--- TOC entry 234 (class 1259 OID 27063)
--- Dependencies: 2852 6
+-- TOC entry 237 (class 1259 OID 16777)
+-- Dependencies: 2879 6
 -- Name: файлы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2744,8 +2744,8 @@ CREATE TABLE "файлы" (
 ALTER TABLE public."файлы" OWNER TO sa;
 
 --
--- TOC entry 235 (class 1259 OID 27070)
--- Dependencies: 6 234
+-- TOC entry 238 (class 1259 OID 16784)
+-- Dependencies: 237 6
 -- Name: файлы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2760,8 +2760,8 @@ CREATE SEQUENCE "файлы_код_seq"
 ALTER TABLE public."файлы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3118 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 3145 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: файлы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2769,17 +2769,17 @@ ALTER SEQUENCE "файлы_код_seq" OWNED BY "файлы"."код";
 
 
 --
--- TOC entry 3119 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 3146 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: файлы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"файлы_код_seq"', 7, true);
+SELECT pg_catalog.setval('"файлы_код_seq"', 8, true);
 
 
 --
--- TOC entry 237 (class 1259 OID 27249)
--- Dependencies: 2855 6
+-- TOC entry 239 (class 1259 OID 16786)
+-- Dependencies: 2881 6
 -- Name: фирмы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2792,8 +2792,8 @@ CREATE TABLE "фирмы" (
 ALTER TABLE public."фирмы" OWNER TO sa;
 
 --
--- TOC entry 236 (class 1259 OID 27247)
--- Dependencies: 6 237
+-- TOC entry 240 (class 1259 OID 16790)
+-- Dependencies: 6 239
 -- Name: фирмы_код_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2808,8 +2808,8 @@ CREATE SEQUENCE "фирмы_код_seq"
 ALTER TABLE public."фирмы_код_seq" OWNER TO sa;
 
 --
--- TOC entry 3121 (class 0 OID 0)
--- Dependencies: 236
+-- TOC entry 3148 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: фирмы_код_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2817,8 +2817,8 @@ ALTER SEQUENCE "фирмы_код_seq" OWNED BY "фирмы"."код";
 
 
 --
--- TOC entry 3122 (class 0 OID 0)
--- Dependencies: 236
+-- TOC entry 3149 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: фирмы_код_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -2826,242 +2826,242 @@ SELECT pg_catalog.setval('"фирмы_код_seq"', 3, true);
 
 
 --
--- TOC entry 2810 (class 2604 OID 27077)
--- Dependencies: 200 199
+-- TOC entry 2837 (class 2604 OID 16792)
+-- Dependencies: 203 202
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "адрес" ALTER COLUMN "код" SET DEFAULT nextval('"адрес_код_seq"'::regclass);
+ALTER TABLE ONLY "адрес" ALTER COLUMN "код" SET DEFAULT nextval('"адрес_код_seq"'::regclass);
 
 
 --
--- TOC entry 2815 (class 2604 OID 27078)
--- Dependencies: 202 201
+-- TOC entry 2842 (class 2604 OID 16793)
+-- Dependencies: 205 204
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "банки" ALTER COLUMN "код" SET DEFAULT nextval('"банки_код_seq"'::regclass);
+ALTER TABLE ONLY "банки" ALTER COLUMN "код" SET DEFAULT nextval('"банки_код_seq"'::regclass);
 
 
 --
--- TOC entry 2818 (class 2604 OID 27079)
--- Dependencies: 204 203
--- Name: код; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE "банковские_счета" ALTER COLUMN "код" SET DEFAULT nextval('"банковские_счета_код_seq"'::regclass);
-
-
---
--- TOC entry 2734 (class 2604 OID 27080)
--- Dependencies: 205 169
--- Name: код; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE "блокпериоды" ALTER COLUMN "код" SET DEFAULT nextval('"блокпериоды_код_seq"'::regclass);
-
-
---
--- TOC entry 2820 (class 2604 OID 27081)
+-- TOC entry 2845 (class 2604 OID 16794)
 -- Dependencies: 207 206
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "виды_расходов" ALTER COLUMN "код" SET DEFAULT nextval('"виды_расходов_код_seq"'::regclass);
+ALTER TABLE ONLY "банковские_счета" ALTER COLUMN "код" SET DEFAULT nextval('"банковские_счета_код_seq"'::regclass);
 
 
 --
--- TOC entry 2823 (class 2604 OID 27082)
--- Dependencies: 209 208
+-- TOC entry 2761 (class 2604 OID 16795)
+-- Dependencies: 208 170
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "группы" ALTER COLUMN "код" SET DEFAULT nextval('"группы_код_seq"'::regclass);
+ALTER TABLE ONLY "блокпериоды" ALTER COLUMN "код" SET DEFAULT nextval('"блокпериоды_код_seq"'::regclass);
 
 
 --
--- TOC entry 2751 (class 2604 OID 27083)
--- Dependencies: 210 173
+-- TOC entry 2847 (class 2604 OID 16796)
+-- Dependencies: 210 209
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "документы" ALTER COLUMN "код" SET DEFAULT nextval('"документы_код_seq"'::regclass);
+ALTER TABLE ONLY "виды_расходов" ALTER COLUMN "код" SET DEFAULT nextval('"виды_расходов_код_seq"'::regclass);
 
 
 --
--- TOC entry 2757 (class 2604 OID 27084)
--- Dependencies: 211 176
+-- TOC entry 2850 (class 2604 OID 16797)
+-- Dependencies: 212 211
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "доступ" ALTER COLUMN "код" SET DEFAULT nextval('"доступ_код_seq"'::regclass);
+ALTER TABLE ONLY "группы" ALTER COLUMN "код" SET DEFAULT nextval('"группы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2787 (class 2604 OID 27085)
--- Dependencies: 212 184
+-- TOC entry 2778 (class 2604 OID 16798)
+-- Dependencies: 213 174
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "журнал" ALTER COLUMN "код" SET DEFAULT nextval('"журнал_код_seq"'::regclass);
+ALTER TABLE ONLY "документы" ALTER COLUMN "код" SET DEFAULT nextval('"документы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2790 (class 2604 OID 27086)
--- Dependencies: 213 186
+-- TOC entry 2784 (class 2604 OID 16799)
+-- Dependencies: 214 177
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "константы" ALTER COLUMN "код" SET DEFAULT nextval('"константы_код_seq"'::regclass);
+ALTER TABLE ONLY "доступ" ALTER COLUMN "код" SET DEFAULT nextval('"доступ_код_seq"'::regclass);
 
 
 --
--- TOC entry 2747 (class 2604 OID 27087)
--- Dependencies: 214 171
+-- TOC entry 2814 (class 2604 OID 16800)
+-- Dependencies: 215 185
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "контрагенты" ALTER COLUMN "код" SET DEFAULT nextval('"контрагенты_код_seq"'::regclass);
+ALTER TABLE ONLY "журнал" ALTER COLUMN "код" SET DEFAULT nextval('"журнал_код_seq"'::regclass);
 
 
 --
--- TOC entry 2793 (class 2604 OID 27088)
--- Dependencies: 215 189
+-- TOC entry 2817 (class 2604 OID 16801)
+-- Dependencies: 216 187
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "материалы" ALTER COLUMN "код" SET DEFAULT nextval('"материалы_код_seq"'::regclass);
+ALTER TABLE ONLY "константы" ALTER COLUMN "код" SET DEFAULT nextval('"константы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2824 (class 2604 OID 27089)
--- Dependencies: 217 216
+-- TOC entry 2774 (class 2604 OID 16802)
+-- Dependencies: 217 172
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "набор1" ALTER COLUMN "код" SET DEFAULT nextval('"набор1_код_seq"'::regclass);
+ALTER TABLE ONLY "контрагенты" ALTER COLUMN "код" SET DEFAULT nextval('"контрагенты_код_seq"'::regclass);
 
 
 --
--- TOC entry 2801 (class 2604 OID 27090)
--- Dependencies: 218 191
+-- TOC entry 2820 (class 2604 OID 16803)
+-- Dependencies: 218 190
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "номенклатура" ALTER COLUMN "код" SET DEFAULT nextval('"номенклатура_код_seq"'::regclass);
+ALTER TABLE ONLY "материалы" ALTER COLUMN "код" SET DEFAULT nextval('"материалы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2827 (class 2604 OID 27091)
+-- TOC entry 2851 (class 2604 OID 16804)
 -- Dependencies: 220 219
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "нумераторы" ALTER COLUMN "код" SET DEFAULT nextval('"нумераторы_код_seq"'::regclass);
+ALTER TABLE ONLY "набор1" ALTER COLUMN "код" SET DEFAULT nextval('"набор1_код_seq"'::regclass);
 
 
 --
--- TOC entry 2835 (class 2604 OID 27092)
--- Dependencies: 222 221
+-- TOC entry 2828 (class 2604 OID 16805)
+-- Dependencies: 221 192
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "персонал" ALTER COLUMN "код" SET DEFAULT nextval('"персонал_код_seq"'::regclass);
+ALTER TABLE ONLY "номенклатура" ALTER COLUMN "код" SET DEFAULT nextval('"номенклатура_код_seq"'::regclass);
 
 
 --
--- TOC entry 2845 (class 2604 OID 27093)
--- Dependencies: 224 223
+-- TOC entry 2854 (class 2604 OID 16806)
+-- Dependencies: 223 222
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "прайсы" ALTER COLUMN "код" SET DEFAULT nextval('"прайсы_код_seq"'::regclass);
+ALTER TABLE ONLY "нумераторы" ALTER COLUMN "код" SET DEFAULT nextval('"нумераторы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2849 (class 2604 OID 27094)
--- Dependencies: 226 225
+-- TOC entry 2862 (class 2604 OID 16807)
+-- Dependencies: 225 224
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "предметы" ALTER COLUMN "код" SET DEFAULT nextval('"предметы_код_seq"'::regclass);
+ALTER TABLE ONLY "персонал" ALTER COLUMN "код" SET DEFAULT nextval('"персонал_код_seq"'::regclass);
 
 
 --
--- TOC entry 2805 (class 2604 OID 27095)
--- Dependencies: 227 193
+-- TOC entry 2873 (class 2604 OID 16808)
+-- Dependencies: 227 226
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "проводки" ALTER COLUMN "код" SET DEFAULT nextval('"проводки_код_seq"'::regclass);
+ALTER TABLE ONLY "прайсы" ALTER COLUMN "код" SET DEFAULT nextval('"прайсы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2763 (class 2604 OID 27096)
--- Dependencies: 228 180
+-- TOC entry 2876 (class 2604 OID 16809)
+-- Dependencies: 229 228
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "справочники" ALTER COLUMN "код" SET DEFAULT nextval('"справочники_код_seq"'::regclass);
+ALTER TABLE ONLY "предметы" ALTER COLUMN "код" SET DEFAULT nextval('"предметы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2808 (class 2604 OID 27097)
--- Dependencies: 229 196
+-- TOC entry 2832 (class 2604 OID 16810)
+-- Dependencies: 230 194
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "столбцы" ALTER COLUMN "код" SET DEFAULT nextval('"столбцы_код_seq"'::regclass);
+ALTER TABLE ONLY "проводки" ALTER COLUMN "код" SET DEFAULT nextval('"проводки_код_seq"'::regclass);
 
 
 --
--- TOC entry 2729 (class 2604 OID 27098)
--- Dependencies: 230 167
+-- TOC entry 2790 (class 2604 OID 16811)
+-- Dependencies: 231 181
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "счета" ALTER COLUMN "код" SET DEFAULT nextval('"счета_код_seq"'::regclass);
+ALTER TABLE ONLY "справочники" ALTER COLUMN "код" SET DEFAULT nextval('"справочники_код_seq"'::regclass);
 
 
 --
--- TOC entry 2851 (class 2604 OID 27099)
--- Dependencies: 232 231
+-- TOC entry 2835 (class 2604 OID 16812)
+-- Dependencies: 232 197
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "типыобъектов" ALTER COLUMN "код" SET DEFAULT nextval('"типыобъектов_код_seq"'::regclass);
+ALTER TABLE ONLY "столбцы" ALTER COLUMN "код" SET DEFAULT nextval('"столбцы_код_seq"'::regclass);
 
 
 --
--- TOC entry 2784 (class 2604 OID 27100)
--- Dependencies: 233 182
+-- TOC entry 2756 (class 2604 OID 16813)
+-- Dependencies: 233 168
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "топер" ALTER COLUMN "код" SET DEFAULT nextval('"топер_код_seq"'::regclass);
+ALTER TABLE ONLY "счета" ALTER COLUMN "код" SET DEFAULT nextval('"счета_код_seq"'::regclass);
 
 
 --
--- TOC entry 2853 (class 2604 OID 27101)
+-- TOC entry 2878 (class 2604 OID 16814)
 -- Dependencies: 235 234
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "файлы" ALTER COLUMN "код" SET DEFAULT nextval('"файлы_код_seq"'::regclass);
+ALTER TABLE ONLY "типыобъектов" ALTER COLUMN "код" SET DEFAULT nextval('"типыобъектов_код_seq"'::regclass);
 
 
 --
--- TOC entry 2854 (class 2604 OID 27252)
--- Dependencies: 237 236 237
+-- TOC entry 2811 (class 2604 OID 16815)
+-- Dependencies: 236 183
 -- Name: код; Type: DEFAULT; Schema: public; Owner: sa
 --
 
-ALTER TABLE "фирмы" ALTER COLUMN "код" SET DEFAULT nextval('"фирмы_код_seq"'::regclass);
+ALTER TABLE ONLY "топер" ALTER COLUMN "код" SET DEFAULT nextval('"топер_код_seq"'::regclass);
 
 
 --
--- TOC entry 3010 (class 0 OID 27312)
--- Dependencies: 238
+-- TOC entry 2880 (class 2604 OID 16816)
+-- Dependencies: 238 237
+-- Name: код; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE ONLY "файлы" ALTER COLUMN "код" SET DEFAULT nextval('"файлы_код_seq"'::regclass);
+
+
+--
+-- TOC entry 2882 (class 2604 OID 16817)
+-- Dependencies: 240 239
+-- Name: код; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE ONLY "фирмы" ALTER COLUMN "код" SET DEFAULT nextval('"фирмы_код_seq"'::regclass);
+
+
+--
+-- TOC entry 3010 (class 0 OID 16419)
+-- Dependencies: 164
 -- Data for Name: objectnames; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3070,8 +3070,8 @@ COPY objectnames (name, value) FROM stdin;
 
 
 --
--- TOC entry 2997 (class 0 OID 26948)
--- Dependencies: 199
+-- TOC entry 3025 (class 0 OID 16661)
+-- Dependencies: 202
 -- Data for Name: адрес; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3081,8 +3081,8 @@ COPY "адрес" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 2998 (class 0 OID 26954)
--- Dependencies: 201
+-- TOC entry 3026 (class 0 OID 16667)
+-- Dependencies: 204
 -- Data for Name: банки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3091,8 +3091,8 @@ COPY "банки" ("код", "имя", "бик", "корсчет", "счет") F
 
 
 --
--- TOC entry 2999 (class 0 OID 26963)
--- Dependencies: 203
+-- TOC entry 3027 (class 0 OID 16676)
+-- Dependencies: 206
 -- Data for Name: банковские_счета; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3101,8 +3101,8 @@ COPY "банковские_счета" ("код", "имя", "счет", "код_
 
 
 --
--- TOC entry 2985 (class 0 OID 26749)
--- Dependencies: 169
+-- TOC entry 3013 (class 0 OID 16456)
+-- Dependencies: 170
 -- Data for Name: блокпериоды; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3112,8 +3112,8 @@ COPY "блокпериоды" ("код", "имя", "блокконец", "нач
 
 
 --
--- TOC entry 3000 (class 0 OID 26972)
--- Dependencies: 206
+-- TOC entry 3028 (class 0 OID 16685)
+-- Dependencies: 209
 -- Data for Name: виды_расходов; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3122,8 +3122,8 @@ COPY "виды_расходов" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 3001 (class 0 OID 26978)
--- Dependencies: 208
+-- TOC entry 3029 (class 0 OID 16691)
+-- Dependencies: 211
 -- Data for Name: группы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3134,8 +3134,8 @@ COPY "группы" ("код", "имя", "цены_снижать") FROM stdin;
 
 
 --
--- TOC entry 2987 (class 0 OID 26782)
--- Dependencies: 173
+-- TOC entry 3015 (class 0 OID 16489)
+-- Dependencies: 174
 -- Data for Name: документы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3151,22 +3151,22 @@ COPY "документы" ("код", "дата", "датавремя", "номе
 21	2010-05-31	2012-01-24 11:51:03.336253	3		770.00	\N	3	0	\N
 23	2010-05-31	2012-01-24 12:02:14.445494	5	Товар от Автодеталь	700.00	\N	2	0	\N
 26	2010-05-31	2012-01-31 12:23:16.373909	7		0.00	\N	1	0	\N
-54	2012-01-24	2012-02-27 18:29:09.640184	Д0000000223	Общество с ограниченной ответственностью "Дальтек"	434.28	\N	1	0	\N
-55	2012-01-31	2012-03-05 08:15:01.933426	31		250.00	\N	1	0	<?xml version="1.0"?>\\012<variables/>\\012
-46	2012-01-31	2012-02-11 16:43:59.9853	5		156.52	\N	3	0	<?xml version="1.0"?>\\012<variables>\\012    <variable name="\\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270" type="6" value="9"/>\\012    <variable name="\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260" type="6" value="20.6"/>\\012    <variable name="\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260" type="6" value="206"/>\\012    <variable name="\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270" type="6" value="0"/>\\012    <variable name="\\321\\202\\320\\265\\321\\201\\321\\202" type="10" value="\\320\\242\\320\\265\\321\\201\\321\\202\\320\\276\\320\\262\\320\\276\\320\\265 \\321\\201\\320\\276\\320\\276\\320\\261\\321\\211\\320\\265\\320\\275\\320\\270\\320\\265"/>\\012</variables>\\012
-42	2012-01-31	2012-02-10 19:31:19.603234	7		244.90	\N	2	0	<?xml version="1.0"?>\\012<variables/>\\012
+55	2012-01-31	2012-03-05 08:15:01.933426	31		250.00	\N	1	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65732f3e0a
+46	2012-01-31	2012-02-11 16:43:59.9853	5		156.52	\N	3	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65733e0a202020203c7661726961626c65206e616d653d22d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b82220747970653d2236222076616c75653d2239222f3e0a202020203c7661726961626c65206e616d653d22d181d0bad0b8d0b4d0bad0b02220747970653d2236222076616c75653d2232302e36222f3e0a202020203c7661726961626c65206e616d653d22d181d183d0bcd0bcd0b02220747970653d2236222076616c75653d22323036222f3e0a202020203c7661726961626c65206e616d653d22d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b82220747970653d2236222076616c75653d2230222f3e0a202020203c7661726961626c65206e616d653d22d182d0b5d181d1822220747970653d223130222076616c75653d22d0a2d0b5d181d182d0bed0b2d0bed0b520d181d0bed0bed0b1d189d0b5d0bdd0b8d0b5222f3e0a3c2f7661726961626c65733e0a
+42	2012-01-31	2012-02-10 19:31:19.603234	7		244.90	\N	2	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65732f3e0a
 34	2012-01-24	2012-02-08 15:22:50.688361	Д0000000223	Общество с ограниченной ответственностью "Дальтек"	384.28	\N	1	0	\N
-24	2010-05-31	2012-01-24 12:03:17.95945	4		75.00	\N	3	0	<?xml version="1.0"?>\\012<variables>\\012    <variable name="\\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270" type="6" value="0"/>\\012    <variable name="\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260" type="6" value="0"/>\\012    <variable name="\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260" type="6" value="75"/>\\012    <variable name="\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270" type="6" value="0"/>\\012    <variable name="\\321\\202\\320\\265\\321\\201\\321\\202" type="10" value="\\320\\242\\320\\265\\321\\201\\321\\202\\320\\276\\320\\262\\320\\276\\320\\265 \\321\\201\\320\\276\\320\\276\\320\\261\\321\\211\\320\\265\\320\\275\\320\\270\\320\\265"/>\\012</variables>\\012
-22	2010-05-31	2012-01-24 12:01:08.554112	5	ТД "Автодеталь"	700.00	\N	1	0	<?xml version="1.0"?>\\012<variables/>\\012
-10	2010-05-31	2012-01-09 11:06:32.779341	4	ООО "АвтоОпт"	1060.00	\N	1	0	<?xml version="1.0"?>\\012<variables/>\\012
+24	2010-05-31	2012-01-24 12:03:17.95945	4		75.00	\N	3	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65733e0a202020203c7661726961626c65206e616d653d22d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b82220747970653d2236222076616c75653d2230222f3e0a202020203c7661726961626c65206e616d653d22d181d0bad0b8d0b4d0bad0b02220747970653d2236222076616c75653d2230222f3e0a202020203c7661726961626c65206e616d653d22d181d183d0bcd0bcd0b02220747970653d2236222076616c75653d223735222f3e0a202020203c7661726961626c65206e616d653d22d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b82220747970653d2236222076616c75653d2230222f3e0a202020203c7661726961626c65206e616d653d22d182d0b5d181d1822220747970653d223130222076616c75653d22d0a2d0b5d181d182d0bed0b2d0bed0b520d181d0bed0bed0b1d189d0b5d0bdd0b8d0b5222f3e0a3c2f7661726961626c65733e0a
+22	2010-05-31	2012-01-24 12:01:08.554112	5	ТД "Автодеталь"	700.00	\N	1	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65732f3e0a
+10	2010-05-31	2012-01-09 11:06:32.779341	4	ООО "АвтоОпт"	1060.00	\N	1	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65732f3e0a
 44	2012-01-31	2012-02-11 16:19:51.909403	4		0.00	\N	5	0	\N
 45	2012-01-31	2012-02-11 16:19:56.13209	5	Общество с ограниченной ответственностью "Дальтек"	1000.00	\N	5	0	\N
+54	2012-01-24	2012-02-27 18:29:09.640184	Д0000000223	Общество с ограниченной ответственностью "Дальтек"	434.28	\N	1	0	\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7661726961626c65732f3e0a
 \.
 
 
 --
--- TOC entry 2988 (class 0 OID 26799)
--- Dependencies: 176
+-- TOC entry 3016 (class 0 OID 16506)
+-- Dependencies: 177
 -- Data for Name: доступ; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3200,16 +3200,16 @@ COPY "доступ" ("код", "меню", "комментарий", "код_т�
 62	t		3	sa	4	
 63	t		3	sa	5	
 64	t		1	sa	фирмы	
-13	t		3	sa	1	
 66	t		1	sa	прайсы	
 65	t		1	sa	фирмы	
 31	t		3	sa	3	
+13	t		3	sa	1	
 \.
 
 
 --
--- TOC entry 2991 (class 0 OID 26867)
--- Dependencies: 184
+-- TOC entry 3019 (class 0 OID 16574)
+-- Dependencies: 185
 -- Data for Name: журнал; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3218,8 +3218,8 @@ COPY "журнал" ("код", "имя", "датавремя", "содержан
 
 
 --
--- TOC entry 2992 (class 0 OID 26876)
--- Dependencies: 186
+-- TOC entry 3020 (class 0 OID 16583)
+-- Dependencies: 187
 -- Data for Name: константы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3232,8 +3232,8 @@ COPY "константы" ("код", "имя", "значение", "коммен
 
 
 --
--- TOC entry 2986 (class 0 OID 26760)
--- Dependencies: 171
+-- TOC entry 3014 (class 0 OID 16467)
+-- Dependencies: 172
 -- Data for Name: контрагенты; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3245,8 +3245,8 @@ COPY "контрагенты" ("код", "имя", "адрес", "телефон
 
 
 --
--- TOC entry 2993 (class 0 OID 26889)
--- Dependencies: 189
+-- TOC entry 3021 (class 0 OID 16596)
+-- Dependencies: 190
 -- Data for Name: материалы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3255,8 +3255,8 @@ COPY "материалы" ("код", "имя", "едизм") FROM stdin;
 
 
 --
--- TOC entry 3002 (class 0 OID 26997)
--- Dependencies: 216
+-- TOC entry 3030 (class 0 OID 16710)
+-- Dependencies: 219
 -- Data for Name: набор1; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3277,8 +3277,8 @@ COPY "набор1" ("код", "код_vw_номенклатура", "код_ад
 
 
 --
--- TOC entry 2994 (class 0 OID 26898)
--- Dependencies: 191
+-- TOC entry 3022 (class 0 OID 16605)
+-- Dependencies: 192
 -- Data for Name: номенклатура; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3324,14 +3324,6 @@ COPY "номенклатура" ("код", "имя", "едизм", "артику
 42	антенна HYUNDAI внутрисалонная активная	шт		\N	0.00	0		3	\N
 43	антенна MYSTERY внутрисалонная активная	шт		\N	0.00	0		3	\N
 44	антенна Ratex-R01A (АМ, УКВ, FM)	шт		\N	0.00	0		3	\N
-46				\N	0.00	0		3	\N
-47				\N	0.00	0		3	\N
-49				\N	0.00	0		3	\N
-50				\N	0.00	0		3	\N
-51				\N	0.00	0		3	\N
-52				\N	0.00	0		3	\N
-53				1	0.00	0		3	\N
-54				1	0.00	0		3	\N
 55	антирадар Crunch 213В дисплей светодиод	шт		3	0.00	0		3	\N
 56	освежитель воздуха BUGALE ваниль (60мл)	шт		3	0.00	0		3	\N
 57	освежитель воздуха Business Class гелевый (60мл)	шт		3	0.00	0		3	\N
@@ -3339,8 +3331,8 @@ COPY "номенклатура" ("код", "имя", "едизм", "артику
 
 
 --
--- TOC entry 3003 (class 0 OID 27004)
--- Dependencies: 219
+-- TOC entry 3031 (class 0 OID 16717)
+-- Dependencies: 222
 -- Data for Name: нумераторы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3353,8 +3345,8 @@ COPY "нумераторы" ("код", "имя", "значение") FROM stdin;
 
 
 --
--- TOC entry 3004 (class 0 OID 27011)
--- Dependencies: 221
+-- TOC entry 3032 (class 0 OID 16724)
+-- Dependencies: 224
 -- Data for Name: персонал; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3363,8 +3355,8 @@ COPY "персонал" ("код", "имя", "инн", "паспорт_сери�
 
 
 --
--- TOC entry 3005 (class 0 OID 27023)
--- Dependencies: 223
+-- TOC entry 3033 (class 0 OID 16736)
+-- Dependencies: 226
 -- Data for Name: прайсы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3383,8 +3375,8 @@ COPY "прайсы" ("код", "имя", "код_фирмы", "кодвпрай�
 
 
 --
--- TOC entry 3006 (class 0 OID 27040)
--- Dependencies: 225
+-- TOC entry 3034 (class 0 OID 16754)
+-- Dependencies: 228
 -- Data for Name: предметы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3393,8 +3385,8 @@ COPY "предметы" ("код", "имя", "едизм") FROM stdin;
 
 
 --
--- TOC entry 2995 (class 0 OID 26915)
--- Dependencies: 193
+-- TOC entry 3023 (class 0 OID 16622)
+-- Dependencies: 194
 -- Data for Name: проводки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3444,8 +3436,8 @@ COPY "проводки" ("код", "дбсчет", "дбкод", "крсчет",
 
 
 --
--- TOC entry 2983 (class 0 OID 26724)
--- Dependencies: 166
+-- TOC entry 3011 (class 0 OID 16431)
+-- Dependencies: 167
 -- Data for Name: сальдо; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3523,8 +3515,8 @@ COPY "сальдо" ("счет", "код", "кол", "сальдо", "дбкол
 
 
 --
--- TOC entry 2989 (class 0 OID 26820)
--- Dependencies: 180
+-- TOC entry 3017 (class 0 OID 16527)
+-- Dependencies: 181
 -- Data for Name: справочники; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3557,8 +3549,8 @@ COPY "справочники" ("код", "имя", "имя_в_списке", "и
 
 
 --
--- TOC entry 2996 (class 0 OID 26930)
--- Dependencies: 196
+-- TOC entry 3024 (class 0 OID 16637)
+-- Dependencies: 197
 -- Data for Name: столбцы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3622,11 +3614,6 @@ COPY "столбцы" ("код", "код_vw_справочники_со_стол
 81	19	конец	Конец периода	3
 82	19	пользователь	Пользователь	4
 84	24	имя	Наименование	1
-21	10	код	Код	1
-22	10	имя	Наименование	2
-24	10	едизм	Ед.Изм.	3
-23	10	артикул	Артикул	4
-25	10	цена_розн	Розн.Цена	5
 116	2000004	p1__сумма	Сумма	1
 1	1	имя	Справочник	1
 94	1	прототип	Прототип	2
@@ -3681,22 +3668,34 @@ COPY "столбцы" ("код", "код_vw_справочники_со_стол
 131	54	дата	Дата	6
 133	54	упаковка	Упаковка	7
 134	54	наличие	Наличие	8
+182	1000001	дата	Дата	1
+183	1000001	номер	Номер	2
+144	1000001	комментарий	Комментарий	3
+185	1000001	сумма	Сумма	4
+21	10	код	Код	2
+22	10	имя	Наименование	3
+24	10	едизм	Ед.Изм.	5
+23	10	артикул	Артикул	4
+246	10	группы__имя	Группа	1
+25	10	цена_розн	Розн.Цена	6
 43	2000001	номенклатура__имя	Наименование	1
 44	2000001	номенклатура__артикул	Артикул	2
 45	2000001	номенклатура__едизм	Ед.Изм.	3
 46	2000001	p1__кол	Кол-во	4
 47	2000001	p1__цена	Цена	5
 48	2000001	p1__сумма	Сумма	6
-182	1000001	дата	Дата	1
-183	1000001	номер	Номер	2
-144	1000001	комментарий	Комментарий	3
-185	1000001	сумма	Сумма	4
+247	1000001	номенклатура__имя	Наименование	1
+248	1000001	номенклатура__артикул	Артикул	2
+249	1000001	номенклатура__едизм	Ед.Изм.	3
+250	1000001	p1__кол	Кол-во	4
+251	1000001	p1__цена	Цена	5
+252	1000001	p1__сумма	Сумма	6
 \.
 
 
 --
--- TOC entry 2984 (class 0 OID 26736)
--- Dependencies: 167
+-- TOC entry 3012 (class 0 OID 16443)
+-- Dependencies: 168
 -- Data for Name: счета; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3809,8 +3808,8 @@ COPY "счета" ("код", "имя", "счет", "имясправочника
 
 
 --
--- TOC entry 3007 (class 0 OID 27055)
--- Dependencies: 231
+-- TOC entry 3035 (class 0 OID 16769)
+-- Dependencies: 234
 -- Data for Name: типыобъектов; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3824,8 +3823,8 @@ COPY "типыобъектов" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 2990 (class 0 OID 26836)
--- Dependencies: 182
+-- TOC entry 3018 (class 0 OID 16543)
+-- Dependencies: 183
 -- Data for Name: топер; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3833,31 +3832,32 @@ COPY "топер" ("код", "опер", "номер", "дбсчет", "крсч
 78	4	1	51	50.2	Выручка. Сдача денег на расчетный счет	+			t	f	f	f	f	f	f	f	f	f	f	f		f	t	\N
 51	2	1	41.2	41.1	Товар на складе. Передача в розничную торговлю	+		Накладная1	f	f	f	f	f	f	f	f	f	t	f	t		f	t	\N
 82	5	1	60	51	Банковский счет. Перечисление организации	+		ПлатежноеПоручение	t	f	t	f	f	f	f	f	f	f	f	f		f	t	\N
-294	1	1	41.1	60	Товар на складе. Приход от поставщика	+		Накладная	f	f	f	t	f	f	f	f	f	f	t	f		f	t	\N
 465	3	3	90.1	50.2	Товар в рознице. Реализация за наличный расчет	-			\N	f	f	f	f	f	f	f	f	f	f	f		t	t	\N
 464	3	2	50.2	90.1	Товар в рознице. Реализация за наличный расчет	+			\N	f	f	f	f	f	f	f	f	f	f	f		f	t	\N
 463	3	1	90.2	41.2	Товар в рознице. Реализация за наличный расчет			ТоварныйЧек	f	f	f	f	f	f	f	f	f	t	f	t		f	t	\N
+466	1	1	41.1	60	Товар на складе. Приход от поставщика	+		Накладная	f	f	f	t	f	f	f	f	f	f	t	f		f	t	\N
 \.
 
 
 --
--- TOC entry 3008 (class 0 OID 27063)
--- Dependencies: 234
+-- TOC entry 3036 (class 0 OID 16777)
+-- Dependencies: 237
 -- Data for Name: файлы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "файлы" ("код", "имя", "тип", "значение") FROM stdin;
-7	./scripts/формулы5.qs	0	function EventParametersChanged()\\012 {\\012// \\320\\227\\320\\260\\320\\277\\320\\270\\321\\210\\320\\265\\320\\274 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265 \\321\\204\\320\\270\\321\\200\\320\\274\\321\\213-\\320\\277\\320\\276\\321\\201\\321\\202\\320\\260\\320\\262\\321\\211\\320\\270\\320\\272\\320\\260 \\320\\262 \\320\\272\\320\\276\\320\\274\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\321\\200\\320\\270\\320\\270 \\320\\272 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\321\\203\\012\\011\\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265 = getDictionary("vw_\\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213").getValue("\\320\\270\\320\\274\\321\\217");\\012\\011documents.setValue("\\320\\232\\320\\276\\320\\274\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\321\\200\\320\\270\\320\\271", \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265);\\012}\\012\\012
-6	./scripts/формулы4.qs	0	function EventInitForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\321\\201\\321\\200\\320\\260\\320\\267\\321\\203 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\321\\201\\320\\276\\320\\267\\320\\264\\320\\260\\320\\275\\320\\270\\321\\217 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012function EventBeforeShowForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\265\\321\\200\\320\\265\\320\\264 \\320\\276\\321\\202\\320\\272\\321\\200\\321\\213\\321\\202\\320\\270\\320\\265\\320\\274 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012function EventAfterHideForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\320\\267\\320\\260\\320\\272\\321\\200\\321\\213\\321\\202\\320\\270\\321\\217 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012function EventCloseForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\265\\321\\200\\320\\265\\320\\264 \\321\\203\\320\\264\\320\\260\\320\\273\\320\\265\\320\\275\\320\\270\\320\\265\\320\\274 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012function EventParametersChanged()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\262 \\320\\274\\320\\276\\320\\274\\320\\265\\320\\275\\321\\202 \\320\\270\\320\\267\\320\\274\\320\\265\\320\\275\\320\\265\\320\\275\\320\\270\\321\\217 \\320\\277\\320\\276\\321\\201\\321\\202\\320\\276\\321\\217\\320\\275\\320\\275\\320\\276\\320\\263\\320\\276 \\321\\201\\320\\277\\321\\200\\320\\260\\320\\262\\320\\276\\321\\207\\320\\275\\320\\270\\320\\272\\320\\260 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012function EventBeforeAddString()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\265\\321\\200\\320\\265\\320\\264 \\320\\264\\320\\276\\320\\261\\320\\260\\320\\262\\320\\273\\320\\265\\320\\275\\320\\270\\320\\265\\320\\274 \\321\\201\\321\\202\\321\\200\\320\\276\\320\\272\\320\\270 \\320\\262 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012function EventAfterAddString()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\320\\264\\320\\276\\320\\261\\320\\260\\320\\262\\320\\273\\320\\265\\320\\275\\320\\270\\321\\217 \\321\\201\\321\\202\\321\\200\\320\\276\\320\\272\\320\\270 \\320\\262 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\012// \\320\\227\\320\\264\\320\\265\\321\\201\\321\\214 \\320\\222\\321\\213 \\320\\274\\320\\276\\320\\266\\320\\265\\321\\202\\320\\265 \\320\\262\\321\\201\\321\\202\\320\\260\\320\\262\\320\\270\\321\\202\\321\\214 \\321\\201\\320\\262\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\264\\012}\\012\\012\\012
-4	./scripts/формулы2.qs	0	if (getCurrentFieldName() == "p1__\\320\\272\\320\\276\\320\\273") \\012{\\012\\011\\320\\272\\320\\276\\320\\273 = getOldValue() + getValue("\\320\\272\\321\\200\\321\\201\\320\\260\\320\\273\\321\\214\\320\\264\\320\\2761__\\320\\272\\320\\276\\320\\275\\320\\272\\320\\276\\320\\273");\\011// \\320\\232\\320\\276\\320\\273\\320\\270\\321\\207\\320\\265\\321\\201\\321\\202\\320\\262\\320\\276 \\320\\262\\321\\201\\320\\265\\320\\263\\320\\276\\012\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260") + getValue("\\320\\272\\321\\200\\321\\201\\320\\260\\320\\273\\321\\214\\320\\264\\320\\2761__\\320\\272\\320\\276\\320\\275\\321\\201\\320\\260\\320\\273\\321\\214\\320\\264\\320\\276");\\011// \\320\\241\\321\\203\\320\\274\\320\\274\\320\\260 \\320\\262\\321\\201\\320\\265\\320\\263\\320\\276\\012\\011if (\\320\\272\\320\\276\\320\\273 != 0)\\012\\011{\\012\\011\\011\\321\\206\\320\\265\\320\\275\\320\\260 = \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 / \\320\\272\\320\\276\\320\\273;\\012\\011\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getValue("p1__\\320\\272\\320\\276\\320\\273") * \\321\\206\\320\\265\\320\\275\\320\\260;\\012\\011\\011setValue("p1__\\321\\206\\320\\265\\320\\275\\320\\260", \\321\\206\\320\\265\\320\\275\\320\\260);\\012\\011\\011setValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260", \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260);\\012\\011}\\012}\\012
-1	./scripts/формулы1.qs	0	function EventInitForm(form)\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\321\\201\\321\\200\\320\\260\\320\\267\\321\\203 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\321\\201\\320\\276\\320\\267\\320\\264\\320\\260\\320\\275\\320\\270\\321\\217 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012\\011form.getButtonLoad().show();\\011\\011// \\320\\222\\320\\272\\320\\273\\321\\216\\321\\207\\320\\270\\320\\274 \\320\\272\\320\\275\\320\\276\\320\\277\\320\\272\\321\\203 "\\320\\227\\320\\260\\320\\263\\321\\200\\321\\203\\320\\267\\320\\270\\321\\202\\321\\214 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202" \\320\\275\\320\\260 \\321\\204\\320\\276\\321\\200\\320\\274\\320\\265\\012}\\012\\012\\012function EventImport(form)\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\321\\200\\320\\270 \\320\\275\\320\\260\\320\\266\\320\\260\\321\\202\\320\\270\\320\\270 \\320\\272\\320\\275\\320\\276\\320\\277\\320\\272\\320\\270 <\\320\\227\\320\\260\\320\\263\\321\\200\\321\\203\\320\\267\\320\\270\\321\\202\\321\\214 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202>\\012  var fileName = QFileDialog.getOpenFileName(form, "\\320\\236\\321\\202\\320\\272\\321\\200\\320\\276\\320\\271\\321\\202\\320\\265 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 \\321\\201 \\320\\277\\321\\200\\320\\270\\321\\205\\320\\276\\320\\264\\320\\276\\320\\274 \\321\\202\\320\\276\\320\\262\\320\\260\\321\\200\\320\\260", QDir.currentPath(), "\\320\\224\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 XML(*.XML)");\\012  if (fileName != "")\\012  {    \\012    var file = new QFile(fileName);\\012    if (file.open(QIODevice.OpenMode(QIODevice.ReadOnly, QIODevice.Text))) \\012    {\\012      var doc = new QDomDocument();\\012      if (doc.setContent(file))\\012      {\\012        if (doc.elementsByTagName("\\320\\245\\320\\276\\320\\267\\320\\236\\320\\277\\320\\265\\321\\200\\320\\260\\321\\206\\320\\270\\321\\217").at(0).toElement().text() == "\\320\\236\\321\\202\\320\\277\\321\\203\\321\\201\\320\\272 \\321\\202\\320\\276\\320\\262\\320\\260\\321\\200\\320\\260")\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\321\\215\\321\\202\\320\\276 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 \\320\\275\\320\\260 \\320\\276\\321\\202\\320\\263\\321\\200\\321\\203\\320\\267\\320\\272\\321\\203 \\321\\202\\320\\276\\320\\262\\320\\260\\321\\200\\320\\260\\012        {\\012          var docNumber = doc.elementsByTagName("\\320\\235\\320\\276\\320\\274\\320\\265\\321\\200").at(0).toElement().text();\\012          var docDate = doc.elementsByTagName("\\320\\224\\320\\260\\321\\202\\320\\260").at(0).toElement().text();\\012          var agentName = "";\\012          var agentFullName = "";\\012          var agentAddress = "";\\012          // \\320\\235\\320\\260\\320\\271\\320\\264\\320\\265\\320\\274 \\320\\262 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\265 \\321\\200\\320\\265\\320\\272\\320\\262\\320\\270\\320\\267\\320\\270\\321\\202\\321\\213 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260-\\320\\277\\321\\200\\320\\276\\320\\264\\320\\260\\320\\262\\321\\206\\320\\260\\012          var agents = doc.elementsByTagName("\\320\\232\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202");\\012          for (var i = 0; i < agents.count(); i++)\\012          {\\012            if (agents.at(i).firstChildElement("\\320\\240\\320\\276\\320\\273\\321\\214").text() == "\\320\\237\\321\\200\\320\\276\\320\\264\\320\\260\\320\\262\\320\\265\\321\\206")\\012            {\\012              agentName = agents.at(i).firstChildElement("\\320\\235\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265").text();\\012              agentFullName = agents.at(i).firstChildElement("\\320\\236\\321\\204\\320\\270\\321\\206\\320\\270\\320\\260\\320\\273\\321\\214\\320\\275\\320\\276\\320\\265\\320\\235\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265").text();\\012              agentAddress = agents.at(i).namedItem("\\320\\256\\321\\200\\320\\270\\320\\264\\320\\270\\321\\207\\320\\265\\321\\201\\320\\272\\320\\270\\320\\271\\320\\220\\320\\264\\321\\200\\320\\265\\321\\201").namedItem("\\320\\237\\321\\200\\320\\265\\320\\264\\321\\201\\321\\202\\320\\260\\320\\262\\320\\273\\320\\265\\320\\275\\320\\270\\320\\265").toElement().text();\\012              break;\\012            }\\012          }\\011\\011\\011\\011\\011\\012          if (agentName != "")\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\321\\203\\320\\272\\320\\260\\320\\267\\320\\260\\320\\275 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202-\\320\\277\\321\\200\\320\\276\\320\\264\\320\\260\\320\\262\\320\\265\\321\\206\\012          {\\012            if (agentFullName == "")\\012              agentFullName = agentName;\\012            document.setNumber(docNumber);\\012            document.setDate(docDate, Qt.ISODate);\\012            var agentDict = getDictionary("vw_\\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213");\\011// \\320\\235\\320\\260\\320\\271\\320\\264\\320\\265\\320\\274 \\321\\202\\320\\260\\320\\272\\320\\276\\320\\263\\320\\276 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260 \\320\\262 \\320\\275\\320\\260\\321\\210\\320\\265\\320\\271 \\320\\221\\320\\224\\012            agentDict.query("\\320\\270\\320\\274\\321\\217 = '" + agentFullName + "'");\\012            var agentId = agentDict.getId(0);\\012            if (agentId == 0)\\011\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\321\\202\\320\\260\\320\\272\\320\\276\\320\\263\\320\\276 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260 \\320\\275\\320\\265 \\321\\201\\321\\203\\321\\211\\320\\265\\321\\201\\321\\202\\320\\262\\321\\203\\320\\265\\321\\202 \\320\\262 \\321\\201\\320\\277\\321\\200\\320\\260\\320\\262\\320\\276\\321\\207\\320\\275\\320\\270\\320\\272\\320\\265\\012            {\\012              var agentMsg = new QMessageBox(QMessageBox.Question, "\\320\\222\\320\\275\\320\\270\\320\\274\\320\\260\\320\\275\\320\\270\\320\\265!", "\\320\\235\\320\\265 \\320\\275\\320\\260\\320\\271\\320\\264\\320\\265\\320\\275 \\321\\202\\320\\260\\320\\272\\320\\276\\320\\271 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202. \\320\\241\\320\\276\\320\\267\\320\\264\\320\\260\\321\\202\\321\\214?", QMessageBox.Yes, form);\\012              if (agentMsg.exec() == QMessageBox.Yes)\\012              {\\012                db.exec("INSERT INTO \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213 (\\320\\270\\320\\274\\321\\217, \\320\\260\\320\\264\\321\\200\\320\\265\\321\\201) VALUES ('" + agentFullName + "', '" + agentAddress + "')");\\012                agentDict.query("\\320\\270\\320\\274\\321\\217 = '" + agentFullName + "'");\\012                agentId = agentDict.getId(0);\\012              }\\012            }\\012            // \\320\\241\\320\\264\\320\\265\\320\\273\\320\\260\\320\\265\\320\\274 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260-\\320\\277\\321\\200\\320\\276\\320\\264\\320\\260\\320\\262\\321\\206\\320\\260 \\320\\262\\320\\270\\320\\264\\320\\270\\320\\274\\321\\213\\320\\274 \\320\\275\\320\\260 \\321\\204\\320\\276\\321\\200\\320\\274\\320\\265 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012            agentDict.setId(agentId);\\012            document.showParameterText("vw_\\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213");\\012\\011    EventParametersChanged();\\012\\011    documents.setValue("\\320\\232\\320\\276\\320\\274\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\321\\200\\320\\270\\320\\271", getDictionary("vw_\\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213").getValue("\\320\\270\\320\\274\\321\\217"));\\012            var firmId = agentDict.getValue("\\320\\272\\320\\276\\320\\264_\\321\\204\\320\\270\\321\\200\\320\\274\\321\\213");\\011// \\320\\237\\320\\276\\320\\273\\321\\203\\321\\207\\320\\270\\320\\274 \\320\\272\\320\\276\\320\\264 \\321\\204\\320\\270\\321\\200\\320\\274\\321\\213 \\320\\276\\321\\202\\320\\263\\321\\200\\321\\203\\320\\267\\320\\272\\320\\270 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260\\012            if (firmId == 0)\\012            {\\011\\011\\012              var firmMsg = new QMessageBox(QMessageBox.Question, "\\320\\222\\320\\275\\320\\270\\320\\274\\320\\260\\320\\275\\320\\270\\320\\265!", "\\320\\243 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260 \\320\\275\\320\\265 \\321\\203\\320\\272\\320\\260\\320\\267\\320\\260\\320\\275\\320\\260 \\321\\204\\320\\270\\321\\200\\320\\274\\320\\260 \\320\\276\\321\\202\\320\\263\\321\\200\\321\\203\\320\\267\\320\\272\\320\\270. \\320\\241\\320\\276\\320\\267\\320\\264\\320\\260\\321\\202\\321\\214?", QMessageBox.Yes, form);\\012              if (firmMsg.exec() == QMessageBox.Yes)\\012                {\\012                  // \\320\\237\\320\\276 \\321\\203\\320\\274\\320\\276\\320\\273\\321\\207\\320\\260\\320\\275\\320\\270\\321\\216 \\321\\201\\320\\276\\320\\267\\320\\264\\320\\260\\320\\265\\321\\202\\321\\201\\321\\217 \\321\\204\\320\\270\\321\\200\\320\\274\\320\\260 \\320\\276\\321\\202\\320\\263\\321\\200\\321\\203\\320\\267\\320\\272\\320\\270 \\321\\201 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265\\320\\274 \\320\\272\\320\\260\\320\\272 \\321\\203 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260\\012                  var firmDict = getDictionary("\\321\\204\\320\\270\\321\\200\\320\\274\\321\\213");\\012                  // \\320\\241\\320\\275\\320\\260\\321\\207\\320\\260\\320\\273\\320\\260 \\320\\277\\320\\276\\320\\270\\321\\211\\320\\265\\320\\274 \\321\\203\\320\\266\\320\\265 \\321\\201\\321\\203\\321\\211\\320\\265\\321\\201\\321\\202\\320\\262\\321\\203\\321\\216\\321\\211\\321\\203\\321\\216 \\321\\204\\320\\270\\321\\200\\320\\274\\321\\203 \\321\\201 \\321\\202\\320\\260\\320\\272\\320\\270\\320\\274 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265\\320\\274\\012                  firmDict.query("\\320\\270\\320\\274\\321\\217 = '" + agentName + "'");\\012                  firmId = firmDict.getId(0);\\012                  if (firmId == 0)\\011\\011\\012                  {\\012                    // \\320\\244\\320\\270\\321\\200\\320\\274\\321\\213 \\321\\201 \\321\\202\\320\\260\\320\\272\\320\\270\\320\\274 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265\\320\\274 \\320\\275\\320\\265\\321\\202, \\320\\277\\320\\276\\321\\215\\321\\202\\320\\276\\320\\274\\321\\203 \\321\\201\\320\\276\\320\\267\\320\\264\\320\\260\\320\\265\\320\\274 \\320\\275\\320\\276\\320\\262\\321\\203\\321\\216 \\320\\267\\320\\260\\320\\277\\320\\270\\321\\201\\321\\214\\012                    db.exec("INSERT INTO \\321\\204\\320\\270\\321\\200\\320\\274\\321\\213 (\\320\\270\\320\\274\\321\\217) VALUES ('" + agentName + "')");\\012                    firmDict.query("\\320\\270\\320\\274\\321\\217 = '" + agentName + "'");\\012                    firmtId = firmtDict.getId(0);\\012                  }\\012                  // \\320\\241\\320\\276\\321\\205\\321\\200\\320\\260\\320\\275\\321\\217\\320\\265\\320\\274 \\321\\201\\321\\201\\321\\213\\320\\273\\320\\272\\321\\203 \\320\\275\\320\\260 \\321\\204\\320\\270\\321\\200\\320\\274\\321\\203 \\320\\276\\321\\202\\320\\263\\321\\200\\321\\203\\320\\267\\320\\272\\320\\270 \\320\\262 \\320\\267\\320\\260\\320\\277\\320\\270\\321\\201\\320\\270 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\320\\260\\012                  db.exec("UPDATE \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213 SET \\320\\272\\320\\276\\320\\264_\\321\\204\\320\\270\\321\\200\\320\\274\\321\\213 = " + firmId + " WHERE \\320\\272\\320\\276\\320\\264 = " + agentId);\\012                }\\012            }\\012            // \\320\\237\\320\\265\\321\\200\\320\\265\\320\\261\\320\\265\\321\\200\\320\\265\\320\\274 \\320\\262\\321\\201\\320\\265 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\320\\270 \\320\\262 \\320\\275\\320\\260\\320\\272\\320\\273\\320\\260\\320\\264\\320\\275\\320\\276\\320\\271\\012            var tovar = doc.elementsByTagName("\\320\\242\\320\\276\\320\\262\\320\\260\\321\\200");\\012            for (var i = 0; i < tovar.count(); i++)\\012\\011    {\\012\\011      var tovarId = tovar.at(i).firstChildElement("\\320\\230\\320\\264").text();\\012\\011      var tovarName = tovar.at(i).firstChildElement("\\320\\235\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265").text();\\012\\011      var tovarArticul = tovar.at(i).firstChildElement("\\320\\220\\321\\200\\321\\202\\320\\270\\320\\272\\321\\203\\320\\273").text();\\012\\011      var tovarUnit = tovar.at(i).firstChildElement("\\320\\225\\320\\264\\320\\270\\320\\275\\320\\270\\321\\206\\320\\260").text();\\012\\011      var tovarQuan = tovar.at(i).firstChildElement("\\320\\232\\320\\276\\320\\273\\320\\270\\321\\207\\320\\265\\321\\201\\321\\202\\320\\262\\320\\276").text();\\012\\011      var tovarPrice = tovar.at(i).firstChildElement("\\320\\246\\320\\265\\320\\275\\320\\260\\320\\227\\320\\260\\320\\225\\320\\264\\320\\270\\320\\275\\320\\270\\321\\206\\321\\203").text();\\012\\011      var tovarSum = tovar.at(i).firstChildElement("\\320\\241\\321\\203\\320\\274\\320\\274\\320\\260").text();\\012\\011      WriteTovar(firmId, tovarId, tovarName, tovarArticul, tovarUnit, tovarQuan, tovarPrice, tovarSum)\\012\\011    }\\012\\011    document.query();\\012\\011    document.calcItog();\\012          }\\012          else\\012            QMessageBox.warning(form, "\\320\\224\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 CommerceML", "\\320\\235\\320\\265 \\320\\275\\320\\260\\320\\271\\320\\264\\320\\265\\320\\275 \\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202 - \\320\\277\\321\\200\\320\\276\\320\\264\\320\\260\\320\\262\\320\\265\\321\\206");\\012        }\\012        else\\012          QMessageBox.warning(form, "\\320\\224\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 CommerceML", "\\320\\255\\321\\202\\320\\276 \\320\\275\\320\\265 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 \\320\\275\\320\\260 \\320\\276\\321\\202\\320\\263\\321\\200\\321\\203\\320\\267\\320\\272\\321\\203 \\321\\202\\320\\276\\320\\262\\320\\260\\321\\200\\320\\260");\\012      }\\012      else\\012        QMessageBox.warning(form, "\\320\\224\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 CommerceML", "\\320\\235\\320\\265 \\321\\203\\320\\264\\320\\260\\320\\273\\320\\276\\321\\201\\321\\214 \\321\\200\\320\\260\\320\\267\\320\\276\\320\\261\\321\\200\\320\\260\\321\\202\\321\\214 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202");\\012      file.close();\\012    }\\012    else\\012      QMessageBox.warning(form, "\\320\\224\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202 CommerceML", QString("\\320\\235\\320\\265 \\320\\274\\320\\276\\320\\263\\321\\203 \\320\\276\\321\\202\\320\\272\\321\\200\\321\\213\\321\\202\\321\\214 \\321\\204\\320\\260\\320\\271\\320\\273 %1:\\\\n%2.") .arg(fileName) .arg(file.errorString()));\\012  }\\012}\\012\\012\\012function WriteTovar(firmId, id, name, articul, unit, quan, price, sum)\\012// \\320\\227\\320\\260\\320\\277\\320\\270\\321\\210\\320\\265\\320\\274 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\321\\216 \\320\\262 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202, \\320\\277\\321\\200\\320\\265\\320\\264\\320\\262\\320\\260\\321\\200\\320\\270\\321\\202\\320\\265\\320\\273\\321\\214\\320\\275\\320\\276 \\320\\262\\321\\213\\321\\217\\321\\201\\320\\275\\320\\270\\320\\262 \\321\\201\\320\\276\\320\\276\\321\\202\\320\\262\\320\\265\\321\\202\\321\\201\\321\\202\\320\\262\\320\\270\\320\\265 \\320\\262 \\321\\202\\320\\260\\320\\261\\320\\273\\320\\270\\321\\206\\320\\265 \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\276\\320\\262\\012{\\012  var nomId = 0;\\012  var nomDict = getDictionary("\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260");\\012  // \\320\\237\\320\\276\\320\\270\\321\\211\\320\\265\\320\\274 \\320\\262 \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265 \\320\\277\\320\\276\\321\\201\\321\\202\\320\\260\\320\\262\\321\\211\\320\\270\\320\\272\\320\\260 \\320\\267\\320\\260\\320\\277\\320\\270\\321\\201\\321\\214 \\320\\276 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\320\\270, \\320\\272\\320\\276\\321\\202\\320\\276\\321\\200\\320\\260\\321\\217 \\320\\277\\320\\276\\321\\201\\321\\202\\321\\203\\320\\277\\320\\270\\320\\273\\320\\260\\012  var priceRec = db.execQuery("SELECT \\320\\272\\320\\276\\320\\264, \\320\\270\\320\\274\\321\\217, \\321\\206\\320\\265\\320\\275\\320\\260, \\320\\272\\320\\276\\320\\264_\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260, \\320\\272\\320\\276\\320\\273_\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260, \\320\\272\\320\\276\\320\\273_\\320\\277\\321\\200\\320\\260\\320\\271\\321\\201 FROM \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\321\\213 WHERE \\320\\272\\320\\276\\320\\264_\\321\\204\\320\\270\\321\\200\\320\\274\\321\\213 = " + firmId + " AND \\320\\272\\320\\276\\320\\264\\320\\262\\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265 = '" + id + "'");\\012  if (priceRec.size() != 0)\\011\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\320\\262 \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265 \\320\\265\\321\\201\\321\\202\\321\\214 \\320\\267\\320\\260\\320\\277\\320\\270\\321\\201\\320\\270 \\320\\276 \\321\\202\\320\\260\\320\\272\\320\\276\\320\\271 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\320\\270\\012  {\\012    if (priceRec.first())\\011\\011\\011\\011\\011\\012       nomId = priceRec.record().value("\\320\\272\\320\\276\\320\\264_\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260");\\011// \\320\\237\\320\\276\\321\\201\\320\\274\\320\\276\\321\\202\\321\\200\\320\\270\\320\\274, \\320\\272\\320\\260\\320\\272\\320\\276\\320\\271 \\320\\275\\320\\260\\321\\210\\320\\265\\320\\271 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\320\\270 \\321\\201\\320\\276\\320\\276\\321\\202\\320\\262\\320\\265\\321\\202\\321\\201\\321\\202\\320\\262\\321\\203\\320\\265\\321\\202 \\321\\215\\321\\202\\320\\276 \\320\\275\\320\\260\\320\\267\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265 \\320\\262 \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265\\012  }\\012  if (nomId == 0)\\011\\011\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\320\\274\\321\\213 \\320\\275\\320\\265 \\320\\267\\320\\275\\320\\260\\320\\265\\320\\274, \\320\\272\\320\\260\\320\\272\\320\\276\\320\\271 \\320\\275\\320\\260\\321\\210\\320\\265\\320\\271 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\320\\270 \\321\\201\\320\\276\\320\\276\\321\\202\\321\\201\\321\\202\\320\\262\\320\\265\\321\\202\\321\\201\\321\\202\\320\\262\\321\\203\\320\\265\\321\\202 \\321\\215\\321\\202\\320\\276 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265\\012  {\\011\\011\\011\\011\\011// \\321\\202\\320\\276\\320\\263\\320\\264\\320\\260 \\321\\201\\320\\277\\321\\200\\320\\276\\321\\201\\320\\270\\320\\274 \\321\\215\\321\\202\\320\\276 \\321\\203 \\320\\277\\320\\276\\320\\273\\321\\214\\320\\267\\320\\276\\320\\262\\320\\260\\321\\202\\320\\265\\320\\273\\321\\217\\012    var formTitle = nomDict.getFormTitle();\\012    nomDict.setFormTitle("\\320\\243\\320\\272\\320\\260\\320\\266\\320\\270\\321\\202\\320\\265 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\321\\216 \\320\\260\\320\\275\\320\\260\\320\\273\\320\\276\\320\\263\\320\\270\\321\\207\\320\\275\\321\\203\\321\\216: " + name + " (" + articul + ")");\\011\\011// \\320\\243\\321\\201\\321\\202\\320\\260\\320\\275\\320\\276\\320\\262\\320\\270\\320\\274 \\320\\262 \\320\\267\\320\\260\\320\\263\\320\\276\\320\\273\\320\\276\\320\\262\\320\\272\\320\\265 \\320\\276\\320\\272\\320\\275\\320\\260 \\320\\277\\320\\276\\320\\264\\321\\201\\320\\272\\320\\260\\320\\267\\320\\272\\321\\203 \\320\\264\\320\\273\\321\\217 \\320\\277\\320\\276\\320\\273\\321\\214\\320\\267\\320\\276\\320\\262\\320\\260\\321\\202\\320\\265\\320\\273\\321\\217\\012    nomDict.exec()\\012    nomDict.setFormTitle(formTitle);\\012    if (nomDict.isFormSelected())\\011// \\320\\265\\321\\201\\320\\273\\320\\270 \\320\\277\\320\\276\\320\\273\\321\\214\\320\\267\\320\\276\\320\\262\\320\\260\\321\\202\\320\\265\\320\\273\\321\\214 \\320\\275\\320\\260\\320\\266\\320\\260\\320\\273 \\320\\272\\320\\275\\320\\276\\320\\277\\320\\272\\321\\203 Ok\\012    {\\012      nomId = nomDict.getId();\\012    }\\012  }\\012  else\\012    nomDict.setId(nomId);\\011\\011\\012  if (nomId != 0)\\011\\011\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\320\\277\\320\\276\\320\\273\\321\\214\\320\\267\\320\\276\\320\\262\\320\\260\\321\\202\\320\\265\\320\\273\\321\\214 \\320\\262\\321\\213\\320\\261\\321\\200\\320\\260\\320\\273 \\320\\272\\320\\260\\320\\272\\321\\203\\321\\216-\\320\\273\\320\\270\\320\\261\\320\\276 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\321\\216 \\320\\262 \\321\\201\\320\\262\\320\\276\\320\\265\\320\\271 \\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\265 \\320\\270\\320\\273\\320\\270 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\321\\217 \\320\\261\\321\\213\\320\\273\\320\\260 \\320\\262\\321\\213\\320\\261\\321\\200\\320\\260\\320\\275\\320\\260 \\320\\260\\320\\262\\321\\202\\320\\276\\320\\274\\320\\260\\321\\202\\320\\270\\321\\207\\320\\265\\321\\201\\320\\272\\320\\270 \\320\\275\\320\\260 \\320\\276\\321\\201\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\270 \\321\\201\\320\\276\\320\\276\\321\\202\\320\\262\\320\\265\\321\\202\\321\\201\\321\\202\\320\\262\\320\\270\\321\\217\\012  {\\012    if (priceRec.size() == 0)\\011\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\320\\262 \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265 \\321\\200\\320\\260\\320\\275\\321\\214\\321\\210\\320\\265 \\321\\202\\320\\260\\320\\272\\320\\276\\320\\271 \\320\\277\\320\\276\\320\\267\\320\\270\\321\\206\\320\\270\\320\\270 \\320\\275\\320\\265 \\320\\261\\321\\213\\320\\273\\320\\276\\012      db.exec("INSERT INTO \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\321\\213 (\\320\\272\\320\\276\\320\\264\\320\\262\\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265, \\320\\270\\320\\274\\321\\217, \\320\\260\\321\\200\\321\\202\\320\\270\\320\\272\\321\\203\\320\\273, \\320\\265\\320\\264\\320\\270\\320\\267\\320\\274, \\321\\206\\320\\265\\320\\275\\320\\260, \\320\\275\\320\\260\\320\\273\\320\\270\\321\\207\\320\\270\\320\\265, \\320\\272\\320\\276\\320\\264_\\321\\204\\320\\270\\321\\200\\320\\274\\321\\213, \\320\\272\\320\\276\\320\\264_\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260) VALUES ('" + id + "','" + name + "','" + articul + "','" + unit + "'," + price + ", '+'," + firmId + "," + nomId + ")");\\012    else\\012      db.exec("UPDATE \\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\321\\213 SET \\320\\272\\320\\276\\320\\264_\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260=" + nomId + ",\\320\\270\\320\\274\\321\\217='" + name + "',\\320\\260\\321\\200\\321\\202\\320\\270\\320\\272\\321\\203\\320\\273='" + articul + "',\\320\\265\\320\\264\\320\\270\\320\\267\\320\\274='" + unit + "',\\321\\206\\320\\265\\320\\275\\320\\260=" + price + ",\\320\\275\\320\\260\\320\\273\\320\\270\\321\\207\\320\\270\\320\\265='+' WHERE \\320\\272\\320\\276\\320\\264_\\321\\204\\320\\270\\321\\200\\320\\274\\321\\213=" + firmId + " AND \\320\\272\\320\\276\\320\\264\\320\\262\\320\\277\\321\\200\\320\\260\\320\\271\\321\\201\\320\\265='" + id + "'");\\012    // \\320\\227\\320\\260\\320\\277\\320\\270\\321\\210\\320\\265\\320\\274 \\320\\272\\320\\276\\320\\273-\\320\\262\\320\\276, \\321\\206\\320\\265\\320\\275\\321\\203, \\321\\201\\321\\203\\320\\274\\320\\274\\321\\203 \\320\\262 \\320\\277\\321\\200\\320\\276\\320\\262\\320\\276\\320\\264\\320\\272\\321\\203\\012    document.setPrvValue("p1__\\320\\272\\320\\276\\320\\273", quan);\\012    document.setPrvValue("p1__\\321\\206\\320\\265\\320\\275\\320\\260", price);\\012    document.setPrvValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260", sum);\\012    // \\320\\241\\320\\276\\321\\205\\321\\200\\320\\260\\320\\275\\320\\270\\320\\274 \\320\\277\\321\\200\\320\\276\\320\\262\\320\\276\\320\\264\\320\\272\\321\\203 \\320\\275\\320\\260 \\321\\201\\320\\265\\321\\200\\320\\262\\320\\265\\321\\200\\320\\265\\012    document.appendDocString();\\012  }\\012}\\012\\012\\012function EventParametersChanged()\\012 {\\012// \\320\\227\\320\\260\\320\\277\\320\\270\\321\\210\\320\\265\\320\\274 \\320\\275\\320\\260\\320\\270\\320\\274\\320\\265\\320\\275\\320\\276\\320\\262\\320\\260\\320\\275\\320\\270\\320\\265 \\321\\204\\320\\270\\321\\200\\320\\274\\321\\213-\\320\\277\\320\\276\\321\\201\\321\\202\\320\\260\\320\\262\\321\\211\\320\\270\\320\\272\\320\\260 \\320\\262 \\320\\272\\320\\276\\320\\274\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\321\\200\\320\\270\\320\\270 \\320\\272 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\321\\203\\012\\011documents.setValue("\\320\\232\\320\\276\\320\\274\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\321\\200\\320\\270\\320\\271", getDictionary("vw_\\320\\272\\320\\276\\320\\275\\321\\202\\321\\200\\320\\260\\320\\263\\320\\265\\320\\275\\321\\202\\321\\213").getValue("\\320\\270\\320\\274\\321\\217"));\\012}\\012\\012\\012\\012//*********************************************************************************************************/\\012// \\320\\255\\321\\202\\320\\260 \\321\\207\\320\\260\\321\\201\\321\\202\\321\\214 \\321\\201\\320\\272\\321\\200\\320\\270\\320\\277\\321\\202\\320\\260 \\320\\276\\321\\202\\320\\275\\320\\276\\321\\201\\320\\270\\321\\202\\321\\201\\321\\217 \\320\\272 \\320\\262\\321\\213\\321\\207\\320\\270\\321\\201\\320\\273\\320\\265\\320\\275\\320\\270\\321\\217\\320\\274 \\321\\202\\320\\260\\320\\261\\320\\273\\320\\270\\321\\207\\320\\275\\320\\276\\320\\271 \\321\\207\\320\\260\\321\\201\\321\\202\\320\\270 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012\\012\\320\\272\\320\\276\\320\\273 = getValue("p1__\\320\\272\\320\\276\\320\\273");\\012\\321\\206\\320\\265\\320\\275\\320\\260 = getValue("p1__\\321\\206\\320\\265\\320\\275\\320\\260");\\012\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260");\\012\\012if (getCurrentFieldName() == "p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260" && \\320\\272\\320\\276\\320\\273 != 0) \\012{\\012\\011\\321\\206\\320\\265\\320\\275\\320\\260 = \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 / \\320\\272\\320\\276\\320\\273;\\012}\\012else \\012{\\012\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = \\320\\272\\320\\276\\320\\273 * \\321\\206\\320\\265\\320\\275\\320\\260;\\012}\\012\\012setValue("p1__\\320\\272\\320\\276\\320\\273", \\320\\272\\320\\276\\320\\273);\\012setValue("p1__\\321\\206\\320\\265\\320\\275\\320\\260", \\321\\206\\320\\265\\320\\275\\320\\260);\\012setValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260", \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260);\\012\\012\\012
-5	./scripts/формулы3.qs	0	var \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 = 0;\\011// \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202 \\321\\201\\320\\264\\320\\265\\320\\273\\320\\260\\320\\275\\320\\275\\320\\276\\320\\271 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270\\012var \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 = 0;\\011// \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 \\321\\201\\320\\264\\320\\265\\320\\273\\320\\260\\320\\275\\320\\275\\320\\276\\320\\271 \\320\\262\\321\\200\\321\\203\\321\\207\\320\\275\\321\\203\\321\\216 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270\\012var \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = 0;\\011// \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 \\320\\277\\321\\200\\320\\276\\320\\264\\320\\260\\320\\266\\320\\270 \\320\\261\\320\\265\\320\\267 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\276\\320\\272\\012var \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260 = 0;\\011// \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260\\012\\012\\012function EventInitForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\321\\201\\321\\200\\320\\260\\320\\267\\321\\203 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\321\\201\\320\\276\\320\\267\\320\\264\\320\\260\\320\\275\\320\\270\\321\\217 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012\\011// \\320\\237\\321\\200\\320\\270 \\320\\270\\320\\267\\320\\274\\320\\265\\320\\275\\320\\265\\320\\275\\320\\270\\320\\270 \\321\\201\\320\\277\\320\\270\\320\\275\\320\\261\\320\\276\\320\\272\\321\\201\\320\\276\\320\\262 \\321\\201 \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\320\\276\\320\\274 \\320\\270\\320\\273\\320\\270 \\321\\201\\321\\203\\320\\274\\320\\274\\320\\276\\320\\271 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 \\320\\267\\320\\260\\320\\277\\321\\203\\321\\201\\321\\202\\320\\270\\320\\274 \\320\\277\\320\\265\\321\\200\\320\\265\\321\\201\\321\\207\\320\\265\\321\\202 \\320\\270\\321\\202\\320\\276\\320\\263\\320\\276\\320\\262\\012\\011form.spinBox.editingFinished.connect(EventAfterCalculate);\\011\\012\\011form.doubleSpinBox.editingFinished.connect(EventAfterCalculate);\\011\\012}\\012\\012\\012function EventBeforeShowForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\265\\321\\200\\320\\265\\320\\264 \\320\\276\\321\\202\\320\\272\\321\\200\\321\\213\\321\\202\\320\\270\\320\\265\\320\\274 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012\\011// \\320\\222\\320\\276\\321\\201\\321\\201\\321\\202\\320\\260\\320\\275\\320\\276\\320\\262\\320\\270\\320\\274 \\320\\277\\320\\265\\321\\200\\320\\265\\320\\274\\320\\265\\320\\275\\320\\275\\321\\213\\320\\265 \\320\\270\\320\\267 \\320\\221\\320\\224\\012\\011\\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 = restoreVariable("\\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270");\\012\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 = restoreVariable("\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270");\\012\\011form.spinBox.value = \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270;\\012\\011form.doubleSpinBox.value = \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270;\\012\\011CalcItog();\\012}\\012\\012\\012function EventAfterHideForm()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\320\\267\\320\\260\\320\\272\\321\\200\\321\\213\\321\\202\\320\\270\\321\\217 \\321\\204\\320\\276\\321\\200\\320\\274\\321\\213 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012\\011// \\320\\241\\320\\276\\321\\205\\321\\200\\320\\260\\320\\275\\320\\270\\320\\274 \\320\\277\\320\\265\\321\\200\\320\\265\\320\\274\\320\\265\\320\\275\\320\\275\\321\\213\\320\\265 \\320\\262 \\320\\221\\320\\224\\012\\011saveVariable("\\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270", \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270);\\012\\011saveVariable("\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270", \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270);\\012}\\012\\012      \\012function EventAfterCalculate()\\012{// \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\320\\262\\321\\213\\321\\207\\320\\270\\321\\201\\320\\273\\320\\265\\320\\275\\320\\270\\321\\217 \\320\\262 \\321\\217\\321\\207\\320\\265\\320\\271\\320\\272\\320\\265\\012\\011\\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 = form.spinBox.value;\\011\\011// \\320\\222\\320\\276\\320\\267\\320\\274\\320\\265\\320\\274 \\320\\267\\320\\275\\320\\260\\321\\207\\320\\265\\320\\275\\320\\270\\320\\265 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270, \\321\\203\\321\\201\\321\\202\\320\\260\\320\\275\\320\\276\\320\\262\\320\\273\\320\\265\\320\\275\\320\\275\\320\\276\\320\\265 \\320\\277\\320\\276\\320\\273\\321\\214\\320\\267\\320\\276\\320\\262\\320\\260\\321\\202\\320\\265\\320\\273\\320\\265\\320\\274\\012\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 = form.doubleSpinBox.value;\\011// \\320\\230\\320\\273\\320\\270 \\321\\201\\321\\203\\320\\274\\320\\274\\320\\276\\320\\262\\320\\276\\320\\265 \\320\\267\\320\\275\\320\\260\\321\\207\\320\\265\\320\\275\\320\\270\\320\\265 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270\\012\\011CalcItog();\\012}\\012\\012\\012function CalcItog()\\012{\\012\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getSumValue("p2__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260");\\011\\011// \\320\\237\\321\\200\\320\\276\\321\\201\\321\\203\\320\\274\\320\\274\\320\\270\\321\\200\\321\\203\\320\\265\\320\\274 \\320\\262\\321\\202\\320\\276\\321\\200\\321\\203\\321\\216 \\320\\277\\321\\200\\320\\276\\320\\262\\320\\276\\320\\264\\320\\272\\321\\203 \\320\\262 \\320\\276\\320\\277\\320\\265\\321\\200\\320\\260\\321\\206\\320\\270\\320\\270 \\320\\264\\320\\273\\321\\217 \\320\\262\\321\\201\\320\\265\\320\\263\\320\\276 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\320\\260\\012\\011if (\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 == 0)\\011\\011\\011// \\320\\225\\321\\201\\320\\273\\320\\270 \\321\\201\\321\\203\\320\\274\\320\\274\\320\\276\\320\\262\\320\\276\\320\\265 \\320\\267\\320\\275\\320\\260\\321\\207\\320\\265\\320\\275\\320\\270\\320\\265 \\320\\275\\320\\265 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 \\321\\203\\321\\201\\321\\202\\320\\260\\320\\275\\320\\276\\320\\262\\320\\273\\320\\265\\320\\275\\320\\276\\012\\011{\\011\\011\\011\\011// \\320\\242\\320\\276\\320\\263\\320\\264\\320\\260 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\321\\203 \\321\\201\\321\\207\\320\\270\\321\\202\\320\\260\\320\\265\\320\\274 \\320\\277\\320\\276 \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\203\\012\\011\\011\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260 = \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 *  \\320\\277\\321\\200\\320\\276\\321\\206\\320\\265\\320\\275\\321\\202\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 / 100;\\012\\011}\\012\\011else\\012\\011{\\012\\011\\011\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260 = \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270;\\012\\011}\\012\\011setValue("p3__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260",  \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260);\\011\\011// \\320\\227\\320\\260\\320\\277\\320\\270\\321\\210\\320\\265\\320\\274 \\320\\267\\320\\275\\320\\260\\321\\207\\320\\265\\320\\275\\320\\270\\320\\265 \\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\270 \\320\\262 \\320\\221\\320\\224 \\320\\262 \\321\\202\\321\\200\\320\\265\\321\\202\\321\\214\\320\\265\\320\\271 (\\321\\201\\320\\262\\320\\276\\320\\261\\320\\276\\320\\264\\320\\275\\320\\276\\320\\271) \\320\\277\\321\\200\\320\\276\\320\\262\\320\\276\\320\\264\\320\\272\\320\\265\\012\\011form.skidkaNumeric.setValue(\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260);\\012\\011form.vsegoNumeric.setValue(\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260);\\011\\011\\012\\011form.itogNumeric.setValue(\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260-\\321\\201\\320\\272\\320\\270\\320\\264\\320\\272\\320\\260);\\012}\\012\\012\\012function EventAfterAddString()\\012{ // \\320\\241\\320\\276\\320\\261\\321\\213\\321\\202\\320\\270\\320\\265 \\320\\277\\321\\200\\320\\276\\320\\270\\321\\201\\321\\205\\320\\276\\320\\264\\320\\270\\321\\202 \\320\\277\\320\\276\\321\\201\\320\\273\\320\\265 \\320\\264\\320\\276\\320\\261\\320\\260\\320\\262\\320\\273\\320\\265\\320\\275\\320\\270\\321\\217 \\321\\201\\321\\202\\321\\200\\320\\276\\320\\272\\320\\270 \\320\\262 \\320\\264\\320\\276\\320\\272\\321\\203\\320\\274\\320\\265\\320\\275\\321\\202\\012\\011\\321\\206\\320\\265\\320\\275\\320\\260 = getValue("vw_\\320\\275\\320\\276\\320\\274\\320\\265\\320\\275\\320\\272\\320\\273\\320\\260\\321\\202\\321\\203\\321\\200\\320\\260__\\321\\206\\320\\265\\320\\275\\320\\260_\\321\\200\\320\\276\\320\\267\\320\\275");\\012\\011setValue("p2__\\321\\206\\320\\265\\320\\275\\320\\260", \\321\\206\\320\\265\\320\\275\\320\\260);\\012}\\012\\012\\012//========================================================================================\\012// \\320\\241\\321\\207\\320\\270\\321\\202\\320\\260\\320\\265\\320\\274 \\320\\267\\320\\275\\320\\260\\321\\207\\320\\265\\320\\275\\320\\270\\321\\217 \\320\\262 \\321\\202\\320\\260\\320\\261\\320\\273\\320\\270\\321\\207\\320\\275\\320\\276\\320\\271 \\321\\207\\320\\260\\321\\201\\321\\202\\320\\270\\012if (getCurrentFieldName() == "p1__\\320\\272\\320\\276\\320\\273")\\011\\011// \\320\\242\\320\\276\\320\\273\\321\\214\\320\\272\\320\\276 \\320\\277\\321\\200\\320\\270 \\320\\270\\320\\267\\320\\274\\320\\265\\320\\275\\320\\265\\320\\275\\320\\270\\320\\270 \\320\\272\\320\\276\\320\\273\\320\\270\\321\\207\\320\\265\\321\\201\\321\\202\\320\\262\\320\\260 \\012{\\012\\011\\320\\272\\320\\276\\320\\273 = getOldValue() + getValue("\\320\\272\\321\\200\\321\\201\\320\\260\\320\\273\\321\\214\\320\\264\\320\\2761__\\320\\272\\320\\276\\320\\275\\320\\272\\320\\276\\320\\273");\\011\\011// \\320\\232\\320\\276\\320\\273\\320\\270\\321\\207\\320\\265\\321\\201\\321\\202\\320\\262\\320\\276 \\320\\262\\321\\201\\320\\265\\320\\263\\320\\276\\012\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260") + getValue("\\320\\272\\321\\200\\321\\201\\320\\260\\320\\273\\321\\214\\320\\264\\320\\2761__\\320\\272\\320\\276\\320\\275\\321\\201\\320\\260\\320\\273\\321\\214\\320\\264\\320\\276");\\011// \\320\\241\\321\\203\\320\\274\\320\\274\\320\\260 \\320\\262\\321\\201\\320\\265\\320\\263\\320\\276\\012\\011if (\\320\\272\\320\\276\\320\\273 != 0)\\012\\011{\\012\\011\\011// \\320\\237\\320\\276\\321\\201\\321\\207\\320\\270\\321\\202\\320\\260\\320\\265\\320\\274 \\320\\277\\320\\265\\321\\200\\320\\262\\321\\203\\321\\216 \\320\\277\\321\\200\\320\\276\\320\\262\\320\\276\\320\\264\\320\\272\\321\\203 (\\320\\277\\320\\276 \\320\\267\\320\\260\\320\\272\\321\\203\\320\\277\\320\\276\\321\\207\\320\\275\\320\\276\\320\\271 \\321\\206\\320\\265\\320\\275\\320\\265)\\012\\011\\011\\321\\206\\320\\265\\320\\275\\320\\260 = \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 / \\320\\272\\320\\276\\320\\273;\\012\\011\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getValue("p1__\\320\\272\\320\\276\\320\\273") * \\321\\206\\320\\265\\320\\275\\320\\260;\\012\\011\\011setValue("p1__\\321\\206\\320\\265\\320\\275\\320\\260", \\321\\206\\320\\265\\320\\275\\320\\260);\\012\\011\\011setValue("p1__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260", \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260);\\012\\011\\011// \\320\\237\\320\\276\\321\\201\\321\\207\\320\\270\\321\\202\\320\\260\\320\\265\\320\\274 \\320\\262\\321\\202\\320\\276\\321\\200\\321\\203\\321\\216 \\320\\277\\321\\200\\320\\276\\320\\262\\320\\276\\320\\264\\320\\272\\321\\203 (\\320\\277\\320\\276 \\321\\200\\320\\276\\320\\267\\320\\275\\320\\270\\321\\207\\320\\275\\320\\276\\320\\271 \\321\\206\\320\\265\\320\\275\\320\\265)\\012\\011\\011\\321\\206\\320\\265\\320\\275\\320\\260 = getValue("p2__\\321\\206\\320\\265\\320\\275\\320\\260");\\012\\011\\011\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260 = getValue("p1__\\320\\272\\320\\276\\320\\273") * \\321\\206\\320\\265\\320\\275\\320\\260;\\012\\011\\011setValue("p2__\\321\\201\\321\\203\\320\\274\\320\\274\\320\\260", \\321\\201\\321\\203\\320\\274\\320\\274\\320\\260);\\012\\011}\\012}\\012
+7	./scripts/формулы5.qs	0	\\x66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a207b0a2f2f20d097d0b0d0bfd0b8d188d0b5d0bc20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b520d184d0b8d180d0bcd18b2dd0bfd0bed181d182d0b0d0b2d189d0b8d0bad0b020d0b220d0bad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b820d0ba20d0b4d0bed0bad183d0bcd0b5d0bdd182d1830a09d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b5203d2067657444696374696f6e617279282276775fd0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b22292e67657456616c75652822d0b8d0bcd18f22293b0a09646f63756d656e74732e73657456616c75652822d09ad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b9222c20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b5293b0a7d0a0a
+6	./scripts/формулы4.qs	0	\\x66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a
+4	./scripts/формулы2.qs	0	\\x6966202867657443757272656e744669656c644e616d652829203d3d202270315f5fd0bad0bed0bb2229200a7b0a09d0bad0bed0bb203d206765744f6c6456616c75652829202b2067657456616c75652822d0bad180d181d0b0d0bbd18cd0b4d0be315f5fd0bad0bed0bdd0bad0bed0bb22293b092f2f20d09ad0bed0bbd0b8d187d0b5d181d182d0b2d0be20d0b2d181d0b5d0b3d0be0a09d181d183d0bcd0bcd0b0203d2067657456616c7565282270315f5fd181d183d0bcd0bcd0b02229202b2067657456616c75652822d0bad180d181d0b0d0bbd18cd0b4d0be315f5fd0bad0bed0bdd181d0b0d0bbd18cd0b4d0be22293b092f2f20d0a1d183d0bcd0bcd0b020d0b2d181d0b5d0b3d0be0a0969662028d0bad0bed0bb20213d2030290a097b0a0909d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a0909d181d183d0bcd0bcd0b0203d2067657456616c7565282270315f5fd0bad0bed0bb2229202a20d186d0b5d0bdd0b03b0a090973657456616c7565282270315f5fd186d0b5d0bdd0b0222c20d186d0b5d0bdd0b0293b0a090973657456616c7565282270315f5fd181d183d0bcd0bcd0b0222c20d181d183d0bcd0bcd0b0293b0a097d0a7d0a
+5	./scripts/формулы3.qs	0	\\x76617220d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b8203d20303b092f2f20d0bfd180d0bed186d0b5d0bdd18220d181d0b4d0b5d0bbd0b0d0bdd0bdd0bed0b920d181d0bad0b8d0b4d0bad0b80a76617220d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b8203d20303b092f2f20d181d183d0bcd0bcd0b020d181d0b4d0b5d0bbd0b0d0bdd0bdd0bed0b920d0b2d180d183d187d0bdd183d18e20d181d0bad0b8d0b4d0bad0b80a76617220d181d183d0bcd0bcd0b0203d20303b092f2f20d181d183d0bcd0bcd0b020d0bfd180d0bed0b4d0b0d0b6d0b820d0b1d0b5d0b720d181d0bad0b8d0b4d0bed0ba0a76617220d181d0bad0b8d0b4d0bad0b0203d20303b092f2f20d181d0bad0b8d0b4d0bad0b00a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a092f2f20d09fd180d0b820d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d0b820d181d0bfd0b8d0bdd0b1d0bed0bad181d0bed0b220d18120d0bfd180d0bed186d0b5d0bdd182d0bed0bc20d0b8d0bbd0b820d181d183d0bcd0bcd0bed0b920d181d0bad0b8d0b4d0bad0b820d0b7d0b0d0bfd183d181d182d0b8d0bc20d0bfd0b5d180d0b5d181d187d0b5d18220d0b8d182d0bed0b3d0bed0b20a09666f726d2e7370696e426f782e65646974696e6746696e69736865642e636f6e6e656374284576656e74416674657243616c63756c617465293b090a09666f726d2e646f75626c655370696e426f782e65646974696e6746696e69736865642e636f6e6e656374284576656e74416674657243616c63756c617465293b090a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a092f2f20d092d0bed181d181d182d0b0d0bdd0bed0b2d0b8d0bc20d0bfd0b5d180d0b5d0bcd0b5d0bdd0bdd18bd0b520d0b8d0b720d091d0940a09d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b8203d20726573746f72655661726961626c652822d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b822293b0a09d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b8203d20726573746f72655661726961626c652822d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b822293b0a09666f726d2e7370696e426f782e76616c7565203d20d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b83b0a09666f726d2e646f75626c655370696e426f782e76616c7565203d20d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b83b0a0943616c6349746f6728293b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a092f2f20d0a1d0bed185d180d0b0d0bdd0b8d0bc20d0bfd0b5d180d0b5d0bcd0b5d0bdd0bdd18bd0b520d0b220d091d0940a09736176655661726961626c652822d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b8222c20d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b8293b0a09736176655661726961626c652822d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b8222c20d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b8293b0a7d0a0a2020202020200a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b2f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a09d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b8203d20666f726d2e7370696e426f782e76616c75653b09092f2f20d092d0bed0b7d0bcd0b5d0bc20d0b7d0bdd0b0d187d0b5d0bdd0b8d0b520d181d0bad0b8d0b4d0bad0b82c20d183d181d182d0b0d0bdd0bed0b2d0bbd0b5d0bdd0bdd0bed0b520d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd0b5d0bc0a09d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b8203d20666f726d2e646f75626c655370696e426f782e76616c75653b092f2f20d098d0bbd0b820d181d183d0bcd0bcd0bed0b2d0bed0b520d0b7d0bdd0b0d187d0b5d0bdd0b8d0b520d181d0bad0b8d0b4d0bad0b80a0943616c6349746f6728293b0a7d0a0a0a66756e6374696f6e2043616c6349746f6728290a7b0a09d181d183d0bcd0bcd0b0203d2067657453756d56616c7565282270325f5fd181d183d0bcd0bcd0b022293b09092f2f20d09fd180d0bed181d183d0bcd0bcd0b8d180d183d0b5d0bc20d0b2d182d0bed180d183d18e20d0bfd180d0bed0b2d0bed0b4d0bad18320d0b220d0bed0bfd0b5d180d0b0d186d0b8d0b820d0b4d0bbd18f20d0b2d181d0b5d0b3d0be20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a0969662028d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b8203d3d2030290909092f2f20d095d181d0bbd0b820d181d183d0bcd0bcd0bed0b2d0bed0b520d0b7d0bdd0b0d187d0b5d0bdd0b8d0b520d0bdd0b520d181d0bad0b8d0b4d0bad0b820d183d181d182d0b0d0bdd0bed0b2d0bbd0b5d0bdd0be0a097b090909092f2f20d0a2d0bed0b3d0b4d0b020d181d0bad0b8d0b4d0bad18320d181d187d0b8d182d0b0d0b5d0bc20d0bfd0be20d0bfd180d0bed186d0b5d0bdd182d1830a0909d181d0bad0b8d0b4d0bad0b0203d20d181d183d0bcd0bcd0b0202a2020d0bfd180d0bed186d0b5d0bdd182d181d0bad0b8d0b4d0bad0b8202f203130303b0a097d0a09656c73650a097b0a0909d181d0bad0b8d0b4d0bad0b0203d20d181d183d0bcd0bcd0b0d181d0bad0b8d0b4d0bad0b83b0a097d0a0973657456616c7565282270335f5fd181d183d0bcd0bcd0b0222c2020d181d0bad0b8d0b4d0bad0b0293b09092f2f20d097d0b0d0bfd0b8d188d0b5d0bc20d0b7d0bdd0b0d187d0b5d0bdd0b8d0b520d181d0bad0b8d0b4d0bad0b820d0b220d091d09420d0b220d182d180d0b5d182d18cd0b5d0b92028d181d0b2d0bed0b1d0bed0b4d0bdd0bed0b92920d0bfd180d0bed0b2d0bed0b4d0bad0b50a09666f726d2e736b69646b614e756d657269632e73657456616c756528d181d0bad0b8d0b4d0bad0b0293b0a09666f726d2e767365676f4e756d657269632e73657456616c756528d181d183d0bcd0bcd0b0293b09090a09666f726d2e69746f674e756d657269632e73657456616c756528d181d183d0bcd0bcd0b02dd181d0bad0b8d0b4d0bad0b0293b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a09d186d0b5d0bdd0b0203d2067657456616c7565282276775fd0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b05f5fd186d0b5d0bdd0b05fd180d0bed0b7d0bd22293b0a0973657456616c7565282270325f5fd186d0b5d0bdd0b0222c20d186d0b5d0bdd0b0293b0a7d0a0a0a2f2f3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d0a2f2f20d0a1d187d0b8d182d0b0d0b5d0bc20d0b7d0bdd0b0d187d0b5d0bdd0b8d18f20d0b220d182d0b0d0b1d0bbd0b8d187d0bdd0bed0b920d187d0b0d181d182d0b80a6966202867657443757272656e744669656c644e616d652829203d3d202270315f5fd0bad0bed0bb222909092f2f20d0a2d0bed0bbd18cd0bad0be20d0bfd180d0b820d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d0b820d0bad0bed0bbd0b8d187d0b5d181d182d0b2d0b0200a7b0a09d0bad0bed0bb203d206765744f6c6456616c75652829202b2067657456616c75652822d0bad180d181d0b0d0bbd18cd0b4d0be315f5fd0bad0bed0bdd0bad0bed0bb22293b09092f2f20d09ad0bed0bbd0b8d187d0b5d181d182d0b2d0be20d0b2d181d0b5d0b3d0be0a09d181d183d0bcd0bcd0b0203d2067657456616c7565282270315f5fd181d183d0bcd0bcd0b02229202b2067657456616c75652822d0bad180d181d0b0d0bbd18cd0b4d0be315f5fd0bad0bed0bdd181d0b0d0bbd18cd0b4d0be22293b092f2f20d0a1d183d0bcd0bcd0b020d0b2d181d0b5d0b3d0be0a0969662028d0bad0bed0bb20213d2030290a097b0a09092f2f20d09fd0bed181d187d0b8d182d0b0d0b5d0bc20d0bfd0b5d180d0b2d183d18e20d0bfd180d0bed0b2d0bed0b4d0bad1832028d0bfd0be20d0b7d0b0d0bad183d0bfd0bed187d0bdd0bed0b920d186d0b5d0bdd0b5290a0909d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a0909d181d183d0bcd0bcd0b0203d2067657456616c7565282270315f5fd0bad0bed0bb2229202a20d186d0b5d0bdd0b03b0a090973657456616c7565282270315f5fd186d0b5d0bdd0b0222c20d186d0b5d0bdd0b0293b0a090973657456616c7565282270315f5fd181d183d0bcd0bcd0b0222c20d181d183d0bcd0bcd0b0293b0a09092f2f20d09fd0bed181d187d0b8d182d0b0d0b5d0bc20d0b2d182d0bed180d183d18e20d0bfd180d0bed0b2d0bed0b4d0bad1832028d0bfd0be20d180d0bed0b7d0bdd0b8d187d0bdd0bed0b920d186d0b5d0bdd0b5290a0909d186d0b5d0bdd0b0203d2067657456616c7565282270325f5fd186d0b5d0bdd0b022293b0a0909d181d183d0bcd0bcd0b0203d2067657456616c7565282270315f5fd0bad0bed0bb2229202a20d186d0b5d0bdd0b03b0a090973657456616c7565282270325f5fd181d183d0bcd0bcd0b0222c20d181d183d0bcd0bcd0b0293b0a097d0a7d0a
+8	номенклатура.qs	0	\\x66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a
+1	./scripts/формулы1.qs	0	\\x66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a09666f726d2e676574427574746f6e4c6f616428292e73686f7728293b09092f2f20d092d0bad0bbd18ed187d0b8d0bc20d0bad0bdd0bed0bfd0bad1832022d097d0b0d0b3d180d183d0b7d0b8d182d18c20d0b4d0bed0bad183d0bcd0b5d0bdd1822220d0bdd0b020d184d0bed180d0bcd0b50a7d0a0a0a66756e6374696f6e204576656e74496d706f727428666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd097d0b0d0b3d180d183d0b7d0b8d182d18c20d0b4d0bed0bad183d0bcd0b5d0bdd1823e0a20207661722066696c654e616d65203d205146696c654469616c6f672e6765744f70656e46696c654e616d6528666f726d2c2022d09ed182d0bad180d0bed0b9d182d0b520d0b4d0bed0bad183d0bcd0b5d0bdd18220d18120d0bfd180d0b8d185d0bed0b4d0bed0bc20d182d0bed0b2d0b0d180d0b0222c20514469722e63757272656e745061746828292c2022d094d0bed0bad183d0bcd0b5d0bdd18220584d4c282a2e584d4c2922293b0a20206966202866696c654e616d6520213d202222290a20207b202020200a202020207661722066696c65203d206e6577205146696c652866696c654e616d65293b0a202020206966202866696c652e6f70656e2851494f4465766963652e4f70656e4d6f64652851494f4465766963652e526561644f6e6c792c2051494f4465766963652e54657874292929200a202020207b0a20202020202076617220646f63203d206e65772051446f6d446f63756d656e7428293b0a20202020202069662028646f632e736574436f6e74656e742866696c6529290a2020202020207b0a202020202020202069662028646f632e656c656d656e747342795461674e616d652822d0a5d0bed0b7d09ed0bfd0b5d180d0b0d186d0b8d18f22292e61742830292e746f456c656d656e7428292e746578742829203d3d2022d09ed182d0bfd183d181d0ba20d182d0bed0b2d0b0d180d0b02229092f2f20d095d181d0bbd0b820d18dd182d0be20d0b4d0bed0bad183d0bcd0b5d0bdd18220d0bdd0b020d0bed182d0b3d180d183d0b7d0bad18320d182d0bed0b2d0b0d180d0b00a20202020202020207b0a2020202020202020202076617220646f634e756d626572203d20646f632e656c656d656e747342795461674e616d652822d09dd0bed0bcd0b5d18022292e61742830292e746f456c656d656e7428292e7465787428293b0a2020202020202020202076617220646f6344617465203d20646f632e656c656d656e747342795461674e616d652822d094d0b0d182d0b022292e61742830292e746f456c656d656e7428292e7465787428293b0a20202020202020202020766172206167656e744e616d65203d2022223b0a20202020202020202020766172206167656e7446756c6c4e616d65203d2022223b0a20202020202020202020766172206167656e7441646472657373203d2022223b0a202020202020202020202f2f20d09dd0b0d0b9d0b4d0b5d0bc20d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b520d180d0b5d0bad0b2d0b8d0b7d0b8d182d18b20d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b02dd0bfd180d0bed0b4d0b0d0b2d186d0b00a20202020202020202020766172206167656e7473203d20646f632e656c656d656e747342795461674e616d652822d09ad0bed0bdd182d180d0b0d0b3d0b5d0bdd18222293b0a20202020202020202020666f7220287661722069203d20303b2069203c206167656e74732e636f756e7428293b20692b2b290a202020202020202020207b0a202020202020202020202020696620286167656e74732e61742869292e66697273744368696c64456c656d656e742822d0a0d0bed0bbd18c22292e746578742829203d3d2022d09fd180d0bed0b4d0b0d0b2d0b5d18622290a2020202020202020202020207b0a20202020202020202020202020206167656e744e616d65203d206167656e74732e61742869292e66697273744368696c64456c656d656e742822d09dd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b522292e7465787428293b0a20202020202020202020202020206167656e7446756c6c4e616d65203d206167656e74732e61742869292e66697273744368696c64456c656d656e742822d09ed184d0b8d186d0b8d0b0d0bbd18cd0bdd0bed0b5d09dd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b522292e7465787428293b0a20202020202020202020202020206167656e7441646472657373203d206167656e74732e61742869292e6e616d65644974656d2822d0aed180d0b8d0b4d0b8d187d0b5d181d0bad0b8d0b9d090d0b4d180d0b5d18122292e6e616d65644974656d2822d09fd180d0b5d0b4d181d182d0b0d0b2d0bbd0b5d0bdd0b8d0b522292e746f456c656d656e7428292e7465787428293b0a2020202020202020202020202020627265616b3b0a2020202020202020202020207d0a202020202020202020207d09090909090a20202020202020202020696620286167656e744e616d6520213d20222229092f2f20d095d181d0bbd0b820d183d0bad0b0d0b7d0b0d0bd20d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd1822dd0bfd180d0bed0b4d0b0d0b2d0b5d1860a202020202020202020207b0a202020202020202020202020696620286167656e7446756c6c4e616d65203d3d202222290a20202020202020202020202020206167656e7446756c6c4e616d65203d206167656e744e616d653b0a202020202020202020202020646f63756d656e742e7365744e756d62657228646f634e756d626572293b0a202020202020202020202020646f63756d656e742e7365744461746528646f63446174652c2051742e49534f44617465293b0a202020202020202020202020766172206167656e7444696374203d2067657444696374696f6e617279282276775fd0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b22293b092f2f20d09dd0b0d0b9d0b4d0b5d0bc20d182d0b0d0bad0bed0b3d0be20d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b020d0b220d0bdd0b0d188d0b5d0b920d091d0940a2020202020202020202020206167656e74446963742e71756572792822d0b8d0bcd18f203d202722202b206167656e7446756c6c4e616d65202b20222722293b0a202020202020202020202020766172206167656e744964203d206167656e74446963742e67657449642830293b0a202020202020202020202020696620286167656e744964203d3d20302909092f2f20d095d181d0bbd0b820d182d0b0d0bad0bed0b3d0be20d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b020d0bdd0b520d181d183d189d0b5d181d182d0b2d183d0b5d18220d0b220d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b50a2020202020202020202020207b0a2020202020202020202020202020766172206167656e744d7367203d206e657720514d657373616765426f7828514d657373616765426f782e5175657374696f6e2c2022d092d0bdd0b8d0bcd0b0d0bdd0b8d0b521222c2022d09dd0b520d0bdd0b0d0b9d0b4d0b5d0bd20d182d0b0d0bad0bed0b920d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd1822e20d0a1d0bed0b7d0b4d0b0d182d18c3f222c20514d657373616765426f782e5965732c20666f726d293b0a2020202020202020202020202020696620286167656e744d73672e657865632829203d3d20514d657373616765426f782e596573290a20202020202020202020202020207b0a2020202020202020202020202020202064622e657865632822494e5345525420494e544f20d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b2028d0b8d0bcd18f2c20d0b0d0b4d180d0b5d181292056414c55455320282722202b206167656e7446756c6c4e616d65202b2022272c202722202b206167656e7441646472657373202b2022272922293b0a202020202020202020202020202020206167656e74446963742e71756572792822d0b8d0bcd18f203d202722202b206167656e7446756c6c4e616d65202b20222722293b0a202020202020202020202020202020206167656e744964203d206167656e74446963742e67657449642830293b0a20202020202020202020202020207d0a2020202020202020202020207d0a2020202020202020202020202f2f20d0a1d0b4d0b5d0bbd0b0d0b5d0bc20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b520d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b02dd0bfd180d0bed0b4d0b0d0b2d186d0b020d0b2d0b8d0b4d0b8d0bcd18bd0bc20d0bdd0b020d184d0bed180d0bcd0b520d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2020202020202020202020206167656e74446963742e7365744964286167656e744964293b0a202020202020202020202020646f63756d656e742e73686f77506172616d6574657254657874282276775fd0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b22293b0a09202020204576656e74506172616d65746572734368616e67656428293b0a0920202020646f63756d656e74732e73657456616c75652822d09ad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b9222c2067657444696374696f6e617279282276775fd0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b22292e67657456616c75652822d0b8d0bcd18f2229293b0a202020202020202020202020766172206669726d4964203d206167656e74446963742e67657456616c75652822d0bad0bed0b45fd184d0b8d180d0bcd18b22293b092f2f20d09fd0bed0bbd183d187d0b8d0bc20d0bad0bed0b420d184d0b8d180d0bcd18b20d0bed182d0b3d180d183d0b7d0bad0b820d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b00a202020202020202020202020696620286669726d4964203d3d2030290a2020202020202020202020207b09090a2020202020202020202020202020766172206669726d4d7367203d206e657720514d657373616765426f7828514d657373616765426f782e5175657374696f6e2c2022d092d0bdd0b8d0bcd0b0d0bdd0b8d0b521222c2022d0a320d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b020d0bdd0b520d183d0bad0b0d0b7d0b0d0bdd0b020d184d0b8d180d0bcd0b020d0bed182d0b3d180d183d0b7d0bad0b82e20d0a1d0bed0b7d0b4d0b0d182d18c3f222c20514d657373616765426f782e5965732c20666f726d293b0a2020202020202020202020202020696620286669726d4d73672e657865632829203d3d20514d657373616765426f782e596573290a202020202020202020202020202020207b0a2020202020202020202020202020202020202f2f20d09fd0be20d183d0bcd0bed0bbd187d0b0d0bdd0b8d18e20d181d0bed0b7d0b4d0b0d0b5d182d181d18f20d184d0b8d180d0bcd0b020d0bed182d0b3d180d183d0b7d0bad0b820d18120d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b5d0bc20d0bad0b0d0ba20d18320d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b00a202020202020202020202020202020202020766172206669726d44696374203d2067657444696374696f6e6172792822d184d0b8d180d0bcd18b22293b0a2020202020202020202020202020202020202f2f20d0a1d0bdd0b0d187d0b0d0bbd0b020d0bfd0bed0b8d189d0b5d0bc20d183d0b6d0b520d181d183d189d0b5d181d182d0b2d183d18ed189d183d18e20d184d0b8d180d0bcd18320d18120d182d0b0d0bad0b8d0bc20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b5d0bc0a2020202020202020202020202020202020206669726d446963742e71756572792822d0b8d0bcd18f203d202722202b206167656e744e616d65202b20222722293b0a2020202020202020202020202020202020206669726d4964203d206669726d446963742e67657449642830293b0a202020202020202020202020202020202020696620286669726d4964203d3d20302909090a2020202020202020202020202020202020207b0a20202020202020202020202020202020202020202f2f20d0a4d0b8d180d0bcd18b20d18120d182d0b0d0bad0b8d0bc20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b5d0bc20d0bdd0b5d1822c20d0bfd0bed18dd182d0bed0bcd18320d181d0bed0b7d0b4d0b0d0b5d0bc20d0bdd0bed0b2d183d18e20d0b7d0b0d0bfd0b8d181d18c0a202020202020202020202020202020202020202064622e657865632822494e5345525420494e544f20d184d0b8d180d0bcd18b2028d0b8d0bcd18f292056414c55455320282722202b206167656e744e616d65202b2022272922293b0a20202020202020202020202020202020202020206669726d446963742e71756572792822d0b8d0bcd18f203d202722202b206167656e744e616d65202b20222722293b0a20202020202020202020202020202020202020206669726d744964203d206669726d74446963742e67657449642830293b0a2020202020202020202020202020202020207d0a2020202020202020202020202020202020202f2f20d0a1d0bed185d180d0b0d0bdd18fd0b5d0bc20d181d181d18bd0bbd0bad18320d0bdd0b020d184d0b8d180d0bcd18320d0bed182d0b3d180d183d0b7d0bad0b820d0b220d0b7d0b0d0bfd0b8d181d0b820d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d0b00a20202020202020202020202020202020202064622e65786563282255504441544520d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b2053455420d0bad0bed0b45fd184d0b8d180d0bcd18b203d2022202b206669726d4964202b202220574845524520d0bad0bed0b4203d2022202b206167656e744964293b0a202020202020202020202020202020207d0a2020202020202020202020207d0a2020202020202020202020202f2f20d09fd0b5d180d0b5d0b1d0b5d180d0b5d0bc20d0b2d181d0b520d0bfd0bed0b7d0b8d186d0b8d0b820d0b220d0bdd0b0d0bad0bbd0b0d0b4d0bdd0bed0b90a20202020202020202020202076617220746f766172203d20646f632e656c656d656e747342795461674e616d652822d0a2d0bed0b2d0b0d18022293b0a202020202020202020202020666f7220287661722069203d20303b2069203c20746f7661722e636f756e7428293b20692b2b290a09202020207b0a0920202020202076617220746f7661724964203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d098d0b422292e7465787428293b0a0920202020202076617220746f7661724e616d65203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d09dd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b522292e7465787428293b0a0920202020202076617220746f7661724172746963756c203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d090d180d182d0b8d0bad183d0bb22292e7465787428293b0a0920202020202076617220746f766172556e6974203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d095d0b4d0b8d0bdd0b8d186d0b022292e7465787428293b0a0920202020202076617220746f7661725175616e203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d09ad0bed0bbd0b8d187d0b5d181d182d0b2d0be22292e7465787428293b0a0920202020202076617220746f7661725072696365203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d0a6d0b5d0bdd0b0d097d0b0d095d0b4d0b8d0bdd0b8d186d18322292e7465787428293b0a0920202020202076617220746f76617253756d203d20746f7661722e61742869292e66697273744368696c64456c656d656e742822d0a1d183d0bcd0bcd0b022292e7465787428293b0a092020202020205772697465546f766172286669726d49642c20746f76617249642c20746f7661724e616d652c20746f7661724172746963756c2c20746f766172556e69742c20746f7661725175616e2c20746f76617250726963652c20746f76617253756d290a09202020207d0a0920202020646f63756d656e742e717565727928293b0a0920202020646f63756d656e742e63616c6349746f6728293b0a202020202020202020207d0a20202020202020202020656c73650a202020202020202020202020514d657373616765426f782e7761726e696e6728666f726d2c2022d094d0bed0bad183d0bcd0b5d0bdd18220436f6d6d657263654d4c222c2022d09dd0b520d0bdd0b0d0b9d0b4d0b5d0bd20d0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182202d20d0bfd180d0bed0b4d0b0d0b2d0b5d18622293b0a20202020202020207d0a2020202020202020656c73650a20202020202020202020514d657373616765426f782e7761726e696e6728666f726d2c2022d094d0bed0bad183d0bcd0b5d0bdd18220436f6d6d657263654d4c222c2022d0add182d0be20d0bdd0b520d0b4d0bed0bad183d0bcd0b5d0bdd18220d0bdd0b020d0bed182d0b3d180d183d0b7d0bad18320d182d0bed0b2d0b0d180d0b022293b0a2020202020207d0a202020202020656c73650a2020202020202020514d657373616765426f782e7761726e696e6728666f726d2c2022d094d0bed0bad183d0bcd0b5d0bdd18220436f6d6d657263654d4c222c2022d09dd0b520d183d0b4d0b0d0bbd0bed181d18c20d180d0b0d0b7d0bed0b1d180d0b0d182d18c20d0b4d0bed0bad183d0bcd0b5d0bdd18222293b0a20202020202066696c652e636c6f736528293b0a202020207d0a20202020656c73650a202020202020514d657373616765426f782e7761726e696e6728666f726d2c2022d094d0bed0bad183d0bcd0b5d0bdd18220436f6d6d657263654d4c222c2051537472696e672822d09dd0b520d0bcd0bed0b3d18320d0bed182d0bad180d18bd182d18c20d184d0b0d0b9d0bb2025313a5c6e25322e2229202e6172672866696c654e616d6529202e6172672866696c652e6572726f72537472696e67282929293b0a20207d0a7d0a0a0a66756e6374696f6e205772697465546f766172286669726d49642c2069642c206e616d652c206172746963756c2c20756e69742c207175616e2c2070726963652c2073756d290a2f2f20d097d0b0d0bfd0b8d188d0b5d0bc20d0bfd0bed0b7d0b8d186d0b8d18e20d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1822c20d0bfd180d0b5d0b4d0b2d0b0d180d0b8d182d0b5d0bbd18cd0bdd0be20d0b2d18bd18fd181d0bdd0b8d0b220d181d0bed0bed182d0b2d0b5d182d181d182d0b2d0b8d0b520d0b220d182d0b0d0b1d0bbd0b8d186d0b520d0bfd180d0b0d0b9d181d0bed0b20a7b0a2020766172206e6f6d4964203d20303b0a2020766172206e6f6d44696374203d2067657444696374696f6e6172792822d0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b022293b0a20202f2f20d09fd0bed0b8d189d0b5d0bc20d0b220d0bfd180d0b0d0b9d181d0b520d0bfd0bed181d182d0b0d0b2d189d0b8d0bad0b020d0b7d0b0d0bfd0b8d181d18c20d0be20d0bfd0bed0b7d0b8d186d0b8d0b82c20d0bad0bed182d0bed180d0b0d18f20d0bfd0bed181d182d183d0bfd0b8d0bbd0b00a2020766172207072696365526563203d2064622e657865635175657279282253454c45435420d0bad0bed0b42c20d0b8d0bcd18f2c20d186d0b5d0bdd0b02c20d0bad0bed0b45fd0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b02c20d0bad0bed0bb5fd0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b02c20d0bad0bed0bb5fd0bfd180d0b0d0b9d1812046524f4d20d0bfd180d0b0d0b9d181d18b20574845524520d0bad0bed0b45fd184d0b8d180d0bcd18b203d2022202b206669726d4964202b202220414e4420d0bad0bed0b4d0b2d0bfd180d0b0d0b9d181d0b5203d202722202b206964202b20222722293b0a20206966202870726963655265632e73697a65282920213d20302909092f2f20d095d181d0bbd0b820d0b220d0bfd180d0b0d0b9d181d0b520d0b5d181d182d18c20d0b7d0b0d0bfd0b8d181d0b820d0be20d182d0b0d0bad0bed0b920d0bfd0bed0b7d0b8d186d0b8d0b80a20207b0a202020206966202870726963655265632e666972737428292909090909090a202020202020206e6f6d4964203d2070726963655265632e7265636f726428292e76616c75652822d0bad0bed0b45fd0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b022293b092f2f20d09fd0bed181d0bcd0bed182d180d0b8d0bc2c20d0bad0b0d0bad0bed0b920d0bdd0b0d188d0b5d0b920d0bfd0bed0b7d0b8d186d0b8d0b820d181d0bed0bed182d0b2d0b5d182d181d182d0b2d183d0b5d18220d18dd182d0be20d0bdd0b0d0b7d0b2d0b0d0bdd0b8d0b520d0b220d0bfd180d0b0d0b9d181d0b50a20207d0a2020696620286e6f6d4964203d3d2030290909092f2f20d095d181d0bbd0b820d0bcd18b20d0bdd0b520d0b7d0bdd0b0d0b5d0bc2c20d0bad0b0d0bad0bed0b920d0bdd0b0d188d0b5d0b920d0bfd0bed0b7d0b8d186d0b8d0b820d181d0bed0bed182d181d182d0b2d0b5d182d181d182d0b2d183d0b5d18220d18dd182d0be20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b50a20207b09090909092f2f20d182d0bed0b3d0b4d0b020d181d0bfd180d0bed181d0b8d0bc20d18dd182d0be20d18320d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18f0a2020202076617220666f726d5469746c65203d206e6f6d446963742e676574466f726d5469746c6528293b0a202020206e6f6d446963742e736574466f726d5469746c652822d0a3d0bad0b0d0b6d0b8d182d0b520d0bfd0bed0b7d0b8d186d0b8d18e20d0b0d0bdd0b0d0bbd0bed0b3d0b8d187d0bdd183d18e3a2022202b206e616d65202b2022202822202b206172746963756c202b20222922293b09092f2f20d0a3d181d182d0b0d0bdd0bed0b2d0b8d0bc20d0b220d0b7d0b0d0b3d0bed0bbd0bed0b2d0bad0b520d0bed0bad0bdd0b020d0bfd0bed0b4d181d0bad0b0d0b7d0bad18320d0b4d0bbd18f20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18f0a202020206e6f6d446963742e6578656328290a202020206e6f6d446963742e736574466f726d5469746c6528666f726d5469746c65293b0a20202020696620286e6f6d446963742e6973466f726d53656c6563746564282929092f2f20d0b5d181d0bbd0b820d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18c20d0bdd0b0d0b6d0b0d0bb20d0bad0bdd0bed0bfd0bad183204f6b0a202020207b0a2020202020206e6f6d4964203d206e6f6d446963742e676574496428293b0a202020207d0a20207d0a2020656c73650a202020206e6f6d446963742e7365744964286e6f6d4964293b09090a2020696620286e6f6d496420213d2030290909092f2f20d095d181d0bbd0b820d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18c20d0b2d18bd0b1d180d0b0d0bb20d0bad0b0d0bad183d18e2dd0bbd0b8d0b1d0be20d0bfd0bed0b7d0b8d186d0b8d18e20d0b220d181d0b2d0bed0b5d0b920d0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b520d0b8d0bbd0b820d0bfd0bed0b7d0b8d186d0b8d18f20d0b1d18bd0bbd0b020d0b2d18bd0b1d180d0b0d0bdd0b020d0b0d0b2d182d0bed0bcd0b0d182d0b8d187d0b5d181d0bad0b820d0bdd0b020d0bed181d0bdd0bed0b2d0b0d0bdd0b8d0b820d181d0bed0bed182d0b2d0b5d182d181d182d0b2d0b8d18f0a20207b0a202020206966202870726963655265632e73697a652829203d3d20302909092f2f20d095d181d0bbd0b820d0b220d0bfd180d0b0d0b9d181d0b520d180d0b0d0bdd18cd188d0b520d182d0b0d0bad0bed0b920d0bfd0bed0b7d0b8d186d0b8d0b820d0bdd0b520d0b1d18bd0bbd0be0a20202020202064622e657865632822494e5345525420494e544f20d0bfd180d0b0d0b9d181d18b2028d0bad0bed0b4d0b2d0bfd180d0b0d0b9d181d0b52c20d0b8d0bcd18f2c20d0b0d180d182d0b8d0bad183d0bb2c20d0b5d0b4d0b8d0b7d0bc2c20d186d0b5d0bdd0b02c20d0bdd0b0d0bbd0b8d187d0b8d0b52c20d0bad0bed0b45fd184d0b8d180d0bcd18b2c20d0bad0bed0b45fd0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b0292056414c55455320282722202b206964202b2022272c2722202b206e616d65202b2022272c2722202b206172746963756c202b2022272c2722202b20756e6974202b2022272c22202b207072696365202b20222c20272b272c22202b206669726d4964202b20222c22202b206e6f6d4964202b20222922293b0a20202020656c73650a20202020202064622e65786563282255504441544520d0bfd180d0b0d0b9d181d18b2053455420d0bad0bed0b45fd0bdd0bed0bcd0b5d0bdd0bad0bbd0b0d182d183d180d0b03d22202b206e6f6d4964202b20222cd0b8d0bcd18f3d2722202b206e616d65202b2022272cd0b0d180d182d0b8d0bad183d0bb3d2722202b206172746963756c202b2022272cd0b5d0b4d0b8d0b7d0bc3d2722202b20756e6974202b2022272cd186d0b5d0bdd0b03d22202b207072696365202b20222cd0bdd0b0d0bbd0b8d187d0b8d0b53d272b2720574845524520d0bad0bed0b45fd184d0b8d180d0bcd18b3d22202b206669726d4964202b202220414e4420d0bad0bed0b4d0b2d0bfd180d0b0d0b9d181d0b53d2722202b206964202b20222722293b0a202020202f2f20d097d0b0d0bfd0b8d188d0b5d0bc20d0bad0bed0bb2dd0b2d0be2c20d186d0b5d0bdd1832c20d181d183d0bcd0bcd18320d0b220d0bfd180d0bed0b2d0bed0b4d0bad1830a20202020646f63756d656e742e73657450727656616c7565282270315f5fd0bad0bed0bb222c207175616e293b0a20202020646f63756d656e742e73657450727656616c7565282270315f5fd186d0b5d0bdd0b0222c207072696365293b0a20202020646f63756d656e742e73657450727656616c7565282270315f5fd181d183d0bcd0bcd0b0222c2073756d293b0a202020202f2f20d0a1d0bed185d180d0b0d0bdd0b8d0bc20d0bfd180d0bed0b2d0bed0b4d0bad18320d0bdd0b020d181d0b5d180d0b2d0b5d180d0b50a20202020646f63756d656e742e617070656e64446f63537472696e6728293b0a20207d0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a207b0a2f2f20d097d0b0d0bfd0b8d188d0b5d0bc20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b520d184d0b8d180d0bcd18b2dd0bfd0bed181d182d0b0d0b2d189d0b8d0bad0b020d0b220d0bad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b820d0ba20d0b4d0bed0bad183d0bcd0b5d0bdd182d1830a09646f63756d656e74732e73657456616c75652822d09ad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b9222c2067657444696374696f6e617279282276775fd0bad0bed0bdd182d180d0b0d0b3d0b5d0bdd182d18b22292e67657456616c75652822d0b8d0bcd18f2229293b0a7d0a0a0a0a2f2f2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2f0a2f2f20d0add182d0b020d187d0b0d181d182d18c20d181d0bad180d0b8d0bfd182d0b020d0bed182d0bdd0bed181d0b8d182d181d18f20d0ba20d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18fd0bc20d182d0b0d0b1d0bbd0b8d187d0bdd0bed0b920d187d0b0d181d182d0b820d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a0ad0bad0bed0bb203d2067657456616c7565282270315f5fd0bad0bed0bb22293b0ad186d0b5d0bdd0b0203d2067657456616c7565282270315f5fd186d0b5d0bdd0b022293b0ad181d183d0bcd0bcd0b0203d2067657456616c7565282270315f5fd181d183d0bcd0bcd0b022293b0a0a6966202867657443757272656e744669656c644e616d652829203d3d202270315f5fd181d183d0bcd0bcd0b02220262620d0bad0bed0bb20213d203029200a7b0a09d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a7d0a656c7365200a7b0a09d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a7d0a0a73657456616c7565282270315f5fd0bad0bed0bb222c20d0bad0bed0bb293b0a73657456616c7565282270315f5fd186d0b5d0bdd0b0222c20d186d0b5d0bdd0b0293b0a73657456616c7565282270315f5fd181d183d0bcd0bcd0b0222c20d181d183d0bcd0bcd0b0293b0a0a0a
 \.
 
 
 --
--- TOC entry 3009 (class 0 OID 27249)
--- Dependencies: 237
+-- TOC entry 3037 (class 0 OID 16786)
+-- Dependencies: 239
 -- Data for Name: фирмы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -3867,8 +3867,8 @@ COPY "фирмы" ("код", "имя") FROM stdin;
 
 
 --
--- TOC entry 2911 (class 2606 OID 27103)
--- Dependencies: 199 199
+-- TOC entry 2939 (class 2606 OID 16820)
+-- Dependencies: 202 202
 -- Name: адрес_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3877,8 +3877,8 @@ ALTER TABLE ONLY "адрес"
 
 
 --
--- TOC entry 2913 (class 2606 OID 27105)
--- Dependencies: 201 201
+-- TOC entry 2941 (class 2606 OID 16822)
+-- Dependencies: 204 204
 -- Name: банки_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3887,8 +3887,8 @@ ALTER TABLE ONLY "банки"
 
 
 --
--- TOC entry 2917 (class 2606 OID 27107)
--- Dependencies: 203 203
+-- TOC entry 2945 (class 2606 OID 16824)
+-- Dependencies: 206 206
 -- Name: банковские_счета_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3897,8 +3897,8 @@ ALTER TABLE ONLY "банковские_счета"
 
 
 --
--- TOC entry 2862 (class 2606 OID 27109)
--- Dependencies: 169 169
+-- TOC entry 2890 (class 2606 OID 16826)
+-- Dependencies: 170 170
 -- Name: блокпериоды_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3907,8 +3907,8 @@ ALTER TABLE ONLY "блокпериоды"
 
 
 --
--- TOC entry 2921 (class 2606 OID 27111)
--- Dependencies: 206 206
+-- TOC entry 2949 (class 2606 OID 16828)
+-- Dependencies: 209 209
 -- Name: виды_расходов_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3917,8 +3917,8 @@ ALTER TABLE ONLY "виды_расходов"
 
 
 --
--- TOC entry 2925 (class 2606 OID 27113)
--- Dependencies: 208 208
+-- TOC entry 2953 (class 2606 OID 16830)
+-- Dependencies: 211 211
 -- Name: группы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3927,8 +3927,8 @@ ALTER TABLE ONLY "группы"
 
 
 --
--- TOC entry 2870 (class 2606 OID 27115)
--- Dependencies: 173 173
+-- TOC entry 2898 (class 2606 OID 16832)
+-- Dependencies: 174 174
 -- Name: документы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3937,8 +3937,8 @@ ALTER TABLE ONLY "документы"
 
 
 --
--- TOC entry 2876 (class 2606 OID 27117)
--- Dependencies: 176 176
+-- TOC entry 2904 (class 2606 OID 16834)
+-- Dependencies: 177 177
 -- Name: доступ_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3947,8 +3947,8 @@ ALTER TABLE ONLY "доступ"
 
 
 --
--- TOC entry 2884 (class 2606 OID 27119)
--- Dependencies: 184 184
+-- TOC entry 2912 (class 2606 OID 16836)
+-- Dependencies: 185 185
 -- Name: журнал_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3957,8 +3957,8 @@ ALTER TABLE ONLY "журнал"
 
 
 --
--- TOC entry 2886 (class 2606 OID 27121)
--- Dependencies: 186 186
+-- TOC entry 2914 (class 2606 OID 16838)
+-- Dependencies: 187 187
 -- Name: константы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3967,8 +3967,8 @@ ALTER TABLE ONLY "константы"
 
 
 --
--- TOC entry 2866 (class 2606 OID 27123)
--- Dependencies: 171 171
+-- TOC entry 2894 (class 2606 OID 16840)
+-- Dependencies: 172 172
 -- Name: контрагенты_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3977,8 +3977,8 @@ ALTER TABLE ONLY "контрагенты"
 
 
 --
--- TOC entry 2890 (class 2606 OID 27125)
--- Dependencies: 189 189
+-- TOC entry 2918 (class 2606 OID 16842)
+-- Dependencies: 190 190
 -- Name: материалы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3987,8 +3987,8 @@ ALTER TABLE ONLY "материалы"
 
 
 --
--- TOC entry 2929 (class 2606 OID 27127)
--- Dependencies: 216 216
+-- TOC entry 2957 (class 2606 OID 16844)
+-- Dependencies: 219 219
 -- Name: набор1_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3997,8 +3997,8 @@ ALTER TABLE ONLY "набор1"
 
 
 --
--- TOC entry 2894 (class 2606 OID 27129)
--- Dependencies: 191 191
+-- TOC entry 2922 (class 2606 OID 16846)
+-- Dependencies: 192 192
 -- Name: номенклатура_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4007,8 +4007,8 @@ ALTER TABLE ONLY "номенклатура"
 
 
 --
--- TOC entry 2931 (class 2606 OID 27131)
--- Dependencies: 219 219
+-- TOC entry 2959 (class 2606 OID 16848)
+-- Dependencies: 222 222
 -- Name: нумераторы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4017,8 +4017,8 @@ ALTER TABLE ONLY "нумераторы"
 
 
 --
--- TOC entry 2935 (class 2606 OID 27133)
--- Dependencies: 221 221
+-- TOC entry 2963 (class 2606 OID 16850)
+-- Dependencies: 224 224
 -- Name: персонал_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4027,8 +4027,8 @@ ALTER TABLE ONLY "персонал"
 
 
 --
--- TOC entry 2940 (class 2606 OID 27135)
--- Dependencies: 223 223
+-- TOC entry 2968 (class 2606 OID 16852)
+-- Dependencies: 226 226
 -- Name: прайсы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4037,8 +4037,8 @@ ALTER TABLE ONLY "прайсы"
 
 
 --
--- TOC entry 2950 (class 2606 OID 27137)
--- Dependencies: 225 225
+-- TOC entry 2978 (class 2606 OID 16854)
+-- Dependencies: 228 228
 -- Name: предметы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4047,8 +4047,8 @@ ALTER TABLE ONLY "предметы"
 
 
 --
--- TOC entry 2898 (class 2606 OID 27139)
--- Dependencies: 193 193
+-- TOC entry 2926 (class 2606 OID 16856)
+-- Dependencies: 194 194
 -- Name: проводки_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4057,8 +4057,8 @@ ALTER TABLE ONLY "проводки"
 
 
 --
--- TOC entry 2880 (class 2606 OID 27141)
--- Dependencies: 180 180
+-- TOC entry 2908 (class 2606 OID 16858)
+-- Dependencies: 181 181
 -- Name: справочники_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4067,8 +4067,8 @@ ALTER TABLE ONLY "справочники"
 
 
 --
--- TOC entry 2909 (class 2606 OID 27143)
--- Dependencies: 196 196
+-- TOC entry 2937 (class 2606 OID 16860)
+-- Dependencies: 197 197
 -- Name: столбцы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4077,8 +4077,8 @@ ALTER TABLE ONLY "столбцы"
 
 
 --
--- TOC entry 2858 (class 2606 OID 27145)
--- Dependencies: 167 167
+-- TOC entry 2886 (class 2606 OID 16862)
+-- Dependencies: 168 168
 -- Name: счета_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4087,8 +4087,8 @@ ALTER TABLE ONLY "счета"
 
 
 --
--- TOC entry 2954 (class 2606 OID 27147)
--- Dependencies: 231 231
+-- TOC entry 2982 (class 2606 OID 16864)
+-- Dependencies: 234 234
 -- Name: типыобъектов_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4097,8 +4097,8 @@ ALTER TABLE ONLY "типыобъектов"
 
 
 --
--- TOC entry 2882 (class 2606 OID 27149)
--- Dependencies: 182 182
+-- TOC entry 2910 (class 2606 OID 16866)
+-- Dependencies: 183 183
 -- Name: топер_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4107,8 +4107,8 @@ ALTER TABLE ONLY "топер"
 
 
 --
--- TOC entry 2958 (class 2606 OID 27151)
--- Dependencies: 234 234
+-- TOC entry 2986 (class 2606 OID 16868)
+-- Dependencies: 237 237
 -- Name: файлы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4117,8 +4117,8 @@ ALTER TABLE ONLY "файлы"
 
 
 --
--- TOC entry 2960 (class 2606 OID 27255)
--- Dependencies: 237 237
+-- TOC entry 2988 (class 2606 OID 16870)
+-- Dependencies: 239 239
 -- Name: фирмы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4127,8 +4127,8 @@ ALTER TABLE ONLY "фирмы"
 
 
 --
--- TOC entry 2961 (class 1259 OID 27315)
--- Dependencies: 238
+-- TOC entry 2883 (class 1259 OID 16871)
+-- Dependencies: 164
 -- Name: objectnames_name_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4136,8 +4136,8 @@ CREATE INDEX objectnames_name_idx ON objectnames USING btree (name);
 
 
 --
--- TOC entry 2914 (class 1259 OID 27152)
--- Dependencies: 201
+-- TOC entry 2942 (class 1259 OID 16872)
+-- Dependencies: 204
 -- Name: банки_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4145,8 +4145,8 @@ CREATE INDEX "банки_имя_idx" ON "банки" USING btree ("имя");
 
 
 --
--- TOC entry 2915 (class 1259 OID 27153)
--- Dependencies: 201
+-- TOC entry 2943 (class 1259 OID 16873)
+-- Dependencies: 204
 -- Name: банки_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4154,8 +4154,8 @@ CREATE INDEX "банки_код_idx" ON "банки" USING btree ("код");
 
 
 --
--- TOC entry 2918 (class 1259 OID 27154)
--- Dependencies: 203
+-- TOC entry 2946 (class 1259 OID 16874)
+-- Dependencies: 206
 -- Name: банковские_счета_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4163,8 +4163,8 @@ CREATE INDEX "банковские_счета_имя_idx" ON "банковски
 
 
 --
--- TOC entry 2919 (class 1259 OID 27155)
--- Dependencies: 203
+-- TOC entry 2947 (class 1259 OID 16875)
+-- Dependencies: 206
 -- Name: банковские_счета_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4172,8 +4172,8 @@ CREATE INDEX "банковские_счета_код_idx" ON "банковски
 
 
 --
--- TOC entry 2863 (class 1259 OID 27156)
--- Dependencies: 169
+-- TOC entry 2891 (class 1259 OID 16876)
+-- Dependencies: 170
 -- Name: блокпериоды_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4181,8 +4181,8 @@ CREATE INDEX "блокпериоды_имя_idx" ON "блокпериоды" USI
 
 
 --
--- TOC entry 2864 (class 1259 OID 27157)
--- Dependencies: 169
+-- TOC entry 2892 (class 1259 OID 16877)
+-- Dependencies: 170
 -- Name: блокпериоды_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4190,8 +4190,8 @@ CREATE INDEX "блокпериоды_код_idx" ON "блокпериоды" USI
 
 
 --
--- TOC entry 2922 (class 1259 OID 27158)
--- Dependencies: 206
+-- TOC entry 2950 (class 1259 OID 16878)
+-- Dependencies: 209
 -- Name: виды_расходов_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4199,8 +4199,8 @@ CREATE INDEX "виды_расходов_имя_idx" ON "виды_расходо�
 
 
 --
--- TOC entry 2923 (class 1259 OID 27159)
--- Dependencies: 206
+-- TOC entry 2951 (class 1259 OID 16879)
+-- Dependencies: 209
 -- Name: виды_расходов_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4208,8 +4208,8 @@ CREATE INDEX "виды_расходов_код_idx" ON "виды_расходо�
 
 
 --
--- TOC entry 2926 (class 1259 OID 27160)
--- Dependencies: 208
+-- TOC entry 2954 (class 1259 OID 16880)
+-- Dependencies: 211
 -- Name: группы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4217,8 +4217,8 @@ CREATE INDEX "группы_имя_idx" ON "группы" USING btree ("имя");
 
 
 --
--- TOC entry 2927 (class 1259 OID 27161)
--- Dependencies: 208
+-- TOC entry 2955 (class 1259 OID 16881)
+-- Dependencies: 211
 -- Name: группы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4226,8 +4226,8 @@ CREATE INDEX "группы_код_idx" ON "группы" USING btree ("код");
 
 
 --
--- TOC entry 2871 (class 1259 OID 27162)
--- Dependencies: 173 173 173
+-- TOC entry 2899 (class 1259 OID 16882)
+-- Dependencies: 174 174 174
 -- Name: документы_авто_опер_дата_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4235,8 +4235,8 @@ CREATE INDEX "документы_авто_опер_дата_idx" ON "докум�
 
 
 --
--- TOC entry 2872 (class 1259 OID 27163)
--- Dependencies: 173
+-- TOC entry 2900 (class 1259 OID 16883)
+-- Dependencies: 174
 -- Name: документы_дата_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4244,8 +4244,8 @@ CREATE INDEX "документы_дата_idx" ON "документы" USING btr
 
 
 --
--- TOC entry 2873 (class 1259 OID 27164)
--- Dependencies: 173 173 173
+-- TOC entry 2901 (class 1259 OID 16884)
+-- Dependencies: 174 174 174
 -- Name: документы_дата_опер_авто_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4253,8 +4253,8 @@ CREATE INDEX "документы_дата_опер_авто_idx" ON "докум�
 
 
 --
--- TOC entry 2874 (class 1259 OID 27165)
--- Dependencies: 173
+-- TOC entry 2902 (class 1259 OID 16885)
+-- Dependencies: 174
 -- Name: документы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4262,8 +4262,8 @@ CREATE INDEX "документы_код_idx" ON "документы" USING btree
 
 
 --
--- TOC entry 2877 (class 1259 OID 27166)
--- Dependencies: 176
+-- TOC entry 2905 (class 1259 OID 16886)
+-- Dependencies: 177
 -- Name: доступ_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4271,8 +4271,8 @@ CREATE INDEX "доступ_имя_idx" ON "доступ" USING btree ("имя");
 
 
 --
--- TOC entry 2878 (class 1259 OID 27167)
--- Dependencies: 176
+-- TOC entry 2906 (class 1259 OID 16887)
+-- Dependencies: 177
 -- Name: доступ_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4280,8 +4280,8 @@ CREATE INDEX "доступ_код_idx" ON "доступ" USING btree ("код");
 
 
 --
--- TOC entry 2887 (class 1259 OID 27168)
--- Dependencies: 186
+-- TOC entry 2915 (class 1259 OID 16888)
+-- Dependencies: 187
 -- Name: константы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4289,8 +4289,8 @@ CREATE INDEX "константы_имя_idx" ON "константы" USING btree
 
 
 --
--- TOC entry 2888 (class 1259 OID 27169)
--- Dependencies: 186
+-- TOC entry 2916 (class 1259 OID 16889)
+-- Dependencies: 187
 -- Name: константы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4298,8 +4298,8 @@ CREATE INDEX "константы_код_idx" ON "константы" USING btree
 
 
 --
--- TOC entry 2867 (class 1259 OID 27170)
--- Dependencies: 171
+-- TOC entry 2895 (class 1259 OID 16890)
+-- Dependencies: 172
 -- Name: контрагенты_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4307,8 +4307,8 @@ CREATE INDEX "контрагенты_имя_idx" ON "контрагенты" USI
 
 
 --
--- TOC entry 2868 (class 1259 OID 27171)
--- Dependencies: 171
+-- TOC entry 2896 (class 1259 OID 16891)
+-- Dependencies: 172
 -- Name: контрагенты_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4316,8 +4316,8 @@ CREATE INDEX "контрагенты_код_idx" ON "контрагенты" USI
 
 
 --
--- TOC entry 2891 (class 1259 OID 27172)
--- Dependencies: 189
+-- TOC entry 2919 (class 1259 OID 16892)
+-- Dependencies: 190
 -- Name: материалы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4325,8 +4325,8 @@ CREATE INDEX "материалы_имя_idx" ON "материалы" USING btree
 
 
 --
--- TOC entry 2892 (class 1259 OID 27173)
--- Dependencies: 189
+-- TOC entry 2920 (class 1259 OID 16893)
+-- Dependencies: 190
 -- Name: материалы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4334,8 +4334,8 @@ CREATE INDEX "материалы_код_idx" ON "материалы" USING btree
 
 
 --
--- TOC entry 2895 (class 1259 OID 27174)
--- Dependencies: 191
+-- TOC entry 2923 (class 1259 OID 16894)
+-- Dependencies: 192
 -- Name: номенклатура_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4343,8 +4343,8 @@ CREATE INDEX "номенклатура_имя_idx" ON "номенклатура"
 
 
 --
--- TOC entry 2896 (class 1259 OID 27175)
--- Dependencies: 191
+-- TOC entry 2924 (class 1259 OID 16895)
+-- Dependencies: 192
 -- Name: номенклатура_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4352,8 +4352,8 @@ CREATE INDEX "номенклатура_код_idx" ON "номенклатура"
 
 
 --
--- TOC entry 2932 (class 1259 OID 27176)
--- Dependencies: 219
+-- TOC entry 2960 (class 1259 OID 16896)
+-- Dependencies: 222
 -- Name: нумераторы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4361,8 +4361,8 @@ CREATE INDEX "нумераторы_имя_idx" ON "нумераторы" USING b
 
 
 --
--- TOC entry 2933 (class 1259 OID 27177)
--- Dependencies: 219
+-- TOC entry 2961 (class 1259 OID 16897)
+-- Dependencies: 222
 -- Name: нумераторы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4370,8 +4370,8 @@ CREATE INDEX "нумераторы_код_idx" ON "нумераторы" USING b
 
 
 --
--- TOC entry 2936 (class 1259 OID 27178)
--- Dependencies: 221
+-- TOC entry 2964 (class 1259 OID 16898)
+-- Dependencies: 224
 -- Name: персонал_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4379,8 +4379,8 @@ CREATE INDEX "персонал_имя_idx" ON "персонал" USING btree ("�
 
 
 --
--- TOC entry 2937 (class 1259 OID 27179)
--- Dependencies: 221
+-- TOC entry 2965 (class 1259 OID 16899)
+-- Dependencies: 224
 -- Name: персонал_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4388,8 +4388,8 @@ CREATE INDEX "персонал_код_idx" ON "персонал" USING btree ("�
 
 
 --
--- TOC entry 2938 (class 1259 OID 27180)
--- Dependencies: 223
+-- TOC entry 2966 (class 1259 OID 16900)
+-- Dependencies: 226
 -- Name: прайсы_fts_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4397,8 +4397,8 @@ CREATE INDEX "прайсы_fts_idx" ON "прайсы" USING gin (fts);
 
 
 --
--- TOC entry 2941 (class 1259 OID 27181)
--- Dependencies: 223
+-- TOC entry 2969 (class 1259 OID 16901)
+-- Dependencies: 226
 -- Name: прайсы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4406,8 +4406,8 @@ CREATE INDEX "прайсы_имя_idx" ON "прайсы" USING btree ("имя" v
 
 
 --
--- TOC entry 2942 (class 1259 OID 27182)
--- Dependencies: 223
+-- TOC entry 2970 (class 1259 OID 16902)
+-- Dependencies: 226
 -- Name: прайсы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4415,8 +4415,8 @@ CREATE INDEX "прайсы_код_idx" ON "прайсы" USING btree ("код");
 
 
 --
--- TOC entry 2943 (class 1259 OID 27183)
--- Dependencies: 223
+-- TOC entry 2971 (class 1259 OID 16903)
+-- Dependencies: 226
 -- Name: прайсы_код_товар; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4424,8 +4424,8 @@ CREATE INDEX "прайсы_код_товар" ON "прайсы" USING btree ("к
 
 
 --
--- TOC entry 2944 (class 1259 OID 27184)
--- Dependencies: 223 223
+-- TOC entry 2972 (class 1259 OID 16904)
+-- Dependencies: 226 226
 -- Name: прайсы_код_товар_код_фирмы; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4433,8 +4433,8 @@ CREATE INDEX "прайсы_код_товар_код_фирмы" ON "прайсы
 
 
 --
--- TOC entry 2945 (class 1259 OID 27185)
--- Dependencies: 223
+-- TOC entry 2973 (class 1259 OID 16905)
+-- Dependencies: 226
 -- Name: прайсы_код_фирмы_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4442,8 +4442,8 @@ CREATE INDEX "прайсы_код_фирмы_idx" ON "прайсы" USING btree 
 
 
 --
--- TOC entry 2946 (class 1259 OID 27186)
--- Dependencies: 223 223
+-- TOC entry 2974 (class 1259 OID 16906)
+-- Dependencies: 226 226
 -- Name: прайсы_код_фирмы_имя; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4451,8 +4451,8 @@ CREATE INDEX "прайсы_код_фирмы_имя" ON "прайсы" USING btr
 
 
 --
--- TOC entry 2947 (class 1259 OID 27187)
--- Dependencies: 223 223
+-- TOC entry 2975 (class 1259 OID 16907)
+-- Dependencies: 226 226
 -- Name: прайсы_код_фирмы_кодвпрайсе; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4460,8 +4460,8 @@ CREATE INDEX "прайсы_код_фирмы_кодвпрайсе" ON "прай�
 
 
 --
--- TOC entry 2948 (class 1259 OID 27188)
--- Dependencies: 223
+-- TOC entry 2976 (class 1259 OID 16908)
+-- Dependencies: 226
 -- Name: прайсы_кодвпрайсе; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4469,8 +4469,8 @@ CREATE INDEX "прайсы_кодвпрайсе" ON "прайсы" USING btree (
 
 
 --
--- TOC entry 2951 (class 1259 OID 27189)
--- Dependencies: 225
+-- TOC entry 2979 (class 1259 OID 16909)
+-- Dependencies: 228
 -- Name: предметы_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4478,8 +4478,8 @@ CREATE INDEX "предметы_имя_idx" ON "предметы" USING btree ("�
 
 
 --
--- TOC entry 2952 (class 1259 OID 27190)
--- Dependencies: 225
+-- TOC entry 2980 (class 1259 OID 16910)
+-- Dependencies: 228
 -- Name: предметы_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4487,8 +4487,8 @@ CREATE INDEX "предметы_код_idx" ON "предметы" USING btree ("�
 
 
 --
--- TOC entry 2899 (class 1259 OID 27191)
--- Dependencies: 193 193 193
+-- TOC entry 2927 (class 1259 OID 16911)
+-- Dependencies: 194 194 194
 -- Name: проводки_дбкод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4496,8 +4496,8 @@ CREATE INDEX "проводки_дбкод_idx" ON "проводки" USING btree
 
 
 --
--- TOC entry 2900 (class 1259 OID 27192)
--- Dependencies: 193 193
+-- TOC entry 2928 (class 1259 OID 16912)
+-- Dependencies: 194 194
 -- Name: проводки_дбсчет_опер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4505,8 +4505,8 @@ CREATE INDEX "проводки_дбсчет_опер_idx" ON "проводки" 
 
 
 --
--- TOC entry 2901 (class 1259 OID 27193)
--- Dependencies: 193
+-- TOC entry 2929 (class 1259 OID 16913)
+-- Dependencies: 194
 -- Name: проводки_доккод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4514,8 +4514,8 @@ CREATE INDEX "проводки_доккод_idx" ON "проводки" USING btr
 
 
 --
--- TOC entry 2902 (class 1259 OID 27194)
--- Dependencies: 193 193 193
+-- TOC entry 2930 (class 1259 OID 16914)
+-- Dependencies: 194 194 194
 -- Name: проводки_доккод_опер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4523,8 +4523,8 @@ CREATE INDEX "проводки_доккод_опер_idx" ON "проводки" 
 
 
 --
--- TOC entry 2903 (class 1259 OID 27195)
--- Dependencies: 193 193
+-- TOC entry 2931 (class 1259 OID 16915)
+-- Dependencies: 194 194
 -- Name: проводки_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4532,8 +4532,8 @@ CREATE INDEX "проводки_доккод_стр_idx" ON "проводки" US
 
 
 --
--- TOC entry 2904 (class 1259 OID 27196)
--- Dependencies: 193
+-- TOC entry 2932 (class 1259 OID 16916)
+-- Dependencies: 194
 -- Name: проводки_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4541,8 +4541,8 @@ CREATE INDEX "проводки_код_idx" ON "проводки" USING btree ("�
 
 
 --
--- TOC entry 2905 (class 1259 OID 27197)
--- Dependencies: 193 193 193
+-- TOC entry 2933 (class 1259 OID 16917)
+-- Dependencies: 194 194 194
 -- Name: проводки_кркод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4550,8 +4550,8 @@ CREATE INDEX "проводки_кркод_idx" ON "проводки" USING btree
 
 
 --
--- TOC entry 2906 (class 1259 OID 27198)
--- Dependencies: 193 193
+-- TOC entry 2934 (class 1259 OID 16918)
+-- Dependencies: 194 194
 -- Name: проводки_крсчет_опер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4559,8 +4559,8 @@ CREATE INDEX "проводки_крсчет_опер_idx" ON "проводки" 
 
 
 --
--- TOC entry 2907 (class 1259 OID 27199)
--- Dependencies: 193 193
+-- TOC entry 2935 (class 1259 OID 16919)
+-- Dependencies: 194 194
 -- Name: проводки_опер_номеропер_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4568,8 +4568,8 @@ CREATE INDEX "проводки_опер_номеропер_idx" ON "провод
 
 
 --
--- TOC entry 2856 (class 1259 OID 27200)
--- Dependencies: 166 166
+-- TOC entry 2884 (class 1259 OID 16920)
+-- Dependencies: 167 167
 -- Name: сальдо_счет_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4577,8 +4577,8 @@ CREATE INDEX "сальдо_счет_код_idx" ON "сальдо" USING btree ("
 
 
 --
--- TOC entry 2859 (class 1259 OID 27201)
--- Dependencies: 167
+-- TOC entry 2887 (class 1259 OID 16921)
+-- Dependencies: 168
 -- Name: счета_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4586,8 +4586,8 @@ CREATE INDEX "счета_имя_idx" ON "счета" USING btree ("имя");
 
 
 --
--- TOC entry 2860 (class 1259 OID 27202)
--- Dependencies: 167
+-- TOC entry 2888 (class 1259 OID 16922)
+-- Dependencies: 168
 -- Name: счета_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4595,8 +4595,8 @@ CREATE INDEX "счета_код_idx" ON "счета" USING btree ("код");
 
 
 --
--- TOC entry 2955 (class 1259 OID 27203)
--- Dependencies: 231
+-- TOC entry 2983 (class 1259 OID 16923)
+-- Dependencies: 234
 -- Name: типыобъектов_имя_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4604,8 +4604,8 @@ CREATE INDEX "типыобъектов_имя_idx" ON "типыобъектов"
 
 
 --
--- TOC entry 2956 (class 1259 OID 27204)
--- Dependencies: 231
+-- TOC entry 2984 (class 1259 OID 16924)
+-- Dependencies: 234
 -- Name: типыобъектов_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4613,8 +4613,8 @@ CREATE INDEX "типыобъектов_код_idx" ON "типыобъектов"
 
 
 --
--- TOC entry 2973 (class 2620 OID 27205)
--- Dependencies: 258 199
+-- TOC entry 3000 (class 2620 OID 16925)
+-- Dependencies: 202 260
 -- Name: testdeleting_адрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4622,8 +4622,8 @@ CREATE TRIGGER "testdeleting_адрес" BEFORE DELETE ON "адрес" FOR EACH 
 
 
 --
--- TOC entry 2974 (class 2620 OID 27206)
--- Dependencies: 201 258
+-- TOC entry 3001 (class 2620 OID 16926)
+-- Dependencies: 260 204
 -- Name: testdeleting_банки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4631,8 +4631,8 @@ CREATE TRIGGER "testdeleting_банки" BEFORE DELETE ON "банки" FOR EACH 
 
 
 --
--- TOC entry 2975 (class 2620 OID 27207)
--- Dependencies: 203 258
+-- TOC entry 3002 (class 2620 OID 16927)
+-- Dependencies: 260 206
 -- Name: testdeleting_банковские_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4640,8 +4640,8 @@ CREATE TRIGGER "testdeleting_банковские_счета" BEFORE DELETE ON "
 
 
 --
--- TOC entry 2964 (class 2620 OID 27208)
--- Dependencies: 258 169
+-- TOC entry 2991 (class 2620 OID 16928)
+-- Dependencies: 260 170
 -- Name: testdeleting_блокпериоды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4649,8 +4649,8 @@ CREATE TRIGGER "testdeleting_блокпериоды" BEFORE DELETE ON "блок�
 
 
 --
--- TOC entry 2976 (class 2620 OID 27209)
--- Dependencies: 206 258
+-- TOC entry 3003 (class 2620 OID 16929)
+-- Dependencies: 260 209
 -- Name: testdeleting_виды_расходов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4658,8 +4658,8 @@ CREATE TRIGGER "testdeleting_виды_расходов" BEFORE DELETE ON "вид
 
 
 --
--- TOC entry 2967 (class 2620 OID 27210)
--- Dependencies: 258 176
+-- TOC entry 2994 (class 2620 OID 16930)
+-- Dependencies: 260 177
 -- Name: testdeleting_доступ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4667,8 +4667,8 @@ CREATE TRIGGER "testdeleting_доступ" BEFORE DELETE ON "доступ" FOR E
 
 
 --
--- TOC entry 2968 (class 2620 OID 27211)
--- Dependencies: 258 186
+-- TOC entry 2995 (class 2620 OID 16931)
+-- Dependencies: 260 187
 -- Name: testdeleting_константы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4676,8 +4676,8 @@ CREATE TRIGGER "testdeleting_константы" BEFORE DELETE ON "конста�
 
 
 --
--- TOC entry 2965 (class 2620 OID 27212)
--- Dependencies: 258 171
+-- TOC entry 2992 (class 2620 OID 16932)
+-- Dependencies: 260 172
 -- Name: testdeleting_контрагенты; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4685,8 +4685,8 @@ CREATE TRIGGER "testdeleting_контрагенты" BEFORE DELETE ON "конт�
 
 
 --
--- TOC entry 2969 (class 2620 OID 27213)
--- Dependencies: 189 258
+-- TOC entry 2996 (class 2620 OID 16933)
+-- Dependencies: 260 190
 -- Name: testdeleting_материалы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4694,8 +4694,8 @@ CREATE TRIGGER "testdeleting_материалы" BEFORE DELETE ON "матери�
 
 
 --
--- TOC entry 2977 (class 2620 OID 27214)
--- Dependencies: 258 216
+-- TOC entry 3004 (class 2620 OID 16934)
+-- Dependencies: 219 260
 -- Name: testdeleting_набор1; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4703,8 +4703,8 @@ CREATE TRIGGER "testdeleting_набор1" BEFORE DELETE ON "набор1" FOR EAC
 
 
 --
--- TOC entry 2978 (class 2620 OID 27215)
--- Dependencies: 219 258
+-- TOC entry 3005 (class 2620 OID 16935)
+-- Dependencies: 222 260
 -- Name: testdeleting_нумераторы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4712,8 +4712,8 @@ CREATE TRIGGER "testdeleting_нумераторы" BEFORE DELETE ON "нумер�
 
 
 --
--- TOC entry 2979 (class 2620 OID 27216)
--- Dependencies: 221 258
+-- TOC entry 3006 (class 2620 OID 16936)
+-- Dependencies: 260 224
 -- Name: testdeleting_персонал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4721,8 +4721,8 @@ CREATE TRIGGER "testdeleting_персонал" BEFORE DELETE ON "персона�
 
 
 --
--- TOC entry 2962 (class 2620 OID 27217)
--- Dependencies: 166 257
+-- TOC entry 2989 (class 2620 OID 16937)
+-- Dependencies: 167 259
 -- Name: testdeleting_сальдо; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4730,8 +4730,8 @@ CREATE TRIGGER "testdeleting_сальдо" BEFORE DELETE ON "сальдо" FOR E
 
 
 --
--- TOC entry 2981 (class 2620 OID 27218)
--- Dependencies: 258 231
+-- TOC entry 3008 (class 2620 OID 16938)
+-- Dependencies: 234 260
 -- Name: testdeleting_типыобъектов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4739,8 +4739,8 @@ CREATE TRIGGER "testdeleting_типыобъектов" BEFORE DELETE ON "тип�
 
 
 --
--- TOC entry 2982 (class 2620 OID 27256)
--- Dependencies: 237 258
+-- TOC entry 3009 (class 2620 OID 16939)
+-- Dependencies: 239 260
 -- Name: testdeleting_фирмы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4748,8 +4748,8 @@ CREATE TRIGGER "testdeleting_фирмы" BEFORE DELETE ON "фирмы" FOR EACH 
 
 
 --
--- TOC entry 2980 (class 2620 OID 27219)
--- Dependencies: 223 263
+-- TOC entry 3007 (class 2620 OID 16940)
+-- Dependencies: 226 262
 -- Name: tsvectorupdate_прайсы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4757,8 +4757,8 @@ CREATE TRIGGER "tsvectorupdate_прайсы" BEFORE INSERT OR UPDATE ON "пра�
 
 
 --
--- TOC entry 2970 (class 2620 OID 27220)
--- Dependencies: 193 260
+-- TOC entry 2997 (class 2620 OID 16941)
+-- Dependencies: 194 263
 -- Name: вставитьпроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4766,8 +4766,8 @@ CREATE TRIGGER "вставитьпроводку" BEFORE INSERT ON "провод
 
 
 --
--- TOC entry 2963 (class 2620 OID 27221)
--- Dependencies: 166 261
+-- TOC entry 2990 (class 2620 OID 16942)
+-- Dependencies: 167 264
 -- Name: считатьконечноесальдо; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4775,8 +4775,8 @@ CREATE TRIGGER "считатьконечноесальдо" BEFORE INSERT OR UPD
 
 
 --
--- TOC entry 2971 (class 2620 OID 27222)
--- Dependencies: 193 254
+-- TOC entry 2998 (class 2620 OID 16943)
+-- Dependencies: 265 194
 -- Name: считатьпроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4784,8 +4784,8 @@ CREATE TRIGGER "считатьпроводку" BEFORE UPDATE ON "проводк
 
 
 --
--- TOC entry 2966 (class 2620 OID 27223)
--- Dependencies: 173 262
+-- TOC entry 2993 (class 2620 OID 16944)
+-- Dependencies: 174 266
 -- Name: удалитьдокумент; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4793,8 +4793,8 @@ CREATE TRIGGER "удалитьдокумент" BEFORE DELETE ON "докумен
 
 
 --
--- TOC entry 2972 (class 2620 OID 27224)
--- Dependencies: 193 264
+-- TOC entry 2999 (class 2620 OID 16945)
+-- Dependencies: 267 194
 -- Name: удалитьпроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -4802,7 +4802,7 @@ CREATE TRIGGER "удалитьпроводку" BEFORE DELETE ON "проводк
 
 
 --
--- TOC entry 3015 (class 0 OID 0)
+-- TOC entry 3042 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -4814,8 +4814,8 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- TOC entry 3017 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 3044 (class 0 OID 0)
+-- Dependencies: 268
 -- Name: sp_calcaccoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4826,7 +4826,7 @@ GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character varying, cdate1 character 
 
 
 --
--- TOC entry 3018 (class 0 OID 0)
+-- TOC entry 3045 (class 0 OID 0)
 -- Dependencies: 253
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
@@ -4838,8 +4838,8 @@ GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character 
 
 
 --
--- TOC entry 3019 (class 0 OID 0)
--- Dependencies: 265
+-- TOC entry 3046 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4850,8 +4850,8 @@ GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cd
 
 
 --
--- TOC entry 3020 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 3047 (class 0 OID 0)
+-- Dependencies: 270
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4862,8 +4862,8 @@ GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character var
 
 
 --
--- TOC entry 3021 (class 0 OID 0)
--- Dependencies: 268
+-- TOC entry 3048 (class 0 OID 0)
+-- Dependencies: 255
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4874,8 +4874,8 @@ GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname cha
 
 
 --
--- TOC entry 3022 (class 0 OID 0)
--- Dependencies: 256
+-- TOC entry 3049 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: sp_deletedoc(integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4886,8 +4886,8 @@ GRANT ALL ON FUNCTION sp_deletedoc(ndocid integer) TO bookkeeper;
 
 
 --
--- TOC entry 3023 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 3050 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: sp_deletedocstr(integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4898,8 +4898,8 @@ GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO bookke
 
 
 --
--- TOC entry 3024 (class 0 OID 0)
--- Dependencies: 269
+-- TOC entry 3051 (class 0 OID 0)
+-- Dependencies: 257
 -- Name: sp_insertdoc(integer, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4910,8 +4910,8 @@ GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO bo
 
 
 --
--- TOC entry 3025 (class 0 OID 0)
--- Dependencies: 271
+-- TOC entry 3052 (class 0 OID 0)
+-- Dependencies: 258
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4922,8 +4922,8 @@ GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam cha
 
 
 --
--- TOC entry 3026 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 3053 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: sp_islockedperiod(character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4934,8 +4934,8 @@ GRANT ALL ON FUNCTION sp_islockedperiod(cdate character varying) TO bookkeeper;
 
 
 --
--- TOC entry 3027 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 3054 (class 0 OID 0)
+-- Dependencies: 272
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4946,8 +4946,8 @@ GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictn
 
 
 --
--- TOC entry 3028 (class 0 OID 0)
--- Dependencies: 166
+-- TOC entry 3055 (class 0 OID 0)
+-- Dependencies: 167
 -- Name: сальдо; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4958,8 +4958,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "сальдо" TO bookkeeper;
 
 
 --
--- TOC entry 3029 (class 0 OID 0)
--- Dependencies: 167
+-- TOC entry 3056 (class 0 OID 0)
+-- Dependencies: 168
 -- Name: счета; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4970,8 +4970,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "счета" TO bookkeeper;
 
 
 --
--- TOC entry 3030 (class 0 OID 0)
--- Dependencies: 168
+-- TOC entry 3057 (class 0 OID 0)
+-- Dependencies: 169
 -- Name: vw_баланс; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4982,8 +4982,8 @@ GRANT SELECT ON TABLE "vw_баланс" TO bookkeeper;
 
 
 --
--- TOC entry 3031 (class 0 OID 0)
--- Dependencies: 169
+-- TOC entry 3058 (class 0 OID 0)
+-- Dependencies: 170
 -- Name: блокпериоды; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -4994,8 +4994,8 @@ GRANT SELECT,UPDATE ON TABLE "блокпериоды" TO bookkeeper;
 
 
 --
--- TOC entry 3032 (class 0 OID 0)
--- Dependencies: 170
+-- TOC entry 3059 (class 0 OID 0)
+-- Dependencies: 171
 -- Name: vw_блокпериоды; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5006,8 +5006,8 @@ GRANT SELECT ON TABLE "vw_блокпериоды" TO bookkeeper;
 
 
 --
--- TOC entry 3033 (class 0 OID 0)
--- Dependencies: 171
+-- TOC entry 3060 (class 0 OID 0)
+-- Dependencies: 172
 -- Name: контрагенты; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5018,8 +5018,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "контрагенты" TO bookkeepe
 
 
 --
--- TOC entry 3034 (class 0 OID 0)
--- Dependencies: 172
+-- TOC entry 3061 (class 0 OID 0)
+-- Dependencies: 173
 -- Name: vw_грузополучатели; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5030,8 +5030,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "vw_грузополучатели" T
 
 
 --
--- TOC entry 3035 (class 0 OID 0)
--- Dependencies: 173
+-- TOC entry 3062 (class 0 OID 0)
+-- Dependencies: 174
 -- Name: документы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5042,8 +5042,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "документы" TO bookkeeper;
 
 
 --
--- TOC entry 3036 (class 0 OID 0)
--- Dependencies: 175
+-- TOC entry 3063 (class 0 OID 0)
+-- Dependencies: 176
 -- Name: vw_пользователи; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5054,8 +5054,8 @@ GRANT SELECT ON TABLE "vw_пользователи" TO test;
 
 
 --
--- TOC entry 3037 (class 0 OID 0)
--- Dependencies: 176
+-- TOC entry 3064 (class 0 OID 0)
+-- Dependencies: 177
 -- Name: доступ; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5065,8 +5065,8 @@ GRANT ALL ON TABLE "доступ" TO sa;
 
 
 --
--- TOC entry 3038 (class 0 OID 0)
--- Dependencies: 178
+-- TOC entry 3065 (class 0 OID 0)
+-- Dependencies: 179
 -- Name: vw_доступ_к_оборотам; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5077,8 +5077,8 @@ GRANT SELECT ON TABLE "vw_доступ_к_оборотам" TO PUBLIC;
 
 
 --
--- TOC entry 3039 (class 0 OID 0)
--- Dependencies: 179
+-- TOC entry 3066 (class 0 OID 0)
+-- Dependencies: 180
 -- Name: vw_доступ_к_сальдо; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5089,8 +5089,8 @@ GRANT SELECT ON TABLE "vw_доступ_к_сальдо" TO PUBLIC;
 
 
 --
--- TOC entry 3040 (class 0 OID 0)
--- Dependencies: 180
+-- TOC entry 3067 (class 0 OID 0)
+-- Dependencies: 181
 -- Name: справочники; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5101,8 +5101,8 @@ GRANT SELECT ON TABLE "справочники" TO bookkeeper;
 
 
 --
--- TOC entry 3041 (class 0 OID 0)
--- Dependencies: 181
+-- TOC entry 3068 (class 0 OID 0)
+-- Dependencies: 182
 -- Name: vw_доступ_к_справочникам; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5113,8 +5113,8 @@ GRANT SELECT ON TABLE "vw_доступ_к_справочникам" TO PUBLIC;
 
 
 --
--- TOC entry 3042 (class 0 OID 0)
--- Dependencies: 182
+-- TOC entry 3069 (class 0 OID 0)
+-- Dependencies: 183
 -- Name: топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5125,8 +5125,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "топер" TO bookkeeper;
 
 
 --
--- TOC entry 3043 (class 0 OID 0)
--- Dependencies: 183
+-- TOC entry 3070 (class 0 OID 0)
+-- Dependencies: 184
 -- Name: vw_доступ_к_топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5137,8 +5137,8 @@ GRANT SELECT ON TABLE "vw_доступ_к_топер" TO PUBLIC;
 
 
 --
--- TOC entry 3044 (class 0 OID 0)
--- Dependencies: 185
+-- TOC entry 3071 (class 0 OID 0)
+-- Dependencies: 186
 -- Name: vw_журнал; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5148,8 +5148,8 @@ GRANT ALL ON TABLE "vw_журнал" TO sa;
 
 
 --
--- TOC entry 3045 (class 0 OID 0)
--- Dependencies: 186
+-- TOC entry 3072 (class 0 OID 0)
+-- Dependencies: 187
 -- Name: константы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5159,8 +5159,8 @@ GRANT ALL ON TABLE "константы" TO sa;
 
 
 --
--- TOC entry 3046 (class 0 OID 0)
--- Dependencies: 187
+-- TOC entry 3073 (class 0 OID 0)
+-- Dependencies: 188
 -- Name: vw_константы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5172,8 +5172,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "vw_константы" TO bookkeeper
 
 
 --
--- TOC entry 3047 (class 0 OID 0)
--- Dependencies: 188
+-- TOC entry 3074 (class 0 OID 0)
+-- Dependencies: 189
 -- Name: vw_контрагенты; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5184,8 +5184,8 @@ GRANT ALL ON TABLE "vw_контрагенты" TO bookkeeper;
 
 
 --
--- TOC entry 3048 (class 0 OID 0)
--- Dependencies: 189
+-- TOC entry 3075 (class 0 OID 0)
+-- Dependencies: 190
 -- Name: материалы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5196,8 +5196,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "материалы" TO bookkeeper;
 
 
 --
--- TOC entry 3049 (class 0 OID 0)
--- Dependencies: 190
+-- TOC entry 3076 (class 0 OID 0)
+-- Dependencies: 191
 -- Name: vw_материалы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5208,8 +5208,8 @@ GRANT ALL ON TABLE "vw_материалы" TO bookkeeper;
 
 
 --
--- TOC entry 3050 (class 0 OID 0)
--- Dependencies: 191
+-- TOC entry 3077 (class 0 OID 0)
+-- Dependencies: 192
 -- Name: номенклатура; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5220,8 +5220,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "номенклатура" TO bookkee
 
 
 --
--- TOC entry 3051 (class 0 OID 0)
--- Dependencies: 192
+-- TOC entry 3078 (class 0 OID 0)
+-- Dependencies: 193
 -- Name: vw_номенклатура; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5232,8 +5232,8 @@ GRANT ALL ON TABLE "vw_номенклатура" TO bookkeeper;
 
 
 --
--- TOC entry 3052 (class 0 OID 0)
--- Dependencies: 193
+-- TOC entry 3079 (class 0 OID 0)
+-- Dependencies: 194
 -- Name: проводки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5244,8 +5244,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "проводки" TO bookkeeper;
 
 
 --
--- TOC entry 3053 (class 0 OID 0)
--- Dependencies: 195
+-- TOC entry 3080 (class 0 OID 0)
+-- Dependencies: 196
 -- Name: vw_справочники_со_столбцами; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5256,8 +5256,8 @@ GRANT SELECT ON TABLE "vw_справочники_со_столбцами" TO boo
 
 
 --
--- TOC entry 3054 (class 0 OID 0)
--- Dependencies: 196
+-- TOC entry 3081 (class 0 OID 0)
+-- Dependencies: 197
 -- Name: столбцы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5268,8 +5268,8 @@ GRANT SELECT ON TABLE "столбцы" TO bookkeeper;
 
 
 --
--- TOC entry 3055 (class 0 OID 0)
--- Dependencies: 239
+-- TOC entry 3082 (class 0 OID 0)
+-- Dependencies: 198
 -- Name: vw_столбцы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5279,8 +5279,8 @@ GRANT ALL ON TABLE "vw_столбцы" TO sa;
 
 
 --
--- TOC entry 3056 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 3083 (class 0 OID 0)
+-- Dependencies: 199
 -- Name: vw_столбцы_типы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5290,8 +5290,8 @@ GRANT ALL ON TABLE "vw_столбцы_типы" TO sa;
 
 
 --
--- TOC entry 3057 (class 0 OID 0)
--- Dependencies: 197
+-- TOC entry 3084 (class 0 OID 0)
+-- Dependencies: 200
 -- Name: vw_счета; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5302,8 +5302,8 @@ GRANT SELECT ON TABLE "vw_счета" TO bookkeeper;
 
 
 --
--- TOC entry 3058 (class 0 OID 0)
--- Dependencies: 198
+-- TOC entry 3085 (class 0 OID 0)
+-- Dependencies: 201
 -- Name: vw_топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5314,8 +5314,8 @@ GRANT SELECT ON TABLE "vw_топер" TO bookkeeper;
 
 
 --
--- TOC entry 3059 (class 0 OID 0)
--- Dependencies: 199
+-- TOC entry 3086 (class 0 OID 0)
+-- Dependencies: 202
 -- Name: адрес; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5325,8 +5325,8 @@ GRANT ALL ON TABLE "адрес" TO sa;
 
 
 --
--- TOC entry 3062 (class 0 OID 0)
--- Dependencies: 201
+-- TOC entry 3089 (class 0 OID 0)
+-- Dependencies: 204
 -- Name: банки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5337,8 +5337,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "банки" TO bookkeeper;
 
 
 --
--- TOC entry 3065 (class 0 OID 0)
--- Dependencies: 203
+-- TOC entry 3092 (class 0 OID 0)
+-- Dependencies: 206
 -- Name: банковские_счета; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5349,8 +5349,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "банковские_счета" TO bookkee
 
 
 --
--- TOC entry 3070 (class 0 OID 0)
--- Dependencies: 206
+-- TOC entry 3097 (class 0 OID 0)
+-- Dependencies: 209
 -- Name: виды_расходов; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5361,8 +5361,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "виды_расходов" TO bookke
 
 
 --
--- TOC entry 3087 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 3114 (class 0 OID 0)
+-- Dependencies: 219
 -- Name: набор1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5372,8 +5372,8 @@ GRANT ALL ON TABLE "набор1" TO sa;
 
 
 --
--- TOC entry 3092 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 3119 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: нумераторы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5384,8 +5384,8 @@ GRANT SELECT,UPDATE ON TABLE "нумераторы" TO bookkeeper;
 
 
 --
--- TOC entry 3095 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 3122 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: персонал; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5396,8 +5396,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "персонал" TO bookkeeper;
 
 
 --
--- TOC entry 3098 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 3125 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: прайсы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5408,8 +5408,8 @@ GRANT SELECT ON TABLE "прайсы" TO bookkeeper;
 
 
 --
--- TOC entry 3101 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 3128 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: предметы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5420,8 +5420,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "предметы" TO bookkeeper;
 
 
 --
--- TOC entry 3112 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3139 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: типыобъектов; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5433,8 +5433,8 @@ GRANT SELECT ON TABLE "типыобъектов" TO bookkeeper;
 
 
 --
--- TOC entry 3117 (class 0 OID 0)
--- Dependencies: 234
+-- TOC entry 3144 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: файлы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5445,8 +5445,8 @@ GRANT SELECT ON TABLE "файлы" TO PUBLIC;
 
 
 --
--- TOC entry 3120 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 3147 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: фирмы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -5455,7 +5455,7 @@ REVOKE ALL ON TABLE "фирмы" FROM sa;
 GRANT ALL ON TABLE "фирмы" TO sa;
 
 
--- Completed on 2012-04-03 16:37:18 MSK
+-- Completed on 2012-04-29 22:28:39 MSK
 
 --
 -- PostgreSQL database dump complete

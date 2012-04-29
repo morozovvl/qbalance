@@ -38,7 +38,7 @@ class TableView : public QTableView {
     Q_OBJECT
 
 public:
-    QMap<int, FieldType>*   columns;
+    QList<FieldType>*           columns;
 
     TableView(QWidget* = 0, FormGrid* = 0);
     ~TableView();

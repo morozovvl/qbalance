@@ -48,6 +48,7 @@ TableView::~TableView()
     delete oldModel;
 }
 
+
 void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     QTableView::currentChanged(current, previous);
@@ -86,14 +87,18 @@ void TableView::setModel(MySqlRelationalTableModel* model)
     if (model != 0)
     {
         tableModel = model;
-//        QItemSelectionModel *oldModel = selectionModel();
-        QTableView::setModel(model);
-//        delete oldModel;
+        QTableView::setModel(tableModel);
         if (parent != 0)
         {
+            // Прочитаем список доступных полей
             columns = parent->getParent()->getColumnsProperties();
-            setColumnsHeaders();
-            setColumnsDelegates();
+            if (columns->count() > 0)
+            {
+                // Установим заголовки полей
+                setColumnsHeaders();
+                // и их делегаты
+                setColumnsDelegates();
+            }
         }
     }
 }
@@ -102,75 +107,69 @@ void TableView::setModel(MySqlRelationalTableModel* model)
 void TableView::setColumnsHeaders()
 {
     QHeaderView* header = horizontalHeader();
+    DBFactory* db = TApplication::exemplar()->getDBFactory();
     header->setMovable(true);
     header->setSortIndicatorShown(true);
-    if (parent != 0) {
-        QSqlQuery headers = app->getDBFactory()->getColumnsHeaders(parent->getParent()->getTagName());
-        if (headers.size() > 0)
-        {   // Если удалось прочитать описание столбцов, то установим столбцы в соответствии с описанием
-            int i;
-            for (i = 0; i < tableModel->columnCount(); i++)
-            {
-                setColumnHidden(i, true);
-            }
-            QString columnName;                 // Расположим их по порядку, как они идут в описании и дадим им правильные заголовки
-            QSqlRecord rec;
-            int k;
-            i = 0;
-            if (headers.first())
-            {
-                do
-                {
-                    rec = headers.record();
-                    columnName = rec.value("столбец").toString().trimmed();
-                    visibleColumns << columnName;
-                    k = tableModel->fieldIndex(columnName);
-                    header->showSection(k);
-                    tableModel->setHeaderData(k, Qt::Horizontal, rec.value("заголовок").toString().trimmed());
-                    header->moveSection(header->visualIndex(k), i);
-                    i++;
-                } while (headers.next());
-            }
-            return;
-        }
-    }
-    QStringList fields = app->getDBFactory()->getFieldsList(columns);
-    for (int i = 0; i < fields.count(); i++)
+    QSqlQuery columnsHeaders = db->getColumnsHeaders(parent->getParent()->getTableName());
+    // Сначала скроем все столбцы
+    if (columnsHeaders.size() > 0)
     {
-        tableModel->setHeaderData(i, Qt::Horizontal, fields.at(i));
+        for (int i = 0; i < tableModel->columnCount(); i++)
+        {
+            setColumnHidden(i, true);
+        }
+        for (columnsHeaders.first(); columnsHeaders.isValid(); columnsHeaders.next())
+        {
+            int number = columnsHeaders.record().value(db->getObjectName("vw_столбцы.номер")).toInt();
+            if (number > 0)
+            {
+                int k;
+                QString columnName = columnsHeaders.record().value(db->getObjectName("vw_столбцы.столбец")).toString();
+                visibleColumns << columnName;
+                k = tableModel->fieldIndex(columnName);
+                header->showSection(k);
+                tableModel->setHeaderData(k, Qt::Horizontal, columnsHeaders.record().value(db->getObjectName("vw_столбцы.заголовок")).toString());
+                header->moveSection(header->visualIndex(k), number - 1);
+            }
+        }
     }
 }
 
 
 void TableView::setColumnsDelegates()
 {
-    foreach (int fld, columns->keys())
+    for (int fld = 0; fld < columns->count(); fld++)
     {
-        if (visibleColumns.contains(columns->value(fld).name))
+        QString columnName;
+        if (parent->getParent()->getTableName() == columns->at(fld).table)
+            columnName = columns->at(fld).name;
+        else
+            columnName = columns->at(fld).table + "__" + columns->at(fld).name;
+        if (visibleColumns.contains(columnName))
         {
-            if (columns->value(fld).type.toUpper() == "NUMERIC" ||
-                columns->value(fld).type.toUpper() == "INTEGER")
+            if (columns->at(fld).type.toUpper() == "NUMERIC" ||
+                columns->at(fld).type.toUpper() == "INTEGER")
             {     // для числовых полей зададим свой самодельный делегат
                 MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parentWidget);
-                numericDelegate->setLength(columns->value(fld).length);
-                numericDelegate->setPrecision(columns->value(fld).precision);
+                numericDelegate->setLength(columns->at(fld).length);
+                numericDelegate->setPrecision(columns->at(fld).precision);
                 connect(numericDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                numericDelegate->setReadOnly(columns->value(fld).readOnly);
-                setItemDelegateForColumn(fld, numericDelegate);
-            } else if (columns->value(fld).type.toUpper() == "BOOLEAN")
+                numericDelegate->setReadOnly(columns->at(fld).readOnly);
+                setItemDelegateForColumn(columns->at(fld).number - 1, numericDelegate);
+            } else if (columns->at(fld).type.toUpper() == "BOOLEAN")
                 {
                     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
                     connect(booleanDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                    booleanDelegate->setReadOnly(columns->value(fld).readOnly);
-                    setItemDelegateForColumn(fld, booleanDelegate);
+                    booleanDelegate->setReadOnly(columns->at(fld).readOnly);
+                    setItemDelegateForColumn(columns->at(fld).number - 1, booleanDelegate);
                 } else
                 {
-                if (columns->value(fld).type.toUpper() == "CHARACTER" ||
-                    columns->value(fld).type.toUpper() == "CHARACTER VARYING") {
+                if (columns->at(fld).type.toUpper() == "CHARACTER" ||
+                    columns->at(fld).type.toUpper() == "CHARACTER VARYING") {
                     MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parentWidget);
                     connect(textDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                    textDelegate->setReadOnly(columns->value(fld).readOnly);
-                    setItemDelegateForColumn(fld, textDelegate);
+                    textDelegate->setReadOnly(columns->at(fld).readOnly);
+                    setItemDelegateForColumn(columns->at(fld).number - 1, textDelegate);
                 }
             }
         }

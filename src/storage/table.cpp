@@ -43,7 +43,7 @@ Table::~Table()
 }
 
 
-QMap<int, FieldType>* Table::getColumnsProperties()
+QList<FieldType>* Table::getColumnsProperties()
 {
     return &columnsProperties;
 }

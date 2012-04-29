@@ -431,11 +431,11 @@ void WizardOperation::getData()
      prvTable->setItemDelegateForColumn(freeField, boolDelegate);
 
      topersList.clear();
-     QMap<int, FieldType> flds;
+     QList<FieldType> flds;
      db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
      getFieldsTable(flds, fieldsTable, &fields);
      sortHeaders(headers, &fields);
-     db->getColumnsProperties(&flds, db->getObjectName("документы"), oper);
+     db->getColumnsProperties(&flds, QString("СписокДокументов%1").arg(oper));
      getFieldsTable(flds, docListFieldsTable, &docListFields);
      sortHeaders(docListHeaders, &docListFields);
 
@@ -576,7 +576,7 @@ void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields
 }
 
 
-void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* fieldsTable, QList<FieldType>* fields)
+void WizardOperation::getFieldsTable(QList<FieldType> flds,  QTableWidget* fieldsTable, QList<FieldType>* fields)
 {
     // Создадим таблицу столбцов
     fieldsTable->setRowCount(flds.count());
@@ -588,26 +588,26 @@ void WizardOperation::getFieldsTable(QMap<int, FieldType> flds,  QTableWidget* f
                                                          << QObject::trUtf8("Точность")
                                                          << QObject::trUtf8("Заголовок")
                                                          << QObject::trUtf8("Видимость"));
-    foreach (int i, flds.keys())
+    for (int i = 0; i < flds.count(); i++)
     {
         QTableWidgetItem* item;
-        item = new QTableWidgetItem(flds.value(i).name);
+        item = new QTableWidgetItem(flds.at(i).name);
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, 0, item);
-        item = new QTableWidgetItem(flds.value(i).type);
+        item = new QTableWidgetItem(flds.at(i).type);
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, 1, item);
-        item = new QTableWidgetItem(QString("%1").arg(flds.value(i).length));
+        item = new QTableWidgetItem(QString("%1").arg(flds.at(i).length));
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, 2, item);
-        item = new QTableWidgetItem(QString("%1").arg(flds.value(i).precision));
+        item = new QTableWidgetItem(QString("%1").arg(flds.at(i).precision));
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, 3, item);
-        item = new QTableWidgetItem(flds.value(i).header);
+        item = new QTableWidgetItem(flds.at(i).header);
         fieldsTable->setItem(i, 4, item);
-        item = new QTableWidgetItem(flds.value(i).number > 0 ? "true" : "false");
+        item = new QTableWidgetItem(flds.at(i).number > 0 ? "true" : "false");
         fieldsTable->setItem(i, 5, item);
-        (*fields) << flds.value(i);
+        (*fields) << flds.at(i);
     }
 
 //     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
@@ -648,7 +648,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 toperT.itog = item->text().trimmed();
             topersList.append(toperT);
         }
-        QMap<int, FieldType> flds;
+        QList<FieldType> flds;
         db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
         getFieldsTable(flds, fieldsTable, &fields);
         prvTableChanged = false;

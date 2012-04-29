@@ -152,7 +152,6 @@ void Dictionary::setForm() {
 bool Dictionary::open(int deep) {
     if (Table::open()) {     // Откроем этот справочник
         fieldList = getFieldsList();
-        QString idField = db->getObjectName("код");
         if (deep > 0) {              // Если нужно открыть подсправочники
             int columnCount = fieldList.count();
             for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
@@ -165,12 +164,12 @@ bool Dictionary::open(int deep) {
                         if (!lIsSet)
                             dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
                         QStringList relFieldList = dict->getFieldsList();
-                        tableModel->setRelation(i, QSqlRelation(name, idField, idField));
+                        tableModel->setRelation(i, QSqlRelation(name, idFieldName, idFieldName));
                         for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
-                            if (relFieldList.at(j) != idField) {
+                            if (relFieldList.at(j) != idFieldName) {    // добавляем в модель все колонки зависимого справочника, кроме колонки "код"
                                 tableModel->insertColumns(columnCount, 1);
-                                tableModel->setRelation(columnCount, i, QSqlRelation(name, idField, relFieldList.at(j)));
-                                tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "." + relFieldList.at(j)));
+                                tableModel->setRelation(columnCount, i, QSqlRelation(name, idFieldName, relFieldList.at(j)));
+                                tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "__" + relFieldList.at(j)));
                                 columnCount++;
                             }
                         }
@@ -184,10 +183,9 @@ bool Dictionary::open(int deep) {
         // Установим порядок сортировки и стратегию сохранения данных на сервере
         tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
         db->getColumnsRestrictions(tableName, &columnsProperties);
-        // Т.к. мы добавили новые столбцы в модель, то сначала завершим создавать модель (выше), а сейчас откроем пользовательскую форму
+
         initForm();
         setScriptEngine();
-//        form->createUi();
         if (scriptEngine != 0)
         {
             if (scriptEngine->open(tableName + ".qs"))
