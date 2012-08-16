@@ -49,6 +49,7 @@ struct FieldType
     int length;
     int precision;
     bool readOnly;
+    bool constReadOnly;
     QString header;
     bool headerExist;
     int number;
@@ -108,6 +109,7 @@ public:
     Q_INVOKABLE QString getDatabaseName() { return dbName; }
     QSqlDatabase* getDB() { return db; }
     QSqlQuery getColumnsHeaders(QString);
+    void getColumnsHeaders(QString, QList<FieldType>*);
     QSqlQuery getDictionariesProperties();
     QSqlRecord getDictionariesProperties(QString tableName);
     QSqlQuery getTopersProperties();
@@ -122,7 +124,6 @@ public:
     QStringList getFieldsList(QString tableName);
     bool isSet(QString tableName);
     void addColumnProperties(QList<FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
-//    void getColumnsProperties(QList<FieldType>*, QString, int = 0);
     void getColumnsProperties(QList<FieldType>*, QString, QString = "", int = 0);
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
@@ -148,6 +149,7 @@ public:
     QStringList initializationScriptList() const;
 
     QString getObjectName(const QString&) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
+    QString getObjectNameCom(const QString&) const;    // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
     static QString storageEncoding();
 
@@ -181,9 +183,9 @@ public:
     bool dropTableColumn(QString, QString);
     bool renameTableColumn(QString, QString, QString);
     bool alterTableColumn(QString, QString, QString);
-    bool appendColumnHeader(int, QString, QString, int = 0);
-    bool updateColumnHeader(int, QString, QString, int = 0);
-    bool setTableColumnHeaderOrder(int, QString, QString, int);
+    bool appendColumnHeader(int, QString, QString, int, bool);
+    bool updateColumnHeader(int, QString, QString, int, bool);
+    bool setTableColumnHeaderOrder(int, QString, QString, int, bool);
 
     // Функции для мастера создания новый (редактирования старых) типовых операций
     bool deleteToper(int operNumber);                           // Удаляет записи о типовой операции в таблице типовых операций
@@ -206,6 +208,8 @@ public:
     QString getToperNumerator(int);                             // Получает значение свойства "нумератор" типовой операции
     bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
     void setToperPermition(int operNumber, QString user, bool menu);
+    QSqlQuery getDocumentAddQueriesList(int);
+    QSqlRecord getDocumentAddQuery(int);
 
 private:
     QSqlDatabase*           db;

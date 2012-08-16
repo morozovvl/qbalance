@@ -31,19 +31,57 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define LABEL_DATE     QObject::trUtf8("Дата:")
 #define LABEL_NUMBER   QObject::trUtf8("Номер:")
 
-FormDocument::FormDocument()
-: FormGrid()
-, dateEdit(NULL)
-, numberEdit(NULL)
-, parameters(NULL)
-, itogNumeric(NULL)
+
+FormDocument::FormDocument(): FormGrid()
 {
+    dateEdit = 0;
+    numberEdit = 0;
+    parameters = 0;
+    itogNumeric = 0;
+    buttonQueryAdd = 0;
+    queriesMenu = 0;
 }
 
 
 void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     FormGrid::createForm(fileName, pwgt);
+    // Подключим кнопку "Добавить из запроса"
+    if (parent != 0)
+    {
+        if (defaultForm)
+        {
+            buttonQueryAdd = new QPushButton();
+            buttonQueryAdd->setObjectName("buttonQueryAdd");
+            cmdButtonLayout->insertWidget(1, buttonQueryAdd);
+        }
+        else
+        {
+            if (formWidget != 0)
+            {
+                buttonQueryAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonQueryAdd");
+            }
+        }
+        if (buttonQueryAdd != 0)
+        {
+            connect(buttonQueryAdd, SIGNAL(clicked()), this, SLOT(cmdQueryAdd()));
+            // Если для этой типовой операции имеются запросы к БД, позволяющие автоматически заполнять документ
+            QSqlQuery queries = db->getDocumentAddQueriesList(getParent()->getOperNumber());
+            if (queries.size() > 0)
+            {
+                queriesMenu = new QMenu(formWidget);    // то создадим меню со списком возможных запросов
+                while (queries.next())
+                {
+                    QAction* action = new QAction(queries.value(0).toString(), queriesMenu);
+                    action->setData(queries.value(1).toInt());
+                    queriesMenu->addAction(action);
+                }
+                buttonQueryAdd->show();                 // и покажем кнопку заполнения документа из запроса
+            }
+            else
+                buttonQueryAdd->hide();     // в противном случае скроем ее
+        }
+    }
 
     bool docParams = false;
     formWidget->resize(600, formWidget->height());
@@ -132,6 +170,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     if (getParent()->getIsSingleString())
     {
         getButtonAdd()->hide();
+        getButtonQueryAdd()->hide();
         getButtonDelete()->hide();
     }
 }
@@ -178,6 +217,17 @@ void FormDocument::cmdOk()
         getParent()->getParent()->setValue("сумма", QVariant(itogNumeric->getValue()));
     getParent()->getParent()->getTableModel()->submit();
     FormGrid::cmdOk();
+}
+
+
+void FormDocument::cmdQueryAdd()
+{
+    QAction* action = queriesMenu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-queriesMenu->height())));
+    if (action > 0)
+    {
+        if (getParent()->addFromQuery(action->data().toInt()) > 0)
+            buttonDelete->setDisabled(false);
+    }
 }
 
 

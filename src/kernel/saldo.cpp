@@ -22,8 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/mysqlrelationaltablemodel.h"
 
 
-Saldo::Saldo(QString cAcc, QString dictName, QObject *parent)
-: Dictionary(dictName, parent) {
+Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictName, parent) {
     //configName = "saldo" + cAcc;
     account = cAcc;
     dictionaryName = dictName;

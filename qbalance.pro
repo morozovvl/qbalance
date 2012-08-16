@@ -18,7 +18,7 @@ CONFIG += designer \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = subdirs
-SUBDIRS = src src/plugins
+SUBDIRS = src/plugins src
 
 unix:MOC_DIR = ./.moc
 win32:MOC_DIR = /.moc

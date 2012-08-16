@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/table.h"
 #include "../engine/scriptengine.h"
 #include "../engine/reportscriptengine.h"
+#include "../gui/dialog.h"
 
 
 class TApplication;
@@ -52,6 +53,7 @@ public:
     Q_INVOKABLE virtual bool            remove();                       // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     virtual void                        print(QString);                 // Печать
+    virtual void                        query(QString filter = "");
 
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
@@ -73,7 +75,7 @@ public:
     Q_INVOKABLE virtual void hide();                // Скрыть форму
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
-    Q_INVOKABLE virtual QDialog* getFormWidget();
+    Q_INVOKABLE virtual Dialog* getFormWidget();
     bool isInsertable() { return lInsertable; }         // Получить/установить ...
     bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     bool isViewable() { return lViewable; }             // ... кнопок на форме

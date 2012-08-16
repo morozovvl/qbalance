@@ -116,6 +116,11 @@ void ConnectionForm::cmdOk() {
     Form::cmdOk();
 }
 
+void ConnectionForm::cmdCancel() {
+    db->close();
+    Form::cmdCancel();
+}
+
 void ConnectionForm::connectionChanged(int index) {
     readSettings(pcmbConnection->itemText(index));
 }

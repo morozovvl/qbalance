@@ -20,7 +20,9 @@ HEADERS = tableviewplugin.h \
     mynumericeditplugin.h \
     ../gui/mynumericedit.h \
     ../gui/mynumericitemdelegate.h \
-    ../gui/myitemdelegate.h
+    ../gui/myitemdelegate.h \
+    ../gui/dialog.h \
+    dialogplugin.h
 SOURCES = tableviewplugin.cpp \
     ../gui/tableview.cpp \
     pictureplugin.cpp \
@@ -34,7 +36,9 @@ SOURCES = tableviewplugin.cpp \
     mynumericeditplugin.cpp \
     ../gui/mynumericedit.cpp \
     ../gui/mynumericitemdelegate.cpp \
-    ../gui/myitemdelegate.cpp
+    ../gui/myitemdelegate.cpp \
+    ../gui/dialog.cpp \
+    dialogplugin.cpp
 
 unix:MOC_DIR = ../../.moc
 win32:MOC_DIR = ../../.moc
@@ -44,4 +48,8 @@ win32:OBJECTS_DIR = ../../.obj
 
 unix:RCC_DIR = ../src
 win32:RCC_DIR = ../src
+
+
+
+
 

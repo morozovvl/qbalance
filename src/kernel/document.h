@@ -46,9 +46,11 @@ public:
     Document(int, Documents*);
     virtual ~Document();
     Q_INVOKABLE int getDocId() { return docId; }
+    Q_INVOKABLE int getOperNumber() { return operNumber; }
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dicts; }
     Q_INVOKABLE Dictionary* getDictionary(QString dictName, int deep = 0, bool add = true) { return dictionaries->getDictionary(dictName, deep, add); }
+    Q_INVOKABLE Saldo* getSaldo(QString acc, QString dictName, int deep = 0) { return dictionaries->getSaldo(acc, dictName, deep); }
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void show();
@@ -58,7 +60,9 @@ public:
     virtual void setConstDictId(QString, QVariant);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
+    virtual void query(QString filter = "");
     virtual void setScriptEngine();
+    int    addFromQuery(int);
     DocumentScriptEngine* getScriptEngine();
     bool getIsSingleString() { return isSingleString; }
     Q_INVOKABLE void setDate(QString date, Qt::DateFormat format = Qt::TextDate) { ((FormDocument*)getForm())->setDate(QDate::fromString(date, format)); }

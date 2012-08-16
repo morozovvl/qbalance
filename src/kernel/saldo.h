@@ -23,10 +23,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionary.h"
 
 class Saldo : public Dictionary {
+    Q_OBJECT
 public:
     Saldo(QString, QString, QObject *parent = 0);
     virtual QString transformSelectStatement(QString);
-    virtual QString objectName() { return "Saldo"; }
+    Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
     void setQuan(bool q) { quan = q; }
     Q_INVOKABLE virtual bool open(int = 0);
 private:

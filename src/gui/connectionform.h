@@ -43,6 +43,7 @@ private slots:
     void cmdSave();
     void cmdDelete();
     void cmdOk();
+    void cmdCancel();
     void connectionChanged(int);
 private:
     DBFactory* db;

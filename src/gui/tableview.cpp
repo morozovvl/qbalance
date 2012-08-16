@@ -36,7 +36,6 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
     name = "TableView";
     app = 0;
     tableModel = 0;
-    columns = 0;
     if (verticalHeader()->minimumSectionSize() > 0)
         verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
 }
@@ -62,11 +61,17 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
 void TableView::keyPressEvent(QKeyEvent* event)
 {
-    if (event->modifiers() == Qt::ControlModifier)
-    {              // Были нажаты клавиши модификации
-        if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return))
-        {   // и <Enter>
+    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return))
+    {
+        if (event->modifiers() == Qt::ControlModifier)
+        {              // Были нажаты клавиши модификации
+                       // и <Enter>
             parent->cmdOk();
+            return;
+        }
+        else
+        {
+//            selectNextColumn();
             return;
         }
     }
@@ -82,7 +87,7 @@ void TableView::keyPressEvent(QKeyEvent* event)
 }
 
 
-void TableView::setModel(MySqlRelationalTableModel* model)
+void TableView::setTableModel(MySqlRelationalTableModel* model)
 {
     if (model != 0)
     {
@@ -90,15 +95,9 @@ void TableView::setModel(MySqlRelationalTableModel* model)
         QTableView::setModel(tableModel);
         if (parent != 0)
         {
-            // Прочитаем список доступных полей
-            columns = parent->getParent()->getColumnsProperties();
-            if (columns->count() > 0)
-            {
-                // Установим заголовки полей
-                setColumnsHeaders();
-                // и их делегаты
-                setColumnsDelegates();
-            }
+            // Установим заголовки и делегаты полей
+            setColumnsHeaders();
+            connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
         }
     }
 }
@@ -110,69 +109,80 @@ void TableView::setColumnsHeaders()
     DBFactory* db = TApplication::exemplar()->getDBFactory();
     header->setMovable(true);
     header->setSortIndicatorShown(true);
-    QSqlQuery columnsHeaders = db->getColumnsHeaders(parent->getParent()->getTableName());
-    // Сначала скроем все столбцы
-    if (columnsHeaders.size() > 0)
+    QList<FieldType>* fields = parent->getParent()->getColumnsProperties();
+    db->getColumnsProperties(fields, tagName);
+    db->getColumnsHeaders(tagName, fields);
+    if (fields->count() > 0)
     {
+        // Сначала скроем все столбцы
         for (int i = 0; i < tableModel->columnCount(); i++)
         {
             setColumnHidden(i, true);
         }
-        for (columnsHeaders.first(); columnsHeaders.isValid(); columnsHeaders.next())
+        for (int i = 0; i < fields->count(); i++)
         {
-            int number = columnsHeaders.record().value(db->getObjectName("vw_столбцы.номер")).toInt();
-            if (number > 0)
+            if (fields->at(i).number > 0)
             {
                 int k;
-                QString columnName = columnsHeaders.record().value(db->getObjectName("vw_столбцы.столбец")).toString();
-                visibleColumns << columnName;
+                QString columnName = fields->at(i).column;
                 k = tableModel->fieldIndex(columnName);
                 header->showSection(k);
-                tableModel->setHeaderData(k, Qt::Horizontal, columnsHeaders.record().value(db->getObjectName("vw_столбцы.заголовок")).toString());
-                header->moveSection(header->visualIndex(k), number - 1);
-            }
-        }
-    }
-}
-
-
-void TableView::setColumnsDelegates()
-{
-    for (int fld = 0; fld < columns->count(); fld++)
-    {
-        QString columnName;
-        if (parent->getParent()->getTableName() == columns->at(fld).table)
-            columnName = columns->at(fld).name;
-        else
-            columnName = columns->at(fld).table + "__" + columns->at(fld).name;
-        if (visibleColumns.contains(columnName))
-        {
-            if (columns->at(fld).type.toUpper() == "NUMERIC" ||
-                columns->at(fld).type.toUpper() == "INTEGER")
-            {     // для числовых полей зададим свой самодельный делегат
-                MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parentWidget);
-                numericDelegate->setLength(columns->at(fld).length);
-                numericDelegate->setPrecision(columns->at(fld).precision);
-                connect(numericDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                numericDelegate->setReadOnly(columns->at(fld).readOnly);
-                setItemDelegateForColumn(columns->at(fld).number - 1, numericDelegate);
-            } else if (columns->at(fld).type.toUpper() == "BOOLEAN")
+                MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
+                if (delegate != 0)
                 {
-                    MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
-                    connect(booleanDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                    booleanDelegate->setReadOnly(columns->at(fld).readOnly);
-                    setItemDelegateForColumn(columns->at(fld).number - 1, booleanDelegate);
-                } else
-                {
-                if (columns->at(fld).type.toUpper() == "CHARACTER" ||
-                    columns->at(fld).type.toUpper() == "CHARACTER VARYING") {
-                    MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parentWidget);
-                    connect(textDelegate, SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate(QWidget*, QAbstractItemDelegate::EndEditHint)));
-                    textDelegate->setReadOnly(columns->at(fld).readOnly);
-                    setItemDelegateForColumn(columns->at(fld).number - 1, textDelegate);
+                    connect(delegate, SIGNAL(closeEditor( QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate()));
+                    delegate->setReadOnly(fields->at(i).readOnly);
+                    setItemDelegateForColumn(k, delegate);
                 }
+                tableModel->setHeaderData(k, Qt::Horizontal, fields->at(i).header);
+                header->moveSection(header->visualIndex(k), fields->at(i).number - 1);
             }
         }
     }
 }
 
+
+MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
+{
+    if (fld.type.toUpper() == "NUMERIC" ||
+        fld.type.toUpper() == "INTEGER")
+    {     // для числовых полей зададим свой самодельный делегат
+        MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(parentWidget, fld.length, fld.precision);
+        return numericDelegate;
+    } else if (fld.type.toUpper() == "BOOLEAN")
+           {
+                MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(parentWidget);
+                return booleanDelegate;
+           } else
+           {
+                if (fld.type.toUpper() == "CHARACTER" ||
+                    fld.type.toUpper() == "CHARACTER VARYING")
+                {
+                    MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parentWidget);
+                    return textDelegate;
+                }
+                else
+                    return 0;
+           }
+}
+
+
+void TableView::selectNextColumn()
+// Ищет следующую колонку для редактирования
+{
+    QModelIndex index = currentIndex();
+    int column = index.column();
+    while (true)
+    {
+        column++;   // Перейдем в следующий столбец
+        if (horizontalHeader()->isSectionHidden(column))
+            column = 0;
+        QModelIndex newIndex = index.sibling(index.row(), column);
+        setCurrentIndex(newIndex);
+        MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(column);
+        if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            break;
+        if (newIndex.column() == index.column())                                           // Если мы уже прошли по кругу по всем колонкам
+            break;
+    }
+}

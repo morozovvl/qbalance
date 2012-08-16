@@ -59,6 +59,7 @@ bool Documents::add() {
     if (db->addDoc(operNumber, date))
     {
         query();
+        form->getGridTable()->selectRow(tableModel->rowCount() - 1);    // Установить фокус таблицы на последнюю, только что добавленную, запись
         return true;
     }
     return false;

@@ -8,7 +8,7 @@ QT += sql \
       script \
       gui
 
-CONFIG += debug
+#CONFIG += debug
 CONFIG(debug) {
     DESTDIR = ./
 }
@@ -77,7 +77,9 @@ SOURCES += main.cpp \
     gui/wizarddictionary.cpp \
     gui/wizardoperation.cpp \
     gui/mytextedit.cpp \
-    gui/mysyntaxhighlighter.cpp
+    gui/mysyntaxhighlighter.cpp \
+    gui/dialog.cpp \
+    gui/progressbar.cpp
 #    report/openrptreportengine.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
@@ -135,7 +137,9 @@ HEADERS += kernel/app.h \
     gui/wizarddictionary.h \
     gui/wizardoperation.h \
     gui/mytextedit.h \
-    gui/mysyntaxhighlighter.h
+    gui/mysyntaxhighlighter.h \
+    gui/dialog.h \
+    gui/progressbar.h
 #    report/openrptreportengine.h \
 #    ./../openrpt/openrpt/report/report.h \
 #    ./../openrpt/openrpt/report/wrapper.h
@@ -166,11 +170,8 @@ unix {
  INSTALLS +=  target  desktop  icons
 }
 
-
-
-
-
-
+OTHER_FILES += \
+    qbalance.nsi
 
 
 

@@ -44,6 +44,8 @@ TApplication::TApplication(int & argc, char** argv)
 
     db  = new DBFactory();
     gui = new GUIFactory(db);
+    dictionaryList = 0;
+    topersList = 0;
 
 //    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
     reportTemplateType = OpenRPTreportTemplate;
@@ -140,20 +142,32 @@ bool TApplication::open() {
     return lResult;
 }
 
+
 void TApplication::close() {
-    foreach(Documents* doc, documents)
+    if (documents.count() > 0)
     {
-        doc->close();
+        foreach(Documents* doc, documents)
+        {
+             doc->close();
+        }
     }
-    dictionaryList->close();
-    delete dictionaryList;
-    topersList->close();
-    delete topersList;
-    gui->close();
-    db->close();
+    if (dictionaryList != 0)
+    {
+        dictionaryList->close();
+        delete dictionaryList;
+    }
+    if (topersList != 0)
+    {
+        topersList->close();
+        delete topersList;
+    }
+    if (gui != 0)
+        gui->close();
+    if (db != 0)
+        db->close();
     if (debugMode())
     {
-        TApplication::debug("Program shutdown.\n");
+        TApplication::debug("Program shutdown.\n\n");
         TApplication::DebugFile->close();
     }
 }
@@ -183,10 +197,10 @@ QString TApplication::getReportsPath(QString reportName) {
 QString TApplication::encoding()
 {
     QString result("UTF-8");
-#ifdef Q_OS_WIN32
-    if (QSysInfo::windowsVersion() != QSysInfo::WV_WINDOWS7)
-        result = "Windows-1251";
-#endif
+//#ifdef Q_OS_WIN32
+//    if (QSysInfo::windowsVersion() != QSysInfo::WV_WINDOWS7)
+//        result = "Windows-1251";
+//#endif
     return result;
 }
 
@@ -212,6 +226,7 @@ bool TApplication::setDebugMode(const bool& value)
     return result;
 }
 
+
 void TApplication::debug(const QString& value)
 {
     if (debugMode())
@@ -219,6 +234,7 @@ void TApplication::debug(const QString& value)
         TApplication::debugStream() << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value;
     }
 }
+
 
 TApplication* TApplication::exemplar()
 {

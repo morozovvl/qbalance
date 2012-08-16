@@ -34,7 +34,6 @@ public:
 protected:
     virtual void   initFrames();
     virtual bool   setData();
-    virtual void    frameDeactivated(int frameNumber);
 private:
     int             oper;               // Номер операции, с которой работает мастер
     bool            prvTableChanged;
@@ -49,14 +48,17 @@ private:
     QTableWidget*   docListFieldsTable;
     MyTextEdit*     textEditor;
     MySyntaxHighlighter* highlighter;
-    QListWidget*        headers;          // Заголовки колонок документа
-    QListWidget*        docListHeaders;   // Заголовки колонок списка документов
+    QListWidget        headers;          // Заголовки колонок документа
+    QListWidget        docListHeaders;   // Заголовки колонок списка документов
     QList<FieldType>    fields;           // Первоначальный список полей
     QList<FieldType>    docListFields;    // Первоначальный список полей
     QList<ToperType> topersList;
     virtual void    getData();
     friend QString  showAccounts();
-    void            getFieldsTable(QList<FieldType>,  QTableWidget*, QList<FieldType>*);
+    void            getFieldsTable(QList<FieldType>*,  QTableWidget*);
+    virtual void    frameActivated(int);
+    virtual void    frameDeactivated(int);
+
 private slots:
     void            addPrv();
     void            deletePrv();
@@ -68,7 +70,9 @@ private slots:
     void            toperTableChanged();
     void            fieldsTableChanged();
     void            docListFieldsTableChanged();
+    void            sortHeadersList(QTableWidget*, QListWidget*);
     void            sortHeaders(QListWidget*, QList<FieldType>*);
+
 };
 
 #endif // WIZARDOPERATION_H

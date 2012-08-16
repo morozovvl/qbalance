@@ -78,7 +78,7 @@ void test() {
 
 int main(int argc, char **argv)
 {
- /*
+
     qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
     qDebug() << "QLibraryInfo::DocumentationPath" << QLibraryInfo::location(QLibraryInfo::DocumentationPath);
     qDebug() << "QLibraryInfo::HeadersPath" << QLibraryInfo::location(QLibraryInfo::HeadersPath);
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     qDebug() << "QLibraryInfo::DemosPath" << QLibraryInfo::location(QLibraryInfo::DemosPath);
     qDebug() << "QCoreApplication.applicationDirPath()" << QCoreApplication::applicationDirPath();
     qDebug() << "QCoreApplication.applicationFilePath()" << QCoreApplication::applicationFilePath();
-*/
+    qDebug() << "QApplication::libraryPaths()" << QApplication::libraryPaths();
 
 
     // Инициируем переменные, которые нуждаются в этом
@@ -115,8 +115,8 @@ int main(int argc, char **argv)
         if (application.open()) {       // Если приложение удалось создать
             application.show();         // Тогда откроем его
             lResult = application.exec();
-            application.close();            // Закроем приложение
         }
+        application.close();            // Закроем приложение
         application.quit();
     }
 

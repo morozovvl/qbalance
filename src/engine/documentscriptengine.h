@@ -33,6 +33,7 @@ public:
     void eventBeforeAddString();
     void eventAfterAddString();
     void eventAfterCalculate();
+    void eventAppendFromQuery(int, QSqlRecord*);
     virtual QList<EventFunction>* getEventsList();
 protected:
     virtual void loadScriptObjects();

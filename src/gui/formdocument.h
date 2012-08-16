@@ -29,6 +29,7 @@ class Document;
 //class DocParameters;
 
 class FormDocument : public FormGrid {
+    Q_OBJECT
 public:
     FormDocument();
     Document* getParent() { return (Document*)parent; }
@@ -36,16 +37,23 @@ public:
     void setNumber(QString number) { numberEdit->setText(number); }
     void setDate(QDate date) { dateEdit->setDate(date); }
     void showParameterText(QString dictName) { parameters->showText(dictName); }
+
+    Q_INVOKABLE QPushButton* getButtonQueryAdd() { return buttonQueryAdd; }
+
 public slots:
+    virtual void cmdQueryAdd();
     virtual void cmdDelete();
     virtual void cmdOk();
     Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void hide();
+protected:
+    QPushButton*                buttonQueryAdd;     // Кнопка "Добавить записи из запроса"
 private:
     QDateEdit*      dateEdit;
     QLineEdit*      numberEdit;
     DocParameters*  parameters;
     MyNumericEdit*    itogNumeric;
+    QMenu*          queriesMenu;
     virtual void createForm(QString, QWidget* pwgt = 0);
     virtual QDomElement createWidgetsStructure();
 };

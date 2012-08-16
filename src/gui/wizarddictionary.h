@@ -46,8 +46,8 @@ private:
     QLineEdit*          tableMenuName;          // Как справочник будет называться в меню
     QLineEdit*          tableFormName;          // Как справочник будет называться в форме
     QCheckBox*          chbMenu;                // Справочник доступен в меню справочников
-    QTableWidget*       fieldsTable;            // Список полей таблицы
-    QListWidget*        headers;                // Заголовки колонок
+    QTableWidget        fieldsTable;            // Список полей таблицы
+    QListWidget         headers;                // Заголовки колонок
     MyTextEdit*         textEditor;
     MySyntaxHighlighter* highlighter;
     virtual void        getData();

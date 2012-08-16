@@ -152,7 +152,7 @@ QString SearchParameters::getFilter()
         {
             if (filter.size() > 0)
                 filter.append(" AND ");
-            filter.append(searchParameters[i].table + ".FTS @@ to_tsquery('");
+            filter.append(searchParameters[i].table + QString(".%1 @@ to_tsquery('").arg(db->getObjectName(searchParameters[i].table + ".fts")));
             QString f = "";
             foreach (QString param, paramList)
             {

@@ -33,10 +33,10 @@ class Form: public QObject
 public:
     explicit Form(QObject* parent = NULL);
     ~Form();
-    Q_INVOKABLE virtual bool open(QWidget* pwgt = 0, Essence* par = 0, QString fileName = "");
+    Q_INVOKABLE virtual bool open(QWidget* = 0, Essence* = 0, QString = "");
     Q_INVOKABLE virtual void close();
     Q_INVOKABLE virtual void setIcons();
-    Q_INVOKABLE QDialog* getForm() { return formWidget; }
+    Q_INVOKABLE Dialog* getForm() { return formWidget; }
     Q_INVOKABLE Essence* getParent() { return parent; }
     Q_INVOKABLE bool selected() { return lSelected; }
     Q_INVOKABLE bool opened() { return (formWidget != 0) ? true : false; }
@@ -66,13 +66,15 @@ public slots:
 signals:
     void buttonPressed(QString);
 
+
 protected:
     DBFactory*      db;
-    QDialog*        formWidget;
+    Dialog*        formWidget;
     Essence*        parent;
     bool            lSelected;
     bool            defaultForm;
     QString         configName;
+    QString         fileName;
     bool            iconsSeted;
 
     QString         script;

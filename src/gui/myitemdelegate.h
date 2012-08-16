@@ -47,14 +47,15 @@ public:
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     virtual void setColumnMask(const QString mask = "") { columnMask = mask; }
     QString getColumnMask() { return columnMask; }
-    void setAlignment(Qt::Alignment align) { alignment = align; }
-    Qt::Alignment getAlignment() { return alignment; }
+//    void setAlignment(Qt::Alignment align) { alignment = align; }
+//    Qt::Alignment getAlignment() { return alignment; }
     virtual QVariant convertType(QVariant var) { return var; }
     void        setReadOnly(bool val);
+    bool        isReadOnly() { return readOnly; }
     QVariant    getOldValue() { return oldValue; }
 protected:
     QString                 columnMask;
-    Qt::Alignment           alignment;
+//    Qt::Alignment           alignment;
     DelegateTypes           delegateType;
     bool                    readOnly;
     QStyleOptionViewItemV2 setElementColor(QStyleOptionViewItem) const;

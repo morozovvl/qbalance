@@ -18,33 +18,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QStringList>
-#include <QDialog>
+//#include <QDialog>
 #include <QLineEdit>
 #include <QPushButton>
 #include "formscriptengine.h"
 #include "../gui/form.h"
+#include "../gui/dialog.h"
 
-Q_DECLARE_METATYPE(QDialog*)
+Q_DECLARE_METATYPE(Dialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
 Q_DECLARE_METATYPE(QPushButton*)
 
-// класс QDialog
+// класс Dialog
 QScriptValue qDialogConstructor(QScriptContext *, QScriptEngine *engine) {
-     QDialog *object = new QDialog();
+     Dialog *object = new Dialog();
      return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
-QScriptValue qDialogToScriptValue(QScriptEngine *engine, QDialog* const &in) {
-    return engine->newQObject(in);
+QScriptValue qDialogToScriptValue(QScriptEngine *engine, Dialog* const &in) {
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
 }
 
-void qDialogFromScriptValue(const QScriptValue &object, QDialog* &out) {
-    out = qobject_cast<QDialog*>(object.toQObject());
+void qDialogFromScriptValue(const QScriptValue &object, Dialog* &out) {
+    out = qobject_cast<Dialog*>(object.toQObject());
 }
 
 // класс QLineEdit
 QScriptValue qLineEditToScriptValue(QScriptEngine *engine, QLineEdit* const &in) {
-    return engine->newQObject(in);
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
 }
 
 void qLineEditFromScriptValue(const QScriptValue &object, QLineEdit* &out) {
@@ -53,7 +54,7 @@ void qLineEditFromScriptValue(const QScriptValue &object, QLineEdit* &out) {
 
 // класс QPushButton
 QScriptValue qPushButtonToScriptValue(QScriptEngine *engine, QPushButton* const &in) {
-    return engine->newQObject(in);
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
 }
 
 void qPushButtonFromScriptValue(const QScriptValue &object, QPushButton* &out) {
@@ -71,9 +72,9 @@ void FormScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
 
-    // Объявим класс QDialog
+    // Объявим класс Dialog
     qScriptRegisterMetaType(this, qDialogToScriptValue, qDialogFromScriptValue);
-    globalObject().setProperty("QDialog", newQMetaObject(&QObject::staticMetaObject, newFunction(qDialogConstructor)));
+    globalObject().setProperty("Dialog", newQMetaObject(&QObject::staticMetaObject, newFunction(qDialogConstructor)));
 
     // Объявим класс QLineEdit
     qScriptRegisterMetaType(this, qLineEditToScriptValue, qLineEditFromScriptValue);

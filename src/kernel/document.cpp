@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QModelIndex>
+#include <QProgressBar>
 #include "dictionary.h"
 #include "saldo.h"
 #include "document.h"
@@ -187,6 +188,31 @@ bool Document::add()
 }
 
 
+int Document::addFromQuery(int id)
+{
+    QSqlRecord data = db->getDocumentAddQuery(id);
+    if (!data.isEmpty())
+    {
+        QSqlQuery queryData = db->execQuery(data.value(1).toString());
+        QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
+        progressBar.setMaximum(queryData.size());
+        progressBar.show();
+        int i = 0;
+        while (queryData.next())
+        {
+            QSqlRecord record = queryData.record();
+            ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(data.value(0).toInt(), &record);
+            i++;
+            progressBar.setValue(i);
+        }
+        query();
+        calcItog();
+        return queryData.size();
+    }
+    return 0;
+}
+
+
 bool Document::remove() {
     if (lDeleteable) {
         int strNum = getValue("p1__стр").toInt();
@@ -208,6 +234,22 @@ bool Document::remove() {
 }
 
 
+void Document::query(QString filter)
+{
+    if (form != 0)
+    {
+        QModelIndex index = form->getCurrentIndex();
+        Essence::query(filter);
+        if (index.row() == -1 || (index.row() + 1) > tableModel->rowCount())
+            index = tableModel->index(0, 0);
+        form->setCurrentIndex(index);
+        form->getGridTable()->setFocus();
+    }
+    else
+        Essence::query(filter);
+}
+
+
 void Document::saveVariable(QString name, QVariant value)
 {
     if (variables.contains(name))
@@ -218,7 +260,7 @@ void Document::saveVariable(QString name, QVariant value)
 
 QVariant Document::restoreVariable(QString name)
 {
-    QVariant value;
+    QVariant value(0);
     if (variables.contains(name))
         value = variables.value(name);
     return value;
@@ -276,9 +318,10 @@ void Document::setValue(QString name, QVariant value, int row)
             Essence::setValue(name, value, 0);  // Т.к. свободная проводка находится всегда в первой строке документа
         else
             Essence::setValue(name, value, row);
-        return;
     }
-    Essence::setValue(name, value, row);
+    else
+        Essence::setValue(name, value, row);
+    calcItog();
 }
 
 
@@ -326,7 +369,6 @@ void Document::show()
                 }
             }
         }
-        restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
     }
     else
     {
@@ -336,6 +378,7 @@ void Document::show()
             query();
         }
     }
+    restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
     Essence::show();
 }
 
@@ -410,6 +453,9 @@ void Document::setForm()
         button = form->getButtonAdd();
         if (button != NULL)
             button->setToolTip(trUtf8("Добавить строку в документ"));
+        button = ((FormDocument*)form)->getButtonQueryAdd();
+        if (button != NULL)
+            button->setToolTip(trUtf8("Добавить строки в документ из запроса"));
         button = form->getButtonDelete();
         if (button != NULL)
             button->setToolTip(trUtf8("Удалить строку из документа"));
@@ -518,13 +564,29 @@ bool Document::showNextDict()
                     if (dName != dictName &&
                         dict->getPrototypeName().size() > 0 &&
                         (dName == dict->getPrototypeName() ||
-                        dicts->value(dName)->getPrototypeName() == dict->getPrototypeName())
-                       )        // Если справочники называются по-разному, но являются прототипами
+                        dicts->value(dName)->getPrototypeName() == dict->getPrototypeName()))        // Если справочники называются по-разному, но являются прототипами
                     {
-                            Dictionary* dict = dicts->value(dName);
-                            dict->setMustShow(false);
-                            dicts->value(dName)->setId(dict->getId());          // то установим в справочниках-прототипах один и тот же текущий элемент справочника
+                            Dictionary* d = dicts->value(dName);
+                            d->setMustShow(false);
+                            d->setId(dict->getId());          // то установим в справочниках-прототипах один и тот же текущий элемент справочника
 
+                    }
+                }
+                // Если это набор или прототип является набором, то не будем показывать связанные справочники
+                if (dict->isSet() ||
+                        (dict->getPrototypeName().size() > 0 && dicts->value(dict->getPrototypeName())->isSet()))
+                {
+                    for (int i = 0; i < dict->getFieldsList().count(); i++)
+                    {       // Просмотрим список полей
+                        QString name = dict->getFieldsList().at(i);
+                        if (name.left(4) == dict->getIdFieldName() + "_")
+                        {        // Если поле ссылается на другую таблицу
+                            name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                            name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                            Dictionary* d = dicts->value(name);
+                            d->setMustShow(false);
+                            d->setId(dict->getId());          // то установим в справочниках-прототипах один и тот же текущий элемент справочника
+                        }
                     }
                 }
             }
@@ -540,6 +602,7 @@ bool Document::showNextDict()
 
 void Document::appendDocString()
 {
+    bool error = false;
     Dictionary* dict;
     QString dictName, parameter;
     qulonglong dbId, crId;
@@ -552,6 +615,8 @@ void Document::appendDocString()
         {
             dict = dicts->value(dictName);
             dbId = dict->getId();   // То получим код текущего элемента дебетового справочника
+            if (dbId == 0)
+                error = true;
         }
         crId = 0;
         dictName = topersList.at(i).crDictAlias;
@@ -559,6 +624,8 @@ void Document::appendDocString()
         {
             dict = dicts->value(dictName);
             crId = dict->getId();   // Получим код текущего элемента кредитового справочника
+            if (crId == 0)
+                error = true;
         }
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
         parameter.append(QString("%1,%2,").arg(dbId).arg(crId));
@@ -571,8 +638,11 @@ void Document::appendDocString()
         parameter.append(value.size() > 0 ? value : "0").append(",");
     }
     // Добавим строку в документ с параметрами всех проводок операции
-    db->addDocStr(operNumber, docId, parameter);
-    prvValues.clear();
+    if (!error)
+    {
+        db->addDocStr(operNumber, docId, parameter);
+        prvValues.clear();
+    }
 }
 
 
@@ -653,5 +723,4 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
         }
     }
 }
-
 

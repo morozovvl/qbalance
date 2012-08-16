@@ -56,7 +56,7 @@ public:
     Q_INVOKABLE QPushButton* getButtonSave() { return buttonSave; }
 
 public slots:
-    virtual void calculate(QWidget*, QAbstractItemDelegate::EndEditHint);
+    virtual void calculate();
     virtual void cmdAdd();
     virtual void cmdDelete();
     virtual void cmdView();

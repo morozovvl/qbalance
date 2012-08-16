@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "form.h"
 #include "../kernel/app.h"
 #include "mainwindow.h"
+#include "dialog.h"
 
 class TApplication;
 
@@ -53,8 +54,9 @@ Form::~Form()
 }
 
 
-bool Form::open(QWidget* pwgt, Essence* par, QString fileName) {
+bool Form::open(QWidget* pwgt, Essence* par, QString fName) {
     parent = par;
+    fileName = fName;
     if (fileName.size() == 0)
         createForm("mainform", pwgt);
     else
@@ -66,7 +68,7 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fileName) {
 void Form::close() {
     disconnect(formWidget, 0, 0, 0);
     if (defaultForm) {
-        delete formWidget;
+//        delete formWidget;
     }
 }
 
@@ -91,7 +93,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     if (file.open(QIODevice::ReadOnly)) {
         QUiLoader loader;
         loader.addPluginPath("./plugins/");
-        formWidget = (QDialog*)loader.load(&file);
+        formWidget = (Dialog*)loader.load(&file);
         file.close();
 
         // Удалим пустые объекты в форме, если они имеются после загрузки
@@ -116,7 +118,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
         }
     }
     if (formWidget == 0) {
-        formWidget = new QDialog(pwgt);
+        formWidget = new Dialog(pwgt);
         formWidget->setVisible(false);
         buttonOk = new QPushButton();
         buttonOk->setObjectName("buttonOk");
@@ -137,7 +139,8 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     }
     if (buttonOk != 0)
         connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
-    if (buttonCancel != 0) {
+    if (buttonCancel != 0)
+    {
         connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
         connect(formWidget, SIGNAL(finished(int)), SLOT(cmdCancel()));
     }
@@ -311,11 +314,11 @@ QDomElement Form::createBoxLayoutElement(QLayout* obj) {
 
 
 QDomElement Form::createPushButtonElement(QWidget* obj) {
-#ifdef Q_OS_WIN32
-    QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
-#else
+//#ifdef Q_OS_WIN32
+//    QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
+//#else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-#endif
+//#endif
     QDomDocument* doc = new QDomDocument();
     QDomElement element;
     element = doc->createElement("widget");
@@ -376,11 +379,11 @@ QDomElement Form::createPushButtonElement(QWidget* obj) {
 
 
 QDomElement Form::createLabelElement(QString label) {
-#ifdef Q_OS_WIN32
-    QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
-#else
+//#ifdef Q_OS_WIN32
+//    QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
+//#else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-#endif
+//#endif
     QDomDocument* doc = new QDomDocument();
     QDomElement item, widget;
     widget = doc->createElement("widget");
@@ -573,11 +576,11 @@ QDomElement Form::createWidgetsStructure() {
 
 
 void Form::createUi() {
-#ifdef Q_OS_WIN32
-    QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
-#else
+//#ifdef Q_OS_WIN32
+//    QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
+//#else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-#endif
+//#endif
     if (getConfigName().size() > 0) {
         QString fileName = "./defaultforms/" + getParent()->getTagName() + ".ui";
         QFile file(fileName);
@@ -592,7 +595,7 @@ void Form::createUi() {
             cl.appendChild(doc->createTextNode("Dialog"));
             root.appendChild(cl);
             cl = doc->createElement("widget");
-            cl.setAttribute("class", "QDialog");
+            cl.setAttribute("class", "Dialog");
             cl.setAttribute("name", formWidget->objectName());
             QDomElement nameString = doc->createElement("string");
             nameString.appendChild(doc->createTextNode(QString(codec->toUnicode(configName.toUtf8()))));

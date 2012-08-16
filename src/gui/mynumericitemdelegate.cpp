@@ -29,7 +29,7 @@ MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, int len, int prec)
     precision = prec;
     delegateType = Numeric;
     setColumnMask();
-    setAlignment(Qt::AlignRight);
+//    setAlignment(Qt::AlignRight);
 }
 
 
@@ -78,7 +78,7 @@ QWidget* MyNumericItemDelegate::createEditor(QWidget* parent, const QStyleOption
         saveOldValue(index.data());
         QLineEdit* editor = new QLineEdit();
         editor->setParent(parent);
-        editor->setAlignment(alignment);
+        editor->setAlignment(Qt::AlignRight);
         QDoubleValidator* validator = new QDoubleValidator(editor);
         validator->setDecimals(precision);
         validator->setRange(-columnMask.toDouble(), columnMask.toDouble(), precision);
@@ -94,7 +94,7 @@ void MyNumericItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     QLocale locale;
     locale.setNumberOptions(QLocale::OmitGroupSeparator);
     opt = setElementColor(QStyleOptionViewItem(option));
-    opt.displayAlignment = alignment | Qt::AlignVCenter;
+    opt.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
     QString text = locale.toString(index.data(Qt::DisplayRole).toDouble(), 'f', precision);
     drawDisplay(painter, opt, opt.rect, text);
 }

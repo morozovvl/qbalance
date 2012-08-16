@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QScriptValueIterator>
+#include <QKeyEvent>
 #include "scriptengine.h"
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
@@ -39,7 +41,7 @@ bool isNumeric(ScriptEngine* engine, QString field = "")
         fieldName = ((Essence*)engine->parent())->getCurrentFieldName();
     else
         fieldName = field;
-    if (((Essence*)engine->parent())->getValue(fieldName).canConvert(QVariant::Double))
+    if (((Essence*)engine->parent())->getValue(fieldName).typeName() == "double")
         return true;
     return false;
 }
@@ -57,14 +59,14 @@ QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine) {
 
 
 QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
-    QScriptValue fieldName = context->argument(0);
-    if (fieldName.isString() && engine->evaluate("table").isValid())
+    if (context->argument(0).isString() && engine->evaluate("table").isValid())
     {
+        QString fieldName = context->argument(0).toString();
         QScriptValue value;
-        if (isNumeric((ScriptEngine*)engine, fieldName.toString()))
-            value = engine->evaluate(QString("parseFloat(table.getValue('%1'))").arg(fieldName.toString()));
+        if (isNumeric((ScriptEngine*)engine, fieldName))
+            value = engine->evaluate(QString("parseFloat(table.getValue('%1'))").arg(fieldName));
         else
-            value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName.toString()));
+            value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName));
         if (value.isValid())
         {
             return value;
@@ -135,6 +137,22 @@ void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
     out = qobject_cast<Dictionary*>(object.toQObject());
 }
 
+// класс Saldo
+Q_DECLARE_METATYPE(Saldo*)
+
+QScriptValue SaldoConstructor(QScriptContext *context, QScriptEngine *engine) {
+     Saldo* object = new Saldo(context->argument(0).toString(), context->argument(1).toString());
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue SaldoToScriptValue(QScriptEngine *engine, Saldo* const &in) {
+    return engine->newQObject(in);
+}
+
+void SaldoFromScriptValue(const QScriptValue &object, Saldo* &out) {
+    out = qobject_cast<Saldo*>(object.toQObject());
+}
+
 // класс Dictionaries
 Q_DECLARE_METATYPE(Dictionaries*)
 
@@ -159,11 +177,11 @@ QScriptValue FormConstructor(QScriptContext *context, QScriptEngine *engine) {
      object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
      object->setIcons();
      object->setButtonsSignals();
-     return engine->newQObject(object, QScriptEngine::AutoOwnership);
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue FormToScriptValue(QScriptEngine *engine, Form* const &in) {
-    return engine->newQObject(in);
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
 }
 
 void FormFromScriptValue(const QScriptValue &object, Form* &out) {
@@ -179,11 +197,11 @@ QScriptValue FormGridConstructor(QScriptContext *context, QScriptEngine *engine)
      object->open(TApplication::exemplar()->getMainWindow()->centralWidget(), 0, context->argument(0).toString());
      object->setIcons();
      object->setButtonsSignals();
-     return engine->newQObject(object, QScriptEngine::AutoOwnership);
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue FormGridToScriptValue(QScriptEngine *engine, FormGrid* const &in) {
-    return engine->newQObject(in);
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
 }
 
 void FormGridFromScriptValue(const QScriptValue &object, FormGrid* &out) {
@@ -262,6 +280,7 @@ ScriptEngine::ScriptEngine(QObject *parent/* = 0*/) : QScriptEngine(parent)
     sqlFieldClass = new SqlFieldClass(this);
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
+    errorMessage = QObject::trUtf8("Ошибка скрипта!");
 }
 
 
@@ -314,6 +333,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
+    qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
+    globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
     qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
     globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
 
@@ -326,6 +347,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()->getForm()));
     globalObject().setProperty("table", newQObject(parent()));
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
+    globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
     globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
     globalObject().setProperty("app", newQObject(TApplication::exemplar()));
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
@@ -350,6 +372,14 @@ void ScriptEngine::loadScriptObjects()
         if (ret.isError())
             failExtensions.append(ext);
     }
+
+//    QScriptValueIterator it(globalObject().property("form"));
+//    while (it.hasNext())
+//    {
+//        it.next();
+//        qDebug() << it.name() << ": " << it.value().toString();
+//    }
+
 }
 
 
@@ -359,13 +389,29 @@ bool ScriptEngine::evaluate()
     if (script.size() > 0)
     {
         loadScriptObjects();
-        QScriptEngine::evaluate(script);
+        QScriptProgram program(script);
+        QScriptEngine::evaluate(program);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
             return false;
         }
+        if (globalObject().property("EventKeyPressed").isValid())
+        {
+            // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
+            qScriptConnect(((Essence*)parent())->getForm()->getForm(),
+                           SIGNAL(keyPressed(QKeyEvent*)),
+                           globalObject(),
+                           globalObject().property("EventKeyPressed"));
+        }
         scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
+        errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
+//        QScriptValueIterator it(globalObject());
+//        while (it.hasNext())
+//        {
+//            it.next();
+//            qDebug() << it.name() << ": " << it.value().toString();
+//        }
         return scriptResult;
     }
     return true;
@@ -430,7 +476,9 @@ QString ScriptEngine::getBlankScripts()
     for (int i = 0; i < events->count(); i++)
     {
         stream << "function " << events->at(i).name << "()" << endl;
-        stream << "{ " << events->at(i).comment << endl;
+        stream << "{";
+        if (events->at(i).comment.size() > 0)
+            stream << " // " << events->at(i).comment << endl;
         stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
         stream << "}" << endl;
         stream << endl << endl;
@@ -447,27 +495,31 @@ QList<EventFunction>* ScriptEngine::getEventsList()
         EventFunction func;
 
         func.name = "EventInitForm";
-        func.comment = "// " + QObject::trUtf8("Событие происходит сразу после создания формы документа");
+        func.comment = QObject::trUtf8("Событие происходит сразу после создания формы документа");
         eventsList.append(func);
 
         func.name = "EventBeforeShowForm";
-        func.comment = "// " + QObject::trUtf8("Событие происходит перед открытием формы документа");
+        func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
         eventsList.append(func);
 
         func.name = "EventAfterHideForm";
-        func.comment = "// " + QObject::trUtf8("Событие происходит после закрытия формы документа");
+        func.comment = QObject::trUtf8("Событие происходит после закрытия формы документа");
         eventsList.append(func);
 
         func.name = "EventCloseForm";
-        func.comment = "// " + QObject::trUtf8("Событие происходит перед удалением формы документа");
+        func.comment = QObject::trUtf8("Событие происходит перед удалением формы документа");
         eventsList.append(func);
 
         func.name = "EventImport";
-        func.comment = "// " + QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
+        func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
         eventsList.append(func);
 
         func.name = "EventExport";
-        func.comment = "// " + QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
+        func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
+        eventsList.append(func);
+
+        func.name = "EventKeyPressed(keyEvent)";
+        func.comment = QObject::trUtf8("Событие происходит при нажатии любой кнопки на форме. Параметр keyEvent имеет тип QKeyEvent");
         eventsList.append(func);
     }
     return &eventsList;

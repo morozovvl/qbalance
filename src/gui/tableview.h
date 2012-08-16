@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QScriptValue>
 #include <QScriptContext>
 #include <QScriptEngine>
+#include "myitemdelegate.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 
@@ -38,14 +39,13 @@ class TableView : public QTableView {
     Q_OBJECT
 
 public:
-    QList<FieldType>*           columns;
-
     TableView(QWidget* = 0, FormGrid* = 0);
     ~TableView();
 
     void                        setFormGrid(FormGrid* par) { parent = par; }
-    void                        setModel(MySqlRelationalTableModel*);
     void                        setApp(TApplication* a) { app = a; }
+    void                        setTableModel(MySqlRelationalTableModel*);
+    void                        setTagName(QString tag) { tagName = tag; }
 
 signals:
     void                        rowChanged();
@@ -56,14 +56,16 @@ protected:
 
 private:
     QString                     name;
+    QString                     tagName;
     FormGrid*                   parent;
     QWidget*                    parentWidget;
     TApplication*               app;
     MySqlRelationalTableModel*  tableModel;
-    QStringList                 visibleColumns;
+
 
     void                        setColumnsHeaders();
-    void                        setColumnsDelegates();
+    MyItemDelegate*             getColumnDelegate(FieldType);
+    void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
 };
 
 #endif // TABLEVIEW_H

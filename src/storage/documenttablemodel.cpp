@@ -42,11 +42,15 @@ bool DocumentTableModel::submit(const QModelIndex& index) {
                     }
                 }
                 command.chop(2);
-                command = QString("UPDATE проводки SET %1 WHERE код=%2;").arg(command).arg(record(index.row()).value(*key).toString());
-                if (!TApplication::exemplar()->getDBFactory()->exec(command))
+                QString id = record(index.row()).value(*key).toString();
+                if (id.size() > 0)
                 {
-                    database().rollback();
-                    return false;
+                    command = QString("UPDATE проводки SET %1 WHERE код=%2;").arg(command).arg(id);
+                    if (!TApplication::exemplar()->getDBFactory()->exec(command))
+                    {
+                        database().rollback();
+                        return false;
+                    }
                 }
             }
             database().commit();

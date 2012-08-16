@@ -45,6 +45,7 @@ MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableMode
     blockUpdate = false;
     preparedStatementName = "";
     preparedStatement = "";
+    setEditStrategy(QSqlTableModel::OnFieldChange);
 }
 
 
@@ -86,8 +87,8 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
             QSqlRecord rec = record(index.row());
-//            if (rec.indexOf("код") != index.column())
-//            {   // Если мы не пытаемся поменять значение ключевого столбца
+            if (rec.indexOf(TApplication::exemplar()->getDBFactory()->getObjectName("код")) != index.column())
+            {   // Если мы не пытаемся поменять значение ключевого столбца
                 rec.setValue(index.column(), value);
                 rec.setGenerated(index.column(), true);
                 for (int i = insertedColumns.count() - 1; i >= 0; i--)
@@ -95,9 +96,9 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
                     // уберем добавленные столбцы из записи
                     rec.remove(insertedColumns[i]);
                 }
-//                lResult = updateRowInTable(index.row(), rec);
                 lResult = QSqlRelationalTableModel::setData(index, value, role);
-//            }
+                emit dataChanged(index, index);
+            }
         }
         else
         {

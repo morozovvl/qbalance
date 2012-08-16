@@ -64,7 +64,7 @@ Essence::~Essence() {
 }
 
 
-QDialog* Essence::getFormWidget() {
+Dialog* Essence::getFormWidget() {
     if (!opened)
     {
         open();
@@ -102,6 +102,7 @@ void Essence::setValue(QString name, QVariant value, int r)
     int row = (r >= 0 ? r : form->getCurrentIndex().row());
     int col = tableModel->record().indexOf(name);
     tableModel->setData(tableModel->index(row, col), value);
+    tableModel->submit(tableModel->index(row, col));
 }
 
 
@@ -227,6 +228,22 @@ void Essence::close()
     delete scriptEngine;
     delete form;
     Table::close();
+}
+
+
+void Essence::query(QString filter)
+{
+    if (form != 0)
+    {
+        QModelIndex index = form->getCurrentIndex();
+        Table::query(filter);
+        if (index.row() == -1 || (index.row() + 1) > tableModel->rowCount())
+            index = tableModel->index(0, 0);
+        form->setCurrentIndex(index);
+        form->getGridTable()->setFocus();
+    }
+    else
+        Table::query(filter);
 }
 
 

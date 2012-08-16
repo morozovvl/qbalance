@@ -27,7 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 
-Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent) {
+Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
+{
     formTitle = "";
     lPrintable = true;
     lIsSet = false;
@@ -55,8 +56,10 @@ Dictionary::~Dictionary() {
 }
 
 
-bool Dictionary::add() {
-    if (!lInsertable) {
+bool Dictionary::add()
+{
+    if (!lInsertable)
+    {
         showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
                       TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
                       TApplication::exemplar()->getLogin()));
@@ -64,32 +67,51 @@ bool Dictionary::add() {
     }
     QMap<QString, QVariant> values;
     bool lAddDict = true;
-    SearchParameters* parameters = (SearchParameters*)qFindChild<QFrame*>(form->getForm(), "searchParameters");
-    if (parameters != 0) {
-        QVector<sParam> searchParameters = parameters->getParameters();
-        if (searchParameters.size() > 0)
+    if (!isSet())
+    {
+        SearchParameters* parameters = (SearchParameters*)qFindChild<QFrame*>(form->getForm(), "searchParameters");
+        if (parameters != 0)
         {
-            for (int i = 0; i < searchParameters.size(); i++) {
-                if (searchParameters[i].table == getTableName()) {
-                    values.insert(searchParameters[i].field, searchParameters[i].value);
-                    }
-                else {
-                    if (searchParameters[i].value.toString().size() > 0) {
-                        Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
-                        dict->query(QString("%1='%2'").arg(nameFieldName).arg(searchParameters[i].value.toString()));
-                        if (dict->getTableModel()->rowCount() == 1)
-                            // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
-                            // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
-                            values.insert(db->getObjectName(QString("%1.%2").arg(searchParameters[i].value.toString())
-                                                                            .arg(idFieldName.toLower() + "_" + searchParameters[i].table)), dict->getId(0));
-                        else
+            QVector<sParam> searchParameters = parameters->getParameters();
+            if (searchParameters.size() > 0)
+            {
+                for (int i = 0; i < searchParameters.size(); i++) {
+                    if (searchParameters[i].table == getTableName())
+                        values.insert(searchParameters[i].field, searchParameters[i].value);
+                    else
+                    {
+                        if (searchParameters[i].value.toString().size() > 0)
                         {
-                            TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::tr("Уточните, пожалуйста, значение связанного справочника <%1>.")).arg(dict->getFormTitle()));
-                            lAddDict = false;
+                            Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
+                            dict->query(QString("%1='%2'").arg(nameFieldName).arg(searchParameters[i].value.toString()));
+                            if (dict->getTableModel()->rowCount() == 1)
+                                // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
+                                // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
+                                values.insert(db->getObjectName(QString("%1.%2").arg(searchParameters[i].value.toString())
+                                                                                .arg(idFieldName.toLower() + "_" + searchParameters[i].table)), dict->getId(0));
+                            else
+                            {
+                                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::tr("Уточните, пожалуйста, значение связанного справочника <%1>.")).arg(dict->getFormTitle()));
+                                lAddDict = false;
+                            }
                         }
-
                     }
                 }
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < fieldList.count(); i++)
+        {       // Просмотрим список полей
+            QString name = fieldList.at(i);
+            if (name.left(4) == idFieldName + "_")
+            {        // Если поле ссылается на другую таблицу
+                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                Dictionary* dict = dictionaries->getDictionary(name);
+                if (dict != NULL)                       // Если удалось открыть справочник
+                    values.insert(fieldList.at(i), dict->getId());
             }
         }
     }
@@ -105,8 +127,10 @@ bool Dictionary::add() {
 }
 
 
-bool Dictionary::remove() {
-    if (lDeleteable) {
+bool Dictionary::remove()
+{
+    if (lDeleteable)
+    {
         if (Essence::remove()) {
             db->removeDictValue(tableName, getId());
             query();
@@ -121,7 +145,8 @@ bool Dictionary::remove() {
 }
 
 
-void Dictionary::setForm() {
+void Dictionary::setForm()
+{
     form = new FormGridSearch();
     form->open(parentForm, this, getTagName());
     if (form->isDefaultForm())
@@ -149,24 +174,32 @@ void Dictionary::setForm() {
 }
 
 
-bool Dictionary::open(int deep) {
-    if (Table::open()) {     // Откроем этот справочник
+bool Dictionary::open(int deep)
+{
+    if (Table::open())
+    {     // Откроем этот справочник
         fieldList = getFieldsList();
-        if (deep > 0) {              // Если нужно открыть подсправочники
+        if (deep > 0)
+        {              // Если нужно открыть подсправочники
             int columnCount = fieldList.count();
-            for (int i = 0; i < fieldList.count(); i++) {       // Просмотрим список полей
+            for (int i = 0; i < fieldList.count(); i++)
+            {       // Просмотрим список полей
                 QString name = fieldList.at(i);
-                if (name.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
+                if (name.left(4) == idFieldName + "_")
+                {        // Если поле ссылается на другую таблицу
                     name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                     name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                     Dictionary* dict = dictionaries->getDictionary(name, deep - 1);
-                    if (dict != NULL) {                      // Если удалось открыть справочник
+                    if (dict != NULL)
+                    {                      // Если удалось открыть справочник
                         if (!lIsSet)
                             dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
                         QStringList relFieldList = dict->getFieldsList();
                         tableModel->setRelation(i, QSqlRelation(name, idFieldName, idFieldName));
-                        for (int j = 0; j < relFieldList.count(); j++) {       // Просмотрим список полей в подсправочнике
-                            if (relFieldList.at(j) != idFieldName) {    // добавляем в модель все колонки зависимого справочника, кроме колонки "код"
+                        for (int j = 0; j < relFieldList.count(); j++)
+                        {       // Просмотрим список полей в подсправочнике
+                            if (relFieldList.at(j) != idFieldName)
+                            {    // добавляем в модель все колонки зависимого справочника, кроме колонки "код"
                                 tableModel->insertColumns(columnCount, 1);
                                 tableModel->setRelation(columnCount, i, QSqlRelation(name, idFieldName, relFieldList.at(j)));
                                 tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name + "__" + relFieldList.at(j)));
@@ -179,7 +212,7 @@ bool Dictionary::open(int deep) {
             deep--;
         }
         // Проверим, имеется ли в справочнике полнотекстовый поиск
-        ftsEnabled = fieldList.contains("FTS", Qt::CaseInsensitive);
+        ftsEnabled = fieldList.contains(db->getObjectName(tableName + ".fts"), Qt::CaseInsensitive);
         // Установим порядок сортировки и стратегию сохранения данных на сервере
         tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
         db->getColumnsRestrictions(tableName, &columnsProperties);
@@ -210,18 +243,38 @@ qulonglong Dictionary::getId(int row)
 {
     if (isSet())
     {
-        query();
-        qulonglong result = Essence::getId(0);
-        if (result == 0)
-        {
-            if (add())
-            {
-                query();
-                return Essence::getId(0);
+        QString filter = "";
+        for (int i = 0; i < fieldList.count(); i++)
+        {       // Просмотрим список полей
+            QString name = fieldList.at(i);
+            if (name.left(4) == idFieldName + "_")
+            {        // Если поле ссылается на другую таблицу
+                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                Dictionary* dict = dictionaries->getDictionary(name);
+                if (dict != NULL)
+                {                      // Если удалось открыть справочник
+                    if (filter.size() > 0)
+                        filter.append(" AND ");
+                    filter.append(QString("%1=%2").arg(fieldList.at(i)).arg(dict->getId()));
+                }
             }
-            return 0;
         }
-        return result;
+        if (filter.size() > 0)
+        {
+            query(filter);
+            qulonglong result = Essence::getId(0);
+            if (result == 0)
+            {
+                if (add())
+                {
+                    query(filter);
+                    return Essence::getId(0);
+                }
+                return 0;
+            }
+            return result;
+        }
     }
     return Essence::getId(row);
 }

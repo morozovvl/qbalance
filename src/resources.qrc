@@ -16,5 +16,6 @@
         <file alias="buttonUp">resources/up.png</file>
         <file alias="buttonDown">resources/down.png</file>
         <file alias="buttonLoad">resources/load.png</file>
+        <file alias="buttonQueryAdd">resources/folder_new.png</file>
     </qresource>
 </RCC>
