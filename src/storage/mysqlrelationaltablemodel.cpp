@@ -79,7 +79,6 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-//    Q_UNUSED(role)
     bool lResult = false;
     if (indexInQuery(index).isValid() && !insertedColumns.contains(index.column()))
     {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать

@@ -217,6 +217,7 @@ void FormDocument::cmdOk()
         getParent()->getParent()->setValue("сумма", QVariant(itogNumeric->getValue()));
     getParent()->getParent()->getTableModel()->submit();
     FormGrid::cmdOk();
+    getParent()->getParent()->getFormWidget()->activateWindow();
 }
 
 

@@ -86,6 +86,7 @@ struct ToperType
     bool        isSingleString; // В документе должна быть только одна строка
     QString     itog;           //
     bool        freePrv;        // Свободная проводка
+    bool        attributes;     // Наличие дополнительных атрибутов (полей) в документах
 };
 
 
@@ -123,7 +124,7 @@ public:
     QStringList getFieldsList(QMap<int, FieldType>*);
     QStringList getFieldsList(QString tableName);
     bool isSet(QString tableName);
-    void addColumnProperties(QList<FieldType>*, QString, QString, int, int, bool readOnly = false, int number = 0);
+    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool readOnly = false, int number = 0);
     void getColumnsProperties(QList<FieldType>*, QString, QString = "", int = 0);
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
@@ -201,7 +202,8 @@ public:
                      bool crVisible,
                      bool crSalVisible,
                      QString itog,
-                     bool freePrv);
+                     bool freePrv,
+                     bool attribute);
     int getNewToper();                                          // Получает свободный номер для новой типовой операции
     bool getToperSingleString(int);                             // Получает значение флага "одна строка в документе" для типовой операции
     bool setToperSignleString(int, bool);                       // Устанавливает значение флага "одна строка в документе" для типовой операции

@@ -159,10 +159,10 @@ void Form::setIcons() {
 
 
 void Form::cmdOk() {
+    hide();
     lSelected = true;
     if (parent != 0)
         parent->cmdOk();
-    hide();
 }
 
 

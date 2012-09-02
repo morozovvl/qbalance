@@ -46,6 +46,7 @@ public:
     void                        setApp(TApplication* a) { app = a; }
     void                        setTableModel(MySqlRelationalTableModel*);
     void                        setTagName(QString tag) { tagName = tag; }
+    void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
 
 signals:
     void                        rowChanged();
@@ -65,7 +66,6 @@ private:
 
     void                        setColumnsHeaders();
     MyItemDelegate*             getColumnDelegate(FieldType);
-    void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
 };
 
 #endif // TABLEVIEW_H

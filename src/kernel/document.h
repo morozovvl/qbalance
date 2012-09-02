@@ -60,7 +60,6 @@ public:
     virtual void setConstDictId(QString, QVariant);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
-    virtual void query(QString filter = "");
     virtual void setScriptEngine();
     int    addFromQuery(int);
     DocumentScriptEngine* getScriptEngine();

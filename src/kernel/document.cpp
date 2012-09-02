@@ -120,6 +120,7 @@ Document::~Document() {
 
 
 bool Document::calculate(const QModelIndex& index) {
+    db->beginTransaction();
     bool lResult = Essence::calculate(index);
     if (lResult) {
         if (freePrv)    // Если есть "свободная" проводка
@@ -127,15 +128,14 @@ bool Document::calculate(const QModelIndex& index) {
             ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
             tableModel->submit(tableModel->index(0, 0));
         }
-        selectCurrentRow();                     // Обновим содержимое строки
         calcItog();
+        db->commitTransaction();
+        selectCurrentRow();                     // Обновим содержимое строки
     }
     else
     {
-//        if (((DocumentScriptEngine*)scriptEngine)->getScriptResult())
-//        {
-            TApplication::exemplar()->showError(((DocumentScriptEngine*)scriptEngine)->getErrorMessage());
-//        }
+        db->rollbackTransaction();
+        TApplication::exemplar()->showError(((DocumentScriptEngine*)scriptEngine)->getErrorMessage());
     }
     return lResult;
 }
@@ -161,6 +161,7 @@ void Document::calcItog()
         }
     }
     parent->setValue("сумма", itog);
+    parent->getTableModel()->submit();
     showItog();
 }
 
@@ -231,22 +232,6 @@ bool Document::remove() {
     else
         showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
     return false;
-}
-
-
-void Document::query(QString filter)
-{
-    if (form != 0)
-    {
-        QModelIndex index = form->getCurrentIndex();
-        Essence::query(filter);
-        if (index.row() == -1 || (index.row() + 1) > tableModel->rowCount())
-            index = tableModel->index(0, 0);
-        form->setCurrentIndex(index);
-        form->getGridTable()->setFocus();
-    }
-    else
-        Essence::query(filter);
 }
 
 
@@ -490,13 +475,26 @@ DocumentScriptEngine* Document::getScriptEngine()
 QString Document::transformSelectStatement(QString string)
 {   // Модифицирует команду SELECT... заменяя пустую секцию WHERE реальным фильтром с номером текущего документа
     // Вызывается перед каждым запросом содержимого табличной части документа
-    QString whereClause = QString(" WHERE p%3.%4=%1 AND p%3.%5=%2 AND p%3.%6=%3").arg(docId)
-                                                                                 .arg(operNumber)
-                                                                                 .arg(prv1)
-                                                                                 .arg(db->getObjectName("проводки.доккод"))
-                                                                                 .arg(db->getObjectName("проводки.опер"))
-                                                                                 .arg(db->getObjectName("проводки.номеропер"));
-    string.replace(" WHERE", whereClause);
+    QString whereClause;
+    if (string.contains(" WHERE p"))
+    {
+        whereClause = QString(" WHERE p%3.%4=%1 AND p%3.%5=%2 AND p%3.%6=%3").arg(docId)
+                                                                             .arg(operNumber)
+                                                                             .arg(prv1)
+                                                                             .arg(db->getObjectName("проводки.доккод"))
+                                                                             .arg(db->getObjectName("проводки.опер"))
+                                                                             .arg(db->getObjectName("проводки.номеропер"));
+        string.replace(" WHERE p", whereClause);
+    }
+    else
+    {
+        if (string.contains(" WHERE a"))
+        {
+            whereClause = QString(" WHERE a.%1=%2").arg(db->getObjectName("проводки.доккод"))
+                                                   .arg(docId);
+            string.replace(" WHERE a", whereClause);
+        }
+    }
     return string;
 }
 
@@ -515,11 +513,6 @@ void Document::setTableModel()
         tableModel->setSelectStatement(selectStatement);
         db->getColumnsRestrictions(tagName, &columnsProperties);
 
-        // Соберем информацию об обновляемых полях таблицы "проводки"
-        QStringList updateFields;
-        updateFields << db->getObjectName("проводки.кол")
-                     << db->getObjectName("проводки.цена")
-                     << db->getObjectName("проводки.сумма");
         int columnCount = 0;
         int keyColumn   = 0;
         for (int i = 0; i < columnsProperties.count(); i++)
@@ -527,12 +520,14 @@ void Document::setTableModel()
             QString field = columnsProperties.value(i).name;
             field = field.mid(field.indexOf("__") + 2);
             if (field == db->getObjectName("проводки.код"))
-            {// Если в списке полей встретилось поле ключа
-                keyColumn = columnCount;                                    // Запомним номер столбца с ключом
-            }
-            if (updateFields.contains(field))
-            {// Если поле входит в список сохраняемых полей
-                tableModel->setUpdateInfo(columnCount, keyColumn, field);   // То сохраним информацию, необходимую для генерации команды сохранения этого поля (номер столбца поля, номер столбца ключа и имя поля)
+            // Если в списке полей встретилось поле ключа
+               keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+
+            if (!columnsProperties.value(i).constReadOnly)
+            {
+                // Если поле входит в список сохраняемых полей
+                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnCount, keyColumn);
+
             }
             columnCount++;      // Считаем столбцы
         }

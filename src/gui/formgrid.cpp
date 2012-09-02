@@ -282,15 +282,15 @@ void FormGrid::close()
 
 int FormGrid::exec()
 {
-//    grdTable->setFocus();
     return Form::exec();
 }
 
 
 void FormGrid::show()
 {
+    QModelIndex index = getCurrentIndex();
     Form::show();
-//    grdTable->setFocus();
+    restoreCurrentIndex(index);
 }
 
 
@@ -304,6 +304,8 @@ void FormGrid::cmdAdd()
                 buttonDelete->setDisabled(false);
         }
     }
+    formWidget->activateWindow();
+    getGridTable()->setFocus();
 }
 
 
@@ -324,6 +326,8 @@ void FormGrid::cmdDelete()
             if (buttonDelete != 0)
                 buttonDelete->setDisabled(true);
     }
+    formWidget->activateWindow();
+    getGridTable()->setFocus();
 }
 
 
@@ -331,12 +335,17 @@ void FormGrid::cmdView()
 {
     if (parent != 0)
         parent->view();
+    getGridTable()->setFocus();
 }
 
 
 void FormGrid::cmdRequery()
 {
+    QModelIndex index = getCurrentIndex();
     parent->query();
+    restoreCurrentIndex(index);
+    formWidget->activateWindow();
+    getGridTable()->setFocus();
 }
 
 
@@ -352,8 +361,10 @@ void FormGrid::showPhoto()
 
 void FormGrid::calculate()
 {
+    QModelIndex index = getCurrentIndex();
     parent->setOldValue(((MyItemDelegate*)sender())->getOldValue());
     parent->calculate(getCurrentIndex());
+    restoreCurrentIndex(index);
 }
 
 
@@ -383,13 +394,6 @@ void FormGrid::setGridFocus()
     if (grdTable != 0)
         grdTable->setFocus();
 }
-
-/*
-void FormGrid::setShowFocus()
-{
-    setGridFocus();
-}
-*/
 
 void FormGrid::showEvent(QShowEvent* event)
 {
@@ -442,7 +446,8 @@ void FormGrid::cmdPrint()
                 parent->print(REPORT_DIR + getConfigName() + "." + action->text());
         }
     }
-//    FormGrid::setShowFocus();
+    formWidget->activateWindow();
+    getGridTable()->setFocus();
 }
 
 
@@ -596,3 +601,15 @@ QDomElement FormGrid::createWidgetsStructure()
 }
 
 
+void FormGrid::restoreCurrentIndex(QModelIndex index)
+{
+    if (index.row() == -1 && index.column() == -1)
+    {
+        index = getParent()->getTableModel()->index(0, 0);
+        setCurrentIndex(index);
+        grdTable->selectNextColumn();
+    }
+    else
+        setCurrentIndex(index);
+    getGridTable()->setFocus();
+}

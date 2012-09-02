@@ -31,42 +31,51 @@ DocumentTableModel::DocumentTableModel(): MySqlRelationalTableModel() {
 }
 
 bool DocumentTableModel::submit(const QModelIndex& index) {
+    DBFactory* db = TApplication::exemplar()->getDBFactory();
     if (editStrategy() == QSqlTableModel::OnManualSubmit) {
-        if (database().transaction()) {
-            QList<int>::iterator key;
-            for (key = updateKeys.begin(); key != updateKeys.end(); key++) {
+        if (updateInfo.contains(index.column()))
+        {
+            QString value;
+            // Возьмем исходное значение из модели, которое необходимо сохранить в базу
+            QVariant recValue = ((Document*)parent)->getValue(updateInfo.value(index.column()).originField);
+            // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
+            switch (recValue.type())
+            {
+                case QVariant::String:
+                    value = QString("'%1'").arg(recValue.toString());
+                    break;
+                default:
+                    value = QString("%1").arg(recValue.toString());
+                    break;
+            }
+            if (value.size() > 0)
+            {
+                // Сгенерируем для сервера команду сохранения значения из модели
                 QString command;
-                foreach (int field, updateKeyFields.keys()) {
-                    if (*key == updateKeyFields[field]) {
-                        command.append(QString("%1=%2, ").arg(updateFields[field]).arg(record(index.row()).value(field).toString()));
-                    }
-                }
-                command.chop(2);
-                QString id = record(index.row()).value(*key).toString();
-                if (id.size() > 0)
+                command = QString("UPDATE %1 SET %2=%3 WHERE %4=%5;").arg(db->getObjectName(updateInfo.value(index.column()).table))
+                                                                     .arg(db->getObjectName(updateInfo.value(index.column()).field))
+                                                                     .arg(value)
+                                                                     .arg(db->getObjectName(updateInfo.value(index.column()).table + ".код"))
+                                                                     .arg(record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toString());
+                if (!db->exec(command))
                 {
-                    command = QString("UPDATE проводки SET %1 WHERE код=%2;").arg(command).arg(id);
-                    if (!TApplication::exemplar()->getDBFactory()->exec(command))
-                    {
-                        database().rollback();
-                        return false;
-                    }
+                   return false;
                 }
             }
-            database().commit();
             return true;
         }
     }
     return false;
 }
 
-void DocumentTableModel::setUpdateInfo(int column, int keyColumn, QString fieldName) {
-    QStringList fields;
-    fields << "кол" << "цена" << "сумма";
-    if (fields.contains(fieldName)) {
-        if (!updateKeys.contains(keyColumn))
-            updateKeys.append(keyColumn);
-        updateKeyFields.insert(column, keyColumn);
-        updateFields.insert(column, fieldName);
+void DocumentTableModel::setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn) {
+    if (!updateInfo.contains(fieldColumn))
+    {
+        UpdateInfoStruct info;
+        info.originField = originField;
+        info.table = table;
+        info.keyFieldColumn = keyFieldColumn;
+        info.field = field;
+        updateInfo.insert(fieldColumn, info);
     }
 }

@@ -53,7 +53,6 @@ public:
     Q_INVOKABLE virtual bool            remove();                       // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     virtual void                        print(QString);                 // Печать
-    virtual void                        query(QString filter = "");
 
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);

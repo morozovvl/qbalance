@@ -175,14 +175,15 @@ void TableView::selectNextColumn()
     while (true)
     {
         column++;   // Перейдем в следующий столбец
-        if (horizontalHeader()->isSectionHidden(column))
-            column = 0;
         QModelIndex newIndex = index.sibling(index.row(), column);
-        setCurrentIndex(newIndex);
-        MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(column);
-        if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+        if (newIndex.row() == -1 && newIndex.column() == -1)
             break;
-        if (newIndex.column() == index.column())                                           // Если мы уже прошли по кругу по всем колонкам
-            break;
+        if (!horizontalHeader()->isSectionHidden(column))
+        {
+            setCurrentIndex(newIndex);
+            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(column);
+            if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+                break;
+        }
     }
 }

@@ -91,9 +91,23 @@ bool Essence::calculate(const QModelIndex &index)
 
 QVariant Essence::getValue(QString name, int row)
 {
+    QVariant result;
     if (row >= 0)
-        return tableModel->record(row).value(name);
-    return tableModel->record(form->getCurrentIndex().row()).value(name);
+    {
+        result =  tableModel->record(row).value(name);
+    }
+    else
+    {
+        result = tableModel->record(form->getCurrentIndex().row()).value(name);
+    }
+    // ВНИМАНИЕ!!!
+    // Не могу понять, почему тип поля "p1__кол" возвращается как QString. Должен быть double
+    // Типы полей "p2__кол" и "p3__кол" возвращаются нормальные - double
+    // пока не разобрался, почему это так - временно делаю следующее преобразование
+    if (name == "p1__кол")
+        result.convert(QVariant::Double);
+
+    return result;
 }
 
 
@@ -228,22 +242,6 @@ void Essence::close()
     delete scriptEngine;
     delete form;
     Table::close();
-}
-
-
-void Essence::query(QString filter)
-{
-    if (form != 0)
-    {
-        QModelIndex index = form->getCurrentIndex();
-        Table::query(filter);
-        if (index.row() == -1 || (index.row() + 1) > tableModel->rowCount())
-            index = tableModel->index(0, 0);
-        form->setCurrentIndex(index);
-        form->getGridTable()->setFocus();
-    }
-    else
-        Table::query(filter);
 }
 
 

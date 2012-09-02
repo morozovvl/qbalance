@@ -67,8 +67,8 @@ public:
     void setBlockUpdate(bool block) { blockUpdate = block; }
     virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return QSqlRelationalTableModel::submit(); }
     virtual bool updateRowInTable(int, const QSqlRecord&);
-    virtual void setUpdateInfo(int, int, QString) { ; }
-
+//    virtual void setUpdateInfo(int, int, QString) { ; }
+    virtual void setUpdateInfo(QString, QString, QString, int, int) { ; }
 
 // Прочие функции
     QStringList getFieldsList();

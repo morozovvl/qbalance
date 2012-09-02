@@ -327,6 +327,19 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
         fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
 
         fld.number    = 0;
+        if (table == getObjectName("документы"))
+        {
+            if (fld.column == getObjectName("документы.комментарий"))
+            {
+                fld.readOnly = false;
+                fld.constReadOnly = false;
+            }
+            else
+            {
+                fld.readOnly = true;
+                fld.constReadOnly = true;
+            }
+        }
         result->append(fld);
         if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
         {
@@ -353,7 +366,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
 }
 
 
-void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString name, QString type, int length, int precision, bool read, int number)
+void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString table, QString name, QString type, int length, int precision, bool read, int number)
 {
     // Выясним, нет ли уже такого поля, чтобы избежать появления полей
     int maxKey = 0;
@@ -370,6 +383,7 @@ void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString
         maxKey++;
     }
     FieldType fld;
+    fld.table = table;
     fld.name = name;
     fld.column = name;
     fld.header = name;
@@ -448,11 +462,11 @@ int DBFactory::getDictionaryId(QString dictionaryName)
     if (query.isValid()) {
         return query.value(0).toInt();
     }
-    if (dictName.left(16) == "СписокДокументов")
+    if (dictionaryName.left(16) == "СписокДокументов")
     {
         int number = 1000000;
         clearError();
-        QSqlQuery query = execQuery(QString("SELECT MAX(%1) FROM %2 WHERE %3 LIKE 'СписокДокументов%'").arg(dictId)
+        QSqlQuery query = execQuery(QString("SELECT MAX(%1) FROM %2 WHERE %3 LIKE 'СписокДокументов%';").arg(dictId)
                                                                                                        .arg(dict)
                                                                                                        .arg(dictName));
         if (query.first())
@@ -461,11 +475,11 @@ int DBFactory::getDictionaryId(QString dictionaryName)
         }
         return number;
     }
-    if (dictName.left(8) == "Документ")
+    if (dictionaryName.left(8) == "Документ")
     {
         int number = 2000000;
         clearError();
-        QSqlQuery query = execQuery(QString("SELECT MAX(%1) FROM %2 WHERE %3 LIKE 'Документ%'").arg(dictId)
+        QSqlQuery query = execQuery(QString("SELECT MAX(%1) FROM %2 WHERE %3 LIKE 'Документ%';").arg(dictId)
                                                                                                .arg(dict)
                                                                                                .arg(dictName));
         if (query.first())
@@ -734,21 +748,26 @@ bool DBFactory::deleteAllToperInfo(int operNumber)
 }
 
 
-bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, bool dbVisible, bool dbSalVisible, QString crAcc, bool crAccConst, bool crVisible, bool crSalVisible, QString itog, bool freePrv)
+bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool dbAccConst, bool dbVisible, bool dbSalVisible, QString crAcc, bool crAccConst, bool crVisible, bool crSalVisible, QString itog, bool freePrv, bool attribute)
 {
     int number = 1;
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT MAX(%1) FROM %2 WHERE %3 = %4;").arg(getObjectNameCom("топер.номер"))
-                                                                                .arg(getObjectNameCom("топер"))
-                                                                                .arg(getObjectNameCom("топер.опер"))
-                                                                                .arg(operNumber));
-    if (query.first())
+    if (dbAcc.size() > 0 && crAcc.size() > 0)
     {
-        number = query.record().value(0).toInt() + 1;
+        QSqlQuery query = execQuery(QString("SELECT MAX(%1) FROM %2 WHERE %3 = %4;").arg(getObjectNameCom("топер.номер"))
+                                                                                    .arg(getObjectNameCom("топер"))
+                                                                                    .arg(getObjectNameCom("топер.опер"))
+                                                                                    .arg(operNumber));
+        if (query.first())
+        {
+            number = query.record().value(0).toInt() + 1;
+        }
     }
+    else
+        number = 0;
     QString command;
-    command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14) " \
-                      "VALUES (%15, %16, '%17', '%18', %19, %20, %21, '%22', %23, %24, %25, '%26', %27);").arg(getObjectNameCom("топер"))
+    command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15) " \
+                      "VALUES (%16, %17, '%18', '%19', %20, %21, %22, '%23', %24, %25, %26, '%27', %28, %29);").arg(getObjectNameCom("топер"))
                                                                                              .arg(getObjectNameCom("топер.опер"))
                                                                                              .arg(getObjectNameCom("топер.номер"))
                                                                                              .arg(getObjectNameCom("топер.имя"))
@@ -762,6 +781,7 @@ bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool db
                                                                                              .arg(getObjectNameCom("топер.крсалвидим"))
                                                                                              .arg(getObjectNameCom("топер.итоги"))
                                                                                              .arg(getObjectNameCom("топер.независим"))
+                                                                                             .arg(getObjectNameCom("топер.атрибуты"))
                                                                                              .arg(operNumber)
                                                                                              .arg(number)
                                                                                              .arg(name)
@@ -774,7 +794,8 @@ bool DBFactory::addToperPrv(int operNumber, QString name, QString dbAcc, bool db
                                                                                              .arg(crVisible ? "true" : "false")
                                                                                              .arg(crSalVisible ? "true" : "false")
                                                                                              .arg(itog)
-                                                                                             .arg(freePrv ? "true" : "false");
+                                                                                             .arg(freePrv ? "true" : "false")
+                                                                                             .arg(attribute ? "true" : "false");
     return exec(command);
 }
 
@@ -854,7 +875,8 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                         field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
                         field.number = number;
                         field.headerExist = true;   // Для столбца найден заголовок
-                        field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
+                        if (tableName.left(16) != "СписокДокументов")
+                            field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
                         fields->removeAt(i);
                         fields->insert(i, field);
                     }
@@ -878,7 +900,7 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
 bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, int number, bool readOnly)
 {
     clearError();
-    QString command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (%7, '%8', '%9', %10);")
+    QString command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (%7, '%8', '%9', %10, %11);")
             .arg(getObjectNameCom("столбцы"))
             .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
             .arg(getObjectNameCom("столбцы.имя"))
@@ -1114,7 +1136,7 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("vw_доступ_к_топер.имя", "имя");
     ObjectNames.insert("vw_доступ_к_топер.опер", "опер");
     ObjectNames.insert("справочники", "справочники");
-    ObjectNames.insert("справочники.код", "КОД");
+    ObjectNames.insert("справочники.код", "код");
     ObjectNames.insert("справочники.имя", "имя");
     ObjectNames.insert("справочники.имя_в_списке", "имя_в_списке");
     ObjectNames.insert("справочники.имя_в_форме", "имя_в_форме");
@@ -1139,6 +1161,7 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("топер.крвидим", "крвидим");
     ObjectNames.insert("топер.дбсалвидим", "дбсалвидим");
     ObjectNames.insert("топер.крсалвидим", "крсалвидим");
+    ObjectNames.insert("топер.атрибуты", "атрибуты");
     ObjectNames.insert("счета", "счета");
     ObjectNames.insert("счета.счет", "счет");
     ObjectNames.insert("vw_счета", "vw_счета");
@@ -1207,6 +1230,10 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("запросы.опер", "опер");
     ObjectNames.insert("запросы.номер", "номер");
     ObjectNames.insert("запросы.текст", "текст");
+    ObjectNames.insert("атрибуты", "атрибуты");
+    ObjectNames.insert("атрибуты.код", "код");
+    ObjectNames.insert("атрибуты.доккод", "доккод");
+    ObjectNames.insert("атрибуты.стр", "стр");
 }
 
 
@@ -1340,6 +1367,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.isSingleString = toper.record().value("однаоперация").toBool();
         toperT.itog = toper.record().value("итоги").toString();
         toperT.freePrv = toper.record().value("независим").toBool();
+        toperT.attributes = toper.record().value("атрибуты").toBool();
         topersList->append(toperT);
         toper.next();
     }
@@ -1458,33 +1486,75 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         for (int i = 0; i < topersList->count(); i++)
         {   // Для всех проводок данной типовой операции
             prv = topersList->at(i).number;                     // получим номер проводки в типовой операции
-            foreach (const QString field, prvFieldsList)
-            {// Для всех полей таблицы "проводки"
-                selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
-                selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
-                for (int i = 0; i < fields.count(); i++)
-                {
-                    if (fields.at(i).name == field && columnsProperties != 0)
-                        addColumnProperties(columnsProperties, QString("p%1__%2").arg(prv).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, fields.at(i).readOnly);
+            if (prv > 0)
+            {
+                foreach (const QString field, prvFieldsList)
+                {// Для всех полей таблицы "проводки"
+                    selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
+                    selectClause.append(QString("p%1.%2 AS p%1__%2").arg(prv).arg(field));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
+                    for (int i = 0; i < fields.count(); i++)
+                    {
+                        if (fields.at(i).name == field && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, getObjectName("проводки"), QString("p%1__%2").arg(prv).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, fields.at(i).readOnly);
+                    }
                 }
-            }
-            if (i == 0)
-            {
-                fromClause = QString(" FROM %1 p%2").arg(tableName).arg(prv);
-                prv1 = prv;
-                whereClause = " WHERE";     // Создадим пометку в команде с пустой секцией WHERE.
-                                            // Непосредственно перед отправкой команды на сервер
-                                            // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
-                                            // в фунции transformSelectStatement(QString)
-            }
-            else
-            {
-                fromClause.append(QString(" LEFT OUTER JOIN %1 p%2 ON p%3.%4=p%2.%4 AND p%3.%5=p%2.%5 AND p%3.%6=p%2.%6 AND p%2.%7=%2").arg(tableName).arg(prv).arg(prv1).arg(getObjectNameCom("проводки.доккод")).arg(getObjectNameCom("проводки.стр")).arg(getObjectNameCom("проводки.опер")).arg(getObjectNameCom("проводки.номеропер")));
+                if (i == 0)
+                {
+                    fromClause = QString(" FROM %1 p%2").arg(tableName).arg(prv);
+                    prv1 = prv;
+                    whereClause = " WHERE p";       // Создадим пометку в команде с пустой секцией WHERE.
+                                                    // Непосредственно перед отправкой команды на сервер
+                                                    // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
+                                                    // в фунции transformSelectStatement(QString)
+                                                    // p в конце означает, что нужно ставить фильтр для типовой операции с проводками
+                }
+                else
+                    fromClause.append(QString(" LEFT OUTER JOIN %1 p%2 ON p%3.%4=p%2.%4 AND p%3.%5=p%2.%5 AND p%3.%6=p%2.%6 AND p%2.%7=%2").arg(tableName).arg(prv).arg(prv1).arg(getObjectNameCom("проводки.доккод")).arg(getObjectNameCom("проводки.стр")).arg(getObjectNameCom("проводки.опер")).arg(getObjectNameCom("проводки.номеропер")));
             }
         }
         // Соберем команду SELECT для проводок табличной части документа
         selectClause = QString("SELECT ").append(selectClause);
         selectStatement = selectClause + fromClause + whereClause;
+
+        if (topersList->at(0).attributes)
+        {   // Если имеются атрибуты для документа в данной операции
+            QString attrName = QString("атрибуты%1").arg(oper);
+            getColumnsProperties(&fields, attrName);
+            selectClause = "";
+            foreach (QString fieldName, getFieldsList(attrName))
+            {
+                if (fieldName != "доккод" && fieldName != "стр")
+                {
+//                    selectClause.append(QString(",a.%2 AS %1__%2").arg("атрибуты").arg(fieldName));
+                    selectClause.append(QString(",a.%1").arg(fieldName));
+                    for (int i = 0; i < fields.count(); i++)
+                        if (fields.at(i).name == fieldName && columnsProperties != 0)
+//                            addColumnProperties(columnsProperties, attrName, QString("%1__%2").arg("атрибуты").arg(fieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, (fieldName != "код") ? false : true);
+                            addColumnProperties(columnsProperties, attrName, QString("%1").arg(fieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, (fieldName != "код") ? false : true);
+                }
+            }
+
+            if (fromClause.size() > 0)
+            {   // Если типовая операция включает в себя проводки
+                selectStatement = QString("SELECT DISTINCT p.*%1 FROM (%2) p LEFT OUTER JOIN %3 a ON p.p1__%4=a.%4 AND p.p1__%5=a.%5").arg(selectClause)
+                                                                                                                                      .arg(selectStatement)
+                                                                                                                                      .arg(attrName)
+                                                                                                                                      .arg(getObjectName("атрибуты.доккод"))
+                                                                                                                                      .arg(getObjectName("атрибуты.стр"));
+            }
+            else
+            {   // Если проводок нет
+                selectStatement = QString("SELECT DISTINCT * FROM (SELECT a.%1 AS p1__%1%2 FROM %3 a WHERE a) p").arg(getObjectName("атрибуты.стр"))
+                                                                                                                 .arg(selectClause)
+                                                                                                                 .arg(attrName);
+                                                                    // Создадим пометку в команде с пустой секцией WHERE.
+                                                                    // Непосредственно перед отправкой команды на сервер
+                                                                    // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
+                                                                    // в фунции transformSelectStatement(QString)
+                                                                    // a в конце означает, что нужно ставить фильтр для типовой операции без проводок, но с атрибутами
+            }
+        }
+
         selectClause = "SELECT DISTINCT p.*";
         fromClause = " FROM (" + selectStatement + ") p";
 
@@ -1516,7 +1586,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                                     selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName).arg(setDictFieldName)));
                                     for (int i = 0; i < fields.count(); i++)
                                         if (fields.at(i).name == setDictFieldName && columnsProperties != 0)
-                                            addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                                            addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                                 }
                                 setFromClause.append(QString(" LEFT OUTER JOIN %1 ON %2.%3=%1.код").arg(setDictName).arg(dictName).arg(fieldName));
                             }
@@ -1533,7 +1603,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                             selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                             for (int i = 0; i < fields.count(); i++)
                                 if (fields.at(i).name == field && columnsProperties != 0)
-                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                                    addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                         }
                         fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод")));
                     }
@@ -1560,7 +1630,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                                       selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName).arg(setDictFieldName)));
                                       for (int i = 0; i < fields.count(); i++)
                                           if (fields.at(i).name == setDictFieldName && columnsProperties != 0)
-                                              addColumnProperties(columnsProperties, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                                              addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(setDictName).arg(setDictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                                   }
                                   setFromClause.append(QString(" LEFT OUTER JOIN %1 ON %2.%3=%1.код").arg(setDictName).arg(dictName).arg(fieldName));
                               }
@@ -1577,14 +1647,15 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                             selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                             for (int i = 0; i < fields.count(); i++)
                                 if (fields.at(i).name == field && columnsProperties != 0)
-                                    addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                                    addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                         }
                         fromClause.append(QString(" LEFT OUTER JOIN %1 ON p.p%2__%3=%1.код").arg(dictName).arg(prv).arg(getObjectName("проводки.кркод")));
                     }
                     dictsNames << dictName;
                 }
             }
-            getColumnsProperties(&fields, getObjectName("сальдо"));
+            QString salTableName = getObjectName("сальдо");
+            getColumnsProperties(&fields, salTableName);
             QString field;
             if (topersList->at(i).dbSaldoVisible) {
                 dictName = QString("дбсальдо%1").arg(prv);
@@ -1593,18 +1664,18 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                            addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                     field = getObjectName("сальдо.концена");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                            addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 }
                 field = getObjectName("сальдо.консальдо");
                 selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                 for (int i  = 0; i < fields.count(); i++)
                     if (fields.at(i).name == field && columnsProperties != 0)
-                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                        addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectNameCom("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет")).arg(getObjectNameCom("сальдо.счет")).arg(getObjectName("проводки.дбкод")).arg(getObjectNameCom("сальдо.код")));
             }
             if (topersList->at(i).crSaldoVisible) {
@@ -1614,18 +1685,18 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                            addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                     field = getObjectName("сальдо.концена");
                     selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).name == field && columnsProperties != 0)
-                            addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                            addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 }
                 field = getObjectName("сальдо.консальдо");
                 selectClause.append(QString(",%1.%2 AS %1__%2").arg(dictName).arg(field));
                 for (int i  = 0; i < fields.count(); i++)
                     if (fields.at(i).name == field && columnsProperties != 0)
-                        addColumnProperties(columnsProperties, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                        addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.p%3__%4=%2.%5 AND p.p%3__%6=%2.%7").arg(getObjectNameCom("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.крсчет")).arg(getObjectNameCom("сальдо.счет")).arg(getObjectName("проводки.кркод")).arg(getObjectNameCom("сальдо.код")));
             }
         }
@@ -1656,7 +1727,7 @@ QSqlRecord DBFactory::getAccountRecord(QString cAcc)
 bool DBFactory::getToperSingleString(int operNumber)
 {
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT %1 FROM %2 WHERE %3 = %4 AND %5 = 1;").arg(getObjectNameCom("vw_топер.однаоперация"))
+    QSqlQuery query = execQuery(QString("SELECT %1 FROM %2 WHERE %3 = %4 AND (%5 = 0 OR %5 = 1);").arg(getObjectNameCom("vw_топер.однаоперация"))
                                                                                       .arg(getObjectNameCom("vw_топер"))
                                                                                       .arg(getObjectNameCom("vw_топер.опер"))
                                                                                       .arg(operNumber)
@@ -1672,13 +1743,13 @@ bool DBFactory::getToperSingleString(int operNumber)
 bool DBFactory::setToperSignleString(int operNumber, bool singleString)
 {
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3 AND %4 = 1;").arg(getObjectNameCom("vw_топер"))
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3 AND (%4 = 0 OR %4 = 1);").arg(getObjectNameCom("vw_топер"))
                                                                                      .arg(getObjectNameCom("vw_топер.опер"))
                                                                                      .arg(operNumber)
                                                                                      .arg(getObjectNameCom("vw_топер.номер")));
     if (query.first())
     {   // Если операция существует
-        return exec(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND %6 = 1;").arg(getObjectNameCom("топер"))
+        return exec(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
                                                                               .arg(getObjectNameCom("топер.однаоперация"))
                                                                               .arg(singleString ? "true" : "false")
                                                                               .arg(getObjectNameCom("топер.опер"))
@@ -1692,7 +1763,7 @@ bool DBFactory::setToperSignleString(int operNumber, bool singleString)
 QString DBFactory::getToperNumerator(int operNumber)
 {
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT %1 FROM %2 WHERE %3 = %4 AND %5 = 1;").arg(getObjectNameCom("топер.нумератор"))
+    QSqlQuery query = execQuery(QString("SELECT %1 FROM %2 WHERE %3 = %4 AND (%5 = 0 OR %5 = 1);").arg(getObjectNameCom("топер.нумератор"))
                                                                                       .arg(getObjectNameCom("топер"))
                                                                                       .arg(getObjectNameCom("топер.опер"))
                                                                                       .arg(operNumber)
@@ -1708,13 +1779,13 @@ QString DBFactory::getToperNumerator(int operNumber)
 bool DBFactory::setToperNumerator(int operNumber, QString numerator)
 {
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3 AND %4 = 1;").arg(getObjectNameCom("топер"))
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3 AND (%4 = 0 OR %4 = 1);").arg(getObjectNameCom("топер"))
                                                                                      .arg(getObjectNameCom("топер.опер"))
                                                                                      .arg(operNumber)
                                                                                      .arg(getObjectNameCom("топер.номер")));
     if (query.first())
     {   // Если операция существует
-        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE %4 = %5 AND %6 = 1;").arg(getObjectNameCom("топер"))
+        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
                                                                                 .arg(getObjectNameCom("топер.нумератор"))
                                                                                 .arg(numerator.trimmed())
                                                                                 .arg(getObjectNameCom("топер.опер"))

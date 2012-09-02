@@ -8,7 +8,7 @@ QT += sql \
       script \
       gui
 
-#CONFIG += debug
+CONFIG += debug
 CONFIG(debug) {
     DESTDIR = ./
 }

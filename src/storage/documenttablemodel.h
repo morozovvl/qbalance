@@ -28,17 +28,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 
+struct UpdateInfoStruct {
+    QString     originField;        // Наименование обновляемого поля в модели
+    QString     table;              // Наименование обновляемой таблицы
+    int         keyFieldColumn;     // Номер колонки ключевого поля в модели
+    QString     field;              // Наименование обновляемого поля в таблице
+    int         fieldColumn;        // Номер колонки обновляемого поля в модели
+};
+
 class DocumentTableModel : public MySqlRelationalTableModel {
     Q_OBJECT
 public:
     DocumentTableModel();
-    void setUpdateInfo(int, int, QString);
+    void setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn);
     virtual bool submit(const QModelIndex&);
 private:
-    // Структуры updateKeys и updateFields хранят записи, необходимые для генерации команды сохранения данных
-    QList<int> updateKeys;                   // Список ключевых полей
-    QHash<int, int> updateKeyFields;   // Хранит номер ключевого столбца
-    QHash<int, QString> updateFields;   // Хранит имя поля в БД для текущего столбца
+    QMap<int, UpdateInfoStruct>     updateInfo;
 };
 
 #endif // DOCUMENTTABLEMODEL_H

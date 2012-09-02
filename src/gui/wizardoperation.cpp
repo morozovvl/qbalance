@@ -35,7 +35,8 @@ enum fieldsEnums {debetField = 0,
              crVisible = 6,
              crSalVisField = 7,
              itogField = 8,
-             freeField = 9};
+             freeField = 9,
+             attrField = 10};
 
 
 enum dictFieldsEnums {columnField = 0,
@@ -230,16 +231,17 @@ bool WizardOperation::setData()
             bool crVisib = false;
             bool crSalVisible = false;
             bool freePrv = false;
+            bool attribute = false;
 
             dbAcc = "";
             item = prvTable->item(i, debetField);
             if (item != 0)
                 dbAcc = item->text().trimmed();
-            if (dbAcc.size() == 0)
-            {
-                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан дебетовый счет в проводке № %1")).arg(i+1));
-                return false;
-            }
+//            if (dbAcc.size() == 0)
+//            {
+//                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан дебетовый счет в проводке № %1")).arg(i+1));
+//                return false;
+//            }
 
             item = prvTable->item(i, dbConstField);
             if (item != 0)
@@ -257,11 +259,11 @@ bool WizardOperation::setData()
             item = prvTable->item(i, creditField);
             if (item != 0)
                 crAcc = item->text().trimmed();
-            if (crAcc.size() == 0)
-            {
-                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан кредитовый счет в проводке № %1")).arg(i+1));
-                return false;
-            }
+//            if (crAcc.size() == 0)
+//            {
+//                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Не указан кредитовый счет в проводке № %1")).arg(i+1));
+//                return false;
+//            }
 
             item = prvTable->item(i, crConstField);
             if (item != 0)
@@ -279,6 +281,10 @@ bool WizardOperation::setData()
             if (item != 0)
                 freePrv = item->text().compare("true") == 0 ? true : false;
 
+            item = prvTable->item(i, attrField);
+            if (item != 0)
+                attribute = item->text().compare("true") == 0 ? true : false;
+
             QString itog;
             if (prvTable->item(i, itogField) != 0)
                 itog = prvTable->item(i, itogField)->text().trimmed();
@@ -293,7 +299,8 @@ bool WizardOperation::setData()
                             crVisib,
                             crSalVisible,
                             itog,
-                            freePrv))
+                            freePrv,
+                            attribute))
             {
                 db->rollbackTransaction();
                 return false;
@@ -369,7 +376,7 @@ void WizardOperation::getData()
     bleNumerator->setValue(db->getToperNumerator(oper));
 
     // Создадим таблицу проводок
-    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 10);
+    prvTable = new QTableWidget((prvs.size() > 0 ? prvs.size() : 1), 11);
     if (prvTable->verticalHeader()->minimumSectionSize() > 0)
         prvTable->verticalHeader()->setDefaultSectionSize(prvTable->verticalHeader()->minimumSectionSize());
     prvTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Дебет")
@@ -381,7 +388,8 @@ void WizardOperation::getData()
                                                       << QObject::trUtf8("Кр.спр.видим")
                                                       << QObject::trUtf8("Кр.сал.видимо")
                                                       << QObject::trUtf8("Итоги")
-                                                      << QObject::trUtf8("Независим."));
+                                                      << QObject::trUtf8("Независим.")
+                                                      << QObject::trUtf8("Атрибуты"));
      for (int i = 0; i < prvs.size(); i++)
      {
          prvs.seek(i);
@@ -405,6 +413,8 @@ void WizardOperation::getData()
          prvTable->setItem(i, itogField, item);
          item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.независим")).toString());
          prvTable->setItem(i, freeField, item);
+         item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.атрибуты")).toString());
+         prvTable->setItem(i, attrField, item);
      }
      MyButtonLineEditItemDelegate* dbEditDelegate = new MyButtonLineEditItemDelegate();
      dbEditDelegate->setFormOnPushButton(&showAccounts);
@@ -434,6 +444,9 @@ void WizardOperation::getData()
 
      boolDelegate = new MyBooleanItemDelegate();
      prvTable->setItemDelegateForColumn(freeField, boolDelegate);
+
+     boolDelegate = new MyBooleanItemDelegate();
+     prvTable->setItemDelegateForColumn(attrField, boolDelegate);
 
      // Получим список проводок и полей и заголовков формы документа
      topersList.clear();

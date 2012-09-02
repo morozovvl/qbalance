@@ -5,6 +5,7 @@ QT += gui
 QT += xml
 CONFIG += designer \
     plugin
+CONFIG += debug
 TARGET = ../../plugins/plugins
 TEMPLATE = lib
 HEADERS = tableviewplugin.h \

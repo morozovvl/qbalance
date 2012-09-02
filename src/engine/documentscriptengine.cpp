@@ -130,16 +130,16 @@ QList<EventFunction>* DocumentScriptEngine::getEventsList()
     {// Зарядим список событий
         ScriptEngine::getEventsList();
         EventFunction func;
-        func.name = "EventParametersChanged";
+        func.name = "EventParametersChanged()";
         func.comment = QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
         eventsList.append(func);
-        func.name = "EventBeforeAddString";
+        func.name = "EventBeforeAddString()";
         func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
         eventsList.append(func);
-        func.name = "EventAfterAddString";
+        func.name = "EventAfterAddString()";
         func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
         eventsList.append(func);
-        func.name = "EventAfterCalculate";
+        func.name = "EventAfterCalculate()";
         func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
         eventsList.append(func);
         func.name = "EventAppendFromQuery(id, record)";

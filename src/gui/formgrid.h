@@ -43,7 +43,6 @@ public:
     TableView* getGridTable() { return grdTable; }
     virtual void setGridFocus();
 
-//    virtual void setShowFocus();
     virtual void readSettings();
     virtual void writeSettings();
 
@@ -89,6 +88,7 @@ protected:
 
 private:
     QString             photoPath;
+    void    restoreCurrentIndex(QModelIndex);
 //    virtual void keyPressEvent(QKeyEvent*);
 
 };

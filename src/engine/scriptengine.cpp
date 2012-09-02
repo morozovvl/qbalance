@@ -41,7 +41,7 @@ bool isNumeric(ScriptEngine* engine, QString field = "")
         fieldName = ((Essence*)engine->parent())->getCurrentFieldName();
     else
         fieldName = field;
-    if (((Essence*)engine->parent())->getValue(fieldName).typeName() == "double")
+    if (QString(((Essence*)engine->parent())->getValue(fieldName).typeName()).compare("double", Qt::CaseInsensitive) == 0)
         return true;
     return false;
 }
@@ -475,7 +475,7 @@ QString ScriptEngine::getBlankScripts()
     QList<EventFunction>* events = getEventsList();
     for (int i = 0; i < events->count(); i++)
     {
-        stream << "function " << events->at(i).name << "()" << endl;
+        stream << "function " << events->at(i).name << endl;
         stream << "{";
         if (events->at(i).comment.size() > 0)
             stream << " // " << events->at(i).comment << endl;
@@ -494,27 +494,27 @@ QList<EventFunction>* ScriptEngine::getEventsList()
 
         EventFunction func;
 
-        func.name = "EventInitForm";
+        func.name = "EventInitForm()";
         func.comment = QObject::trUtf8("Событие происходит сразу после создания формы документа");
         eventsList.append(func);
 
-        func.name = "EventBeforeShowForm";
+        func.name = "EventBeforeShowForm()";
         func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
         eventsList.append(func);
 
-        func.name = "EventAfterHideForm";
+        func.name = "EventAfterHideForm()";
         func.comment = QObject::trUtf8("Событие происходит после закрытия формы документа");
         eventsList.append(func);
 
-        func.name = "EventCloseForm";
+        func.name = "EventCloseForm()";
         func.comment = QObject::trUtf8("Событие происходит перед удалением формы документа");
         eventsList.append(func);
 
-        func.name = "EventImport";
+        func.name = "EventImport()";
         func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
         eventsList.append(func);
 
-        func.name = "EventExport";
+        func.name = "EventExport()";
         func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
         eventsList.append(func);
 
