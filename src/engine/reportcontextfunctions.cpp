@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QScriptValue>
 #include <QScriptContext>
 #include <QScriptEngine>
-#include <QDebug>
 
 //-- функция SumToString -----------------------------------------------------------------------------------------------------
 QString str0_9(QString n9, int strS) {

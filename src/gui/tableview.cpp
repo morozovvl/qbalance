@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include "tableview.h"
-#include <QDebug>
 #include <QLineEdit>
 #include <QTableView>
 #include <QScriptContextInfo>
@@ -35,6 +34,7 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
     parentWidget = pwgt;
     name = "TableView";
     app = 0;
+    db = 0;
     tableModel = 0;
     if (verticalHeader()->minimumSectionSize() > 0)
         verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
@@ -45,6 +45,13 @@ TableView::~TableView()
 {
     QItemSelectionModel *oldModel = selectionModel();
     delete oldModel;
+}
+
+
+void    TableView::setApp(TApplication* a)
+{
+    app = a;
+    db = app->getDBFactory();
 }
 
 
@@ -106,11 +113,9 @@ void TableView::setTableModel(MySqlRelationalTableModel* model)
 void TableView::setColumnsHeaders()
 {
     QHeaderView* header = horizontalHeader();
-    DBFactory* db = TApplication::exemplar()->getDBFactory();
     header->setMovable(true);
     header->setSortIndicatorShown(true);
     QList<FieldType>* fields = parent->getParent()->getColumnsProperties();
-    db->getColumnsProperties(fields, tagName);
     db->getColumnsHeaders(tagName, fields);
     if (fields->count() > 0)
     {
@@ -119,6 +124,37 @@ void TableView::setColumnsHeaders()
         {
             setColumnHidden(i, true);
         }
+        // Найдем наибольший номер видимой колонки
+        int maxNumber = 0;
+        for (int i = 0; i < fields->count(); i++)
+        {
+            if (fields->at(i).number > maxNumber)
+                maxNumber = fields->at(i).number;
+        }
+        for (int j = 1; j <= maxNumber; j++)
+        {
+            for (int i = 0; i < fields->count(); i++)
+            {
+                if (fields->at(i).number == j)
+                {
+                    QString columnName = fields->at(i).column;
+                    int k = fields->at(i).number - 1;
+                    int l = tableModel->fieldIndex(columnName);
+                    header->showSection(l);
+                    MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
+                    if (delegate != 0)
+                    {
+                        connect(delegate, SIGNAL(closeEditor( QWidget*, QAbstractItemDelegate::EndEditHint)), parent, SLOT(calculate()));
+                        delegate->setReadOnly(fields->at(i).readOnly);
+                        setItemDelegateForColumn(l, delegate);
+                    }
+                    tableModel->setHeaderData(l, Qt::Horizontal, fields->at(i).header);
+                    header->moveSection(l, k);
+                    qDebug() << tagName << columnName << l << k << fields->at(i).header;
+                }
+            }
+        }
+/*
         for (int i = 0; i < fields->count(); i++)
         {
             if (fields->at(i).number > 0)
@@ -138,6 +174,7 @@ void TableView::setColumnsHeaders()
                 header->moveSection(header->visualIndex(k), fields->at(i).number - 1);
             }
         }
+*/
     }
 }
 

@@ -28,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QModelIndex>
 #include <QPalette>
 #include <QVariant>
-#include <QDebug>
 //#include "../essence.h"
 
 enum DelegateTypes

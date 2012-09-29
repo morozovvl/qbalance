@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QScriptClass>
 
 #include "../kernel/app.h"
-#include "mysqlrelationaltablemodel.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 
 Table::Table(QString name, QObject *parent)
 : QObject(parent)
@@ -35,11 +35,6 @@ Table::Table(QString name, QObject *parent)
     tableName = name.trimmed();
     tagName = tableName;
     db = TApplication::exemplar()->getDBFactory();
-}
-
-
-Table::~Table()
-{
 }
 
 
@@ -69,7 +64,6 @@ void Table::query(QString filter)
 bool Table::open()
 {
     setTableModel();
-    db->getColumnsProperties(&columnsProperties, tableName);
     if (tableModel->lastError().type() == QSqlError::NoError)
     {
         opened = true;
@@ -96,6 +90,7 @@ void Table::setTableModel()
     tableModel = new MySqlRelationalTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
+    db->getColumnsProperties(&columnsProperties, tableName);
 }
 
 

@@ -25,7 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/essence.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/documents.h"
-#include "../storage/documenttablemodel.h"
 
 #define LABEL_ITOG     QObject::trUtf8("Итого:")
 #define LABEL_DATE     QObject::trUtf8("Дата:")

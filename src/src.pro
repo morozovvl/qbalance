@@ -8,7 +8,6 @@ QT += sql \
       script \
       gui
 
-CONFIG += debug
 CONFIG(debug) {
     DESTDIR = ./
 }
@@ -44,8 +43,7 @@ SOURCES += main.cpp \
     storage/mysqlrelationaltablemodel.cpp \
     kernel/topers.cpp \
     kernel/document.cpp \
-    storage/table.cpp \
-    storage/documenttablemodel.cpp \
+    kernel/table.cpp \
     gui/tableview.cpp \
     gui/mynumericitemdelegate.cpp \
     gui/mybooleanitemdelegate.cpp \
@@ -61,7 +59,6 @@ SOURCES += main.cpp \
     report/ooreportengine.cpp \
     engine/reportcontext.cpp \
     engine/formscriptengine.cpp \
-    storage/mysqlrecord.cpp \
     engine/sqlqueryclass.cpp \
     engine/sqlqueryprototype.cpp \
     engine/sqlrecordclass.cpp \
@@ -102,8 +99,7 @@ HEADERS += kernel/app.h \
     storage/mysqlrelationaltablemodel.h \
     kernel/topers.h \
     kernel/document.h \
-    storage/table.h \
-    storage/documenttablemodel.h \
+    kernel/table.h \
     gui/tableview.h \
     gui/mynumericitemdelegate.h \
     gui/mybooleanitemdelegate.h \
@@ -121,7 +117,6 @@ HEADERS += kernel/app.h \
     report/ooreportengine.h \
     engine/reportcontext.h \
     engine/formscriptengine.h \
-    storage/mysqlrecord.h \
     engine/sqlqueryclass.h \
     engine/sqlqueryprototype.h \
     engine/sqlrecordclass.h \
@@ -172,6 +167,12 @@ unix {
 
 OTHER_FILES += \
     qbalance.nsi
+
+
+
+
+
+
 
 
 

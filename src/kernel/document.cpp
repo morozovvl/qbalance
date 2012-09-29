@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
-#include "../storage/documenttablemodel.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 
@@ -51,7 +50,7 @@ Document::Document(int oper, Documents* par): Essence()
     QList<DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
 
     db->getToperData(operNumber, &topersList);              // Получим список типовых операций
-    db->getToperDictAliases(&topersList, &dictsList);       // Получим имена справочников в проводках
+    db->getToperDictAliases(operNumber, &topersList, &dictsList);       // Получим имена справочников в проводках
 
     // Проверим, должна ли быть в документе только одна строка
     isSingleString = topersList.at(0).isSingleString;
@@ -74,9 +73,9 @@ Document::Document(int oper, Documents* par): Essence()
             Saldo* sal;
             if (dictsList.at(i).name.size() > 0 &&
                 db->isSet(dictsList.at(i).name))
-                   sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name, 1);
+                   sal = dictionaries->getSaldo(dictsList.at(i).acc, 1);
             else
-                sal = dictionaries->getSaldo(dictsList.at(i).acc, dictsList.at(i).name, 0);
+                sal = dictionaries->getSaldo(dictsList.at(i).acc, 0);
             if (sal != 0)
             {
                 sal->setPrototypeName(dictsList.at(i).prototype);
@@ -179,6 +178,21 @@ bool Document::add()
     if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         ((DocumentScriptEngine*)scriptEngine)->eventBeforeAddString();
+        if (topersList.at(0).attributes && topersList.at(0).number == 0)
+        {
+            prvValues.clear();
+            QString attrName = QString("%1%2").arg(db->getObjectName("атрибуты")).arg(operNumber);
+            QString idFieldName = db->getObjectName("код");
+            foreach (QString fieldName, db->getFieldsList(attrName))
+            {
+                if (fieldName.left(4) == idFieldName + "_")
+                {        // Если поле ссылается на другую таблицу
+                    QString dictName = fieldName;
+                    dictName.remove(0, 4);
+                    prepareValue(fieldName, QVariant(dictionaries->getDictionary(dictName)->getId()));
+                }
+            }
+        }
         appendDocString();
         query();
         form->getGridTable()->selectRow(tableModel->rowCount() - 1);    // Установить фокус таблицы на последнюю, только что добавленную, запись
@@ -502,7 +516,7 @@ QString Document::transformSelectStatement(QString string)
 void Document::setTableModel()
 {   // Генерирует заготовку запроса для получения данных для табличной части документа
     // Вызывается 1 раз
-    tableModel = new DocumentTableModel();
+    tableModel = new MySqlRelationalTableModel();
     tableModel->setParent(this);
     tableModel->setTable(tableName);
     tableModel->setBlockUpdate(!isUpdateable());
@@ -515,23 +529,31 @@ void Document::setTableModel()
 
         int columnCount = 0;
         int keyColumn   = 0;
+        QString attrName = QString("атрибуты%1").arg(operNumber);
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             QString field = columnsProperties.value(i).name;
-            field = field.mid(field.indexOf("__") + 2);
-            if (field == db->getObjectName("проводки.код"))
-            // Если в списке полей встретилось поле ключа
-               keyColumn = columnCount;                                    // Запомним номер столбца с ключом
-
-            if (!columnsProperties.value(i).constReadOnly)
+            if (topersList.at(0).attributes && topersList.at(0).number == 0)
             {
+                if (field == db->getObjectName("атрибуты.код"))
+                    // Если в списке полей встретилось поле ключа
+                    keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+            }
+            else
+            {
+                field = field.mid(field.indexOf("__") + 2);
+                if (field == db->getObjectName("проводки.код"))
+                    // Если в списке полей встретилось поле ключа
+                    keyColumn = columnCount;                                    // Запомним номер столбца с ключом
+            }
+            if (!columnsProperties.value(i).constReadOnly)
                 // Если поле входит в список сохраняемых полей
                 tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnCount, keyColumn);
-
-            }
+            // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
+            if (columnsProperties.value(i).table == attrName)
+                attrFields.append(columnsProperties.value(i).column);
             columnCount++;      // Считаем столбцы
         }
-
         // Заполним модель пустыми данными. Это необходимо только в случае, если мы сами генерировали команду запроса для модели.
         int oldDocId = docId;
         docId = 0;
@@ -636,6 +658,13 @@ void Document::appendDocString()
     if (!error)
     {
         db->addDocStr(operNumber, docId, parameter);
+        foreach (QString attr, attrFields)
+        {
+            if (prvValues.keys().contains(attr))
+            {
+                db->saveDocAttribute(operNumber, docId, attr, prvValues.value(attr));
+            }
+        }
         prvValues.clear();
     }
 }
@@ -645,8 +674,16 @@ void Document::selectCurrentRow()
 {   // Делает запрос к БД по одной строке документа. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились (например сальдо).
     QString command = tableModel->getSelectStatement();
-    command.replace(" WHERE ", QString(" WHERE p1.%1=%2 AND ").arg(db->getObjectName("проводки.стр"))
-                                                              .arg(getValue(QString("p1__%1").arg(db->getObjectName("проводки.стр"))).toInt()));
+    if (topersList.at(0).attributes && topersList.at(0).number == 0)
+    {
+        command.replace(" WHERE ", QString(" WHERE a.%1=%2 AND ").arg(db->getObjectName("атрибуты.стр"))
+                                                                 .arg(getValue(db->getObjectName("атрибуты.стр")).toInt()));
+    }
+    else
+    {
+        command.replace(" WHERE ", QString(" WHERE p1.%1=%2 AND ").arg(db->getObjectName("проводки.стр"))
+                                                                   .arg(getValue(QString("p1__%1").arg(db->getObjectName("проводки.стр"))).toInt()));
+    }
     QSqlQuery query = db->execQuery(command);
     if (query.first())
     {

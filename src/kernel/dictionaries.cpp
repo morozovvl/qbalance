@@ -50,12 +50,12 @@ Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add) {
 }
 
 
-Saldo* Dictionaries::getSaldo(QString acc, QString dictName, int deep) {
+Saldo* Dictionaries::getSaldo(QString acc, int deep) {
     if (acc.size() == 0)
         return 0;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addSaldo(acc, dictName, deep))
+        if (!addSaldo(acc, deep))
             return 0;
     }
     return (Saldo*)dictionaries[alias];
@@ -87,11 +87,15 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
     return false;
 }
 
-bool Dictionaries::addSaldo(QString acc, QString dictName, int deep) {
+bool Dictionaries::addSaldo(QString acc, int deep) {
     if (acc.size() == 0)
         return false;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {
+        // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
+        Dictionary* accDict = TApplication::exemplar()->getDictionaries()->getDictionary(db->getObjectName("счета"));
+        accDict->query(QString("%1='%2'").arg(db->getObjectName("счета.счет")).arg(acc));
+        QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
         if (saldo->open(deep)) {

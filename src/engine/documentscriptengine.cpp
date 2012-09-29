@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QDebug>
 #include "documentscriptengine.h"
 #include "../kernel/document.h"
 
@@ -36,10 +35,9 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
 
 QScriptValue getSaldo(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue acc = context->argument(0);
-    QScriptValue dictName = context->argument(1);
-    if (acc.isString() && dictName.isString() && engine->evaluate("document").isValid())
+    if (acc.isString() && engine->evaluate("document").isValid())
     {
-        QScriptValue value = engine->evaluate(QString("document.getSaldo('%1', '%2')").arg(acc.toString()).arg(dictName.toString()));
+        QScriptValue value = engine->evaluate(QString("document.getSaldo('%1')").arg(acc.toString()));
         if (value.isValid())
             return value;
     }

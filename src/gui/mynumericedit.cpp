@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QVariant>
 #include <QLocale>
-#include <QDebug>
 #include "mynumericedit.h"
 
 MyNumericEdit::MyNumericEdit(QWidget *parent): QLineEdit(parent) {

@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QTreeWidgetItem>
 #include <QFrame>
-#include <QDebug>
 #include <QSizePolicy>
 #include "configform.h"
 #include "../kernel/app.h"
@@ -40,20 +39,18 @@ bool ConfigForm::open(QWidget* pwgt) {
         QTreeWidgetItem* treeWidgetItem1 = 0;
 
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList(QObject::trUtf8("Справочники")));
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Добавить") << "10");
+        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Создать") << "10");
         treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "11");
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Столбцы") << "12");
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "13");
+        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "12");
 
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList(QObject::trUtf8("Операции")));
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Добавить") << "20");
+        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Создать") << "20");
         treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "21");
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Столбцы") << "22");
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "23");
+        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "22");
 
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList(QObject::trUtf8("Отчеты")));
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "30");
-        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Столбцы") << "31");
+        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Создать") << "30");
+        treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "31");
         treeWidgetItem1 = new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "32");
         connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(dispatch(QTreeWidgetItem*, int)));
         treeWidget->setHeaderHidden(true);
@@ -90,9 +87,7 @@ void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
                 break;
     case 11: dictProperties();
                 break;
-    case 12: dictColumns();
-                break;
-    case 13: dictPermissions();
+    case 12: dictPermissions();
                 break;
     }
 }

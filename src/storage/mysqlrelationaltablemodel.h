@@ -28,9 +28,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QList>
 #include <QStringList>
 
-#include "table.h"
+#include "../kernel/table.h"
 
 class Table;
+
+struct UpdateInfoStruct {
+    QString     originField;        // Наименование обновляемого поля в модели
+    QString     table;              // Наименование обновляемой таблицы
+    int         keyFieldColumn;     // Номер колонки ключевого поля в модели
+    QString     field;              // Наименование обновляемого поля в таблице
+//    int         fieldColumn;        // Номер колонки обновляемого поля в модели
+};
 
 class MySqlRelationalTableModel : public QSqlRelationalTableModel {
     Q_OBJECT
@@ -65,10 +73,9 @@ public:
 // Функции для сохранения данных
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     void setBlockUpdate(bool block) { blockUpdate = block; }
-    virtual bool submit(const QModelIndex& index) { Q_UNUSED(index); return QSqlRelationalTableModel::submit(); }
+    virtual bool submit(const QModelIndex& index);
     virtual bool updateRowInTable(int, const QSqlRecord&);
-//    virtual void setUpdateInfo(int, int, QString) { ; }
-    virtual void setUpdateInfo(QString, QString, QString, int, int) { ; }
+    virtual void setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn);
 
 // Прочие функции
     QStringList getFieldsList();
@@ -94,6 +101,7 @@ private:
     bool                    isPrepared;
     int                     sortColumn;
     Qt::SortOrder           sortOrder;
+    QMap<int, UpdateInfoStruct>     updateInfo;
 
 // Прочие свойства
     QStringList             fieldsList;

@@ -638,25 +638,6 @@ bool DBFactory::renameTableColumn(QString table, QString oldColumnName, QString 
 }
 
 
-bool DBFactory::setTableColumnHeaderOrder(int tableId, QString column, QString header, int number, bool readOnly)
-{
-    QString command;
-    clearError();
-    command = QString("SELECT * FROM %1 WHERE %2 = %3 AND %4 = '%5';").arg(getObjectNameCom("столбцы"))
-                                                                      .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
-                                                                      .arg(tableId)
-                                                                      .arg(getObjectNameCom("столбцы.имя"))
-                                                                      .arg(column);
-    QSqlQuery query = execQuery(command);
-    query.first();
-    if (query.isValid())
-    {
-        return updateColumnHeader(tableId, column, header, number, readOnly);
-    }
-    return appendColumnHeader(tableId, column, header, number, readOnly);
-}
-
-
 bool DBFactory::alterTableColumn(QString table, QString columnName, QString type)
 {
     clearError();
@@ -897,10 +878,23 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
 }
 
 
+bool DBFactory::removeColumnHeaders(int tableId)
+{
+    clearError();
+    QString command;
+    command = QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("столбцы"))
+                                                      .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
+                                                      .arg(tableId);
+    return exec(command);
+}
+
+
+
 bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, int number, bool readOnly)
 {
     clearError();
-    QString command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (%7, '%8', '%9', %10, %11);")
+    QString command;
+    command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (%7, '%8', '%9', %10, %11);")
             .arg(getObjectNameCom("столбцы"))
             .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
             .arg(getObjectNameCom("столбцы.имя"))
@@ -912,26 +906,6 @@ bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, 
             .arg(header)
             .arg(number)
             .arg(readOnly ? "true" : "false");
-    return exec(command);
-}
-
-
-bool DBFactory::updateColumnHeader(int tableId, QString column, QString header, int number, bool readOnly)
-{
-    clearError();
-    QString command;
-    command = QString("UPDATE %1 SET %2 = '%3', %4 = %5, %6 = %7 WHERE %8 = %9 AND %10 = '%11';")
-            .arg(getObjectNameCom("столбцы"))
-            .arg(getObjectNameCom("столбцы.заголовок"))
-            .arg(header)
-            .arg(getObjectNameCom("столбцы.номер"))
-            .arg(number)
-            .arg(getObjectNameCom("столбцы.толькочтение"))
-            .arg(readOnly ? "true" : "false")
-            .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
-            .arg(tableId)
-            .arg(getObjectNameCom("столбцы.имя"))
-            .arg(column);
     return exec(command);
 }
 
@@ -988,6 +962,25 @@ bool DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, 
 {
     clearError();
     return exec(QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5)").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr));
+}
+
+
+void DBFactory::saveDocAttribute(int operNumber, int docId, QString attribute, QVariant val)
+{
+    clearError();
+    QString value;
+    if (val.type() == QVariant::String)
+        value = QString("'%1'").arg(val.toString());
+    else
+        value = val.toString();
+    QString command = QString("UPDATE %1%2 SET %3=%4 WHERE %5=%6 AND %7=(SELECT max(%7) FROM %1%2 WHERE %5=%6);").arg(getObjectName("атрибуты"))
+                                                                                                                 .arg(operNumber)
+                                                                                                                 .arg(attribute)
+                                                                                                                 .arg(value)
+                                                                                                                 .arg(getObjectNameCom("атрибуты.доккод"))
+                                                                                                                 .arg(docId)
+                                                                                                                 .arg(getObjectNameCom("атрибуты.стр"));
+    exec(command);
 }
 
 
@@ -1163,7 +1156,13 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("топер.крсалвидим", "крсалвидим");
     ObjectNames.insert("топер.атрибуты", "атрибуты");
     ObjectNames.insert("счета", "счета");
+    ObjectNames.insert("счета.счет", "код");
     ObjectNames.insert("счета.счет", "счет");
+    ObjectNames.insert("счета.имя", "имя");
+    ObjectNames.insert("счета.имясправочника", "имясправочника");
+    ObjectNames.insert("счета.баланс", "баланс");
+    ObjectNames.insert("счета.количество", "количество");
+    ObjectNames.insert("счета.прототип", "прототип");
     ObjectNames.insert("vw_счета", "vw_счета");
     ObjectNames.insert("vw_счета.код", "код");
     ObjectNames.insert("vw_счета.счет", "счет");
@@ -1374,60 +1373,88 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 }
 
 
-void DBFactory::getToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList)
+void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList)
 {
     QString dictName;
     // Укажем, как обращаться к справочникам для заполнения кодов в проводках
-    for (int i = 0; i < topersList->count(); i++)
+    if (topersList->at(0).attributes && topersList->at(0).number == 0)
     {
-        ToperType toperT;
-        DictType dict;
-        toperT = topersList->at(i);
-        // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
-        QSqlRecord accRecord = getAccountRecord(toperT.dbAcc);
-        dictName = accRecord.value(getObjectName("vw_счета.имясправочника")).toString();
-        toperT.dbDict = dictName;
-        toperT.dbQuan = accRecord.value(getObjectName("vw_счета.количество")).toBool();
-        if (dictName.size() > 0)
+        // Если в документе отсутствуют проводки, но присутствуют атрибуты, то в локальный список справочников попадают
+        // связанные справочники из атрибутов
+        QString attrName = QString("%1%2").arg(getObjectName("атрибуты")).arg(oper);
+        QString idFieldName = getObjectName("код");
+        foreach (QString fieldName, getFieldsList(attrName))
         {
-            dict.name = dictName;
-            dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
-            if (dict.prototype.size() == 0)
+            if (fieldName.left(4) == idFieldName + "_")
+            {        // Если поле ссылается на другую таблицу
+                dictName = fieldName;
+                dictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
+                DictType dict;
+                dict.name = dictName;
                 dict.prototype = dict.name;
-            toperT.dbDictAlias = dictName;
-            dict.isSaldo = false;
-            dict.isConst = toperT.dbConst;
-            if (dictsList != 0)
+                dict.isSaldo = false;
+                dict.isConst = false;
+                if (dictsList != 0)
+                    dictsList->append(dict);
+            }
+        }
+    }
+    else
+    {
+        // Если в документе присутствуют проводки, то в локальный список справочников счетов попадают только справочники из корреспондирующих счетов
+        // и не попадают связанные справочники из атрибутов
+        for (int i = 0; i < topersList->count(); i++)
+        {
+            ToperType toperT;
+            DictType dict;
+            toperT = topersList->at(i);
+            // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
+            QSqlRecord accRecord = getAccountRecord(toperT.dbAcc);
+            dictName = accRecord.value(getObjectName("vw_счета.имясправочника")).toString();
+            toperT.dbDict = dictName;
+            toperT.dbQuan = accRecord.value(getObjectName("vw_счета.количество")).toBool();
+            if (dictName.size() > 0)
+            {
+                dict.name = dictName;
+                dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
+                if (dict.prototype.size() == 0)
+                    dict.prototype = dict.name;
+                toperT.dbDictAlias = dictName;
+                dict.isSaldo = false;
+                dict.isConst = toperT.dbConst;
+                if (dictsList != 0)
+                    dictsList->append(dict);
+            }
+
+            accRecord = getAccountRecord(toperT.crAcc);
+            dictName = accRecord.value(getObjectName("vw_счета.имясправочника")).toString();
+            toperT.crDict = dictName;
+            toperT.crQuan = accRecord.value(getObjectName("vw_счета.количество")).toBool();
+            if (dictName.size() > 0)
+            {
+                dict.name = dictName;
+                if (toperT.crQuan)
+                {      // Если в кредитовом справочнике ведется количественный учет
+                    dict.acc = toperT.crAcc;
+                    dict.isSaldo = true;
+                    toperT.crDictAlias = "saldo" + dict.acc;
+                }
+                else
+                {
+                    dict.isSaldo = false;
+                    toperT.crDictAlias = dictName;
+                }
+                dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
+                if (dict.prototype.size() == 0)
+                    dict.prototype = dict.name;
+                dict.isConst = toperT.crConst;
+                if (dictsList != 0)
                 dictsList->append(dict);
+            }
+            topersList->removeAt(i);
+            topersList->insert(i, toperT);
         }
 
-        accRecord = getAccountRecord(toperT.crAcc);
-        dictName = accRecord.value(getObjectName("vw_счета.имясправочника")).toString();
-        toperT.crDict = dictName;
-        toperT.crQuan = accRecord.value(getObjectName("vw_счета.количество")).toBool();
-        if (dictName.size() > 0)
-        {
-            dict.name = dictName;
-            if (toperT.crQuan)
-            {      // Если в кредитовом справочнике ведется количественный учет
-                dict.acc = toperT.crAcc;
-                dict.isSaldo = true;
-                toperT.crDictAlias = "saldo" + dict.acc;
-            }
-            else
-            {
-                dict.isSaldo = false;
-                toperT.crDictAlias = dictName;
-            }
-            dict.prototype = accRecord.value(getObjectName("vw_счета.прототип")).toString();
-            if (dict.prototype.size() == 0)
-                dict.prototype = dict.name;
-            dict.isConst = toperT.crConst;
-            if (dictsList != 0)
-            dictsList->append(dict);
-        }
-        topersList->removeAt(i);
-        topersList->insert(i, toperT);
     }
 }
 
@@ -1472,7 +1499,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
     }
     if (topersList->count() > 0)
     {
-        getToperDictAliases(topersList, &dictsList);
+        getToperDictAliases(oper, topersList, &dictsList);
         QString selectClause, fromClause, whereClause;
         int prv, prv1 = 0;
         if (columnsProperties != 0)
@@ -1480,6 +1507,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
         // Создадим клаузу проводок в секции SELECT
         QString tableName = getObjectName("проводки");
+        QString idFieldName = getObjectName("код");
         QStringList prvFieldsList = getFieldsList(tableName);
         QList<FieldType> fields;
         getColumnsProperties(&fields, tableName);
@@ -1518,40 +1546,77 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
         if (topersList->at(0).attributes)
         {   // Если имеются атрибуты для документа в данной операции
-            QString attrName = QString("атрибуты%1").arg(oper);
+            QString attrName = QString("%1%2").arg(getObjectName("атрибуты")).arg(oper);
             getColumnsProperties(&fields, attrName);
             selectClause = "";
+            QString attrSelectClause = "";
+            QString attrFromClause = "";
+            bool fieldReadOnly;
             foreach (QString fieldName, getFieldsList(attrName))
             {
-                if (fieldName != "доккод" && fieldName != "стр")
+                if (fieldName == getObjectName("атрибуты.код") ||
+                    fieldName == getObjectName("атрибуты.доккод") ||
+                    fieldName == getObjectName("атрибуты.стр"))
+                    fieldReadOnly = true;
+                else
+                    fieldReadOnly = false;
+                if (!(topersList->at(0).number != 0 && fieldName == getObjectName("атрибуты.код")))
                 {
-//                    selectClause.append(QString(",a.%2 AS %1__%2").arg("атрибуты").arg(fieldName));
-                    selectClause.append(QString(",a.%1").arg(fieldName));
-                    for (int i = 0; i < fields.count(); i++)
-                        if (fields.at(i).name == fieldName && columnsProperties != 0)
-//                            addColumnProperties(columnsProperties, attrName, QString("%1__%2").arg("атрибуты").arg(fieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, (fieldName != "код") ? false : true);
-                            addColumnProperties(columnsProperties, attrName, QString("%1").arg(fieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, (fieldName != "код") ? false : true);
-                }
+                    if (fieldName.left(4) == idFieldName + "_")
+                    {        // Если поле ссылается на другую таблицу
+                        QString dictName = fieldName;
+                        dictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
+                        selectClause.append(QString("a.%1,").arg(fieldName));
+                        attrSelectClause.append(QString("a.%1,").arg(fieldName));
+                        for (int i = 0; i < fields.count(); i++)
+                            if (fields.at(i).name == fieldName && columnsProperties != 0)
+                                addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly);
+                        getColumnsProperties(&fields, dictName);
+                        foreach (QString dictFieldName, getFieldsList(dictName))
+                        {
+                            if (dictFieldName != idFieldName)
+                            {  // покажем все поля, кроме поля "код"
+                                selectClause.append(QString("a.%1__%2,").arg(dictName).arg(dictFieldName));
+                                attrSelectClause.append(QString("%1.%2 AS %1__%2,").arg(dictName).arg(dictFieldName));
+                                for (int i = 0; i < fields.count(); i++)
+                                    if (fields.at(i).name == dictFieldName && columnsProperties != 0)
+                                        addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true);
+                            }
+                        }
+                        attrFromClause.append(QString(" LEFT OUTER JOIN %1 ON a.%2=%1.код").arg(dictName).arg(fieldName));
+                    }
+                    else
+                    {
+                        selectClause.append(QString("a.%1,").arg(fieldName));
+                        attrSelectClause.append(QString("a.%1,").arg(fieldName));
+                        for (int i = 0; i < fields.count(); i++)
+                            if (fields.at(i).name == fieldName && columnsProperties != 0)
+                                addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly);
+                    }
+               }
             }
+            selectClause.chop(1);
+            attrSelectClause.chop(1);
+            attrSelectClause = QString("SELECT DISTINCT ").append(attrSelectClause);
+            attrFromClause = QString(" FROM %1 a").arg(attrName).append(attrFromClause);
+            attrSelectClause.append(attrFromClause);
 
             if (fromClause.size() > 0)
             {   // Если типовая операция включает в себя проводки
-                selectStatement = QString("SELECT DISTINCT p.*%1 FROM (%2) p LEFT OUTER JOIN %3 a ON p.p1__%4=a.%4 AND p.p1__%5=a.%5").arg(selectClause)
+                selectStatement = QString("SELECT DISTINCT p.*, %1 FROM (%2) p LEFT OUTER JOIN (%3) a ON p.p1__%4=a.%4 AND p.p1__%5=a.%5").arg(selectClause)
                                                                                                                                       .arg(selectStatement)
-                                                                                                                                      .arg(attrName)
+                                                                                                                                      .arg(attrSelectClause)
                                                                                                                                       .arg(getObjectName("атрибуты.доккод"))
                                                                                                                                       .arg(getObjectName("атрибуты.стр"));
             }
             else
             {   // Если проводок нет
-                selectStatement = QString("SELECT DISTINCT * FROM (SELECT a.%1 AS p1__%1%2 FROM %3 a WHERE a) p").arg(getObjectName("атрибуты.стр"))
-                                                                                                                 .arg(selectClause)
-                                                                                                                 .arg(attrName);
-                                                                    // Создадим пометку в команде с пустой секцией WHERE.
-                                                                    // Непосредственно перед отправкой команды на сервер
-                                                                    // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
-                                                                    // в фунции transformSelectStatement(QString)
-                                                                    // a в конце означает, что нужно ставить фильтр для типовой операции без проводок, но с атрибутами
+                selectStatement = attrSelectClause + " WHERE a ";
+                // Создадим пометку в команде с пустой секцией WHERE.
+                // Непосредственно перед отправкой команды на сервер
+                // пустая секция WHERE заполняется реальной с фильтрами для текущего документа
+                // в фунции transformSelectStatement(QString)
+                // "a" в конце означает, что нужно ставить фильтр для типовой операции без проводок, но с атрибутами
             }
         }
 
@@ -1562,7 +1627,6 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         QString dictName;
         QStringList dictsNames;
         Dictionary* dict;
-        QString idFieldName = getObjectName("код");
         for (int i = 0; i < topersList->count(); i++)
         {
             prv = topersList->at(i).number;
@@ -1703,7 +1767,10 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
         if (retPrv1 != 0)
             *retPrv1 = prv1;
-        selectStatement = selectClause + fromClause + QString(" ORDER BY p1__%1 ASC").arg(getObjectName("проводки.стр"));
+        if (topersList->at(0).attributes && topersList->at(0).number == 0)
+            selectStatement = selectClause + fromClause + QString(" ORDER BY %1 ASC").arg(getObjectName("атрибуты.стр"));
+        else
+            selectStatement = selectClause + fromClause + QString(" ORDER BY p1__%1 ASC").arg(getObjectName("проводки.стр"));
 
         // Получим заголовки столбцов
         getColumnsHeaders(QString("Документ%1").arg(oper), columnsProperties);

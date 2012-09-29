@@ -20,14 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <QDebug>
 #include <QSqlTableModel>
 #include <QSqlQuery>
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include "dbfactory.h"
-#include "mysqlrelationaltablemodel.h"
+#include "../storage/dbfactory.h"
+#include "../storage/mysqlrelationaltablemodel.h"
 
 class TApplication;
 class MySqlRelationalTableModel;
@@ -38,14 +37,13 @@ class Table : public QObject {
 
 public:
     Table(QString table = "", QObject *parent = 0);
-    ~Table();
 
     Q_INVOKABLE virtual bool            open();
     Q_INVOKABLE virtual void            close();
     Q_INVOKABLE virtual void            query(QString filter = "");
 
-    virtual bool                        relationsIsEmpty();
-    virtual QList<FieldType>*           getColumnsProperties();
+    bool                                relationsIsEmpty();
+    QList<FieldType>*                   getColumnsProperties();
     MySqlRelationalTableModel*          getMyRelationalTableModel() { return tableModel; }
     QSqlTableModel*                     getTableModel() { return (QSqlTableModel*)tableModel; }
     virtual QString                     transformSelectStatement(QString string) { return string; }

@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QTextCodec>
 #include <QTextStream>
 #include <QResource>
-#include <QDebug>
 #include "kernel/app.h"
 
 
@@ -71,14 +70,14 @@ void test() {
         if (dict != 0) {
             dicts->removeDictionary(dictName);
         }
-        qDebug() << i;
+//        qDebug() << i;
     }
 }
 
 
 int main(int argc, char **argv)
 {
-
+/*
     qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
     qDebug() << "QLibraryInfo::DocumentationPath" << QLibraryInfo::location(QLibraryInfo::DocumentationPath);
     qDebug() << "QLibraryInfo::HeadersPath" << QLibraryInfo::location(QLibraryInfo::HeadersPath);
@@ -94,7 +93,7 @@ int main(int argc, char **argv)
     qDebug() << "QCoreApplication.applicationDirPath()" << QCoreApplication::applicationDirPath();
     qDebug() << "QCoreApplication.applicationFilePath()" << QCoreApplication::applicationFilePath();
     qDebug() << "QApplication::libraryPaths()" << QApplication::libraryPaths();
-
+*/
 
     // Инициируем переменные, которые нуждаются в этом
 

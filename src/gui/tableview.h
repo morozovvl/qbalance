@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QTableView>
 #include <QWidget>
 #include <QAbstractItemDelegate>
-#include <QDebug>
 #include <QScriptValue>
 #include <QScriptContext>
 #include <QScriptEngine>
@@ -32,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 class TApplication;
+class DBFactory;
 class FormGrid;
 struct FieldType;
 
@@ -43,7 +43,7 @@ public:
     ~TableView();
 
     void                        setFormGrid(FormGrid* par) { parent = par; }
-    void                        setApp(TApplication* a) { app = a; }
+    void                        setApp(TApplication*);
     void                        setTableModel(MySqlRelationalTableModel*);
     void                        setTagName(QString tag) { tagName = tag; }
     void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
@@ -61,6 +61,7 @@ private:
     FormGrid*                   parent;
     QWidget*                    parentWidget;
     TApplication*               app;
+    DBFactory*                  db;
     MySqlRelationalTableModel*  tableModel;
 
 

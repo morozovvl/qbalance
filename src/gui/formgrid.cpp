@@ -33,8 +33,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "myitemdelegate.h"
 #include "../kernel/essence.h"
 #include "../kernel/app.h"
+#include "../kernel/table.h"
 #include "../storage/mysqlrelationaltablemodel.h"
-#include "../storage/table.h"
 
 FormGrid::FormGrid(QObject* parent/* = NULL*/)
 : Form(parent)
@@ -268,15 +268,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             parent->setInsertable(false);
         }
     }
-}
-
-
-void FormGrid::close()
-{
-//    QItemSelectionModel* model = grdTable->selectionModel();
-//    delete model;
-    delete grdTable;
-    Form::close();
 }
 
 

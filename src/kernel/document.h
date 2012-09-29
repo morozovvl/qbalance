@@ -31,7 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 class TApplication;
-class DocumentTableModel;
 
 struct prvSaldo {
     double  dbQuan;
@@ -50,7 +49,7 @@ public:
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dicts; }
     Q_INVOKABLE Dictionary* getDictionary(QString dictName, int deep = 0, bool add = true) { return dictionaries->getDictionary(dictName, deep, add); }
-    Q_INVOKABLE Saldo* getSaldo(QString acc, QString dictName, int deep = 0) { return dictionaries->getSaldo(acc, dictName, deep); }
+    Q_INVOKABLE Saldo* getSaldo(QString acc, int deep = 0) { return dictionaries->getSaldo(acc, deep); }
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void show();
@@ -68,7 +67,7 @@ public:
     Q_INVOKABLE void setNumber(QString number) { ((FormDocument*)getForm())->setNumber(number); }
     Q_INVOKABLE void showParameterText(QString dictName) { ((FormDocument*)getForm())->showParameterText(dictName);}
     Q_INVOKABLE void appendDocString();
-    Q_INVOKABLE void setPrvValue(QString name, QVariant value) { prvValues.insert(name, value); }
+    Q_INVOKABLE void prepareValue(QString name, QVariant value) { prvValues.insert(name, value); }
     Q_INVOKABLE void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void calcItog();
@@ -92,6 +91,7 @@ private:
     int                             freePrv;            // Номер "свободной" проводки
     bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
     QList<ToperType>                topersList;
+    QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
     QHash<int, prvSaldo>            saldo;             // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     virtual void setTableModel();

@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QDebug>
 #include <QMap>
 #include <QVariant>
 #include "wizarddictionary.h"
@@ -330,9 +329,10 @@ bool WizardDictionary::setData()
                 i++;
         }
         // Прошерстим список полей, сравним с исходным. Если что изменялось, то меняем и в БД
+        db->removeColumnHeaders(mainTableId);
         for (int i = 0; i < fieldsTable.rowCount(); i++)
         {
-            QString tblName = fieldsTable.item(i, tableField)->text().trimmed();
+//            QString tblName = fieldsTable.item(i, tableField)->text().trimmed();
             QString fieldName = fieldsTable.item(i, columnField)->text().trimmed();
             QString sType = fieldsTable.item(i, typeField)->text();
             int nLength = fieldsTable.item(i, lengthField)->text().toInt();
@@ -369,22 +369,10 @@ bool WizardDictionary::setData()
                 }
                 if (fields.value(i).number > 0)
                 {
-
-                    if (fields.value(i).headerExist)      // Заголовок для этого столбца скорее всего уже был в базе
+                    if (!db->appendColumnHeader(mainTableId, fields.value(i).column, sHeader, fields.value(i).number, fields.value(i).readOnly))
                     {
-                        if (!db->updateColumnHeader(mainTableId, fields.value(i).column, sHeader, fields.value(i).number, fields.value(i).readOnly))
-                        {
-                            db->rollbackTransaction();
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        if (!db->appendColumnHeader(mainTableId, fields.value(i).column, sHeader, fields.value(i).number, fields.value(i).readOnly))
-                        {
-                                db->rollbackTransaction();
-                                return false;
-                        }
+                        db->rollbackTransaction();
+                        return false;
                     }
                 }
             }

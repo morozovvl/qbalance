@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QDebug>
 #include <QSizePolicy>
 #include <QFrame>
 #include <QLayout>
@@ -94,7 +93,7 @@ void SearchParameters::addString(QString name, int strNum) {
         }
     }
     else {
-        name = parentForm->getParent()->getTableName() + "." + programNameFieldName;
+        name = parentForm->getParent()->getTableName();
         if (app != 0)
         {
             labelName = app->getDBFactory()->getDictionariesProperties(parentForm->getParent()->getTableName()).value("имя_в_форме").toString();

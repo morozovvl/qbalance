@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QHBoxLayout>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QDebug>
 #include "mybuttonlineedit.h"
 #include "../kernel/essence.h"
 #include "../kernel/app.h"

@@ -322,11 +322,12 @@ bool WizardOperation::setData()
         sortHeaders(&headers, &fields);
 
         // Установим наименование полей документа
+        db->removeColumnHeaders(tableId);
         for (int i = 0; i < fields.count(); i++)
         {
  //           if (fields.value(i).number > 0)
  //           {
-                if (!db->setTableColumnHeaderOrder(tableId, fields.value(i).name, fields.value(i).header, fields.value(i).number, fields.value(i).readOnly))
+                if (!db->appendColumnHeader(tableId, fields.value(i).name, fields.value(i).header, fields.value(i).number, fields.value(i).readOnly))
                 {
                    db->rollbackTransaction();
                    return false;
@@ -339,11 +340,12 @@ bool WizardOperation::setData()
         tableId = db->getDictionaryId(QString("СписокДокументов%1").arg(oper));
         if (tableId)
         {
+            db->removeColumnHeaders(tableId);
             for (int i = 0; i < docListFields.count(); i++)
             {
  //               if (docListFields.value(i).number > 0)
  //               {
-                    if (!db->setTableColumnHeaderOrder(tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
+                    if (!db->appendColumnHeader(tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
                     {
                        db->rollbackTransaction();
                        return false;

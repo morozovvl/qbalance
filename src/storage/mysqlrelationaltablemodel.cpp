@@ -26,13 +26,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QStringList>
 #include <QSqlRelation>
 #include <QSqlDriver>
-#include <QDebug>
 #include <QSqlError>
 #include <QMap>
 #include <QUuid>
 #include <QLocale>
 #include "mysqlrelationaltablemodel.h"
-#include "table.h"
 #include "../kernel/app.h"
 
 
@@ -45,7 +43,8 @@ MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableMode
     blockUpdate = false;
     preparedStatementName = "";
     preparedStatement = "";
-    setEditStrategy(QSqlTableModel::OnFieldChange);
+    setEditStrategy(QSqlTableModel::OnManualSubmit);
+//    setBlockUpdate(true);
 }
 
 
@@ -279,4 +278,55 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
     return database().driver()->escapeIdentifier(esc, QSqlDriver::FieldName);
 }
 
+
+void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn) {
+    if (!updateInfo.contains(fieldColumn))
+    {
+        UpdateInfoStruct info;
+        info.originField = originField;
+        info.table = table;
+        info.keyFieldColumn = keyFieldColumn;
+        info.field = field;
+        updateInfo.insert(fieldColumn, info);
+    }
+}
+
+
+bool MySqlRelationalTableModel::submit(const QModelIndex& index) {
+    DBFactory* db = TApplication::exemplar()->getDBFactory();
+    if (editStrategy() == QSqlTableModel::OnManualSubmit) {
+        if (updateInfo.contains(index.column()))
+        {
+            QString value;
+            // Возьмем исходное значение из модели, которое необходимо сохранить в базу
+            QVariant recValue = ((Essence*)parent)->getValue(updateInfo.value(index.column()).originField);
+            // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
+            switch (recValue.type())
+            {
+                case QVariant::String:
+                    value = QString("'%1'").arg(recValue.toString());
+                    break;
+                default:
+                    value = QString("%1").arg(recValue.toString());
+                    break;
+            }
+            if (value.size() > 0)
+            {
+                // Сгенерируем для сервера команду сохранения значения из модели
+                QString command;
+                command = QString("UPDATE %1 SET %2=%3 WHERE %4=%5;").arg(db->getObjectName(updateInfo.value(index.column()).table))
+                                                                     .arg(db->getObjectName(updateInfo.value(index.column()).field))
+                                                                     .arg(value)
+                                                                     .arg(db->getObjectName(updateInfo.value(index.column()).table + ".код"))
+                                                                     .arg(record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toString());
+                if (!db->exec(command))
+                {
+                   return false;
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
 

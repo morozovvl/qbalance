@@ -25,7 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
 #include "../storage/dbfactory.h"
-#include "../storage/mysqlrecord.h"
 #include "../gui/mainwindow.h"
 #include "../gui/form.h"
 #include "../gui/formgrid.h"

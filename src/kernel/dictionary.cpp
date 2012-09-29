@@ -182,9 +182,13 @@ bool Dictionary::open(int deep)
         if (deep > 0)
         {              // Если нужно открыть подсправочники
             int columnCount = fieldList.count();
+            int keyColumn   = 0;
             for (int i = 0; i < fieldList.count(); i++)
             {       // Просмотрим список полей
                 QString name = fieldList.at(i);
+                if (name == idFieldName)
+                    keyColumn = i;
+                tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
                 if (name.left(4) == idFieldName + "_")
                 {        // Если поле ссылается на другую таблицу
                     name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
@@ -232,7 +236,7 @@ bool Dictionary::open(int deep)
         return true;
     }
     QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
-    if (dictTitle.isEmpty())
+    if (dictTitle.size() == 0)
         dictTitle = tableName;
     showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
     return false;

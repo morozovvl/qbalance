@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QDomElement>
 #include <QMessageBox>
 #include <QMenu>
-#include <QDebug>
 #include <QUiLoader>
 #include "essence.h"
 #include "../kernel/app.h"
@@ -98,7 +97,8 @@ QVariant Essence::getValue(QString name, int row)
     }
     else
     {
-        result = tableModel->record(form->getCurrentIndex().row()).value(name);
+        int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+        result = tableModel->record(r).value(name);
     }
     // ВНИМАНИЕ!!!
     // Не могу понять, почему тип поля "p1__кол" возвращается как QString. Должен быть double
@@ -111,12 +111,18 @@ QVariant Essence::getValue(QString name, int row)
 }
 
 
-void Essence::setValue(QString name, QVariant value, int r)
+void Essence::setValue(QString name, QVariant value, int row)
 {
-    int row = (r >= 0 ? r : form->getCurrentIndex().row());
+    int r;
+    if (row >= 0)
+        r = row;
+    else
+    {
+        r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+    }
     int col = tableModel->record().indexOf(name);
-    tableModel->setData(tableModel->index(row, col), value);
-    tableModel->submit(tableModel->index(row, col));
+    tableModel->setData(tableModel->index(r, col), value);
+    tableModel->submit(tableModel->index(r, col));
 }
 
 
@@ -124,7 +130,8 @@ qulonglong Essence::getId(int row)
 {
     if (row >= 0)
         return getValue(idFieldName, row).toULongLong();
-    return getValue(idFieldName, form->getCurrentIndex().row()).toULongLong();
+    int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+    return getValue(idFieldName, r).toULongLong();
 }
 
 
@@ -132,7 +139,8 @@ QString Essence::getName(int row)
 {
     if (row >= 0)
         return getValue(nameFieldName, row).toString();
-    return getValue(nameFieldName, form->getCurrentIndex().row()).toString();
+    int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+    return getValue(nameFieldName, r).toString();
 }
 
 

@@ -99,6 +99,7 @@ public:
     bool addDoc(int, QDate);
     bool removeDoc(int);
     bool addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
+    void saveDocAttribute(int, int, QString, QVariant);
     bool removeDocStr(int, int);
     void clearError();
     bool createNewDB(QString, QString, int);
@@ -167,7 +168,7 @@ public:
     QSqlQuery getDataTypes();
 
     void getToperData(int oper, QList<ToperType>* topersList);
-    void getToperDictAliases(QList<ToperType>* topersList, QList<DictType>* dictsList);
+    void getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList);
 
     QString getDocumentSqlSelectStatement(int oper,
                                           Dictionaries* dictionaries,
@@ -185,8 +186,7 @@ public:
     bool renameTableColumn(QString, QString, QString);
     bool alterTableColumn(QString, QString, QString);
     bool appendColumnHeader(int, QString, QString, int, bool);
-    bool updateColumnHeader(int, QString, QString, int, bool);
-    bool setTableColumnHeaderOrder(int, QString, QString, int, bool);
+    bool removeColumnHeaders(int);
 
     // Функции для мастера создания новый (редактирования старых) типовых операций
     bool deleteToper(int operNumber);                           // Удаляет записи о типовой операции в таблице типовых операций

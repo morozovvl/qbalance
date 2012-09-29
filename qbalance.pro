@@ -8,7 +8,7 @@ QT += sql \
       script \
       gui
 
-CONFIG += debug
+
 #CONFIG(debug) {
 # DESTDIR = bin/debug
 #}
@@ -22,10 +22,10 @@ TEMPLATE = subdirs
 SUBDIRS = src/plugins src
 
 unix:MOC_DIR = ./.moc
-win32:MOC_DIR = /.moc
+win32:MOC_DIR = .moc
 
 unix:OBJECTS_DIR = ./.obj
-win32:OBJECTS_DIR = /.obj
+win32:OBJECTS_DIR = .obj
 
 unix:RCC_DIR = ./src
 win32:RCC_DIR = /src

@@ -31,9 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QDomNode>
 #include <QSqlQuery>
 #include <QSqlRecord>
-#include <QDebug>
 #include <QDialog>
-#include "../storage/table.h"
+#include "../kernel/table.h"
 #include "../engine/scriptengine.h"
 #include "../engine/reportscriptengine.h"
 #include "../gui/dialog.h"
