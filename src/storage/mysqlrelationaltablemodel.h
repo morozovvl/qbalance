@@ -49,7 +49,7 @@ public:
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений
     bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
-    int fieldIndex(const QString &) const;
+    virtual int fieldIndex(const QString &) const;
     bool relationsIsEmpty() { return relIsEmpty; }
     void setRelation(int, const QSqlRelation &);
     void setRelation(int, int, const QSqlRelation &);

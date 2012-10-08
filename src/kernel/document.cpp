@@ -37,6 +37,7 @@ Document::Document(int oper, Documents* par): Essence()
     lPrintable = true;
     tableName = db->getObjectName("проводки");
     tagName = QString("Документ%1").arg(oper);
+    scriptFileName = TApplication::exemplar()->getScriptFileName(operNumber);
     formTitle = db->getTopersProperties(oper).value(db->getObjectName("имя")).toString();   // Получим с сервера наименование формы
     idFieldName = "p1__" + db->getObjectName("код");
     freePrv = 0;
@@ -230,7 +231,11 @@ int Document::addFromQuery(int id)
 
 bool Document::remove() {
     if (lDeleteable) {
-        int strNum = getValue("p1__стр").toInt();
+        int strNum;
+        if (topersList.at(0).attributes && topersList.at(0).number == 0)
+            strNum = getValue(db->getObjectName("атрибуты.стр")).toInt();
+        else
+            strNum = getValue(QString("p1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove()) {
             db->removeDocStr(docId, strNum);
             query();
@@ -407,22 +412,6 @@ void Document::setConstDictId(QString dName, QVariant id)
             }
         }
     }
-}
-
-
-bool Document::open()
-{
-    if (Essence::open()) {
-        if (scriptEngine != 0)
-        {
-            if (((DocumentScriptEngine*)scriptEngine)->open(TApplication::exemplar()->getScriptFileName(operNumber)))
-                                                                          // Если для данной типовой операции существуют скрипты
-                if (((DocumentScriptEngine*)scriptEngine)->evaluate())    // и они корректны
-                    form->initFormEvent();                                // Запустим в скриптах событие инициализации формы
-        }
-        return true;
-    }
-    return false;
 }
 
 

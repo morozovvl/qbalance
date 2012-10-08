@@ -6,7 +6,8 @@ QT += sql \
       xml \
       core \
       script \
-      gui
+      gui \
+      network
 
 CONFIG(debug) {
     DESTDIR = ./

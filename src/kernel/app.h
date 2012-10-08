@@ -53,7 +53,7 @@ public:
 
     TApplication(int& argc, char** argv);
     virtual ~TApplication();
-    Q_INVOKABLE Dictionaries* getDictionaries();
+    Q_INVOKABLE virtual Dictionaries* getDictionaries();
     Q_INVOKABLE Documents* getDocuments(int);
     void removeDocuments(int opNumber);
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }

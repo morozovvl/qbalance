@@ -111,9 +111,9 @@ public:
     Q_INVOKABLE QString getDatabaseName() { return dbName; }
     QSqlDatabase* getDB() { return db; }
     QSqlQuery getColumnsHeaders(QString);
-    void getColumnsHeaders(QString, QList<FieldType>*);
+    virtual void getColumnsHeaders(QString, QList<FieldType>*);
     QSqlQuery getDictionariesProperties();
-    QSqlRecord getDictionariesProperties(QString tableName);
+    virtual QSqlRecord getDictionariesProperties(QString tableName);
     QSqlQuery getTopersProperties();
     QSqlRecord getTopersProperties(int operNumber);
     QSqlQuery getToper(int operNumber);
@@ -141,7 +141,7 @@ public:
     Q_INVOKABLE bool exec(QString);
     Q_INVOKABLE QSqlQuery execQuery(QString);
     QStringList getUserList();
-    QString getPhotoPath(QString);
+    Q_INVOKABLE QString getDictionaryPhotoPath(QString);
     QString getIdFieldPrefix() { return getObjectName("код_"); }      // возвращает префикс в именах полей, которые используются как ссылки на другие справочники
 
     bool isError() { return wasError; }
@@ -150,7 +150,7 @@ public:
     QString initializationScriptPath() const;
     QStringList initializationScriptList() const;
 
-    QString getObjectName(const QString&) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
+    virtual QString getObjectName(const QString&) const;       // транслирует имена объектов БД из "внутренних" в реальные наименования
     QString getObjectNameCom(const QString&) const;    // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
     static QString storageEncoding();

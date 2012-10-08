@@ -29,6 +29,11 @@ MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent): MyItemDelegate(pa
 }
 
 
+MyBooleanItemDelegate::~MyBooleanItemDelegate()
+{
+}
+
+
 QWidget* MyBooleanItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option)

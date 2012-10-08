@@ -176,7 +176,7 @@ int Form::exec() {
     if (formWidget != 0) {
         lSelected = false;
         if (parent != 0)
-            beforeShowFormEvent();
+            parent->beforeShowFormEvent();
         formWidget->exec();
         return lSelected;
     }
@@ -188,7 +188,7 @@ void Form::show() {
     if (formWidget != 0) {
         lSelected = false;
         if (parent != 0)
-            beforeShowFormEvent();
+            parent->beforeShowFormEvent();
         formWidget->activateWindow();
         formWidget->show();
     }
@@ -199,34 +199,7 @@ void Form::hide() {
     if (formWidget != 0) {
         formWidget->hide();
         if (parent != 0)
-            afterHideFormEvent();
-    }
-}
-
-
-void Form::initFormEvent() {
-    if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->eventInitForm(this);
-    }
-}
-
-
-void Form::beforeShowFormEvent() {
-    if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->eventBeforeShowForm(this);
-    }
-}
-
-
-void Form::afterHideFormEvent() {
-    if (getParent()->getScriptEngine() != 0)
-        getParent()->getScriptEngine()->eventAfterHideForm(this);
-}
-
-
-void Form::closeFormEvent() {
-    if (getParent()->getScriptEngine() != 0) {
-        getParent()->getScriptEngine()->eventCloseForm(this);
+            parent->afterHideFormEvent();
     }
 }
 

@@ -27,11 +27,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QStringList>
 #include <QWidget>
 #include <QObject>
+#include "../kernel/app.h"
 #include "mycombobox.h"
 #include "formgridsearch.h"
 #include "guifactory.h"
 
-class TApplication;
+//class TApplication;
 class FormGridSearch;
 struct sParam;
 

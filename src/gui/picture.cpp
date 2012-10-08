@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QDir>
 #include <QPainter>
+#include <QUrl>
 #include "picture.h"
 
 Picture::Picture(QWidget* parent): QFrame(parent) {
@@ -28,7 +29,7 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
 }
 
 void Picture::show(QString fileName) {
-    pictureFileName = QDir().exists(fileName) ? fileName : "";
+    pictureFileName = fileName.size() > 0 && QDir().exists(fileName) ? fileName : "";
     update();
 }
 
@@ -43,4 +44,5 @@ void Picture::paintEvent(QPaintEvent*) {
     painter.setClipping(false);
     painter.drawImage(0, 0, image);
 }
+
 

@@ -220,19 +220,16 @@ bool Dictionary::open(int deep)
         // Установим порядок сортировки и стратегию сохранения данных на сервере
         tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
         db->getColumnsRestrictions(tableName, &columnsProperties);
-
         initForm();
         setScriptEngine();
         if (scriptEngine != 0)
         {
-            if (scriptEngine->open(tableName + ".qs"))
-            {
-                scriptEngine->evaluate();
-                form->initFormEvent();
-                return true;
-            }
-            return false;
+            if (!scriptEngine->open(scriptFileName))
+                return false;
+            if (!scriptEngine->evaluate())
+                return false;
         }
+        initFormEvent();
         return true;
     }
     QString dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();

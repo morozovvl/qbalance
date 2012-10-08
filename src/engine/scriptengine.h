@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "sqlfieldclass.h"
 
 class Form;
+class Essence;
 
 struct EventFunction {
     QString     name;
@@ -53,6 +54,7 @@ public:
     void eventCloseForm(Form*);
     void eventImport(Form*);
     void eventExport(Form*);
+    virtual QString preparePictureUrl(Essence*);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
     QList<EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями

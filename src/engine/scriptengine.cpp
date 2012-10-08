@@ -120,6 +120,22 @@ void EventLoopFromScriptValue(const QScriptValue &object, EventLoop* &out) {
     out = qobject_cast<EventLoop*>(object.toQObject());
 }
 
+// класс Essence
+Q_DECLARE_METATYPE(Essence*)
+
+QScriptValue EssenceConstructor(QScriptContext *context, QScriptEngine *engine) {
+     Essence* object = new Essence(context->argument(0).toString());
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue EssenceToScriptValue(QScriptEngine *engine, Essence* const &in) {
+    return engine->newQObject(in);
+}
+
+void EssenceFromScriptValue(const QScriptValue &object, Essence* &out) {
+    out = qobject_cast<Essence*>(object.toQObject());
+}
+
 // класс Dictionary
 Q_DECLARE_METATYPE(Dictionary*)
 
@@ -330,6 +346,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
     qScriptRegisterMetaType(this, FormGridToScriptValue, FormGridFromScriptValue);
     globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
+    qScriptRegisterMetaType(this, EssenceToScriptValue, EssenceFromScriptValue);
+    globalObject().setProperty("Essence", newQMetaObject(&QObject::staticMetaObject, newFunction(EssenceConstructor)));
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
     qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
@@ -366,8 +384,9 @@ void ScriptEngine::loadScriptObjects()
                << "qt.xmlpatterns"
                << "qt.uitools";
     QStringList failExtensions;
+    QScriptValue ret;
     foreach (const QString &ext, extensions) {
-        QScriptValue ret = importExtension(ext);
+        ret = importExtension(ext);
         if (ret.isError())
             failExtensions.append(ext);
     }
@@ -466,6 +485,18 @@ void ScriptEngine::eventExport(Form* form)
 }
 
 
+QString ScriptEngine::preparePictureUrl(Essence* essence)
+{
+    QScriptValueList args;
+    QString result;
+    args << newQObject(essence);
+    result = globalObject().property("PreparePictureUrl").call(QScriptValue(), args).toString();
+    if (result == "undefined")
+        result = "";
+    return result;
+}
+
+
 QString ScriptEngine::getBlankScripts()
 {
     // создадим пустой скрипт с событиями
@@ -519,6 +550,10 @@ QList<EventFunction>* ScriptEngine::getEventsList()
 
         func.name = "EventKeyPressed(keyEvent)";
         func.comment = QObject::trUtf8("Событие происходит при нажатии любой кнопки на форме. Параметр keyEvent имеет тип QKeyEvent");
+        eventsList.append(func);
+
+        func.name = "PreparePictureUrl(object)";
+        func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
         eventsList.append(func);
     }
     return &eventsList;

@@ -3,6 +3,7 @@ QT += core
 QT += script
 QT += gui
 QT += xml
+QT += network
 CONFIG += designer \
     plugin
 TARGET = ../../plugins/plugins
@@ -20,6 +21,8 @@ HEADERS = tableviewplugin.h \
     mynumericeditplugin.h \
     ../gui/mynumericedit.h \
     ../gui/mynumericitemdelegate.h \
+    ../gui/mybooleanitemdelegate.h \
+    ../gui/mylineitemdelegate.h \
     ../gui/myitemdelegate.h \
     ../gui/dialog.h \
     dialogplugin.h

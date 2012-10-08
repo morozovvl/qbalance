@@ -199,7 +199,7 @@ bool DBFactory::exec(QString str)
 
 QSqlQuery DBFactory::execQuery(QString str)
 {
-    TApplication::debug("Query: " + str + "\n");
+    TApplication::debug(QString("Query: %1\n").arg(str));
     clearError();
     QSqlQuery query;
     if (!query.exec(str))
@@ -807,7 +807,7 @@ QString DBFactory::getPhotoDatabase()
     return result;
 }
 
-QString DBFactory::getPhotoPath(QString tableName)
+QString DBFactory::getDictionaryPhotoPath(QString tableName)
 {
     clearError();
     QString result, command;

@@ -28,6 +28,7 @@ class MyBooleanItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
     MyBooleanItemDelegate(QObject* parent = 0);
+    virtual ~MyBooleanItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 };

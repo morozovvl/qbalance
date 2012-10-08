@@ -32,6 +32,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QDialog>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include "../kernel/table.h"
 #include "../engine/scriptengine.h"
 #include "../engine/reportscriptengine.h"
@@ -74,6 +76,8 @@ public:
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
     Q_INVOKABLE virtual Dialog* getFormWidget();
+    Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
+    Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     bool isInsertable() { return lInsertable; }         // Получить/установить ...
     bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     bool isViewable() { return lViewable; }             // ... кнопок на форме
@@ -92,8 +96,15 @@ public:
     void setOldValue(QVariant value) { oldValue = value; }
     Q_INVOKABLE virtual QVariant getOldValue() { return oldValue; }
 
+// Скриптовые события
+    void initFormEvent();
+    void beforeShowFormEvent();
+    void afterHideFormEvent();
+    void closeFormEvent();
+    QString preparePictureUrl();
+
 // Прочие функции
-    QString getPhotoPath();
+    QString getPhotoFile();
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     void                initForm();
@@ -109,6 +120,7 @@ protected:
     FormGrid*           form;
     QWidget*            parentForm;
     ScriptEngine*       scriptEngine;
+    QString             scriptFileName;                     // Имя файла со скриптами
     bool                lInsertable;
     bool                lDeleteable;
     bool                lViewable;
@@ -118,6 +130,13 @@ protected:
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
 private:
     QVariant            oldValue;
+    QString             photoPath;
+    QString             photoIdField;
+    QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
+    QNetworkAccessManager*      m_networkAccessManager;
+private slots:
+    void replyFinished(QNetworkReply*);
+
 };
 
 #endif // ESSENCE_H

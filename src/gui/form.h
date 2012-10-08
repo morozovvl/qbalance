@@ -45,10 +45,6 @@ public:
     virtual void readSettings();
     virtual void writeSettings();
     virtual void createUi();
-    void initFormEvent();
-    void beforeShowFormEvent();
-    void afterHideFormEvent();
-    void closeFormEvent();
     void setButtonsSignals();
     ScriptEngine* getScriptEngine() { return parent->getScriptEngine(); }
     bool isDefaultForm() { return defaultForm; }

@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QPixmap>
 #include <QHBoxLayout>
 #include <QPainter>
+#include <QUrl>
 #include "formgrid.h"
 #include "picture.h"
 #include "tableview.h"
@@ -94,26 +95,20 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         }
     }
-    if (parent != 0)
+    if (defaultForm)
     {
-        photoPath = parent->getPhotoPath();
+        picture = new Picture(formWidget);
+        picture->setObjectName("picture");
+        picture->hide();
+        tableLayout->addWidget(picture);
     }
-    if (photoPath.size() > 0)
-    {                                // Если есть фотографии, то будем отображать их
-        if (defaultForm)
-        {
-            picture = new Picture(formWidget);
-            picture->setObjectName("picture");
-            tableLayout->addWidget(picture);
-        }
-        else
-        {
-            picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
-        }
-        if (picture != 0 && grdTable != 0)
-        {
-            connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
-        }
+    else
+    {
+        picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
+    }
+    if (picture != 0 && grdTable != 0)
+    {
+        connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
     }
 
     // Подключим кнопку "Загрузить"
@@ -344,7 +339,14 @@ void FormGrid::showPhoto()
 {
     if (picture && parent != 0)
     {
-        QString photoFileName = photoPath + "/" + parent->getValue("код").toString().trimmed() + ".jpg";
+        QString photoFileName = parent->getPhotoFile(); // Получим имя фотографии
+        if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
+        {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
+            if (QDir().exists(photoFileName))
+                picture->setVisible(true);              // то включим просмотр фотографий
+            else
+                photoFileName = "";
+        }
         picture->show(photoFileName);
     }
 }

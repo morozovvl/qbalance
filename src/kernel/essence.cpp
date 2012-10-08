@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QMessageBox>
 #include <QMenu>
 #include <QUiLoader>
+#include <QFile>
 #include "essence.h"
 #include "../kernel/app.h"
 #include "../gui/form.h"
@@ -54,7 +55,10 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
     scriptEngine = 0;
+    scriptFileName =  tableName + ".qs";
     connect(this, SIGNAL(showError(QString)), TApplication::exemplar(), SLOT(showError(QString)));
+    photoPath = "";
+    photoIdField = "";
 }
 
 
@@ -162,16 +166,81 @@ void Essence::setId(qulonglong id)
 }
 
 
-QString Essence::getPhotoPath()
+QString Essence::getPhotoFile()
 {
-    QString path = db->getPhotoPath(tableName);
-    if (!path.isEmpty()) {
-        if (path.left(1) == "~") {
-            path.remove(0, 1);
-            path = TApplication::exemplar()->applicationDirPath() + path;
+    QString idField;
+    if (photoIdField.size() == 0)
+        // Если имя поля, из которого нужно брать идентификатор фотографии не установлено, то будем считать идентификатором код позиции
+        idField = db->getObjectName("код");
+    else
+        idField = photoIdField;
+    QString idValue = getValue(idField).toString().trimmed();
+    QString file;
+    // Попробуем сначала получить локальный путь к фотографии
+    if (photoPath.size() == 0)
+    {
+        // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
+        file = db->getDictionaryPhotoPath(tableName);
+    }
+    else
+    {
+        file = photoPath;
+    }
+    if (file.left(1) == "~")
+    {   // Если путь к фотографиям является относительным пути к самой программе
+        file.remove(0, 1);
+        file = TApplication::exemplar()->applicationDirPath() + file;
+    }
+    if (file.size() > 0) {
+        photoPath = file;
+        if (idValue.size() > 0)
+        {
+            file = file + "/" + idValue + ".jpg";
+            if (!QDir().exists(file))
+                file = "";              // Локальный файл с фотографией не существует
+        }
+        else
+            file = "";
+    }
+    if (file.size() == 0)
+    {   // Локальный путь скорее всего не найден, попробуем получить фотографию из Интернета
+        file = preparePictureUrl();
+        // Если в скриптах указано, откуда брать фотографию
+        if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+        {
+            QUrl url(file);
+            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port()).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+            QNetworkRequest request(url);
+            if (m_networkAccessManager == 0)
+            {
+                m_networkAccessManager = new QNetworkAccessManager(this);
+                connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+            }
+            m_networkAccessManager->get(request);   // Запустим скачивание картинки
         }
     }
-    return path;
+    return file;
+}
+
+
+void Essence::replyFinished(QNetworkReply* reply)
+{
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        // Данные с фотографией получены, запишем их в файл
+        QString url = QString("%1:%2%3").arg(reply->url().host()).arg(reply->url().port()).arg(reply->url().path());
+        QString idValue = urls.value(url);
+        if (idValue.size() > 0)
+        {
+            QFile pictFile(photoPath + "/" + idValue + ".jpg");
+            if (pictFile.open(QIODevice::WriteOnly))
+            {
+                pictFile.write(reply->readAll());
+                pictFile.close();
+            }
+            urls.remove(url);
+        }
+    }
 }
 
 
@@ -233,6 +302,14 @@ bool Essence::open()
     {
         initForm();
         setScriptEngine();
+        if (scriptEngine != 0)
+        {
+            if (!scriptEngine->open(scriptFileName))
+                return false;
+            if (!scriptEngine->evaluate())
+                return false;
+        }
+        initFormEvent();
         return true;
     }
     return false;
@@ -243,7 +320,7 @@ void Essence::close()
 {
     if (form != 0)
     {
-        form->closeFormEvent();
+        closeFormEvent();
         form->writeSettings();
         form->close();
     }
@@ -303,6 +380,43 @@ void Essence::cmdOk() {
 
 
 void Essence::cmdCancel() {
+}
+
+
+void Essence::initFormEvent() {
+    if (getScriptEngine() != 0) {
+        getScriptEngine()->eventInitForm(form);
+    }
+}
+
+
+void Essence::beforeShowFormEvent() {
+    if (getScriptEngine() != 0) {
+        getScriptEngine()->eventBeforeShowForm(form);
+    }
+}
+
+
+void Essence::afterHideFormEvent() {
+    if (getScriptEngine() != 0)
+        getScriptEngine()->eventAfterHideForm(form);
+}
+
+
+void Essence::closeFormEvent() {
+    if (getScriptEngine() != 0) {
+        getScriptEngine()->eventCloseForm(form);
+    }
+}
+
+
+QString Essence::preparePictureUrl()
+{
+    QString result;
+    if (getScriptEngine() != 0) {
+        result = getScriptEngine()->preparePictureUrl(this);
+    }
+    return result;
 }
 
 

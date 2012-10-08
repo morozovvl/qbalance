@@ -43,13 +43,13 @@ public:
     Q_INVOKABLE virtual void            query(QString filter = "");
 
     bool                                relationsIsEmpty();
-    QList<FieldType>*                   getColumnsProperties();
+    virtual QList<FieldType>*           getColumnsProperties();
     MySqlRelationalTableModel*          getMyRelationalTableModel() { return tableModel; }
     QSqlTableModel*                     getTableModel() { return (QSqlTableModel*)tableModel; }
     virtual QString                     transformSelectStatement(QString string) { return string; }
 
-    Q_INVOKABLE QStringList             getFieldsList();
-    Q_INVOKABLE QString                 getFieldName(int);
+    Q_INVOKABLE virtual QStringList     getFieldsList();
+    Q_INVOKABLE virtual QString         getFieldName(int);
     Q_INVOKABLE QString                 getTableName() { return tableName; }
     QString                             getTagName() { return tagName; }
 

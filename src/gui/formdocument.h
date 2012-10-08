@@ -33,7 +33,7 @@ class FormDocument : public FormGrid {
 public:
     FormDocument();
     Document* getParent() { return (Document*)parent; }
-    void parametersChangedEvent();
+    virtual void parametersChangedEvent();
     void setNumber(QString number) { numberEdit->setText(number); }
     void setDate(QDate date) { dateEdit->setDate(date); }
     void showParameterText(QString dictName) { parameters->showText(dictName); }

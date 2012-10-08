@@ -86,7 +86,6 @@ protected:
     virtual QDomElement createWidgetsStructure();
 
 private:
-    QString             photoPath;
     void    restoreCurrentIndex(QModelIndex);
 //    virtual void keyPressEvent(QKeyEvent*);
 
