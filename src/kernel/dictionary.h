@@ -78,10 +78,10 @@ protected:
     bool            lIsConst;
     bool            lAutoSelect;
     bool            isDepend;
+    QStringList     fieldList;
     virtual void    setForm();
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
-    QStringList     fieldList;
 };
 
 #endif // DICTIONARY_H

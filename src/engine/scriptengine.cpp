@@ -315,7 +315,7 @@ bool ScriptEngine::open(QString scriptFile)
         // Попытаемся сначала получить скрипты на сервере
         script = QString(TApplication::exemplar()->getDBFactory()->getFile(scriptFileName, ScriptFileType));
         if (script.size() == 0)
-        {
+        {   // Скрипты на сервере отсутствуют. Попытаемся загрузить локальные скрипты
             QFile file(scriptFileName);
             if (file.open(QIODevice::ReadOnly))
             {   // Если существуют скрипты

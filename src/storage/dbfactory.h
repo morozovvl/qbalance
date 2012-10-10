@@ -106,6 +106,7 @@ public:
     QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
     QByteArray getFile(QString, FileType);
+    virtual bool isFileExist(QString, FileType);
     void setFile(QString, FileType, QByteArray);
     int getPort() { return port; }
     Q_INVOKABLE QString getDatabaseName() { return dbName; }

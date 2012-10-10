@@ -97,9 +97,15 @@ void Documents::query(QString filter) {
 
 bool Documents::open() {
     if (Essence::open()) {     // Откроем этот справочник
-
-        // Установим форму для отображения справочника
-
+        fieldList = getFieldsList();
+        int keyColumn   = 0;
+        for (int i = 0; i < fieldList.count(); i++)
+        {       // Просмотрим список полей
+            QString name = fieldList.at(i);
+            if (name == idFieldName)
+                keyColumn = i;
+            tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
+        }
         // Установим порядок сортировки и стратегию сохранения данных на сервере
         tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
 

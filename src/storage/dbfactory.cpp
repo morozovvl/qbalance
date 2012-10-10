@@ -1271,12 +1271,33 @@ QByteArray DBFactory::getFile(QString fileName, FileType type)
                                                                           .arg(getObjectNameCom("файлы.тип"))
                                                                           .arg(type);
     QSqlQuery query = execQuery(text);
-    if (query.first())
+    query.first();
+    if (query.isValid())
     {
-        return query.value(query.record().indexOf("значение")).toByteArray();
+        return query.record().value("значение").toByteArray();
     }
     return QByteArray();
 }
+
+
+bool DBFactory::isFileExist(QString fileName, FileType type)
+{
+    QString text = QString("SELECT count(*) FROM %1 WHERE %2 = '%3' AND %4 = %5").arg(getObjectNameCom("файлы"))
+                                                                          .arg(getObjectNameCom("файлы.имя"))
+                                                                          .arg(fileName)
+                                                                          .arg(getObjectNameCom("файлы.тип"))
+                                                                          .arg(type);
+    QSqlQuery query = execQuery(text);
+    query.first();
+    if (query.isValid())
+    {
+        int quan = query.record().value(0).toInt();
+        if (quan > 0)
+            return true;
+    }
+    return false;
+}
+
 
 
 void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData)

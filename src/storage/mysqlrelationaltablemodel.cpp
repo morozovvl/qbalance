@@ -306,6 +306,12 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index) {
                 case QVariant::String:
                     value = QString("'%1'").arg(recValue.toString());
                     break;
+                case QVariant::Date:
+                    value = QString("'%1'").arg(recValue.toString());
+                    break;
+                case QVariant::DateTime:
+                    value = QString("'%1'").arg(recValue.toString());
+                    break;
                 default:
                     value = QString("%1").arg(recValue.toString());
                     break;

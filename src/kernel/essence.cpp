@@ -168,55 +168,95 @@ void Essence::setId(qulonglong id)
 
 QString Essence::getPhotoFile()
 {
-    QString idField;
+    QString idField;    // Имя поля, в котором берем значение идентификатора фотографии.
+    QString idValue;    // Значение идентификатора фотографии
+    QString file;       // Полное имя файла с фотографией
+    QString localFile;  // Локальный путь к фотографии
+    QString fullFile;   // Полный путь к фотографии
+
+    // Сначала получим имя поля из которого будем брать значение идентификатора
     if (photoIdField.size() == 0)
         // Если имя поля, из которого нужно брать идентификатор фотографии не установлено, то будем считать идентификатором код позиции
         idField = db->getObjectName("код");
     else
         idField = photoIdField;
-    QString idValue = getValue(idField).toString().trimmed();
-    QString file;
-    // Попробуем сначала получить локальный путь к фотографии
-    if (photoPath.size() == 0)
+
+    // Теперь получим значение идентификатора
+    if (tableModel->rowCount() > 0)
+        idValue = getValue(idField).toString().trimmed();
+
+    if (idValue.size() > 0)
     {
-        // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
-        file = db->getDictionaryPhotoPath(tableName);
-    }
-    else
-    {
-        file = photoPath;
-    }
-    if (file.left(1) == "~")
-    {   // Если путь к фотографиям является относительным пути к самой программе
-        file.remove(0, 1);
-        file = TApplication::exemplar()->applicationDirPath() + file;
-    }
-    if (file.size() > 0) {
-        photoPath = file;
-        if (idValue.size() > 0)
+        // Попробуем получить локальный путь к фотографии
+        if (photoPath.size() == 0)
         {
-            file = file + "/" + idValue + ".jpg";
-            if (!QDir().exists(file))
-                file = "";              // Локальный файл с фотографией не существует
+            // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
+            file = db->getDictionaryPhotoPath(tableName);
         }
         else
-            file = "";
-    }
-    if (file.size() == 0)
-    {   // Локальный путь скорее всего не найден, попробуем получить фотографию из Интернета
-        file = preparePictureUrl();
-        // Если в скриптах указано, откуда брать фотографию
-        if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
         {
-            QUrl url(file);
-            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port()).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
-            QNetworkRequest request(url);
-            if (m_networkAccessManager == 0)
-            {
-                m_networkAccessManager = new QNetworkAccessManager(this);
-                connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+            file = photoPath;
+        }
+        if (file.size() > 0)
+        {
+            file = file + "/" + idValue + ".jpg";
+            localFile = file;       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+            if (file.left(1) == "~")
+            {   // Если путь к фотографиям является относительным пути к самой программе
+                file.remove(0, 1);
+                file = TApplication::exemplar()->applicationDirPath() + file;
             }
-            m_networkAccessManager->get(request);   // Запустим скачивание картинки
+            fullFile = file;
+            if (!QDir().exists(file))
+               file = "";              // Локальный файл с фотографией не существует
+        }
+        if (file.size() == 0)
+        {   // Локальный файл с фотографией не найден, попробуем получить фотографию с сервера
+            if (localFile.size() > 0)
+            {   // Если мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                QByteArray picture = db->getFile(localFile, PictureFileType);
+                qDebug() << picture.size();
+                if (picture.size() > 0)
+                {   // Если удалось получить какую-то фотографию
+                    savePicture(fullFile, &picture);
+                    if (QDir().exists(fullFile))
+                        file = fullFile;
+                }
+            }
+            if (file.size() == 0)
+            {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                file = preparePictureUrl();
+                // Если в скриптах указано, откуда брать фотографию
+                if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                {
+                    QUrl url(file);
+                    urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port()).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+                    QNetworkRequest request(url);
+                    if (url.isValid())
+                    {
+                        if (m_networkAccessManager == 0)
+                        {
+                            m_networkAccessManager = new QNetworkAccessManager(this);
+                            connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                        }
+                        m_networkAccessManager->get(request);   // Запустим скачивание картинки
+                    }
+                    else
+                        file = "";
+                }
+            }
+        }
+        else
+        {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере и если что, то сохраним его там
+            if (!db->isFileExist(localFile, PictureFileType))
+            {
+                QFile file(fullFile);
+                if (file.open(QIODevice::ReadOnly))
+                {
+                    db->setFile(localFile, PictureFileType, file.readAll());
+                    file.close();
+                }
+            }
         }
     }
     return file;
@@ -232,14 +272,21 @@ void Essence::replyFinished(QNetworkReply* reply)
         QString idValue = urls.value(url);
         if (idValue.size() > 0)
         {
-            QFile pictFile(photoPath + "/" + idValue + ".jpg");
-            if (pictFile.open(QIODevice::WriteOnly))
-            {
-                pictFile.write(reply->readAll());
-                pictFile.close();
-            }
+            QByteArray array = reply->readAll();
+            savePicture(photoPath + "/" + idValue + ".jpg", &array);
             urls.remove(url);
         }
+    }
+}
+
+
+void Essence::savePicture(QString file, QByteArray* array)
+{
+    QFile pictFile(file);
+    if (pictFile.open(QIODevice::WriteOnly))
+    {
+        pictFile.write(*array);
+        pictFile.close();
     }
 }
 

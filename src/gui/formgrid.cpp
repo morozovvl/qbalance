@@ -99,13 +99,13 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         picture = new Picture(formWidget);
         picture->setObjectName("picture");
-        picture->hide();
         tableLayout->addWidget(picture);
     }
     else
     {
         picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
     }
+    picture->hide();
     if (picture != 0 && grdTable != 0)
     {
         connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
@@ -319,6 +319,7 @@ void FormGrid::cmdDelete()
 
 void FormGrid::cmdView()
 {
+    picture->hide();
     if (parent != 0)
         parent->view();
     getGridTable()->setFocus();

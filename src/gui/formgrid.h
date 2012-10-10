@@ -66,6 +66,7 @@ public slots:
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();
 
+
 protected:
     TableView*                  grdTable;
     MySqlRelationalTableModel*  tableModel;

@@ -134,6 +134,7 @@ private:
     QString             photoIdField;
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QNetworkAccessManager*      m_networkAccessManager;
+    void                savePicture(QString, QByteArray*);
 private slots:
     void replyFinished(QNetworkReply*);
 

@@ -311,6 +311,15 @@ void Document::restoreVariablesFromDB()
     }
 }
 
+/*
+QVariant Document::getValue(QString name, int row)
+{
+    QVariant result;
+    if (tableModel->rowCount() > 0)
+        result = Essence::getValue(name, row);
+    return result;
+}
+*/
 
 void Document::setValue(QString name, QVariant value, int row)
 {   // Функция по-особому обрабатывает "свободные" проводки

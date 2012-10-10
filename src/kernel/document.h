@@ -67,6 +67,7 @@ public:
     Q_INVOKABLE void showParameterText(QString dictName) { ((FormDocument*)getForm())->showParameterText(dictName);}
     Q_INVOKABLE void appendDocString();
     Q_INVOKABLE void prepareValue(QString name, QVariant value) { prvValues.insert(name, value); }
+//    Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void calcItog();
