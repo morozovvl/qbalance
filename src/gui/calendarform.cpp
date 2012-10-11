@@ -20,6 +20,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "calendarform.h"
 #include "../kernel/app.h"
 
+
+
+//CalendarForm::CalendarForm(QObject* parent/* = NULL*/): Form(parent)
+//{
+//}
+
+
+//CalendarForm::~CalendarForm()
+//{
+//}
+
+
 bool CalendarForm::open(QWidget* pwgt) {
     if (Form::open(pwgt)) {
 

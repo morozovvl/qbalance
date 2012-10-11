@@ -32,6 +32,7 @@ class FormDocument : public FormGrid {
     Q_OBJECT
 public:
     FormDocument();
+    virtual ~FormDocument();
     Document* getParent() { return (Document*)parent; }
     virtual void parametersChangedEvent();
     void setNumber(QString number) { numberEdit->setText(number); }

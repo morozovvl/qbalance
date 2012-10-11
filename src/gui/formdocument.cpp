@@ -42,6 +42,11 @@ FormDocument::FormDocument(): FormGrid()
 }
 
 
+FormDocument::~FormDocument()
+{
+}
+
+
 void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     FormGrid::createForm(fileName, pwgt);

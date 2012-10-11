@@ -23,6 +23,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "connectionform.h"
 #include "../kernel/app.h"
 
+
+//ConnectionForm::ConnectionForm(QObject* parent/* = NULL*/): Form(parent)
+//{
+//}
+
+
+//ConnectionForm::~ConnectionForm()
+//{
+//}
+
+
 bool ConnectionForm::open(QWidget* pwgt, Essence* par) {
     return Form::open(pwgt, par);
 }

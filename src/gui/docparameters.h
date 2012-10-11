@@ -41,7 +41,7 @@ class DocParameters : public QFrame {
 
 public:
     DocParameters(QWidget* pwgt = 0);
-    ~DocParameters();
+    virtual ~DocParameters();
 
     void addString(QString);
     void removeString(int);

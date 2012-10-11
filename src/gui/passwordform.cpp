@@ -26,10 +26,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "passwordform.h"
 
-PassWordForm::PassWordForm(QObject* parent/* = NULL*/)
-: Form(parent)
+//PassWordForm::PassWordForm(QObject* parent/* = NULL*/)
+//: Form(parent)
+//{
+//}
+
+
+/*
+PassWordForm::~PassWordForm()
 {
 }
+*/
 
 bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 // Создает форму ввода пароля на основе формы с кнопками "Ок" и "Cancel"

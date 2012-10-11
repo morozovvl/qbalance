@@ -25,12 +25,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class TApplication;
 
 class CalendarForm : public Form {
+    Q_OBJECT
 public:
-    bool open(QWidget* pwgt = 0);
-    QDate getBeginDate() { return beginDate; }
-    QDate getEndDate() { return endDate; }
-    void setBeginDate(QDate);
-    void setEndDate(QDate);
+//    CalendarForm(QObject* parent = NULL);
+//    virtual ~CalendarForm();
+    virtual bool open(QWidget* pwgt = 0);
+    virtual QDate getBeginDate() { return beginDate; }
+    virtual QDate getEndDate() { return endDate; }
+    virtual void setBeginDate(QDate);
+    virtual void setEndDate(QDate);
 private:
     QCalendarWidget* pBeginCalendar;
     QCalendarWidget* pEndCalendar;

@@ -27,8 +27,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class OOReportEngine : public ReportEngine
 {
+    Q_OBJECT
 public:
     OOReportEngine(QMap<QString, QVariant>* context, QString name, QString ext);
+    virtual ~OOReportEngine();
     virtual bool open();
 };
 

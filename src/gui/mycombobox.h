@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class MyComboBox : public QComboBox {
    Q_OBJECT
 public:
-    MyComboBox(QWidget* parent = 0): QComboBox(parent) { ; }
-
+    MyComboBox(QWidget* parent = 0);
+    virtual ~MyComboBox();
 private:
     void keyPressEvent(QKeyEvent*);     // Перехват нажатия клавиши Enter - для перехода с одного ComboBox на другой
 

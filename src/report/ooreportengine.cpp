@@ -26,6 +26,11 @@ OOReportEngine::OOReportEngine(QMap<QString, QVariant>* context, QString name, Q
 }
 
 
+OOReportEngine::~OOReportEngine()
+{
+}
+
+
 bool OOReportEngine::open()
 {
     bool result = false;

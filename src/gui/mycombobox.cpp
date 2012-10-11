@@ -21,6 +21,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QKeyEvent>
 #include "mycombobox.h"
 
+
+MyComboBox::MyComboBox(QWidget* parent): QComboBox(parent)
+{
+}
+
+
+MyComboBox::~MyComboBox()
+{
+}
+
+
 void MyComboBox::keyPressEvent(QKeyEvent* event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return))
         emit enterPressed(this);

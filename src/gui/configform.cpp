@@ -30,6 +30,11 @@ ConfigForm::ConfigForm(QObject* parent/* = NULL*/): Form(parent)
 }
 
 
+ConfigForm::~ConfigForm()
+{
+}
+
+
 bool ConfigForm::open(QWidget* pwgt) {
     if (Form::open(pwgt)) {
         formWidget->setWindowTitle(QObject::trUtf8("Настройки"));

@@ -174,11 +174,12 @@ void TApplication::close() {
 
 
 void TApplication::showConfigs() {
-    ConfigForm form;
-    if (form.open(getMainWindow())) {
-        form.exec();
-        form.close();
+    ConfigForm* form = new ConfigForm();
+    if (form->open(getMainWindow())) {
+        form->exec();
+        form->close();
     }
+    delete form;
 }
 
 

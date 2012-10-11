@@ -45,12 +45,6 @@ Form::Form(QObject* par/* = NULL*/): QObject(par)
 
 Form::~Form()
 {
-/*
-    buttonOk->deleteLater();
-    buttonCancel->deleteLater();
-    cmdButtonLayout->deleteLater();
-    vbxLayout->deleteLater();
-*/
 }
 
 

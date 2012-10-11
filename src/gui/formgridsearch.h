@@ -38,7 +38,8 @@ struct sParam {
 class FormGridSearch : public FormGrid {
 
 public:
-    explicit FormGridSearch(QObject* parent = NULL);
+    FormGridSearch(QObject* parent = NULL);
+    virtual ~FormGridSearch();
     Q_INVOKABLE virtual void close();
     Dictionary* getParent() { return (Dictionary*)parent; }
     SearchParameters* getSearchParameters() { return parameters; }

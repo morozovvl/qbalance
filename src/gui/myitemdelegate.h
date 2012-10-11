@@ -49,7 +49,7 @@ public:
 //    void setAlignment(Qt::Alignment align) { alignment = align; }
 //    Qt::Alignment getAlignment() { return alignment; }
     virtual QVariant convertType(QVariant var) { return var; }
-    void        setReadOnly(bool val);
+    virtual void        setReadOnly(bool val);
     bool        isReadOnly() { return readOnly; }
     QVariant    getOldValue() { return oldValue; }
 protected:

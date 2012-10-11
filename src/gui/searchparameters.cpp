@@ -40,6 +40,12 @@ SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) 
     app = 0;
 }
 
+
+SearchParameters::~SearchParameters()
+{
+}
+
+
 void SearchParameters::close() {
     delete gridLayout;
 }

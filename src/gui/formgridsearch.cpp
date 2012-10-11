@@ -32,6 +32,11 @@ FormGridSearch::FormGridSearch(QObject* parent/* = NULL*/)
 }
 
 
+FormGridSearch::~FormGridSearch()
+{
+}
+
+
 void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     FormGrid::createForm(fileName, pwgt);

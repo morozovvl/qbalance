@@ -501,8 +501,9 @@ void Essence::print(QString file)
         {
             case OOreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                    OOReportEngine report(&printValues, file, ext);
-                    report.open();
+                    OOReportEngine* report = new OOReportEngine(&printValues, file, ext);
+                    report->open();
+                    delete report;
                 }
                 break;
             case OpenRPTreportTemplate:

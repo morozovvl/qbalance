@@ -33,8 +33,10 @@ class TApplication;
 class ConnectionForm : public Form {
     Q_OBJECT
 public:
+//    ConnectionForm(QObject* parent = NULL);
+//    virtual ~ConnectionForm();
     virtual bool open(QWidget* pwgt = 0, Essence* par = 0);
-    void initForm(QString, QString, int, bool readSettings = true);
+    virtual void initForm(QString, QString, int, bool readSettings = true);
     QString connectionName() { return pcmbConnection->currentText(); }
 public slots:
     virtual int exec(DBFactory*);

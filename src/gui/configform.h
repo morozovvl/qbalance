@@ -27,8 +27,9 @@ class ConfigForm : public Form
     Q_OBJECT
 public:
     ConfigForm(QObject* parent = NULL);
-    bool open(QWidget* pwgt = 0);
-    void close();
+    virtual ~ConfigForm();
+    virtual bool open(QWidget* pwgt = 0);
+    virtual void close();
 public slots:
     void dispatch(QTreeWidgetItem*, int);
 private:

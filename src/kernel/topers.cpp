@@ -57,31 +57,34 @@ void Topers::removeDocument(int opNumber) {
 
 bool Topers::add()
 {
-    WizardOperation wizard;
-    wizard.open(TApplication::exemplar()->getMainWindow());
-    wizard.getForm()->setWindowTitle(QObject::trUtf8("Новая операция"));
-    wizard.exec();
-    wizard.close();
-    if (wizard.getResult())
+    bool result = false;
+    WizardOperation* wizard = new WizardOperation();
+    wizard->open(TApplication::exemplar()->getMainWindow());
+    wizard->getForm()->setWindowTitle(QObject::trUtf8("Новая операция"));
+    wizard->exec();
+    wizard->close();
+    if (wizard->getResult())
     {   // Если удалось создать операцию, то обновим список операций
-        return true;
+        result = true;
     }
-    return false;
+    delete wizard;
+    return result;
 }
 
 
 void Topers::view()
 {
     int operNumber = getValue("опер").toInt();
-    WizardOperation wizard;
-    wizard.open(TApplication::exemplar()->getMainWindow(), operNumber);
-    wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства операции"));
-    wizard.exec();
-    wizard.close();
-    if (wizard.getResult())
+    WizardOperation* wizard = new WizardOperation();
+    wizard->open(TApplication::exemplar()->getMainWindow(), operNumber);
+    wizard->getForm()->setWindowTitle(QObject::trUtf8("Свойства операции"));
+    wizard->exec();
+    wizard->close();
+    if (wizard->getResult())
     {
         removeDocument(operNumber);
     }
+    delete wizard;
 }
 
 

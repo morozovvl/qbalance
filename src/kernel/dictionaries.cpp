@@ -127,17 +127,19 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
 
 bool Dictionaries::add()
 {
-    WizardDictionary wizard(true);
-    wizard.open(TApplication::exemplar()->getMainWindow());
-    wizard.getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
-    wizard.exec();
-    wizard.close();
-    if (wizard.getResult())
+    bool result = false;
+    WizardDictionary* wizard = new WizardDictionary(true);
+    wizard->open(TApplication::exemplar()->getMainWindow());
+    wizard->getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
+    wizard->exec();
+    wizard->close();
+    if (wizard->getResult())
     {   // Если удалось создать справочник, то обновим список справочников
         dictionariesProperties = db->getDictionariesProperties();
-        return true;
+        result = true;
     }
-    return false;
+    delete wizard;
+    return result;
 }
 
 

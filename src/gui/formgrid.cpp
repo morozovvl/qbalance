@@ -55,6 +55,11 @@ FormGrid::FormGrid(QObject* parent/* = NULL*/)
 }
 
 
+FormGrid::~FormGrid()
+{
+}
+
+
 void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     Form::createForm(fileName, pwgt);

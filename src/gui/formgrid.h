@@ -35,7 +35,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class FormGrid : public Form {
     Q_OBJECT
 public:
-    explicit FormGrid(QObject* parent = NULL);
+    FormGrid(QObject* parent = NULL);
+    virtual ~FormGrid();
     QVariant getValue(QString);
     QModelIndex getCurrentIndex() { return grdTable->currentIndex(); }
     void setCurrentIndex(QModelIndex index) { grdTable->setCurrentIndex(index); }

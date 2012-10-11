@@ -28,10 +28,10 @@ class MainWindow:public QMainWindow {
       Q_OBJECT
 public:
       MainWindow();
-      ~MainWindow();
-      void open();
+      virtual ~MainWindow();
+      virtual void open();
       QMdiArea* getWorkspace() { return workSpace; }
-      void showPeriod();
+      virtual void showPeriod();
 
 private slots:
       void showDictionaries();

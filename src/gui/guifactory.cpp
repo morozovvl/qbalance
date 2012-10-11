@@ -60,15 +60,15 @@ int GUIFactory::openDB()
         lastPort = db->getPort();
         if (db->open("test", "*"))
         {
-            PassWordForm frm;
-            frm.open();
-            frm.addLogin(db->getUserList());
+            PassWordForm* frm = new PassWordForm();
+            frm->open();
+            frm->addLogin(db->getUserList());
             db->close();
-            frm.exec();
-            if (frm.selected())
+            frm->exec();
+            if (frm->selected())
             {   // Пользователь нажал кнопку "Ok"
-                QString login = frm.getLogin();
-                QString password = frm.getPassword();
+                QString login = frm->getLogin();
+                QString password = frm->getPassword();
                 if (db->open(login, password))
                 {
                     db->initDBFactory();
@@ -83,6 +83,7 @@ int GUIFactory::openDB()
             }
             else
                 returnCode = -4;  //  Пользователь нажал кнопку "Отмена"
+            delete frm;
         }
         else
             returnCode = -2; // Ошибка соединения с сервером

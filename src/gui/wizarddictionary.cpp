@@ -85,6 +85,10 @@ WizardDictionary::WizardDictionary(bool addDict): WizardForm()
 }
 
 
+WizardDictionary::~WizardDictionary()
+{
+}
+
 WizardDictionary* WizardDictionary::exemplar()
 {
     return Exemplar;

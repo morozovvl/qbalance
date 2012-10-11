@@ -91,6 +91,11 @@ WizardOperation::WizardOperation(): WizardForm()
 }
 
 
+WizardOperation::~WizardOperation()
+{
+}
+
+
 bool WizardOperation::open(QWidget* pwgt, int op/* = 0*/)
 {
     if (op == 0)

@@ -53,13 +53,13 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
     setHostName(hostName);
     setDatabaseName("postgres");
     setPort(port);
-    PassWordForm frm;
-    frm.open();
-    frm.addLogin("postgres");
-    if (frm.exec())
+    PassWordForm* frm = new PassWordForm();
+    frm->open();
+    frm->addLogin("postgres");
+    if (frm->exec())
     {
-        const QString login = frm.getLogin();
-        const QString password = frm.getPassword();
+        const QString login = frm->getLogin();
+        const QString password = frm->getPassword();
         if (open(login, password))
         {
             const QStringList scripts = initializationScriptList();
@@ -114,6 +114,7 @@ bool DBFactory::createNewDB(QString hostName, QString dbName, int port)
        else
           TApplication::exemplar()->showCriticalError(QObject::trUtf8("Не удалось создать соединение с сервером."));
     }
+    delete frm;
     setDatabaseName(defaultDatabase);
     return lResult;
 }

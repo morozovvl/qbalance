@@ -28,14 +28,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "form.h"
 
 class PassWordForm: public Form {
+    Q_OBJECT
 public:
-        PassWordForm(QObject* parent = NULL);
+//        PassWordForm(QObject* parent = NULL);
+//        virtual ~PassWordForm();
         Q_INVOKABLE virtual bool open(QWidget* pwgt = 0);
-        void addLogin(QString);
-        void addLogin(QStringList);
-        QString getLogin() { return login; }
+        virtual void addLogin(QString);
+        virtual void addLogin(QStringList);
+        virtual QString getLogin() { return login; }
         QString getPassword() { return password; }
-        int exec();
+        virtual int exec();
 protected:
         virtual void readSettings();
         virtual void writeSettings();
