@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/shared">
+        <file>files/template.xml</file>
+    </qresource>
+</RCC>

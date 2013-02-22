@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QHttp Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 align="center">QHttp Class Reference</h1>
+<h3 align="center">[<a href="com_trolltech_qt_network.html">com.trolltech.qt.network</a> package]</h3>
+<p>Inherits <a href="qobject.html">QObject</a>.</p>
+<h3>Constructor</h3>
+<ul>
+<li><div class="fn"/><b>void QHttp(QObject parent)</b></li>
+<li><div class="fn"/><b>void QHttp(String hostname, ConnectionMode mode, unsigned short port, QObject parent)</b></li>
+<li><div class="fn"/><b>void QHttp(String hostname, unsigned short port, QObject parent)</b></li>
+</ul>
+<h3>Constructor Properties</h3>
+<ul>
+<li><b>prototype</b>: The QHttp prototype object</li>
+<li><b>NoError</b></li>
+<li><b>UnknownError</b></li>
+<li><b>HostNotFound</b></li>
+<li><b>ConnectionRefused</b></li>
+<li><b>UnexpectedClose</b></li>
+<li><b>InvalidResponseHeader</b></li>
+<li><b>WrongContentLength</b></li>
+<li><b>Aborted</b></li>
+<li><b>AuthenticationRequiredError</b></li>
+<li><b>ProxyAuthenticationRequiredError</b></li>
+<li><b>Error( value )</b></li>
+<li><b>ConnectionModeHttp</b></li>
+<li><b>ConnectionModeHttps</b></li>
+<li><b>ConnectionMode( value )</b></li>
+<li><b>Unconnected</b></li>
+<li><b>HostLookup</b></li>
+<li><b>Connecting</b></li>
+<li><b>Sending</b></li>
+<li><b>Reading</b></li>
+<li><b>Connected</b></li>
+<li><b>Closing</b></li>
+<li><b>State( value )</b></li>
+</ul>
+<h3>Prototype Object Properties</h3>
+<p>The QHttp prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
+<ul>
+<li><div class="fn"/><b>qint64 bytesAvailable()</b></li>
+<li><div class="fn"/><b>void clearPendingRequests()</b></li>
+<li><div class="fn"/><b>int close()</b></li>
+<li><div class="fn"/><b>QIODevice currentDestinationDevice()</b></li>
+<li><div class="fn"/><b>int currentId()</b></li>
+<li><div class="fn"/><b>QHttpRequestHeader currentRequest()</b></li>
+<li><div class="fn"/><b>QIODevice currentSourceDevice()</b></li>
+<li><div class="fn"/><b>Error error()</b></li>
+<li><div class="fn"/><b>String errorString()</b></li>
+<li><div class="fn"/><b>int get(String path, QIODevice to)</b></li>
+<li><div class="fn"/><b>bool hasPendingRequests()</b></li>
+<li><div class="fn"/><b>int head(String path)</b></li>
+<li><div class="fn"/><b>QHttpResponseHeader lastResponse()</b></li>
+<li><div class="fn"/><b>int post(String path, QIODevice data, QIODevice to)</b></li>
+<li><div class="fn"/><b>qint64 read(char data, qint64 maxlen)</b></li>
+<li><div class="fn"/><b>QByteArray readAll()</b></li>
+<li><div class="fn"/><b>int request(QHttpRequestHeader header, QIODevice device, QIODevice to)</b></li>
+<li><div class="fn"/><b>int setHost(String hostname, ConnectionMode mode, unsigned short port)</b></li>
+<li><div class="fn"/><b>int setProxy(QNetworkProxy proxy)</b></li>
+<li><div class="fn"/><b>int setSocket(QTcpSocket socket)</b></li>
+<li><div class="fn"/><b>int setUser(String username, String password)</b></li>
+<li><div class="fn"/><b>State state()</b></li>
+</ul>
+<h3>Instance Properties</h3>
+<p>QHttp objects have no special properties beyond those inherited from the QHttp prototype object.</p>
+</body>
+</html>

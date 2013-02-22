@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QMatrix4x4 Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 align="center">QMatrix4x4 Class Reference</h1>
+<h3 align="center">[<a href="com_trolltech_qt_gui.html">com.trolltech.qt.gui</a> package]</h3>
+<h3>Constructor</h3>
+<ul>
+<li><div class="fn"/><b>void QMatrix4x4()</b></li>
+<li><div class="fn"/><b>void QMatrix4x4(QMatrix matrix)</b></li>
+<li><div class="fn"/><b>void QMatrix4x4(QTransform transform)</b></li>
+<li><div class="fn"/><b>void QMatrix4x4(qreal values)</b></li>
+<li><div class="fn"/><b>void QMatrix4x4(qreal values, int cols, int rows)</b></li>
+<li><div class="fn"/><b>void QMatrix4x4(qreal m11, qreal m12, qreal m13, qreal m14, qreal m21, qreal m22, qreal m23, qreal m24, qreal m31, qreal m32, qreal m33, qreal m34, qreal m41, qreal m42, qreal m43, qreal m44)</b></li>
+</ul>
+<h3>Constructor Properties</h3>
+<ul>
+<li><b>prototype</b>: The QMatrix4x4 prototype object</li>
+</ul>
+<h3>Prototype Object Properties</h3>
+<ul>
+<li><div class="fn"/><b>QVector4D column(int index)</b></li>
+<li><div class="fn"/><b>qreal constData()</b></li>
+<li><div class="fn"/><b>void copyDataTo(qreal values)</b></li>
+<li><div class="fn"/><b>qreal data()</b></li>
+<li><div class="fn"/><b>qreal determinant()</b></li>
+<li><div class="fn"/><b>void fill(qreal value)</b></li>
+<li><div class="fn"/><b>void flipCoordinates()</b></li>
+<li><div class="fn"/><b>void frustum(qreal left, qreal right, qreal bottom, qreal top, qreal nearPlane, qreal farPlane)</b></li>
+<li><div class="fn"/><b>QMatrix4x4 inverted(bool invertible)</b></li>
+<li><div class="fn"/><b>bool isIdentity()</b></li>
+<li><div class="fn"/><b>void lookAt(QVector3D eye, QVector3D center, QVector3D up)</b></li>
+<li><div class="fn"/><b>QPoint map(QPoint point)</b></li>
+<li><div class="fn"/><b>QRect mapRect(QRect rect)</b></li>
+<li><div class="fn"/><b>QVector3D mapVector(QVector3D vector)</b></li>
+<li><div class="fn"/><b>QMatrix3x3 normalMatrix()</b></li>
+<li><div class="fn"/><b>QMatrix4x4 operator_add_assign(QMatrix4x4 other)</b></li>
+<li><div class="fn"/><b>qreal operator_cast_(int row, int column)</b></li>
+<li><div class="fn"/><b>QMatrix4x4 operator_divide_assign(qreal divisor)</b></li>
+<li><div class="fn"/><b>bool operator_equal(QMatrix4x4 other)</b></li>
+<li><div class="fn"/><b>QMatrix4x4 operator_multiply_assign(QMatrix4x4 other)</b></li>
+<li><div class="fn"/><b>QMatrix4x4 operator_subtract_assign(QMatrix4x4 other)</b></li>
+<li><div class="fn"/><b>void optimize()</b></li>
+<li><div class="fn"/><b>void ortho(QRect rect)</b></li>
+<li><div class="fn"/><b>void perspective(qreal angle, qreal aspect, qreal nearPlane, qreal farPlane)</b></li>
+<li><div class="fn"/><b>void readFrom(QDataStream arg__1)</b></li>
+<li><div class="fn"/><b>void rotate(QQuaternion quaternion)</b></li>
+<li><div class="fn"/><b>QVector4D row(int index)</b></li>
+<li><div class="fn"/><b>void scale(QVector3D vector)</b></li>
+<li><div class="fn"/><b>void setColumn(int index, QVector4D value)</b></li>
+<li><div class="fn"/><b>void setRow(int index, QVector4D value)</b></li>
+<li><div class="fn"/><b>void setToIdentity()</b></li>
+<li><div class="fn"/><b>QMatrix toAffine()</b></li>
+<li><div class="fn"/><b>QTransform toTransform()</b></li>
+<li><div class="fn"/><b>void translate(QVector3D vector)</b></li>
+<li><div class="fn"/><b>QMatrix4x4 transposed()</b></li>
+<li><div class="fn"/><b>void writeTo(QDataStream arg__1)</b></li>
+</ul>
+<h3>Instance Properties</h3>
+<p>QMatrix4x4 objects have no special properties beyond those inherited from the QMatrix4x4 prototype object.</p>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QFile Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 align="center">QFile Class Reference</h1>
+<h3 align="center">[<a href="com_trolltech_qt_core.html">com.trolltech.qt.core</a> package]</h3>
+<p>Inherits <a href="qiodevice.html">QIODevice</a>.</p>
+<h3>Constructor</h3>
+<ul>
+<li><div class="fn"/><b>void QFile()</b></li>
+<li><div class="fn"/><b>void QFile(QObject parent)</b></li>
+<li><div class="fn"/><b>void QFile(String name)</b></li>
+<li><div class="fn"/><b>void QFile(String name, QObject parent)</b></li>
+</ul>
+<h3>Constructor Properties</h3>
+<ul>
+<li><b>prototype</b>: The QFile prototype object</li>
+<li><div class="fn"/><b>bool copy(String fileName, String newName)</b></li>
+<li><div class="fn"/><b>String decodeName(QByteArray localFileName)</b></li>
+<li><div class="fn"/><b>QByteArray encodeName(String fileName)</b></li>
+<li><div class="fn"/><b>bool exists(String fileName)</b></li>
+<li><div class="fn"/><b>bool link(String oldname, String newName)</b></li>
+<li><div class="fn"/><b>Permissions permissions(String filename)</b></li>
+<li><div class="fn"/><b>bool remove(String fileName)</b></li>
+<li><div class="fn"/><b>bool rename(String oldName, String newName)</b></li>
+<li><div class="fn"/><b>bool resize(String filename, qint64 sz)</b></li>
+<li><div class="fn"/><b>bool setPermissions(String filename, Permissions permissionSpec)</b></li>
+<li><div class="fn"/><b>String symLinkTarget(String fileName)</b></li>
+<li><b>NoError = 0</b></li>
+<li><b>ReadError = 1</b></li>
+<li><b>WriteError = 2</b></li>
+<li><b>FatalError = 3</b></li>
+<li><b>ResourceError = 4</b></li>
+<li><b>OpenError = 5</b></li>
+<li><b>AbortError = 6</b></li>
+<li><b>TimeOutError = 7</b></li>
+<li><b>UnspecifiedError = 8</b></li>
+<li><b>RemoveError = 9</b></li>
+<li><b>RenameError = 10</b></li>
+<li><b>PositionError = 11</b></li>
+<li><b>ResizeError = 12</b></li>
+<li><b>PermissionsError = 13</b></li>
+<li><b>CopyError = 14</b></li>
+<li><b>FileError( value )</b></li>
+<li><b>NoOptions = 0</b></li>
+<li><b>MemoryMapFlags( value )</b></li>
+<li><b>ExeOther = 0x0001</b></li>
+<li><b>WriteOther = 0x0002</b></li>
+<li><b>ReadOther = 0x0004</b></li>
+<li><b>ExeGroup = 0x0010</b></li>
+<li><b>WriteGroup = 0x0020</b></li>
+<li><b>ReadGroup = 0x0040</b></li>
+<li><b>ExeUser = 0x0100</b></li>
+<li><b>WriteUser = 0x0200</b></li>
+<li><b>ReadUser = 0x0400</b></li>
+<li><b>ExeOwner = 0x1000</b></li>
+<li><b>WriteOwner = 0x2000</b></li>
+<li><b>ReadOwner = 0x4000</b></li>
+<li><b>Permission( value )</b></li>
+<li><b>Permissions( value1, value2, ... )</b></li>
+</ul>
+<h3>Prototype Object Properties</h3>
+<p>The QFile prototype object inherits properties from the <a href="qiodevice.html">QIODevice</a> prototype object and also has the following properties.</p>
+<ul>
+<li><div class="fn"/><b>bool copy(String newName)</b></li>
+<li><div class="fn"/><b>FileError error()</b></li>
+<li><div class="fn"/><b>bool exists()</b></li>
+<li><div class="fn"/><b>QAbstractFileEngine fileEngine()</b></li>
+<li><div class="fn"/><b>String fileName()</b></li>
+<li><div class="fn"/><b>bool flush()</b></li>
+<li><div class="fn"/><b>int handle()</b></li>
+<li><div class="fn"/><b>bool link(String newName)</b></li>
+<li><div class="fn"/><b>Permissions permissions()</b></li>
+<li><div class="fn"/><b>bool remove()</b></li>
+<li><div class="fn"/><b>bool rename(String newName)</b></li>
+<li><div class="fn"/><b>bool resize(qint64 sz)</b></li>
+<li><div class="fn"/><b>void setFileName(String name)</b></li>
+<li><div class="fn"/><b>bool setPermissions(Permissions permissionSpec)</b></li>
+<li><div class="fn"/><b>String symLinkTarget()</b></li>
+<li><div class="fn"/><b>void unsetError()</b></li>
+</ul>
+<h3>Instance Properties</h3>
+<p>QFile objects have no special properties beyond those inherited from the QFile prototype object.</p>
+</body>
+</html>

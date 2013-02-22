@@ -1,0 +1,35 @@
+-- Group: Test
+-- Name:  TestName
+-- Notes: This is a test script that shows a majority
+--        of the functionality available.
+
+SELECT item_id, item_number
+FROM item
+<?if reExists("^classcode_.*")?>
+  , classcode
+<?elseif reExists("^plancode_.*")?>
+  , itemsite, plancode
+<?endif?>
+<?if exists("classcode_id")?>
+WHERE (item_classcode_id=<?value("classcode_id")?>)
+<?elseif exists("classcode_code")?>
+WHERE (item_classcode_id IN (SELECT classcode_id FROM classcode WHERE (classcode_code ~ <?value("classcode_code")?>)))
+<?elseif exists("classcode_id_list")?>
+WHERE (item_classcode_id IN (
+  <?foreach("classcode_id_list")?>
+    <?if not isfirst("classcode_id_list")?>
+      ,
+    <?endif?>
+    <?value("classcode_id_list")?>
+  <?endforeach?>
+  ))
+<?elseif reExists("^plancode_.*")?>
+WHERE ( (itemsite_item_id=item_id) AND
+  <?if exists("plancode_id")?>
+  (itemsite_plancode_id=<?value("plancode_id")?>)
+  <?elseif exists("plancode_code")?>
+  (itemsite_plancode_id IN (SELECT plancode_id FROM plancode WHERE (plancode_code ~ <?value("plancode_code")?>)))
+  <?endif?>
+)
+<?endif?>
+ORDER BY item_number;

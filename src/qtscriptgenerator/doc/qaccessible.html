@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QAccessible Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 align="center">QAccessible Class Reference</h1>
+<h3 align="center">[<a href="com_trolltech_qt_gui.html">com.trolltech.qt.gui</a> package]</h3>
+<h3>Constructor</h3>
+<ul>
+<li><div class="fn"/><b>void QAccessible()</b></li>
+</ul>
+<h3>Constructor Properties</h3>
+<ul>
+<li><b>prototype</b>: The QAccessible prototype object</li>
+<li><div class="fn"/><b>bool isActive()</b></li>
+<li><div class="fn"/><b>QAccessibleInterface queryAccessibleInterface(QObject arg__1)</b></li>
+<li><div class="fn"/><b>void setRootObject(QObject arg__1)</b></li>
+<li><div class="fn"/><b>void updateAccessibility(QObject arg__1, int who, Event reason)</b></li>
+<li><b>ListSupportedMethods = 0</b></li>
+<li><b>SetCursorPosition = 1</b></li>
+<li><b>GetCursorPosition = 2</b></li>
+<li><b>ForegroundColor = 3</b></li>
+<li><b>BackgroundColor = 4</b></li>
+<li><b>Method( value )</b></li>
+<li><b>NoRole = 0x00000000</b></li>
+<li><b>TitleBar = 0x00000001</b></li>
+<li><b>MenuBar = 0x00000002</b></li>
+<li><b>ScrollBar = 0x00000003</b></li>
+<li><b>Grip = 0x00000004</b></li>
+<li><b>Sound = 0x00000005</b></li>
+<li><b>Cursor = 0x00000006</b></li>
+<li><b>Caret = 0x00000007</b></li>
+<li><b>AlertMessage = 0x00000008</b></li>
+<li><b>Window = 0x00000009</b></li>
+<li><b>Client = 0x0000000A</b></li>
+<li><b>PopupMenu = 0x0000000B</b></li>
+<li><b>MenuItem = 0x0000000C</b></li>
+<li><b>ToolTip = 0x0000000D</b></li>
+<li><b>Application = 0x0000000E</b></li>
+<li><b>Document = 0x0000000F</b></li>
+<li><b>Pane = 0x00000010</b></li>
+<li><b>Chart = 0x00000011</b></li>
+<li><b>Dialog = 0x00000012</b></li>
+<li><b>Border = 0x00000013</b></li>
+<li><b>Grouping = 0x00000014</b></li>
+<li><b>Separator = 0x00000015</b></li>
+<li><b>ToolBar = 0x00000016</b></li>
+<li><b>StatusBar = 0x00000017</b></li>
+<li><b>Table = 0x00000018</b></li>
+<li><b>ColumnHeader = 0x00000019</b></li>
+<li><b>RowHeader = 0x0000001A</b></li>
+<li><b>Column = 0x0000001B</b></li>
+<li><b>Row = 0x0000001C</b></li>
+<li><b>Cell = 0x0000001D</b></li>
+<li><b>Link = 0x0000001E</b></li>
+<li><b>HelpBalloon = 0x0000001F</b></li>
+<li><b>Assistant = 0x00000020</b></li>
+<li><b>List = 0x00000021</b></li>
+<li><b>ListItem = 0x00000022</b></li>
+<li><b>Tree = 0x00000023</b></li>
+<li><b>TreeItem = 0x00000024</b></li>
+<li><b>PageTab = 0x00000025</b></li>
+<li><b>PropertyPage = 0x00000026</b></li>
+<li><b>Indicator = 0x00000027</b></li>
+<li><b>Graphic = 0x00000028</b></li>
+<li><b>StaticText = 0x00000029</b></li>
+<li><b>EditableText = 0x0000002A</b></li>
+<li><b>PushButton = 0x0000002B</b></li>
+<li><b>CheckBox = 0x0000002C</b></li>
+<li><b>RadioButton = 0x0000002D</b></li>
+<li><b>ComboBox = 0x0000002E</b></li>
+<li><b>ProgressBar = 0x00000030</b></li>
+<li><b>Dial = 0x00000031</b></li>
+<li><b>HotkeyField = 0x00000032</b></li>
+<li><b>Slider = 0x00000033</b></li>
+<li><b>SpinBox = 0x00000034</b></li>
+<li><b>Canvas = 0x00000035</b></li>
+<li><b>Animation = 0x00000036</b></li>
+<li><b>Equation = 0x00000037</b></li>
+<li><b>ButtonDropDown = 0x00000038</b></li>
+<li><b>ButtonMenu = 0x00000039</b></li>
+<li><b>ButtonDropGrid = 0x0000003A</b></li>
+<li><b>Whitespace = 0x0000003B</b></li>
+<li><b>PageTabList = 0x0000003C</b></li>
+<li><b>Clock = 0x0000003D</b></li>
+<li><b>Splitter = 0x0000003E</b></li>
+<li><b>LayeredPane = 0x0000003F</b></li>
+<li><b>UserRole = 0x0000ffff</b></li>
+<li><b>Role( value )</b></li>
+<li><b>AddToSelection = -11</b></li>
+<li><b>ExtendSelection = -10</b></li>
+<li><b>RemoveSelection = -9</b></li>
+<li><b>ClearSelection = -8</b></li>
+<li><b>Select = -7</b></li>
+<li><b>Cancel = -6</b></li>
+<li><b>Accept = -5</b></li>
+<li><b>Decrease = -4</b></li>
+<li><b>Increase = -3</b></li>
+<li><b>SetFocus = -2</b></li>
+<li><b>Press = -1</b></li>
+<li><b>DefaultAction = 0</b></li>
+<li><b>Action( value )</b></li>
+<li><b>SoundPlayed = 0x0001</b></li>
+<li><b>Alert = 0x0002</b></li>
+<li><b>ForegroundChanged = 0x0003</b></li>
+<li><b>MenuStart = 0x0004</b></li>
+<li><b>MenuEnd = 0x0005</b></li>
+<li><b>PopupMenuStart = 0x0006</b></li>
+<li><b>PopupMenuEnd = 0x0007</b></li>
+<li><b>ContextHelpStart = 0x000C</b></li>
+<li><b>ContextHelpEnd = 0x000D</b></li>
+<li><b>DragDropStart = 0x000E</b></li>
+<li><b>DragDropEnd = 0x000F</b></li>
+<li><b>DialogStart = 0x0010</b></li>
+<li><b>DialogEnd = 0x0011</b></li>
+<li><b>ScrollingStart = 0x0012</b></li>
+<li><b>ScrollingEnd = 0x0013</b></li>
+<li><b>MenuCommand = 0x0018</b></li>
+<li><b>ObjectCreated = 0x8000</b></li>
+<li><b>ObjectDestroyed = 0x8001</b></li>
+<li><b>ObjectShow = 0x8002</b></li>
+<li><b>ObjectHide = 0x8003</b></li>
+<li><b>ObjectReorder = 0x8004</b></li>
+<li><b>Focus = 0x8005</b></li>
+<li><b>Selection = 0x8006</b></li>
+<li><b>SelectionAdd = 0x8007</b></li>
+<li><b>SelectionRemove = 0x8008</b></li>
+<li><b>SelectionWithin = 0x8009</b></li>
+<li><b>StateChanged = 0x800A</b></li>
+<li><b>LocationChanged = 0x800B</b></li>
+<li><b>NameChanged = 0x800C</b></li>
+<li><b>DescriptionChanged = 0x800D</b></li>
+<li><b>ValueChanged = 0x800E</b></li>
+<li><b>ParentChanged = 0x800F</b></li>
+<li><b>HelpChanged = 0x80A0</b></li>
+<li><b>DefaultActionChanged = 0x80B0</b></li>
+<li><b>AcceleratorChanged = 0x80C0</b></li>
+<li><b>Event( value )</b></li>
+<li><b>Unrelated = 0x00000000</b></li>
+<li><b>Self = 0x00000001</b></li>
+<li><b>Ancestor = 0x00000002</b></li>
+<li><b>Child = 0x00000004</b></li>
+<li><b>Descendent = 0x00000008</b></li>
+<li><b>Sibling = 0x00000010</b></li>
+<li><b>HierarchyMask = 0x000000ff</b></li>
+<li><b>Up = 0x00000100</b></li>
+<li><b>Down = 0x00000200</b></li>
+<li><b>Left = 0x00000400</b></li>
+<li><b>Right = 0x00000800</b></li>
+<li><b>Covers = 0x00001000</b></li>
+<li><b>Covered = 0x00002000</b></li>
+<li><b>GeometryMask = 0x0000ff00</b></li>
+<li><b>FocusChild = 0x00010000</b></li>
+<li><b>Label = 0x00020000</b></li>
+<li><b>Labelled = 0x00040000</b></li>
+<li><b>Controller = 0x00080000</b></li>
+<li><b>Controlled = 0x00100000</b></li>
+<li><b>LogicalMask = 0x00ff0000</b></li>
+<li><b>RelationFlag( value )</b></li>
+<li><b>Relation( value1, value2, ... )</b></li>
+<li><b>Modal = 0x80000000</b></li>
+<li><b>Normal = 0x00000000</b></li>
+<li><b>Unavailable = 0x00000001</b></li>
+<li><b>Selected = 0x00000002</b></li>
+<li><b>Focused = 0x00000004</b></li>
+<li><b>Pressed = 0x00000008</b></li>
+<li><b>Checked = 0x00000010</b></li>
+<li><b>Mixed = 0x00000020</b></li>
+<li><b>ReadOnly = 0x00000040</b></li>
+<li><b>HotTracked = 0x00000080</b></li>
+<li><b>DefaultButton = 0x00000100</b></li>
+<li><b>Expanded = 0x00000200</b></li>
+<li><b>Collapsed = 0x00000400</b></li>
+<li><b>Busy = 0x00000800</b></li>
+<li><b>Marqueed = 0x00002000</b></li>
+<li><b>Animated = 0x00004000</b></li>
+<li><b>Invisible = 0x00008000</b></li>
+<li><b>Offscreen = 0x00010000</b></li>
+<li><b>Sizeable = 0x00020000</b></li>
+<li><b>Movable = 0x00040000</b></li>
+<li><b>SelfVoicing = 0x00080000</b></li>
+<li><b>Focusable = 0x00100000</b></li>
+<li><b>Selectable = 0x00200000</b></li>
+<li><b>Linked = 0x00400000</b></li>
+<li><b>Traversed = 0x00800000</b></li>
+<li><b>MultiSelectable = 0x01000000</b></li>
+<li><b>ExtSelectable = 0x02000000</b></li>
+<li><b>HasInvokeExtension = 0x10000000</b></li>
+<li><b>Protected = 0x20000000</b></li>
+<li><b>HasPopup = 0x40000000</b></li>
+<li><b>StateFlag( value )</b></li>
+<li><b>State( value1, value2, ... )</b></li>
+<li><b>Name = 0</b></li>
+<li><b>Description</b></li>
+<li><b>Value</b></li>
+<li><b>Help</b></li>
+<li><b>Accelerator</b></li>
+<li><b>UserText = 0x0000ffff</b></li>
+<li><b>Text( value )</b></li>
+</ul>
+<h3>Instance Properties</h3>
+<p>QAccessible objects have no special properties beyond those inherited from the QAccessible prototype object.</p>
+</body>
+</html>

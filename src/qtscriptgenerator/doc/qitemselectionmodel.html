@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QItemSelectionModel Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 align="center">QItemSelectionModel Class Reference</h1>
+<h3 align="center">[<a href="com_trolltech_qt_gui.html">com.trolltech.qt.gui</a> package]</h3>
+<p>Inherits <a href="qobject.html">QObject</a>.</p>
+<h3>Constructor</h3>
+<ul>
+<li><div class="fn"/><b>void QItemSelectionModel(QAbstractItemModel model)</b></li>
+<li><div class="fn"/><b>void QItemSelectionModel(QAbstractItemModel model, QObject parent)</b></li>
+</ul>
+<h3>Constructor Properties</h3>
+<ul>
+<li><b>prototype</b>: The QItemSelectionModel prototype object</li>
+<li><b>NoUpdate = 0x0000</b></li>
+<li><b>Clear = 0x0001</b></li>
+<li><b>Select = 0x0002</b></li>
+<li><b>ClearAndSelect = Clear|Select</b></li>
+<li><b>Deselect = 0x0004</b></li>
+<li><b>Toggle = 0x0008</b></li>
+<li><b>Current = 0x0010</b></li>
+<li><b>SelectCurrent = Select|Current</b></li>
+<li><b>ToggleCurrent = Toggle|Current</b></li>
+<li><b>Rows = 0x0020</b></li>
+<li><b>Columns = 0x0040</b></li>
+<li><b>SelectionFlag( value )</b></li>
+<li><b>SelectionFlags( value1, value2, ... )</b></li>
+</ul>
+<h3>Prototype Object Properties</h3>
+<p>The QItemSelectionModel prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
+<ul>
+<li><div class="fn"/><b>bool columnIntersectsSelection(int column, QModelIndex parent)</b></li>
+<li><div class="fn"/><b>QModelIndex currentIndex()</b></li>
+<li><div class="fn"/><b>bool hasSelection()</b></li>
+<li><div class="fn"/><b>bool isColumnSelected(int column, QModelIndex parent)</b></li>
+<li><div class="fn"/><b>bool isRowSelected(int row, QModelIndex parent)</b></li>
+<li><div class="fn"/><b>bool isSelected(QModelIndex index)</b></li>
+<li><div class="fn"/><b>QAbstractItemModel model()</b></li>
+<li><div class="fn"/><b>bool rowIntersectsSelection(int row, QModelIndex parent)</b></li>
+<li><div class="fn"/><b>List selectedColumns(int row)</b></li>
+<li><div class="fn"/><b>List selectedIndexes()</b></li>
+<li><div class="fn"/><b>List selectedRows(int column)</b></li>
+<li><div class="fn"/><b>QItemSelection selection()</b></li>
+</ul>
+<h3>Instance Properties</h3>
+<p>QItemSelectionModel objects have no special properties beyond those inherited from the QItemSelectionModel prototype object.</p>
+</body>
+</html>

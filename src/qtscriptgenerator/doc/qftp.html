@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QFtp Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 align="center">QFtp Class Reference</h1>
+<h3 align="center">[<a href="com_trolltech_qt_network.html">com.trolltech.qt.network</a> package]</h3>
+<p>Inherits <a href="qobject.html">QObject</a>.</p>
+<h3>Constructor</h3>
+<ul>
+<li><div class="fn"/><b>void QFtp(QObject parent)</b></li>
+</ul>
+<h3>Constructor Properties</h3>
+<ul>
+<li><b>prototype</b>: The QFtp prototype object</li>
+<li><b>Binary</b></li>
+<li><b>Ascii</b></li>
+<li><b>TransferType( value )</b></li>
+<li><b>NoError</b></li>
+<li><b>UnknownError</b></li>
+<li><b>HostNotFound</b></li>
+<li><b>ConnectionRefused</b></li>
+<li><b>NotConnected</b></li>
+<li><b>Error( value )</b></li>
+<li><b>None</b></li>
+<li><b>SetTransferMode</b></li>
+<li><b>SetProxy</b></li>
+<li><b>ConnectToHost</b></li>
+<li><b>Login</b></li>
+<li><b>Close</b></li>
+<li><b>List</b></li>
+<li><b>Cd</b></li>
+<li><b>Get</b></li>
+<li><b>Put</b></li>
+<li><b>Remove</b></li>
+<li><b>Mkdir</b></li>
+<li><b>Rmdir</b></li>
+<li><b>Rename</b></li>
+<li><b>RawCommand</b></li>
+<li><b>Command( value )</b></li>
+<li><b>Active</b></li>
+<li><b>Passive</b></li>
+<li><b>TransferMode( value )</b></li>
+<li><b>Unconnected</b></li>
+<li><b>HostLookup</b></li>
+<li><b>Connecting</b></li>
+<li><b>Connected</b></li>
+<li><b>LoggedIn</b></li>
+<li><b>Closing</b></li>
+<li><b>State( value )</b></li>
+</ul>
+<h3>Prototype Object Properties</h3>
+<p>The QFtp prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
+<ul>
+<li><div class="fn"/><b>qint64 bytesAvailable()</b></li>
+<li><div class="fn"/><b>int cd(String dir)</b></li>
+<li><div class="fn"/><b>void clearPendingCommands()</b></li>
+<li><div class="fn"/><b>int close()</b></li>
+<li><div class="fn"/><b>int connectToHost(String host, unsigned short port)</b></li>
+<li><div class="fn"/><b>Command currentCommand()</b></li>
+<li><div class="fn"/><b>QIODevice currentDevice()</b></li>
+<li><div class="fn"/><b>int currentId()</b></li>
+<li><div class="fn"/><b>Error error()</b></li>
+<li><div class="fn"/><b>String errorString()</b></li>
+<li><div class="fn"/><b>int get(String file, QIODevice dev, TransferType type)</b></li>
+<li><div class="fn"/><b>bool hasPendingCommands()</b></li>
+<li><div class="fn"/><b>int list(String dir)</b></li>
+<li><div class="fn"/><b>int login(String user, String password)</b></li>
+<li><div class="fn"/><b>int mkdir(String dir)</b></li>
+<li><div class="fn"/><b>int put(QIODevice dev, String file, TransferType type)</b></li>
+<li><div class="fn"/><b>int rawCommand(String command)</b></li>
+<li><div class="fn"/><b>qint64 read(char data, qint64 maxlen)</b></li>
+<li><div class="fn"/><b>QByteArray readAll()</b></li>
+<li><div class="fn"/><b>int remove(String file)</b></li>
+<li><div class="fn"/><b>int rename(String oldname, String newname)</b></li>
+<li><div class="fn"/><b>int rmdir(String dir)</b></li>
+<li><div class="fn"/><b>int setProxy(String host, unsigned short port)</b></li>
+<li><div class="fn"/><b>int setTransferMode(TransferMode mode)</b></li>
+<li><div class="fn"/><b>State state()</b></li>
+</ul>
+<h3>Instance Properties</h3>
+<p>QFtp objects have no special properties beyond those inherited from the QFtp prototype object.</p>
+</body>
+</html>
