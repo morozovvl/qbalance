@@ -126,7 +126,7 @@ QStringList MySqlRelationalTableModel::getFieldsList()
     {
         for (int i = 0; i < record().count(); i++)
         {
-            fieldsList << record().fieldName(i);
+            fieldsList << record().fieldName(i).toUpper();
         }
     }
     return fieldsList;

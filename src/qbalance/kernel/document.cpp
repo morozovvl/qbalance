@@ -43,6 +43,8 @@ Document::Document(int oper, Documents* par): Essence()
     scriptFileName = TApplication::exemplar()->getScriptFileName(operNumber);
     idFieldName = "P1__" + db->getObjectName("код");
     freePrv = 0;
+    setPhotoEnabled(false);
+    setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = new Dictionaries();
@@ -340,12 +342,12 @@ void Document::setValue(QString name, QVariant value, int row)
         int __pos = name.indexOf("__");
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
-            Essence::setValue(name, value, 0, false);  // Т.к. свободная проводка находится всегда в первой строке документа
+            Essence::setValue(name, value, 0);  // Т.к. свободная проводка находится всегда в первой строке документа
         else
-            Essence::setValue(name, value, row, false);
+            Essence::setValue(name, value, row);
     }
     else
-        Essence::setValue(name, value, row, false);
+        Essence::setValue(name, value, row);
 }
 
 
@@ -453,6 +455,12 @@ void Document::prepareSelectCurrentRowCommand()
         command.replace(" WHERE ", QString(" WHERE p1.%1=:value AND ").arg(db->getObjectName("проводки.стр")));
     }
     preparedSelectCurrentRow.prepare(command);
+}
+
+
+bool Document::open()
+{
+    return Essence::open();
 }
 
 

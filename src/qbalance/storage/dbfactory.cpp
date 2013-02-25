@@ -237,11 +237,14 @@ void DBFactory::close()
     clearError();
 
     if(db->isOpen())
+    {
         db->close();
+    }
 
     if(dbExtend->isOpen())
+    {
         dbExtend->close();
-
+    }
 }
 
 
@@ -343,7 +346,7 @@ QStringList DBFactory::getFieldsList(QMap<int, FieldType>* columnsProperties)
 }
 
 
-QStringList DBFactory::getFieldsList(QString tableName)
+QStringList DBFactory::getFieldsList(QString tableName, int level)
 {
     QStringList result;
     QList<FieldType> fields;
@@ -351,7 +354,8 @@ QStringList DBFactory::getFieldsList(QString tableName)
 
     for (int i = 0; i < fields.count(); i++)
     {
-        result << fields.value(i).column;
+        if (level == -1 || fields.value(i).level <= level)
+            result << fields.value(i).column;
     }
     return result;
 }
@@ -401,6 +405,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
                 else
                     fld.readOnly  = columnsProperties.record().value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
             }
+            fld.level = level;
             // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
             if (originTable.size() > 0 && originTable != table)
                 fld.column = table.toUpper() + "__" + fld.name;
@@ -1903,7 +1908,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                                 QString setDictName = fieldName.toLower();
                                 setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
                                 getColumnsProperties(&fields, setDictName);
-                                foreach (QString setDictFieldName, getFieldsList(setDictName)) {
+                                foreach (QString setDictFieldName, getFieldsList(setDictName, 0)) {
                                     setSelectClause.append(QString(",%1.%2 AS %3__%4").arg(setDictName).arg(setDictFieldName).arg(setDictName.toUpper()).arg(setDictFieldName.toUpper()));
                                     selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName.toUpper()).arg(setDictFieldName.toUpper())));
                                     for (int i = 0; i < fields.count(); i++)
@@ -1947,7 +1952,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                                   QString setDictName = fieldName.toLower();
                                   setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
                                   getColumnsProperties(&fields, setDictName);
-                                  foreach (QString setDictFieldName, getFieldsList(setDictName)) {
+                                  foreach (QString setDictFieldName, getFieldsList(setDictName, 0)) {
                                       setSelectClause.append(QString(",%1.%2 AS %3__%4").arg(setDictName).arg(setDictFieldName).arg(setDictName.toUpper()).arg(setDictFieldName.toUpper()));
                                       selectClause.append(QString(",%1.%2 AS %2").arg(dictName).arg(QString("%1__%2").arg(setDictName.toUpper()).arg(setDictFieldName.toUpper())));
                                       for (int i = 0; i < fields.count(); i++)

@@ -66,6 +66,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     photoEnabled = true;
     m_networkAccessManager = 0;
     m_request = 0;
+    doSubmit = false;                           // По умолчанию не обновлять записи автоматически
 }
 
 
@@ -132,7 +133,7 @@ QVariant Essence::getValue(QString n, int row)
 }
 
 
-void Essence::setValue(QString n, QVariant value, int row, bool doSubmit)
+void Essence::setValue(QString n, QVariant value, int row)
 {
     QString name = n.toUpper();
     if (tableModel->record().contains(name))
@@ -393,7 +394,7 @@ bool Essence::open()
         setScriptEngine();
         if (scriptEngineEnabled && scriptEngine != 0)
         {
-            if (!scriptEngine->open(scriptFileName))
+            if (!scriptEngine->open(scriptFileName) || !scriptEngine->evaluate())
             {
                 showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
                 return false;
@@ -535,6 +536,7 @@ void Essence::prepareSelectCurrentRowCommand()
 
 void Essence::selectCurrentRow()
 {
+    preparedSelectCurrentRow.exec();
     if (preparedSelectCurrentRow.first())
     {
         for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)

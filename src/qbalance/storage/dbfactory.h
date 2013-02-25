@@ -66,6 +66,7 @@ struct FieldType
     QString header;
     bool headerExist;
     int number;
+    int level;
 };
 
 
@@ -138,7 +139,7 @@ public:
     bool createNewDictionary(QString, QString = "", bool = true);
     bool removeDictionary(QString);
     QStringList getFieldsList(QMap<int, FieldType>*);
-    QStringList getFieldsList(QString tableName);
+    QStringList getFieldsList(QString tableName, int = -1);
     bool isSet(QString tableName);
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
     void getColumnsProperties(QList<FieldType>*, QString, QString = "", int = 0);

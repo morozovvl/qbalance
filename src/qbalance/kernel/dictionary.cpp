@@ -340,17 +340,18 @@ void Dictionary::prepareSelectCurrentRowCommand()
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
     QString command = tableModel->getSelectStatement();
 
-    command.replace(" WHERE ", QString(" WHERE %1.%2=:value AND ").arg(getTableName()).arg(getIdFieldName()));
+    command.replace(" ORDER BY", QString(" WHERE %1.%2=:value ORDER BY").arg(getTableName()).arg(getIdFieldName()));
 
     preparedSelectCurrentRow.prepare(command);
 }
 
 
+/*
 void Dictionary::setValue(QString name, QVariant value, int row)
 {   // Не будем сохранять переменные в БД сразу, т.к. мы используем скрипты и обновлять будем после исполнения скриптов и с помощью транзакции
-    Essence::setValue(name, value, row, false);
+    Essence::setValue(name, value, row);
 }
-
+*/
 
 void Dictionary::setScriptEngine()
 {

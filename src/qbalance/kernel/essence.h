@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define TMP_DIR         "./tmp/"
 
+#include <QDebug>
 #include <QtCore/QVariant>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -63,7 +64,8 @@ public:
     QString                             getIdFieldName() { return idFieldName; }
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
-    Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1, bool doSubmit = true);           // Устанавливает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
+    void                                setDoSubmit(bool submit) { doSubmit = submit; }
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm();
@@ -149,6 +151,7 @@ private:
     QString             photoIdField;
     QString             photoNameField;
     bool                photoEnabled;
+    bool                doSubmit;
     QMap<QString, QVariant>             oldValues;
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы

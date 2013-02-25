@@ -69,7 +69,7 @@ public:
     bool isFtsEnabled() { return ftsEnabled; }
     Q_INVOKABLE QString getTest() { return "Test Ok"; }
     QString     getDictTitle() { return dictTitle; }
-    Q_INVOKABLE virtual void setValue(QString, QVariant, int = -1);
+//    Q_INVOKABLE virtual void setValue(QString, QVariant, int = -1);
     virtual void setScriptEngine();
 
 protected:

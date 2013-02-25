@@ -14,13 +14,14 @@ QT += sql \
 # DESTDIR = bin/debug
 #}
 
-TARGET = qbalance
+CONFIG += debug
+TARGET = ../qbalance
 CONFIG += designer \
     plugin \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = subdirs
-SUBDIRS = src/plugins src
+SUBDIRS = src/qbalance/plugins src/qbalance
 
 unix:MOC_DIR = ./.moc
 win32:MOC_DIR = .moc
@@ -28,8 +29,8 @@ win32:MOC_DIR = .moc
 unix:OBJECTS_DIR = ./.obj
 win32:OBJECTS_DIR = .obj
 
-unix:RCC_DIR = ./src
-win32:RCC_DIR = /src
+unix:RCC_DIR = ./qbalance
+win32:RCC_DIR = /qbalance
 
 unix {
  isEmpty(PREFIX) {

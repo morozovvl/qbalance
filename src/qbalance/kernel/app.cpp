@@ -207,7 +207,10 @@ void TApplication::showConfigs() {
 
 
 QString TApplication::getFormsPath(QString formName) {
-    QString dir = applicationDirPath() + "/forms/" + getConfigPrefix() + "/";
+    QString dir = applicationDirPath() + "/forms/";
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+    dir += getConfigPrefix() + "/";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
     QString fileName = dir + formName;

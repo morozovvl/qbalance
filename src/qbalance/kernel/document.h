@@ -60,6 +60,7 @@ public:
     virtual bool calculate(const QModelIndex &);
     void calcItog();
     virtual void setConstDictId(QString, QVariant);
+    Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine();
     int    addFromQuery(int);
