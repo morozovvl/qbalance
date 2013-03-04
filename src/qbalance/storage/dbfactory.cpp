@@ -1373,10 +1373,10 @@ QString DBFactory::getObjectName(const QString& n) const
     else
     {
         // Присвоим результату значение по умолчанию
-        if (name.contains('.'))
-            result = name.mid(name.indexOf('.') + 1).toUpper();
+        if (n.contains('.'))
+            result = n.mid(n.indexOf('.') + 1);
         else
-            result = name;
+            result = n;
     }
     return result;
 }
@@ -1771,7 +1771,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         // Создадим клаузу проводок в секции SELECT
         QString tableName = getObjectName("проводки").toLower();
         QString idFieldName = getObjectName("код");
-        QStringList prvFieldsList = getFieldsList(tableName);
+        QStringList prvFieldsList = getFieldsList(tableName, 0);
         QList<FieldType> fields;
         getColumnsProperties(&fields, tableName);
         for (int i = 0; i < topersList->count(); i++)
@@ -1815,7 +1815,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
             QString attrSelectClause = "";
             QString attrFromClause = "";
             bool fieldReadOnly;
-            foreach (QString fieldName, getFieldsList(attrName))
+            foreach (QString fieldName, getFieldsList(attrName, 0))
             {
                 if (fieldName == getObjectName("атрибуты.код") ||
                     fieldName == getObjectName("атрибуты.доккод") ||
@@ -1835,7 +1835,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                             if (fields.at(i).table == attrName && fields.at(i).name == fieldName.toUpper() && columnsProperties != 0)
                                 addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly, fieldReadOnly);
                         getColumnsProperties(&fields, dictName);
-                        foreach (QString dictFieldName, getFieldsList(dictName))
+                        foreach (QString dictFieldName, getFieldsList(dictName, 0))
                         {
                             if (dictFieldName != idFieldName)
                             {  // покажем все поля, кроме поля "код"
@@ -1903,7 +1903,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                     { // Это набор (справочников)
                       // Сгенерируем команду SELECT для набора и входящих в него справочников
                         QString setSelectClause, setFromClause;
-                        foreach (QString fieldName, getFieldsList(dictName)) {
+                        foreach (QString fieldName, getFieldsList(dictName, 0)) {
                             if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
                                 QString setDictName = fieldName.toLower();
                                 setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
@@ -1926,7 +1926,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                     else
                     {  // Это обычный справочник
                         getColumnsProperties(&fields, dictName);
-                        foreach (QString field, getFieldsList(dictName)) {
+                        foreach (QString field, getFieldsList(dictName, 0)) {
                             selectClause.append(QString(",%1.%2 AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                             for (int i = 0; i < fields.count(); i++)
                                 if (fields.at(i).table == dictName && fields.at(i).name == field.toUpper() && columnsProperties != 0)
@@ -1947,7 +1947,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                     {  // Это набор (справочников)
                         // Сгенерируем команду SELECT для набора и входящих в него справочников
                           QString setSelectClause, setFromClause;
-                          foreach (QString fieldName, getFieldsList(dictName)) {
+                          foreach (QString fieldName, getFieldsList(dictName, 0)) {
                               if (fieldName.left(4) == idFieldName + "_") {        // Если поле ссылается на другую таблицу
                                   QString setDictName = fieldName.toLower();
                                   setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор

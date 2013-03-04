@@ -80,8 +80,8 @@ SOURCES += main.cpp \
     gui/progressbar.cpp \
     driverfr/driverfr.cpp \
     gui/mydateitemdelegate.cpp \
-    report/oounoreportengine.cpp \
-    openoffice/openoffice.cpp \
+#    report/oounoreportengine.cpp \
+#    openoffice/openoffice.cpp \
     report/ooxmlreportengine.cpp
 #    kernel/globalparameters.cpp
 #    report/openrptreportengine.cpp
@@ -145,8 +145,8 @@ HEADERS += kernel/app.h \
     gui/progressbar.h \
     driverfr/driverfr.h \
     gui/mydateitemdelegate.h \
-    report/oounoreportengine.h \
-    openoffice/openoffice.h \
+#    report/oounoreportengine.h \
+#    openoffice/openoffice.h \
     report/ooxmlreportengine.h
 #    kernel/globalparameters.h
 #    report/openrptreportengine.h \

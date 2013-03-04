@@ -117,7 +117,7 @@ public:
     void                initForm();
     static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
-    void                saveOldValues();
+    virtual void        saveOldValues();
 
 signals:
     void                showError(const QString &);

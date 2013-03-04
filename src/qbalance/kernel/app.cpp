@@ -246,6 +246,7 @@ Dialog* TApplication::createForm(QString fileName)
                 showError(QString(QObject::tr("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                 return 0;
             }
+            formWidget->setApp(this);
         }
     }
     return formWidget;

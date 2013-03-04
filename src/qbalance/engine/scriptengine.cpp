@@ -539,6 +539,12 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
 }
 
 
+void ScriptEngine::eventCalcTable()
+{
+    globalObject().property("EventCalcTable").call();
+}
+
+
 QString ScriptEngine::getBlankScripts()
 {
     // создадим пустой скрипт с событиями
@@ -597,6 +603,11 @@ QList<EventFunction>* ScriptEngine::getEventsList()
         func.name = "PreparePictureUrl(object)";
         func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
         eventsList.append(func);
+
+        func.name = "EventCalcTable()";
+        func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
+        eventsList.append(func);
+
     }
     return &eventsList;
 }

@@ -126,7 +126,7 @@ QStringList MySqlRelationalTableModel::getFieldsList()
     {
         for (int i = 0; i < record().count(); i++)
         {
-            fieldsList << record().fieldName(i).toUpper();
+            fieldsList << record().fieldName(i);
         }
     }
     return fieldsList;
@@ -169,7 +169,7 @@ void MySqlRelationalTableModel::setSort(int column, Qt::SortOrder order)
 QString MySqlRelationalTableModel::orderByClause() const
 {
     if (sortClause.size() > 0)
-        return QString("ORDER BY %1").arg(sortClause.toUpper());
+        return QString("ORDER BY %1").arg(sortClause);
     QString s;
     QSqlField f = record().field(sortColumn);
     if (!f.isValid())
@@ -258,7 +258,8 @@ QString MySqlRelationalTableModel::getSelectClause() const
         else
             aliases << tableName();
         QSqlRecord rec = record();
-        for (int i = 0; i < rec.count(); ++i)               // составим список полей для секции SELECT
+        for (int i = 0; i < rec.count(); i++)               // составим список полей для секции SELECT
+        {
             if (!insertedColumns.contains(i))
             {           // в исходный список полей включим только те поля, которые не были добавлены при создании реляций
                 if (tableAlias.size() > 0)
@@ -270,12 +271,13 @@ QString MySqlRelationalTableModel::getSelectClause() const
                 else
                     selectList.append(escapedRelationField(tableName(), rec.fieldName(i))).append(QLatin1Char(','));
             }
+        }
         if (insertedColumns.size() > 0) {
             for (QMap<int, int>::const_iterator it = keyColumns.constBegin(); it != keyColumns.constEnd(); it++)
             {
                 QSqlRelation relation = QSqlRelationalTableModel::relation(it.key());
                 QString alias = tablesAliases.contains(it.key()) ? tablesAliases.value(it.key()) : relation.tableName();
-                selectList.append(escapedRelationField(alias, relation.displayColumn()));
+                selectList.append(escapedRelationField(alias, db->getObjectName(alias + "." + relation.displayColumn())));
                 selectList.append(QString::fromLatin1(" AS %1__%2").arg(alias.toUpper()).arg(relation.displayColumn()));
                 selectList.append(QLatin1Char(','));
                 if (!aliases.contains(alias))

@@ -73,6 +73,7 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
         if (dict->open(deep)) {
             dictionaries.insert(dictName, dict);
             dict->setDictionaries(this);
+            dict->setPhotoEnabled(true);
             return true;
         }
     }

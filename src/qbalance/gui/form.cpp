@@ -119,6 +119,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     else
     {
         formWidget = new Dialog(pwgt);
+        formWidget->setApp(app);
         formWidget->setVisible(false);
         buttonOk = new QPushButton();
         buttonOk->setObjectName("buttonOk");

@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Dialog::Dialog(QWidget *parent):
     QDialog(parent)
 {
+    app = 0;
     freeWindow = false;
     formX = 100;
     formY = 100;
@@ -32,6 +33,13 @@ Dialog::Dialog(QWidget *parent):
     formH = 300;
     subWindow = 0;
 }
+
+
+void Dialog::setApp(TApplication* a)
+{
+    app = a;
+}
+
 
 void Dialog::keyPressEvent(QKeyEvent *e)
 {
@@ -44,7 +52,7 @@ void Dialog::show()
 {
     if (!freeWindow)
     {
-        subWindow = TApplication::exemplar()->getMainWindow()->appendMdiWindow(this);
+        subWindow = app->getMainWindow()->appendMdiWindow(this);
         if (subWindow != 0)
         {
             subWindow->setGeometry(formX, formY, formW, formH);
@@ -59,7 +67,7 @@ int Dialog::exec()
 {
     if (!freeWindow)
     {
-        setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
+        setParent(app->getMainWindow(), Qt::Dialog);
     }
     return QDialog::exec();
 }
@@ -75,7 +83,7 @@ void Dialog::hide()
             formY = subWindow->y();
             formW = subWindow->width();
             formH = subWindow->height();
-            TApplication::exemplar()->getMainWindow()->removeMdiWindow(subWindow);
+            app->getMainWindow()->removeMdiWindow(subWindow);
             subWindow = 0;
         }
     }

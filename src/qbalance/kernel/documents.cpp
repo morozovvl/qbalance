@@ -125,6 +125,7 @@ bool Documents::open() {
         if (currentDocument->open())
         {
             currentDocument->setFormTitle(subFormTitle);
+            currentDocument->setPhotoEnabled(true);
             return true;
         }
     }

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define OOXMLREPORTENGINE_H
 #include <QtCore/QMap>
 #include "../kernel/essence.h"
-#include "./kernel/app.h"
+#include "../kernel/app.h"
 #include "reportengine.h"
 
 class OOXMLReportEngine : public ReportEngine

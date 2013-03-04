@@ -39,9 +39,9 @@ public:
       QMdiArea* getWorkspace() { return workSpace; }
       QStatusBar* getStatusBar() { return statusBar(); }
       virtual void showPeriod();
-      QMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс
+      virtual QMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс
 //      void showMdiWindow(QMdiSubWindow*);
-      void removeMdiWindow(QMdiSubWindow*);                         // Удаляет окно из многооконного интерфейса
+      virtual void removeMdiWindow(QMdiSubWindow*);                         // Удаляет окно из многооконного интерфейса
 
 private slots:
       void showDictionaries();

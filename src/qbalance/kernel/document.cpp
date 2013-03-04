@@ -43,7 +43,6 @@ Document::Document(int oper, Documents* par): Essence()
     scriptFileName = TApplication::exemplar()->getScriptFileName(operNumber);
     idFieldName = "P1__" + db->getObjectName("код");
     freePrv = 0;
-    setPhotoEnabled(false);
     setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
 
     // Подготовим структуру для хранения локальных справочников

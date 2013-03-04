@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 #include <QDebug>
-#include <boost/crc.hpp>
+//#include <boost/crc.hpp>
 #include "essence.h"
 #include "../kernel/app.h"
 #include "../gui/form.h"
@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../report/reportengine.h"
 #include "../report/ooreportengine.h"
-#include "../report/oounoreportengine.h"
+//#include "../report/oounoreportengine.h"
 #include "../report/ooxmlreportengine.h"
 #include "../engine/reportscriptengine.h"
 #include "../engine/reportcontext.h"
@@ -63,7 +63,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     connect(this, SIGNAL(showError(QString)), app, SLOT(showError(QString)));
     photoPath = "";
     photoIdField = "";
-    photoEnabled = true;
+    photoEnabled = false;
     m_networkAccessManager = 0;
     m_request = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
@@ -89,7 +89,7 @@ bool Essence::calculate(const QModelIndex &index)
     if (scriptEngine != 0)
     {
         currentFieldName = tableModel->getFieldName(index.column());
-        scriptEngine->evaluate();
+        scriptEngine->eventCalcTable();
         scriptEngine->eventAfterCalculate();
         if (!scriptEngine->getScriptResult())
         {
@@ -239,6 +239,7 @@ QString Essence::getPhotoFile()
             {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера
                 if (localFile.size() > 0)
                 {   // Если мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                    app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                     QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
                     if (picture.size() > 0)
                     {   // Если удалось получить какую-то фотографию
@@ -658,12 +659,34 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
 
 qulonglong Essence::calculateCRC32(QByteArray* array)
 {
+/*
     boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true>  crc_ccitt2;
     for(int index = 0; index < array->length(); index++)
     {
       crc_ccitt2((*array)[index]);
     }
     return crc_ccitt2();
+*/
+
+//    unsigned int CRC32_function(unsigned char *buf, unsigned long len)
+
+    unsigned long crc_table[256];
+    unsigned long crc;
+    char *buf = array->data();
+    unsigned long len = array->count();
+
+    for (int i = 0; i < 256; i++)
+    {
+        crc = i;
+        for (int j = 0; j < 8; j++)
+            crc = crc & 1 ? (crc >> 1) ^ 0xEDB88320UL : crc >> 1;
+        crc_table[i] = crc;
+    }
+
+    crc = 0xFFFFFFFFUL;
+    while (len--)
+        crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
+    return crc ^ 0xFFFFFFFFUL;
 }
 
 
@@ -719,6 +742,7 @@ void Essence::print(QString fileName)
                         delete report;
                     }
                     break;
+/*
                 case OOUNOreportTemplate:
                     {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                         OOUNOReportEngine* report = new OOUNOReportEngine(&scriptEngine);
@@ -730,6 +754,7 @@ void Essence::print(QString fileName)
                         delete report;
                     }
                     break;
+*/
                 case OOXMLreportTemplate:
                     {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                         OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
