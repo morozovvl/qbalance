@@ -400,8 +400,9 @@ void FormGrid::calculate()
     QModelIndex index = getCurrentIndex();
     if (!parent->calculate(index))
         grdTable->reset();
-    restoreCurrentIndex(index);
-    grdTable->selectNextColumn();       // Передвинуть курсор на следующую колонку
+    else
+        grdTable->repaint();
+    grdTable->selectNextColumn(&index);       // Передвинуть курсор на следующую колонку
 }
 
 

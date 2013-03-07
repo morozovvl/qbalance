@@ -49,7 +49,7 @@ public:
     void                        setApp(TApplication*);
     void                        setTableModel(MySqlRelationalTableModel*);
     void                        setTagName(QString tag) { tagName = tag; }
-    void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
+    void                        selectNextColumn(QModelIndex* = 0);         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     void                        selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
     void                        setReadOnly(bool);
     bool                        setColumnsHeaders();

@@ -44,6 +44,7 @@ Document::Document(int oper, Documents* par): Essence()
     idFieldName = "P1__" + db->getObjectName("код");
     freePrv = 0;
     setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
+    parent->setDoSubmit(true);          // Обновления в списке документов будем сохранять сразу
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = new Dictionaries();

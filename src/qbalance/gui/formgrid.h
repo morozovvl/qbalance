@@ -41,6 +41,7 @@ public:
     QVariant getValue(QString);
     QModelIndex getCurrentIndex();
     void setCurrentIndex(QModelIndex index);
+    void restoreCurrentIndex(QModelIndex);
     void setCalculateColumn(int column) { calculateColumn = column; }
     void selectRow(int);
     virtual void setGridFocus();
@@ -88,7 +89,6 @@ protected:
 
 private:
     int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки
-    void    restoreCurrentIndex(QModelIndex);
 
 };
 

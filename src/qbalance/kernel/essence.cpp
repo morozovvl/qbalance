@@ -239,13 +239,16 @@ QString Essence::getPhotoFile()
             {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера
                 if (localFile.size() > 0)
                 {   // Если мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                    app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                    QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                    if (picture.size() > 0)
-                    {   // Если удалось получить какую-то фотографию
-                        saveFile(fullFileName, &picture);
-                        if (QDir().exists(fullFileName))
-                            file = fullFileName;
+                    if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
+                    {
+                        app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                        QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                        if (picture.size() > 0)
+                        {   // Если удалось получить какую-то фотографию
+                            saveFile(fullFileName, &picture);
+                            if (QDir().exists(fullFileName))
+                                file = fullFileName;
+                        }
                     }
                 }
                 if (file.size() == 0)

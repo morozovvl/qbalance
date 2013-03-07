@@ -35,7 +35,6 @@ class QDESIGNER_WIDGET_EXPORT Dialog : public QDialog
 {
     Q_OBJECT
 public:
-    int     formX, formY, formW, formH;
 
     Dialog(QWidget *parent = 0);
 
@@ -46,6 +45,7 @@ public:
 
     void setFreeWindow(bool free) { freeWindow = free; }
     void setApp(TApplication*);
+    QMdiSubWindow* getSubWindow();
 
 
 public slots:
@@ -55,7 +55,7 @@ signals:
 
 private:
     TApplication*                   app;
-    QMdiSubWindow*  subWindow;
+    QMdiSubWindow*                  subWindow;
     bool    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
     virtual void keyPressEvent(QKeyEvent *e);
 };

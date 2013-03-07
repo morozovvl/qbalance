@@ -97,6 +97,8 @@ void TableView::keyPressEvent(QKeyEvent* event)
                              return;
             case Qt::Key_Right: selectNextColumn();
                              return;
+            case Qt::Key_Tab: selectNextColumn();
+                             return;
             case Qt::Key_Left: selectPreviousColumn();
                              return;
         }
@@ -150,7 +152,7 @@ bool TableView::setColumnsHeaders()
                     if (delegate != 0)
                     {
                         delegate->setFieldName(fields->at(i).column);
-                        connect(delegate, SIGNAL(commitData(QWidget*)), parent, SLOT(calculate()));
+                        connect(delegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
                         delegate->setReadOnly(fields->at(i).readOnly);
                         setItemDelegateForColumn(visualIndex, delegate);
                     }
@@ -211,10 +213,15 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 }
 
 
-void TableView::selectNextColumn()
+void TableView::selectNextColumn(QModelIndex* idx)
 // Ищет следующую колонку для редактирования
 {
-    QModelIndex index = currentIndex();
+    QModelIndex index;
+    if (idx != 0)
+        index = *idx;
+    else
+        index = currentIndex();
+
     if (index.row() == -1 && index.column() == -1)
         return;
     int column = horizontalHeader()->visualIndex(index.column());
@@ -233,13 +240,17 @@ void TableView::selectNextColumn()
         }
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
-            setCurrentIndex(newIndex);
             MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
             if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            {
+                setCurrentIndex(newIndex);
                 break;
+            }
         }
         if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
+        {
             break;
+        }
     }
 }
 

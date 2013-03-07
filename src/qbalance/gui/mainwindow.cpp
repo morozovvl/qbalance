@@ -191,6 +191,7 @@ QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
         }
         // Такой виджет видимо ранее не отображался, поэтому создадим новое окно
         QMdiSubWindow* subWindow = new QMdiSubWindow(workSpace);
+        subWindow->hide();
         subWindow->setWidget(dialogWidget);
         return workSpace->addSubWindow(subWindow);
     }

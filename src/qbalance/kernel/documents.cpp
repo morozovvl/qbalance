@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
+#include "../gui/tableview.h"
 
 
 Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
@@ -44,10 +45,12 @@ Documents::~Documents() {
 
 
 void Documents::show() {
+    QModelIndex index = form->getCurrentIndex();
     bool gotoLast = tableModel->rowCount() > 0 ? false : true;  // если список документов пока пустой, то после его загрузки
                                                                 // перейдем к последней записи, иначе останемся на той записи,
                                                                 // на которой находимся сейчас
     query();
+    form->restoreCurrentIndex(index);
     if (gotoLast)
     {
         form->selectRow(tableModel->rowCount() - 1);

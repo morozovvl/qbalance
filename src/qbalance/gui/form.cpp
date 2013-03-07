@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextCodec>
 #include <QtCore/QList>
 #include <QtGui/QPushButton>
-#include <QtGui/QMdiSubWindow>
 #include <QDebug>
 #include "form.h"
 #include "../kernel/app.h"
@@ -37,7 +36,6 @@ Form::Form(QObject* par/* = NULL*/): QObject(par)
 {
     parent = 0;
     formWidget = 0;
-    subWindow = 0;
     cmdButtonLayout = 0;
     vbxLayout = 0;
     buttonOk = 0;
@@ -46,10 +44,6 @@ Form::Form(QObject* par/* = NULL*/): QObject(par)
     app = TApplication::exemplar();
     mainWindow = app->getMainWindow();
     db = app->getDBFactory();
-    formX = 0;
-    formY = 0;
-    formW = 0;
-    formH = 0;
 }
 
 
@@ -106,6 +100,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     }
     if (formWidget != 0)
     {
+        formWidget->setApp(app);
         formWidget->setParent(pwgt);
         formWidget->setVisible(false);
         formWidget->setWindowFlags(Qt::Window | Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint);
@@ -148,6 +143,8 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
         buttonCancel->hide();
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
+    formWidget->setFreeWindow(!appendToMdi);
+
 }
 
 
@@ -170,16 +167,6 @@ int Form::exec() {
         lSelected = false;
         if (parent != 0)
             parent->beforeShowFormEvent();
-//        formWidget->setWindowModality(Qt::ApplicationModal);
-
-        if (appendToMdi)
-        {
-            formWidget->formX = formX;
-            formWidget->formY = formY;
-            formWidget->formW = formW;
-            formWidget->formH = formH;
-        }
-        formWidget->setFreeWindow(!appendToMdi);
 
         formWidget->exec();
         return lSelected;
@@ -195,29 +182,7 @@ void Form::show() {
         lSelected = false;
         if (parent != 0)
             parent->beforeShowFormEvent();
-/*
-        if (appendToMdi)
-        {
-            subWindow = mainWindow->appendMdiWindow(formWidget);
-            if (subWindow != 0)
-            {
-                formWidget->show();
-                subWindow->setGeometry(formX, formY, formW, formH);
-                subWindow->show();
-            }
-        }
-        else
-            formWidget->show();
-*/
 
-        if (appendToMdi)
-        {
-            formWidget->formX = formX;
-            formWidget->formY = formY;
-            formWidget->formW = formW;
-            formWidget->formH = formH;
-        }
-        formWidget->setFreeWindow(!appendToMdi);
         formWidget->show();
 
     }
@@ -226,28 +191,9 @@ void Form::show() {
 
 void Form::hide() {
     if (formWidget != 0) {
-/*
-        if (appendToMdi && subWindow != 0)
-        {
-            formX = subWindow->x();
-            formY = subWindow->y();
-            formW = subWindow->width();
-            formH = subWindow->height();
-            mainWindow->removeMdiWindow(subWindow);
-        }
-        else
-            formWidget->hide();
-*/
         formWidget->hide();
-
-        formX = formWidget->formX;
-        formY = formWidget->formY;
-        formW = formWidget->formW;
-        formH = formWidget->formH;
-
         if (parent != 0)
             parent->afterHideFormEvent();
-
     }
 }
 
@@ -271,77 +217,68 @@ void Form::setButtonsSignals()
 
 
 void Form::readSettings() {
+    // Установим координаты и размеры окна
+    QWidget* widget;
+    widget = formWidget->getSubWindow();
+    if (widget == 0)
+        widget = formWidget;
+
     QMap<QString, int> settingValues;
     // Попытаемся сначала прочитать локальные значения координат окна и размеров на компьютере пользователя
     QSettings settings;
     if (settings.status() == QSettings::NoError)
     {
         settings.beginGroup(configName);
-        settingValues.insert("x", settings.value("x", -1).toInt());
-        settingValues.insert("y", settings.value("y", -1).toInt());
-        settingValues.insert("width", settings.value("width", -1).toInt());
-        settingValues.insert("height", settings.value("height", -1).toInt());
+        if (settings.contains("x") && settings.contains("y") && settings.contains("width") && settings.contains("height"))
+        {
+            settingValues.insert("x", settings.value("x").toInt());
+            settingValues.insert("y", settings.value("y").toInt());
+            settingValues.insert("width", settings.value("width").toInt());
+            settingValues.insert("height", settings.value("height").toInt());
+        }
+        else
+        {
+            // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
+            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
+            QSqlQuery config = db->getConfig();
+            config.first();
+            while (config.isValid())
+            {
+                if (config.record().value("group").toString() == configName)
+                {
+                    settingValues.remove(config.value(0).toString());
+                    settingValues.insert(config.value(0).toString(), config.value(1).toInt());
+                }
+                config.next();
+            }
+            app->showMessageOnStatusBar("");
+        }
         settings.endGroup();
     }
 
-    // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
-    if (settingValues.value("x") == -1 ||
-        settingValues.value("y") == -1 ||
-        settingValues.value("width") == -1 ||
-        settingValues.value("height") == -1)
-    {
-        app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
-        QSqlQuery config = db->getConfig();
-        config.first();
-        while (config.isValid())
-        {
-            if (config.record().value("group").toString() == configName)
-            {
-                settingValues.remove(config.value(0).toString());
-                settingValues.insert(config.value(0).toString(), config.value(1).toInt());
-            }
-            config.next();
-        }
-        app->showMessageOnStatusBar("");
-    }
+    int x = settingValues.value("x");
+    int y = settingValues.value("y");
+    int w = settingValues.value("width");
+    int h = settingValues.value("height");
 
-    // Установим координаты и размеры окна
-    QWidget* widget;
-    if (subWindow != 0)         // Если используется mdi-окно
-        widget = subWindow;     // то установим координаты для него
-    else
-        widget = formWidget;
-    int x = settingValues.value("x") == -1 ? 100 : settingValues.value("x");
-    int y = settingValues.value("y") == -1 ? 100 : settingValues.value("y");
-    int w = settingValues.value("width") == -1 ? 600 : settingValues.value("width");
-    int h = settingValues.value("height") == -1 ? 300 : settingValues.value("height");
-    x = x == 0 ? 100 : x;
-    y = y == 0 ? 100 : y;
-    w = w == 0 ? 600 : w;
-    h = h == 0 ? 300 : h;
     widget->setGeometry(x, y, w, h);
-    formX = x;
-    formY = y;
-    formW = w;
-    formH = h;
 }
 
 
 void Form::writeSettings() {
     // Сохраним координаты и размеры окна
     QWidget* widget;
-    if (subWindow != 0)         // Если используется mdi-окно
-        widget = subWindow;     // то будем сохранять его координаты и размеры
-    else
+    widget = formWidget->getSubWindow();
+    if (widget == 0)
         widget = formWidget;
 
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings;
     settings.beginGroup(configName);
-    settings.setValue("x", widget->geometry().x());
-    settings.setValue("y", widget->geometry().y());
-    settings.setValue("width", widget->geometry().width());
-    settings.setValue("height", widget->geometry().height());
+    settings.setValue("x", widget->x());
+    settings.setValue("y", widget->y());
+    settings.setValue("width", widget->frameGeometry().width());
+    settings.setValue("height", widget->frameGeometry().height());
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере

@@ -27,10 +27,6 @@ Dialog::Dialog(QWidget *parent):
 {
     app = 0;
     freeWindow = false;
-    formX = 100;
-    formY = 100;
-    formW = 600;
-    formH = 300;
     subWindow = 0;
 }
 
@@ -38,6 +34,7 @@ Dialog::Dialog(QWidget *parent):
 void Dialog::setApp(TApplication* a)
 {
     app = a;
+    setParent(app->getMainWindow(), Qt::Dialog);
 }
 
 
@@ -52,10 +49,13 @@ void Dialog::show()
 {
     if (!freeWindow)
     {
-        subWindow = app->getMainWindow()->appendMdiWindow(this);
         if (subWindow != 0)
         {
-            subWindow->setGeometry(formX, formY, formW, formH);
+            subWindow->show();
+        }
+        else
+        {
+            subWindow = app->getMainWindow()->appendMdiWindow(this);
             subWindow->show();
         }
     }
@@ -67,7 +67,9 @@ int Dialog::exec()
 {
     if (!freeWindow)
     {
-        setParent(app->getMainWindow(), Qt::Dialog);
+        if (subWindow == 0)
+            subWindow = app->getMainWindow()->appendMdiWindow(this);
+        subWindow->show();
     }
     return QDialog::exec();
 }
@@ -79,15 +81,22 @@ void Dialog::hide()
     {
         if (subWindow != 0)
         {
-            formX = subWindow->x();
-            formY = subWindow->y();
-            formW = subWindow->width();
-            formH = subWindow->height();
-            app->getMainWindow()->removeMdiWindow(subWindow);
-            subWindow = 0;
+            subWindow->hide();
         }
     }
     QDialog::hide();
+}
+
+
+QMdiSubWindow* Dialog::getSubWindow()
+{
+    if (app != 0 && !freeWindow)
+    {
+        if (subWindow == 0)
+            subWindow = app->getMainWindow()->appendMdiWindow(this);
+        return subWindow;
+    }
+    return 0;
 }
 
 

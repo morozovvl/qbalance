@@ -49,7 +49,6 @@ public:
 //    virtual void createUi();
     void setButtonsSignals();
     bool isDefaultForm() { return defaultForm; }
-    void    setSubWindow(QMdiSubWindow* win) { subWindow = win; }       // Установить указатель на подокно в многооконном интерфейсе, в котором отображается текущее окно
 
     Q_INVOKABLE QPushButton* getButtonOk() { return buttonOk; }
     Q_INVOKABLE QPushButton* getButtonCancel() { return buttonCancel; }
@@ -72,7 +71,6 @@ protected:
     DBFactory*      db;
     Dialog*         formWidget;
     Essence*        parent;
-    QMdiSubWindow*  subWindow;
     bool            lSelected;
     bool            defaultForm;
     bool            appendToMdi;        // Флаг, указывающий, нужно ли добавлять окно к многооконному интерфейсу
@@ -104,7 +102,6 @@ protected:
 
 private:
     bool                    uiCreated;
-    int                     formX, formY, formW, formH;
     QMap<QString, QString>  toolTips;
 };
 

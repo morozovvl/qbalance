@@ -39,6 +39,7 @@ ConnectionForm::~ConnectionForm()
 
 void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, bool readSettings)
 {
+    formWidget->setApp(TApplication::exemplar());
     formWidget->setWindowTitle(QObject::trUtf8("Параметры соединения"));
     QGridLayout* ptopLayout = new QGridLayout();
     QLabel* plblConnection = new QLabel(QObject::trUtf8("Имя соединения:"));
