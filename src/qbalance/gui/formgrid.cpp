@@ -343,8 +343,11 @@ void FormGrid::cmdDelete()
                 setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
         }
         else
+        {
             if (buttonDelete != 0)
                 buttonDelete->setDisabled(true);
+            picture->setVisible(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
+        }
     }
     formWidget->activateWindow();
     if (grdTable != 0)

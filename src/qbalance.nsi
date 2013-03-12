@@ -91,15 +91,9 @@ Section "QBalance" SecQBalance
   SetOutPath "$INSTDIR\plugins"
   File /r ..\plugins\*.dll
   
-  SetOutPath "$INSTDIR\forms"
-  File /r ..\forms\*.ui
-
   SetOutPath "$INSTDIR\imageformats"
   File /r ..\imageformats\*.dll
 
-  SetOutPath "$INSTDIR\photo"
-  File /r ..\photo\*.jpg
-  
   SetOutPath "$INSTDIR\doc"
   File /r ..\doc\*.*
   
@@ -119,14 +113,23 @@ Section "source" SecSource
 
   SetOutPath "$INSTDIR\src"
   
-  ;ADD YOUR OWN FILES HERE...
-;  File /r *.h
-;  File /r *.cpp
-;  File /r *.sql
-;  File /r *.qrc
-;  File /r *.pro
-;  File /r *.bat
-;  File qbalance.nsi
+  File *.pri
+  File *.bat
+  File qbalance.nsi
+
+  SetOutPath "$INSTDIR\src\qbalance"
+  
+  File /r *.h
+  File /r *.cpp
+  File /r *.qrc
+  File /r *.pro
+
+  SetOutPath "$INSTDIR\src\drvfr"
+  
+  File /r *.*
+
+  SetOutPath "$INSTDIR\src\qtscriptgenerator"
+  
   File /r *.*
 
 SectionEnd

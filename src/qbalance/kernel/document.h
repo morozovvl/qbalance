@@ -69,8 +69,8 @@ public:
     Q_INVOKABLE void setDate(QString date, Qt::DateFormat format = Qt::TextDate) { ((FormDocument*)getForm())->setDate(QDate::fromString(date, format)); }
     Q_INVOKABLE void setNumber(QString number) { ((FormDocument*)getForm())->setNumber(number); }
     Q_INVOKABLE void showParameterText(QString dictName) { ((FormDocument*)getForm())->showParameterText(dictName);}
-    Q_INVOKABLE void appendDocString();
-    Q_INVOKABLE void prepareValue(QString name, QVariant value) { prvValues.insert(name, value); }
+    void appendDocString();
+    void prepareValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void saveVariable(QString, QVariant);
@@ -101,6 +101,7 @@ private:
     QHash<int, prvSaldo>            saldo;             // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     virtual void setTableModel();
     bool showNextDict();
+    void hideOtherLinkedDicts(Dictionary*);
     void showItog();
 };
 

@@ -90,9 +90,10 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     formWidget->setMaximumWidth(350);
     if (readSettings)
         readConnectionsList();
-    formWidget->setWindowModality(Qt::WindowModal);
+//    formWidget->setWindowModality(Qt::WindowModal);
     app->setIcons(formWidget);
 }
+
 
 int ConnectionForm::exec(DBFactory* d)
 {
@@ -100,6 +101,7 @@ int ConnectionForm::exec(DBFactory* d)
     db = d;
     readDefaultSettings();
     readSettings(pcmbConnection->itemText(pcmbConnection->currentIndex()));
+    gotoCenter();
     lResult = Form::exec();
     db->setHostName(ptxtHost->text());
     db->setDatabaseName(ptxtDatabase->text());

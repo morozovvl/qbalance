@@ -163,13 +163,9 @@ bool Dictionaries::remove()
 }
 
 
-bool Dictionaries::open(bool openForm) {
+bool Dictionaries::open() {
     if (Essence::open()) {
-//        dictListDict = new Dictionary(db->getObjectName("справочники"), this);
-//        dictListDict->open();
         tableModel->setSortClause(db->getObjectName("vw_доступ_к_справочникам.имя"));
-        if (openForm)
-            initForm();
         return true;
     }
     return false;

@@ -313,7 +313,8 @@ ScriptEngine::ScriptEngine(QObject *parent/* = 0*/) : QScriptEngine(parent)
     sqlFieldClass = new SqlFieldClass(this);
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
-    errorMessage = QObject::trUtf8("Ошибка скрипта!");
+//    errorMessage = QObject::trUtf8("Ошибка скрипта!");
+    errorMessage = "";
 }
 
 
@@ -541,7 +542,11 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
 
 void ScriptEngine::eventCalcTable()
 {
+    errorMessage = "";
+    scriptResult = true;
     globalObject().property("EventCalcTable").call();
+    errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
+    scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
 }
 
 

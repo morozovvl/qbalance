@@ -74,7 +74,7 @@ public:
     void setReadOnly(bool ro) { readOnly = ro; }
     bool isReadOnly() { return readOnly; }
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
-    virtual bool submit(const QModelIndex&);
+    virtual bool submit(const QModelIndex&, bool = false);
     virtual bool submit();
     int submitCount();
     virtual bool updateRowInTable(int, const QSqlRecord&);

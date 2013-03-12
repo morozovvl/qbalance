@@ -49,15 +49,9 @@ void Dialog::show()
 {
     if (!freeWindow)
     {
-        if (subWindow != 0)
-        {
-            subWindow->show();
-        }
-        else
-        {
+        if (subWindow == 0)
             subWindow = app->getMainWindow()->appendMdiWindow(this);
-            subWindow->show();
-        }
+        subWindow->show();
     }
     QDialog::show();
 }
@@ -65,13 +59,7 @@ void Dialog::show()
 
 int Dialog::exec()
 {
-    if (!freeWindow)
-    {
-        if (subWindow == 0)
-            subWindow = app->getMainWindow()->appendMdiWindow(this);
-        subWindow->show();
-    }
-    return QDialog::exec();
+   return QDialog::exec();
 }
 
 

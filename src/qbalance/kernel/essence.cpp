@@ -48,7 +48,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     form = 0;
     parentForm = 0;
     scriptEngine = 0;
-    parentForm  = app->getMainWindow()->centralWidget();
+    parentForm = app->getMainWindow()->centralWidget();
     formTitle   = "";
     lInsertable = false;
     lDeleteable = false;
@@ -67,6 +67,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     m_networkAccessManager = 0;
     m_request = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
+    forceSubmit = false;
 }
 
 
@@ -86,14 +87,16 @@ QWidget* Essence::getFormWidget() {
 
 bool Essence::calculate(const QModelIndex &index)
 {
+//    saveOldValues();
     if (scriptEngine != 0)
     {
         currentFieldName = tableModel->getFieldName(index.column());
         scriptEngine->eventCalcTable();
         scriptEngine->eventAfterCalculate();
+        if (scriptEngine->getErrorMessage().size() > 0)
+            app->showError(scriptEngine->getErrorMessage());
         if (!scriptEngine->getScriptResult())
         {
-            app->showError(scriptEngine->getErrorMessage());
             return false;
         }
     }
@@ -148,7 +151,7 @@ void Essence::setValue(QString n, QVariant value, int row)
         int col = tableModel->record().indexOf(name);
         tableModel->setData(tableModel->index(r, col), value);
         if (doSubmit)
-            tableModel->submit(tableModel->index(r, col));
+            tableModel->submit(tableModel->index(r, col), forceSubmit);
     }
     else
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
@@ -444,6 +447,24 @@ ScriptEngine* Essence::getScriptEngine()
 }
 
 
+void Essence::setOldValue(QString field, QVariant value)
+{
+    oldValues.insert(field.toUpper(), value);
+}
+
+
+QVariant Essence::getOldValue(QString field)
+{
+    return oldValues.value(field);
+}
+
+
+QVariant Essence::getOldValue()
+{
+    return getOldValue(getCurrentFieldName());
+}
+
+
 void Essence::initForm() {
     setForm();
     setFormTitle(formTitle);
@@ -699,7 +720,16 @@ void Essence::saveOldValues()
     oldValues.clear();
     int row = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
     foreach (QString field, tableModel->getFieldsList())
-        oldValues.insert(field, tableModel->record(row).value(field));
+        oldValues.insert(field.toUpper(), tableModel->record(row).value(field));
+}
+
+
+void Essence::restoreOldValues()
+{
+    foreach (QString fieldName, oldValues.keys())
+    {
+        setValue(fieldName, oldValues.value(fieldName));
+    }
 }
 
 

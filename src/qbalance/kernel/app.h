@@ -121,8 +121,8 @@ public:
     Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
 
 public slots:
-    Q_INVOKABLE void showError(QString);
-    Q_INVOKABLE void showCriticalError(QString);
+    void showError(QString);
+    void showCriticalError(QString);
 
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников

@@ -43,7 +43,6 @@ public:
     Q_INVOKABLE Dialog* getForm() { return formWidget; }
     Q_INVOKABLE Essence* getParent() { return parent; }
     Q_INVOKABLE bool selected() { return lSelected; }
-    QString getConfigName() { return configName; }
     void appendToolTip(QString name, QString value);
 
 //    virtual void createUi();
@@ -60,6 +59,7 @@ public slots:
     Q_INVOKABLE virtual void cmdOk();
     Q_INVOKABLE virtual void cmdCancel();
     virtual void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
+    Q_INVOKABLE virtual void gotoCenter();
 
 signals:
     void buttonPressed(QString);
@@ -67,7 +67,6 @@ signals:
 
 protected:
     TApplication*   app;
-    MainWindow*     mainWindow;
     DBFactory*      db;
     Dialog*         formWidget;
     Essence*        parent;

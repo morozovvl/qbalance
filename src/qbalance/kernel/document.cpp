@@ -99,6 +99,7 @@ Document::Document(int oper, Documents* par): Essence()
             }
             else
                 dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
+            dict->setPrototypeName(dictsList.at(i).name);
         }
     }
 
@@ -134,24 +135,43 @@ bool Document::calculate(const QModelIndex& index)
     if (Essence::calculate(index))
     {   // Если в вычислениях не было ошибки
 
+        bool success = false;
+
         // Начнем транзакцию
-        db->beginTransaction();
+        int submitCount = tableModel->submitCount();
+        if (submitCount > 1)
+            db->beginTransaction();
 
         // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
         int row = form->getCurrentIndex().row();
         for (int i = 0; i < tableModel->record().count(); i++)
         {
-            tableModel->submit(tableModel->index(row, i));
+            success = tableModel->submit(tableModel->index(row, i));
+            if (!success)
+                break;
         }
 
-        // Подсчитаем и сохраним итог документа
-        calcItog();
-        // Завершим транзакцию
-        db->commitTransaction();
-
-        // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-        selectCurrentRow();
-
+        if (success)
+        {   // Если во время работы скриптов ошибки не произошло
+            // Подсчитаем и сохраним итог документа
+            calcItog();
+            // Завершим транзакцию
+            if (submitCount > 1)
+                db->commitTransaction();
+            // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+            selectCurrentRow();
+        }
+        else
+        {   // Во время работы скриптов произошла ошибка
+            if (submitCount > 1)
+                db->rollbackTransaction();
+            restoreOldValues();
+        }
+    }
+    else
+    {
+        restoreOldValues();
+        ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
     }
     return true;
 }
@@ -185,7 +205,9 @@ void Document::calcItog()
                 itog -= sum;
         }
     }
-    parent->setValue("сумма", itog);
+    parent->setForceSubmit(true);       // Итог документа будем обновлять принудительно, иначе после удаления последней строки в документе
+    parent->setValue("сумма", itog);    // итог может быть не корректным
+    parent->setForceSubmit(false);
     showItog();
 }
 
@@ -200,12 +222,12 @@ void Document::showItog()
 
 bool Document::add()
 {
+    prvValues.clear();
     if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
-        ((DocumentScriptEngine*)scriptEngine)->eventBeforeAddString();
+        scriptEngine->eventBeforeAddString();
         if (topersList.at(0).attributes && topersList.at(0).number == 0)
         {
-            prvValues.clear();
             QString attrName = QString("%1%2").arg(db->getObjectName("атрибуты")).arg(operNumber);
             QString idFieldName = db->getObjectName("код");
             foreach (QString fieldName, db->getFieldsList(attrName))
@@ -220,8 +242,34 @@ bool Document::add()
         }
         appendDocString();
         query();
+
+        saveOldValues();
+        scriptEngine->eventAfterAddString();
+
+        // Сохраним данные, которые изменились после работы события "EventAfterAddString"
+        bool success = false;
+        db->beginTransaction();
+        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+        int row = form->getCurrentIndex().row();
+        for (int i = 0; i < tableModel->record().count(); i++)
+        {
+            success = tableModel->submit(tableModel->index(row, i));
+            if (!success)
+                break;
+        }
+        if (success)
+        {   // Если во время работы скриптов ошибки не произошло
+            // Подсчитаем и сохраним итог документа
+            // Завершим транзакцию
+            db->commitTransaction();
+            // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+        }
+        else
+        {   // Во время работы скриптов произошла ошибка
+            db->rollbackTransaction();
+            return false;
+        }
         form->selectRow(tableModel->rowCount() - 1);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-        ((DocumentScriptEngine*)scriptEngine)->eventAfterAddString();
         return true;
     }
     return false;
@@ -263,10 +311,7 @@ bool Document::remove() {
         if (Essence::remove()) {
             db->removeDocStr(docId, strNum);
             query();
-            if (tableModel->rowCount() > 0 && freePrv)    // Если есть "свободная" проводка
-            {
-                ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
-            }
+            scriptEngine->eventAfterCalculate();
             calcItog();
             return true;
         }
@@ -380,7 +425,7 @@ void Document::show()
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
                     // то установим его значение, которое актуально для всего документа
-                    dict->setId(tableModel->record(0).value(QString("p%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод"))).toULongLong());
+                    dict->setId(tableModel->record(0).value(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод"))).toULongLong());
                     showParameterText(dictName);
                 }
             }
@@ -392,7 +437,7 @@ void Document::show()
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
                     // то установим его значение, которое актуально для всего документа
-                    dict->setId(tableModel->record(0).value(QString("p%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод"))).toULongLong());
+                    dict->setId(tableModel->record(0).value(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод"))).toULongLong());
                     showParameterText(dictName);
                 }
             }
@@ -407,7 +452,7 @@ void Document::show()
         }
     }
     restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
-    parent->saveOldValues();
+    parent->saveOldValues();    // Запомним старые значения текущей строки списка документов
     Essence::show();
 }
 
@@ -580,51 +625,57 @@ void Document::setTableModel()
 
 bool Document::showNextDict()
 {  // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документ
-    bool anyShown = true;
-    foreach (QString dictName, dicts->keys()) {         // Из локального списка справочников
-        Dictionary* dict = dicts->value(dictName);
-        if (dict->isMustShow()) {                       // покажем те справочники, которые можно показывать
-            dict->exec();
-            if (dict->isFormSelected()) {               // Если в справочнике была нажата кнопка "Ок"
-                if (dict->getTableModel()->rowCount() == 0) {       // Если в выбранном справочнике нет записей
-                    anyShown = false;                               // то считать, что этот справочник не был показан и не давать добавить строчку в документ
-                    break;
-                }
-                // Не будем показывать те справочники-прототипы, у которых аналог уже был показан
-                foreach (QString dName, dicts->keys())
-                {
-                    if (dName != dictName &&
-                        dict->getPrototypeName().size() > 0 &&
-                        (dName == dict->getPrototypeName() ||
-                        dicts->value(dName)->getPrototypeName() == dict->getPrototypeName()))        // Если справочники называются по-разному, но являются прототипами
-                    {
-                            Dictionary* d = dicts->value(dName);
-                            d->setMustShow(false);
-                            d->setId(dict->getId());          // то установим в справочниках-прототипах один и тот же текущий элемент справочника
-
+    bool anyShown = false;
+    Dictionary* dict;
+    QString dictName;
+    for (int i = 0; i < topersList.count(); i++)
+    {
+        dictName = topersList.at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+        if (dictName.size() > 0 && dicts->contains(dictName))
+        {
+            dict = dicts->value(dictName);
+            if (dict->isMustShow())
+            {                       // покажем те справочники, которые можно показывать
+                dict->exec();
+                if (dict->isFormSelected())
+                {               // Если в справочнике была нажата кнопка "Ок"
+                    anyShown = true;
+                    if (dict->getTableModel()->rowCount() == 0)
+                    {       // Если в выбранном справочнике нет записей
+                        break;
                     }
+                    prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
+                    hideOtherLinkedDicts(dict);     // Скроем все связанные с этим справочником другие справочники и установим для них правильные текущие идентификаторы
                 }
-                // Если это набор или прототип является набором, то не будем показывать связанные справочники
-                if (dict->isSet() ||
-                        (dict->getPrototypeName().size() > 0 && dicts->value(dict->getPrototypeName())->isSet()))
+                else
                 {
-                    for (int i = 0; i < dict->getFieldsList().count(); i++)
-                    {       // Просмотрим список полей
-                        QString name = dict->getFieldsList().at(i);
-                        if (name.left(4) == dict->getIdFieldName() + "_")
-                        {        // Если поле ссылается на другую таблицу
-                            name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                            name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                            Dictionary* d = dicts->value(name);
-                            d->setMustShow(false);
-                            d->setId(dict->getId());          // то установим в справочниках-прототипах один и тот же текущий элемент справочника
-                        }
-                    }
+                    anyShown = false;
+                    break;      // Пользователь отказался от дальнейшей работы со справочниками
                 }
             }
-            else {
-                anyShown = false;    // пользователь отказался от работы со справочниками. Прекратим процесс добавления записи
-                break;
+        }
+        dictName = topersList.at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
+        if (dictName.size() > 0 && dicts->contains(dictName))
+        {
+            dict = dicts->value(dictName);
+            if (dict->isMustShow())
+            {                       // покажем те справочники, которые можно показывать
+                dict->exec();
+                if (dict->isFormSelected())
+                {               // Если в справочнике была нажата кнопка "Ок"
+                    anyShown = true;
+                    if (dict->getTableModel()->rowCount() == 0)
+                    {       // Если в выбранном справочнике нет записей
+                        break;
+                    }
+                    prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
+                    hideOtherLinkedDicts(dict);     // Скроем все связанные с этим справочником другие справочники и установим для них правильные текущие идентификаторы
+                }
+                else
+                {
+                    anyShown = false;
+                    break;      // Пользователь отказался от дальнейшей работы со справочниками
+                }
             }
         }
     }
@@ -632,68 +683,84 @@ bool Document::showNextDict()
 }
 
 
+void Document::prepareValue(QString name, QVariant value)
+{
+    if (!prvValues.contains(name))
+        prvValues.insert(name, value);
+}
+
+
+void Document::hideOtherLinkedDicts(Dictionary* dict)
+{
+    // Не будем показывать те справочники-прототипы, у которых аналог уже был показан
+    foreach (QString dName, dicts->keys())
+    {
+        if (dName == dict->getPrototypeName())        // Если справочники называются по-разному, но являются прототипами
+        {
+            Dictionary* d = dicts->value(dName);
+            d->setMustShow(false);
+        }
+    }
+    // Если это набор или прототип является набором, то не будем показывать связанные справочники
+    if (dict->isSet() ||
+            (dict->getPrototypeName().size() > 0 && dicts->value(dict->getPrototypeName())->isSet()))
+    {
+        for (int i = 0; i < dict->getFieldsList().count(); i++)
+        {       // Просмотрим список полей
+            QString fieldName = dict->getFieldsList().at(i);
+            QString name = fieldName;
+            if (name.left(4) == dict->getIdFieldName() + "_")
+            {        // Если поле ссылается на другую таблицу
+                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                Dictionary* d = dicts->value(name);
+                d->setMustShow(false);
+                d->setId(dict->getValue(fieldName).toInt());
+            }
+        }
+    }
+}
+
+
 void Document::appendDocString()
 {
-    bool error = false;
-    Dictionary* dict;
     QString dictName, parameter;
-    QString errorText = QObject::tr("Не указано значение справочника");
     qulonglong dbId, crId;
     // Просмотрим все проводки типовой операции
     for (int i = 0; i < topersList.count(); i++)
     {
-        dbId = prvValues.value(QString("p%1__%2").arg(i+1).arg(db->getObjectName("проводки.дбкод"))).toInt();
-        if (dbId == 0)
+        dbId = 0;
+        crId = 0;
+        dictName = topersList.at(i).dbDictAlias;
+        if (dictName.size() > 0 && dicts->contains(dictName))
         {
-            dictName = topersList.at(i).dbDictAlias;
-            if (dictName.size() > 0)    // Если у текущей проводки указан дебетовый справочник
-            {
-                dict = dicts->value(dictName);
-                dbId = dict->getId();   // То получим код текущего элемента дебетового справочника
-                if (dbId == 0)
-                {
-                    TApplication::exemplar()->showError(QString("%1 %2.").arg(errorText).arg(dict->getDictTitle()));
-                    error = true;
-                }
-            }
+            dbId = prvValues.value(dicts->value(dictName)->getPrototypeName()).toInt();
         }
-        crId = prvValues.value(QString("p%1__%2").arg(i+1).arg(db->getObjectName("проводки.кркод"))).toInt();
-        if (crId == 0)
+        dictName = topersList.at(i).crDictAlias;
+        if (dictName.size() > 0 && dicts->contains(dictName))
         {
-            dictName = topersList.at(i).crDictAlias;
-            if (dictName.size() > 0)    // У текущей проводки указан кредитовый справочник
-            {
-                dict = dicts->value(dictName);
-                crId = dict->getId();   // Получим код текущего элемента кредитового справочника
-                if (crId == 0)
-                {
-                    TApplication::exemplar()->showError(QString("%1 %2.").arg(errorText).arg(dict->getDictTitle()));
-                    error = true;
-                }
-            }
+            crId = prvValues.value(dicts->value(dictName)->getPrototypeName()).toInt();
         }
-        QString value;
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
-        parameter.append(QString("%1,%2,").arg(dbId).arg(crId));
-        value = prvValues.value(QString("p%1__%2").arg(i+1).arg(db->getObjectName("проводки.кол"))).toString();
+        parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
+/*
+        QString value;
+        value = prvValues.value(QString("P%1__%2").arg(i+1).arg(db->getObjectName("проводки.кол"))).toString();
         parameter.append(value.size() > 0 ? value : "0").append(",");
-        value = prvValues.value(QString("p%1__%2").arg(i+1).arg(db->getObjectName("проводки.цена"))).toString();
+        value = prvValues.value(QString("P%1__%2").arg(i+1).arg(db->getObjectName("проводки.цена"))).toString();
         parameter.append(value.size() > 0 ? value : "0").append(",");
-        value = prvValues.value(QString("p%1__%2").arg(i+1).arg(db->getObjectName("проводки.сумма"))).toString();
+        value = prvValues.value(QString("P%1__%2").arg(i+1).arg(db->getObjectName("проводки.сумма"))).toString();
         parameter.append(value.size() > 0 ? value : "0").append(",");
-    }
+*/
+     }
     // Добавим строку в документ с параметрами всех проводок операции
-    if (!error)
+    db->addDocStr(operNumber, docId, parameter);
+    foreach (QString attr, attrFields)
     {
-        db->addDocStr(operNumber, docId, parameter);
-        foreach (QString attr, attrFields)
+        if (prvValues.keys().contains(attr))
         {
-            if (prvValues.keys().contains(attr))
-            {
-                db->saveDocAttribute(operNumber, docId, attr, prvValues.value(attr));
-            }
+            db->saveDocAttribute(operNumber, docId, attr, prvValues.value(attr));
         }
-        prvValues.clear();
     }
 }
 

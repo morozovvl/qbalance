@@ -151,15 +151,17 @@ bool TableView::setColumnsHeaders()
                     MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
                     if (delegate != 0)
                     {
-                        delegate->setFieldName(fields->at(i).column);
-                        connect(delegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
-                        delegate->setReadOnly(fields->at(i).readOnly);
-                        setItemDelegateForColumn(visualIndex, delegate);
+                       delegate->setFieldName(fields->at(i).column);
+                       if (!fields->at(i).readOnly)
+                       {
+                           connect(delegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
+                       }
+                       delegate->setReadOnly(fields->at(i).readOnly);
+                       setItemDelegateForColumn(visualIndex, delegate);
                     }
                     tableModel->setHeaderData(visualIndex, Qt::Horizontal, fields->at(i).header);
                     columns.insert(fields->at(i).number - 1, fields->at(i).column);
                     header->showSection(visualIndex);
-
                 }
             }
 

@@ -347,7 +347,7 @@ bool MySqlRelationalTableModel::submit()
 }
 
 
-bool MySqlRelationalTableModel::submit(const QModelIndex& index)
+bool MySqlRelationalTableModel::submit(const QModelIndex& index, bool force)
 {
     if (editStrategy() == QSqlTableModel::OnManualSubmit)
     {
@@ -356,7 +356,8 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             QString value;
             QString fieldName = updateInfo.value(index.column()).originField;
             QVariant recValue = ((Essence*)parent)->getValue(fieldName);
-            if (recValue != ((Essence*)parent)->getOldValue(fieldName))
+            if (force || recValue != ((Essence*)parent)->getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае,
+                                                                                    // если старые и новые данные различаются или обновление принудительное
             {
                 // Возьмем исходное значение из модели, которое необходимо сохранить в базу
                 // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера

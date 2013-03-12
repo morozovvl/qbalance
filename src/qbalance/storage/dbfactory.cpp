@@ -1079,7 +1079,8 @@ bool DBFactory::removeDoc(int docId)
 bool DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, int nDocStr)
 {
     clearError();
-    return exec(QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5)").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr));
+    QString command = QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5)").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr);
+    return exec(command);
 }
 
 
@@ -1360,7 +1361,7 @@ void DBFactory::initObjectNames()
 }
 
 
-QString DBFactory::getObjectName(const QString& n) const
+QString DBFactory::getObjectName(const QString& n)
 // транслирует имена объектов БД из "внутренних" в реальные наименования
 {
     QString name = n.toLower();
@@ -1374,7 +1375,19 @@ QString DBFactory::getObjectName(const QString& n) const
     {
         // Присвоим результату значение по умолчанию
         if (n.contains('.'))
-            result = n.mid(n.indexOf('.') + 1);
+        {   // В искомом значении есть имя таблицы и наименование поля
+            QString tableName = n.left(n.indexOf('.')).toLower();
+            QString fieldName = n.mid(n.indexOf('.') + 1);
+            result = fieldName.toUpper();       // Зададим имя поля по умолчанию, если не найдем другого значения
+            foreach (QString field, getFieldsList(tableName, 0))
+            {
+                if (field.compare(fieldName, Qt::CaseInsensitive) == 0)
+                {
+                    result = field;
+                    break;
+                }
+            }
+        }
         else
             result = n;
     }
@@ -1382,7 +1395,7 @@ QString DBFactory::getObjectName(const QString& n) const
 }
 
 
-QString DBFactory::getObjectNameCom(const QString& name) const
+QString DBFactory::getObjectNameCom(const QString& name)
 {
     return '"' + getObjectName(name) + '"';
 }

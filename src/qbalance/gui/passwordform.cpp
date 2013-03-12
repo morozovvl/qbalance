@@ -56,6 +56,11 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, layout);
+        formWidget->setMinimumHeight(100);
+        formWidget->setMinimumWidth(200);
+        formWidget->setMaximumHeight(100);
+        formWidget->setMaximumWidth(200);
+        gotoCenter();
         return true;
     }
     return false;

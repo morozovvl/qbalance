@@ -66,6 +66,7 @@ public:
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     void                                setDoSubmit(bool submit) { doSubmit = submit; }
+    void                                setForceSubmit(bool submit) { forceSubmit = submit; }
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm();
@@ -98,9 +99,9 @@ public:
     virtual bool calculate(const QModelIndex &);
     virtual void setScriptEngine();
     ScriptEngine* getScriptEngine();
-    void setOldValue(QString field, QVariant value) { oldValues.insert(field, value); }
-    Q_INVOKABLE virtual QVariant getOldValue(QString field) { return oldValues.value(field); }
-    Q_INVOKABLE virtual QVariant getOldValue() { return getOldValue(getCurrentFieldName()); }
+    void setOldValue(QString field, QVariant value);
+    Q_INVOKABLE virtual QVariant getOldValue(QString field);
+    Q_INVOKABLE virtual QVariant getOldValue();
 
 
 // Скриптовые события
@@ -117,7 +118,8 @@ public:
     void                initForm();
     static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
-    virtual void        saveOldValues();
+    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
+    virtual void        restoreOldValues();
 
 signals:
     void                showError(const QString &);
@@ -152,6 +154,7 @@ private:
     QString             photoNameField;
     bool                photoEnabled;
     bool                doSubmit;
+    bool                forceSubmit;
     QMap<QString, QVariant>             oldValues;
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы

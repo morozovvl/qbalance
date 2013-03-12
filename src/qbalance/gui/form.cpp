@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextCodec>
 #include <QtCore/QList>
 #include <QtGui/QPushButton>
+#include <QtGui/QDesktopWidget>
 #include <QDebug>
 #include "form.h"
 #include "../kernel/app.h"
@@ -42,7 +43,6 @@ Form::Form(QObject* par/* = NULL*/): QObject(par)
     buttonCancel = 0;
     appendToMdi = true;
     app = TApplication::exemplar();
-    mainWindow = app->getMainWindow();
     db = app->getDBFactory();
 }
 
@@ -83,11 +83,13 @@ void Form::close() {
 void Form::createForm(QString fileName, QWidget* pwgt) {
     if (parent != 0)
     {
-        configName = app->getConfigPrefix() + "." + getParent()->getTagName();
+//        configName = app->getConfigPrefix() + "." + getParent()->getTagName();
+        configName = getParent()->getTagName();
     }
     else
     {
-        configName = app->getConfigPrefix() + ".Form";
+//        configName = app->getConfigPrefix() + ".Form";
+        configName = "Form";
     }
     setObjectName(configName);
     uiCreated = false;
@@ -198,6 +200,24 @@ void Form::hide() {
 }
 
 
+void Form::gotoCenter()
+{   // Переместить форму в центр родительского виджета
+    if (formWidget != 0)
+    {
+        QRect rect;
+        if (formWidget->parentWidget() != 0)
+            rect = formWidget->parentWidget()->geometry();
+        else
+            rect = app->desktop()->screen()->geometry();
+
+        int x = (rect.width() - formWidget->width()) / 2;
+        int y = (rect.height() - formWidget->height()) / 2;
+
+        formWidget->move(x, y);
+    }
+}
+
+
 void Form::appendToolTip(QString name, QString value)
 {
     if (toolTips.contains(name))
@@ -229,7 +249,12 @@ void Form::readSettings() {
     if (settings.status() == QSettings::NoError)
     {
         settings.beginGroup(configName);
-        if (settings.contains("x") && settings.contains("y") && settings.contains("width") && settings.contains("height"))
+        if (settings.contains("x") &&
+            settings.contains("y") &&
+            settings.contains("width") &&
+            settings.contains("height") &&
+            settings.value("width", 0).toInt() > 0 &&
+            settings.value("height", 0).toInt() > 0)
         {
             settingValues.insert("x", settings.value("x").toInt());
             settingValues.insert("y", settings.value("y").toInt());
@@ -254,14 +279,14 @@ void Form::readSettings() {
             app->showMessageOnStatusBar("");
         }
         settings.endGroup();
+
+        int x = settingValues.value("x", 0);
+        int y = settingValues.value("y", 0);
+        int w = settingValues.value("width", 400);
+        int h = settingValues.value("height", 200);
+
+        widget->setGeometry(x, y, w, h);
     }
-
-    int x = settingValues.value("x");
-    int y = settingValues.value("y");
-    int w = settingValues.value("width");
-    int h = settingValues.value("height");
-
-    widget->setGeometry(x, y, w, h);
 }
 
 
@@ -591,7 +616,7 @@ void Form::createUi() {
 //#else
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
 //#endif
-    if (getConfigName().size() > 0) {
+    if (configName.size() > 0) {
         QString path = app->applicationDirPath() + "/defaultforms";
         if (!QDir(path).exists())
             QDir().mkpath(path);

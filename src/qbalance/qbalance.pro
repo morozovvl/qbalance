@@ -120,7 +120,6 @@ HEADERS += kernel/app.h \
     gui/mynumericedit.h \
     report/reports.h \
     engine/reportscriptengine.h \
-    engine/reportscriptengine.h \
     report/ooreportengine.h \
     engine/reportcontext.h \
     engine/formscriptengine.h \

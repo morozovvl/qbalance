@@ -23,9 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictName, parent) {
-    //configName = "saldo" + cAcc;
     account = cAcc;
-    dictionaryName = dictName;
+    dictionaryName = dictName.trimmed().toLower();
     tagName = "saldo" + cAcc;
     quan = false;
     QSqlQuery accounts = db->getAccounts();
@@ -44,12 +43,23 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
 
 QString Saldo::transformSelectStatement(QString statement) {
     QString command = statement;
-    QString appendString = QString(" %1 сальдо.счет='%2' AND сальдо.код=%3.код%4").arg(command.contains("WHERE", Qt::CaseInsensitive)?"AND":"WHERE").arg(account).arg(dictionaryName).arg(quan?" AND (сальдо.конкол<>0 OR сальдо.консальдо<>0)":"");
+    QString appendString = QString(" %1 сальдо.%2='%3' AND сальдо.%4=%5.%6").arg(command.contains("WHERE", Qt::CaseInsensitive)?"AND":"WHERE")
+                                                                              .arg(db->getObjectName("счет.счет"))
+                                                                              .arg(account)
+                                                                              .arg(db->getObjectName("счет.код"))
+                                                                              .arg(dictionaryName)
+                                                                              .arg(db->getObjectName(dictionaryName + ".код"));
+    if (quan)
+        appendString.append(QString(" AND (сальдо.%1<>0 OR сальдо.%2<>0)").arg(db->getObjectName("сальдо.конкол"))
+                                                                          .arg(db->getObjectName("сальдо.консальдо")));
+
     if (command.contains("ORDER BY", Qt::CaseInsensitive))
         command.replace(QString("ORDER BY"), appendString + " ORDER BY", Qt::CaseInsensitive);
     else
         command.append(appendString);
-    command.replace(" FROM", ", сальдо.конкол, сальдо.концена, сальдо.консальдо FROM", Qt::CaseInsensitive);
+    command.replace(" FROM", QString(", сальдо.%1, сальдо.%2, сальдо.%3 FROM").arg(db->getObjectName("сальдо.конкол"))
+                                                                              .arg(db->getObjectName("сальдо.концена"))
+                                                                              .arg(db->getObjectName("сальдо.консальдо")), Qt::CaseInsensitive);
     command.replace(" WHERE", ", сальдо WHERE", Qt::CaseInsensitive);
     return command;
 }
