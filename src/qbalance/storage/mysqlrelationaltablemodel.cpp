@@ -45,7 +45,8 @@ MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableMode
     preparedStatementName = "";
     preparedStatement = "";
     setEditStrategy(QSqlTableModel::OnManualSubmit);
-    db = TApplication::exemplar()->getDBFactory();
+    app = TApplication::exemplar();
+    db = app->getDBFactory();
 
 //    setReadOnly(true);
 }
@@ -169,7 +170,7 @@ void MySqlRelationalTableModel::setSort(int column, Qt::SortOrder order)
 QString MySqlRelationalTableModel::orderByClause() const
 {
     if (sortClause.size() > 0)
-        return QString("ORDER BY %1").arg(sortClause);
+        return QString("ORDER BY %1").arg(sortClause.toUpper());
     QString s;
     QSqlField f = record().field(sortColumn);
     if (!f.isValid())
@@ -192,7 +193,7 @@ QString MySqlRelationalTableModel::orderByClause() const
     }
     if ((table.size() > 0) && (field.size() > 0))
     {
-        s.append(QLatin1String("ORDER BY ")).append(table).append(QLatin1Char('.')).append(field);
+        s.append(QLatin1String("ORDER BY ")).append(table.toUpper()).append(QLatin1Char('.')).append(field.toUpper());
         s += sortOrder == Qt::AscendingOrder ? QLatin1String(" ASC") : QLatin1String(" DESC");
     }
     return s;
@@ -249,7 +250,7 @@ QString MySqlRelationalTableModel::getSelectClause() const
         QString fromList;
         QStringList aliases;
 
-        fromList = database().driver()->escapeIdentifier(tableName(), QSqlDriver::TableName);
+        fromList = db->getObjectNameCom(tableName());
         if (tableAlias.size() > 0)
         {
             fromList.append(" ").append(database().driver()->escapeIdentifier(tableAlias, QSqlDriver::TableName));
@@ -257,6 +258,7 @@ QString MySqlRelationalTableModel::getSelectClause() const
         }
         else
             aliases << tableName();
+
         QSqlRecord rec = record();
         for (int i = 0; i < rec.count(); i++)               // составим список полей для секции SELECT
         {
@@ -277,7 +279,7 @@ QString MySqlRelationalTableModel::getSelectClause() const
             {
                 QSqlRelation relation = QSqlRelationalTableModel::relation(it.key());
                 QString alias = tablesAliases.contains(it.key()) ? tablesAliases.value(it.key()) : relation.tableName();
-                selectList.append(escapedRelationField(alias, db->getObjectName(alias + "." + relation.displayColumn())));
+                selectList.append(escapedRelationField(alias, db->getObjectNameCom(alias + "." + relation.displayColumn())));
                 selectList.append(QString::fromLatin1(" AS %1__%2").arg(alias.toUpper()).arg(relation.displayColumn()));
                 selectList.append(QLatin1Char(','));
                 if (!aliases.contains(alias))

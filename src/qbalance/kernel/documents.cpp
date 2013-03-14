@@ -99,14 +99,14 @@ void Documents::view() {
 
 void Documents::query(QString filter) {
     Q_UNUSED(filter)
-    Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6' ORDER BY %7, %8").arg(db->getObjectName("документы.дата"))
+    Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6' ORDER BY %7, %8").arg(db->getObjectNameCom("документы.дата"))
                                                                                                                        .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
                                                                                                                        .arg(TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy"))
-                                                                                                                       .arg(db->getObjectName("документы.авто"))
-                                                                                                                       .arg(db->getObjectName("документы.опер"))
+                                                                                                                       .arg(db->getObjectNameCom("документы.авто"))
+                                                                                                                       .arg(db->getObjectNameCom("документы.опер"))
                                                                                                                        .arg(QString::number(operNumber))
-                                                                                                                       .arg(db->getObjectName("документы.дата"))
-                                                                                                                       .arg(db->getObjectName("документы.код")));
+                                                                                                                       .arg(db->getObjectNameCom("документы.дата"))
+                                                                                                                       .arg(db->getObjectNameCom("документы.код")));
 }
 
 

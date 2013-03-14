@@ -271,7 +271,7 @@ QString Essence::getPhotoFile()
                             urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
                             m_request = new QNetworkRequest(url);
                             m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
-                            app->showMessageOnStatusBar(tr("Запущена загрузка фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                            app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
 
                         }
                         else
@@ -288,6 +288,7 @@ QString Essence::getPhotoFile()
                     qulonglong localFileCheckSum = calculateCRC32(&array);
                     if (db->getFileCheckSum(localFile, PictureFileType, true) != localFileCheckSum)
                     {
+                        app->showMessageOnStatusBar(tr("Сохранение фотографии с кодом ") + QString("%1").arg(idValue) + tr(" на сервере"), 3000);
                         db->setFile(localFile, PictureFileType, array, localFileCheckSum, true);      // Сохранить картинку в расширенную базу
                     }
                     file.close();
@@ -741,8 +742,15 @@ void Essence::print(QString fileName)
     ReportScriptEngine scriptEngine(&printValues);
     preparePrintValues(&scriptEngine);
 
+
+    QString fullFileName = app->getReportsPath();
+
+    // Если нет каталога с отчетами, то создадим его
+    if (!QDir(fullFileName).exists())
+        QDir().mkpath(fullFileName);
+
+    fullFileName += fileName;
     // Если такого шаблона нет, попробуем получить его с сервера
-    QString fullFileName = app->getReportsPath() + fileName;
     if (getFile(app->getReportsPath(), fileName, ReportTemplateFileType))
     {
         if (scriptEngine.open(fullFileName + ".qs") && scriptEngine.evaluate())

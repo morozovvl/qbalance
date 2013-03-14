@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/table.h"
 
 class Table;
+class TApplication;
 class DBFactory;
 
 struct UpdateInfoStruct {
@@ -83,7 +84,6 @@ public:
 // Прочие функции
     QStringList getFieldsList();
     QString getFieldName(int i) { return record().fieldName(i); }
-    void setAlias(QString alias) { tableAlias = alias; }
 
 
 protected:
@@ -109,7 +109,7 @@ private:
     QStringList             fieldsList;
     QString                 tableAlias;
     bool                    readOnly;
-
+    TApplication*           app;
     DBFactory*              db;
 };
 

@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
 
-QString TApplication::MaxSumMask       = "9999999999.99";
 QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
 QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
 bool    TApplication::DebugMode        = false;
@@ -45,6 +44,7 @@ TApplication::TApplication(int & argc, char** argv)
     setOrganizationName("Enterprise");
     setApplicationName("QBalance");
     setApplicationVersion("0.0.1");
+    setWindowIcon(QIcon(":qbalance.ico"));
 
     db  = new DBFactory();
     gui = new GUIFactory(db);
@@ -61,7 +61,6 @@ TApplication::TApplication(int & argc, char** argv)
     if (!Exemplar)
     {
         Exemplar = this;
-        TApplication::MaxSumMask = TApplication::MaxSumMask.replace(".", QApplication::keyboardInputLocale().decimalPoint());
     }
 }
 

@@ -182,7 +182,6 @@ void ConnectionForm::writeDefaultSettings()
 
 void ConnectionForm::readSettings(QString connectionName)
 {
-    Form::readSettings();
     QSettings settings;
     if (connectionName.size() > 0 && settings.status() == QSettings::NoError)
     {

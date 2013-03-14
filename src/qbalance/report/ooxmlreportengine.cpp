@@ -45,7 +45,11 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
         // Распакуем файл OpenOffice
         QProcess* unzip = new QProcess();
         unzip->setWorkingDirectory(tmpDir);
+#ifdef Q_OS_WIN32
+        unzip->start(app->applicationDirPath() + "/unzip", QStringList() << fileName);
+#else
         unzip->start("unzip", QStringList() << fileName);
+#endif
         if (waitProcessEnd(unzip)) {
 
             // Запишем контент в файл
@@ -70,7 +74,11 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
             // Запакуем файл OpenOffice обратно
             QProcess* zip = new QProcess();
             zip->setWorkingDirectory(tmpDir);
+#ifdef Q_OS_WIN32
+            zip->start(app->applicationDirPath() + "/zip", QStringList() << "-r" << fileName << ".");
+#else
             zip->start("zip", QStringList() << "-r" << fileName << ".");
+#endif
             if (waitProcessEnd(zip)) {
 
                 // удалим временный каталог

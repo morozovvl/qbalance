@@ -186,6 +186,10 @@ unix {
 
 }
 
+windows {
+    RC_FILE+=resources.rc
+}
+
 OTHER_FILES += \
     ../qbalance.nsi \
     ../generator.pri \

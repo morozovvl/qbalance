@@ -560,16 +560,16 @@ QString Document::transformSelectStatement(QString string)
         whereClause = QString(" WHERE p%3.%4=%1 AND p%3.%5=%2 AND p%3.%6=%3").arg(docId)
                                                                              .arg(operNumber)
                                                                              .arg(prv1)
-                                                                             .arg(db->getObjectName("проводки.доккод"))
-                                                                             .arg(db->getObjectName("проводки.опер"))
-                                                                             .arg(db->getObjectName("проводки.номеропер"));
+                                                                             .arg(db->getObjectNameCom("проводки.доккод"))
+                                                                             .arg(db->getObjectNameCom("проводки.опер"))
+                                                                             .arg(db->getObjectNameCom("проводки.номеропер"));
         string.replace(" WHERE p", whereClause);
     }
     else
     {
         if (string.contains(" WHERE a"))
         {
-            whereClause = QString(" WHERE a.%1=%2").arg(db->getObjectName("проводки.доккод"))
+            whereClause = QString(" WHERE a.%1=%2").arg(db->getObjectNameCom("проводки.доккод"))
                                                    .arg(docId);
             string.replace(" WHERE a", whereClause);
         }

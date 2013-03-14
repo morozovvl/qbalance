@@ -87,7 +87,7 @@ bool Dictionaries::addSaldo(QString acc, int deep) {
     if (!dictionaries.contains(alias)) {
         // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
         Dictionary* accDict = TApplication::exemplar()->getDictionaries()->getDictionary(db->getObjectName("счета"));
-        accDict->query(QString("%1='%2'").arg(db->getObjectName("счета.счет")).arg(acc));
+        accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);

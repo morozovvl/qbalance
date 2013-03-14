@@ -102,7 +102,6 @@ public:
     static QString errorFileName() { return "error.log";}
     static QFile&  debugFile()     { return *DebugFile;}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss";}
-    static QString maxSumMask()    { return MaxSumMask;}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
     static bool setDebugMode(const bool& value);
@@ -136,7 +135,6 @@ private:
     static QFile*           DebugFile;
     static bool             DebugMode;
     static QTextStream*     DebugStream;
-    static QString          MaxSumMask;
     static TApplication*    Exemplar;
 //    GlobalParameters*       globalParameters;
 
