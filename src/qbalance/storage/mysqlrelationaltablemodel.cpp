@@ -193,7 +193,7 @@ QString MySqlRelationalTableModel::orderByClause() const
     }
     if ((table.size() > 0) && (field.size() > 0))
     {
-        s.append(QLatin1String("ORDER BY ")).append(table.toUpper()).append(QLatin1Char('.')).append(field.toUpper());
+        s.append(QLatin1String("ORDER BY ")).append(table).append(QLatin1Char('.')).append(field.toUpper());
         s += sortOrder == Qt::AscendingOrder ? QLatin1String(" ASC") : QLatin1String(" DESC");
     }
     return s;
@@ -325,31 +325,13 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
 }
 
 
-int MySqlRelationalTableModel::submitCount()
-{   // Подсчитывает, в скольких колонках произошли изменения
-    int counter = 0;
-    for (int i = 0; i < record().count(); i++)
-    {
-        QString fieldName = updateInfo.value(i).originField;
-        if (fieldName.size() > 0)
-        {
-            QVariant newValue = ((Essence*)parent)->getValue(fieldName);
-            QVariant oldValue = ((Essence*)parent)->getOldValue(fieldName);
-            if (newValue != oldValue)
-                counter++;
-        }
-    }
-    return counter;
-}
-
-
 bool MySqlRelationalTableModel::submit()
 {
     return QSqlRelationalTableModel::submit();
 }
 
 
-bool MySqlRelationalTableModel::submit(const QModelIndex& index, bool force)
+bool MySqlRelationalTableModel::submit(const QModelIndex& index)
 {
     if (editStrategy() == QSqlTableModel::OnManualSubmit)
     {
@@ -357,44 +339,42 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index, bool force)
         {
             QString value;
             QString fieldName = updateInfo.value(index.column()).originField;
-            QVariant recValue = ((Essence*)parent)->getValue(fieldName);
-            if (force || recValue != ((Essence*)parent)->getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае,
-                                                                                    // если старые и новые данные различаются или обновление принудительное
+            QVariant recValue = ((Essence*)parent)->getValue(fieldName, index.row());
+            // Возьмем исходное значение из модели, которое необходимо сохранить в базу
+            // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
+            switch (recValue.type())
             {
-                // Возьмем исходное значение из модели, которое необходимо сохранить в базу
-                // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
-                switch (recValue.type())
+                case QVariant::String:
+                    value = QString("'%1'").arg(recValue.toString().trimmed());
+                    break;
+                case QVariant::Date:
+                    value = QString("'%1'").arg(recValue.toString());
+                    break;
+                case QVariant::DateTime:
+                    value = QString("'%1'").arg(recValue.toString());
+                    break;
+                default:
+                    value = QString("%1").arg(recValue.toString());
+                    break;
+            }
+            if (value.size() > 0)
+            {
+                // Сгенерируем для сервера команду сохранения значения из модели
+                QString command;
+                int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();
+                if (id > 0)
                 {
-                    case QVariant::String:
-                        value = QString("'%1'").arg(recValue.toString().trimmed());
-                        break;
-                    case QVariant::Date:
-                        value = QString("'%1'").arg(recValue.toString());
-                        break;
-                    case QVariant::DateTime:
-                        value = QString("'%1'").arg(recValue.toString());
-                        break;
-                    default:
-                        value = QString("%1").arg(recValue.toString());
-                        break;
-                }
-                if (value.size() > 0)
-                {
-                    // Сгенерируем для сервера команду сохранения значения из модели
-                    QString command;
                     command = QString("UPDATE %1 SET %2=%3 WHERE %4=%5;").arg(db->getObjectName(updateInfo.value(index.column()).table))
                                                                          .arg(db->getObjectName(updateInfo.value(index.column()).table + "." + updateInfo.value(index.column()).field))
                                                                          .arg(value)
                                                                          .arg(db->getObjectName(updateInfo.value(index.column()).table + ".код"))
-                                                                         .arg(record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toString());
-                    if (!db->exec(command))
-                    {
-                       return false;
-                    }
+                                                                         .arg(id);
+                    db->appendCommand(command);
                 }
             }
         }
     }
     return true;
 }
+
 

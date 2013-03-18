@@ -155,7 +155,7 @@ private:
     bool                photoEnabled;
     bool                doSubmit;
     bool                forceSubmit;
-    QMap<QString, QVariant>             oldValues;
+    QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QNetworkAccessManager*      m_networkAccessManager;

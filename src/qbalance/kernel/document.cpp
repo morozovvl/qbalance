@@ -135,45 +135,56 @@ bool Document::calculate(const QModelIndex& index)
     if (Essence::calculate(index))
     {   // Если в вычислениях не было ошибки
 
-        bool success = false;
-
-        // Начнем транзакцию
-        int submitCount = tableModel->submitCount();
-        if (submitCount > 1)
-            db->beginTransaction();
-
-        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-        int row = form->getCurrentIndex().row();
-        for (int i = 0; i < tableModel->record().count(); i++)
-        {
-            success = tableModel->submit(tableModel->index(row, i));
-            if (!success)
-                break;
-        }
-
-        if (success)
-        {   // Если во время работы скриптов ошибки не произошло
-            // Подсчитаем и сохраним итог документа
-            calcItog();
-            // Завершим транзакцию
-            if (submitCount > 1)
-                db->commitTransaction();
-            // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-            selectCurrentRow();
-        }
-        else
-        {   // Во время работы скриптов произошла ошибка
-            if (submitCount > 1)
-                db->rollbackTransaction();
-            restoreOldValues();
-        }
+        ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
+        saveChanges();
     }
     else
     {
-        restoreOldValues();
         ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
+        restoreOldValues();
     }
     return true;
+}
+
+
+void Document::saveChanges()
+{
+    int row = form->getCurrentIndex().row();
+
+    // Начнем транзакцию
+    if (freePrv > 0 && row > 0)
+    {   // Если существует "свободная" проводка, то сохраним изменения и в ней
+        for (int i = 0; i < tableModel->record().count(); i++)
+        {
+            QString fieldName = tableModel->record().fieldName(i);
+            if (getValue(fieldName, 0) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            {
+                tableModel->submit(tableModel->index(0, i));
+            }
+        }
+    }
+
+    // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+    for (int i = 0; i < tableModel->record().count(); i++)
+    {
+        QString fieldName = tableModel->record().fieldName(i);
+        if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+        {
+            tableModel->submit(tableModel->index(row, i));
+        }
+    }
+
+    calcItog();
+
+    if (db->execCommands())
+    {   // Если во время сохранения результатов ошибки не произошло
+        // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+        selectCurrentRow();
+    }
+    else
+    {   // Во время сохранения результатов произошла ошибка
+        restoreOldValues();
+    }
 }
 
 
@@ -205,9 +216,11 @@ void Document::calcItog()
                 itog -= sum;
         }
     }
+
     parent->setForceSubmit(true);       // Итог документа будем обновлять принудительно, иначе после удаления последней строки в документе
     parent->setValue("сумма", itog);    // итог может быть не корректным
     parent->setForceSubmit(false);
+
     showItog();
 }
 
@@ -242,34 +255,22 @@ bool Document::add()
         }
         appendDocString();
         query();
+        form->selectRow(tableModel->rowCount() - 1);            // Установить фокус таблицы на последнюю, только что добавленную, запись
 
         saveOldValues();
         scriptEngine->eventAfterAddString();
 
         // Сохраним данные, которые изменились после работы события "EventAfterAddString"
-        bool success = false;
-        db->beginTransaction();
-        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
         int row = form->getCurrentIndex().row();
         for (int i = 0; i < tableModel->record().count(); i++)
         {
-            success = tableModel->submit(tableModel->index(row, i));
-            if (!success)
-                break;
+            QString fieldName = tableModel->record().fieldName(i);
+            if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            {
+                tableModel->submit(tableModel->index(row, i));
+            }
         }
-        if (success)
-        {   // Если во время работы скриптов ошибки не произошло
-            // Подсчитаем и сохраним итог документа
-            // Завершим транзакцию
-            db->commitTransaction();
-            // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-        }
-        else
-        {   // Во время работы скриптов произошла ошибка
-            db->rollbackTransaction();
-            return false;
-        }
-        form->selectRow(tableModel->rowCount() - 1);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        db->execCommands();
         return true;
     }
     return false;
@@ -387,13 +388,68 @@ void Document::setValue(QString name, QVariant value, int row)
         int __pos = name.indexOf("__");
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
-            Essence::setValue(name, value, 0);  // Т.к. свободная проводка находится всегда в первой строке документа
+        {
+            Essence::setValue(name, value, findFreePrv(operNum));
+        }
         else
             Essence::setValue(name, value, row);
     }
     else
         Essence::setValue(name, value, row);
 }
+
+
+QVariant Document::getValue(QString name, int row)
+{
+    if (name.left(1) == "P")
+    {
+        int __pos = name.indexOf("__");
+        int operNum = name.mid(1, __pos - 1).toInt();
+        if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
+        {
+            return Essence::getValue(name, findFreePrv(operNum));
+        }
+    }
+    return Essence::getValue(name, row);
+}
+
+
+int Document::findFreePrv(int operNum)
+{
+    QString idFieldName = QString("P%1__%2").arg(operNum).arg(db->getObjectName("проводки.код"));
+    for (int row = 0; row < tableModel->rowCount(); row++)
+    {
+        if (Essence::getValue(idFieldName, row).toInt() > 0)
+            return row;
+    }
+    return 0;
+}
+
+
+void Document::saveOldValues()
+{
+    Essence::saveOldValues();
+    if (freePrv > 0)
+    {  // Если есть "свободная" проводка
+
+        oldValues0.clear();
+        foreach (QString field, tableModel->getFieldsList())
+            oldValues0.insert(field.toUpper(), tableModel->record(0).value(field));
+    }
+}
+
+
+
+void Document::restoreOldValues()
+{
+    Essence::restoreOldValues();
+    if (freePrv > 0)
+    {
+        foreach (QString fieldName, oldValues0.keys())
+            setValue(fieldName, oldValues0.value(fieldName), 0);
+    }
+}
+
 
 
 QVariant Document::getSumValue(QString name)

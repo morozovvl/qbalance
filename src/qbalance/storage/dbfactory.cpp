@@ -35,6 +35,7 @@ DBFactory::DBFactory()
     db = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL"));
     dbExtend = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL", "qt_sql_pictures_connection"));
     extDbExist = true;
+    commands.clear();
 }
 
 
@@ -408,7 +409,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
             fld.level = level;
             // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
             if (originTable.size() > 0 && originTable != table)
-                fld.column = table + "__" + fld.name;
+                fld.column = table.toUpper() + "__" + fld.name;
             else
                 fld.column = fld.name;
             fld.header = fld.column;
@@ -2221,6 +2222,33 @@ void DBFactory::setConfig(QString config, QString name, QString value)
         command = QString("INSERT INTO configs (\"group\", name, value) VALUES ('%1', '%2', '%3');").arg(config).arg(name).arg(value);
         exec(command);
     }
+}
+
+
+void DBFactory::appendCommand(QString command)
+{
+    commands.append(command);
+}
+
+
+bool DBFactory::execCommands()
+{
+    if (commands.count() > 1)
+    {
+        beginTransaction();
+        for (int i = 0; i < commands.count(); i++)
+        {
+            if (!exec(commands.at(i)))
+            {
+                rollbackTransaction();
+                commands.clear();
+                return false;
+            }
+        }
+        commitTransaction();
+        commands.clear();
+    }
+    return true;
 }
 
 

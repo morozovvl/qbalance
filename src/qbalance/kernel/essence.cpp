@@ -67,7 +67,6 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     m_networkAccessManager = 0;
     m_request = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
-    forceSubmit = false;
 }
 
 
@@ -88,6 +87,7 @@ QWidget* Essence::getFormWidget() {
 bool Essence::calculate(const QModelIndex &index)
 {
 //    saveOldValues();
+
     if (scriptEngine != 0)
     {
         currentFieldName = tableModel->getFieldName(index.column());
@@ -141,17 +141,22 @@ void Essence::setValue(QString n, QVariant value, int row)
     QString name = n.toUpper();
     if (tableModel->record().contains(name))
     {
-        int r;
+        QModelIndex index, oldIndex;
+
         if (row >= 0)
-            r = row;
-        else
-        {
-            r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
-        }
-        int col = tableModel->record().indexOf(name);
-        tableModel->setData(tableModel->index(r, col), value);
+            oldIndex = form->getCurrentIndex();
+
+        index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), tableModel->record().indexOf(name));
+
+        tableModel->setData(index, value);
         if (doSubmit)
-            tableModel->submit(tableModel->index(r, col), forceSubmit);
+        {
+            if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                tableModel->submit(index);
+        }
+
+        if (row >= 0)
+            form->setCurrentIndex(oldIndex);
     }
     else
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
@@ -362,6 +367,7 @@ int Essence::exec()
     }
     if (opened && form != 0)
     {
+        saveOldValues();
         return form->exec();
     }
     return 0;
@@ -372,6 +378,7 @@ void Essence::show()
     if (!opened) open();
     if (opened && form != 0)
     {
+        saveOldValues();
         form->show();
         prepareSelectCurrentRowCommand();   // Подготовим команду для обновления строк
     }

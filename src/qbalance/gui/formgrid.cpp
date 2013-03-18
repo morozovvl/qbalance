@@ -421,7 +421,9 @@ QModelIndex FormGrid::getCurrentIndex()
 {
     QModelIndex index;
     if (grdTable != 0)
+    {
         index = grdTable->currentIndex();
+    }
     return index;
 }
 
@@ -455,6 +457,7 @@ void FormGrid::showEvent(QShowEvent* event)
 
 void FormGrid::cmdPrint()
 {
+    parent->afterHideFormEvent();
     QDir dir = QDir(app->getReportsPath());
     QString ext = "." + app->getReportTemplateExt();
     // Получим список локальных шаблонов отчетов

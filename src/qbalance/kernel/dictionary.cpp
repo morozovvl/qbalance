@@ -166,24 +166,26 @@ bool Dictionary::calculate(const QModelIndex& index) {
     if (Essence::calculate(index))
     {   // Если в вычислениях не было ошибки
 
-        int submitCount = tableModel->submitCount();
-
-        if (submitCount > 1)
-            db->beginTransaction();
-
         // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
         int row = form->getCurrentIndex().row();
         for (int i = 0; i < tableModel->record().count(); i++)
         {
-            tableModel->submit(tableModel->index(row, i));
+            QString fieldName = tableModel->record().fieldName(i);
+            if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            {
+                tableModel->submit(tableModel->index(row, i));
+            }
         }
 
-        if (submitCount > 1)
-            db->commitTransaction();
-
-        // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-        selectCurrentRow();
-
+        if (db->execCommands())
+        {   // Если во время работы скриптов ошибки не произошло
+            // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+            selectCurrentRow();
+        }
+        else
+        {   // Во время работы скриптов произошла ошибка
+            restoreOldValues();
+        }
     }
     return true;
 }

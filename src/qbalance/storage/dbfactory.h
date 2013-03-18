@@ -235,6 +235,10 @@ public:
     void setToperPermition(int operNumber, QString user, bool menu);
     QSqlQuery getDocumentAddQueriesList(int);
     QSqlRecord getDocumentAddQuery(int);
+    bool    execCommands();
+    void    appendCommand(QString);
+
+
 
 private:
     QSqlDatabase*           db;
@@ -257,6 +261,7 @@ private:
     bool                    wasError;           // во время обращения к БД произошла ошибка
     QString                 errorText;          // текст последней ошибки
     QMap<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
+    QStringList             commands;
 
     void setError(QString);
     void initObjectNames();

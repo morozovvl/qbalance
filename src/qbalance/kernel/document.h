@@ -58,7 +58,6 @@ public:
     virtual QString transformSelectStatement(QString string);
     void setDocId(int doc) { docId = doc; }
     virtual bool calculate(const QModelIndex &);
-    void calcItog();
     virtual void setConstDictId(QString, QVariant);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
@@ -72,11 +71,16 @@ public:
     void appendDocString();
     void prepareValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
+    Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void saveVariable(QString, QVariant);
     Q_INVOKABLE QVariant restoreVariable(QString);
+    Q_INVOKABLE void saveChanges();
     void saveVariablesToDB();
     void restoreVariablesFromDB();
+    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
+    virtual void        restoreOldValues();
+
 
 protected:
     virtual void        setForm();
@@ -99,10 +103,14 @@ private:
     QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
     QHash<int, prvSaldo>            saldo;             // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
+    QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
+
     virtual void setTableModel();
     bool showNextDict();
     void hideOtherLinkedDicts(Dictionary*);
     void showItog();
+    void calcItog();
+    int findFreePrv(int);              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
 };
 
 #endif // DOCUMENT_H
