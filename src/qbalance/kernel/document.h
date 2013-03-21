@@ -109,8 +109,8 @@ private:
     bool showNextDict();
     void hideOtherLinkedDicts(Dictionary*);
     void showItog();
-    void calcItog();
-    int findFreePrv(int);              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
+    void calcItog(bool = false);
+    int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
 };
 
 #endif // DOCUMENT_H

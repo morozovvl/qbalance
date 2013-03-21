@@ -167,7 +167,7 @@ public:
     QStringList initializationScriptList(QString = "") const;
 
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
-    QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
+    Q_INVOKABLE QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
     static QString storageEncoding();
 

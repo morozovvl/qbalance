@@ -1796,7 +1796,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 foreach (const QString field, prvFieldsList)
                 {// Для всех полей таблицы "проводки"
                     selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
-                    selectClause.append(QString("p%1.%2 AS \"P%1__%3\"").arg(prv).arg(getObjectNameCom("проводки." + field)).arg(field.toUpper()));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
+                    selectClause.append(QString("p%1.%2 AS \"P%1__%3\"").arg(prv).arg(getObjectName("проводки." + field)).arg(field.toUpper()));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
                     for (int i = 0; i < fields.count(); i++)
                     {
                         if (fields.at(i).table == tableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
@@ -1880,10 +1880,10 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
             if (fromClause.size() > 0)
             {   // Если типовая операция включает в себя проводки
-                selectStatement = QString("SELECT DISTINCT p.*, %1 FROM (%2) p LEFT OUTER JOIN (%3) a ON p.P1__%4=a.%5 AND p.P1__%6=a.%7").arg(selectClause)
+                selectStatement = QString("SELECT DISTINCT p.*, %1 FROM (%2) p LEFT OUTER JOIN (%3) a ON p.\"P1__%4\"=a.%5 AND p.\"P1__%6\"=a.%7").arg(selectClause)
                                                                                                                                       .arg(selectStatement)
                                                                                                                                       .arg(attrSelectClause)
-                                                                                                                                      .arg(getObjectNameCom("атрибуты.доккод").toUpper())
+                                                                                                                                      .arg(getObjectName("атрибуты.доккод").toUpper())
                                                                                                                                       .arg(getObjectNameCom("атрибуты.доккод"))
                                                                                                                                       .arg(getObjectName("атрибуты.стр").toUpper())
                                                                                                                                       .arg(getObjectNameCom("атрибуты.стр"));
@@ -2234,20 +2234,22 @@ void DBFactory::appendCommand(QString command)
 bool DBFactory::execCommands()
 {
     if (commands.count() > 1)
-    {
         beginTransaction();
-        for (int i = 0; i < commands.count(); i++)
+
+    for (int i = 0; i < commands.count(); i++)
+    {
+        if (!exec(commands.at(i)))
         {
-            if (!exec(commands.at(i)))
-            {
+            if (commands.count() > 1)
                 rollbackTransaction();
-                commands.clear();
-                return false;
-            }
+            commands.clear();
+            return false;
         }
-        commitTransaction();
-        commands.clear();
     }
+
+    if (commands.count() > 1)
+        commitTransaction();
+    commands.clear();
     return true;
 }
 

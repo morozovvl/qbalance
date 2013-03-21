@@ -86,8 +86,6 @@ QWidget* Essence::getFormWidget() {
 
 bool Essence::calculate(const QModelIndex &index)
 {
-//    saveOldValues();
-
     if (scriptEngine != 0)
     {
         currentFieldName = tableModel->getFieldName(index.column());
@@ -726,9 +724,10 @@ void Essence::saveOldValues()
 {
     // Сохраним старые значения полей записи
     oldValues.clear();
-    int row = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
     foreach (QString field, tableModel->getFieldsList())
-        oldValues.insert(field.toUpper(), tableModel->record(row).value(field));
+    {
+        oldValues.insert(field.toUpper(), getValue(field));
+    }
 }
 
 

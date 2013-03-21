@@ -120,24 +120,25 @@ void GUIFactory::show() {
 
 int GUIFactory::showError(QString errorText) {
     QErrorMessage msgBox;
-    msgBox.showMessage(errorText);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
+    msgBox.showMessage(errorText);
     msgBox.exec();
     return 0;
 }
 
 int GUIFactory::showCriticalError(QString errorText) {
     QMessageBox msgBox;
+    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Критическая ошибка!"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText(errorText);
-    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.exec();
     return 0;
 }
 
 int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
     QMessageBox msgBox;
+    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Внимание!"));
     msgBox.setText(message);
     if (question.size() > 0) {          // Если пользователю задан вопрос, то предусмотреть варианты ответа

@@ -152,18 +152,6 @@ void Document::saveChanges()
     int row = form->getCurrentIndex().row();
 
     // Начнем транзакцию
-    if (freePrv > 0 && row > 0)
-    {   // Если существует "свободная" проводка, то сохраним изменения и в ней
-        for (int i = 0; i < tableModel->record().count(); i++)
-        {
-            QString fieldName = tableModel->record().fieldName(i);
-            if (getValue(fieldName, 0) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-            {
-                tableModel->submit(tableModel->index(0, i));
-            }
-        }
-    }
-
     // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
     for (int i = 0; i < tableModel->record().count(); i++)
     {
@@ -174,12 +162,29 @@ void Document::saveChanges()
         }
     }
 
+    if (freePrv > 0)
+    {   // Если существует "свободная" проводка, то сохраним изменения и в ней
+        int freePrvRow = findFreePrv();
+        if (freePrvRow != row)
+        {
+            for (int i = 0; i < tableModel->record().count(); i++)
+            {
+                QString fieldName = tableModel->record().fieldName(i);
+                if (getValue(fieldName, freePrvRow) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                {
+                    tableModel->submit(tableModel->index(freePrvRow, i));
+                }
+            }
+        }
+    }
+
     calcItog();
 
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
         // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
         selectCurrentRow();
+        saveOldValues();
     }
     else
     {   // Во время сохранения результатов произошла ошибка
@@ -188,7 +193,7 @@ void Document::saveChanges()
 }
 
 
-void Document::calcItog()
+void Document::calcItog(bool forceSubmit)
 {
     // сохраним те переменные, которые использовались в скриптах
     foreach (QString varName, variables.keys())
@@ -217,9 +222,14 @@ void Document::calcItog()
         }
     }
 
-    parent->setForceSubmit(true);       // Итог документа будем обновлять принудительно, иначе после удаления последней строки в документе
-    parent->setValue("сумма", itog);    // итог может быть не корректным
-    parent->setForceSubmit(false);
+    if (forceSubmit)
+    {
+        parent->setForceSubmit(true);       // Итог документа будем обновлять принудительно, иначе после удаления последней строки в документе
+        parent->setValue("сумма", itog);    // итог может быть не корректным
+        parent->setForceSubmit(false);
+    }
+    else
+        parent->setValue("сумма", itog);
 
     showItog();
 }
@@ -258,6 +268,7 @@ bool Document::add()
         form->selectRow(tableModel->rowCount() - 1);            // Установить фокус таблицы на последнюю, только что добавленную, запись
 
         saveOldValues();
+
         scriptEngine->eventAfterAddString();
 
         // Сохраним данные, которые изменились после работы события "EventAfterAddString"
@@ -313,7 +324,7 @@ bool Document::remove() {
             db->removeDocStr(docId, strNum);
             query();
             scriptEngine->eventAfterCalculate();
-            calcItog();
+            calcItog(true);     // Принудительно обновим итог при удалении строки
             return true;
         }
     }
@@ -389,7 +400,7 @@ void Document::setValue(QString name, QVariant value, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
         {
-            Essence::setValue(name, value, findFreePrv(operNum));
+            Essence::setValue(name, value, findFreePrv());
         }
         else
             Essence::setValue(name, value, row);
@@ -407,16 +418,16 @@ QVariant Document::getValue(QString name, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
         {
-            return Essence::getValue(name, findFreePrv(operNum));
+            return Essence::getValue(name, findFreePrv());
         }
     }
     return Essence::getValue(name, row);
 }
 
 
-int Document::findFreePrv(int operNum)
+int Document::findFreePrv()
 {
-    QString idFieldName = QString("P%1__%2").arg(operNum).arg(db->getObjectName("проводки.код"));
+    QString idFieldName = QString("P%1__%2").arg(freePrv).arg(db->getObjectName("проводки.код"));
     for (int row = 0; row < tableModel->rowCount(); row++)
     {
         if (Essence::getValue(idFieldName, row).toInt() > 0)
@@ -432,9 +443,12 @@ void Document::saveOldValues()
     if (freePrv > 0)
     {  // Если есть "свободная" проводка
 
+        int freePrvRow = findFreePrv();
         oldValues0.clear();
         foreach (QString field, tableModel->getFieldsList())
-            oldValues0.insert(field.toUpper(), tableModel->record(0).value(field));
+        {
+            oldValues0.insert(field.toUpper(), getValue(field, freePrvRow));
+        }
     }
 }
 
@@ -700,7 +714,6 @@ bool Document::showNextDict()
                     {       // Если в выбранном справочнике нет записей
                         break;
                     }
-                    prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
                     hideOtherLinkedDicts(dict);     // Скроем все связанные с этим справочником другие справочники и установим для них правильные текущие идентификаторы
                 }
                 else
@@ -709,6 +722,7 @@ bool Document::showNextDict()
                     break;      // Пользователь отказался от дальнейшей работы со справочниками
                 }
             }
+            prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
         }
         dictName = topersList.at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
         if (dictName.size() > 0 && dicts->contains(dictName))
@@ -724,7 +738,6 @@ bool Document::showNextDict()
                     {       // Если в выбранном справочнике нет записей
                         break;
                     }
-                    prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
                     hideOtherLinkedDicts(dict);     // Скроем все связанные с этим справочником другие справочники и установим для них правильные текущие идентификаторы
                 }
                 else
@@ -733,6 +746,7 @@ bool Document::showNextDict()
                     break;      // Пользователь отказался от дальнейшей работы со справочниками
                 }
             }
+            prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
         }
     }
     return anyShown;
@@ -754,7 +768,8 @@ void Document::hideOtherLinkedDicts(Dictionary* dict)
         if (dName == dict->getPrototypeName())        // Если справочники называются по-разному, но являются прототипами
         {
             Dictionary* d = dicts->value(dName);
-            d->setMustShow(false);
+            if (d != dict)                              // Исходный справочник трогать нельзя
+                d->setMustShow(false);
         }
     }
     // Если это набор или прототип является набором, то не будем показывать связанные справочники
