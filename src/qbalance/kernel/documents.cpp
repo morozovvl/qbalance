@@ -86,7 +86,7 @@ bool Documents::remove() {
         }
     }
     else
-        showError(QString(QObject::trUtf8("Запрещено удалять документы пользователю %2")).arg(TApplication::exemplar()->getLogin()));
+        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять документы пользователю %2")).arg(app->getLogin()));
     return false;
 }
 
@@ -132,9 +132,9 @@ bool Documents::open() {
             return true;
         }
     }
-    showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(
+    app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(
                   formTitle,
-                  TApplication::exemplar()->getLogin()));
+                  app->getLogin()));
     return false;
 }
 

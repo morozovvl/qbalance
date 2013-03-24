@@ -119,7 +119,6 @@ public:
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
 
-public slots:
     void showError(QString);
     void showCriticalError(QString);
 

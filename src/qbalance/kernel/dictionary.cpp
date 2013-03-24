@@ -71,9 +71,9 @@ bool Dictionary::add()
 {
     if (!lInsertable)
     {
-        showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
-                      TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
-                      TApplication::exemplar()->getLogin()));
+        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
+                      app->getDictionaries()->getDictionaryTitle(tableName),
+                      app->getLogin()));
         return false;
     }
     QMap<QString, QVariant> values;
@@ -155,9 +155,9 @@ bool Dictionary::remove()
         }
     }
     else
-        showError(QString(QObject::trUtf8("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
-            TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName),
-            TApplication::exemplar()->getLogin()));
+        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
+            app->getDictionaries()->getDictionaryTitle(tableName),
+            app->getLogin()));
     return false;
 }
 
@@ -264,7 +264,7 @@ bool Dictionary::open(int deep)
         initFormEvent();
         return true;
     }
-    showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
+    app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
     return false;
 }
 

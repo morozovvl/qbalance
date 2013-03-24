@@ -120,7 +120,7 @@ void GUIFactory::show() {
 
 int GUIFactory::showError(QString errorText) {
     QErrorMessage msgBox;
-    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
+    msgBox.setParent(TApplication::exemplar()->activeWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
     msgBox.exec();
     return 0;

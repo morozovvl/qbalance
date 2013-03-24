@@ -60,7 +60,6 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     scriptEngine = 0;
     scriptFileName =  tableName + ".qs";
     scriptEngineEnabled = true;                 // По умолчанию разрешена загрузка скриптового движка
-    connect(this, SIGNAL(showError(QString)), app, SLOT(showError(QString)));
     photoPath = "";
     photoIdField = "";
     photoEnabled = false;
@@ -92,7 +91,10 @@ bool Essence::calculate(const QModelIndex &index)
         scriptEngine->eventCalcTable();
         scriptEngine->eventAfterCalculate();
         if (scriptEngine->getErrorMessage().size() > 0)
+        {
             app->showError(scriptEngine->getErrorMessage());
+            scriptEngine->setErrorMessage("");
+        }
         if (!scriptEngine->getScriptResult())
         {
             return false;
@@ -365,7 +367,7 @@ int Essence::exec()
     }
     if (opened && form != 0)
     {
-        saveOldValues();
+//        saveOldValues();
         return form->exec();
     }
     return 0;
@@ -376,7 +378,7 @@ void Essence::show()
     if (!opened) open();
     if (opened && form != 0)
     {
-        saveOldValues();
+//        saveOldValues();
         form->show();
         prepareSelectCurrentRowCommand();   // Подготовим команду для обновления строк
     }
@@ -409,7 +411,7 @@ bool Essence::open()
         {
             if (!scriptEngine->open(scriptFileName) || !scriptEngine->evaluate())
             {
-                showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
+                app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
                 return false;
             }
             initFormEvent();
@@ -570,12 +572,13 @@ void Essence::selectCurrentRow()
     preparedSelectCurrentRow.exec();
     if (preparedSelectCurrentRow.first())
     {
+        QModelIndex index = form->getCurrentIndex();
         for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
         {
             QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
             QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-            if (value != getValue(fieldName))
-                setValue(fieldName, value);
+            if (value != tableModel->record(index.row()).value(fieldName))
+                tableModel->setData(index.sibling(index.row(), i), value);
         }
     }
 }

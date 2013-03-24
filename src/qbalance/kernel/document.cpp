@@ -147,7 +147,7 @@ bool Document::calculate(const QModelIndex& index)
 }
 
 
-void Document::saveChanges()
+void Document::saveChanges(bool forceSubmit)
 {
     int row = form->getCurrentIndex().row();
 
@@ -165,20 +165,17 @@ void Document::saveChanges()
     if (freePrv > 0)
     {   // Если существует "свободная" проводка, то сохраним изменения и в ней
         int freePrvRow = findFreePrv();
-        if (freePrvRow != row)
+        for (int i = 0; i < tableModel->record().count(); i++)
         {
-            for (int i = 0; i < tableModel->record().count(); i++)
+            QString fieldName = tableModel->record().fieldName(i);
+            if (getValue(fieldName, freePrvRow) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
             {
-                QString fieldName = tableModel->record().fieldName(i);
-                if (getValue(fieldName, freePrvRow) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                {
-                    tableModel->submit(tableModel->index(freePrvRow, i));
-                }
+                tableModel->submit(tableModel->index(freePrvRow, i));
             }
         }
     }
 
-    calcItog();
+    calcItog(forceSubmit);
 
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
@@ -316,20 +313,20 @@ int Document::addFromQuery(int id)
 bool Document::remove() {
     if (lDeleteable) {
         int strNum;
-        if (topersList.at(0).attributes && topersList.at(0).number == 0)
-            strNum = getValue(db->getObjectName("атрибуты.стр")).toInt();
-        else
+//        if (topersList.at(0).attributes && topersList.at(0).number == 0)
+//            strNum = getValue(db->getObjectName("атрибуты.стр")).toInt();
+//        else
             strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove()) {
             db->removeDocStr(docId, strNum);
             query();
             scriptEngine->eventAfterCalculate();
-            calcItog(true);     // Принудительно обновим итог при удалении строки
+            saveChanges(true);     // Принудительно обновим итог при удалении строки
             return true;
         }
     }
     else
-        showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(TApplication::exemplar()->getLogin()));
+        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(app->getLogin()));
     return false;
 }
 

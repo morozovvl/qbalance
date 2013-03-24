@@ -122,7 +122,6 @@ public:
     virtual void        restoreOldValues();
 
 signals:
-    void                showError(const QString &);
     void                photoLoaded();
 
 

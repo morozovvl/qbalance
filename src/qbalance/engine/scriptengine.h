@@ -45,6 +45,7 @@ public:
     bool evaluate();
     QScriptValue evaluate (const QString &, const QString & = QString(), int = 1);
     QString getErrorMessage() { return errorMessage; }
+    void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     bool getScriptResult() { return scriptResult; }
 // События
     virtual QList<EventFunction>* getEventsList();

@@ -75,7 +75,7 @@ public:
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void saveVariable(QString, QVariant);
     Q_INVOKABLE QVariant restoreVariable(QString);
-    Q_INVOKABLE void saveChanges();
+    Q_INVOKABLE void saveChanges(bool = false);
     void saveVariablesToDB();
     void restoreVariablesFromDB();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
