@@ -95,6 +95,7 @@ bool Dictionaries::addSaldo(QString acc, int deep) {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
+            saldo->setPhotoEnabled(true);
             return true;
         }
     }

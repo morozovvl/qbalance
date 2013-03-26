@@ -47,6 +47,7 @@ MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableMode
     setEditStrategy(QSqlTableModel::OnManualSubmit);
     app = TApplication::exemplar();
     db = app->getDBFactory();
+    selectCommand = "";
 
 //    setReadOnly(true);
 }
@@ -217,6 +218,14 @@ void MySqlRelationalTableModel::setSelectStatement(QString string)
 
 QString MySqlRelationalTableModel::selectStatement() const
 {
+    QString command;
+    command = prepareSelectStatement();
+    return command;
+}
+
+
+QString MySqlRelationalTableModel::prepareSelectStatement() const
+{
     QString query;
     if (selectCommand.size() > 0)
         query = selectCommand;
@@ -236,7 +245,6 @@ QString MySqlRelationalTableModel::selectStatement() const
     }
     if (parent != NULL)
         query = parent->transformSelectStatement(query);
-
     return query;
 }
 

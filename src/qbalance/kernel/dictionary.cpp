@@ -94,7 +94,7 @@ bool Dictionary::add()
                         if (searchParameters[i].value.toString().size() > 0)
                         {
                             Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
-                            dict->query(QString("%1='%2'").arg(nameFieldName).arg(searchParameters[i].value.toString()));
+                            dict->query(QString("trim(%1)='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(searchParameters[i].value.toString()));
                             if (dict->getTableModel()->rowCount() == 1)
                             {
                                 // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
@@ -321,6 +321,7 @@ void Dictionary::query(QString defaultFilter)
         else
             resFilter = filter;
     }
+    tableModel->setSelectStatement();
     Essence::query(resFilter);
 }
 

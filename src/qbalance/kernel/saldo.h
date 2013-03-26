@@ -29,7 +29,8 @@ public:
     virtual QString transformSelectStatement(QString);
     Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
     void setQuan(bool q) { quan = q; }
-    Q_INVOKABLE virtual bool open(int = 0);
+    virtual void setTableModel();
+
 private:
     QString account;
     QString dictionaryName;

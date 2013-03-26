@@ -125,6 +125,7 @@ Document::Document(int oper, Documents* par): Essence()
     lUpdateable = true;
 }
 
+
 Document::~Document()
 {
 }
@@ -312,11 +313,7 @@ int Document::addFromQuery(int id)
 
 bool Document::remove() {
     if (lDeleteable) {
-        int strNum;
-//        if (topersList.at(0).attributes && topersList.at(0).number == 0)
-//            strNum = getValue(db->getObjectName("атрибуты.стр")).toInt();
-//        else
-            strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
+        int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove()) {
             db->removeDocStr(docId, strNum);
             query();
@@ -622,23 +619,23 @@ QString Document::transformSelectStatement(QString string)
 {   // Модифицирует команду SELECT... заменяя пустую секцию WHERE реальным фильтром с номером текущего документа
     // Вызывается перед каждым запросом содержимого табличной части документа
     QString whereClause;
-    if (string.contains(" WHERE p"))
+    if (string.contains(" WHERE p)"))
     {
-        whereClause = QString(" WHERE p%3.%4=%1 AND p%3.%5=%2 AND p%3.%6=%3").arg(docId)
+        whereClause = QString(" WHERE p%3.%4=%1 AND p%3.%5=%2 AND p%3.%6=%3)").arg(docId)
                                                                              .arg(operNumber)
                                                                              .arg(prv1)
                                                                              .arg(db->getObjectNameCom("проводки.доккод"))
                                                                              .arg(db->getObjectNameCom("проводки.опер"))
                                                                              .arg(db->getObjectNameCom("проводки.номеропер"));
-        string.replace(" WHERE p", whereClause);
+        string.replace(" WHERE p)", whereClause);
     }
     else
     {
-        if (string.contains(" WHERE a"))
+        if (string.contains(" WHERE a)"))
         {
-            whereClause = QString(" WHERE a.%1=%2").arg(db->getObjectNameCom("проводки.доккод"))
+            whereClause = QString(" WHERE a.%1=%2)").arg(db->getObjectNameCom("проводки.доккод"))
                                                    .arg(docId);
-            string.replace(" WHERE a", whereClause);
+            string.replace(" WHERE a)", whereClause);
         }
     }
     return string;

@@ -303,6 +303,7 @@ void FormGrid::show()
             readColumnsSettings();
         }
         grdTable->setReadOnly(parent->isReadOnly());
+        showPhoto();
     }
     QModelIndex index = getCurrentIndex();
     Form::show();
@@ -385,15 +386,20 @@ void FormGrid::showPhoto()
 {
     if (picture != 0 && parent != 0)
     {
-        QString photoFileName = parent->getPhotoFile(); // Получим имя фотографии
-        if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
-        {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
-            if (QDir().exists(photoFileName))
-                picture->setVisible(true);              // то включим просмотр фотографий
-            else
-                photoFileName = "";
+        if (parent->getTableModel()->rowCount() > 0)
+        {
+            QString photoFileName = parent->getPhotoFile(); // Получим имя фотографии
+            if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
+            {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
+                if (QDir().exists(photoFileName))
+                    picture->setVisible(true);              // то включим просмотр фотографий
+                else
+                    photoFileName = "";
+            }
+            picture->show(photoFileName);
         }
-        picture->show(photoFileName);
+        else
+            picture->setVisible(false);
     }
 }
 
@@ -581,7 +587,7 @@ void FormGrid::readColumnsSettings()
                 if (values.contains(name))
                 {
                     int width = values.value(name, 50);
-                    width = width == 0 ? 20 : width;
+                    width = width == 0 ? 50 : width;
                     grdTable->setColumnWidth(i, width);
                 }
                 else

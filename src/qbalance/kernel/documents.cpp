@@ -157,3 +157,17 @@ void Documents::setForm() {
 
     form->open(parentForm, this);
 }
+
+
+void Documents::prepareSelectCurrentRowCommand()
+{
+    preparedSelectCurrentRow.clear();
+
+    // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
+    QString command = tableModel->getSelectStatement();
+
+    command = command.left(command.indexOf(" WHERE "));
+    command += QString(" WHERE %1.%2=:value").arg(getTableName()).arg(getIdFieldName());
+
+    preparedSelectCurrentRow.prepare(command);
+}

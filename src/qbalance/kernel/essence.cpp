@@ -119,12 +119,10 @@ QVariant Essence::getValue(QString n, int row)
             int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
             result = tableModel->record(r).value(name);
         }
-        // ВНИМАНИЕ!!!
-        // Не могу понять, почему тип поля "p1__кол" возвращается как QString. Должен быть double
-        // Типы полей "p2__кол" и "p3__кол" возвращаются нормальные - double
-        // пока не разобрался, почему это так - временно делаю следующее преобразование
-        if (name == "P1__КОЛ")
-            result.convert(QVariant::Double);
+        if (!result.isValid())
+            result = 0;
+
+        result.convert(tableModel->record().field(name).type());
 
         // Округлим значение числового поля до точности как и в БД
         if (result.type() == QVariant::Double)

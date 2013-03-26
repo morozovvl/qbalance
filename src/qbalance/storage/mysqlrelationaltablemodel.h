@@ -68,6 +68,7 @@ public:
     virtual void setSort(int, Qt::SortOrder);
     void setPrepared(bool p = true) { isPrepared = p; }
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
+    QString prepareSelectStatement() const;
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
     Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
 

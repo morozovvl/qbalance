@@ -115,8 +115,6 @@ void TableView::setTableModel(MySqlRelationalTableModel* model)
         QTableView::setModel(tableModel);
         if (parent != 0)
         {
-            // Установим заголовки и делегаты полей
-//            setColumnsHeaders();
             connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
         }
     }

@@ -43,6 +43,8 @@ public:
 
 protected:
     virtual void setForm();
+    virtual void        prepareSelectCurrentRowCommand();
+
 private:
     int operNumber;
     Document* currentDocument;
