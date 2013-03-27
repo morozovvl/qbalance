@@ -47,45 +47,60 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
 }
 
 
+bool Saldo::open(int deep)
+{
+    if (Dictionary::open(deep))
+    {
+        fieldList = getFieldsList();
+        int columnCount = fieldList.count();
+
+        QString salTableName = db->getObjectName("сальдо");
+        QList<FieldType> saldoFields;
+        db->getColumnsProperties(&saldoFields, salTableName);
+
+        tableModel->setRelation(0, QSqlRelation(salTableName, idFieldName, idFieldName));
+
+        for (int i = 0; i < saldoFields.count(); i++)
+        {
+            if ((QString(saldoFields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+                (QString(saldoFields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+                (QString(saldoFields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+            {
+                QString columnName = salTableName.toUpper() + "__" + saldoFields.at(i).name.toUpper();
+                tableModel->insertColumns(columnCount, 1);
+                tableModel->setRelation(columnCount, 0, QSqlRelation(salTableName, idFieldName, saldoFields.at(i).name.toUpper()));
+                tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(columnName));
+                db->addColumnProperties(&columnsProperties, salTableName, columnName, saldoFields.at(i).type, saldoFields.at(i).length, saldoFields.at(i).precision, saldoFields.at(i).readOnly, saldoFields.at(i).constReadOnly);
+                columnCount++;
+            }
+        }
+
+        // Установим порядок сортировки и стратегию сохранения данных на сервере
+//        tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
+        db->getColumnsRestrictions(tableName, &columnsProperties);
+        initForm();
+        initFormEvent();
+        return true;
+    }
+    app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(formTitle, TApplication::exemplar()->getLogin()));
+    return false;
+
+}
+
+
 QString Saldo::transformSelectStatement(QString statement) {
     QString command = statement;
-    if (!command.contains(", сальдо WHERE"))
-    {
-        QString appendString = QString(" %1 сальдо.%2='%3' AND сальдо.%4=%5.%6").arg(command.contains("WHERE", Qt::CaseInsensitive)?"AND":"WHERE")
-                                                                                  .arg(db->getObjectName("счет.счет"))
-                                                                                  .arg(account)
-                                                                                  .arg(db->getObjectName("счет.код"))
-                                                                                  .arg(dictionaryName)
-                                                                                  .arg(db->getObjectName(dictionaryName + ".код"));
-        if (quan)
-            appendString.append(QString(" AND (сальдо.%1<>0 OR сальдо.%2<>0)").arg(db->getObjectName("сальдо.конкол"))
-                                                                              .arg(db->getObjectName("сальдо.консальдо")));
-
-        if (command.contains("ORDER BY", Qt::CaseInsensitive))
-            command.replace(QString("ORDER BY"), appendString + " ORDER BY", Qt::CaseInsensitive);
-        else
-            command.append(appendString);
-        command.replace(" FROM", QString(", сальдо.%1, сальдо.%2, сальдо.%3 FROM").arg(db->getObjectName("сальдо.конкол"))
-                                                                                  .arg(db->getObjectName("сальдо.концена"))
-                                                                                  .arg(db->getObjectName("сальдо.консальдо")), Qt::CaseInsensitive);
-        command.replace(" WHERE", ", сальдо WHERE", Qt::CaseInsensitive);
-    }
+    QString appendString = QString(" %1 сальдо.%2='%3'").arg(command.contains("WHERE", Qt::CaseInsensitive)?"AND":"WHERE")
+                                                                            .arg(db->getObjectName("счет.счет"))
+                                                                            .arg(account);
+    if (quan)
+        appendString.append(QString(" AND (сальдо.%1<>0 OR сальдо.%2<>0)").arg(db->getObjectName("сальдо.конкол"))
+                                                                         .arg(db->getObjectName("сальдо.консальдо")));
+    if (command.contains("ORDER BY", Qt::CaseInsensitive))
+        command.replace(QString("ORDER BY"), appendString + " ORDER BY", Qt::CaseInsensitive);
+    else
+        command.append(appendString);
     return command;
 }
 
-void Saldo::setTableModel()
-{
-    Dictionary::setTableModel();
-    QList<FieldType> saldoFields;
-    QString salTableName = db->getObjectName("сальдо");
-    db->getColumnsProperties(&saldoFields, salTableName);
-    for (int i = 0; i < saldoFields.count(); i++)
-    {
-        if ((QString(saldoFields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
-            (QString(saldoFields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
-            (QString(saldoFields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
-        {
-            db->addColumnProperties(&columnsProperties, salTableName, saldoFields.at(i).name, saldoFields.at(i).type, saldoFields.at(i).length, saldoFields.at(i).precision, saldoFields.at(i).readOnly, saldoFields.at(i).constReadOnly);
-        }
-    }
-}
+

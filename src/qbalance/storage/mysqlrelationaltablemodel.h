@@ -62,7 +62,6 @@ public:
     QString orderByClause() const;
     QString escapedRelationField(const QString &, const QString &) const;
     virtual QString selectStatement() const;
-    void setSelectClause(QString string = "");
     void setSelectStatement(QString string = "");
     void setSortClause(QString sort) { sortClause = sort; }
     virtual void setSort(int, Qt::SortOrder);
@@ -82,7 +81,7 @@ public:
     virtual void setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn);
 
 // Прочие функции
-    QStringList getFieldsList();
+    QStringList getFieldsList() const;
     QString getFieldName(int i) { return record().fieldName(i); }
 
 
@@ -95,7 +94,6 @@ private:
     QMap<int, QString>      tablesAliases;
 
 // Свойства для обслуживания SQL запросов
-    QString                 selectClause;
     QString                 selectCommand;
     QString                 sortClause;
     mutable QString         preparedStatementName;
@@ -106,7 +104,6 @@ private:
     QMap<int, UpdateInfoStruct>     updateInfo;
 
 // Прочие свойства
-    QStringList             fieldsList;
     QString                 tableAlias;
     bool                    readOnly;
     TApplication*           app;

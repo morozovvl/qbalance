@@ -77,9 +77,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
         if (fieldName == fldName)
             return insertedColumns[i];
     }
-    if (fieldsList.size() > 0 && fieldsList.contains(fieldName))
-        return fieldsList.indexOf(fieldName);
-    return -1;
+    return getFieldsList().indexOf(fieldName);
 }
 
 
@@ -122,24 +120,16 @@ bool MySqlRelationalTableModel::updateRowInTable(int row, const QSqlRecord &valu
 }
 
 
-QStringList MySqlRelationalTableModel::getFieldsList()
+QStringList MySqlRelationalTableModel::getFieldsList() const
 {
-    if (fieldsList.count() == 0)
+    QStringList fields;
+    for (int i = 0; i < record().count(); i++)
     {
-        for (int i = 0; i < record().count(); i++)
-        {
-            fieldsList << record().fieldName(i);
-        }
+        fields << record().fieldName(i);
     }
-    return fieldsList;
+    return fields;
 }
 
-/*
-void MySqlRelationalTableModel::setFieldsList(QStringList list) {
-    if (insertedColumns.size() == 0)                // Если реляции уже заданы, то нельзя переназначать список полей во избежание неправильной генерации SQL команды
-        fieldsList = list;
-}
-*/
 
 void MySqlRelationalTableModel::setRelation(int column, const QSqlRelation &relation)
 {
@@ -201,15 +191,6 @@ QString MySqlRelationalTableModel::orderByClause() const
 }
 
 
-void MySqlRelationalTableModel::setSelectClause(QString string)
-{
-    if (string.size() == 0)
-        selectClause = getSelectClause();
-    else
-        selectClause = string;
-}
-
-
 void MySqlRelationalTableModel::setSelectStatement(QString string)
 {
     selectCommand = string;
@@ -231,10 +212,7 @@ QString MySqlRelationalTableModel::prepareSelectStatement() const
         query = selectCommand;
     else
     {
-        if (selectClause.size() > 0)            // Если уже имеется готовый текст запроса
-            query = selectClause;
-        else                                    // Иначе создадим его заново
-            query = getSelectClause();
+        query = getSelectClause();
         if (query.size() > 0)
         {
             if (!filter().isEmpty())

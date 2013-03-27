@@ -133,7 +133,7 @@ bool TableView::setColumnsHeaders()
         if (fields->count() > 0)
         {
             // Сначала скроем все столбцы
-            for (int i = 0; i < tableModel->columnCount(); i++)
+            for (int i = 0; i < header->count(); i++)
             {
                 int visualIndex = header->visualIndex(i);
                 header->hideSection(visualIndex);
