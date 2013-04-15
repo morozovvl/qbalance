@@ -57,6 +57,9 @@ void Table::query(QString filter)
 bool Table::open()
 {
     setTableModel();
+    tableModel->setTestSelect(true);
+    query();
+    tableModel->setTestSelect(false);
     if (tableModel->lastError().type() == QSqlError::NoError)
     {
         opened = true;
@@ -80,9 +83,7 @@ void Table::close()
 
 void Table::setTableModel()
 {
-    tableModel = new MySqlRelationalTableModel();
-    tableModel->setParent(this);
-    tableModel->setTable(tableName);
+    tableModel = new MySqlRelationalTableModel(tableName, this);
     db->getColumnsProperties(&columnsProperties, tableName);
 }
 

@@ -44,6 +44,7 @@ public:
     Q_INVOKABLE Essence* getParent() { return parent; }
     Q_INVOKABLE bool selected() { return lSelected; }
     void appendToolTip(QString name, QString value);
+    virtual void keyPressEvent(QKeyEvent*);
 
 //    virtual void createUi();
     void setButtonsSignals();
@@ -56,8 +57,8 @@ public slots:
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void hide();
-    Q_INVOKABLE virtual void cmdOk();
-    Q_INVOKABLE virtual void cmdCancel();
+    virtual void cmdOk();
+    virtual void cmdCancel();
     virtual void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
     Q_INVOKABLE virtual void gotoCenter();
 
@@ -102,6 +103,7 @@ protected:
 private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;
+    void                    checkVisibility();
 };
 
 #endif

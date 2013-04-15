@@ -82,7 +82,8 @@ SOURCES += main.cpp \
     gui/mydateitemdelegate.cpp \
 #    report/oounoreportengine.cpp \
 #    openoffice/openoffice.cpp \
-    report/ooxmlreportengine.cpp
+    report/ooxmlreportengine.cpp \
+    gui/mymdisubwindow.cpp
 #    kernel/globalparameters.cpp
 #    report/openrptreportengine.cpp
 HEADERS += kernel/app.h \
@@ -146,7 +147,8 @@ HEADERS += kernel/app.h \
     gui/mydateitemdelegate.h \
 #    report/oounoreportengine.h \
 #    openoffice/openoffice.h \
-    report/ooxmlreportengine.h
+    report/ooxmlreportengine.h \
+    gui/mymdisubwindow.h
 #    kernel/globalparameters.h
 #    report/openrptreportengine.h \
 #    ./../openrpt/openrpt/report/report.h \
@@ -196,6 +198,8 @@ OTHER_FILES += \
     ../qtbindingsbase.pri \
     ../qtscriptgenerator.bat \
     license.txt
+
+
 
 
 

@@ -43,7 +43,7 @@ public:
     void setCurrentIndex(QModelIndex index);
     void restoreCurrentIndex(QModelIndex);
     void setCalculateColumn(int column) { calculateColumn = column; }
-    void selectRow(int);
+    void selectRow(int = 0);
     virtual void setGridFocus();
 
     Q_INVOKABLE QPushButton* getButtonAdd() { return buttonAdd; }
@@ -53,6 +53,7 @@ public:
     Q_INVOKABLE QPushButton* getButtonPrint() { return buttonPrint; }
     Q_INVOKABLE QPushButton* getButtonLoad() { return buttonLoad; }
     Q_INVOKABLE QPushButton* getButtonSave() { return buttonSave; }
+    virtual void keyPressEvent(QKeyEvent*);
 
 public slots:
     virtual void calculate();
@@ -82,7 +83,6 @@ protected:
     QPushButton*                buttonLoad;
     QPushButton*                buttonSave;
 
-    void showEvent(QShowEvent*);
     virtual void createForm(QString, QWidget* pwgt = 0);
     virtual void writeSettings();
     void    readColumnsSettings();

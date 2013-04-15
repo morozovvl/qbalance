@@ -1359,6 +1359,8 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("атрибуты.код", "код");
     ObjectNames.insert("атрибуты.доккод", "доккод");
     ObjectNames.insert("атрибуты.стр", "стр");
+    ObjectNames.insert("докатрибуты", "докатрибуты");
+    ObjectNames.insert("докатрибуты.код", "код");
 }
 
 
@@ -1627,6 +1629,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.itog = toper.record().value("итоги").toString();
         toperT.freePrv = toper.record().value("независим").toBool();
         toperT.attributes = toper.record().value("атрибуты").toBool();
+        toperT.docattributes = toper.record().value("докатрибуты").toBool();
         topersList->append(toperT);
         toper.next();
     }
@@ -1912,6 +1915,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
             if (!topersList->at(i).dbConst)
             {   // Если счет не является постоянным, т.е. он фигурирует в табличной части
                 dictName = topersList->at(i).dbDict.toLower();
+
                 if (dictName.size() > 0 && !dictsNames.contains(dictName))
                 {   // Если в по дебетовому счету указан какой-либо справочник и этот справочник мы еще не обрабатывали
                     dict = dictionaries->getDictionary(dictName);
@@ -1937,7 +1941,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                         setSelectClause = QString("SELECT \"%1\".%2").arg(dictName).arg(getObjectNameCom(dictName + ".код")).append(setSelectClause);
                         setFromClause = QString(" FROM \"%1\"").arg(dictName).append(setFromClause);
                         setSelectClause.append(setFromClause);
-                        fromClause.append(QString(" LEFT OUTER JOIN (%1) \"%2\" ON p.P%3__%4=\"%2\".%5").arg(setSelectClause).arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод").toUpper()).arg(getObjectNameCom(dictName + ".код")));
+                        fromClause.append(QString(" LEFT OUTER JOIN (%1) \"%2\" ON p.\"P%3__%4\"=\"%2\".%5").arg(setSelectClause).arg(dictName).arg(prv).arg(getObjectName("проводки.дбкод").toUpper()).arg(getObjectNameCom(dictName + ".код")));
                     }
                     else
                     {  // Это обычный справочник
@@ -2227,7 +2231,8 @@ void DBFactory::setConfig(QString config, QString name, QString value)
 
 void DBFactory::appendCommand(QString command)
 {
-    commands.append(command);
+    if (!commands.contains(command))
+        commands.append(command);
 }
 
 

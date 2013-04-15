@@ -38,10 +38,13 @@ void Dialog::setApp(TApplication* a)
 }
 
 
-void Dialog::keyPressEvent(QKeyEvent *e)
+void Dialog::keyPressEvent(QKeyEvent *event)
 {
-    emit keyPressed(e);
-    QDialog::keyPressEvent(e);
+    emit keyPressed(event);
+
+    form->keyPressEvent(event);
+    if (!event->isAccepted())
+        QDialog::keyPressEvent(event);
 }
 
 
@@ -76,7 +79,7 @@ void Dialog::hide()
 }
 
 
-QMdiSubWindow* Dialog::getSubWindow()
+MyMdiSubWindow* Dialog::getSubWindow()
 {
     if (app != 0 && !freeWindow)
     {
@@ -90,6 +93,9 @@ QMdiSubWindow* Dialog::getSubWindow()
 
 QWidget* Dialog::findChild(QString name)
 {
-    return QDialog::findChild<QWidget*>(name);
+    QWidget* widget = QDialog::findChild<QWidget*>(name);
+    if (widget == 0)
+        app->showError(QString(QObject::trUtf8("Не найден объект %1")).arg(name));
+    return widget;
 }
 

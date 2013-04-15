@@ -32,6 +32,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     operNumber = opNumber;
     tagName    = QString("СписокДокументов%1").arg(operNumber);
     QSqlRecord operProperties = db->getTopersProperties(operNumber);
+    db->getToperData(operNumber, &topersList);              // Получим список типовых операций
     formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString()).arg(QObject::trUtf8("Список документов"));
     subFormTitle = operProperties.value(db->getObjectName("имя")).toString().trimmed();
     lInsertable = operProperties.value("insertable").toBool();
@@ -99,14 +100,12 @@ void Documents::view() {
 
 void Documents::query(QString filter) {
     Q_UNUSED(filter)
-    Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6' ORDER BY %7, %8").arg(db->getObjectNameCom("документы.дата"))
-                                                                                                                       .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
-                                                                                                                       .arg(TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy"))
-                                                                                                                       .arg(db->getObjectNameCom("документы.авто"))
-                                                                                                                       .arg(db->getObjectNameCom("документы.опер"))
-                                                                                                                       .arg(QString::number(operNumber))
-                                                                                                                       .arg(db->getObjectNameCom("документы.дата"))
-                                                                                                                       .arg(db->getObjectNameCom("документы.код")));
+    Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
+                                                                                                       .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
+                                                                                                       .arg(TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy"))
+                                                                                                       .arg(db->getObjectNameCom("документы.авто"))
+                                                                                                       .arg(db->getObjectNameCom("документы.опер"))
+                                                                                                       .arg(QString::number(operNumber)));
 }
 
 
@@ -121,8 +120,10 @@ bool Documents::open() {
                 keyColumn = i;
             tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
         }
-        // Установим порядок сортировки и стратегию сохранения данных на сервере
-        tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
+        // Установим порядок сортировки
+        setSortClause(QString("%1, \"%2\".%3").arg(db->getObjectNameCom(tableName + ".дата"))
+                                          .arg(tableName)
+                                          .arg(db->getObjectNameCom(tableName + ".номер")));
 
         currentDocument = new Document(operNumber, this);
         if (currentDocument->open())
@@ -164,10 +165,32 @@ void Documents::prepareSelectCurrentRowCommand()
     preparedSelectCurrentRow.clear();
 
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
-    QString command = tableModel->getSelectStatement();
+    QString command = tableModel->selectStatement();
 
     command = command.left(command.indexOf(" WHERE "));
     command += QString(" WHERE %1.%2=:value").arg(getTableName()).arg(getIdFieldName());
 
     preparedSelectCurrentRow.prepare(command);
 }
+
+
+QString Documents::transformSelectStatement(QString string)
+{
+/*
+    if (topersList.at(0).docattributes)
+    {
+        if (!string.contains("INNER JOIN"))
+        {
+            string.replace(" FROM ", ", a.* FROM ");
+            string.replace(" WHERE ", QString(" LEFT OUTER JOIN \"%1%2\" a ON \"%3\".%4=a.%5 WHERE ").arg(db->getObjectName("докатрибуты"))
+                                                                                                      .arg(operNumber)
+                                                                                                      .arg(tableName)
+                                                                                                      .arg(db->getObjectNameCom(tableName + ".код"))
+                                                                                                      .arg(db->getObjectNameCom("докатрибуты.код")));
+        }
+    }
+*/
+    return string;
+}
+
+

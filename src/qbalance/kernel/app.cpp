@@ -140,6 +140,13 @@ bool TApplication::open() {
                     gui->getMainWindow()->showPeriod();
                     if (driverFR->open(applicationDirPath() + "/plugins/libdrvfr"))
                         driverFRisValid = true;
+                    // Загрузим константы
+                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
+                    if (constDict != 0)
+                    {
+                        constDict->setPhotoEnabled(false);
+                        constDict->query();
+                    }
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
                 }
@@ -321,4 +328,27 @@ void TApplication::showCriticalError(QString error)
 {
     gui->showCriticalError(error);
     debug("Error: " + error + "\n");
+}
+
+
+QVariant TApplication::getConst(QString valueName)
+{
+    QString constDictionaryName = db->getObjectName("константы");
+    QString constNameField = db->getObjectName(constDictionaryName + ".имя");
+    QString constValueField = db->getObjectName(constDictionaryName + ".значение");
+    QString valName = valueName.trimmed();
+
+    // Откроем справочник констант
+    Dictionary* dict = dictionaryList->getDictionary(constDictionaryName);
+    if (dict != 0)
+    {
+        MySqlRelationalTableModel* model = dict->getTableModel();
+        for (int i = 0; i < model->rowCount(); i++)
+        {
+            QSqlRecord rec = model->record(i);
+            if (QString().compare(rec.value(constNameField).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
+                return rec.value(constValueField);
+        }
+    }
+    return QVariant();
 }

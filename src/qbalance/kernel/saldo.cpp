@@ -28,7 +28,6 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
     dictionaryName = dictName.trimmed().toLower();
     tagName = "saldo" + cAcc;
     quan = false;
-    lIsSet = false;                              // Сальдо не может быть набором
     QSqlQuery accounts = db->getAccounts();
     accounts.first();
     while (accounts.isValid())
@@ -47,36 +46,12 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
 }
 
 
-bool Saldo::open(int deep)
+bool Saldo::open()
 {
-    if (Dictionary::open(deep))
+    if (Dictionary::open())
     {
-        fieldList = getFieldsList();
-        int columnCount = fieldList.count();
+        lIsSet = false;                              // Сальдо не может быть набором
 
-        QString salTableName = db->getObjectName("сальдо");
-        QList<FieldType> saldoFields;
-        db->getColumnsProperties(&saldoFields, salTableName);
-
-        tableModel->setRelation(0, QSqlRelation(salTableName, idFieldName, idFieldName));
-
-        for (int i = 0; i < saldoFields.count(); i++)
-        {
-            if ((QString(saldoFields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
-                (QString(saldoFields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
-                (QString(saldoFields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
-            {
-                QString columnName = salTableName.toUpper() + "__" + saldoFields.at(i).name.toUpper();
-                tableModel->insertColumns(columnCount, 1);
-                tableModel->setRelation(columnCount, 0, QSqlRelation(salTableName, idFieldName, saldoFields.at(i).name.toUpper()));
-                tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(columnName));
-                db->addColumnProperties(&columnsProperties, salTableName, columnName, saldoFields.at(i).type, saldoFields.at(i).length, saldoFields.at(i).precision, saldoFields.at(i).readOnly, saldoFields.at(i).constReadOnly);
-                columnCount++;
-            }
-        }
-
-        // Установим порядок сортировки и стратегию сохранения данных на сервере
-//        tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
         db->getColumnsRestrictions(tableName, &columnsProperties);
         initForm();
         initFormEvent();
@@ -85,6 +60,45 @@ bool Saldo::open(int deep)
     app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(formTitle, TApplication::exemplar()->getLogin()));
     return false;
 
+}
+
+
+void Saldo::setTableModel()
+{
+    Dictionary::setTableModel();
+
+    QString selectCommand = tableModel->getSelectStatement();
+
+    QString tableName = db->getObjectName("сальдо");
+    QList<FieldType> fields;
+    db->getColumnsProperties(&fields, tableName);
+
+    QString selectList;
+    FieldType fld;
+    for (int i = 0; i < fields.count(); i++)
+    {
+        fld = fields.at(i);
+        if ((QString(fields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+            (QString(fields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+            (QString(fields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+        {
+            QString column = QString("%1__%2").arg(fld.table).arg(fld.column).toUpper();
+            selectList.append(QString(", \"%1\".\"%2\" AS \"%3\"").arg(fld.table)
+                                                                  .arg(fld.name)
+                                                                  .arg(column));
+            fld.column = column;
+            fld.header = column;
+            columnsProperties.append(fld);
+        }
+    }
+    selectCommand.replace(" FROM", selectList + " FROM");
+    selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tableName)
+                                                                                                            .arg(db->getObjectName(dictionaryName + ".счет"))
+                                                                                                            .arg(account)
+                                                                                                            .arg(db->getObjectName(tableName + ".код"))
+                                                                                                            .arg(dictionaryName)
+                                                                                                            .arg(db->getObjectName(dictionaryName + ".код")));
+    tableModel->setSelectStatement(selectCommand);
 }
 
 

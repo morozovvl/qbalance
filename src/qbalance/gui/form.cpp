@@ -146,7 +146,7 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
     formWidget->setFreeWindow(!appendToMdi);
-
+    formWidget->setForm(this);
 }
 
 
@@ -159,8 +159,10 @@ void Form::cmdOk() {
 
 
 void Form::cmdCancel() {
-    lSelected = false;
     hide();
+    lSelected = false;
+    if (parent != 0)
+        parent->cmdCancel();
 }
 
 
@@ -170,6 +172,7 @@ int Form::exec() {
         if (parent != 0)
             parent->beforeShowFormEvent();
 
+        checkVisibility();
         formWidget->exec();
         return lSelected;
     }
@@ -185,8 +188,39 @@ void Form::show() {
         if (parent != 0)
             parent->beforeShowFormEvent();
 
+        checkVisibility();
         formWidget->show();
 
+    }
+}
+
+
+void Form::checkVisibility()
+{
+    // Проверим, не уползло ли окно за пределы видимости. Если оно за пределами видимости, то вернем его
+    if (formWidget->getSubWindow() != 0)
+    {
+        int x = formWidget->getSubWindow()->x();
+        int y = formWidget->getSubWindow()->y();
+        int w = formWidget->getSubWindow()->width();
+        int h = formWidget->getSubWindow()->height();
+        if (x >= app->getMainWindow()->centralWidget()->width())        // Если координата X уползла за пределы видимости
+        {
+            if (w > app->getMainWindow()->centralWidget()->width())     // Если ширина окна превышает ширину центрального виджета
+                w = app->getMainWindow()->centralWidget()->width();
+            x = (app->getMainWindow()->centralWidget()->width() - w) / 2;   // Разместим окно посередине
+            if (x < 0)
+                x = 0;
+        }
+        if (y >= app->getMainWindow()->centralWidget()->height())        // Если координата Y уползла за пределы видимости
+        {
+            if (h > app->getMainWindow()->centralWidget()->height())     // Если высота окна превышает высоту центрального виджета
+                h = app->getMainWindow()->centralWidget()->height();
+            y = (app->getMainWindow()->centralWidget()->height() - h) / 2;   // Разместим окно посередине
+            if (y < 0)
+                y = 0;
+        }
+        formWidget->getSubWindow()->setGeometry(x, y, w, h);
     }
 }
 
@@ -233,6 +267,37 @@ void Form::setButtonsSignals()
     {
         connect(button, SIGNAL(clicked()), SLOT(buttonPressedSignalSend()));
     }
+}
+
+
+void Form::keyPressEvent(QKeyEvent *event)
+{
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        switch (event->key())
+        {
+            case Qt::Key_Enter:
+                cmdOk();
+                break;
+            case Qt::Key_Return:
+                cmdOk();
+                break;
+            default:
+                return;
+        }
+    }
+    else
+    {
+        switch (event->key())
+        {
+            case Qt::Key_Escape:
+                cmdCancel();
+                break;
+            default:
+                return;
+        }
+    }
+    event->accept();
 }
 
 

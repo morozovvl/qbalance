@@ -35,7 +35,7 @@ public:
     Dictionary(QObject *parent = 0) { Dictionary("", parent); }
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
-    Q_INVOKABLE virtual bool open(int i = 0);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
+    Q_INVOKABLE virtual bool open(int i = 1);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
 
 // Функции для работы с моделью данных
     virtual bool add();
@@ -84,12 +84,14 @@ protected:
     bool            isDepend;
     QStringList     fieldList;
     virtual void    setForm();
-    virtual void        prepareSelectCurrentRowCommand();
-    virtual void        selectCurrentRow();
+    virtual void    prepareSelectCurrentRowCommand();
+    virtual void    selectCurrentRow();
+    virtual void    setTableModel();
 
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
     QString         dictTitle;
+    QString         sortOrder;
 };
 
 #endif // DICTIONARY_H

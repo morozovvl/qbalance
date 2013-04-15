@@ -85,16 +85,17 @@ void FormGridSearch::close() {
 
 QString FormGridSearch::getFilter()
 {
-    return parameters->getFilter();
+    if (parameters != 0)
+        return parameters->getFilter();
+    return QString();
 }
 
 
 int FormGridSearch::exec()
 {
-    int result = FormGrid::exec();
     if (parameters != 0)
         parameters->setFocus();
-    return result;
+    return FormGrid::exec();
 }
 
 

@@ -288,14 +288,21 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
 int FormGrid::exec()
 {
-    if (grdTable->setColumnsHeaders())
-        readColumnsSettings();
+    if (grdTable != 0)
+    {
+        if (grdTable->setColumnsHeaders())
+            readColumnsSettings();
+        grdTable->selectNextColumn();
+    }
     return Form::exec();
 }
 
 
 void FormGrid::show()
 {
+    QModelIndex index = getCurrentIndex();
+    Form::show();
+    restoreCurrentIndex(index);
     if (grdTable != 0)
     {
         if (grdTable->setColumnsHeaders())
@@ -304,10 +311,9 @@ void FormGrid::show()
         }
         grdTable->setReadOnly(parent->isReadOnly());
         showPhoto();
+        grdTable->setFocus();
+        grdTable->selectNextColumn();
     }
-    QModelIndex index = getCurrentIndex();
-    Form::show();
-    restoreCurrentIndex(index);
 }
 
 
@@ -445,21 +451,51 @@ void FormGrid::setGridFocus()
 {
     formWidget->activateWindow();
     if (grdTable != 0)
+    {
         grdTable->setFocus();
+    }
 }
 
 
 void FormGrid::selectRow(int row)
 {
     grdTable->selectRow(row);
+    grdTable->selectNextColumn();
 }
 
 
-void FormGrid::showEvent(QShowEvent* event)
+void FormGrid::keyPressEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event);          // Просто избавимся от предупреждения о не используемой переменной
-//    setShowFocus();
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        switch (event->key())
+        {
+            case Qt::Key_Insert:
+                cmdAdd();
+                break;
+            case Qt::Key_Delete:
+                cmdDelete();
+                break;
+            default:
+                Form::keyPressEvent(event);
+                return;
+        }
+    }
+    else
+    {
+        switch (event->key())
+        {
+            case Qt::Key_F2:
+                cmdView();
+                break;
+            default:
+                Form::keyPressEvent(event);
+                return;
+        }
+    }
+    event->accept();
 }
+
 
 void FormGrid::cmdPrint()
 {
@@ -538,7 +574,7 @@ void FormGrid::readColumnsSettings()
 // Считывает сохраненную информацию о ширине столбцов при открытии формы с таблицей
 {
     bool readedFromEnv = true;  // Предположим, что удастся прочитать конфигурацию из окружения
-//    Form::readSettings();
+    Form::readSettings();
     if (grdTable != 0)
     {
         QSettings settings;
@@ -650,8 +686,6 @@ void FormGrid::restoreCurrentIndex(QModelIndex index)
     }
     else
         setCurrentIndex(index);
-    if (grdTable != 0)
-        grdTable->setFocus();
 }
 
 

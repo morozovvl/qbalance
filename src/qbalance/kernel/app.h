@@ -66,6 +66,7 @@ public:
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }
     Q_INVOKABLE void clearMessageOnStatusBar() { gui->getMainWindow()->getStatusBar()->clearMessage(); }
     Q_INVOKABLE void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
+    Q_INVOKABLE QVariant getConst(QString);
     GUIFactory* getGUIFactory() { return gui; }
     QString getLogin() { return db->getLogin(); }
     bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
@@ -119,8 +120,8 @@ public:
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
 
-    void showError(QString);
-    void showCriticalError(QString);
+    void virtual showError(QString);
+    void virtual showCriticalError(QString);
 
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников

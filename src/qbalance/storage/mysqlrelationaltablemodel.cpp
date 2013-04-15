@@ -36,20 +36,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 
 
-MySqlRelationalTableModel::MySqlRelationalTableModel() : QSqlRelationalTableModel()
+MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* par) : QSqlRelationalTableModel()
 {
-    parent = NULL;
+    parent = par;
+    setTable(tableName);
     sortClause = "";
-    isPrepared = false;
     readOnly = false;
-    preparedStatementName = "";
-    preparedStatement = "";
     setEditStrategy(QSqlTableModel::OnManualSubmit);
     app = TApplication::exemplar();
     db = app->getDBFactory();
     selectCommand = "";
-
-//    setReadOnly(true);
+    testSelect = false;
 }
 
 
@@ -150,140 +147,24 @@ void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSq
 }
 
 
-void MySqlRelationalTableModel::setSort(int column, Qt::SortOrder order)
-{
-    sortColumn = column;
-    sortOrder = order;
-    QSqlRelationalTableModel::setSort(column, order);
-}
-
-
 QString MySqlRelationalTableModel::orderByClause() const
 {
-    if (sortClause.size() > 0)
-        return QString("ORDER BY %1").arg(sortClause.toUpper());
-    QString s;
-    QSqlField f = record().field(sortColumn);
-    if (!f.isValid())
-        return s;
-    QString table;
-    QString field;
-    if (!relation(sortColumn).isValid())
-    {
-        table = database().driver()->escapeIdentifier(tableName(), QSqlDriver::TableName);
-        field = database().driver()->escapeIdentifier(f.name(), QSqlDriver::FieldName);
-    }
-    else
-    {
-        QSqlRelation rel = relation(sortColumn);
-        if (rel.isValid())
-        {
-            table = database().driver()->escapeIdentifier(rel.tableName(), QSqlDriver::TableName);
-            field = database().driver()->escapeIdentifier(rel.displayColumn(), QSqlDriver::FieldName);
-        }
-    }
-    if ((table.size() > 0) && (field.size() > 0))
-    {
-        s.append(QLatin1String("ORDER BY ")).append(table).append(QLatin1Char('.')).append(field.toUpper());
-        s += sortOrder == Qt::AscendingOrder ? QLatin1String(" ASC") : QLatin1String(" DESC");
-    }
-    return s;
-}
-
-
-void MySqlRelationalTableModel::setSelectStatement(QString string)
-{
-    selectCommand = string;
+    return sortClause.size() > 0 ? QString("ORDER BY %1").arg(sortClause) : "";
 }
 
 
 QString MySqlRelationalTableModel::selectStatement() const
 {
-    QString command;
-    command = prepareSelectStatement();
-    return command;
-}
-
-
-QString MySqlRelationalTableModel::prepareSelectStatement() const
-{
     QString query;
-    if (selectCommand.size() > 0)
-        query = selectCommand;
-    else
-    {
-        query = getSelectClause();
-        if (query.size() > 0)
-        {
-            if (!filter().isEmpty())
-                query.append(QLatin1String(" WHERE ")).append(filter());
-            if (!orderByClause().isEmpty())
-                query.append(QLatin1Char(' ')).append(orderByClause());
-        }
-    }
+    query = selectCommand;
+    if (!filter().isEmpty())
+        query.append(" WHERE ").append(filter());
+    if (!orderByClause().isEmpty())
+        query.append(" " + orderByClause());
     if (parent != NULL)
         query = parent->transformSelectStatement(query);
-    return query;
-}
-
-
-QString MySqlRelationalTableModel::getSelectClause() const
-{
-    QString query;
-    if (!tableName().isEmpty())
-    {
-        QString selectList;
-        QString fromList;
-        QStringList aliases;
-
-        fromList = db->getObjectNameCom(tableName());
-        if (tableAlias.size() > 0)
-        {
-            fromList.append(" ").append(database().driver()->escapeIdentifier(tableAlias, QSqlDriver::TableName));
-            aliases << tableAlias;
-        }
-        else
-            aliases << tableName();
-
-        QSqlRecord rec = record();
-        for (int i = 0; i < rec.count(); i++)               // составим список полей для секции SELECT
-        {
-            if (!insertedColumns.contains(i))
-            {           // в исходный список полей включим только те поля, которые не были добавлены при создании реляций
-                if (tableAlias.size() > 0)
-                {
-                    selectList.append(escapedRelationField(tableAlias, rec.fieldName(i)));
-                    selectList.append(QString::fromLatin1(" AS %1__%2").arg(tableAlias.toUpper()).arg(rec.fieldName(i).toUpper()));
-                    selectList.append(QLatin1Char(','));
-                }
-                else
-                    selectList.append(escapedRelationField(tableName(), rec.fieldName(i))).append(QLatin1Char(','));
-            }
-        }
-        if (insertedColumns.size() > 0) {
-            for (QMap<int, int>::const_iterator it = keyColumns.constBegin(); it != keyColumns.constEnd(); it++)
-            {
-                QSqlRelation relation = QSqlRelationalTableModel::relation(it.key());
-                QString alias = tablesAliases.contains(it.key()) ? tablesAliases.value(it.key()) : relation.tableName();
-                selectList.append(escapedRelationField(alias, db->getObjectNameCom(alias + "." + relation.displayColumn())));
-                selectList.append(QString::fromLatin1(" AS %1__%2").arg(alias.toUpper()).arg(relation.displayColumn()));
-                selectList.append(QLatin1Char(','));
-                if (!aliases.contains(alias))
-                {
-                    fromList.append(" LEFT OUTER JOIN ").append(database().driver()->escapeIdentifier(relation.tableName(), QSqlDriver::TableName));
-                    if (tablesAliases.value(it.key()).size() > 0 && QString(relation.tableName()).compare(tablesAliases.value(it.key())) != 0)          // если имя таблицы и ее алиас не совпадают
-                        fromList.append(" ").append(database().driver()->escapeIdentifier(tablesAliases.value(it.key()), QSqlDriver::TableName));
-                    fromList.append(" ON ").append(escapedRelationField((tableAlias.size() == 0 ? tableName() : tableAlias), rec.fieldName(it.value())));
-                    fromList.append(QLatin1Char('='));
-                    fromList.append(escapedRelationField(alias, relation.indexColumn()));
-                    aliases << alias;
-                }
-            }
-        }
-        selectList.chop(1);
-        query.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
-        query.append(QLatin1String(" FROM ")).append(fromList);
-    }
+    if (testSelect)
+        query += " LIMIT 0";
     return query;
 }
 
@@ -308,12 +189,6 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
         info.field = field;
         updateInfo.insert(fieldColumn, info);
     }
-}
-
-
-bool MySqlRelationalTableModel::submit()
-{
-    return QSqlRelationalTableModel::submit();
 }
 
 

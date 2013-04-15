@@ -27,9 +27,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
-    lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
-    lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
-    lDeleteable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
+    lInsertable = app->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
+    lViewable = app->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
+    lDeleteable = app->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
     lUpdateable = false;
     lPrintable = false;
 }
@@ -51,12 +51,12 @@ Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add) {
 }
 
 
-Saldo* Dictionaries::getSaldo(QString acc, int deep) {
+Saldo* Dictionaries::getSaldo(QString acc) {
     if (acc.size() == 0)
         return 0;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addSaldo(acc, deep))
+        if (!addSaldo(acc))
             return 0;
     }
     return (Saldo*)dictionaries[alias];
@@ -80,18 +80,18 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
     return false;
 }
 
-bool Dictionaries::addSaldo(QString acc, int deep) {
+bool Dictionaries::addSaldo(QString acc) {
     if (acc.size() == 0)
         return false;
     QString alias = "saldo" + acc;
     if (!dictionaries.contains(alias)) {
         // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
-        Dictionary* accDict = TApplication::exemplar()->getDictionaries()->getDictionary(db->getObjectName("счета"));
+        Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
         accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
-        if (saldo->open(deep)) {
+        if (saldo->open()) {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
@@ -123,7 +123,7 @@ bool Dictionaries::add()
 {
     bool result = false;
     WizardDictionary* wizard = new WizardDictionary(true);
-    wizard->open(TApplication::exemplar()->getMainWindow());
+    wizard->open(app->getMainWindow());
     wizard->getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
     wizard->exec();
     wizard->close();
@@ -140,7 +140,7 @@ void Dictionaries::view()
 {
     QString dictName = getValue("таблица").toString().trimmed();
     WizardDictionary wizard;
-    wizard.open(TApplication::exemplar()->getMainWindow(), dictName);
+    wizard.open(app->getMainWindow(), dictName);
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
     wizard.exec();
     wizard.close();
@@ -166,7 +166,7 @@ bool Dictionaries::remove()
 
 bool Dictionaries::open() {
     if (Essence::open()) {
-        tableModel->setSortClause(db->getObjectName("vw_доступ_к_справочникам.имя"));
+        setSortClause(db->getObjectName("vw_доступ_к_справочникам.имя"));
         return true;
     }
     return false;
@@ -190,7 +190,7 @@ void Dictionaries::cmdOk() {
     Dictionary::cmdOk();
     QString dictName = getValue("таблица").toString().trimmed();
     if (dictName.size() > 0) {
-        Dictionaries* dicts = TApplication::exemplar()->getDictionaries();
+        Dictionaries* dicts = app->getDictionaries();
         Dictionary* dict = dicts->getDictionary(dictName, 1);         // Откроем справочник и подсправочники 1-го уровня
         if (dict != 0)
         {

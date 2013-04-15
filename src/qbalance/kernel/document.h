@@ -49,7 +49,7 @@ public:
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dicts; }
     Q_INVOKABLE Dictionary* getDictionary(QString dictName, int deep = 0, bool add = true) { return dictionaries->getDictionary(dictName, deep, add); }
-    Q_INVOKABLE Saldo* getSaldo(QString acc, int deep = 0) { return dictionaries->getSaldo(acc, deep); }
+    Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void show();
@@ -87,6 +87,7 @@ protected:
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     virtual void        selectCurrentRow();
+    virtual void setTableModel();
 
 private:
     QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
@@ -99,13 +100,12 @@ private:
     int                             prv1;
     int                             freePrv;            // Номер "свободной" проводки
     bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
-    QList<ToperType>                topersList;
     QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
     QHash<int, prvSaldo>            saldo;             // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
+    QList<ToperType>*               topersList;
 
-    virtual void setTableModel();
     bool showNextDict();
     void hideOtherLinkedDicts(Dictionary*);
     void showItog();

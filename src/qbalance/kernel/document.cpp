@@ -54,17 +54,17 @@ Document::Document(int oper, Documents* par): Essence()
     }
     QList<DictType> dictsList;  // Список справочников, которые будут присутствовать в документе
 
-    db->getToperData(operNumber, &topersList);              // Получим список типовых операций
-    db->getToperDictAliases(operNumber, &topersList, &dictsList);       // Получим имена справочников в проводках
+    topersList = par->getTopersList();
+    db->getToperDictAliases(operNumber, topersList, &dictsList);       // Получим имена справочников в проводках
 
     // Проверим, должна ли быть в документе только одна строка
-    isSingleString = topersList.at(0).isSingleString;
+    isSingleString = topersList->at(0).isSingleString;
 
     // Проверим, есть ли в документе "свободная" проводка
-    for (int i = 0; i < topersList.count(); i++)
-        if (topersList.at(i).freePrv)
+    for (int i = 0; i < topersList->count(); i++)
+        if (topersList->at(i).freePrv)
         {
-            freePrv = topersList.at(i).number;
+            freePrv = topersList->at(i).number;
             break;
         }
 
@@ -76,11 +76,7 @@ Document::Document(int oper, Documents* par): Essence()
         if (dictsList.at(i).isSaldo)
         {
             Saldo* sal;
-            if (dictsList.at(i).name.size() > 0 &&
-                db->isSet(dictsList.at(i).name))
-                   sal = dictionaries->getSaldo(dictsList.at(i).acc, 1);
-            else
-                sal = dictionaries->getSaldo(dictsList.at(i).acc, 0);
+            sal = dictionaries->getSaldo(dictsList.at(i).acc);
             if (sal != 0)
             {
                 sal->setPrototypeName(dictsList.at(i).prototype);
@@ -123,6 +119,7 @@ Document::Document(int oper, Documents* par): Essence()
     lInsertable = true;
     lDeleteable = true;
     lUpdateable = true;
+    isDictionary = false;
 }
 
 
@@ -201,13 +198,13 @@ void Document::calcItog(bool forceSubmit)
     }
 
     double itog = 0;
-    for (int i = 0; i < topersList.count(); i++)
+    for (int i = 0; i < topersList->count(); i++)
     {
-        QString sign = topersList.at(i).itog;
+        QString sign = topersList->at(i).itog;
         if (sign == "+" || sign == "-")
         {
             double sum = 0;
-            int col = tableModel->record().indexOf(QString("P%1__%2").arg(topersList.at(i).number)
+            int col = tableModel->record().indexOf(QString("P%1__%2").arg(topersList->at(i).number)
                                                                      .arg(db->getObjectName("документы.сумма")));
             for (int j = 0; j < tableModel->rowCount(); j++)
             {
@@ -247,7 +244,7 @@ bool Document::add()
     if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         scriptEngine->eventBeforeAddString();
-        if (topersList.at(0).attributes && topersList.at(0).number == 0)
+        if (topersList->at(0).attributes && topersList->at(0).number == 0)
         {
             QString attrName = QString("%1%2").arg(db->getObjectName("атрибуты")).arg(operNumber);
             QString idFieldName = db->getObjectName("код");
@@ -478,10 +475,10 @@ void Document::show()
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
-        for (int i = 0; i < topersList.count(); i++)
+        for (int i = 0; i < topersList->count(); i++)
         {
-            int prvNumber = topersList.at(i).number;
-            dictName = topersList.at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+            int prvNumber = topersList->at(i).number;
+            dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
             if (dicts->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
                 dict = dicts->value(dictName);
@@ -493,7 +490,7 @@ void Document::show()
                     showParameterText(dictName);
                 }
             }
-            dictName = topersList.at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
+            dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
             if (dicts->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
                 dict = dicts->value(dictName);
@@ -526,21 +523,21 @@ void Document::setConstDictId(QString dName, QVariant id)
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
-        for (int i = 0; i < topersList.count(); i++)
+        for (int i = 0; i < topersList->count(); i++)
         {
-            dictName = topersList.at(i).dbDictAlias;
+            dictName = topersList->at(i).dbDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0) {
                 dict = dicts->value(dictName);
                 if (dict->isConst()) {
-                    db->setConstDictId(db->getObjectName("проводки.дбкод"), id, docId, operNumber, topersList.at(i).number);
+                    db->setConstDictId(db->getObjectName("проводки.дбкод"), id, docId, operNumber, topersList->at(i).number);
                     dict->setId(id.toULongLong());
                 }
             }
-            dictName = topersList.at(i).crDictAlias;
+            dictName = topersList->at(i).crDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0) {
                 dict = dicts->value(dictName);
                 if (dict->isConst()) {
-                    db->setConstDictId(db->getObjectName("проводки.кркод"), id, docId, operNumber, topersList.at(i).number);
+                    db->setConstDictId(db->getObjectName("проводки.кркод"), id, docId, operNumber, topersList->at(i).number);
                     dict->setId(id.toULongLong());
                 }
             }
@@ -554,8 +551,8 @@ void Document::prepareSelectCurrentRowCommand()
     preparedSelectCurrentRow.clear();
 
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
-    QString command = tableModel->getSelectStatement();
-    if (topersList.at(0).attributes && topersList.at(0).number == 0)
+    QString command = tableModel->selectStatement();
+    if (topersList->at(0).attributes && topersList->at(0).number == 0)
     {   // Если в типовой операции нет проводок, а есть только таблица атрибутов
         command.replace(" WHERE ", QString(" WHERE a.%1=:value AND ").arg(db->getObjectName("атрибуты.стр")));
     }
@@ -645,10 +642,7 @@ QString Document::transformSelectStatement(QString string)
 void Document::setTableModel()
 {   // Генерирует заготовку запроса для получения данных для табличной части документа
     // Вызывается 1 раз
-    tableModel = new MySqlRelationalTableModel();
-    tableModel->setParent(this);
-    tableModel->setTable(tableName);
-//    tableModel->setReadOnly(!isUpdateable());
+    tableModel = new MySqlRelationalTableModel(tableName, this);
     QList<ToperType> topersList;
     selectStatement = db->getDocumentSqlSelectStatement(operNumber, dictionaries, &topersList, &columnsProperties, &prv1);
     if (selectStatement.size() > 0)
@@ -692,9 +686,9 @@ bool Document::showNextDict()
     bool anyShown = false;
     Dictionary* dict;
     QString dictName;
-    for (int i = 0; i < topersList.count(); i++)
+    for (int i = 0; i < topersList->count(); i++)
     {
-        dictName = topersList.at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+        dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
         if (dictName.size() > 0 && dicts->contains(dictName))
         {
             dict = dicts->value(dictName);
@@ -718,7 +712,7 @@ bool Document::showNextDict()
             }
             prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
         }
-        dictName = topersList.at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
+        dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
         if (dictName.size() > 0 && dicts->contains(dictName))
         {
             dict = dicts->value(dictName);
@@ -792,31 +786,22 @@ void Document::appendDocString()
     QString dictName, parameter;
     qulonglong dbId, crId;
     // Просмотрим все проводки типовой операции
-    for (int i = 0; i < topersList.count(); i++)
+    for (int i = 0; i < topersList->count(); i++)
     {
         dbId = 0;
         crId = 0;
-        dictName = topersList.at(i).dbDictAlias;
+        dictName = topersList->at(i).dbDictAlias;
         if (dictName.size() > 0 && dicts->contains(dictName))
         {
             dbId = prvValues.value(dicts->value(dictName)->getPrototypeName()).toInt();
         }
-        dictName = topersList.at(i).crDictAlias;
+        dictName = topersList->at(i).crDictAlias;
         if (dictName.size() > 0 && dicts->contains(dictName))
         {
             crId = prvValues.value(dicts->value(dictName)->getPrototypeName()).toInt();
         }
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
         parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
-/*
-        QString value;
-        value = prvValues.value(QString("P%1__%2").arg(i+1).arg(db->getObjectName("проводки.кол"))).toString();
-        parameter.append(value.size() > 0 ? value : "0").append(",");
-        value = prvValues.value(QString("P%1__%2").arg(i+1).arg(db->getObjectName("проводки.цена"))).toString();
-        parameter.append(value.size() > 0 ? value : "0").append(",");
-        value = prvValues.value(QString("P%1__%2").arg(i+1).arg(db->getObjectName("проводки.сумма"))).toString();
-        parameter.append(value.size() > 0 ? value : "0").append(",");
-*/
      }
     // Добавим строку в документ с параметрами всех проводок операции
     db->addDocStr(operNumber, docId, parameter);
@@ -834,7 +819,7 @@ void Document::selectCurrentRow()
 {   // Делает запрос к БД по одной строке документа. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились (например сальдо).
 
-    if (topersList.at(0).attributes && topersList.at(0).number == 0)
+    if (topersList->at(0).attributes && topersList->at(0).number == 0)
     {   // Если в типовой операции нет проводок, а есть только таблица атрибутов
         preparedSelectCurrentRow.bindValue(":value", getValue(db->getObjectName("атрибуты.стр")).toInt());
     }

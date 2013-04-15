@@ -32,13 +32,13 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 {
     formTitle = "";
     lPrintable = true;
-    lIsSet = false;
     lCanShow = true;
     lMustShow = false;
     lIsConst = false;
     lAutoSelect = false;
     isDepend = false;
     ftsEnabled = false;
+    sortOrder = "";
     dictionaries = TApplication::exemplar()->getDictionaries();
     if (TApplication::exemplar()->isSA())
     {
@@ -170,7 +170,7 @@ bool Dictionary::calculate(const QModelIndex& index) {
         int row = form->getCurrentIndex().row();
         for (int i = 0; i < tableModel->record().count(); i++)
         {
-            QString fieldName = tableModel->record().fieldName(i);
+            QString fieldName = tableModel->record().fieldName(i).toUpper();
             if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
             {
                 tableModel->submit(tableModel->index(row, i));
@@ -214,43 +214,17 @@ bool Dictionary::open(int deep)
     if (Table::open())
     {     // Откроем этот справочник
         fieldList = getFieldsList();
-        if (deep > 0)
-        {              // Если нужно открыть подсправочники
-            int columnCount = fieldList.count();
-            int keyColumn   = 0;
-            for (int i = 0; i < fieldList.count(); i++)
-            {       // Просмотрим список полей
-                QString name = fieldList.at(i);
-                if (name == idFieldName)
-                    keyColumn = i;
-                tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
-                if (name.left(4) == idFieldName + "_")
-                {        // Если поле ссылается на другую таблицу
-                    name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                    name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                    Dictionary* dict = dictionaries->getDictionary(name, deep - 1);
-                    if (dict != NULL)
-                    {                      // Если удалось открыть справочник
-                        if (!lIsSet)
-                            dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
-                        QStringList relFieldList = dict->getFieldsList();
-                        tableModel->setRelation(i, QSqlRelation(name, idFieldName, idFieldName));
-                        for (int j = 0; j < relFieldList.count(); j++)
-                        {       // Просмотрим список полей в подсправочнике
-                            tableModel->insertColumns(columnCount, 1);
-                            tableModel->setRelation(columnCount, i, QSqlRelation(name, idFieldName, relFieldList.at(j)));
-                            tableModel->setHeaderData(columnCount, Qt::Horizontal, QVariant(name.toUpper() + "__" + relFieldList.at(j)));
-                            columnCount++;
-                        }
-                    }
-                }
-            }
-            deep--;
-        }
+
         // Проверим, имеется ли в справочнике полнотекстовый поиск
         ftsEnabled = fieldList.contains(db->getObjectName(tableName + ".fts"), Qt::CaseInsensitive);
-        // Установим порядок сортировки и стратегию сохранения данных на сервере
-        tableModel->setSort(tableModel->fieldIndex(db->getObjectName("имя")), Qt::AscendingOrder);
+
+        // Установим порядок сортировки
+        if (isSet())
+            setSortClause(sortOrder);
+        else
+            setSortClause(QString("\"%1\".%2").arg(tableName)
+                                          .arg(db->getObjectNameCom(tableName + ".имя")));
+
         db->getColumnsRestrictions(tableName, &columnsProperties);
         initForm();
         setScriptEngine();
@@ -266,6 +240,72 @@ bool Dictionary::open(int deep)
     }
     app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
     return false;
+}
+
+
+void Dictionary::setTableModel()
+{
+    QString selectList;
+    QString fromList;
+    QString selectStatement;
+
+    Essence::setTableModel();
+
+    QList<FieldType> fields;
+    db->getColumnsProperties(&fields, tableName);
+
+    QStringList tables;
+    tables.append(fields.at(0).table);
+
+    fromList = db->getObjectNameCom(tableName);
+
+    FieldType fld, oldFld;
+    int keyColumn   = 0;
+    for (int i = 0; i < fields.count(); i++)
+    {
+        fld = fields.at(i);
+
+        // Для основной таблицы сохраним информацию для обновления
+        if (fld.table == fields.at(0).table)
+        {
+            if (fld.name == idFieldName)
+                keyColumn = i;
+            tableModel->setUpdateInfo(fld.name, fld.table, fld.name, i, keyColumn);
+        }
+
+        if (!tables.contains(fld.table))
+        {
+            fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(fld.table)
+                                                                                             .arg(oldFld.table)
+                                                                                             .arg(oldFld.name)
+                                                                                             .arg(fld.name));
+            Dictionary* dict = dictionaries->getDictionary(fld.table);
+            if (dict != 0)
+            {                                       // Если удалось открыть справочник
+                if (!lIsSet)
+                    dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
+                else
+                {
+                    if (sortOrder.size() > 0)
+                        sortOrder.append(", ");
+                    sortOrder.append(QString("\"%1\".%2").arg(fld.table)
+                                                         .arg(db->getObjectNameCom(fld.table + ".имя")));
+                }
+            }
+            tables.append(fld.table);
+        }
+
+        if (selectList.size() > 0)
+            selectList.append(", ");
+        selectList.append(QString("\"%1\".\"%2\" AS \"%3\"").arg(fld.table)
+                                                                .arg(fld.name)
+                                                                .arg(fld.column.toUpper()));
+        oldFld = fld;
+    }
+
+    selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
+    selectStatement.append(QLatin1String(" FROM ")).append(fromList);
+    tableModel->setSelectStatement(selectStatement);
 }
 
 
@@ -313,15 +353,18 @@ qulonglong Dictionary::getId(int row)
 void Dictionary::query(QString defaultFilter)
 {
     QString resFilter = defaultFilter;
-    QString filter = ((FormGridSearch*)form)->getFilter();
-    if (filter.size() > 0)
+    if (form != 0)
     {
-        if (resFilter.size() > 0)
-            resFilter.append(" AND " + filter);
-        else
-            resFilter = filter;
+        QString filter = ((FormGridSearch*)form)->getFilter();
+        if (filter.size() > 0)
+        {
+            if (resFilter.size() > 0)
+                resFilter.append(" AND " + filter);
+            else
+                resFilter = filter;
+        }
     }
-    tableModel->setSelectStatement();
+//    tableModel->setSelectStatement();
     Essence::query(resFilter);
 }
 
@@ -341,7 +384,7 @@ void Dictionary::prepareSelectCurrentRowCommand()
     preparedSelectCurrentRow.clear();
 
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
-    QString command = tableModel->getSelectStatement();
+    QString command = tableModel->selectStatement();
 
     command.replace(" ORDER BY", QString(" WHERE %1.%2=:value ORDER BY").arg(getTableName()).arg(getIdFieldName()));
 

@@ -55,6 +55,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     lViewable   = false;
     lUpdateable = false;
     lPrintable  = false;
+    isDictionary = true;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
     scriptEngine = 0;
@@ -198,14 +199,14 @@ QString Essence::getPhotoFile()
         pictureUrl = preparePictureUrl();
 
         // Сначала получим имя поля из которого будем брать значение идентификатора
-        if (photoIdField.size() == 0)
+        if (photoIdField.size() == 0 && isDictionary)
         {
             // Если имя поля, из которого нужно брать идентификатор фотографии не установлено, то будем считать идентификатором код позиции
             photoIdField = db->getObjectName("код");
         }
 
         // Теперь получим значение идентификатора
-        if (tableModel->rowCount() > 0)
+        if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
             idValue = getValue(photoIdField).toString().trimmed();
 
         if (idValue.size() > 0)
@@ -215,6 +216,8 @@ QString Essence::getPhotoFile()
             {
                 // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
                 file = db->getDictionaryPhotoPath(tableName);
+//                if (file.size() == 0)
+//                    photoEnabled = false;   // Если путь к фотографиям найти не удалось, то запретим просмотр фотографий
             }
             else
             {
@@ -365,7 +368,6 @@ int Essence::exec()
     }
     if (opened && form != 0)
     {
-//        saveOldValues();
         return form->exec();
     }
     return 0;
@@ -376,9 +378,8 @@ void Essence::show()
     if (!opened) open();
     if (opened && form != 0)
     {
-//        saveOldValues();
         form->show();
-        prepareSelectCurrentRowCommand();   // Подготовим команду для обновления строк
+        prepareSelectCurrentRowCommand();
     }
 }
 
@@ -409,7 +410,13 @@ bool Essence::open()
         {
             if (!scriptEngine->open(scriptFileName) || !scriptEngine->evaluate())
             {
-                app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
+                if (scriptEngine->hasUncaughtException())
+                {
+                    app->getGUIFactory()->showError(QString(QObject::trUtf8("Ошибка [%1] в строке %2 !")).arg(scriptEngine->uncaughtException ().toString())
+                                                                                                      .arg(scriptEngine->uncaughtExceptionLineNumber()-1));
+                }
+                else
+                    app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
                 return false;
             }
             initFormEvent();
@@ -452,12 +459,12 @@ ScriptEngine* Essence::getScriptEngine()
     return scriptEngine;
 }
 
-
+/*
 void Essence::setOldValue(QString field, QVariant value)
 {
     oldValues.insert(field.toUpper(), value);
 }
-
+*/
 
 QVariant Essence::getOldValue(QString field)
 {

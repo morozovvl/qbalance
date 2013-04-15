@@ -64,7 +64,7 @@ void test() {
     QString dictName("счета");
     for (int i = 0; i < 50; i++) {              // 50 раз откроем, закроем справочник
         Dictionaries* dicts = TApplication::exemplar()->getDictionaries();
-        dicts->addDictionary(dictName, 1);
+        dicts->addDictionary(dictName);
         Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
         if (dict != 0) {
             dicts->removeDictionary(dictName);

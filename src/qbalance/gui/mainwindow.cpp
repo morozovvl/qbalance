@@ -18,11 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtGui/QMenuBar>
-#include <QtGui/QMdiSubWindow>
 #include <QDebug>
 #include "../kernel/app.h"
 #include "mainwindow.h"
 #include "dialog.h"
+#include "mymdisubwindow.h"
 
 
 MainWindow::MainWindow(GUIFactory* par) {
@@ -179,27 +179,27 @@ void MainWindow::writeSettings()
 }
 
 
-QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
+MyMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
 {
     if (dialogWidget != 0)
     {
-        // Сначала попытаемся найти окно QMdiSubWindow, в котором виджет dialogWidget отображался ранее
+        // Сначала попытаемся найти окно MyMdiSubWindow, в котором виджет dialogWidget отображался ранее
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
             Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
             if (widget == dialogWidget)
-                return subWindow;
+                return (MyMdiSubWindow*)subWindow;
         }
         // Такой виджет видимо ранее не отображался, поэтому создадим новое окно
-        QMdiSubWindow* subWindow = new QMdiSubWindow(workSpace);
+        MyMdiSubWindow* subWindow = new MyMdiSubWindow(workSpace);
         subWindow->hide();
         subWindow->setWidget(dialogWidget);
-        return workSpace->addSubWindow(subWindow);
+        return (MyMdiSubWindow*)workSpace->addSubWindow(subWindow);
     }
     return 0;
 }
 
 
-void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
+void MainWindow::removeMdiWindow(MyMdiSubWindow* subWindow)
 {
     if (subWindow != 0)
     {

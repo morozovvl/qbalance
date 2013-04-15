@@ -23,9 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtGui/QDialog>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QMdiSubWindow>
 #include <QtDesigner/QDesignerExportWidget>
 #include "../kernel/app.h"
+#include "mymdisubwindow.h"
+#include "form.h"
 
 class MainWindow;
 
@@ -45,7 +46,9 @@ public:
 
     void setFreeWindow(bool free) { freeWindow = free; }
     void setApp(TApplication*);
-    QMdiSubWindow* getSubWindow();
+    MyMdiSubWindow* getSubWindow();
+    Form* getForm() { return form; }
+    void    setForm(Form* f) { form = f; }
 
 
 public slots:
@@ -54,8 +57,9 @@ signals:
     void keyPressed(QKeyEvent *e);
 
 private:
-    TApplication*                   app;
-    QMdiSubWindow*                  subWindow;
+    TApplication*               app;
+    MyMdiSubWindow*             subWindow;
+    Form*                       form;
     bool    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
     virtual void keyPressEvent(QKeyEvent *e);
 };

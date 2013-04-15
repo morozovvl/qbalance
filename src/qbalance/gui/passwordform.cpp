@@ -70,6 +70,7 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 int PassWordForm::exec()
 {
     readSettings();
+    PasswordEditor->setFocus();
     return Form::exec();
 }
 

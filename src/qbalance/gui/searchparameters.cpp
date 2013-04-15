@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QLayout>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QCheckBox>
+#include <QtGui/QLineEdit>
 #include "searchparameters.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/dictionaries.h"
@@ -157,7 +158,6 @@ QVector<sParam> SearchParameters::getParameters()
 
 QString SearchParameters::getFilter()
 {
-    DBFactory* db = app->getDBFactory();
     QString filter;
     QVector<sParam> searchParameters = getParameters();
     for (int i = 0; i < searchParameters.size(); i++)
@@ -168,7 +168,7 @@ QString SearchParameters::getFilter()
         {
             if (filter.size() > 0)
                 filter.append(" AND ");
-            filter.append(searchParameters[i].table + QString(".%1 @@ to_tsquery('").arg(db->getObjectName(searchParameters[i].table + ".fts")));
+            filter.append(QString("%1.%2 @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)).arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".fts")));
             QString f = "";
             foreach (QString param, paramList)
             {
@@ -184,8 +184,8 @@ QString SearchParameters::getFilter()
             {
                 if (filter.size() > 0)
                     filter.append(" AND ");
-                filter.append(QString("%1.%2 ILIKE '%3'").arg(db->getObjectName(searchParameters[i].table))
-                                                         .arg(db->getObjectName(searchParameters[i].field))
+                filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+                                                         .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].field))
                                                          .arg("%" + param + "%"));
             }
         }
@@ -240,7 +240,13 @@ void SearchParameters::setFocus()
 {
     if (gridLayout != 0 && gridLayout->rowCount() > 0)
     {
-        QWidget* widget = gridLayout->itemAtPosition(0, 1)->widget();
-        widget->setFocus();
+        // При активации фокуса подсветим все строчки
+        for (int i = 0; i < gridLayout->rowCount(); i++)
+        {
+            MyComboBox* widget = (MyComboBox*)(gridLayout->itemAtPosition(i, 1)->widget());
+            widget->lineEdit()->selectAll();
+            if (i == 0)
+                widget->setFocus();
+        }
     }
 }

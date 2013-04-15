@@ -100,7 +100,8 @@ struct ToperType
     bool        isSingleString; // В документе должна быть только одна строка
     QString     itog;           //
     bool        freePrv;        // Свободная проводка
-    bool        attributes;     // Наличие дополнительных атрибутов (полей) в документах
+    bool        attributes;     // Наличие дополнительных атрибутов (полей) в табличной части документов
+    bool        docattributes;  // Наличие дополнительных атрибутов у самого документа
 };
 
 
@@ -167,7 +168,7 @@ public:
     QStringList initializationScriptList(QString = "") const;
 
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
-    Q_INVOKABLE QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
+    Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
     static QString storageEncoding();
 

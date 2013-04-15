@@ -52,7 +52,10 @@ public:
     Essence(QString name = "", QObject *parent = 0);
     ~Essence();
 
-    Q_INVOKABLE virtual bool            add() = 0;                          // Добавление записи
+    Q_INVOKABLE virtual bool            open();
+    Q_INVOKABLE virtual void            close();
+    void                                initForm();
+    Q_INVOKABLE virtual bool            add() = 0;                      // Добавление записи
     Q_INVOKABLE virtual bool            remove();                       // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     virtual void                        print(QString);                 // Печать
@@ -64,6 +67,8 @@ public:
     QString                             getIdFieldName() { return idFieldName; }
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
+    Q_INVOKABLE virtual QVariant        getOldValue(QString field);
+    Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     void                                setDoSubmit(bool submit) { doSubmit = submit; }
     void                                setForceSubmit(bool submit) { forceSubmit = submit; }
@@ -93,33 +98,27 @@ public:
     void setViewable(bool b) { lViewable = b; }
     void setUpdateable(bool b) { lUpdateable = b; }
     void setPrintable(bool b) { lPrintable = b; }
-    void setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
 
 // Функции для обеспечения работы скриптов
-    virtual bool calculate(const QModelIndex &);
-    virtual void setScriptEngine();
-    ScriptEngine* getScriptEngine();
-    void setOldValue(QString field, QVariant value);
-    Q_INVOKABLE virtual QVariant getOldValue(QString field);
-    Q_INVOKABLE virtual QVariant getOldValue();
+    virtual void        setScriptEngine();
+    ScriptEngine*       getScriptEngine();
+    void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
+    virtual bool        calculate(const QModelIndex &);
+    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
+    virtual void        restoreOldValues();
 
 
 // Скриптовые события
-    void initFormEvent();
-    void beforeShowFormEvent();
-    void afterHideFormEvent();
-    void closeFormEvent();
-    QString preparePictureUrl();
+    void                initFormEvent();
+    void                beforeShowFormEvent();
+    void                afterHideFormEvent();
+    void                closeFormEvent();
+    QString             preparePictureUrl();
 
 // Прочие функции
-    QString getPhotoFile();
-    Q_INVOKABLE virtual bool open();
-    Q_INVOKABLE virtual void close();
-    void                initForm();
+    QString             getPhotoFile();
     static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
-    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
-    virtual void        restoreOldValues();
 
 signals:
     void                photoLoaded();
@@ -140,6 +139,7 @@ protected:
     bool                lViewable;
     bool                lUpdateable;
     bool                lPrintable;
+    bool                isDictionary;
     virtual void        setForm();
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -157,13 +157,13 @@ private:
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
-    QNetworkAccessManager*      m_networkAccessManager;
-    QNetworkRequest*    m_request;
-    static qulonglong          calculateCRC32(QByteArray*);
+    QNetworkAccessManager*  m_networkAccessManager;
+    QNetworkRequest*        m_request;
+    static qulonglong       calculateCRC32(QByteArray*);
 
 
 private slots:
-    void replyFinished(QNetworkReply*);
+    void                replyFinished(QNetworkReply*);
 
 };
 

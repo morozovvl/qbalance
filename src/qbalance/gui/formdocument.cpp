@@ -207,8 +207,8 @@ void FormDocument::show()
 
 void FormDocument::hide()
 {
-    getParent()->getParent()->getFormWidget()->activateWindow();
     FormGrid::hide();
+    getParent()->getParent()->getFormWidget()->activateWindow();
     getParent()->saveVariablesToDB();
 }
 

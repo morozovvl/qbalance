@@ -40,15 +40,18 @@ public:
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine() { scriptEngine = 0; }
+    virtual QString transformSelectStatement(QString string);
+    QList<ToperType>*   getTopersList() { return &topersList; }
 
 protected:
-    virtual void setForm();
+    virtual void        setForm();
     virtual void        prepareSelectCurrentRowCommand();
 
 private:
-    int operNumber;
-    Document* currentDocument;
-    QString     subFormTitle;
+    int                 operNumber;
+    Document*           currentDocument;
+    QString             subFormTitle;
+    QList<ToperType>    topersList;
 };
 
 #endif // DOCUMENTS_H

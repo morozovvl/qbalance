@@ -26,10 +26,13 @@ class Saldo : public Dictionary {
     Q_OBJECT
 public:
     Saldo(QString, QString, QObject *parent = 0);
-    Q_INVOKABLE virtual bool open(int i = 0);
+    Q_INVOKABLE virtual bool open();
     virtual QString transformSelectStatement(QString);
     Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
     void setQuan(bool q) { quan = q; }
+
+protected:
+    virtual void setTableModel();
 
 private:
     QString account;

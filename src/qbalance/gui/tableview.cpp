@@ -75,35 +75,27 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
 void TableView::keyPressEvent(QKeyEvent* event)
 {
-    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return))
+    if (event->modifiers() == Qt::ControlModifier)
     {
-        if (event->modifiers() == Qt::ControlModifier)
-        {              // Были нажаты клавиши модификации
-                       // и <Enter>
-            parent->cmdOk();
-            return;
-        }
-        else
-        {
-            selectNextColumn();
-            return;
-        }
     }
     else
     {
         switch (event->key())
         {
-            case Qt::Key_F2: parent->cmdView();
-                             return;
-            case Qt::Key_Right: selectNextColumn();
-                             return;
-            case Qt::Key_Tab: selectNextColumn();
-                             return;
-            case Qt::Key_Left: selectPreviousColumn();
-                             return;
+            case Qt::Key_Right:
+                selectNextColumn();
+                return;
+            case Qt::Key_Tab:
+                selectNextColumn();
+                return;
+            case Qt::Key_Left:
+                selectPreviousColumn();
+                return;
+            default:
+                QTableView::keyPressEvent(event);
         }
     }
-    QTableView::keyPressEvent(event);
+    parent->keyPressEvent(event);
 }
 
 

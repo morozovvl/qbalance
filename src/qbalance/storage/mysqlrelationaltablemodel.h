@@ -39,15 +39,12 @@ struct UpdateInfoStruct {
     QString     table;              // Наименование обновляемой таблицы
     int         keyFieldColumn;     // Номер колонки ключевого поля в модели
     QString     field;              // Наименование обновляемого поля в таблице
-//    int         fieldColumn;        // Номер колонки обновляемого поля в модели
 };
 
 class MySqlRelationalTableModel : public QSqlRelationalTableModel {
     Q_OBJECT
 public:
-    MySqlRelationalTableModel();
-    void setParent(Table* par) { parent = par; }
-    Q_INVOKABLE void setTable(const QString& str) { QSqlRelationalTableModel::setTable(str); }
+    MySqlRelationalTableModel(QString, Table* = 0);
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений
     bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
@@ -57,17 +54,13 @@ public:
     void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
 
 // Функции, помогающие в генерации SQL запросов и работающие с ним
-    Q_INVOKABLE QString getSelectStatement() { return selectStatement(); }
-    QString getSelectClause() const;
     QString orderByClause() const;
     QString escapedRelationField(const QString &, const QString &) const;
     virtual QString selectStatement() const;
-    void setSelectStatement(QString string = "");
+    QString getSelectStatement() { return selectCommand; }
+    void setSelectStatement(QString string = "") { selectCommand = string; }
     void setSortClause(QString sort) { sortClause = sort; }
-    virtual void setSort(int, Qt::SortOrder);
-    void setPrepared(bool p = true) { isPrepared = p; }
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
-    QString prepareSelectStatement() const;
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
     Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
 
@@ -76,13 +69,13 @@ public:
     bool isReadOnly() { return readOnly; }
     virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
     virtual bool submit(const QModelIndex&);
-    virtual bool submit();
     virtual bool updateRowInTable(int, const QSqlRecord&);
     virtual void setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn);
 
 // Прочие функции
     QStringList getFieldsList() const;
     QString getFieldName(int i) { return record().fieldName(i); }
+    void    setTestSelect(bool test) { testSelect = test; }
 
 
 protected:
@@ -96,11 +89,6 @@ private:
 // Свойства для обслуживания SQL запросов
     QString                 selectCommand;
     QString                 sortClause;
-    mutable QString         preparedStatementName;
-    mutable QString         preparedStatement;
-    bool                    isPrepared;
-    int                     sortColumn;
-    Qt::SortOrder           sortOrder;
     QMap<int, UpdateInfoStruct>     updateInfo;
 
 // Прочие свойства
@@ -108,6 +96,7 @@ private:
     bool                    readOnly;
     TApplication*           app;
     DBFactory*              db;
+    bool                    testSelect;
 };
 
 #endif // MYSQLRELATIONALTABLEMODEL_H
