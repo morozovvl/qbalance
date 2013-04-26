@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
+#include "../gui/tableview.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 
@@ -43,6 +44,7 @@ Document::Document(int oper, Documents* par): Essence()
     scriptFileName = TApplication::exemplar()->getScriptFileName(operNumber);
     idFieldName = "P1__" + db->getObjectName("код");
     freePrv = 0;
+    isSaldoExist = false;
     setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
     parent->setDoSubmit(true);          // Обновления в списке документов будем сохранять сразу
 
@@ -83,6 +85,7 @@ Document::Document(int oper, Documents* par): Essence()
                 sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
                 sal->setQuan(true);
                 sal->setConst(dictsList.at(i).isConst);
+                isSaldoExist = true;
             }
         }
         else
@@ -145,7 +148,7 @@ bool Document::calculate(const QModelIndex& index)
 }
 
 
-void Document::saveChanges(bool forceSubmit)
+void Document::saveChanges()
 {
     int row = form->getCurrentIndex().row();
 
@@ -154,7 +157,9 @@ void Document::saveChanges(bool forceSubmit)
     for (int i = 0; i < tableModel->record().count(); i++)
     {
         QString fieldName = tableModel->record().fieldName(i);
-        if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+        QVariant oldValue = getOldValue(fieldName);
+        QVariant newValue = getValue(fieldName);
+        if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
         {
             tableModel->submit(tableModel->index(row, i));
         }
@@ -173,12 +178,16 @@ void Document::saveChanges(bool forceSubmit)
         }
     }
 
-    calcItog(forceSubmit);
+    calcItog();
 
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
         // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-        selectCurrentRow();
+        if (isSaldoExist)
+        {
+            if (compareSumValues())
+                updateCurrentRow();
+        }
         saveOldValues();
     }
     else
@@ -188,7 +197,7 @@ void Document::saveChanges(bool forceSubmit)
 }
 
 
-void Document::calcItog(bool forceSubmit)
+void Document::calcItog()
 {
     // сохраним те переменные, которые использовались в скриптах
     foreach (QString varName, variables.keys())
@@ -217,15 +226,7 @@ void Document::calcItog(bool forceSubmit)
         }
     }
 
-    if (forceSubmit)
-    {
-        parent->setForceSubmit(true);       // Итог документа будем обновлять принудительно, иначе после удаления последней строки в документе
-        parent->setValue("сумма", itog);    // итог может быть не корректным
-        parent->setForceSubmit(false);
-    }
-    else
-        parent->setValue("сумма", itog);
-
+    parent->setValue("сумма", itog);    // итог может быть не корректным
     showItog();
 }
 
@@ -254,13 +255,33 @@ bool Document::add()
                 {        // Если поле ссылается на другую таблицу
                     QString dictName = fieldName;
                     dictName.remove(0, 4);
-                    prepareValue(fieldName, QVariant(dictionaries->getDictionary(dictName)->getId()));
+                    prepareValue(fieldName, dictionaries->getDictionary(dictName));
                 }
             }
         }
-        appendDocString();
-        query();
-        form->selectRow(tableModel->rowCount() - 1);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+
+        int strNum = appendDocString();
+
+// Первый способ обновления документа после вставки новой строки. Не оптимальный
+//        query();
+//        form->selectRow(tableModel->rowCount() - 1);
+
+// Второй способ обновления документа после вставки новой строки, более оптимальный, без загрузки всего документа, а загрузки только новой строки
+        int newRow = tableModel->rowCount();
+        if (newRow == 0)
+        {
+            query();
+            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        }
+        else
+        {
+            tableModel->insertRow(newRow);
+            form->getGridTable()->reset();
+            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            updateCurrentRow(strNum);
+            form->showPhoto();
+        }
+// Конец второго способа
 
         saveOldValues();
 
@@ -312,10 +333,12 @@ bool Document::remove() {
     if (lDeleteable) {
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove()) {
+//            tableModel->removeRow(form->getCurrentIndex().row());
+//            form->getGridTable()->reset();
             db->removeDocStr(docId, strNum);
             query();
             scriptEngine->eventAfterCalculate();
-            saveChanges(true);     // Принудительно обновим итог при удалении строки
+            saveChanges();     // Принудительно обновим итог при удалении строки
             return true;
         }
     }
@@ -325,16 +348,18 @@ bool Document::remove() {
 }
 
 
-void Document::saveVariable(QString name, QVariant value)
+void Document::saveVariable(QString n, QVariant value)
 {
+    QString name = n.toUpper();
     if (variables.contains(name))
         variables.remove(name);
     variables.insert(name, value);
 }
 
 
-QVariant Document::restoreVariable(QString name)
+QVariant Document::restoreVariable(QString n)
 {
+    QString name = n.toUpper();
     QVariant value(0);
     if (variables.contains(name))
         value = variables.value(name);
@@ -344,22 +369,25 @@ QVariant Document::restoreVariable(QString name)
 
 void Document::saveVariablesToDB()
 {
-    QString xml;
-    QXmlStreamWriter xmlWriter(&xml);
-    xmlWriter.setAutoFormatting(true);
-    xmlWriter.writeStartDocument();
-    xmlWriter.writeStartElement("variables");
-    foreach (QString name, variables.keys())
+    if (variables.size() > 0)
     {
-        xmlWriter.writeStartElement("variable");
-        xmlWriter.writeAttribute("name", name);
-        xmlWriter.writeAttribute("type", QString("%1").arg(variables.value(name).type()));
-        xmlWriter.writeAttribute("value", variables.value(name).toString());
+        QString xml;
+        QXmlStreamWriter xmlWriter(&xml);
+        xmlWriter.setAutoFormatting(true);
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeStartElement("variables");
+        foreach (QString name, variables.keys())
+        {
+            xmlWriter.writeStartElement("variable");
+            xmlWriter.writeAttribute("name", name);
+            xmlWriter.writeAttribute("type", QString("%1").arg(variables.value(name).type()));
+            xmlWriter.writeAttribute("value", variables.value(name).toString());
+            xmlWriter.writeEndElement();
+        }
         xmlWriter.writeEndElement();
+        xmlWriter.writeEndDocument();
+        db->saveDocumentVariables(docId, xml);
     }
-    xmlWriter.writeEndElement();
-    xmlWriter.writeEndDocument();
-    db->saveDocumentVariables(docId, xml);
 }
 
 
@@ -367,18 +395,21 @@ void Document::restoreVariablesFromDB()
 {
     variables.clear();
     QString xml = db->restoreDocumentVariables(docId);
-    QXmlStreamReader xmlReader(xml);
-    while (!xmlReader.atEnd())
+    if (xml.size() > 0)
     {
-        if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "variable")
+        QXmlStreamReader xmlReader(xml);
+        while (!xmlReader.atEnd())
         {
-            QVariant val(xmlReader.attributes().value("value").toString());
-            if (val.convert((QVariant::Type)QString(xmlReader.attributes().value("type").toString()).toInt()))
+            if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "variable")
             {
-                variables.insert(xmlReader.attributes().value("name").toString(), val);
+                QVariant val(xmlReader.attributes().value("value").toString());
+                if (val.convert((QVariant::Type)QString(xmlReader.attributes().value("type").toString()).toInt()))
+                {
+                    variables.insert(xmlReader.attributes().value("name").toString().toUpper(), val);
+                }
             }
+            xmlReader.readNext();
         }
-        xmlReader.readNext();
     }
 }
 
@@ -403,16 +434,21 @@ void Document::setValue(QString name, QVariant value, int row)
 
 QVariant Document::getValue(QString name, int row)
 {
+    QVariant result;
     if (name.left(1) == "P")
     {
         int __pos = name.indexOf("__");
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
         {
-            return Essence::getValue(name, findFreePrv());
+            result = Essence::getValue(name, findFreePrv());
         }
+        else
+            result = Essence::getValue(name, row);
     }
-    return Essence::getValue(name, row);
+    else
+        result = Essence::getValue(name, row);
+    return result;
 }
 
 
@@ -444,7 +480,6 @@ void Document::saveOldValues()
 }
 
 
-
 void Document::restoreOldValues()
 {
     Essence::restoreOldValues();
@@ -455,6 +490,20 @@ void Document::restoreOldValues()
     }
 }
 
+
+bool Document::compareSumValues()
+{
+    for (int i = 0; i < topersList->count(); i++)
+    {
+        QString field = QString("P%1__%2").arg(topersList->at(i).number)
+                                          .arg(db->getObjectName("документы.сумма"));
+        QVariant oldValue = oldValues.value(field);
+        QVariant newValue = getValue(field);
+        if (newValue != oldValue)
+            return true;
+    }
+    return false;
+}
 
 
 QVariant Document::getSumValue(QString name)
@@ -486,8 +535,12 @@ void Document::show()
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
                     // то установим его значение, которое актуально для всего документа
-                    dict->setId(tableModel->record(0).value(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод"))).toULongLong());
-                    showParameterText(dictName);
+                    qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
+                    if (val > 0)
+                    {
+                        dict->setId(val);
+                        showParameterText(dictName);
+                    }
                 }
             }
             dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
@@ -498,8 +551,12 @@ void Document::show()
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
                     // то установим его значение, которое актуально для всего документа
-                    dict->setId(tableModel->record(0).value(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод"))).toULongLong());
-                    showParameterText(dictName);
+                    qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                    if (val > 0)
+                    {
+                        dict->setId(val);
+                        showParameterText(dictName);
+                    }
                 }
             }
         }
@@ -639,7 +696,7 @@ QString Document::transformSelectStatement(QString string)
 }
 
 
-void Document::setTableModel()
+void Document::setTableModel(int)
 {   // Генерирует заготовку запроса для получения данных для табличной части документа
     // Вызывается 1 раз
     tableModel = new MySqlRelationalTableModel(tableName, this);
@@ -710,7 +767,7 @@ bool Document::showNextDict()
                     break;      // Пользователь отказался от дальнейшей работы со справочниками
                 }
             }
-            prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
+            prepareValue(dict->getPrototypeName(), dict);
         }
         dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
         if (dictName.size() > 0 && dicts->contains(dictName))
@@ -734,17 +791,17 @@ bool Document::showNextDict()
                     break;      // Пользователь отказался от дальнейшей работы со справочниками
                 }
             }
-            prepareValue(dict->getPrototypeName(), QVariant(dict->getId()));
+            prepareValue(dict->getPrototypeName(), dict);
         }
     }
     return anyShown;
 }
 
 
-void Document::prepareValue(QString name, QVariant value)
+void Document::prepareValue(QString name, Dictionary* dict)
 {
     if (!prvValues.contains(name))
-        prvValues.insert(name, value);
+        prvValues.insert(name, QVariant(dict->getId()));
 }
 
 
@@ -774,15 +831,15 @@ void Document::hideOtherLinkedDicts(Dictionary* dict)
                 name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                 Dictionary* d = dicts->value(name);
                 d->setMustShow(false);
-                d->setId(dict->getValue(fieldName).toInt());
             }
         }
     }
 }
 
 
-void Document::appendDocString()
+int Document::appendDocString()
 {
+    int result = 0;
     QString dictName, parameter;
     qulonglong dbId, crId;
     // Просмотрим все проводки типовой операции
@@ -804,7 +861,7 @@ void Document::appendDocString()
         parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
      }
     // Добавим строку в документ с параметрами всех проводок операции
-    db->addDocStr(operNumber, docId, parameter);
+    result = db->addDocStr(operNumber, docId, parameter);
     foreach (QString attr, attrFields)
     {
         if (prvValues.keys().contains(attr))
@@ -812,10 +869,11 @@ void Document::appendDocString()
             db->saveDocAttribute(operNumber, docId, attr, prvValues.value(attr));
         }
     }
+    return result;
 }
 
 
-void Document::selectCurrentRow()
+void Document::updateCurrentRow(int strNum)
 {   // Делает запрос к БД по одной строке документа. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились (например сальдо).
 
@@ -825,10 +883,11 @@ void Document::selectCurrentRow()
     }
     else
     {
-        preparedSelectCurrentRow.bindValue(":value", getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt());
+        int str = strNum == 0 ? getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt() : strNum;
+        preparedSelectCurrentRow.bindValue(":value", str);
     }
 
-    Essence::selectCurrentRow();
+    Essence::updateCurrentRow();
 }
 
 
@@ -850,18 +909,13 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
         }
     }
     // Зарядим реквизиты документа
-    QStringList enabledFields;
-    enabledFields << db->getObjectName("документы.дата")
-                  << db->getObjectName("документы.датавремя")
-                  << db->getObjectName("документы.номер")
-                  << db->getObjectName("документы.комментарий")
-                  << db->getObjectName("документы.сумма");
     foreach(QString field, getParent()->getFieldsList())
     {
-        if (enabledFields.contains(field))
-        {
-            reportEngine->getReportContext()->setValue(QString("документ.%1").arg(field).toLower(), getParent()->getValue(field));
-        }
+        QVariant value = getParent()->getValue(field);
+        QString fieldName = field;
+        if (fieldName.contains(getParent()->getAttrPrefix()))
+            fieldName.remove(getParent()->getAttrPrefix());
+        reportEngine->getReportContext()->setValue(QString("документ.%1").arg(fieldName).toLower(), value);
     }
 
     foreach(QString varName, variables.keys())

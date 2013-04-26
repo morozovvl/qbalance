@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgridsearch.h"
 #include "../gui/wizardoperation.h"
 #include "../gui/mainwindow.h"
+#include "../gui/tableview.h"
 
 
 Topers::Topers(QObject *parent): Dictionary("vw_доступ_к_топер", parent) {
@@ -85,6 +86,7 @@ void Topers::view()
         removeDocument(operNumber);
     }
     delete wizard;
+    form->getGridTable()->setFocus();
 }
 
 

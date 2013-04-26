@@ -24,8 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgridsearch.h"
 #include "../gui/searchparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
-#include "../engine/formscriptengine.h"
-
 
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
@@ -39,8 +37,8 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     isDepend = false;
     ftsEnabled = false;
     sortOrder = "";
-    dictionaries = TApplication::exemplar()->getDictionaries();
-    if (TApplication::exemplar()->isSA())
+    dictionaries = app->getDictionaries();
+    if (app->isSA())
     {
         lSelectable = true;
         lInsertable = true;
@@ -101,7 +99,6 @@ bool Dictionary::add()
                                 // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
                                 QString dictTableName = searchParameters[i].value.toString();
                                 QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
-//                                dictFieldName = db->getObjectName(dictTableName + "." + dictFieldName);
                                 values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
                                                                                 .arg(dictFieldName)),
                                               dict->getId(0));
@@ -180,7 +177,7 @@ bool Dictionary::calculate(const QModelIndex& index) {
         if (db->execCommands())
         {   // Если во время работы скриптов ошибки не произошло
             // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-            selectCurrentRow();
+            updateCurrentRow();
         }
         else
         {   // Во время работы скриптов произошла ошибка
@@ -206,7 +203,7 @@ void Dictionary::setForm()
 }
 
 
-bool Dictionary::open(int deep)
+bool Dictionary::open(int)
 {
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
@@ -225,7 +222,6 @@ bool Dictionary::open(int deep)
             setSortClause(QString("\"%1\".%2").arg(tableName)
                                           .arg(db->getObjectNameCom(tableName + ".имя")));
 
-        db->getColumnsRestrictions(tableName, &columnsProperties);
         initForm();
         setScriptEngine();
         if (scriptEngine != 0)
@@ -243,42 +239,29 @@ bool Dictionary::open(int deep)
 }
 
 
-void Dictionary::setTableModel()
+void Dictionary::setTableModel(int)
 {
-    QString selectList;
-    QString fromList;
-    QString selectStatement;
-
-    Essence::setTableModel();
-
-    QList<FieldType> fields;
-    db->getColumnsProperties(&fields, tableName);
+    Essence::setTableModel(0);
 
     QStringList tables;
-    tables.append(fields.at(0).table);
+    tables.append(columnsProperties.at(0).table);
 
-    fromList = db->getObjectNameCom(tableName);
-
-    FieldType fld, oldFld;
+    FieldType fld;
     int keyColumn   = 0;
-    for (int i = 0; i < fields.count(); i++)
+    for (int i = 0; i < columnsProperties.count(); i++)
     {
-        fld = fields.at(i);
+        fld = columnsProperties.at(i);
 
         // Для основной таблицы сохраним информацию для обновления
-        if (fld.table == fields.at(0).table)
+        if (fld.table == columnsProperties.at(0).table)
         {
             if (fld.name == idFieldName)
                 keyColumn = i;
             tableModel->setUpdateInfo(fld.name, fld.table, fld.name, i, keyColumn);
         }
 
-        if (!tables.contains(fld.table))
+        if (!tables.contains(fld.table) && dictionaries != 0)
         {
-            fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(fld.table)
-                                                                                             .arg(oldFld.table)
-                                                                                             .arg(oldFld.name)
-                                                                                             .arg(fld.name));
             Dictionary* dict = dictionaries->getDictionary(fld.table);
             if (dict != 0)
             {                                       // Если удалось открыть справочник
@@ -294,59 +277,10 @@ void Dictionary::setTableModel()
             }
             tables.append(fld.table);
         }
-
-        if (selectList.size() > 0)
-            selectList.append(", ");
-        selectList.append(QString("\"%1\".\"%2\" AS \"%3\"").arg(fld.table)
-                                                                .arg(fld.name)
-                                                                .arg(fld.column.toUpper()));
-        oldFld = fld;
     }
 
-    selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
-    selectStatement.append(QLatin1String(" FROM ")).append(fromList);
-    tableModel->setSelectStatement(selectStatement);
-}
-
-
-qulonglong Dictionary::getId(int row)
-{
-    if (isSet())
-    {
-        QString filter = "";
-        for (int i = 0; i < fieldList.count(); i++)
-        {       // Просмотрим список полей
-            QString name = fieldList.at(i);
-            if (name.left(4) == idFieldName + "_")
-            {        // Если поле ссылается на другую таблицу
-                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                Dictionary* dict = dictionaries->getDictionary(name);
-                if (dict != NULL)
-                {                      // Если удалось открыть справочник
-                    if (filter.size() > 0)
-                        filter.append(" AND ");
-                    filter.append(QString("%1=%2").arg(fieldList.at(i)).arg(dict->getId()));
-                }
-            }
-        }
-        if (filter.size() > 0)
-        {
-            query(filter);
-            qulonglong result = Essence::getId(0);
-            if (result == 0)
-            {
-                if (add())
-                {
-                    query(filter);
-                    return Essence::getId(0);
-                }
-                return 0;
-            }
-            return result;
-        }
-    }
-    return Essence::getId(row);
+    tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+    db->getColumnsRestrictions(tableName, &columnsProperties);
 }
 
 
@@ -364,18 +298,17 @@ void Dictionary::query(QString defaultFilter)
                 resFilter = filter;
         }
     }
-//    tableModel->setSelectStatement();
     Essence::query(resFilter);
 }
 
 
-void Dictionary::selectCurrentRow()
+void Dictionary::updateCurrentRow()
 {   // Делает запрос к БД по одной строке справочника. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились
 
     preparedSelectCurrentRow.bindValue(":value", getId());
 
-    Essence::selectCurrentRow();
+    Essence::updateCurrentRow();
 }
 
 
@@ -389,19 +322,6 @@ void Dictionary::prepareSelectCurrentRowCommand()
     command.replace(" ORDER BY", QString(" WHERE %1.%2=:value ORDER BY").arg(getTableName()).arg(getIdFieldName()));
 
     preparedSelectCurrentRow.prepare(command);
-}
-
-
-/*
-void Dictionary::setValue(QString name, QVariant value, int row)
-{   // Не будем сохранять переменные в БД сразу, т.к. мы используем скрипты и обновлять будем после исполнения скриптов и с помощью транзакции
-    Essence::setValue(name, value, row);
-}
-*/
-
-void Dictionary::setScriptEngine()
-{
-    scriptEngine = new FormScriptEngine(this);
 }
 
 

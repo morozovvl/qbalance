@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
+#include <QtGui/QLineEdit>
 #include <QDebug>
 #include "scriptengine.h"
 #include "../kernel/app.h"
@@ -31,7 +32,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/form.h"
 #include "../gui/formgrid.h"
+#include "../gui/dialog.h"
+
 #include "eventloop.h"
+
+
+Q_DECLARE_METATYPE(Dialog*)
+Q_DECLARE_METATYPE(QLineEdit*)
 
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
@@ -202,6 +209,29 @@ void DictionariesFromScriptValue(const QScriptValue &object, Dictionaries* &out)
 }
 
 
+
+// класс Dialog
+QScriptValue qDialogConstructor(QScriptContext *, QScriptEngine *engine) {
+     Dialog *object = new Dialog();
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue qDialogToScriptValue(QScriptEngine *engine, Dialog* const &in) {
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+}
+
+void qDialogFromScriptValue(const QScriptValue &object, Dialog* &out) {
+    out = qobject_cast<Dialog*>(object.toQObject());
+}
+
+// класс QLineEdit
+QScriptValue qLineEditToScriptValue(QScriptEngine *engine, QLineEdit* const &in) {
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+}
+
+void qLineEditFromScriptValue(const QScriptValue &object, QLineEdit* &out) {
+    out = qobject_cast<QLineEdit*>(object.toQObject());
+}
 
 /*
 // класс Form
@@ -378,6 +408,13 @@ void ScriptEngine::loadScriptObjects()
 //    globalObject().setProperty("QFileDialog", newQMetaObject(&QObject::staticMetaObject, newFunction(QFileDialogConstructor)));
 //    qScriptRegisterMetaType(this, QFileDialogToScriptValue, QFileDialogFromScriptValue);
 
+    // Объявим класс Dialog
+    qScriptRegisterMetaType(this, qDialogToScriptValue, qDialogFromScriptValue);
+    globalObject().setProperty("Dialog", newQMetaObject(&QObject::staticMetaObject, newFunction(qDialogConstructor)));
+
+    // Объявим класс QLineEdit
+    qScriptRegisterMetaType(this, qLineEditToScriptValue, qLineEditFromScriptValue);
+
     // Объявим глобальные переменные и объекты
 //    globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()->getForm()));
     globalObject().setProperty("table", newQObject(parent()));
@@ -469,6 +506,23 @@ void ScriptEngine::eventBeforeShowForm(Form* form)
     QScriptValueList args;
     args << newQObject((FormGrid*)form);
     globalObject().property("EventBeforeShowForm").call(QScriptValue(), args);
+}
+
+
+void ScriptEngine::eventAfterShowForm(Form* form)
+{
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventAfterShowForm").call(QScriptValue(), args);
+}
+
+
+
+void ScriptEngine::eventBeforeHideForm(Form* form)
+{
+    QScriptValueList args;
+    args << newQObject((FormGrid*)form);
+    globalObject().property("EventBeforeHideForm").call(QScriptValue(), args);
 }
 
 
@@ -583,6 +637,14 @@ QList<EventFunction>* ScriptEngine::getEventsList()
 
         func.name = "EventBeforeShowForm()";
         func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
+        eventsList.append(func);
+
+        func.name = "EventAfterShowForm()";
+        func.comment = QObject::trUtf8("Событие происходит после открытия формы документа");
+        eventsList.append(func);
+
+        func.name = "EventBeforeHideForm()";
+        func.comment = QObject::trUtf8("Событие происходит перед закрытием формы документа");
         eventsList.append(func);
 
         func.name = "EventAfterHideForm()";

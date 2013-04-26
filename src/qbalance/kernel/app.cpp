@@ -245,6 +245,7 @@ Dialog* TApplication::createForm(QString fileName)
         {
             QUiLoader loader;
             loader.addPluginPath("./plugins/");
+            loader.setWorkingDirectory(path);
             formWidget = (Dialog*)loader.load(&file);
             file.close();
             if (QString::compare(formWidget->metaObject()->className(), "Dialog",  Qt::CaseSensitive) != 0)

@@ -78,16 +78,16 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 }
 
 
-bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
-    if (indexInQuery(index).isValid() && !insertedColumns.contains(index.column()))
+    if ((indexInQuery(index).isValid() && !insertedColumns.contains(index.column())) || force)
     {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
             QSqlRecord rec = record(index.row());
-            if (rec.indexOf(TApplication::exemplar()->getDBFactory()->getObjectName("код")) != index.column())
+            if (rec.indexOf(db->getObjectName("код")) != index.column())
             {   // Если мы не пытаемся поменять значение ключевого столбца
                 rec.setValue(index.column(), value);
                 rec.setGenerated(index.column(), true);
@@ -221,16 +221,15 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             if (value.size() > 0)
             {
                 // Сгенерируем для сервера команду сохранения значения из модели
-                QString command;
                 int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();
                 if (id > 0)
                 {
-                    command = QString("UPDATE %1 SET %2=%3 WHERE %4=%5;").arg(db->getObjectName(updateInfo.value(index.column()).table))
-                                                                         .arg(db->getObjectName(updateInfo.value(index.column()).table + "." + updateInfo.value(index.column()).field))
-                                                                         .arg(value)
-                                                                         .arg(db->getObjectName(updateInfo.value(index.column()).table + ".код"))
-                                                                         .arg(id);
-                    db->appendCommand(command);
+                    UpdateValues values;
+                    values.table = updateInfo.value(index.column()).table;
+                    values.field = updateInfo.value(index.column()).field;
+                    values.value = value;
+                    values.recId = id;
+                    db->appendCommand(values);
                 }
             }
         }
@@ -238,4 +237,13 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
     return true;
 }
 
+
+QVariant MySqlRelationalTableModel::headerData (int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Vertical && QSqlRelationalTableModel::headerData(section,Qt::Vertical) == "*")
+    {
+        return section + 1;
+    }
+    return QSqlRelationalTableModel::headerData(section, orientation, role);
+}
 

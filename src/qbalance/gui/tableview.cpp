@@ -67,7 +67,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     QTableView::currentChanged(current, previous);
     if (parent != 0)
     {
-        if (current.row() != previous.row())
+        if ((current.row() != previous.row()) && tableModel->rowCount() > 0)
             emit rowChanged();
     }
 }
@@ -82,6 +82,12 @@ void TableView::keyPressEvent(QKeyEvent* event)
     {
         switch (event->key())
         {
+            case Qt::Key_Return:
+                selectNextColumn();
+                return;
+            case Qt::Key_Enter:
+                selectNextColumn();
+                return;
             case Qt::Key_Right:
                 selectNextColumn();
                 return;
@@ -125,17 +131,15 @@ bool TableView::setColumnsHeaders()
         if (fields->count() > 0)
         {
             // Сначала скроем все столбцы
-            for (int i = 0; i < header->count(); i++)
+            for (int i = 0; i < fields->count(); i++)
             {
-                int visualIndex = header->visualIndex(i);
-                header->hideSection(visualIndex);
+                header->hideSection(i);
             }
 
             // Теперь покажем только те столбцы, у которых поле number в списке fields больше 0
             QMap<int, QString>  columns;
             for (int i = 0; i < fields->count(); i++)
             {
-                int visualIndex = tableModel->fieldIndex(fields->at(i).column);
                 if (fields->at(i).number > 0)
                 {
                     MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
@@ -147,11 +151,11 @@ bool TableView::setColumnsHeaders()
                            connect(delegate, SIGNAL(closeEditor(QWidget*)), parent, SLOT(calculate()));
                        }
                        delegate->setReadOnly(fields->at(i).readOnly);
-                       setItemDelegateForColumn(visualIndex, delegate);
+                       setItemDelegateForColumn(i, delegate);
                     }
-                    tableModel->setHeaderData(visualIndex, Qt::Horizontal, fields->at(i).header);
+                    tableModel->setHeaderData(i, Qt::Horizontal, fields->at(i).header);
                     columns.insert(fields->at(i).number - 1, fields->at(i).column);
-                    header->showSection(visualIndex);
+                    header->showSection(i);
                 }
             }
 
@@ -299,3 +303,5 @@ void TableView::setReadOnly(bool ro)
         }
     }
 }
+
+

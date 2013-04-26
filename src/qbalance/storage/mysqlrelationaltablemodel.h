@@ -67,7 +67,7 @@ public:
 // Функции для сохранения данных
     void setReadOnly(bool ro) { readOnly = ro; }
     bool isReadOnly() { return readOnly; }
-    virtual bool setData(const QModelIndex &, const QVariant &, int role = Qt::EditRole);
+    bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
     virtual bool submit(const QModelIndex&);
     virtual bool updateRowInTable(int, const QSqlRecord&);
     virtual void setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn);
@@ -97,6 +97,8 @@ private:
     TApplication*           app;
     DBFactory*              db;
     bool                    testSelect;
+
+    QVariant headerData (int, Qt::Orientation, int) const;
 };
 
 #endif // MYSQLRELATIONALTABLEMODEL_H

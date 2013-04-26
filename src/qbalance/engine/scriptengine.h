@@ -56,6 +56,8 @@ public:
     void eventAfterAddString();
     void eventInitForm(Form*);
     void eventBeforeShowForm(Form*);
+    void eventAfterShowForm(Form*);
+    void eventBeforeHideForm(Form*);
     void eventAfterHideForm(Form*);
     void eventCloseForm(Form*);
     void eventImport(Form*);

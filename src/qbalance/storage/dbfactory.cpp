@@ -1077,11 +1077,17 @@ bool DBFactory::removeDoc(int docId)
 }
 
 
-bool DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, int nDocStr)
+int DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, int nDocStr)
 {
+    int result = 0;
     clearError();
     QString command = QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5)").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr);
-    return exec(command);
+    QSqlQuery query = execQuery(command);
+    if (query.first())
+    {
+        result = query.record().field(0).value().toInt();
+    }
+    return result;
 }
 
 
@@ -2062,6 +2068,52 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 }
 
 
+QString DBFactory::getDictionarySqlSelectStatement(QString tableName, QString prefix)
+{
+    QString selectList;
+    QString fromList;
+    QString selectStatement;
+    QList<FieldType>    columnsProperties;
+    QStringList tables;
+
+    getColumnsProperties(&columnsProperties, tableName, tableName, 0);
+
+    if (columnsProperties.size() > 0)
+    {
+        tables.append(columnsProperties.at(0).table);
+
+        fromList = getObjectNameCom(tableName);
+
+        FieldType fld, oldFld;
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            fld = columnsProperties.at(i);
+
+            if (!tables.contains(fld.table))
+            {
+                fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(fld.table)
+                                                                                                 .arg(oldFld.table)
+                                                                                                 .arg(oldFld.name)
+                                                                                                 .arg(fld.name));
+                tables.append(fld.table);
+            }
+
+            if (selectList.size() > 0)
+                selectList.append(", ");
+            selectList.append(QString("\"%1\".\"%2\" AS \"%3%4\"").arg(fld.table)
+                                                                .arg(fld.name)
+                                                                .arg(prefix.toUpper())
+                                                                .arg(fld.column.toUpper()));
+            oldFld = fld;
+        }
+
+        selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
+        selectStatement.append(QLatin1String(" FROM ")).append(fromList);
+    }
+    return selectStatement;
+}
+
+
 bool DBFactory::getToperSingleString(int operNumber)
 {
     clearError();
@@ -2236,8 +2288,20 @@ void DBFactory::appendCommand(QString command)
 }
 
 
+void DBFactory::appendCommand(UpdateValues value)
+{
+    for (int i = 0; i < updateValues.count(); i++)
+    {
+        if (value.recId == updateValues.at(i).recId && value.field == updateValues.at(i).field)
+            return;
+    }
+    updateValues.append(value);
+}
+
+
 bool DBFactory::execCommands()
 {
+    // Сначала выполним готовые команды
     if (commands.count() > 1)
         beginTransaction();
 
@@ -2255,6 +2319,67 @@ bool DBFactory::execCommands()
     if (commands.count() > 1)
         commitTransaction();
     commands.clear();
+
+
+    // Теперь соберем и выполним команды, скомпоновав вместе все данные для обновления отдельной записи
+    QList<UpdateIds> ids;
+    for (int i = 0; i < updateValues.count(); i++)
+    {
+        UpdateIds id;
+        id.id = updateValues.at(i).recId;
+        id.table = updateValues.at(i).table;
+        bool found = false;
+        foreach (UpdateIds i, ids)
+        {
+            if ((i.id == id.id) && (i.table == id.table))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            ids.append(id);
+    }
+
+    if (ids.count() > 1)
+        beginTransaction();
+
+    if (ids.count() > 0)
+    {
+
+        foreach(UpdateIds id, ids)
+        {
+            QString command;
+            QString table;
+            for (int i = 0; i < updateValues.count(); i++)
+            {
+                if (updateValues.at(i).recId == id.id && updateValues.at(i).table == id.table)
+                {
+                    table = updateValues.at(i).table;
+                    if (command.size() > 0)
+                        command.append(",");
+                    command.append(QString("\"%1\"=%2").arg(getObjectName(table + "." + updateValues.at(i).field)).arg(updateValues.at(i).value));
+                }
+            }
+            if (table.size() > 0)
+            {
+                command = QString("UPDATE \"%1\" SET %2 WHERE %3=%4").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
+                if (!exec(command))
+                {
+                    if (ids.count() > 1)
+                        rollbackTransaction();
+                    updateValues.clear();
+                    return false;
+                }
+
+            }
+        }
+    }
+
+    if (ids.count() > 1)
+        commitTransaction();
+
+    updateValues.clear();
     return true;
 }
 

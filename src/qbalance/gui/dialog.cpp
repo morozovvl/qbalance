@@ -28,6 +28,7 @@ Dialog::Dialog(QWidget *parent):
     app = 0;
     freeWindow = false;
     subWindow = 0;
+    form = 0;
 }
 
 
@@ -36,17 +37,6 @@ void Dialog::setApp(TApplication* a)
     app = a;
     setParent(app->getMainWindow(), Qt::Dialog);
 }
-
-
-void Dialog::keyPressEvent(QKeyEvent *event)
-{
-    emit keyPressed(event);
-
-    form->keyPressEvent(event);
-    if (!event->isAccepted())
-        QDialog::keyPressEvent(event);
-}
-
 
 void Dialog::show()
 {
@@ -98,4 +88,15 @@ QWidget* Dialog::findChild(QString name)
         app->showError(QString(QObject::trUtf8("Не найден объект %1")).arg(name));
     return widget;
 }
+
+
+void Dialog::keyPressEvent(QKeyEvent *event)
+{
+    if (form != 0)
+        form->keyPressEvent(event);
+    else
+        QDialog::keyPressEvent(event);
+}
+
+
 

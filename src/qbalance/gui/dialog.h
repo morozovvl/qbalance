@@ -38,30 +38,25 @@ class QDESIGNER_WIDGET_EXPORT Dialog : public QDialog
 public:
 
     Dialog(QWidget *parent = 0);
-
     Q_INVOKABLE void show();
     Q_INVOKABLE int exec();
     Q_INVOKABLE void hide();
     Q_INVOKABLE QWidget* findChild(QString);
+    Q_INVOKABLE QString test() { return "test"; }
 
     void setFreeWindow(bool free) { freeWindow = free; }
     void setApp(TApplication*);
     MyMdiSubWindow* getSubWindow();
     Form* getForm() { return form; }
     void    setForm(Form* f) { form = f; }
+    virtual void keyPressEvent(QKeyEvent*);
 
-
-public slots:
-
-signals:
-    void keyPressed(QKeyEvent *e);
 
 private:
     TApplication*               app;
     MyMdiSubWindow*             subWindow;
     Form*                       form;
-    bool    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
-    virtual void keyPressEvent(QKeyEvent *e);
+    bool                        freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
 };
 
 #endif // DIALOG_H

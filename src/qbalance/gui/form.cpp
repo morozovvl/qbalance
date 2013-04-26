@@ -191,6 +191,9 @@ void Form::show() {
         checkVisibility();
         formWidget->show();
 
+        if (parent != 0)
+            parent->afterShowFormEvent();
+
     }
 }
 
@@ -227,9 +230,15 @@ void Form::checkVisibility()
 
 void Form::hide() {
     if (formWidget != 0) {
+
+        if (parent != 0)
+            parent->beforeHideFormEvent();
+
         formWidget->hide();
+
         if (parent != 0)
             parent->afterHideFormEvent();
+
     }
 }
 

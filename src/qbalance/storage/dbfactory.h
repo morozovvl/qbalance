@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 class TApplication;
-//class MySqlRelationalTableModel;
 class Dictionary;
 class Dictionaries;
 
@@ -105,6 +104,21 @@ struct ToperType
 };
 
 
+struct UpdateValues
+{
+    QString     table;
+    QString     field;
+    QString     value;
+    int         recId;
+};
+
+
+struct UpdateIds
+{
+    int         id;
+    QString     table;
+};
+
 class DBFactory : public QObject {
     Q_OBJECT
 
@@ -113,7 +127,7 @@ public:
     ~DBFactory();
     bool addDoc(int, QDate);
     bool removeDoc(int);
-    bool addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
+    int addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
     void saveDocAttribute(int, int, QString, QVariant);
     bool removeDocStr(int, int);
     void clearError();
@@ -192,6 +206,7 @@ public:
                                           QList<ToperType>*,
                                           QList<FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
+    QString getDictionarySqlSelectStatement(QString, QString = "");       // Генерирует текст SQL-запроса для справочника
     QSqlQuery getAccounts() { return accounts; }
     void saveDocumentVariables(int docId, QString xml);
     QString restoreDocumentVariables(int docId);
@@ -238,7 +253,7 @@ public:
     QSqlRecord getDocumentAddQuery(int);
     bool    execCommands();
     void    appendCommand(QString);
-
+    void    appendCommand(UpdateValues);
 
 
 private:
@@ -263,6 +278,7 @@ private:
     QString                 errorText;          // текст последней ошибки
     QMap<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
     QStringList             commands;
+    QList<UpdateValues>     updateValues;
 
     void setError(QString);
     void initObjectNames();

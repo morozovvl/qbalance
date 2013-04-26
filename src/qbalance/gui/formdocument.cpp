@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QFont>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
+#include "tableview.h"
+#include "formgrid.h"
 #include "formdocument.h"
 #include "docparameters.h"
 #include "../kernel/document.h"

@@ -37,7 +37,7 @@ public:
       MainWindow(GUIFactory*);
       ~MainWindow();
       virtual void open();
-      QMdiArea* getWorkspace() { return workSpace; }
+      QMdiArea* getWorkSpace() { return workSpace; }
       QStatusBar* getStatusBar() { return statusBar(); }
       virtual void showPeriod();
       virtual MyMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс

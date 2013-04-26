@@ -31,6 +31,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
     tableName  = "документы";
     operNumber = opNumber;
     tagName    = QString("СписокДокументов%1").arg(operNumber);
+    prefix = "АТРИБУТЫ__";
     QSqlRecord operProperties = db->getTopersProperties(operNumber);
     db->getToperData(operNumber, &topersList);              // Получим список типовых операций
     formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString()).arg(QObject::trUtf8("Список документов"));
@@ -110,20 +111,18 @@ void Documents::query(QString filter) {
 
 
 bool Documents::open() {
-    if (Essence::open()) {     // Откроем этот справочник
-        fieldList = getFieldsList();
-        int keyColumn   = 0;
-        for (int i = 0; i < fieldList.count(); i++)
-        {       // Просмотрим список полей
-            QString name = fieldList.at(i);
-            if (name == idFieldName)
-                keyColumn = i;
-            tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
-        }
+    if (Table::open()) {     // Откроем этот справочник
+
         // Установим порядок сортировки
         setSortClause(QString("%1, \"%2\".%3").arg(db->getObjectNameCom(tableName + ".дата"))
                                           .arg(tableName)
                                           .arg(db->getObjectNameCom(tableName + ".номер")));
+
+        tableModel->setTestSelect(true);
+        query();
+        tableModel->setTestSelect(false);
+
+        initForm();
 
         currentDocument = new Document(operNumber, this);
         if (currentDocument->open())
@@ -144,6 +143,48 @@ void Documents::close() {
     currentDocument->close();
     delete currentDocument;
     Dictionary::close();
+}
+
+
+void Documents::setValue(QString n, QVariant value)
+{
+    for (int i = 0; i < columnsProperties.count(); i++)
+    {
+        if (n.toUpper() == columnsProperties.at(i).column)
+        {
+            Dictionary::setValue(n, value);
+            return;
+        }
+    }
+    for (int i = 0; i < attrFields.count(); i++)
+    {
+        if ((n.toUpper() == attrFields.at(i).column) || (n.toUpper() == prefix + attrFields.at(i).column))
+        {
+            Dictionary::setValue(prefix + n, value);
+            return;
+        }
+    }
+}
+
+
+QVariant Documents::getValue(QString n)
+{
+    QVariant result;
+    for (int i = 0; i < columnsProperties.count(); i++)
+    {
+        if (n.toUpper() == columnsProperties.at(i).column)
+        {
+            return Dictionary::getValue(n);
+        }
+    }
+    for (int i = 0; i < attrFields.count(); i++)
+    {
+        if (n.toUpper() == attrFields.at(i).column)
+        {
+            return Dictionary::getValue(prefix + n);
+        }
+    }
+    return result;
 }
 
 
@@ -174,23 +215,51 @@ void Documents::prepareSelectCurrentRowCommand()
 }
 
 
-QString Documents::transformSelectStatement(QString string)
+void Documents::setTableModel(int)
 {
-/*
+    Essence::setTableModel(0);
+
+    fieldList = getFieldsList();
+    int keyColumn   = 0;
+    for (int i = 0; i < fieldList.count(); i++)
+    {       // Просмотрим список полей
+        QString name = fieldList.at(i);
+        if (name == idFieldName)
+            keyColumn = i;
+        tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
+    }
+
     if (topersList.at(0).docattributes)
     {
-        if (!string.contains("INNER JOIN"))
+        QString attrName = QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(operNumber).toLower();
+        QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
+        QString attrSelectStatement = db->getDictionarySqlSelectStatement(attrName, prefix);
+        if (attrSelectStatement.size() > 0)
         {
-            string.replace(" FROM ", ", a.* FROM ");
-            string.replace(" WHERE ", QString(" LEFT OUTER JOIN \"%1%2\" a ON \"%3\".%4=a.%5 WHERE ").arg(db->getObjectName("докатрибуты"))
-                                                                                                      .arg(operNumber)
-                                                                                                      .arg(tableName)
-                                                                                                      .arg(db->getObjectNameCom(tableName + ".код"))
-                                                                                                      .arg(db->getObjectNameCom("докатрибуты.код")));
+            selectStatement.replace(" FROM ", ",a.* FROM ");
+            selectStatement.append(QString(" LEFT OUTER JOIN (%1) a ON \"%2\".\"%3\"=a.\"%4\"").arg(attrSelectStatement)
+                                                                                               .arg(tableName)
+                                                                                               .arg(db->getObjectName(tableName + ".код"))
+                                                                                               .arg(prefix + "КОД"));
+            db->getColumnsProperties(&attrFields, attrName);
+            FieldType fld;
+            int keyColumn   = 0;
+            int columnCount = columnsProperties.count();
+            for (int i = 0; i < attrFields.count(); i++)
+            {
+                fld = attrFields.at(i);
+                if (fld.table == attrName)
+                {
+                    if (fld.name == db->getObjectName(attrName + ".код"))
+                        keyColumn = columnCount;
+                    tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, columnCount, keyColumn);
+                }
+                fld.column = prefix + fld.column;
+                columnsProperties.append(fld);
+                columnCount++;
+            }
         }
+        tableModel->setSelectStatement(selectStatement);
+        db->getColumnsRestrictions(tableName, &columnsProperties);
     }
-*/
-    return string;
 }
-
-

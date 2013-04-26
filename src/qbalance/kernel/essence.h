@@ -71,7 +71,6 @@ public:
     Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     void                                setDoSubmit(bool submit) { doSubmit = submit; }
-    void                                setForceSubmit(bool submit) { forceSubmit = submit; }
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm();
@@ -111,6 +110,8 @@ public:
 // Скриптовые события
     void                initFormEvent();
     void                beforeShowFormEvent();
+    void                afterShowFormEvent();
+    void                beforeHideFormEvent();
     void                afterHideFormEvent();
     void                closeFormEvent();
     QString             preparePictureUrl();
@@ -140,21 +141,20 @@ protected:
     bool                lUpdateable;
     bool                lPrintable;
     bool                isDictionary;
+    QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        setForm();
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
-    virtual void        selectCurrentRow();
+    virtual void        updateCurrentRow();
 
 private:
     bool                scriptEngineEnabled;
-//    QVariant            oldValue;
     QString             photoPath;
     QString             photoIdField;
     QString             photoNameField;
     bool                photoEnabled;
     bool                doSubmit;
-    bool                forceSubmit;
-    QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
+    QWidget*            activeWidget;
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QNetworkAccessManager*  m_networkAccessManager;

@@ -57,19 +57,8 @@ void Table::query(QString filter)
 bool Table::open()
 {
     setTableModel();
-    tableModel->setTestSelect(true);
-    query();
-    tableModel->setTestSelect(false);
-    if (tableModel->lastError().type() == QSqlError::NoError)
-    {
-        opened = true;
-    }
-    else
-    {// Не удалось открыть таблицу, сообщим об ошибке
-        QSqlError error = tableModel->lastError();
-        app->showError(error.text());
-    }
-    return opened;
+    opened = true;
+    return true;
 }
 
 
@@ -81,10 +70,10 @@ void Table::close()
 }
 
 
-void Table::setTableModel()
+void Table::setTableModel(int level)
 {
     tableModel = new MySqlRelationalTableModel(tableName, this);
-    db->getColumnsProperties(&columnsProperties, tableName);
+    db->getColumnsProperties(&columnsProperties, tableName, tableName, level);
 }
 
 
@@ -96,7 +85,13 @@ void Table::setSortClause(QString sort)
 
 QStringList Table::getFieldsList()
 {
-    return tableModel->getFieldsList();
+//    return tableModel->getFieldsList();
+    QStringList fields;
+    for (int i = 0; i < columnsProperties.count(); i++)
+    {
+        fields << columnsProperties.at(i).column;
+    }
+    return fields;
 }
 
 

@@ -412,12 +412,14 @@ void FormGrid::showPhoto()
 
 void FormGrid::calculate()
 {
+    grdTable->setUpdatesEnabled(false);
     QModelIndex index = getCurrentIndex();
     if (!parent->calculate(index))
         grdTable->reset();
     else
         grdTable->repaint();
     grdTable->selectNextColumn(&index);       // Передвинуть курсор на следующую колонку
+    grdTable->setUpdatesEnabled(true);
 }
 
 
@@ -499,7 +501,6 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
 
 void FormGrid::cmdPrint()
 {
-    parent->afterHideFormEvent();
     QDir dir = QDir(app->getReportsPath());
     QString ext = "." + app->getReportTemplateExt();
     // Получим список локальных шаблонов отчетов

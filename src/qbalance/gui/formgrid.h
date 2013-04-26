@@ -45,6 +45,7 @@ public:
     void setCalculateColumn(int column) { calculateColumn = column; }
     void selectRow(int = 0);
     virtual void setGridFocus();
+    TableView* getGridTable() { return grdTable; }
 
     Q_INVOKABLE QPushButton* getButtonAdd() { return buttonAdd; }
     Q_INVOKABLE QPushButton* getButtonDelete() { return buttonDelete; }

@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/wizarddictionary.h"
+#include "../gui/tableview.h"
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
@@ -148,12 +149,13 @@ void Dictionaries::view()
     {
         removeDictionary(dictName);
     }
+    form->getGridTable()->setFocus();
 }
 
 
 bool Dictionaries::remove()
 {
-    if (Essence::remove())
+    if (Dictionary::remove())
     {
         if (db->removeDictionary(getValue("таблица").toString().trimmed()))
         {   // если удалось удалить справочник, то обновим список справочников
@@ -165,7 +167,7 @@ bool Dictionaries::remove()
 
 
 bool Dictionaries::open() {
-    if (Essence::open()) {
+    if (Dictionary::open()) {
         setSortClause(db->getObjectName("vw_доступ_к_справочникам.имя"));
         return true;
     }
@@ -177,7 +179,7 @@ void Dictionaries::close() {
     foreach(Dictionary* dict, dictionaries) {
         dict->close();
     }
-    Essence::close();
+    Dictionary::close();
 }
 
 

@@ -40,7 +40,6 @@ public:
 // Функции для работы с моделью данных
     virtual bool add();
     virtual bool remove();
-    Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     Q_INVOKABLE virtual void            query(QString filter = "");
     virtual bool                        calculate(const QModelIndex &);
 
@@ -69,8 +68,6 @@ public:
     bool isFtsEnabled() { return ftsEnabled; }
     Q_INVOKABLE QString getTest() { return "Test Ok"; }
     QString     getDictTitle() { return dictTitle; }
-//    Q_INVOKABLE virtual void setValue(QString, QVariant, int = -1);
-    virtual void setScriptEngine();
 
 protected:
     Dictionaries*   dictionaries;
@@ -85,8 +82,8 @@ protected:
     QStringList     fieldList;
     virtual void    setForm();
     virtual void    prepareSelectCurrentRowCommand();
-    virtual void    selectCurrentRow();
-    virtual void    setTableModel();
+    virtual void    updateCurrentRow();
+    virtual void    setTableModel(int = 0);
 
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск

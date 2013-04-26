@@ -68,14 +68,14 @@ public:
     Q_INVOKABLE void setDate(QString date, Qt::DateFormat format = Qt::TextDate) { ((FormDocument*)getForm())->setDate(QDate::fromString(date, format)); }
     Q_INVOKABLE void setNumber(QString number) { ((FormDocument*)getForm())->setNumber(number); }
     Q_INVOKABLE void showParameterText(QString dictName) { ((FormDocument*)getForm())->showParameterText(dictName);}
-    void appendDocString();
-    void prepareValue(QString, QVariant);
+    int appendDocString();
+    void prepareValue(QString, Dictionary*);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
     Q_INVOKABLE void saveVariable(QString, QVariant);
     Q_INVOKABLE QVariant restoreVariable(QString);
-    Q_INVOKABLE void saveChanges(bool = false);
+    Q_INVOKABLE void saveChanges();
     void saveVariablesToDB();
     void restoreVariablesFromDB();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
@@ -86,8 +86,8 @@ protected:
     virtual void        setForm();
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
-    virtual void        selectCurrentRow();
-    virtual void setTableModel();
+    virtual void        updateCurrentRow(int = 0);
+    virtual void        setTableModel(int = 0);
 
 private:
     QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
@@ -102,15 +102,16 @@ private:
     bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
     QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
-    QHash<int, prvSaldo>            saldo;             // содержит остаток и сальдо по счетам, корреспондирующим в текущей строке документа
     QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
+    bool                            isSaldoExist;
 
     bool showNextDict();
     void hideOtherLinkedDicts(Dictionary*);
     void showItog();
-    void calcItog(bool = false);
+    void calcItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
+    bool    compareSumValues();     // Сравнивает новые значения полей СУММА проводок со старыми. Если значения различаются, то дается добро на сохранение данных проводки на сервере
 };
 
 #endif // DOCUMENT_H

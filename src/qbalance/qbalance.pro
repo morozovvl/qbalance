@@ -59,7 +59,6 @@ SOURCES += main.cpp \
     engine/reportscriptengine.cpp \
     report/ooreportengine.cpp \
     engine/reportcontext.cpp \
-    engine/formscriptengine.cpp \
     engine/sqlqueryclass.cpp \
     engine/sqlqueryprototype.cpp \
     engine/sqlrecordclass.cpp \
@@ -123,7 +122,6 @@ HEADERS += kernel/app.h \
     engine/reportscriptengine.h \
     report/ooreportengine.h \
     engine/reportcontext.h \
-    engine/formscriptengine.h \
     engine/sqlqueryclass.h \
     engine/sqlqueryprototype.h \
     engine/sqlrecordclass.h \

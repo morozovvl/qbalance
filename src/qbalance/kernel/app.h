@@ -68,8 +68,8 @@ public:
     Q_INVOKABLE void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
     Q_INVOKABLE QVariant getConst(QString);
     GUIFactory* getGUIFactory() { return gui; }
-    QString getLogin() { return db->getLogin(); }
-    bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
+    Q_INVOKABLE QString getLogin() { return db->getLogin(); }
+    Q_INVOKABLE bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
     QString getFormsPath(QString formName = "");

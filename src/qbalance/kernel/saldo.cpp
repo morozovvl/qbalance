@@ -48,30 +48,29 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
 
 bool Saldo::open()
 {
-    if (Dictionary::open())
+    bool result = Dictionary::open();
+    if (result)
     {
-        lIsSet = false;                              // Сальдо не может быть набором
+        tableModel->setTestSelect(true);
+        query();
+        tableModel->setTestSelect(false);
 
-        db->getColumnsRestrictions(tableName, &columnsProperties);
-        initForm();
-        initFormEvent();
-        return true;
+        lIsSet = false;                              // Сальдо не может быть набором
     }
-    app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(formTitle, TApplication::exemplar()->getLogin()));
-    return false;
+    return result;
 
 }
 
 
-void Saldo::setTableModel()
+void Saldo::setTableModel(int)
 {
-    Dictionary::setTableModel();
+    Dictionary::setTableModel(0);
 
     QString selectCommand = tableModel->getSelectStatement();
 
-    QString tableName = db->getObjectName("сальдо");
+    QString tName = db->getObjectName("сальдо");
     QList<FieldType> fields;
-    db->getColumnsProperties(&fields, tableName);
+    db->getColumnsProperties(&fields, tName);
 
     QString selectList;
     FieldType fld;
@@ -92,13 +91,14 @@ void Saldo::setTableModel()
         }
     }
     selectCommand.replace(" FROM", selectList + " FROM");
-    selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tableName)
+    selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
                                                                                                             .arg(db->getObjectName(dictionaryName + ".счет"))
                                                                                                             .arg(account)
-                                                                                                            .arg(db->getObjectName(tableName + ".код"))
+                                                                                                            .arg(db->getObjectName(tName + ".код"))
                                                                                                             .arg(dictionaryName)
                                                                                                             .arg(db->getObjectName(dictionaryName + ".код")));
     tableModel->setSelectStatement(selectCommand);
+    db->getColumnsRestrictions(tName, &columnsProperties);
 }
 
 
