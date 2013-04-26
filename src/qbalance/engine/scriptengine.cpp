@@ -582,6 +582,15 @@ void ScriptEngine::eventAfterAddString()
 }
 
 
+void ScriptEngine::eventSetEnabled(bool enabled)
+{
+    QScriptValueList args;
+    args << QScriptValue(enabled);
+    globalObject().property("EventSetEnabled").call(QScriptValue(), args);
+
+}
+
+
 QString ScriptEngine::preparePictureUrl(Essence* essence)
 {
     QScriptValueList args;
@@ -673,6 +682,10 @@ QList<EventFunction>* ScriptEngine::getEventsList()
 
         func.name = "EventCalcTable()";
         func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
+        eventsList.append(func);
+
+        func.name = "EventSetEnabled(enabled)";
+        func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
         eventsList.append(func);
 
     }

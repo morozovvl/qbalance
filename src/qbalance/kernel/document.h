@@ -80,6 +80,7 @@ public:
     void restoreVariablesFromDB();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
+    Q_INVOKABLE virtual void setEnabled(bool);
 
 
 protected:

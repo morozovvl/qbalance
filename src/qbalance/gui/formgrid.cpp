@@ -283,6 +283,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             parent->setInsertable(false);
         }
     }
+    grdTable->setReadOnly(parent->isReadOnly());
 }
 
 
@@ -301,7 +302,6 @@ int FormGrid::exec()
 void FormGrid::show()
 {
     QModelIndex index = getCurrentIndex();
-    Form::show();
     restoreCurrentIndex(index);
     if (grdTable != 0)
     {
@@ -309,57 +309,63 @@ void FormGrid::show()
         {
             readColumnsSettings();
         }
-        grdTable->setReadOnly(parent->isReadOnly());
         showPhoto();
         grdTable->setFocus();
         grdTable->selectNextColumn();
     }
+    Form::show();
 }
 
 
 void FormGrid::cmdAdd()
 {
-    if (parent != 0 && parent->add())
+    if (buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
-        if (parent->getTableModel()->rowCount() > 0)
-        {   // Если записей стало больше 0, то активируем кнопку "Удалить"
-            if (buttonDelete != 0)
-                buttonDelete->setDisabled(false);
+        if (parent != 0 && parent->add())
+        {
+            if (parent->getTableModel()->rowCount() > 0)
+            {   // Если записей стало больше 0, то активируем кнопку "Удалить"
+                if (buttonDelete != 0)
+                    buttonDelete->setDisabled(false);
+            }
         }
-    }
-    formWidget->activateWindow();
-    if (grdTable != 0)
-    {
-        grdTable->setFocus();
-        grdTable->selectNextColumn();
+        formWidget->activateWindow();
+        if (grdTable != 0)
+        {
+            grdTable->setFocus();
+            grdTable->selectNextColumn();
+        }
     }
 }
 
 
 void FormGrid::cmdDelete()
 {
-    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
-    if (parent != 0 && parent->remove())
+    if (buttonDelete->isVisible() && buttonDelete->isEnabled())
     {
-        int rowCount = parent->getTableModel()->rowCount();
-        if (rowCount > 0)
-        {   // Если после удаления строки в таблице остались еще записи
-            if (index.row() < rowCount)
-                setCurrentIndex(index);
-            else
-                setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
-        }
-        else
+        QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
+        if (parent != 0 && parent->remove())
         {
-            if (buttonDelete != 0)
-                buttonDelete->setDisabled(true);
-            picture->setVisible(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
+            int rowCount = parent->getTableModel()->rowCount();
+            if (rowCount > 0)
+            {   // Если после удаления строки в таблице остались еще записи
+                if (index.row() < rowCount)
+                    setCurrentIndex(index);
+                else
+                    setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
+            }
+            else
+            {
+                if (buttonDelete != 0)
+                    buttonDelete->setDisabled(true);
+                picture->setVisible(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
+            }
         }
-    }
-    formWidget->activateWindow();
-    if (grdTable != 0)
-    {
-        grdTable->setFocus();
+        formWidget->activateWindow();
+        if (grdTable != 0)
+        {
+            grdTable->setFocus();
+        }
     }
 }
 
@@ -690,83 +696,11 @@ void FormGrid::restoreCurrentIndex(QModelIndex index)
 }
 
 
-/*
-QDomElement FormGrid::createWidgetsStructure()
+void FormGrid::setEnabled(bool enabled)
 {
-    QDomDocument* doc = new QDomDocument();
-    QDomElement vboxLayout = Form::createWidgetsStructure();
-    QDomElement item, layout;
-    for (int i = 0; vboxLayout.childNodes().count(); i++)
-    {
-        item = vboxLayout.childNodes().at(i).firstChildElement("widget");
-        if (!item.isNull()) {
-           layout = item.firstChildElement("layout");
-            if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0)
-            {
-                if (buttonPrint != 0)
-                {
-                    item = doc->createElement("item");
-                    item.appendChild(createPushButtonElement((QWidget*)buttonPrint));
-                    layout.insertBefore(item, QDomNode());
-                }
-                if (buttonRequery != 0)
-                {
-                    item = doc->createElement("item");
-                    item.appendChild(createPushButtonElement((QWidget*)buttonRequery));
-                    layout.insertBefore(item, QDomNode());
-                }
-                if (buttonView != 0)
-                {
-                    item = doc->createElement("item");
-                    item.appendChild(createPushButtonElement((QWidget*)buttonView));
-                    layout.insertBefore(item, QDomNode());
-                }
-                if (buttonDelete != 0)
-                {
-                    item = doc->createElement("item");
-                    item.appendChild(createPushButtonElement((QWidget*)buttonDelete));
-                    layout.insertBefore(item, QDomNode());
-                }
-                if (buttonAdd != 0)
-                {
-                    item = doc->createElement("item");
-                    item.appendChild(createPushButtonElement((QWidget*)buttonAdd));
-                    layout.insertBefore(item, QDomNode());
-                }
-                break;
-            }
-        }
-    }
-    if (tableLayout != 0)
-    {
-        QDomElement widget, hlayout;
-        hlayout = doc->createElement("layout");
-        hlayout.setAttribute("class", "QVBoxLayout");
-        hlayout.setAttribute("name", tableLayout->objectName());
-        if (grdTable != 0)
-        {
-            widget = doc->createElement("widget");
-            widget.setAttribute("class", grdTable->metaObject()->className());
-            widget.setAttribute("name", grdTable->objectName());
-            item = doc->createElement("item");
-            item.appendChild(widget);
-            hlayout.appendChild(item);
-        }
-        if (picture != 0)
-        {
-            widget = doc->createElement("widget");
-            widget.setAttribute("class", picture->metaObject()->className());
-            widget.setAttribute("name", picture->objectName());
-            item = doc->createElement("item");
-            item.appendChild(widget);
-            hlayout.appendChild(item);
-        }
-        item = doc->createElement("item");
-        item.appendChild(hlayout);
-        vboxLayout.insertBefore(item, QDomNode());
-    }
-    delete doc;
-    return vboxLayout;
+    buttonAdd->setEnabled(enabled);
+    buttonDelete->setEnabled(enabled);
+    grdTable->setReadOnly(!enabled);
 }
-*/
+
 

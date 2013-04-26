@@ -251,86 +251,15 @@ void FormDocument::parametersChangedEvent()
 }
 
 
-/*
-QDomElement FormDocument::createWidgetsStructure()
+void FormDocument::setEnabled(bool enabled)
 {
-    QDomDocument* doc = new QDomDocument();
-    QDomElement vboxLayout = FormGrid::createWidgetsStructure();
-    if (vbxLayout != 0)
-    {
-        QDomElement item, widget, layout, hlayout, element;
-        if (itogNumeric != 0)
-            for (int i = 0; vboxLayout.childNodes().count(); i++)
-            {
-                item = vboxLayout.childNodes().at(i).firstChildElement("widget");
-                if (!item.isNull())
-                {
-                   layout = item.firstChildElement("layout");
-                    if (!layout.isNull() && layout.attribute("name").compare("cmdButtonLayout", Qt::CaseSensitive) == 0)
-                    {
-                        hlayout = doc->createElement("layout");
-                        hlayout.setAttribute("class", "QHBoxLayout");
-                        hlayout.setAttribute("name", "phbxItogLayout");
-
-                        item = doc->createElement("item");
-                        item.appendChild(createHStretchElement());
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(createLabelElement(LABEL_ITOG));
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(createLineEditElement(itogNumeric));
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(hlayout);
-
-                        vboxLayout.insertBefore(item, vboxLayout.childNodes().at(i));
-
-                        if (parameters != 0)
-                        {
-                            widget = doc->createElement("widget");
-                            widget.setAttribute("class", parameters->metaObject()->className());
-                            widget.setAttribute("name", parameters->objectName());
-                            item = doc->createElement("item");
-                            item.appendChild(widget);
-                            vboxLayout.insertBefore(item, QDomNode());
-                        }
-
-                        hlayout = doc->createElement("layout");
-                        hlayout.setAttribute("class", "QHBoxLayout");
-
-                        item = doc->createElement("item");
-                        item.appendChild(createLabelElement(LABEL_DATE));
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(createDateEditElement(dateEdit));
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(createLabelElement(LABEL_NUMBER));
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(createLineEditElement(numberEdit));
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(createHStretchElement());
-                        hlayout.appendChild(item);
-
-                        item = doc->createElement("item");
-                        item.appendChild(hlayout);
-                        vboxLayout.insertBefore(item, QDomNode());
-                        break;
-                    }
-                }
-            }
-    }
-    delete doc;
-    return vboxLayout;
+    FormGrid::setEnabled(enabled);
+    dateEdit->setReadOnly(!enabled);
+    numberEdit->setReadOnly(!enabled);
+    if (parameters != 0)
+        parameters->setEnabled(enabled);
+    if (queriesMenu != 0)
+        queriesMenu->setEnabled(enabled);
 }
-*/
+
+

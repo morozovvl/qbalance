@@ -937,3 +937,10 @@ void Document::cmdCancel()
 {
     getParent()->getForm()->setGridFocus();
 }
+
+
+void Document::setEnabled(bool en)
+{
+    Essence::setEnabled(en);
+    form->setEnabled(en);
+}

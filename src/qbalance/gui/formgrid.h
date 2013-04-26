@@ -55,6 +55,7 @@ public:
     Q_INVOKABLE QPushButton* getButtonLoad() { return buttonLoad; }
     Q_INVOKABLE QPushButton* getButtonSave() { return buttonSave; }
     virtual void keyPressEvent(QKeyEvent*);
+    Q_INVOKABLE virtual void setEnabled(bool);
 
 public slots:
     virtual void calculate();

@@ -63,6 +63,7 @@ public:
     void eventImport(Form*);
     void eventExport(Form*);
     void eventCalcTable();
+    void eventSetEnabled(bool);
     virtual QString preparePictureUrl(Essence*);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:

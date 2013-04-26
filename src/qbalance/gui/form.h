@@ -46,12 +46,12 @@ public:
     void appendToolTip(QString name, QString value);
     virtual void keyPressEvent(QKeyEvent*);
 
-//    virtual void createUi();
     void setButtonsSignals();
     bool isDefaultForm() { return defaultForm; }
 
     Q_INVOKABLE QPushButton* getButtonOk() { return buttonOk; }
     Q_INVOKABLE QPushButton* getButtonCancel() { return buttonCancel; }
+    Q_INVOKABLE virtual void setEnabled(bool) { ; }
 
 public slots:
     Q_INVOKABLE virtual int exec();

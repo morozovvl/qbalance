@@ -97,6 +97,8 @@ public:
     void setViewable(bool b) { lViewable = b; }
     void setUpdateable(bool b) { lUpdateable = b; }
     void setPrintable(bool b) { lPrintable = b; }
+    Q_INVOKABLE virtual void setEnabled(bool);
+    Q_INVOKABLE bool isEnabled() { return enabled; }
 
 // Функции для обеспечения работы скриптов
     virtual void        setScriptEngine();
@@ -141,6 +143,7 @@ protected:
     bool                lUpdateable;
     bool                lPrintable;
     bool                isDictionary;
+    bool                enabled;
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        setForm();
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати

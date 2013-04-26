@@ -41,6 +41,7 @@ public:
     void showParameterText(QString dictName) { parameters->showText(dictName); }
 
     Q_INVOKABLE QPushButton* getButtonQueryAdd() { return buttonQueryAdd; }
+    Q_INVOKABLE virtual void setEnabled(bool);
 
 public slots:
     virtual void cmdQueryAdd();

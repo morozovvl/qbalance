@@ -56,6 +56,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     lUpdateable = false;
     lPrintable  = false;
     isDictionary = true;
+    enabled     = true;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
     scriptEngine = 0;
@@ -448,6 +449,22 @@ void Essence::setScriptEngine()
 ScriptEngine* Essence::getScriptEngine()
 {
     return scriptEngine;
+}
+
+
+void Essence::setEnabled(bool en)
+{
+    QString disabledMessage = QObject::trUtf8(" - изменения запрещены");
+    enabled = en;
+    if (scriptEngine != 0)
+        scriptEngine->eventSetEnabled(en);
+    if (enabled)
+        form->getForm()->setWindowTitle(form->getForm()->windowTitle().remove(disabledMessage));
+    else
+    {
+        if (!form->getForm()->windowTitle().contains(disabledMessage))
+            form->getForm()->setWindowTitle(form->getForm()->windowTitle().append(disabledMessage));
+    }
 }
 
 
