@@ -1805,7 +1805,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 foreach (const QString field, prvFieldsList)
                 {// Для всех полей таблицы "проводки"
                     selectClause += (!selectClause.isEmpty() ? "," : "");                   // Добавим запятую, если это необходимо
-                    selectClause.append(QString("p%1.%2 AS \"P%1__%3\"").arg(prv).arg(getObjectName("проводки." + field)).arg(field.toUpper()));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
+                    selectClause.append(QString("p%1.\"%2\" AS \"P%1__%3\"").arg(prv).arg(getObjectName("проводки." + field)).arg(field.toUpper()));  // запишем в клаузу элемент <таблица>.<поле> с именем <таблица>__<поле>
                     for (int i = 0; i < fields.count(); i++)
                     {
                         if (fields.at(i).table == tableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
@@ -2014,18 +2014,18 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 dictName = QString("дбсальдо%1").arg(prv);
                 if (topersList->at(i).dbQuan) {
                     field = getObjectName("сальдо.конкол");
-                    selectClause.append(QString(",%1.\"%2\" AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
+                    selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
                             addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
                     field = getObjectName("сальдо.концена");
-                    selectClause.append(QString(",%1.\"%2\" AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
+                    selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
                             addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
                 }
                 field = getObjectName("сальдо.консальдо");
-                selectClause.append(QString(",%1.\"%2\" AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
+                selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                 for (int i  = 0; i < fields.count(); i++)
                     if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
                         addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
@@ -2035,18 +2035,18 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 dictName = QString("крсальдо%1").arg(prv);
                 if (topersList->at(i).crQuan) {
                     field = getObjectName("сальдо.конкол");
-                    selectClause.append(QString(",%1.\"%2\" AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
+                    selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
                             addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
                     field = getObjectName("сальдо.концена");
-                    selectClause.append(QString(",%1.\"%2\" AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
+                    selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                     for (int i  = 0; i < fields.count(); i++)
                         if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
                             addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
                 }
                 field = getObjectName("сальдо.консальдо");
-                selectClause.append(QString(",%1.\"%2\" AS %3__%4").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
+                selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                 for (int i  = 0; i < fields.count(); i++)
                     if (fields.at(i).table == salTableName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
                         addColumnProperties(columnsProperties, salTableName, QString("%1__%2").arg(dictName).arg(field.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
@@ -2199,24 +2199,24 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
     QSqlQuery query = execQuery(command);
     if (query.first())
     {   // Если операция существует
-        command = QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND %6 = '%7' AND %8 = '%9';").arg(getObjectName("доступ"))
-                                                                                             .arg(getObjectName("доступ.меню"))
+        command = QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND %6 = '%7' AND %8 = '%9';").arg(getObjectNameCom("доступ"))
+                                                                                             .arg(getObjectNameCom("доступ.меню"))
                                                                                              .arg(menu ? "true" : "false")
-                                                                                             .arg(getObjectName("доступ.код_типыобъектов"))
+                                                                                             .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                                              .arg(getTypeId("топер"))
-                                                                                             .arg(getObjectName("доступ.имя"))
+                                                                                             .arg(getObjectNameCom("доступ.имя"))
                                                                                              .arg(operNumber)
-                                                                                             .arg(getObjectName("доступ.пользователь"))
+                                                                                             .arg(getObjectNameCom("доступ.пользователь"))
                                                                                              .arg(user);
         exec(command);
     }
     else
     {
-        command = QString("INSERT INTO %1 (%2, %3, %4, %5) VALUES ('%6', '%7', '%8', %9);").arg(getObjectName("доступ"))
-                                                                                         .arg(getObjectName("доступ.код_типыобъектов"))
-                                                                                         .arg(getObjectName("доступ.имя"))
-                                                                                         .arg(getObjectName("доступ.пользователь"))
-                                                                                         .arg(getObjectName("доступ.меню"))
+        command = QString("INSERT INTO %1 (%2, %3, %4, %5) VALUES ('%6', '%7', '%8', %9);").arg(getObjectNameCom("доступ"))
+                                                                                         .arg(getObjectNameCom("доступ.код_типыобъектов"))
+                                                                                         .arg(getObjectNameCom("доступ.имя"))
+                                                                                         .arg(getObjectNameCom("доступ.пользователь"))
+                                                                                         .arg(getObjectNameCom("доступ.меню"))
                                                                                          .arg(getTypeId("топер"))
                                                                                          .arg(operNumber)
                                                                                          .arg(user)
@@ -2232,7 +2232,7 @@ void DBFactory::saveDocumentVariables(int docId, QString xml)
     QByteArray ba;
     QSqlQuery query;
     ba.append(xml);
-    QString command = QString("UPDATE %1 SET %2 = (:value) WHERE %3 = %4;").arg(getObjectNameCom("документы"))
+    QString command = QString("UPDATE %1 SET %2 = E':value' WHERE %3 = %4;").arg(getObjectNameCom("документы"))
                                                                            .arg(getObjectNameCom("документы.переменные"))
                                                                            .arg(getObjectNameCom("документы.код"))
                                                                            .arg(docId);

@@ -56,6 +56,7 @@ FormGrid::FormGrid(QObject* parent/* = NULL*/)
     buttonPrint = 0;
     buttonLoad = 0;
     buttonSave = 0;
+    columnsSettingsReaded = false;
 }
 
 
@@ -295,6 +296,7 @@ int FormGrid::exec()
             readColumnsSettings();
         grdTable->selectNextColumn();
     }
+    setButtons();
     return Form::exec();
 }
 
@@ -306,13 +308,12 @@ void FormGrid::show()
     if (grdTable != 0)
     {
         if (grdTable->setColumnsHeaders())
-        {
             readColumnsSettings();
-        }
         showPhoto();
         grdTable->setFocus();
         grdTable->selectNextColumn();
     }
+    setButtons();
     Form::show();
 }
 
@@ -372,9 +373,12 @@ void FormGrid::cmdDelete()
 
 void FormGrid::cmdView()
 {
-    picture->hide();
-    if (parent != 0)
-        parent->view();
+    if (buttonView->isVisible() && buttonView->isEnabled())
+    {
+        picture->hide();
+        if (parent != 0)
+            parent->view();
+    }
 }
 
 
@@ -391,6 +395,118 @@ void FormGrid::cmdRequery()
         grdTable->setFocus();
     }
     app->showMessageOnStatusBar("");
+    setButtons();
+}
+
+
+void FormGrid::cmdPrint()
+{
+    if (buttonPrint->isVisible() && buttonPrint->isEnabled())
+    {
+        QDir dir = QDir(app->getReportsPath());
+        QString ext = "." + app->getReportTemplateExt();
+        // Получим список локальных шаблонов отчетов
+        QStringList files = dir.entryList(QStringList(getParent()->getTagName() + ".*" + ext), QDir::Files, QDir::Name);
+        // И шаблоны с сервера
+        QStringList fs = db->getFilesList(getParent()->getTagName(), ReportTemplateFileType);
+        foreach (QString f, fs)
+        {
+            if (!files.contains(f))
+                files << f;
+        }
+
+        QStringList reports;
+        QMenu* menu = new QMenu(formWidget);
+        QAction* newReportAct = menu->addAction(QObject::trUtf8("Создать новый отчет..."));
+        if (files.count() > 0)
+        {
+            menu->addSeparator();
+            for (int i = 0; i < files.size(); i++)
+            {
+                QString file = files.at(i);
+                file.remove(getParent()->getTagName() + ".", Qt::CaseInsensitive);      // Уберем префикс файла
+                file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
+                reports << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
+                menu->addAction(file);
+            }
+        }
+        QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
+        if (cmdButtonLayout != 0)
+        {
+            QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));
+            if (action > 0)
+            {
+                if (action == newReportAct)
+                {
+                    QString reportName;                         // Создадим имя отчета по умолчанию
+                    int i = 1;
+                    do
+                    {
+                        reportName = QString("Отчет%1").arg(i++);
+                    } while (reports.contains(reportName));
+                    bool ok;
+                    reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый отчет"),
+                                                  QObject::trUtf8("Наименование отчета:"), QLineEdit::Normal,
+                                                  reportName, &ok);
+                    if (ok && !reportName.isEmpty())
+                        parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt());
+                }
+                else
+                    parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
+            }
+        }
+        formWidget->activateWindow();
+        if (grdTable != 0)
+            grdTable->setFocus();
+    }
+}
+
+
+void FormGrid::cmdLoad()
+{
+    if (buttonLoad->isVisible() && buttonLoad->isEnabled())
+    {
+        parent->getScriptEngine()->eventImport(this);
+    }
+}
+
+
+void FormGrid::cmdSave()
+{
+    if (buttonSave->isVisible() && buttonSave->isEnabled())
+    {
+        parent->getScriptEngine()->eventExport(this);
+    }
+}
+
+
+void FormGrid::setButtons()
+{
+    if (parent != 0)
+    {
+        if (parent->getTableModel()->rowCount() > 0)
+        {
+            if (buttonDelete != 0)
+                buttonDelete->setEnabled(true);
+            if (buttonView != 0)
+                buttonView->setEnabled(true);
+            if (buttonPrint != 0)
+                buttonPrint->setEnabled(true);
+            if (buttonSave != 0)
+                buttonSave->setEnabled(true);
+        }
+        else
+        {
+            if (buttonDelete != 0)
+                buttonDelete->setEnabled(false);
+            if (buttonView != 0)
+                buttonView->setEnabled(false);
+            if (buttonPrint != 0)
+                buttonPrint->setEnabled(false);
+            if (buttonSave != 0)
+                buttonSave->setEnabled(false);
+        }
+    }
 }
 
 
@@ -505,78 +621,6 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
 }
 
 
-void FormGrid::cmdPrint()
-{
-    QDir dir = QDir(app->getReportsPath());
-    QString ext = "." + app->getReportTemplateExt();
-    // Получим список локальных шаблонов отчетов
-    QStringList files = dir.entryList(QStringList(getParent()->getTagName() + ".*" + ext), QDir::Files, QDir::Name);
-    // И шаблоны с сервера
-    QStringList fs = db->getFilesList(getParent()->getTagName(), ReportTemplateFileType);
-    foreach (QString f, fs)
-    {
-        if (!files.contains(f))
-            files << f;
-    }
-
-    QStringList reports;
-    QMenu* menu = new QMenu(formWidget);
-    QAction* newReportAct = menu->addAction(QObject::trUtf8("Создать новый отчет..."));
-    if (files.count() > 0)
-    {
-        menu->addSeparator();
-        for (int i = 0; i < files.size(); i++)
-        {
-            QString file = files.at(i);
-            file.remove(getParent()->getTagName() + ".", Qt::CaseInsensitive);      // Уберем префикс файла
-            file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
-            reports << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
-            menu->addAction(file);
-        }
-    }
-    QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
-    if (cmdButtonLayout != 0)
-    {
-        QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));
-        if (action > 0)
-        {
-            if (action == newReportAct)
-            {
-                QString reportName;                         // Создадим имя отчета по умолчанию
-                int i = 1;
-                do
-                {
-                    reportName = QString("Отчет%1").arg(i++);
-                } while (reports.contains(reportName));
-                bool ok;
-                reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый отчет"),
-                                              QObject::trUtf8("Наименование отчета:"), QLineEdit::Normal,
-                                              reportName, &ok);
-                if (ok && !reportName.isEmpty())
-                    parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt());
-            }
-            else
-                parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
-        }
-    }
-    formWidget->activateWindow();
-    if (grdTable != 0)
-        grdTable->setFocus();
-}
-
-
-void FormGrid::cmdLoad()
-{
-    parent->getScriptEngine()->eventImport(this);
-}
-
-
-void FormGrid::cmdSave()
-{
-    parent->getScriptEngine()->eventExport(this);
-}
-
-
 void FormGrid::readColumnsSettings()
 // Считывает сохраненную информацию о ширине столбцов при открытии формы с таблицей
 {
@@ -591,14 +635,11 @@ void FormGrid::readColumnsSettings()
             int columnCount = settings.beginReadArray("grid");
             if (columnCount > 0)
             {
-                int i = 0;
-                while (i < columnCount)
+                for (int i = 0; i < columnCount; i++)
                 {
                     settings.setArrayIndex(i);
                     int width = settings.value("width", 100).toInt();
-                    width = width == 0 ? 20 : width;
                     grdTable->setColumnWidth(i, width);
-                    i++;
                 }
             }
             else
@@ -629,8 +670,7 @@ void FormGrid::readColumnsSettings()
                 QString name = QString("grid/%1/width").arg(i);
                 if (values.contains(name))
                 {
-                    int width = values.value(name, 50);
-                    width = width == 0 ? 50 : width;
+                    int width = values.value(name, 100);
                     grdTable->setColumnWidth(i, width);
                 }
                 else
@@ -639,45 +679,46 @@ void FormGrid::readColumnsSettings()
             }
             app->showMessageOnStatusBar("");
         }
+        columnsSettingsReaded = true;
     }
 }
 
 
 void FormGrid::writeSettings()
 {
-    Form::writeSettings();
-    if (grdTable != 0)
+    if (columnsSettingsReaded)
     {
-        QSettings settings;
-        int columnCount = grdTable->model()->columnCount();
-        settings.beginGroup(configName);
-        settings.beginWriteArray("grid", columnCount);
-        int i = 0;
-        while (i < columnCount)
+        Form::writeSettings();
+        if (grdTable != 0)
         {
-            int width = grdTable->columnWidth(i);
-            settings.setArrayIndex(i);
-            settings.setValue("width", width);
-            // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
-            i++;
-        }
-        // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
-        if (app->getSaveFormConfigToDb())
-        {
-            app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + configName + "...");
-            int i = 0;
-            while (i < columnCount)
+            QSettings settings;
+            int columnCount = grdTable->model()->columnCount();
+            if (columnCount > 0)
             {
-                int width = grdTable->columnWidth(i);
-                db->setConfig(configName, QString("grid/%1/width").arg(i), QString("%1").arg(width));
-                i++;
+                settings.beginGroup(configName);
+                settings.beginWriteArray("grid", columnCount);
+                for (int i = 0; i < columnCount; i++)
+                {
+                    int width = grdTable->columnWidth(i);
+                    settings.setArrayIndex(i);
+                    settings.setValue("width", width);
+                }
+                settings.endArray();
+                settings.endGroup();
+
+                // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
+                if (app->getSaveFormConfigToDb())
+                {
+                    app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + configName + "...");
+                    for (int i = 0; i < columnCount; i++)
+                    {
+                        int width = grdTable->columnWidth(i);
+                        db->setConfig(configName, QString("grid/%1/width").arg(i), QString("%1").arg(width));
+                    }
+                    app->showMessageOnStatusBar("");
+                }
             }
-            app->showMessageOnStatusBar("");
         }
-
-
-        settings.endArray();
-        settings.endGroup();
     }
 }
 

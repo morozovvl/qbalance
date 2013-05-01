@@ -49,7 +49,6 @@ public slots:
 private:
     SearchParameters*   parameters;
     virtual void        createForm(QString, QWidget* pwgt = 0);
-//    virtual QDomElement createWidgetsStructure();
 
 };
 

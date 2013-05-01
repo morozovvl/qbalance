@@ -611,11 +611,11 @@ void Document::prepareSelectCurrentRowCommand()
     QString command = tableModel->selectStatement();
     if (topersList->at(0).attributes && topersList->at(0).number == 0)
     {   // Если в типовой операции нет проводок, а есть только таблица атрибутов
-        command.replace(" WHERE ", QString(" WHERE a.%1=:value AND ").arg(db->getObjectName("атрибуты.стр")));
+        command.replace(" WHERE ", QString(" WHERE a.%1=:value AND ").arg(db->getObjectNameCom("атрибуты.стр")));
     }
     else
     {
-        command.replace(" WHERE ", QString(" WHERE p1.%1=:value AND ").arg(db->getObjectName("проводки.стр")));
+        command.replace(" WHERE ", QString(" WHERE p1.%1=:value AND ").arg(db->getObjectNameCom("проводки.стр")));
     }
     preparedSelectCurrentRow.prepare(command);
 }

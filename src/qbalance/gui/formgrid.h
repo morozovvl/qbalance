@@ -91,6 +91,8 @@ protected:
 
 private:
     int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки
+    void    setButtons();
+    bool    columnsSettingsReaded;
 
 };
 

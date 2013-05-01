@@ -90,16 +90,6 @@ protected:
     virtual void    readSettings();
     virtual void    writeSettings();
 
-//    virtual QDomElement createWidgetsStructure();
-//    QDomElement createBoxLayoutElement(QLayout*);
-//    QDomElement createPushButtonElement(QWidget*);
-//    QDomElement createLabelElement(QString);
-//    QDomElement createLineEditElement(QLineEdit*);
-//    QDomElement createDateEditElement(QtCore/QDateEdit*);
-//    QDomElement createHStretchElement();
-//    QDomElement createVStretchElement();
-//    QDomElement createConnectionElement(QWidget*, QString, QWidget*, QString);
-
 private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;

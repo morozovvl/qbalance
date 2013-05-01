@@ -50,30 +50,12 @@ MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* p
 }
 
 
-bool MySqlRelationalTableModel::insertColumns(int column, int count, const QModelIndex & parent)
-{
-    if (QSqlQueryModel::insertColumns(column, count, parent))
-    {
-        for (int i = 0; i < count; i++)
-            insertedColumns.append(column + i);
-        return true;
-    }
-    return false;
-}
-
-
 int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 {
     int result;
     result = QSqlTableModel::fieldIndex(fieldName);
     if (result >= 0)
         return result;      // Если искомое поле было в базовой таблице, то просто вернем его номер
-    for (int i = 0; i < insertedColumns.size(); i++)
-    {
-        QString fldName = relation(insertedColumns[i]).tableName().toUpper() + "__" + relation(insertedColumns[i]).displayColumn();
-        if (fieldName == fldName)
-            return insertedColumns[i];
-    }
     return getFieldsList().indexOf(fieldName);
 }
 
@@ -81,7 +63,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
-    if ((indexInQuery(index).isValid() && !insertedColumns.contains(index.column())) || force)
+    if (indexInQuery(index).isValid() || force)
     {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
@@ -91,11 +73,6 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
             {   // Если мы не пытаемся поменять значение ключевого столбца
                 rec.setValue(index.column(), value);
                 rec.setGenerated(index.column(), true);
-                for (int i = insertedColumns.count() - 1; i >= 0; i--)
-                {   // Для корректной генерации команды сохранения
-                    // уберем добавленные столбцы из записи
-                    rec.remove(insertedColumns[i]);
-                }
                 lResult = QSqlRelationalTableModel::setData(index, value, role);
                 emit dataChanged(index, index);
             }
@@ -144,6 +121,11 @@ void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSq
         keyColumns.insert(column, keyColumn);
         QSqlRelationalTableModel::setRelation(column, rel);
     }
+}
+
+
+void MySqlRelationalTableModel::setSortClause(QString sort) {
+    sortClause = sort;
 }
 
 

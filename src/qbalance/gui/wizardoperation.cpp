@@ -204,7 +204,7 @@ void WizardOperation::initFrames()
 
 
 bool WizardOperation::setData()
-{
+{   // Сохранение данных на сервере
     QString opName = operName->text().trimmed();
     if (opName.size() == 0)
     {

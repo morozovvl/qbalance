@@ -209,7 +209,7 @@ void Documents::prepareSelectCurrentRowCommand()
     QString command = tableModel->selectStatement();
 
     command = command.left(command.indexOf(" WHERE "));
-    command += QString(" WHERE %1.%2=:value").arg(getTableName()).arg(getIdFieldName());
+    command += QString(" WHERE \"%1\".\"%2\"=:value").arg(getTableName()).arg(getIdFieldName());
 
     preparedSelectCurrentRow.prepare(command);
 }
@@ -229,10 +229,11 @@ void Documents::setTableModel(int)
         tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
     }
 
+    QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
+
     if (topersList.at(0).docattributes)
     {
         QString attrName = QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(operNumber).toLower();
-        QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
         QString attrSelectStatement = db->getDictionarySqlSelectStatement(attrName, prefix);
         if (attrSelectStatement.size() > 0)
         {
@@ -259,7 +260,7 @@ void Documents::setTableModel(int)
                 columnCount++;
             }
         }
-        tableModel->setSelectStatement(selectStatement);
-        db->getColumnsRestrictions(tableName, &columnsProperties);
     }
+    tableModel->setSelectStatement(selectStatement);
+    db->getColumnsRestrictions(tableName, &columnsProperties);
 }

@@ -113,36 +113,12 @@ QScriptValue getOldValue(QScriptContext*, QScriptEngine* engine) {
     return QScriptValue();
 }
 
-/*
-QScriptValue getId(QScriptContext* context, QScriptEngine* engine) {
-    if (engine->evaluate("table").isValid())
-    {
-        int row = context->argument(0).toInteger();
-        QScriptValue value;
-        value = engine->evaluate(QString("table.getId(%1)").arg(row));
-        if (value.isValid())
-        {
-            return value;
-        }
-    }
-    return QScriptValue();
+
+QScriptValue quotes(QScriptContext* context, QScriptEngine*)
+{   // Просто заворачивает аргумент в кавычки
+    return QScriptValue('"' + context->argument(0).toString() + '"');
 }
 
-
-QScriptValue getName(QScriptContext* context, QScriptEngine* engine) {
-    if (engine->evaluate("table").isValid())
-    {
-        int row = context->argument(0).toInteger();
-        QScriptValue value;
-        value = engine->evaluate(QString("table.getName(%1)").arg(row));
-        if (value.isValid())
-        {
-            return value;
-        }
-    }
-    return QScriptValue();
-}
-*/
 
 // класс EventLoop
 Q_DECLARE_METATYPE(EventLoop*)
@@ -428,6 +404,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("setValue", newFunction(setValue));
     globalObject().setProperty("getOldValue", newFunction(getOldValue));
+    globalObject().setProperty("quotes", newFunction(quotes));
 
     QStringList extensions;
     extensions << "qt.core"

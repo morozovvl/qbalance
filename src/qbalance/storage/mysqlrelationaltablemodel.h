@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYSQLRELATIONALTABLEMODEL_H
 #define MYSQLRELATIONALTABLEMODEL_H
 
+#include <QDebug>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
 #include <QtCore/QMap>
@@ -47,7 +48,6 @@ public:
     MySqlRelationalTableModel(QString, Table* = 0);
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений
-    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
     virtual int fieldIndex(const QString &) const;
     void setRelation(int, const QSqlRelation &);
     void setRelation(int, int, const QSqlRelation &);
@@ -59,7 +59,7 @@ public:
     virtual QString selectStatement() const;
     QString getSelectStatement() { return selectCommand; }
     void setSelectStatement(QString string = "") { selectCommand = string; }
-    void setSortClause(QString sort) { sortClause = sort; }
+    void setSortClause(QString);
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
     Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
@@ -83,7 +83,6 @@ protected:
 private:
 // Свойства для механизма реляционных отношений
     QMap<int, int>          keyColumns;
-    QList<int>              insertedColumns;
     QMap<int, QString>      tablesAliases;
 
 // Свойства для обслуживания SQL запросов

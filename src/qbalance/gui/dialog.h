@@ -49,7 +49,11 @@ public:
     MyMdiSubWindow* getSubWindow();
     Form* getForm() { return form; }
     void    setForm(Form* f) { form = f; }
+    void    findCmdOk();
     virtual void keyPressEvent(QKeyEvent*);
+
+signals:
+    void cmdOkPressed();
 
 
 private:
@@ -57,6 +61,8 @@ private:
     MyMdiSubWindow*             subWindow;
     Form*                       form;
     bool                        freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
+    QPushButton*                buttonOk;
+
 };
 
 #endif // DIALOG_H

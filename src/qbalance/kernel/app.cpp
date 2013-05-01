@@ -254,6 +254,7 @@ Dialog* TApplication::createForm(QString fileName)
                 return 0;
             }
             formWidget->setApp(this);
+            formWidget->findCmdOk();
         }
     }
     return formWidget;

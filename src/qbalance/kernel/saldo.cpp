@@ -48,17 +48,8 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
 
 bool Saldo::open()
 {
-    bool result = Dictionary::open();
-    if (result)
-    {
-        tableModel->setTestSelect(true);
-        query();
-        tableModel->setTestSelect(false);
-
-        lIsSet = false;                              // Сальдо не может быть набором
-    }
-    return result;
-
+    lIsSet = false;                              // Сальдо не может быть набором
+    return Dictionary::open();
 }
 
 
@@ -103,15 +94,18 @@ void Saldo::setTableModel(int)
 
 
 QString Saldo::transformSelectStatement(QString statement) {
+    QString tName = db->getObjectName("сальдо");
     QString command = statement;
-    QString appendString = QString(" %1 сальдо.%2='%3'").arg(command.contains("WHERE", Qt::CaseInsensitive)?"AND":"WHERE")
-                                                                            .arg(db->getObjectName("счет.счет"))
-                                                                            .arg(account);
+    QString appendString = QString(" %1 \"%2\".\"%3\"='%4'").arg(command.contains(" WHERE", Qt::CaseInsensitive) ? " AND":" WHERE")
+                                                            .arg(tName)
+                                                            .arg(db->getObjectName("счет.счет"))
+                                                            .arg(account);
     if (quan)
-        appendString.append(QString(" AND (сальдо.%1<>0 OR сальдо.%2<>0)").arg(db->getObjectName("сальдо.конкол"))
-                                                                         .arg(db->getObjectName("сальдо.консальдо")));
-    if (command.contains("ORDER BY", Qt::CaseInsensitive))
-        command.replace(QString("ORDER BY"), appendString + " ORDER BY", Qt::CaseInsensitive);
+        appendString.append(QString(" AND (\"%1\".\"%2\"<>0 OR \"%1\".\"%3\"<>0)").arg(tName)
+                                                                                  .arg(db->getObjectName(tName + ".конкол"))
+                                                                                  .arg(db->getObjectName(tName + ".консальдо")));
+    if (command.contains(" ORDER BY", Qt::CaseInsensitive))
+        command.replace(QString(" ORDER BY"), appendString + " ORDER BY", Qt::CaseInsensitive);
     else
         command.append(appendString);
     return command;

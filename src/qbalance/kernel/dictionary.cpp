@@ -208,8 +208,13 @@ bool Dictionary::open(int)
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
         dictTitle = tableName;
-    if (Table::open())
-    {     // Откроем этот справочник
+    if (Essence::open())
+    {
+        tableModel->setTestSelect(true);
+        query();
+        tableModel->setTestSelect(false);
+
+        // Откроем этот справочник
         fieldList = getFieldsList();
 
         // Проверим, имеется ли в справочнике полнотекстовый поиск
@@ -222,16 +227,6 @@ bool Dictionary::open(int)
             setSortClause(QString("\"%1\".%2").arg(tableName)
                                           .arg(db->getObjectNameCom(tableName + ".имя")));
 
-        initForm();
-        setScriptEngine();
-        if (scriptEngine != 0)
-        {
-            if (!scriptEngine->open(scriptFileName))
-                return false;
-            if (!scriptEngine->evaluate())
-                return false;
-        }
-        initFormEvent();
         return true;
     }
     app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
@@ -242,6 +237,9 @@ bool Dictionary::open(int)
 void Dictionary::setTableModel(int)
 {
     Essence::setTableModel(0);
+
+    tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+    db->getColumnsRestrictions(tableName, &columnsProperties);
 
     QStringList tables;
     tables.append(columnsProperties.at(0).table);
@@ -278,9 +276,6 @@ void Dictionary::setTableModel(int)
             tables.append(fld.table);
         }
     }
-
-    tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
-    db->getColumnsRestrictions(tableName, &columnsProperties);
 }
 
 
@@ -319,7 +314,7 @@ void Dictionary::prepareSelectCurrentRowCommand()
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
     QString command = tableModel->selectStatement();
 
-    command.replace(" ORDER BY", QString(" WHERE %1.%2=:value ORDER BY").arg(getTableName()).arg(getIdFieldName()));
+    command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName()).arg(getIdFieldName()));
 
     preparedSelectCurrentRow.prepare(command);
 }
