@@ -88,7 +88,7 @@ protected:
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     virtual void        updateCurrentRow(int = 0);
-    virtual void        setTableModel(int = 0);
+    virtual bool        setTableModel(int = 0);
 
 private:
     QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
@@ -105,7 +105,6 @@ private:
     QString                         selectStatement;
     QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
-    bool                            isSaldoExist;
 
     bool showNextDict();
     void hideOtherLinkedDicts(Dictionary*);

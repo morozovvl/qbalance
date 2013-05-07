@@ -53,43 +53,46 @@ bool Saldo::open()
 }
 
 
-void Saldo::setTableModel(int)
+bool Saldo::setTableModel(int)
 {
-    Dictionary::setTableModel(0);
-
-    QString selectCommand = tableModel->getSelectStatement();
-
-    QString tName = db->getObjectName("сальдо");
-    QList<FieldType> fields;
-    db->getColumnsProperties(&fields, tName);
-
-    QString selectList;
-    FieldType fld;
-    for (int i = 0; i < fields.count(); i++)
+    if (Dictionary::setTableModel(0))
     {
-        fld = fields.at(i);
-        if ((QString(fields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
-            (QString(fields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
-            (QString(fields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+        QString selectCommand = tableModel->getSelectStatement();
+
+        QString tName = db->getObjectName("сальдо");
+        QList<FieldType> fields;
+        db->getColumnsProperties(&fields, tName);
+
+        QString selectList;
+        FieldType fld;
+        for (int i = 0; i < fields.count(); i++)
         {
-            QString column = QString("%1__%2").arg(fld.table).arg(fld.column).toUpper();
-            selectList.append(QString(", \"%1\".\"%2\" AS \"%3\"").arg(fld.table)
-                                                                  .arg(fld.name)
-                                                                  .arg(column));
-            fld.column = column;
-            fld.header = column;
-            columnsProperties.append(fld);
+            fld = fields.at(i);
+            if ((QString(fields.at(i).name).compare("конкол",    Qt::CaseInsensitive) == 0) ||
+                (QString(fields.at(i).name).compare("концена",   Qt::CaseInsensitive) == 0) ||
+                (QString(fields.at(i).name).compare("консальдо", Qt::CaseInsensitive) == 0))
+            {
+                QString column = QString("%1__%2").arg(fld.table).arg(fld.column).toUpper();
+                selectList.append(QString(", \"%1\".\"%2\" AS \"%3\"").arg(fld.table)
+                                                                      .arg(fld.name)
+                                                                      .arg(column));
+                fld.column = column;
+                fld.header = column;
+                columnsProperties.append(fld);
+            }
         }
+        selectCommand.replace(" FROM", selectList + " FROM");
+        selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
+                                                                                                                .arg(db->getObjectName(dictionaryName + ".счет"))
+                                                                                                                .arg(account)
+                                                                                                                .arg(db->getObjectName(tName + ".код"))
+                                                                                                                .arg(dictionaryName)
+                                                                                                                .arg(db->getObjectName(dictionaryName + ".код")));
+        tableModel->setSelectStatement(selectCommand);
+        db->getColumnsRestrictions(tName, &columnsProperties);
+        return true;
     }
-    selectCommand.replace(" FROM", selectList + " FROM");
-    selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
-                                                                                                            .arg(db->getObjectName(dictionaryName + ".счет"))
-                                                                                                            .arg(account)
-                                                                                                            .arg(db->getObjectName(tName + ".код"))
-                                                                                                            .arg(dictionaryName)
-                                                                                                            .arg(db->getObjectName(dictionaryName + ".код")));
-    tableModel->setSelectStatement(selectCommand);
-    db->getColumnsRestrictions(tName, &columnsProperties);
+    return false;
 }
 
 

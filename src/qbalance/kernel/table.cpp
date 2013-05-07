@@ -61,9 +61,8 @@ void Table::query(QString filter)
 
 bool Table::open()
 {
-    setTableModel();
-    opened = true;
-    return true;
+    opened = setTableModel();
+    return opened;
 }
 
 
@@ -75,10 +74,16 @@ void Table::close()
 }
 
 
-void Table::setTableModel(int level)
+bool Table::setTableModel(int level)
 {
     tableModel = new MySqlRelationalTableModel(tableName, this);
     db->getColumnsProperties(&columnsProperties, tableName, tableName, level);
+    if (columnsProperties.size() == 0)
+    {
+        app->showError(QString(QObject::trUtf8("Не существует таблица %1")).arg(tableName));
+        return false;
+    }
+    return true;
 }
 
 

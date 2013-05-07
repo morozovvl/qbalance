@@ -130,8 +130,9 @@ bool TableView::setColumnsHeaders()
         db->getColumnsHeaders(tagName, fields);
         if (fields->count() > 0)
         {
+
             // Сначала скроем все столбцы
-            for (int i = 0; i < fields->count(); i++)
+            for (int i = 0; i < header->count(); i++)
             {
                 header->hideSection(i);
             }
@@ -158,7 +159,6 @@ bool TableView::setColumnsHeaders()
                     header->showSection(i);
                 }
             }
-
             // Установим столбцы в соотвествующем порядке
             foreach (int i, columns.keys())
             {

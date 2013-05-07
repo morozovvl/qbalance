@@ -32,7 +32,7 @@ public:
     void setQuan(bool q) { quan = q; }
 
 protected:
-    virtual void setTableModel(int = 0);
+    virtual bool    setTableModel(int = 0);
 
 private:
     QString account;

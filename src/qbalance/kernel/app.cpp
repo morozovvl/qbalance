@@ -78,7 +78,7 @@ Documents* TApplication::getDocuments(int opNumber) {
     if (!documents.contains(operName)) {
         Documents* doc = new Documents(opNumber);
         if (!doc->open())
-            return NULL;
+            return 0;
         documents.insert(operName, doc);
     }
     return documents[operName];

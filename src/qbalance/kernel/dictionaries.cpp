@@ -27,12 +27,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/tableview.h"
 
 
-Dictionaries::Dictionaries(QObject *parent): Dictionary("vw_доступ_к_справочникам", parent) {
+Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_справочникам", parent) {
     lInsertable = app->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
     lViewable = app->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
     lDeleteable = app->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
     lUpdateable = false;
     lPrintable = false;
+    document = 0;
+    lIsSaldoExist = false;
 }
 
 
@@ -60,6 +62,7 @@ Saldo* Dictionaries::getSaldo(QString acc) {
         if (!addSaldo(acc))
             return 0;
     }
+    lIsSaldoExist = true;
     return (Saldo*)dictionaries[alias];
 }
 
@@ -116,7 +119,7 @@ void Dictionaries::removeDictionary(QString dictName) {
 
 
 QString Dictionaries::getDictionaryTitle(QString dictName) {
-    return db->getDictionariesProperties(dictName).value(db->getObjectName("имя")).toString().trimmed();
+    return db->getDictionariesProperties(dictName).value(db->getObjectName("доступ_к_справочникам.имя")).toString().trimmed();
 }
 
 
@@ -139,7 +142,7 @@ bool Dictionaries::add()
 
 void Dictionaries::view()
 {
-    QString dictName = getValue("таблица").toString().trimmed();
+    QString dictName = getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed();
     WizardDictionary wizard;
     wizard.open(app->getMainWindow(), dictName);
     wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
@@ -157,7 +160,7 @@ bool Dictionaries::remove()
 {
     if (Dictionary::remove())
     {
-        if (db->removeDictionary(getValue("таблица").toString().trimmed()))
+        if (db->removeDictionary(getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed()))
         {   // если удалось удалить справочник, то обновим список справочников
             return true;
         }
@@ -168,7 +171,7 @@ bool Dictionaries::remove()
 
 bool Dictionaries::open() {
     if (Dictionary::open()) {
-        setSortClause(db->getObjectName("vw_доступ_к_справочникам.имя"));
+        setSortClause(db->getObjectName("доступ_к_справочникам.имя"));
         return true;
     }
     return false;
@@ -184,13 +187,13 @@ void Dictionaries::close() {
 
 
 void Dictionaries::query(QString) {
-    Dictionary::query(QString("%1=true").arg(db->getObjectName("vw_доступ_к_справочникам.меню")));
+    Dictionary::query(QString("%1=true").arg(db->getObjectName("доступ_к_справочникам.меню")));
 }
 
 
 void Dictionaries::cmdOk() {
     Dictionary::cmdOk();
-    QString dictName = getValue("таблица").toString().trimmed();
+    QString dictName = getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed();
     if (dictName.size() > 0) {
         Dictionaries* dicts = app->getDictionaries();
         Dictionary* dict = dicts->getDictionary(dictName, 1);         // Откроем справочник и подсправочники 1-го уровня

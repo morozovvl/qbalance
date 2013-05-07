@@ -36,7 +36,9 @@ unix {
  isEmpty(PREFIX) {
   PREFIX = /usr
   }
-  BINDIR = $$PREFIX/bin
+  BINDIR = $$PREFIX/bino!@#$%^&&*())!@#$%^&*~!@#$!@#$%^%^&*()_+
+gigkkh
+
   DATAROOT = $$PREFIX/share
   DESKTOPDIR = $$DATAROOT/applications
   PIXMAPSDIR = $$DATAROOT/pixmaps
@@ -44,6 +46,11 @@ unix {
  desktop.path = $$DESKTOPDIR
  desktop.files = qbalance.desktop
  icons.path = $$PIXMAPSDIR
- icons.files = qbalance.png
+ icons.files = qbalance.pngeriu~~~~~~~~~~~~~~~~glgy[jvouyououoyoyoluoypjg'k;yl
+
+!@#$%^&***()ffoogjphpjp$$$$$$@#fufufohjifk  fjfintit rk rkjoitiroorroeoror
+~gyguitj%%%%$$$#@!&^%$#@!~*()kotjg[h.jj;jg;;hk;'y;hlhlhlhlhl[p/ ukflgf iijiiibmggmmmfkfkk
+doforppr!@#$%^&*()firifofohlhlgg;g;j;h;j;j;kj;pkpjhf''''hp;n/hy;j;h;h;;;gllhln,hh;fg;l;h;bl[yl=ull                    igigghgig
+kjyjiiti
  INSTALLS += target desktop icons
 }

@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/tableview.h"
 
 
-Topers::Topers(QObject *parent): Dictionary("vw_доступ_к_топер", parent) {
+Topers::Topers(QObject *parent): Dictionary("доступ_к_топер", parent) {
     lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить операцию
     lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства операции
     lDeleteable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно попытаться удалить операцию
@@ -42,7 +42,7 @@ void Topers::cmdOk() {
 void Topers::addDocument(int opNumber) {
     if (opNumber > 0) {
         Documents* doc = TApplication::exemplar()->getDocuments(opNumber);
-        if (doc != NULL) {
+        if (doc != 0) {
             doc->show();
         }
     }

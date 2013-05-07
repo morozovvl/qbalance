@@ -24,6 +24,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionary.h"
 #include "saldo.h"
 
+
+class Document;
+
+
 class Dictionaries : public Dictionary {
     Q_OBJECT
 public:
@@ -45,10 +49,15 @@ public:
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine() { scriptEngine = 0; }
+    void    setDocument(Document* doc) { document = doc; }
+    Document* getDocument() { return document; }
+    bool        isSaldoExist() { return lIsSaldoExist; }
+
 protected:
     virtual void setForm();
 private:
-//    Dictionary* dictListDict;
+    Document*   document;
+    bool        lIsSaldoExist;
 };
 
 //Q_DECLARE_METATYPE(Dictionaries)

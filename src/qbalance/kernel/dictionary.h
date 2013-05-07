@@ -83,7 +83,7 @@ protected:
     virtual void    setForm();
     virtual void    prepareSelectCurrentRowCommand();
     virtual void    updateCurrentRow();
-    virtual void    setTableModel(int = 0);
+    virtual bool    setTableModel(int = 0);
 
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск

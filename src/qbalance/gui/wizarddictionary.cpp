@@ -221,9 +221,10 @@ void WizardDictionary::getData()
         db->getColumnsHeaders(table, &fields);
 
         QSqlRecord dictProperties = db->getDictionariesProperties(table);
-        tableMenuName->setText(dictProperties.value(db->getObjectName("имя")).toString().trimmed());
-        tableFormName->setText(dictProperties.value(db->getObjectName("имя_в_форме")).toString().trimmed());
-        if (dictProperties.value(db->getObjectName("vw_доступ_к_справочникам.меню")).toBool())
+        tableName->setText(dictProperties.value(db->getObjectName("справочники.имя")).toString().trimmed());
+        tableMenuName->setText(dictProperties.value(db->getObjectName("справочники.имя_в_списке")).toString().trimmed());
+        tableFormName->setText(dictProperties.value(db->getObjectName("справочники.имя_в_форме")).toString().trimmed());
+        if (dictProperties.value(db->getObjectName("доступ_к_справочникам.меню")).toBool())
             chbMenu->setCheckState(Qt::Checked);
         else
             chbMenu->setCheckState(Qt::Unchecked);
@@ -350,7 +351,6 @@ bool WizardDictionary::setData()
         db->removeColumnHeaders(mainTableId);
         for (int i = 0; i < fieldsTable.rowCount(); i++)
         {
-//            QString tblName = fieldsTable.item(i, tableField)->text().trimmed();
             QString fieldName = fieldsTable.item(i, columnField)->text().trimmed();
             QString sType = fieldsTable.item(i, typeField)->text();
             int nLength = fieldsTable.item(i, lengthField)->text().toInt();

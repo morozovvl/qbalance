@@ -66,7 +66,7 @@ protected:
     MySqlRelationalTableModel*          tableModel;
     QList<FieldType>                    columnsProperties;
     QString                             currentFieldName;                   // имя поля, в котором был вызван метод calculate()
-    virtual void                        setTableModel(int = 0);
+    virtual bool                        setTableModel(int = 0);
 
 };
 

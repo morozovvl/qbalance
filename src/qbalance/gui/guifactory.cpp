@@ -121,7 +121,7 @@ void GUIFactory::show() {
 int GUIFactory::showError(QString errorText) {
     QMdiSubWindow* window = mainWindow->getWorkSpace()->activeSubWindow();
     QErrorMessage msgBox;
-    msgBox.setParent(TApplication::exemplar()->activeWindow(), Qt::Dialog);
+    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
     mainWindow->setUpdatesEnabled(false);
     msgBox.exec();

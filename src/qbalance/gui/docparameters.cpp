@@ -35,7 +35,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/essence.h"
 #include "../kernel/document.h"
 
-DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt) {
+DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
+{
     app = 0;            // По умолчанию нет ссылки на приложение. Ссылку устанавливает само приложение
     dictionaries = 0;
     parentForm = 0;
@@ -48,13 +49,15 @@ DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt) {
 }
 
 
-DocParameters::~DocParameters() {
+DocParameters::~DocParameters()
+{
     for(int i = 0; i < strNum; i++)
         removeString(i);
 }
 
 
-void DocParameters::addString(QString name) {
+void DocParameters::addString(QString name)
+{
     QLineEdit* lineEdit = new QLineEdit();
     lineEdit->setReadOnly(true);
     lineEdit->setObjectName(name);
@@ -79,17 +82,20 @@ void DocParameters::addString(QString name) {
 }
 
 
-void DocParameters::removeString(int strNum) {
+void DocParameters::removeString(int strNum)
+{
     QLabel* label = (QLabel*)gridLayout->itemAtPosition(strNum, 0)->widget();                   // удалим Label
     if (label != 0)
         gridLayout->removeWidget(label);
     QLineEdit* lineEdit = (QLineEdit*)gridLayout->itemAtPosition(strNum, 1)->widget();       // удалим ComboBox
-    if (lineEdit != 0) {
+    if (lineEdit != 0)
+    {
         disconnect(lineEdit, 0, 0, 0);
         gridLayout->removeWidget(lineEdit);
     }
     QPushButton* button = (QPushButton*)gridLayout->itemAtPosition(strNum, 2)->widget();       // удалим PushButton
-    if (button != 0) {
+    if (button != 0)
+    {
         disconnect(button, 0, 0, 0);
         gridLayout->removeWidget(button);
     }
@@ -104,12 +110,17 @@ void DocParameters::setApp(TApplication* a)
 }
 
 
-void DocParameters::dictionaryButtonPressed() {
-    foreach (QString dictName, dictionaries->keys()) {
-        if (dictName.compare(sender()->objectName(), Qt::CaseInsensitive) == 0) {
+void DocParameters::dictionaryButtonPressed()
+{
+    foreach (QString dictName, dictionaries->keys())
+    {
+        if (dictName.compare(sender()->objectName(), Qt::CaseInsensitive) == 0)
+        {
             dictionaries->value(dictName)->exec();
-            if (dictionaries->value(dictName)->isFormSelected()) {
+            if (dictionaries->value(dictName)->isFormSelected())
+            {
                 showText(dictName);
+                parentForm->getParent()->setConstDictId(dictName, dictionaries->value(dictName)->getId());
             }
             break;
         }
@@ -129,7 +140,8 @@ void DocParameters::showText(QString dictName)
 }
 
 
-void DocParameters::setFocus() {
+void DocParameters::setFocus()
+{
     QWidget* widget = gridLayout->itemAtPosition(0, 1)->widget();
     widget->setFocus();
 }

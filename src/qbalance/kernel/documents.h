@@ -49,7 +49,7 @@ public:
 protected:
     virtual void        setForm();
     virtual void        prepareSelectCurrentRowCommand();
-    virtual void        setTableModel(int = 0);
+    virtual bool        setTableModel(int = 0);
 
 private:
     int                 operNumber;

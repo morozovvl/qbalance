@@ -194,7 +194,7 @@ void DBFactory::initDBFactory()
 {
     initObjectNames();                  // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
     objectTypes = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("типыобъектов")));
-    dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_доступ_к_справочникам")));
+    dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
     columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
                                   "WHERE ins.table_schema = 'public' " \
@@ -314,15 +314,15 @@ QStringList DBFactory::getUserList()
 QSqlQuery DBFactory::getDictionariesProperties()
 {
     clearError();
-    return execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("vw_доступ_к_справочникам"))
-                                                          .arg(getObjectNameCom("vw_доступ_к_справочникам.имя")));
+    return execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("доступ_к_справочникам"))
+                                                          .arg(getObjectNameCom("доступ_к_справочникам.имя")));
 }
 
 
 QSqlRecord DBFactory::getDictionariesProperties(QString tName)
 {
     QSqlRecord result;
-    QString tableName = getObjectName("vw_доступ_к_справочникам.таблица");
+    QString tableName = getObjectName("доступ_к_справочникам.справочник");
     if (dictionariesPermitions.first())
     {
         do
@@ -600,7 +600,7 @@ bool DBFactory::isTableExists(QString tName)
 bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool menu)
 {
     if (!isTableExists(tName))
-    {   // Если такой таблицы не существует, то добавим ее
+    {   // Если такой таблицы вует, то добавим ее
         QString command = QString("CREATE TABLE \"%1\" ("    \
                                   "%2 SERIAL NOT NULL," \
                                   "%3 CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING)" \
@@ -695,13 +695,15 @@ bool DBFactory::removeDictionary(QString tName)
 bool DBFactory::setTableGuiName(QString tableName, QString menuName, QString formName)
 {
     clearError();
-    return exec(QString("UPDATE %1 SET %2 = '%3', %4 = '%5' WHERE %6 = '%7'").arg(getObjectNameCom("справочники"))
-                                                                             .arg(getObjectNameCom("справочники.имя_в_списке"))
-                                                                             .arg(menuName)
-                                                                             .arg(getObjectNameCom("справочники.имя_в_форме"))
-                                                                             .arg(formName)
-                                                                             .arg(getObjectNameCom("справочники.имя"))
-                                                                             .arg(tableName));
+    QString command;
+    command = QString("UPDATE %1 SET %2 = '%3', %4 = '%5' WHERE %6 = '%7'").arg(getObjectNameCom("справочники"))
+                                                                            .arg(getObjectNameCom("справочники.имя_в_списке"))
+                                                                            .arg(menuName)
+                                                                            .arg(getObjectNameCom("справочники.имя_в_форме"))
+                                                                            .arg(formName)
+                                                                            .arg(getObjectNameCom("справочники.имя"))
+                                                                            .arg(tableName);
+    return exec(command);
 }
 
 
@@ -751,7 +753,7 @@ bool DBFactory::dropTableColumn(QString table, QString columnName)
 QSqlQuery DBFactory::getTopersProperties()
 {
     clearError();
-    return execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_доступ_к_топер")));
+    return execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_топер")));
 }
 
 
@@ -759,8 +761,8 @@ QSqlRecord DBFactory::getTopersProperties(int operNumber)
 {
     clearError();
     QSqlRecord result;
-    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("vw_доступ_к_топер"))
-                                                                          .arg(getObjectNameCom("vw_доступ_к_топер.опер"))
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("доступ_к_топер"))
+                                                                          .arg(getObjectNameCom("доступ_к_топер.опер"))
                                                                           .arg(operNumber));
     if (query.first())
         result = query.record();
@@ -1252,10 +1254,10 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("доступ.код_типыобъектов", "код_типыобъектов");
     ObjectNames.insert("доступ.пользователь", "пользователь");
     ObjectNames.insert("доступ.имя", "имя");
-    ObjectNames.insert("vw_доступ_к_топер", "vw_доступ_к_топер");
-    ObjectNames.insert("vw_доступ_к_топер.код", "код");
-    ObjectNames.insert("vw_доступ_к_топер.имя", "имя");
-    ObjectNames.insert("vw_доступ_к_топер.опер", "опер");
+    ObjectNames.insert("доступ_к_топер", "доступ_к_топер");
+    ObjectNames.insert("доступ_к_топер.код", "код");
+    ObjectNames.insert("доступ_к_топер.имя", "имя");
+    ObjectNames.insert("доступ_к_топер.опер", "опер");
     ObjectNames.insert("справочники", "справочники");
     ObjectNames.insert("справочники.код", "код");
     ObjectNames.insert("справочники.имя", "имя");
@@ -1271,7 +1273,6 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("топер.дбсчет", "дбсчет");
     ObjectNames.insert("топер.крсчет", "крсчет");
     ObjectNames.insert("топер.итоги", "итоги");
-    ObjectNames.insert("топер.меню", "меню");
     ObjectNames.insert("топер.независим", "независим");
     ObjectNames.insert("топер.осндокумент", "осндокумент");
     ObjectNames.insert("топер.нумератор", "нумератор");
@@ -1326,11 +1327,6 @@ void DBFactory::initObjectNames()
     ObjectNames.insert("vw_столбцы.толькочтение", "толькочтение");
     ObjectNames.insert("нумераторы", "нумераторы");
     ObjectNames.insert("нумераторы.имя", "имя");
-    ObjectNames.insert("vw_доступ_к_справочникам", "vw_доступ_к_справочникам");
-    ObjectNames.insert("vw_доступ_к_справочникам.имя", "имя");
-    ObjectNames.insert("vw_доступ_к_справочникам.имя_в_форме", "имя_в_форме");
-    ObjectNames.insert("vw_доступ_к_справочникам.таблица", "таблица");
-    ObjectNames.insert("vw_доступ_к_справочникам.меню", "меню");
     ObjectNames.insert("vw_types", "vw_types");
     ObjectNames.insert("vw_types.код", "код");
     ObjectNames.insert("vw_types.имя", "имя");
@@ -1676,9 +1672,11 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
         {
             ToperType toperT;
             DictType dict;
+            bool    accFounded;
             toperT = topersList->at(i);
             // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
             accounts.first();
+            accFounded = false;
             while (accounts.isValid())
             {
                 if (accounts.record().value(getObjectName("vw_счета.счет")).toString().trimmed().toLower() == toperT.dbAcc)
@@ -1698,12 +1696,16 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                         if (dictsList != 0)
                             dictsList->append(dict);
                     }
+                    accFounded = true;
                     break;
                 }
                 accounts.next();
             }
+            if (!accFounded)
+                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
 
             accounts.first();
+            accFounded = false;
             while (accounts.isValid())
             {
                 if (accounts.record().value(getObjectName("vw_счета.счет")).toString().trimmed().toLower() == toperT.crAcc)
@@ -1732,10 +1734,13 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                         if (dictsList != 0)
                         dictsList->append(dict);
                     }
+                    accFounded = true;
                     break;
                 }
                 accounts.next();
             }
+            if (!accFounded)
+                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
 
             topersList->removeAt(i);
             topersList->insert(i, toperT);
@@ -1786,6 +1791,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
     if (topersList->count() > 0)
     {
         getToperDictAliases(oper, topersList, &dictsList);
+
         QString selectClause, fromClause, whereClause;
         int prv, prv1 = 0;
         if (columnsProperties != 0)
@@ -2063,6 +2069,36 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
         // Получим заголовки столбцов
         getColumnsHeaders(QString("Документ%1").arg(oper), columnsProperties);
+
+        // Откроем связанные справочники
+        for (int i = 0; i < dictsList.count(); i++)
+        {
+            if (dictsList.at(i).isSaldo)
+            {
+                Saldo* sal;
+                sal = dictionaries->getSaldo(dictsList.at(i).acc);
+                if (sal != 0)
+                {
+                    sal->setPrototypeName(dictsList.at(i).prototype);
+                    sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
+                    sal->setQuan(true);
+                    sal->setConst(dictsList.at(i).isConst);
+                }
+            }
+            else
+            {
+                if (dictsList.at(i).isConst)
+                {
+                    dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
+                    if (dict != 0)
+                        dict->setConst(true);
+                }
+                else
+                    dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
+                if (dict != 0)
+                    dict->setPrototypeName(dictsList.at(i).name);
+            }
+        }
     }
     return selectStatement;
 }

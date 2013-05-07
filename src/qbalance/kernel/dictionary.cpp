@@ -38,19 +38,19 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     ftsEnabled = false;
     sortOrder = "";
     dictionaries = app->getDictionaries();
-    if (app->isSA())
+    QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
+    if (!tableProperties.isEmpty())
     {
-        lSelectable = true;
-        lInsertable = true;
-        lDeleteable = true;
-        lUpdateable = true;
-    }
-    else
-    {
-        QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
-        if (!tableProperties.isEmpty())
+        formTitle = tableProperties.value(db->getObjectName("доступ_к_справочникам.имя_в_списке")).toString().trimmed();
+        if (app->isSA())
         {
-            formTitle = tableProperties.value(db->getObjectName("имя")).toString().trimmed();
+            lSelectable = true;
+            lInsertable = true;
+            lDeleteable = true;
+            lUpdateable = true;
+        }
+        else
+        {
             lSelectable = tableProperties.value("selectable").toBool();
             lInsertable = tableProperties.value("insertable").toBool();
             lDeleteable = tableProperties.value("deleteable").toBool();
@@ -188,7 +188,6 @@ bool Dictionary::calculate(const QModelIndex& index) {
 }
 
 
-
 void Dictionary::setForm()
 {
     form = new FormGridSearch();
@@ -229,53 +228,55 @@ bool Dictionary::open(int)
 
         return true;
     }
-    app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать справочник <%1> пользователю %2. Либо справочник отсутствует.")).arg(dictTitle, TApplication::exemplar()->getLogin()));
     return false;
 }
 
 
-void Dictionary::setTableModel(int)
+bool Dictionary::setTableModel(int)
 {
-    Essence::setTableModel(0);
-
-    tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
-    db->getColumnsRestrictions(tableName, &columnsProperties);
-
-    QStringList tables;
-    tables.append(columnsProperties.at(0).table);
-
-    FieldType fld;
-    int keyColumn   = 0;
-    for (int i = 0; i < columnsProperties.count(); i++)
+    if (Essence::setTableModel(0))
     {
-        fld = columnsProperties.at(i);
+        tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+        db->getColumnsRestrictions(tableName, &columnsProperties);
 
-        // Для основной таблицы сохраним информацию для обновления
-        if (fld.table == columnsProperties.at(0).table)
-        {
-            if (fld.name == idFieldName)
-                keyColumn = i;
-            tableModel->setUpdateInfo(fld.name, fld.table, fld.name, i, keyColumn);
-        }
+        QStringList tables;
+        tables.append(columnsProperties.at(0).table);
 
-        if (!tables.contains(fld.table) && dictionaries != 0)
+        FieldType fld;
+        int keyColumn   = 0;
+        for (int i = 0; i < columnsProperties.count(); i++)
         {
-            Dictionary* dict = dictionaries->getDictionary(fld.table);
-            if (dict != 0)
-            {                                       // Если удалось открыть справочник
-                if (!lIsSet)
-                    dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
-                else
-                {
-                    if (sortOrder.size() > 0)
-                        sortOrder.append(", ");
-                    sortOrder.append(QString("\"%1\".%2").arg(fld.table)
-                                                         .arg(db->getObjectNameCom(fld.table + ".имя")));
-                }
+            fld = columnsProperties.at(i);
+
+            // Для основной таблицы сохраним информацию для обновления
+            if (fld.table == columnsProperties.at(0).table)
+            {
+                if (fld.name == idFieldName)
+                    keyColumn = i;
+                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, i, keyColumn);
             }
-            tables.append(fld.table);
+
+            if (!tables.contains(fld.table) && dictionaries != 0)
+            {
+                Dictionary* dict = dictionaries->getDictionary(fld.table);
+                if (dict != 0)
+                {                                       // Если удалось открыть справочник
+                    if (!lIsSet)
+                        dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
+                    else
+                    {
+                        if (sortOrder.size() > 0)
+                            sortOrder.append(", ");
+                        sortOrder.append(QString("\"%1\".%2").arg(fld.table)
+                                                             .arg(db->getObjectNameCom(fld.table + ".имя")));
+                    }
+                }
+                tables.append(fld.table);
+            }
         }
+        return true;
     }
+    return false;
 }
 
 

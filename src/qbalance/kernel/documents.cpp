@@ -26,7 +26,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/tableview.h"
 
 
-Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
+Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
+{
     lViewable  = true;
     tableName  = "документы";
     operNumber = opNumber;
@@ -42,11 +43,13 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent) {
 }
 
 
-Documents::~Documents() {
+Documents::~Documents()
+{
 }
 
 
-void Documents::show() {
+void Documents::show()
+{
     QModelIndex index = form->getCurrentIndex();
     bool gotoLast = tableModel->rowCount() > 0 ? false : true;  // если список документов пока пустой, то после его загрузки
                                                                 // перейдем к последней записи, иначе останемся на той записи,
@@ -61,9 +64,11 @@ void Documents::show() {
 }
 
 
-bool Documents::add() {
+bool Documents::add()
+{
     QDate date = QDate().currentDate();
-    if (!(date >= TApplication::exemplar()->getBeginDate() && date <= TApplication::exemplar()->getEndDate())) {
+    if (!(date >= TApplication::exemplar()->getBeginDate() && date <= TApplication::exemplar()->getEndDate()))
+    {
         if (date < TApplication::exemplar()->getBeginDate())
             date = TApplication::exemplar()->getBeginDate();
         else if (date > TApplication::exemplar()->getEndDate())
@@ -79,9 +84,12 @@ bool Documents::add() {
 }
 
 
-bool Documents::remove() {
-    if (lDeleteable) {
-        if (Essence::remove()) {
+bool Documents::remove()
+{
+    if (lDeleteable)
+    {
+        if (Essence::remove())
+        {
             db->removeDoc(getValue("код").toInt());
             query();
             return true;
@@ -93,13 +101,15 @@ bool Documents::remove() {
 }
 
 
-void Documents::view() {
+void Documents::view()
+{
     currentDocument->setDocId(getValue("код").toInt());
     currentDocument->show();
 }
 
 
-void Documents::query(QString filter) {
+void Documents::query(QString filter)
+{
     Q_UNUSED(filter)
     Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
                                                                                                        .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
@@ -110,8 +120,10 @@ void Documents::query(QString filter) {
 }
 
 
-bool Documents::open() {
-    if (Table::open()) {     // Откроем этот справочник
+bool Documents::open()
+{
+    if (Table::open())
+    {     // Откроем этот справочник
 
         // Установим порядок сортировки
         setSortClause(QString("%1, \"%2\".%3").arg(db->getObjectNameCom(tableName + ".дата"))
@@ -132,14 +144,13 @@ bool Documents::open() {
             return true;
         }
     }
-    app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(
-                  formTitle,
-                  app->getLogin()));
+    app->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(formTitle, app->getLogin()));
     return false;
 }
 
 
-void Documents::close() {
+void Documents::close()
+{
     currentDocument->close();
     delete currentDocument;
     Dictionary::close();
@@ -188,7 +199,8 @@ QVariant Documents::getValue(QString n)
 }
 
 
-void Documents::setForm() {
+void Documents::setForm()
+{
     form = new FormGrid();
 
     form->appendToolTip("buttonOk",         trUtf8("Закрыть список документов"));
@@ -215,52 +227,55 @@ void Documents::prepareSelectCurrentRowCommand()
 }
 
 
-void Documents::setTableModel(int)
+bool Documents::setTableModel(int)
 {
-    Essence::setTableModel(0);
-
-    fieldList = getFieldsList();
-    int keyColumn   = 0;
-    for (int i = 0; i < fieldList.count(); i++)
-    {       // Просмотрим список полей
-        QString name = fieldList.at(i);
-        if (name == idFieldName)
-            keyColumn = i;
-        tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
-    }
-
-    QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
-
-    if (topersList.at(0).docattributes)
+    if (Essence::setTableModel(0))
     {
-        QString attrName = QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(operNumber).toLower();
-        QString attrSelectStatement = db->getDictionarySqlSelectStatement(attrName, prefix);
-        if (attrSelectStatement.size() > 0)
+        fieldList = getFieldsList();
+        int keyColumn   = 0;
+        for (int i = 0; i < fieldList.count(); i++)
+        {       // Просмотрим список полей
+            QString name = fieldList.at(i);
+            if (name == idFieldName)
+                keyColumn = i;
+            tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
+        }
+
+        QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
+
+        if (topersList.at(0).docattributes)
         {
-            selectStatement.replace(" FROM ", ",a.* FROM ");
-            selectStatement.append(QString(" LEFT OUTER JOIN (%1) a ON \"%2\".\"%3\"=a.\"%4\"").arg(attrSelectStatement)
-                                                                                               .arg(tableName)
-                                                                                               .arg(db->getObjectName(tableName + ".код"))
-                                                                                               .arg(prefix + "КОД"));
-            db->getColumnsProperties(&attrFields, attrName);
-            FieldType fld;
-            int keyColumn   = 0;
-            int columnCount = columnsProperties.count();
-            for (int i = 0; i < attrFields.count(); i++)
+            QString attrName = QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(operNumber).toLower();
+            QString attrSelectStatement = db->getDictionarySqlSelectStatement(attrName, prefix);
+            if (attrSelectStatement.size() > 0)
             {
-                fld = attrFields.at(i);
-                if (fld.table == attrName)
+                selectStatement.replace(" FROM ", ",a.* FROM ");
+                selectStatement.append(QString(" LEFT OUTER JOIN (%1) a ON \"%2\".\"%3\"=a.\"%4\"").arg(attrSelectStatement)
+                                                                                                   .arg(tableName)
+                                                                                                   .arg(db->getObjectName(tableName + ".код"))
+                                                                                                   .arg(prefix + "КОД"));
+                db->getColumnsProperties(&attrFields, attrName);
+                FieldType fld;
+                int keyColumn   = 0;
+                int columnCount = columnsProperties.count();
+                for (int i = 0; i < attrFields.count(); i++)
                 {
-                    if (fld.name == db->getObjectName(attrName + ".код"))
-                        keyColumn = columnCount;
-                    tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, columnCount, keyColumn);
+                    fld = attrFields.at(i);
+                    if (fld.table == attrName)
+                    {
+                        if (fld.name == db->getObjectName(attrName + ".код"))
+                            keyColumn = columnCount;
+                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, columnCount, keyColumn);
+                    }
+                    fld.column = prefix + fld.column;
+                    columnsProperties.append(fld);
+                    columnCount++;
                 }
-                fld.column = prefix + fld.column;
-                columnsProperties.append(fld);
-                columnCount++;
             }
         }
+        tableModel->setSelectStatement(selectStatement);
+        db->getColumnsRestrictions(tableName, &columnsProperties);
+        return true;
     }
-    tableModel->setSelectStatement(selectStatement);
-    db->getColumnsRestrictions(tableName, &columnsProperties);
+    return false;
 }
