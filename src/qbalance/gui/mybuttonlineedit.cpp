@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 MyButtonLineEdit::MyButtonLineEdit(QWidget *parent)
 : QWidget(parent)
-, buttonForm(NULL)
+, buttonForm(0)
 {
     lineEdit = new QLineEdit(parent);
     lineEdit->setReadOnly(true);

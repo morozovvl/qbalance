@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "passwordform.h"
 #include "../kernel/app.h"
 
-PassWordForm::PassWordForm(QObject* parent/* = NULL*/) : Form(parent)
+PassWordForm::PassWordForm(QObject* parent/* = 0*/) : Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу, т.к. его к этому моменту еще не существует
 }

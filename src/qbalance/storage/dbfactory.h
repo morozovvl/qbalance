@@ -224,7 +224,7 @@ public:
     bool appendColumnHeader(int, QString, QString, int, bool);
     bool removeColumnHeaders(int);
     void reloadColumnHeaders();
-    QSqlQuery getDictionaries() { return dictionaries; }
+    QSqlQuery* getDictionaries() { return &dictionaries; }
 
     // Функции для мастера создания новый (редактирования старых) типовых операций
     bool deleteToper(int operNumber, int operNumber1);          // Удаляет записи о типовой операции в таблице типовых операций

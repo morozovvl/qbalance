@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 
-Form::Form(QObject* par/* = NULL*/): QObject(par)
+Form::Form(QObject* par/* = 0*/): QObject(par)
 {
     parent = 0;
     formWidget = 0;

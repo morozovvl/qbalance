@@ -36,7 +36,7 @@ class Form: public QObject
 {
     Q_OBJECT
 public:
-    Form(QObject* parent = NULL);
+    Form(QObject* parent = 0);
     ~Form();
     Q_INVOKABLE virtual bool open(QWidget* = 0, Essence* = 0, QString = "");
     Q_INVOKABLE virtual void close();

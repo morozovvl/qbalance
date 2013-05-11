@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
 QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
 bool    TApplication::DebugMode        = false;
-TApplication* TApplication::Exemplar   = NULL;
+TApplication* TApplication::Exemplar   = 0;
 
 TApplication::TApplication(int & argc, char** argv)
     : QApplication(argc, argv)

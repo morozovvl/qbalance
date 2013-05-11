@@ -42,6 +42,8 @@ public:
     virtual bool remove();
     Q_INVOKABLE virtual void            query(QString filter = "");
     virtual bool                        calculate(const QModelIndex &);
+    Q_INVOKABLE virtual qulonglong      getId(int row = -1);
+
 
 
 // Функции для работы справочника в составе документа

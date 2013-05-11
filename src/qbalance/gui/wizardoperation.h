@@ -31,7 +31,7 @@ class WizardOperation : public WizardForm
 public:
     WizardOperation();
     ~WizardOperation();
-    virtual bool open(QWidget* pwgt = NULL, int oper = 0);
+    virtual bool open(QWidget* pwgt = 0, int oper = 0);
 protected:
     virtual void   initFrames();
     virtual bool   setData();

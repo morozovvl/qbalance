@@ -40,7 +40,7 @@ enum dictFieldsEnums {tableField = 0,
                       visibleField = 6};
 
 
-WizardDictionary* WizardDictionary::Exemplar   = NULL;
+WizardDictionary* WizardDictionary::Exemplar   = 0;
 
 
 QString showTypesForm()
@@ -71,8 +71,8 @@ QString showTypesForm()
 
 
 WizardDictionary::WizardDictionary(bool addDict): WizardForm()
-  , tableName(NULL)
-  , tableMenuName(NULL)
+  , tableName(0)
+  , tableMenuName(0)
 {
     addDictionary = addDict;
     tableName = new QLineEdit();

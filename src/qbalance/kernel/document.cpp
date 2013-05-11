@@ -215,45 +215,58 @@ bool Document::add()
             }
         }
 
-        int strNum = appendDocString();
-
-// Первый способ обновления документа после вставки новой строки. Не оптимальный
-//        query();
-//        form->selectRow(tableModel->rowCount() - 1);
-
-// Второй способ обновления документа после вставки новой строки, более оптимальный, без загрузки всего документа, а загрузки только новой строки
-        int newRow = tableModel->rowCount();
-        if (newRow == 0)
+        // Подготовим значения постоянных справочников и наборов
+        foreach (QString dictName, dictionaries->getDictionaries()->keys())
         {
-            query();
-            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-        }
-        else
-        {
-            tableModel->insertRow(newRow);
-            form->getGridTable()->reset();
-            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            updateCurrentRow(strNum);
-            form->showPhoto();
-        }
-// Конец второго способа
-
-        saveOldValues();
-
-        scriptEngine->eventAfterAddString();
-
-        // Сохраним данные, которые изменились после работы события "EventAfterAddString"
-        int row = form->getCurrentIndex().row();
-        for (int i = 0; i < tableModel->record().count(); i++)
-        {
-            QString fieldName = tableModel->record().fieldName(i);
-            if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            if (dictionaries->getDictionary(dictName)->isConst() || dictionaries->getDictionary(dictName)->isSet())
             {
-                tableModel->submit(tableModel->index(row, i));
+                prepareValue(dictName, dictionaries->getDictionary(dictName));
             }
         }
-        db->execCommands();
-        return true;
+
+        int strNum = appendDocString();
+
+        if (strNum > 0)
+        {
+
+// Первый способ обновления документа после вставки новой строки. Не оптимальный
+//            query();
+//           form->selectRow(tableModel->rowCount() - 1);
+
+// Второй способ обновления документа после вставки новой строки, более оптимальный, без загрузки всего документа, а загрузки только новой строки
+            int newRow = tableModel->rowCount();
+            if (newRow == 0)
+            {
+                query();
+                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            }
+            else
+            {
+                tableModel->insertRow(newRow);
+                form->getGridTable()->reset();
+                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                updateCurrentRow(strNum);
+                form->showPhoto();
+            }
+// Конец второго способа
+
+            saveOldValues();
+
+            scriptEngine->eventAfterAddString();
+
+            // Сохраним данные, которые изменились после работы события "EventAfterAddString"
+            int row = form->getCurrentIndex().row();
+            for (int i = 0; i < tableModel->record().count(); i++)
+            {
+                QString fieldName = tableModel->record().fieldName(i);
+                if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                {
+                    tableModel->submit(tableModel->index(row, i));
+                }
+            }
+            db->execCommands();
+            return true;
+        }
     }
     return false;
 }
@@ -735,6 +748,7 @@ bool Document::showNextDict()
                     break;
                 }
                 hideOtherLinkedDicts(dict);     // Скроем все связанные с этим справочником другие справочники и установим для них правильные текущие идентификаторы
+                prepareValue(dict->getPrototypeName(), dict);
             }
             else
             {
@@ -742,7 +756,6 @@ bool Document::showNextDict()
                 break;      // Пользователь отказался от дальнейшей работы со справочниками
             }
         }
-        prepareValue(dict->getPrototypeName(), dict);
     }
     return anyShown;
 }

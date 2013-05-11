@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/table.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
-FormGrid::FormGrid(QObject* parent/* = NULL*/)
+FormGrid::FormGrid(QObject* parent/* = 0*/)
 : Form(parent)
 {
     grdTable = 0;

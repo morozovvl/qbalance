@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 
 
-ConnectionForm::ConnectionForm(QObject* parent/* = NULL*/): Form(parent)
+ConnectionForm::ConnectionForm(QObject* parent/* = 0*/): Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу
 }

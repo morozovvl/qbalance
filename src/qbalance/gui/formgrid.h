@@ -36,7 +36,7 @@ class TableView;
 class FormGrid : public Form {
     Q_OBJECT
 public:
-    FormGrid(QObject* parent = NULL);
+    FormGrid(QObject* parent = 0);
     ~FormGrid();
     QVariant getValue(QString);
     QModelIndex getCurrentIndex();

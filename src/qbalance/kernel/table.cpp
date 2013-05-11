@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Table::Table(QString name, QObject *parent)
 : QObject(parent)
-, tableModel(NULL)
+, tableModel(0)
 {
     opened = false;
     tableName = name.trimmed().toLower();

@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "guifactory.h"
 #include "mainwindow.h"
 
-ConfigForm::ConfigForm(QObject* parent/* = NULL*/): Form(parent)
+ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {
 }
 

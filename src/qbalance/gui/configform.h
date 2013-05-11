@@ -27,7 +27,7 @@ class ConfigForm : public Form
 {
     Q_OBJECT
 public:
-    ConfigForm(QObject* parent = NULL);
+    ConfigForm(QObject* parent = 0);
     ~ConfigForm();
     virtual bool open(QWidget* pwgt = 0);
 public slots:

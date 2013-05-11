@@ -37,7 +37,7 @@ struct sParam {
 class FormGridSearch : public FormGrid {
 
 public:
-    FormGridSearch(QObject* parent = NULL);
+    FormGridSearch(QObject* parent = 0);
     ~FormGridSearch();
     Q_INVOKABLE virtual void close();
     QString getFilter();    // Возвращает фильтр для поиска в справочнике

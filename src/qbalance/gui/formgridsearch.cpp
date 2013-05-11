@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define LABEL_SEARCH_PARAMETERS     QObject::trUtf8("Параметры для поиска:")
 
-FormGridSearch::FormGridSearch(QObject* parent/* = NULL*/) : FormGrid(parent)
+FormGridSearch::FormGridSearch(QObject* parent/* = 0*/) : FormGrid(parent)
 {
     parameters = 0;
 }

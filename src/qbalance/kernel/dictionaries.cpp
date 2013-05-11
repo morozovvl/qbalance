@@ -78,6 +78,24 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
             dictionaries.insert(dictName, dict);
             dict->setDictionaries(this);
             dict->setPhotoEnabled(true);
+
+            QSqlQuery* dicts = db->getDictionaries();
+            if (dicts->first())
+            {
+                QString fieldName = db->getObjectName("справочники.имя");
+                do
+                {
+                    if (dicts->record().value(fieldName).toString() == dictName)
+                    {
+                        QString prototype = dicts->record().value(db->getObjectName("справочники.прототип")).toString();
+                        if (prototype.size() > 0)
+                            dict->setPrototypeName(prototype);
+                        else
+                            dict->setPrototypeName(dictName);
+                        break;
+                    }
+                } while (dicts->next());
+            }
             return true;
         }
     }
@@ -100,6 +118,8 @@ bool Dictionaries::addSaldo(QString acc) {
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
             saldo->setPhotoEnabled(true);
+            saldo->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
+            saldo->setQuan(true);
             return true;
         }
     }

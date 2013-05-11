@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 {
+    prototypeName = name;
     formTitle = "";
     lPrintable = true;
     lCanShow = true;
@@ -124,7 +125,7 @@ bool Dictionary::add()
                 name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                 name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                 Dictionary* dict = dictionaries->getDictionary(name);
-                if (dict != NULL)                       // Если удалось открыть справочник
+                if (dict != 0)                       // Если удалось открыть справочник
                     values.insert(fieldList.at(i), dict->getId());
             }
         }
@@ -185,6 +186,57 @@ bool Dictionary::calculate(const QModelIndex& index) {
         }
     }
     return true;
+}
+
+
+qulonglong Dictionary::getId(int row)
+{
+    if (!lIsSet)
+        return Essence::getId(row);
+
+    // Если это набор, то продолжаем
+    QString filter;
+    QString variables, values;
+    for (int i = 0; i < fieldList.count(); i++)
+    {       // Просмотрим список полей
+        QString name = fieldList.at(i);
+        if (name.left(4) == idFieldName + "_")
+        {        // Если поле ссылается на другую таблицу
+            if (filter.size() > 0)
+                filter.append(" AND ");
+            filter.append(name + "=");
+
+            if (variables.size() > 0)
+                variables.append(",");
+            variables.append(name);
+
+            name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+            name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+            Dictionary* dict = dictionaries->getDictionary(name);
+            if (dict != 0)                       // Если удалось открыть справочник
+            {
+                filter.append(QString("%1").arg(dict->getId()));
+                if (values.size() > 0)
+                    values.append(",");
+                values.append(QString("%1").arg(dict->getId()));
+            }
+            else
+                return 0;
+        }
+    }
+    if (filter.size() > 0)
+    {
+        query(filter);
+        if (tableModel->rowCount() == 0)
+        {
+            QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(tableName).arg(variables).arg(values);
+            qDebug() << command;
+            db->exec(command);
+            query(filter);
+        }
+        return Essence::getId(0);
+    }
+    return 0;
 }
 
 

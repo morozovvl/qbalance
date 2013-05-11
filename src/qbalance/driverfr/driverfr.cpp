@@ -3,7 +3,7 @@
 #include "../../drvfr/drvfr.h"
 
 
-DriverFR* DriverFR::Exemplar = NULL;
+DriverFR* DriverFR::Exemplar = 0;
 
 
 DriverFR::DriverFR(QObject *parent) : QObject(parent)

@@ -143,7 +143,7 @@ QString MySqlRelationalTableModel::selectStatement() const
         query.append(" WHERE ").append(filter());
     if (!orderByClause().isEmpty())
         query.append(" " + orderByClause());
-    if (parent != NULL)
+    if (parent != 0)
         query = parent->transformSelectStatement(query);
     if (testSelect)
         query += " LIMIT 0";
