@@ -39,6 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/scriptengine.h"
 #include "../engine/reportscriptengine.h"
 #include "../gui/formgrid.h"
+#include "../gui/tableview.h"
 
 
 class TApplication;
@@ -71,6 +72,10 @@ public:
     Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     void                                setDoSubmit(bool submit) { doSubmit = submit; }
+    Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
+    virtual void query(QString = "");
+    virtual void                        setOrderClause() { ; }
+
 
 // Функции для работы с модулем GUI
     virtual FormGrid* getForm();
@@ -82,28 +87,34 @@ public:
     Q_INVOKABLE virtual void hide();                // Скрыть форму
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
-    Q_INVOKABLE virtual QWidget* getFormWidget();
+    Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
     Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
-    bool isInsertable() { return lInsertable; }         // Получить/установить ...
-    bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
-    bool isViewable() { return lViewable; }             // ... кнопок на форме
-    bool isUpdateable() { return lUpdateable; }
-    bool isPrintable() { return lPrintable; }
-    void setInsertable(bool b) { lInsertable = b; }
-    void setDeleteable(bool b) { lDeleteable = b; }
-    void setViewable(bool b) { lViewable = b; }
-    void setUpdateable(bool b) { lUpdateable = b; }
-    void setPrintable(bool b) { lPrintable = b; }
+    Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
+    Q_INVOKABLE bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
+    Q_INVOKABLE bool isViewable() { return lViewable; }             // ... кнопок на форме
+    Q_INVOKABLE bool isUpdateable() { return lUpdateable; }
+    Q_INVOKABLE bool isPrintable() { return lPrintable; }
+    Q_INVOKABLE void setInsertable(bool b) { lInsertable = b; form->setButtonAdd(b); }
+    Q_INVOKABLE void setDeleteable(bool b) { lDeleteable = b; form->setButtonDelete(b); }
+    Q_INVOKABLE void setViewable(bool b) { lViewable = b; }
+    Q_INVOKABLE void setUpdateable(bool b) { lUpdateable = b; }
+    Q_INVOKABLE void setPrintable(bool b) { lPrintable = b; }
     Q_INVOKABLE virtual void setEnabled(bool);
     Q_INVOKABLE bool isEnabled() { return enabled; }
+    Q_INVOKABLE void hideAllGridSections() { form->getGridTable()->hideAllGridSections(); }
+    Q_INVOKABLE void hideGridSection(QString columnName)  { form->getGridTable()->hideGridSection(columnName); }
+    Q_INVOKABLE void showGridSection(QString columnName) { form->getGridTable()->showGridSection(columnName); }
+    Q_INVOKABLE void showAllGridSections() { form->getGridTable()->showAllGridSections(); }
+
 
 // Функции для обеспечения работы скриптов
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
+    void                evaluateEngine();
     virtual bool        calculate(const QModelIndex &);
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
@@ -129,6 +140,7 @@ signals:
 
 
 protected:
+    bool                scriptEngineEnabled;
     QString             formTitle;
     QString             idFieldName;
     QString             nameFieldName;
@@ -137,6 +149,7 @@ protected:
     ScriptEngine*       scriptEngine;
     QString             scriptFileName;                     // Имя файла со скриптами
     QSqlQuery           preparedSelectCurrentRow;           // Содержит подготовленный запрос для обновления текущей строки при вычислениях
+    QString             defaultFilter;
     bool                lInsertable;
     bool                lDeleteable;
     bool                lViewable;
@@ -151,7 +164,6 @@ protected:
     virtual void        updateCurrentRow();
 
 private:
-    bool                scriptEngineEnabled;
     QString             photoPath;
     QString             photoIdField;
     QString             photoNameField;

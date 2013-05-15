@@ -20,8 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef WIZARDOPERATION_H
 #define WIZARDOPERATION_H
 
+#include <QtGui/QTextEdit>
 #include "wizarddictionary.h"
-#include "mytextedit.h"
+//#include "mytextedit.h"
 #include "mysyntaxhighlighter.h"
 #include "mybuttonlineedit.h"
 
@@ -47,7 +48,7 @@ private:
     QTableWidget*   prvTable;             // Список проводок операции
     QTableWidget*   fieldsTable;
     QTableWidget*   docListFieldsTable;
-    MyTextEdit*     textEditor;
+    QTextEdit*      textEditor;
     MySyntaxHighlighter* highlighter;
     QListWidget        headers;          // Заголовки колонок документа
     QListWidget        docListHeaders;   // Заголовки колонок списка документов
@@ -59,6 +60,7 @@ private:
     void            getFieldsTable(QList<FieldType>*,  QTableWidget*);
     virtual void    frameActivated(int);
     virtual void    frameDeactivated(int);
+    void            generateScripts();
 
 private slots:
     void            addPrv();

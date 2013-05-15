@@ -292,7 +292,7 @@ void WizardDictionary::getData()
     fieldsTable.setItemDelegateForColumn(visibleField, booleanDelegate);
 
     // Инициализируем текстовый редактор
-    textEditor = new MyTextEdit(formWidget);
+    textEditor = new QTextEdit(formWidget);
     highlighter = new MySyntaxHighlighter(textEditor->document());
     QString scripts = QString(db->getFile(table + ".qs", ScriptFileType));
     if (scripts.size() == 0)
@@ -321,15 +321,10 @@ bool WizardDictionary::setData()
     int mainTableId = db->getDictionaryId(tableName->text());
     if (mainTableId > 0) {
         // Установим пользовательские наименования справочника
-        if (tableName->isModified() ||
-                tableMenuName->isModified() ||
-                tableFormName->isModified())
+        if (!db->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
         {
-            if (!db->setTableGuiName(tableName->text(), tableMenuName->text(), tableFormName->text()))
-            {
-                    db->rollbackTransaction();
-                    return false;
-            }
+           db->rollbackTransaction();
+           return false;
         }
         // Удалим поля, помеченные к удалению
         int i = 0;

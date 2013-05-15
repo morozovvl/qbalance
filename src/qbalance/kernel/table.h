@@ -51,7 +51,7 @@ public:
     Q_INVOKABLE virtual QString         getFieldName(int);
     Q_INVOKABLE QString                 getTableName() { return tableName; }
     QString                             getTagName() { return tagName; }
-    Q_INVOKABLE void                    setSortClause(QString);
+    Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE bool                    isReadOnly();
 

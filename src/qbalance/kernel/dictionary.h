@@ -43,8 +43,7 @@ public:
     Q_INVOKABLE virtual void            query(QString filter = "");
     virtual bool                        calculate(const QModelIndex &);
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
-
-
+    virtual void                        setOrderClause();
 
 // Функции для работы справочника в составе документа
 // Используются в момент добавления новых записей в документ
@@ -56,6 +55,7 @@ public:
     virtual void setMustShow(bool must) { lMustShow = must; }
     bool isConst() { return lIsConst; }
     bool isSet() { return lIsSet; }
+    bool isSaldo() { return lIsSaldo; }
     void setConst(bool con) { lIsConst = con; }
     void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
@@ -81,6 +81,7 @@ protected:
     bool            lIsConst;
     bool            lAutoSelect;
     bool            isDepend;
+    bool            lIsSaldo;
     QStringList     fieldList;
     virtual void    setForm();
     virtual void    prepareSelectCurrentRowCommand();
@@ -90,7 +91,6 @@ protected:
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
     QString         dictTitle;
-    QString         sortOrder;
 };
 
 #endif // DICTIONARY_H

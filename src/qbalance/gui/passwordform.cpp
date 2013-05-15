@@ -53,6 +53,7 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 
     if (Form::open(pwgt))
     {
+        connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
         QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, layout);

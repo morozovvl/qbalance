@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QPainter>
 #include <QtCore/QUrl>
 #include "picture.h"
+#include "../kernel/app.h"
+
 
 Picture::Picture(QWidget* parent): QFrame(parent) {
     setFrameStyle(QFrame::Box);
@@ -28,6 +30,16 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
     setFixedSize(200, 200);
     pictureDrawn = "";
 }
+
+
+void Picture::setApp(TApplication* a)
+{
+    app = a;
+    // Установим высоту и ширину картинки как 20% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
+    int pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.2 / 2;
+    setFixedSize(pictSize, pictSize);
+}
+
 
 void Picture::show(QString fileName) {
     pictureFileName = fileName.size() > 0 && QDir().exists(fileName) ? fileName : "";

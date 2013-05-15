@@ -306,7 +306,12 @@ void OOXMLReportEngine::writeVariables() {
                                 if (var.type() == QVariant::DateTime)
                                     valueString = var.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
                                 else
-                                    valueString = var.toString().trimmed();
+                                {
+                                    if (var.type() == QVariant::Date)
+                                        valueString = var.toDate().toString("dd.MM.yyyy");
+                                    else
+                                        valueString = var.toString().trimmed();
+                                }
                             }
                             cellText.replace(svar, valueString);
                             replacement = true;

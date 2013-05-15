@@ -374,8 +374,9 @@ bool DBFactory::isSet(QString tableName)
             result = false;                                     // это справочник, т.к. есть поле ИМЯ
         }
         else {
+            QString id = getObjectName("код") + "_";
             for (int k = 0; k < fieldList.count(); k++)
-                if (QString(fieldList.at(k)).contains(getObjectName("код") + "_", Qt::CaseInsensitive)) {
+                if (QString(fieldList.at(k).left(id.size())).compare(id, Qt::CaseInsensitive) == 0) {
                     result = true;                              // это набор, т.к. нет поля ИМЯ и есть поля-ссылки на другие справочники
                     break;
                 }
@@ -696,7 +697,7 @@ bool DBFactory::setTableGuiName(QString tableName, QString menuName, QString for
 {
     clearError();
     QString command;
-    command = QString("UPDATE %1 SET %2 = '%3', %4 = '%5' WHERE %6 = '%7'").arg(getObjectNameCom("справочники"))
+    command = QString("UPDATE %1 SET %2 = '%3', %4 = '%5' WHERE trim(%6) = '%7';").arg(getObjectNameCom("справочники"))
                                                                             .arg(getObjectNameCom("справочники.имя_в_списке"))
                                                                             .arg(menuName)
                                                                             .arg(getObjectNameCom("справочники.имя_в_форме"))
@@ -1122,13 +1123,14 @@ bool DBFactory::removeDocStr(int docId, int nDocStr)
 void DBFactory::setPeriod(QDate begDate, QDate endDate)
 {
     clearError();
-    exec(QString("UPDATE %1 SET %2='%3', %4='%5' WHERE %6='%7';").arg(getObjectNameCom("блокпериоды"))
+    QString command = QString("UPDATE %1 SET %2='%3', %4='%5' WHERE %6='%7';").arg(getObjectNameCom("блокпериоды"))
                                                                  .arg(getObjectNameCom("блокпериоды.начало"))
                                                                  .arg(begDate.toString(Qt::LocaleDate))
                                                                  .arg(getObjectNameCom("блокпериоды.конец"))
                                                                  .arg(endDate.toString(Qt::LocaleDate))
                                                                  .arg(getObjectNameCom("блокпериоды.пользователь"))
-                                                                 .arg(TApplication::exemplar()->getLogin()));
+                                                                 .arg(TApplication::exemplar()->getLogin());
+    exec(command);
 }
 
 

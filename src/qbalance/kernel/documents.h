@@ -39,11 +39,12 @@ public:
     virtual void query(QString filter = "");
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
-    virtual void setScriptEngine() { scriptEngine = 0; }
+    virtual void setScriptEngine() { scriptEngine = 0; ; scriptEngineEnabled = false; }
     QList<ToperType>*   getTopersList() { return &topersList; }
     Q_INVOKABLE virtual void setValue(QString, QVariant);
     Q_INVOKABLE virtual QVariant getValue(QString);
     QString getAttrPrefix() { return prefix; }
+    virtual void            setOrderClause();
 
 
 protected:

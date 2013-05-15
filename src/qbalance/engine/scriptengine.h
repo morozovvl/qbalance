@@ -31,8 +31,8 @@ class Form;
 class Essence;
 
 struct EventFunction {
-    QString     name;
     QString     comment;
+    QString     body;
 };
 
 
@@ -48,7 +48,8 @@ public:
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     bool getScriptResult() { return scriptResult; }
 // События
-    virtual QList<EventFunction>* getEventsList();
+    virtual QMap<QString, EventFunction>* getEventsList();
+    void    appendEvent(QString, EventFunction);
     QString getBlankScripts();
     void eventAfterCalculate();
     void eventParametersChanged();
@@ -67,7 +68,7 @@ public:
     virtual QString preparePictureUrl(Essence*);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
-    QList<EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
+    QMap<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     virtual void loadScriptObjects();
 private:
     bool                scriptResult;

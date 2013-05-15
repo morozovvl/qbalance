@@ -125,7 +125,7 @@ void DocParameters::dictionaryButtonPressed()
             break;
         }
     }
-    parentForm->getForm()->activateWindow();
+    parentForm->getForm()->activateSubWindow();
     parentForm->parametersChangedEvent();
 }
 

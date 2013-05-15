@@ -52,7 +52,8 @@ Form::~Form()
 }
 
 
-bool Form::open(QWidget* pwgt, Essence* par, QString fName) {
+bool Form::open(QWidget* pwgt, Essence* par, QString fName)
+{
     parent = par;
     fileName = fName;
     if (fileName.size() == 0)
@@ -74,13 +75,15 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName) {
 }
 
 
-void Form::close() {
+void Form::close()
+{
     disconnect(formWidget, 0, 0, 0);
     writeSettings();
 }
 
 
-void Form::createForm(QString fileName, QWidget* pwgt) {
+void Form::createForm(QString fileName, QWidget* pwgt)
+{
     if (parent != 0)
     {
 //        configName = app->getConfigPrefix() + "." + getParent()->getTagName();
@@ -150,7 +153,8 @@ void Form::createForm(QString fileName, QWidget* pwgt) {
 }
 
 
-void Form::cmdOk() {
+void Form::cmdOk()
+{
     hide();
     lSelected = true;
     if (parent != 0)
@@ -158,7 +162,8 @@ void Form::cmdOk() {
 }
 
 
-void Form::cmdCancel() {
+void Form::cmdCancel()
+{
     hide();
     lSelected = false;
     if (parent != 0)
@@ -166,8 +171,10 @@ void Form::cmdCancel() {
 }
 
 
-int Form::exec() {
-    if (formWidget != 0) {
+int Form::exec()
+{
+    if (formWidget != 0)
+    {
         lSelected = false;
         if (parent != 0)
             parent->beforeShowFormEvent();
@@ -180,15 +187,16 @@ int Form::exec() {
 }
 
 
-void Form::show() {
-    if (formWidget != 0) {
+void Form::show()
+{
+    if (formWidget != 0)
+    {
         lSelected = false;
         if (parent != 0)
             parent->beforeShowFormEvent();
 
         checkVisibility();
         formWidget->show();
-
         if (parent != 0)
             parent->afterShowFormEvent();
 
@@ -226,8 +234,10 @@ void Form::checkVisibility()
 }
 
 
-void Form::hide() {
-    if (formWidget != 0) {
+void Form::hide()
+{
+    if (formWidget != 0)
+    {
 
         if (parent != 0)
             parent->beforeHideFormEvent();
@@ -308,7 +318,8 @@ void Form::keyPressEvent(QKeyEvent *event)
 }
 
 
-void Form::readSettings() {
+void Form::readSettings()
+{
     // Установим координаты и размеры окна
     QWidget* widget;
     widget = formWidget->getSubWindow();
@@ -362,7 +373,8 @@ void Form::readSettings() {
 }
 
 
-void Form::writeSettings() {
+void Form::writeSettings()
+{
     // Сохраним координаты и размеры окна
     QWidget* widget;
     widget = formWidget->getSubWindow();

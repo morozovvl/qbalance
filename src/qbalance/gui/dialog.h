@@ -38,7 +38,7 @@ class QDESIGNER_WIDGET_EXPORT Dialog : public QDialog
 public:
 
     Dialog(QWidget *parent = 0);
-    Q_INVOKABLE void show();
+//    Q_INVOKABLE void show();
     Q_INVOKABLE int exec();
     Q_INVOKABLE void hide();
     Q_INVOKABLE QWidget* findChild(QString);
@@ -51,6 +51,7 @@ public:
     void    setForm(Form* f) { form = f; }
     void    findCmdOk();
     virtual void keyPressEvent(QKeyEvent*);
+    void    activateSubWindow();
 
 signals:
     void cmdOkPressed();

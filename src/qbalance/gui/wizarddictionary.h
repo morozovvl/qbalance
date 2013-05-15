@@ -23,8 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QCheckBox>
 #include <QtGui/QTableWidget>
 #include <QtGui/QListWidget>
+#include <QtGui/QTextEdit>
 #include "wizardform.h"
-#include "mytextedit.h"
+//#include "mytextedit.h"
 #include "mysyntaxhighlighter.h"
 #include "../storage/dbfactory.h"
 
@@ -52,7 +53,7 @@ private:
     QCheckBox*          chbMenu;                // Справочник доступен в меню справочников
     QTableWidget        fieldsTable;            // Список полей таблицы
     QListWidget         headers;                // Заголовки колонок
-    MyTextEdit*         textEditor;
+    QTextEdit*         textEditor;
     MySyntaxHighlighter* highlighter;
     virtual void        getData();
     friend QString      showTypesForm();

@@ -39,7 +39,7 @@ void Dialog::setApp(TApplication* a)
     setParent(app->getMainWindow(), Qt::Dialog);
 }
 
-
+/*
 void Dialog::show()
 {
     if (!freeWindow)
@@ -50,11 +50,28 @@ void Dialog::show()
     }
     QDialog::show();
 }
+*/
 
 
 int Dialog::exec()
 {
-   return QDialog::exec();
+    int result;
+
+    if (subWindow != 0)
+    {
+        setGeometry(subWindow->x(), subWindow->y(), subWindow->width(), subWindow->height());
+
+        subWindow->setWidget(0);
+        setParent(app->getMainWindow(), Qt::Dialog);
+        result = QDialog::exec();
+
+        subWindow->setGeometry(x(), y(), width(), height());
+        subWindow->setWidget(this);
+    }
+    else
+        result = QDialog::exec();
+
+    return result;
 }
 
 
@@ -120,5 +137,10 @@ void Dialog::keyPressEvent(QKeyEvent *event)
         QDialog::keyPressEvent(event);
 }
 
+
+void Dialog::activateSubWindow()
+{
+    app->getMainWindow()->getWorkSpace()->setActiveSubWindow(subWindow);
+}
 
 

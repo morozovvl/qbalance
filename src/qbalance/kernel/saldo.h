@@ -30,6 +30,7 @@ public:
     virtual QString transformSelectStatement(QString);
     Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
     void setQuan(bool q) { quan = q; }
+    virtual void            setOrderClause();
 
 protected:
     virtual bool    setTableModel(int = 0);

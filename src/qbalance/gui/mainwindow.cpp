@@ -32,6 +32,7 @@ MainWindow::MainWindow(GUIFactory* par) {
     createToolBars();
     createStatusBar();
     workSpace = new QMdiArea(this);
+    workSpace->setActivationOrder(QMdiArea::ActivationHistoryOrder);
 }
 
 MainWindow::~MainWindow() {
@@ -151,11 +152,13 @@ void MainWindow::setPeriod() {
     showPeriod();
 }
 
+
 void MainWindow::showPeriod() {
     QString period;
     period = TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy") + " - " + TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy");
     periodAct->setIconText(period);
 }
+
 
 void MainWindow::readSettings() {
       QSettings settings;
@@ -166,6 +169,7 @@ void MainWindow::readSettings() {
           settings.endGroup();
       }
 }
+
 
 void MainWindow::writeSettings()
 {
@@ -189,11 +193,29 @@ MyMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
             if (widget == dialogWidget)
                 return (MyMdiSubWindow*)subWindow;
         }
+
         // Такой виджет видимо ранее не отображался, поэтому создадим новое окно
         MyMdiSubWindow* subWindow = new MyMdiSubWindow(workSpace);
         subWindow->hide();
         subWindow->setWidget(dialogWidget);
+
+        QList<QMdiSubWindow *>  list = workSpace->subWindowList();
+
         return (MyMdiSubWindow*)workSpace->addSubWindow(subWindow);
+    }
+    return 0;
+}
+
+
+MyMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
+{
+    if (dialogWidget != 0)
+    {
+        foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
+            Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
+            if (widget == dialogWidget)
+                return (MyMdiSubWindow*)subWindow;
+        }
     }
     return 0;
 }

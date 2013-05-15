@@ -125,10 +125,7 @@ bool Documents::open()
     if (Table::open())
     {     // Откроем этот справочник
 
-        // Установим порядок сортировки
-        setSortClause(QString("%1, \"%2\".%3").arg(db->getObjectNameCom(tableName + ".дата"))
-                                          .arg(tableName)
-                                          .arg(db->getObjectNameCom(tableName + ".номер")));
+        setScriptEngine();
 
         tableModel->setTestSelect(true);
         query();
@@ -154,6 +151,14 @@ void Documents::close()
     currentDocument->close();
     delete currentDocument;
     Dictionary::close();
+}
+
+
+void Documents::setOrderClause()
+{
+    Table::setOrderClause(QString("%1, \"%2\".%3").arg(db->getObjectNameCom(tableName + ".дата"))
+                                                 .arg(tableName)
+                                                 .arg(db->getObjectNameCom(tableName + ".номер")));
 }
 
 

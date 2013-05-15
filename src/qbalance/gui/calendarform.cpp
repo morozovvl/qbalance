@@ -23,14 +23,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 
-//CalendarForm::CalendarForm(QObject* parent/* = 0*/): Form(parent)
-//{
-//}
+CalendarForm::CalendarForm(QObject* parent/* = 0*/): Form(parent)
+{
+}
 
 
-//CalendarForm::~CalendarForm()
-//{
-//}
+CalendarForm::~CalendarForm()
+{
+}
 
 
 bool CalendarForm::open(QWidget* pwgt) {
@@ -67,7 +67,9 @@ void CalendarForm::cmdOk() {
     if (beginDate > endDate)
         TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
     else
+    {
         Form::cmdOk();
+    }
 }
 
 void CalendarForm::setBeginDate(QDate date) {

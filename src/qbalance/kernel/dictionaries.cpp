@@ -191,7 +191,6 @@ bool Dictionaries::remove()
 
 bool Dictionaries::open() {
     if (Dictionary::open()) {
-        setSortClause(db->getObjectName("доступ_к_справочникам.имя"));
         return true;
     }
     return false;
@@ -207,7 +206,7 @@ void Dictionaries::close() {
 
 
 void Dictionaries::query(QString) {
-    Dictionary::query(QString("%1=true").arg(db->getObjectName("доступ_к_справочникам.меню")));
+    Dictionary::query(QString("%1=true").arg(db->getObjectNameCom("доступ_к_справочникам.меню")));
 }
 
 
@@ -239,3 +238,8 @@ void Dictionaries::setForm()
     form->open(parentForm, this, getTagName());
 }
 
+
+void Dictionaries::setOrderClause()
+{
+    Table::setOrderClause(db->getObjectName("доступ_к_справочникам.имя"));
+}

@@ -46,7 +46,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Essence::Essence(QString name, QObject *parent): Table(name, parent)
 {
     form = 0;
-    parentForm = 0;
     scriptEngine = 0;
     parentForm = app->getMainWindow()->centralWidget();
     formTitle   = "";
@@ -68,6 +67,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     m_networkAccessManager = 0;
     m_request = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
+    defaultFilter = "";
 }
 
 
@@ -76,7 +76,7 @@ Essence::~Essence() {
 }
 
 
-QWidget* Essence::getFormWidget() {
+Dialog* Essence::getFormWidget() {
     if (!opened)
     {
         open();
@@ -188,6 +188,22 @@ void Essence::setId(qulonglong id)
 {
     query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(db->getObjectName("код")).arg(id));
 }
+
+
+void Essence::query(QString filter)
+{
+    if (filter.size() > 0 && defaultFilter.size() > 0)
+    {
+        Table::query(filter + " AND " + defaultFilter);
+        return;
+    }
+    if (defaultFilter.size() > 0)
+    {
+        Table::query(defaultFilter);
+        return;
+    }
+    Table::query(filter);
+ }
 
 
 QString Essence::getPhotoFile()
@@ -417,23 +433,8 @@ bool Essence::open()
 {
     if (Table::open())
     {
-        initForm();
+        setOrderClause();
         setScriptEngine();
-        if (scriptEngineEnabled && scriptEngine != 0)
-        {
-            if (!scriptEngine->open(scriptFileName) || !scriptEngine->evaluate())
-            {
-                if (scriptEngine->hasUncaughtException())
-                {
-                    app->getGUIFactory()->showError(QString(QObject::trUtf8("Ошибка [%1] в строке %2 !")).arg(scriptEngine->uncaughtException ().toString())
-                                                                                                      .arg(scriptEngine->uncaughtExceptionLineNumber()));
-                }
-                else
-                    app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
-                return false;
-            }
-            initFormEvent();
-        }
         return true;
     }
     return false;
@@ -464,6 +465,25 @@ void Essence::setForm()
 void Essence::setScriptEngine()
 {
     scriptEngine = new ScriptEngine(this);
+}
+
+
+void Essence::evaluateEngine()
+{
+    if (scriptEngineEnabled && scriptEngine != 0)
+    {
+        if (!scriptEngine->open(scriptFileName) || !scriptEngine->evaluate())
+        {
+            if (scriptEngine->hasUncaughtException())
+            {
+                app->getGUIFactory()->showError(QString(QObject::trUtf8("Ошибка [%1] в строке %2 !")).arg(scriptEngine->uncaughtException ().toString())
+                                                                                                  .arg(scriptEngine->uncaughtExceptionLineNumber()));
+            }
+            else
+                app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось загрузить скрипты!")));
+            scriptEngineEnabled = false;
+        }
+    }
 }
 
 
@@ -543,7 +563,7 @@ FormGrid* Essence::getForm()
 
 void Essence::initFormEvent()
 {
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
     {
         getScriptEngine()->eventInitForm(form);
     }
@@ -552,7 +572,7 @@ void Essence::initFormEvent()
 
 void Essence::beforeShowFormEvent()
 {
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
     {
         getScriptEngine()->eventBeforeShowForm(form);
     }
@@ -561,28 +581,28 @@ void Essence::beforeShowFormEvent()
 
 void Essence::afterShowFormEvent()
 {
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
         getScriptEngine()->eventAfterShowForm(form);
 }
 
 
 void Essence::beforeHideFormEvent()
 {
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
         getScriptEngine()->eventBeforeHideForm(form);
 }
 
 
 void Essence::afterHideFormEvent()
 {
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
         getScriptEngine()->eventAfterHideForm(form);
 }
 
 
 void Essence::closeFormEvent()
 {
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
         getScriptEngine()->eventCloseForm(form);
 }
 
@@ -590,7 +610,7 @@ void Essence::closeFormEvent()
 QString Essence::preparePictureUrl()
 {
     QString result;
-    if (getScriptEngine() != 0)
+    if (scriptEngineEnabled)
     {
         result = getScriptEngine()->preparePictureUrl(this);
     }
@@ -603,28 +623,36 @@ void Essence::prepareSelectCurrentRowCommand()
     preparedSelectCurrentRow.clear();
 
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
-    preparedSelectCurrentRow.prepare(tableModel->getSelectStatement());
+    QString command = tableModel->getSelectStatement();
+    preparedSelectCurrentRow.prepare(command);
 }
 
 
 void Essence::updateCurrentRow()
 {
-    preparedSelectCurrentRow.exec();
-    TApplication::debug(QString("PreparedQuery: %1\n").arg(preparedSelectCurrentRow.executedQuery()));
-    if (preparedSelectCurrentRow.first())
+    QString command = preparedSelectCurrentRow.executedQuery();
+    if (command.size() > 0)
     {
-        QModelIndex index = form->getCurrentIndex();
-        for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
+        preparedSelectCurrentRow.exec();
+        TApplication::debug(QString("PreparedQuery: %1\n").arg(command));
+        if (preparedSelectCurrentRow.first())
         {
-            QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
-            QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-            if (value != tableModel->record(index.row()).value(fieldName))
-                tableModel->setData(index.sibling(index.row(), i), value, true);
+            QModelIndex index = form->getCurrentIndex();
+            for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
+            {
+                QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
+                QVariant value = preparedSelectCurrentRow.record().value(fieldName);
+                if (value != tableModel->record(index.row()).value(fieldName))
+                    tableModel->setData(index.sibling(index.row(), i), value, true);
+            }
         }
+        else
+            if (!preparedSelectCurrentRow.isValid())
+            {
+                TApplication::debug(QString("PreparedQuery Error: %1\n").arg(preparedSelectCurrentRow.lastError().text()));
+                TApplication::debug(QString("PreparedQuery Expression: %1\n").arg(command));
+            }
     }
-    else
-        if (!preparedSelectCurrentRow.isValid())
-            TApplication::debug(QString("PreparedQuery Error: %1\n").arg(preparedSelectCurrentRow.lastError().text()));
 }
 
 

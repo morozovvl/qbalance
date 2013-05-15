@@ -48,6 +48,7 @@ private:
         QString password;
         QComboBox* LoginSelector;
         QLineEdit* PasswordEditor;
+private slots:
         void cmdOk();
 };
 

@@ -462,14 +462,14 @@ void WizardOperation::getData()
      sortHeadersList(docListFieldsTable, &docListHeaders);
 
      // Инициализируем текстовый редактор
-     textEditor = new MyTextEdit(formWidget);
+     textEditor = new QTextEdit(formWidget);
      highlighter = new MySyntaxHighlighter(textEditor->document());
      QString scripts = QString(db->getFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType));
-     if (scripts.size() == 0)
-     {
-         DocumentScriptEngine engine;
-         scripts = engine.getBlankScripts();
-     }
+//     if (scripts.size() == 0)
+//     {
+//         DocumentScriptEngine engine;
+//         scripts = engine.getBlankScripts();
+//     }
      textEditor->setText(scripts);
 
      connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
@@ -715,6 +715,10 @@ void WizardOperation::getFieldsTable(QList<FieldType>* flds,  QTableWidget* fiel
 
 void WizardOperation::frameActivated(int frameNumber)
 {
+    if (frameNumber == 4)
+    {
+        generateScripts();
+    }
     if (frameNumber == 6 && docListFldsTableChanged)
     {
         sortHeadersList(docListFieldsTable, &docListHeaders);
@@ -725,40 +729,44 @@ void WizardOperation::frameActivated(int frameNumber)
 
 void WizardOperation::frameDeactivated(int frameNumber)
 {
-    if (frameNumber == 1 && prvTableChanged)
+    if (frameNumber == 1)
     {
-        for (int i = 0; i < prvTable->rowCount(); i++)
+        if (prvTableChanged)
         {
-            ToperType toperT;
-            QTableWidgetItem* item;
-            toperT.number = i + 1;
-            item = prvTable->item(i, debetField);
-            if (item != 0)
-                toperT.dbAcc = item->text().trimmed();
-            item = prvTable->item(i, dbConstField);
-            if (item != 0)
-                toperT.dbConst = (QString(item->text()).compare("true") == 0) ? true : false;
-            item = prvTable->item(i, dbSalVisField);
-            if (item != 0)
-                toperT.dbSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
-            item = prvTable->item(i, creditField);
-            if (item != 0)
-                toperT.crAcc = item->text().trimmed();
-            item = prvTable->item(i, crConstField);
-            if (item != 0)
-                toperT.crConst = (QString(item->text()).compare("true") == 0) ? true : false;
-            item = prvTable->item(i, itogField);
-            item = prvTable->item(i, crSalVisField);
-            if (item != 0)
-                toperT.crSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
-            if (item != 0)
-                toperT.itog = item->text().trimmed();
-            topersList.append(toperT);
+            for (int i = 0; i < prvTable->rowCount(); i++)
+            {
+                ToperType toperT;
+                QTableWidgetItem* item;
+                toperT.number = i + 1;
+                item = prvTable->item(i, debetField);
+                if (item != 0)
+                    toperT.dbAcc = item->text().trimmed();
+                item = prvTable->item(i, dbConstField);
+                if (item != 0)
+                    toperT.dbConst = (QString(item->text()).compare("true") == 0) ? true : false;
+                item = prvTable->item(i, dbSalVisField);
+                if (item != 0)
+                    toperT.dbSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
+                item = prvTable->item(i, creditField);
+                if (item != 0)
+                    toperT.crAcc = item->text().trimmed();
+                item = prvTable->item(i, crConstField);
+                if (item != 0)
+                    toperT.crConst = (QString(item->text()).compare("true") == 0) ? true : false;
+                item = prvTable->item(i, itogField);
+                item = prvTable->item(i, crSalVisField);
+                if (item != 0)
+                    toperT.crSaldoVisible = (QString(item->text()).compare("true") == 0) ? true : false;
+                if (item != 0)
+                    toperT.itog = item->text().trimmed();
+                topersList.append(toperT);
+            }
+            QList<FieldType> flds;
+            db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
+            getFieldsTable(&flds, fieldsTable);
+            prvTableChanged = false;
         }
-        QList<FieldType> flds;
-        db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
-        getFieldsTable(&flds, fieldsTable);
-        prvTableChanged = false;
+
     }
     if (frameNumber == 2 && fldsTableChanged)
     {
@@ -780,5 +788,73 @@ void WizardOperation::frameDeactivated(int frameNumber)
         fldsTableChanged = false;
     }
 }
+
+
+void WizardOperation::generateScripts()
+{
+    // Проверим, нужно ли автоматически вставить скрипт вычисления цены или суммы при поступлении на счет, в котором ведется количественный учет
+    QString scripts = textEditor->toPlainText();
+    if (scripts.size() == 0)
+    {
+        DocumentScriptEngine engine;
+        EventFunction func;
+        QString script;
+        QTextStream stream(&script, QIODevice::Text);
+        // Создадим скрипт для вычисления цены и суммы при оприходовании количественных объектов учета
+        if (topersList.count() == 1)
+        {
+            Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
+            accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(topersList.at(0).dbAcc));
+            bool dbQuan = accDict->getValue(db->getObjectName("счета.количество")).toBool();
+            accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(topersList.at(0).crAcc));
+            bool crQuan = accDict->getValue(db->getObjectName("счета.количество")).toBool();
+            if (dbQuan && !crQuan)
+            {
+                stream.reset();
+                stream << QObject::trUtf8("var кол = getValue(\"P1__КОЛ\");") << endl;
+                stream << QObject::trUtf8("var цена = getValue(\"P1__ЦЕНА\");") << endl;
+                stream << QObject::trUtf8("var сумма = getValue(\"P1__СУММА\");") << endl;
+                stream << QObject::trUtf8("if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0)") << endl;
+                stream << QObject::trUtf8("   цена = сумма / кол;") << endl;
+                stream << QObject::trUtf8("else") << endl;
+                stream << QObject::trUtf8("   сумма = кол * цена;") << endl;
+                stream << QObject::trUtf8("setValue(\"P1__КОЛ\", кол);") << endl;
+                stream << QObject::trUtf8("setValue(\"P1__ЦЕНА\", цена);") << endl;
+                stream << QObject::trUtf8("setValue(\"P1__СУММА\", сумма);");
+                func.body = script;
+                engine.appendEvent("EventCalcTable()", func);
+            }
+        }
+
+        // Скрипт для вывода значения постоянного справочника в комментарий
+        int constDict = 0;
+        QString constDictName;
+        for (int i = 0; i < topersList.count(); i++)
+        {
+            if (topersList.at(i).dbConst)
+            {
+                constDict++;
+                constDictName = topersList.at(i).dbDict;
+            }
+            if (topersList.at(i).crConst)
+            {
+                constDict++;
+                constDictName = topersList.at(i).crDict;
+            }
+        }
+        if (constDict == 1)
+        {
+            stream.reset();
+            func.body = QString("documents.setValue(\"%1\", getDictionary(\"%2\").getValue(\"имя\"));").arg(db->getObjectName("документы.комментарий"))
+                                                                                                       .arg(constDictName)
+                                                                                                       .arg(db->getObjectName(constDictName + ".имя"));
+            engine.appendEvent("EventParametersChanged()", func);
+        }
+
+        scripts = engine.getBlankScripts();
+        textEditor->setText(scripts);
+    }
+}
+
 
 

@@ -48,10 +48,11 @@ public:
     Q_INVOKABLE virtual void view();       // Исправление свойств справочника
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
-    virtual void setScriptEngine() { scriptEngine = 0; }
+    virtual void setScriptEngine() { scriptEngine = 0; scriptEngineEnabled = false; }
     void    setDocument(Document* doc) { document = doc; }
     Document* getDocument() { return document; }
     bool        isSaldoExist() { return lIsSaldoExist; }
+    virtual void            setOrderClause();
 
 protected:
     virtual void setForm();

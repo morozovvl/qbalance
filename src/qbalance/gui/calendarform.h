@@ -28,8 +28,8 @@ class TApplication;
 class CalendarForm : public Form {
     Q_OBJECT
 public:
-//    CalendarForm(QObject* parent = 0);
-//    virtual ~CalendarForm();
+    CalendarForm(QObject* parent = 0);
+    ~CalendarForm();
     virtual bool open(QWidget* pwgt = 0);
     virtual QDate getBeginDate() { return beginDate; }
     virtual QDate getEndDate() { return endDate; }

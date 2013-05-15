@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlIndex>
 #include <QtCore/QVariant>
 #include <QtGui/QItemDelegate>
-//#include "../kernel/essence.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "form.h"
 #include "picture.h"
@@ -54,8 +53,13 @@ public:
     Q_INVOKABLE QPushButton* getButtonPrint() { return buttonPrint; }
     Q_INVOKABLE QPushButton* getButtonLoad() { return buttonLoad; }
     Q_INVOKABLE QPushButton* getButtonSave() { return buttonSave; }
+
+    void setButtonAdd(bool);
+    void setButtonDelete(bool);
+
     virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE virtual void setEnabled(bool);
+    virtual void    readColumnsSettings();
 
 public slots:
     virtual void calculate();
@@ -87,7 +91,6 @@ protected:
 
     virtual void createForm(QString, QWidget* pwgt = 0);
     virtual void writeSettings();
-    void    readColumnsSettings();
 
 private:
     int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки

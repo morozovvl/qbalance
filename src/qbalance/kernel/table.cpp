@@ -87,9 +87,9 @@ bool Table::setTableModel(int level)
 }
 
 
-void Table::setSortClause(QString sort)
+void Table::setOrderClause(QString sort)
 {
-    tableModel->setSortClause(sort);
+    tableModel->setOrderClause(sort);
 }
 
 

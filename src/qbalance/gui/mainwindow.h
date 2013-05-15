@@ -41,7 +41,7 @@ public:
       QStatusBar* getStatusBar() { return statusBar(); }
       virtual void showPeriod();
       virtual MyMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс
-//      void showMdiWindow(MyMdiSubWindow*);
+      virtual MyMdiSubWindow* findMdiWindow(QWidget*);
       virtual void removeMdiWindow(MyMdiSubWindow*);                         // Удаляет окно из многооконного интерфейса
 
 private slots:

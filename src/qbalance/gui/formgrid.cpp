@@ -124,6 +124,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     if (picture != 0)
     {
+        picture->setApp(app);
         picture->hide();
         if (grdTable != 0)
         {
@@ -240,51 +241,103 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             parent->setViewable(false);
         }
     }
-        // Подключим кнопку "Удалить"
-    if (parent != 0 && parent->isDeleteable())
+    // Подключим кнопку "Удалить"
+    setButtonDelete(true);
+    // Подключим кнопку "Добавить"
+    setButtonAdd(true);
+    grdTable->setReadOnly(parent->isReadOnly());
+}
+
+
+void FormGrid::setButtonAdd(bool set)
+{
+    if (set)
     {
-        if (defaultForm)
+        if (parent != 0 && parent->isInsertable() && buttonAdd == 0)
         {
-            buttonDelete = new QPushButton();
-            buttonDelete->setObjectName("buttonDelete");
-            cmdButtonLayout->insertWidget(0, buttonDelete);
-        }
-        else
-        {
-            buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
-        }
-        if (buttonDelete != 0)
-        {
-            connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
-        }
-        else
-        {
-            parent->setDeleteable(false);
+            if (defaultForm)
+            {
+                buttonAdd = new QPushButton();
+                buttonAdd->setObjectName("buttonAdd");
+                cmdButtonLayout->insertWidget(0, buttonAdd);
+            }
+            else
+            {
+                buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
+            }
+            if (buttonAdd != 0)
+            {
+                connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
+                app->setIcons(formWidget);
+            }
+            else
+            {
+                parent->setInsertable(false);
+            }
         }
     }
-    // Подключим кнопку "Добавить"
-    if (parent != 0 && parent->isInsertable())
+    else
     {
-        if (defaultForm)
-        {
-            buttonAdd = new QPushButton();
-            buttonAdd->setObjectName("buttonAdd");
-            cmdButtonLayout->insertWidget(0, buttonAdd);
-        }
-        else
-        {
+        if (!defaultForm)
             buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
-        }
-        if (buttonAdd != 0)
+        if (parent != 0 && buttonAdd != 0)
         {
-            connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
-        }
-        else
-        {
+            cmdButtonLayout->removeWidget(buttonAdd);
+            disconnect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
+            if (defaultForm)
+            {
+                delete buttonAdd;
+                buttonAdd = 0;
+            }
             parent->setInsertable(false);
         }
     }
-    grdTable->setReadOnly(parent->isReadOnly());
+}
+
+
+void FormGrid::setButtonDelete(bool set)
+{
+    if (set)
+    {
+        if (parent != 0 && parent->isDeleteable() && buttonDelete == 0)
+        {
+            if (defaultForm)
+            {
+                buttonDelete = new QPushButton();
+                buttonDelete->setObjectName("buttonDelete");
+                cmdButtonLayout->insertWidget(0, buttonDelete);
+            }
+            else
+            {
+                buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
+            }
+            if (buttonDelete != 0)
+            {
+                connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
+                app->setIcons(formWidget);
+            }
+            else
+            {
+                parent->setDeleteable(false);
+            }
+        }
+    }
+    else
+    {
+        if (!defaultForm)
+            buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
+        if (parent != 0 && buttonDelete != 0)
+        {
+            cmdButtonLayout->removeWidget(buttonDelete);
+            disconnect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
+            if (defaultForm)
+            {
+                delete buttonDelete;
+                buttonDelete = 0;
+            }
+            parent->setDeleteable(false);
+        }
+    }
 }
 
 
@@ -292,8 +345,7 @@ int FormGrid::exec()
 {
     if (grdTable != 0)
     {
-        if (grdTable->setColumnsHeaders())
-            readColumnsSettings();
+        grdTable->setColumnsHeaders();
         grdTable->selectNextColumn();
     }
     setButtons();
@@ -307,8 +359,7 @@ void FormGrid::show()
     restoreCurrentIndex(index);
     if (grdTable != 0)
     {
-        if (grdTable->setColumnsHeaders())
-            readColumnsSettings();
+        grdTable->setColumnsHeaders();
         showPhoto();
         grdTable->setFocus();
         grdTable->selectNextColumn();
@@ -330,7 +381,7 @@ void FormGrid::cmdAdd()
                     buttonDelete->setDisabled(false);
             }
         }
-        formWidget->activateWindow();
+        formWidget->activateSubWindow();
         if (grdTable != 0)
         {
             grdTable->setFocus();
@@ -362,7 +413,7 @@ void FormGrid::cmdDelete()
                 picture->setVisible(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
             }
         }
-        formWidget->activateWindow();
+        formWidget->activateSubWindow();
         if (grdTable != 0)
         {
             grdTable->setFocus();
@@ -389,7 +440,8 @@ void FormGrid::cmdRequery()
     QModelIndex index = getCurrentIndex();
     parent->query();
     restoreCurrentIndex(index);
-    formWidget->activateWindow();
+//    formWidget->activateWindow();
+    formWidget->activateSubWindow();
     if (grdTable != 0)
     {
         grdTable->setFocus();
@@ -455,7 +507,7 @@ void FormGrid::cmdPrint()
                     parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
             }
         }
-        formWidget->activateWindow();
+        formWidget->activateSubWindow();
         if (grdTable != 0)
             grdTable->setFocus();
     }
@@ -573,7 +625,7 @@ void FormGrid::setCurrentIndex(QModelIndex index)
 
 void FormGrid::setGridFocus()
 {
-    formWidget->activateWindow();
+    formWidget->activateSubWindow();
     if (grdTable != 0)
     {
         grdTable->setFocus();

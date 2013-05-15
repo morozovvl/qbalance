@@ -59,7 +59,7 @@ public:
     virtual QString selectStatement() const;
     QString getSelectStatement() { return selectCommand; }
     void setSelectStatement(QString string = "") { selectCommand = string; }
-    void setSortClause(QString);
+    void setOrderClause(QString);
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
     Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }

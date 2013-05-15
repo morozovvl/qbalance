@@ -99,6 +99,7 @@ void GUIFactory::closeDB() {
     db->close();
 }
 
+
 void GUIFactory::setPeriod() {
     CalendarForm* calendar = new CalendarForm();
     calendar->open(mainWindow->centralWidget());
@@ -162,8 +163,6 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
     }
     msgBox.setMinimumWidth(400);
     msgBox.setMinimumHeight(200);
-//    msgBox.setWindowModality(Qt::ApplicationModal);
-//    msgBox.show();
     return msgBox.exec();
 }
 

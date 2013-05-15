@@ -98,28 +98,20 @@ void DocumentScriptEngine::eventAppendFromQuery(int number, QSqlRecord* values)
 }
 
 
-QList<EventFunction>* DocumentScriptEngine::getEventsList()
+QMap<QString, EventFunction>* DocumentScriptEngine::getEventsList()
 {
-   if (eventsList.size() == 0)
-    {// Зарядим список событий
-        ScriptEngine::getEventsList();
-        EventFunction func;
-        func.name = "EventParametersChanged()";
-        func.comment = QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
-        eventsList.append(func);
-        func.name = "EventBeforeAddString()";
-        func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
-        eventsList.append(func);
-        func.name = "EventAfterAddString()";
-        func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
-        eventsList.append(func);
-        func.name = "EventAfterCalculate()";
-        func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
-        eventsList.append(func);
-        func.name = "EventAppendFromQuery(id, record)";
-        func.comment = QObject::trUtf8("Вызывается при добавлении новой записи из запроса");
-        eventsList.append(func);
-    }
+    ScriptEngine::getEventsList();
+    EventFunction func;
+    func.comment = QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
+    appendEvent("EventParametersChanged()", func);
+    func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
+    appendEvent("EventBeforeAddString()", func);
+    func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
+    appendEvent("EventAfterAddString()", func);
+    func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
+    appendEvent("EventAfterCalculate()", func);
+    func.comment = QObject::trUtf8("Вызывается при добавлении новой записи из запроса");
+    appendEvent("EventAppendFromQuery(id, record)", func);
     return &eventsList;
 }
 

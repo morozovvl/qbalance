@@ -37,7 +37,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     lAutoSelect = false;
     isDepend = false;
     ftsEnabled = false;
-    sortOrder = "";
+    lIsSaldo = false;
     dictionaries = app->getDictionaries();
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
@@ -191,7 +191,7 @@ bool Dictionary::calculate(const QModelIndex& index) {
 
 qulonglong Dictionary::getId(int row)
 {
-    if (!lIsSet)
+    if (tableModel->rowCount() > row)
         return Essence::getId(row);
 
     // Если это набор, то продолжаем
@@ -215,10 +215,19 @@ qulonglong Dictionary::getId(int row)
             Dictionary* dict = dictionaries->getDictionary(name);
             if (dict != 0)                       // Если удалось открыть справочник
             {
-                filter.append(QString("%1").arg(dict->getId()));
-                if (values.size() > 0)
-                    values.append(",");
-                values.append(QString("%1").arg(dict->getId()));
+                qulonglong id = dict->getId();
+                if (id != 0)
+                {
+                    filter.append(QString("%1").arg(id));
+                    if (values.size() > 0)
+                        values.append(",");
+                    values.append(QString("%1").arg(id));
+                }
+                else
+                {
+                    app->showError(QString(QObject::trUtf8("Не опредено значение справочника \"%1\"")).arg(name));
+                    return 0;
+                }
             }
             else
                 return 0;
@@ -230,7 +239,6 @@ qulonglong Dictionary::getId(int row)
         if (tableModel->rowCount() == 0)
         {
             QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(tableName).arg(variables).arg(values);
-            qDebug() << command;
             db->exec(command);
             query(filter);
         }
@@ -259,6 +267,7 @@ bool Dictionary::open(int)
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
         dictTitle = tableName;
+
     if (Essence::open())
     {
         tableModel->setTestSelect(true);
@@ -271,13 +280,9 @@ bool Dictionary::open(int)
         // Проверим, имеется ли в справочнике полнотекстовый поиск
         ftsEnabled = fieldList.contains(db->getObjectName(tableName + ".fts"), Qt::CaseInsensitive);
 
-        // Установим порядок сортировки
-        if (isSet())
-            setSortClause(sortOrder);
-        else
-            setSortClause(QString("\"%1\".%2").arg(tableName)
-                                          .arg(db->getObjectNameCom(tableName + ".имя")));
-
+        initForm();
+        evaluateEngine();
+        initFormEvent();
         return true;
     }
     return false;
@@ -315,13 +320,6 @@ bool Dictionary::setTableModel(int)
                 {                                       // Если удалось открыть справочник
                     if (!lIsSet)
                         dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
-                    else
-                    {
-                        if (sortOrder.size() > 0)
-                            sortOrder.append(", ");
-                        sortOrder.append(QString("\"%1\".%2").arg(fld.table)
-                                                             .arg(db->getObjectNameCom(fld.table + ".имя")));
-                    }
                 }
                 tables.append(fld.table);
             }
@@ -350,6 +348,34 @@ void Dictionary::query(QString defaultFilter)
 }
 
 
+void Dictionary::setOrderClause()
+{
+    if (isSet())
+    {
+        QString sortOrder;
+        QStringList tablesList;
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            FieldType fld = columnsProperties.at(i);
+            if (fld.table != tableName && !tablesList.contains(fld.table))
+            {
+                tablesList.append(fld.table);
+                if (sortOrder.size() > 0)
+                    sortOrder.append(",");
+                sortOrder.append(QString("\"%1\".%2").arg(fld.table)
+                                                     .arg(db->getObjectNameCom(fld.table + ".имя")));
+            }
+        }
+        Table::setOrderClause(sortOrder);
+    }
+    else
+    {
+        Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
+                                                 .arg(db->getObjectNameCom(tableName + ".имя")));
+    }
+}
+
+
 void Dictionary::updateCurrentRow()
 {   // Делает запрос к БД по одной строке справочника. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились
@@ -367,7 +393,7 @@ void Dictionary::prepareSelectCurrentRowCommand()
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
     QString command = tableModel->selectStatement();
 
-    command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName()).arg(getIdFieldName()));
+    command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName().toUpper()).arg(getIdFieldName()));
 
     preparedSelectCurrentRow.prepare(command);
 }

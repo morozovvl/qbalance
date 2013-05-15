@@ -53,6 +53,11 @@ public:
     void                        selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
     void                        setReadOnly(bool);
     bool                        setColumnsHeaders();
+    void                        hideAllGridSections();
+    void                        hideGridSection(QString);
+    void                        showGridSection(QString);
+    void                        showAllGridSections();
+
 
 signals:
     void                        rowChanged();
@@ -71,6 +76,7 @@ private:
     TApplication*               app;
     DBFactory*                  db;
     MySqlRelationalTableModel*  tableModel;
+    QMap<int, QString>          columns;            // Список видимых столбцов и их порядок
 
     MyItemDelegate*             getColumnDelegate(FieldType);
 };

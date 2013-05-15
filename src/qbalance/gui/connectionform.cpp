@@ -90,7 +90,6 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     formWidget->setMaximumWidth(350);
     if (readSettings)
         readConnectionsList();
-//    formWidget->setWindowModality(Qt::WindowModal);
     app->setIcons(formWidget);
 }
 

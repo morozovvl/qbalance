@@ -47,7 +47,7 @@ public:
     Q_INVOKABLE int getDocId() { return docId; }
     Q_INVOKABLE int getOperNumber() { return operNumber; }
     Documents* getParent() { return parent; }
-    QMap<QString, Dictionary*>* getDictionaries() { return dicts; }
+    QMap<QString, Dictionary*>* getDictionaries() { return dictionaries->getDictionaries(); }
     Q_INVOKABLE Dictionary* getDictionary(QString dictName, int deep = 0, bool add = true) { return dictionaries->getDictionary(dictName, deep, add); }
     Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
     Q_INVOKABLE virtual bool add();
@@ -69,7 +69,7 @@ public:
     Q_INVOKABLE void setNumber(QString number) { ((FormDocument*)getForm())->setNumber(number); }
     Q_INVOKABLE void showParameterText(QString dictName) { ((FormDocument*)getForm())->showParameterText(dictName);}
     int appendDocString();
-    void prepareValue(QString, Dictionary*);
+    bool prepareValue(QString, Dictionary*);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
@@ -91,7 +91,6 @@ protected:
     virtual bool        setTableModel(int = 0);
 
 private:
-    QMap<QString, Dictionary*>*     dicts;              // Объекты справочников
     QMap<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
     QMap<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
     Dictionaries*                   dictionaries;       // Объекты справочников

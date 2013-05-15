@@ -595,14 +595,17 @@ QString ScriptEngine::getBlankScripts()
     // создадим пустой скрипт с событиями
     QString scripts;
     QTextStream stream(&scripts, QIODevice::Text);
-    QList<EventFunction>* events = getEventsList();
-    for (int i = 0; i < events->count(); i++)
+    QMap<QString, EventFunction>* events = getEventsList();
+    foreach (QString funcName, events->keys())
     {
-        stream << "function " << events->at(i).name << endl;
+        stream << "function " << funcName << endl;
         stream << "{";
-        if (events->at(i).comment.size() > 0)
-            stream << " // " << events->at(i).comment << endl;
-        stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
+        if (events->value(funcName).comment.size() > 0)
+            stream << " // " << events->value(funcName).comment << endl;
+        if (events->value(funcName).body.size() > 0)
+            stream << events->value(funcName).body << endl;
+        else
+            stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
         stream << "}" << endl;
         stream << endl << endl;
     }
@@ -610,62 +613,64 @@ QString ScriptEngine::getBlankScripts()
 }
 
 
-QList<EventFunction>* ScriptEngine::getEventsList()
+QMap<QString, EventFunction>* ScriptEngine::getEventsList()
 {
-    if (eventsList.size() == 0)
-    {// Зарядим список событий
+    EventFunction func;
 
-        EventFunction func;
+    func.comment = QObject::trUtf8("Событие происходит сразу после создания формы документа");
+    appendEvent("EventInitForm()", func);
 
-        func.name = "EventInitForm()";
-        func.comment = QObject::trUtf8("Событие происходит сразу после создания формы документа");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
+    appendEvent("EventBeforeShowForm()", func);
 
-        func.name = "EventBeforeShowForm()";
-        func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит после открытия формы документа");
+    appendEvent("EventAfterShowForm()", func);
 
-        func.name = "EventAfterShowForm()";
-        func.comment = QObject::trUtf8("Событие происходит после открытия формы документа");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит перед закрытием формы документа");
+    appendEvent("EventBeforeHideForm()", func);
 
-        func.name = "EventBeforeHideForm()";
-        func.comment = QObject::trUtf8("Событие происходит перед закрытием формы документа");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит после закрытия формы документа");
+    appendEvent("EventAfterHideForm()", func);
 
-        func.name = "EventAfterHideForm()";
-        func.comment = QObject::trUtf8("Событие происходит после закрытия формы документа");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит перед удалением формы документа");
+    appendEvent("EventCloseForm()", func);
 
-        func.name = "EventCloseForm()";
-        func.comment = QObject::trUtf8("Событие происходит перед удалением формы документа");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
+    appendEvent("EventImport()", func);
 
-        func.name = "EventImport()";
-        func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
+    appendEvent("EventExport()", func);
 
-        func.name = "EventExport()";
-        func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит при нажатии любой кнопки на форме. Параметр keyEvent имеет тип QKeyEvent");
+    appendEvent("EventKeyPressed(keyEvent)", func);
 
-        func.name = "EventKeyPressed(keyEvent)";
-        func.comment = QObject::trUtf8("Событие происходит при нажатии любой кнопки на форме. Параметр keyEvent имеет тип QKeyEvent");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
+    appendEvent("PreparePictureUrl(object)", func);
 
-        func.name = "PreparePictureUrl(object)";
-        func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
+    appendEvent("EventCalcTable()", func);
 
-        func.name = "EventCalcTable()";
-        func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
-        eventsList.append(func);
+    func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
+    appendEvent("EventSetEnabled(enabled)", func);
 
-        func.name = "EventSetEnabled(enabled)";
-        func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
-        eventsList.append(func);
-
-    }
     return &eventsList;
+}
+
+
+void ScriptEngine::appendEvent(QString funcName, EventFunction func)
+{
+    EventFunction f;
+    if (eventsList.contains(funcName))
+    {
+        f = eventsList.value(funcName);
+        if (func.comment.size() > 0)
+            f.comment = func.comment;
+        if (func.body.size() > 0)
+            f.body = func.body;
+    }
+    else
+        f = func;
+    eventsList.remove(funcName);
+    eventsList.insert(funcName, f);
 }
 

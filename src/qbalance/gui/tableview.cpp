@@ -138,7 +138,6 @@ bool TableView::setColumnsHeaders()
             }
 
             // Теперь покажем только те столбцы, у которых поле number в списке fields больше 0
-            QMap<int, QString>  columns;
             for (int i = 0; i < fields->count(); i++)
             {
                 if (fields->at(i).number > 0)
@@ -168,10 +167,64 @@ bool TableView::setColumnsHeaders()
                 maxColumn = i;
             }
         }
+        parent->readColumnsSettings();
         columnsHeadersSeted = true;
         return true;
     }
     return false;
+}
+
+
+void TableView::hideAllGridSections()
+{
+    setColumnsHeaders();
+
+    foreach (int i, columns.keys())
+    {
+        horizontalHeader()->hideSection(horizontalHeader()->logicalIndex(i));
+    }
+}
+
+
+void TableView::hideGridSection(QString columnName)
+{
+    setColumnsHeaders();
+
+    foreach (int i, columns.keys())
+    {
+        if (columns.value(i) == columnName)
+        {
+            horizontalHeader()->hideSection(horizontalHeader()->logicalIndex(i));
+            return;
+        }
+    }
+}
+
+
+void TableView::showGridSection(QString columnName)
+{
+    setColumnsHeaders();
+
+
+    foreach (int i, columns.keys())
+    {
+        if (columns.value(i) == columnName)
+        {
+            horizontalHeader()->showSection(horizontalHeader()->logicalIndex(i));
+            return;
+        }
+    }
+}
+
+
+void TableView::showAllGridSections()
+{
+    setColumnsHeaders();
+
+    foreach (int i, columns.keys())
+    {
+        horizontalHeader()->showSection(horizontalHeader()->logicalIndex(i));
+    }
 }
 
 
@@ -212,40 +265,43 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 void TableView::selectNextColumn(QModelIndex* idx)
 // Ищет следующую колонку для редактирования
 {
-    QModelIndex index;
-    if (idx != 0)
-        index = *idx;
-    else
-        index = currentIndex();
-
-    if (index.row() == -1 && index.column() == -1)
-        return;
-    int column = horizontalHeader()->visualIndex(index.column());
-    int oldColumn = column > 0 ? column : 0;
-    int logicalIndex;
-    while (true)
+    if (tableModel->rowCount() > 0)
     {
-        column++;   // Перейдем в следующий столбец
-        logicalIndex = horizontalHeader()->logicalIndex(column);
-        QModelIndex newIndex = index.sibling(index.row(), logicalIndex);
-        if (newIndex.row() == -1 && newIndex.column() == -1)
+        QModelIndex index;
+        if (idx != 0)
+            index = *idx;
+        else
+            index = currentIndex();
+
+        if (index.row() == -1 && index.column() == -1)
+            return;
+        int column = horizontalHeader()->visualIndex(index.column());
+        int oldColumn = column > 0 ? column : 0;
+        int logicalIndex;
+        while (true)
         {
-            column = 0;
+            column++;   // Перейдем в следующий столбец
             logicalIndex = horizontalHeader()->logicalIndex(column);
-            newIndex = index.sibling(index.row(), logicalIndex);
-        }
-        if (!horizontalHeader()->isSectionHidden(logicalIndex))
-        {
-            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
-            if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            QModelIndex newIndex = index.sibling(index.row(), logicalIndex);
+            if (newIndex.row() == -1 && newIndex.column() == -1)
             {
-                setCurrentIndex(newIndex);
+                column = 0;
+                logicalIndex = horizontalHeader()->logicalIndex(column);
+                newIndex = index.sibling(index.row(), logicalIndex);
+            }
+            if (!horizontalHeader()->isSectionHidden(logicalIndex))
+            {
+                MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
+                if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+                {
+                    setCurrentIndex(newIndex);
+                    break;
+                }
+            }
+            if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
+            {
                 break;
             }
-        }
-        if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
-        {
-            break;
         }
     }
 }

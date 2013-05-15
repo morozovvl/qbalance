@@ -124,7 +124,7 @@ void MySqlRelationalTableModel::setRelation(int column, int keyColumn, const QSq
 }
 
 
-void MySqlRelationalTableModel::setSortClause(QString sort) {
+void MySqlRelationalTableModel::setOrderClause(QString sort) {
     sortClause = sort;
 }
 

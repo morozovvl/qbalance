@@ -26,15 +26,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QPaintEvent>
 #include <QtDesigner/QDesignerExportWidget>
 
+class TApplication;
+
+
 class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
     Q_OBJECT
 public:
     Picture(QWidget* parent = 0);
     void show(QString);
+    void                        setApp(TApplication*);
+
 protected:
     QString pictureFileName;
     QString pictureDrawn;
     virtual void paintEvent(QPaintEvent*);
+
+private:
+    TApplication*               app;
 };
 
 #endif // PICTURE_H

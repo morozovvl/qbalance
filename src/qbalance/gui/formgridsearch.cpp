@@ -73,9 +73,11 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 }
 
 
-void FormGridSearch::close() {
+void FormGridSearch::close()
+{
     if (!defaultForm)
-        if (parameters != 0) {
+        if (parameters != 0)
+        {
             disconnect(parameters, 0, 0, 0);
             parameters->close();
         }
@@ -93,9 +95,10 @@ QString FormGridSearch::getFilter()
 
 int FormGridSearch::exec()
 {
+    int result = FormGrid::exec();
     if (parameters != 0)
         parameters->setFocus();
-    return FormGrid::exec();
+    return result;
 }
 
 

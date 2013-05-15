@@ -28,6 +28,7 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
     dictionaryName = dictName.trimmed().toLower();
     tagName = "saldo" + cAcc;
     quan = false;
+    lIsSaldo = true;
     QSqlQuery accounts = db->getAccounts();
     accounts.first();
     while (accounts.isValid())
@@ -93,6 +94,12 @@ bool Saldo::setTableModel(int)
         return true;
     }
     return false;
+}
+
+
+void Saldo::setOrderClause()
+{
+    Table::setOrderClause("");
 }
 
 

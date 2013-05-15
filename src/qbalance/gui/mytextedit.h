@@ -26,12 +26,7 @@ class MyTextEdit : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit MyTextEdit(QWidget *parent = 0);
-
-signals:
-
-public slots:
-
+    MyTextEdit(QWidget *parent = 0);
 };
 
 #endif // MYTEXTEDIT_H
