@@ -449,7 +449,7 @@ void WizardOperation::getData()
      // Получим список проводок и полей и заголовков формы документа
      topersList.clear();
      fields.clear();
-     db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &fields);
+     db->getDocumentSqlSelectStatement(oper, &topersList, &fields);
      db->getColumnsHeaders(QString("Документ%1").arg(oper), &fields);
      getFieldsTable(&fields, fieldsTable);
      sortHeadersList(fieldsTable, &headers);
@@ -762,7 +762,7 @@ void WizardOperation::frameDeactivated(int frameNumber)
                 topersList.append(toperT);
             }
             QList<FieldType> flds;
-            db->getDocumentSqlSelectStatement(oper, TApplication::exemplar()->getDictionaries(), &topersList, &flds);
+            db->getDocumentSqlSelectStatement(oper, &topersList, &flds);
             getFieldsTable(&flds, fieldsTable);
             prvTableChanged = false;
         }

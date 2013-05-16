@@ -435,12 +435,9 @@ void FormGrid::cmdView()
 
 void FormGrid::cmdRequery()
 {
-//    app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + parent->getTagName() + "...");
-    app->showMessageOnStatusBar("Загрузка с сервера данных из таблицы ");
-    QModelIndex index = getCurrentIndex();
+    app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + parent->getTagName() + "...");
+//    app->showMessageOnStatusBar("Загрузка с сервера данных из таблицы ");
     parent->query();
-    restoreCurrentIndex(index);
-//    formWidget->activateWindow();
     formWidget->activateSubWindow();
     if (grdTable != 0)
     {

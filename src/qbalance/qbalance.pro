@@ -2,6 +2,12 @@
 # Project created by QtCreator 2009-04-25T16:32:03
 # -------------------------------------------------
 
+# для профилировщика
+#QMAKE_CXXFLAGS_DEBUG += -pg
+#QMAKE_LFLAGS_DEBUG += -pg
+
+
+
 QT += sql \
       xml \
       core \
@@ -79,12 +85,8 @@ SOURCES += main.cpp \
     gui/progressbar.cpp \
     driverfr/driverfr.cpp \
     gui/mydateitemdelegate.cpp \
-#    report/oounoreportengine.cpp \
-#    openoffice/openoffice.cpp \
     report/ooxmlreportengine.cpp \
     gui/mymdisubwindow.cpp
-#    kernel/globalparameters.cpp
-#    report/openrptreportengine.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -143,14 +145,8 @@ HEADERS += kernel/app.h \
     gui/progressbar.h \
     driverfr/driverfr.h \
     gui/mydateitemdelegate.h \
-#    report/oounoreportengine.h \
-#    openoffice/openoffice.h \
     report/ooxmlreportengine.h \
     gui/mymdisubwindow.h
-#    kernel/globalparameters.h
-#    report/openrptreportengine.h \
-#    ./../openrpt/openrpt/report/report.h \
-#    ./../openrpt/openrpt/report/wrapper.h
 RESOURCES += ../../resources.qrc
 
 unix:MOC_DIR = ../../.moc

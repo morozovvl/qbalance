@@ -76,6 +76,7 @@ struct DictType
     QString prototype;  // Справочник - прототип - справочник, который является основой для этого справочника и коды позиций в которых совпадают
     bool    isSaldo;
     bool    isConst;
+    bool    isSet;
 };
 
 
@@ -125,7 +126,7 @@ class DBFactory : public QObject {
 public:
     DBFactory();
     ~DBFactory();
-    bool addDoc(int, QDate);
+    int addDoc(int, QDate);
     bool removeDoc(int);
     int addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
     void saveDocAttribute(int, int, QString, QVariant);
@@ -202,7 +203,6 @@ public:
     void getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList);
 
     QString getDocumentSqlSelectStatement(int oper,
-                                          Dictionaries* dictionaries,
                                           QList<ToperType>*,
                                           QList<FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper

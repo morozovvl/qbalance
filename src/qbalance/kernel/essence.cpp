@@ -110,7 +110,8 @@ QVariant Essence::getValue(QString n, int row)
 {
     QVariant result;
     QString name = n.toUpper();
-    if (tableModel->record().contains(name))
+    QSqlRecord record = tableModel->record();
+    if (record.contains(name))
     {
         if (row >= 0)
         {
@@ -121,14 +122,14 @@ QVariant Essence::getValue(QString n, int row)
             int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
             result = tableModel->record(r).value(name);
         }
-        QVariant::Type type = tableModel->record().field(name).type();
+        QVariant::Type type = record.field(name).type();
         if (type == QVariant::Double ||
             type == QVariant::Int)
         {
             if (!result.isValid())
                 result = QVariant(0);
             result.convert(type);
-            result = QString::number(result.toDouble(), 'f', tableModel->record().field(name).precision()).toDouble();
+            result = QString::number(result.toDouble(), 'f', record.field(name).precision()).toDouble();
         }
 
         // Округлим значение числового поля до точности как и в БД
@@ -142,14 +143,15 @@ QVariant Essence::getValue(QString n, int row)
 void Essence::setValue(QString n, QVariant value, int row)
 {
     QString name = n.toUpper();
-    if (tableModel->record().contains(name))
+    QSqlRecord record = tableModel->record();
+    if (record.contains(name))
     {
         QModelIndex index, oldIndex;
 
         if (row >= 0)
             oldIndex = form->getCurrentIndex();
 
-        index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), tableModel->record().indexOf(name));
+        index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), record.indexOf(name));
 
         tableModel->setData(index, value);
         if (doSubmit)

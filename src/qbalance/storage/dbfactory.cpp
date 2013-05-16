@@ -390,14 +390,15 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
 {
     for (columnsProperties.first(); columnsProperties.isValid(); columnsProperties.next())
     {
-        if (QString().compare(columnsProperties.record().value("table_name").toString(), table.trimmed(), Qt::CaseInsensitive) == 0)
+        QSqlRecord record = columnsProperties.record();
+        if (QString().compare(record.value("table_name").toString(), table.trimmed(), Qt::CaseInsensitive) == 0)
         {
             FieldType fld;
             fld.table  = table;
-            fld.name      = columnsProperties.record().value("column_name").toString().trimmed();
-            fld.type      = columnsProperties.record().value("type").toString().trimmed();
-            fld.length    = columnsProperties.record().value("length").toInt();
-            fld.precision = columnsProperties.record().value("precision").toInt();
+            fld.name      = record.value("column_name").toString().trimmed();
+            fld.type      = record.value("type").toString().trimmed();
+            fld.length    = record.value("length").toInt();
+            fld.precision = record.value("precision").toInt();
             if (fld.name == getObjectName("код"))
                 fld.readOnly = true;
             else
@@ -405,7 +406,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
                 if (level > 0)
                     fld.readOnly = true;        // Если это связанный справочник, то у него любое поле запрещено изменять напрямую
                 else
-                    fld.readOnly  = columnsProperties.record().value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
+                    fld.readOnly  = record.value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
             }
             fld.level = level;
             // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
@@ -1066,10 +1067,17 @@ bool DBFactory::removeDictValue(QString tableName, qulonglong id)
 }
 
 
-bool DBFactory::addDoc(int operNumber, QDate date)
+int DBFactory::addDoc(int operNumber, QDate date)
 {
+    int result = 0;
     clearError();
-    return exec(QString("SELECT sp_InsertDoc(%1,'%2')").arg(operNumber).arg(date.toString("dd.MM.yyyy")));
+    QString command = QString("SELECT sp_InsertDoc(%1,'%2')").arg(operNumber).arg(date.toString("dd.MM.yyyy"));
+    QSqlQuery query = execQuery(command);
+    if (query.first())
+    {
+        result = query.record().field(0).value().toInt();
+    }
+    return result;
 }
 
 
@@ -1661,8 +1669,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 dict.prototype = dict.name;
                 dict.isSaldo = false;
                 dict.isConst = false;
-                if (dictsList != 0)
-                    dictsList->append(dict);
+                dictsList->append(dict);
             }
         }
     }
@@ -1670,6 +1677,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
     {
         // Если в документе присутствуют проводки, то в локальный список справочников счетов попадают только справочники из корреспондирующих счетов
         // и не попадают связанные справочники из атрибутов
+        QStringList prototypes;
         for (int i = 0; i < topersList->count(); i++)
         {
             ToperType toperT;
@@ -1677,35 +1685,6 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
             bool    accFounded;
             toperT = topersList->at(i);
             // Присвоим имена справочникам, как они будут называться в списке справочников Dictionaries
-            accounts.first();
-            accFounded = false;
-            while (accounts.isValid())
-            {
-                if (accounts.record().value(getObjectName("vw_счета.счет")).toString().trimmed().toLower() == toperT.dbAcc)
-                {
-                    dictName = accounts.record().value(getObjectName("vw_счета.имясправочника")).toString().trimmed().toLower();
-                    toperT.dbDict = dictName;
-                    toperT.dbQuan = accounts.record().value(getObjectName("vw_счета.количество")).toBool();
-                    if (dictName.size() > 0)
-                    {
-                        dict.name = dictName;
-                        dict.prototype = accounts.record().value(getObjectName("vw_счета.прототип")).toString();
-                        if (dict.prototype.size() == 0)
-                            dict.prototype = dict.name;
-                        toperT.dbDictAlias = dictName;
-                        dict.isSaldo = false;
-                        dict.isConst = toperT.dbConst;
-                        if (dictsList != 0)
-                            dictsList->append(dict);
-                    }
-                    accFounded = true;
-                    break;
-                }
-                accounts.next();
-            }
-            if (!accFounded)
-                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
-
             accounts.first();
             accFounded = false;
             while (accounts.isValid())
@@ -1732,9 +1711,43 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                         dict.prototype = accounts.record().value(getObjectName("vw_счета.прототип")).toString();
                         if (dict.prototype.size() == 0)
                             dict.prototype = dict.name;
-                        dict.isConst = toperT.crConst;
-                        if (dictsList != 0)
-                        dictsList->append(dict);
+                        if (!prototypes.contains(dict.prototype))
+                        {
+                            prototypes.append(dict.prototype);
+                            dict.isConst = toperT.crConst;
+                            dict.isSet   = isSet(dictName);
+                            dictsList->append(dict);
+                        }
+                    }
+                    accFounded = true;
+                    break;
+                }
+                accounts.next();
+            }
+            accounts.first();
+            accFounded = false;
+            while (accounts.isValid())
+            {
+                if (accounts.record().value(getObjectName("vw_счета.счет")).toString().trimmed().toLower() == toperT.dbAcc)
+                {
+                    dictName = accounts.record().value(getObjectName("vw_счета.имясправочника")).toString().trimmed().toLower();
+                    toperT.dbDict = dictName;
+                    toperT.dbQuan = accounts.record().value(getObjectName("vw_счета.количество")).toBool();
+                    if (dictName.size() > 0)
+                    {
+                        dict.name = dictName;
+                        dict.prototype = accounts.record().value(getObjectName("vw_счета.прототип")).toString();
+                        if (dict.prototype.size() == 0)
+                            dict.prototype = dict.name;
+                        if (!prototypes.contains(dict.prototype))
+                        {
+                            prototypes.append(dict.prototype);
+                            toperT.dbDictAlias = dictName;
+                            dict.isSaldo = false;
+                            dict.isConst = toperT.dbConst;
+                            dict.isSet   = isSet(dictName);
+                            dictsList->append(dict);
+                        }
                     }
                     accFounded = true;
                     break;
@@ -1742,12 +1755,14 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 accounts.next();
             }
             if (!accFounded)
+                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
+
+            if (!accFounded)
                 TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
 
             topersList->removeAt(i);
             topersList->insert(i, toperT);
         }
-
     }
 }
 
@@ -1782,18 +1797,15 @@ QSqlRecord DBFactory::getDocumentAddQuery(int id)
 }
 
 
-QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictionaries, QList<ToperType>* topersList, QList<FieldType>* columnsProperties, int* retPrv1)
+QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QList<FieldType>* columnsProperties, int* retPrv1)
 {
     QString selectStatement;
-    QList<DictType> dictsList;
     if (topersList->count() == 0)
     {   // В случае, если таблица проводок типовой операции пустая, то запрашиваем ее с сервера. Но она может быть и не пустая, если ее сформировал мастер
         getToperData(oper, topersList);
     }
     if (topersList->count() > 0)
     {
-        getToperDictAliases(oper, topersList, &dictsList);
-
         QString selectClause, fromClause, whereClause;
         int prv, prv1 = 0;
         if (columnsProperties != 0)
@@ -1922,7 +1934,6 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
         // Приступим к генерации секции SELECT, которая относится к задействованным в типовой операции справочникам
         QString dictName;
         QStringList dictsNames;
-        Dictionary* dict;
         for (int i = 0; i < topersList->count(); i++)
         {
             prv = topersList->at(i).number;
@@ -1932,8 +1943,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
                 if (dictName.size() > 0 && !dictsNames.contains(dictName))
                 {   // Если в по дебетовому счету указан какой-либо справочник и этот справочник мы еще не обрабатывали
-                    dict = dictionaries->getDictionary(dictName);
-                    if (dict != 0 && dict->isSet())
+                    if (isSet(dictName))
                     { // Это набор (справочников)
                       // Сгенерируем команду SELECT для набора и входящих в него справочников
                         QString setSelectClause, setFromClause;
@@ -1976,8 +1986,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
                 dictName = topersList->at(i).crDict.toLower();
                 if (dictName.size() > 0 && !dictsNames.contains(dictName))
                 {   // Если в по кредитовому счету указан какой-либо справочник и этот справочник мы еще не обрабатывали
-                    dict = dictionaries->getDictionary(dictName);
-                    if (dict != 0 && dict->isSet())
+                    if (isSet(dictName))
                     {  // Это набор (справочников)
                         // Сгенерируем команду SELECT для набора и входящих в него справочников
                           QString setSelectClause, setFromClause;
@@ -2071,36 +2080,6 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  Dictionaries* dictio
 
         // Получим заголовки столбцов
         getColumnsHeaders(QString("Документ%1").arg(oper), columnsProperties);
-
-        // Откроем связанные справочники
-        for (int i = 0; i < dictsList.count(); i++)
-        {
-            if (dictsList.at(i).isSaldo)
-            {
-                Saldo* sal;
-                sal = dictionaries->getSaldo(dictsList.at(i).acc);
-                if (sal != 0)
-                {
-                    sal->setPrototypeName(dictsList.at(i).prototype);
-                    sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
-                    sal->setQuan(true);
-                    sal->setConst(dictsList.at(i).isConst);
-                }
-            }
-            else
-            {
-                if (dictsList.at(i).isConst)
-                {
-                    dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
-                    if (dict != 0)
-                        dict->setConst(true);
-                }
-                else
-                    dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
-                if (dict != 0)
-                    dict->setPrototypeName(dictsList.at(i).name);
-            }
-        }
     }
     return selectStatement;
 }

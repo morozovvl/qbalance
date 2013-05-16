@@ -106,7 +106,6 @@ private:
     QList<ToperType>*               topersList;
 
     bool showNextDict();
-    void hideOtherLinkedDicts(Dictionary*);
     void showItog();
     void calcItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке

@@ -228,7 +228,7 @@ void FormDocument::cmdOk()
     if (numberEdit != 0)
         getParent()->getParent()->setValue("номер", QVariant(numberEdit->text()));
     FormGrid::cmdOk();
-    getParent()->getParent()->getFormWidget()->activateWindow();
+    getParent()->getParent()->getFormWidget()->activateSubWindow();
 }
 
 

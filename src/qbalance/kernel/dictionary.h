@@ -85,7 +85,7 @@ protected:
     QStringList     fieldList;
     virtual void    setForm();
     virtual void    prepareSelectCurrentRowCommand();
-    virtual void    updateCurrentRow();
+    virtual void    updateCurrentRow(int = 0);
     virtual bool    setTableModel(int = 0);
 
 private:

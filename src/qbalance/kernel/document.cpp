@@ -703,22 +703,56 @@ bool Document::setTableModel(int)
 {   // Генерирует заготовку запроса для получения данных для табличной части документа
     // Вызывается 1 раз
     tableModel = new MySqlRelationalTableModel(tableName, this);
-    selectStatement = db->getDocumentSqlSelectStatement(operNumber, dictionaries, topersList, &columnsProperties, &prv1);
+    selectStatement = db->getDocumentSqlSelectStatement(operNumber, topersList, &columnsProperties, &prv1);
     if (columnsProperties.size() > 0)
     {
         tableModel->setSelectStatement(selectStatement);
         db->getColumnsRestrictions(tagName, &columnsProperties);
 
-        // Определим, какие справочники показывать при добавлении новой строки в документ, а какие не показывать
         Dictionary* dict;
-        foreach (QString dictName, getDictionaries()->keys())
+        QList<DictType> dictsList;
+        db->getToperDictAliases(operNumber, topersList, &dictsList);
+        // Определим, какие справочники показывать при добавлении новой строки в документ, а какие не показывать
+        for (int i = 0; i < dictsList.count(); i++)
         {
-            dict = getDictionaries()->value(dictName);
-            if (dict->isConst() || dict->isSet() || dict->isDependent())
-                dict->setMustShow(false); // Если справочник документа является постоянным или это набор или дочерний (вторичный) справочник,
-                                          // то не показывать его при добавлении новой записи в документ
+            if (dictsList.at(i).isSaldo)
+            {
+                Saldo* sal;
+                sal = dictionaries->getSaldo(dictsList.at(i).acc);
+                if (sal != 0)
+                {
+                    sal->setPrototypeName(dictsList.at(i).prototype);
+                    sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
+                    sal->setQuan(true);
+                    sal->setConst(dictsList.at(i).isConst);
+                    if (sal->isConst() || sal->isSet())
+                        sal->setMustShow(false); // Если справочник документа является постоянным или это набор
+                                                  // то не показывать его при добавлении новой записи в документ
+                    else
+                        sal->setMustShow(true);
+                }
+            }
             else
-                dict->setMustShow(true);
+            {
+                if (dictsList.at(i).isConst)
+                {
+                    dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
+                    if (dict != 0)
+                        dict->setConst(true);
+                }
+                else
+                    dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
+                if (dict != 0)
+                {
+                    dict->setPrototypeName(dictsList.at(i).name);
+                    if (dict->isConst() || dict->isSet())
+                        dict->setMustShow(false); // Если справочник документа является постоянным или это набор
+                                                  // то не показывать его при добавлении новой записи в документ
+                    else
+                        dict->setMustShow(true);
+                }
+            }
+
         }
 
         int columnCount = 0;
@@ -772,7 +806,6 @@ bool Document::showNextDict()
                 {       // Если в выбранном справочнике нет записей
                     break;
                 }
-                hideOtherLinkedDicts(dict);     // Скроем все связанные с этим справочником другие справочники и установим для них правильные текущие идентификаторы
                 prepareValue(dict->getPrototypeName(), dict);
             }
             else
@@ -798,38 +831,6 @@ bool Document::prepareValue(QString name, Dictionary* dict)
         }
     }
     return false;
-}
-
-
-void Document::hideOtherLinkedDicts(Dictionary* dict)
-{
-    // Не будем показывать те справочники-прототипы, у которых аналог уже был показан
-    foreach (QString dName, getDictionaries()->keys())
-    {
-        if (dName == dict->getPrototypeName())        // Если справочники называются по-разному, но являются прототипами
-        {
-            Dictionary* d = getDictionaries()->value(dName);
-            if (d != dict)                              // Исходный справочник трогать нельзя
-                d->setMustShow(false);
-        }
-    }
-    // Если это набор или прототип является набором, то не будем показывать связанные справочники
-    if (dict->isSet() ||
-            (dict->getPrototypeName().size() > 0 && getDictionaries()->value(dict->getPrototypeName())->isSet()))
-    {
-        for (int i = 0; i < dict->getFieldsList().count(); i++)
-        {       // Просмотрим список полей
-            QString fieldName = dict->getFieldsList().at(i);
-            QString name = fieldName;
-            if (name.left(4) == dict->getIdFieldName() + "_")
-            {        // Если поле ссылается на другую таблицу
-                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                Dictionary* d = getDictionaries()->value(name);
-                d->setMustShow(false);
-            }
-        }
-    }
 }
 
 

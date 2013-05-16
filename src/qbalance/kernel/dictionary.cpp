@@ -270,6 +270,9 @@ bool Dictionary::open(int)
 
     if (Essence::open())
     {
+        initForm();
+        evaluateEngine();
+
         tableModel->setTestSelect(true);
         query();
         tableModel->setTestSelect(false);
@@ -280,8 +283,6 @@ bool Dictionary::open(int)
         // Проверим, имеется ли в справочнике полнотекстовый поиск
         ftsEnabled = fieldList.contains(db->getObjectName(tableName + ".fts"), Qt::CaseInsensitive);
 
-        initForm();
-        evaluateEngine();
         initFormEvent();
         return true;
     }
@@ -313,7 +314,7 @@ bool Dictionary::setTableModel(int)
                 tableModel->setUpdateInfo(fld.name, fld.table, fld.name, i, keyColumn);
             }
 
-            if (!tables.contains(fld.table) && dictionaries != 0)
+            if (!tables.contains(fld.table) && dictionaries != 0 && dictionaries->getDocument() == 0)
             {
                 Dictionary* dict = dictionaries->getDictionary(fld.table);
                 if (dict != 0)
@@ -332,6 +333,9 @@ bool Dictionary::setTableModel(int)
 
 void Dictionary::query(QString defaultFilter)
 {
+    QModelIndex index = form->getCurrentIndex();
+    QString oldFilter = tableModel->filter();
+
     QString resFilter = defaultFilter;
     if (form != 0)
     {
@@ -345,6 +349,19 @@ void Dictionary::query(QString defaultFilter)
         }
     }
     Essence::query(resFilter);
+
+    if (tableModel->rowCount() > 0)
+    {
+        if (resFilter == oldFilter)                         // Параметры запроса совпадают
+        {
+            if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
+                form->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
+            else
+                form->restoreCurrentIndex(index);               // Установим указатель на тот же адрес
+        }
+        else
+            form->selectRow(0);                         // параметры запроса изменились, перейдем на первую запись
+    }
 }
 
 
@@ -376,11 +393,13 @@ void Dictionary::setOrderClause()
 }
 
 
-void Dictionary::updateCurrentRow()
+void Dictionary::updateCurrentRow(int strNum)
 {   // Делает запрос к БД по одной строке справочника. Изменяет в текущей модели поля, которые в БД отличаются от таковых в модели.
     // Применяется после работы формул для изменения полей в строке, которые косвенно изменились
 
-    preparedSelectCurrentRow.bindValue(":value", getId());
+    int str = strNum == 0 ? getId() : strNum;
+
+    preparedSelectCurrentRow.bindValue(":value", str);
 
     Essence::updateCurrentRow();
 }

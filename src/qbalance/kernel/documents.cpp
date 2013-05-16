@@ -74,11 +74,24 @@ bool Documents::add()
         else if (date > TApplication::exemplar()->getEndDate())
             date = TApplication::exemplar()->getEndDate();
     }
-    if (db->addDoc(operNumber, date))
+
+    int strNum = db->addDoc(operNumber, date);
+    if (strNum > 0)
     {
-        query();
-        form->selectRow(tableModel->rowCount() - 1);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-        return true;
+         int newRow = tableModel->rowCount();
+         if (newRow == 0)
+         {
+             query();
+             form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+         }
+         else
+         {
+             tableModel->insertRow(newRow);
+             form->getGridTable()->reset();
+             form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+             updateCurrentRow(strNum);
+         }
+         return true;
     }
     return false;
 }
@@ -111,27 +124,50 @@ void Documents::view()
 void Documents::query(QString filter)
 {
     Q_UNUSED(filter)
+
+    // Чтобы не потерять текущий документ после обновления, запомним его номер, а потом поставим на него указатель записи
+    qulonglong currentDocId = getId();
+    QModelIndex index = form->getCurrentIndex();
+
     Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
                                                                                                        .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
                                                                                                        .arg(TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy"))
                                                                                                        .arg(db->getObjectNameCom("документы.авто"))
                                                                                                        .arg(db->getObjectNameCom("документы.опер"))
                                                                                                        .arg(QString::number(operNumber)));
+    if (tableModel->rowCount() > 0)
+    {
+        // Восстановим указатель на текущую запись
+        form->getGridTable()->reset();
+        if (tableModel->rowCount() > 0 && currentDocId > 0)
+        {
+            for (int i = 0; i < tableModel->rowCount(); i++)
+            {
+                if (getId(i) == currentDocId)
+                {
+                    form->selectRow(i);             // Текущая запись найдена
+                    return;                         // Перейдем на нее
+                }
+            }
+        }
+        if (index.row() > tableModel->rowCount() - 1)       // Если мы стояли на последней записи, но она теперь удалена
+            form->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
+        else
+            form->restoreCurrentIndex(index);   // Иначе останемся стоять на том же месте на экране
+    }
 }
 
 
 bool Documents::open()
 {
-    if (Table::open())
+    if (Essence::open())
     {     // Откроем этот справочник
 
-        setScriptEngine();
+        initForm();
 
         tableModel->setTestSelect(true);
         query();
         tableModel->setTestSelect(false);
-
-        initForm();
 
         currentDocument = new Document(operNumber, this);
         if (currentDocument->open())
