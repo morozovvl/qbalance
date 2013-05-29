@@ -169,9 +169,12 @@ bool TApplication::open() {
 void TApplication::close() {
     if (documents.count() > 0)
     {
-        foreach(Documents* doc, documents)
+        foreach(QString operName, documents.keys())
         {
-             doc->close();
+            Documents* doc = documents.value(operName);
+            doc->close();
+            delete doc;
+            documents.remove(operName);
         }
     }
     if (dictionaryList != 0)
@@ -315,7 +318,9 @@ void TApplication::setIcons(QWidget* formWidget)
 {
     QList<QPushButton*> widgets = qFindChildren<QPushButton*>(formWidget);
     for (int i = 0; i < widgets.size(); i++)
+    {
         widgets.at(i)->setIcon(QIcon(":" + widgets.at(i)->objectName()));
+    }
 }
 
 

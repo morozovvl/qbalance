@@ -56,7 +56,7 @@ public:
     bool isConst() { return lIsConst; }
     bool isSet() { return lIsSet; }
     bool isSaldo() { return lIsSaldo; }
-    void setConst(bool con) { lIsConst = con; }
+    Q_INVOKABLE void setConst(bool);
     void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
                                                                             // которые будут блокироваться при добавлении записи в документ
@@ -68,12 +68,21 @@ public:
     QString getPrototypeName() { return prototypeName; }
     void setPrototypeName(QString prototype) { prototypeName = prototype; }
     bool isFtsEnabled() { return ftsEnabled; }
+    QString getFTSfieldName() { return ftsFieldName; }
     Q_INVOKABLE QString getTest() { return "Test Ok"; }
     QString     getDictTitle() { return dictTitle; }
+    QStringList getChildDicts();
+    Dictionary* getParentDict() { return parentDict; }
+    void setParentDict(Dictionary* dict) { parentDict = dict; }
+    Q_INVOKABLE virtual void            setId(qulonglong);
+    void    setIdEnabled(bool e) { lsetIdEnabled = e; }
+
+
 
 protected:
     Dictionaries*   dictionaries;
     QString         prototypeName;          // Имя справочника - прототипа
+    Dictionary*     parentDict;
     bool            lSelectable;
     bool            lIsSet;
     bool            lCanShow;
@@ -90,6 +99,8 @@ protected:
 
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
+    bool            lsetIdEnabled;
+    QString         ftsFieldName;
     QString         dictTitle;
 };
 

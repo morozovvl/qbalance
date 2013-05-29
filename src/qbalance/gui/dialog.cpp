@@ -22,12 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dialog.h"
 
 
-Dialog::Dialog(QWidget *parent):
-    QDialog(parent)
+Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
+    QDialog(parent, f)
 {
     app = 0;
-    freeWindow = false;
-    subWindow = 0;
     form = 0;
     buttonOk = 0;
 }
@@ -37,41 +35,6 @@ void Dialog::setApp(TApplication* a)
 {
     app = a;
     setParent(app->getMainWindow(), Qt::Dialog);
-}
-
-/*
-void Dialog::show()
-{
-    if (!freeWindow)
-    {
-        if (subWindow == 0)
-            subWindow = app->getMainWindow()->appendMdiWindow(this);
-        subWindow->show();
-    }
-    QDialog::show();
-}
-*/
-
-
-int Dialog::exec()
-{
-    int result;
-
-    if (subWindow != 0)
-    {
-        setGeometry(subWindow->x(), subWindow->y(), subWindow->width(), subWindow->height());
-
-        subWindow->setWidget(0);
-        setParent(app->getMainWindow(), Qt::Dialog);
-        result = QDialog::exec();
-
-        subWindow->setGeometry(x(), y(), width(), height());
-        subWindow->setWidget(this);
-    }
-    else
-        result = QDialog::exec();
-
-    return result;
 }
 
 
@@ -86,28 +49,11 @@ void Dialog::findCmdOk()
 }
 
 
-void Dialog::hide()
+void Dialog::showEvent(QShowEvent* event)
 {
-    if (!freeWindow)
-    {
-        if (subWindow != 0)
-        {
-            subWindow->hide();
-        }
-    }
-    QDialog::hide();
-}
-
-
-MyMdiSubWindow* Dialog::getSubWindow()
-{
-    if (app != 0 && !freeWindow)
-    {
-        if (subWindow == 0)
-            subWindow = app->getMainWindow()->appendMdiWindow(this);
-        return subWindow;
-    }
-    return 0;
+    QDialog::showEvent(event);
+    if (form != 0)
+        form->activateWidget();
 }
 
 
@@ -135,12 +81,6 @@ void Dialog::keyPressEvent(QKeyEvent *event)
         form->keyPressEvent(event);
     else
         QDialog::keyPressEvent(event);
-}
-
-
-void Dialog::activateSubWindow()
-{
-    app->getMainWindow()->getWorkSpace()->setActiveSubWindow(subWindow);
 }
 
 

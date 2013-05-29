@@ -41,10 +41,7 @@ public:
     ~FormGridSearch();
     Q_INVOKABLE virtual void close();
     QString getFilter();    // Возвращает фильтр для поиска в справочнике
-
-public slots:
-    Q_INVOKABLE virtual int exec();
-    Q_INVOKABLE virtual void show();
+    virtual void activateWidget();
 
 private:
     SearchParameters*   parameters;

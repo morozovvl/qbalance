@@ -65,9 +65,9 @@ public:
     int    addFromQuery(int);
     DocumentScriptEngine* getScriptEngine();
     bool getIsSingleString() { return isSingleString; }
-    Q_INVOKABLE void setDate(QString date, Qt::DateFormat format = Qt::TextDate) { ((FormDocument*)getForm())->setDate(QDate::fromString(date, format)); }
-    Q_INVOKABLE void setNumber(QString number) { ((FormDocument*)getForm())->setNumber(number); }
-    Q_INVOKABLE void showParameterText(QString dictName) { ((FormDocument*)getForm())->showParameterText(dictName);}
+    Q_INVOKABLE void setDate(QString date, Qt::DateFormat format = Qt::TextDate) { getForm()->setDate(QDate::fromString(date, format)); }
+    Q_INVOKABLE void setNumber(QString number) { getForm()->setNumber(number); }
+    Q_INVOKABLE void showParameterText(QString dictName) { getForm()->showParameterText(dictName);}
     int appendDocString();
     bool prepareValue(QString, Dictionary*);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
@@ -81,6 +81,8 @@ public:
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
     Q_INVOKABLE virtual void setEnabled(bool);
+    virtual FormDocument* getForm() { return (FormDocument*)Essence::getForm(); }
+
 
 
 protected:
@@ -104,12 +106,14 @@ private:
     QString                         selectStatement;
     QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
+    bool                            localDictsOpened;
 
     bool showNextDict();
     void showItog();
     void calcItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
     bool    compareSumValues();     // Сравнивает новые значения полей СУММА проводок со старыми. Если значения различаются, то дается добро на сохранение данных проводки на сервере
+    void    openLocalDictionaries();
 };
 
 #endif // DOCUMENT_H

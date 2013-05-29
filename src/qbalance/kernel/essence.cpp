@@ -72,7 +72,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
 
 
 Essence::~Essence() {
-    disconnect(this, 0, 0, 0);
+    this->disconnect();
 }
 
 
@@ -143,17 +143,17 @@ QVariant Essence::getValue(QString n, int row)
 void Essence::setValue(QString n, QVariant value, int row)
 {
     QString name = n.toUpper();
-    QSqlRecord record = tableModel->record();
-    if (record.contains(name))
+    int fieldColumn = tableModel->fieldIndex(n);
+    if (fieldColumn >= 0)
     {
         QModelIndex index, oldIndex;
 
         if (row >= 0)
             oldIndex = form->getCurrentIndex();
 
-        index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), record.indexOf(name));
-
+        index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), fieldColumn);
         tableModel->setData(index, value);
+
         if (doSubmit)
         {
             if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
@@ -208,6 +208,23 @@ void Essence::query(QString filter)
  }
 
 
+QString Essence::getPhotoPath()
+{
+    QString file;
+    // Попробуем получить локальный путь к фотографии
+    if (photoPath.size() == 0)
+    {
+        // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
+        file = db->getDictionaryPhotoPath(tableName);
+    }
+    else
+    {
+        file = photoPath;
+    }
+    return file;
+}
+
+
 QString Essence::getPhotoFile()
 {
     QString idValue;    // Значение идентификатора фотографии
@@ -234,16 +251,7 @@ QString Essence::getPhotoFile()
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
-                // Попробуем получить локальный путь к фотографии
-                if (photoPath.size() == 0)
-                {
-                    // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
-                    file = db->getDictionaryPhotoPath(tableName);
-                }
-                else
-                {
-                    file = photoPath;
-                }
+                file = getPhotoPath();
                 if (file.size() > 0)
                 {
                     photoPath = file;
@@ -449,9 +457,13 @@ void Essence::close()
     {
         closeFormEvent();
         form->close();
+        delete form;
     }
-    delete scriptEngine;
-    delete form;
+    if (scriptEngine != 0)
+    {
+//        scriptEngine->close();
+//        delete scriptEngine;
+    }
     Table::close();
 }
 
@@ -635,17 +647,19 @@ void Essence::updateCurrentRow()
     QString command = preparedSelectCurrentRow.executedQuery();
     if (command.size() > 0)
     {
-        preparedSelectCurrentRow.exec();
-        TApplication::debug(QString("PreparedQuery: %1\n").arg(command));
-        if (preparedSelectCurrentRow.first())
+        if (preparedSelectCurrentRow.exec())
         {
-            QModelIndex index = form->getCurrentIndex();
-            for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
+            TApplication::debug(QString("PreparedQuery: %1\n").arg(command));
+            if (preparedSelectCurrentRow.first())
             {
-                QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
-                QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-                if (value != tableModel->record(index.row()).value(fieldName))
-                    tableModel->setData(index.sibling(index.row(), i), value, true);
+                QModelIndex index = form->getCurrentIndex();
+                for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
+                {
+                    QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
+                    QVariant value = preparedSelectCurrentRow.record().value(fieldName);
+                    if (value != tableModel->record(index.row()).value(fieldName))
+                        tableModel->setData(index.sibling(index.row(), i), value, true);
+                }
             }
         }
         else

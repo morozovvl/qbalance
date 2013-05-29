@@ -61,6 +61,7 @@ void DocParameters::addString(QString name)
     QLineEdit* lineEdit = new QLineEdit();
     lineEdit->setReadOnly(true);
     lineEdit->setObjectName(name);
+    lineEdit->setAlignment(Qt::AlignLeft);
     gridLayout->addWidget(lineEdit, strNum, 1, 1, 1);
     QPushButton* button = new QPushButton("...");   // Создадим пользовательскую кнопку для связанного справочника
     button->setObjectName(name);                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
@@ -90,13 +91,13 @@ void DocParameters::removeString(int strNum)
     QLineEdit* lineEdit = (QLineEdit*)gridLayout->itemAtPosition(strNum, 1)->widget();       // удалим ComboBox
     if (lineEdit != 0)
     {
-        disconnect(lineEdit, 0, 0, 0);
+        lineEdit->disconnect();
         gridLayout->removeWidget(lineEdit);
     }
     QPushButton* button = (QPushButton*)gridLayout->itemAtPosition(strNum, 2)->widget();       // удалим PushButton
     if (button != 0)
     {
-        disconnect(button, 0, 0, 0);
+        button->disconnect();
         gridLayout->removeWidget(button);
     }
 }
@@ -125,7 +126,7 @@ void DocParameters::dictionaryButtonPressed()
             break;
         }
     }
-    parentForm->getForm()->activateSubWindow();
+    parentForm->activateSubWindow();
     parentForm->parametersChangedEvent();
 }
 

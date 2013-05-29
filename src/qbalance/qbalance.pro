@@ -25,7 +25,7 @@ CONFIG += designer \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = app
-CONFIG += debug
+#CONFIG += debug
 
 
 SOURCES += main.cpp \

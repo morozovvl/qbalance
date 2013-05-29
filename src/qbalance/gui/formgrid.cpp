@@ -346,7 +346,6 @@ int FormGrid::exec()
     if (grdTable != 0)
     {
         grdTable->setColumnsHeaders();
-        grdTable->selectNextColumn();
     }
     setButtons();
     return Form::exec();
@@ -361,11 +360,19 @@ void FormGrid::show()
     {
         grdTable->setColumnsHeaders();
         showPhoto();
-        grdTable->setFocus();
-        grdTable->selectNextColumn();
     }
     setButtons();
     Form::show();
+}
+
+
+void FormGrid::activateWidget()
+{
+    if (grdTable != 0)
+    {
+        grdTable->setFocus();
+        grdTable->selectNextColumn();
+    }
 }
 
 
@@ -381,12 +388,13 @@ void FormGrid::cmdAdd()
                     buttonDelete->setDisabled(false);
             }
         }
-        formWidget->activateSubWindow();
+        activateSubWindow();
         if (grdTable != 0)
         {
             grdTable->setFocus();
             grdTable->selectNextColumn();
         }
+        setButtons();
     }
 }
 
@@ -410,14 +418,15 @@ void FormGrid::cmdDelete()
             {
                 if (buttonDelete != 0)
                     buttonDelete->setDisabled(true);
-                picture->setVisible(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
+                picture->setVisibility(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
             }
         }
-        formWidget->activateSubWindow();
+        activateSubWindow();
         if (grdTable != 0)
         {
             grdTable->setFocus();
         }
+        setButtons();
     }
 }
 
@@ -436,15 +445,15 @@ void FormGrid::cmdView()
 void FormGrid::cmdRequery()
 {
     app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + parent->getTagName() + "...");
-//    app->showMessageOnStatusBar("Загрузка с сервера данных из таблицы ");
     parent->query();
-    formWidget->activateSubWindow();
+    activateSubWindow();
     if (grdTable != 0)
     {
         grdTable->setFocus();
     }
     app->showMessageOnStatusBar("");
     setButtons();
+    showPhoto();
 }
 
 
@@ -466,17 +475,24 @@ void FormGrid::cmdPrint()
 
         QStringList reports;
         QMenu* menu = new QMenu(formWidget);
-        QAction* newReportAct = menu->addAction(QObject::trUtf8("Создать новый отчет..."));
+        QAction* newReportAct = new QAction(this);
+        if (app->isSA())
+            menu->addAction(QObject::trUtf8("Создать новый отчет..."));
         if (files.count() > 0)
         {
-            menu->addSeparator();
+            if (app->isSA())
+                menu->addSeparator();
             for (int i = 0; i < files.size(); i++)
             {
                 QString file = files.at(i);
+                QString oldFile = file;
                 file.remove(getParent()->getTagName() + ".", Qt::CaseInsensitive);      // Уберем префикс файла
-                file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
-                reports << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
-                menu->addAction(file);
+                if (file != oldFile)
+                {
+                    file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
+                    reports << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
+                    menu->addAction(file);
+                }
             }
         }
         QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
@@ -504,7 +520,7 @@ void FormGrid::cmdPrint()
                     parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
             }
         }
-        formWidget->activateSubWindow();
+        activateSubWindow();
         if (grdTable != 0)
             grdTable->setFocus();
     }
@@ -569,14 +585,14 @@ void FormGrid::showPhoto()
             if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
             {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
                 if (QDir().exists(photoFileName))
-                    picture->setVisible(true);              // то включим просмотр фотографий
+                    picture->setVisibility(true);              // то включим просмотр фотографий
                 else
                     photoFileName = "";
             }
             picture->show(photoFileName);
         }
         else
-            picture->setVisible(false);
+            picture->setVisibility(false);
     }
 }
 
@@ -622,7 +638,7 @@ void FormGrid::setCurrentIndex(QModelIndex index)
 
 void FormGrid::setGridFocus()
 {
-    formWidget->activateSubWindow();
+    activateSubWindow();
     if (grdTable != 0)
     {
         grdTable->setFocus();
@@ -743,7 +759,8 @@ void FormGrid::writeSettings()
         if (grdTable != 0)
         {
             QSettings settings;
-            int columnCount = grdTable->model()->columnCount();
+//            int columnCount = grdTable->model()->columnCount();
+            int columnCount = tableModel->columnCount();
             if (columnCount > 0)
             {
                 settings.beginGroup(configName);

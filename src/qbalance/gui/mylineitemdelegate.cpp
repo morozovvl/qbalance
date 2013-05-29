@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyLineItemDelegate::MyLineItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
 {
 //    setAlignment(Qt::AlignVCenter);
+    length = 0;
 }
 
 
@@ -38,7 +39,9 @@ QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionView
 {
     if (!readOnly) {
         parentForm->getParent()->saveOldValues();
-        return  new QLineEdit(parent);
+        QLineEdit* editor = new QLineEdit(parent);
+        editor->setMaxLength(length);
+        return editor;
     }
     return 0;
 }

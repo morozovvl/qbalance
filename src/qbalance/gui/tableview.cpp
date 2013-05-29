@@ -246,6 +246,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
                     fld.type.toUpper() == "TEXT")
                 {
                     MyLineItemDelegate* textDelegate = new MyLineItemDelegate(parentWidget, parent);
+                    textDelegate->setMaxLength(fld.length);
                     return (MyItemDelegate*)textDelegate;
                 }
                 else

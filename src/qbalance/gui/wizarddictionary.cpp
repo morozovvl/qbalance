@@ -114,7 +114,7 @@ void WizardDictionary::initFrames()
     gridLayout->addWidget(lblTableName, 0, 0, Qt::AlignRight);
     gridLayout->addWidget(tableName, 0, 1);
 
-    QLabel* lblMenuTableName = new QLabel(QObject::trUtf8("Наименование в меню:"), formWidget);
+    QLabel* lblMenuTableName = new QLabel(QObject::trUtf8("Наименование формы:"), formWidget);
     gridLayout->addWidget(lblMenuTableName, 1, 0, Qt::AlignRight);
     gridLayout->addWidget(tableMenuName, 1, 1);
 
@@ -412,7 +412,7 @@ bool WizardDictionary::setData()
     db->commitTransaction();
 
     // Перезагрузим список столбцов
-    db->reloadColumnHeaders();
+    db->loadSystemTables();
 
     return true;
 }

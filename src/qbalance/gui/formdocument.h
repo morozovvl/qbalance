@@ -39,6 +39,7 @@ public:
     void setNumber(QString number) { numberEdit->setText(number.left(10)); }
     void setDate(QDate date) { dateEdit->setDate(date); }
     void showParameterText(QString dictName) { parameters->showText(dictName); }
+    DocParameters*  getDocParameters() { return parameters; }
 
     Q_INVOKABLE QPushButton* getButtonQueryAdd() { return buttonQueryAdd; }
     Q_INVOKABLE virtual void setEnabled(bool);

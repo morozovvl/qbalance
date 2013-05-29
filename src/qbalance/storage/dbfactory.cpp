@@ -179,6 +179,7 @@ bool DBFactory::open(QString login, QString password)
 //  поэтому пришлось сделать так:
     if (db->open()) {
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
+        exec("set standard_conforming_strings=on;");
         currentLogin = login;
         currentPassword = password;
 
@@ -193,29 +194,15 @@ bool DBFactory::open(QString login, QString password)
 void DBFactory::initDBFactory()
 {
     initObjectNames();                  // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
-    objectTypes = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("типыобъектов")));
-    dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
-    columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
-                                  "FROM information_schema.columns ins " \
-                                  "WHERE ins.table_schema = 'public' " \
-                                  "ORDER BY table_name");
-    config = execQuery("SELECT name, value FROM configs;");
-    accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
-    columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '\%'||\"current_user\"()::text||'%' OR %4 ILIKE '\%*\%');")
-                                                               .arg(getObjectNameCom("доступ.имя"))
-                                                               .arg(getObjectNameCom("доступ"))
-                                                               .arg(getObjectNameCom("доступ.код_типыобъектов"))
-                                                               .arg(getObjectNameCom("доступ.пользователь")));
+    loadSystemTables();
+
     files = execQuery(QString("SELECT %1, %2, %3, %4 FROM %5;").arg(getObjectNameCom("файлы.код"))
                                                                .arg(getObjectNameCom("файлы.имя"))
                                                                .arg(getObjectNameCom("файлы.тип"))
                                                                .arg(getObjectNameCom("файлы.контрсумма"))
                                                                .arg(getObjectNameCom("файлы")));
-    dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
-    // Загрузим информацию о наименовании колонок
-    reloadColumnHeaders();
-    // Откроем базу с картинками
+   // Откроем базу с картинками
     dbExtend->setHostName(hostName);
     dbExtend->setDatabaseName(dbName + "_extend");
     dbExtend->setPort(port);
@@ -228,8 +215,52 @@ void DBFactory::initDBFactory()
     else
     {
         extDbExist = false;
-        setError(dbExtend->lastError().text());
+//  Закомментировано: Не сообщать, что расширенная БД (для картинок) отсутствует. Работать без нее
+//        setError(dbExtend->lastError().text());
     }
+}
+
+
+void DBFactory::loadSystemTables()
+{
+    objectTypes.clear();
+    objectTypes = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("типыобъектов")));
+
+    dictionariesPermitions.clear();
+    dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
+
+    columnsProperties.clear();
+    columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
+                                  "FROM information_schema.columns ins " \
+                                  "WHERE ins.table_schema = 'public' " \
+                                  "ORDER BY table_name");
+
+    config.clear();
+    config = execQuery("SELECT name, value FROM configs;");
+
+    accounts.clear();
+    accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
+
+    columnsRestrictions.clear();
+    columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '\%'||\"current_user\"()::text||'%' OR %4 ILIKE '\%*\%');")
+                                                               .arg(getObjectNameCom("доступ.имя"))
+                                                               .arg(getObjectNameCom("доступ"))
+                                                               .arg(getObjectNameCom("доступ.код_типыобъектов"))
+                                                               .arg(getObjectNameCom("доступ.пользователь")));
+
+
+    dictionaries.clear();
+    dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
+
+    columnsHeaders.clear();
+    columnsHeaders = execQuery(QString("SELECT lower(%1) AS %1, upper(%2) AS %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("vw_столбцы.справочник"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.столбец"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.заголовок"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.номер"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.толькочтение"))
+                                                                        .arg(getObjectNameCom("vw_столбцы")));
+
+
 }
 
 
@@ -249,7 +280,7 @@ void DBFactory::close()
 }
 
 
-bool DBFactory::exec(QString str, QSqlDatabase* db)
+bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 {
     TApplication::debug("Exec: " + str + "\n");
     clearError();
@@ -260,7 +291,7 @@ bool DBFactory::exec(QString str, QSqlDatabase* db)
         query = new QSqlQuery();
 
     bool lResult = query->exec(str);
-    if (!lResult)
+    if (!lResult && showError)
     {
         setError(query->lastError().text());
     }
@@ -270,7 +301,7 @@ bool DBFactory::exec(QString str, QSqlDatabase* db)
 }
 
 
-QSqlQuery DBFactory::execQuery(QString str, QSqlDatabase* extDb)
+QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
 {
     TApplication::debug(QString("Query: %1\n").arg(str));
     clearError();
@@ -281,7 +312,7 @@ QSqlQuery DBFactory::execQuery(QString str, QSqlDatabase* extDb)
     else
         query = new QSqlQuery(*db);
 
-    if (!query->exec(str))
+    if (!query->exec(str) && showError)
     {
         setError(query->lastError().text());
     }
@@ -433,7 +464,9 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
             }
             if (table == getObjectName("проводки"))
             {
-                if ((fld.column == getObjectName("проводки.кол")) ||
+                if ((fld.column == getObjectName("проводки.дбкод")) ||
+                    (fld.column == getObjectName("проводки.кркод")) ||
+                    (fld.column == getObjectName("проводки.кол")) ||
                     (fld.column == getObjectName("проводки.цена")) ||
                     (fld.column == getObjectName("проводки.сумма")))
                 {
@@ -999,18 +1032,6 @@ bool DBFactory::removeColumnHeaders(int tableId)
 }
 
 
-void DBFactory::reloadColumnHeaders()
-{
-    columnsHeaders = execQuery(QString("SELECT lower(%1) AS %1, upper(%2) AS %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("vw_столбцы.справочник"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.столбец"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.заголовок"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.номер"))
-                                                                        .arg(getObjectNameCom("vw_столбцы.толькочтение"))
-                                                                        .arg(getObjectNameCom("vw_столбцы")));
-
-}
-
-
 bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, int number, bool readOnly)
 {
     clearError();
@@ -1205,7 +1226,7 @@ QStringList DBFactory::initializationScriptList(QString ext) const
 void DBFactory::initObjectNames()
 {
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT * FROM objectnames;"));
+    QSqlQuery query = execQuery("SELECT * FROM objectnames;", false);   // Если что, то не сообщать об отсутствии таблицы
     if (query.first())
     {   // Если на сервере есть определение имен объектов, то прочитаем его
         do {
@@ -1213,166 +1234,8 @@ void DBFactory::initObjectNames()
         } while (query.next());
         return;
     }
-    // Если нет определения имен объектов, то заполним по умолчанию
-    ObjectNames.insert("код", "код");
-    ObjectNames.insert("имя", "имя");
-    ObjectNames.insert("документы", "документы");
-    ObjectNames.insert("документы.код", "код");
-    ObjectNames.insert("документы.дата", "дата");
-    ObjectNames.insert("документы.датавремя", "датавремя");
-    ObjectNames.insert("документы.номер", "номер");
-    ObjectNames.insert("документы.комментарий", "комментарий");
-    ObjectNames.insert("документы.сумма", "сумма");
-    ObjectNames.insert("документы.опер", "опер");
-    ObjectNames.insert("документы.описание", "описание");
-    ObjectNames.insert("документы.авто", "авто");
-    ObjectNames.insert("документы.переменные", "переменные");
-    ObjectNames.insert("проводки", "проводки");
-    ObjectNames.insert("проводки.код", "код");
-    ObjectNames.insert("проводки.дбкод", "дбкод");
-    ObjectNames.insert("проводки.дбсчет", "дбсчет");
-    ObjectNames.insert("проводки.кркод", "кркод");
-    ObjectNames.insert("проводки.крсчет", "крсчет");
-    ObjectNames.insert("проводки.кол", "кол");
-    ObjectNames.insert("проводки.цена", "цена");
-    ObjectNames.insert("проводки.сумма", "сумма");
-    ObjectNames.insert("проводки.стр", "стр");
-    ObjectNames.insert("проводки.доккод", "доккод");
-    ObjectNames.insert("проводки.опер", "опер");
-    ObjectNames.insert("проводки.номеропер", "номеропер");
-    ObjectNames.insert("vw_топер", "vw_топер");
-    ObjectNames.insert("vw_топер.код", "код");
-    ObjectNames.insert("vw_топер.опер", "опер");
-    ObjectNames.insert("vw_топер.номер", "номер");
-    ObjectNames.insert("vw_топер.дбвидим", "дбвидим");
-    ObjectNames.insert("vw_топер.крвидим", "крвидим");
-    ObjectNames.insert("vw_топер.дбсалвидим", "дбсалвидим");
-    ObjectNames.insert("vw_топер.крсалвидим", "крсалвидим");
-    ObjectNames.insert("vw_топер.дбкол", "дбкол");
-    ObjectNames.insert("vw_топер.кркол", "кркол");
-    ObjectNames.insert("vw_топер.однаоперация", "однаоперация");
-    ObjectNames.insert("константы", "константы");
-    ObjectNames.insert("константы.код", "код");
-    ObjectNames.insert("константы.имя", "имя");
-    ObjectNames.insert("константы.значение", "значение");
-    ObjectNames.insert("типыобъектов", "типыобъектов");
-    ObjectNames.insert("типыобъектов.имя", "имя");
-    ObjectNames.insert("типыобъектов.справочник", "справочник");
-    ObjectNames.insert("типыобъектов.топер", "топер");
-    ObjectNames.insert("доступ", "доступ");
-    ObjectNames.insert("доступ.меню", "меню");
-    ObjectNames.insert("доступ.код_типыобъектов", "код_типыобъектов");
-    ObjectNames.insert("доступ.пользователь", "пользователь");
-    ObjectNames.insert("доступ.имя", "имя");
-    ObjectNames.insert("доступ_к_топер", "доступ_к_топер");
-    ObjectNames.insert("доступ_к_топер.код", "код");
-    ObjectNames.insert("доступ_к_топер.имя", "имя");
-    ObjectNames.insert("доступ_к_топер.опер", "опер");
-    ObjectNames.insert("справочники", "справочники");
-    ObjectNames.insert("справочники.код", "код");
-    ObjectNames.insert("справочники.имя", "имя");
-    ObjectNames.insert("справочники.имя_в_списке", "имя_в_списке");
-    ObjectNames.insert("справочники.имя_в_форме", "имя_в_форме");
-    ObjectNames.insert("справочники.прототип", "прототип");
-    ObjectNames.insert("справочники.фото", "фото");
-    ObjectNames.insert("топер", "топер");
-    ObjectNames.insert("топер.код", "код");
-    ObjectNames.insert("топер.имя", "имя");
-    ObjectNames.insert("топер.опер", "опер");
-    ObjectNames.insert("топер.номер", "номер");
-    ObjectNames.insert("топер.дбсчет", "дбсчет");
-    ObjectNames.insert("топер.крсчет", "крсчет");
-    ObjectNames.insert("топер.итоги", "итоги");
-    ObjectNames.insert("топер.независим", "независим");
-    ObjectNames.insert("топер.осндокумент", "осндокумент");
-    ObjectNames.insert("топер.нумератор", "нумератор");
-    ObjectNames.insert("топер.однаоперация", "однаоперация");
-    ObjectNames.insert("топер.дбпост", "дбпост");
-    ObjectNames.insert("топер.крпост", "крпост");
-    ObjectNames.insert("топер.дбвидим", "дбвидим");
-    ObjectNames.insert("топер.крвидим", "крвидим");
-    ObjectNames.insert("топер.дбсалвидим", "дбсалвидим");
-    ObjectNames.insert("топер.крсалвидим", "крсалвидим");
-    ObjectNames.insert("топер.атрибуты", "атрибуты");
-    ObjectNames.insert("счета", "счета");
-    ObjectNames.insert("счета.код", "код");
-    ObjectNames.insert("счета.счет", "счет");
-    ObjectNames.insert("счета.имя", "имя");
-    ObjectNames.insert("счета.имясправочника", "имясправочника");
-    ObjectNames.insert("счета.баланс", "баланс");
-    ObjectNames.insert("счета.количество", "количество");
-    ObjectNames.insert("счета.прототип", "прототип");
-    ObjectNames.insert("vw_счета", "vw_счета");
-    ObjectNames.insert("vw_счета.код", "код");
-    ObjectNames.insert("vw_счета.счет", "счет");
-    ObjectNames.insert("vw_счета.имя", "имя");
-    ObjectNames.insert("vw_счета.имясправочника", "имясправочника");
-    ObjectNames.insert("vw_счета.баланс", "баланс");
-    ObjectNames.insert("vw_счета.количество", "количество");
-    ObjectNames.insert("vw_счета.прототип", "прототип");
-    ObjectNames.insert("сальдо", "сальдо");
-    ObjectNames.insert("сальдо.счет", "счет");
-    ObjectNames.insert("сальдо.код", "код");
-    ObjectNames.insert("сальдо.кол", "кол");
-    ObjectNames.insert("сальдо.сальдо", "сальдо");
-    ObjectNames.insert("сальдо.дбкол", "дбкол");
-    ObjectNames.insert("сальдо.дебет", "дебет");
-    ObjectNames.insert("сальдо.дбкол", "дбкол");
-    ObjectNames.insert("сальдо.кркол", "кркол");
-    ObjectNames.insert("сальдо.конкол", "конкол");
-    ObjectNames.insert("сальдо.концена", "концена");
-    ObjectNames.insert("сальдо.консальдо", "консальдо");
-    ObjectNames.insert("столбцы", "столбцы");
-    ObjectNames.insert("столбцы.имя", "имя");
-    ObjectNames.insert("столбцы.код_vw_справочники_со_столбцами", "код_vw_справочники_со_столбцами");
-    ObjectNames.insert("столбцы.заголовок", "заголовок");
-    ObjectNames.insert("столбцы.номер", "номер");
-    ObjectNames.insert("столбцы.толькочтение", "толькочтение");
-    ObjectNames.insert("vw_столбцы", "vw_столбцы");
-    ObjectNames.insert("vw_столбцы.справочник", "справочник");
-    ObjectNames.insert("vw_столбцы.столбец", "столбец");
-    ObjectNames.insert("vw_столбцы.заголовок", "заголовок");
-    ObjectNames.insert("vw_столбцы.номер", "номер");
-    ObjectNames.insert("vw_столбцы.имя", "имя");
-    ObjectNames.insert("vw_столбцы.толькочтение", "толькочтение");
-    ObjectNames.insert("нумераторы", "нумераторы");
-    ObjectNames.insert("нумераторы.имя", "имя");
-    ObjectNames.insert("vw_types", "vw_types");
-    ObjectNames.insert("vw_types.код", "код");
-    ObjectNames.insert("vw_types.имя", "имя");
-    ObjectNames.insert("vw_types.тип", "тип");
-    ObjectNames.insert("vw_types.длина", "длина");
-    ObjectNames.insert("vw_пользователи", "vw_пользователи");
-    ObjectNames.insert("vw_справочники_со_столбцами", "vw_справочники_со_столбцами");
-    ObjectNames.insert("vw_справочники_со_столбцами.код", "код");
-    ObjectNames.insert("vw_справочники_со_столбцами.имя", "имя");
-    ObjectNames.insert("файлы", "файлы");
-    ObjectNames.insert("файлы.код", "код");
-    ObjectNames.insert("файлы.имя", "имя");
-    ObjectNames.insert("файлы.тип", "тип");
-    ObjectNames.insert("файлы.значение", "значение");
-    ObjectNames.insert("файлы.размер", "размер");
-    ObjectNames.insert("файлы.датамодификации", "датамодификации");
-    ObjectNames.insert("файлы.контрсумма", "контрсумма");
-    ObjectNames.insert("vw_константы", "vw_константы");
-    ObjectNames.insert("vw_константы.значение", "значение");
-    ObjectNames.insert("vw_константы.имя", "имя");
-    ObjectNames.insert("блокпериоды", "блокпериоды");
-    ObjectNames.insert("блокпериоды.начало", "начало");
-    ObjectNames.insert("блокпериоды.конец", "конец");
-    ObjectNames.insert("блокпериоды.пользователь", "пользователь");
-    ObjectNames.insert("запросы", "запросы");
-    ObjectNames.insert("запросы.код", "код");
-    ObjectNames.insert("запросы.имя", "имя");
-    ObjectNames.insert("запросы.опер", "опер");
-    ObjectNames.insert("запросы.номер", "номер");
-    ObjectNames.insert("запросы.текст", "текст");
-    ObjectNames.insert("атрибуты", "атрибуты");
-    ObjectNames.insert("атрибуты.код", "код");
-    ObjectNames.insert("атрибуты.доккод", "доккод");
-    ObjectNames.insert("атрибуты.стр", "стр");
-    ObjectNames.insert("докатрибуты", "докатрибуты");
-    ObjectNames.insert("докатрибуты.код", "код");
+    ObjectNames.insert("код", "КОД");
+    ObjectNames.insert("имя", "ИМЯ");
 }
 
 
@@ -1391,17 +1254,8 @@ QString DBFactory::getObjectName(const QString& n)
         // Присвоим результату значение по умолчанию
         if (n.contains('.'))
         {   // В искомом значении есть имя таблицы и наименование поля
-            QString tableName = n.left(n.indexOf('.')).toLower();
             QString fieldName = n.mid(n.indexOf('.') + 1);
             result = fieldName.toUpper();       // Зададим имя поля по умолчанию, если не найдем другого значения
-            foreach (QString field, getFieldsList(tableName, 0))
-            {
-                if (field.compare(fieldName, Qt::CaseInsensitive) == 0)
-                {
-                    result = field;
-                    break;
-                }
-            }
         }
         else
             result = n;
@@ -1562,7 +1416,7 @@ void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData, qu
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
-        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4 WHERE %5 = E'%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1573,7 +1427,7 @@ void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData, qu
     }
     else
     {
-        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES (E'%7', %8, %9, (:value));").arg(getObjectNameCom("файлы"))
+        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, (:value));").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.имя"))
                                                                                   .arg(getObjectNameCom("файлы.тип"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
@@ -1651,13 +1505,13 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList)
 {
     QString dictName;
+    QString idFieldName = getObjectName("код");
     // Укажем, как обращаться к справочникам для заполнения кодов в проводках
     if (topersList->at(0).attributes && topersList->at(0).number == 0)
     {
         // Если в документе отсутствуют проводки, но присутствуют атрибуты, то в локальный список справочников попадают
         // связанные справочники из атрибутов
         QString attrName = QString("%1%2").arg(getObjectName("атрибуты")).arg(oper);
-        QString idFieldName = getObjectName("код");
         foreach (QString fieldName, getFieldsList(attrName))
         {
             if (fieldName.left(4) == idFieldName + "_")
@@ -1665,7 +1519,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 dictName = fieldName;
                 dictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
                 DictType dict;
-                dict.name = dictName;
+                dict.name = dictName.toLower();
                 dict.prototype = dict.name;
                 dict.isSaldo = false;
                 dict.isConst = false;
@@ -1739,14 +1593,32 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                         dict.prototype = accounts.record().value(getObjectName("vw_счета.прототип")).toString();
                         if (dict.prototype.size() == 0)
                             dict.prototype = dict.name;
+                        toperT.dbDictAlias = dictName;
                         if (!prototypes.contains(dict.prototype))
                         {
                             prototypes.append(dict.prototype);
-                            toperT.dbDictAlias = dictName;
                             dict.isSaldo = false;
                             dict.isConst = toperT.dbConst;
                             dict.isSet   = isSet(dictName);
                             dictsList->append(dict);
+                            if (dict.isSet)     // Это набор справочников и счет дебетовый, поэтому откроем связанные справочники
+                            {
+                                foreach (QString fieldName, getFieldsList(dictName))
+                                {
+                                    if (fieldName.left(4) == idFieldName + "_")
+                                    {        // Если поле ссылается на другую таблицу
+                                        dictName = fieldName;
+                                        dictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
+                                        DictType childDict;
+                                        childDict.name = dictName.toLower();
+                                        childDict.prototype = childDict.name;
+                                        childDict.isSaldo = false;
+                                        childDict.isConst = false;
+                                        childDict.isSet = false;
+                                        dictsList->append(childDict);
+                                    }
+                                }
+                            }
                         }
                     }
                     accFounded = true;
@@ -1817,6 +1689,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         QStringList prvFieldsList = getFieldsList(tableName, 0);
         QList<FieldType> fields;
         getColumnsProperties(&fields, tableName);
+        QString field = getObjectName("проводки.код");
+        selectClause.append(QString("p%1.\"%2\"").arg(topersList->at(0).number).arg(field));
+        addColumnProperties(columnsProperties, tableName, QString("%1").arg(field), fields.at(0).type, fields.at(0).length, fields.at(0).precision, fields.at(0).readOnly, fields.at(0).constReadOnly);
         for (int i = 0; i < topersList->count(); i++)
         {   // Для всех проводок данной типовой операции
             prv = topersList->at(i).number;                     // получим номер проводки в типовой операции

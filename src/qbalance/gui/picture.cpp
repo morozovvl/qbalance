@@ -27,7 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Picture::Picture(QWidget* parent): QFrame(parent) {
     setFrameStyle(QFrame::Box);
     setVisible(true);
-    setFixedSize(200, 200);
+    pictSize = 200;
+    setFixedSize(pictSize, pictSize);
     pictureDrawn = "";
 }
 
@@ -36,7 +37,7 @@ void Picture::setApp(TApplication* a)
 {
     app = a;
     // Установим высоту и ширину картинки как 20% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
-    int pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.2 / 2;
+    pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.2 / 2;
     setFixedSize(pictSize, pictSize);
 }
 
@@ -64,4 +65,13 @@ void Picture::paintEvent(QPaintEvent*) {
 //    }
 }
 
+
+void Picture::setVisibility(bool vis)
+{
+    setVisible(vis);
+    if (vis)
+        setFixedSize(pictSize, pictSize);
+    else
+        setFixedSize(0, 0);
+}
 

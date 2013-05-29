@@ -60,6 +60,7 @@ public:
     virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual void    readColumnsSettings();
+    virtual void activateWidget();
 
 public slots:
     virtual void calculate();

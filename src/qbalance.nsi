@@ -60,6 +60,9 @@ Section "QBalance" SecQBalance
   File ..\README
   File ..\qbalance.exe
   File ..\psql.exe
+  File ..\zip.exe
+  File ..\bzip2.dll
+  File ..\unzip.exe
   File ..\QtCore4.dll
   File ..\QtGui4.dll
   File ..\QtScript4.dll
@@ -99,6 +102,9 @@ Section "QBalance" SecQBalance
   
   SetOutPath "$INSTDIR\examples"
   File /r ..\examples\*.*
+
+  SetOutPath "$INSTDIR\resources"
+  File /r ..\resources\*.*
 
   ;Store installation folder
   WriteRegStr HKCU "Software\QBalance" "" $INSTDIR

@@ -170,10 +170,10 @@ bool Documents::open()
         tableModel->setTestSelect(false);
 
         currentDocument = new Document(operNumber, this);
+        currentDocument->setPhotoEnabled(true);
         if (currentDocument->open())
         {
             currentDocument->setFormTitle(subFormTitle);
-            currentDocument->setPhotoEnabled(true);
             return true;
         }
     }
@@ -185,8 +185,8 @@ bool Documents::open()
 void Documents::close()
 {
     currentDocument->close();
+    Essence::close();
     delete currentDocument;
-    Dictionary::close();
 }
 
 
@@ -272,14 +272,14 @@ bool Documents::setTableModel(int)
 {
     if (Essence::setTableModel(0))
     {
-        fieldList = getFieldsList();
         int keyColumn   = 0;
-        for (int i = 0; i < fieldList.count(); i++)
-        {       // Просмотрим список полей
-            QString name = fieldList.at(i);
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            QString name = columnsProperties.at(i).column;
             if (name == idFieldName)
                 keyColumn = i;
-            tableModel->setUpdateInfo(name, tableName, name, i, keyColumn);
+
+            tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).length, i, keyColumn);
         }
 
         QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
@@ -306,7 +306,7 @@ bool Documents::setTableModel(int)
                     {
                         if (fld.name == db->getObjectName(attrName + ".код"))
                             keyColumn = columnCount;
-                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, columnCount, keyColumn);
+                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.length, columnCount, keyColumn);
                     }
                     fld.column = prefix + fld.column;
                     columnsProperties.append(fld);

@@ -52,6 +52,8 @@ public:
     Q_INVOKABLE QPushButton* getButtonOk() { return buttonOk; }
     Q_INVOKABLE QPushButton* getButtonCancel() { return buttonCancel; }
     Q_INVOKABLE virtual void setEnabled(bool) { ; }
+    virtual void activateWidget() { ; }
+    virtual void activateSubWindow();
 
 public slots:
     Q_INVOKABLE virtual int exec();
@@ -70,6 +72,7 @@ protected:
     TApplication*   app;
     DBFactory*      db;
     Dialog*         formWidget;
+    MyMdiSubWindow* subWindow;
     Essence*        parent;
     bool            lSelected;
     bool            defaultForm;
@@ -93,7 +96,11 @@ protected:
 private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;
+    bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
+
     void                    checkVisibility();
+    MyMdiSubWindow* getSubWindow();
+
 };
 
 #endif

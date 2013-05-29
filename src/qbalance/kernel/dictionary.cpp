@@ -20,9 +20,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QDebug>
 #include "dictionary.h"
 #include "../kernel/app.h"
+#include "../kernel/document.h"
 #include "../gui/mainwindow.h"
+#include "../gui/formdocument.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/searchparameters.h"
+#include "../gui/docparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
 
@@ -37,7 +40,10 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     lAutoSelect = false;
     isDepend = false;
     ftsEnabled = false;
+    ftsFieldName = "";
     lIsSaldo = false;
+    lsetIdEnabled = true;
+    parentDict = 0;
     dictionaries = app->getDictionaries();
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
@@ -192,59 +198,86 @@ bool Dictionary::calculate(const QModelIndex& index) {
 qulonglong Dictionary::getId(int row)
 {
     if (tableModel->rowCount() > row)
-        return Essence::getId(row);
+    {
+        if (!isSet())
+            return Essence::getId(row);
 
-    // Если это набор, то продолжаем
-    QString filter;
-    QString variables, values;
-    for (int i = 0; i < fieldList.count(); i++)
-    {       // Просмотрим список полей
-        QString name = fieldList.at(i);
-        if (name.left(4) == idFieldName + "_")
-        {        // Если поле ссылается на другую таблицу
-            if (filter.size() > 0)
-                filter.append(" AND ");
-            filter.append(name + "=");
+        // Если это набор, то продолжаем
+        QString filter;
+        QString variables, values;
+        for (int i = 0; i < fieldList.count(); i++)
+        {       // Просмотрим список полей
+            QString name = fieldList.at(i);
+            if (name.left(4) == idFieldName + "_")
+            {        // Если поле ссылается на другую таблицу
+                QString field = db->getObjectNameCom(tableName + "." + name);
+                if (filter.size() > 0)
+                    filter.append(" AND ");
+                filter.append(field + "=");
 
-            if (variables.size() > 0)
-                variables.append(",");
-            variables.append(name);
+                if (variables.size() > 0)
+                    variables.append(",");
+                variables.append(field);
 
-            name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-            name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-            Dictionary* dict = dictionaries->getDictionary(name);
-            if (dict != 0)                       // Если удалось открыть справочник
-            {
-                qulonglong id = dict->getId();
-                if (id != 0)
+                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                Dictionary* dict = dictionaries->getDictionary(name);
+                if (dict != 0)                       // Если удалось открыть справочник
                 {
-                    filter.append(QString("%1").arg(id));
-                    if (values.size() > 0)
-                        values.append(",");
-                    values.append(QString("%1").arg(id));
+                    qulonglong id = dict->getId();
+                    if (id != 0)
+                    {
+                        filter.append(QString("%1").arg(id));
+                        if (values.size() > 0)
+                            values.append(",");
+                        values.append(QString("%1").arg(id));
+                    }
+                    else
+                    {
+                        app->showError(QString(QObject::trUtf8("Не опредено значение справочника \"%1\"")).arg(name));
+                        return 0;
+                    }
                 }
                 else
-                {
-                    app->showError(QString(QObject::trUtf8("Не опредено значение справочника \"%1\"")).arg(name));
                     return 0;
-                }
             }
-            else
-                return 0;
         }
-    }
-    if (filter.size() > 0)
-    {
-        query(filter);
-        if (tableModel->rowCount() == 0)
+        if (filter.size() > 0)
         {
-            QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(tableName).arg(variables).arg(values);
-            db->exec(command);
             query(filter);
+            if (tableModel->rowCount() == 0)
+            {
+                QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(db->getObjectNameCom(tableName)).arg(variables).arg(values);
+                db->exec(command);
+                query(filter);
+            }
+            return Essence::getId(0);
         }
-        return Essence::getId(0);
     }
     return 0;
+}
+
+
+void Dictionary::setId(qulonglong id)
+{
+    if (lsetIdEnabled)
+    {
+        Essence::setId(id);
+        if (isSet())            // Если это набор, то переустановим связанные справочники
+        {
+            QString idFieldName = db->getObjectName("код");
+            foreach (QString dictName, getChildDicts())
+            {
+                Dictionary* dict = dictionaries->getDictionary(dictName);
+                if (!dict->isSet())
+                {
+                    qulonglong val = getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                    if (val > 0)
+                        dict->setId(val);
+                }
+            }
+        }
+    }
 }
 
 
@@ -281,12 +314,64 @@ bool Dictionary::open(int)
         fieldList = getFieldsList();
 
         // Проверим, имеется ли в справочнике полнотекстовый поиск
-        ftsEnabled = fieldList.contains(db->getObjectName(tableName + ".fts"), Qt::CaseInsensitive);
+        QString ftsField = db->getObjectName(tableName + ".fts");
+        foreach (QString fieldName, fieldList)
+        {
+            if (fieldName == ftsField || fieldName == "__" + ftsField)
+            {
+                ftsEnabled = true;
+                ftsFieldName = fieldName;
+                break;
+            }
+        }
 
         initFormEvent();
+
+        // Если путь к фотографиям не найден, то запретим их показ
+        if (getPhotoPath().size() == 0)
+            setPhotoEnabled(false);
+
         return true;
     }
     return false;
+}
+
+
+void Dictionary::setConst(bool isConst)
+{
+    lIsConst = isConst;
+    if (dictionaries != 0 && dictionaries->getDocument() != 0)      // Если справочник является локальным к документу
+    {                                                               // То на форме документа мы должны его переместить в строку параметров документа
+        FormDocument* docForm = dictionaries->getDocument()->getForm();
+        if (docForm != 0)
+        {
+            DocParameters* docPar = docForm->getDocParameters();
+            if (isConst)
+            {
+                docPar->addString(prototypeName);
+            }
+        }
+    }
+}
+
+
+QStringList Dictionary::getChildDicts()
+{
+    QStringList childrenList;
+    if (isSet())
+    {
+        for (int i = 0; i < fieldList.count(); i++)
+        {       // Просмотрим список полей
+            QString name = fieldList.at(i);
+            if (name.left(idFieldName.size() + 1) == idFieldName + "_")
+            {        // Если поле ссылается на другую таблицу
+                name.remove(0, idFieldName.size() + 1);     // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                childrenList.append(name);
+            }
+        }
+    }
+    return childrenList;
 }
 
 
@@ -311,7 +396,7 @@ bool Dictionary::setTableModel(int)
             {
                 if (fld.name == idFieldName)
                     keyColumn = i;
-                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, i, keyColumn);
+                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.length, i, keyColumn);
             }
 
             if (!tables.contains(fld.table) && dictionaries != 0 && dictionaries->getDocument() == 0)
@@ -412,7 +497,8 @@ void Dictionary::prepareSelectCurrentRowCommand()
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
     QString command = tableModel->selectStatement();
 
-    command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName().toUpper()).arg(getIdFieldName()));
+    command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName())
+                                                                                .arg(db->getObjectName(getTableName() + "." + getIdFieldName())));
 
     preparedSelectCurrentRow.prepare(command);
 }

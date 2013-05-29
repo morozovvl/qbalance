@@ -72,6 +72,7 @@ public:
     Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     void                                setDoSubmit(bool submit) { doSubmit = submit; }
+    bool                                getDoSubmit() { return doSubmit; }
     Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
     virtual void query(QString = "");
     virtual void                        setOrderClause() { ; }
@@ -90,6 +91,7 @@ public:
     Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
     Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
+    QString getPhotoPath();
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
     Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...

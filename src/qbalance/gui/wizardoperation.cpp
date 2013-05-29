@@ -354,7 +354,7 @@ bool WizardOperation::setData()
     db->commitTransaction();
 
     // Перезагрузим список столбцов
-    db->reloadColumnHeaders();
+    db->loadSystemTables();
 
     return true;
 }

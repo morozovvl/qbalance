@@ -44,6 +44,7 @@ Document::Document(int oper, Documents* par): Essence()
     scriptFileName = TApplication::exemplar()->getScriptFileName(operNumber);
     idFieldName = "P1__" + db->getObjectName("код");
     freePrv = 0;
+    localDictsOpened = false;
     setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
     parent->setDoSubmit(true);          // Обновления в списке документов будем сохранять сразу
 
@@ -193,6 +194,70 @@ void Document::showItog()
 }
 
 
+void Document::openLocalDictionaries()
+{
+    Dictionary* dict;
+    QList<DictType> dictsList;
+    db->getToperDictAliases(operNumber, topersList, &dictsList);
+    // Определим, какие справочники показывать при добавлении новой строки в документ, а какие не показывать
+    for (int i = 0; i < dictsList.count(); i++)
+    {
+        if (dictsList.at(i).isSaldo)
+        {
+            Saldo* sal;
+            sal = dictionaries->getSaldo(dictsList.at(i).acc);
+            if (sal != 0)
+            {
+                sal->setPrototypeName(dictsList.at(i).prototype);
+                sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
+                sal->setQuan(true);
+                sal->setConst(dictsList.at(i).isConst);
+                if (sal->isConst() || sal->isSet())
+                    sal->setMustShow(false); // Если справочник документа является постоянным или это набор
+                                              // то не показывать его при добавлении новой записи в документ
+                else
+                    sal->setMustShow(true);
+            }
+        }
+        else
+        {
+            dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
+            if (dict != 0)
+            {
+                if (!dict->isConst())
+                {
+                   dict->setPrototypeName(dictsList.at(i).name);
+                   if (dict->isSet())
+                       dict->setMustShow(false); // Если справочник документа является набором
+                                                // то не показывать его при добавлении новой записи в документ
+                   else
+                       dict->setMustShow(true);
+                }
+                else
+                    dict->setMustShow(false);                   // Сначала сделаем невидимым при добавлении проводки сам справочник
+            }
+        }
+    }
+    // Установим "родителей" локальных справочников
+    for (int i = 0; i < dictsList.count(); i++)
+    {
+        if (!dictsList.at(i).isSaldo)
+        {
+            dict = dictionaries->getDictionary(dictsList.at(i).name);
+            if (dict->isSet())
+            {
+                foreach (QString dictName, dict->getChildDicts())
+                {
+                    Dictionary* childDict = dictionaries->getDictionary(dictName);
+                    if (childDict != 0)
+                            childDict->setParentDict(dict);
+                }
+            }
+        }
+    }
+}
+
+
 bool Document::add()
 {
     prvValues.clear();
@@ -231,12 +296,14 @@ bool Document::add()
             QString dictName = topersList->at(i).dbDictAlias;
             if (dictName.size() > 0 && getDictionaries()->contains(dictName))
             {
+                prepareValue(dictName, dictionaries->getDictionary(dictName));
                 dictName = dictionaries->getDictionary(dictName)->getPrototypeName();
                 prepareValue(dictName, dictionaries->getDictionary(dictName));
             }
             dictName = topersList->at(i).crDictAlias;
             if (dictName.size() > 0 && getDictionaries()->contains(dictName))
             {
+                prepareValue(dictName, dictionaries->getDictionary(dictName));
                 dictName = dictionaries->getDictionary(dictName)->getPrototypeName();
                 prepareValue(dictName, dictionaries->getDictionary(dictName));
             }
@@ -263,6 +330,7 @@ bool Document::add()
                 tableModel->insertRow(newRow);
                 form->getGridTable()->reset();
                 form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                form->getGridTable()->selectNextColumn();
                 updateCurrentRow(strNum);
                 form->showPhoto();
             }
@@ -315,15 +383,21 @@ int Document::addFromQuery(int id)
 }
 
 
-bool Document::remove() {
-    if (lDeleteable) {
+bool Document::remove()
+{
+    if (lDeleteable)
+    {
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
-        if (Essence::remove()) {
-            db->removeDocStr(docId, strNum);
-            query();
-            scriptEngine->eventAfterCalculate();
-            saveChanges();     // Принудительно обновим итог при удалении строки
-            return true;
+        if (Essence::remove())
+        {
+            if (db->removeDocStr(docId, strNum))
+            {
+                query();
+                scriptEngine->eventAfterCalculate();
+                saveChanges();     // Принудительно обновим итог при удалении строки
+                return true;
+            }
+            app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
         }
     }
     else
@@ -504,10 +578,17 @@ QVariant Document::getSumValue(QString name)
 
 void Document::show()
 {   // Перед открытием документа запрашивается его содержимое, а для постоянных справочников в документе устанавливаются их значения
+    if (!localDictsOpened)
+    {
+        openLocalDictionaries();
+        localDictsOpened = true;
+    }
     query();
     if (tableModel->rowCount() > 0) {
         Dictionary* dict;
         QString dictName;
+        QString idFieldName = db->getObjectName("код");
+        // Установим значения постоянных справочников, участвующих в проводках
         for (int i = 0; i < topersList->count(); i++)
         {
             int prvNumber = topersList->at(i).number;
@@ -526,6 +607,27 @@ void Document::show()
                         showParameterText(dictName);
                     }
                 }
+                // Проверим связанные справочники этого справочника, если он набор
+                foreach (QString dictName, dict->getChildDicts())
+                {
+                    Dictionary* childDict = getDictionaries()->value(dictName);
+                    if (childDict->isConst())
+                    {
+                        // Установим сначала значение основного справочника
+                        qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
+                        if (val > 0)
+                        {
+                            dict->setId(val);
+                            // А затем установим значение связанного справочника
+                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                            if (val > 0)
+                            {
+                                childDict->setId(val);
+                                showParameterText(dictName);
+                            }
+                        }
+                    }
+                }
             }
             dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
             if (getDictionaries()->contains(dictName))
@@ -540,6 +642,27 @@ void Document::show()
                     {
                         dict->setId(val);
                         showParameterText(dictName);
+                    }
+                }
+                // Проверим связанные справочники этого справочника, если он набор
+                foreach (QString dictName, dict->getChildDicts())
+                {
+                    Dictionary* childDict = getDictionaries()->value(dictName);
+                    if (childDict->isConst())
+                    {
+                        // Установим сначала значение основного справочника
+                        qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                        if (val > 0)
+                        {
+                            dict->setId(val);
+                            // А затем установим значение связанного справочника
+                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                            if (val > 0)
+                            {
+                                childDict->setId(val);
+                                showParameterText(dictName);
+                            }
+                        }
                     }
                 }
             }
@@ -563,6 +686,8 @@ void Document::setConstDictId(QString dName, QVariant id)
 {
     if (tableModel->rowCount() > 0)
     {
+        bool submit = getDoSubmit();
+        setDoSubmit(true);
         Dictionary* dict;
         QString dictName;
         for (int i = 0; i < topersList->count(); i++)
@@ -580,6 +705,26 @@ void Document::setConstDictId(QString dName, QVariant id)
                     }
                 }
             }
+            else
+            {
+                // Если справочник, в котором мы устанавливаем идентификатор, является постоянным
+                // и у него имеется "родитель"-набор, который задействован в проводке
+                Dictionary* constDict = getDictionaries()->value(dName);
+                if (constDict->isConst() &&
+                    constDict->getParentDict()->getPrototypeName() == dictName)
+                {
+                    constDict->setIdEnabled(false);
+                    dict = getDictionaries()->value(dictName);
+                    for (int r = 0; r < tableModel->rowCount(); r++)
+                    {
+                        qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
+                        dict->setId(id);
+                        id = dict->getId();
+                        setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), id, r);
+                    }
+                    constDict->setIdEnabled(true);
+                }
+            }
             dictName = topersList->at(i).crDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0)
             {
@@ -593,7 +738,30 @@ void Document::setConstDictId(QString dName, QVariant id)
                     }
                 }
             }
+            else
+            {
+                // Если справочник, в котором мы устанавливаем идентификатор, является постоянным
+                // и у него имеется "родитель"-набор, который задействован в проводке
+                Dictionary* constDict = getDictionaries()->value(dName);
+                if (constDict->isConst() &&
+                    constDict->getParentDict()->getPrototypeName() == dictName)
+                {
+                    constDict->setIdEnabled(false);
+                    dict = getDictionaries()->value(dictName);
+                    for (int r = 0; r < tableModel->rowCount(); r++)
+                    {
+                        qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
+                        dict->setId(id);
+                        id = dict->getId();
+                        setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), id, r);
+                    }
+                    constDict->setIdEnabled(true);
+                }
+            }
         }
+        db->execCommands();
+        setDoSubmit(submit);
+        query();
         saveOldValues();
     }
 }
@@ -624,6 +792,11 @@ bool Document::open()
         initForm();
         evaluateEngine();
         initFormEvent();
+
+        // Если путь к фотографиям не найден, то запретим их показ
+        if (getPhotoPath().size() == 0)
+            setPhotoEnabled(false);
+
         return true;
     }
     return false;
@@ -632,12 +805,8 @@ bool Document::open()
 
 void Document::close()
 {
-    foreach(QString dictName, getDictionaries()->keys()) {
-        Dictionary* dict;
-        dict = getDictionaries()->value(dictName);
-        if (dict != 0)
-            dict->close();
-    }
+    dictionaries->close();
+    delete dictionaries;
     Essence::close();
 }
 
@@ -709,50 +878,21 @@ bool Document::setTableModel(int)
         tableModel->setSelectStatement(selectStatement);
         db->getColumnsRestrictions(tagName, &columnsProperties);
 
+        // Откроем постоянные справочники
         Dictionary* dict;
         QList<DictType> dictsList;
         db->getToperDictAliases(operNumber, topersList, &dictsList);
-        // Определим, какие справочники показывать при добавлении новой строки в документ, а какие не показывать
         for (int i = 0; i < dictsList.count(); i++)
         {
-            if (dictsList.at(i).isSaldo)
+            if (dictsList.at(i).isConst)
             {
-                Saldo* sal;
-                sal = dictionaries->getSaldo(dictsList.at(i).acc);
-                if (sal != 0)
-                {
-                    sal->setPrototypeName(dictsList.at(i).prototype);
-                    sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
-                    sal->setQuan(true);
-                    sal->setConst(dictsList.at(i).isConst);
-                    if (sal->isConst() || sal->isSet())
-                        sal->setMustShow(false); // Если справочник документа является постоянным или это набор
-                                                  // то не показывать его при добавлении новой записи в документ
-                    else
-                        sal->setMustShow(true);
-                }
-            }
-            else
-            {
-                if (dictsList.at(i).isConst)
-                {
-                    dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
-                    if (dict != 0)
-                        dict->setConst(true);
-                }
-                else
-                    dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
+                dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
                 if (dict != 0)
                 {
-                    dict->setPrototypeName(dictsList.at(i).name);
-                    if (dict->isConst() || dict->isSet())
-                        dict->setMustShow(false); // Если справочник документа является постоянным или это набор
-                                                  // то не показывать его при добавлении новой записи в документ
-                    else
-                        dict->setMustShow(true);
+                    dict->setConst(true);
+                    dict->setMustShow(false); // Если справочник документа является постоянным или это набор
                 }
             }
-
         }
 
         int columnCount = 0;
@@ -776,7 +916,7 @@ bool Document::setTableModel(int)
             }
             if (!columnsProperties.value(i).constReadOnly)
                 // Если поле входит в список сохраняемых полей
-                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnCount, keyColumn);
+                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).length, columnCount, keyColumn);
             // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
             if (columnsProperties.value(i).table == attrName)
                 attrFields.append(columnsProperties.value(i).column);
@@ -806,6 +946,7 @@ bool Document::showNextDict()
                 {       // Если в выбранном справочнике нет записей
                     break;
                 }
+                prepareValue(dictName, dict);
                 prepareValue(dict->getPrototypeName(), dict);
             }
             else
@@ -845,14 +986,18 @@ int Document::appendDocString()
         dbId = 0;
         crId = 0;
         dictName = topersList->at(i).dbDictAlias;
-        if (dictName.size() > 0 && getDictionaries()->contains(dictName))
+        if (dictName.size() > 0)
         {
-            dbId = prvValues.value(getDictionaries()->value(dictName)->getPrototypeName()).toInt();
+            dbId = prvValues.value(dictName).toInt();
+            if (dbId == 0)
+                return result;
         }
         dictName = topersList->at(i).crDictAlias;
-        if (dictName.size() > 0 && getDictionaries()->contains(dictName))
+        if (dictName.size() > 0)
         {
-            crId = prvValues.value(getDictionaries()->value(dictName)->getPrototypeName()).toInt();
+            crId = prvValues.value(dictName).toInt();
+            if (crId == 0)
+                return result;
         }
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
         parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));

@@ -68,8 +68,11 @@ bool Table::open()
 
 void Table::close()
 {
-    tableModel->clear();
-    delete tableModel;
+    if (tableModel != 0)
+    {
+        tableModel->clear();
+        delete tableModel;
+    }
     opened = false;
 }
 

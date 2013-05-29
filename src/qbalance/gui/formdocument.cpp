@@ -210,7 +210,7 @@ void FormDocument::show()
 void FormDocument::hide()
 {
     FormGrid::hide();
-    getParent()->getParent()->getFormWidget()->activateSubWindow();
+    getParent()->getParent()->getForm()->activateSubWindow();
     getParent()->saveVariablesToDB();
 }
 
@@ -228,7 +228,7 @@ void FormDocument::cmdOk()
     if (numberEdit != 0)
         getParent()->getParent()->setValue("номер", QVariant(numberEdit->text()));
     FormGrid::cmdOk();
-    getParent()->getParent()->getFormWidget()->activateSubWindow();
+    getParent()->getParent()->getForm()->activateSubWindow();
 }
 
 

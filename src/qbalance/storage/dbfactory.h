@@ -170,8 +170,8 @@ public:
     void getPeriod(QDate&, QDate&);
     void setConstDictId(QString, QVariant, int, int, int);
     QString prepareSearchParameters();
-    Q_INVOKABLE bool exec(QString, QSqlDatabase* = 0);
-    Q_INVOKABLE QSqlQuery execQuery(QString, QSqlDatabase* = 0);
+    Q_INVOKABLE bool exec(QString, bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
     QStringList getUserList();
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
     QString getIdFieldPrefix() { return getObjectName("код_"); }      // возвращает префикс в именах полей, которые используются как ссылки на другие справочники
@@ -196,6 +196,8 @@ public:
     void beginTransaction()     { exec("BEGIN;"); }
     void commitTransaction()    { exec("COMMIT;"); }
     void rollbackTransaction()  { exec("ROLLBACK;"); }
+
+    void loadSystemTables();
 
     QSqlQuery getDataTypes();
 

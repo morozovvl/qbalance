@@ -41,7 +41,8 @@ class ScriptEngine : public QScriptEngine {
 public:
     ScriptEngine(QObject *parent = 0);
     ~ScriptEngine();
-    bool open(QString fileName = "");
+    virtual bool open(QString fileName = "");
+    virtual void close() { ; }
     bool evaluate();
     QScriptValue evaluate (const QString &, const QString & = QString(), int = 1);
     QString getErrorMessage() { return errorMessage; }

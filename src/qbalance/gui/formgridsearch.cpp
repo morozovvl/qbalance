@@ -78,7 +78,7 @@ void FormGridSearch::close()
     if (!defaultForm)
         if (parameters != 0)
         {
-            disconnect(parameters, 0, 0, 0);
+            parameters->disconnect();
             parameters->close();
         }
     FormGrid::close();
@@ -93,21 +93,8 @@ QString FormGridSearch::getFilter()
 }
 
 
-int FormGridSearch::exec()
+void FormGridSearch::activateWidget()
 {
-    int result = FormGrid::exec();
-    if (parameters != 0)
-        parameters->setFocus();
-    return result;
-}
-
-
-void FormGridSearch::show()
-{
-    FormGrid::show();
     if (parameters != 0)
         parameters->setFocus();
 }
-
-
-

@@ -35,6 +35,7 @@ public:
     Picture(QWidget* parent = 0);
     void show(QString);
     void                        setApp(TApplication*);
+    void    setVisibility(bool);
 
 protected:
     QString pictureFileName;
@@ -43,6 +44,7 @@ protected:
 
 private:
     TApplication*               app;
+    int                         pictSize;
 };
 
 #endif // PICTURE_H

@@ -98,12 +98,14 @@ void SearchParameters::addString(QString name, int strNum)
         button->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
         gridLayout->addWidget(button, strNum, 2, 1, 1);
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
-        name = name + "." + programNameFieldName;
         if (app != 0)
         {
             labelName = app->getDBFactory()->getDictionariesProperties(name).value("имя_в_форме").toString();
+            name = name + "." + programNameFieldName;
             if (labelName.size() == 0)
+            {
                 labelName = name;
+            }
         }
     }
     else
@@ -111,9 +113,7 @@ void SearchParameters::addString(QString name, int strNum)
         name = parentForm->getParent()->getTableName();
         if (app != 0)
         {
-            labelName = app->getDBFactory()->getDictionariesProperties(parentForm->getParent()->getTableName()).value("имя_в_форме").toString();
-            if (labelName.size() == 0)
-                labelName = "Наименование";
+            labelName = "Наименование";
         }
         // Проверим, имеется ли в связанном справочнике полнотекстовый поиск
         if (((Dictionary*)parentForm->getParent())->isFtsEnabled())
@@ -168,7 +168,8 @@ QString SearchParameters::getFilter()
         {
             if (filter.size() > 0)
                 filter.append(" AND ");
-            filter.append(QString("%1.%2 @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)).arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".fts")));
+            filter.append(QString("%1.%2 @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+                                                          .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".fts")));
             QString f = "";
             foreach (QString param, paramList)
             {
@@ -185,7 +186,7 @@ QString SearchParameters::getFilter()
                 if (filter.size() > 0)
                     filter.append(" AND ");
                 filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
-                                                         .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].field))
+                                                         .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
                                                          .arg("%" + param + "%"));
             }
         }

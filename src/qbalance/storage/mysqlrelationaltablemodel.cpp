@@ -60,6 +60,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 }
 
 
+
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
@@ -68,14 +69,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
-            QSqlRecord rec = record(index.row());
-            if (rec.indexOf(db->getObjectName("код")) != index.column())
-            {   // Если мы не пытаемся поменять значение ключевого столбца
-                rec.setValue(index.column(), value);
-                rec.setGenerated(index.column(), true);
-                lResult = QSqlRelationalTableModel::setData(index, value, role);
-                emit dataChanged(index, index);
-            }
+            lResult = QSqlTableModel::setData(index, value, role);
         }
         else
         {
@@ -160,7 +154,7 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
 }
 
 
-void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, int fieldColumn, int keyFieldColumn)
+void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, int len, int fieldColumn, int keyFieldColumn)
 {
     if (!updateInfo.contains(fieldColumn))
     {
@@ -169,6 +163,7 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
         info.table = table;
         info.keyFieldColumn = keyFieldColumn;
         info.field = field;
+        info.length = len;
         updateInfo.insert(fieldColumn, info);
     }
 }
@@ -182,13 +177,14 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
         {
             QString value;
             QString fieldName = updateInfo.value(index.column()).originField;
+            int length = updateInfo.value(index.column()).length;
             QVariant recValue = ((Essence*)parent)->getValue(fieldName, index.row());
             // Возьмем исходное значение из модели, которое необходимо сохранить в базу
             // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
             switch (recValue.type())
             {
                 case QVariant::String:
-                    value = QString("'%1'").arg(recValue.toString().trimmed());
+                    value = QString("'%1'").arg(recValue.toString().left(length).trimmed());
                     break;
                 case QVariant::Date:
                     value = QString("'%1'").arg(recValue.toString());

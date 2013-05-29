@@ -44,6 +44,8 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     appendToMdi = true;
     app = TApplication::exemplar();
     db = app->getDBFactory();
+    freeWindow = false;
+    subWindow = 0;
 }
 
 
@@ -62,7 +64,8 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
         createForm(fileName, pwgt);
     app->setIcons(formWidget);
     readSettings();
-    buttonOk = qFindChild<QPushButton*>(formWidget, "buttonOk");
+
+//    buttonOk = qFindChild<QPushButton*>(formWidget, "buttonOk");
 
     //  Установим подписи ко всем кнопкам
     foreach (QString key, toolTips.keys())
@@ -77,7 +80,12 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 
 void Form::close()
 {
-    disconnect(formWidget, 0, 0, 0);
+   if (formWidget != 0)
+       formWidget->disconnect();
+   if (buttonOk != 0)
+       buttonOk->disconnect();
+   if (buttonCancel != 0)
+       buttonCancel->disconnect();
     writeSettings();
 }
 
@@ -121,6 +129,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget = new Dialog(pwgt);
         formWidget->setApp(app);
         formWidget->setVisible(false);
+        formWidget->setWindowFlags(Qt::Window | Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint);
         buttonOk = new QPushButton();
         buttonOk->setObjectName("buttonOk");
         buttonCancel = new QPushButton();
@@ -148,7 +157,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         buttonCancel->hide();
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
-    formWidget->setFreeWindow(!appendToMdi);
+    freeWindow = !appendToMdi;
     formWidget->setForm(this);
 }
 
@@ -180,7 +189,23 @@ int Form::exec()
             parent->beforeShowFormEvent();
 
         checkVisibility();
-        formWidget->exec();
+
+        getSubWindow();
+
+        if (subWindow != 0)
+        {
+            formWidget->setGeometry(subWindow->x(), subWindow->y(), subWindow->width(), subWindow->height());
+
+            subWindow->setWidget(0);
+            formWidget->setParent(app->getMainWindow(), Qt::Dialog);
+            formWidget->exec();
+
+            subWindow->setGeometry(formWidget->x(), formWidget->y(), formWidget->width(), formWidget->height());
+            subWindow->setWidget(formWidget);
+        }
+        else
+            formWidget->exec();
+
         return lSelected;
     }
     return 0;
@@ -196,6 +221,10 @@ void Form::show()
             parent->beforeShowFormEvent();
 
         checkVisibility();
+
+        if (getSubWindow() != 0)
+            subWindow->show();
+
         formWidget->show();
         if (parent != 0)
             parent->afterShowFormEvent();
@@ -204,15 +233,33 @@ void Form::show()
 }
 
 
+MyMdiSubWindow* Form::getSubWindow()
+{
+    if (app != 0 && !freeWindow)
+    {
+        if (subWindow == 0)
+            subWindow = app->getMainWindow()->appendMdiWindow(formWidget);
+        return subWindow;
+    }
+    return 0;
+}
+
+
+void Form::activateSubWindow()
+{
+    app->getMainWindow()->getWorkSpace()->setActiveSubWindow(subWindow);
+}
+
+
 void Form::checkVisibility()
 {
     // Проверим, не уползло ли окно за пределы видимости. Если оно за пределами видимости, то вернем его
-    if (formWidget->getSubWindow() != 0)
+    if (getSubWindow() != 0)
     {
-        int x = formWidget->getSubWindow()->x();
-        int y = formWidget->getSubWindow()->y();
-        int w = formWidget->getSubWindow()->width();
-        int h = formWidget->getSubWindow()->height();
+        int x = getSubWindow()->x();
+        int y = getSubWindow()->y();
+        int w = getSubWindow()->width();
+        int h = getSubWindow()->height();
         if (x >= app->getMainWindow()->centralWidget()->width())        // Если координата X уползла за пределы видимости
         {
             if (w > app->getMainWindow()->centralWidget()->width())     // Если ширина окна превышает ширину центрального виджета
@@ -229,7 +276,7 @@ void Form::checkVisibility()
             if (y < 0)
                 y = 0;
         }
-        formWidget->getSubWindow()->setGeometry(x, y, w, h);
+        getSubWindow()->setGeometry(x, y, w, h);
     }
 }
 
@@ -241,6 +288,14 @@ void Form::hide()
 
         if (parent != 0)
             parent->beforeHideFormEvent();
+
+        if (!freeWindow)
+        {
+            if (subWindow != 0)
+            {
+                subWindow->hide();
+            }
+        }
 
         formWidget->hide();
 
@@ -322,7 +377,7 @@ void Form::readSettings()
 {
     // Установим координаты и размеры окна
     QWidget* widget;
-    widget = formWidget->getSubWindow();
+    widget = getSubWindow();
     if (widget == 0)
         widget = formWidget;
 
@@ -377,9 +432,9 @@ void Form::writeSettings()
 {
     // Сохраним координаты и размеры окна
     QWidget* widget;
-    widget = formWidget->getSubWindow();
+    widget = (QWidget*)getSubWindow();
     if (widget == 0)
-        widget = formWidget;
+        widget = (QWidget*)formWidget;
 
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings;

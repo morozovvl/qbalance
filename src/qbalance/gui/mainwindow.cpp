@@ -198,9 +198,6 @@ MyMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
         MyMdiSubWindow* subWindow = new MyMdiSubWindow(workSpace);
         subWindow->hide();
         subWindow->setWidget(dialogWidget);
-
-        QList<QMdiSubWindow *>  list = workSpace->subWindowList();
-
         return (MyMdiSubWindow*)workSpace->addSubWindow(subWindow);
     }
     return 0;

@@ -74,10 +74,10 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
         Dictionary* dict;
         dict = new Dictionary(dictName, this);
         dict->setDictionaries(this);
+        dict->setPhotoEnabled(true);
         if (dict->open(deep)) {
             dictionaries.insert(dictName, dict);
             dict->setDictionaries(this);
-            dict->setPhotoEnabled(true);
 
             QSqlQuery* dicts = db->getDictionaries();
             if (dicts->first())
@@ -113,11 +113,11 @@ bool Dictionaries::addSaldo(QString acc) {
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
+        saldo->setPhotoEnabled(true);
         if (saldo->open()) {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
-            saldo->setPhotoEnabled(true);
             saldo->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
             saldo->setQuan(true);
             return true;
@@ -172,7 +172,6 @@ void Dictionaries::view()
     {
         removeDictionary(dictName);
     }
-    form->getGridTable()->setFocus();
 }
 
 
@@ -198,8 +197,10 @@ bool Dictionaries::open() {
 
 
 void Dictionaries::close() {
-    foreach(Dictionary* dict, dictionaries) {
+    foreach(Dictionary* dict, dictionaries)
+    {
         dict->close();
+        delete dict;
     }
     Dictionary::close();
 }
@@ -241,5 +242,5 @@ void Dictionaries::setForm()
 
 void Dictionaries::setOrderClause()
 {
-    Table::setOrderClause(db->getObjectName("доступ_к_справочникам.имя"));
+    Table::setOrderClause(db->getObjectNameCom("доступ_к_справочникам.имя"));
 }

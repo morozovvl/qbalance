@@ -35,7 +35,7 @@ MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
 
 MyItemDelegate::~MyItemDelegate()
 {
-    disconnect(this, 0, this, 0);
+    this->disconnect();
 }
 
 
