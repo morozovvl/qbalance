@@ -211,6 +211,7 @@ void DBFactory::initDBFactory()
     if (dbExtend->open())
     {
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()), dbExtend);
+        exec("set standard_conforming_strings=on;");
     }
     else
     {
@@ -268,12 +269,12 @@ void DBFactory::close()
 {
     clearError();
 
-    if(db->isOpen())
+    if(db != 0 && db->isOpen())
     {
         db->close();
     }
 
-    if(dbExtend->isOpen())
+    if(dbExtend != 0 && dbExtend->isOpen())
     {
         dbExtend->close();
     }

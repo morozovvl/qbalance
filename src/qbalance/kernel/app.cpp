@@ -64,14 +64,14 @@ TApplication::TApplication(int & argc, char** argv)
     }
 }
 
-/*
+
 TApplication::~TApplication()
 {
     delete driverFR;
     delete gui;
     delete db;
 }
-*/
+
 
 Documents* TApplication::getDocuments(int opNumber) {
     QString operName = QString("oper%1").arg(opNumber);

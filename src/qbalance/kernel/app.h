@@ -59,7 +59,7 @@ public:
     QMap<QString, Documents*> documents;                        // Объекты списков документов
 
     TApplication(int& argc, char** argv);
-//    ~TApplication();
+    ~TApplication();
     Q_INVOKABLE virtual Dictionaries* getDictionaries();
     Q_INVOKABLE Documents* getDocuments(int);
     void removeDocuments(int opNumber);

@@ -686,6 +686,7 @@ void Document::setConstDictId(QString dName, QVariant id)
 {
     if (tableModel->rowCount() > 0)
     {
+        int currentRow = form->getGridTable()->currentIndex().row();
         bool submit = getDoSubmit();
         setDoSubmit(true);
         Dictionary* dict;
@@ -762,6 +763,8 @@ void Document::setConstDictId(QString dName, QVariant id)
         db->execCommands();
         setDoSubmit(submit);
         query();
+        form->selectRow(currentRow);
+        form->getGridTable()->setFocus();
         saveOldValues();
     }
 }
