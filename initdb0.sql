@@ -2193,7 +2193,6 @@ COPY "справочники" ("КОД", "ИМЯ", "ФОТО", "ИМЯ_В_СПИ
 50	блокпериоды                                                                                         				\N	\N	t
 13	константы                                                                                           		Константы	Константы	\N	Справочник. Константы	t
 4	справочники                                                                                         		Справочники	Справочники	\N	Служебный справочник. Список справочников	t
-23	счета                                                                                               				\N	Бухгалтерия. План счетов	t
 12	топер                                                                                               		Типовые операции		\N	Бухгалтерия. Типовые операции (проводки)	t
 6	доступ                                                                                              		Доступ	Доступ	\N	Служебный справочник. Доступ	t
 84	доступ_к_справочникам		Справочники	Справочники	\N	Служебный просмотр. Доступ к справочникам	t
@@ -2201,6 +2200,7 @@ COPY "справочники" ("КОД", "ИМЯ", "ФОТО", "ИМЯ_В_СПИ
 85	столбцы				\N	Служебный справочник. Столбцы	t
 91	типыобъектов		Типы объектов	Типы объектов	\N	Служебный справочник. Типы объектов	t
 34	нумераторы                                                                                          		Нумераторы	Нумераторы	\N	Справочник. Нумераторы	t
+23	счета                                                                                               		Счета		\N	Бухгалтерия. План счетов	t
 \.
 
 
@@ -2216,6 +2216,12 @@ SELECT pg_catalog.setval('"справочники_КОД_seq"', 94, true);
 --
 
 COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛБЦАМИ", "ИМЯ", "ЗАГОЛОВОК", "НОМЕР", "ТОЛЬКОЧТЕНИЕ") FROM stdin;
+7403	23	ИМЯ	Наименование	1	f
+7404	23	СЧЕТ	Счет	2	f
+7405	23	ИМЯСПРАВОЧНИКА	Справочник	3	f
+7406	23	АНАЛИТИКА	Аналитика	4	f
+7407	23	КОЛИЧЕСТВО	Количество	5	f
+7408	23	БАЛАНС	Баланс	6	f
 7181	6	МЕНЮ	Меню	4	f
 7182	6	ТИПЫОБЪЕКТОВ__ИМЯ	Тип объекта	2	t
 7183	6	ИМЯ	Наименование	1	f
@@ -2266,7 +2272,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 -- Name: столбцы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"столбцы_КОД_seq"', 7402, true);
+SELECT pg_catalog.setval('"столбцы_КОД_seq"', 7408, true);
 
 
 --
@@ -2323,6 +2329,7 @@ SELECT pg_catalog.setval('"топер_КОД_seq"', 2, true);
 --
 
 COPY "файлы" ("КОД", "ИМЯ", "ТИП", "ЗНАЧЕНИЕ", "КОНТРСУММА") FROM stdin;
+893	счета.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
 \.
 
 
@@ -2330,7 +2337,7 @@ COPY "файлы" ("КОД", "ИМЯ", "ТИП", "ЗНАЧЕНИЕ", "КОНТР
 -- Name: файлы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"файлы_КОД_seq"', 892, true);
+SELECT pg_catalog.setval('"файлы_КОД_seq"', 893, true);
 
 
 --

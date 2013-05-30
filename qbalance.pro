@@ -14,7 +14,7 @@ QT += sql \
 # DESTDIR = bin/debug
 #}
 
-CONFIG += debug
+#CONFIG += debug
 TARGET = ../qbalance
 CONFIG += designer \
     plugin \
@@ -36,9 +36,7 @@ unix {
  isEmpty(PREFIX) {
   PREFIX = /usr
   }
-  BINDIR = $$PREFIX/bino!@#$%^&&*())!@#$%^&*~!@#$!@#$%^%^&*()_+
-gigkkh
-
+  BINDIR = $$PREFIX/bin
   DATAROOT = $$PREFIX/share
   DESKTOPDIR = $$DATAROOT/applications
   PIXMAPSDIR = $$DATAROOT/pixmaps
@@ -46,11 +44,11 @@ gigkkh
  desktop.path = $$DESKTOPDIR
  desktop.files = qbalance.desktop
  icons.path = $$PIXMAPSDIR
- icons.files = qbalance.pngeriu~~~~~~~~~~~~~~~~glgy[jvouyououoyoyoluoypjg'k;yl
-
-!@#$%^&***()ffoogjphpjp$$$$$$@#fufufohjifk  fjfintit rk rkjoitiroorroeoror
-~gyguitj%%%%$$$#@!&^%$#@!~*()kotjg[h.jj;jg;;hk;'y;hlhlhlhlhl[p/ ukflgf iijiiibmggmmmfkfkk
-doforppr!@#$%^&*()firifofohlhlgg;g;j;h;j;j;kj;pkpjhf''''hp;n/hy;j;h;h;;;gllhln,hh;fg;l;h;bl[yl=ull                    igigghgig
-kjyjiiti
+ icons.files = qbalance.png
  INSTALLS += target desktop icons
 }
+
+windows {
+    CONFIG += rtti
+}
+
