@@ -271,69 +271,71 @@ QString Essence::getPhotoFile()
                     file = fullFileName;
                     if (!QDir().exists(file))
                         file = "";              // Локальный файл с фотографией не существует
-                }
-                if (isDictionary)
-                {
-                    if (file.size() == 0)
-                    {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
-                        if (localFile.size() > 0)
-                        {   // Если мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                            if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
-                            {
-                                app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                                QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                                if (picture.size() > 0)
-                                {   // Если удалось получить какую-то фотографию
-                                    saveFile(fullFileName, &picture);
-                                    if (QDir().exists(fullFileName))
-                                        file = fullFileName;
-                                }
-                            }
-                        }
+                    if (isDictionary)
+                    {
                         if (file.size() == 0)
-                        {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
-                            file = pictureUrl;
-                            // Если в скриптах указано, откуда брать фотографию
-                            if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
-                            {
-                                QUrl url(file);
-                                if (url.isValid())
+                        {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
+                            if (localFile.size() > 0)
+                            {   // Если мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                                if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
                                 {
-                                    if (m_networkAccessManager == 0)
-                                    {
-                                        m_networkAccessManager = new QNetworkAccessManager(this);
-                                        connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                                    app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                    QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                                    if (picture.size() > 0)
+                                    {   // Если удалось получить какую-то фотографию
+                                        saveFile(fullFileName, &picture);
+                                        if (QDir().exists(fullFileName))
+                                            file = fullFileName;
                                     }
-                                    urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
-                                    m_request = new QNetworkRequest(url);
-                                    m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
-                                    app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                                 }
-                                else
-                                    file = "";
+                            }
+                            if (file.size() == 0)
+                            {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                                file = pictureUrl;
+                                // Если в скриптах указано, откуда брать фотографию
+                                if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                                {
+                                    QUrl url(file);
+                                    if (url.isValid())
+                                    {
+                                        if (m_networkAccessManager == 0)
+                                        {
+                                            m_networkAccessManager = new QNetworkAccessManager(this);
+                                            connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                                        }
+                                        urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+                                        m_request = new QNetworkRequest(url);
+                                        m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
+                                        app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                    }
+                                    else
+                                        file = "";
+                                }
                             }
                         }
-                    }
-                    else
-                    {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        if (app->isSA())
-                        {
-                            QFile file(fullFileName);
-                            if (file.open(QIODevice::ReadOnly))
+                        else
+                        {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
+                            if (app->isSA())
                             {
-                                QByteArray array = file.readAll();
-                                qulonglong localFileCheckSum = calculateCRC32(&array);
-                                qulonglong removeFileCheckSum = db->getFileCheckSum(localFile, PictureFileType, true);
-                                if (removeFileCheckSum != localFileCheckSum)
+                                QFile file(fullFileName);
+                                if (file.open(QIODevice::ReadOnly))
                                 {
-                                    db->setFile(localFile, PictureFileType, array, localFileCheckSum, true);      // Сохранить картинку в расширенную базу
+                                    QByteArray array = file.readAll();
+                                    qulonglong localFileCheckSum = calculateCRC32(&array);
+                                    qulonglong removeFileCheckSum = db->getFileCheckSum(localFile, PictureFileType, true);
+                                    if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
+                                                                                    // предполагается, что локальный файл свежее того, который в базе
+                                    {
+                                        db->setFile(localFile, PictureFileType, array, localFileCheckSum, true);      // Сохранить картинку в расширенную базу
+                                    }
+                                    file.close();
                                 }
-                                file.close();
                             }
                         }
                     }
                 }
-
+                else
+                    setPhotoEnabled(false);
             }
         }
     }

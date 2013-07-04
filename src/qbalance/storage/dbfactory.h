@@ -54,18 +54,18 @@ struct FileInfo
 
 struct FieldType
 {
-    QString table;
-    QString name;
-    QString column;
-    QString type;
-    int length;
-    int precision;
-    bool readOnly;
-    bool constReadOnly;
-    QString header;
-    bool headerExist;
-    int number;
-    int level;
+    QString table;          // Наименование таблицы
+    QString name;           // Наименование поля таблицы
+    QString column;         // Синтетическое наименование поля таблицы (<имя таблицы>__<имя поля>)
+    QString type;           // Тип поля таблицы
+    int length;             // Длина поля
+    int precision;          // Точность (если numeric)
+    bool readOnly;          // Только для чтения (установлено пользователем)
+    bool constReadOnly;     // Системное поле. Поэтому только для чтения
+    QString header;         // Пользовательский заголовок
+    bool headerExist;       // Используется для внутренних целей поиска заголовка
+    int number;             // Порядковый номер при отображении столбца
+    int level;              // Уровень таблицы. Для базовой таблицы уровень = 0, для связанных таблиц уровень повышается. Используется для внутренних целей
 };
 
 
@@ -126,80 +126,77 @@ class DBFactory : public QObject {
 public:
     DBFactory();
     ~DBFactory();
+
+    virtual bool open();
+    virtual bool open(QString, QString);
+    virtual void close();
+    void initDBFactory();
+    bool createNewDBs(QString, QString, int);
+
+    // Работа с документами
     int addDoc(int, QDate);
     bool removeDoc(int);
     int addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
-    void saveDocAttribute(int, int, QString, QVariant);
     bool removeDocStr(int, int);
-    void clearError();
-    bool createNewDBs(QString, QString, int);
-    QString getHostName() { return hostName; }
-    QString getLogin() { return currentLogin; }
+    void saveDocAttribute(int, int, QString, QVariant);
+    void saveDocumentVariables(int docId, QString xml);
+    QString restoreDocumentVariables(int docId);
+    QSqlQuery getDocumentAddQueriesList(int);
+    QSqlRecord getDocumentAddQuery(int);
+
+    // Работа с файлами
     QByteArray getFile(QString, FileType, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
     qulonglong getFileCheckSum(QString, FileType, bool = false);
     QStringList getFilesList(QString, FileType, bool = false);
     virtual bool isFileExist(QString, FileType, bool = false);
     void setFile(QString, FileType, QByteArray, qulonglong, bool = false);
+
+    // Работа с соединением
     int getPort() { return port; }
-    Q_INVOKABLE QString getDatabaseName() { return dbName; }
+    QString getHostName() { return hostName; }
+    QString getLogin() { return currentLogin; }
+    void setHostName(QString name) { hostName = name; }
+    void setPort(int portNum) { port = portNum; }
+
+    // Работа с базой
+    void setDatabaseName(QString name) { dbName = name; }
+    QString getDatabaseName() { return dbName; }
     QSqlDatabase* getDB() { return db; }
+
     virtual void getColumnsHeaders(QString, QList<FieldType>*);
     QSqlQuery getDictionariesProperties();
     virtual QSqlRecord getDictionariesProperties(QString tableName);
     QSqlQuery getTopersProperties();
     QSqlRecord getTopersProperties(int operNumber);
     QSqlQuery getToper(int operNumber);
-    int getTypeId(QString);
     int getDictionaryId(QString dictName);
-    bool isTableExists(QString);
-    bool createNewDictionary(QString, QString = "", bool = true);
     bool removeDictionary(QString);
     QStringList getFieldsList(QMap<int, FieldType>*);
     QStringList getFieldsList(QString tableName, int = -1);
     bool isSet(QString tableName);
-    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
     void getColumnsProperties(QList<FieldType>*, QString, QString = "", int = 0);
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
     bool insertDictDefault(QString tableName, QMap<QString, QVariant>* values);                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
-    void setHostName(QString name) { hostName = name; }
-    void setPort(int portNum) { port = portNum; }
-    void setDatabaseName(QString name) { dbName = name; }
     void setPeriod(QDate, QDate);
     void getPeriod(QDate&, QDate&);
     void setConstDictId(QString, QVariant, int, int, int);
-    QString prepareSearchParameters();
-    Q_INVOKABLE bool exec(QString, bool = true, QSqlDatabase* = 0);
-    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
     QStringList getUserList();
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
-    QString getIdFieldPrefix() { return getObjectName("код_"); }      // возвращает префикс в именах полей, которые используются как ссылки на другие справочники
 
-    bool isError() { return wasError; }
-    QString getErrorText() { return errorText; }
-
-    QString initializationScriptPath() const;
-    QStringList initializationScriptList(QString = "") const;
+    // Работа с ошибками
+    Q_INVOKABLE bool exec(QString, bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
 
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
-
-    static QString storageEncoding();
-
-    virtual bool open();
-    virtual bool open(QString, QString);
-    void initDBFactory();
-
-    virtual void close();
 
     void beginTransaction()     { exec("BEGIN;"); }
     void commitTransaction()    { exec("COMMIT;"); }
     void rollbackTransaction()  { exec("ROLLBACK;"); }
 
     void loadSystemTables();
-
-    QSqlQuery getDataTypes();
 
     void getToperData(int oper, QList<ToperType>* topersList);
     void getToperDictAliases(int oper, QList<ToperType>* topersList, QList<DictType>* dictsList);
@@ -210,8 +207,6 @@ public:
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
     QString getDictionarySqlSelectStatement(QString, QString = "");       // Генерирует текст SQL-запроса для справочника
     QSqlQuery getAccounts() { return accounts; }
-    void saveDocumentVariables(int docId, QString xml);
-    QString restoreDocumentVariables(int docId);
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
     void setConfig(QString, QString, QString);
@@ -227,6 +222,11 @@ public:
     bool removeColumnHeaders(int);
     void reloadColumnHeaders();
     QSqlQuery* getDictionaries() { return &dictionaries; }
+
+    // Функции для мастера работы со справочниками
+    bool createNewDictionary(QString, QString = "", bool = true);
+    bool isTableExists(QString);
+
 
     // Функции для мастера создания новый (редактирования старых) типовых операций
     bool deleteToper(int operNumber, int operNumber1);          // Удаляет записи о типовой операции в таблице типовых операций
@@ -251,8 +251,6 @@ public:
     QString getToperNumerator(int);                             // Получает значение свойства "нумератор" типовой операции
     bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
     void setToperPermition(int operNumber, QString user, bool menu);
-    QSqlQuery getDocumentAddQueriesList(int);
-    QSqlRecord getDocumentAddQuery(int);
     bool    execCommands();
     void    appendCommand(QString);
     void    appendCommand(UpdateValues);
@@ -285,6 +283,12 @@ private:
     void setError(QString);
     void initObjectNames();
     bool createNewDB(QString, QString, QStringList);
+    static QString storageEncoding();
+    QStringList initializationScriptList(QString = "") const;
+    int getTypeId(QString);
+    void clearError();
+    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
+
 };
 
 #endif

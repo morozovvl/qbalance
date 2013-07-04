@@ -262,7 +262,7 @@ void Documents::prepareSelectCurrentRowCommand()
     QString command = tableModel->selectStatement();
 
     command = command.left(command.indexOf(" WHERE "));
-    command += QString(" WHERE \"%1\".\"%2\"=:value").arg(getTableName()).arg(getIdFieldName());
+    command += QString(" WHERE \"%1\".\"%2\"=:value").arg(getTableName()).arg(idFieldName);
 
     preparedSelectCurrentRow.prepare(command);
 }

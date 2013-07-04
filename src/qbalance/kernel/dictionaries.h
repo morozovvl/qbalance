@@ -40,7 +40,7 @@ public:
     Q_INVOKABLE virtual void removeDictionary(QString);
     QString getDictionaryTitle(QString);
     bool isMember(QString dictName) { return dictionaries.contains(dictName); }
-    void query(QString);
+    virtual void            query(QString filter = "");
     QMap<QString, Dictionary*>* getDictionaries() { return &dictionaries; }
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
@@ -53,6 +53,7 @@ public:
     Document* getDocument() { return document; }
     bool        isSaldoExist() { return lIsSaldoExist; }
     virtual void            setOrderClause();
+    virtual void            prepareSelectCurrentRowCommand() { ; }
 
 protected:
     virtual void setForm();

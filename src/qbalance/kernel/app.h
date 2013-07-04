@@ -32,7 +32,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/dialog.h"
 #include "../driverfr/driverfr.h"
-//#include "../kernel/globalparameters.h"
 
 class Dictionaries;
 class Topers;
@@ -86,9 +85,6 @@ public:
     void setPeriod() { gui->setPeriod(); }                                               // Установим рабочий интервал
     void setBeginDate(QDate date) { beginDate = date; }
     void setEndDate(QDate date) { endDate = date; }
-//    QVariant getGlobalParameter(QString key) { return globalParameters->getValue(key); }
-//    void setGlobalParameter(QString key, QVariant value) { globalParameters->setValue(key, value); }
-//    GlobalParameters* getGlobalParameters() {return globalParameters; }
 
     Q_INVOKABLE Dialog* createForm(QString);           // Открыть форму с заданным именем
     Q_INVOKABLE virtual void setIcons(QWidget*);         // Устанавливает иконки на кнопки указанной формы
@@ -136,7 +132,6 @@ private:
     static bool             DebugMode;
     static QTextStream*     DebugStream;
     static TApplication*    Exemplar;
-//    GlobalParameters*       globalParameters;
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати

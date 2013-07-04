@@ -65,7 +65,6 @@ public:
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
     Q_INVOKABLE virtual void            setId(qulonglong);
-    QString                             getIdFieldName() { return idFieldName; }
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual QVariant        getOldValue(QString field);

@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 Topers::Topers(QObject *parent): Dictionary("доступ_к_топер", parent) {
+    lPrintable = false;
     lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить операцию
     lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства операции
     lDeleteable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно попытаться удалить операцию

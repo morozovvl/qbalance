@@ -453,7 +453,6 @@ void FormGrid::cmdRequery()
     }
     app->showMessageOnStatusBar("");
     setButtons();
-    showPhoto();
 }
 
 

@@ -46,20 +46,24 @@ private:
     bool                addDictionary;
     bool                columnsRecordsExists;
     QList<FieldType>    fields;                // Первоначальный список полей
+    QMap<QString, int>  columnsOrder;           // Порядок вывода столбцов
+    QStringList         oldColumnsList;         // Список старых полей
     QString             table;
     QLineEdit*          tableName;              // Как таблица будет называться в БД
     QLineEdit*          tableMenuName;          // Как справочник будет называться в меню
     QLineEdit*          tableFormName;          // Как справочник будет называться в форме
     QCheckBox*          chbMenu;                // Справочник доступен в меню справочников
     QTableWidget        fieldsTable;            // Список полей таблицы
-    QListWidget         headers;                // Заголовки колонок
-    QTextEdit*         textEditor;
+    QListWidget*        headers;                // Заголовки колонок
+    QTextEdit*          textEditor;
     MySyntaxHighlighter* highlighter;
     virtual void        getData();
     friend QString      showTypesForm();
     static WizardDictionary*    Exemplar;
     virtual void        frameActivated(int);
     virtual void        frameDeactivated(int);
+    void                saveFields();
+    void                saveOrder();
 
 private slots:
     void                addColumn();

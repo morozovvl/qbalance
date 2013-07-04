@@ -48,7 +48,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
     {
-        formTitle = tableProperties.value(db->getObjectName("доступ_к_справочникам.имя_в_списке")).toString().trimmed();
+        formTitle = tableProperties.value(db->getObjectName("доступ_к_справочникам.имя_в_форме")).toString().trimmed();
         if (app->isSA())
         {
             lSelectable = true;
@@ -327,10 +327,6 @@ bool Dictionary::open(int)
 
         initFormEvent();
 
-        // Если путь к фотографиям не найден, то запретим их показ
-        if (getPhotoPath().size() == 0)
-            setPhotoEnabled(false);
-
         return true;
     }
     return false;
@@ -498,7 +494,7 @@ void Dictionary::prepareSelectCurrentRowCommand()
     QString command = tableModel->selectStatement();
 
     command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName())
-                                                                                .arg(db->getObjectName(getTableName() + "." + getIdFieldName())));
+                                                                                .arg(db->getObjectName(getTableName() + "." + idFieldName)));
 
     preparedSelectCurrentRow.prepare(command);
 }

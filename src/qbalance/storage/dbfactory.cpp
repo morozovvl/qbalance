@@ -234,7 +234,7 @@ void DBFactory::loadSystemTables()
     columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
                                   "WHERE ins.table_schema = 'public' " \
-                                  "ORDER BY table_name");
+                                  "ORDER BY table_name;");
 
     config.clear();
     config = execQuery("SELECT name, value FROM configs;");
@@ -629,7 +629,7 @@ int DBFactory::getDictionaryId(QString dictionaryName)
 
 bool DBFactory::isTableExists(QString tName)
 {
-    return execQuery(QString("SELECT * FROM pg_tables WHERE schemaname = 'public' AND tablename = '%1'").arg(tName)).size() > 0 ? true : false;
+    return execQuery(QString("SELECT * FROM pg_tables WHERE schemaname = 'public' AND tablename = '%1';").arg(tName)).size() > 0 ? true : false;
 }
 
 
@@ -657,7 +657,7 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                         .arg(getObjectNameCom("доступ.пользователь"))
                         .arg(getObjectNameCom("доступ.имя"))
                         .arg(menu ? "true" : "false")
-                        .arg(getTypeId(getObjectNameCom("типыобъектов.справочник")))
+                        .arg(getTypeId(getObjectName("типыобъектов.справочник")))
                         .arg(getLogin())
                         .arg(tName);
             if (exec(command))
@@ -701,7 +701,7 @@ bool DBFactory::removeDictionary(QString tName)
             command = QString("DELETE FROM %1 WHERE %2 = %3 AND %4 = '%5' AND %6 = '%7';")
                         .arg(getObjectNameCom("доступ"))
                         .arg(getObjectNameCom("доступ.код_типыобъектов"))
-                        .arg(getTypeId(getObjectNameCom("типыобъектов.справочник")))
+                        .arg(getTypeId(getObjectName("типыобъектов.справочник")))
                         .arg(getObjectNameCom("доступ.пользователь"))
                         .arg(getLogin())
                         .arg(getObjectNameCom("доступ.имя"))
@@ -767,14 +767,16 @@ bool DBFactory::renameTableColumn(QString table, QString oldColumnName, QString 
 bool DBFactory::alterTableColumn(QString table, QString columnName, QString type)
 {
     clearError();
-    return exec(QString("ALTER TABLE %1 ALTER COLUMN %2 TYPE %3;").arg(table).arg(columnName).arg(type));
+    return exec(QString("ALTER TABLE %1 ALTER COLUMN %2 TYPE %3;").arg(getObjectNameCom(table)).arg(getObjectNameCom(table + "." + columnName)).arg(type));
 }
 
 
 bool DBFactory::addTableColumn(QString table, QString columnName, QString type)
 {
     clearError();
-    QString command = QString("ALTER TABLE %1 ADD COLUMN %2 %3;").arg(table).arg(columnName).arg(type);
+    QString command = QString("ALTER TABLE %1 ADD COLUMN %2 %3;").arg(getObjectNameCom(table))
+                                                                 .arg(getObjectNameCom(table + "." + columnName))
+                                                                 .arg(type);
     return exec(command);
 }
 
@@ -782,7 +784,7 @@ bool DBFactory::addTableColumn(QString table, QString columnName, QString type)
 bool DBFactory::dropTableColumn(QString table, QString columnName)
 {
     clearError();
-    return exec(QString("ALTER TABLE %1 DROP COLUMN %2;").arg(table).arg(columnName));
+    return exec(QString("ALTER TABLE %1 DROP COLUMN %2;").arg(getObjectNameCom(table)).arg(getObjectNameCom(table + "." + columnName)));
 }
 
 
@@ -1072,11 +1074,14 @@ bool DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* va
         }
         fieldsList.chop(1);
         valuesList.chop(1);
-        QString command = QString("INSERT INTO \"%1\" (%2) VALUES (%3);").arg(tableName).arg(fieldsList).arg(valuesList);
+        QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(getObjectNameCom(tableName)).arg(fieldsList).arg(valuesList);
         execQuery(command);
     }
     else
-        execQuery("INSERT INTO " + tableName + " DEFAULT VALUES");
+    {
+        QString command = QString("INSERT INTO %1 DEFAULT VALUES;").arg(getObjectNameCom(tableName));
+        execQuery(command);
+    }
     return !wasError;
 }
 
@@ -1093,7 +1098,7 @@ int DBFactory::addDoc(int operNumber, QDate date)
 {
     int result = 0;
     clearError();
-    QString command = QString("SELECT sp_InsertDoc(%1,'%2')").arg(operNumber).arg(date.toString("dd.MM.yyyy"));
+    QString command = QString("SELECT sp_InsertDoc(%1,'%2');").arg(operNumber).arg(date.toString("dd.MM.yyyy"));
     QSqlQuery query = execQuery(command);
     if (query.first())
     {
@@ -1106,7 +1111,7 @@ int DBFactory::addDoc(int operNumber, QDate date)
 bool DBFactory::removeDoc(int docId)
 {
     clearError();
-    return exec(QString("SELECT sp_DeleteDoc(%1)").arg(docId));
+    return exec(QString("SELECT sp_DeleteDoc(%1);").arg(docId));
 }
 
 
@@ -1114,7 +1119,7 @@ int DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, i
 {
     int result = 0;
     clearError();
-    QString command = QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5)").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr);
+    QString command = QString("SELECT sp_InsertDocStr(%1,%2,'%3'::character varying,%4,%5);").arg(operNumber).arg(docId).arg(cParam).arg(nQuan).arg(nDocStr);
     QSqlQuery query = execQuery(command);
     if (query.first())
     {
@@ -1146,7 +1151,7 @@ void DBFactory::saveDocAttribute(int operNumber, int docId, QString attribute, Q
 bool DBFactory::removeDocStr(int docId, int nDocStr)
 {
     clearError();
-    return exec(QString("SELECT sp_DeleteDocStr(%1,%2)").arg(docId).arg(nDocStr));
+    return exec(QString("SELECT sp_DeleteDocStr(%1,%2);").arg(docId).arg(nDocStr));
 }
 
 
@@ -1183,7 +1188,7 @@ void DBFactory::getPeriod(QDate& begDate, QDate& endDate)
 void DBFactory::setConstDictId(QString fieldName, QVariant val, int docId, int oper, int operNum)
 {
     clearError();
-    exec(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND %6 = %7 AND %8 = %9").arg(getObjectNameCom("проводки"))
+    exec(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND %6 = %7 AND %8 = %9;").arg(getObjectNameCom("проводки"))
                                                                                .arg(fieldName)
                                                                                .arg(val.toString())
                                                                                .arg(getObjectNameCom("проводки.доккод"))
@@ -1195,21 +1200,11 @@ void DBFactory::setConstDictId(QString fieldName, QVariant val, int docId, int o
 }
 
 
-QString DBFactory::initializationScriptPath() const
-{
-    QString result = QCoreApplication::applicationDirPath();
-
-//    result.append("/src/qbalance");
-
-    return result;
-}
-
-
 QStringList DBFactory::initializationScriptList(QString ext) const
 {
     QStringList result;
 
-    QDir dir(initializationScriptPath());
+    QDir dir(QCoreApplication::applicationDirPath());
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
     dir.setSorting(QDir::Name | QDir::IgnoreCase);
     dir.setNameFilters(QStringList() << "initdb" + ext + "*.sql");
@@ -1275,12 +1270,12 @@ QByteArray DBFactory::getFile(QString fileName, FileType type, bool extend)
 {
     if (extend && extDbExist)
     {   // Если будем смотреть файлы в расширенной базе данных
-        QString text = QString("SELECT * FROM %1 WHERE %2 = '%3' AND %4 = %5").arg(getObjectNameCom("файлы"))
+        QString text = QString("SELECT * FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
                                                                               .arg(type);
-        QSqlQuery query = execQuery(text, dbExtend);
+        QSqlQuery query = execQuery(text, true, dbExtend);
         query.first();
         if (query.isValid())
         {
@@ -1316,17 +1311,20 @@ qulonglong DBFactory::getFileCheckSum(QString fileName, FileType type, bool exte
 {
     if (extend && extDbExist)
     {
-        QString text = QString("SELECT %6 FROM %1 WHERE %2 = '%3' AND %4 = %5").arg(getObjectNameCom("файлы"))
+        QString text = QString("SELECT %6 FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
                                                                               .arg(type)
                                                                               .arg(getObjectNameCom("файлы.контрсумма"));
-        QSqlQuery query = execQuery(text, dbExtend);
+        QSqlQuery query = execQuery(text, true, dbExtend);
         query.first();
         if (query.isValid())
         {
-            return query.record().value(0).toLongLong();
+            qulonglong result = query.record().value(0).toLongLong();
+            if (result == 0)    // Видимо раньше не была обозначена контрольная сумма
+                result = 1;     // Сделаем ее не равной 0, иначе фотография не будет показана, хотя она в базе есть
+            return result;
         }
         return 0;
     }
@@ -1349,7 +1347,7 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
     QStringList filesList;
     if (extend && extDbExist)
     {
-        QString text = QString("SELECT * FROM %1 WHERE %2 ILIKE '%3' AND %4 = %5").arg(getObjectNameCom("файлы"))
+        QString text = QString("SELECT * FROM %1 WHERE %2 ILIKE '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName + "%")
                                                                               .arg(getObjectNameCom("файлы.тип"))
@@ -1381,12 +1379,12 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
 {
     if (extend && extDbExist)
     {
-        QString text = QString("SELECT count(*) FROM %1 WHERE %2 = '%3' AND %4 = %5").arg(getObjectNameCom("файлы"))
+        QString text = QString("SELECT count(*) FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
                                                                               .arg(type);
-        QSqlQuery query = execQuery(text, dbExtend);
+        QSqlQuery query = execQuery(text, true, dbExtend);
         query.first();
         if (query.isValid())
         {
@@ -1417,7 +1415,7 @@ void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData, qu
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
-        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4 WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1447,19 +1445,6 @@ void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData, qu
 }
 
 
-QSqlQuery DBFactory::getDataTypes()
-{
-    clearError();
-    return execQuery("SELECT t.typname as name, t.typlen as len " \
-                                "FROM pg_type t "\
-                                "LEFT JOIN   pg_catalog.pg_namespace n ON n.oid = t.typnamespace " \
-                                "WHERE (t.typrelid = 0 OR (SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid)) " \
-                                "AND NOT EXISTS(SELECT 1 FROM pg_catalog.pg_type el WHERE el.oid = t.typelem AND el.typarray = t.oid)" \
-                                "AND n.nspname IN ('pg_catalog', 'information_schema')" \
-                                "ORDER BY t.typname;");
-}
-
-
 QString DBFactory::storageEncoding()
 {
     QString result("UTF-8");
@@ -1473,7 +1458,7 @@ QString DBFactory::storageEncoding()
 void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 {
     clearError();
-    QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4").arg(getObjectNameCom("vw_топер")).arg(getObjectNameCom("vw_топер.опер")).arg(oper).arg(getObjectNameCom("vw_топер.номер")));
+    QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4;").arg(getObjectNameCom("vw_топер")).arg(getObjectNameCom("vw_топер.опер")).arg(oper).arg(getObjectNameCom("vw_топер.номер")));
     toper.first();
     // Сначала составим список справочников и проверим на предмет присутствия одного и того же справочника и по дебету и по кредиту
     while (toper.isValid())

@@ -34,7 +34,7 @@ public slots:
     void                        cmdForward();
     void                        cmdBackward();
 protected:
-    QList<QFrame*>              frames;
+    QList<QWidget*>              frames;
     QPushButton*                buttonForward;
     QPushButton*                buttonBackward;
     void                        addFrame(QVBoxLayout*, QString = "");
@@ -46,7 +46,7 @@ private:
     bool                        result;
     int                         frameIndex;
     int                         oldFrameIndex;
-    QWidget*                    currentFrame;
+    QWidget*                     currentFrame;
     void                        setButtonsEnabled();
     void                        setFrame();
     virtual void                getData() { ; }

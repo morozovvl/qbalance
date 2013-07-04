@@ -48,7 +48,6 @@ TApplication::TApplication(int & argc, char** argv)
 
     db  = new DBFactory();
     gui = new GUIFactory(db);
-//    globalParameters = new GlobalParameters(this);
     dictionaryList = 0;
     topersList = 0;
     driverFR = new DriverFR(this);
@@ -267,10 +266,6 @@ Dialog* TApplication::createForm(QString fileName)
 QString TApplication::encoding()
 {
     QString result("UTF-8");
-//#ifdef Q_OS_WIN32
-//    if (QSysInfo::windowsVersion() != QSysInfo::WV_WINDOWS7)
-//        result = "Windows-1251";
-//#endif
     return result;
 }
 

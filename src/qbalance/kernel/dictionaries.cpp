@@ -27,7 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/tableview.h"
 
 
-Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_справочникам", parent) {
+Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_справочникам", parent)
+{
     lInsertable = app->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
     lViewable = app->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
     lDeleteable = app->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
@@ -38,10 +39,12 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
 }
 
 
-Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add) {
+Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add)
+{
     if (dictName.size() == 0)
         return 0;
-    if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    if (!dictionaries.contains(dictName))
+    {             // Если справочник с таким именем не существует, то попробуем его создать
         if (add)
         {
             if (!addDictionary(dictName, deep))
@@ -54,11 +57,13 @@ Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add) {
 }
 
 
-Saldo* Dictionaries::getSaldo(QString acc) {
+Saldo* Dictionaries::getSaldo(QString acc)
+{
     if (acc.size() == 0)
         return 0;
     QString alias = "saldo" + acc;
-    if (!dictionaries.contains(alias)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    if (!dictionaries.contains(alias))
+    {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc))
             return 0;
     }
@@ -67,10 +72,12 @@ Saldo* Dictionaries::getSaldo(QString acc) {
 }
 
 
-bool Dictionaries::addDictionary(QString dictName, int deep) {
+bool Dictionaries::addDictionary(QString dictName, int deep)
+{
     if (dictName.size() == 0)
         return false;
-    if (!dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    if (!dictionaries.contains(dictName))
+    {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict;
         dict = new Dictionary(dictName, this);
         dict->setDictionaries(this);
@@ -102,11 +109,13 @@ bool Dictionaries::addDictionary(QString dictName, int deep) {
     return false;
 }
 
-bool Dictionaries::addSaldo(QString acc) {
+bool Dictionaries::addSaldo(QString acc)
+{
     if (acc.size() == 0)
         return false;
     QString alias = "saldo" + acc;
-    if (!dictionaries.contains(alias)) {
+    if (!dictionaries.contains(alias))
+    {
         // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
         Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
         accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));
@@ -127,10 +136,12 @@ bool Dictionaries::addSaldo(QString acc) {
 }
 
 
-void Dictionaries::removeDictionary(QString dictName) {
+void Dictionaries::removeDictionary(QString dictName)
+{
     if (dictName.size() == 0)
         return;
-    if (dictionaries.contains(dictName)) {             // Если справочник с таким именем не существует, то попробуем его создать
+    if (dictionaries.contains(dictName))
+    {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict = getDictionary(dictName);
         dict->close();
         dictionaries.remove(dictName);
@@ -153,6 +164,7 @@ bool Dictionaries::add()
     wizard->close();
     if (wizard->getResult())
     {   // Если удалось создать справочник, то обновим список справочников
+        query();
         result = true;
     }
     delete wizard;
@@ -177,10 +189,11 @@ void Dictionaries::view()
 
 bool Dictionaries::remove()
 {
-    if (Dictionary::remove())
+    if (Essence::remove())
     {
         if (db->removeDictionary(getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed()))
         {   // если удалось удалить справочник, то обновим список справочников
+            query();
             return true;
         }
     }
@@ -188,15 +201,18 @@ bool Dictionaries::remove()
 }
 
 
-bool Dictionaries::open() {
-    if (Dictionary::open()) {
+bool Dictionaries::open()
+{
+    if (Dictionary::open())
+    {
         return true;
     }
     return false;
 }
 
 
-void Dictionaries::close() {
+void Dictionaries::close()
+{
     foreach(Dictionary* dict, dictionaries)
     {
         dict->close();
@@ -206,7 +222,8 @@ void Dictionaries::close() {
 }
 
 
-void Dictionaries::query(QString) {
+void Dictionaries::query(QString)
+{
     Dictionary::query(QString("%1=true").arg(db->getObjectNameCom("доступ_к_справочникам.меню")));
 }
 

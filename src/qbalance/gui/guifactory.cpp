@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtCore/QIODevice>
 #include <QtCore/QDir>
+#include <QtGui/QAbstractButton>
 #include "guifactory.h"
 #include "connectionform.h"
 #include "mainwindow.h"
@@ -157,6 +158,10 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
         msgBox.setInformativeText(question);
         msgBox.setStandardButtons(buttons);
         msgBox.setDefaultButton(defButton);
+        QAbstractButton* buttonYes = msgBox.button(QMessageBox::Yes);
+        buttonYes->setIcon(QIcon(":buttonOk"));
+        QAbstractButton* buttonNo = msgBox.button(QMessageBox::No);
+        buttonNo->setIcon(QIcon(":buttonCancel"));
      }
     else {                              // Вопрос не задан, значит выведем только кнопку "Ok"
         msgBox.setIcon(QMessageBox::Information);

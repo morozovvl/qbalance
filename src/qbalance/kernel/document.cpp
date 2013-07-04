@@ -796,10 +796,6 @@ bool Document::open()
         evaluateEngine();
         initFormEvent();
 
-        // Если путь к фотографиям не найден, то запретим их показ
-        if (getPhotoPath().size() == 0)
-            setPhotoEnabled(false);
-
         return true;
     }
     return false;
@@ -1044,9 +1040,10 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
         Dictionary* dict = getDictionaries()->value(dictName);
         if (dict->isConst())
         {   // Нам нужны только постоянные справочники
+            QString idFieldName = db->getObjectName("код") + "_";
             foreach(QString field, dict->getFieldsList())
             {
-                if (field.left(4) != db->getIdFieldPrefix())       // Если поле не является ссылкой на другой справочник
+                if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
                 {
                     reportEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
                 }
