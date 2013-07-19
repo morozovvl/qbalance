@@ -378,7 +378,7 @@ void FormGrid::activateWidget()
 
 void FormGrid::cmdAdd()
 {
-    if (buttonAdd->isVisible() && buttonAdd->isEnabled())
+    if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
         if (parent != 0 && parent->add())
         {
@@ -401,7 +401,7 @@ void FormGrid::cmdAdd()
 
 void FormGrid::cmdDelete()
 {
-    if (buttonDelete->isVisible() && buttonDelete->isEnabled())
+    if (buttonDelete != 0 && buttonDelete->isVisible() && buttonDelete->isEnabled())
     {
         QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
         if (parent != 0 && parent->remove())
@@ -433,7 +433,7 @@ void FormGrid::cmdDelete()
 
 void FormGrid::cmdView()
 {
-    if (buttonView->isVisible() && buttonView->isEnabled())
+    if (buttonView != 0 && buttonView->isVisible() && buttonView->isEnabled())
     {
         picture->hide();
         if (parent != 0)
@@ -458,7 +458,7 @@ void FormGrid::cmdRequery()
 
 void FormGrid::cmdPrint()
 {
-    if (buttonPrint->isVisible() && buttonPrint->isEnabled())
+    if (buttonPrint != 0 && buttonPrint->isVisible() && buttonPrint->isEnabled())
     {
         QDir dir = QDir(app->getReportsPath());
         QString ext = "." + app->getReportTemplateExt();
@@ -498,7 +498,7 @@ void FormGrid::cmdPrint()
         if (cmdButtonLayout != 0)
         {
             QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));
-            if (action > 0)
+            if (action != 0)
             {
                 if (action == newReportAct)
                 {
@@ -528,7 +528,7 @@ void FormGrid::cmdPrint()
 
 void FormGrid::cmdLoad()
 {
-    if (buttonLoad->isVisible() && buttonLoad->isEnabled())
+    if (buttonLoad != 0 && buttonLoad->isVisible() && buttonLoad->isEnabled())
     {
         parent->getScriptEngine()->eventImport(this);
     }
@@ -537,7 +537,7 @@ void FormGrid::cmdLoad()
 
 void FormGrid::cmdSave()
 {
-    if (buttonSave->isVisible() && buttonSave->isEnabled())
+    if (buttonSave != 0 && buttonSave->isVisible() && buttonSave->isEnabled())
     {
         parent->getScriptEngine()->eventExport(this);
     }

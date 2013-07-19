@@ -323,7 +323,7 @@ bool WizardOperation::setData()
         db->removeColumnHeaders(tableId);
         for (int i = 0; i < fields.count(); i++)
         {
-            if (!db->appendColumnHeader(tableId, fields.value(i).name, fields.value(i).header, fields.value(i).number, fields.value(i).readOnly))
+            if (!db->appendColumnHeader(tableId, tableId, fields.value(i).name, fields.value(i).header, fields.value(i).number, fields.value(i).readOnly))
             {
                 db->rollbackTransaction();
                 return false;
@@ -338,7 +338,7 @@ bool WizardOperation::setData()
             db->removeColumnHeaders(tableId);
             for (int i = 0; i < docListFields.count(); i++)
             {
-               if (!db->appendColumnHeader(tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
+               if (!db->appendColumnHeader(tableId, tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
                {
                    db->rollbackTransaction();
                    return false;

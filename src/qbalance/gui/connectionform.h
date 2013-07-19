@@ -43,8 +43,8 @@ protected:
     void readSettings(QString);
     void writeSettings();
 private slots:
-    void cmdSave();
-    void cmdDelete();
+    void buttonSave();
+    void buttonDelete();
     void cmdOk();
     void cmdCancel();
     void connectionChanged(int);

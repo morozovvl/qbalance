@@ -253,15 +253,20 @@ void DBFactory::loadSystemTables()
     dictionaries.clear();
     dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
+    reloadColumnHeaders();
+}
+
+
+void DBFactory::reloadColumnHeaders()
+{
     columnsHeaders.clear();
-    columnsHeaders = execQuery(QString("SELECT lower(%1) AS %1, upper(%2) AS %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("vw_столбцы.справочник"))
+    columnsHeaders = execQuery(QString("SELECT lower(%1) AS %1, lower(%2) AS %2, upper(%3) AS %3, %4, %5, %6 FROM %7;").arg(getObjectNameCom("vw_столбцы.базсправочник"))
+                                                                        .arg(getObjectNameCom("vw_столбцы.справочник"))
                                                                         .arg(getObjectNameCom("vw_столбцы.столбец"))
                                                                         .arg(getObjectNameCom("vw_столбцы.заголовок"))
                                                                         .arg(getObjectNameCom("vw_столбцы.номер"))
                                                                         .arg(getObjectNameCom("vw_столбцы.толькочтение"))
                                                                         .arg(getObjectNameCom("vw_столбцы")));
-
-
 }
 
 
@@ -985,19 +990,22 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
     int counter = 0;
     for (columnsHeaders.first(); columnsHeaders.isValid(); columnsHeaders.next())
     {
-        if (columnsHeaders.record().value(getObjectName("vw_столбцы.справочник")).toString().trimmed().toLower() == tableName.toLower())
+        if (columnsHeaders.record().value(getObjectName("vw_столбцы.базсправочник")).toString().trimmed().toLower() == tableName.toLower())
         {
             int number = columnsHeaders.record().value(getObjectName("vw_столбцы.номер")).toInt();
             if (number > 0)
             {
+                QString table = columnsHeaders.record().value(getObjectName("vw_столбцы.справочник")).toString().trimmed().toLower();
                 QString column1 = columnsHeaders.record().value(getObjectName("vw_столбцы.столбец")).toString().toUpper();
+
                 for (int i = 0; i < fields->count(); i++)
                 {
-                    if (column1 == fields->at(i).column.toUpper())
+                    if ((table == fields->at(i).table.toLower()) && (column1 == fields->at(i).name.toUpper()))
                     {
                         // Заголовок для столбца найден
                         counter++;
                         FieldType field = fields->at(i);
+                        field.table = table;
                         field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
                         field.number = number;
                         field.headerExist = true;   // Для столбца найден заголовок
@@ -1035,22 +1043,24 @@ bool DBFactory::removeColumnHeaders(int tableId)
 }
 
 
-bool DBFactory::appendColumnHeader(int tableId, QString column, QString header, int number, bool readOnly)
+bool DBFactory::appendColumnHeader(int mainTableId, int tableId, QString column, QString header, int number, bool readOnly)
 {
     clearError();
     QString command;
-    command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (%7, '%8', '%9', %10, %11);")
+    command = QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7) VALUES (%8, '%9', '%10', %11, %12, %13);")
             .arg(getObjectNameCom("столбцы"))
             .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
             .arg(getObjectNameCom("столбцы.имя"))
             .arg(getObjectNameCom("столбцы.заголовок"))
             .arg(getObjectNameCom("столбцы.номер"))
             .arg(getObjectNameCom("столбцы.толькочтение"))
-            .arg(tableId)
+            .arg(getObjectNameCom("столбцы.кодтаблицы"))
+            .arg(mainTableId)
             .arg(column)
             .arg(header)
             .arg(number)
-            .arg(readOnly ? "true" : "false");
+            .arg(readOnly ? "true" : "false")
+            .arg(tableId);
     return exec(command);
 }
 

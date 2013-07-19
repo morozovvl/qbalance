@@ -235,7 +235,7 @@ void FormDocument::cmdOk()
 void FormDocument::cmdQueryAdd()
 {
     QAction* action = queriesMenu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-queriesMenu->height())));
-    if (action > 0)
+    if (action != 0)
     {
         if (getParent()->addFromQuery(action->data().toInt()) > 0)
             buttonDelete->setDisabled(false);

@@ -74,12 +74,14 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
         {
             QPushButton* buttonDelete = new QPushButton();
             buttonDelete->setObjectName("buttonDelete");
-            connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
-            QPushButton* cmdSave = new QPushButton();
-            cmdSave->setObjectName("buttonSave");
-            cmdSave->setToolTip(trUtf8("Сохранить настройки подключения"));
-            connect(cmdSave, SIGNAL(clicked()), this, SLOT(cmdSave()));
-            cmdButtonLayout->insertWidget(0, cmdSave);
+            buttonDelete->setToolTip(trUtf8("Удалить настройки подключения"));
+            connect(buttonDelete, SIGNAL(clicked()), this, SLOT(buttonDelete()));
+            QPushButton* buttonSave = new QPushButton();
+            buttonSave->setObjectName("buttonSave");
+            buttonSave->setToolTip(trUtf8("Сохранить настройки подключения"));
+            connect(buttonSave, SIGNAL(clicked()), this, SLOT(buttonSave()));
+            cmdButtonLayout->insertWidget(0, buttonDelete);
+            cmdButtonLayout->insertWidget(0, buttonSave);
         }
     }
     buttonOk->setToolTip(trUtf8("Подключиться к серверу"));
@@ -109,7 +111,7 @@ int ConnectionForm::exec(DBFactory* d)
 }
 
 
-void ConnectionForm::cmdSave()
+void ConnectionForm::buttonSave()
 {
     if (pcmbConnection->currentText().trimmed().size() > 0)
     {
@@ -121,7 +123,7 @@ void ConnectionForm::cmdSave()
 }
 
 
-void ConnectionForm::cmdDelete()
+void ConnectionForm::buttonDelete()
 {
     deleteSettings(pcmbConnection->currentText());
 }

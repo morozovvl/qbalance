@@ -208,7 +208,7 @@ void WizardDictionary::getData()
         field.number = 1;
         field.readOnly = true;
         fields.append(field);
-        oldColumnsList.append(field.name);
+        oldColumnsList.append(field.table + "__" + field.name);
 
         field.table = table;
         field.name = "ИМЯ";
@@ -220,7 +220,7 @@ void WizardDictionary::getData()
         field.number = 2;
         field.readOnly = false;
         fields.append(field);
-        oldColumnsList.append(field.name);
+        oldColumnsList.append(field.table + "__" + field.name);
     }
     else
     {   // Получим список полей таблицы
@@ -230,7 +230,7 @@ void WizardDictionary::getData()
 
         for (int i = 0; i < fields.count(); i++)
         {
-            oldColumnsList.append(fields.at(i).column);
+            oldColumnsList.append(fields.at(i).table + "__" + fields.at(i).name);
         }
 
         QSqlRecord dictProperties = db->getDictionariesProperties(table);
@@ -245,7 +245,7 @@ void WizardDictionary::getData()
     }
     // Запишем порядок вывода столбцов
     for (int i = 0; i < fields.count(); i++)
-        columnsOrder.insert(fields.at(i).column, fields.at(i).number);
+        columnsOrder.insert(fields.at(i).table + "__" + fields.at(i).name, fields.at(i).number);
 
     fieldsTable.setRowCount(fields.count());
     fieldsTable.setColumnCount(7);
@@ -376,14 +376,14 @@ bool WizardDictionary::setData()
             type = QString("%1%2").arg(type).arg(length);
 
             // Если мы работаем со старыми полями, т.е. теми, которые уже были в таблице
-            if (oldColumnsList.contains(fields.at(i).column))
+            if (oldColumnsList.contains(fields.at(i).table + "__" + fields.at(i).column))
             {   // Если мы просматриваем поля таблицы, которые уже были
                 if (QString::compare(fieldName, fields.value(i).name) != 0)
                 {   // Если пользователь изменил наименование поля
                     if (!db->renameTableColumn(tableName->text(), fields.value(i).name, fieldName))
                     {
-                            db->rollbackTransaction();
-                            return false;
+                        db->rollbackTransaction();
+                        return false;
                     }
                 }
                 if (QString::compare(sType, fields.value(i).type, Qt::CaseInsensitive) != 0 ||
@@ -392,13 +392,13 @@ bool WizardDictionary::setData()
                 {   // Если изменились тип, длина или точность
                     if (!db->alterTableColumn(tableName->text(), fieldName, type))
                     {
-                            db->rollbackTransaction();
-                            return false;
+                        db->rollbackTransaction();
+                        return false;
                     }
                 }
                 if (fields.value(i).number > 0)
                 {
-                    if (!db->appendColumnHeader(mainTableId, fields.value(i).column, sHeader, fields.value(i).number, fields.value(i).readOnly))
+                    if (!db->appendColumnHeader(mainTableId, db->getDictionaryId(fields.value(i).table), fields.value(i).column, sHeader, fields.value(i).number, fields.value(i).readOnly))
                     {
                         db->rollbackTransaction();
                         return false;
@@ -407,17 +407,20 @@ bool WizardDictionary::setData()
             }
             else
             {   // Если мы добавляем новые поля
-                if (!db->addTableColumn(tableName->text(), fieldName, type))
+                if (fields.at(i).table == tableName->text())
                 {
+                    if (!db->addTableColumn(tableName->text(), fieldName, type))
+                    {
                         db->rollbackTransaction();
                         return false;
+                    }
                 }
                 if (sHeader.size() > 0)
                 {
-                    if (!db->appendColumnHeader(mainTableId, fieldName, sHeader, fields.value(i).number + 1, fields.value(i).readOnly))
+                    if (!db->appendColumnHeader(mainTableId, mainTableId, fieldName, sHeader, fields.value(i).number + 1, fields.value(i).readOnly))
                     {
-                            db->rollbackTransaction();
-                            return false;
+                        db->rollbackTransaction();
+                        return false;
                     }
                 }
             }
@@ -428,7 +431,7 @@ bool WizardDictionary::setData()
     db->commitTransaction();
 
     // Перезагрузим список столбцов
-    db->loadSystemTables();
+    db->reloadColumnHeaders();
 
     return true;
 }
@@ -496,7 +499,7 @@ void WizardDictionary::frameActivated(int frameNumber)
             {
                 if (fieldsTable.item(j, visibleField)->text() == "true")
                 {
-                    QString columnName = fieldsTable.item(j, columnField)->text().toUpper();
+                    QString columnName = fieldsTable.item(j, tableField)->text() + "__" + fieldsTable.item(j, columnField)->text().toUpper();
                     int number;
                     if (j + 1 > fields.count())
                     {           // Для новых полей
@@ -556,7 +559,7 @@ void WizardDictionary::saveFields()
         field.length = fieldsTable.item(i, lengthField)->text().toInt();
         field.precision = fieldsTable.item(i, precisionField)->text().toInt();
         field.header = fieldsTable.item(i, headerField)->text();
-        field.number = columnsOrder.value(field.column);
+        field.number = columnsOrder.value(field.table + "__" + field.name);
         field.readOnly = true;
         fields.append(field);
     }
@@ -576,8 +579,8 @@ void WizardDictionary::saveOrder()
         for (int j = 0; j < fields.count(); j++)
         {
             FieldType field = fields.at(j);
-            if (columnsOrder.contains(field.column))
-                field.number = columnsOrder.value(field.column);
+            if (columnsOrder.contains(field.table + "__" + field.name))
+                field.number = columnsOrder.value(field.table + "__" + field.name);
             else
                 field.number = 0;
             fields.removeAt(j);

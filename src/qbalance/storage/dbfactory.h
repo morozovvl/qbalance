@@ -218,7 +218,7 @@ public:
     bool dropTableColumn(QString, QString);
     bool renameTableColumn(QString, QString, QString);
     bool alterTableColumn(QString, QString, QString);
-    bool appendColumnHeader(int, QString, QString, int, bool);
+    bool appendColumnHeader(int, int, QString, QString, int, bool);
     bool removeColumnHeaders(int);
     void reloadColumnHeaders();
     QSqlQuery* getDictionaries() { return &dictionaries; }
