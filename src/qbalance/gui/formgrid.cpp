@@ -128,7 +128,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         picture->hide();
         if (grdTable != 0)
         {
-            connect(grdTable, SIGNAL(rowChanged()), this, SLOT(showPhoto()));
             connect(parent, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
         }
     }

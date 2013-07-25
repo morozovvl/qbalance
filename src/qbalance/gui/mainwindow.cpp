@@ -45,6 +45,7 @@ void MainWindow::open() {
     statusBar()->showMessage("");
 }
 
+
 void MainWindow::closeEvent() {
     writeSettings();
     close();
@@ -225,6 +226,7 @@ void MainWindow::removeMdiWindow(MyMdiSubWindow* subWindow)
         workSpace->setActiveSubWindow(subWindow);
         subWindow->setWidget(0);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет
         workSpace->removeSubWindow(subWindow);
+        delete subWindow;
     }
 
 }

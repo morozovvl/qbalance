@@ -59,9 +59,6 @@ public:
     void                        showAllGridSections();
 
 
-signals:
-    void                        rowChanged();
-
 protected:
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void                currentChanged(const QModelIndex &, const QModelIndex &);

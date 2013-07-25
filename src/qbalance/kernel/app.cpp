@@ -245,7 +245,7 @@ Dialog* TApplication::createForm(QString fileName)
         QFile file(path + fName);
         if (file.open(QIODevice::ReadOnly))
         {
-            QUiLoader loader;
+            QUiLoader loader(this);
             loader.addPluginPath("./plugins/");
             loader.setWorkingDirectory(path);
             formWidget = (Dialog*)loader.load(&file);
@@ -257,6 +257,7 @@ Dialog* TApplication::createForm(QString fileName)
             }
             formWidget->setApp(this);
             formWidget->findCmdOk();
+            formWidget->setAttribute(Qt::WA_DeleteOnClose);
         }
     }
     return formWidget;

@@ -436,6 +436,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
             fld.type      = record.value("type").toString().trimmed();
             fld.length    = record.value("length").toInt();
             fld.precision = record.value("precision").toInt();
+            fld.constReadOnly = false;
             if (fld.name == getObjectName("код"))
                 fld.readOnly = true;
             else

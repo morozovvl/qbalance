@@ -174,7 +174,7 @@ public:
     QStringList getFieldsList(QMap<int, FieldType>*);
     QStringList getFieldsList(QString tableName, int = -1);
     bool isSet(QString tableName);
-    void getColumnsProperties(QList<FieldType>*, QString, QString = "", int = 0);
+    void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
     bool insertDictDefault(QString tableName, QMap<QString, QVariant>* values);                 // Вставляет в справочник новую строку

@@ -306,6 +306,7 @@ QString Essence::getPhotoFile()
                                         urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
                                         m_request = new QNetworkRequest(url);
                                         m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
+                                        delete m_request;
                                         app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                                     }
                                     else
@@ -361,7 +362,7 @@ void Essence::replyFinished(QNetworkReply* reply)
             QByteArray array = reply->readAll();
             saveFile(file + "/" + idValue + ".jpg", &array);
             urls.remove(url);
-            app->showMessageOnStatusBar(tr("Загружена фотография с кодом ") + QString("%1").arg(idValue), 3000);
+            app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
             // Проверим, не нужно ли обновить фотографию
             if (idValue == getValue(photoIdField).toString().trimmed())
@@ -371,8 +372,13 @@ void Essence::replyFinished(QNetworkReply* reply)
     else
     {
         urls.remove(url);
-        app->showMessageOnStatusBar(tr("Не удалось загрузить фотографию с кодом ") + QString("%1").arg(idValue), 3000);
+        app->showMessageOnStatusBar(QString(tr("Не удалось загрузить фотографию с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
     }
+    if (urls.size() == 0)
+    {
+        app->showMessageOnStatusBar(tr("Список заданий на загрузку фотографий пуст"));
+    }
+    reply->deleteLater();
 }
 
 

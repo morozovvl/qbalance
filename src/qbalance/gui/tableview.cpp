@@ -49,6 +49,7 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
 
 TableView::~TableView()
 {
+//    columns.clear();
     QItemSelectionModel *oldModel = selectionModel();
     delete oldModel;
 }
@@ -68,7 +69,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     if (parent != 0)
     {
         if ((current.row() != previous.row()) && tableModel->rowCount() > 0)
-            emit rowChanged();
+            parent->showPhoto();
     }
 }
 

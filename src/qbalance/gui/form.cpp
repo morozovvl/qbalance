@@ -87,6 +87,8 @@ void Form::close()
    if (buttonCancel != 0)
        buttonCancel->disconnect();
     writeSettings();
+    if (subWindow != 0)
+        app->getMainWindow()->removeMdiWindow(subWindow);
 }
 
 
