@@ -52,6 +52,7 @@ public:
     void setProgramNameFieldName(QString s) { programNameFieldName = s; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
     QString getFilter();
+    virtual void keyPressEvent(QKeyEvent*);
 
 signals:
     void requery();

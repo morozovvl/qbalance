@@ -82,11 +82,11 @@ public:
     virtual void        restoreOldValues();
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual FormDocument* getForm() { return (FormDocument*)Essence::getForm(); }
+    Q_INVOKABLE virtual void setForm(QString = "");
 
 
 
 protected:
-    virtual void        setForm();
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     virtual void        updateCurrentRow(int = 0);

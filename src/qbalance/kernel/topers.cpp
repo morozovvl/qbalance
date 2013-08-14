@@ -62,7 +62,7 @@ bool Topers::add()
     bool result = false;
     WizardOperation* wizard = new WizardOperation();
     wizard->open(TApplication::exemplar()->getMainWindow());
-    wizard->getForm()->setWindowTitle(QObject::trUtf8("Новая операция"));
+    wizard->getFormWidget()->setWindowTitle(QObject::trUtf8("Новая операция"));
     wizard->exec();
     wizard->close();
     if (wizard->getResult())
@@ -79,7 +79,7 @@ void Topers::view()
     int operNumber = getValue("опер").toInt();
     WizardOperation* wizard = new WizardOperation();
     wizard->open(TApplication::exemplar()->getMainWindow(), operNumber);
-    wizard->getForm()->setWindowTitle(QObject::trUtf8("Свойства операции"));
+    wizard->getFormWidget()->setWindowTitle(QObject::trUtf8("Свойства операции"));
     wizard->exec();
     wizard->close();
     if (wizard->getResult())

@@ -199,7 +199,7 @@ MyMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
         MyMdiSubWindow* subWindow = new MyMdiSubWindow(workSpace);
         subWindow->hide();
         subWindow->setWidget(dialogWidget);
-        return (MyMdiSubWindow*)workSpace->addSubWindow(subWindow);
+        return (MyMdiSubWindow*)workSpace->addSubWindow(subWindow, Qt::Window);
     }
     return 0;
 }

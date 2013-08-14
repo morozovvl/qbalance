@@ -55,7 +55,7 @@ QString showAccounts()
     FormGrid* accForm = TApplication::exemplar()->getDictionaries()->getDictionary(TApplication::exemplar()->getDBFactory()->getObjectName("счета"))->getForm();
     accForm->getParent()->query();
     accForm->exec();
-    if (accForm->selected())
+    if (accForm->isFormSelected())
     {
         return accForm->getParent()->getValue(TApplication::exemplar()->getDBFactory()->getObjectName("счета.счет")).toString();
     }
@@ -68,7 +68,7 @@ QString showNumerators()
     FormGrid* numeratorForm = TApplication::exemplar()->getDictionaries()->getDictionary(TApplication::exemplar()->getDBFactory()->getObjectName("нумераторы"))->getForm();
     numeratorForm->getParent()->query();
     numeratorForm->exec();
-    if (numeratorForm->selected())
+    if (numeratorForm->isFormSelected())
     {
         return numeratorForm->getParent()->getValue(TApplication::exemplar()->getDBFactory()->getObjectName("нумераторы.имя")).toString();
     }
@@ -414,36 +414,36 @@ void WizardOperation::getData()
          item = new QTableWidgetItem(prvs.record().value(db->getObjectName("топер.атрибуты")).toString());
          prvTable->setItem(i, attrField, item);
      }
-     MyButtonLineEditItemDelegate* dbEditDelegate = new MyButtonLineEditItemDelegate(getForm());
+     MyButtonLineEditItemDelegate* dbEditDelegate = new MyButtonLineEditItemDelegate(getFormWidget());
      dbEditDelegate->setFormOnPushButton(&showAccounts);
      prvTable->setItemDelegateForColumn(debetField, dbEditDelegate);
 
-     MyBooleanItemDelegate* boolDelegate = new MyBooleanItemDelegate(getForm());
+     MyBooleanItemDelegate* boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(dbConstField, boolDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(dbSalVisField, boolDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(dbVisible, boolDelegate);
 
-     MyButtonLineEditItemDelegate* crEditDelegate = new MyButtonLineEditItemDelegate(getForm());
+     MyButtonLineEditItemDelegate* crEditDelegate = new MyButtonLineEditItemDelegate(getFormWidget());
      crEditDelegate->setFormOnPushButton(&showAccounts);
      prvTable->setItemDelegateForColumn(creditField, crEditDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(crConstField, boolDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(crVisible, boolDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(crSalVisField, boolDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(freeField, boolDelegate);
 
-     boolDelegate = new MyBooleanItemDelegate(getForm());
+     boolDelegate = new MyBooleanItemDelegate(getFormWidget());
      prvTable->setItemDelegateForColumn(attrField, boolDelegate);
 
      // Получим список проводок и полей и заголовков формы документа
@@ -706,9 +706,9 @@ void WizardOperation::getFieldsTable(QList<FieldType>* flds,  QTableWidget* fiel
     }
 
     MyBooleanItemDelegate* booleanDelegate;
-    booleanDelegate = new MyBooleanItemDelegate(getForm());
+    booleanDelegate = new MyBooleanItemDelegate(getFormWidget());
     fieldsTable->setItemDelegateForColumn(visibleField, booleanDelegate);
-    booleanDelegate = new MyBooleanItemDelegate(getForm());
+    booleanDelegate = new MyBooleanItemDelegate(getFormWidget());
     fieldsTable->setItemDelegateForColumn(editableField, booleanDelegate);
 }
 

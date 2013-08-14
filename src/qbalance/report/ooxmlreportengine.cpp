@@ -87,15 +87,15 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
                 QProcess* ooProcess = new QProcess();
                 ooProcess->start("soffice", QStringList() << "--invisible" << "--quickstart" << fileName);
                 if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))    // Подождем 1 секунду и если процесс не запустился
-                    app->showError(QObject::tr("Не удалось запустить") + " Open Office");                  // выдадим сообщение об ошибке
+                    app->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                  // выдадим сообщение об ошибке
                 else
                     return true;
             }
             else
-                app->showError(QObject::tr("Не удалось запустить программу") + " zip");
+                app->showError(QObject::trUtf8("Не удалось запустить программу") + " zip");
         }
         else
-            app->showError(QObject::tr("Не удалось запустить программу") + " unzip");
+            app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
     }
     return false;
 }
@@ -237,7 +237,7 @@ void OOXMLReportEngine::writeVariables() {
                                 else
                                 {
                                     if (strNum == 1)
-                                        app->showError(QString(QObject::tr("Неизвестное выражение %1")).arg(dvar));
+                                        app->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(dvar));
                                     error = true;
                                     break;
                                 }
@@ -328,7 +328,7 @@ void OOXMLReportEngine::writeVariables() {
                         }
                         else
                         {
-                            app->showError(QString(QObject::tr("Неизвестное выражение %1")).arg(dvar));
+                            app->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(dvar));
                             error = true;
                             break;
                         }

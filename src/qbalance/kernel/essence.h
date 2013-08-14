@@ -47,7 +47,6 @@ class TApplication;
 
 class Essence : public Table {
     Q_OBJECT
-    Q_PROPERTY(bool         isFormSelected  READ isFormSelected)
 
 public:
     Essence(QString name = "", QObject *parent = 0);
@@ -109,6 +108,7 @@ public:
     Q_INVOKABLE void hideGridSection(QString columnName)  { form->getGridTable()->hideGridSection(columnName); }
     Q_INVOKABLE void showGridSection(QString columnName) { form->getGridTable()->showGridSection(columnName); }
     Q_INVOKABLE void showAllGridSections() { form->getGridTable()->showAllGridSections(); }
+    Q_INVOKABLE virtual void setForm(QString = "");
 
 
 // Функции для обеспечения работы скриптов
@@ -159,7 +159,6 @@ protected:
     bool                isDictionary;
     bool                enabled;
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
-    virtual void        setForm();
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     virtual void        updateCurrentRow();

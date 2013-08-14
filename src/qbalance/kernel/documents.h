@@ -45,10 +45,10 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString);
     QString getAttrPrefix() { return prefix; }
     virtual void            setOrderClause();
+    Q_INVOKABLE virtual void  setForm(QString = "");
 
 
 protected:
-    virtual void        setForm();
     virtual void        prepareSelectCurrentRowCommand();
     virtual bool        setTableModel(int = 0);
 

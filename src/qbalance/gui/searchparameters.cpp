@@ -69,9 +69,11 @@ void SearchParameters::setFieldsList(QStringList fldList)
     for (int i = 0; i < fldList.count(); i++)
     {
         QString field = fldList.at(i);
-            if (field.toLower() == programNameFieldName ||
-                (field.left(4).toLower() == (programIdFieldName + "_")))                          // Если это поле - столбец ИМЯ, то это справочник
+        if (field.toLower() == programNameFieldName ||
+            (field.left(4).toLower() == (programIdFieldName + "_")))                          // Если это поле - столбец ИМЯ, то это справочник
+        {
             addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
+        }
     }
     setLayout(gridLayout);
     gridLayout->setColumnStretch(1, 1);
@@ -149,8 +151,7 @@ QVector<sParam> SearchParameters::getParameters()
         // Определим, включен ли полнотекстовый поиск
         QCheckBox* chb = (QCheckBox*)qFindChild<QCheckBox*>(this, field);
         par.isFtsEnabled = (chb != 0 ? chb->isChecked(): false);
-        if (text.size() > 0)
-            param.append(par);
+        param.append(par);
     }
     return param;
 }
@@ -168,8 +169,7 @@ QString SearchParameters::getFilter()
         {
             if (filter.size() > 0)
                 filter.append(" AND ");
-            filter.append(QString("%1.%2 @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
-                                                          .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".fts")));
+            filter.append(QString("%1.fts @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
             QString f = "";
             foreach (QString param, paramList)
             {
@@ -214,6 +214,8 @@ void SearchParameters::dictionaryButtonPressed()
                     cmb->insertItem(0, text);
                     cmb->setCurrentIndex(0);
                 }
+                cmb->lineEdit()->selectAll();
+                cmb->setFocus();
             }
         }
     }
@@ -225,10 +227,15 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
     int i = 0;
     while (i < gridLayout->rowCount())
     {                        // Пока мы не достигли последней ComboBox в параметрах поиска
-        if (gridLayout->itemAtPosition(i, 1)->widget()->objectName() == wdgt->objectName())
+        MyComboBox* cmb = (MyComboBox*)gridLayout->itemAtPosition(i, 1)->widget();
+        if (cmb->objectName() == wdgt->objectName())
         {   // На этой ComboBox была нажата Enter
             if ((i + 1) < gridLayout->rowCount())                               // Если ниже есть еще одна ComboBox
-                gridLayout->itemAtPosition(i + 1, 1)->widget()->setFocus();     // то переставим фокус на нее
+            {
+                cmb = (MyComboBox*)gridLayout->itemAtPosition(i + 1, 1)->widget();
+                cmb->lineEdit()->selectAll();
+                cmb->setFocus();     // то переставим фокус на нее
+            }
             else
                 requery();
         }
@@ -251,3 +258,11 @@ void SearchParameters::setFocus()
         }
     }
 }
+
+
+void SearchParameters::keyPressEvent(QKeyEvent *event)
+{
+    parentForm->keyPressEvent(event);
+}
+
+

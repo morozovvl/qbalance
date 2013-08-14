@@ -88,7 +88,10 @@ void Form::close()
        buttonCancel->disconnect();
     writeSettings();
     if (subWindow != 0)
+    {
+        subWindow->setWidget(0);
         app->getMainWindow()->removeMdiWindow(subWindow);
+    }
 }
 
 
@@ -96,12 +99,10 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 {
     if (parent != 0)
     {
-//        configName = app->getConfigPrefix() + "." + getParent()->getTagName();
         configName = getParent()->getTagName();
     }
     else
     {
-//        configName = app->getConfigPrefix() + ".Form";
         configName = "Form";
     }
     setObjectName(configName);
@@ -114,7 +115,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget = app->createForm(fileName);
     }
     if (formWidget != 0)
-    {
+    {   // Если была найдена нестандартная пользовательская форма
         formWidget->setApp(app);
         formWidget->setParent(pwgt);
         formWidget->setVisible(false);
@@ -127,7 +128,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         defaultForm = false;
     }
     else
-    {
+    {   // Нужно создать стандартную форму
         formWidget = new Dialog(pwgt);
         formWidget->setApp(app);
         formWidget->setVisible(false);
@@ -196,9 +197,9 @@ int Form::exec()
 
         if (subWindow != 0)
         {
+            subWindow->setWidget(0);
             formWidget->setGeometry(subWindow->x(), subWindow->y(), subWindow->width(), subWindow->height());
 
-            subWindow->setWidget(0);
             formWidget->setParent(app->getMainWindow(), Qt::Dialog);
             formWidget->exec();
 

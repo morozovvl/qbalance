@@ -66,7 +66,7 @@ int GUIFactory::openDB()
             frm->addLogin(db->getUserList());
             db->close();
             frm->exec();
-            if (frm->selected())
+            if (frm->isFormSelected())
             {   // Пользователь нажал кнопку "Ok"
                 QString login = frm->getLogin();
                 QString password = frm->getPassword();
@@ -107,7 +107,7 @@ void GUIFactory::setPeriod() {
     calendar->setBeginDate(TApplication::exemplar()->getBeginDate());
     calendar->setEndDate(TApplication::exemplar()->getEndDate());
     calendar->exec();
-    if (calendar->selected()) {
+    if (calendar->isFormSelected()) {
         TApplication::exemplar()->setBeginDate(calendar->getBeginDate());
         TApplication::exemplar()->setEndDate(calendar->getEndDate());
         TApplication::exemplar()->getDBFactory()->setPeriod(calendar->getBeginDate(), calendar->getEndDate());

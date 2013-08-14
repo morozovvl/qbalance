@@ -81,7 +81,7 @@ Dialog* Essence::getFormWidget() {
     {
         open();
     }
-    return form->getForm();
+    return form->getFormWidget();
 }
 
 
@@ -443,7 +443,7 @@ void Essence::hide()
 void Essence::view()
 {
     if (form != 0)
-        form->getForm()->setFocus(Qt::OtherFocusReason);
+        form->getFormWidget()->setFocus(Qt::OtherFocusReason);
 }
 
 
@@ -476,10 +476,16 @@ void Essence::close()
 }
 
 
-void Essence::setForm()
+void Essence::setForm(QString formName)
 {
+    if (form != 0)
+    {
+        form->close();
+        delete form;
+    }
+
     form = new FormGrid();
-    form->open(parentForm, this);
+    form->open(parentForm, this, formName);
     form->setButtonsSignals();
 }
 
@@ -522,11 +528,11 @@ void Essence::setEnabled(bool en)
     if (scriptEngine != 0)
         scriptEngine->eventSetEnabled(en);
     if (enabled)
-        form->getForm()->setWindowTitle(form->getForm()->windowTitle().remove(disabledMessage));
+        form->getFormWidget()->setWindowTitle(form->getFormWidget()->windowTitle().remove(disabledMessage));
     else
     {
-        if (!form->getForm()->windowTitle().contains(disabledMessage))
-            form->getForm()->setWindowTitle(form->getForm()->windowTitle().append(disabledMessage));
+        if (!form->getFormWidget()->windowTitle().contains(disabledMessage))
+            form->getFormWidget()->setWindowTitle(form->getFormWidget()->windowTitle().append(disabledMessage));
     }
 }
 
@@ -551,19 +557,19 @@ void Essence::initForm() {
 
 void Essence::setFormTitle(QString title) {
     formTitle = title;
-    form->getForm()->setWindowTitle(title);
+    form->getFormWidget()->setWindowTitle(title);
 }
 
 
 QString Essence::getFormTitle()
 {
-    return form->getForm()->windowTitle();
+    return form->getFormWidget()->windowTitle();
 }
 
 
 bool Essence::isFormSelected()
 {
-    return form->selected();
+    return form->isFormSelected();
 }
 
 

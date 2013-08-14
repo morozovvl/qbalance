@@ -87,6 +87,7 @@ public:
     void setEndDate(QDate date) { endDate = date; }
 
     Q_INVOKABLE Dialog* createForm(QString);           // Открыть форму с заданным именем
+    Q_INVOKABLE Form* createForm1(QString);
     Q_INVOKABLE virtual void setIcons(QWidget*);         // Устанавливает иконки на кнопки указанной формы
 
     static QString encoding();

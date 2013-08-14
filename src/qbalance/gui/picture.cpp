@@ -33,6 +33,10 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
 }
 
 
+Picture::~Picture()
+{
+}
+
 void Picture::setApp(TApplication* a)
 {
     app = a;
@@ -42,10 +46,17 @@ void Picture::setApp(TApplication* a)
 }
 
 
-void Picture::show(QString fileName) {
+void Picture::setPictureName(QString fileName)
+{
     pictureFileName = fileName.size() > 0 && QDir().exists(fileName) ? fileName : "";
+}
+
+
+void Picture::show(QString fileName) {
+    setPictureName(fileName);
     update();
 }
+
 
 void Picture::paintEvent(QPaintEvent*) {
 

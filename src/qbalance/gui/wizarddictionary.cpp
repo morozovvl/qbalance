@@ -46,7 +46,7 @@ QString showTypesForm()
 {
     FormGrid* typeForm = TApplication::exemplar()->getDictionaries()->getDictionary(TApplication::exemplar()->getDBFactory()->getObjectName("vw_types"))->getForm();
     typeForm->exec();
-    if (typeForm->selected())
+    if (typeForm->isFormSelected())
     {
         int length = typeForm->getParent()->getValue(TApplication::exemplar()->getDBFactory()->getObjectName("vw_types.длина")).toInt();
         QTableWidgetItem* item = WizardDictionary::exemplar()->fieldsTable.item(WizardDictionary::exemplar()->fieldsTable.currentRow(), 2);
@@ -301,10 +301,10 @@ void WizardDictionary::getData()
         fieldsTable.setItem(i, visibleField, visibleItem);
     }
 
-    MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getForm());
+    MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getFormWidget());
     fieldsTable.setItemDelegateForColumn(typeField, buttonEditDelegate);
     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
-    MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getForm());
+    MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getFormWidget());
     fieldsTable.setItemDelegateForColumn(visibleField, booleanDelegate);
 
     // Инициализируем текстовый редактор

@@ -65,11 +65,14 @@ QString PicturePlugin::whatsThis() const {
     return "Your what's this.";
 }
 
-QWidget *PicturePlugin::createWidget( QWidget *parent ) {
-    return new Picture(parent);
+QWidget *PicturePlugin::createWidget(QWidget *parent ) {
+
+    Picture *picture = new Picture(parent);
+    return picture;
 }
 
 void PicturePlugin::initialize( QDesignerFormEditorInterface *core ) {
+
     QDesignerCustomWidgetInterface::initialize(core);
     if( m_initialized )
         return;

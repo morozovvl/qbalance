@@ -159,7 +159,7 @@ bool Dictionaries::add()
     bool result = false;
     WizardDictionary* wizard = new WizardDictionary(true);
     wizard->open(app->getMainWindow());
-    wizard->getForm()->setWindowTitle(QObject::trUtf8("Новый справочник"));
+    wizard->getFormWidget()->setWindowTitle(QObject::trUtf8("Новый справочник"));
     wizard->exec();
     wizard->close();
     if (wizard->getResult())
@@ -177,7 +177,7 @@ void Dictionaries::view()
     QString dictName = getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed();
     WizardDictionary wizard;
     wizard.open(app->getMainWindow(), dictName);
-    wizard.getForm()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
+    wizard.getFormWidget()->setWindowTitle(QObject::trUtf8("Свойства справочника"));
     wizard.exec();
     wizard.close();
     if (wizard.getResult())
@@ -242,8 +242,14 @@ void Dictionaries::cmdOk() {
 }
 
 
-void Dictionaries::setForm()
+void Dictionaries::setForm(QString formName)
 {
+    if (form != 0)
+    {
+        form->close();
+        delete form;
+    }
+
     form = new FormGridSearch();
 
     form->appendToolTip("buttonOk",         trUtf8("Открыть справочник"));
@@ -253,7 +259,7 @@ void Dictionaries::setForm()
     form->appendToolTip("buttonView",       trUtf8("Просмотреть свойства справочника"));
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список справочников (загрузить повторно с сервера)"));
 
-    form->open(parentForm, this, getTagName());
+    form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
 }
 
 

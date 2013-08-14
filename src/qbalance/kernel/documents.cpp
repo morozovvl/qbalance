@@ -240,8 +240,14 @@ QVariant Documents::getValue(QString n)
 }
 
 
-void Documents::setForm()
+void Documents::setForm(QString formName)
 {
+    if (form != 0)
+    {
+        form->close();
+        delete form;
+    }
+
     form = new FormGrid();
 
     form->appendToolTip("buttonOk",         trUtf8("Закрыть список документов"));
@@ -250,7 +256,7 @@ void Documents::setForm()
     form->appendToolTip("buttonView",       trUtf8("Просмотреть документ"));
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера)"));
 
-    form->open(parentForm, this);
+    form->open(parentForm, this, formName);
 }
 
 

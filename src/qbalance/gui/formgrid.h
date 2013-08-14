@@ -37,6 +37,7 @@ class FormGrid : public Form {
 public:
     FormGrid(QObject* parent = 0);
     ~FormGrid();
+    Q_INVOKABLE virtual void close();
     QVariant getValue(QString);
     QModelIndex getCurrentIndex();
     void setCurrentIndex(QModelIndex index);

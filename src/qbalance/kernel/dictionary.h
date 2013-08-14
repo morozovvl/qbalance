@@ -68,7 +68,6 @@ public:
     QString getPrototypeName() { return prototypeName; }
     void setPrototypeName(QString prototype) { prototypeName = prototype; }
     bool isFtsEnabled() { return ftsEnabled; }
-    QString getFTSfieldName() { return ftsFieldName; }
     Q_INVOKABLE QString getTest() { return "Test Ok"; }
     QString     getDictTitle() { return dictTitle; }
     QStringList getChildDicts();
@@ -76,7 +75,7 @@ public:
     void setParentDict(Dictionary* dict) { parentDict = dict; }
     Q_INVOKABLE virtual void            setId(qulonglong);
     void    setIdEnabled(bool e) { lsetIdEnabled = e; }
-
+    Q_INVOKABLE virtual void setForm(QString = "");
 
 
 protected:
@@ -92,7 +91,6 @@ protected:
     bool            isDepend;
     bool            lIsSaldo;
     QStringList     fieldList;
-    virtual void    setForm();
     virtual void    prepareSelectCurrentRowCommand();
     virtual void    updateCurrentRow(int = 0);
     virtual bool    setTableModel(int = 0);
@@ -100,7 +98,6 @@ protected:
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
     bool            lsetIdEnabled;
-    QString         ftsFieldName;
     QString         dictTitle;
 };
 

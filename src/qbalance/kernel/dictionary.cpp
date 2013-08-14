@@ -40,7 +40,6 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     lAutoSelect = false;
     isDepend = false;
     ftsEnabled = false;
-    ftsFieldName = "";
     lIsSaldo = false;
     lsetIdEnabled = true;
     parentDict = 0;
@@ -85,7 +84,7 @@ bool Dictionary::add()
     bool lAddDict = true;
     if (!isSet())
     {
-        SearchParameters* parameters = (SearchParameters*)qFindChild<QFrame*>(form->getForm(), "searchParameters");
+        SearchParameters* parameters = (SearchParameters*)qFindChild<QFrame*>(form->getFormWidget(), "searchParameters");
         if (parameters != 0)
         {
             QVector<sParam> searchParameters = parameters->getParameters();
@@ -96,25 +95,25 @@ bool Dictionary::add()
                         values.insert(searchParameters[i].field, searchParameters[i].value);
                     else
                     {
-                        if (searchParameters[i].value.toString().size() > 0)
+                        Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
+                        QString dictName = searchParameters[i].value.toString();
+                        if (dictName.size() > 0)
+                            dictName = dict->getName();
+                        dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
+                        if (dict->getTableModel()->rowCount() == 1)
                         {
-                            Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
-                            dict->query(QString("trim(%1)='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(searchParameters[i].value.toString()));
-                            if (dict->getTableModel()->rowCount() == 1)
-                            {
-                                // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
-                                // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
-                                QString dictTableName = searchParameters[i].value.toString();
-                                QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
-                                values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
-                                                                                .arg(dictFieldName)),
-                                              dict->getId(0));
-                            }
-                            else
-                            {
-                                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::tr("Уточните, пожалуйста, значение связанного справочника <%1>.")).arg(dict->getFormTitle()));
-                                lAddDict = false;
-                            }
+                            // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
+                            // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
+                            QString dictTableName = dictName;
+                            QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
+                            values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
+                                                                            .arg(dictFieldName)),
+                                          dict->getId(0));
+                        }
+                        else
+                        {
+                            TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
+                            lAddDict = false;
                         }
                     }
                 }
@@ -138,9 +137,23 @@ bool Dictionary::add()
     }
     if (lAddDict)
     {
-        if (db->insertDictDefault(getTableName(), &values))
+        int strNum = db->insertDictDefault(getTableName(), &values);
+        if (strNum >= 0)
         {
-            query();
+            int newRow = tableModel->rowCount();
+            if (newRow == 0)
+            {
+                query();
+                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            }
+            else
+            {
+                tableModel->insertRow(newRow);
+                form->getGridTable()->reset();
+                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                form->getGridTable()->selectNextColumn();
+                updateCurrentRow(strNum);
+            }
             return true;
         }
     }
@@ -198,10 +211,9 @@ bool Dictionary::calculate(const QModelIndex& index) {
 qulonglong Dictionary::getId(int row)
 {
     if (tableModel->rowCount() > row)
+        return Essence::getId(row);
+    if (isSet())
     {
-        if (!isSet())
-            return Essence::getId(row);
-
         // Если это набор, то продолжаем
         QString filter;
         QString variables, values;
@@ -281,8 +293,14 @@ void Dictionary::setId(qulonglong id)
 }
 
 
-void Dictionary::setForm()
+void Dictionary::setForm(QString formName)
 {
+    if (form != 0)
+    {
+        form->close();
+        delete form;
+    }
+
     form = new FormGridSearch();
 
     form->appendToolTip("buttonOk",         trUtf8("Закрыть справочник"));
@@ -291,7 +309,7 @@ void Dictionary::setForm()
     form->appendToolTip("buttonPrint",      trUtf8("Распечатать выбранные записи из справочника"));
     form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера)"));
 
-    form->open(parentForm, this, getTagName());
+    form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
 }
 
 
@@ -303,27 +321,25 @@ bool Dictionary::open(int)
 
     if (Essence::open())
     {
+        // Откроем этот справочник
+        fieldList = getFieldsList();
+
+        // Проверим, имеется ли в справочнике полнотекстовый поиск
+        foreach (QString fieldName, fieldList)
+        {
+            if (fieldName == "fts")
+            {
+                ftsEnabled = true;
+                break;
+            }
+        }
+
         initForm();
         evaluateEngine();
 
         tableModel->setTestSelect(true);
         query();
         tableModel->setTestSelect(false);
-
-        // Откроем этот справочник
-        fieldList = getFieldsList();
-
-        // Проверим, имеется ли в справочнике полнотекстовый поиск
-        QString ftsField = db->getObjectName(tableName + ".fts");
-        foreach (QString fieldName, fieldList)
-        {
-            if (fieldName == ftsField || fieldName == "__" + ftsField)
-            {
-                ftsEnabled = true;
-                ftsFieldName = fieldName;
-                break;
-            }
-        }
 
         initFormEvent();
 
@@ -493,6 +509,7 @@ void Dictionary::prepareSelectCurrentRowCommand()
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
     QString command = tableModel->selectStatement();
 
+    command.replace(command.indexOf("WHERE"), command.indexOf(" ORDER") - command.indexOf("WHERE"), "");
     command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName())
                                                                                 .arg(db->getObjectName(getTableName() + "." + idFieldName)));
 

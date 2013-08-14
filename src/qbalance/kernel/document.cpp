@@ -188,7 +188,7 @@ void Document::calcItog()
 
 void Document::showItog()
 {
-    MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getForm(), "itogNumeric");
+    MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getFormWidget(), "itogNumeric");
     if (itogWidget != 0)
         itogWidget->setValue(parent->getValue(db->getObjectName("документы.сумма")));
 }
@@ -810,8 +810,14 @@ void Document::close()
 }
 
 
-void Document::setForm()
+void Document::setForm(QString formName)
 {
+    if (form != 0)
+    {
+        form->close();
+        delete form;
+    }
+
     form = new FormDocument();
 
     // Установим тултипы (подписи к кнопкам)
@@ -824,7 +830,7 @@ void Document::setForm()
     form->appendToolTip("buutonSave", trUtf8("Экспорт документа"));
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
-    form->open(parentForm, (Document*)this, QString("Документ%1").arg(operNumber));
+    form->open(parentForm, (Document*)this, formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
 }
 
 

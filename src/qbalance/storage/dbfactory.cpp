@@ -1001,7 +1001,10 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
 
                 for (int i = 0; i < fields->count(); i++)
                 {
-                    if ((table == fields->at(i).table.toLower()) && (column1 == fields->at(i).name.toUpper()))
+                    if ((column1 == fields->at(i).name.toUpper()) &&
+                            ((table == fields->at(i).table.toLower()) ||
+                             (table == "проводки") ||
+                             (table == "документы")))
                     {
                         // Заголовок для столбца найден
                         counter++;
@@ -1010,8 +1013,8 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                         field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
                         field.number = number;
                         field.headerExist = true;   // Для столбца найден заголовок
-                        if (tableName.left(16) != "СписокДокументов" && !field.constReadOnly)
-                            field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
+//                        if (tableName.left(16) != "СписокДокументов" && !field.constReadOnly)
+//                            field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
                         fields->removeAt(i);
                         fields->insert(i, field);
                         break;
@@ -1066,8 +1069,10 @@ bool DBFactory::appendColumnHeader(int mainTableId, int tableId, QString column,
 }
 
 
-bool DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* values)
+int DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* values)
 {
+    int result = -1;
+    QString command;
     clearError();
     if (values->size() > 0)
     {
@@ -1085,22 +1090,30 @@ bool DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* va
         }
         fieldsList.chop(1);
         valuesList.chop(1);
-        QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(getObjectNameCom(tableName)).arg(fieldsList).arg(valuesList);
-        execQuery(command);
+        command = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;").arg(getObjectNameCom(tableName))
+                                                                          .arg(fieldsList)
+                                                                          .arg(valuesList)
+                                                                          .arg(getObjectNameCom(tableName + ".КОД"));
     }
     else
     {
-        QString command = QString("INSERT INTO %1 DEFAULT VALUES;").arg(getObjectNameCom(tableName));
-        execQuery(command);
+        command = QString("INSERT INTO %1 DEFAULT VALUES RETURNING %2;").arg(getObjectNameCom(tableName))
+                                                                        .arg(getObjectNameCom(tableName + ".КОД"));
     }
-    return !wasError;
+    QSqlQuery query = execQuery(command);
+    if (query.first())
+    {
+        result = query.record().field(0).value().toInt();
+    }
+    return result;
 }
 
 
 bool DBFactory::removeDictValue(QString tableName, qulonglong id)
 {
     clearError();
-    execQuery(QString("DELETE FROM \"%1\" WHERE \"%2\" = %3;").arg(tableName).arg(getObjectName("код")).arg(id));
+    QString command = QString("DELETE FROM \"%1\" WHERE \"%2\" = %3;").arg(tableName).arg(getObjectName("код")).arg(id);
+    execQuery(command);
     return !wasError;
 }
 

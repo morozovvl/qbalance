@@ -54,9 +54,8 @@ public:
     bool        isSaldoExist() { return lIsSaldoExist; }
     virtual void            setOrderClause();
     virtual void            prepareSelectCurrentRowCommand() { ; }
+    Q_INVOKABLE virtual void setForm(QString = "");
 
-protected:
-    virtual void setForm();
 private:
     Document*   document;
     bool        lIsSaldoExist;

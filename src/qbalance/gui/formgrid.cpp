@@ -65,6 +65,19 @@ FormGrid::~FormGrid()
 }
 
 
+void FormGrid::close()
+{
+    Form::close();
+    if (defaultForm)
+    {
+        if (grdTable != 0)
+        {
+            delete grdTable;
+        }
+    }
+}
+
+
 void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     Form::createForm(fileName, pwgt);

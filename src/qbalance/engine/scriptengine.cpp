@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/form.h"
 #include "../gui/formgrid.h"
 #include "../gui/dialog.h"
+#include "../gui/picture.h"
 
 #include "eventloop.h"
 
@@ -136,6 +137,24 @@ void EventLoopFromScriptValue(const QScriptValue &object, EventLoop* &out) {
     out = qobject_cast<EventLoop*>(object.toQObject());
 }
 
+
+// класс Picture
+Q_DECLARE_METATYPE(Picture*)
+
+QScriptValue PictureConstructor(QScriptContext *, QScriptEngine *engine) {
+     Picture* object = new Picture();
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue PictureToScriptValue(QScriptEngine *engine, Picture* const &in) {
+    return engine->newQObject(in);
+}
+
+void PictureFromScriptValue(const QScriptValue &object, Picture* &out) {
+    out = qobject_cast<Picture*>(object.toQObject());
+}
+
+
 // класс Dictionary
 Q_DECLARE_METATYPE(Dictionary*)
 
@@ -209,7 +228,6 @@ void qLineEditFromScriptValue(const QScriptValue &object, QLineEdit* &out) {
     out = qobject_cast<QLineEdit*>(object.toQObject());
 }
 
-/*
 // класс Form
 Q_DECLARE_METATYPE(Form*)
 
@@ -246,7 +264,7 @@ QScriptValue FormGridToScriptValue(QScriptEngine *engine, FormGrid* const &in) {
 void FormGridFromScriptValue(const QScriptValue &object, FormGrid* &out) {
     out = qobject_cast<FormGrid*>(object.toQObject());
 }
-*/
+
 
 // класс QPushButton
 Q_DECLARE_METATYPE(QPushButton*)
@@ -281,7 +299,7 @@ QScriptValue QFileDialogConstructor(QScriptContext *context, QScriptEngine *engi
         }
         else
         {
-            object = new QFileDialog(((FormGrid*)context->argument(0).toQObject())->getForm(),
+            object = new QFileDialog(((FormGrid*)context->argument(0).toQObject())->getFormWidget(),
                                      Qt::SubWindow);
 
         }
@@ -368,12 +386,14 @@ void ScriptEngine::loadScriptObjects()
     // Объявим классы для работы с пользовательскими формами
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
-//    qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
-//    globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
-//    qScriptRegisterMetaType(this, FormGridToScriptValue, FormGridFromScriptValue);
-//    globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
+    qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
+    globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
+    qScriptRegisterMetaType(this, FormGridToScriptValue, FormGridFromScriptValue);
+    globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
+    qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
+    globalObject().setProperty("Picture", newQMetaObject(&QObject::staticMetaObject, newFunction(PictureConstructor)));
     qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
     globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
     qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
@@ -451,7 +471,7 @@ bool ScriptEngine::evaluate()
         if (globalObject().property("EventKeyPressed").isValid())
         {
             // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
-            qScriptConnect(((Essence*)parent())->getForm()->getForm(),
+            qScriptConnect(((Essence*)parent())->getFormWidget()->getForm(),
                            SIGNAL(keyPressed(QKeyEvent*)),
                            globalObject(),
                            globalObject().property("EventKeyPressed"));

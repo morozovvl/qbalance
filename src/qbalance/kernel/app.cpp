@@ -252,15 +252,24 @@ Dialog* TApplication::createForm(QString fileName)
             file.close();
             if (QString::compare(formWidget->metaObject()->className(), "Dialog",  Qt::CaseSensitive) != 0)
             {
-                showError(QString(QObject::tr("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
+                showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                 return 0;
             }
             formWidget->setApp(this);
             formWidget->findCmdOk();
-            formWidget->setAttribute(Qt::WA_DeleteOnClose);
         }
     }
     return formWidget;
+}
+
+
+Form* TApplication::createForm1(QString fileName)
+{
+    Form* form = new Form();
+    if (form->open(getMainWindow()->centralWidget(), 0, fileName))
+        return form;
+    delete form;
+    return 0;
 }
 
 

@@ -139,5 +139,4 @@ void ConfigForm::dictPermissions() {
 
 void ConfigForm::pictures()
 {
-//    qDebug() << "Картинки";
 }

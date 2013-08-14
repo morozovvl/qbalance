@@ -33,9 +33,12 @@ class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
     Q_OBJECT
 public:
     Picture(QWidget* parent = 0);
-    void show(QString);
-    void                        setApp(TApplication*);
-    void    setVisibility(bool);
+    ~Picture();
+    Q_INVOKABLE void setPictureName(QString);
+    Q_INVOKABLE void show(QString);
+    Q_INVOKABLE void setApp(TApplication*);
+    Q_INVOKABLE void setVisibility(bool);
+    Q_INVOKABLE QString getPictureFileName() { return pictureFileName; }
 
 protected:
     QString pictureFileName;

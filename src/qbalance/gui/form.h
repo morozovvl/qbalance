@@ -40,9 +40,9 @@ public:
     ~Form();
     Q_INVOKABLE virtual bool open(QWidget* = 0, Essence* = 0, QString = "");
     Q_INVOKABLE virtual void close();
-    Q_INVOKABLE Dialog* getForm() { return formWidget; }
+    Q_INVOKABLE Dialog* getFormWidget() { return formWidget; }
     Q_INVOKABLE Essence* getParent() { return parent; }
-    Q_INVOKABLE bool selected() { return lSelected; }
+    Q_INVOKABLE bool isFormSelected() { return lSelected; }
     void appendToolTip(QString name, QString value);
     virtual void keyPressEvent(QKeyEvent*);
 
