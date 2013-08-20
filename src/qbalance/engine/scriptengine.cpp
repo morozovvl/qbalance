@@ -339,6 +339,7 @@ ScriptEngine::ScriptEngine(QObject *parent/* = 0*/) : QScriptEngine(parent)
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
 //    errorMessage = QObject::trUtf8("Ошибка скрипта!");
     errorMessage = "";
+    app = TApplication::exemplar();
 }
 
 
@@ -466,18 +467,21 @@ bool ScriptEngine::evaluate()
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
+            app->getGUIFactory()->showError(errorMessage);
             return false;
         }
-        if (globalObject().property("EventKeyPressed").isValid())
+        else
         {
-            // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
-            qScriptConnect(((Essence*)parent())->getFormWidget()->getForm(),
-                           SIGNAL(keyPressed(QKeyEvent*)),
-                           globalObject(),
-                           globalObject().property("EventKeyPressed"));
+            if (globalObject().property("EventKeyPressed").isValid())
+            {
+                // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
+                qScriptConnect(((Essence*)parent())->getFormWidget()->getForm(),
+                               SIGNAL(keyPressed(QKeyEvent*)),
+                               globalObject(),
+                               globalObject().property("EventKeyPressed"));
+            }
+            errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
         }
-        errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
-        return result;
     }
     return result;
 }
@@ -588,14 +592,30 @@ void ScriptEngine::eventSetEnabled(bool enabled)
 }
 
 
+void ScriptEngine::eventAfterRowChanged()
+{
+    QString eventName = "EventAfterRowChanged";
+    globalObject().property(eventName).call();
+    if (hasUncaughtException())
+    {   // Если в скриптах произошла ошибка
+        showScriptError(eventName, uncaughtException().toString());
+    }
+}
+
+
 QString ScriptEngine::preparePictureUrl(Essence* essence)
 {
     QScriptValueList args;
     QString result;
+    QString eventName = "PreparePictureUrl";
     args << newQObject(essence);
-    result = globalObject().property("PreparePictureUrl").call(QScriptValue(), args).toString();
+    result = globalObject().property(eventName).call(QScriptValue(), args).toString();
     if (result == "undefined")
         result = "";
+    if (hasUncaughtException())
+    {   // Если в скриптах произошла ошибка
+        showScriptError(eventName, uncaughtException().toString());
+    }
     return result;
 }
 
@@ -607,6 +627,14 @@ void ScriptEngine::eventCalcTable()
     globalObject().property("EventCalcTable").call();
     errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
     scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
+}
+
+
+// Конец списка событий
+
+void ScriptEngine::showScriptError(QString eventName, QString exception)
+{
+    app->getGUIFactory()->showError(QString(QObject::trUtf8("Ошибка в событии %1: %2")).arg(eventName).arg(exception));
 }
 
 
@@ -672,6 +700,9 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
 
     func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
     appendEvent("EventSetEnabled(enabled)", func);
+
+    func.comment = QObject::trUtf8("Событие происходит после перемещения на другую строку");
+    appendEvent("EventAfterRowChanged()", func);
 
     return &eventsList;
 }

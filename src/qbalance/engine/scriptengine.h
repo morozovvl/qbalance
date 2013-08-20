@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Form;
 class Essence;
+class TApplication;
 
 struct EventFunction {
     QString     comment;
@@ -66,6 +67,7 @@ public:
     void eventExport(Form*);
     void eventCalcTable();
     void eventSetEnabled(bool);
+    void eventAfterRowChanged();
     virtual QString preparePictureUrl(Essence*);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
@@ -79,6 +81,9 @@ private:
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;
+    TApplication*       app;
+
+    void                showScriptError(QString, QString);
 };
 
 

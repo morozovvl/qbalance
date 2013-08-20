@@ -69,7 +69,10 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     if (parent != 0)
     {
         if ((current.row() != previous.row()) && tableModel->rowCount() > 0)
+        {
             parent->showPhoto();
+            parent->getParent()->afterRowChanged();
+        }
     }
 }
 

@@ -89,9 +89,11 @@ public:
     Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
     Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
-    QString getPhotoPath();
+    Q_INVOKABLE QString getPhotoPath() { return photoPath; }
+    Q_INVOKABLE QString getPhotoPath(QVariant);
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
+    Q_INVOKABLE void savePhotoToServer(QString);
     Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
     Q_INVOKABLE bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     Q_INVOKABLE bool isViewable() { return lViewable; }             // ... кнопок на форме
@@ -129,6 +131,7 @@ public:
     void                afterHideFormEvent();
     void                closeFormEvent();
     QString             preparePictureUrl();
+    void                afterRowChanged();
 
 // Прочие функции
     QString             getPhotoFile();

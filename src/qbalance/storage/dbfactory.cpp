@@ -1290,8 +1290,9 @@ QString DBFactory::getObjectNameCom(const QString& name)
 }
 
 
-QByteArray DBFactory::getFile(QString fileName, FileType type, bool extend)
+QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
 {
+    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
     if (extend && extDbExist)
     {   // Если будем смотреть файлы в расширенной базе данных
         QString text = QString("SELECT * FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
@@ -1331,8 +1332,9 @@ QByteArray DBFactory::getFile(QString fileName, FileType type, bool extend)
 }
 
 
-qulonglong DBFactory::getFileCheckSum(QString fileName, FileType type, bool extend)
+qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
 {
+    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
     if (extend && extDbExist)
     {
         QString text = QString("SELECT %6 FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
@@ -1432,8 +1434,9 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
 }
 
 
-void DBFactory::setFile(QString fileName, FileType type, QByteArray fileData, qulonglong size, bool extend)
+void DBFactory::setFile(QString file, FileType type, QByteArray fileData, qulonglong size, bool extend)
 {
+    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
     clearError();
     QString text;
     if (isFileExist(fileName, type, extend))

@@ -165,7 +165,7 @@ QString SearchParameters::getFilter()
     {
         QString text = searchParameters[i].value.toString();
         QStringList paramList = text.split(QRegExp("\\s+"));
-        if (searchParameters[i].isFtsEnabled)   // Если включен полнотектовый поиск
+        if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
         {
             if (filter.size() > 0)
                 filter.append(" AND ");
@@ -183,11 +183,14 @@ QString SearchParameters::getFilter()
         { // Если полнотекстовый поиск отключен
             foreach (QString param, paramList)
             {
-                if (filter.size() > 0)
-                    filter.append(" AND ");
-                filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
-                                                         .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
-                                                         .arg("%" + param + "%"));
+                if (param.size() > 0)
+                {
+                    if (filter.size() > 0)
+                        filter.append(" AND ");
+                    filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+                                                             .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
+                                                             .arg("%" + param + "%"));
+                }
             }
         }
     }

@@ -80,12 +80,6 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 
 void Form::close()
 {
-   if (formWidget != 0)
-       formWidget->disconnect();
-   if (buttonOk != 0)
-       buttonOk->disconnect();
-   if (buttonCancel != 0)
-       buttonCancel->disconnect();
     writeSettings();
     if (subWindow != 0)
     {
