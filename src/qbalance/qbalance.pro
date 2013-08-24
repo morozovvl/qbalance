@@ -191,7 +191,9 @@ OTHER_FILES += \
     ../generator.pri \
     ../qtbindingsbase.pri \
     ../qtscriptgenerator.bat \
-    license.txt
+    license.txt \
+    ../../README
+
 
 
 

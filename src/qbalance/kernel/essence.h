@@ -89,8 +89,7 @@ public:
     Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
     Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
-    Q_INVOKABLE QString getPhotoPath() { return photoPath; }
-    Q_INVOKABLE QString getPhotoPath(QVariant);
+    Q_INVOKABLE QString getPhotoPath();
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
     Q_INVOKABLE void savePhotoToServer(QString);

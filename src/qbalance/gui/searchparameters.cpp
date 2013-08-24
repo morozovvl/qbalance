@@ -69,10 +69,16 @@ void SearchParameters::setFieldsList(QStringList fldList)
     for (int i = 0; i < fldList.count(); i++)
     {
         QString field = fldList.at(i);
-        if (field.toLower() == programNameFieldName ||
-            (field.left(4).toLower() == (programIdFieldName + "_")))                          // Если это поле - столбец ИМЯ, то это справочник
+        if (field.toLower() == programNameFieldName)
         {
-            addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
+            addString(field, strNum++);
+        }
+        else if (field.left(4).toLower() == (programIdFieldName + "_"))                          // Если это поле - столбец ИМЯ, то это справочник
+        {
+            QString tableName = field;
+            tableName = tableName.remove(programIdFieldName + "_", Qt::CaseInsensitive).toLower();
+            if (app->getDictionaries()->getDictionary(tableName) != 0)
+                addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
         }
     }
     setLayout(gridLayout);

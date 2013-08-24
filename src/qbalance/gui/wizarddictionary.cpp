@@ -208,7 +208,6 @@ void WizardDictionary::getData()
         field.number = 1;
         field.readOnly = true;
         fields.append(field);
-        oldColumnsList.append(field.table + "__" + field.name);
 
         field.table = table;
         field.name = "ИМЯ";
@@ -220,18 +219,12 @@ void WizardDictionary::getData()
         field.number = 2;
         field.readOnly = false;
         fields.append(field);
-        oldColumnsList.append(field.table + "__" + field.name);
     }
     else
     {   // Получим список полей таблицы
         db->getColumnsProperties(&fields, table);
         // Прочитаем данные о заголовках столбцов
         db->getColumnsHeaders(table, &fields);
-
-        for (int i = 0; i < fields.count(); i++)
-        {
-            oldColumnsList.append(fields.at(i).table + "__" + fields.at(i).name);
-        }
 
         QSqlRecord dictProperties = db->getDictionariesProperties(table);
         tableName->setText(dictProperties.value(db->getObjectName("справочники.имя")).toString().trimmed());
@@ -346,7 +339,7 @@ bool WizardDictionary::setData()
         int i = 0;
         while (i < fields.count())
         {
-            if (fields.value(i).type.size() == 0)
+            if (fields.value(i).type.size() == 0 && oldColumnsList.contains(fields.at(i).table + "__" + fields.at(i).column))
             {
                 if (!db->dropTableColumn(tableName->text(), fields.value(i).name))
                 {
@@ -362,6 +355,7 @@ bool WizardDictionary::setData()
         db->removeColumnHeaders(mainTableId);
         for (int i = 0; i < fieldsTable.rowCount(); i++)
         {
+            QString tName = fieldsTable.item(i, tableField)->text().trimmed();
             QString fieldName = fieldsTable.item(i, columnField)->text().trimmed();
             QString sType = fieldsTable.item(i, typeField)->text();
             int nLength = fieldsTable.item(i, lengthField)->text().toInt();
@@ -376,7 +370,7 @@ bool WizardDictionary::setData()
             type = QString("%1%2").arg(type).arg(length);
 
             // Если мы работаем со старыми полями, т.е. теми, которые уже были в таблице
-            if (oldColumnsList.contains(fields.at(i).table + "__" + fields.at(i).column))
+            if (oldColumnsList.contains(tName + "__" + fieldName))
             {   // Если мы просматриваем поля таблицы, которые уже были
                 if (QString::compare(fieldName, fields.value(i).name) != 0)
                 {   // Если пользователь изменил наименование поля
@@ -398,7 +392,12 @@ bool WizardDictionary::setData()
                 }
                 if (fields.value(i).number > 0)
                 {
-                    if (!db->appendColumnHeader(mainTableId, db->getDictionaryId(fields.value(i).table), fields.value(i).column, sHeader, fields.value(i).number, fields.value(i).readOnly))
+                    if (!db->appendColumnHeader(mainTableId,
+                                                tableName->text() == fields.value(i).table ?  mainTableId : db->getDictionaryId(fields.value(i).table),
+                                                fields.value(i).column,
+                                                sHeader,
+                                                fields.value(i).number,
+                                                fields.value(i).readOnly))
                     {
                         db->rollbackTransaction();
                         return false;
@@ -407,7 +406,7 @@ bool WizardDictionary::setData()
             }
             else
             {   // Если мы добавляем новые поля
-                if (fields.at(i).table == tableName->text())
+                if (fields.at(i).table == tableName->text() && type.size() > 0)
                 {
                     if (!db->addTableColumn(tableName->text(), fieldName, type))
                     {
@@ -431,6 +430,7 @@ bool WizardDictionary::setData()
     db->commitTransaction();
 
     // Перезагрузим список столбцов
+    db->reloadColumnProperties();
     db->reloadColumnHeaders();
 
     return true;
@@ -453,12 +453,50 @@ void WizardDictionary::addColumn()
 
 void WizardDictionary::deleteColumn()
 {
-    if (fieldsTable.rowCount() > 1)
-    {   // Можно удалять все столбцы, кроме первого (КОД)
-        fieldsTable.removeRow(fieldsTable.currentRow());
+    if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить столбец? Вы уверены?")) == QMessageBox::Yes)
+    {
+        if (fieldsTable.rowCount() > 1)
+        {   // Можно удалять все столбцы, кроме первого (КОД)
+            QString tableName = fieldsTable.item(fieldsTable.currentRow(), tableField)->text().trimmed();
+            QString fieldName = fieldsTable.item(fieldsTable.currentRow(), columnField)->text().trimmed();
+            fieldsTable.removeRow(fieldsTable.currentRow());
+            for (int i = 0; i < fields.count(); i++)
+            {
+                if (fields.value(i).table == tableName && fields.value(i).column == fieldName)
+                {
+                    FieldType fld;
+                    fld = fields.value(i);
+                    fld.type = "";
+                    fields.removeAt(i);
+                    fields.insert(i, fld);
+                }
+            }
+            if (fieldName.left(4) == "КОД_")
+            {
+                tableName = fieldName.remove("КОД_", Qt::CaseInsensitive).toLower();
+                for (int i = fieldsTable.rowCount() - 1; i >= 0 ; i--)
+                {
+                    if (fieldsTable.item(i, tableField)->text().trimmed() == tableName)
+                    {
+                        fieldsTable.removeRow(i);
+                        for (int i = 0; i < fields.count(); i++)
+                        {
+                            if (fields.value(i).table == tableName)
+                            {
+                                FieldType fld;
+                                fld = fields.value(i);
+                                fld.type = "";
+                                fields.removeAt(i);
+                                fields.insert(i, fld);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        fieldsTable.setFocus(Qt::OtherFocusReason);
+        saveOrder();
     }
-    fieldsTable.setFocus(Qt::OtherFocusReason);
-    saveOrder();
 }
 
 
@@ -490,6 +528,14 @@ void WizardDictionary::headerDown()
 
 void WizardDictionary::frameActivated(int frameNumber)
 {
+    if (frameNumber == 1)
+    {
+        oldColumnsList.clear();
+        for (int i = 0; i < fields.count(); i++)
+        {
+            oldColumnsList.append(fields.at(i).table + "__" + fields.at(i).name);
+        }
+    }
     if (frameNumber == 2)
     {   // Если активизирован фрейм списка заголовков
         headers->clear();

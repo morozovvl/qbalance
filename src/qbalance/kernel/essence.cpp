@@ -208,7 +208,7 @@ void Essence::query(QString filter)
  }
 
 
-QString Essence::getPhotoPath(QVariant idValue)
+QString Essence::getPhotoPath()
 {
     QString path;
     // Попробуем получить локальный путь к фотографии
@@ -230,7 +230,7 @@ QString Essence::getPhotoPath(QVariant idValue)
     // Если каталога с картинками нет, то попытаемся его создать
     if (!QDir(path).exists())
         QDir().mkpath(path);
-    return path + "/" + idValue.toString() + ".jpg";
+    return path;
 }
 
 
@@ -259,7 +259,7 @@ QString Essence::getPhotoFile()
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
-                file = getPhotoPath(QVariant(idValue));
+                file = getPhotoPath() + "/" + idValue + ".jpg";
                 if (isDictionary)
                 {
                     photoPath = QFileInfo(file).absoluteDir().absolutePath();
@@ -385,7 +385,7 @@ void Essence::saveFile(QString file, QByteArray* array)
 
 bool Essence::remove()
 {
-    if (app->getGUIFactory()->showYesNo("Удалить запись? Вы уверены?") == QMessageBox::Yes)
+    if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить запись? Вы уверены?")) == QMessageBox::Yes)
     {
         return true;
     }

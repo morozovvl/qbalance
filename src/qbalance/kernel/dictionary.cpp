@@ -98,22 +98,24 @@ bool Dictionary::add()
                         Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
                         QString dictName = searchParameters[i].value.toString();
                         if (dictName.size() > 0)
+                        {
                             dictName = dict->getName();
-                        dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
-                        if (dict->getTableModel()->rowCount() == 1)
-                        {
-                            // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
-                            // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
-                            QString dictTableName = dictName;
-                            QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
-                            values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
-                                                                            .arg(dictFieldName)),
-                                          dict->getId(0));
-                        }
-                        else
-                        {
-                            TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
-                            lAddDict = false;
+                            dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
+                            if (dict->getTableModel()->rowCount() == 1)
+                            {
+                                // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
+                                // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
+                                QString dictTableName = dictName;
+                                QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
+                                values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
+                                                                                .arg(dictFieldName)),
+                                dict->getId(0));
+                            }
+                            else
+                            {
+                                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
+                                lAddDict = false;
+                            }
                         }
                     }
                 }

@@ -221,6 +221,7 @@ public:
     bool appendColumnHeader(int, int, QString, QString, int, bool);
     bool removeColumnHeaders(int);
     void reloadColumnHeaders();
+    void reloadColumnProperties();
     QSqlQuery* getDictionaries() { return &dictionaries; }
 
     // Функции для мастера работы со справочниками

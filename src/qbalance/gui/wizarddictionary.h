@@ -62,8 +62,8 @@ private:
     static WizardDictionary*    Exemplar;
     virtual void        frameActivated(int);
     virtual void        frameDeactivated(int);
-    void                saveFields();
     void                saveOrder();
+    void                saveFields();
 
 private slots:
     void                addColumn();

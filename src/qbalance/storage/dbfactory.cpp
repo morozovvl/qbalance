@@ -230,11 +230,7 @@ void DBFactory::loadSystemTables()
     dictionariesPermitions.clear();
     dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
 
-    columnsProperties.clear();
-    columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
-                                  "FROM information_schema.columns ins " \
-                                  "WHERE ins.table_schema = 'public' " \
-                                  "ORDER BY table_name;");
+    reloadColumnProperties();
 
     config.clear();
     config = execQuery("SELECT name, value FROM configs;");
@@ -254,6 +250,16 @@ void DBFactory::loadSystemTables()
     dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
     reloadColumnHeaders();
+}
+
+
+void DBFactory::reloadColumnProperties()
+{
+    columnsProperties.clear();
+    columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
+                                  "FROM information_schema.columns ins " \
+                                  "WHERE ins.table_schema = 'public' " \
+                                  "ORDER BY table_name;");
 }
 
 

@@ -2,109 +2,118 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.0.4
+-- Dumped by pg_dump version 9.0.4
+-- Started on 2013-08-20 23:39:19
+
 SET statement_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
+SET client_encoding = 'WIN1251';
+SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET escape_string_warning = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- TOC entry 435 (class 2612 OID 11574)
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
 --
 
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+CREATE OR REPLACE PROCEDURAL LANGUAGE plpgsql;
 
 
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
+ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO postgres;
 
 SET search_path = public, pg_catalog;
 
 --
+-- TOC entry 329 (class 1247 OID 71790)
+-- Dependencies: 6 1628
 -- Name: sp_calcaccoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
 CREATE TYPE sp_calcaccoborot_fret AS (
-	"Ğ”ĞĞ¢Ğ" date,
-	"ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ " integer,
-	"ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯" character varying(100),
-	"Ğ”ĞĞšĞšĞĞ”" integer,
-	"Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢" character varying(20),
-	"ĞĞĞœĞ•Ğ " character varying(10),
-	"ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™" character varying(100),
-	"Ğ¡Ğ£ĞœĞœĞ" numeric(10,2),
-	"Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" bpchar,
-	"ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" bpchar,
-	"Ğ”Ğ•Ğ‘Ğ•Ğ¢" numeric(10,2),
-	"ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" numeric(10,2),
-	"Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢" character varying(15),
-	"Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" character varying(15)
+	"ÄÀÒÀ" date,
+	"ÎÏÅĞÍÎÌÅĞ" integer,
+	"ÎÏÅĞÈÌß" character varying(100),
+	"ÄÎÊÊÎÄ" integer,
+	"ÄÎÊÓÌÅÍÒ" character varying(20),
+	"ÍÎÌÅĞ" character varying(10),
+	"ÊÎÌÌÅÍÒÀĞÈÉ" character varying(100),
+	"ÑÓÌÌÀ" numeric(10,2),
+	"ÄÁÑ×ÅÒ" bpchar,
+	"ÊĞÑ×ÅÒ" bpchar,
+	"ÄÅÁÅÒ" numeric(10,2),
+	"ÊĞÅÄÈÒ" numeric(10,2),
+	"ÑÄÅÁÅÒ" character varying(15),
+	"ÑÊĞÅÄÈÒ" character varying(15)
 );
 
 
 ALTER TYPE public.sp_calcaccoborot_fret OWNER TO sa;
 
 --
+-- TOC entry 331 (class 1247 OID 71793)
+-- Dependencies: 6 1629
 -- Name: sp_calcobjoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
 CREATE TYPE sp_calcobjoborot_fret AS (
-	"Ğ”ĞĞ¢Ğ" date,
-	"ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ " integer,
-	"ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯" character varying(100),
-	"Ğ”ĞĞšĞšĞĞ”" integer,
-	"Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢" character varying(20),
-	"ĞĞĞœĞ•Ğ " character varying(10),
-	"Ğ¡Ğ¢Ğ " integer,
-	"ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™" character varying(100),
-	"Ğ¡Ğ£ĞœĞœĞ" numeric(10,2),
-	"Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" character(5),
-	"ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" character(5),
-	"Ğ”Ğ‘ĞšĞĞ›" numeric(10,3),
-	"Ğ”Ğ•Ğ‘Ğ•Ğ¢" numeric(10,2),
-	"ĞšĞ ĞšĞĞ›" numeric(10,3),
-	"ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" numeric(10,2),
-	"Ğ¡Ğ”Ğ‘ĞšĞĞ›" character varying(15),
-	"Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢" character varying(15),
-	"Ğ¡ĞšĞ ĞšĞĞ›" character varying(15),
-	"Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" character varying(15)
+	"ÄÀÒÀ" date,
+	"ÎÏÅĞÍÎÌÅĞ" integer,
+	"ÎÏÅĞÈÌß" character varying(100),
+	"ÄÎÊÊÎÄ" integer,
+	"ÄÎÊÓÌÅÍÒ" character varying(20),
+	"ÍÎÌÅĞ" character varying(10),
+	"ÑÒĞ" integer,
+	"ÊÎÌÌÅÍÒÀĞÈÉ" character varying(100),
+	"ÑÓÌÌÀ" numeric(10,2),
+	"ÄÁÑ×ÅÒ" character(5),
+	"ÊĞÑ×ÅÒ" character(5),
+	"ÄÁÊÎË" numeric(10,3),
+	"ÄÅÁÅÒ" numeric(10,2),
+	"ÊĞÊÎË" numeric(10,3),
+	"ÊĞÅÄÈÒ" numeric(10,2),
+	"ÑÄÁÊÎË" character varying(15),
+	"ÑÄÅÁÅÒ" character varying(15),
+	"ÑÊĞÊÎË" character varying(15),
+	"ÑÊĞÅÄÈÒ" character varying(15)
 );
 
 
 ALTER TYPE public.sp_calcobjoborot_fret OWNER TO sa;
 
 --
+-- TOC entry 333 (class 1247 OID 71796)
+-- Dependencies: 6 1630
 -- Name: sp_calcoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
 CREATE TYPE sp_calcoborot_fret AS (
-	"ĞšĞĞ”" integer,
-	"ĞšĞĞ›" numeric(10,3),
-	"Ğ¡ĞĞ›Ğ¬Ğ”Ğ" numeric(10,2),
-	"Ğ”Ğ‘ĞšĞĞ›" numeric(10,3),
-	"Ğ”Ğ•Ğ‘Ğ•Ğ¢" numeric(10,2),
-	"ĞšĞ ĞšĞĞ›" numeric(10,3),
-	"ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" numeric(10,2),
-	"ĞšĞĞĞšĞĞ›" numeric(10,3),
-	"ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" numeric(10,2),
-	"cĞšĞĞ›" character varying(15),
-	"cĞ¡ĞĞ›Ğ¬Ğ”Ğ" character varying(15),
-	"cĞ”Ğ‘ĞšĞĞ›" character varying(15),
-	"cĞ”Ğ•Ğ‘Ğ•Ğ¢" character varying(15),
-	"cĞšĞ ĞšĞĞ›" character varying(15),
-	"cĞšĞ Ğ•Ğ”Ğ˜Ğ¢" character varying(15),
-	"cĞšĞĞĞšĞĞ›" character varying(15),
-	"cĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" character varying(15)
+	"ÊÎÄ" integer,
+	"ÊÎË" numeric(10,3),
+	"ÑÀËÜÄÎ" numeric(10,2),
+	"ÄÁÊÎË" numeric(10,3),
+	"ÄÅÁÅÒ" numeric(10,2),
+	"ÊĞÊÎË" numeric(10,3),
+	"ÊĞÅÄÈÒ" numeric(10,2),
+	"ÊÎÍÊÎË" numeric(10,3),
+	"ÊÎÍÑÀËÜÄÎ" numeric(10,2),
+	"cÊÎË" character varying(15),
+	"cÑÀËÜÄÎ" character varying(15),
+	"cÄÁÊÎË" character varying(15),
+	"cÄÅÁÅÒ" character varying(15),
+	"cÊĞÊÎË" character varying(15),
+	"cÊĞÅÄÈÒ" character varying(15),
+	"cÊÎÍÊÎË" character varying(15),
+	"cÊÎÍÑÀËÜÄÎ" character varying(15)
 );
 
 
 ALTER TYPE public.sp_calcoborot_fret OWNER TO sa;
 
 --
+-- TOC entry 38 (class 1255 OID 71797)
+-- Dependencies: 329 435 6
 -- Name: sp_calcaccoborot(character, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -116,53 +125,53 @@ DECLARE ret_row RECORD;
 	dDate2 DATE;
 BEGIN
 	IF cDate1 IS NULL THEN
-		dDate1 := (SELECT ĞĞĞ§ĞĞ›Ğ FROM vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹);
+		dDate1 := (SELECT ÍÀ×ÀËÎ FROM vw_áëîêïåğèîäû);
 	ELSE
 		dDate1 := to_date(cDate1, 'DD.MM.YYYY');
 	END IF;
 	IF cDate2 IS NULL THEN
-		dDate2 := (SELECT ĞšĞĞĞ•Ğ¦ FROM vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹);
+		dDate2 := (SELECT ÊÎÍÅÖ FROM vw_áëîêïåğèîäû);
 	ELSE
 		dDate2 := to_date(cDate2, 'DD.MM.YYYY') + 1;
 	END IF;
 	RAISE NOTICE '%', dDate1;
 	FOR ret_row IN
-		SELECT dDate1 AS "Ğ”ĞĞ¢Ğ", 0::integer AS "ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ ", ''::VARCHAR(100) AS "ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯", 0::integer AS "Ğ”ĞĞšĞšĞĞ”", ''::VARCHAR(20) AS "Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢", ''::VARCHAR(10) AS "ĞĞĞœĞ•Ğ ", ''::VARCHAR(100) AS "ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", 0.0::numeric(10,2) AS "Ğ¡Ğ£ĞœĞœĞ", 
-       			''::char(5) AS "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", ''::char(5) AS "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢",
+		SELECT dDate1 AS "ÄÀÒÀ", 0::integer AS "ÎÏÅĞÍÎÌÅĞ", ''::VARCHAR(100) AS "ÎÏÅĞÈÌß", 0::integer AS "ÄÎÊÊÎÄ", ''::VARCHAR(20) AS "ÄÎÊÓÌÅÍÒ", ''::VARCHAR(10) AS "ÍÎÌÅĞ", ''::VARCHAR(100) AS "ÊÎÌÌÅÍÒÀĞÈÉ", 0.0::numeric(10,2) AS "ÑÓÌÌÀ", 
+       			''::char(5) AS "ÄÁÑ×ÅÒ", ''::char(5) AS "ÊĞÑ×ÅÒ",
        			CASE
-               			WHEN S."Ğ¡ĞĞ›Ğ¬Ğ”Ğ" > 0 THEN S."Ğ¡ĞĞ›Ğ¬Ğ”Ğ"
+               			WHEN S."ÑÀËÜÄÎ" > 0 THEN S."ÑÀËÜÄÎ"
                			ELSE 0.0
-               		END::numeric(10,2) AS "Ğ”Ğ•Ğ‘Ğ•Ğ¢",
+               		END::numeric(10,2) AS "ÄÅÁÅÒ",
        			CASE
-                		WHEN S."Ğ¡ĞĞ›Ğ¬Ğ”Ğ" < 0 THEN -S."Ğ¡ĞĞ›Ğ¬Ğ”Ğ"
+                		WHEN S."ÑÀËÜÄÎ" < 0 THEN -S."ÑÀËÜÄÎ"
                 		ELSE 0.0
-                	END::numeric(10,2) AS "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢", ''::VARCHAR(15) AS "Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢", ''::VARCHAR(15) AS "Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢"
-		FROM (SELECT (S."Ğ¡ĞĞ›Ğ¬Ğ”Ğ" + P1."Ğ¡Ğ£ĞœĞœĞ" - P2."Ğ¡Ğ£ĞœĞœĞ") AS "Ğ¡ĞĞ›Ğ¬Ğ”Ğ"
-      	      	      FROM (SELECT "Ğ¡Ğ§Ğ•Ğ¢", SUM(COALESCE("Ğ¡ĞĞ›Ğ¬Ğ”Ğ", 0)) AS "Ğ¡ĞĞ›Ğ¬Ğ”Ğ" 
-		    	    FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" 
-		    	    WHERE "Ğ¡Ğ§Ğ•Ğ¢" = cAcc 
-		    	    GROUP BY "Ğ¡Ğ§Ğ•Ğ¢") S LEFT OUTER JOIN (SELECT P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", SUM(COALESCE(P."Ğ¡Ğ£ĞœĞœĞ", 0)) AS "Ğ¡Ğ£ĞœĞœĞ" 
-                                		 	      FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" P INNER JOIN "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" D ON P."Ğ”ĞĞšĞšĞĞ”"=D."ĞšĞĞ”" 
-			                        	      WHERE P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND D."Ğ”ĞĞ¢Ğ" < dDate1 
-			         		      	      GROUP BY P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") P1 ON S."Ğ¡Ğ§Ğ•Ğ¢" = P1."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢"
-			             	     LEFT OUTER JOIN (SELECT P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", SUM(COALESCE(P."Ğ¡Ğ£ĞœĞœĞ", 0)) AS "Ğ¡Ğ£ĞœĞœĞ" 
-                                 			      FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" P INNER JOIN "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" D ON P."Ğ”ĞĞšĞšĞĞ”"=D."ĞšĞĞ”" 
-                                 		      	      WHERE P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND D."Ğ”ĞĞ¢Ğ" < dDate1
-       			         		      	      GROUP BY P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") P2 ON S."Ğ¡Ğ§Ğ•Ğ¢" = P2."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢"
+                	END::numeric(10,2) AS "ÊĞÅÄÈÒ", ''::VARCHAR(15) AS "ÑÄÅÁÅÒ", ''::VARCHAR(15) AS "ÑÊĞÅÄÈÒ"
+		FROM (SELECT (S."ÑÀËÜÄÎ" + P1."ÑÓÌÌÀ" - P2."ÑÓÌÌÀ") AS "ÑÀËÜÄÎ"
+      	      	      FROM (SELECT "Ñ×ÅÒ", SUM(COALESCE("ÑÀËÜÄÎ", 0)) AS "ÑÀËÜÄÎ" 
+		    	    FROM "ñàëüäî" 
+		    	    WHERE "Ñ×ÅÒ" = cAcc 
+		    	    GROUP BY "Ñ×ÅÒ") S LEFT OUTER JOIN (SELECT P."ÄÁÑ×ÅÒ", SUM(COALESCE(P."ÑÓÌÌÀ", 0)) AS "ÑÓÌÌÀ" 
+                                		 	      FROM "ïğîâîäêè" P INNER JOIN "äîêóìåíòû" D ON P."ÄÎÊÊÎÄ"=D."ÊÎÄ" 
+			                        	      WHERE P."ÄÁÑ×ÅÒ" = cAcc AND D."ÄÀÒÀ" < dDate1 
+			         		      	      GROUP BY P."ÄÁÑ×ÅÒ") P1 ON S."Ñ×ÅÒ" = P1."ÄÁÑ×ÅÒ"
+			             	     LEFT OUTER JOIN (SELECT P."ÊĞÑ×ÅÒ", SUM(COALESCE(P."ÑÓÌÌÀ", 0)) AS "ÑÓÌÌÀ" 
+                                 			      FROM "ïğîâîäêè" P INNER JOIN "äîêóìåíòû" D ON P."ÄÎÊÊÎÄ"=D."ÊÎÄ" 
+                                 		      	      WHERE P."ÊĞÑ×ÅÒ" = cAcc AND D."ÄÀÒÀ" < dDate1
+       			         		      	      GROUP BY P."ÊĞÑ×ÅÒ") P2 ON S."Ñ×ÅÒ" = P2."ÊĞÑ×ÅÒ"
 		) S
 		UNION
-		SELECT D."Ğ”ĞĞ¢Ğ", D."ĞĞŸĞ•Ğ " AS "ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ ", T."Ğ˜ĞœĞ¯" AS "ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯", D."ĞšĞĞ”", COALESCE(T."ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢", '')::VARCHAR(20), D."ĞĞĞœĞ•Ğ ", D."ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", D."Ğ¡Ğ£ĞœĞœĞ", cAcc AS "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", SUM(COALESCE(P."Ğ¡Ğ£ĞœĞœĞ", 0))::numeric(10,2) AS "Ğ”Ğ‘Ğ¡Ğ£ĞœĞœĞ", 0::numeric(10,2) AS "ĞšĞ Ğ¡Ğ£ĞœĞœĞ", ''::VARCHAR(15) AS "CĞ”Ğ•Ğ‘Ğ•Ğ¢", ''::VARCHAR(15) AS "CĞšĞ Ğ•Ğ”Ğ˜Ğ¢"
-		FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" P INNER JOIN "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" D ON P."Ğ”ĞĞšĞšĞĞ”"=D."ĞšĞĞ”" 
-                		INNER JOIN "Ñ‚Ğ¾Ğ¿ĞµÑ€" T ON P."ĞĞŸĞ•Ğ " = T."ĞĞŸĞ•Ğ " AND T."ĞĞĞœĞ•Ğ " = 1
-		WHERE P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" <> cAcc AND P."Ğ¡Ğ£ĞœĞœĞ" <> 0 AND D."Ğ”ĞĞ¢Ğ" >= dDate1 AND D."Ğ”ĞĞ¢Ğ" < dDate2
-		GROUP BY D."Ğ”ĞĞ¢Ğ", D."ĞĞŸĞ•Ğ ", T."Ğ˜ĞœĞ¯", D."ĞšĞĞ”", T."ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢", D."ĞĞĞœĞ•Ğ ", D."ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", D."Ğ¡Ğ£ĞœĞœĞ", P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢"
+		SELECT D."ÄÀÒÀ", D."ÎÏÅĞ" AS "ÎÏÅĞÍÎÌÅĞ", T."ÈÌß" AS "ÎÏÅĞÈÌß", D."ÊÎÄ", COALESCE(T."ÎÑÍÄÎÊÓÌÅÍÒ", '')::VARCHAR(20), D."ÍÎÌÅĞ", D."ÊÎÌÌÅÍÒÀĞÈÉ", D."ÑÓÌÌÀ", cAcc AS "ÄÁÑ×ÅÒ", P."ÊĞÑ×ÅÒ", SUM(COALESCE(P."ÑÓÌÌÀ", 0))::numeric(10,2) AS "ÄÁÑÓÌÌÀ", 0::numeric(10,2) AS "ÊĞÑÓÌÌÀ", ''::VARCHAR(15) AS "CÄÅÁÅÒ", ''::VARCHAR(15) AS "CÊĞÅÄÈÒ"
+		FROM "ïğîâîäêè" P INNER JOIN "äîêóìåíòû" D ON P."ÄÎÊÊÎÄ"=D."ÊÎÄ" 
+                		INNER JOIN "òîïåğ" T ON P."ÎÏÅĞ" = T."ÎÏÅĞ" AND T."ÍÎÌÅĞ" = 1
+		WHERE P."ÄÁÑ×ÅÒ" = cAcc AND P."ÊĞÑ×ÅÒ" <> cAcc AND P."ÑÓÌÌÀ" <> 0 AND D."ÄÀÒÀ" >= dDate1 AND D."ÄÀÒÀ" < dDate2
+		GROUP BY D."ÄÀÒÀ", D."ÎÏÅĞ", T."ÈÌß", D."ÊÎÄ", T."ÎÑÍÄÎÊÓÌÅÍÒ", D."ÍÎÌÅĞ", D."ÊÎÌÌÅÍÒÀĞÈÉ", D."ÑÓÌÌÀ", P."ÊĞÑ×ÅÒ"
 		UNION
-		SELECT D."Ğ”ĞĞ¢Ğ", D."ĞĞŸĞ•Ğ " AS "ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ ", T."Ğ˜ĞœĞ¯" AS "ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯", D."ĞšĞĞ”", COALESCE(T."ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢", '')::VARCHAR(20), D."ĞĞĞœĞ•Ğ ", D."ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", D."Ğ¡Ğ£ĞœĞœĞ", P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", cAcc AS "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", 0::numeric(10,2) AS "Ğ”Ğ‘Ğ¡Ğ£ĞœĞœĞ", SUM(COALESCE(P."Ğ¡Ğ£ĞœĞœĞ", 0))::numeric(10,2) AS "ĞšĞ Ğ¡Ğ£ĞœĞœĞ", ''::VARCHAR(15) AS "CĞ”Ğ•Ğ‘Ğ•Ğ¢", ''::VARCHAR(15) AS "CĞšĞ Ğ•Ğ”Ğ˜Ğ¢"
-		FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" P INNER JOIN "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" D ON P."Ğ”ĞĞšĞšĞĞ”"=D."ĞšĞĞ”" 
-        		        INNER JOIN "Ñ‚Ğ¾Ğ¿ĞµÑ€" T ON P."ĞĞŸĞ•Ğ " = T."ĞĞŸĞ•Ğ " AND T."ĞĞĞœĞ•Ğ " = 1
-		WHERE P."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" <> cAcc AND P."Ğ¡Ğ£ĞœĞœĞ" <> 0 AND D."Ğ”ĞĞ¢Ğ" >= dDate1 AND D."Ğ”ĞĞ¢Ğ" < dDate2
-		GROUP BY D."Ğ”ĞĞ¢Ğ", D."ĞĞŸĞ•Ğ ", T."Ğ˜ĞœĞ¯", D."ĞšĞĞ”", T."ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢", D."ĞĞĞœĞ•Ğ ", D."ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", D."Ğ¡Ğ£ĞœĞœĞ", P."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢"
-		ORDER BY "Ğ”ĞĞ¢Ğ" LOOP
+		SELECT D."ÄÀÒÀ", D."ÎÏÅĞ" AS "ÎÏÅĞÍÎÌÅĞ", T."ÈÌß" AS "ÎÏÅĞÈÌß", D."ÊÎÄ", COALESCE(T."ÎÑÍÄÎÊÓÌÅÍÒ", '')::VARCHAR(20), D."ÍÎÌÅĞ", D."ÊÎÌÌÅÍÒÀĞÈÉ", D."ÑÓÌÌÀ", P."ÄÁÑ×ÅÒ", cAcc AS "ÊĞÑ×ÅÒ", 0::numeric(10,2) AS "ÄÁÑÓÌÌÀ", SUM(COALESCE(P."ÑÓÌÌÀ", 0))::numeric(10,2) AS "ÊĞÑÓÌÌÀ", ''::VARCHAR(15) AS "CÄÅÁÅÒ", ''::VARCHAR(15) AS "CÊĞÅÄÈÒ"
+		FROM "ïğîâîäêè" P INNER JOIN "äîêóìåíòû" D ON P."ÄÎÊÊÎÄ"=D."ÊÎÄ" 
+        		        INNER JOIN "òîïåğ" T ON P."ÎÏÅĞ" = T."ÎÏÅĞ" AND T."ÍÎÌÅĞ" = 1
+		WHERE P."ÊĞÑ×ÅÒ" = cAcc AND P."ÄÁÑ×ÅÒ" <> cAcc AND P."ÑÓÌÌÀ" <> 0 AND D."ÄÀÒÀ" >= dDate1 AND D."ÄÀÒÀ" < dDate2
+		GROUP BY D."ÄÀÒÀ", D."ÎÏÅĞ", T."ÈÌß", D."ÊÎÄ", T."ÎÑÍÄÎÊÓÌÅÍÒ", D."ÍÎÌÅĞ", D."ÊÎÌÌÅÍÒÀĞÈÉ", D."ÑÓÌÌÀ", P."ÄÁÑ×ÅÒ"
+		ORDER BY "ÄÀÒÀ" LOOP
 
 		RETURN NEXT ret_row;
 	END LOOP;
@@ -174,6 +183,8 @@ $$;
 ALTER FUNCTION public.sp_calcaccoborot(cacc character, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
+-- TOC entry 18 (class 1255 OID 71798)
+-- Dependencies: 6 435
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -181,39 +192,39 @@ CREATE FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character varyin
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	SELECT to_date(cDate1, 'DD.MM.YYYY') AS Ğ”ĞĞ¢Ğ, NULL AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , '' AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, '' AS Ğ”ĞĞšĞšĞĞ”, '' AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, '' AS ĞĞĞœĞ•Ğ , '' AS ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, 0 AS Ğ¡Ğ£ĞœĞœĞ, '' AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, '' AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢,
-       		Ğ”Ğ•Ğ‘Ğ•Ğ¢ = CASE
-               			WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ > 0 THEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ
+	SELECT to_date(cDate1, 'DD.MM.YYYY') AS ÄÀÒÀ, NULL AS ÎÏÅĞÍÎÌÅĞ, '' AS ÎÏÅĞÈÌß, '' AS ÄÎÊÊÎÄ, '' AS ÄÎÊÓÌÅÍÒ, '' AS ÍÎÌÅĞ, '' AS ÊÎÌÌÅÍÒÀĞÈÉ, 0 AS ÑÓÌÌÀ, '' AS ÄÁÑ×ÅÒ, '' AS ÊĞÑ×ÅÒ,
+       		ÄÅÁÅÒ = CASE
+               			WHEN S.ÑÀËÜÄÎ > 0 THEN S.ÑÀËÜÄÎ
                			ELSE 0
                		END,
-       		ĞšĞ Ğ•Ğ”Ğ˜Ğ¢ = CASE
-                		WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ < 0 THEN -S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ
+       		ÊĞÅÄÈÒ = CASE
+                		WHEN S.ÑÀËÜÄÎ < 0 THEN -S.ÑÀËÜÄÎ
                 		ELSE 0
-                	END, '             ' AS Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢, '             ' AS Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢
-	FROM (SELECT (S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ + COALESCE(P1.Ğ¡Ğ£ĞœĞœĞ, 0) - COALESCE(P2.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ 
-       	      FROM (SELECT SUM(Ğ¡ĞĞ›Ğ¬Ğ”Ğ) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ 
-		    FROM ÑĞ°Ğ»ÑŒĞ´Ğ¾ 
-		    WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc) S,
-	           (SELECT SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ 
-                    FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” 
-                    WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND to_date(D.Ğ”ĞĞ¢Ğ, 'DD.MM.YYYY') < to_date(cDate1, 'DD.MM.YYYY')) P1,
-                   (SELECT SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ 
-                    FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” 
-	            WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND to_date(D.Ğ”ĞĞ¢Ğ, 'DD.MM.YYYY') < to_date(cDate1, 'DD.MM.YYYY')) P2
+                	END, '             ' AS ÑÄÅÁÅÒ, '             ' AS ÑÊĞÅÄÈÒ
+	FROM (SELECT (S.ÑÀËÜÄÎ + COALESCE(P1.ÑÓÌÌÀ, 0) - COALESCE(P2.ÑÓÌÌÀ, 0)) AS ÑÀËÜÄÎ 
+       	      FROM (SELECT SUM(ÑÀËÜÄÎ) AS ÑÀËÜÄÎ 
+		    FROM ñàëüäî 
+		    WHERE Ñ×ÅÒ = cAcc) S,
+	           (SELECT SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ 
+                    FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ 
+                    WHERE P.ÄÁÑ×ÅÒ = cAcc AND to_date(D.ÄÀÒÀ, 'DD.MM.YYYY') < to_date(cDate1, 'DD.MM.YYYY')) P1,
+                   (SELECT SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ 
+                    FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ 
+	            WHERE P.ÊĞÑ×ÅÒ = cAcc AND to_date(D.ÄÀÒÀ, 'DD.MM.YYYY') < to_date(cDate1, 'DD.MM.YYYY')) P2
               ) S
 	UNION
-	SELECT D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, D.ĞšĞĞ”, COALESCE(T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, ''), D.ĞĞĞœĞ•Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, cAcc AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, 0 AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, '             ', '             '
-	FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” 
-                        INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1
-	WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND (P.Ğ¡Ğ£ĞœĞœĞ <> 0) AND (to_date(D.Ğ”ĞĞ¢Ğ, 'DD.MM.YYYY') >= to_date(cDate1, 'DD.MM.YYYY')) AND (to_date(D.Ğ”ĞĞ¢Ğ, 'DD.MM.YYYY') < to_date(cDate2, 'DD.MM.YYYY') + 1)
-	GROUP BY D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ , T.Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢
+	SELECT D.ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, D.ÊÎÄ, COALESCE(T.ÎÑÍÄÎÊÓÌÅÍÒ, ''), D.ÍÎÌÅĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, cAcc AS ÄÁÑ×ÅÒ, P.ÊĞÑ×ÅÒ, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÄÅÁÅÒ, 0 AS ÊĞÅÄÈÒ, '             ', '             '
+	FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ 
+                        INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1
+	WHERE P.ÄÁÑ×ÅÒ = cAcc AND (P.ÑÓÌÌÀ <> 0) AND (to_date(D.ÄÀÒÀ, 'DD.MM.YYYY') >= to_date(cDate1, 'DD.MM.YYYY')) AND (to_date(D.ÄÀÒÀ, 'DD.MM.YYYY') < to_date(cDate2, 'DD.MM.YYYY') + 1)
+	GROUP BY D.ÄÀÒÀ, D.ÎÏÅĞ, T.ÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÊĞÑ×ÅÒ
 	UNION
-	SELECT D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, D.ĞšĞĞ”, COALESCE(T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, ''), D.ĞĞĞœĞ•Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, cAcc AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, 0 AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, '             ', '             '
-	FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” 
-                        INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1
-	WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND (P.Ğ¡Ğ£ĞœĞœĞ <> 0) AND (to_date(D.Ğ”ĞĞ¢Ğ, 'DD.MM.YYYY') >= to_date(cDate1, 'DD.MM.YYYY')) AND (to_date(D.Ğ”ĞĞ¢Ğ, 'DD.MM.YYYY') < to_date(cDate2, 'DD.MM.YYYY') + 1)
-	GROUP BY D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ , T.Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢
-	ORDER BY Ğ”ĞĞ¢Ğ;
+	SELECT D.ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, D.ÊÎÄ, COALESCE(T.ÎÑÍÄÎÊÓÌÅÍÒ, ''), D.ÍÎÌÅĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÄÁÑ×ÅÒ, cAcc AS ÊĞÑ×ÅÒ, 0 AS ÄÅÁÅÒ, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÊĞÅÄÈÒ, '             ', '             '
+	FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ 
+                        INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1
+	WHERE P.ÊĞÑ×ÅÒ = cAcc AND (P.ÑÓÌÌÀ <> 0) AND (to_date(D.ÄÀÒÀ, 'DD.MM.YYYY') >= to_date(cDate1, 'DD.MM.YYYY')) AND (to_date(D.ÄÀÒÀ, 'DD.MM.YYYY') < to_date(cDate2, 'DD.MM.YYYY') + 1)
+	GROUP BY D.ÄÀÒÀ, D.ÎÏÅĞ, T.ÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÄÁÑ×ÅÒ
+	ORDER BY ÄÀÒÀ;
 END;
 $$;
 
@@ -221,6 +232,8 @@ $$;
 ALTER FUNCTION public.sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
+-- TOC entry 39 (class 1255 OID 71799)
+-- Dependencies: 435 331 6
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -235,114 +248,114 @@ BEGIN
 	dDate1 := to_date(cDate1, 'DD.MM.YYYY');
 	dDate2 := to_date(cDate2, 'DD.MM.YYYY') + 1;
 	nObj := COALESCE(pnObj, 0);
-	IF (SELECT ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ FROM ÑÑ‡ĞµÑ‚Ğ° WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc) = TRUE THEN		-- ĞµÑĞ»Ğ¸ Ğ´Ğ»Ñ ÑÑ‚Ğ¾Ğ³Ğ¾ ÑÑ‡ĞµÑ‚Ğ° ĞµÑÑ‚ÑŒ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²ĞµĞ½Ğ½Ñ‹Ğ¹ ÑƒÑ‡ĞµÑ‚, Ñ‚Ğ¾ Ğ² Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚ Ğ²ĞºĞ»ÑÑ‡Ğ¸Ğ¼ ÑÑÑ‹Ğ»ĞºÑƒ Ğ½Ğ° Ğ½Ğ¾Ğ¼ĞµÑ€ ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ² Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğµ Ğ´Ğ»Ñ Ğ¾Ğ±Ğ»ĞµĞ³Ñ‡ĞµĞ½Ğ¸Ñ Ğ¿Ğ¾Ğ¸ÑĞºĞ° Ğ¿Ğ¾Ğ·Ğ¸Ñ†Ğ¸Ğ¸
+	IF (SELECT ÊÎËÈ×ÅÑÒÂÎ FROM ñ÷åòà WHERE Ñ×ÅÒ = cAcc) = TRUE THEN		-- åñëè äëÿ ıòîãî ñ÷åòà åñòü êîëè÷åñòâåííûé ó÷åò, òî â ğåçóëüòàò âêëş÷èì ññûëêó íà íîìåğ ñòğîêè â äîêóìåíòå äëÿ îáëåã÷åíèÿ ïîèñêà ïîçèöèè
 		FOR ret_row IN
-			SELECT  dDate1 AS Ğ”ĞĞ¢Ğ, 0 AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , ''::VARCHAR(100) AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, 0 AS Ğ”ĞĞšĞšĞĞ”, ''::VARCHAR(20) AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, ''::VARCHAR(10) AS ĞĞĞœĞ•Ğ , 0 AS Ğ¡Ğ¢Ğ , ''::VARCHAR(100) AS ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, 0 AS Ğ¡Ğ£ĞœĞœĞ, '' AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, '' AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢,
+			SELECT  dDate1 AS ÄÀÒÀ, 0 AS ÎÏÅĞÍÎÌÅĞ, ''::VARCHAR(100) AS ÎÏÅĞÈÌß, 0 AS ÄÎÊÊÎÄ, ''::VARCHAR(20) AS ÄÎÊÓÌÅÍÒ, ''::VARCHAR(10) AS ÍÎÌÅĞ, 0 AS ÑÒĞ, ''::VARCHAR(100) AS ÊÎÌÌÅÍÒÀĞÈÉ, 0 AS ÑÓÌÌÀ, '' AS ÄÁÑ×ÅÒ, '' AS ÊĞÑ×ÅÒ,
 	       			CASE
-             				WHEN S.ĞšĞĞ› > 0 THEN S.ĞšĞĞ›
+             				WHEN S.ÊÎË > 0 THEN S.ÊÎË
 		               		ELSE 0::NUMERIC(10, 3)
-		               	END AS Ğ”Ğ‘ĞšĞĞ›,
+		               	END AS ÄÁÊÎË,
 	       			CASE
-             				WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ > 0 THEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ
+             				WHEN S.ÑÀËÜÄÎ > 0 THEN S.ÑÀËÜÄÎ
 		               		ELSE 0::NUMERIC(10, 2)
-        	     		END AS Ğ”Ğ•Ğ‘Ğ•Ğ¢,
+        	     		END AS ÄÅÁÅÒ,
 	       			CASE
-             				WHEN S.ĞšĞĞ› < 0 THEN -S.ĞšĞĞ›
+             				WHEN S.ÊÎË < 0 THEN -S.ÊÎË
 	               			ELSE 0::NUMERIC(10, 3)
-	             		END AS ĞšĞ ĞšĞĞ›,
+	             		END AS ÊĞÊÎË,
 		       		CASE
-             				WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ < 0 THEN -S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ
+             				WHEN S.ÑÀËÜÄÎ < 0 THEN -S.ÑÀËÜÄÎ
 	                		ELSE 0::NUMERIC(10, 2)
-             			END AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, ''::VARCHAR(15) AS Ğ¡Ğ”Ğ‘ĞšĞĞ›, ''::VARCHAR(15) AS Ğ¡ĞšĞ ĞšĞĞ›, ''::VARCHAR(15) AS Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢, ''::VARCHAR(15) AS Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢
-			FROM (SELECT (S.ĞšĞĞ› + P1.ĞšĞĞ› - P2.ĞšĞĞ›) AS ĞšĞĞ›, (S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ + P1.Ğ¡Ğ£ĞœĞœĞ - P2.Ğ¡Ğ£ĞœĞœĞ) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ 
-			      FROM (SELECT ĞšĞĞ”, ĞšĞĞ›, Ğ¡ĞĞ›Ğ¬Ğ”Ğ 
-				    FROM ÑĞ°Ğ»ÑŒĞ´Ğ¾ 
-				    WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND ĞšĞĞ” = nObj) S,
-				   (SELECT SUM(P.ĞšĞĞ›) AS ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS Ğ¡Ğ£ĞœĞœĞ 
-             		            FROM (SELECT p.ĞšĞĞ” AS ĞšĞĞ”, p.ĞšĞĞ›, p.Ğ¡Ğ£ĞœĞœĞ
-					  FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” 
-								      FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ 
-								      WHERE Ğ”ĞĞ¢Ğ < dDate1) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-	                            	  WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.Ğ”Ğ‘ĞšĞĞ” = nObj
+             			END AS ÊĞÅÄÈÒ, ''::VARCHAR(15) AS ÑÄÁÊÎË, ''::VARCHAR(15) AS ÑÊĞÊÎË, ''::VARCHAR(15) AS ÑÄÅÁÅÒ, ''::VARCHAR(15) AS ÑÊĞÅÄÈÒ
+			FROM (SELECT (S.ÊÎË + P1.ÊÎË - P2.ÊÎË) AS ÊÎË, (S.ÑÀËÜÄÎ + P1.ÑÓÌÌÀ - P2.ÑÓÌÌÀ) AS ÑÀËÜÄÎ 
+			      FROM (SELECT ÊÎÄ, ÊÎË, ÑÀËÜÄÎ 
+				    FROM ñàëüäî 
+				    WHERE Ñ×ÅÒ = cAcc AND ÊÎÄ = nObj) S,
+				   (SELECT SUM(P.ÊÎË) AS ÊÎË, SUM(P.ÑÓÌÌÀ) AS ÑÓÌÌÀ 
+             		            FROM (SELECT p.ÊÎÄ AS ÊÎÄ, p.ÊÎË, p.ÑÓÌÌÀ
+					  FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ 
+								      FROM äîêóìåíòû 
+								      WHERE ÄÀÒÀ < dDate1) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+	                            	  WHERE P.ÄÁÑ×ÅÒ = cAcc AND P.ÄÁÊÎÄ = nObj
 					  UNION
-				    	  SELECT 0 AS ĞšĞĞ”, 0 AS ĞšĞĞ›, 0 AS Ğ¡Ğ£ĞœĞœĞ) p) P1,
-             			   (SELECT SUM(P.ĞšĞĞ›) AS ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS Ğ¡Ğ£ĞœĞœĞ 
-                        	    FROM (SELECT p.ĞšĞĞ” AS ĞšĞĞ”, p.ĞšĞĞ›, p.Ğ¡Ğ£ĞœĞœĞ
-					  FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” 
-								      FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ 
-								      WHERE Ğ”ĞĞ¢Ğ < dDate1) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-					  WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.ĞšĞ ĞšĞĞ” = nObj
+				    	  SELECT 0 AS ÊÎÄ, 0 AS ÊÎË, 0 AS ÑÓÌÌÀ) p) P1,
+             			   (SELECT SUM(P.ÊÎË) AS ÊÎË, SUM(P.ÑÓÌÌÀ) AS ÑÓÌÌÀ 
+                        	    FROM (SELECT p.ÊÎÄ AS ÊÎÄ, p.ÊÎË, p.ÑÓÌÌÀ
+					  FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ 
+								      FROM äîêóìåíòû 
+								      WHERE ÄÀÒÀ < dDate1) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+					  WHERE P.ÊĞÑ×ÅÒ = cAcc AND P.ÊĞÊÎÄ = nObj
 					  UNION
-					  SELECT 0 AS ĞšĞĞ”, 0 AS ĞšĞĞ›, 0 AS Ğ¡Ğ£ĞœĞœĞ) p) P2
+					  SELECT 0 AS ÊÎÄ, 0 AS ÊÎË, 0 AS ÑÓÌÌÀ) p) P2
 		              ) S
 			UNION
-			SELECT D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢ AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , P.Ğ¡Ğ¢Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, cAcc AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, SUM(P.ĞšĞĞ›) AS Ğ”Ğ‘ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, 0 AS ĞšĞ ĞšĞĞ›, 0 AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, '', '', '', ''
-			FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” 
-        	     		        INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1
-			WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.Ğ”Ğ‘ĞšĞĞ” = nObj AND D.Ğ”ĞĞ¢Ğ >= dDate1 AND D.Ğ”ĞĞ¢Ğ < dDate2
-			GROUP BY D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ , T.Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , P.Ğ¡Ğ¢Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢
+			SELECT D.ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ AS ÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, P.ÑÒĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, cAcc AS ÄÁÑ×ÅÒ, P.ÊĞÑ×ÅÒ, SUM(P.ÊÎË) AS ÄÁÊÎË, SUM(P.ÑÓÌÌÀ) AS ÄÅÁÅÒ, 0 AS ÊĞÊÎË, 0 AS ÊĞÅÄÈÒ, '', '', '', ''
+			FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ 
+        	     		        INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1
+			WHERE P.ÄÁÑ×ÅÒ = cAcc AND P.ÄÁÊÎÄ = nObj AND D.ÄÀÒÀ >= dDate1 AND D.ÄÀÒÀ < dDate2
+			GROUP BY D.ÄÀÒÀ, D.ÎÏÅĞ, T.ÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, P.ÑÒĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÊĞÑ×ÅÒ
 			UNION
-			SELECT D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢ AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , P.Ğ¡Ğ¢Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, cAcc AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, 0 AS Ğ”Ğ‘ĞšĞĞ›, 0 AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, SUM(P.ĞšĞĞ›) AS ĞšĞ ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, '', '', '', ''
-			FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” 
-             	        	        INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1
-			WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.ĞšĞ ĞšĞĞ” = nObj AND D.Ğ”ĞĞ¢Ğ >= dDate1 AND D.Ğ”ĞĞ¢Ğ < dDate2
-			GROUP BY D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ , T.Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , P.Ğ¡Ğ¢Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢
-			ORDER BY Ğ”ĞĞ¢Ğ, ĞĞĞœĞ•Ğ  LOOP
+			SELECT D.ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ AS ÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, P.ÑÒĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÄÁÑ×ÅÒ, cAcc AS ÊĞÑ×ÅÒ, 0 AS ÄÁÊÎË, 0 AS ÄÅÁÅÒ, SUM(P.ÊÎË) AS ÊĞÊÎË, SUM(P.ÑÓÌÌÀ) AS ÊĞÅÄÈÒ, '', '', '', ''
+			FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ 
+             	        	        INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1
+			WHERE P.ÊĞÑ×ÅÒ = cAcc AND P.ÊĞÊÎÄ = nObj AND D.ÄÀÒÀ >= dDate1 AND D.ÄÀÒÀ < dDate2
+			GROUP BY D.ÄÀÒÀ, D.ÎÏÅĞ, T.ÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, P.ÑÒĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÄÁÑ×ÅÒ
+			ORDER BY ÄÀÒÀ, ÍÎÌÅĞ LOOP
 			RETURN NEXT ret_row;
 		END LOOP;
 	ELSE
 		FOR ret_row IN
-			SELECT  dDate1 AS Ğ”ĞĞ¢Ğ, 0 AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , ''::VARCHAR(100) AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, 0 AS Ğ”ĞĞšĞšĞĞ”, ''::VARCHAR(20) AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, ''::VARCHAR(10) AS ĞĞĞœĞ•Ğ , 0 AS Ğ¡Ğ¢Ğ , ''::VARCHAR(100) AS ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, 0 AS Ğ¡Ğ£ĞœĞœĞ, '' AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, '' AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢,
+			SELECT  dDate1 AS ÄÀÒÀ, 0 AS ÎÏÅĞÍÎÌÅĞ, ''::VARCHAR(100) AS ÎÏÅĞÈÌß, 0 AS ÄÎÊÊÎÄ, ''::VARCHAR(20) AS ÄÎÊÓÌÅÍÒ, ''::VARCHAR(10) AS ÍÎÌÅĞ, 0 AS ÑÒĞ, ''::VARCHAR(100) AS ÊÎÌÌÅÍÒÀĞÈÉ, 0 AS ÑÓÌÌÀ, '' AS ÄÁÑ×ÅÒ, '' AS ÊĞÑ×ÅÒ,
 		       		CASE
-             				WHEN S.ĞšĞĞ› > 0 THEN S.ĞšĞĞ›
+             				WHEN S.ÊÎË > 0 THEN S.ÊÎË
 	               			ELSE 0::NUMERIC(10, 3)
-		               	END AS Ğ”Ğ‘ĞšĞĞ›,
+		               	END AS ÄÁÊÎË,
 		       		CASE
-             				WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ > 0 THEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ
+             				WHEN S.ÑÀËÜÄÎ > 0 THEN S.ÑÀËÜÄÎ
 	               			ELSE 0::NUMERIC(10, 2)
-	             		END AS Ğ”Ğ•Ğ‘Ğ•Ğ¢,
+	             		END AS ÄÅÁÅÒ,
 		       		CASE
-             				WHEN S.ĞšĞĞ› < 0 THEN -S.ĞšĞĞ›
+             				WHEN S.ÊÎË < 0 THEN -S.ÊÎË
 	               			ELSE 0::NUMERIC(10, 3)
-	             		END AS ĞšĞ ĞšĞĞ›,
+	             		END AS ÊĞÊÎË,
 		       		CASE
-             				WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ < 0 THEN -S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ
+             				WHEN S.ÑÀËÜÄÎ < 0 THEN -S.ÑÀËÜÄÎ
 	                		ELSE 0::NUMERIC(10, 2)
-	             		END AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, ''::VARCHAR(15) AS Ğ¡Ğ”Ğ‘ĞšĞĞ›, ''::VARCHAR(15) AS Ğ¡ĞšĞ ĞšĞĞ›, ''::VARCHAR(15) AS Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢, ''::VARCHAR(15) AS Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢
-			FROM (SELECT (S.ĞšĞĞ› + P1.ĞšĞĞ› - P2.ĞšĞĞ›) AS ĞšĞĞ›, (S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ + P1.Ğ¡Ğ£ĞœĞœĞ - P2.Ğ¡Ğ£ĞœĞœĞ) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ 
-			      FROM (SELECT ĞšĞĞ”, ĞšĞĞ›, Ğ¡ĞĞ›Ğ¬Ğ”Ğ 
-				    FROM ÑĞ°Ğ»ÑŒĞ´Ğ¾ 
-				    WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND ĞšĞĞ” = nObj) S,
-				   (SELECT SUM(P.ĞšĞĞ›) AS ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS Ğ¡Ğ£ĞœĞœĞ 
-             		            FROM (SELECT p.ĞšĞĞ”, p.ĞšĞĞ›, p.Ğ¡Ğ£ĞœĞœĞ
-					  FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” 
-								      FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ 
-								      WHERE Ğ”ĞĞ¢Ğ < dDate1) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-	                            	  WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.Ğ”Ğ‘ĞšĞĞ” = nObj
+	             		END AS ÊĞÅÄÈÒ, ''::VARCHAR(15) AS ÑÄÁÊÎË, ''::VARCHAR(15) AS ÑÊĞÊÎË, ''::VARCHAR(15) AS ÑÄÅÁÅÒ, ''::VARCHAR(15) AS ÑÊĞÅÄÈÒ
+			FROM (SELECT (S.ÊÎË + P1.ÊÎË - P2.ÊÎË) AS ÊÎË, (S.ÑÀËÜÄÎ + P1.ÑÓÌÌÀ - P2.ÑÓÌÌÀ) AS ÑÀËÜÄÎ 
+			      FROM (SELECT ÊÎÄ, ÊÎË, ÑÀËÜÄÎ 
+				    FROM ñàëüäî 
+				    WHERE Ñ×ÅÒ = cAcc AND ÊÎÄ = nObj) S,
+				   (SELECT SUM(P.ÊÎË) AS ÊÎË, SUM(P.ÑÓÌÌÀ) AS ÑÓÌÌÀ 
+             		            FROM (SELECT p.ÊÎÄ, p.ÊÎË, p.ÑÓÌÌÀ
+					  FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ 
+								      FROM äîêóìåíòû 
+								      WHERE ÄÀÒÀ < dDate1) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+	                            	  WHERE P.ÄÁÑ×ÅÒ = cAcc AND P.ÄÁÊÎÄ = nObj
 					  UNION
-				    	  SELECT 0 AS ĞšĞĞ”, 0 AS ĞšĞĞ›, 0 AS Ğ¡Ğ£ĞœĞœĞ) p) P1,
-             			   (SELECT SUM(P.ĞšĞĞ›) AS ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS Ğ¡Ğ£ĞœĞœĞ 
-                        	    FROM (SELECT p.ĞšĞĞ”, p.ĞšĞĞ›, p.Ğ¡Ğ£ĞœĞœĞ
-					  FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” 
-								      FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ 
-								      WHERE Ğ”ĞĞ¢Ğ < dDate1) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-					  WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.ĞšĞ ĞšĞĞ” = nObj
+				    	  SELECT 0 AS ÊÎÄ, 0 AS ÊÎË, 0 AS ÑÓÌÌÀ) p) P1,
+             			   (SELECT SUM(P.ÊÎË) AS ÊÎË, SUM(P.ÑÓÌÌÀ) AS ÑÓÌÌÀ 
+                        	    FROM (SELECT p.ÊÎÄ, p.ÊÎË, p.ÑÓÌÌÀ
+					  FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ 
+								      FROM äîêóìåíòû 
+								      WHERE ÄÀÒÀ < dDate1) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+					  WHERE P.ÊĞÑ×ÅÒ = cAcc AND P.ÊĞÊÎÄ = nObj
 					  UNION
-					  SELECT 0 AS ĞšĞĞ”, 0 AS ĞšĞĞ›, 0 AS Ğ¡Ğ£ĞœĞœĞ) p) P2
+					  SELECT 0 AS ÊÎÄ, 0 AS ÊÎË, 0 AS ÑÓÌÌÀ) p) P2
 		              ) S
 			UNION
-			SELECT D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢ AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , 0 AS Ğ¡Ğ¢Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, cAcc AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, SUM(P.ĞšĞĞ›) AS Ğ”Ğ‘ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, 0 AS ĞšĞ ĞšĞĞ›, 0 AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, '', '', '', ''
-			FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-             	        	        INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1
-			WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.Ğ”Ğ‘ĞšĞĞ” = nObj AND D.Ğ”ĞĞ¢Ğ >= dDate1 AND D.Ğ”ĞĞ¢Ğ < dDate2
-			GROUP BY D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ , T.Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, p.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢
+			SELECT D.ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ AS ÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, 0 AS ÑÒĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, cAcc AS ÄÁÑ×ÅÒ, P.ÊĞÑ×ÅÒ, SUM(P.ÊÎË) AS ÄÁÊÎË, SUM(P.ÑÓÌÌÀ) AS ÄÅÁÅÒ, 0 AS ÊĞÊÎË, 0 AS ÊĞÅÄÈÒ, '', '', '', ''
+			FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+             	        	        INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1
+			WHERE P.ÄÁÑ×ÅÒ = cAcc AND P.ÄÁÊÎÄ = nObj AND D.ÄÀÒÀ >= dDate1 AND D.ÄÀÒÀ < dDate2
+			GROUP BY D.ÄÀÒÀ, D.ÎÏÅĞ, T.ÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, p.ÊĞÑ×ÅÒ
 			UNION
-			SELECT D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢ AS Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , 0 AS Ğ¡Ğ¢Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, cAcc AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, 0 AS Ğ”Ğ‘ĞšĞĞ›, 0 AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, SUM(P.ĞšĞĞ›) AS ĞšĞ ĞšĞĞ›, SUM(P.Ğ¡Ğ£ĞœĞœĞ) AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, '', '', '', ''
-			FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-             		                INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1
-			WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc AND P.ĞšĞ ĞšĞĞ” = nObj AND D.Ğ”ĞĞ¢Ğ >= dDate1 AND D.Ğ”ĞĞ¢Ğ < dDate2
-			GROUP BY D.Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ , T.Ğ˜ĞœĞ¯, D.ĞšĞĞ”, T.ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢, D.ĞĞĞœĞ•Ğ , D.ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™, D.Ğ¡Ğ£ĞœĞœĞ, p.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢
-			ORDER BY Ğ”ĞĞ¢Ğ, ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , ĞĞĞœĞ•Ğ  LOOP
+			SELECT D.ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ AS ÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, 0 AS ÑÒĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, P.ÄÁÑ×ÅÒ, cAcc AS ÊĞÑ×ÅÒ, 0 AS ÄÁÊÎË, 0 AS ÄÅÁÅÒ, SUM(P.ÊÎË) AS ÊĞÊÎË, SUM(P.ÑÓÌÌÀ) AS ÊĞÅÄÈÒ, '', '', '', ''
+			FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+             		                INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1
+			WHERE P.ÊĞÑ×ÅÒ = cAcc AND P.ÊĞÊÎÄ = nObj AND D.ÄÀÒÀ >= dDate1 AND D.ÄÀÒÀ < dDate2
+			GROUP BY D.ÄÀÒÀ, D.ÎÏÅĞ, T.ÈÌß, D.ÊÎÄ, T.ÎÑÍÄÎÊÓÌÅÍÒ, D.ÍÎÌÅĞ, D.ÊÎÌÌÅÍÒÀĞÈÉ, D.ÑÓÌÌÀ, p.ÄÁÑ×ÅÒ
+			ORDER BY ÄÀÒÀ, ÎÏÅĞÍÎÌÅĞ, ÍÎÌÅĞ LOOP
 			RETURN NEXT ret_row;
 		END LOOP;
 	END IF;
@@ -353,17 +366,19 @@ $$;
 ALTER FUNCTION public.sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
+-- TOC entry 20 (class 1255 OID 71800)
+-- Dependencies: 6 435 333
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
 CREATE FUNCTION sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) RETURNS SETOF sp_calcoborot_fret
     LANGUAGE plpgsql
     AS $$
--- cComm1 - ÑĞµĞºÑ†Ğ¸Ñ select ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹
--- cComm2 - ÑĞµĞºÑ†Ğ¸Ñ order ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹
--- cAcc - Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€ÑĞºĞ¸Ğ¹ ÑÑ‡ĞµÑ‚
--- dDate1 - Ğ½Ğ°Ñ‡Ğ°Ğ»ÑŒĞ½Ğ°Ñ Ğ´Ğ°Ñ‚Ğ°
--- dDate2 - ĞºĞ¾Ğ½ĞµÑ‡Ğ½Ğ°Ñ Ğ´Ğ°Ñ‚Ğ°
+-- cComm1 - ñåêöèÿ select êîìàíäû
+-- cComm2 - ñåêöèÿ order êîìàíäû
+-- cAcc - áóõãàëòåğñêèé ñ÷åò
+-- dDate1 - íà÷àëüíàÿ äàòà
+-- dDate2 - êîíå÷íàÿ äàòà
 DECLARE ret_row RECORD;
 	dDate1 DATE;
 	dDate2 DATE;
@@ -373,30 +388,30 @@ BEGIN
 	
 	FOR ret_row IN
 		SELECT *
-		FROM (SELECT S.ĞšĞĞ”, COALESCE(S.ĞšĞĞ›, 0)::NUMERIC(10, 3) AS ĞšĞĞ›, COALESCE(S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ, 0)::NUMERIC(10, 2) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ, COALESCE(P1.ĞšĞĞ›, 0)::NUMERIC(10, 3) AS Ğ”Ğ‘ĞšĞĞ›, COALESCE(P1.Ğ¡Ğ£ĞœĞœĞ, 0)::NUMERIC(10, 2) AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, COALESCE(P2.ĞšĞĞ›, 0)::NUMERIC(10, 3) AS ĞšĞ ĞšĞĞ›, COALESCE(P2.Ğ¡Ğ£ĞœĞœĞ, 0)::NUMERIC(10, 2) AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢, (COALESCE(S.ĞšĞĞ›, 0) + COALESCE(P1.ĞšĞĞ›, 0) - COALESCE(P2.ĞšĞĞ›, 0))::NUMERIC(10, 3) AS ĞšĞĞĞšĞĞ›, (COALESCE(S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ, 0) + COALESCE(P1.Ğ¡Ğ£ĞœĞœĞ, 0) - COALESCE(P2.Ğ¡Ğ£ĞœĞœĞ, 0))::NUMERIC(10, 2) AS ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ, 
-			''::VARCHAR(15) AS CĞšĞĞ›, ''::VARCHAR(15) AS CĞ¡ĞĞ›Ğ¬Ğ”Ğ, ''::VARCHAR(15) AS CĞ”Ğ‘ĞšĞĞ›, ''::VARCHAR(15) AS CĞ”Ğ•Ğ‘Ğ•Ğ¢, ''::VARCHAR(15) AS CĞšĞ ĞšĞĞ›, ''::VARCHAR(15) AS CĞšĞ Ğ•Ğ”Ğ˜Ğ¢, ''::VARCHAR(15) AS CĞšĞĞĞšĞĞ›, ''::VARCHAR(15) AS CĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ
- 		      FROM (SELECT S.ĞšĞĞ”, (S.ĞšĞĞ› + COALESCE(P1.ĞšĞĞ›, 0) - COALESCE(P2.ĞšĞĞ›, 0)) AS ĞšĞĞ›, (S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ + COALESCE(P1.Ğ¡Ğ£ĞœĞœĞ, 0) - COALESCE(P2.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ
-                	    FROM (SELECT ĞšĞĞ”, COALESCE(ĞšĞĞ›, 0) AS ĞšĞĞ›, Ğ¡ĞĞ›Ğ¬Ğ”Ğ FROM ÑĞ°Ğ»ÑŒĞ´Ğ¾ WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc
-                    		 ) S LEFT JOIN (SELECT P.Ğ”Ğ‘ĞšĞĞ” AS ĞšĞĞ”, SUM(COALESCE(P.ĞšĞĞ›, 0)) AS ĞšĞĞ›, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ
-			        	   	FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ WHERE Ğ”ĞĞ¢Ğ < dDate1) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-					   	WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc
-					   	GROUP BY P.Ğ”Ğ‘ĞšĞĞ”) P1 ON S.ĞšĞĞ” = P1.ĞšĞĞ”
-			             LEFT JOIN (SELECT P.ĞšĞ ĞšĞĞ” AS ĞšĞĞ”, SUM(COALESCE(P.ĞšĞĞ›, 0)) AS ĞšĞĞ›, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ
-		        	           	FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ WHERE Ğ”ĞĞ¢Ğ < dDate1) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-			        	   	WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc
-		        	   		GROUP BY P.ĞšĞ ĞšĞĞ”) P2 ON S.ĞšĞĞ” = P2.ĞšĞĞ”
-                    	    ) S LEFT JOIN (SELECT P.Ğ”Ğ‘ĞšĞĞ” AS ĞšĞĞ”, SUM(COALESCE(P.ĞšĞĞ›, 0)) AS ĞšĞĞ›, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ
-                         		   FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ WHERE Ğ”ĞĞ¢Ğ >= dDate1 AND Ğ”ĞĞ¢Ğ < dDate2) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-                                	   WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = cAcc
-                            		   GROUP BY P.Ğ”Ğ‘ĞšĞĞ”
-	                           	  ) P1 ON S.ĞšĞĞ” = P1.ĞšĞĞ”
-        	        	LEFT JOIN (SELECT P.ĞšĞ ĞšĞĞ” AS ĞšĞĞ”, SUM(COALESCE(P.ĞšĞĞ›, 0)) AS ĞšĞĞ›, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ
-					   FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN (SELECT ĞšĞĞ” FROM Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ WHERE Ğ”ĞĞ¢Ğ >= dDate1 AND Ğ”ĞĞ¢Ğ < dDate2) D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ”
-                        	   	   WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = cAcc
-                                   	   GROUP BY P.ĞšĞ ĞšĞĞ”
-                                   	   ) P2 ON S.ĞšĞĞ” = P2.ĞšĞĞ”
+		FROM (SELECT S.ÊÎÄ, COALESCE(S.ÊÎË, 0)::NUMERIC(10, 3) AS ÊÎË, COALESCE(S.ÑÀËÜÄÎ, 0)::NUMERIC(10, 2) AS ÑÀËÜÄÎ, COALESCE(P1.ÊÎË, 0)::NUMERIC(10, 3) AS ÄÁÊÎË, COALESCE(P1.ÑÓÌÌÀ, 0)::NUMERIC(10, 2) AS ÄÅÁÅÒ, COALESCE(P2.ÊÎË, 0)::NUMERIC(10, 3) AS ÊĞÊÎË, COALESCE(P2.ÑÓÌÌÀ, 0)::NUMERIC(10, 2) AS ÊĞÅÄÈÒ, (COALESCE(S.ÊÎË, 0) + COALESCE(P1.ÊÎË, 0) - COALESCE(P2.ÊÎË, 0))::NUMERIC(10, 3) AS ÊÎÍÊÎË, (COALESCE(S.ÑÀËÜÄÎ, 0) + COALESCE(P1.ÑÓÌÌÀ, 0) - COALESCE(P2.ÑÓÌÌÀ, 0))::NUMERIC(10, 2) AS ÊÎÍÑÀËÜÄÎ, 
+			''::VARCHAR(15) AS CÊÎË, ''::VARCHAR(15) AS CÑÀËÜÄÎ, ''::VARCHAR(15) AS CÄÁÊÎË, ''::VARCHAR(15) AS CÄÅÁÅÒ, ''::VARCHAR(15) AS CÊĞÊÎË, ''::VARCHAR(15) AS CÊĞÅÄÈÒ, ''::VARCHAR(15) AS CÊÎÍÊÎË, ''::VARCHAR(15) AS CÊÎÍÑÀËÜÄÎ
+ 		      FROM (SELECT S.ÊÎÄ, (S.ÊÎË + COALESCE(P1.ÊÎË, 0) - COALESCE(P2.ÊÎË, 0)) AS ÊÎË, (S.ÑÀËÜÄÎ + COALESCE(P1.ÑÓÌÌÀ, 0) - COALESCE(P2.ÑÓÌÌÀ, 0)) AS ÑÀËÜÄÎ
+                	    FROM (SELECT ÊÎÄ, COALESCE(ÊÎË, 0) AS ÊÎË, ÑÀËÜÄÎ FROM ñàëüäî WHERE Ñ×ÅÒ = cAcc
+                    		 ) S LEFT JOIN (SELECT P.ÄÁÊÎÄ AS ÊÎÄ, SUM(COALESCE(P.ÊÎË, 0)) AS ÊÎË, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ
+			        	   	FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ FROM äîêóìåíòû WHERE ÄÀÒÀ < dDate1) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+					   	WHERE P.ÄÁÑ×ÅÒ = cAcc
+					   	GROUP BY P.ÄÁÊÎÄ) P1 ON S.ÊÎÄ = P1.ÊÎÄ
+			             LEFT JOIN (SELECT P.ÊĞÊÎÄ AS ÊÎÄ, SUM(COALESCE(P.ÊÎË, 0)) AS ÊÎË, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ
+		        	           	FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ FROM äîêóìåíòû WHERE ÄÀÒÀ < dDate1) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+			        	   	WHERE P.ÊĞÑ×ÅÒ = cAcc
+		        	   		GROUP BY P.ÊĞÊÎÄ) P2 ON S.ÊÎÄ = P2.ÊÎÄ
+                    	    ) S LEFT JOIN (SELECT P.ÄÁÊÎÄ AS ÊÎÄ, SUM(COALESCE(P.ÊÎË, 0)) AS ÊÎË, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ
+                         		   FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ FROM äîêóìåíòû WHERE ÄÀÒÀ >= dDate1 AND ÄÀÒÀ < dDate2) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+                                	   WHERE P.ÄÁÑ×ÅÒ = cAcc
+                            		   GROUP BY P.ÄÁÊÎÄ
+	                           	  ) P1 ON S.ÊÎÄ = P1.ÊÎÄ
+        	        	LEFT JOIN (SELECT P.ÊĞÊÎÄ AS ÊÎÄ, SUM(COALESCE(P.ÊÎË, 0)) AS ÊÎË, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ
+					   FROM ïğîâîäêè P INNER JOIN (SELECT ÊÎÄ FROM äîêóìåíòû WHERE ÄÀÒÀ >= dDate1 AND ÄÀÒÀ < dDate2) D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ
+                        	   	   WHERE P.ÊĞÑ×ÅÒ = cAcc
+                                   	   GROUP BY P.ÊĞÊÎÄ
+                                   	   ) P2 ON S.ÊÎÄ = P2.ÊÎÄ
       	     	) S
-		WHERE ĞšĞĞ› <> 0 OR Ğ¡ĞĞ›Ğ¬Ğ”Ğ <> 0 OR Ğ”Ğ‘ĞšĞĞ› <> 0 OR Ğ”Ğ•Ğ‘Ğ•Ğ¢ <> 0 OR ĞšĞ ĞšĞĞ› <> 0 OR ĞšĞ Ğ•Ğ”Ğ˜Ğ¢ <> 0 OR ĞšĞĞĞšĞĞ› <> 0 OR ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ <> 0 
+		WHERE ÊÎË <> 0 OR ÑÀËÜÄÎ <> 0 OR ÄÁÊÎË <> 0 OR ÄÅÁÅÒ <> 0 OR ÊĞÊÎË <> 0 OR ÊĞÅÄÈÒ <> 0 OR ÊÎÍÊÎË <> 0 OR ÊÎÍÑÀËÜÄÎ <> 0 
 		LOOP
 		RETURN NEXT ret_row;
 	END LOOP;
@@ -407,6 +422,8 @@ $$;
 ALTER FUNCTION public.sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
+-- TOC entry 32 (class 1255 OID 71801)
+-- Dependencies: 435 6
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -420,18 +437,18 @@ DECLARE cSetName VARCHAR(50);
 BEGIN
 	cDictName := UPPER(pcDictName);
 	nObj = COALESCE(pnObj, 0);
-	cSetName = (SELECT Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ FROM ÑÑ‡ĞµÑ‚Ğ° WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc);
+	cSetName = (SELECT ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ FROM ñ÷åòà WHERE Ñ×ÅÒ = cAcc);
 	cSetName = RTRIM(cSetName);
 
-	IF (SELECT COUNT(*) FROM vw_columns WHERE Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ = cSetName AND Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦ = 'ĞšĞĞ”') = 1			-- Ğ•ÑĞ»Ğ¸ ĞµÑÑ‚ÑŒ Ğ¾Ğ´Ğ½Ğ¾ Ğ¿Ğ¾Ğ»Ğµ ĞºĞ¾Ğ´
-		AND (SELECT COUNT(*) FROM vw_columns WHERE Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ = cSetName AND Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦ = 'Ğ˜ĞœĞ¯') = 1	THEN 	-- Ğ¸ Ğ¾Ğ´Ğ½Ğ¾ Ğ¿Ğ¾Ğ»Ğµ Ğ¸Ğ¼Ñ
-		-- ĞœÑ‹ Ğ¾Ğ¿Ñ€ĞµĞ´ĞµĞ»Ğ¸Ğ»Ğ¸, Ñ‡Ñ‚Ğ¾ ĞºĞ¾Ğ´ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ° Ğ¾Ğ¿Ñ€ĞµĞ´ĞµĞ»ÑĞµÑ‚ÑÑ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¾Ğ¼, Ğ¿Ğ¾ÑÑ‚Ğ¾Ğ¼Ñƒ Ğ¸Ğ½Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ†Ğ¸Ñ Ğ¾Ğ± Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğµ Ğ¼Ğ¾Ğ¶Ğ½Ğ¾
-		-- Ğ¡Ğ¾Ğ±Ñ€Ğ°Ñ‚ÑŒ Ğ½Ğ°Ğ¿Ñ€ÑĞ¼ÑƒÑ
+	IF (SELECT COUNT(*) FROM vw_columns WHERE ÒÀÁËÈÖÀ = cSetName AND ÑÒÎËÁÅÖ = 'ÊÎÄ') = 1			-- Åñëè åñòü îäíî ïîëå êîä
+		AND (SELECT COUNT(*) FROM vw_columns WHERE ÒÀÁËÈÖÀ = cSetName AND ÑÒÎËÁÅÖ = 'ÈÌß') = 1	THEN 	-- è îäíî ïîëå èìÿ
+		-- Ìû îïğåäåëèëè, ÷òî êîä îáúåêòà îïğåäåëÿåòñÿ ñïğàâî÷íèêîì, ïîıòîìó èíôîğìàöèş îá îáúåêòå ìîæíî
+		-- Ñîáğàòü íàïğÿìóş
 		SELECT sp_CalcObjOborot(cAcc, nObj, cDate1, cDate2);
 	ELSE
-		-- ĞœÑ‹ Ğ¾Ğ¿Ñ€ĞµĞ´ĞµĞ»Ğ¸Ğ»Ğ¸, Ñ‡Ñ‚Ğ¾ ĞºĞ¾Ğ´ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ° Ğ¾Ğ¿Ñ€ĞµĞ´ĞµĞ»ÑĞµÑ‚ÑÑ Ğ½Ğ°Ğ±Ğ¾Ñ€Ğ¾Ğ¼ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¾Ğ²
-		IF (SELECT COUNT(*) FROM vw_columns WHERE Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ = cSetName AND Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦ = 'ĞšĞĞ”') = 1				-- Ğ•ÑĞ»Ğ¸ ĞµÑÑ‚ÑŒ Ğ¾Ğ´Ğ½Ğ¾ Ğ¿Ğ¾Ğ»Ğµ ĞºĞ¾Ğ´
-		AND (SELECT COUNT(*) FROM vw_columns WHERE Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ = cSetName AND Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦ = 'ĞšĞĞ”_' + cDictName) = 1 THEN	-- Ğ¸ Ğ¾Ğ´Ğ½Ğ¾ Ğ¿Ğ¾Ğ»Ğµ ÑĞ¾ ÑÑÑ‹Ğ»ĞºĞ¾Ğ¹ Ğ½Ğ° ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº
+		-- Ìû îïğåäåëèëè, ÷òî êîä îáúåêòà îïğåäåëÿåòñÿ íàáîğîì ñïğàâî÷íèêîâ
+		IF (SELECT COUNT(*) FROM vw_columns WHERE ÒÀÁËÈÖÀ = cSetName AND ÑÒÎËÁÅÖ = 'ÊÎÄ') = 1				-- Åñëè åñòü îäíî ïîëå êîä
+		AND (SELECT COUNT(*) FROM vw_columns WHERE ÒÀÁËÈÖÀ = cSetName AND ÑÒÎËÁÅÖ = 'ÊÎÄ_' + cDictName) = 1 THEN	-- è îäíî ïîëå ñî ññûëêîé íà ñïğàâî÷íèê
 			SELECT sp_MakeTotObjOborotCommand(cAcc, cDictName, nObj, cDate1, cDate2) INTO cCommand;
 			EXECUTE cCommand;
 		END IF;
@@ -443,6 +460,8 @@ $$;
 ALTER FUNCTION public.sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
+-- TOC entry 22 (class 1255 OID 71802)
+-- Dependencies: 6 435
 -- Name: sp_deletedoc(integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -453,16 +472,16 @@ DECLARE
 	nOperNum INTEGER;
 	cAttrName VARCHAR (50);
 BEGIN
-	nOperNum := (SELECT "ĞĞŸĞ•Ğ " FROM "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" WHERE "ĞšĞĞ”" = ndocid LIMIT 1);
-	DELETE FROM "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" WHERE "ĞšĞĞ”" = nDocId;
-	DELETE FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE "Ğ”ĞĞšĞšĞĞ”" = nDocId;
-	cAttrName = 'Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(nOperNum AS VARCHAR(10))));
+	nOperNum := (SELECT "ÎÏÅĞ" FROM "äîêóìåíòû" WHERE "ÊÎÄ" = ndocid LIMIT 1);
+	DELETE FROM "äîêóìåíòû" WHERE "ÊÎÄ" = nDocId;
+	DELETE FROM "ïğîâîäêè" WHERE "ÄÎÊÊÎÄ" = nDocId;
+	cAttrName = 'àòğèáóòû' || rtrim(ltrim(cast(nOperNum AS VARCHAR(10))));
 	IF (SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename = cAttrName) > 0 THEN
-		EXECUTE 'DELETE FROM ' || cAttrName || ' WHERE "Ğ”ĞĞšĞšĞĞ”"=$1;' USING ndocid;
+		EXECUTE 'DELETE FROM ' || cAttrName || ' WHERE "ÄÎÊÊÎÄ"=$1;' USING ndocid;
 	END IF;
-	cAttrName = 'Ğ´Ğ¾ĞºĞ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(nOperNum AS VARCHAR(10))));
+	cAttrName = 'äîêàòğèáóòû' || rtrim(ltrim(cast(nOperNum AS VARCHAR(10))));
 	IF (SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename = cAttrName) > 0 THEN
-		EXECUTE 'DELETE FROM ' || cAttrName || ' WHERE "ĞšĞĞ”"=$1;' USING ndocid;
+		EXECUTE 'DELETE FROM ' || cAttrName || ' WHERE "ÊÎÄ"=$1;' USING ndocid;
 	END IF;
 END;
 $_$;
@@ -471,6 +490,8 @@ $_$;
 ALTER FUNCTION public.sp_deletedoc(ndocid integer) OWNER TO sa;
 
 --
+-- TOC entry 21 (class 1255 OID 71803)
+-- Dependencies: 435 6
 -- Name: sp_deletedocstr(integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -484,21 +505,21 @@ DECLARE
 	cDbAcc VARCHAR(5);
 	cCrAcc VARCHAR(5);
 BEGIN
-	nOper := (SELECT "ĞĞŸĞ•Ğ " FROM "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" WHERE "ĞšĞĞ”" = nDocId);
-	nFreeOper := (SELECT "ĞĞĞœĞ•Ğ " FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = nOper AND "ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ" = true);
+	nOper := (SELECT "ÎÏÅĞ" FROM "äîêóìåíòû" WHERE "ÊÎÄ" = nDocId);
+	nFreeOper := (SELECT "ÍÎÌÅĞ" FROM "òîïåğ" WHERE "ÎÏÅĞ" = nOper AND "ÍÅÇÀÂÈÑÈÌ" = true);
 	IF nFreeOper IS NOT NULL THEN
-		IF (SELECT "Ğ¡Ğ¢Ğ " FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE "Ğ”ĞĞšĞšĞĞ”" = nDocId AND "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ " = nFreeOper LIMIT 1) = nDocStr THEN
-			nNewDocStr := (SELECT MIN("Ğ¡Ğ¢Ğ ") FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE "Ğ”ĞĞšĞšĞĞ”" = nDocId AND "ĞĞŸĞ•Ğ " = nOper AND "Ğ¡Ğ¢Ğ " <> nDocStr);
+		IF (SELECT "ÑÒĞ" FROM "ïğîâîäêè" WHERE "ÄÎÊÊÎÄ" = nDocId AND "ÍÎÌÅĞÎÏÅĞ" = nFreeOper LIMIT 1) = nDocStr THEN
+			nNewDocStr := (SELECT MIN("ÑÒĞ") FROM "ïğîâîäêè" WHERE "ÄÎÊÊÎÄ" = nDocId AND "ÎÏÅĞ" = nOper AND "ÑÒĞ" <> nDocStr);
 			IF nNewDocStr IS NOT NULL AND nNewDocStr <> nDocStr THEN
-				cDbAcc := (SELECT "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = nOper AND "ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ" = true);			
-				cCrAcc := (SELECT "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = nOper AND "ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ" = true);			
-				INSERT INTO "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" ("Ğ”ĞĞšĞšĞĞ”", "Ğ¡Ğ¢Ğ ", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ ", "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "Ğ”Ğ‘ĞšĞĞ”", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ ĞšĞĞ”") 
+				cDbAcc := (SELECT "ÄÁÑ×ÅÒ" FROM "òîïåğ" WHERE "ÎÏÅĞ" = nOper AND "ÍÅÇÀÂÈÑÈÌ" = true);			
+				cCrAcc := (SELECT "ÊĞÑ×ÅÒ" FROM "òîïåğ" WHERE "ÎÏÅĞ" = nOper AND "ÍÅÇÀÂÈÑÈÌ" = true);			
+				INSERT INTO "ïğîâîäêè" ("ÄÎÊÊÎÄ", "ÑÒĞ", "ÎÏÅĞ", "ÍÎÌÅĞÎÏÅĞ", "ÄÁÑ×ÅÒ", "ÄÁÊÎÄ", "ÊĞÑ×ÅÒ", "ÊĞÊÎÄ") 
 					VALUES (nDocId, nNewDocStr, nOper, nFreeOper, cDbAcc, 0, cCrAcc, 0);
 			END IF;
 	
 		END IF;
 	END IF;
-	DELETE FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE "Ğ”ĞĞšĞšĞĞ”" = nDocId AND "Ğ¡Ğ¢Ğ " = nDocStr;
+	DELETE FROM "ïğîâîäêè" WHERE "ÄÎÊÊÎÄ" = nDocId AND "ÑÒĞ" = nDocStr;
 END;
 $$;
 
@@ -506,6 +527,8 @@ $$;
 ALTER FUNCTION public.sp_deletedocstr(ndocid integer, ndocstr integer) OWNER TO sa;
 
 --
+-- TOC entry 40 (class 1255 OID 71804)
+-- Dependencies: 435 6
 -- Name: sp_insertdoc(integer, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -513,17 +536,17 @@ CREATE FUNCTION sp_insertdoc(noper integer, cdate character varying) RETURNS int
     LANGUAGE plpgsql
     AS $_$
 DECLARE 
-cNumName "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹"."Ğ˜ĞœĞ¯"%TYPE;		-- ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ğ°
-	nValue "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹"."Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•"%TYPE;	-- Ğ—Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ğ°
-	dDate DATE;				-- Ğ”Ğ°Ñ‚Ğ° Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğ°
-	nDocId "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹"."ĞšĞĞ”"%TYPE;
-	cNumber "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹"."ĞĞĞœĞ•Ğ "%TYPE;			
+cNumName "íóìåğàòîğû"."ÈÌß"%TYPE;		-- Íàèìåíîâàíèå íóìåğàòîğà
+	nValue "íóìåğàòîğû"."ÇÍÀ×ÅÍÈÅ"%TYPE;	-- Çíà÷åíèå íóìåğàòîğà
+	dDate DATE;				-- Äàòà äîêóìåíòà
+	nDocId "äîêóìåíòû"."ÊÎÄ"%TYPE;
+	cNumber "äîêóìåíòû"."ÍÎÌÅĞ"%TYPE;			
 BEGIN
-	cNumName := RTRIM((SELECT "ĞĞ£ĞœĞ•Ğ ĞĞ¢ĞĞ " FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = nOper AND "ĞĞĞœĞ•Ğ " = 1 LIMIT 1));	-- Ğ—Ğ°Ğ³Ñ€ÑƒĞ·Ğ¸Ğ¼ Ğ½Ğ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ğ°
+	cNumName := RTRIM((SELECT "ÍÓÌÅĞÀÒÎĞ" FROM "òîïåğ" WHERE "ÎÏÅĞ" = nOper AND "ÍÎÌÅĞ" = 1 LIMIT 1));	-- Çàãğóçèì íàèìåíîâàíèå íóìåğàòîğà
 	IF cNumName IS NOT NULL AND char_length(cNumName) > 0 THEN
-		nValue := (SELECT "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•" FROM "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" WHERE RTRIM("Ğ˜ĞœĞ¯") = cNumName LIMIT 1);	-- ĞŸĞ¾Ğ»ÑƒÑ‡Ğ¸Ğ¼ Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ğ°
+		nValue := (SELECT "ÇÍÀ×ÅÍÈÅ" FROM "íóìåğàòîğû" WHERE RTRIM("ÈÌß") = cNumName LIMIT 1);	-- Ïîëó÷èì íîâîå çíà÷åíèå íóìåğàòîğà
 		nValue := nValue + 1;
-		UPDATE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" SET "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•" = nValue WHERE RTRIM("Ğ˜ĞœĞ¯") = cNumName;		-- Ğ¡Ğ¾Ñ…Ñ€Ğ°Ğ½Ğ¸Ğ¼ Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ğ°
+		UPDATE "íóìåğàòîğû" SET "ÇÍÀ×ÅÍÈÅ" = nValue WHERE RTRIM("ÈÌß") = cNumName;		-- Ñîõğàíèì íîâîå çíà÷åíèå íóìåğàòîğà
 		cNumber := trim(leading from to_char(nValue, '999999999'));
 	ELSE
 		cNumber := '';
@@ -533,9 +556,9 @@ BEGIN
 	ELSE
 		dDate = to_date(cDate, 'DD.MM.YYYY');
 	END IF;
-	INSERT INTO "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" ("Ğ”ĞĞ¢Ğ", "Ğ”ĞĞ¢ĞĞ’Ğ Ğ•ĞœĞ¯", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ", "ĞĞ’Ğ¢Ğ") VALUES (dDate, current_timestamp, nOper, cNumber, 0) RETURNING "ĞšĞĞ”" INTO nDocId;
-	IF (SELECT COUNT(*) FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = nOper AND "Ğ”ĞĞšĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«" = TRUE) > 0 THEN
-		EXECUTE 'INSERT INTO "Ğ´Ğ¾ĞºĞ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(nOper AS VARCHAR(10)))) || '" ("ĞšĞĞ”") VALUES ($1);' USING nDocId;
+	INSERT INTO "äîêóìåíòû" ("ÄÀÒÀ", "ÄÀÒÀÂĞÅÌß", "ÎÏÅĞ", "ÍÎÌÅĞ", "ÀÂÒÎ") VALUES (dDate, current_timestamp, nOper, cNumber, 0) RETURNING "ÊÎÄ" INTO nDocId;
+	IF (SELECT COUNT(*) FROM "òîïåğ" WHERE "ÎÏÅĞ" = nOper AND "ÄÎÊÀÒĞÈÁÓÒÛ" = TRUE) > 0 THEN
+		EXECUTE 'INSERT INTO "äîêàòğèáóòû' || rtrim(ltrim(cast(nOper AS VARCHAR(10)))) || '" ("ÊÎÄ") VALUES ($1);' USING nDocId;
 	END IF;
 	RETURN nDocId;
 END;
@@ -545,6 +568,8 @@ $_$;
 ALTER FUNCTION public.sp_insertdoc(noper integer, cdate character varying) OWNER TO sa;
 
 --
+-- TOC entry 41 (class 1255 OID 71805)
+-- Dependencies: 435 6
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -576,37 +601,37 @@ BEGIN
 	IF nCount IS NULL THEN
 		nCount := 1;
 	END IF;
-	IF (SELECT COUNT(*) FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = noper AND "ĞĞĞœĞ•Ğ " = 0 AND "ĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«" = TRUE) > 0 THEN
-		EXECUTE 'SELECT max("Ğ¡Ğ¢Ğ ") FROM "Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '"' INTO nDocStr;
+	IF (SELECT COUNT(*) FROM "òîïåğ" WHERE "ÎÏÅĞ" = noper AND "ÍÎÌÅĞ" = 0 AND "ÀÒĞÈÁÓÒÛ" = TRUE) > 0 THEN
+		EXECUTE 'SELECT max("ÑÒĞ") FROM "àòğèáóòû' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '"' INTO nDocStr;
 		IF nDocStr IS NULL THEN
 			nDocStr := 1;
 		ELSE
 			nDocStr := nDocStr + 1;
 		END IF;
 		WHILE nCount > 0 LOOP
-			-- ĞŸÑ€Ğ¾Ğ²ĞµÑ€Ğ¸Ğ¼, Ğ½Ğµ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ Ğ»Ğ¸ Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñƒ Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ğ¾Ğ², Ğ¸ ĞµÑĞ»Ğ¸ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚, Ñ‚Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ğ¼ ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ğ² Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñƒ Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ğ¾Ğ²
-			EXECUTE 'SELECT COUNT(*) FROM "Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" WHERE "Ğ”ĞĞšĞšĞĞ”" = $1 AND "Ğ¡Ğ¢Ğ " = $2;' INTO nCount1 USING nDocId, nDocStr;
+			-- Ïğîâåğèì, íå èñïîëüçóåò ëè äîêóìåíò òàáëèöó àòğèáóòîâ, è åñëè èñïîëüçóåò, òî äîáàâèì ñòğîêó â òàáëèöó àòğèáóòîâ
+			EXECUTE 'SELECT COUNT(*) FROM "àòğèáóòû' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" WHERE "ÄÎÊÊÎÄ" = $1 AND "ÑÒĞ" = $2;' INTO nCount1 USING nDocId, nDocStr;
 			IF nCount1 = 0 THEN
-				EXECUTE 'INSERT INTO "Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" ("Ğ”ĞĞšĞšĞĞ”", "Ğ¡Ğ¢Ğ ") VALUES ($1, $2);' USING nDocId, nDocStr;
+				EXECUTE 'INSERT INTO "àòğèáóòû' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" ("ÄÎÊÊÎÄ", "ÑÒĞ") VALUES ($1, $2);' USING nDocId, nDocStr;
 			END IF;
 			nCount := nCount - 1;
 		END LOOP;
 	ELSE
 		IF nDocStr IS NULL OR nDocStr = 0 THEN
-			-- Ğ½Ğ°Ğ¹Ğ´ĞµĞ¼ Ğ½Ğ°Ğ¸Ğ±Ğ¾Ğ»ÑŒÑˆĞ¸Ğ¹ "ĞĞĞœĞ•Ğ " ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ² Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğµ
-			nDocStr := (SELECT max(p."Ğ¡Ğ¢Ğ ") AS max_value FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" p WHERE p."Ğ”ĞĞšĞšĞĞ”" = nDocId AND p."ĞĞŸĞ•Ğ " = noper);
+			-- íàéäåì íàèáîëüøèé "ÍÎÌÅĞ" ñòğîêè â äîêóìåíòå
+			nDocStr := (SELECT max(p."ÑÒĞ") AS max_value FROM "ïğîâîäêè" p WHERE p."ÄÎÊÊÎÄ" = nDocId AND p."ÎÏÅĞ" = noper);
 			IF nDocStr IS NULL THEN
 				nDocStr := 1;
 			ELSE
 				nDocStr := nDocStr + 1;
 			END IF;
 		END IF;
-		-- Ğ²ÑÑ‚Ğ°Ğ²Ğ¸Ğ¼ Ğ² Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚ Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ Ğ´Ğ»Ñ Ğ½Ğ¾Ğ²Ğ¾Ğ¹ ÑÑ‚Ñ€Ğ¾ĞºĞ¸
-		OPEN curResult FOR SELECT "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞĞĞœĞ•Ğ ", "ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ"  FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = noper ORDER BY "ĞĞĞœĞ•Ğ ";
+		-- âñòàâèì â äîêóìåíò ïğîâîäêè äëÿ íîâîé ñòğîêè
+		OPEN curResult FOR SELECT "ÄÁÑ×ÅÒ", "ÊĞÑ×ÅÒ", "ÍÎÌÅĞ", "ÍÅÇÀÂÈÑÈÌ"  FROM "òîïåğ" WHERE "ÎÏÅĞ" = noper ORDER BY "ÍÎÌÅĞ";
 		WHILE nCount > 0 LOOP
-			-- ĞŸÑ€Ğ¾Ğ²ĞµÑ€Ğ¸Ğ¼, Ğ½Ğµ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ Ğ»Ğ¸ Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñƒ Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ğ¾Ğ², Ğ¸ ĞµÑĞ»Ğ¸ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚, Ñ‚Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ğ¼ ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ğ² Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñƒ Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ğ¾Ğ²
-			IF (SELECT COUNT(*) FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = noper AND "ĞĞĞœĞ•Ğ " = 1 AND "ĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«" = TRUE) > 0 THEN
-				EXECUTE 'INSERT INTO "Ğ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" ("Ğ”ĞĞšĞšĞĞ”", "Ğ¡Ğ¢Ğ ") VALUES ($1, $2);' USING nDocId, nDocStr;
+			-- Ïğîâåğèì, íå èñïîëüçóåò ëè äîêóìåíò òàáëèöó àòğèáóòîâ, è åñëè èñïîëüçóåò, òî äîáàâèì ñòğîêó â òàáëèöó àòğèáóòîâ
+			IF (SELECT COUNT(*) FROM "òîïåğ" WHERE "ÎÏÅĞ" = noper AND "ÍÎÌÅĞ" = 1 AND "ÀÒĞÈÁÓÒÛ" = TRUE) > 0 THEN
+				EXECUTE 'INSERT INTO "àòğèáóòû' || rtrim(ltrim(cast(noper AS VARCHAR(10)))) || '" ("ÄÎÊÊÎÄ", "ÑÒĞ") VALUES ($1, $2);' USING nDocId, nDocStr;
 			END IF;
 
 			cParam1 := cParam;
@@ -626,12 +651,12 @@ BEGIN
 				nSum := to_number(substring(cParam1 FROM 1 FOR position(',' in cParam1) - 1), '99999999d99');	
 				cParam1 := substring(cParam1 FROM position(',' in cParam1) + 1);
 				IF bFreePrv THEN 
-					nFreeCount := (SELECT count(*) FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" p WHERE p."Ğ”ĞĞšĞšĞĞ”" = nDocId AND p."ĞĞŸĞ•Ğ " = noper AND p."ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ " = nNum);
+					nFreeCount := (SELECT count(*) FROM "ïğîâîäêè" p WHERE p."ÄÎÊÊÎÄ" = nDocId AND p."ÎÏÅĞ" = noper AND p."ÍÎÌÅĞÎÏÅĞ" = nNum);
 					IF nFreeCount = 0 THEN
-						INSERT INTO "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" ("Ğ”ĞĞšĞšĞĞ”", "Ğ¡Ğ¢Ğ ", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ ", "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "Ğ”Ğ‘ĞšĞĞ”", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ ĞšĞĞ”", "ĞšĞĞ›", "Ğ¦Ğ•ĞĞ", "Ğ¡Ğ£ĞœĞœĞ") VALUES (nDocId, nDocStr, noper, nNum, cDbAcc, nDbId, cCrAcc, nCrId, nQuan, nPrice, nSum);
+						INSERT INTO "ïğîâîäêè" ("ÄÎÊÊÎÄ", "ÑÒĞ", "ÎÏÅĞ", "ÍÎÌÅĞÎÏÅĞ", "ÄÁÑ×ÅÒ", "ÄÁÊÎÄ", "ÊĞÑ×ÅÒ", "ÊĞÊÎÄ", "ÊÎË", "ÖÅÍÀ", "ÑÓÌÌÀ") VALUES (nDocId, nDocStr, noper, nNum, cDbAcc, nDbId, cCrAcc, nCrId, nQuan, nPrice, nSum);
 					END IF;
 				ELSE
-					INSERT INTO "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" ("Ğ”ĞĞšĞšĞĞ”", "Ğ¡Ğ¢Ğ ", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ ", "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "Ğ”Ğ‘ĞšĞĞ”", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ ĞšĞĞ”", "ĞšĞĞ›", "Ğ¦Ğ•ĞĞ", "Ğ¡Ğ£ĞœĞœĞ") VALUES (nDocId, nDocStr, noper, nNum, cDbAcc, nDbId, cCrAcc, nCrId, nQuan, nPrice, nSum);
+					INSERT INTO "ïğîâîäêè" ("ÄÎÊÊÎÄ", "ÑÒĞ", "ÎÏÅĞ", "ÍÎÌÅĞÎÏÅĞ", "ÄÁÑ×ÅÒ", "ÄÁÊÎÄ", "ÊĞÑ×ÅÒ", "ÊĞÊÎÄ", "ÊÎË", "ÖÅÍÀ", "ÑÓÌÌÀ") VALUES (nDocId, nDocStr, noper, nNum, cDbAcc, nDbId, cCrAcc, nCrId, nQuan, nPrice, nSum);
 				END IF;
 				FETCH NEXT FROM curResult INTO cDbAcc, cCrAcc, nNum, bFreePrv;
 			END LOOP;
@@ -649,6 +674,8 @@ $_$;
 ALTER FUNCTION public.sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) OWNER TO sa;
 
 --
+-- TOC entry 25 (class 1255 OID 71806)
+-- Dependencies: 435 6
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -662,52 +689,52 @@ DECLARE cSetName VARCHAR(50);
 BEGIN
 	cDictName = UPPER(pcDictName);
 	nObj = COALESCE(pnObj, 0);
-	cSetName = (SELECT Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ FROM ÑÑ‡ĞµÑ‚Ğ° WHERE Ğ¡Ğ§Ğ•Ğ¢ = cAcc);
+	cSetName = (SELECT ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ FROM ñ÷åòà WHERE Ñ×ÅÒ = cAcc);
 	cSetName = RTRIM(cSetName);
 
-	cCommand = 'SELECT ĞšĞĞ” FROM ' || cSetName || ' WHERE ĞšĞĞ”_' || cDictName || '=' || RTRIM(LTRIM(CAST(nObj AS VARCHAR(20))));
-	cCommand = 'SELECT Ğ”ĞĞ¢Ğ, ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, SUM(Ğ”Ğ‘ĞšĞĞ›) AS Ğ”Ğ‘ĞšĞĞ›, SUM(Ğ”Ğ•Ğ‘Ğ•Ğ¢) AS Ğ”Ğ•Ğ‘Ğ•Ğ¢, SUM(ĞšĞ ĞšĞĞ›) AS ĞšĞ ĞšĞĞ›, SUM(ĞšĞ Ğ•Ğ”Ğ˜Ğ¢) AS ĞšĞ Ğ•Ğ”Ğ˜Ğ¢ '
-		 || 'FROM (SELECT to_date("' || cDate1 || '", "DD.MM.YYYY") AS Ğ”ĞĞ¢Ğ, 0 AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , "" AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, "" AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, "" AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, '
-			       || 'Ğ”Ğ‘ĞšĞĞ› = CASE '
-			               || 'WHEN S.ĞšĞĞ› > 0 THEN S.ĞšĞĞ› '
+	cCommand = 'SELECT ÊÎÄ FROM ' || cSetName || ' WHERE ÊÎÄ_' || cDictName || '=' || RTRIM(LTRIM(CAST(nObj AS VARCHAR(20))));
+	cCommand = 'SELECT ÄÀÒÀ, ÎÏÅĞÍÎÌÅĞ, ÎÏÅĞÈÌß, ÄÁÑ×ÅÒ, ÊĞÑ×ÅÒ, SUM(ÄÁÊÎË) AS ÄÁÊÎË, SUM(ÄÅÁÅÒ) AS ÄÅÁÅÒ, SUM(ÊĞÊÎË) AS ÊĞÊÎË, SUM(ÊĞÅÄÈÒ) AS ÊĞÅÄÈÒ '
+		 || 'FROM (SELECT to_date("' || cDate1 || '", "DD.MM.YYYY") AS ÄÀÒÀ, 0 AS ÎÏÅĞÍÎÌÅĞ, "" AS ÎÏÅĞÈÌß, "" AS ÄÁÑ×ÅÒ, "" AS ÊĞÑ×ÅÒ, '
+			       || 'ÄÁÊÎË = CASE '
+			               || 'WHEN S.ÊÎË > 0 THEN S.ÊÎË '
 	        		       || 'ELSE 0 '
 			               || 'END, '
-			       || 'Ğ”Ğ•Ğ‘Ğ•Ğ¢ = CASE '
-        			       || 'WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ > 0 THEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ '
+			       || 'ÄÅÁÅÒ = CASE '
+        			       || 'WHEN S.ÑÀËÜÄÎ > 0 THEN S.ÑÀËÜÄÎ '
 			               || 'ELSE 0 '
 			               || 'END, '
-			       || 'ĞšĞ ĞšĞĞ› = CASE '
-			               || 'WHEN S.ĞšĞĞ› < 0 THEN -S.ĞšĞĞ› '
+			       || 'ÊĞÊÎË = CASE '
+			               || 'WHEN S.ÊÎË < 0 THEN -S.ÊÎË '
         			       || 'ELSE 0 '
 			               || 'END, '
-			       || 'ĞšĞ Ğ•Ğ”Ğ˜Ğ¢ = CASE '
-	        		        || 'WHEN S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ < 0 THEN -S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ '
+			       || 'ÊĞÅÄÈÒ = CASE '
+	        		        || 'WHEN S.ÑÀËÜÄÎ < 0 THEN -S.ÑÀËÜÄÎ '
 			                || 'ELSE 0 '
 			                || 'END '
-			 || 'FROM (SELECT (S.ĞšĞĞ› + COALESCE(P1.ĞšĞĞ›, 0) - COALESCE(P2.ĞšĞĞ›, 0)) AS ĞšĞĞ›, (S.Ğ¡ĞĞ›Ğ¬Ğ”Ğ + COALESCE(P1.Ğ¡Ğ£ĞœĞœĞ, 0) - COALESCE(P2.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ '
- 		        	     || 'FROM (SELECT ĞšĞĞ”, COALESCE(ĞšĞĞ›, 0) AS ĞšĞĞ›, COALESCE(Ğ¡ĞĞ›Ğ¬Ğ”Ğ, 0) AS Ğ¡ĞĞ›Ğ¬Ğ”Ğ '
-				     || 'FROM ÑĞ°Ğ»ÑŒĞ´Ğ¾ WHERE Ğ¡Ğ§Ğ•Ğ¢ = "' || cAcc || '" AND ĞšĞĞ” IN (' || cCommand || ') '
-     		        		             || ') S LEFT OUTER JOIN (SELECT P.Ğ”Ğ‘ĞšĞĞ” AS ĞšĞĞ”, SUM(COALESCE(P.ĞšĞĞ›, 0)) AS ĞšĞĞ›, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ '
-     	               		        		                  || 'FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” '
-                	                       		        		  || 'WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = "' || cAcc || '" AND COALESCE(P.Ğ”Ğ‘ĞšĞĞ”, 0) IN (' || cCommand || ') AND to_date(D.Ğ”ĞĞ¢Ğ, "DD.MM.YYYY") < to_date("' || cDate1 || '", "DD.MM.YYYY") '
-	                	                                       		  || 'GROUP BY P.Ğ”Ğ‘ĞšĞĞ”) P1 ON S.ĞšĞĞ” = P1.ĞšĞĞ” '
-			        	                     	 || 'LEFT OUTER JOIN (SELECT P.ĞšĞ ĞšĞĞ” AS ĞšĞĞ”, SUM(COALESCE(P.ĞšĞĞ›, 0)) AS ĞšĞĞ›, SUM(COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0)) AS Ğ¡Ğ£ĞœĞœĞ '
-	               				                                  || 'FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” '
-        	                				                  || 'WHERE P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = "' || cAcc || '" AND COALESCE(P.ĞšĞ ĞšĞĞ”, 0) IN (' || cCommand || ') AND to_date(D.Ğ”ĞĞ¢Ğ, "DD.MM.YYYY") < to_date("' || cDate1 || '", "DD.MM.YYYY") '
-				                                		  || 'GROUP BY P.ĞšĞ ĞšĞĞ”) P2 ON S.ĞšĞĞ” = P2.ĞšĞĞ” '
+			 || 'FROM (SELECT (S.ÊÎË + COALESCE(P1.ÊÎË, 0) - COALESCE(P2.ÊÎË, 0)) AS ÊÎË, (S.ÑÀËÜÄÎ + COALESCE(P1.ÑÓÌÌÀ, 0) - COALESCE(P2.ÑÓÌÌÀ, 0)) AS ÑÀËÜÄÎ '
+ 		        	     || 'FROM (SELECT ÊÎÄ, COALESCE(ÊÎË, 0) AS ÊÎË, COALESCE(ÑÀËÜÄÎ, 0) AS ÑÀËÜÄÎ '
+				     || 'FROM ñàëüäî WHERE Ñ×ÅÒ = "' || cAcc || '" AND ÊÎÄ IN (' || cCommand || ') '
+     		        		             || ') S LEFT OUTER JOIN (SELECT P.ÄÁÊÎÄ AS ÊÎÄ, SUM(COALESCE(P.ÊÎË, 0)) AS ÊÎË, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ '
+     	               		        		                  || 'FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ '
+                	                       		        		  || 'WHERE P.ÄÁÑ×ÅÒ = "' || cAcc || '" AND COALESCE(P.ÄÁÊÎÄ, 0) IN (' || cCommand || ') AND to_date(D.ÄÀÒÀ, "DD.MM.YYYY") < to_date("' || cDate1 || '", "DD.MM.YYYY") '
+	                	                                       		  || 'GROUP BY P.ÄÁÊÎÄ) P1 ON S.ÊÎÄ = P1.ÊÎÄ '
+			        	                     	 || 'LEFT OUTER JOIN (SELECT P.ÊĞÊÎÄ AS ÊÎÄ, SUM(COALESCE(P.ÊÎË, 0)) AS ÊÎË, SUM(COALESCE(P.ÑÓÌÌÀ, 0)) AS ÑÓÌÌÀ '
+	               				                                  || 'FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ '
+        	                				                  || 'WHERE P.ÊĞÑ×ÅÒ = "' || cAcc || '" AND COALESCE(P.ÊĞÊÎÄ, 0) IN (' || cCommand || ') AND to_date(D.ÄÀÒÀ, "DD.MM.YYYY") < to_date("' || cDate1 || '", "DD.MM.YYYY") '
+				                                		  || 'GROUP BY P.ÊĞÊÎÄ) P2 ON S.ÊÎÄ = P2.ÊÎÄ '
 				     		      || ') S '
 						|| 'UNION '
-						|| 'SELECT D.Ğ”ĞĞ¢ĞĞ’Ğ Ğ•ĞœĞ¯ AS Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, "' || cAcc || '" AS Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, COALESCE(P.ĞšĞĞ›, 0) AS Ğ”Ğ‘ĞšĞĞ›, COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0) AS Ğ”Ğ‘Ğ¡Ğ£ĞœĞœĞ, 0 AS ĞšĞ ĞšĞĞ›, 0 AS ĞšĞ Ğ¡Ğ£ĞœĞœĞ '
-						|| 'FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” '
-               							               || 'INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1 '
-						|| 'WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ <> P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ AND P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ = "' || cAcc || '" AND P.Ğ”Ğ‘ĞšĞĞ” IN (' || cCommand || ') AND (P.ĞšĞĞ› <> 0 OR P.Ğ¡Ğ£ĞœĞœĞ <> 0) AND (to_date(D.Ğ”ĞĞ¢Ğ, "DD.MM.YYYY") >= to_date("' || cDate1 || '", "DD.MM.YYYY")) AND (to_date(D.Ğ”ĞĞ¢Ğ, "DD.MM.YYYY") < to_date("' || cDate2 || '", "DD.MM.YYYY") + 1) '
+						|| 'SELECT D.ÄÀÒÀÂĞÅÌß AS ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, "' || cAcc || '" AS ÄÁÑ×ÅÒ, P.ÊĞÑ×ÅÒ, COALESCE(P.ÊÎË, 0) AS ÄÁÊÎË, COALESCE(P.ÑÓÌÌÀ, 0) AS ÄÁÑÓÌÌÀ, 0 AS ÊĞÊÎË, 0 AS ÊĞÑÓÌÌÀ '
+						|| 'FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ '
+               							               || 'INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1 '
+						|| 'WHERE P.ÄÁÑ×ÅÒ <> P.ÊĞÑ×ÅÒ AND P.ÄÁÑ×ÅÒ = "' || cAcc || '" AND P.ÄÁÊÎÄ IN (' || cCommand || ') AND (P.ÊÎË <> 0 OR P.ÑÓÌÌÀ <> 0) AND (to_date(D.ÄÀÒÀ, "DD.MM.YYYY") >= to_date("' || cDate1 || '", "DD.MM.YYYY")) AND (to_date(D.ÄÀÒÀ, "DD.MM.YYYY") < to_date("' || cDate2 || '", "DD.MM.YYYY") + 1) '
 						|| 'UNION '
-						|| 'SELECT D.Ğ”ĞĞ¢ĞĞ’Ğ Ğ•ĞœĞ¯ AS Ğ”ĞĞ¢Ğ, D.ĞĞŸĞ•Ğ  AS ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , T.Ğ˜ĞœĞ¯ AS ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, "' || cAcc || '" AS ĞšĞ Ğ¡Ğ§Ğ•Ğ¢, 0 AS Ğ”Ğ‘ĞšĞĞ›, 0 AS Ğ”Ğ‘Ğ¡Ğ£ĞœĞœĞ, COALESCE(P.ĞšĞĞ›, 0) AS ĞšĞ ĞšĞĞ›, COALESCE(P.Ğ¡Ğ£ĞœĞœĞ, 0) AS ĞšĞ Ğ¡Ğ£ĞœĞœĞ '
-						|| 'FROM Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸ P INNER JOIN Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹ D ON P.Ğ”ĞĞšĞšĞĞ”=D.ĞšĞĞ” '
-               							               || 'INNER JOIN Ñ‚Ğ¾Ğ¿ĞµÑ€ T ON P.ĞĞŸĞ•Ğ  = T.ĞĞŸĞ•Ğ  AND T.ĞĞĞœĞ•Ğ  = 1 '
-						|| 'WHERE P.Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢ <> P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ AND P.ĞšĞ Ğ¡Ğ§Ğ•Ğ¢ = "' || cAcc || '" AND P.ĞšĞ ĞšĞĞ” IN (' || cCommand || ') AND (P.ĞšĞĞ› <> 0 OR P.Ğ¡Ğ£ĞœĞœĞ <> 0) AND (to_date(D.Ğ”ĞĞ¢Ğ, "DD.MM.YYYY") >= to_date("' || cDate1 || '", "DD.MM.YYYY")) AND (to_date(D.Ğ”ĞĞ¢Ğ, "DD.MM.YYYY") < to_date("' || cDate2 || '", "DD.MM.YYYY") + 1) '
+						|| 'SELECT D.ÄÀÒÀÂĞÅÌß AS ÄÀÒÀ, D.ÎÏÅĞ AS ÎÏÅĞÍÎÌÅĞ, T.ÈÌß AS ÎÏÅĞÈÌß, P.ÄÁÑ×ÅÒ, "' || cAcc || '" AS ÊĞÑ×ÅÒ, 0 AS ÄÁÊÎË, 0 AS ÄÁÑÓÌÌÀ, COALESCE(P.ÊÎË, 0) AS ÊĞÊÎË, COALESCE(P.ÑÓÌÌÀ, 0) AS ÊĞÑÓÌÌÀ '
+						|| 'FROM ïğîâîäêè P INNER JOIN äîêóìåíòû D ON P.ÄÎÊÊÎÄ=D.ÊÎÄ '
+               							               || 'INNER JOIN òîïåğ T ON P.ÎÏÅĞ = T.ÎÏÅĞ AND T.ÍÎÌÅĞ = 1 '
+						|| 'WHERE P.ÄÁÑ×ÅÒ <> P.ÊĞÑ×ÅÒ AND P.ÊĞÑ×ÅÒ = "' || cAcc || '" AND P.ÊĞÊÎÄ IN (' || cCommand || ') AND (P.ÊÎË <> 0 OR P.ÑÓÌÌÀ <> 0) AND (to_date(D.ÄÀÒÀ, "DD.MM.YYYY") >= to_date("' || cDate1 || '", "DD.MM.YYYY")) AND (to_date(D.ÄÀÒÀ, "DD.MM.YYYY") < to_date("' || cDate2 || '", "DD.MM.YYYY") + 1) '
 						|| ') S '
-					|| 'GROUP BY Ğ”ĞĞ¢Ğ, ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ , ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯, Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢, ĞšĞ Ğ¡Ğ§Ğ•Ğ¢';
+					|| 'GROUP BY ÄÀÒÀ, ÎÏÅĞÍÎÌÅĞ, ÎÏÅĞÈÌß, ÄÁÑ×ÅÒ, ÊĞÑ×ÅÒ';
 	RETURN cCommand;
 END;
 $$;
@@ -716,6 +743,8 @@ $$;
 ALTER FUNCTION public.sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
+-- TOC entry 23 (class 1255 OID 71807)
+-- Dependencies: 6 435
 -- Name: synonymtsvectorupdate(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -723,7 +752,7 @@ CREATE FUNCTION synonymtsvectorupdate() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	NEW."FTS" = to_tsvector(lower(NEW.Ğ˜ĞœĞ¯ || ' ' || NEW.Ğ˜ĞœĞ¯1));
+	NEW."FTS" = to_tsvector(lower(NEW.ÈÌß || ' ' || NEW.ÈÌß1));
 	RETURN NEW;
 END;
 $$;
@@ -732,27 +761,31 @@ $$;
 ALTER FUNCTION public.synonymtsvectorupdate() OWNER TO sa;
 
 --
--- Name: testdeleting_Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 24 (class 1255 OID 71808)
+-- Dependencies: 435 6
+-- Name: testdeleting_Ñàëüäî(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "testdeleting_Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾"() RETURNS trigger
+CREATE FUNCTION "testdeleting_Ñàëüäî"() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE 
 	cAcc VARCHAR(20);
 	nId INTEGER;
 BEGIN
-	IF (SELECT COUNT(*) FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = OLD."Ğ¡Ğ§Ğ•Ğ¢" AND "Ğ”Ğ‘ĞšĞĞ”" = OLD."ĞšĞĞ”") OR ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = OLD."Ğ¡Ğ§Ğ•Ğ¢" AND "Ğ”Ğ‘ĞšĞĞ”" = OLD."ĞšĞĞ”")) > 0 THEN
-		RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ, Ñ‚.Ğº. Ğ´Ğ»Ñ Ğ½ĞµĞµ Ğ±Ñ‹Ğ»Ğ¸ ÑĞ´ĞµĞ»Ğ°Ğ½Ñ‹ Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€ÑĞºĞ¸Ğµ Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸.';
+	IF (SELECT COUNT(*) FROM "ïğîâîäêè" WHERE ("ÄÁÑ×ÅÒ" = OLD."Ñ×ÅÒ" AND "ÄÁÊÎÄ" = OLD."ÊÎÄ") OR ("ÄÁÑ×ÅÒ" = OLD."Ñ×ÅÒ" AND "ÄÁÊÎÄ" = OLD."ÊÎÄ")) > 0 THEN
+		RAISE EXCEPTION 'Çàïğåùåíî óäàëÿòü çàïèñü, ò.ê. äëÿ íåå áûëè ñäåëàíû áóõãàëòåğñêèå ïğîâîäêè.';
 	END IF;
 	RETURN OLD;
 END;
 $$;
 
 
-ALTER FUNCTION public."testdeleting_Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾"() OWNER TO sa;
+ALTER FUNCTION public."testdeleting_Ñàëüäî"() OWNER TO sa;
 
 --
+-- TOC entry 26 (class 1255 OID 71809)
+-- Dependencies: 435 6
 -- Name: testdeletingdictobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -777,11 +810,11 @@ DECLARE
 	CurTables REFCURSOR;
 	CurAccounts REFCURSOR;
 BEGIN
-	lError := FALSE;		-- Ğ¡Ñ‡Ğ¸Ñ‚Ğ°ĞµĞ¼ Ğ¿Ğ¾Ğ½Ğ°Ñ‡Ğ°Ğ»Ñƒ, Ñ‡Ñ‚Ğ¾ Ğ½Ğ¸ĞºĞ°ĞºĞ¸Ñ… Ğ¿Ñ€Ğ¾Ğ±Ğ»ĞµĞ¼ Ğ½Ğµ Ğ¾Ğ±Ğ½Ğ°Ñ€ÑƒĞ¶ĞµĞ½Ğ¾
+	lError := FALSE;		-- Ñ÷èòàåì ïîíà÷àëó, ÷òî íèêàêèõ ïğîáëåì íå îáíàğóæåíî
 	
-	-- ĞŸÑ€Ğ¾Ğ²ĞµÑ€Ğ¸Ğ¼, ĞµÑÑ‚ÑŒ Ğ»Ğ¸ ÑÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° ÑÑ‚Ğ¾Ñ‚ Ğ¾Ğ±ÑŠĞµĞºÑ‚ Ğ² Ğ¾Ğ´Ğ½Ğ¾Ğ¼ Ğ¸Ğ· ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¾Ğ²
-	cDict := LTRIM(RTRIM(UPPER(TG_RELNAME)));	-- Ğ’Ğ¾Ğ·ÑŒĞ¼ĞµĞ¼ Ğ¸Ğ¼Ñ Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°ĞµĞ¼Ğ¾Ğ³Ğ¾ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°
-	nId := OLD."ĞšĞĞ”";					-- Ğ¸ Ğ²Ğ¾Ğ·ÑŒĞ¼ĞµĞ¼ ĞºĞ¾Ğ´ ÑƒĞ´Ğ°Ğ»ÑĞµĞ¼Ğ¾Ğ¹ Ğ¿Ğ¾Ğ·Ğ¸Ñ†Ğ¸Ğ¸
+	-- Ïğîâåğèì, åñòü ëè ññûëêà íà ıòîò îáúåêò â îäíîì èç ñïğàâî÷íèêîâ
+	cDict := LTRIM(RTRIM(UPPER(TG_RELNAME)));	-- Âîçüìåì èìÿ îáğàáàòûâàåìîãî ñïğàâî÷íèêà
+	nId := OLD."ÊÎÄ";					-- è âîçüìåì êîä óäàëÿåìîé ïîçèöèè
 
 	OPEN CurTables FOR
 		SELECT DISTINCT t.RELNAME
@@ -790,17 +823,17 @@ BEGIN
 				    FROM pg_class c
 				    WHERE c.RELNAME IN (SELECT TABLENAME FROM pg_tables WHERE SCHEMANAME = 'public')
 				    ) t ON C.ATTRELID = t.RELFILENODE
-		WHERE UPPER(c.ATTNAME) = 'ĞšĞĞ”_' || cDict;
+		WHERE UPPER(c.ATTNAME) = 'ÊÎÄ_' || cDict;
 
 	LOOP
 		FETCH CurTables INTO cTable;
 		IF NOT FOUND THEN
 			EXIT;
 		ELSE
-			EXECUTE 'SELECT COUNT(*) FROM ' || cTable || ' WHERE ĞšĞĞ”_' || cDict || ' = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) INTO nCount;
+			EXECUTE 'SELECT COUNT(*) FROM ' || cTable || ' WHERE ÊÎÄ_' || cDict || ' = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) INTO nCount;
 			IF nCount > 0 THEN
 				lError := TRUE;
-				RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ, Ñ‚.Ğº. Ğ½Ğ° Ğ½ĞµĞµ Ğ¸Ğ¼ĞµĞµÑ‚ÑÑ ÑÑÑ‹Ğ»ĞºĞ° Ğ² ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞµ <%>', cTable;
+				RAISE EXCEPTION 'Çàïğåùåíî óäàëÿòü çàïèñü, ò.ê. íà íåå èìååòñÿ ññûëêà â ñïğàâî÷íèêå <%>', cTable;
 				EXIT;			
 			END IF;
 		END IF;
@@ -808,11 +841,11 @@ BEGIN
 
 	CLOSE CurTables;
 
-	IF NOT lError THEN	-- Ğ•ÑĞ»Ğ¸ ĞµÑ‰Ğµ Ğ½ĞµÑ‚ Ğ½Ğ¸ĞºĞ°ĞºĞ¾Ğ¹ Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸, Ñ‚Ğ¾ Ğ¿Ñ€Ğ¾Ğ´Ğ¾Ğ»Ğ¶Ğ¸Ğ¼ Ğ´Ğ°Ğ»ÑŒÑˆĞµ
+	IF NOT lError THEN	-- Åñëè åùå íåò íèêàêîé îøèáêè, òî ïğîäîëæèì äàëüøå
 		OPEN CurAccounts FOR 
-			SELECT "Ğ¡Ğ§Ğ•Ğ¢" 
-			FROM "ÑÑ‡ĞµÑ‚Ğ°" 
-			WHERE LTRIM(RTRIM(UPPER("Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ"))) = cDict;
+			SELECT "Ñ×ÅÒ" 
+			FROM "ñ÷åòà" 
+			WHERE LTRIM(RTRIM(UPPER("ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ"))) = cDict;
 	
 		LOOP
 			FETCH CurAccounts INTO cAcc;
@@ -820,17 +853,17 @@ BEGIN
 				EXIT;
 			ELSE
 				cAcc := RTRIM(cAcc);
-				cCommand := 'FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = ''' || cAcc || ''' AND "Ğ”Ğ‘ĞšĞĞ”" = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) || ') OR ("ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = ''' || cAcc || ''' AND "ĞšĞ ĞšĞĞ”" = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) || ')';
+				cCommand := 'FROM "ïğîâîäêè" WHERE ("ÄÁÑ×ÅÒ" = ''' || cAcc || ''' AND "ÄÁÊÎÄ" = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) || ') OR ("ÊĞÑ×ÅÒ" = ''' || cAcc || ''' AND "ÊĞÊÎÄ" = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) || ')';
 				EXECUTE 'SELECT COUNT(*) ' || cCommand INTO nCount;
 				IF nCount > 0 THEN
 					lError := TRUE;
-					EXECUTE 'SELECT "Ğ”ĞĞšĞšĞĞ”" ' || cCommand || ' ORDER BY "Ğ”ĞĞšĞšĞĞ”" DESC LIMIT 1' INTO nDocId;
-					EXECUTE 'SELECT "ĞĞŸĞ•Ğ " ' || cCommand || ' ORDER BY "Ğ”ĞĞšĞšĞĞ”" DESC LIMIT 1' INTO OperId;
+					EXECUTE 'SELECT "ÄÎÊÊÎÄ" ' || cCommand || ' ORDER BY "ÄÎÊÊÎÄ" DESC LIMIT 1' INTO nDocId;
+					EXECUTE 'SELECT "ÎÏÅĞ" ' || cCommand || ' ORDER BY "ÄÎÊÊÎÄ" DESC LIMIT 1' INTO OperId;
 					cCommand := LTRIM(RTRIM(CAST(nDocId AS VARCHAR(20))));
-					EXECUTE 'SELECT "Ğ”ĞĞ¢Ğ" FROM "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" WHERE "ĞšĞĞ”" = ' || cCommand INTO OperDate;
-					EXECUTE 'SELECT "ĞĞĞœĞ•Ğ " FROM "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" WHERE "ĞšĞĞ”" = ' || cCommand INTO OperNum;
-					EXECUTE 'SELECT "Ğ˜ĞœĞ¯" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = ' || LTRIM(RTRIM(CAST(OperId AS VARCHAR(20)))) || ' AND "ĞĞĞœĞ•Ğ " = 1' INTO OperName;
-					RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ, Ñ‚.Ğº. Ğ´Ğ»Ñ Ğ½ĞµĞµ Ğ±Ñ‹Ğ»Ğ¸ ÑĞ´ĞµĞ»Ğ°Ğ½Ñ‹ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸ (% ÑˆÑ‚.). ĞŸĞ¾ÑĞ»ĞµĞ´Ğ½ÑÑ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸Ñ <%> Ğ¿Ğ¾ Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñƒ Ğ½Ğ¾Ğ¼ĞµÑ€ <%> Ğ±Ñ‹Ğ»Ğ° ÑĞ´ĞµĞ»Ğ°Ğ½Ğ° <%>.', nCount, RTRIM(OperName), RTRIM(OperNum), OperDate;
+					EXECUTE 'SELECT "ÄÀÒÀ" FROM "äîêóìåíòû" WHERE "ÊÎÄ" = ' || cCommand INTO OperDate;
+					EXECUTE 'SELECT "ÍÎÌÅĞ" FROM "äîêóìåíòû" WHERE "ÊÎÄ" = ' || cCommand INTO OperNum;
+					EXECUTE 'SELECT "ÈÌß" FROM "òîïåğ" WHERE "ÎÏÅĞ" = ' || LTRIM(RTRIM(CAST(OperId AS VARCHAR(20)))) || ' AND "ÍÎÌÅĞ" = 1' INTO OperName;
+					RAISE EXCEPTION 'Çàïğåùåíî óäàëÿòü çàïèñü, ò.ê. äëÿ íåå áûëè ñäåëàíû îïåğàöèè (% øò.). Ïîñëåäíÿÿ îïåğàöèÿ <%> ïî äîêóìåíòó íîìåğ <%> áûëà ñäåëàíà <%>.', nCount, RTRIM(OperName), RTRIM(OperNum), OperDate;
 					EXIT;
 				END IF;
 			END IF;
@@ -839,9 +872,9 @@ BEGIN
 	END IF;
 
 	IF lError THEN
-		RETURN NULL;	-- ĞÑˆĞ¸Ğ±ĞºĞ°, ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ½ĞµĞ»ÑŒĞ·Ñ
+		RETURN NULL;	-- Îøèáêà, óäàëÿòü íåëüçÿ
 	ELSE
-		RETURN OLD;	-- ĞÑˆĞ¸Ğ±ĞºĞ¸ Ğ½ĞµÑ‚, Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ
+		RETURN OLD;	-- Îøèáêè íåò, ìîæíî óäàëÿòü çàïèñü
 	END IF;
 END;
 $$;
@@ -850,6 +883,8 @@ $$;
 ALTER FUNCTION public.testdeletingdictobject() OWNER TO sa;
 
 --
+-- TOC entry 27 (class 1255 OID 71810)
+-- Dependencies: 435 6
 -- Name: testdeletingtoperobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -873,26 +908,26 @@ DECLARE
 	CurTables REFCURSOR;
 	CurAccounts REFCURSOR;
 BEGIN
-	lError := FALSE;		-- Ğ¡Ñ‡Ğ¸Ñ‚Ğ°ĞµĞ¼ Ğ¿Ğ¾Ğ½Ğ°Ñ‡Ğ°Ğ»Ñƒ, Ñ‡Ñ‚Ğ¾ Ğ½Ğ¸ĞºĞ°ĞºĞ¸Ñ… Ğ¿Ñ€Ğ¾Ğ±Ğ»ĞµĞ¼ Ğ½Ğµ Ğ¾Ğ±Ğ½Ğ°Ñ€ÑƒĞ¶ĞµĞ½Ğ¾
+	lError := FALSE;		-- Ñ÷èòàåì ïîíà÷àëó, ÷òî íèêàêèõ ïğîáëåì íå îáíàğóæåíî
 
-	-- ĞŸÑ€Ğ¾Ğ²ĞµÑ€Ğ¸Ğ¼, ĞµÑÑ‚ÑŒ Ğ»Ğ¸ ÑÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° ÑÑ‚Ğ¾Ñ‚ Ğ¾Ğ±ÑŠĞµĞºÑ‚ Ğ² Ğ¾Ğ´Ğ½Ğ¾Ğ¼ Ğ¸Ğ· ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¾Ğ²
-	cDict := LTRIM(RTRIM(UPPER(TG_RELNAME)));	-- Ğ’Ğ¾Ğ·ÑŒĞ¼ĞµĞ¼ Ğ¸Ğ¼Ñ Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°ĞµĞ¼Ğ¾Ğ³Ğ¾ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°
-	nId := OLD."ĞšĞĞ”";				-- Ğ¸ Ğ²Ğ¾Ğ·ÑŒĞ¼ĞµĞ¼ ĞºĞ¾Ğ´ ÑƒĞ´Ğ°Ğ»ÑĞµĞ¼Ğ¾Ğ¹ Ğ¿Ğ¾Ğ·Ğ¸Ñ†Ğ¸Ğ¸
+	-- Ïğîâåğèì, åñòü ëè ññûëêà íà ıòîò îáúåêò â îäíîì èç ñïğàâî÷íèêîâ
+	cDict := LTRIM(RTRIM(UPPER(TG_RELNAME)));	-- Âîçüìåì èìÿ îáğàáàòûâàåìîãî ñïğàâî÷íèêà
+	nId := OLD."ÊÎÄ";				-- è âîçüìåì êîä óäàëÿåìîé ïîçèöèè
 
 	OPEN CurTables FOR
-		SELECT DISTINCT "Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ"
+		SELECT DISTINCT "ÒÀÁËÈÖÀ"
 		FROM vw_columns
-		WHERE "Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦" = 'ĞšĞĞ”_' || cDict;
+		WHERE "ÑÒÎËÁÅÖ" = 'ÊÎÄ_' || cDict;
 
 	LOOP
 		FETCH CurTables INTO cTable;
 		IF NOT FOUND THEN
 			EXIT;
 		ELSE
-			EXECUTE 'SELECT COUNT(*) FROM ' || cTable || ' WHERE "ĞšĞĞ”_' || cDict || '" = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) INTO nCount;
+			EXECUTE 'SELECT COUNT(*) FROM ' || cTable || ' WHERE "ÊÎÄ_' || cDict || '" = ' || LTRIM(RTRIM(CAST(nId AS VARCHAR(20)))) INTO nCount;
 			IF nCount > 0 THEN
 				lError := TRUE;
-				RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ, Ñ‚.Ğº. Ğ½Ğ° Ğ½ĞµĞµ Ğ¸Ğ¼ĞµĞµÑ‚ÑÑ ÑÑÑ‹Ğ»ĞºĞ° Ğ² ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞµ <%>', cTable;
+				RAISE EXCEPTION 'Çàïğåùåíî óäàëÿòü çàïèñü, ò.ê. íà íåå èìååòñÿ ññûëêà â ñïğàâî÷íèêå <%>', cTable;
 				EXIT;			
 			END IF;
 		END IF;
@@ -900,11 +935,11 @@ BEGIN
 
 	CLOSE CurTables;
 
-	IF NOT lError THEN	-- Ğ•ÑĞ»Ğ¸ ĞµÑ‰Ğµ Ğ½ĞµÑ‚ Ğ½Ğ¸ĞºĞ°ĞºĞ¾Ğ¹ Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸, Ñ‚Ğ¾ Ğ¿Ñ€Ğ¾Ğ´Ğ¾Ğ»Ğ¶Ğ¸Ğ¼ Ğ´Ğ°Ğ»ÑŒÑˆĞµ
+	IF NOT lError THEN	-- Åñëè åùå íåò íèêàêîé îøèáêè, òî ïğîäîëæèì äàëüøå
 		OPEN CurAccounts FOR 
-			SELECT "Ğ¡Ğ§Ğ•Ğ¢" 
-			FROM "ÑÑ‡ĞµÑ‚Ğ°" 
-			WHERE UPPER("Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ") = cDict;
+			SELECT "Ñ×ÅÒ" 
+			FROM "ñ÷åòà" 
+			WHERE UPPER("ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ") = cDict;
 	
 		LOOP
 			FETCH CurAccounts INTO cAcc;
@@ -912,12 +947,12 @@ BEGIN
 				EXIT;
 			ELSE
 				cAcc := RTRIM(cAcc);
-				EXECUTE 'SELECT COUNT(*) FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND "Ğ”Ğ‘ĞšĞĞ”" = nId) OR ("ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND "ĞšĞ ĞšĞĞ”" = nId)' INTO nCount;
+				EXECUTE 'SELECT COUNT(*) FROM "ïğîâîäêè" WHERE ("ÄÁÑ×ÅÒ" = cAcc AND "ÄÁÊÎÄ" = nId) OR ("ÊĞÑ×ÅÒ" = cAcc AND "ÊĞÊÎÄ" = nId)' INTO nCount;
 				IF nCount > 0 THEN
 					lError := TRUE;
-					EXECUTE 'SELECT TOP 1 "Ğ”ĞĞšĞšĞĞ”" FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND "Ğ”Ğ‘ĞšĞĞ”" = nId) OR ("ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND "ĞšĞ ĞšĞĞ”" = nId) ORDER BY "Ğ”ĞĞšĞšĞĞ”" DESC' INTO DocId;
-					EXECUTE 'SELECT TOP 1 "ĞĞŸĞ•Ğ " FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND "Ğ”Ğ‘ĞšĞĞ”" = nId) OR ("ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = cAcc AND "ĞšĞ ĞšĞĞ”" = nId) ORDER BY "Ğ”ĞĞšĞšĞĞ”" DESC' INTO OperId;
-					RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ, Ñ‚.Ğº. Ğ´Ğ»Ñ Ğ½ĞµĞµ Ğ±Ñ‹Ğ»Ğ¸ ÑĞ´ĞµĞ»Ğ°Ğ½Ñ‹ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸ (% ÑˆÑ‚.). ĞŸĞ¾ÑĞ»ĞµĞ´Ğ½ÑÑ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸Ñ <> Ğ¿Ğ¾ Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñƒ Ğ½Ğ¾Ğ¼ĞµÑ€ <> Ğ±Ñ‹Ğ»Ğ° ÑĞ´ĞµĞ»Ğ°Ğ½Ğ° <>.', nCount;
+					EXECUTE 'SELECT TOP 1 "ÄÎÊÊÎÄ" FROM "ïğîâîäêè" WHERE ("ÄÁÑ×ÅÒ" = cAcc AND "ÄÁÊÎÄ" = nId) OR ("ÊĞÑ×ÅÒ" = cAcc AND "ÊĞÊÎÄ" = nId) ORDER BY "ÄÎÊÊÎÄ" DESC' INTO DocId;
+					EXECUTE 'SELECT TOP 1 "ÎÏÅĞ" FROM "ïğîâîäêè" WHERE ("ÄÁÑ×ÅÒ" = cAcc AND "ÄÁÊÎÄ" = nId) OR ("ÊĞÑ×ÅÒ" = cAcc AND "ÊĞÊÎÄ" = nId) ORDER BY "ÄÎÊÊÎÄ" DESC' INTO OperId;
+					RAISE EXCEPTION 'Çàïğåùåíî óäàëÿòü çàïèñü, ò.ê. äëÿ íåå áûëè ñäåëàíû îïåğàöèè (% øò.). Ïîñëåäíÿÿ îïåğàöèÿ <> ïî äîêóìåíòó íîìåğ <> áûëà ñäåëàíà <>.', nCount;
 					EXIT;
 				END IF;
 			END IF;
@@ -926,9 +961,9 @@ BEGIN
 	END IF;
 
 	IF lError THEN
-		RETURN NULL;	-- ĞÑˆĞ¸Ğ±ĞºĞ°, ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ½ĞµĞ»ÑŒĞ·Ñ
+		RETURN NULL;	-- Îøèáêà, óäàëÿòü íåëüçÿ
 	ELSE
-		RETURN OLD;	-- ĞÑˆĞ¸Ğ±ĞºĞ¸ Ğ½ĞµÑ‚, Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ
+		RETURN OLD;	-- Îøèáêè íåò, ìîæíî óäàëÿòü çàïèñü
 	END IF;
 END;
 $$;
@@ -937,6 +972,8 @@ $$;
 ALTER FUNCTION public.testdeletingtoperobject() OWNER TO sa;
 
 --
+-- TOC entry 28 (class 1255 OID 71811)
+-- Dependencies: 6 435
 -- Name: testupdatingattrib(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -944,8 +981,8 @@ CREATE FUNCTION testupdatingattrib() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (OLD."ĞšĞĞ”" <> NEW."ĞšĞĞ”") OR (OLD."Ğ”ĞĞšĞšĞĞ”" <> NEW."Ğ”ĞĞšĞšĞĞ”") OR (OLD."Ğ¡Ğ¢Ğ " <> NEW."Ğ¡Ğ¢Ğ ") THEN
-		RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ Ğ¸Ğ·Ğ¼ĞµĞ½ÑÑ‚ÑŒ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ ĞºĞ»ÑÑ‡ĞµĞ²Ğ¾Ğ³Ğ¾ ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°';
+	IF (OLD."ÊÎÄ" <> NEW."ÊÎÄ") OR (OLD."ÄÎÊÊÎÄ" <> NEW."ÄÎÊÊÎÄ") OR (OLD."ÑÒĞ" <> NEW."ÑÒĞ") THEN
+		RAISE EXCEPTION 'Çàïğåùåíî èçìåíÿòü çíà÷åíèå êëş÷åâîãî ñòîëáöà';
 		RETURN OLD;
 	END IF;
 	RETURN NEW;
@@ -956,6 +993,8 @@ $$;
 ALTER FUNCTION public.testupdatingattrib() OWNER TO sa;
 
 --
+-- TOC entry 29 (class 1255 OID 71812)
+-- Dependencies: 6 435
 -- Name: testupdatingdocattrib(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -963,8 +1002,8 @@ CREATE FUNCTION testupdatingdocattrib() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (OLD."ĞšĞĞ”" <> NEW."ĞšĞĞ”") THEN
-		RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ Ğ¸Ğ·Ğ¼ĞµĞ½ÑÑ‚ÑŒ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ ĞºĞ»ÑÑ‡ĞµĞ²Ğ¾Ğ³Ğ¾ ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°';
+	IF (OLD."ÊÎÄ" <> NEW."ÊÎÄ") THEN
+		RAISE EXCEPTION 'Çàïğåùåíî èçìåíÿòü çíà÷åíèå êëş÷åâîãî ñòîëáöà';
 		RETURN OLD;
 	END IF;
 	RETURN NEW;
@@ -975,6 +1014,8 @@ $$;
 ALTER FUNCTION public.testupdatingdocattrib() OWNER TO sa;
 
 --
+-- TOC entry 30 (class 1255 OID 71813)
+-- Dependencies: 6 435
 -- Name: testupdatingid(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -982,8 +1023,8 @@ CREATE FUNCTION testupdatingid() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF OLD."ĞšĞĞ”" <> NEW."ĞšĞĞ”" THEN
-		RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ Ğ¸Ğ·Ğ¼ĞµĞ½ÑÑ‚ÑŒ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ ĞºĞ»ÑÑ‡ĞµĞ²Ğ¾Ğ³Ğ¾ ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°';
+	IF OLD."ÊÎÄ" <> NEW."ÊÎÄ" THEN
+		RAISE EXCEPTION 'Çàïğåùåíî èçìåíÿòü çíà÷åíèå êëş÷åâîãî ñòîëáöà';
 		RETURN OLD;
 	END IF;
 	RETURN NEW;
@@ -994,6 +1035,8 @@ $$;
 ALTER FUNCTION public.testupdatingid() OWNER TO sa;
 
 --
+-- TOC entry 31 (class 1255 OID 71814)
+-- Dependencies: 435 6
 -- Name: tsvectorupdate(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1001,7 +1044,7 @@ CREATE FUNCTION tsvectorupdate() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	NEW."fts" = to_tsvector(lower(replace(replace(replace(trim(NEW."Ğ˜ĞœĞ¯") || ' ' || trim(NEW."ĞĞ Ğ¢Ğ˜ĞšĞ£Ğ›"), '-', ' '), ',', ' '), '.', ' ')));
+	NEW."fts" = to_tsvector(lower(replace(replace(replace(trim(NEW."ÈÌß") || ' ' || trim(NEW."ÀĞÒÈÊÓË"), '-', ' '), ',', ' '), '.', ' ')));
 	RETURN NEW;
 END;
 $$;
@@ -1010,37 +1053,39 @@ $$;
 ALTER FUNCTION public.tsvectorupdate() OWNER TO sa;
 
 --
--- Name: Ğ’ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 33 (class 1255 OID 71815)
+-- Dependencies: 6 435
+-- Name: ÂñòàâèòüÏğîâîäêó(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "Ğ’ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"() RETURNS trigger
+CREATE FUNCTION "ÂñòàâèòüÏğîâîäêó"() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (SELECT "Ğ¡Ğ§Ğ˜Ğ¢ĞĞ¢Ğ¬" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = NEW."ĞĞŸĞ•Ğ " AND "ĞĞĞœĞ•Ğ " = 1) = '1' THEN			-- Ğ•ÑĞ»Ğ¸ ÑÑ‚Ñƒ Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ ÑƒÑ‡Ğ¸Ñ‚Ñ‹Ğ²Ğ°Ñ‚ÑŒ
-		IF char_length(NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") > 0 AND (SELECT "Ğ‘ĞĞ›ĞĞĞ¡" FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") = '1' THEN		-- Ğ•ÑĞ»Ğ¸ ÑÑ‡ĞµÑ‚ ÑƒĞºĞ°Ğ·Ğ°Ğ½ Ğ¸ ÑÑ‚Ğ¾ Ğ½Ğµ Ğ·Ğ°Ğ±Ğ°Ğ»Ğ°Ğ½ÑĞ¾Ğ²Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-			IF (SELECT COUNT(*) FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") = 0 THEN			-- Ğ•ÑĞ»Ğ¸ Ğ½Ğµ ÑÑƒÑ‰ĞµÑÑ‚Ğ²ÑƒĞµÑ‚ Ñ‚Ğ°ĞºĞ¾Ğ³Ğ¾ ÑÑ‡ĞµÑ‚Ğ°
-				INSERT INTO "ÑÑ‡ĞµÑ‚Ğ°" ("Ğ¡Ğ§Ğ•Ğ¢") VALUES (NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢");					-- Ğ¢Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ğ¼ ĞµĞ³Ğ¾. Ğ½Ğ°Ğ·Ğ²Ğ°Ğ½Ğ¸Ğµ ÑÑ‡ĞµÑ‚Ğ° Ğ²Ğ²ĞµĞ´ĞµÑ‚ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ Ğ¿Ğ¾Ñ‚Ğ¾Ğ¼
+	IF (SELECT "Ñ×ÈÒÀÒÜ" FROM "òîïåğ" WHERE "ÎÏÅĞ" = NEW."ÎÏÅĞ" AND "ÍÎÌÅĞ" = 1) = '1' THEN			-- Åñëè ıòó ïğîâîäêó ó÷èòûâàòü
+		IF char_length(NEW."ÄÁÑ×ÅÒ") > 0 AND (SELECT "ÁÀËÀÍÑ" FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ") = '1' THEN		-- Åñëè ñ÷åò óêàçàí è ıòî íå çàáàëàíñîâûé ñ÷åò
+			IF (SELECT COUNT(*) FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ") = 0 THEN			-- Åñëè íå ñóùåñòâóåò òàêîãî ñ÷åòà
+				INSERT INTO "ñ÷åòà" ("Ñ×ÅÒ") VALUES (NEW."ÄÁÑ×ÅÒ");					-- Òî äîáàâèì åãî. íàçâàíèå ñ÷åòà ââåäåò ïîëüçîâàòåëü ïîòîì
 			END IF;
-			IF (SELECT COUNT(*) FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."Ğ”Ğ‘ĞšĞĞ”") = 0 THEN
-				INSERT INTO "ÑĞ°Ğ»ÑŒĞ´Ğ¾" ("Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞĞ”")  VALUES (NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", NEW."Ğ”Ğ‘ĞšĞĞ”");
+			IF (SELECT COUNT(*) FROM "ñàëüäî" WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÄÁÊÎÄ") = 0 THEN
+				INSERT INTO "ñàëüäî" ("Ñ×ÅÒ", "ÊÎÄ")  VALUES (NEW."ÄÁÑ×ÅÒ", NEW."ÄÁÊÎÄ");
 			END IF;
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"					-- ... Ğ° Ñ‚ĞµĞ¿ĞµÑ€ÑŒ Ğ½Ğ¾Ğ²ÑƒÑ
-				SET "Ğ”Ğ‘ĞšĞĞ›" = "Ğ”Ğ‘ĞšĞĞ›" + NEW."ĞšĞĞ›", 
-					"Ğ”Ğ•Ğ‘Ğ•Ğ¢" = "Ğ”Ğ•Ğ‘Ğ•Ğ¢" + NEW."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."Ğ”Ğ‘ĞšĞĞ”";
+			UPDATE "ñàëüäî"					-- ... à òåïåğü íîâóş
+				SET "ÄÁÊÎË" = "ÄÁÊÎË" + NEW."ÊÎË", 
+					"ÄÅÁÅÒ" = "ÄÅÁÅÒ" + NEW."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÄÁÊÎÄ";
 		END IF;
-		IF char_length(NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") > 0 AND (SELECT "Ğ‘ĞĞ›ĞĞĞ¡" FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") = '1' THEN		-- Ğ•ÑĞ»Ğ¸ ÑÑ‡ĞµÑ‚ ÑƒĞºĞ°Ğ·Ğ°Ğ½ Ğ¸ ÑÑ‚Ğ¾ Ğ½Ğµ Ğ·Ğ°Ğ±Ğ°Ğ»Ğ°Ğ½ÑĞ¾Ğ²Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-			IF (SELECT COUNT(*) FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") = 0 THEN			-- Ğ•ÑĞ»Ğ¸ Ğ½Ğµ ÑÑƒÑ‰ĞµÑÑ‚Ğ²ÑƒĞµÑ‚ Ñ‚Ğ°ĞºĞ¾Ğ³Ğ¾ ÑÑ‡ĞµÑ‚Ğ°
-				INSERT INTO "ÑÑ‡ĞµÑ‚Ğ°" ("Ğ¡Ğ§Ğ•Ğ¢") VALUES (NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢");					-- Ğ¢Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ğ¼ ĞµĞ³Ğ¾. Ğ½Ğ°Ğ·Ğ²Ğ°Ğ½Ğ¸Ğµ ÑÑ‡ĞµÑ‚Ğ° Ğ²Ğ²ĞµĞ´ĞµÑ‚ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ Ğ¿Ğ¾Ñ‚Ğ¾Ğ¼
+		IF char_length(NEW."ÊĞÑ×ÅÒ") > 0 AND (SELECT "ÁÀËÀÍÑ" FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ") = '1' THEN		-- Åñëè ñ÷åò óêàçàí è ıòî íå çàáàëàíñîâûé ñ÷åò
+			IF (SELECT COUNT(*) FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ") = 0 THEN			-- Åñëè íå ñóùåñòâóåò òàêîãî ñ÷åòà
+				INSERT INTO "ñ÷åòà" ("Ñ×ÅÒ") VALUES (NEW."ÊĞÑ×ÅÒ");					-- Òî äîáàâèì åãî. íàçâàíèå ñ÷åòà ââåäåò ïîëüçîâàòåëü ïîòîì
 			END IF;
-			IF (SELECT COUNT(*) FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."ĞšĞ ĞšĞĞ”") = 0 THEN
-				INSERT INTO "ÑĞ°Ğ»ÑŒĞ´Ğ¾" ("Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞĞ”")  VALUES (NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", NEW."ĞšĞ ĞšĞĞ”");
+			IF (SELECT COUNT(*) FROM "ñàëüäî" WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÊĞÊÎÄ") = 0 THEN
+				INSERT INTO "ñàëüäî" ("Ñ×ÅÒ", "ÊÎÄ")  VALUES (NEW."ÊĞÑ×ÅÒ", NEW."ÊĞÊÎÄ");
 			END IF;
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"					-- ... Ğ° Ñ‚ĞµĞ¿ĞµÑ€ÑŒ Ğ½Ğ¾Ğ²ÑƒÑ
-				SET "ĞšĞ ĞšĞĞ›" = "ĞšĞ ĞšĞĞ›" + NEW."ĞšĞĞ›", 
-					"ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" = "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" + NEW."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."ĞšĞ ĞšĞĞ”";
+			UPDATE "ñàëüäî"					-- ... à òåïåğü íîâóş
+				SET "ÊĞÊÎË" = "ÊĞÊÎË" + NEW."ÊÎË", 
+					"ÊĞÅÄÈÒ" = "ÊĞÅÄÈÒ" + NEW."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÊĞÊÎÄ";
 		END IF;
 		RETURN NEW;
 	ELSE
@@ -1050,82 +1095,86 @@ END;
 $$;
 
 
-ALTER FUNCTION public."Ğ’ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"() OWNER TO sa;
+ALTER FUNCTION public."ÂñòàâèòüÏğîâîäêó"() OWNER TO sa;
 
 --
--- Name: Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞšĞ¾Ğ½ĞµÑ‡Ğ½Ğ¾ĞµĞ¡Ğ°Ğ»ÑŒĞ´Ğ¾(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 34 (class 1255 OID 71816)
+-- Dependencies: 6 435
+-- Name: Ñ÷èòàòüÊîíå÷íîåÑàëüäî(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞšĞ¾Ğ½ĞµÑ‡Ğ½Ğ¾ĞµĞ¡Ğ°Ğ»ÑŒĞ´Ğ¾"() RETURNS trigger
+CREATE FUNCTION "Ñ÷èòàòüÊîíå÷íîåÑàëüäî"() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	NEW."ĞšĞĞĞšĞĞ›" := NEW."ĞšĞĞ›" + NEW."Ğ”Ğ‘ĞšĞĞ›" - NEW."ĞšĞ ĞšĞĞ›";
-	NEW."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" := NEW."Ğ¡ĞĞ›Ğ¬Ğ”Ğ" + NEW."Ğ”Ğ•Ğ‘Ğ•Ğ¢" - NEW."ĞšĞ Ğ•Ğ”Ğ˜Ğ¢";
-	IF NEW."ĞšĞĞĞšĞĞ›" = 0 THEN
-		NEW."ĞšĞĞĞ¦Ğ•ĞĞ" := NEW."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ";
+	NEW."ÊÎÍÊÎË" := NEW."ÊÎË" + NEW."ÄÁÊÎË" - NEW."ÊĞÊÎË";
+	NEW."ÊÎÍÑÀËÜÄÎ" := NEW."ÑÀËÜÄÎ" + NEW."ÄÅÁÅÒ" - NEW."ÊĞÅÄÈÒ";
+	IF NEW."ÊÎÍÊÎË" = 0 THEN
+		NEW."ÊÎÍÖÅÍÀ" := NEW."ÊÎÍÑÀËÜÄÎ";
 	ELSE
-		NEW."ĞšĞĞĞ¦Ğ•ĞĞ" := NEW."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" / NEW."ĞšĞĞĞšĞĞ›";
+		NEW."ÊÎÍÖÅÍÀ" := NEW."ÊÎÍÑÀËÜÄÎ" / NEW."ÊÎÍÊÎË";
 	END IF;
 	RETURN NEW;
 END;
 $$;
 
 
-ALTER FUNCTION public."Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞšĞ¾Ğ½ĞµÑ‡Ğ½Ğ¾ĞµĞ¡Ğ°Ğ»ÑŒĞ´Ğ¾"() OWNER TO sa;
+ALTER FUNCTION public."Ñ÷èòàòüÊîíå÷íîåÑàëüäî"() OWNER TO sa;
 
 --
--- Name: Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 35 (class 1255 OID 71817)
+-- Dependencies: 435 6
+-- Name: Ñ÷èòàòüÏğîâîäêó(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"() RETURNS trigger
+CREATE FUNCTION "Ñ÷èòàòüÏğîâîäêó"() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF NOT (NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND NEW."Ğ”Ğ‘ĞšĞĞ”" = NEW."ĞšĞ ĞšĞĞ”") THEN    -- Ğ•ÑĞ»Ğ¸ Ğ¾Ğ±ÑŠĞµĞºÑ‚ Ğ½Ğµ Ğ·Ğ°Ğ¼Ñ‹ĞºĞ°ĞµÑ‚ÑÑ ÑĞ°Ğ¼ Ğ½Ğ° ÑĞµĞ±Ñ
-		-- Ñ‚Ğ¾, Ğ·Ğ½Ğ°Ñ‡Ğ¸Ñ‚, Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ° ÑÑÑ‹Ğ»Ğ°ĞµÑ‚ÑÑ Ğ½Ğ° Ñ€Ğ°Ğ·Ğ½Ñ‹Ğµ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ñ‹ Ğ¸ Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°Ñ‚ÑŒ ÑÑ‡ĞµÑ‚Ğ° Ñ€Ğ°Ğ·Ğ´ĞµĞ»ÑŒĞ½Ğ¾ Ğ¿Ğ¾ Ğ´ĞµĞ±ĞµÑ‚Ğ¾Ğ²Ğ¾Ğ¼Ñƒ Ğ¸ Ğ¿Ğ¾ ĞºÑ€ĞµĞ´Ğ¸Ñ‚Ğ¾Ğ²Ğ¾Ğ¼Ñƒ Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ñƒ
+	IF NOT (NEW."ÄÁÑ×ÅÒ" = NEW."ÊĞÑ×ÅÒ" AND NEW."ÄÁÊÎÄ" = NEW."ÊĞÊÎÄ") THEN    -- Åñëè îáúåêò íå çàìûêàåòñÿ ñàì íà ñåáÿ
+		-- òî, çíà÷èò, ïğîâîäêà ññûëàåòñÿ íà ğàçíûå îáúåêòû è ìîæíî îáğàáàòûâàòü ñ÷åòà ğàçäåëüíî ïî äåáåòîâîìó è ïî êğåäèòîâîìó îáîğîòó
 		
-		-- CĞ½Ğ°Ñ‡Ğ°Ğ»Ğ° Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ¾Ñ‚Ğ°ĞµĞ¼ Ğ¿Ğ¾ Ğ´ĞµĞ±ĞµÑ‚Ğ¾Ğ²Ğ¾Ğ¼Ñƒ Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ñƒ	
-		IF (OLD."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") AND (OLD."Ğ”Ğ‘ĞšĞĞ”" = NEW."Ğ”Ğ‘ĞšĞĞ”") THEN	-- Ğ¡ÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° ĞºÑ€ĞµĞ´Ğ¸Ñ‚Ğ¾Ğ²Ñ‹Ğ¹ Ğ¾Ğ±ÑŠĞµĞºÑ‚ Ğ½Ğµ Ğ¸Ğ·Ğ¼ĞµĞ½Ğ¸Ğ»Ğ°ÑÑŒ
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"
-				SET "Ğ”Ğ‘ĞšĞĞ›" = "Ğ”Ğ‘ĞšĞĞ›" - OLD."ĞšĞĞ›" + NEW."ĞšĞĞ›", 
-					"Ğ”Ğ•Ğ‘Ğ•Ğ¢" = "Ğ”Ğ•Ğ‘Ğ•Ğ¢" - OLD."Ğ¡Ğ£ĞœĞœĞ" + NEW."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = OLD."Ğ”Ğ‘ĞšĞĞ”";
+		-- Cíà÷àëà îáğàáîòàåì ïî äåáåòîâîìó îáîğîòó	
+		IF (OLD."ÄÁÑ×ÅÒ" = NEW."ÄÁÑ×ÅÒ") AND (OLD."ÄÁÊÎÄ" = NEW."ÄÁÊÎÄ") THEN	-- Ññûëêà íà êğåäèòîâûé îáúåêò íå èçìåíèëàñü
+			UPDATE "ñàëüäî"
+				SET "ÄÁÊÎË" = "ÄÁÊÎË" - OLD."ÊÎË" + NEW."ÊÎË", 
+					"ÄÅÁÅÒ" = "ÄÅÁÅÒ" - OLD."ÑÓÌÌÀ" + NEW."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = OLD."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = OLD."ÄÁÊÎÄ";
 		ELSE
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"						-- Ğ¡Ğ½Ğ°Ñ‡Ğ°Ğ»Ğ° Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ¾Ñ‚Ğ°ĞµĞ¼ ÑÑ‚Ğ°Ñ€Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-				SET "Ğ”Ğ‘ĞšĞĞ›" = "Ğ”Ğ‘ĞšĞĞ›" - OLD."ĞšĞĞ›", 
-					"Ğ”Ğ•Ğ‘Ğ•Ğ¢" = "Ğ”Ğ•Ğ‘Ğ•Ğ¢" - OLD."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = OLD."Ğ”Ğ‘ĞšĞĞ”";
-			IF char_length(NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") > 0 AND (SELECT "Ğ‘ĞĞ›ĞĞĞ¡" FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") = '1' THEN	-- Ğ•ÑĞ»Ğ¸ ÑÑ‡ĞµÑ‚ ÑƒĞºĞ°Ğ·Ğ°Ğ½ Ğ¸ Ğ½Ğµ Ğ·Ğ°Ğ±Ğ°Ğ»Ğ°Ğ½ÑĞ¾Ğ²Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-				IF (SELECT COUNT(*) FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."Ğ”Ğ‘ĞšĞĞ”") = 0 THEN
-					INSERT INTO "ÑĞ°Ğ»ÑŒĞ´Ğ¾" ("Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞĞ”") VALUES (NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", NEW."Ğ”Ğ‘ĞšĞĞ”");
+			UPDATE "ñàëüäî"						-- Ñíà÷àëà îáğàáîòàåì ñòàğûé ñ÷åò
+				SET "ÄÁÊÎË" = "ÄÁÊÎË" - OLD."ÊÎË", 
+					"ÄÅÁÅÒ" = "ÄÅÁÅÒ" - OLD."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = OLD."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = OLD."ÄÁÊÎÄ";
+			IF char_length(NEW."ÄÁÑ×ÅÒ") > 0 AND (SELECT "ÁÀËÀÍÑ" FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ") = '1' THEN	-- Åñëè ñ÷åò óêàçàí è íå çàáàëàíñîâûé ñ÷åò
+				IF (SELECT COUNT(*) FROM "ñàëüäî" WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÄÁÊÎÄ") = 0 THEN
+					INSERT INTO "ñàëüäî" ("Ñ×ÅÒ", "ÊÎÄ") VALUES (NEW."ÄÁÑ×ÅÒ", NEW."ÄÁÊÎÄ");
 				END IF;
-				UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"
-					SET "Ğ”Ğ‘ĞšĞĞ›" = "Ğ”Ğ‘ĞšĞĞ›" + NEW."ĞšĞĞ›", 
-						"Ğ”Ğ•Ğ‘Ğ•Ğ¢" = "Ğ”Ğ•Ğ‘Ğ•Ğ¢" + NEW."Ğ¡Ğ£ĞœĞœĞ"
-					WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."Ğ”Ğ‘ĞšĞĞ”";
+				UPDATE "ñàëüäî"
+					SET "ÄÁÊÎË" = "ÄÁÊÎË" + NEW."ÊÎË", 
+						"ÄÅÁÅÒ" = "ÄÅÁÅÒ" + NEW."ÑÓÌÌÀ"
+					WHERE "Ñ×ÅÒ" = NEW."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÄÁÊÎÄ";
 			END IF;
 		END IF;
 
-		-- Ğ¢Ğ°Ğ¿ĞµÑ€ÑŒ Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ¾Ñ‚Ğ°ĞµĞ¼ Ğ¿Ğ¾ ĞºÑ€ĞµĞ´Ğ¸Ñ‚Ğ¾Ğ²Ğ¾Ğ¼Ñƒ Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ñƒ	
-		IF (OLD."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") AND (OLD."ĞšĞ ĞšĞĞ”" = NEW."ĞšĞ ĞšĞĞ”") THEN	-- Ğ¡ÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° ĞºÑ€ĞµĞ´Ğ¸Ñ‚Ğ¾Ğ²Ñ‹Ğ¹ Ğ¾Ğ±ÑŠĞµĞºÑ‚ Ğ½Ğµ Ğ¸Ğ·Ğ¼ĞµĞ½Ğ¸Ğ»Ğ°ÑÑŒ
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"
-			          SET "ĞšĞ ĞšĞĞ›" = "ĞšĞ ĞšĞĞ›" - OLD."ĞšĞĞ›" + NEW."ĞšĞĞ›", 
-				     "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" = "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" - OLD."Ğ¡Ğ£ĞœĞœĞ" + NEW."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = OLD."ĞšĞ ĞšĞĞ”";
+		-- Òàïåğü îáğàáîòàåì ïî êğåäèòîâîìó îáîğîòó	
+		IF (OLD."ÊĞÑ×ÅÒ" = NEW."ÊĞÑ×ÅÒ") AND (OLD."ÊĞÊÎÄ" = NEW."ÊĞÊÎÄ") THEN	-- Ññûëêà íà êğåäèòîâûé îáúåêò íå èçìåíèëàñü
+			UPDATE "ñàëüäî"
+			          SET "ÊĞÊÎË" = "ÊĞÊÎË" - OLD."ÊÎË" + NEW."ÊÎË", 
+				     "ÊĞÅÄÈÒ" = "ÊĞÅÄÈÒ" - OLD."ÑÓÌÌÀ" + NEW."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = OLD."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = OLD."ÊĞÊÎÄ";
 		ELSE
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"						-- Ğ¡Ğ½Ğ°Ñ‡Ğ°Ğ»Ğ° Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ¾Ñ‚Ğ°ĞµĞ¼ ÑÑ‚Ğ°Ñ€Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-				SET "ĞšĞ ĞšĞĞ›" = "ĞšĞ ĞšĞĞ›" - OLD."ĞšĞĞ›", 
-					"ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" = "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" - OLD."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = OLD."ĞšĞ ĞšĞĞ”";
-			IF char_length(NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") > 0 AND (SELECT "Ğ‘ĞĞ›ĞĞĞ¡" FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") = '1' THEN	-- Ğ•ÑĞ»Ğ¸ ÑÑ‡ĞµÑ‚ ÑƒĞºĞ°Ğ·Ğ°Ğ½ Ğ¸ Ğ½Ğµ Ğ·Ğ°Ğ±Ğ°Ğ»Ğ°Ğ½ÑĞ¾Ğ²Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-				IF (SELECT COUNT(*) FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."ĞšĞ ĞšĞĞ”") = 0 THEN
-					INSERT INTO "ÑĞ°Ğ»ÑŒĞ´Ğ¾" ("Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞĞ”") VALUES (NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", NEW."ĞšĞ ĞšĞĞ”");
+			UPDATE "ñàëüäî"						-- Ñíà÷àëà îáğàáîòàåì ñòàğûé ñ÷åò
+				SET "ÊĞÊÎË" = "ÊĞÊÎË" - OLD."ÊÎË", 
+					"ÊĞÅÄÈÒ" = "ÊĞÅÄÈÒ" - OLD."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = OLD."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = OLD."ÊĞÊÎÄ";
+			IF char_length(NEW."ÊĞÑ×ÅÒ") > 0 AND (SELECT "ÁÀËÀÍÑ" FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ") = '1' THEN	-- Åñëè ñ÷åò óêàçàí è íå çàáàëàíñîâûé ñ÷åò
+				IF (SELECT COUNT(*) FROM "ñàëüäî" WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÊĞÊÎÄ") = 0 THEN
+					INSERT INTO "ñàëüäî" ("Ñ×ÅÒ", "ÊÎÄ") VALUES (NEW."ÊĞÑ×ÅÒ", NEW."ÊĞÊÎÄ");
 				END IF;
-				UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"
-					SET "ĞšĞ ĞšĞĞ›" = "ĞšĞ ĞšĞĞ›" + NEW."ĞšĞĞ›", 
-						"ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" = "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" + NEW."Ğ¡Ğ£ĞœĞœĞ"
-					WHERE "Ğ¡Ğ§Ğ•Ğ¢" = NEW."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = NEW."ĞšĞ ĞšĞĞ”";
+				UPDATE "ñàëüäî"
+					SET "ÊĞÊÎË" = "ÊĞÊÎË" + NEW."ÊÎË", 
+						"ÊĞÅÄÈÒ" = "ÊĞÅÄÈÒ" + NEW."ÑÓÌÌÀ"
+					WHERE "Ñ×ÅÒ" = NEW."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = NEW."ÊĞÊÎÄ";
 			END IF;
 		END IF;
 	END IF;
@@ -1134,51 +1183,55 @@ END;
 $$;
 
 
-ALTER FUNCTION public."Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"() OWNER TO sa;
+ALTER FUNCTION public."Ñ÷èòàòüÏğîâîäêó"() OWNER TO sa;
 
 --
--- Name: Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 36 (class 1255 OID 71818)
+-- Dependencies: 6 435
+-- Name: ÓäàëèòüÄîêóìåíò(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚"() RETURNS trigger
+CREATE FUNCTION "ÓäàëèòüÄîêóìåíò"() RETURNS trigger
     LANGUAGE plpgsql
     AS $_$
 DECLARE
 	cAttrName VARCHAR (50);
 BEGIN
-	cAttrName = 'Ğ´Ğ¾ĞºĞ°Ñ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹' || rtrim(ltrim(cast(OLD."ĞĞŸĞ•Ğ " AS VARCHAR(10))));
+	cAttrName = 'äîêàòğèáóòû' || rtrim(ltrim(cast(OLD."ÎÏÅĞ" AS VARCHAR(10))));
 	IF (SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename = cAttrName) > 0 THEN
-		EXECUTE 'DELETE FROM "' || cAttrName || '" WHERE "ĞšĞĞ”"=$1;' USING OLD."ĞšĞĞ”";
+		EXECUTE 'DELETE FROM "' || cAttrName || '" WHERE "ÊÎÄ"=$1;' USING OLD."ÊÎÄ";
 	END IF;
 
-	DELETE FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE "Ğ”ĞĞšĞšĞĞ”" = OLD."ĞšĞĞ”";
+	DELETE FROM "ïğîâîäêè" WHERE "ÄÎÊÊÎÄ" = OLD."ÊÎÄ";
 	RETURN OLD;
 END;
 $_$;
 
 
-ALTER FUNCTION public."Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚"() OWNER TO sa;
+ALTER FUNCTION public."ÓäàëèòüÄîêóìåíò"() OWNER TO sa;
 
 --
--- Name: Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 37 (class 1255 OID 71819)
+-- Dependencies: 6 435
+-- Name: ÓäàëèòüÏğîâîäêó(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"() RETURNS trigger
+CREATE FUNCTION "ÓäàëèòüÏğîâîäêó"() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (SELECT "Ğ¡Ğ§Ğ˜Ğ¢ĞĞ¢Ğ¬" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE "ĞĞŸĞ•Ğ " = OLD."ĞĞŸĞ•Ğ " AND "ĞĞĞœĞ•Ğ " = 1) = '1' THEN				-- ĞµÑĞ»Ğ¸ ÑÑ‚Ñƒ Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ ÑƒÑ‡Ğ¸Ñ‚Ñ‹Ğ²Ğ°Ñ‚ÑŒ
-		IF char_length(OLD."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") > 0 AND (SELECT "Ğ‘ĞĞ›ĞĞĞ¡" FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢") = '1' THEN		-- ĞµÑĞ»Ğ¸ ÑÑ‡ĞµÑ‚ ÑƒĞºĞ°Ğ·Ğ°Ğ½ Ğ¸ ÑÑ‚Ğ¾ Ğ½Ğµ Ğ·Ğ°Ğ±Ğ°Ğ»Ğ°Ğ½ÑĞ¾Ğ²Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"				
-			          SET "Ğ”Ğ‘ĞšĞĞ›" = "Ğ”Ğ‘ĞšĞĞ›" - OLD."ĞšĞĞ›",
-				     "Ğ”Ğ•Ğ‘Ğ•Ğ¢" = "Ğ”Ğ•Ğ‘Ğ•Ğ¢" - OLD."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = OLD."Ğ”Ğ‘ĞšĞĞ”";
+	IF (SELECT "Ñ×ÈÒÀÒÜ" FROM "òîïåğ" WHERE "ÎÏÅĞ" = OLD."ÎÏÅĞ" AND "ÍÎÌÅĞ" = 1) = '1' THEN				-- åñëè ıòó ïğîâîäêó ó÷èòûâàòü
+		IF char_length(OLD."ÄÁÑ×ÅÒ") > 0 AND (SELECT "ÁÀËÀÍÑ" FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = OLD."ÄÁÑ×ÅÒ") = '1' THEN		-- åñëè ñ÷åò óêàçàí è ıòî íå çàáàëàíñîâûé ñ÷åò
+			UPDATE "ñàëüäî"				
+			          SET "ÄÁÊÎË" = "ÄÁÊÎË" - OLD."ÊÎË",
+				     "ÄÅÁÅÒ" = "ÄÅÁÅÒ" - OLD."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = OLD."ÄÁÑ×ÅÒ" AND "ÊÎÄ" = OLD."ÄÁÊÎÄ";
 		END IF;
-		IF char_length(OLD."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") > 0 AND (SELECT "Ğ‘ĞĞ›ĞĞĞ¡" FROM "ÑÑ‡ĞµÑ‚Ğ°" WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢") = '1' THEN		-- ĞµÑĞ»Ğ¸ ÑÑ‡ĞµÑ‚ ÑƒĞºĞ°Ğ·Ğ°Ğ½ Ğ¸ Ğ½Ğµ Ğ·Ğ°Ğ±Ğ°Ğ»Ğ°Ğ½ÑĞ¾Ğ²Ñ‹Ğ¹ ÑÑ‡ĞµÑ‚
-			UPDATE "ÑĞ°Ğ»ÑŒĞ´Ğ¾"
-			          SET "ĞšĞ ĞšĞĞ›" = "ĞšĞ ĞšĞĞ›" - OLD."ĞšĞĞ›",
-				     "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" = "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" - OLD."Ğ¡Ğ£ĞœĞœĞ"
-				WHERE "Ğ¡Ğ§Ğ•Ğ¢" = OLD."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" AND "ĞšĞĞ”" = OLD."ĞšĞ ĞšĞĞ”";
+		IF char_length(OLD."ÊĞÑ×ÅÒ") > 0 AND (SELECT "ÁÀËÀÍÑ" FROM "ñ÷åòà" WHERE "Ñ×ÅÒ" = OLD."ÊĞÑ×ÅÒ") = '1' THEN		-- åñëè ñ÷åò óêàçàí è íå çàáàëàíñîâûé ñ÷åò
+			UPDATE "ñàëüäî"
+			          SET "ÊĞÊÎË" = "ÊĞÊÎË" - OLD."ÊÎË",
+				     "ÊĞÅÄÈÒ" = "ÊĞÅÄÈÒ" - OLD."ÑÓÌÌÀ"
+				WHERE "Ñ×ÅÒ" = OLD."ÊĞÑ×ÅÒ" AND "ÊÎÄ" = OLD."ÊĞÊÎÄ";
 		END IF;
 	END IF;
 	RETURN OLD;
@@ -1186,18 +1239,20 @@ END;
 $$;
 
 
-ALTER FUNCTION public."Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"() OWNER TO sa;
+ALTER FUNCTION public."ÓäàëèòüÏğîâîäêó"() OWNER TO sa;
 
 --
--- Name: Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº(); Type: FUNCTION; Schema: public; Owner: sa
+-- TOC entry 19 (class 1255 OID 71820)
+-- Dependencies: 435 6
+-- Name: ÓäàëèòüÑïğàâî÷íèê(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
-CREATE FUNCTION "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº"() RETURNS trigger
+CREATE FUNCTION "ÓäàëèòüÑïğàâî÷íèê"() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (OLD."Ğ¡Ğ˜Ğ¡Ğ¢Ğ•ĞœĞĞ«Ğ™") THEN
-		RAISE EXCEPTION 'Ğ—Ğ°Ğ¿Ñ€ĞµÑ‰ĞµĞ½Ğ¾ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ, Ñ‚.Ğº. ÑÑ‚Ğ¾ ÑĞ¸ÑÑ‚ĞµĞ¼Ğ½Ñ‹Ğ¹ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº';
+	IF (OLD."ÑÈÑÒÅÌÍÛÉ") THEN
+		RAISE EXCEPTION 'Çàïğåùåíî óäàëÿòü çàïèñü, ò.ê. ıòî ñèñòåìíûé ñïğàâî÷íèê';
 		RETURN NULL;
 	END IF;
 	RETURN OLD;
@@ -1205,9 +1260,11 @@ END;
 $$;
 
 
-ALTER FUNCTION public."Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº"() OWNER TO sa;
+ALTER FUNCTION public."ÓäàëèòüÑïğàâî÷íèê"() OWNER TO sa;
 
 --
+-- TOC entry 1275 (class 3600 OID 71821)
+-- Dependencies: 6 1258
 -- Name: mydict_showball; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: sa
 --
 
@@ -1223,6 +1280,8 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- TOC entry 1631 (class 1259 OID 71822)
+-- Dependencies: 6
 -- Name: configs; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -1236,16 +1295,20 @@ CREATE TABLE configs (
 ALTER TABLE public.configs OWNER TO sa;
 
 --
+-- TOC entry 1632 (class 1259 OID 71828)
+-- Dependencies: 1773 6
 -- Name: vw_columns; Type: VIEW; Schema: public; Owner: sa
 --
 
 CREATE VIEW vw_columns AS
-    SELECT t.relname AS "Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ", upper((c.attname)::text) AS "Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦", s.typname AS "Ğ¢Ğ˜ĞŸ" FROM ((pg_attribute c JOIN (SELECT c.relfilenode, c.relname FROM pg_class c WHERE ((c.relname IN (SELECT pg_tables.tablename FROM pg_tables WHERE (pg_tables.schemaname = 'public'::name))) OR (c.relname IN (SELECT pg_views.viewname FROM pg_views WHERE (pg_views.schemaname = 'public'::name))))) t ON ((c.attrelid = t.relfilenode))) JOIN pg_type s ON ((c.atttypid = s.oid))) WHERE (c.attnum > 0) ORDER BY t.relname, c.attnum;
+    SELECT t.relname AS "ÒÀÁËÈÖÀ", upper((c.attname)::text) AS "ÑÒÎËÁÅÖ", s.typname AS "ÒÈÏ" FROM ((pg_attribute c JOIN (SELECT c.relfilenode, c.relname FROM pg_class c WHERE ((c.relname IN (SELECT pg_tables.tablename FROM pg_tables WHERE (pg_tables.schemaname = 'public'::name))) OR (c.relname IN (SELECT pg_views.viewname FROM pg_views WHERE (pg_views.schemaname = 'public'::name))))) t ON ((c.attrelid = t.relfilenode))) JOIN pg_type s ON ((c.atttypid = s.oid))) WHERE (c.attnum > 0) ORDER BY t.relname, c.attnum;
 
 
 ALTER TABLE public.vw_columns OWNER TO sa;
 
 --
+-- TOC entry 1633 (class 1259 OID 71833)
+-- Dependencies: 1774 6 264 263
 -- Name: vw_permissions; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1256,16 +1319,20 @@ CREATE VIEW vw_permissions AS
 ALTER TABLE public.vw_permissions OWNER TO sa;
 
 --
+-- TOC entry 1634 (class 1259 OID 71837)
+-- Dependencies: 1775 6
 -- Name: vw_sp_calcaccoborot; Type: VIEW; Schema: public; Owner: sa
 --
 
 CREATE VIEW vw_sp_calcaccoborot AS
-    SELECT sp_calcaccoborot."Ğ”ĞĞ¢Ğ", sp_calcaccoborot."ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ ", sp_calcaccoborot."ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯", sp_calcaccoborot."Ğ”ĞĞšĞšĞĞ”", sp_calcaccoborot."Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢", sp_calcaccoborot."ĞĞĞœĞ•Ğ ", sp_calcaccoborot."ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", sp_calcaccoborot."Ğ¡Ğ£ĞœĞœĞ", sp_calcaccoborot."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", sp_calcaccoborot."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", sp_calcaccoborot."Ğ”Ğ•Ğ‘Ğ•Ğ¢", sp_calcaccoborot."ĞšĞ Ğ•Ğ”Ğ˜Ğ¢", sp_calcaccoborot."Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢", sp_calcaccoborot."Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" FROM sp_calcaccoborot(('10'::character varying(5))::bpchar) sp_calcaccoborot("Ğ”ĞĞ¢Ğ", "ĞĞŸĞ•Ğ ĞĞĞœĞ•Ğ ", "ĞĞŸĞ•Ğ Ğ˜ĞœĞ¯", "Ğ”ĞĞšĞšĞĞ”", "Ğ”ĞĞšĞ£ĞœĞ•ĞĞ¢", "ĞĞĞœĞ•Ğ ", "ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", "Ğ¡Ğ£ĞœĞœĞ", "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "Ğ”Ğ•Ğ‘Ğ•Ğ¢", "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢", "Ğ¡Ğ”Ğ•Ğ‘Ğ•Ğ¢", "Ğ¡ĞšĞ Ğ•Ğ”Ğ˜Ğ¢");
+    SELECT sp_calcaccoborot."ÄÀÒÀ", sp_calcaccoborot."ÎÏÅĞÍÎÌÅĞ", sp_calcaccoborot."ÎÏÅĞÈÌß", sp_calcaccoborot."ÄÎÊÊÎÄ", sp_calcaccoborot."ÄÎÊÓÌÅÍÒ", sp_calcaccoborot."ÍÎÌÅĞ", sp_calcaccoborot."ÊÎÌÌÅÍÒÀĞÈÉ", sp_calcaccoborot."ÑÓÌÌÀ", sp_calcaccoborot."ÄÁÑ×ÅÒ", sp_calcaccoborot."ÊĞÑ×ÅÒ", sp_calcaccoborot."ÄÅÁÅÒ", sp_calcaccoborot."ÊĞÅÄÈÒ", sp_calcaccoborot."ÑÄÅÁÅÒ", sp_calcaccoborot."ÑÊĞÅÄÈÒ" FROM sp_calcaccoborot(('10'::character varying(5))::bpchar) sp_calcaccoborot("ÄÀÒÀ", "ÎÏÅĞÍÎÌÅĞ", "ÎÏÅĞÈÌß", "ÄÎÊÊÎÄ", "ÄÎÊÓÌÅÍÒ", "ÍÎÌÅĞ", "ÊÎÌÌÅÍÒÀĞÈÉ", "ÑÓÌÌÀ", "ÄÁÑ×ÅÒ", "ÊĞÑ×ÅÒ", "ÄÅÁÅÒ", "ÊĞÅÄÈÒ", "ÑÄÅÁÅÒ", "ÑÊĞÅÄÈÒ");
 
 
 ALTER TABLE public.vw_sp_calcaccoborot OWNER TO sa;
 
 --
+-- TOC entry 1635 (class 1259 OID 71841)
+-- Dependencies: 1776 6
 -- Name: vw_tables; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -1276,324 +1343,371 @@ CREATE VIEW vw_tables AS
 ALTER TABLE public.vw_tables OWNER TO sa;
 
 --
+-- TOC entry 1636 (class 1259 OID 71845)
+-- Dependencies: 1777 6
 -- Name: vw_types; Type: VIEW; Schema: public; Owner: sa
 --
 
 CREATE VIEW vw_types AS
-    SELECT dummy.oid AS "ĞšĞĞ”", dummy.typname AS "Ğ˜ĞœĞ¯", dummy.typname_orig AS "Ğ¢Ğ˜ĞŸ", dummy.typlen AS "Ğ”Ğ›Ğ˜ĞĞ" FROM ((SELECT format_type(t.oid, NULL::integer) AS typname, t.typname AS typname_orig, CASE WHEN (t.typelem > (0)::oid) THEN t.typelem ELSE t.oid END AS elemoid, t.typlen, t.typtype, t.oid, nsp.nspname, ((SELECT count(1) AS count FROM pg_type t2 WHERE (t2.typname = t.typname)) > 1) AS isdup FROM (pg_type t JOIN pg_namespace nsp ON ((t.typnamespace = nsp.oid))) WHERE ((((((NOT ((t.typname = 'unknown'::name) AND (nsp.nspname = 'pg_catalog'::name))) AND t.typisdefined) AND (t.typtype = ANY (ARRAY['b'::"char", 'c'::"char", 'd'::"char", 'e'::"char"]))) AND (NOT (EXISTS (SELECT 1 FROM pg_class WHERE (((pg_class.relnamespace = t.typnamespace) AND (pg_class.relname = t.typname)) AND (pg_class.relkind <> 'c'::"char")))))) AND ((t.typname !~~ '_%'::text) OR (NOT (EXISTS (SELECT 1 FROM pg_class WHERE (((pg_class.relnamespace = t.typnamespace) AND (pg_class.relname = ("substring"((t.typname)::text, 2))::name)) AND (pg_class.relkind <> 'c'::"char"))))))) AND (nsp.nspname <> 'information_schema'::name)) UNION SELECT 'bigserial'::text AS text, 'bigserial'::text AS text, 0, 8, 'b'::"char" AS "char", 0, 'pg_catalog'::name AS name, false AS bool) UNION SELECT 'serial'::text AS text, 'serial'::text AS text, 0, 4, 'b'::"char" AS "char", 0, 'pg_catalog'::name AS name, false AS bool) dummy WHERE (dummy.typname !~~ '%[]%'::text) ORDER BY (dummy.nspname <> 'pg_catalog'::name), (dummy.nspname <> 'public'::name), dummy.nspname, dummy.oid;
+    SELECT dummy.oid AS "ÊÎÄ", dummy.typname AS "ÈÌß", dummy.typname_orig AS "ÒÈÏ", dummy.typlen AS "ÄËÈÍÀ" FROM ((SELECT format_type(t.oid, NULL::integer) AS typname, t.typname AS typname_orig, CASE WHEN (t.typelem > (0)::oid) THEN t.typelem ELSE t.oid END AS elemoid, t.typlen, t.typtype, t.oid, nsp.nspname, ((SELECT count(1) AS count FROM pg_type t2 WHERE (t2.typname = t.typname)) > 1) AS isdup FROM (pg_type t JOIN pg_namespace nsp ON ((t.typnamespace = nsp.oid))) WHERE ((((((NOT ((t.typname = 'unknown'::name) AND (nsp.nspname = 'pg_catalog'::name))) AND t.typisdefined) AND (t.typtype = ANY (ARRAY['b'::"char", 'c'::"char", 'd'::"char", 'e'::"char"]))) AND (NOT (EXISTS (SELECT 1 FROM pg_class WHERE (((pg_class.relnamespace = t.typnamespace) AND (pg_class.relname = t.typname)) AND (pg_class.relkind <> 'c'::"char")))))) AND ((t.typname !~~ '_%'::text) OR (NOT (EXISTS (SELECT 1 FROM pg_class WHERE (((pg_class.relnamespace = t.typnamespace) AND (pg_class.relname = ("substring"((t.typname)::text, 2))::name)) AND (pg_class.relkind <> 'c'::"char"))))))) AND (nsp.nspname <> 'information_schema'::name)) UNION SELECT 'bigserial'::text AS text, 'bigserial'::text AS text, 0, 8, 'b'::"char" AS "char", 0, 'pg_catalog'::name AS name, false AS bool) UNION SELECT 'serial'::text AS text, 'serial'::text AS text, 0, 4, 'b'::"char" AS "char", 0, 'pg_catalog'::name AS name, false AS bool) dummy WHERE (dummy.typname !~~ '%[]%'::text) ORDER BY (dummy.nspname <> 'pg_catalog'::name), (dummy.nspname <> 'public'::name), dummy.nspname, dummy.oid;
 
 
 ALTER TABLE public.vw_types OWNER TO sa;
 
 --
--- Name: ÑĞ°Ğ»ÑŒĞ´Ğ¾; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1637 (class 1259 OID 71850)
+-- Dependencies: 1985 1986 1987 1988 1989 1990 1991 1992 1993 6
+-- Name: ñàëüäî; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "ÑĞ°Ğ»ÑŒĞ´Ğ¾" (
-    "Ğ¡Ğ§Ğ•Ğ¢" character(5) NOT NULL,
-    "ĞšĞĞ”" integer,
-    "ĞšĞĞ›" numeric(10,3) DEFAULT 0,
-    "Ğ¡ĞĞ›Ğ¬Ğ”Ğ" numeric(10,2) DEFAULT 0,
-    "Ğ”Ğ‘ĞšĞĞ›" numeric(10,3) DEFAULT 0,
-    "Ğ”Ğ•Ğ‘Ğ•Ğ¢" numeric(10,2) DEFAULT 0,
-    "ĞšĞ ĞšĞĞ›" numeric(10,3) DEFAULT 0,
-    "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢" numeric(10,2) DEFAULT 0,
-    "ĞšĞĞĞšĞĞ›" numeric(10,3) DEFAULT 0,
-    "ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" numeric(10,2) DEFAULT 0,
-    "ĞšĞĞĞ¦Ğ•ĞĞ" numeric(10,2) DEFAULT 0
+CREATE TABLE "ñàëüäî" (
+    "Ñ×ÅÒ" character(5) NOT NULL,
+    "ÊÎÄ" integer,
+    "ÊÎË" numeric(10,3) DEFAULT 0,
+    "ÑÀËÜÄÎ" numeric(10,2) DEFAULT 0,
+    "ÄÁÊÎË" numeric(10,3) DEFAULT 0,
+    "ÄÅÁÅÒ" numeric(10,2) DEFAULT 0,
+    "ÊĞÊÎË" numeric(10,3) DEFAULT 0,
+    "ÊĞÅÄÈÒ" numeric(10,2) DEFAULT 0,
+    "ÊÎÍÊÎË" numeric(10,3) DEFAULT 0,
+    "ÊÎÍÑÀËÜÄÎ" numeric(10,2) DEFAULT 0,
+    "ÊÎÍÖÅÍÀ" numeric(10,2) DEFAULT 0
 );
 
 
-ALTER TABLE public."ÑĞ°Ğ»ÑŒĞ´Ğ¾" OWNER TO sa;
+ALTER TABLE public."ñàëüäî" OWNER TO sa;
 
 --
--- Name: ÑÑ‡ĞµÑ‚Ğ°; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1638 (class 1259 OID 71862)
+-- Dependencies: 1994 1995 1996 1997 1998 1999 6
+-- Name: ñ÷åòà; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "ÑÑ‡ĞµÑ‚Ğ°" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ¡Ğ§Ğ•Ğ¢" character(5) DEFAULT ''::bpchar,
-    "Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ" character varying(50) DEFAULT ''::character varying,
-    "ĞĞĞĞ›Ğ˜Ğ¢Ğ˜ĞšĞ" boolean DEFAULT false,
-    "ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ" boolean DEFAULT false,
-    "Ğ‘ĞĞ›ĞĞĞ¡" boolean DEFAULT true
+CREATE TABLE "ñ÷åòà" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "Ñ×ÅÒ" character(5) DEFAULT ''::bpchar,
+    "ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ" character varying(50) DEFAULT ''::character varying,
+    "ÀÍÀËÈÒÈÊÀ" boolean DEFAULT false,
+    "ÊÎËÈ×ÅÑÒÂÎ" boolean DEFAULT false,
+    "ÁÀËÀÍÑ" boolean DEFAULT true
 );
 
 
-ALTER TABLE public."ÑÑ‡ĞµÑ‚Ğ°" OWNER TO sa;
+ALTER TABLE public."ñ÷åòà" OWNER TO sa;
 
 --
--- Name: vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1639 (class 1259 OID 71871)
+-- Dependencies: 1778 6
+-- Name: vw_áàëàíñ; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ" AS
-    SELECT DISTINCT "ÑÑ‡ĞµÑ‚Ğ°"."ĞšĞĞ”", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯", COALESCE("Ğ´Ğ±ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ”Ğ‘ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ", (0)::numeric) AS "Ğ”Ğ‘ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ", COALESCE("ĞºÑ€ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞ ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ", (0)::numeric) AS "ĞšĞ ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" FROM (("ÑÑ‡ĞµÑ‚Ğ°" LEFT JOIN (SELECT DISTINCT "ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢", sum("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ") AS "Ğ”Ğ‘ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" WHERE (("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" > (0)::numeric) AND (substr(("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢")::text, 1, 2) <> '00'::text)) GROUP BY "ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢" ORDER BY "ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢", sum("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ")) "Ğ´Ğ±ÑĞ°Ğ»ÑŒĞ´Ğ¾" ON (("ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢" = "Ğ´Ğ±ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢"))) LEFT JOIN (SELECT DISTINCT "ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢", (- sum("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ")) AS "ĞšĞ ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" FROM "ÑĞ°Ğ»ÑŒĞ´Ğ¾" WHERE (("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ" < (0)::numeric) AND (substr(("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢")::text, 1, 2) <> '00'::text)) GROUP BY "ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢" ORDER BY "ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢", (- sum("ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ"))) "ĞºÑ€ÑĞ°Ğ»ÑŒĞ´Ğ¾" ON (("ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢" = "ĞºÑ€ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ¡Ğ§Ğ•Ğ¢"))) ORDER BY "ÑÑ‡ĞµÑ‚Ğ°"."ĞšĞĞ”", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯", COALESCE("Ğ´Ğ±ÑĞ°Ğ»ÑŒĞ´Ğ¾"."Ğ”Ğ‘ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ", (0)::numeric), COALESCE("ĞºÑ€ÑĞ°Ğ»ÑŒĞ´Ğ¾"."ĞšĞ ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ", (0)::numeric);
+CREATE VIEW "vw_áàëàíñ" AS
+    SELECT DISTINCT "ñ÷åòà"."ÊÎÄ", "ñ÷åòà"."Ñ×ÅÒ", "ñ÷åòà"."ÈÌß", COALESCE("äáñàëüäî"."ÄÁÊÎÍÑÀËÜÄÎ", (0)::numeric) AS "ÄÁÊÎÍÑÀËÜÄÎ", COALESCE("êğñàëüäî"."ÊĞÊÎÍÑÀËÜÄÎ", (0)::numeric) AS "ÊĞÊÎÍÑÀËÜÄÎ" FROM (("ñ÷åòà" LEFT JOIN (SELECT DISTINCT "ñàëüäî"."Ñ×ÅÒ", sum("ñàëüäî"."ÊÎÍÑÀËÜÄÎ") AS "ÄÁÊÎÍÑÀËÜÄÎ" FROM "ñàëüäî" WHERE (("ñàëüäî"."ÊÎÍÑÀËÜÄÎ" > (0)::numeric) AND (substr(("ñàëüäî"."Ñ×ÅÒ")::text, 1, 2) <> '00'::text)) GROUP BY "ñàëüäî"."Ñ×ÅÒ" ORDER BY "ñàëüäî"."Ñ×ÅÒ", sum("ñàëüäî"."ÊÎÍÑÀËÜÄÎ")) "äáñàëüäî" ON (("ñ÷åòà"."Ñ×ÅÒ" = "äáñàëüäî"."Ñ×ÅÒ"))) LEFT JOIN (SELECT DISTINCT "ñàëüäî"."Ñ×ÅÒ", (- sum("ñàëüäî"."ÊÎÍÑÀËÜÄÎ")) AS "ÊĞÊÎÍÑÀËÜÄÎ" FROM "ñàëüäî" WHERE (("ñàëüäî"."ÊÎÍÑÀËÜÄÎ" < (0)::numeric) AND (substr(("ñàëüäî"."Ñ×ÅÒ")::text, 1, 2) <> '00'::text)) GROUP BY "ñàëüäî"."Ñ×ÅÒ" ORDER BY "ñàëüäî"."Ñ×ÅÒ", (- sum("ñàëüäî"."ÊÎÍÑÀËÜÄÎ"))) "êğñàëüäî" ON (("ñ÷åòà"."Ñ×ÅÒ" = "êğñàëüäî"."Ñ×ÅÒ"))) ORDER BY "ñ÷åòà"."ÊÎÄ", "ñ÷åòà"."Ñ×ÅÒ", "ñ÷åòà"."ÈÌß", COALESCE("äáñàëüäî"."ÄÁÊÎÍÑÀËÜÄÎ", (0)::numeric), COALESCE("êğñàëüäî"."ÊĞÊÎÍÑÀËÜÄÎ", (0)::numeric);
 
 
-ALTER TABLE public."vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ" OWNER TO sa;
+ALTER TABLE public."vw_áàëàíñ" OWNER TO sa;
 
 --
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1640 (class 1259 OID 71876)
+-- Dependencies: 2001 2002 6
+-- Name: áëîêïåğèîäû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ‘Ğ›ĞĞšĞšĞĞĞ•Ğ¦" date,
-    "ĞĞĞ§ĞĞ›Ğ" date NOT NULL,
-    "ĞšĞĞĞ•Ğ¦" date NOT NULL,
-    "ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬" character varying(50) DEFAULT ''::character varying
+CREATE TABLE "áëîêïåğèîäû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÁËÎÊÊÎÍÅÖ" date,
+    "ÍÀ×ÀËÎ" date NOT NULL,
+    "ÊÎÍÅÖ" date NOT NULL,
+    "ÏÎËÜÇÎÂÀÒÅËÜ" character varying(50) DEFAULT ''::character varying
 );
 
 
-ALTER TABLE public."Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" OWNER TO sa;
+ALTER TABLE public."áëîêïåğèîäû" OWNER TO sa;
 
 --
--- Name: Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1641 (class 1259 OID 71881)
+-- Dependencies: 1779 6
+-- Name: ïîëüçîâàòåëè; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" AS
-    SELECT pg_user.usesysid AS "ĞšĞĞ”", pg_user.usename AS "Ğ˜ĞœĞ¯" FROM pg_user WHERE (pg_user.usename <> 'test'::name);
+CREATE VIEW "ïîëüçîâàòåëè" AS
+    SELECT pg_user.usesysid AS "ÊÎÄ", pg_user.usename AS "ÈÌß" FROM pg_user WHERE (pg_user.usename <> 'test'::name);
 
 
-ALTER TABLE public."Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" OWNER TO sa;
-
---
--- Name: vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹; Type: VIEW; Schema: public; Owner: sa
---
-
-CREATE VIEW "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" AS
-    SELECT u."ĞšĞĞ”", u."Ğ˜ĞœĞ¯", COALESCE(b."Ğ‘Ğ›ĞĞšĞšĞĞĞ•Ğ¦", ('now'::text)::date) AS "Ğ‘Ğ›ĞĞšĞšĞĞĞ•Ğ¦", COALESCE(b."ĞĞĞ§ĞĞ›Ğ", (('now'::text)::date - 31)) AS "ĞĞĞ§ĞĞ›Ğ", COALESCE(b."ĞšĞĞĞ•Ğ¦", ('now'::text)::date) AS "ĞšĞĞĞ•Ğ¦" FROM ("Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" u LEFT JOIN "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" b ON (((b."ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬")::name = u."Ğ˜ĞœĞ¯"))) WHERE (u."Ğ˜ĞœĞ¯" = "current_user"());
-
-
-ALTER TABLE public."vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" OWNER TO sa;
+ALTER TABLE public."ïîëüçîâàòåëè" OWNER TO sa;
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1642 (class 1259 OID 71885)
+-- Dependencies: 1780 6
+-- Name: vw_áëîêïåğèîäû; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE TABLE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ”ĞĞ¢Ğ" date,
-    "Ğ”ĞĞ¢ĞĞ’Ğ Ğ•ĞœĞ¯" timestamp without time zone,
-    "ĞĞĞœĞ•Ğ " character varying(10) DEFAULT ''::character varying,
-    "ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™" character varying(100) DEFAULT ''::character varying,
-    "Ğ¡Ğ£ĞœĞœĞ" numeric(10,2) DEFAULT 0,
-    "ĞĞŸĞ˜Ğ¡ĞĞĞ˜Ğ•" text,
-    "ĞĞŸĞ•Ğ " integer,
-    "ĞĞ’Ğ¢Ğ" integer,
-    "ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•1" text,
-    "ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•" bytea
+CREATE VIEW "vw_áëîêïåğèîäû" AS
+    SELECT u."ÊÎÄ", u."ÈÌß", COALESCE(b."ÁËÎÊÊÎÍÅÖ", ('now'::text)::date) AS "ÁËÎÊÊÎÍÅÖ", COALESCE(b."ÍÀ×ÀËÎ", (('now'::text)::date - 31)) AS "ÍÀ×ÀËÎ", COALESCE(b."ÊÎÍÅÖ", ('now'::text)::date) AS "ÊÎÍÅÖ" FROM ("ïîëüçîâàòåëè" u LEFT JOIN "áëîêïåğèîäû" b ON (((b."ÏÎËÜÇÎÂÀÒÅËÜ")::name = u."ÈÌß"))) WHERE (u."ÈÌß" = "current_user"());
+
+
+ALTER TABLE public."vw_áëîêïåğèîäû" OWNER TO sa;
+
+--
+-- TOC entry 1643 (class 1259 OID 71889)
+-- Dependencies: 2004 2005 2006 6
+-- Name: äîêóìåíòû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "äîêóìåíòû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÄÀÒÀ" date,
+    "ÄÀÒÀÂĞÅÌß" timestamp without time zone,
+    "ÍÎÌÅĞ" character varying(10) DEFAULT ''::character varying,
+    "ÊÎÌÌÅÍÒÀĞÈÉ" character varying(100) DEFAULT ''::character varying,
+    "ÑÓÌÌÀ" numeric(10,2) DEFAULT 0,
+    "ÎÏÈÑÀÍÈÅ" text,
+    "ÎÏÅĞ" integer,
+    "ÀÂÒÎ" integer,
+    "ÏÅĞÅÌÅÍÍÛÅ1" text,
+    "ÏÅĞÅÌÅÍÍÛÅ" bytea
 );
 
 
-ALTER TABLE public."Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" OWNER TO sa;
+ALTER TABLE public."äîêóìåíòû" OWNER TO sa;
 
 --
--- Name: vw_Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1644 (class 1259 OID 71898)
+-- Dependencies: 1781 6
+-- Name: vw_äîêóìåíòû; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" AS
-    SELECT d."ĞšĞĞ”", d."Ğ”ĞĞ¢Ğ", d."Ğ”ĞĞ¢ĞĞ’Ğ Ğ•ĞœĞ¯", d."ĞĞĞœĞ•Ğ ", d."ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", d."Ğ¡Ğ£ĞœĞœĞ", d."ĞĞŸĞ•Ğ ", d."ĞĞ’Ğ¢Ğ", d."ĞĞŸĞ˜Ğ¡ĞĞĞ˜Ğ•" FROM ("Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" d JOIN "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" b ON (((d."Ğ”ĞĞ¢Ğ" > (b."ĞĞĞ§ĞĞ›Ğ" - 1)) AND (d."Ğ”ĞĞ¢Ğ" < (b."ĞšĞĞĞ•Ğ¦" + 1)))));
+CREATE VIEW "vw_äîêóìåíòû" AS
+    SELECT d."ÊÎÄ", d."ÄÀÒÀ", d."ÄÀÒÀÂĞÅÌß", d."ÍÎÌÅĞ", d."ÊÎÌÌÅÍÒÀĞÈÉ", d."ÑÓÌÌÀ", d."ÎÏÅĞ", d."ÀÂÒÎ", d."ÎÏÈÑÀÍÈÅ" FROM ("äîêóìåíòû" d JOIN "vw_áëîêïåğèîäû" b ON (((d."ÄÀÒÀ" > (b."ÍÀ×ÀËÎ" - 1)) AND (d."ÄÀÒÀ" < (b."ÊÎÍÅÖ" + 1)))));
 
 
-ALTER TABLE public."vw_Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" OWNER TO sa;
+ALTER TABLE public."vw_äîêóìåíòû" OWNER TO sa;
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1645 (class 1259 OID 71902)
+-- Dependencies: 2008 2009 2010 6
+-- Name: äîñòóï; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "ĞœĞ•ĞĞ®" boolean DEFAULT true,
-    "ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’" integer,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬" character varying(50),
-    "ĞŸĞĞšĞĞ—Ğ’Ğ¡Ğ•Ğ“Ğ”Ğ" boolean DEFAULT false
+CREATE TABLE "äîñòóï" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÌÅÍŞ" boolean DEFAULT true,
+    "ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ" integer,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÏÎËÜÇÎÂÀÒÅËÜ" character varying(50),
+    "ÏÎÊÀÇÂÑÅÃÄÀ" boolean DEFAULT false
 );
 
 
-ALTER TABLE public."Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" OWNER TO sa;
+ALTER TABLE public."äîñòóï" OWNER TO sa;
 
 --
--- Name: vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1646 (class 1259 OID 71908)
+-- Dependencies: 1782 6
+-- Name: vw_äîñòóï; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" AS
-    SELECT DISTINCT s."Ğ˜ĞœĞ¯", s."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’", s."ĞœĞ•ĞĞ®" FROM (SELECT rtrim((d."Ğ˜ĞœĞ¯")::text) AS "Ğ˜ĞœĞ¯", d."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’", (d."ĞœĞ•ĞĞ®" OR d."ĞŸĞĞšĞĞ—Ğ’Ğ¡Ğ•Ğ“Ğ”Ğ") AS "ĞœĞ•ĞĞ®" FROM ("Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" d JOIN "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" p ON ((((rtrim((d."ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬")::text))::name)::text = rtrim((p."Ğ˜ĞœĞ¯")::text)))) WHERE ((upper(rtrim((p."Ğ˜ĞœĞ¯")::text)) = upper(rtrim(("current_user"())::text))) OR (btrim(("current_user"())::text) = 'sa'::text)) ORDER BY d."Ğ˜ĞœĞ¯") s ORDER BY s."Ğ˜ĞœĞ¯", s."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’", s."ĞœĞ•ĞĞ®";
+CREATE VIEW "vw_äîñòóï" AS
+    SELECT DISTINCT s."ÈÌß", s."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ", s."ÌÅÍŞ" FROM (SELECT rtrim((d."ÈÌß")::text) AS "ÈÌß", d."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ", (d."ÌÅÍŞ" OR d."ÏÎÊÀÇÂÑÅÃÄÀ") AS "ÌÅÍŞ" FROM ("äîñòóï" d JOIN "ïîëüçîâàòåëè" p ON ((((rtrim((d."ÏÎËÜÇÎÂÀÒÅËÜ")::text))::name)::text = rtrim((p."ÈÌß")::text)))) WHERE ((upper(rtrim((p."ÈÌß")::text)) = upper(rtrim(("current_user"())::text))) OR (btrim(("current_user"())::text) = 'sa'::text)) ORDER BY d."ÈÌß") s ORDER BY s."ÈÌß", s."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ", s."ÌÅÍŞ";
 
 
-ALTER TABLE public."vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" OWNER TO sa;
-
---
--- Name: vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸; Type: VIEW; Schema: public; Owner: sa
---
-
-CREATE VIEW "vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" AS
-    SELECT pg_user.usesysid AS "ĞºĞ¾Ğ´", pg_user.usename AS "Ğ¸Ğ¼Ñ" FROM pg_user WHERE (pg_user.usename <> 'test'::name);
-
-
-ALTER TABLE public."vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" OWNER TO sa;
+ALTER TABLE public."vw_äîñòóï" OWNER TO sa;
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1647 (class 1259 OID 71912)
+-- Dependencies: 1783 6
+-- Name: vw_ïîëüçîâàòåëè; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE TABLE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" character(5) NOT NULL,
-    "Ğ”Ğ‘ĞšĞĞ”" integer NOT NULL,
-    "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" character(5) NOT NULL,
-    "ĞšĞ ĞšĞĞ”" integer NOT NULL,
-    "ĞšĞĞ›" numeric(10,3) DEFAULT 0,
-    "Ğ¦Ğ•ĞĞ" numeric(10,2) DEFAULT 0,
-    "Ğ¡Ğ£ĞœĞœĞ" numeric(10,2) DEFAULT 0,
-    "Ğ¡Ğ¢Ğ " integer NOT NULL,
-    "Ğ”ĞĞšĞšĞĞ”" integer NOT NULL,
-    "ĞĞŸĞ•Ğ " numeric(3,0) NOT NULL,
-    "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ " numeric(1,0) NOT NULL
+CREATE VIEW "vw_ïîëüçîâàòåëè" AS
+    SELECT pg_user.usesysid AS "êîä", pg_user.usename AS "èìÿ" FROM pg_user WHERE (pg_user.usename <> 'test'::name);
+
+
+ALTER TABLE public."vw_ïîëüçîâàòåëè" OWNER TO sa;
+
+--
+-- TOC entry 1648 (class 1259 OID 71916)
+-- Dependencies: 2012 2013 2014 6
+-- Name: ïğîâîäêè; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "ïğîâîäêè" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÄÁÑ×ÅÒ" character(5) NOT NULL,
+    "ÄÁÊÎÄ" integer NOT NULL,
+    "ÊĞÑ×ÅÒ" character(5) NOT NULL,
+    "ÊĞÊÎÄ" integer NOT NULL,
+    "ÊÎË" numeric(10,3) DEFAULT 0,
+    "ÖÅÍÀ" numeric(10,2) DEFAULT 0,
+    "ÑÓÌÌÀ" numeric(10,2) DEFAULT 0,
+    "ÑÒĞ" integer NOT NULL,
+    "ÄÎÊÊÎÄ" integer NOT NULL,
+    "ÎÏÅĞ" numeric(3,0) NOT NULL,
+    "ÍÎÌÅĞÎÏÅĞ" numeric(1,0) NOT NULL
 );
 
 
-ALTER TABLE public."Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" OWNER TO sa;
+ALTER TABLE public."ïğîâîäêè" OWNER TO sa;
 
 --
--- Name: vw_Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1649 (class 1259 OID 71922)
+-- Dependencies: 1784 6
+-- Name: vw_ïğîâîäêè; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" AS
-    SELECT "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞšĞĞ”", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ”Ğ‘ĞšĞĞ”", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞšĞ ĞšĞĞ”", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞšĞĞ›", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ¦Ğ•ĞĞ", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ¡Ğ£ĞœĞœĞ", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ¡Ğ¢Ğ ", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ”ĞĞšĞšĞĞ”", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞĞŸĞ•Ğ ", "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ " FROM "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" WHERE ("Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."Ğ”ĞĞšĞšĞĞ”" IN (SELECT "vw_Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹"."ĞšĞĞ”" FROM "vw_Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹"));
+CREATE VIEW "vw_ïğîâîäêè" AS
+    SELECT "ïğîâîäêè"."ÊÎÄ", "ïğîâîäêè"."ÄÁÑ×ÅÒ", "ïğîâîäêè"."ÄÁÊÎÄ", "ïğîâîäêè"."ÊĞÑ×ÅÒ", "ïğîâîäêè"."ÊĞÊÎÄ", "ïğîâîäêè"."ÊÎË", "ïğîâîäêè"."ÖÅÍÀ", "ïğîâîäêè"."ÑÓÌÌÀ", "ïğîâîäêè"."ÑÒĞ", "ïğîâîäêè"."ÄÎÊÊÎÄ", "ïğîâîäêè"."ÎÏÅĞ", "ïğîâîäêè"."ÍÎÌÅĞÎÏÅĞ" FROM "ïğîâîäêè" WHERE ("ïğîâîäêè"."ÄÎÊÊÎÄ" IN (SELECT "vw_äîêóìåíòû"."ÊÎÄ" FROM "vw_äîêóìåíòû"));
 
 
-ALTER TABLE public."vw_Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" OWNER TO sa;
+ALTER TABLE public."vw_ïğîâîäêè" OWNER TO sa;
 
 --
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1650 (class 1259 OID 71926)
+-- Dependencies: 2016 2017 2018 2019 2020 6
+-- Name: ñïğàâî÷íèêè; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ¤ĞĞ¢Ğ" character varying(100) DEFAULT ''::character varying,
-    "Ğ˜ĞœĞ¯_Ğ’_Ğ¡ĞŸĞ˜Ğ¡ĞšĞ•" character varying(100) DEFAULT ''::character varying,
-    "Ğ˜ĞœĞ¯_Ğ’_Ğ¤ĞĞ ĞœĞ•" character varying(100) DEFAULT ''::character varying,
-    "ĞŸĞ ĞĞ¢ĞĞ¢Ğ˜ĞŸ" character varying(100),
-    "Ğ¡Ğ˜Ğ¡Ğ¢Ğ•ĞœĞĞ«Ğ™" boolean DEFAULT false
+CREATE TABLE "ñïğàâî÷íèêè" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÔÎÒÎ" character varying(100) DEFAULT ''::character varying,
+    "ÈÌß_Â_ÑÏÈÑÊÅ" character varying(100) DEFAULT ''::character varying,
+    "ÈÌß_Â_ÔÎĞÌÅ" character varying(100) DEFAULT ''::character varying,
+    "ÏĞÎÒÎÒÈÏ" character varying(100),
+    "ÑÈÑÒÅÌÍÛÉ" boolean DEFAULT false
 );
 
 
-ALTER TABLE public."ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" OWNER TO sa;
+ALTER TABLE public."ñïğàâî÷íèêè" OWNER TO sa;
 
 --
--- Name: Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1651 (class 1259 OID 71934)
+-- Dependencies: 2022 2023 2024 2025 2026 2027 2028 2029 2030 2031 2032 2033 2034 2035 2036 2037 2038 2039 2040 2041 2042 6
+-- Name: òîïåğ; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "Ñ‚Ğ¾Ğ¿ĞµÑ€" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "ĞĞŸĞ•Ğ " integer,
-    "ĞĞĞœĞ•Ğ " integer,
-    "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢" character varying(5) DEFAULT ''::character varying,
-    "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢" character varying(5) DEFAULT ''::character varying,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ˜Ğ¢ĞĞ“Ğ˜" character varying(1) DEFAULT ''::character varying,
-    "ĞœĞ•ĞĞ®" boolean DEFAULT true,
-    "ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢" character varying(20) DEFAULT ''::character varying,
-    "ĞĞ£ĞœĞ•Ğ ĞĞ¢ĞĞ " character varying(40) DEFAULT ''::character varying,
-    "ĞĞ”ĞĞĞĞŸĞ•Ğ ĞĞ¦Ğ˜Ğ¯" boolean,
-    "ĞšĞĞ›" boolean DEFAULT false,
-    "Ğ”Ğ‘ĞŸĞĞ¡Ğ¢" boolean DEFAULT false,
-    "ĞšĞ ĞŸĞĞ¡Ğ¢" boolean DEFAULT false,
-    "Ğ”Ğ‘Ğ”ĞĞ‘ĞĞ’" boolean DEFAULT false,
-    "ĞšĞ Ğ”ĞĞ‘ĞĞ’" boolean DEFAULT false,
-    "Ğ”Ğ‘Ğ’Ğ«Ğ‘ĞĞ " boolean DEFAULT false,
-    "ĞšĞ Ğ’Ğ«Ğ‘ĞĞ " boolean DEFAULT false,
-    "Ğ”Ğ‘Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ" boolean DEFAULT true,
-    "ĞšĞ Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ" boolean DEFAULT true,
-    "Ğ”Ğ‘Ğ’Ğ˜Ğ”Ğ˜Ğœ" boolean DEFAULT true,
-    "ĞšĞ Ğ’Ğ˜Ğ”Ğ˜Ğœ" boolean DEFAULT true,
-    "Ğ¤ĞĞ ĞœĞ" character varying(50) DEFAULT ''::character varying,
-    "ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ" boolean DEFAULT false,
-    "Ğ¡Ğ§Ğ˜Ğ¢ĞĞ¢Ğ¬" boolean DEFAULT true,
-    "ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•" text,
-    "ĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«" boolean,
-    "Ğ”ĞĞšĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«" boolean
+CREATE TABLE "òîïåğ" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÎÏÅĞ" integer,
+    "ÍÎÌÅĞ" integer,
+    "ÄÁÑ×ÅÒ" character varying(5) DEFAULT ''::character varying,
+    "ÊĞÑ×ÅÒ" character varying(5) DEFAULT ''::character varying,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÈÒÎÃÈ" character varying(1) DEFAULT ''::character varying,
+    "ÌÅÍŞ" boolean DEFAULT true,
+    "ÎÑÍÄÎÊÓÌÅÍÒ" character varying(20) DEFAULT ''::character varying,
+    "ÍÓÌÅĞÀÒÎĞ" character varying(40) DEFAULT ''::character varying,
+    "ÎÄÍÀÎÏÅĞÀÖÈß" boolean,
+    "ÊÎË" boolean DEFAULT false,
+    "ÄÁÏÎÑÒ" boolean DEFAULT false,
+    "ÊĞÏÎÑÒ" boolean DEFAULT false,
+    "ÄÁÄÎÁÀÂ" boolean DEFAULT false,
+    "ÊĞÄÎÁÀÂ" boolean DEFAULT false,
+    "ÄÁÂÛÁÎĞ" boolean DEFAULT false,
+    "ÊĞÂÛÁÎĞ" boolean DEFAULT false,
+    "ÄÁÑÀËÂÈÄÈÌ" boolean DEFAULT true,
+    "ÊĞÑÀËÂÈÄÈÌ" boolean DEFAULT true,
+    "ÄÁÂÈÄÈÌ" boolean DEFAULT true,
+    "ÊĞÂÈÄÈÌ" boolean DEFAULT true,
+    "ÔÎĞÌÀ" character varying(50) DEFAULT ''::character varying,
+    "ÍÅÇÀÂÈÑÈÌ" boolean DEFAULT false,
+    "Ñ×ÈÒÀÒÜ" boolean DEFAULT true,
+    "ÏÅĞÅÌÅÍÍÛÅ" text,
+    "ÀÒĞÈÁÓÒÛ" boolean,
+    "ÄÎÊÀÒĞÈÁÓÒÛ" boolean
 );
 
 
-ALTER TABLE public."Ñ‚Ğ¾Ğ¿ĞµÑ€" OWNER TO sa;
+ALTER TABLE public."òîïåğ" OWNER TO sa;
 
 --
--- Name: vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1652 (class 1259 OID 71961)
+-- Dependencies: 1785 6
+-- Name: vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" AS
-    (SELECT s."ĞšĞĞ”", s."Ğ˜ĞœĞ¯" FROM "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" s UNION SELECT (1000000 + "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ") AS "ĞšĞĞ”", ('Ğ¡Ğ¿Ğ¸ÑĞ¾ĞºĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğ¾Ğ²'::text || btrim((("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ")::character varying(20))::text)) AS "Ğ˜ĞœĞ¯" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE ("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞĞœĞ•Ğ " = 1)) UNION SELECT (2000000 + "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ") AS "ĞšĞĞ”", ('Ğ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚'::text || btrim((("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ")::character varying(20))::text)) AS "Ğ˜ĞœĞ¯" FROM "Ñ‚Ğ¾Ğ¿ĞµÑ€" WHERE ("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞĞœĞ•Ğ " = 1);
+CREATE VIEW "vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" AS
+    (SELECT s."ÊÎÄ", s."ÈÌß" FROM "ñïğàâî÷íèêè" s UNION SELECT (1000000 + "òîïåğ"."ÎÏÅĞ") AS "ÊÎÄ", ('ÑïèñîêÄîêóìåíòîâ'::text || btrim((("òîïåğ"."ÎÏÅĞ")::character varying(20))::text)) AS "ÈÌß" FROM "òîïåğ" WHERE ("òîïåğ"."ÍÎÌÅĞ" = 1)) UNION SELECT (2000000 + "òîïåğ"."ÎÏÅĞ") AS "ÊÎÄ", ('Äîêóìåíò'::text || btrim((("òîïåğ"."ÎÏÅĞ")::character varying(20))::text)) AS "ÈÌß" FROM "òîïåğ" WHERE ("òîïåğ"."ÍÎÌÅĞ" = 1);
 
 
-ALTER TABLE public."vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" OWNER TO sa;
+ALTER TABLE public."vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" OWNER TO sa;
 
 --
--- Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1653 (class 1259 OID 71966)
+-- Dependencies: 2044 2045 6
+-- Name: ñòîëáöû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE TABLE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "ĞšĞĞ”_VW_Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ˜_Ğ¡Ğ_Ğ¡Ğ¢ĞĞ›Ğ‘Ğ¦ĞĞœĞ˜" integer,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ—ĞĞ“ĞĞ›ĞĞ’ĞĞš" character varying(100) DEFAULT ''::character varying,
-    "ĞĞĞœĞ•Ğ " numeric(3,0),
-    "Ğ¢ĞĞ›Ğ¬ĞšĞĞ§Ğ¢Ğ•ĞĞ˜Ğ•" boolean
+CREATE TABLE "ñòîëáöû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÊÎÄ_VW_ÑÏĞÀÂÎ×ÍÈÊÈ_ÑÎ_ÑÒÎËÁÖÀÌÈ" integer,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÇÀÃÎËÎÂÎÊ" character varying(100) DEFAULT ''::character varying,
+    "ÍÎÌÅĞ" numeric(3,0),
+    "ÒÎËÜÊÎ×ÒÅÍÈÅ" boolean,
+    "ÊÎÄÒÀÁËÈÖÛ" integer
 );
 
 
-ALTER TABLE public."ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" OWNER TO sa;
+ALTER TABLE public."ñòîëáöû" OWNER TO sa;
 
 --
--- Name: vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1685 (class 1259 OID 72230)
+-- Dependencies: 1792 6
+-- Name: vw_ñòîëáöû; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" AS
-    SELECT s."Ğ‘ĞĞ—Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", s."Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", s."Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦", s."Ğ—ĞĞ“ĞĞ›ĞĞ’ĞĞš", s."ĞĞĞœĞ•Ğ ", s."Ğ¢ĞĞ›Ğ¬ĞšĞĞ§Ğ¢Ğ•ĞĞ˜Ğ•" FROM (SELECT DISTINCT d."Ğ˜ĞœĞ¯" AS "Ğ‘ĞĞ—Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", CASE WHEN ("position"((s."Ğ˜ĞœĞ¯")::text, '.'::text) > 0) THEN ("substring"((s."Ğ˜ĞœĞ¯")::text, 0, "position"((s."Ğ˜ĞœĞ¯")::text, '.'::text)))::character varying ELSE d."Ğ˜ĞœĞ¯" END AS "Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", CASE WHEN ("position"((s."Ğ˜ĞœĞ¯")::text, '.'::text) > 0) THEN ("substring"((s."Ğ˜ĞœĞ¯")::text, ("position"((s."Ğ˜ĞœĞ¯")::text, '.'::text) + 1)))::character varying ELSE s."Ğ˜ĞœĞ¯" END AS "Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦", s."Ğ—ĞĞ“ĞĞ›ĞĞ’ĞĞš", s."ĞĞĞœĞ•Ğ ", s."Ğ¢ĞĞ›Ğ¬ĞšĞĞ§Ğ¢Ğ•ĞĞ˜Ğ•" FROM ("ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" s JOIN "vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" d ON ((s."ĞšĞĞ”_VW_Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ˜_Ğ¡Ğ_Ğ¡Ğ¢ĞĞ›Ğ‘Ğ¦ĞĞœĞ˜" = d."ĞšĞĞ”")))) s WHERE ((s."Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦")::text <> ''::text) ORDER BY s."Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", s."ĞĞĞœĞ•Ğ ";
+CREATE VIEW "vw_ñòîëáöû" AS
+    SELECT s."ÁÀÇÑÏĞÀÂÎ×ÍÈÊ", s."ÑÏĞÀÂÎ×ÍÈÊ", s."ÑÒÎËÁÅÖ", s."ÇÀÃÎËÎÂÎÊ", s."ÍÎÌÅĞ", s."ÒÎËÜÊÎ×ÒÅÍÈÅ" FROM (SELECT DISTINCT btrim((d."ÈÌß")::text) AS "ÁÀÇÑÏĞÀÂÎ×ÍÈÊ", CASE WHEN ((d."ÊÎÄ" >= 1000000) AND (d."ÊÎÄ" < 2000000)) THEN 'äîêóìåíòû'::character varying WHEN (d."ÊÎÄ" >= 2000000) THEN 'ïğîâîäêè'::character varying ELSE d1."ÈÌß" END AS "ÑÏĞÀÂÎ×ÍÈÊ", CASE WHEN ("position"((s."ÈÌß")::text, '.'::text) > 0) THEN ("substring"((s."ÈÌß")::text, ("position"((s."ÈÌß")::text, '.'::text) + 1)))::character varying ELSE s."ÈÌß" END AS "ÑÒÎËÁÅÖ", s."ÇÀÃÎËÎÂÎÊ", s."ÍÎÌÅĞ", s."ÒÎËÜÊÎ×ÒÅÍÈÅ" FROM (("ñòîëáöû" s JOIN "vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" d ON ((s."ÊÎÄ_VW_ÑÏĞÀÂÎ×ÍÈÊÈ_ÑÎ_ÑÒÎËÁÖÀÌÈ" = d."ÊÎÄ"))) JOIN "vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" d1 ON ((s."ÊÎÄÒÀÁËÈÖÛ" = d1."ÊÎÄ")))) s WHERE ((s."ÑÒÎËÁÅÖ")::text <> ''::text) ORDER BY s."ÑÏĞÀÂÎ×ÍÈÊ", s."ÍÎÌÅĞ";
 
 
-ALTER TABLE public."vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" OWNER TO sa;
-
---
--- Name: vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹; Type: VIEW; Schema: public; Owner: sa
---
-
-CREATE VIEW "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹" AS
-    SELECT DISTINCT s."Ğ‘ĞĞ—Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš" AS base_table, ins.table_name, ins."column", ins.name, ins.type, ins.length, ins."precision", ins.is_updatable, COALESCE(s."Ğ—ĞĞ“ĞĞ›ĞĞ’ĞĞš", ''::character varying) AS header, COALESCE(s."ĞĞĞœĞ•Ğ ", (0)::numeric) AS number FROM ((SELECT "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"."Ğ‘ĞĞ—Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"."Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"."Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦", "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"."Ğ—ĞĞ“ĞĞ›ĞĞ’ĞĞš", "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"."ĞĞĞœĞ•Ğ " FROM "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹") s RIGHT JOIN (SELECT DISTINCT ins.table_name, ((ins.ordinal_position)::integer - 1) AS "column", ins.column_name AS name, ins.data_type AS type, (COALESCE((ins.character_maximum_length)::integer, 0) + COALESCE((ins.numeric_precision)::integer, 0)) AS length, COALESCE((ins.numeric_scale)::integer, 0) AS "precision", ins.is_updatable FROM (information_schema.columns ins JOIN "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" s ON ((((ins.table_name)::text = (s."Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš")::text) AND (btrim((s."Ğ‘ĞĞ—Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš")::text) = 'Ğ·Ğ°ÑĞ²ĞºĞ°'::text))))) ins ON ((((s."Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš")::text = (ins.table_name)::text) AND ((s."Ğ¡Ğ¢ĞĞ›Ğ‘Ğ•Ğ¦")::text = (ins.name)::text)))) ORDER BY ins.table_name, ins."column";
-
-
-ALTER TABLE public."vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹" OWNER TO sa;
+ALTER TABLE public."vw_ñòîëáöû" OWNER TO sa;
 
 --
--- Name: vw_ÑÑ‡ĞµÑ‚Ğ°; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1686 (class 1259 OID 72235)
+-- Dependencies: 1793 263 6 264 267 264
+-- Name: vw_ñòîëáöû_òèïû; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "vw_ÑÑ‡ĞµÑ‚Ğ°" AS
-    SELECT s."ĞšĞĞ”", s."Ğ˜ĞœĞ¯", s."Ğ¡Ğ§Ğ•Ğ¢", s."Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ", s."Ğ‘ĞĞ›ĞĞĞ¡", s."ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ", sp."ĞŸĞ ĞĞ¢ĞĞ¢Ğ˜ĞŸ" FROM ("ÑÑ‡ĞµÑ‚Ğ°" s LEFT JOIN "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" sp ON (((s."Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ")::text = (sp."Ğ˜ĞœĞ¯")::text)));
+CREATE VIEW "vw_ñòîëáöû_òèïû" AS
+    SELECT DISTINCT s."ÁÀÇÑÏĞÀÂÎ×ÍÈÊ" AS base_table, ins.table_name, ins."column", ins.name, ins.type, ins.length, ins."precision", ins.is_updatable, COALESCE(s."ÇÀÃÎËÎÂÎÊ", ''::character varying) AS header, COALESCE(s."ÍÎÌÅĞ", (0)::numeric) AS number FROM ((SELECT "vw_ñòîëáöû"."ÁÀÇÑÏĞÀÂÎ×ÍÈÊ", "vw_ñòîëáöû"."ÑÏĞÀÂÎ×ÍÈÊ", "vw_ñòîëáöû"."ÑÒÎËÁÅÖ", "vw_ñòîëáöû"."ÇÀÃÎËÎÂÎÊ", "vw_ñòîëáöû"."ÍÎÌÅĞ" FROM "vw_ñòîëáöû") s RIGHT JOIN (SELECT DISTINCT ins.table_name, ((ins.ordinal_position)::integer - 1) AS "column", ins.column_name AS name, ins.data_type AS type, (COALESCE((ins.character_maximum_length)::integer, 0) + COALESCE((ins.numeric_precision)::integer, 0)) AS length, COALESCE((ins.numeric_scale)::integer, 0) AS "precision", ins.is_updatable FROM (information_schema.columns ins JOIN "vw_ñòîëáöû" s ON ((((ins.table_name)::text = (s."ÑÏĞÀÂÎ×ÍÈÊ")::text) AND (btrim(s."ÁÀÇÑÏĞÀÂÎ×ÍÈÊ") = 'çàÿâêà'::text))))) ins ON ((((s."ÑÏĞÀÂÎ×ÍÈÊ")::text = (ins.table_name)::text) AND ((s."ÑÒÎËÁÅÖ")::text = (ins.name)::text)))) ORDER BY ins.table_name, ins."column";
 
 
-ALTER TABLE public."vw_ÑÑ‡ĞµÑ‚Ğ°" OWNER TO sa;
-
---
--- Name: vw_Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: VIEW; Schema: public; Owner: sa
---
-
-CREATE VIEW "vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" AS
-    SELECT "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞĞ”", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞĞœĞ•Ğ ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ˜ĞœĞ¯", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ" AS "Ğ”Ğ‘Ğ¡ĞŸĞ ĞĞ’", '                                        '::bpchar AS "Ğ”Ğ‘Ğ¡ĞŸĞ ĞĞ’ĞĞ›Ğ˜ĞĞ¡", "ÑÑ‡ĞµÑ‚Ğ°"."ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ" AS "Ğ”Ğ‘ĞšĞĞ›", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ”Ğ‘ĞŸĞĞ¡Ğ¢", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ”Ğ‘Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ”Ğ‘Ğ’Ğ˜Ğ”Ğ˜Ğœ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ÑÑ‡ĞµÑ‚Ğ°1"."Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ" AS "ĞšĞ Ğ¡ĞŸĞ ĞĞ’", '                                        '::bpchar AS "ĞšĞ Ğ¡ĞŸĞ ĞĞ’ĞĞ›Ğ˜ĞĞ¡", "ÑÑ‡ĞµÑ‚Ğ°1"."ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ" AS "ĞšĞ ĞšĞĞ›", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞ”ĞĞĞĞŸĞ•Ğ ĞĞ¦Ğ˜Ğ¯", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ˜Ğ¢ĞĞ“Ğ˜", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞ ĞŸĞĞ¡Ğ¢", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞ Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞ Ğ’Ğ˜Ğ”Ğ˜Ğœ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ”ĞĞšĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«" FROM (("Ñ‚Ğ¾Ğ¿ĞµÑ€" LEFT JOIN "ÑÑ‡ĞµÑ‚Ğ°" "ÑÑ‡ĞµÑ‚Ğ°" ON ((("Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢")::bpchar = "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢"))) LEFT JOIN "ÑÑ‡ĞµÑ‚Ğ°" "ÑÑ‡ĞµÑ‚Ğ°1" ON ((("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞ Ğ¡Ğ§Ğ•Ğ¢")::bpchar = "ÑÑ‡ĞµÑ‚Ğ°1"."Ğ¡Ğ§Ğ•Ğ¢")));
-
-
-ALTER TABLE public."vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" OWNER TO sa;
+ALTER TABLE public."vw_ñòîëáöû_òèïû" OWNER TO sa;
 
 --
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1654 (class 1259 OID 71981)
+-- Dependencies: 1786 6
+-- Name: vw_ñ÷åòà; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq"
+CREATE VIEW "vw_ñ÷åòà" AS
+    SELECT s."ÊÎÄ", s."ÈÌß", s."Ñ×ÅÒ", s."ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ", s."ÁÀËÀÍÑ", s."ÊÎËÈ×ÅÑÒÂÎ", sp."ÏĞÎÒÎÒÈÏ" FROM ("ñ÷åòà" s LEFT JOIN "ñïğàâî÷íèêè" sp ON (((s."ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ")::text = (sp."ÈÌß")::text)));
+
+
+ALTER TABLE public."vw_ñ÷åòà" OWNER TO sa;
+
+--
+-- TOC entry 1655 (class 1259 OID 71985)
+-- Dependencies: 1787 6
+-- Name: vw_òîïåğ; Type: VIEW; Schema: public; Owner: sa
+--
+
+CREATE VIEW "vw_òîïåğ" AS
+    SELECT "òîïåğ"."ÊÎÄ", "òîïåğ"."ÎÏÅĞ", "òîïåğ"."ÍÎÌÅĞ", "òîïåğ"."ÈÌß", "òîïåğ"."ÄÁÑ×ÅÒ", "ñ÷åòà"."ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ" AS "ÄÁÑÏĞÀÂ", '                                        '::bpchar AS "ÄÁÑÏĞÀÂÀËÈÀÑ", "ñ÷åòà"."ÊÎËÈ×ÅÑÒÂÎ" AS "ÄÁÊÎË", "òîïåğ"."ÄÁÏÎÑÒ", "òîïåğ"."ÄÁÑÀËÂÈÄÈÌ", "òîïåğ"."ÄÁÂÈÄÈÌ", "òîïåğ"."ÊĞÑ×ÅÒ", "ñ÷åòà1"."ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ" AS "ÊĞÑÏĞÀÂ", '                                        '::bpchar AS "ÊĞÑÏĞÀÂÀËÈÀÑ", "ñ÷åòà1"."ÊÎËÈ×ÅÑÒÂÎ" AS "ÊĞÊÎË", "òîïåğ"."ÎÄÍÀÎÏÅĞÀÖÈß", "òîïåğ"."ÈÒÎÃÈ", "òîïåğ"."ÊĞÏÎÑÒ", "òîïåğ"."ÊĞÑÀËÂÈÄÈÌ", "òîïåğ"."ÊĞÂÈÄÈÌ", "òîïåğ"."ÍÅÇÀÂÈÑÈÌ", "òîïåğ"."ÏÅĞÅÌÅÍÍÛÅ", "òîïåğ"."ÀÒĞÈÁÓÒÛ", "òîïåğ"."ÄÎÊÀÒĞÈÁÓÒÛ" FROM (("òîïåğ" LEFT JOIN "ñ÷åòà" "ñ÷åòà" ON ((("òîïåğ"."ÄÁÑ×ÅÒ")::bpchar = "ñ÷åòà"."Ñ×ÅÒ"))) LEFT JOIN "ñ÷åòà" "ñ÷åòà1" ON ((("òîïåğ"."ÊĞÑ×ÅÒ")::bpchar = "ñ÷åòà1"."Ñ×ÅÒ")));
+
+
+ALTER TABLE public."vw_òîïåğ" OWNER TO sa;
+
+--
+-- TOC entry 1656 (class 1259 OID 71990)
+-- Dependencies: 1640 6
+-- Name: áëîêïåğèîäû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "áëîêïåğèîäû_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1601,20 +1715,33 @@ CREATE SEQUENCE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."áëîêïåğèîäû_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2201 (class 0 OID 0)
+-- Dependencies: 1656
+-- Name: áëîêïåğèîäû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq" OWNED BY "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹"."ĞšĞĞ”";
+ALTER SEQUENCE "áëîêïåğèîäû_ÊÎÄ_seq" OWNED BY "áëîêïåğèîäû"."ÊÎÄ";
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 2202 (class 0 OID 0)
+-- Dependencies: 1656
+-- Name: áëîêïåğèîäû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq"
+SELECT pg_catalog.setval('"áëîêïåğèîäû_ÊÎÄ_seq"', 2, true);
+
+
+--
+-- TOC entry 1657 (class 1259 OID 71992)
+-- Dependencies: 1643 6
+-- Name: äîêóìåíòû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "äîêóìåíòû_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1622,20 +1749,33 @@ CREATE SEQUENCE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."äîêóìåíòû_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2203 (class 0 OID 0)
+-- Dependencies: 1657
+-- Name: äîêóìåíòû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq" OWNED BY "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹"."ĞšĞĞ”";
+ALTER SEQUENCE "äîêóìåíòû_ÊÎÄ_seq" OWNED BY "äîêóìåíòû"."ÊÎÄ";
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 2204 (class 0 OID 0)
+-- Dependencies: 1657
+-- Name: äîêóìåíòû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq"
+SELECT pg_catalog.setval('"äîêóìåíòû_ÊÎÄ_seq"', 1, true);
+
+
+--
+-- TOC entry 1658 (class 1259 OID 71994)
+-- Dependencies: 1645 6
+-- Name: äîñòóï_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "äîñòóï_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1643,74 +1783,97 @@ CREATE SEQUENCE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."äîñòóï_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2205 (class 0 OID 0)
+-- Dependencies: 1658
+-- Name: äîñòóï_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq" OWNED BY "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."ĞšĞĞ”";
+ALTER SEQUENCE "äîñòóï_ÊÎÄ_seq" OWNED BY "äîñòóï"."ÊÎÄ";
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 2206 (class 0 OID 0)
+-- Dependencies: 1658
+-- Name: äîñòóï_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE VIEW "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼" AS
-    SELECT DISTINCT "ÑÑ‡ĞµÑ‚Ğ°"."ĞšĞĞ”", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢" FROM ("ÑÑ‡ĞµÑ‚Ğ°" LEFT JOIN "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" ON ((("ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢")::text = "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."Ğ˜ĞœĞ¯"))) WHERE ("vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’" = 4) ORDER BY "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢";
+SELECT pg_catalog.setval('"äîñòóï_ÊÎÄ_seq"', 44, true);
 
-
-ALTER TABLE public."Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼" OWNER TO sa;
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1659 (class 1259 OID 71996)
+-- Dependencies: 1788 6
+-- Name: äîñòóï_ê_îáîğîòàì; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾" AS
-    SELECT DISTINCT "ÑÑ‡ĞµÑ‚Ğ°"."ĞšĞĞ”", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢" FROM ("ÑÑ‡ĞµÑ‚Ğ°" JOIN "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" ON ((rtrim(("ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢")::text) = rtrim("vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."Ğ˜ĞœĞ¯")))) WHERE ("vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’" = 2) ORDER BY "ÑÑ‡ĞµÑ‚Ğ°"."Ğ˜ĞœĞ¯", "ÑÑ‡ĞµÑ‚Ğ°"."Ğ¡Ğ§Ğ•Ğ¢";
+CREATE VIEW "äîñòóï_ê_îáîğîòàì" AS
+    SELECT DISTINCT "ñ÷åòà"."ÊÎÄ", "ñ÷åòà"."ÈÌß", "ñ÷åòà"."Ñ×ÅÒ" FROM ("ñ÷åòà" LEFT JOIN "vw_äîñòóï" ON ((("ñ÷åòà"."Ñ×ÅÒ")::text = "vw_äîñòóï"."ÈÌß"))) WHERE ("vw_äîñòóï"."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ" = 4) ORDER BY "ñ÷åòà"."ÈÌß", "ñ÷åòà"."Ñ×ÅÒ";
 
 
-ALTER TABLE public."Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾" OWNER TO sa;
-
---
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼; Type: VIEW; Schema: public; Owner: sa
---
-
-CREATE VIEW "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" AS
-    SELECT DISTINCT s."ĞšĞĞ”", s."Ğ˜ĞœĞ¯_Ğ’_Ğ¡ĞŸĞ˜Ğ¡ĞšĞ•" AS "Ğ˜ĞœĞ¯", d."ĞœĞ•ĞĞ®", d."Ğ˜ĞœĞ¯" AS "Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜Ğš", s."Ğ˜ĞœĞ¯_Ğ’_Ğ¡ĞŸĞ˜Ğ¡ĞšĞ•", s."Ğ˜ĞœĞ¯_Ğ’_Ğ¤ĞĞ ĞœĞ•", s."ĞŸĞ ĞĞ¢ĞĞ¢Ğ˜ĞŸ", true AS selectable, true AS insertable, true AS deleteable, true AS updateable FROM ("vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" d JOIN "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" s ON ((upper(rtrim(d."Ğ˜ĞœĞ¯")) = upper(rtrim((s."Ğ˜ĞœĞ¯")::text)))));
-
-
-ALTER TABLE public."Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" OWNER TO sa;
+ALTER TABLE public."äîñòóï_ê_îáîğîòàì" OWNER TO sa;
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: VIEW; Schema: public; Owner: sa
+-- TOC entry 1660 (class 1259 OID 72000)
+-- Dependencies: 1789 6
+-- Name: äîñòóï_ê_ñàëüäî; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE VIEW "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" AS
-    SELECT DISTINCT "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞĞ”", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ˜ĞœĞ¯", s."ĞœĞ•ĞĞ®", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ", s.selectable, s.insertable, s.deleteable, s.updateable FROM ("Ñ‚Ğ¾Ğ¿ĞµÑ€" JOIN (SELECT "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."Ğ˜ĞœĞ¯", "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’", "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."ĞœĞ•ĞĞ®", true AS selectable, true AS insertable, true AS deleteable, true AS updateable FROM "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" WHERE ("vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"."ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’" = 3)) s ON ((rtrim(("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ")::text) = rtrim(s."Ğ˜ĞœĞ¯")))) WHERE (("Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞĞœĞ•Ğ " = 1) AND (s."ĞœĞ•ĞĞ®" = true)) ORDER BY "Ñ‚Ğ¾Ğ¿ĞµÑ€"."Ğ˜ĞœĞ¯", s."ĞœĞ•ĞĞ®", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞŸĞ•Ğ ", "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ";
+CREATE VIEW "äîñòóï_ê_ñàëüäî" AS
+    SELECT DISTINCT "ñ÷åòà"."ÊÎÄ", "ñ÷åòà"."ÈÌß", "ñ÷åòà"."Ñ×ÅÒ" FROM ("ñ÷åòà" JOIN "vw_äîñòóï" ON ((rtrim(("ñ÷åòà"."Ñ×ÅÒ")::text) = rtrim("vw_äîñòóï"."ÈÌß")))) WHERE ("vw_äîñòóï"."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ" = 2) ORDER BY "ñ÷åòà"."ÈÌß", "ñ÷åòà"."Ñ×ÅÒ";
 
 
-ALTER TABLE public."Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" OWNER TO sa;
+ALTER TABLE public."äîñòóï_ê_ñàëüäî" OWNER TO sa;
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 1661 (class 1259 OID 72004)
+-- Dependencies: 1790 6
+-- Name: äîñòóï_ê_ñïğàâî÷íèêàì; Type: VIEW; Schema: public; Owner: sa
 --
 
-CREATE TABLE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "ĞĞŸĞ•Ğ " integer DEFAULT 0,
-    "Ğ¤ĞĞ ĞœĞ£Ğ›Ğ«" text DEFAULT ''::text
+CREATE VIEW "äîñòóï_ê_ñïğàâî÷íèêàì" AS
+    SELECT DISTINCT s."ÊÎÄ", s."ÈÌß_Â_ÑÏÈÑÊÅ" AS "ÈÌß", d."ÌÅÍŞ", d."ÈÌß" AS "ÑÏĞÀÂÎ×ÍÈÊ", s."ÈÌß_Â_ÑÏÈÑÊÅ", s."ÈÌß_Â_ÔÎĞÌÅ", s."ÏĞÎÒÎÒÈÏ", true AS selectable, true AS insertable, true AS deleteable, true AS updateable FROM ("vw_äîñòóï" d JOIN "ñïğàâî÷íèêè" s ON ((upper(rtrim(d."ÈÌß")) = upper(rtrim((s."ÈÌß")::text)))));
+
+
+ALTER TABLE public."äîñòóï_ê_ñïğàâî÷íèêàì" OWNER TO sa;
+
+--
+-- TOC entry 1662 (class 1259 OID 72008)
+-- Dependencies: 1791 6
+-- Name: äîñòóï_ê_òîïåğ; Type: VIEW; Schema: public; Owner: sa
+--
+
+CREATE VIEW "äîñòóï_ê_òîïåğ" AS
+    SELECT DISTINCT "òîïåğ"."ÊÎÄ", "òîïåğ"."ÈÌß", s."ÌÅÍŞ", "òîïåğ"."ÎÏÅĞ", "òîïåğ"."ÍÅÇÀÂÈÑÈÌ", s.selectable, s.insertable, s.deleteable, s.updateable FROM ("òîïåğ" JOIN (SELECT "vw_äîñòóï"."ÈÌß", "vw_äîñòóï"."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ", "vw_äîñòóï"."ÌÅÍŞ", true AS selectable, true AS insertable, true AS deleteable, true AS updateable FROM "vw_äîñòóï" WHERE ("vw_äîñòóï"."ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ" = 3)) s ON ((rtrim(("òîïåğ"."ÎÏÅĞ")::text) = rtrim(s."ÈÌß")))) WHERE (("òîïåğ"."ÍÎÌÅĞ" = 1) AND (s."ÌÅÍŞ" = true)) ORDER BY "òîïåğ"."ÈÌß", s."ÌÅÍŞ", "òîïåğ"."ÎÏÅĞ", "òîïåğ"."ÍÅÇÀÂÈÑÈÌ";
+
+
+ALTER TABLE public."äîñòóï_ê_òîïåğ" OWNER TO sa;
+
+--
+-- TOC entry 1663 (class 1259 OID 72013)
+-- Dependencies: 2047 2048 2049 6
+-- Name: çàïğîñû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "çàïğîñû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÎÏÅĞ" integer DEFAULT 0,
+    "ÔÎĞÌÓËÛ" text DEFAULT ''::text
 );
 
 
-ALTER TABLE public."Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" OWNER TO sa;
+ALTER TABLE public."çàïğîñû" OWNER TO sa;
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1664 (class 1259 OID 72022)
+-- Dependencies: 6 1663
+-- Name: çàïğîñû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq"
+CREATE SEQUENCE "çàïğîñû_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1718,34 +1881,49 @@ CREATE SEQUENCE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."çàïğîñû_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2212 (class 0 OID 0)
+-- Dependencies: 1664
+-- Name: çàïğîñû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq" OWNED BY "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹"."ĞšĞĞ”";
+ALTER SEQUENCE "çàïğîñû_ÊÎÄ_seq" OWNED BY "çàïğîñû"."ÊÎÄ";
 
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2213 (class 0 OID 0)
+-- Dependencies: 1664
+-- Name: çàïğîñû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•" character varying(200) DEFAULT ''::character varying,
-    "ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™" character varying(100)
+SELECT pg_catalog.setval('"çàïğîñû_ÊÎÄ_seq"', 1, false);
+
+
+--
+-- TOC entry 1665 (class 1259 OID 72024)
+-- Dependencies: 2051 2052 6
+-- Name: êîíñòàíòû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "êîíñòàíòû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÇÍÀ×ÅÍÈÅ" character varying(200) DEFAULT ''::character varying,
+    "ÊÎÌÌÅÍÒÀĞÈÉ" character varying(100)
 );
 
 
-ALTER TABLE public."ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" OWNER TO sa;
+ALTER TABLE public."êîíñòàíòû" OWNER TO sa;
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1666 (class 1259 OID 72029)
+-- Dependencies: 6 1665
+-- Name: êîíñòàíòû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq"
+CREATE SEQUENCE "êîíñòàíòû_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1753,34 +1931,50 @@ CREATE SEQUENCE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."êîíñòàíòû_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2215 (class 0 OID 0)
+-- Dependencies: 1666
+-- Name: êîíñòàíòû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq" OWNED BY "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹"."ĞšĞĞ”";
+ALTER SEQUENCE "êîíñòàíòû_ÊÎÄ_seq" OWNED BY "êîíñòàíòû"."ÊÎÄ";
 
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2216 (class 0 OID 0)
+-- Dependencies: 1666
+-- Name: êîíñòàíòû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE TABLE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•" integer DEFAULT 0,
-    "Ğ¢Ğ•Ğ¡Ğ¢" boolean
+SELECT pg_catalog.setval('"êîíñòàíòû_ÊÎÄ_seq"', 22, true);
+
+
+--
+-- TOC entry 1680 (class 1259 OID 72172)
+-- Dependencies: 2062 6
+-- Name: íîìåíêëàòóğà; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "íîìåíêëàòóğà" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÀĞÒÈÊÓË" character varying(20),
+    "ÖÅÍÀ" numeric(10,2),
+    "ÅÄÈÇÌ" character varying(10)
 );
 
 
-ALTER TABLE public."Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" OWNER TO sa;
+ALTER TABLE public."íîìåíêëàòóğà" OWNER TO sa;
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1679 (class 1259 OID 72170)
+-- Dependencies: 6 1680
+-- Name: íîìåíêëàòóğà_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq"
+CREATE SEQUENCE "íîìåíêëàòóğà_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1788,116 +1982,49 @@ CREATE SEQUENCE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."íîìåíêëàòóğà_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2218 (class 0 OID 0)
+-- Dependencies: 1679
+-- Name: íîìåíêëàòóğà_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq" OWNED BY "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹"."ĞšĞĞ”";
-
-
---
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
---
-
-CREATE SEQUENCE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq" OWNER TO sa;
-
---
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
---
-
-ALTER SEQUENCE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq" OWNED BY "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"."ĞšĞĞ”";
+ALTER SEQUENCE "íîìåíêëàòóğà_ÊÎÄ_seq" OWNED BY "íîìåíêëàòóğà"."ÊÎÄ";
 
 
 --
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 2219 (class 0 OID 0)
+-- Dependencies: 1679
+-- Name: íîìåíêëàòóğà_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq" OWNER TO sa;
-
---
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
---
-
-ALTER SEQUENCE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq" OWNED BY "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸"."ĞšĞĞ”";
+SELECT pg_catalog.setval('"íîìåíêëàòóğà_ÊÎÄ_seq"', 1, false);
 
 
 --
--- Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1667 (class 1259 OID 72031)
+-- Dependencies: 2054 2055 6
+-- Name: íóìåğàòîğû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE SEQUENCE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq" OWNER TO sa;
-
---
--- Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
---
-
-ALTER SEQUENCE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq" OWNED BY "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"."ĞšĞĞ”";
-
-
---
--- Name: ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
---
-
-CREATE SEQUENCE "ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq" OWNER TO sa;
-
---
--- Name: ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
---
-
-ALTER SEQUENCE "ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq" OWNED BY "ÑÑ‡ĞµÑ‚Ğ°"."ĞšĞĞ”";
-
-
---
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
---
-
-CREATE TABLE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(20) DEFAULT ''::character varying
+CREATE TABLE "íóìåğàòîğû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÇÍÀ×ÅÍÈÅ" integer DEFAULT 0,
+    "ÒÅÑÒ" boolean
 );
 
 
-ALTER TABLE public."Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" OWNER TO sa;
+ALTER TABLE public."íóìåğàòîğû" OWNER TO sa;
 
 --
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1668 (class 1259 OID 72036)
+-- Dependencies: 6 1667
+-- Name: íóìåğàòîğû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq"
+CREATE SEQUENCE "íóìåğàòîğû_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1905,20 +2032,33 @@ CREATE SEQUENCE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."íóìåğàòîğû_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2221 (class 0 OID 0)
+-- Dependencies: 1668
+-- Name: íóìåğàòîğû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq" OWNED BY "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²"."ĞšĞĞ”";
+ALTER SEQUENCE "íóìåğàòîğû_ÊÎÄ_seq" OWNED BY "íóìåğàòîğû"."ÊÎÄ";
 
 
 --
--- Name: Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 2222 (class 0 OID 0)
+-- Dependencies: 1668
+-- Name: íóìåğàòîğû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq"
+SELECT pg_catalog.setval('"íóìåğàòîğû_ÊÎÄ_seq"', 2, true);
+
+
+--
+-- TOC entry 1669 (class 1259 OID 72038)
+-- Dependencies: 6 1648
+-- Name: ïğîâîäêè_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "ïğîâîäêè_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1926,35 +2066,48 @@ CREATE SEQUENCE "Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."ïğîâîäêè_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2223 (class 0 OID 0)
+-- Dependencies: 1669
+-- Name: ïğîâîäêè_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq" OWNED BY "Ñ‚Ğ¾Ğ¿ĞµÑ€"."ĞšĞĞ”";
+ALTER SEQUENCE "ïğîâîäêè_ÊÎÄ_seq" OWNED BY "ïğîâîäêè"."ÊÎÄ";
 
 
 --
--- Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2224 (class 0 OID 0)
+-- Dependencies: 1669
+-- Name: ïğîâîäêè_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-CREATE TABLE "Ñ„Ğ°Ğ¹Ğ»Ñ‹" (
-    "ĞšĞĞ”" integer NOT NULL,
-    "Ğ˜ĞœĞ¯" character varying(100) DEFAULT ''::character varying,
-    "Ğ¢Ğ˜ĞŸ" integer,
-    "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•" bytea,
-    "ĞšĞĞĞ¢Ğ Ğ¡Ğ£ĞœĞœĞ" bigint
+SELECT pg_catalog.setval('"ïğîâîäêè_ÊÎÄ_seq"', 1, true);
+
+
+--
+-- TOC entry 1682 (class 1259 OID 72192)
+-- Dependencies: 2064 6
+-- Name: ñïğàâî÷íèê1; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "ñïğàâî÷íèê1" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÊÎÄ_ÃĞÓÏÏÛ" integer
 );
 
 
-ALTER TABLE public."Ñ„Ğ°Ğ¹Ğ»Ñ‹" OWNER TO sa;
+ALTER TABLE public."ñïğàâî÷íèê1" OWNER TO sa;
 
 --
--- Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE; Schema: public; Owner: sa
+-- TOC entry 1681 (class 1259 OID 72190)
+-- Dependencies: 1682 6
+-- Name: ñïğàâî÷íèê1_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-CREATE SEQUENCE "Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq"
+CREATE SEQUENCE "ñïğàâî÷íèê1_ÊÎÄ_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1962,107 +2115,482 @@ CREATE SEQUENCE "Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq" OWNER TO sa;
+ALTER TABLE public."ñïğàâî÷íèê1_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+-- TOC entry 2226 (class 0 OID 0)
+-- Dependencies: 1681
+-- Name: ñïğàâî÷íèê1_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER SEQUENCE "Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq" OWNED BY "Ñ„Ğ°Ğ¹Ğ»Ñ‹"."ĞšĞĞ”";
-
-
---
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE ONLY "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq"'::regclass);
+ALTER SEQUENCE "ñïğàâî÷íèê1_ÊÎÄ_seq" OWNED BY "ñïğàâî÷íèê1"."ÊÎÄ";
 
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 2227 (class 0 OID 0)
+-- Dependencies: 1681
+-- Name: ñïğàâî÷íèê1_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-ALTER TABLE ONLY "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq"'::regclass);
-
-
---
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE ONLY "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq"'::regclass);
+SELECT pg_catalog.setval('"ñïğàâî÷íèê1_ÊÎÄ_seq"', 1, false);
 
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 1684 (class 1259 OID 72202)
+-- Dependencies: 2066 6
+-- Name: ñïğàâî÷íèê2; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq"'::regclass);
+CREATE TABLE "ñïğàâî÷íèê2" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÊÎÄ_ÃĞÓÏÏÛ" integer
+);
 
 
---
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE ONLY "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq"'::regclass);
-
-
---
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE ONLY "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq"'::regclass);
-
+ALTER TABLE public."ñïğàâî÷íèê2" OWNER TO sa;
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 1683 (class 1259 OID 72200)
+-- Dependencies: 6 1684
+-- Name: ñïğàâî÷íèê2_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-ALTER TABLE ONLY "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq"'::regclass);
+CREATE SEQUENCE "ñïğàâî÷íèê2_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE public."ñïğàâî÷íèê2_ÊÎÄ_seq" OWNER TO sa;
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 2229 (class 0 OID 0)
+-- Dependencies: 1683
+-- Name: ñïğàâî÷íèê2_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
-ALTER TABLE ONLY "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq"'::regclass);
-
-
---
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE ONLY "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq"'::regclass);
+ALTER SEQUENCE "ñïğàâî÷íèê2_ÊÎÄ_seq" OWNED BY "ñïğàâî÷íèê2"."ÊÎÄ";
 
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 2230 (class 0 OID 0)
+-- Dependencies: 1683
+-- Name: ñïğàâî÷íèê2_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-ALTER TABLE ONLY "ÑÑ‡ĞµÑ‚Ğ°" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq"'::regclass);
-
-
---
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
---
-
-ALTER TABLE ONLY "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq"'::regclass);
+SELECT pg_catalog.setval('"ñïğàâî÷íèê2_ÊÎÄ_seq"', 1, false);
 
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 1670 (class 1259 OID 72040)
+-- Dependencies: 6 1650
+-- Name: ñïğàâî÷íèêè_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
-ALTER TABLE ONLY "Ñ‚Ğ¾Ğ¿ĞµÑ€" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq"'::regclass);
+CREATE SEQUENCE "ñïğàâî÷íèêè_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ñïğàâî÷íèêè_ÊÎÄ_seq" OWNER TO sa;
+
+--
+-- TOC entry 2231 (class 0 OID 0)
+-- Dependencies: 1670
+-- Name: ñïğàâî÷íèêè_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "ñïğàâî÷íèêè_ÊÎÄ_seq" OWNED BY "ñïğàâî÷íèêè"."ÊÎÄ";
 
 
 --
--- Name: ĞšĞĞ”; Type: DEFAULT; Schema: public; Owner: sa
+-- TOC entry 2232 (class 0 OID 0)
+-- Dependencies: 1670
+-- Name: ñïğàâî÷íèêè_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-ALTER TABLE ONLY "Ñ„Ğ°Ğ¹Ğ»Ñ‹" ALTER COLUMN "ĞšĞĞ”" SET DEFAULT nextval('"Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq"'::regclass);
+SELECT pg_catalog.setval('"ñïğàâî÷íèêè_ÊÎÄ_seq"', 118, true);
 
 
 --
+-- TOC entry 1671 (class 1259 OID 72042)
+-- Dependencies: 6 1653
+-- Name: ñòîëáöû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "ñòîëáöû_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ñòîëáöû_ÊÎÄ_seq" OWNER TO sa;
+
+--
+-- TOC entry 2233 (class 0 OID 0)
+-- Dependencies: 1671
+-- Name: ñòîëáöû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "ñòîëáöû_ÊÎÄ_seq" OWNED BY "ñòîëáöû"."ÊÎÄ";
+
+
+--
+-- TOC entry 2234 (class 0 OID 0)
+-- Dependencies: 1671
+-- Name: ñòîëáöû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"ñòîëáöû_ÊÎÄ_seq"', 7531, true);
+
+
+--
+-- TOC entry 1672 (class 1259 OID 72044)
+-- Dependencies: 1638 6
+-- Name: ñ÷åòà_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "ñ÷åòà_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ñ÷åòà_ÊÎÄ_seq" OWNER TO sa;
+
+--
+-- TOC entry 2235 (class 0 OID 0)
+-- Dependencies: 1672
+-- Name: ñ÷åòà_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "ñ÷åòà_ÊÎÄ_seq" OWNED BY "ñ÷åòà"."ÊÎÄ";
+
+
+--
+-- TOC entry 2236 (class 0 OID 0)
+-- Dependencies: 1672
+-- Name: ñ÷åòà_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"ñ÷åòà_ÊÎÄ_seq"', 3, true);
+
+
+--
+-- TOC entry 1673 (class 1259 OID 72046)
+-- Dependencies: 2057 6
+-- Name: òèïûîáúåêòîâ; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "òèïûîáúåêòîâ" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(20) DEFAULT ''::character varying
+);
+
+
+ALTER TABLE public."òèïûîáúåêòîâ" OWNER TO sa;
+
+--
+-- TOC entry 1674 (class 1259 OID 72050)
+-- Dependencies: 1673 6
+-- Name: òèïûîáúåêòîâ_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "òèïûîáúåêòîâ_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."òèïûîáúåêòîâ_ÊÎÄ_seq" OWNER TO sa;
+
+--
+-- TOC entry 2238 (class 0 OID 0)
+-- Dependencies: 1674
+-- Name: òèïûîáúåêòîâ_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "òèïûîáúåêòîâ_ÊÎÄ_seq" OWNED BY "òèïûîáúåêòîâ"."ÊÎÄ";
+
+
+--
+-- TOC entry 2239 (class 0 OID 0)
+-- Dependencies: 1674
+-- Name: òèïûîáúåêòîâ_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"òèïûîáúåêòîâ_ÊÎÄ_seq"', 4, true);
+
+
+--
+-- TOC entry 1675 (class 1259 OID 72052)
+-- Dependencies: 6 1651
+-- Name: òîïåğ_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "òîïåğ_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."òîïåğ_ÊÎÄ_seq" OWNER TO sa;
+
+--
+-- TOC entry 2240 (class 0 OID 0)
+-- Dependencies: 1675
+-- Name: òîïåğ_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "òîïåğ_ÊÎÄ_seq" OWNED BY "òîïåğ"."ÊÎÄ";
+
+
+--
+-- TOC entry 2241 (class 0 OID 0)
+-- Dependencies: 1675
+-- Name: òîïåğ_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"òîïåğ_ÊÎÄ_seq"', 2, true);
+
+
+--
+-- TOC entry 1676 (class 1259 OID 72054)
+-- Dependencies: 2059 6
+-- Name: ôàéëû; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE "ôàéëû" (
+    "ÊÎÄ" integer NOT NULL,
+    "ÈÌß" character varying(100) DEFAULT ''::character varying,
+    "ÒÈÏ" integer,
+    "ÇÍÀ×ÅÍÈÅ" bytea,
+    "ÊÎÍÒĞÑÓÌÌÀ" bigint
+);
+
+
+ALTER TABLE public."ôàéëû" OWNER TO sa;
+
+--
+-- TOC entry 1677 (class 1259 OID 72061)
+-- Dependencies: 6 1676
+-- Name: ôàéëû_ÊÎÄ_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "ôàéëû_ÊÎÄ_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ôàéëû_ÊÎÄ_seq" OWNER TO sa;
+
+--
+-- TOC entry 2243 (class 0 OID 0)
+-- Dependencies: 1677
+-- Name: ôàéëû_ÊÎÄ_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
+--
+
+ALTER SEQUENCE "ôàéëû_ÊÎÄ_seq" OWNED BY "ôàéëû"."ÊÎÄ";
+
+
+--
+-- TOC entry 2244 (class 0 OID 0)
+-- Dependencies: 1677
+-- Name: ôàéëû_ÊÎÄ_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"ôàéëû_ÊÎÄ_seq"', 903, true);
+
+
+--
+-- TOC entry 1678 (class 1259 OID 72146)
+-- Dependencies: 6
+-- Name: ôàéëû_êîä_seq; Type: SEQUENCE; Schema: public; Owner: sa
+--
+
+CREATE SEQUENCE "ôàéëû_êîä_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ôàéëû_êîä_seq" OWNER TO sa;
+
+--
+-- TOC entry 2245 (class 0 OID 0)
+-- Dependencies: 1678
+-- Name: ôàéëû_êîä_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+--
+
+SELECT pg_catalog.setval('"ôàéëû_êîä_seq"', 35, true);
+
+
+--
+-- TOC entry 2003 (class 2604 OID 72063)
+-- Dependencies: 1656 1640
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "áëîêïåğèîäû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"áëîêïåğèîäû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2007 (class 2604 OID 72064)
+-- Dependencies: 1657 1643
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "äîêóìåíòû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"äîêóìåíòû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2011 (class 2604 OID 72065)
+-- Dependencies: 1658 1645
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "äîñòóï" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"äîñòóï_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2050 (class 2604 OID 72066)
+-- Dependencies: 1664 1663
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "çàïğîñû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"çàïğîñû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2053 (class 2604 OID 72067)
+-- Dependencies: 1666 1665
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "êîíñòàíòû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"êîíñòàíòû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2061 (class 2604 OID 72175)
+-- Dependencies: 1680 1679 1680
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "íîìåíêëàòóğà" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"íîìåíêëàòóğà_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2056 (class 2604 OID 72068)
+-- Dependencies: 1668 1667
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "íóìåğàòîğû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"íóìåğàòîğû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2015 (class 2604 OID 72069)
+-- Dependencies: 1669 1648
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ïğîâîäêè" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ïğîâîäêè_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2063 (class 2604 OID 72195)
+-- Dependencies: 1682 1681 1682
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ñïğàâî÷íèê1" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ñïğàâî÷íèê1_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2065 (class 2604 OID 72205)
+-- Dependencies: 1684 1683 1684
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ñïğàâî÷íèê2" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ñïğàâî÷íèê2_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2021 (class 2604 OID 72070)
+-- Dependencies: 1670 1650
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ñïğàâî÷íèêè" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ñïğàâî÷íèêè_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2046 (class 2604 OID 72071)
+-- Dependencies: 1671 1653
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ñòîëáöû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ñòîëáöû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2000 (class 2604 OID 72072)
+-- Dependencies: 1672 1638
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ñ÷åòà" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ñ÷åòà_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2058 (class 2604 OID 72073)
+-- Dependencies: 1674 1673
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "òèïûîáúåêòîâ" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"òèïûîáúåêòîâ_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2043 (class 2604 OID 72074)
+-- Dependencies: 1675 1651
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "òîïåğ" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"òîïåğ_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2060 (class 2604 OID 72075)
+-- Dependencies: 1677 1676
+-- Name: ÊÎÄ; Type: DEFAULT; Schema: public; Owner: sa
+--
+
+ALTER TABLE "ôàéëû" ALTER COLUMN "ÊÎÄ" SET DEFAULT nextval('"ôàéëû_ÊÎÄ_seq"'::regclass);
+
+
+--
+-- TOC entry 2147 (class 0 OID 71822)
+-- Dependencies: 1631
 -- Data for Name: configs; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -2071,437 +2599,479 @@ COPY configs ("group", name, value) FROM stdin;
 
 
 --
--- Data for Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹; Type: TABLE DATA; Schema: public; Owner: sa
+-- TOC entry 2150 (class 0 OID 71876)
+-- Dependencies: 1640
+-- Data for Name: áëîêïåğèîäû; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-COPY "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "Ğ‘Ğ›ĞĞšĞšĞĞĞ•Ğ¦", "ĞĞĞ§ĞĞ›Ğ", "ĞšĞĞĞ•Ğ¦", "ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬") FROM stdin;
-2	Ğ”Ğ»Ñ SA                                  	1899-12-31	2013-04-01	2013-05-31	sa
+COPY "áëîêïåğèîäû" ("ÊÎÄ", "ÈÌß", "ÁËÎÊÊÎÍÅÖ", "ÍÀ×ÀËÎ", "ÊÎÍÅÖ", "ÏÎËÜÇÎÂÀÒÅËÜ") FROM stdin;
+2	Äëÿ SA                                  	1899-12-31	2013-04-01	2013-05-31	sa
 \.
 
 
 --
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2151 (class 0 OID 71889)
+-- Dependencies: 1643
+-- Data for Name: äîêóìåíòû; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_seq"', 2, true);
-
-
---
--- Data for Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" ("ĞšĞĞ”", "Ğ”ĞĞ¢Ğ", "Ğ”ĞĞ¢ĞĞ’Ğ Ğ•ĞœĞ¯", "ĞĞĞœĞ•Ğ ", "ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™", "Ğ¡Ğ£ĞœĞœĞ", "ĞĞŸĞ˜Ğ¡ĞĞĞ˜Ğ•", "ĞĞŸĞ•Ğ ", "ĞĞ’Ğ¢Ğ", "ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•1", "ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•") FROM stdin;
+COPY "äîêóìåíòû" ("ÊÎÄ", "ÄÀÒÀ", "ÄÀÒÀÂĞÅÌß", "ÍÎÌÅĞ", "ÊÎÌÌÅÍÒÀĞÈÉ", "ÑÓÌÌÀ", "ÎÏÈÑÀÍÈÅ", "ÎÏÅĞ", "ÀÂÒÎ", "ÏÅĞÅÌÅÍÍÛÅ1", "ÏÅĞÅÌÅÍÍÛÅ") FROM stdin;
 \.
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2152 (class 0 OID 71902)
+-- Dependencies: 1645
+-- Data for Name: äîñòóï; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_seq"', 1, true);
-
-
---
--- Data for Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" ("ĞšĞĞ”", "ĞœĞ•ĞĞ®", "ĞšĞĞ”_Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’", "Ğ˜ĞœĞ¯", "ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬", "ĞŸĞĞšĞĞ—Ğ’Ğ¡Ğ•Ğ“Ğ”Ğ") FROM stdin;
-18	t	1	Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹	sa	f
-2	f	1	Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²	sa	f
-1	f	1	Ğ´Ğ¾ÑÑ‚ÑƒĞ¿	sa	t
-7	f	1	Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼	sa	f
-8	f	1	Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€	sa	f
-3	f	1	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸	sa	t
-11	f	1	Ñ‚Ğ¾Ğ¿ĞµÑ€	sa	t
-16	t	1	ÑÑ‡ĞµÑ‚Ğ°	sa	t
-17	t	1	ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹	sa	f
+COPY "äîñòóï" ("ÊÎÄ", "ÌÅÍŞ", "ÊÎÄ_ÒÈÏÛÎÁÚÅÊÒÎÂ", "ÈÌß", "ÏÎËÜÇÎÂÀÒÅËÜ", "ÏÎÊÀÇÂÑÅÃÄÀ") FROM stdin;
+18	t	1	íóìåğàòîğû	sa	f
+2	f	1	òèïûîáúåêòîâ	sa	f
+1	f	1	äîñòóï	sa	t
+8	f	1	äîñòóï_ê_òîïåğ	sa	f
+3	f	1	ñïğàâî÷íèêè	sa	t
+11	f	1	òîïåğ	sa	t
+16	t	1	ñ÷åòà	sa	t
+17	t	1	êîíñòàíòû	sa	f
 28	f	1	vw_types	sa	f
+40	t	1	íîìåíêëàòóğà	sa	f
+42	t	1	ñïğàâî÷íèê1	sa	f
+43	t	1	ñïğàâî÷íèê2	sa	f
+7	f	1	äîñòóï_ê_ñïğàâî÷íèêàì	sa	f
 \.
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2157 (class 0 OID 72013)
+-- Dependencies: 1663
+-- Data for Name: çàïğîñû; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_seq"', 37, true);
-
-
---
--- Data for Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "ĞĞŸĞ•Ğ ", "Ğ¤ĞĞ ĞœĞ£Ğ›Ğ«") FROM stdin;
+COPY "çàïğîñû" ("ÊÎÄ", "ÈÌß", "ÎÏÅĞ", "ÔÎĞÌÓËÛ") FROM stdin;
 \.
 
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2158 (class 0 OID 72024)
+-- Dependencies: 1665
+-- Data for Name: êîíñòàíòû; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_seq"', 1, false);
-
-
---
--- Data for Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•", "ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™") FROM stdin;
-3	ĞĞ´Ñ€ĞµÑĞ¤Ğ¸Ñ€Ğ¼Ñ‹                                                                                          		\N
-13	Ğ“Ğ»Ğ‘ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€                                                                                         		\N
-4	Ğ“Ğ¾Ñ€Ğ¾Ğ´Ğ¤Ğ¸Ñ€Ğ¼Ñ‹                                                                                          		\N
-6	Ğ˜ĞĞ                                               		\N
-5	ĞšĞ¾Ğ´Ğ‘Ğ°Ğ½ĞºĞ°                                                                                            		\N
-14	ĞšĞ¾Ğ´Ğ“Ğ»Ğ‘Ğ°Ğ½ĞºĞ°                                                                                          		\N
-12	ĞĞ°Ğ·Ğ²Ğ°Ğ½Ğ¸ĞµĞœĞ°Ğ³Ğ°Ğ·Ğ¸Ğ½Ğ°                                  		\N
-2	ĞĞ°Ğ·Ğ²Ğ°Ğ½Ğ¸ĞµĞ¤Ğ¸Ñ€Ğ¼Ñ‹                                                                                       		\N
-9	Ğ Ğ°ÑÑ‡ĞµÑ‚Ğ½Ñ‹Ğ¹Ğ¡Ñ‡ĞµÑ‚                                                                                       		\N
-7	Ğ ÑƒĞºĞ¾Ğ²Ğ¾Ğ´Ğ¸Ñ‚ĞµĞ»ÑŒ                                                                                        		\N
-11	Ğ¢ĞµĞ»ĞµÑ„Ğ¾Ğ½Ñ‹                                          		\N
+COPY "êîíñòàíòû" ("ÊÎÄ", "ÈÌß", "ÇÍÀ×ÅÍÈÅ", "ÊÎÌÌÅÍÒÀĞÈÉ") FROM stdin;
+3	ÀäğåñÔèğìû                                                                                          		\N
+13	ÃëÁóõãàëòåğ                                                                                         		\N
+4	ÃîğîäÔèğìû                                                                                          		\N
+6	ÈÍÍ                                               		\N
+5	ÊîäÁàíêà                                                                                            		\N
+14	ÊîäÃëÁàíêà                                                                                          		\N
+12	ÍàçâàíèåÌàãàçèíà                                  		\N
+2	ÍàçâàíèåÔèğìû                                                                                       		\N
+9	Ğàñ÷åòíûéÑ÷åò                                                                                       		\N
+7	Ğóêîâîäèòåëü                                                                                        		\N
+11	Òåëåôîíû                                          		\N
 \.
 
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2162 (class 0 OID 72172)
+-- Dependencies: 1680
+-- Data for Name: íîìåíêëàòóğà; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_seq"', 22, true);
-
-
---
--- Data for Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•", "Ğ¢Ğ•Ğ¡Ğ¢") FROM stdin;
-1	ĞĞ°ĞºĞ»Ğ°Ğ´Ğ½Ğ°Ñ                               	1	\N
+COPY "íîìåíêëàòóğà" ("ÊÎÄ", "ÈÌß", "ÀĞÒÈÊÓË", "ÖÅÍÀ", "ÅÄÈÇÌ") FROM stdin;
 \.
 
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2159 (class 0 OID 72031)
+-- Dependencies: 1667
+-- Data for Name: íóìåğàòîğû; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_seq"', 2, true);
-
-
---
--- Data for Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" ("ĞšĞĞ”", "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "Ğ”Ğ‘ĞšĞĞ”", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ ĞšĞĞ”", "ĞšĞĞ›", "Ğ¦Ğ•ĞĞ", "Ğ¡Ğ£ĞœĞœĞ", "Ğ¡Ğ¢Ğ ", "Ğ”ĞĞšĞšĞĞ”", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ ") FROM stdin;
+COPY "íóìåğàòîğû" ("ÊÎÄ", "ÈÌß", "ÇÍÀ×ÅÍÈÅ", "ÒÅÑÒ") FROM stdin;
+1	Íàêëàäíàÿ                               	1	\N
 \.
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2153 (class 0 OID 71916)
+-- Dependencies: 1648
+-- Data for Name: ïğîâîäêè; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_seq"', 1, true);
-
-
---
--- Data for Name: ÑĞ°Ğ»ÑŒĞ´Ğ¾; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "ÑĞ°Ğ»ÑŒĞ´Ğ¾" ("Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞĞ”", "ĞšĞĞ›", "Ğ¡ĞĞ›Ğ¬Ğ”Ğ", "Ğ”Ğ‘ĞšĞĞ›", "Ğ”Ğ•Ğ‘Ğ•Ğ¢", "ĞšĞ ĞšĞĞ›", "ĞšĞ Ğ•Ğ”Ğ˜Ğ¢", "ĞšĞĞĞšĞĞ›", "ĞšĞĞĞ¡ĞĞ›Ğ¬Ğ”Ğ", "ĞšĞĞĞ¦Ğ•ĞĞ") FROM stdin;
+COPY "ïğîâîäêè" ("ÊÎÄ", "ÄÁÑ×ÅÒ", "ÄÁÊÎÄ", "ÊĞÑ×ÅÒ", "ÊĞÊÎÄ", "ÊÎË", "ÖÅÍÀ", "ÑÓÌÌÀ", "ÑÒĞ", "ÄÎÊÊÎÄ", "ÎÏÅĞ", "ÍÎÌÅĞÎÏÅĞ") FROM stdin;
 \.
 
 
 --
--- Data for Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸; Type: TABLE DATA; Schema: public; Owner: sa
+-- TOC entry 2148 (class 0 OID 71850)
+-- Dependencies: 1637
+-- Data for Name: ñàëüäî; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-COPY "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "Ğ¤ĞĞ¢Ğ", "Ğ˜ĞœĞ¯_Ğ’_Ğ¡ĞŸĞ˜Ğ¡ĞšĞ•", "Ğ˜ĞœĞ¯_Ğ’_Ğ¤ĞĞ ĞœĞ•", "ĞŸĞ ĞĞ¢ĞĞ¢Ğ˜ĞŸ", "Ğ¡Ğ˜Ğ¡Ğ¢Ğ•ĞœĞĞ«Ğ™") FROM stdin;
-50	Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹                                                                                         				\N	t
-6	Ğ´Ğ¾ÑÑ‚ÑƒĞ¿                                                                                              		Ğ¡Ğ»ÑƒĞ¶ĞµĞ±Ğ½Ñ‹Ğ¹ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº. Ğ”Ğ¾ÑÑ‚ÑƒĞ¿	Ğ”Ğ¾ÑÑ‚ÑƒĞ¿	\N	t
-84	Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼		Ğ¡Ğ»ÑƒĞ¶ĞµĞ±Ğ½Ñ‹Ğ¹ Ğ¿Ñ€Ğ¾ÑĞ¼Ğ¾Ñ‚Ñ€. Ğ”Ğ¾ÑÑ‚ÑƒĞ¿ Ğº ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼	Ğ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸	\N	t
-86	Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€		Ğ¡Ğ»ÑƒĞ¶ĞµĞ±Ğ½Ñ‹Ğ¹ Ğ¿Ñ€Ğ¾ÑĞ¼Ğ¾Ñ‚Ñ€. Ğ”Ğ¾ÑÑ‚ÑƒĞ¿ Ğº Ñ‚Ğ¸Ğ¿Ğ¾Ğ²Ñ‹Ğ¼ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸ÑĞ¼	Ğ¢Ğ¸Ğ¿Ğ¾Ğ²Ñ‹Ğµ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸	\N	t
-85	ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹		Ğ¡Ğ»ÑƒĞ¶ĞµĞ±Ğ½Ñ‹Ğ¹ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº. Ğ¡Ñ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹		\N	t
-23	ÑÑ‡ĞµÑ‚Ğ°                                                                                               		Ğ‘ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€Ğ¸Ñ. ĞŸĞ»Ğ°Ğ½ ÑÑ‡ĞµÑ‚Ğ¾Ğ²		\N	t
-91	Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²		Ğ¡Ğ»ÑƒĞ¶ĞµĞ±Ğ½Ñ‹Ğ¹ ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº. Ğ¢Ğ¸Ğ¿Ñ‹ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²	Ğ¢Ğ¸Ğ¿Ñ‹ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²	\N	t
-12	Ñ‚Ğ¾Ğ¿ĞµÑ€                                                                                               		Ğ‘ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€Ğ¸Ñ. Ğ¢Ğ¸Ğ¿Ğ¾Ğ²Ñ‹Ğµ Ğ¾Ğ¿ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸ (Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸)		\N	t
-4	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸                                                                                         		Ğ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸	Ğ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸	\N	t
-101	vw_types			Ğ¢Ğ¸Ğ¿Ñ‹ Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ… ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ¾Ğ²	\N	t
-13	ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹                                                                                           		Ğ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº. ĞšĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹	ĞšĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹	\N	t
-34	Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹                                                                                          		Ğ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº. ĞÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹	ĞÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹	\N	t
+COPY "ñàëüäî" ("Ñ×ÅÒ", "ÊÎÄ", "ÊÎË", "ÑÀËÜÄÎ", "ÄÁÊÎË", "ÄÅÁÅÒ", "ÊĞÊÎË", "ÊĞÅÄÈÒ", "ÊÎÍÊÎË", "ÊÎÍÑÀËÜÄÎ", "ÊÎÍÖÅÍÀ") FROM stdin;
 \.
 
 
 --
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2163 (class 0 OID 72192)
+-- Dependencies: 1682
+-- Data for Name: ñïğàâî÷íèê1; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_seq"', 111, true);
-
-
---
--- Data for Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" ("ĞšĞĞ”", "ĞšĞĞ”_VW_Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ˜_Ğ¡Ğ_Ğ¡Ğ¢ĞĞ›Ğ‘Ğ¦ĞĞœĞ˜", "Ğ˜ĞœĞ¯", "Ğ—ĞĞ“ĞĞ›ĞĞ’ĞĞš", "ĞĞĞœĞ•Ğ ", "Ğ¢ĞĞ›Ğ¬ĞšĞĞ§Ğ¢Ğ•ĞĞ˜Ğ•") FROM stdin;
-7403	23	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	1	f
-7404	23	Ğ¡Ğ§Ğ•Ğ¢	Ğ¡Ñ‡ĞµÑ‚	2	f
-7405	23	Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ	Ğ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº	3	f
-7406	23	ĞĞĞĞ›Ğ˜Ğ¢Ğ˜ĞšĞ	ĞĞ½Ğ°Ğ»Ğ¸Ñ‚Ğ¸ĞºĞ°	4	f
-7407	23	ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ	ĞšĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾	5	f
-7408	23	Ğ‘ĞĞ›ĞĞĞ¡	Ğ‘Ğ°Ğ»Ğ°Ğ½Ñ	6	f
-7415	4	Ğ˜ĞœĞ¯	Ğ¢Ğ°Ğ±Ğ»Ğ¸Ñ†Ğ°	1	f
-7416	4	Ğ¤ĞĞ¢Ğ	Ğ¤Ğ¾Ñ‚Ğ¾	4	f
-7417	4	Ğ˜ĞœĞ¯_Ğ’_Ğ¡ĞŸĞ˜Ğ¡ĞšĞ•	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ² Ğ¼ĞµĞ½Ñ	3	f
-7418	4	ĞŸĞ ĞĞ¢ĞĞ¢Ğ˜ĞŸ	ĞŸÑ€Ğ¾Ñ‚Ğ¾Ñ‚Ğ¸Ğ¿	2	f
-7419	4	Ğ¡Ğ˜Ğ¡Ğ¢Ğ•ĞœĞĞ«Ğ™	Ğ¡Ğ¸ÑÑ‚ĞµĞ¼Ğ½Ñ‹Ğ¹	5	f
-7422	96		ĞšĞ¾Ğ´	2	f
-7423	96		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7428	99		ĞšĞ¾Ğ´	2	f
-7429	99		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7432	102		ĞšĞ¾Ğ´	2	f
-7433	102		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7181	6	ĞœĞ•ĞĞ®	ĞœĞµĞ½Ñ	4	f
-7182	6	Ğ¢Ğ˜ĞŸĞ«ĞĞ‘ĞªĞ•ĞšĞ¢ĞĞ’__Ğ˜ĞœĞ¯	Ğ¢Ğ¸Ğ¿ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ°	2	t
-7183	6	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	1	f
-7184	6	ĞŸĞĞ›Ğ¬Ğ—ĞĞ’ĞĞ¢Ğ•Ğ›Ğ¬	ĞŸĞ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ	3	f
-7468	13	ĞšĞĞ”	ĞšĞĞ”	1	t
-7469	13	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7470	13	Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•	Ğ—Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ	3	f
-7471	13	ĞšĞĞœĞœĞ•ĞĞ¢ĞĞ Ğ˜Ğ™	ĞšĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¹	4	f
-7475	34	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	1	f
-7476	34	Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•	Ğ—Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ	2	f
-7478	107	ĞšĞĞ”	ĞšĞ¾Ğ´	1	f
-7479	107	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-88	12	ĞšĞĞ”	ĞšĞ¾Ğ´	1	t
-89	12	ĞĞŸĞ•Ğ 	ĞĞ¿ĞµÑ€Ğ°Ñ†Ğ¸Ñ	2	f
-90	12	ĞĞĞœĞ•Ğ 	ĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ°	3	f
-91	12	Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢	Ğ”Ğ±.Ğ¡Ñ‡ĞµÑ‚	4	f
-92	12	ĞšĞ Ğ¡Ğ§Ğ•Ğ¢	ĞšÑ€.Ğ¡Ñ‡ĞµÑ‚	5	f
-93	12	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	6	f
-94	12	Ğ˜Ğ¢ĞĞ“Ğ˜	Ğ˜Ñ‚Ğ¾Ğ³	7	f
-95	12	ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢	ĞÑĞ½.Ğ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚	8	f
-17	91	ĞšĞĞ”	ĞšĞ¾Ğ´	1	t
-18	91	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-96	12	ĞĞ£ĞœĞ•Ğ ĞĞ¢ĞĞ 	ĞÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€	9	f
-97	12	ĞĞ”ĞĞĞĞŸĞ•Ğ ĞĞ¦Ğ˜Ğ¯	ĞĞ´Ğ½Ğ°ĞĞ¿ĞµÑ€Ğ°Ñ†Ğ¸Ñ	10	f
-98	12	ĞšĞĞ›	ĞšĞ¾Ğ»-Ğ²Ğ¾	11	f
-99	12	Ğ”Ğ‘ĞŸĞĞ¡Ğ¢	Ğ”Ğ±.ĞŸĞ¾ÑÑ‚	12	f
-100	12	ĞšĞ ĞŸĞĞ¡Ğ¢	ĞšÑ€.ĞŸĞ¾ÑÑ‚	13	f
-28	84	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	1	t
-29	86	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	1	t
-7480	108	ĞšĞĞ”	ĞšĞ¾Ğ´	1	f
-7481	108	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7484	110	ĞšĞĞ”	ĞšĞ¾Ğ´	1	f
-7485	110	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7486	110	Ñ‚ĞµÑÑ‚	Ñ‚ĞµÑÑ‚	1	f
-7490	111	ĞšĞĞ”	ĞšĞ¾Ğ´	1	f
-7491	111	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-101	12	Ğ”Ğ‘Ğ”ĞĞ‘ĞĞ’	Ğ”Ğ±.Ğ”Ğ¾Ğ±Ğ°Ğ²	14	f
-102	12	ĞšĞ Ğ”ĞĞ‘ĞĞ’	ĞšÑ€.Ğ”Ğ¾Ğ±Ğ°Ğ²	15	f
-103	12	Ğ”Ğ‘Ğ’Ğ«Ğ‘ĞĞ 	Ğ”Ğ±.Ğ’Ñ‹Ğ±Ğ¾Ñ€	16	f
-104	12	ĞšĞ Ğ’Ğ«Ğ‘ĞĞ 	ĞšÑ€.Ğ’Ñ‹Ğ±Ğ¾Ñ€	17	f
-105	12	Ğ”Ğ‘Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ	Ğ”Ğ±.Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾Ğ’Ğ¸Ğ´Ğ¸Ğ¼	18	f
-106	12	ĞšĞ Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ	ĞšÑ€.Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾Ğ’Ğ¸Ğ´Ğ¸Ğ¼	19	f
-107	12	Ğ”Ğ‘Ğ’Ğ˜Ğ”Ğ˜Ğœ	Ğ”Ğ±Ğ’Ğ¸Ğ´Ğ¸Ğ¼	20	f
-108	12	ĞšĞ Ğ’Ğ˜Ğ”Ğ˜Ğœ	ĞšÑ€Ğ’Ğ¸Ğ´Ğ¸Ğ¼	21	f
-109	12	ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ	ĞĞµĞ·Ğ°Ğ²Ğ¸ÑĞ¸Ğ¼	22	f
-110	12	Ğ¡Ğ§Ğ˜Ğ¢ĞĞ¢Ğ¬	Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒ	23	f
-111	12	ĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«	ĞÑ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹	24	f
-7492	111	Ğ¢Ğ•Ğ¡Ğ¢	Ñ‚ĞµÑÑ‚	3	f
-112	12	Ğ”ĞĞšĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«	Ğ”Ğ¾Ğº.ĞÑ‚Ñ€Ğ¸Ğ±ÑƒÑ‚Ñ‹	25	f
-7420	95		ĞšĞ¾Ğ´	2	f
-7421	95		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7424	97		ĞšĞ¾Ğ´	2	f
-7425	97		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7426	98		ĞšĞ¾Ğ´	2	f
-7427	98		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7430	100		ĞšĞ¾Ğ´	2	f
-7431	100		ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
-7434	101	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	1	t
-7435	101	Ğ”Ğ›Ğ˜ĞĞ	Ğ”Ğ»Ğ¸Ğ½Ğ°	2	t
-7439	103	ĞšĞĞ”	ĞšĞĞ”	1	t
-7440	103	Ğ˜ĞœĞ¯	Ğ˜ĞœĞ¯	2	f
-7444	104	ĞšĞĞ”	ĞšĞĞ”	2	t
-7445	104	Ğ˜ĞœĞ¯	Ğ˜ĞœĞ¯	3	f
-7446	104	Ğ¢Ğ•Ğ¡Ğ¢	Ğ¢ĞµÑÑ‚	1	f
-7477	105	ĞšĞĞ”	ĞšĞĞ”	1	t
-7482	109	ĞšĞĞ”	ĞšĞ¾Ğ´	1	f
-7483	109	Ğ˜ĞœĞ¯	ĞĞ°Ğ¸Ğ¼ĞµĞ½Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ	2	f
+COPY "ñïğàâî÷íèê1" ("ÊÎÄ", "ÈÌß", "ÊÎÄ_ÃĞÓÏÏÛ") FROM stdin;
 \.
 
 
 --
--- Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2164 (class 0 OID 72202)
+-- Dependencies: 1684
+-- Data for Name: ñïğàâî÷íèê2; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_ĞšĞĞ”_seq"', 7492, true);
-
-
---
--- Data for Name: ÑÑ‡ĞµÑ‚Ğ°; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "ÑÑ‡ĞµÑ‚Ğ°" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "Ğ¡Ğ§Ğ•Ğ¢", "Ğ˜ĞœĞ¯Ğ¡ĞŸĞ ĞĞ’ĞĞ§ĞĞ˜ĞšĞ", "ĞĞĞĞ›Ğ˜Ğ¢Ğ˜ĞšĞ", "ĞšĞĞ›Ğ˜Ğ§Ğ•Ğ¡Ğ¢Ğ’Ğ", "Ğ‘ĞĞ›ĞĞĞ¡") FROM stdin;
+COPY "ñïğàâî÷íèê2" ("ÊÎÄ", "ÈÌß", "ÊÎÄ_ÃĞÓÏÏÛ") FROM stdin;
 \.
 
 
 --
--- Name: ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2154 (class 0 OID 71926)
+-- Dependencies: 1650
+-- Data for Name: ñïğàâî÷íèêè; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_seq"', 3, true);
-
-
---
--- Data for Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯") FROM stdin;
-1	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº
-2	ÑĞ°Ğ»ÑŒĞ´Ğ¾
-3	Ñ‚Ğ¾Ğ¿ĞµÑ€
-4	Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚
+COPY "ñïğàâî÷íèêè" ("ÊÎÄ", "ÈÌß", "ÔÎÒÎ", "ÈÌß_Â_ÑÏÈÑÊÅ", "ÈÌß_Â_ÔÎĞÌÅ", "ÏĞÎÒÎÒÈÏ", "ÑÈÑÒÅÌÍÛÉ") FROM stdin;
+50	áëîêïåğèîäû                                                                                         				\N	t
+6	äîñòóï                                                                                              		Ñëóæåáíûé ñïğàâî÷íèê. Äîñòóï	Äîñòóï	\N	t
+86	äîñòóï_ê_òîïåğ		Ñëóæåáíûé ïğîñìîòğ. Äîñòóï ê òèïîâûì îïåğàöèÿì	Òèïîâûå îïåğàöèè	\N	t
+85	ñòîëáöû		Ñëóæåáíûé ñïğàâî÷íèê. Ñòîëáöû		\N	t
+23	ñ÷åòà                                                                                               		Áóõãàëòåğèÿ. Ïëàí ñ÷åòîâ		\N	t
+91	òèïûîáúåêòîâ		Ñëóæåáíûé ñïğàâî÷íèê. Òèïû îáúåêòîâ	Òèïû îáúåêòîâ	\N	t
+12	òîïåğ                                                                                               		Áóõãàëòåğèÿ. Òèïîâûå îïåğàöèè (ïğîâîäêè)		\N	t
+101	vw_types			Òèïû äàííûõ ñòîëáöîâ	\N	t
+13	êîíñòàíòû                                                                                           		Ñïğàâî÷íèê. Êîíñòàíòû	Êîíñòàíòû	\N	t
+34	íóìåğàòîğû                                                                                          		Ñïğàâî÷íèê. Íóìåğàòîğû	Íóìåğàòîğû	\N	t
+114	íîìåíêëàòóğà		Ñïğàâî÷íèê. Íîìåíêëàòóğà	Íîìåíêëàòóğà	\N	f
+4	ñïğàâî÷íèêè                                                                                         		Ñïğàâî÷íèêè	Ñïğàâî÷íèêè	\N	t
+84	äîñòóï_ê_ñïğàâî÷íèêàì		Ñëóæåáíûé ïğîñìîòğ. Äîñòóï ê ñïğàâî÷íèêàì	Ñïğàâî÷íèêè	\N	t
+117	ñïğàâî÷íèê2		Ñïğàâî÷íèê2	Ñïğàâî÷íèê2	\N	f
+116	ñïğàâî÷íèê1		Ñïğàâî÷íèê1	Ñïğàâî÷íèê1	\N	f
 \.
 
 
 --
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2156 (class 0 OID 71966)
+-- Dependencies: 1653
+-- Data for Name: ñòîëáöû; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_seq"', 4, true);
-
-
---
--- Data for Name: Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: TABLE DATA; Schema: public; Owner: sa
---
-
-COPY "Ñ‚Ğ¾Ğ¿ĞµÑ€" ("ĞšĞĞ”", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ", "Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "Ğ˜ĞœĞ¯", "Ğ˜Ğ¢ĞĞ“Ğ˜", "ĞœĞ•ĞĞ®", "ĞĞ¡ĞĞ”ĞĞšĞ£ĞœĞ•ĞĞ¢", "ĞĞ£ĞœĞ•Ğ ĞĞ¢ĞĞ ", "ĞĞ”ĞĞĞĞŸĞ•Ğ ĞĞ¦Ğ˜Ğ¯", "ĞšĞĞ›", "Ğ”Ğ‘ĞŸĞĞ¡Ğ¢", "ĞšĞ ĞŸĞĞ¡Ğ¢", "Ğ”Ğ‘Ğ”ĞĞ‘ĞĞ’", "ĞšĞ Ğ”ĞĞ‘ĞĞ’", "Ğ”Ğ‘Ğ’Ğ«Ğ‘ĞĞ ", "ĞšĞ Ğ’Ğ«Ğ‘ĞĞ ", "Ğ”Ğ‘Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ", "ĞšĞ Ğ¡ĞĞ›Ğ’Ğ˜Ğ”Ğ˜Ğœ", "Ğ”Ğ‘Ğ’Ğ˜Ğ”Ğ˜Ğœ", "ĞšĞ Ğ’Ğ˜Ğ”Ğ˜Ğœ", "Ğ¤ĞĞ ĞœĞ", "ĞĞ•Ğ—ĞĞ’Ğ˜Ğ¡Ğ˜Ğœ", "Ğ¡Ğ§Ğ˜Ğ¢ĞĞ¢Ğ¬", "ĞŸĞ•Ğ Ğ•ĞœĞ•ĞĞĞ«Ğ•", "ĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«", "Ğ”ĞĞšĞĞ¢Ğ Ğ˜Ğ‘Ğ£Ğ¢Ğ«") FROM stdin;
+COPY "ñòîëáöû" ("ÊÎÄ", "ÊÎÄ_VW_ÑÏĞÀÂÎ×ÍÈÊÈ_ÑÎ_ÑÒÎËÁÖÀÌÈ", "ÈÌß", "ÇÀÃÎËÎÂÎÊ", "ÍÎÌÅĞ", "ÒÎËÜÊÎ×ÒÅÍÈÅ", "ÊÎÄÒÀÁËÈÖÛ") FROM stdin;
+7403	23	ÈÌß	Íàèìåíîâàíèå	1	f	\N
+7404	23	Ñ×ÅÒ	Ñ÷åò	2	f	\N
+7405	23	ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ	Ñïğàâî÷íèê	3	f	\N
+7406	23	ÀÍÀËÈÒÈÊÀ	Àíàëèòèêà	4	f	\N
+7407	23	ÊÎËÈ×ÅÑÒÂÎ	Êîëè÷åñòâî	5	f	\N
+7408	23	ÁÀËÀÍÑ	Áàëàíñ	6	f	\N
+7422	96		Êîä	2	f	\N
+7423	96		Íàèìåíîâàíèå	2	f	\N
+7428	99		Êîä	2	f	\N
+7429	99		Íàèìåíîâàíèå	2	f	\N
+7432	102		Êîä	2	f	\N
+7433	102		Íàèìåíîâàíèå	2	f	\N
+7181	6	ÌÅÍŞ	Ìåíş	4	f	\N
+7182	6	ÒÈÏÛÎÁÚÅÊÒÎÂ__ÈÌß	Òèï îáúåêòà	2	t	\N
+7183	6	ÈÌß	Íàèìåíîâàíèå	1	f	\N
+7184	6	ÏÎËÜÇÎÂÀÒÅËÜ	Ïîëüçîâàòåëü	3	f	\N
+7468	13	ÊÎÄ	ÊÎÄ	1	t	\N
+7469	13	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+7470	13	ÇÍÀ×ÅÍÈÅ	Çíà÷åíèå	3	f	\N
+7471	13	ÊÎÌÌÅÍÒÀĞÈÉ	Êîììåíòàğèé	4	f	\N
+7475	34	ÈÌß	Íàèìåíîâàíèå	1	f	\N
+7476	34	ÇÍÀ×ÅÍÈÅ	Çíà÷åíèå	2	f	\N
+7478	107	ÊÎÄ	Êîä	1	f	\N
+7479	107	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+88	12	ÊÎÄ	Êîä	1	t	\N
+89	12	ÎÏÅĞ	Îïåğàöèÿ	2	f	\N
+90	12	ÍÎÌÅĞ	Ïğîâîäêà	3	f	\N
+91	12	ÄÁÑ×ÅÒ	Äá.Ñ÷åò	4	f	\N
+92	12	ÊĞÑ×ÅÒ	Êğ.Ñ÷åò	5	f	\N
+93	12	ÈÌß	Íàèìåíîâàíèå	6	f	\N
+94	12	ÈÒÎÃÈ	Èòîã	7	f	\N
+95	12	ÎÑÍÄÎÊÓÌÅÍÒ	Îñí.Äîêóìåíò	8	f	\N
+17	91	ÊÎÄ	Êîä	1	t	\N
+18	91	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+96	12	ÍÓÌÅĞÀÒÎĞ	Íóìåğàòîğ	9	f	\N
+97	12	ÎÄÍÀÎÏÅĞÀÖÈß	ÎäíàÎïåğàöèÿ	10	f	\N
+98	12	ÊÎË	Êîë-âî	11	f	\N
+99	12	ÄÁÏÎÑÒ	Äá.Ïîñò	12	f	\N
+100	12	ÊĞÏÎÑÒ	Êğ.Ïîñò	13	f	\N
+29	86	ÈÌß	Íàèìåíîâàíèå	1	t	\N
+7480	108	ÊÎÄ	Êîä	1	f	\N
+7481	108	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+7484	110	ÊÎÄ	Êîä	1	f	\N
+7485	110	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+7486	110	òåñò	òåñò	1	f	\N
+7490	111	ÊÎÄ	Êîä	1	f	\N
+7491	111	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+101	12	ÄÁÄÎÁÀÂ	Äá.Äîáàâ	14	f	\N
+102	12	ÊĞÄÎÁÀÂ	Êğ.Äîáàâ	15	f	\N
+103	12	ÄÁÂÛÁÎĞ	Äá.Âûáîğ	16	f	\N
+104	12	ÊĞÂÛÁÎĞ	Êğ.Âûáîğ	17	f	\N
+105	12	ÄÁÑÀËÂÈÄÈÌ	Äá.ÑàëüäîÂèäèì	18	f	\N
+106	12	ÊĞÑÀËÂÈÄÈÌ	Êğ.ÑàëüäîÂèäèì	19	f	\N
+107	12	ÄÁÂÈÄÈÌ	ÄáÂèäèì	20	f	\N
+108	12	ÊĞÂÈÄÈÌ	ÊğÂèäèì	21	f	\N
+109	12	ÍÅÇÀÂÈÑÈÌ	Íåçàâèñèì	22	f	\N
+110	12	Ñ×ÈÒÀÒÜ	Ñ÷èòàòü	23	f	\N
+111	12	ÀÒĞÈÁÓÒÛ	Àòğèáóòû	24	f	\N
+7492	111	ÒÅÑÒ	òåñò	3	f	\N
+112	12	ÄÎÊÀÒĞÈÁÓÒÛ	Äîê.Àòğèáóòû	25	f	\N
+7420	95		Êîä	2	f	\N
+7421	95		Íàèìåíîâàíèå	2	f	\N
+7424	97		Êîä	2	f	\N
+7425	97		Íàèìåíîâàíèå	2	f	\N
+7426	98		Êîä	2	f	\N
+7427	98		Íàèìåíîâàíèå	2	f	\N
+7430	100		Êîä	2	f	\N
+7431	100		Íàèìåíîâàíèå	2	f	\N
+7434	101	ÈÌß	Íàèìåíîâàíèå	1	t	\N
+7435	101	ÄËÈÍÀ	Äëèíà	2	t	\N
+7439	103	ÊÎÄ	ÊÎÄ	1	t	\N
+7440	103	ÈÌß	ÈÌß	2	f	\N
+7444	104	ÊÎÄ	ÊÎÄ	2	t	\N
+7445	104	ÈÌß	ÈÌß	3	f	\N
+7446	104	ÒÅÑÒ	Òåñò	1	f	\N
+7477	105	ÊÎÄ	ÊÎÄ	1	t	\N
+7482	109	ÊÎÄ	Êîä	1	f	\N
+7483	109	ÈÌß	Íàèìåíîâàíèå	2	f	\N
+7500	114	ÊÎÄ	Êîä	1	t	114
+7501	114	ÈÌß	Íàèìåíîâàíèå	2	t	114
+7502	114	ÀĞÒÈÊÓË	Àğòèêóë	3	t	114
+7503	114	ÖÅÍÀ	Öåíà	4	t	114
+7504	114	ÅÄÈÇÌ	Åä.Èçì.	6	t	114
+7510	4	ÊÎÄ	ÊÎÄ	2	t	4
+7511	4	ÈÌß	Íàèìåíîâàíèå	1	t	4
+7512	4	ÔÎÒÎ	ÔÎÒÎ	3	t	4
+7513	4	ÈÌß_Â_ÑÏÈÑÊÅ	ÈÌß_Â_ÑÏÈÑÊÅ	4	t	4
+7514	4	ÈÌß_Â_ÔÎĞÌÅ	ÈÌß_Â_ÔÎĞÌÅ	5	t	4
+7515	4	ÏĞÎÒÎÒÈÏ	ÏĞÎÒÎÒÈÏ	6	t	4
+7516	4	ÑÈÑÒÅÌÍÛÉ	ÑÈÑÒÅÌÍÛÉ	7	t	4
+7517	84	ÈÌß	Íàèìåíîâàíèå	1	t	84
+7520	117	ÊÎÄ	Êîä	1	t	117
+7521	117	ÈÌß	Íàèìåíîâàíèå	2	t	117
+7530	116	ÊÎÄ	Êîä	1	t	116
+7531	116	ÈÌß	Íàèìåíîâàíèå	2	t	116
 \.
 
 
 --
--- Name: Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2149 (class 0 OID 71862)
+-- Dependencies: 1638
+-- Data for Name: ñ÷åòà; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"Ñ‚Ğ¾Ğ¿ĞµÑ€_ĞšĞĞ”_seq"', 2, true);
+COPY "ñ÷åòà" ("ÊÎÄ", "ÈÌß", "Ñ×ÅÒ", "ÈÌßÑÏĞÀÂÎ×ÍÈÊÀ", "ÀÍÀËÈÒÈÊÀ", "ÊÎËÈ×ÅÑÒÂÎ", "ÁÀËÀÍÑ") FROM stdin;
+\.
 
 
 --
--- Data for Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹; Type: TABLE DATA; Schema: public; Owner: sa
+-- TOC entry 2160 (class 0 OID 72046)
+-- Dependencies: 1673
+-- Data for Name: òèïûîáúåêòîâ; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
-COPY "Ñ„Ğ°Ğ¹Ğ»Ñ‹" ("ĞšĞĞ”", "Ğ˜ĞœĞ¯", "Ğ¢Ğ˜ĞŸ", "Ğ—ĞĞĞ§Ğ•ĞĞ˜Ğ•", "ĞšĞĞĞ¢Ğ Ğ¡Ğ£ĞœĞœĞ") FROM stdin;
-893	ÑÑ‡ĞµÑ‚Ğ°.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-894	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-895	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-897	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº2.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-896	ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº1.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+COPY "òèïûîáúåêòîâ" ("ÊÎÄ", "ÈÌß") FROM stdin;
+1	ñïğàâî÷íèê
+2	ñàëüäî
+3	òîïåğ
+4	îáîğîò
+\.
+
+
+--
+-- TOC entry 2155 (class 0 OID 71934)
+-- Dependencies: 1651
+-- Data for Name: òîïåğ; Type: TABLE DATA; Schema: public; Owner: sa
+--
+
+COPY "òîïåğ" ("ÊÎÄ", "ÎÏÅĞ", "ÍÎÌÅĞ", "ÄÁÑ×ÅÒ", "ÊĞÑ×ÅÒ", "ÈÌß", "ÈÒÎÃÈ", "ÌÅÍŞ", "ÎÑÍÄÎÊÓÌÅÍÒ", "ÍÓÌÅĞÀÒÎĞ", "ÎÄÍÀÎÏÅĞÀÖÈß", "ÊÎË", "ÄÁÏÎÑÒ", "ÊĞÏÎÑÒ", "ÄÁÄÎÁÀÂ", "ÊĞÄÎÁÀÂ", "ÄÁÂÛÁÎĞ", "ÊĞÂÛÁÎĞ", "ÄÁÑÀËÂÈÄÈÌ", "ÊĞÑÀËÂÈÄÈÌ", "ÄÁÂÈÄÈÌ", "ÊĞÂÈÄÈÌ", "ÔÎĞÌÀ", "ÍÅÇÀÂÈÑÈÌ", "Ñ×ÈÒÀÒÜ", "ÏÅĞÅÌÅÍÍÛÅ", "ÀÒĞÈÁÓÒÛ", "ÄÎÊÀÒĞÈÁÓÒÛ") FROM stdin;
+\.
+
+
+--
+-- TOC entry 2161 (class 0 OID 72054)
+-- Dependencies: 1676
+-- Data for Name: ôàéëû; Type: TABLE DATA; Schema: public; Owner: sa
+--
+
+COPY "ôàéëû" ("ÊÎÄ", "ÈÌß", "ÒÈÏ", "ÇÍÀ×ÅÍÈÅ", "ÊÎÍÒĞÑÓÌÌÀ") FROM stdin;
+893	ñ÷åòà.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
 898	vw_types.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-901	ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-899	Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
-900	Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+901	êîíñòàíòû.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+894	ñïğàâî÷íèêè.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+897	ñïğàâî÷íèê2.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+899	íóìåğàòîğû.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+900	íóìåğàòîğû.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+895	ñïğàâî÷íèêè.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+902	íîìåíêëàòóğà.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+903	äîñòóï_ê_ñïğàâî÷íèêàì.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
+896	ñïğàâî÷íèê1.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a097072696e7428224576656e74496e6974466f726d22293b0a097461626c652e676574466f726d57696467657428292e73657457696e646f775469746c652822616161616161616122293b0a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0
 \.
 
 
 --
--- Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
+-- TOC entry 2074 (class 2606 OID 72077)
+-- Dependencies: 1640 1640
+-- Name: áëîêïåğèîäû_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-SELECT pg_catalog.setval('"Ñ„Ğ°Ğ¹Ğ»Ñ‹_ĞšĞĞ”_seq"', 901, true);
-
-
---
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
---
-
-ALTER TABLE ONLY "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹"
-    ADD CONSTRAINT "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "áëîêïåğèîäû"
+    ADD CONSTRAINT "áëîêïåğèîäû_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2078 (class 2606 OID 72079)
+-- Dependencies: 1643 1643
+-- Name: äîêóìåíòû_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹"
-    ADD CONSTRAINT "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_pkey" PRIMARY KEY ("ĞšĞĞ”");
-
-
---
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
---
-
-ALTER TABLE ONLY "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿"
-    ADD CONSTRAINT "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "äîêóìåíòû"
+    ADD CONSTRAINT "äîêóìåíòû_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2084 (class 2606 OID 72081)
+-- Dependencies: 1645 1645
+-- Name: äîñòóï_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹"
-    ADD CONSTRAINT "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_pkey" PRIMARY KEY ("ĞšĞĞ”");
-
-
---
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
---
-
-ALTER TABLE ONLY "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹"
-    ADD CONSTRAINT "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "äîñòóï"
+    ADD CONSTRAINT "äîñòóï_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2109 (class 2606 OID 72083)
+-- Dependencies: 1665 1665
+-- Name: êîíñòàíòû_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸"
-    ADD CONSTRAINT "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_pkey" PRIMARY KEY ("ĞšĞĞ”");
-
-
---
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
---
-
-ALTER TABLE ONLY "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸"
-    ADD CONSTRAINT "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "êîíñòàíòû"
+    ADD CONSTRAINT "êîíñòàíòû_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
--- Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2123 (class 2606 OID 72178)
+-- Dependencies: 1680 1680
+-- Name: íîìåíêëàòóğà_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹"
-    ADD CONSTRAINT "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_pkey" PRIMARY KEY ("ĞšĞĞ”");
-
-
---
--- Name: ÑÑ‡ĞµÑ‚Ğ°_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
---
-
-ALTER TABLE ONLY "ÑÑ‡ĞµÑ‚Ğ°"
-    ADD CONSTRAINT "ÑÑ‡ĞµÑ‚Ğ°_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "íîìåíêëàòóğà"
+    ADD CONSTRAINT "íîìåíêëàòóğà_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2113 (class 2606 OID 72085)
+-- Dependencies: 1667 1667
+-- Name: íóìåğàòîğû_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²"
-    ADD CONSTRAINT "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_pkey" PRIMARY KEY ("ĞšĞĞ”");
-
-
---
--- Name: Ñ‚Ğ¾Ğ¿ĞµÑ€_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
---
-
-ALTER TABLE ONLY "Ñ‚Ğ¾Ğ¿ĞµÑ€"
-    ADD CONSTRAINT "Ñ‚Ğ¾Ğ¿ĞµÑ€_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "íóìåğàòîğû"
+    ADD CONSTRAINT "íóìåğàòîğû_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
--- Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2088 (class 2606 OID 72087)
+-- Dependencies: 1648 1648
+-- Name: ïğîâîäêè_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
-ALTER TABLE ONLY "Ñ„Ğ°Ğ¹Ğ»Ñ‹"
-    ADD CONSTRAINT "Ñ„Ğ°Ğ¹Ğ»Ñ‹_pkey" PRIMARY KEY ("ĞšĞĞ”");
+ALTER TABLE ONLY "ïğîâîäêè"
+    ADD CONSTRAINT "ïğîâîäêè_pkey" PRIMARY KEY ("ÊÎÄ");
 
 
 --
+-- TOC entry 2125 (class 2606 OID 72198)
+-- Dependencies: 1682 1682
+-- Name: ñïğàâî÷íèê1_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "ñïğàâî÷íèê1"
+    ADD CONSTRAINT "ñïğàâî÷íèê1_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2127 (class 2606 OID 72208)
+-- Dependencies: 1684 1684
+-- Name: ñïğàâî÷íèê2_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "ñïğàâî÷íèê2"
+    ADD CONSTRAINT "ñïğàâî÷íèê2_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2099 (class 2606 OID 72089)
+-- Dependencies: 1650 1650
+-- Name: ñïğàâî÷íèêè_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "ñïğàâî÷íèêè"
+    ADD CONSTRAINT "ñïğàâî÷íèêè_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2105 (class 2606 OID 72091)
+-- Dependencies: 1653 1653
+-- Name: ñòîëáöû_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "ñòîëáöû"
+    ADD CONSTRAINT "ñòîëáöû_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2070 (class 2606 OID 72093)
+-- Dependencies: 1638 1638
+-- Name: ñ÷åòà_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "ñ÷åòà"
+    ADD CONSTRAINT "ñ÷åòà_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2117 (class 2606 OID 72095)
+-- Dependencies: 1673 1673
+-- Name: òèïûîáúåêòîâ_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "òèïûîáúåêòîâ"
+    ADD CONSTRAINT "òèïûîáúåêòîâ_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2103 (class 2606 OID 72097)
+-- Dependencies: 1651 1651
+-- Name: òîïåğ_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "òîïåğ"
+    ADD CONSTRAINT "òîïåğ_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2121 (class 2606 OID 72099)
+-- Dependencies: 1676 1676
+-- Name: ôàéëû_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY "ôàéëû"
+    ADD CONSTRAINT "ôàéëû_pkey" PRIMARY KEY ("ÊÎÄ");
+
+
+--
+-- TOC entry 2067 (class 1259 OID 72100)
+-- Dependencies: 1631 1631
 -- Name: configs_name_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2509,321 +3079,449 @@ CREATE INDEX configs_name_idx ON configs USING btree ("group", name);
 
 
 --
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2075 (class 1259 OID 72101)
+-- Dependencies: 1640
+-- Name: áëîêïåğèîäû_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_Ğ˜ĞœĞ¯_idx" ON "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "áëîêïåğèîäû_ÈÌß_idx" ON "áëîêïåğèîäû" USING btree ("ÈÌß");
 
 
 --
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2076 (class 1259 OID 72102)
+-- Dependencies: 1640
+-- Name: áëîêïåğèîäû_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹_ĞšĞĞ”_idx" ON "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" USING btree ("ĞšĞĞ”");
+CREATE INDEX "áëîêïåğèîäû_ÊÎÄ_idx" ON "áëîêïåğèîäû" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞĞ’Ğ¢Ğ_ĞĞŸĞ•Ğ _Ğ”ĞĞ¢Ğ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2079 (class 1259 OID 72103)
+-- Dependencies: 1643 1643 1643
+-- Name: äîêóìåíòû_ÀÂÒÎ_ÎÏÅĞ_ÄÀÒÀ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞĞ’Ğ¢Ğ_ĞĞŸĞ•Ğ _Ğ”ĞĞ¢Ğ_idx" ON "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" USING btree ("ĞĞ’Ğ¢Ğ", "ĞĞŸĞ•Ğ ", "Ğ”ĞĞ¢Ğ");
+CREATE INDEX "äîêóìåíòû_ÀÂÒÎ_ÎÏÅĞ_ÄÀÒÀ_idx" ON "äîêóìåíòû" USING btree ("ÀÂÒÎ", "ÎÏÅĞ", "ÄÀÒÀ");
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_Ğ”ĞĞ¢Ğ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2080 (class 1259 OID 72104)
+-- Dependencies: 1643
+-- Name: äîêóìåíòû_ÄÀÒÀ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_Ğ”ĞĞ¢Ğ_idx" ON "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" USING btree ("Ğ”ĞĞ¢Ğ");
+CREATE INDEX "äîêóìåíòû_ÄÀÒÀ_idx" ON "äîêóìåíòû" USING btree ("ÄÀÒÀ");
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_Ğ”ĞĞ¢Ğ_ĞĞŸĞ•Ğ _ĞĞ’Ğ¢Ğ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2081 (class 1259 OID 72105)
+-- Dependencies: 1643 1643 1643
+-- Name: äîêóìåíòû_ÄÀÒÀ_ÎÏÅĞ_ÀÂÒÎ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_Ğ”ĞĞ¢Ğ_ĞĞŸĞ•Ğ _ĞĞ’Ğ¢Ğ_idx" ON "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" USING btree ("Ğ”ĞĞ¢Ğ", "ĞĞŸĞ•Ğ ", "ĞĞ’Ğ¢Ğ");
+CREATE INDEX "äîêóìåíòû_ÄÀÒÀ_ÎÏÅĞ_ÀÂÒÎ_idx" ON "äîêóìåíòû" USING btree ("ÄÀÒÀ", "ÎÏÅĞ", "ÀÂÒÎ");
 
 
 --
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2082 (class 1259 OID 72106)
+-- Dependencies: 1643
+-- Name: äîêóìåíòû_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹_ĞšĞĞ”_idx" ON "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" USING btree ("ĞšĞĞ”");
+CREATE INDEX "äîêóìåíòû_ÊÎÄ_idx" ON "äîêóìåíòû" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2085 (class 1259 OID 72107)
+-- Dependencies: 1645
+-- Name: äîñòóï_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğ˜ĞœĞ¯_idx" ON "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "äîñòóï_ÈÌß_idx" ON "äîñòóï" USING btree ("ÈÌß");
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2086 (class 1259 OID 72108)
+-- Dependencies: 1645
+-- Name: äîñòóï_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_ĞšĞĞ”_idx" ON "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" USING btree ("ĞšĞĞ”");
+CREATE INDEX "äîñòóï_ÊÎÄ_idx" ON "äîñòóï" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2106 (class 1259 OID 72109)
+-- Dependencies: 1663
+-- Name: çàïğîñû_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_Ğ˜ĞœĞ¯_idx" ON "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "çàïğîñû_ÈÌß_idx" ON "çàïğîñû" USING btree ("ÈÌß");
 
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2107 (class 1259 OID 72110)
+-- Dependencies: 1663
+-- Name: çàïğîñû_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹_ĞšĞĞ”_idx" ON "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" USING btree ("ĞšĞĞ”");
+CREATE INDEX "çàïğîñû_ÊÎÄ_idx" ON "çàïğîñû" USING btree ("ÊÎÄ");
 
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2110 (class 1259 OID 72111)
+-- Dependencies: 1665
+-- Name: êîíñòàíòû_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_Ğ˜ĞœĞ¯_idx" ON "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "êîíñòàíòû_ÈÌß_idx" ON "êîíñòàíòû" USING btree ("ÈÌß");
 
 
 --
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2111 (class 1259 OID 72112)
+-- Dependencies: 1665
+-- Name: êîíñòàíòû_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹_ĞšĞĞ”_idx" ON "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" USING btree ("ĞšĞĞ”");
+CREATE INDEX "êîíñòàíòû_ÊÎÄ_idx" ON "êîíñòàíòû" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2114 (class 1259 OID 72113)
+-- Dependencies: 1667
+-- Name: íóìåğàòîğû_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_Ğ˜ĞœĞ¯_idx" ON "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "íóìåğàòîğû_ÈÌß_idx" ON "íóìåğàòîğû" USING btree ("ÈÌß");
 
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2115 (class 1259 OID 72114)
+-- Dependencies: 1667
+-- Name: íóìåğàòîğû_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹_ĞšĞĞ”_idx" ON "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" USING btree ("ĞšĞĞ”");
+CREATE INDEX "íóìåğàòîğû_ÊÎÄ_idx" ON "íóìåğàòîğû" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”Ğ‘ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2089 (class 1259 OID 72115)
+-- Dependencies: 1648 1648 1648
+-- Name: ïğîâîäêè_ÄÁÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”Ğ‘ĞšĞĞ”_idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "Ğ”Ğ‘ĞšĞĞ”", "Ğ”ĞĞšĞšĞĞ”");
+CREATE INDEX "ïğîâîäêè_ÄÁÊÎÄ_idx" ON "ïğîâîäêè" USING btree ("ÄÁÑ×ÅÒ", "ÄÁÊÎÄ", "ÄÎÊÊÎÄ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢_ĞĞŸĞ•Ğ _idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2090 (class 1259 OID 72116)
+-- Dependencies: 1648 1648
+-- Name: ïğîâîäêè_ÄÁÑ×ÅÒ_ÎÏÅĞ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢_ĞĞŸĞ•Ğ _idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("Ğ”Ğ‘Ğ¡Ğ§Ğ•Ğ¢", "ĞĞŸĞ•Ğ ");
+CREATE INDEX "ïğîâîäêè_ÄÁÑ×ÅÒ_ÎÏÅĞ_idx" ON "ïğîâîäêè" USING btree ("ÄÁÑ×ÅÒ", "ÎÏÅĞ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”ĞĞšĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2091 (class 1259 OID 72117)
+-- Dependencies: 1648
+-- Name: ïğîâîäêè_ÄÎÊÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”ĞĞšĞšĞĞ”_idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("Ğ”ĞĞšĞšĞĞ”");
+CREATE INDEX "ïğîâîäêè_ÄÎÊÊÎÄ_idx" ON "ïğîâîäêè" USING btree ("ÄÎÊÊÎÄ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”ĞĞšĞšĞĞ”_ĞĞŸĞ•Ğ _idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2092 (class 1259 OID 72118)
+-- Dependencies: 1648 1648 1648
+-- Name: ïğîâîäêè_ÄÎÊÊÎÄ_ÎÏÅĞ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”ĞĞšĞšĞĞ”_ĞĞŸĞ•Ğ _idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("Ğ”ĞĞšĞšĞĞ”", "ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ ");
+CREATE INDEX "ïğîâîäêè_ÄÎÊÊÎÄ_ÎÏÅĞ_idx" ON "ïğîâîäêè" USING btree ("ÄÎÊÊÎÄ", "ÎÏÅĞ", "ÍÎÌÅĞÎÏÅĞ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”ĞĞšĞšĞĞ”_Ğ¡Ğ¢Ğ _idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2093 (class 1259 OID 72119)
+-- Dependencies: 1648 1648
+-- Name: ïğîâîäêè_ÄÎÊÊÎÄ_ÑÒĞ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_Ğ”ĞĞšĞšĞĞ”_Ğ¡Ğ¢Ğ _idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("Ğ”ĞĞšĞšĞĞ”", "Ğ¡Ğ¢Ğ ");
+CREATE INDEX "ïğîâîäêè_ÄÎÊÊÎÄ_ÑÒĞ_idx" ON "ïğîâîäêè" USING btree ("ÄÎÊÊÎÄ", "ÑÒĞ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2094 (class 1259 OID 72120)
+-- Dependencies: 1648
+-- Name: ïğîâîäêè_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞĞ”_idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("ĞšĞĞ”");
+CREATE INDEX "ïğîâîäêè_ÊÎÄ_idx" ON "ïğîâîäêè" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞ ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2095 (class 1259 OID 72121)
+-- Dependencies: 1648 1648 1648
+-- Name: ïğîâîäêè_ÊĞÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞ ĞšĞĞ”_idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞ ĞšĞĞ”", "Ğ”ĞĞšĞšĞĞ”");
+CREATE INDEX "ïğîâîäêè_ÊĞÊÎÄ_idx" ON "ïğîâîäêè" USING btree ("ÊĞÑ×ÅÒ", "ÊĞÊÎÄ", "ÄÎÊÊÎÄ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞ Ğ¡Ğ§Ğ•Ğ¢_ĞĞŸĞ•Ğ _idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2096 (class 1259 OID 72122)
+-- Dependencies: 1648 1648
+-- Name: ïğîâîäêè_ÊĞÑ×ÅÒ_ÎÏÅĞ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞšĞ Ğ¡Ğ§Ğ•Ğ¢_ĞĞŸĞ•Ğ _idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("ĞšĞ Ğ¡Ğ§Ğ•Ğ¢", "ĞĞŸĞ•Ğ ");
+CREATE INDEX "ïğîâîäêè_ÊĞÑ×ÅÒ_ÎÏÅĞ_idx" ON "ïğîâîäêè" USING btree ("ÊĞÑ×ÅÒ", "ÎÏÅĞ");
 
 
 --
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞĞŸĞ•Ğ _ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ _idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2097 (class 1259 OID 72123)
+-- Dependencies: 1648 1648
+-- Name: ïğîâîäêè_ÎÏÅĞ_ÍÎÌÅĞÎÏÅĞ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸_ĞĞŸĞ•Ğ _ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ _idx" ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" USING btree ("ĞĞŸĞ•Ğ ", "ĞĞĞœĞ•Ğ ĞĞŸĞ•Ğ ");
+CREATE INDEX "ïğîâîäêè_ÎÏÅĞ_ÍÎÌÅĞÎÏÅĞ_idx" ON "ïğîâîäêè" USING btree ("ÎÏÅĞ", "ÍÎÌÅĞÎÏÅĞ");
 
 
 --
--- Name: ÑĞ°Ğ»ÑŒĞ´Ğ¾_Ğ¡Ğ§Ğ•Ğ¢_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2068 (class 1259 OID 72124)
+-- Dependencies: 1637 1637
+-- Name: ñàëüäî_Ñ×ÅÒ_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ÑĞ°Ğ»ÑŒĞ´Ğ¾_Ğ¡Ğ§Ğ•Ğ¢_ĞšĞĞ”_idx" ON "ÑĞ°Ğ»ÑŒĞ´Ğ¾" USING btree ("Ğ¡Ğ§Ğ•Ğ¢", "ĞšĞĞ”");
+CREATE INDEX "ñàëüäî_Ñ×ÅÒ_ÊÎÄ_idx" ON "ñàëüäî" USING btree ("Ñ×ÅÒ", "ÊÎÄ");
 
 
 --
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2100 (class 1259 OID 72125)
+-- Dependencies: 1650
+-- Name: ñïğàâî÷íèêè_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_Ğ˜ĞœĞ¯_idx" ON "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "ñïğàâî÷íèêè_ÈÌß_idx" ON "ñïğàâî÷íèêè" USING btree ("ÈÌß");
 
 
 --
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2101 (class 1259 OID 72126)
+-- Dependencies: 1650
+-- Name: ñïğàâî÷íèêè_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ĞšĞĞ”_idx" ON "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" USING btree ("ĞšĞĞ”");
+CREATE INDEX "ñïğàâî÷íèêè_ÊÎÄ_idx" ON "ñïğàâî÷íèêè" USING btree ("ÊÎÄ");
 
 
 --
--- Name: ÑÑ‡ĞµÑ‚Ğ°_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2071 (class 1259 OID 72127)
+-- Dependencies: 1638
+-- Name: ñ÷åòà_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ÑÑ‡ĞµÑ‚Ğ°_Ğ˜ĞœĞ¯_idx" ON "ÑÑ‡ĞµÑ‚Ğ°" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "ñ÷åòà_ÈÌß_idx" ON "ñ÷åòà" USING btree ("ÈÌß");
 
 
 --
--- Name: ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2072 (class 1259 OID 72128)
+-- Dependencies: 1638
+-- Name: ñ÷åòà_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "ÑÑ‡ĞµÑ‚Ğ°_ĞšĞĞ”_idx" ON "ÑÑ‡ĞµÑ‚Ğ°" USING btree ("ĞšĞĞ”");
+CREATE INDEX "ñ÷åòà_ÊÎÄ_idx" ON "ñ÷åòà" USING btree ("ÊÎÄ");
 
 
 --
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_Ğ˜ĞœĞ¯_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2118 (class 1259 OID 72129)
+-- Dependencies: 1673
+-- Name: òèïûîáúåêòîâ_ÈÌß_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_Ğ˜ĞœĞ¯_idx" ON "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" USING btree ("Ğ˜ĞœĞ¯");
+CREATE INDEX "òèïûîáúåêòîâ_ÈÌß_idx" ON "òèïûîáúåêòîâ" USING btree ("ÈÌß");
 
 
 --
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
+-- TOC entry 2119 (class 1259 OID 72130)
+-- Dependencies: 1673
+-- Name: òèïûîáúåêòîâ_ÊÎÄ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
-CREATE INDEX "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²_ĞšĞĞ”_idx" ON "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" USING btree ("ĞšĞĞ”");
+CREATE INDEX "òèïûîáúåêòîâ_ÊÎÄ_idx" ON "òèïûîáúåêòîâ" USING btree ("ÊÎÄ");
 
 
 --
--- Name: test_ÑƒĞ´Ğ°Ğ»Ğ¸Ñ‚ÑŒÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2137 (class 2620 OID 72131)
+-- Dependencies: 19 1650
+-- Name: test_óäàëèòüñïğàâî÷íèê; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "test_ÑƒĞ´Ğ°Ğ»Ğ¸Ñ‚ÑŒÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº" BEFORE DELETE ON "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" FOR EACH ROW EXECUTE PROCEDURE "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ¡Ğ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸Ğº"();
+CREATE TRIGGER "test_óäàëèòüñïğàâî÷íèê" BEFORE DELETE ON "ñïğàâî÷íèêè" FOR EACH ROW EXECUTE PROCEDURE "ÓäàëèòüÑïğàâî÷íèê"();
 
 
 --
--- Name: testdeleting_Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2128 (class 2620 OID 72132)
+-- Dependencies: 24 1637
+-- Name: testdeleting_Ñàëüäî; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾" BEFORE DELETE ON "ÑĞ°Ğ»ÑŒĞ´Ğ¾" FOR EACH ROW EXECUTE PROCEDURE "testdeleting_Ğ¡Ğ°Ğ»ÑŒĞ´Ğ¾"();
+CREATE TRIGGER "testdeleting_Ñàëüäî" BEFORE DELETE ON "ñàëüäî" FOR EACH ROW EXECUTE PROCEDURE "testdeleting_Ñàëüäî"();
 
 
 --
--- Name: testdeleting_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2131 (class 2620 OID 72133)
+-- Dependencies: 26 1640
+-- Name: testdeleting_áëîêïåğèîäû; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" BEFORE DELETE ON "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_áëîêïåğèîäû" BEFORE DELETE ON "áëîêïåğèîäû" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2133 (class 2620 OID 72134)
+-- Dependencies: 26 1645
+-- Name: testdeleting_äîñòóï; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" BEFORE DELETE ON "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_äîñòóï" BEFORE DELETE ON "äîñòóï" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2139 (class 2620 OID 72135)
+-- Dependencies: 1663 26
+-- Name: testdeleting_çàïğîñû; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" BEFORE DELETE ON "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_çàïğîñû" BEFORE DELETE ON "çàïğîñû" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2140 (class 2620 OID 72136)
+-- Dependencies: 1665 26
+-- Name: testdeleting_êîíñòàíòû; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" BEFORE DELETE ON "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_êîíñòàíòû" BEFORE DELETE ON "êîíñòàíòû" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2144 (class 2620 OID 72179)
+-- Dependencies: 1680 26
+-- Name: testdeleting_íîìåíêëàòóğà; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" BEFORE DELETE ON "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_íîìåíêëàòóğà" BEFORE DELETE ON "íîìåíêëàòóğà" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2141 (class 2620 OID 72137)
+-- Dependencies: 1667 26
+-- Name: testdeleting_íóìåğàòîğû; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" BEFORE DELETE ON "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_íóìåğàòîğû" BEFORE DELETE ON "íóìåğàòîğû" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_ÑÑ‡ĞµÑ‚Ğ°; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2145 (class 2620 OID 72199)
+-- Dependencies: 1682 26
+-- Name: testdeleting_ñïğàâî÷íèê1; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_ÑÑ‡ĞµÑ‚Ğ°" BEFORE DELETE ON "ÑÑ‡ĞµÑ‚Ğ°" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_ñïğàâî÷íèê1" BEFORE DELETE ON "ñïğàâî÷íèê1" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: testdeleting_Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2146 (class 2620 OID 72209)
+-- Dependencies: 26 1684
+-- Name: testdeleting_ñïğàâî÷íèê2; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "testdeleting_Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" BEFORE DELETE ON "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
+CREATE TRIGGER "testdeleting_ñïğàâî÷íèê2" BEFORE DELETE ON "ñïğàâî÷íèê2" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: Ğ’ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2138 (class 2620 OID 72138)
+-- Dependencies: 1650 26
+-- Name: testdeleting_ñïğàâî÷íèêè; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "Ğ’ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ" BEFORE INSERT ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" FOR EACH ROW EXECUTE PROCEDURE "Ğ’ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"();
+CREATE TRIGGER "testdeleting_ñïğàâî÷íèêè" BEFORE DELETE ON "ñïğàâî÷íèêè" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞšĞ¾Ğ½ĞµÑ‡Ğ½Ğ¾ĞµĞ¡Ğ°Ğ»ÑŒĞ´Ğ¾; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2130 (class 2620 OID 72139)
+-- Dependencies: 26 1638
+-- Name: testdeleting_ñ÷åòà; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞšĞ¾Ğ½ĞµÑ‡Ğ½Ğ¾ĞµĞ¡Ğ°Ğ»ÑŒĞ´Ğ¾" BEFORE INSERT OR UPDATE ON "ÑĞ°Ğ»ÑŒĞ´Ğ¾" FOR EACH ROW EXECUTE PROCEDURE "Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞšĞ¾Ğ½ĞµÑ‡Ğ½Ğ¾ĞµĞ¡Ğ°Ğ»ÑŒĞ´Ğ¾"();
+CREATE TRIGGER "testdeleting_ñ÷åòà" BEFORE DELETE ON "ñ÷åòà" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2142 (class 2620 OID 72140)
+-- Dependencies: 1673 26
+-- Name: testdeleting_òèïûîáúåêòîâ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ" BEFORE UPDATE ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" FOR EACH ROW EXECUTE PROCEDURE "Ğ¡Ñ‡Ğ¸Ñ‚Ğ°Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"();
+CREATE TRIGGER "testdeleting_òèïûîáúåêòîâ" BEFORE DELETE ON "òèïûîáúåêòîâ" FOR EACH ROW EXECUTE PROCEDURE testdeletingdictobject();
 
 
 --
--- Name: Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2143 (class 2620 OID 72148)
+-- Dependencies: 1676 30
+-- Name: testupdating_ôàéëû; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚" BEFORE DELETE ON "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" FOR EACH ROW EXECUTE PROCEDURE "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞ”Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚"();
+CREATE TRIGGER "testupdating_ôàéëû" BEFORE UPDATE ON "ôàéëû" FOR EACH ROW EXECUTE PROCEDURE testupdatingid();
 
 
 --
--- Name: Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ; Type: TRIGGER; Schema: public; Owner: sa
+-- TOC entry 2134 (class 2620 OID 72141)
+-- Dependencies: 33 1648
+-- Name: ÂñòàâèòüÏğîâîäêó; Type: TRIGGER; Schema: public; Owner: sa
 --
 
-CREATE TRIGGER "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ" BEFORE DELETE ON "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" FOR EACH ROW EXECUTE PROCEDURE "Ğ£Ğ´Ğ°Ğ»Ğ¸Ñ‚ÑŒĞŸÑ€Ğ¾Ğ²Ğ¾Ğ´ĞºÑƒ"();
+CREATE TRIGGER "ÂñòàâèòüÏğîâîäêó" BEFORE INSERT ON "ïğîâîäêè" FOR EACH ROW EXECUTE PROCEDURE "ÂñòàâèòüÏğîâîäêó"();
 
 
 --
+-- TOC entry 2129 (class 2620 OID 72142)
+-- Dependencies: 34 1637
+-- Name: Ñ÷èòàòüÊîíå÷íîåÑàëüäî; Type: TRIGGER; Schema: public; Owner: sa
+--
+
+CREATE TRIGGER "Ñ÷èòàòüÊîíå÷íîåÑàëüäî" BEFORE INSERT OR UPDATE ON "ñàëüäî" FOR EACH ROW EXECUTE PROCEDURE "Ñ÷èòàòüÊîíå÷íîåÑàëüäî"();
+
+
+--
+-- TOC entry 2135 (class 2620 OID 72143)
+-- Dependencies: 1648 35
+-- Name: Ñ÷èòàòüÏğîâîäêó; Type: TRIGGER; Schema: public; Owner: sa
+--
+
+CREATE TRIGGER "Ñ÷èòàòüÏğîâîäêó" BEFORE UPDATE ON "ïğîâîäêè" FOR EACH ROW EXECUTE PROCEDURE "Ñ÷èòàòüÏğîâîäêó"();
+
+
+--
+-- TOC entry 2132 (class 2620 OID 72144)
+-- Dependencies: 1643 36
+-- Name: ÓäàëèòüÄîêóìåíò; Type: TRIGGER; Schema: public; Owner: sa
+--
+
+CREATE TRIGGER "ÓäàëèòüÄîêóìåíò" BEFORE DELETE ON "äîêóìåíòû" FOR EACH ROW EXECUTE PROCEDURE "ÓäàëèòüÄîêóìåíò"();
+
+
+--
+-- TOC entry 2136 (class 2620 OID 72145)
+-- Dependencies: 1648 37
+-- Name: ÓäàëèòüÏğîâîäêó; Type: TRIGGER; Schema: public; Owner: sa
+--
+
+CREATE TRIGGER "ÓäàëèòüÏğîâîäêó" BEFORE DELETE ON "ïğîâîäêè" FOR EACH ROW EXECUTE PROCEDURE "ÓäàëèòüÏğîâîäêó"();
+
+
+--
+-- TOC entry 2169 (class 0 OID 0)
+-- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
@@ -2834,6 +3532,8 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
+-- TOC entry 2170 (class 0 OID 0)
+-- Dependencies: 38
 -- Name: sp_calcaccoborot(character, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2841,11 +3541,11 @@ REVOKE ALL ON FUNCTION sp_calcaccoborot(cacc character, cdate1 character varying
 REVOKE ALL ON FUNCTION sp_calcaccoborot(cacc character, cdate1 character varying, cdate2 character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character, cdate1 character varying, cdate2 character varying) TO sa;
 GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character, cdate1 character varying, cdate2 character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character, cdate1 character varying, cdate2 character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character, cdate1 character varying, cdate2 character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2171 (class 0 OID 0)
+-- Dependencies: 18
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2853,11 +3553,11 @@ REVOKE ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character
 REVOKE ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO sa;
 GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2172 (class 0 OID 0)
+-- Dependencies: 39
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2865,11 +3565,11 @@ REVOKE ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, c
 REVOKE ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO sa;
 GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2173 (class 0 OID 0)
+-- Dependencies: 20
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2877,11 +3577,11 @@ REVOKE ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character va
 REVOKE ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO sa;
 GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2174 (class 0 OID 0)
+-- Dependencies: 32
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2889,11 +3589,11 @@ REVOKE ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname ch
 REVOKE ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO sa;
 GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2175 (class 0 OID 0)
+-- Dependencies: 22
 -- Name: sp_deletedoc(integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2904,6 +3604,8 @@ GRANT ALL ON FUNCTION sp_deletedoc(ndocid integer) TO PUBLIC;
 
 
 --
+-- TOC entry 2176 (class 0 OID 0)
+-- Dependencies: 21
 -- Name: sp_deletedocstr(integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2911,11 +3613,11 @@ REVOKE ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) FROM PUB
 REVOKE ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) FROM sa;
 GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO sa;
 GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2177 (class 0 OID 0)
+-- Dependencies: 40
 -- Name: sp_insertdoc(integer, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2923,11 +3625,11 @@ REVOKE ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) FROM
 REVOKE ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO sa;
 GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
 
 
 --
+-- TOC entry 2178 (class 0 OID 0)
+-- Dependencies: 41
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2935,11 +3637,11 @@ REVOKE ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam ch
 REVOKE ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) FROM sa;
 GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) TO sa;
 GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2179 (class 0 OID 0)
+-- Dependencies: 25
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2947,22 +3649,22 @@ REVOKE ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdict
 REVOKE ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) FROM sa;
 GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO sa;
 GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2180 (class 0 OID 0)
+-- Dependencies: 1631
 -- Name: configs; Type: ACL; Schema: public; Owner: sa
 --
 
 REVOKE ALL ON TABLE configs FROM PUBLIC;
 REVOKE ALL ON TABLE configs FROM sa;
 GRANT ALL ON TABLE configs TO sa;
-GRANT SELECT ON TABLE configs TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE configs TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
 
 
 --
+-- TOC entry 2181 (class 0 OID 0)
+-- Dependencies: 1633
 -- Name: vw_permissions; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -2973,308 +3675,360 @@ GRANT SELECT ON TABLE vw_permissions TO PUBLIC;
 
 
 --
--- Name: ÑĞ°Ğ»ÑŒĞ´Ğ¾; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2182 (class 0 OID 0)
+-- Dependencies: 1637
+-- Name: ñàëüäî; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "ÑĞ°Ğ»ÑŒĞ´Ğ¾" FROM PUBLIC;
-REVOKE ALL ON TABLE "ÑĞ°Ğ»ÑŒĞ´Ğ¾" FROM sa;
-GRANT ALL ON TABLE "ÑĞ°Ğ»ÑŒĞ´Ğ¾" TO sa;
-GRANT SELECT,INSERT,UPDATE ON TABLE "ÑĞ°Ğ»ÑŒĞ´Ğ¾" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT,INSERT,UPDATE ON TABLE "ÑĞ°Ğ»ÑŒĞ´Ğ¾" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: ÑÑ‡ĞµÑ‚Ğ°; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "ÑÑ‡ĞµÑ‚Ğ°" FROM PUBLIC;
-REVOKE ALL ON TABLE "ÑÑ‡ĞµÑ‚Ğ°" FROM sa;
-GRANT ALL ON TABLE "ÑÑ‡ĞµÑ‚Ğ°" TO sa;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "ÑÑ‡ĞµÑ‚Ğ°" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "ÑÑ‡ĞµÑ‚Ğ°" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "ñàëüäî" FROM PUBLIC;
+REVOKE ALL ON TABLE "ñàëüäî" FROM sa;
+GRANT ALL ON TABLE "ñàëüäî" TO sa;
 
 
 --
--- Name: vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2183 (class 0 OID 0)
+-- Dependencies: 1638
+-- Name: ñ÷åòà; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ" FROM sa;
-GRANT ALL ON TABLE "vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ" TO sa;
-GRANT SELECT ON TABLE "vw_Ğ±Ğ°Ğ»Ğ°Ğ½Ñ" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-
-
---
--- Name: Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" FROM sa;
-GRANT ALL ON TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO sa;
-GRANT SELECT ON TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO PUBLIC;
-GRANT SELECT,UPDATE ON TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT,UPDATE ON TABLE "Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "ñ÷åòà" FROM PUBLIC;
+REVOKE ALL ON TABLE "ñ÷åòà" FROM sa;
+GRANT ALL ON TABLE "ñ÷åòà" TO sa;
 
 
 --
--- Name: Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2184 (class 0 OID 0)
+-- Dependencies: 1639
+-- Name: vw_áàëàíñ; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" FROM sa;
-GRANT ALL ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO sa;
-GRANT SELECT ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO PUBLIC;
-GRANT SELECT ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-GRANT SELECT ON TABLE "Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO test;
+REVOKE ALL ON TABLE "vw_áàëàíñ" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_áàëàíñ" FROM sa;
+GRANT ALL ON TABLE "vw_áàëàíñ" TO sa;
 
 
 --
--- Name: vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2185 (class 0 OID 0)
+-- Dependencies: 1640
+-- Name: áëîêïåğèîäû; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" FROM sa;
-GRANT ALL ON TABLE "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO sa;
-GRANT SELECT ON TABLE "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "vw_Ğ±Ğ»Ğ¾ĞºĞ¿ĞµÑ€Ğ¸Ğ¾Ğ´Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" FROM sa;
-GRANT ALL ON TABLE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" TO sa;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ñ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
+REVOKE ALL ON TABLE "áëîêïåğèîäû" FROM PUBLIC;
+REVOKE ALL ON TABLE "áëîêïåğèîäû" FROM sa;
+GRANT ALL ON TABLE "áëîêïåğèîäû" TO sa;
+GRANT SELECT ON TABLE "áëîêïåğèîäû" TO PUBLIC;
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2186 (class 0 OID 0)
+-- Dependencies: 1641
+-- Name: ïîëüçîâàòåëè; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" FROM sa;
-GRANT ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" TO sa;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-
-
---
--- Name: vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" FROM sa;
-GRANT ALL ON TABLE "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" TO sa;
-GRANT SELECT ON TABLE "vw_Ğ´Ğ¾ÑÑ‚ÑƒĞ¿" TO PUBLIC;
+REVOKE ALL ON TABLE "ïîëüçîâàòåëè" FROM PUBLIC;
+REVOKE ALL ON TABLE "ïîëüçîâàòåëè" FROM sa;
+GRANT ALL ON TABLE "ïîëüçîâàòåëè" TO sa;
+GRANT SELECT ON TABLE "ïîëüçîâàòåëè" TO PUBLIC;
+GRANT SELECT ON TABLE "ïîëüçîâàòåëè" TO test;
 
 
 --
--- Name: vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2187 (class 0 OID 0)
+-- Dependencies: 1642
+-- Name: vw_áëîêïåğèîäû; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" FROM sa;
-GRANT ALL ON TABLE "vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO sa;
-GRANT SELECT ON TABLE "vw_Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ğ¸" TO test;
-
-
---
--- Name: Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" FROM sa;
-GRANT ALL ON TABLE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" TO sa;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "Ğ¿Ñ€Ğ¾Ğ²Ğ¾Ğ´ĞºĞ¸" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "vw_áëîêïåğèîäû" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_áëîêïåğèîäû" FROM sa;
+GRANT ALL ON TABLE "vw_áëîêïåğèîäû" TO sa;
 
 
 --
--- Name: ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2188 (class 0 OID 0)
+-- Dependencies: 1643
+-- Name: äîêóìåíòû; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" FROM PUBLIC;
-REVOKE ALL ON TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" FROM sa;
-GRANT ALL ON TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" TO sa;
-GRANT SELECT ON TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" TO PUBLIC;
-GRANT SELECT ON TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ñ‚Ğ¾Ğ¿ĞµÑ€" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ñ‚Ğ¾Ğ¿ĞµÑ€" FROM sa;
-GRANT ALL ON TABLE "Ñ‚Ğ¾Ğ¿ĞµÑ€" TO sa;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "Ñ‚Ğ¾Ğ¿ĞµÑ€" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "Ñ‚Ğ¾Ğ¿ĞµÑ€" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "äîêóìåíòû" FROM PUBLIC;
+REVOKE ALL ON TABLE "äîêóìåíòû" FROM sa;
+GRANT ALL ON TABLE "äîêóìåíòû" TO sa;
 
 
 --
--- Name: vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2189 (class 0 OID 0)
+-- Dependencies: 1645
+-- Name: äîñòóï; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" FROM sa;
-GRANT ALL ON TABLE "vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" TO sa;
-GRANT SELECT ON TABLE "vw_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ¸_ÑĞ¾_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ğ°Ğ¼Ğ¸" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" FROM sa;
-GRANT ALL ON TABLE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" TO sa;
-GRANT SELECT ON TABLE "ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "äîñòóï" FROM PUBLIC;
+REVOKE ALL ON TABLE "äîñòóï" FROM sa;
+GRANT ALL ON TABLE "äîñòóï" TO sa;
 
 
 --
--- Name: vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2190 (class 0 OID 0)
+-- Dependencies: 1646
+-- Name: vw_äîñòóï; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" FROM sa;
-GRANT ALL ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" TO sa;
-GRANT SELECT ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-GRANT SELECT ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-
-
---
--- Name: vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹" FROM sa;
-GRANT ALL ON TABLE "vw_ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñ‹_Ñ‚Ğ¸Ğ¿Ñ‹" TO sa;
+REVOKE ALL ON TABLE "vw_äîñòóï" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_äîñòóï" FROM sa;
+GRANT ALL ON TABLE "vw_äîñòóï" TO sa;
+GRANT SELECT ON TABLE "vw_äîñòóï" TO PUBLIC;
 
 
 --
--- Name: vw_ÑÑ‡ĞµÑ‚Ğ°; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2191 (class 0 OID 0)
+-- Dependencies: 1647
+-- Name: vw_ïîëüçîâàòåëè; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "vw_ÑÑ‡ĞµÑ‚Ğ°" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_ÑÑ‡ĞµÑ‚Ğ°" FROM sa;
-GRANT ALL ON TABLE "vw_ÑÑ‡ĞµÑ‚Ğ°" TO sa;
-GRANT SELECT ON TABLE "vw_ÑÑ‡ĞµÑ‚Ğ°" TO PUBLIC;
-
-
---
--- Name: vw_Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" FROM PUBLIC;
-REVOKE ALL ON TABLE "vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" FROM sa;
-GRANT ALL ON TABLE "vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO sa;
-GRANT SELECT ON TABLE "vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "vw_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "vw_ïîëüçîâàòåëè" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_ïîëüçîâàòåëè" FROM sa;
+GRANT ALL ON TABLE "vw_ïîëüçîâàòåëè" TO sa;
+GRANT SELECT ON TABLE "vw_ïîëüçîâàòåëè" TO test;
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2192 (class 0 OID 0)
+-- Dependencies: 1648
+-- Name: ïğîâîäêè; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼" FROM sa;
-GRANT ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼" TO sa;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ğ¾Ğ±Ğ¾Ñ€Ğ¾Ñ‚Ğ°Ğ¼" TO PUBLIC;
-
-
---
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾" FROM sa;
-GRANT ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾" TO sa;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ°Ğ»ÑŒĞ´Ğ¾" TO PUBLIC;
+REVOKE ALL ON TABLE "ïğîâîäêè" FROM PUBLIC;
+REVOKE ALL ON TABLE "ïğîâîäêè" FROM sa;
+GRANT ALL ON TABLE "ïğîâîäêè" TO sa;
 
 
 --
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2193 (class 0 OID 0)
+-- Dependencies: 1650
+-- Name: ñïğàâî÷íèêè; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" FROM sa;
-GRANT ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" TO sa;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" TO PUBLIC;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_ÑĞ¿Ñ€Ğ°Ğ²Ğ¾Ñ‡Ğ½Ğ¸ĞºĞ°Ğ¼" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" FROM sa;
-GRANT ALL ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO sa;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO PUBLIC;
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "Ğ´Ğ¾ÑÑ‚ÑƒĞ¿_Ğº_Ñ‚Ğ¾Ğ¿ĞµÑ€" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "ñïğàâî÷íèêè" FROM PUBLIC;
+REVOKE ALL ON TABLE "ñïğàâî÷íèêè" FROM sa;
+GRANT ALL ON TABLE "ñïğàâî÷íèêè" TO sa;
+GRANT SELECT ON TABLE "ñïğàâî÷íèêè" TO PUBLIC;
 
 
 --
--- Name: Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2194 (class 0 OID 0)
+-- Dependencies: 1651
+-- Name: òîïåğ; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" FROM sa;
-GRANT ALL ON TABLE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" TO sa;
-GRANT SELECT ON TABLE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑÑ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" FROM sa;
-GRANT ALL ON TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" TO sa;
-GRANT SELECT ON TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" TO PUBLIC;
-GRANT SELECT,UPDATE ON TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "ĞºĞ¾Ğ½ÑÑ‚Ğ°Ğ½Ñ‚Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "òîïåğ" FROM PUBLIC;
+REVOKE ALL ON TABLE "òîïåğ" FROM sa;
+GRANT ALL ON TABLE "òîïåğ" TO sa;
 
 
 --
--- Name: Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2195 (class 0 OID 0)
+-- Dependencies: 1652
+-- Name: vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" FROM sa;
-GRANT ALL ON TABLE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" TO sa;
-GRANT SELECT,UPDATE ON TABLE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT,UPDATE ON TABLE "Ğ½ÑƒĞ¼ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
-
-
---
--- Name: Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²; Type: ACL; Schema: public; Owner: sa
---
-
-REVOKE ALL ON TABLE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" FROM sa;
-GRANT ALL ON TABLE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" TO sa;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" TO "Ğ±ÑƒÑ…Ğ³Ğ°Ğ»Ñ‚ĞµÑ€";
-GRANT SELECT ON TABLE "Ñ‚Ğ¸Ğ¿Ñ‹Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ²" TO "Ğ¿Ñ€Ğ¾Ğ´Ğ°Ğ²ĞµÑ†";
+REVOKE ALL ON TABLE "vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" FROM sa;
+GRANT ALL ON TABLE "vw_ñïğàâî÷íèêè_ñî_ñòîëáöàìè" TO sa;
 
 
 --
--- Name: Ñ„Ğ°Ğ¹Ğ»Ñ‹; Type: ACL; Schema: public; Owner: sa
+-- TOC entry 2196 (class 0 OID 0)
+-- Dependencies: 1653
+-- Name: ñòîëáöû; Type: ACL; Schema: public; Owner: sa
 --
 
-REVOKE ALL ON TABLE "Ñ„Ğ°Ğ¹Ğ»Ñ‹" FROM PUBLIC;
-REVOKE ALL ON TABLE "Ñ„Ğ°Ğ¹Ğ»Ñ‹" FROM sa;
-GRANT ALL ON TABLE "Ñ„Ğ°Ğ¹Ğ»Ñ‹" TO sa;
-GRANT SELECT ON TABLE "Ñ„Ğ°Ğ¹Ğ»Ñ‹" TO PUBLIC;
+REVOKE ALL ON TABLE "ñòîëáöû" FROM PUBLIC;
+REVOKE ALL ON TABLE "ñòîëáöû" FROM sa;
+GRANT ALL ON TABLE "ñòîëáöû" TO sa;
 
+
+--
+-- TOC entry 2197 (class 0 OID 0)
+-- Dependencies: 1685
+-- Name: vw_ñòîëáöû; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "vw_ñòîëáöû" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_ñòîëáöû" FROM sa;
+GRANT ALL ON TABLE "vw_ñòîëáöû" TO sa;
+
+
+--
+-- TOC entry 2198 (class 0 OID 0)
+-- Dependencies: 1686
+-- Name: vw_ñòîëáöû_òèïû; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "vw_ñòîëáöû_òèïû" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_ñòîëáöû_òèïû" FROM sa;
+GRANT ALL ON TABLE "vw_ñòîëáöû_òèïû" TO sa;
+
+
+--
+-- TOC entry 2199 (class 0 OID 0)
+-- Dependencies: 1654
+-- Name: vw_ñ÷åòà; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "vw_ñ÷åòà" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_ñ÷åòà" FROM sa;
+GRANT ALL ON TABLE "vw_ñ÷åòà" TO sa;
+GRANT SELECT ON TABLE "vw_ñ÷åòà" TO PUBLIC;
+
+
+--
+-- TOC entry 2200 (class 0 OID 0)
+-- Dependencies: 1655
+-- Name: vw_òîïåğ; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "vw_òîïåğ" FROM PUBLIC;
+REVOKE ALL ON TABLE "vw_òîïåğ" FROM sa;
+GRANT ALL ON TABLE "vw_òîïåğ" TO sa;
+
+
+--
+-- TOC entry 2207 (class 0 OID 0)
+-- Dependencies: 1659
+-- Name: äîñòóï_ê_îáîğîòàì; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "äîñòóï_ê_îáîğîòàì" FROM PUBLIC;
+REVOKE ALL ON TABLE "äîñòóï_ê_îáîğîòàì" FROM sa;
+GRANT ALL ON TABLE "äîñòóï_ê_îáîğîòàì" TO sa;
+GRANT SELECT ON TABLE "äîñòóï_ê_îáîğîòàì" TO PUBLIC;
+
+
+--
+-- TOC entry 2208 (class 0 OID 0)
+-- Dependencies: 1660
+-- Name: äîñòóï_ê_ñàëüäî; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "äîñòóï_ê_ñàëüäî" FROM PUBLIC;
+REVOKE ALL ON TABLE "äîñòóï_ê_ñàëüäî" FROM sa;
+GRANT ALL ON TABLE "äîñòóï_ê_ñàëüäî" TO sa;
+GRANT SELECT ON TABLE "äîñòóï_ê_ñàëüäî" TO PUBLIC;
+
+
+--
+-- TOC entry 2209 (class 0 OID 0)
+-- Dependencies: 1661
+-- Name: äîñòóï_ê_ñïğàâî÷íèêàì; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "äîñòóï_ê_ñïğàâî÷íèêàì" FROM PUBLIC;
+REVOKE ALL ON TABLE "äîñòóï_ê_ñïğàâî÷íèêàì" FROM sa;
+GRANT ALL ON TABLE "äîñòóï_ê_ñïğàâî÷íèêàì" TO sa;
+GRANT SELECT ON TABLE "äîñòóï_ê_ñïğàâî÷íèêàì" TO PUBLIC;
+
+
+--
+-- TOC entry 2210 (class 0 OID 0)
+-- Dependencies: 1662
+-- Name: äîñòóï_ê_òîïåğ; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "äîñòóï_ê_òîïåğ" FROM PUBLIC;
+REVOKE ALL ON TABLE "äîñòóï_ê_òîïåğ" FROM sa;
+GRANT ALL ON TABLE "äîñòóï_ê_òîïåğ" TO sa;
+GRANT SELECT ON TABLE "äîñòóï_ê_òîïåğ" TO PUBLIC;
+
+
+--
+-- TOC entry 2211 (class 0 OID 0)
+-- Dependencies: 1663
+-- Name: çàïğîñû; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "çàïğîñû" FROM PUBLIC;
+REVOKE ALL ON TABLE "çàïğîñû" FROM sa;
+GRANT ALL ON TABLE "çàïğîñû" TO sa;
+
+
+--
+-- TOC entry 2214 (class 0 OID 0)
+-- Dependencies: 1665
+-- Name: êîíñòàíòû; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "êîíñòàíòû" FROM PUBLIC;
+REVOKE ALL ON TABLE "êîíñòàíòû" FROM sa;
+GRANT ALL ON TABLE "êîíñòàíòû" TO sa;
+GRANT SELECT ON TABLE "êîíñòàíòû" TO PUBLIC;
+
+
+--
+-- TOC entry 2217 (class 0 OID 0)
+-- Dependencies: 1680
+-- Name: íîìåíêëàòóğà; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "íîìåíêëàòóğà" FROM PUBLIC;
+REVOKE ALL ON TABLE "íîìåíêëàòóğà" FROM sa;
+GRANT ALL ON TABLE "íîìåíêëàòóğà" TO sa;
+
+
+--
+-- TOC entry 2220 (class 0 OID 0)
+-- Dependencies: 1667
+-- Name: íóìåğàòîğû; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "íóìåğàòîğû" FROM PUBLIC;
+REVOKE ALL ON TABLE "íóìåğàòîğû" FROM sa;
+GRANT ALL ON TABLE "íóìåğàòîğû" TO sa;
+
+
+--
+-- TOC entry 2225 (class 0 OID 0)
+-- Dependencies: 1682
+-- Name: ñïğàâî÷íèê1; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "ñïğàâî÷íèê1" FROM PUBLIC;
+REVOKE ALL ON TABLE "ñïğàâî÷íèê1" FROM sa;
+GRANT ALL ON TABLE "ñïğàâî÷íèê1" TO sa;
+
+
+--
+-- TOC entry 2228 (class 0 OID 0)
+-- Dependencies: 1684
+-- Name: ñïğàâî÷íèê2; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "ñïğàâî÷íèê2" FROM PUBLIC;
+REVOKE ALL ON TABLE "ñïğàâî÷íèê2" FROM sa;
+GRANT ALL ON TABLE "ñïğàâî÷íèê2" TO sa;
+
+
+--
+-- TOC entry 2237 (class 0 OID 0)
+-- Dependencies: 1673
+-- Name: òèïûîáúåêòîâ; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "òèïûîáúåêòîâ" FROM PUBLIC;
+REVOKE ALL ON TABLE "òèïûîáúåêòîâ" FROM sa;
+GRANT ALL ON TABLE "òèïûîáúåêòîâ" TO sa;
+
+
+--
+-- TOC entry 2242 (class 0 OID 0)
+-- Dependencies: 1676
+-- Name: ôàéëû; Type: ACL; Schema: public; Owner: sa
+--
+
+REVOKE ALL ON TABLE "ôàéëû" FROM PUBLIC;
+REVOKE ALL ON TABLE "ôàéëû" FROM sa;
+GRANT ALL ON TABLE "ôàéëû" TO sa;
+GRANT SELECT ON TABLE "ôàéëû" TO PUBLIC;
+
+
+-- Completed on 2013-08-20 23:39:20
 
 --
 -- PostgreSQL database dump complete
