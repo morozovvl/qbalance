@@ -71,8 +71,9 @@ public:
     Q_INVOKABLE bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
-    QString getFormsPath(QString formName = "");
-    QString getReportsPath(QString reportName = "");
+    QString getFormsPath(QString = "");
+    QString getReportsPath(QString = "");
+    Q_INVOKABLE QString getPhotoPath(QString = "");
     QString getConfigPrefix() { return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName()); }
     virtual MainWindow* getMainWindow() { return gui->getMainWindow(); }
 

@@ -205,6 +205,10 @@ void Essence::query(QString filter)
         return;
     }
     Table::query(filter);
+    if (tableModel->rowCount() == 0)
+    {
+        form->showPhoto();
+    }
  }
 
 
@@ -221,15 +225,6 @@ QString Essence::getPhotoPath()
     {
         path = photoPath;
     }
-
-    if (path.left(1) == "~")
-    {   // Если путь к фотографиям является относительным пути к самой программе
-        path.remove(0, 1);
-        path = app->applicationDirPath() + path;
-    }
-    // Если каталога с картинками нет, то попытаемся его создать
-    if (!QDir(path).exists())
-        QDir().mkpath(path);
     return path;
 }
 
@@ -259,15 +254,14 @@ QString Essence::getPhotoFile()
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
-                file = getPhotoPath() + "/" + idValue + ".jpg";
+                file = app->getPhotoPath(getPhotoPath()) + "/" + idValue + ".jpg";
                 if (isDictionary)
                 {
-                    photoPath = QFileInfo(file).absoluteDir().absolutePath();
-                    localFile = file;       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+                    localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
                     if (!QFile(file).exists())
                     {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                         // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                        if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
+                        if (getPhotoCheckSum(localFile) != 0)
                         {
                             app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                             QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
@@ -303,7 +297,7 @@ QString Essence::getPhotoFile()
                     }
                     else
                     {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        savePhotoToServer(file);
+                        savePhotoToServer(file, localFile);
                     }
                 }
             }
@@ -313,7 +307,7 @@ QString Essence::getPhotoFile()
 }
 
 
-void Essence::savePhotoToServer(QString file)
+void Essence::savePhotoToServer(QString file, QString localFile)
 {
     if (app->isSA())
     {
@@ -322,11 +316,11 @@ void Essence::savePhotoToServer(QString file)
         {
             QByteArray array = file1.readAll();
             qulonglong localFileCheckSum = calculateCRC32(&array);
-            qulonglong removeFileCheckSum = db->getFileCheckSum(file, PictureFileType, true);
+            qulonglong removeFileCheckSum = getPhotoCheckSum(localFile);
             if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
                                                             // предполагается, что локальный файл свежее того, который в базе
             {
-                db->setFile(file, PictureFileType, array, localFileCheckSum, true);      // Сохранить картинку в расширенную базу
+                db->setFile(localFile, PictureFileType, array, localFileCheckSum, true);      // Сохранить картинку в расширенную базу
             }
             file1.close();
         }
@@ -343,12 +337,7 @@ void Essence::replyFinished(QNetworkReply* reply)
         // Данные с фотографией получены, запишем их в файл
         if (idValue.size() > 0)
         {
-            QString file = photoPath;
-            if (file.left(1) == "~")
-            {   // Если путь к фотографиям является относительным пути к самой программе
-                file.remove(0, 1);
-                file = app->applicationDirPath() + file;
-            }
+            QString file = app->getPhotoPath(getPhotoPath());
             QByteArray array = reply->readAll();
             saveFile(file + "/" + idValue + ".jpg", &array);
             urls.remove(url);
@@ -374,6 +363,11 @@ void Essence::replyFinished(QNetworkReply* reply)
 
 void Essence::saveFile(QString file, QByteArray* array)
 {
+    QString dir = QFileInfo(file).absolutePath();
+
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+
     QFile pictFile(file);
     if (pictFile.open(QIODevice::WriteOnly))
     {

@@ -119,8 +119,8 @@ void MainWindow::createMenus()
     reportAct = menuBar()->addAction(QObject::trUtf8("&Отчеты"));
     connect(reportAct, SIGNAL(triggered()), this, SLOT(showReports()));
 
-    configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
-    connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
+//    configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
+//    connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
 
     infoMenu = menuBar()->addMenu(QObject::trUtf8("&Помощь"));
 

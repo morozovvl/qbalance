@@ -235,12 +235,26 @@ QString TApplication::getReportsPath(QString reportName) {
 }
 
 
+QString TApplication::getPhotoPath(QString photoName) {
+    QString dir = applicationDirPath() + "/photo/" + getConfigPrefix() + "/" + photoName;
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+    return dir;
+}
+
+
 Dialog* TApplication::createForm(QString fileName)
 {
     Dialog* formWidget = 0;
     QString path = getFormsPath();
     QString fName = fileName + ".ui";
-    if (Essence::getFile(path, fName, FormFileType))
+    if (!Essence::getFile(path, fName, FormFileType))
+    {
+        fName = getLogin() + "/" + fName;
+        if (!Essence::getFile(path, fName, FormFileType))
+            fName = "";
+    }
+    if (fName.size() > 0)
     {
         QFile file(path + fName);
         if (file.open(QIODevice::ReadOnly))

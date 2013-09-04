@@ -430,6 +430,7 @@ bool WizardDictionary::setData()
     db->commitTransaction();
 
     // Перезагрузим список столбцов
+    db->reloadDictionariesPermitions();
     db->reloadColumnProperties();
     db->reloadColumnHeaders();
 
@@ -572,10 +573,22 @@ void WizardDictionary::frameDeactivated(int frameNumber)
     {
         if (table != tableName->text())
         {
+            QString oldTable = table;
             table = tableName->text();
             for (int i = 0; i < fieldsTable.rowCount(); i++)
             {
                 fieldsTable.item(i, tableField)->setText(table);
+            }
+            for (int i = 0; i < fields.count(); i++)
+            {
+                if (fields.value(i).table == oldTable)
+                {
+                    FieldType fld;
+                    fld = fields.value(i);
+                    fld.table = table;
+                    fields.removeAt(i);
+                    fields.insert(i, fld);
+                }
             }
         }
     }

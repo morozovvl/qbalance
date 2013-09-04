@@ -220,6 +220,7 @@ public:
     bool alterTableColumn(QString, QString, QString);
     bool appendColumnHeader(int, int, QString, QString, int, bool);
     bool removeColumnHeaders(int);
+    void reloadDictionariesPermitions();
     void reloadColumnHeaders();
     void reloadColumnProperties();
     QSqlQuery* getDictionaries() { return &dictionaries; }

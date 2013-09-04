@@ -227,8 +227,7 @@ void DBFactory::loadSystemTables()
     objectTypes.clear();
     objectTypes = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("типыобъектов")));
 
-    dictionariesPermitions.clear();
-    dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
+    reloadDictionariesPermitions();
 
     reloadColumnProperties();
 
@@ -250,6 +249,13 @@ void DBFactory::loadSystemTables()
     dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
     reloadColumnHeaders();
+}
+
+
+void DBFactory::reloadDictionariesPermitions()
+{
+    dictionariesPermitions.clear();
+    dictionariesPermitions = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_справочникам")));
 }
 
 
