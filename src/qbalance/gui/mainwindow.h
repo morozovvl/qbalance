@@ -47,6 +47,7 @@ public:
 private slots:
       void showDictionaries();
       void showDocuments();
+      void showProcesses();
       void showReports();
       void showConfigs();
       void newRecord();
@@ -80,6 +81,7 @@ private:
       QAction* dictionariesAct;
       QAction* dictAct;
       QAction* operAct;
+      QAction* processAct;
       QAction* reportAct;
       QAction* configAct;
       QAction* newAct;

@@ -49,7 +49,7 @@ SearchParameters::~SearchParameters()
 
 
 void SearchParameters::close() {
-    delete gridLayout;
+//    delete gridLayout;
 }
 
 

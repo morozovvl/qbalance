@@ -55,7 +55,7 @@ TApplication::TApplication(int & argc, char** argv)
 
 //    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
 //    reportTemplateType = OpenRPTreportTemplate;
-        reportTemplateType = OOXMLreportTemplate;
+    reportTemplateType = OOXMLreportTemplate;
 
     if (!Exemplar)
     {
@@ -227,7 +227,10 @@ QString TApplication::getFormsPath(QString formName) {
 
 
 QString TApplication::getReportsPath(QString reportName) {
-    QString dir = applicationDirPath() + "/reports/" + getConfigPrefix() + "/";
+    QString dir = applicationDirPath() + "/reports/";
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+    dir += getConfigPrefix() + "/";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
     QString fileName = dir + reportName;
@@ -235,11 +238,15 @@ QString TApplication::getReportsPath(QString reportName) {
 }
 
 
-QString TApplication::getPhotoPath(QString photoName) {
-    QString dir = applicationDirPath() + "/photo/" + getConfigPrefix() + "/" + photoName;
+QString TApplication::getPhotosPath(QString photoName) {
+    QString dir = applicationDirPath() + "/photos/";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    return dir;
+    dir += getConfigPrefix() + "/";
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+    QString fileName = dir + photoName;
+    return fileName;
 }
 
 
@@ -260,7 +267,7 @@ Dialog* TApplication::createForm(QString fileName)
         if (file.open(QIODevice::ReadOnly))
         {
             QUiLoader loader(this);
-            loader.addPluginPath("./plugins/");
+            loader.addPluginPath(applicationDirPath() + "/plugins/");
             loader.setWorkingDirectory(path);
             formWidget = (Dialog*)loader.load(&file);
             file.close();
@@ -377,4 +384,17 @@ QVariant TApplication::getConst(QString valueName)
         }
     }
     return QVariant();
+}
+
+
+bool TApplication::runProcess(QString command, QString progName)
+{
+    QProcess* ooProcess = new QProcess();
+    ooProcess->start(command);
+    if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))
+    {   // Подождем 1 секунду и если процесс не запустился
+        showError(QString(QObject::trUtf8("Не удалось запустить %1 ")).arg(progName.size() > 0 ? progName : QObject::trUtf8("программу")));                   // выдадим сообщение об ошибке
+        return false;
+    }
+    return true;
 }

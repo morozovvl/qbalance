@@ -254,7 +254,7 @@ QString Essence::getPhotoFile()
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
-                file = app->getPhotoPath(getPhotoPath()) + "/" + idValue + ".jpg";
+                file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
                 if (isDictionary)
                 {
                     localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
@@ -337,7 +337,7 @@ void Essence::replyFinished(QNetworkReply* reply)
         // Данные с фотографией получены, запишем их в файл
         if (idValue.size() > 0)
         {
-            QString file = app->getPhotoPath(getPhotoPath());
+            QString file = app->getPhotosPath(getPhotoPath());
             QByteArray array = reply->readAll();
             saveFile(file + "/" + idValue + ".jpg", &array);
             urls.remove(url);
@@ -345,7 +345,10 @@ void Essence::replyFinished(QNetworkReply* reply)
 
             // Проверим, не нужно ли обновить фотографию
             if (idValue == getValue(photoIdField).toString().trimmed())
+            {
                 emit photoLoaded();
+                scriptEngine->eventPhotoLoaded();
+            }
         }
     }
     else
@@ -451,11 +454,11 @@ void Essence::close()
         form->close();
         delete form;
     }
-    if (scriptEngine != 0)
-    {
+//    if (scriptEngine != 0)
+//    {
 //        scriptEngine->close();
 //        delete scriptEngine;
-    }
+//    }
     Table::close();
 }
 
@@ -855,12 +858,13 @@ void Essence::print(QString fileName)
             if (!defaultFile)
             {
                 // Скопируем файл отчета (шаблон) во временный файл
-                QTemporaryFile templateFile;
-                templateFile.setFileTemplate("qt_temp_XXXXXX." + ext);
-                templateFile.open();
-                templateFile.close();
-                tmpFileName = QDir().tempPath() + "/" + templateFile.fileName();
-                QFile().copy(fullFileName, tmpFileName);
+                QTemporaryFile templateFile("qt_temp_XXXXXX." + ext);
+//                if (templateFile.open())
+//                {
+//                    templateFile.close();
+                    tmpFileName = templateFile.fileName();
+                    QFile().copy(fullFileName, tmpFileName);
+//                }
             }
             else
                 tmpFileName = fullFileName;

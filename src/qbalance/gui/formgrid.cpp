@@ -67,7 +67,7 @@ FormGrid::~FormGrid()
 
 void FormGrid::close()
 {
-    Form::close();
+    writeSettings();
     if (defaultForm)
     {
         if (grdTable != 0)
@@ -75,6 +75,7 @@ void FormGrid::close()
             delete grdTable;
         }
     }
+    Form::close();
 }
 
 
@@ -106,7 +107,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     else
     {   // Была загружена пользовательская форма
         tableLayout = (QVBoxLayout*)qFindChild<QVBoxLayout*>(formWidget, "tableLayout");
-        grdTable = (TableView*)qFindChild<QTableView*>(formWidget, "tableView");
+        grdTable = qFindChild<TableView*>(formWidget, "tableView");
         if (grdTable != 0)
         {
             grdTable->setApp(app);
@@ -766,7 +767,6 @@ void FormGrid::writeSettings()
 {
     if (columnsSettingsReaded)
     {
-        Form::writeSettings();
         if (grdTable != 0)
         {
             QSettings settings;
@@ -781,6 +781,7 @@ void FormGrid::writeSettings()
                     int width = grdTable->columnWidth(i);
                     settings.setArrayIndex(i);
                     settings.setValue("width", width);
+
                 }
                 settings.endArray();
                 settings.endGroup();

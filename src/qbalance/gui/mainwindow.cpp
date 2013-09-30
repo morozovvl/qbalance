@@ -59,6 +59,10 @@ void MainWindow::showDocuments() {
     TApplication::exemplar()->showDocuments();
 }
 
+void MainWindow::showProcesses() {
+    TApplication::exemplar()->showProcesses();
+}
+
 void MainWindow::showReports() {
     TApplication::exemplar()->showReports();
 }
@@ -115,6 +119,9 @@ void MainWindow::createMenus()
 
     operAct = menuBar()->addAction(QObject::trUtf8("&Операции"));
     connect(operAct, SIGNAL(triggered()), this, SLOT(showDocuments()));
+
+    processAct = menuBar()->addAction(QObject::trUtf8("&Обработки"));
+    connect(processAct, SIGNAL(triggered()), this, SLOT(showProcesses()));
 
     reportAct = menuBar()->addAction(QObject::trUtf8("&Отчеты"));
     connect(reportAct, SIGNAL(triggered()), this, SLOT(showReports()));

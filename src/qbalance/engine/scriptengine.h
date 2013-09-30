@@ -68,6 +68,7 @@ public:
     void eventCalcTable();
     void eventSetEnabled(bool);
     void eventAfterRowChanged();
+    void eventPhotoLoaded();
     virtual QString preparePictureUrl(Essence*);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:

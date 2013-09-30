@@ -73,7 +73,7 @@ public:
     QDate getEndDate() { return endDate; }
     QString getFormsPath(QString = "");
     QString getReportsPath(QString = "");
-    Q_INVOKABLE QString getPhotoPath(QString = "");
+    Q_INVOKABLE QString getPhotosPath(QString = "");
     QString getConfigPrefix() { return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName()); }
     virtual MainWindow* getMainWindow() { return gui->getMainWindow(); }
 
@@ -81,6 +81,7 @@ public:
 
     void showDictionaries() { dictionaryList->show(); }
     void showDocuments() { topersList->show(); }
+    void showProcesses() { ; }
     void showReports() { ; }
     void showConfigs();
     void setPeriod() { gui->setPeriod(); }                                               // Установим рабочий интервал
@@ -120,6 +121,8 @@ public:
 
     void virtual showError(QString);
     void virtual showCriticalError(QString);
+
+    Q_INVOKABLE bool runProcess(QString, QString = "");
 
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников

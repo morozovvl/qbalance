@@ -77,7 +77,7 @@ public:
 
 
 // Функции для работы с модулем GUI
-    virtual FormGrid* getForm();
+    Q_INVOKABLE virtual FormGrid* getForm();
     virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();
@@ -111,6 +111,7 @@ public:
     Q_INVOKABLE void showGridSection(QString columnName) { form->getGridTable()->showGridSection(columnName); }
     Q_INVOKABLE void showAllGridSections() { form->getGridTable()->showAllGridSections(); }
     Q_INVOKABLE virtual void setForm(QString = "");
+    Q_INVOKABLE bool isDefaultForm() { return form->isDefaultForm(); }
 
 
 // Функции для обеспечения работы скриптов
@@ -131,7 +132,7 @@ public:
     void                afterHideFormEvent();
     void                closeFormEvent();
     QString             preparePictureUrl();
-    void                afterRowChanged();
+    virtual void        afterRowChanged();
 
 // Прочие функции
     QString             getPhotoFile();

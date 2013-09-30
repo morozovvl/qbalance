@@ -72,7 +72,7 @@ public slots:
     virtual void cmdPrint();
     virtual void cmdLoad();
     virtual void cmdSave();
-    virtual void showPhoto();
+    Q_INVOKABLE virtual void showPhoto();
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();
 
@@ -92,7 +92,7 @@ protected:
     QPushButton*                buttonSave;
 
     virtual void createForm(QString, QWidget* pwgt = 0);
-    virtual void writeSettings();
+    void writeSettings();
 
 private:
     int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки

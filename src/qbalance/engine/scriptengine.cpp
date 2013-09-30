@@ -603,6 +603,17 @@ void ScriptEngine::eventAfterRowChanged()
 }
 
 
+void ScriptEngine::eventPhotoLoaded()
+{
+    QString eventName = "EventPhotoLoaded";
+    globalObject().property(eventName).call();
+    if (hasUncaughtException())
+    {   // Если в скриптах произошла ошибка
+        showScriptError(eventName, uncaughtException().toString());
+    }
+}
+
+
 QString ScriptEngine::preparePictureUrl(Essence* essence)
 {
     QScriptValueList args;
@@ -703,6 +714,9 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
 
     func.comment = QObject::trUtf8("Событие происходит после перемещения на другую строку");
     appendEvent("EventAfterRowChanged()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит после загрузки фотографии из Интернета");
+    appendEvent("EventPhotoLoaded()", func);
 
     return &eventsList;
 }

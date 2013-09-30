@@ -47,7 +47,7 @@ public:
     virtual void keyPressEvent(QKeyEvent*);
 
     void setButtonsSignals();
-    bool isDefaultForm() { return defaultForm; }
+    Q_INVOKABLE bool isDefaultForm() { return defaultForm; }
 
     Q_INVOKABLE QPushButton* getButtonOk() { return buttonOk; }
     Q_INVOKABLE QPushButton* getButtonCancel() { return buttonCancel; }
@@ -91,7 +91,7 @@ protected:
 
     virtual void    createForm(QString, QWidget* pwgt = 0);
     virtual void    readSettings();
-    virtual void    writeSettings();
+    void    writeSettings();
 
 private:
     bool                    uiCreated;

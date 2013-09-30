@@ -61,24 +61,14 @@ bool OOReportEngine::open(QMap<QString, QVariant>* context, QString name, QStrin
             QTemporaryFile templateFile;
             templateFile.setFileTemplate("qt_temp_XXXXXX." + reportExt);
             templateFile.open();
-            QString tmpFileName = QDir().tempPath() + "/" + templateFile.fileName();
+            QString tmpFileName = QDir().tempPath() + templateFile.fileName();
             templateFile.close();
             QString destFile = reportName + "." + reportExt;
             if (!QDir().exists(destFile))
                 QFile().copy(QDir::currentPath() + "/reports/default_report." + reportExt, destFile);
             if (QFile().copy(destFile, tmpFileName))
             {
-                QString command = QString("soffice -invisible -quickstart %1 ""macro://./Standard.Main.Main(%2)""").arg(tmpFileName).arg(file.fileName());
-                QProcess* ooProcess = new QProcess();
-                ooProcess->start(command);
-                if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))
-                {   // Подождем 1 секунду и если процесс не запустился
-                    TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                   // выдадим сообщение об ошибке
-                }
-                else
-                {
-                    result = true;
-                }
+                result = TApplication::exemplar()->runProcess(QString("soffice -invisible -quickstart %1 ""macro://./Standard.Main.Main(%2)""").arg(tmpFileName).arg(file.fileName()), "OpenOffice");
             }
             else
             {
