@@ -46,6 +46,7 @@ public:
     QString getAttrPrefix() { return prefix; }
     virtual void            setOrderClause();
     Q_INVOKABLE virtual void  setForm(QString = "");
+    Q_INVOKABLE Document* getDocument() { return currentDocument; }
 
 
 protected:
@@ -59,6 +60,8 @@ private:
     QString             prefix;
     QList<ToperType>    topersList;
     QList<FieldType>    attrFields;
+
+    void                setCurrentDocument();       // Зафиксировать текущий документ
 
 };
 

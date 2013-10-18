@@ -6,7 +6,7 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-
+include(../qextserialport/src/qextserialport.pri)
 
 QT += sql \
       xml \
@@ -179,6 +179,8 @@ unix {
     LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_cppu.so.3
     LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_salhelpergcc3.so.3
     LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_sal.so.3
+
+  LIBS += /usr/lib/libdrvfr.so
 
 }
 

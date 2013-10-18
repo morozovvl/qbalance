@@ -69,11 +69,12 @@ public:
     Q_INVOKABLE virtual QVariant        getOldValue(QString field);
     Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
-    void                                setDoSubmit(bool submit) { doSubmit = submit; }
+    Q_INVOKABLE void                    setDoSubmit(bool submit) { doSubmit = submit; }
     bool                                getDoSubmit() { return doSubmit; }
     Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
     virtual void query(QString = "");
     virtual void                        setOrderClause() { ; }
+    Q_INVOKABLE int                     getRowCount() { return tableModel->rowCount(); }
 
 
 // Функции для работы с модулем GUI
@@ -138,6 +139,9 @@ public:
     QString             getPhotoFile();
     static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
+    virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
+    Q_INVOKABLE virtual void        updateCurrentRow();
+    Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(form->getCurrentIndex().column()).toUpper(); }
 
 signals:
     void                photoLoaded();
@@ -165,7 +169,6 @@ protected:
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
-    virtual void        updateCurrentRow();
 
 private:
     QString             photoPath;

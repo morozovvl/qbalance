@@ -34,6 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/dialog.h"
 #include "../gui/picture.h"
+#include "../driverfr/driverfr.h"
 
 #include "eventloop.h"
 
@@ -118,6 +119,17 @@ QScriptValue getOldValue(QScriptContext*, QScriptEngine* engine) {
 QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 {   // Просто заворачивает аргумент в кавычки
     return QScriptValue('"' + context->argument(0).toString() + '"');
+}
+
+
+// класс DriverFR
+Q_DECLARE_METATYPE(DriverFR*)
+QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
+    return engine->newQObject(in);
+}
+
+void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
+    out = qobject_cast<DriverFR*>(object.toQObject());
 }
 
 
@@ -385,6 +397,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty(sqlQueryClass->name(), sqlQueryClass->constructor());
 
     // Объявим классы для работы с пользовательскими формами
+    qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
@@ -641,6 +654,20 @@ void ScriptEngine::eventCalcTable()
 }
 
 
+void ScriptEngine::eventBarCodeReaded(QString barCode)
+{
+    QString eventName = "EventBarCodeReaded";
+    QScriptValueList args;
+    args << QScriptValue(barCode);
+    globalObject().property(eventName).call(QScriptValue(), args);
+    if (hasUncaughtException())
+    {   // Если в скриптах произошла ошибка
+        showScriptError(eventName, uncaughtException().toString());
+    }
+}
+
+
+
 // Конец списка событий
 
 void ScriptEngine::showScriptError(QString eventName, QString exception)
@@ -717,6 +744,9 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
 
     func.comment = QObject::trUtf8("Событие происходит после загрузки фотографии из Интернета");
     appendEvent("EventPhotoLoaded()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит после прочтения штрих-кода");
+    appendEvent("EventBarCodeReaded(barCode)", func);
 
     return &eventsList;
 }

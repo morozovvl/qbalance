@@ -64,6 +64,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
         }
     }
     lIsSet = db->isSet(tableName);
+    setDoSubmit(true);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
 }
 
 
@@ -410,7 +411,7 @@ bool Dictionary::setTableModel(int)
             {
                 if (fld.name == idFieldName)
                     keyColumn = i;
-                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.length, i, keyColumn);
+                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, i, keyColumn);
             }
 
             if (!tables.contains(fld.table) && dictionaries != 0 && dictionaries->getDocument() == 0)
@@ -517,6 +518,5 @@ void Dictionary::prepareSelectCurrentRowCommand()
 
     preparedSelectCurrentRow.prepare(command);
 }
-
 
 

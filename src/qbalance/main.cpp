@@ -76,7 +76,6 @@ void test() {
 
 int main(int argc, char **argv)
 {
-
 /*
     qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
     qDebug() << "QLibraryInfo::DocumentationPath" << QLibraryInfo::location(QLibraryInfo::DocumentationPath);

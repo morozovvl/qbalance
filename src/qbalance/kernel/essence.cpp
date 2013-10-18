@@ -85,11 +85,10 @@ Dialog* Essence::getFormWidget() {
 }
 
 
-bool Essence::calculate(const QModelIndex &index)
+bool Essence::calculate(const QModelIndex &)
 {
     if (scriptEngine != 0)
     {
-        currentFieldName = tableModel->getFieldName(index.column());
         scriptEngine->eventCalcTable();
         scriptEngine->eventAfterCalculate();
         if (scriptEngine->getErrorMessage().size() > 0)
@@ -157,7 +156,10 @@ void Essence::setValue(QString n, QVariant value, int row)
         if (doSubmit)
         {
             if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            {
                 tableModel->submit(index);
+                db->execCommands();
+            }
         }
 
         if (row >= 0)
@@ -254,10 +256,11 @@ QString Essence::getPhotoFile()
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
-                file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
+                QString phPath = getPhotoPath();
+                file = app->getPhotosPath(phPath) + "/" + idValue + ".jpg";
                 if (isDictionary)
                 {
-                    localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+                    localFile = phPath + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
                     if (!QFile(file).exists())
                     {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                         // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
@@ -829,6 +832,13 @@ void Essence::restoreOldValues()
     {
         setValue(fieldName, oldValues.value(fieldName));
     }
+}
+
+
+void Essence::keyboardReaded(QString barCode)
+{
+    if (scriptEngine != 0)
+        scriptEngine->eventBarCodeReaded(barCode);
 }
 
 

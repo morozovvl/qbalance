@@ -38,6 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 GUIFactory::GUIFactory(DBFactory *d)
 {
     db = d;
+    mainWindow = 0;
 }
 
 

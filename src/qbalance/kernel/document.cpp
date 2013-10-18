@@ -321,19 +321,17 @@ bool Document::add()
 // Второй способ обновления документа после вставки новой строки, более оптимальный, без загрузки всего документа, а загрузки только новой строки
             int newRow = tableModel->rowCount();
             if (newRow == 0)
-            {
                 query();
-                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            }
             else
             {
                 tableModel->insertRow(newRow);
+                form->selectRow(newRow);
+                updateCurrentRow(newRow);
                 form->getGridTable()->reset();
-                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                form->getGridTable()->selectNextColumn();
-                updateCurrentRow(strNum);
-                form->showPhoto();
             }
+            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            form->showPhoto();
+            form->setButtons();
 // Конец второго способа
 
             saveOldValues();
@@ -487,6 +485,7 @@ void Document::setValue(QString name, QVariant value, int row)
     }
     else
         Essence::setValue(name, value, row);
+    calculate(tableModel->index(row, tableModel->fieldIndex(name)));
 }
 
 
@@ -575,8 +574,14 @@ QVariant Document::getSumValue(QString name)
 }
 
 
-
 void Document::show()
+{
+    loadDocument();
+    Essence::show();
+}
+
+
+void Document::loadDocument()
 {   // Перед открытием документа запрашивается его содержимое, а для постоянных справочников в документе устанавливаются их значения
     if (!localDictsOpened)
     {
@@ -672,13 +677,13 @@ void Document::show()
     {
         if (getIsSingleString())
         {   // Если в документе должна быть только одна строка, но нет ни одной, то добавим пустую строку
-            appendDocString();
-            query();
+            add();
+//            appendDocString();
+//            query();
         }
     }
     restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
     parent->saveOldValues();    // Запомним старые значения текущей строки списка документов
-    Essence::show();
 }
 
 
@@ -921,7 +926,7 @@ bool Document::setTableModel(int)
             }
             if (!columnsProperties.value(i).constReadOnly)
                 // Если поле входит в список сохраняемых полей
-                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).length, columnCount, keyColumn);
+                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnCount, keyColumn);
             // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
             if (columnsProperties.value(i).table == attrName)
                 attrFields.append(columnsProperties.value(i).column);
@@ -936,7 +941,7 @@ bool Document::setTableModel(int)
 
 bool Document::showNextDict()
 {  // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документ
-    bool anyShown = false;
+    bool anyShown = true;
     Dictionary* dict;
     foreach (QString dictName, getDictionaries()->keys())
     {

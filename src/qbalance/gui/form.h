@@ -91,15 +91,16 @@ protected:
 
     virtual void    createForm(QString, QWidget* pwgt = 0);
     virtual void    readSettings();
-    void    writeSettings();
+    void            writeSettings();
 
 private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;
     bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
+    QString                 readedKeyboard;     // строка, прочитанная с клавиатуры до нажатия кнопки Enter
 
     void                    checkVisibility();
-    MyMdiSubWindow* getSubWindow();
+    MyMdiSubWindow*         getSubWindow();
 
 };
 

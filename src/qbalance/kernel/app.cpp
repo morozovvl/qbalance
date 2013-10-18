@@ -32,6 +32,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
+#include "../qextserialport/src/qextserialport.h"
+#include "../engine/documentscriptengine.h"
+
 
 QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
 QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
@@ -51,6 +54,8 @@ TApplication::TApplication(int & argc, char** argv)
     dictionaryList = 0;
     topersList = 0;
     driverFR = new DriverFR(this);
+    barCodeReaderComPort = new QextSerialPort("/dev/ttyUSB0", QextSerialPort::EventDriven);
+    barCodeString = "";
     driverFRisValid = false;
 
 //    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
@@ -66,6 +71,7 @@ TApplication::TApplication(int & argc, char** argv)
 
 TApplication::~TApplication()
 {
+    delete barCodeReaderComPort;
     delete driverFR;
     delete gui;
     delete db;
@@ -137,8 +143,20 @@ bool TApplication::open() {
                 {   // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();
-                    if (driverFR->open(applicationDirPath() + "/plugins/libdrvfr"))
+                    if (driverFR->open())
                         driverFRisValid = true;
+                    if (barCodeReaderComPort != 0)
+                    {
+                        barCodeReaderComPort->setBaudRate(BAUD9600);
+                        barCodeReaderComPort->setFlowControl(FLOW_OFF);
+                        barCodeReaderComPort->setParity(PAR_NONE);
+                        barCodeReaderComPort->setDataBits(DATA_8);
+                        barCodeReaderComPort->setStopBits(STOP_2);
+                        if (barCodeReaderComPort->open(QIODevice::ReadWrite))
+                            connect(barCodeReaderComPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
+
+                    }
+
                     // Загрузим константы
                     Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
                     if (constDict != 0)
@@ -398,3 +416,50 @@ bool TApplication::runProcess(QString command, QString progName)
     }
     return true;
 }
+
+
+void TApplication::barCodeReadyRead()
+{
+    if (barCodeReaderComPort->bytesAvailable())
+    {
+        QString readedPart = QString::fromLatin1(barCodeReaderComPort->readAll());
+        if (readedPart.right(1) == QString('\n'))
+        {
+            barCodeString.append(readedPart);
+
+            if (getActiveSubWindow() != 0 && getMainWindow() != 0)
+            {
+                MyMdiSubWindow* mdiSubWindow = getMainWindow()->findMdiWindow(getActiveSubWindow()->widget());
+                if (mdiSubWindow != 0)
+                {
+                    if (mdiSubWindow->isVisible())
+                    {
+                        Dialog* widget = qobject_cast<Dialog*>(mdiSubWindow->widget());
+                        widget->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
+                    }
+                }
+            }
+            barCodeString = "";
+        }
+        else
+            barCodeString.append(readedPart);
+    }
+}
+
+
+void TApplication::showProcesses()
+{
+    DocumentScriptEngine* scriptEngine;
+    scriptEngine = new DocumentScriptEngine(this);
+    if (scriptEngine != 0)
+    {
+        if (scriptEngine->open("/home/vladimir/work/qbalance1/test.qs"))
+        {
+            if (scriptEngine->evaluate())
+            {
+            }
+        }
+    }
+    delete scriptEngine;
+}
+

@@ -51,8 +51,8 @@ public:
     bool canShow() { return lCanShow; }
     void setCanShow(bool can) { lCanShow = can; }
 
-    bool isMustShow() { return lMustShow; }
-    virtual void setMustShow(bool must) { lMustShow = must; }
+    Q_INVOKABLE bool isMustShow() { return lMustShow; }
+    Q_INVOKABLE virtual void setMustShow(bool must) { lMustShow = must; }
     bool isConst() { return lIsConst; }
     bool isSet() { return lIsSet; }
     bool isSaldo() { return lIsSaldo; }
@@ -76,6 +76,7 @@ public:
     Q_INVOKABLE virtual void            setId(qulonglong);
     void    setIdEnabled(bool e) { lsetIdEnabled = e; }
     Q_INVOKABLE virtual void setForm(QString = "");
+    Q_INVOKABLE virtual void updateCurrentRow(int = 0);
 
 
 protected:
@@ -92,7 +93,6 @@ protected:
     bool            lIsSaldo;
     QStringList     fieldList;
     virtual void    prepareSelectCurrentRowCommand();
-    virtual void    updateCurrentRow(int = 0);
     virtual bool    setTableModel(int = 0);
 
 private:

@@ -40,6 +40,7 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 class Dialog;
+class QextSerialPort;
 
 
 enum  ReportTemplateTypes
@@ -76,12 +77,13 @@ public:
     Q_INVOKABLE QString getPhotosPath(QString = "");
     QString getConfigPrefix() { return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName()); }
     virtual MainWindow* getMainWindow() { return gui->getMainWindow(); }
+    QMdiSubWindow* getActiveSubWindow() { return gui->getMainWindow()->getWorkSpace()->activeSubWindow(); }
 
     void show() { gui->show(); }
 
     void showDictionaries() { dictionaryList->show(); }
     void showDocuments() { topersList->show(); }
-    void showProcesses() { ; }
+    void showProcesses();
     void showReports() { ; }
     void showConfigs();
     void setPeriod() { gui->setPeriod(); }                                               // Установим рабочий интервал
@@ -137,11 +139,16 @@ private:
     static bool             DebugMode;
     static QTextStream*     DebugStream;
     static TApplication*    Exemplar;
+    QextSerialPort*         barCodeReaderComPort;
+    QString                 barCodeString;
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
 
     void loadConsts();
+
+private slots:
+    void                    barCodeReadyRead();
 };
 
 #endif

@@ -2,7 +2,6 @@
 #define DRIVERFR_H
 
 #include <QtCore/QObject>
-#include <QtCore/QLibrary>
 #include "../../drvfr/drvfr.h"
 
 /*
@@ -98,9 +97,13 @@ class DriverFR : public QObject
 {
     Q_OBJECT
 public:
-    explicit DriverFR(QObject *parent = 0);
-    bool open(QString);
-    void close();
+    DriverFR(QObject *parent = 0);
+    bool open();
+
+// Функции для работы с драйвером
+    Q_INVOKABLE int Connect();
+    Q_INVOKABLE int DisConnect();
+    Q_INVOKABLE int Beep();
 
     static DriverFR* exemplar() { return Exemplar; }
 signals:
@@ -108,9 +111,9 @@ signals:
 public slots:
 private:
     static DriverFR*   Exemplar;
-
     fr_func*        fr;     // Функции фискального регистратора
     fr_prop*        prop;   // Свойства фискального регистратора
+
 };
 
 #endif // DRIVERFR_H

@@ -55,8 +55,6 @@ public:
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE bool                    isReadOnly();
 
-    Q_INVOKABLE QString                 getCurrentFieldName() { return currentFieldName.toUpper(); }
-
 protected:
     DBFactory*                          db;
     TApplication*                       app;
@@ -65,7 +63,6 @@ protected:
     QString                             tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
     MySqlRelationalTableModel*          tableModel;
     QList<FieldType>                    columnsProperties;
-    QString                             currentFieldName;                   // имя поля, в котором был вызван метод calculate()
     virtual bool                        setTableModel(int = 0);
 
 };

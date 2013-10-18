@@ -35,7 +35,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
     prefix = "АТРИБУТЫ__";
     QSqlRecord operProperties = db->getTopersProperties(operNumber);
     db->getToperData(operNumber, &topersList);              // Получим список типовых операций
-    formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString()).arg(QObject::trUtf8("Список документов"));
+    formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString().trimmed()).arg(QObject::trUtf8("Список документов"));
     subFormTitle = operProperties.value(db->getObjectName("имя")).toString().trimmed();
     lInsertable = operProperties.value("insertable").toBool();
     lDeleteable = operProperties.value("deleteable").toBool();
@@ -78,20 +78,16 @@ bool Documents::add()
     int strNum = db->addDoc(operNumber, date);
     if (strNum > 0)
     {
-         int newRow = tableModel->rowCount();
-         if (newRow == 0)
-         {
-             query();
-             form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-         }
-         else
-         {
-             tableModel->insertRow(newRow);
-             form->getGridTable()->reset();
-             form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-             updateCurrentRow(strNum);
-         }
-         return true;
+        if (tableModel->rowCount() == 0)
+            query();
+
+        int newRow = tableModel->rowCount();
+        tableModel->insertRow(newRow);
+        form->getGridTable()->reset();
+        form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        updateCurrentRow(strNum);
+        setCurrentDocument();
+        return true;
     }
     return false;
 }
@@ -116,8 +112,14 @@ bool Documents::remove()
 
 void Documents::view()
 {
-    currentDocument->setDocId(getValue("код").toInt());
+    setCurrentDocument();
     currentDocument->show();
+}
+
+
+void Documents::setCurrentDocument()
+{
+    currentDocument->setDocId(getValue("код").toInt());
 }
 
 
@@ -285,7 +287,7 @@ bool Documents::setTableModel(int)
             if (name == idFieldName)
                 keyColumn = i;
 
-            tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).length, i, keyColumn);
+            tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, i, keyColumn);
         }
 
         QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
@@ -312,7 +314,7 @@ bool Documents::setTableModel(int)
                     {
                         if (fld.name == db->getObjectName(attrName + ".код"))
                             keyColumn = columnCount;
-                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.length, columnCount, keyColumn);
+                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.type, fld.length, columnCount, keyColumn);
                     }
                     fld.column = prefix + fld.column;
                     columnsProperties.append(fld);

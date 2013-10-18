@@ -59,21 +59,17 @@ void Picture::show(QString fileName) {
 
 
 void Picture::paintEvent(QPaintEvent*) {
-
-//    if (pictureFileName != pictureDrawn)
-//    {
-        QImage image(size(), QImage::Format_ARGB32_Premultiplied);
-        if (pictureFileName.size() > 0)
-            image.load(pictureFileName);
-        else
-            image.load(":noimage");
-        image = image.scaled(size(), Qt::KeepAspectRatio);
-        QPainter painter(this);
-        painter.setClipping(false);
-        painter.drawImage(0, 0, image);
-        painter.end();
-        pictureDrawn = pictureFileName;
-//    }
+    QImage image(size(), QImage::Format_ARGB32_Premultiplied);
+    if (pictureFileName.size() > 0)
+        image.load(pictureFileName);
+    else
+        image.load(":noimage");
+    image = image.scaled(size(), Qt::KeepAspectRatio);
+    QPainter painter(this);
+    painter.setClipping(false);
+    painter.drawImage(0, 0, image);
+    painter.end();
+    pictureDrawn = pictureFileName;
 }
 
 
@@ -85,4 +81,19 @@ void Picture::setVisibility(bool vis)
     else
         setFixedSize(0, 0);
 }
+
+
+void Picture::mouseDoubleClickEvent(QMouseEvent*)
+{
+    showBigPicture();
+}
+
+
+void Picture::showBigPicture()
+{
+    QDialog bigPicture(app->getMainWindow()->centralWidget());
+    bigPicture.resize(app->getMainWindow()->centralWidget()->size());
+    bigPicture.exec();
+}
+
 

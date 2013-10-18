@@ -70,6 +70,7 @@ public:
     void eventAfterRowChanged();
     void eventPhotoLoaded();
     virtual QString preparePictureUrl(Essence*);
+    void eventBarCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
     QMap<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями

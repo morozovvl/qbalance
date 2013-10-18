@@ -154,7 +154,7 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
 }
 
 
-void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, int len, int fieldColumn, int keyFieldColumn)
+void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, QString type, int len, int fieldColumn, int keyFieldColumn)
 {
     if (!updateInfo.contains(fieldColumn))
     {
@@ -163,6 +163,7 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
         info.table = table;
         info.keyFieldColumn = keyFieldColumn;
         info.field = field;
+        info.type = type;
         info.length = len;
         updateInfo.insert(fieldColumn, info);
     }
@@ -181,20 +182,26 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             QVariant recValue = ((Essence*)parent)->getValue(fieldName, index.row());
             // Возьмем исходное значение из модели, которое необходимо сохранить в базу
             // Определим его тип для того, чтобы правильно подготовить текст команды сохранения для сервера
-            switch (recValue.type())
+            QString type = updateInfo.value(index.column()).type.toUpper();
+            if (type == "CHARACTER" || type == "CHARACTER VARYING")
             {
-                case QVariant::String:
-                    value = QString("'%1'").arg(recValue.toString().left(length).trimmed());
-                    break;
-                case QVariant::Date:
-                    value = QString("'%1'").arg(recValue.toString());
-                    break;
-                case QVariant::DateTime:
-                    value = QString("'%1'").arg(recValue.toString());
-                    break;
-                default:
-                    value = QString("%1").arg(recValue.toString());
-                    break;
+                value = QString("'%1'").arg(recValue.toString().left(length).trimmed());
+            }
+            else if (type == "TEXT")
+            {
+                value = QString("'%1'").arg(recValue.toString().trimmed());
+            }
+            else if (type == "DATE")
+            {
+                value = QString("'%1'").arg(recValue.toString());
+            }
+            else if (type == "DATETIME")
+            {
+                value = QString("'%1'").arg(recValue.toString());
+            }
+            else
+            {
+                value = QString("%1").arg(recValue.toString());
             }
             if (value.size() > 0)
             {

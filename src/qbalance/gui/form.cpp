@@ -46,6 +46,7 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     db = app->getDBFactory();
     freeWindow = false;
     subWindow = 0;
+    readedKeyboard = "";
 }
 
 
@@ -362,7 +363,16 @@ void Form::keyPressEvent(QKeyEvent *event)
             case Qt::Key_Escape:
                 cmdCancel();
                 break;
+            case Qt::Key_Return:
+                if (readedKeyboard.size() > 0)
+                {
+                    if (parent != 0)
+                        parent->keyboardReaded(readedKeyboard);
+                    readedKeyboard = "";
+                }
+                break;
             default:
+                readedKeyboard.append(event->text().toUtf8());
                 return;
         }
     }

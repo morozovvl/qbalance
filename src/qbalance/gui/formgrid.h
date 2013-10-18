@@ -57,6 +57,7 @@ public:
 
     void setButtonAdd(bool);
     void setButtonDelete(bool);
+    void    setButtons();
 
     virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE virtual void setEnabled(bool);
@@ -96,7 +97,6 @@ protected:
 
 private:
     int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки
-    void    setButtons();
     bool    columnsSettingsReaded;
 
 };

@@ -21,7 +21,7 @@ CONFIG += designer \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = subdirs
-SUBDIRS = src/qbalance/plugins src/qbalance
+SUBDIRS = src/qbalance/plugins src/qbalance src/drvfr
 
 unix:MOC_DIR = ./.moc
 win32:MOC_DIR = .moc

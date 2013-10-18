@@ -31,6 +31,7 @@ class TApplication;
 
 class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
     Q_OBJECT
+
 public:
     Picture(QWidget* parent = 0);
     ~Picture();
@@ -44,10 +45,13 @@ protected:
     QString pictureFileName;
     QString pictureDrawn;
     virtual void paintEvent(QPaintEvent*);
+    virtual void mouseDoubleClickEvent(QMouseEvent*);
 
 private:
     TApplication*               app;
     int                         pictSize;
+
+    void    showBigPicture();
 };
 
 #endif // PICTURE_H
