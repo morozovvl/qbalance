@@ -28,6 +28,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "scriptengine.h"
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
+#include "../kernel/document.h"
+#include "../kernel/documents.h"
 #include "../storage/dbfactory.h"
 #include "../gui/mainwindow.h"
 #include "../gui/form.h"
@@ -215,6 +217,43 @@ void DictionariesFromScriptValue(const QScriptValue &object, Dictionaries* &out)
     out = qobject_cast<Dictionaries*>(object.toQObject());
 }
 
+
+// класс Documents
+Q_DECLARE_METATYPE(Documents*)
+
+QScriptValue DocumentsConstructor(QScriptContext *context, QScriptEngine *engine) {
+     Documents *object = new Documents(context->argument(0).toInteger());
+     return engine->newQObject(object, QScriptEngine::QtOwnership);
+}
+
+
+QScriptValue DocumentsToScriptValue(QScriptEngine *engine, Documents* const &in) {
+    return engine->newQObject(in, QScriptEngine::QtOwnership, QScriptEngine::PreferExistingWrapperObject);
+}
+
+
+void DocumentsFromScriptValue(const QScriptValue &object, Documents* &out) {
+    out = qobject_cast<Documents*>(object.toQObject());
+}
+
+
+// класс Document
+Q_DECLARE_METATYPE(Document*)
+
+QScriptValue DocumentConstructor(QScriptContext *context, QScriptEngine *engine) {
+    Documents* docs;
+    DocumentsFromScriptValue(context->argument(1), docs);
+    Document *object = new Document(context->argument(0).toInteger(), docs);
+    return engine->newQObject(object, QScriptEngine::QtOwnership);
+}
+
+QScriptValue DocumentToScriptValue(QScriptEngine *engine, Document* const &in) {
+    return engine->newQObject(in, QScriptEngine::QtOwnership);
+}
+
+void DocumentFromScriptValue(const QScriptValue &object, Document* &out) {
+    out = qobject_cast<Document*>(object.toQObject());
+}
 
 
 // класс Dialog
@@ -412,6 +451,10 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
     qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
     globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
+    qScriptRegisterMetaType(this, DocumentsToScriptValue, DocumentsFromScriptValue);
+    globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
+    qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
+    globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
 
     globalObject().setProperty("QPushButton", newQMetaObject(&QObject::staticMetaObject, newFunction(QPushButtonConstructor)));
     qScriptRegisterMetaType(this, QPushButtonToScriptValue, QPushButtonFromScriptValue);
@@ -509,109 +552,215 @@ QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fi
 // События
 void ScriptEngine::eventInitForm(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventInitForm").call(QScriptValue(), args);
+    QString eventName = "EventInitForm";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventBeforeShowForm(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventBeforeShowForm").call(QScriptValue(), args);
+    QString eventName = "EventBeforeShowForm";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventAfterShowForm(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventAfterShowForm").call(QScriptValue(), args);
+    QString eventName = "EventAfterShowForm";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 
 void ScriptEngine::eventBeforeHideForm(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventBeforeHideForm").call(QScriptValue(), args);
+    QString eventName = "EventBeforeHideForm";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventAfterHideForm(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventAfterHideForm").call(QScriptValue(), args);
+    QString eventName = "EventAfterHideForm";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventCloseForm(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventCloseForm").call(QScriptValue(), args);
+    QString eventName = "EventCloseForm";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventImport(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventImport").call(QScriptValue(), args);
+    QString eventName = "EventImport";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventExport(Form* form)
 {
-    QScriptValueList args;
-    args << newQObject((FormGrid*)form);
-    globalObject().property("EventExport").call(QScriptValue(), args);
+    QString eventName = "EventExport";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject((FormGrid*)form);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+           showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventAfterCalculate()
 {
-    globalObject().property("EventAfterCalculate").call();
+    QString eventName = "EventAfterCalculate";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventParametersChanged()
 {
-    globalObject().property("EventParametersChanged").call();
+    QString eventName = "EventParametersChanged";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventBeforeAddString()
 {
-    globalObject().property("EventBeforeAddString").call();
+    QString eventName = "EventBeforeAddString";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventAfterAddString()
 {
-    globalObject().property("EventAfterAddString").call();
+    QString eventName = "EventAfterAddString";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventSetEnabled(bool enabled)
 {
-    QScriptValueList args;
-    args << QScriptValue(enabled);
-    globalObject().property("EventSetEnabled").call(QScriptValue(), args);
-
+    QString eventName = "EventSetEnabled";
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << QScriptValue(enabled);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
 }
 
 
 void ScriptEngine::eventAfterRowChanged()
 {
     QString eventName = "EventAfterRowChanged";
-    globalObject().property(eventName).call();
-    if (hasUncaughtException())
-    {   // Если в скриптах произошла ошибка
-        showScriptError(eventName, uncaughtException().toString());
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
     }
 }
 
@@ -619,26 +768,32 @@ void ScriptEngine::eventAfterRowChanged()
 void ScriptEngine::eventPhotoLoaded()
 {
     QString eventName = "EventPhotoLoaded";
-    globalObject().property(eventName).call();
-    if (hasUncaughtException())
-    {   // Если в скриптах произошла ошибка
-        showScriptError(eventName, uncaughtException().toString());
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
     }
 }
 
 
 QString ScriptEngine::preparePictureUrl(Essence* essence)
 {
-    QScriptValueList args;
     QString result;
     QString eventName = "PreparePictureUrl";
-    args << newQObject(essence);
-    result = globalObject().property(eventName).call(QScriptValue(), args).toString();
-    if (result == "undefined")
-        result = "";
-    if (hasUncaughtException())
-    {   // Если в скриптах произошла ошибка
-        showScriptError(eventName, uncaughtException().toString());
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << newQObject(essence);
+        result = globalObject().property(eventName).call(QScriptValue(), args).toString();
+        if (result == "undefined")
+            result = "";
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
     }
     return result;
 }
@@ -648,21 +803,28 @@ void ScriptEngine::eventCalcTable()
 {
     errorMessage = "";
     scriptResult = true;
-    globalObject().property("EventCalcTable").call();
-    errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
-    scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
+    QString eventName = "EventCalcTable";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
+        scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
+    }
 }
 
 
 void ScriptEngine::eventBarCodeReaded(QString barCode)
 {
     QString eventName = "EventBarCodeReaded";
-    QScriptValueList args;
-    args << QScriptValue(barCode);
-    globalObject().property(eventName).call(QScriptValue(), args);
-    if (hasUncaughtException())
-    {   // Если в скриптах произошла ошибка
-        showScriptError(eventName, uncaughtException().toString());
+    if (globalObject().property(eventName).isFunction())
+    {
+        QScriptValueList args;
+        args << QScriptValue(barCode);
+        globalObject().property(eventName).call(QScriptValue(), args);
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
     }
 }
 
@@ -704,22 +866,22 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
     EventFunction func;
 
     func.comment = QObject::trUtf8("Событие происходит сразу после создания формы документа");
-    appendEvent("EventInitForm()", func);
+    appendEvent("EventInitForm(form)", func);
 
     func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
-    appendEvent("EventBeforeShowForm()", func);
+    appendEvent("EventBeforeShowForm(form)", func);
 
     func.comment = QObject::trUtf8("Событие происходит после открытия формы документа");
-    appendEvent("EventAfterShowForm()", func);
+    appendEvent("EventAfterShowForm(form)", func);
 
     func.comment = QObject::trUtf8("Событие происходит перед закрытием формы документа");
-    appendEvent("EventBeforeHideForm()", func);
+    appendEvent("EventBeforeHideForm(form)", func);
 
     func.comment = QObject::trUtf8("Событие происходит после закрытия формы документа");
-    appendEvent("EventAfterHideForm()", func);
+    appendEvent("EventAfterHideForm(form)", func);
 
     func.comment = QObject::trUtf8("Событие происходит перед удалением формы документа");
-    appendEvent("EventCloseForm()", func);
+    appendEvent("EventCloseForm(form)", func);
 
     func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
     appendEvent("EventImport()", func);

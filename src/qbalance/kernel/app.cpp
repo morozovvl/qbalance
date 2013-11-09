@@ -84,6 +84,7 @@ Documents* TApplication::getDocuments(int opNumber) {
         Documents* doc = new Documents(opNumber);
         if (!doc->open())
             return 0;
+        doc->query();
         documents.insert(operName, doc);
     }
     return documents[operName];
@@ -449,8 +450,8 @@ void TApplication::barCodeReadyRead()
 
 void TApplication::showProcesses()
 {
-    DocumentScriptEngine* scriptEngine;
-    scriptEngine = new DocumentScriptEngine(this);
+    ScriptEngine* scriptEngine;
+    scriptEngine = new ScriptEngine(this);
     if (scriptEngine != 0)
     {
         if (scriptEngine->open("/home/vladimir/work/qbalance1/test.qs"))

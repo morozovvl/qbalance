@@ -35,14 +35,15 @@ class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
 public:
     Picture(QWidget* parent = 0);
     ~Picture();
-    Q_INVOKABLE void setPictureName(QString);
     Q_INVOKABLE void show(QString);
     Q_INVOKABLE void setApp(TApplication*);
     Q_INVOKABLE void setVisibility(bool);
-    Q_INVOKABLE QString getPictureFileName() { return pictureFileName; }
+    Q_INVOKABLE void setPhotoFileName(QString);
+    Q_INVOKABLE QString getPhotoFileName() { return photoFileName; }
+    Q_INVOKABLE void setPhotoWindowTitle(QString title) { photoWindowTitle = title; }
+    void        setIsBig(bool big) { isBigPicture = big; }
 
 protected:
-    QString pictureFileName;
     QString pictureDrawn;
     virtual void paintEvent(QPaintEvent*);
     virtual void mouseDoubleClickEvent(QMouseEvent*);
@@ -50,6 +51,10 @@ protected:
 private:
     TApplication*               app;
     int                         pictSize;
+    QRect                       bigPictRect;
+    bool                        isBigPicture;
+    QString                     photoFileName;
+    QString                     photoWindowTitle;
 
     void    showBigPicture();
 };

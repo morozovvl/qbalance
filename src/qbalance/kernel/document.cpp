@@ -46,7 +46,6 @@ Document::Document(int oper, Documents* par): Essence()
     freePrv = 0;
     localDictsOpened = false;
     setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
-    parent->setDoSubmit(true);          // Обновления в списке документов будем сохранять сразу
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = new Dictionaries();
@@ -88,16 +87,28 @@ Document::~Document()
 
 bool Document::calculate(const QModelIndex& index)
 {
-    if (Essence::calculate(index))
-    {   // Если в вычислениях не было ошибки
-
-        ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
-        saveChanges();
-    }
-    else
+    if (!isCurrentCalculate)
     {
-        ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
-        restoreOldValues();
+        isCurrentCalculate = true;
+
+        parent->setDoSubmit(false);
+
+        if (Essence::calculate(index))
+        {   // Если в вычислениях не было ошибки
+
+            ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
+            calcItog();
+            saveChanges();
+        }
+        else
+        {
+            ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
+            restoreOldValues();
+        }
+
+        parent->setDoSubmit(true);
+
+        isCurrentCalculate = false;
     }
     return true;
 }
@@ -133,7 +144,17 @@ void Document::saveChanges()
         }
     }
 
-    calcItog();
+    row = parent->getForm()->getCurrentIndex().row();
+    for (int i = 0; i < parent->getTableModel()->record().count(); i++)
+    {
+        QString fieldName = parent->getTableModel()->record().fieldName(i);
+        QVariant oldValue = parent->getOldValue(fieldName);
+        QVariant newValue = parent->getValue(fieldName, row);
+        if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+        {
+            parent->getTableModel()->submit(parent->getTableModel()->index(row, i));
+        }
+    }
 
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
@@ -144,10 +165,12 @@ void Document::saveChanges()
                 updateCurrentRow();
         }
         saveOldValues();
+        parent->saveOldValues();
     }
     else
     {   // Во время сохранения результатов произошла ошибка
         restoreOldValues();
+        parent->restoreOldValues();
     }
 }
 
@@ -250,7 +273,7 @@ void Document::openLocalDictionaries()
                 {
                     Dictionary* childDict = dictionaries->getDictionary(dictName);
                     if (childDict != 0)
-                            childDict->setParentDict(dict);
+                        childDict->setParentDict(dict);
                 }
             }
         }
@@ -262,13 +285,16 @@ bool Document::add()
 {
     prvValues.clear();
 
-    foreach (QString dictName, dictionaries->getDictionaries()->keys())
+    if (!getIsSingleString())
     {
-        Dictionary* dict = dictionaries->getDictionary(dictName);
-        if (dict->isConst() && dict->getId() == 0)
+        foreach (QString dictName, dictionaries->getDictionaries()->keys())
         {
-            app->showError(QString(QObject::trUtf8("Не опредено значение постоянного справочника \"%1\"")).arg(dictName));
-            return false;
+            Dictionary* dict = dictionaries->getDictionary(dictName);
+            if (dict->isConst() && dict->getId() == 0)
+            {
+                app->showError(QString(QObject::trUtf8("Не определено значение постоянного справочника \"%1\"")).arg(dictName));
+                return false;
+            }
         }
     }
 
@@ -321,15 +347,17 @@ bool Document::add()
 // Второй способ обновления документа после вставки новой строки, более оптимальный, без загрузки всего документа, а загрузки только новой строки
             int newRow = tableModel->rowCount();
             if (newRow == 0)
+            {
                 query();
+                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            }
             else
             {
                 tableModel->insertRow(newRow);
+                form->getGridTable()->reset();
                 form->selectRow(newRow);
                 updateCurrentRow(newRow);
-                form->getGridTable()->reset();
             }
-            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             form->showPhoto();
             form->setButtons();
 // Конец второго способа
@@ -392,6 +420,7 @@ bool Document::remove()
             {
                 query();
                 scriptEngine->eventAfterCalculate();
+                calcItog();
                 saveChanges();     // Принудительно обновим итог при удалении строки
                 return true;
             }
@@ -485,7 +514,6 @@ void Document::setValue(QString name, QVariant value, int row)
     }
     else
         Essence::setValue(name, value, row);
-    calculate(tableModel->index(row, tableModel->fieldIndex(name)));
 }
 
 
@@ -534,6 +562,7 @@ void Document::saveOldValues()
             oldValues0.insert(field.toUpper(), getValue(field, freePrvRow));
         }
     }
+    parent->saveOldValues();
 }
 
 
@@ -545,6 +574,7 @@ void Document::restoreOldValues()
         foreach (QString fieldName, oldValues0.keys())
             setValue(fieldName, oldValues0.value(fieldName), 0);
     }
+    parent->restoreOldValues();
 }
 
 
@@ -616,19 +646,22 @@ void Document::loadDocument()
                 foreach (QString dictName, dict->getChildDicts())
                 {
                     Dictionary* childDict = getDictionaries()->value(dictName);
-                    if (childDict->isConst())
+                    if (childDict != 0)
                     {
-                        // Установим сначала значение основного справочника
-                        qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
-                        if (val > 0)
+                        if (childDict->isConst())
                         {
-                            dict->setId(val);
-                            // А затем установим значение связанного справочника
-                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                            // Установим сначала значение основного справочника
+                            qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.дбкод")), 0).toULongLong();
                             if (val > 0)
                             {
-                                childDict->setId(val);
-                                showParameterText(dictName);
+                                dict->setId(val);
+                                // А затем установим значение связанного справочника
+                                val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                                if (val > 0)
+                                {
+                                    childDict->setId(val);
+                                    showParameterText(dictName);
+                                }
                             }
                         }
                     }
@@ -678,8 +711,6 @@ void Document::loadDocument()
         if (getIsSingleString())
         {   // Если в документе должна быть только одна строка, но нет ни одной, то добавим пустую строку
             add();
-//            appendDocString();
-//            query();
         }
     }
     restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
@@ -795,11 +826,11 @@ void Document::prepareSelectCurrentRowCommand()
 
 bool Document::open()
 {
-    if (Essence::open())
+    if (operNumber > 0 && Essence::open())
     {
         initForm();
         evaluateEngine();
-        initFormEvent();
+        initFormEvent(form);
 
         return true;
     }
@@ -999,14 +1030,14 @@ int Document::appendDocString()
         if (dictName.size() > 0)
         {
             dbId = prvValues.value(dictName).toInt();
-            if (dbId == 0)
+            if (dbId == 0 && !getIsSingleString())
                 return result;
         }
         dictName = topersList->at(i).crDictAlias;
         if (dictName.size() > 0)
         {
             crId = prvValues.value(dictName).toInt();
-            if (crId == 0)
+            if (crId == 0 && !getIsSingleString())
                 return result;
         }
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
@@ -1082,12 +1113,15 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
 
 void Document::cmdOk()
 {
+    saveChanges();
     getParent()->getForm()->setGridFocus();
 }
 
 
 void Document::cmdCancel()
 {
+    db->clearCommands();
+    restoreOldValues();
     getParent()->getForm()->setGridFocus();
 }
 

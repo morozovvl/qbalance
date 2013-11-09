@@ -1025,6 +1025,7 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                         field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
                         field.number = number;
                         field.headerExist = true;   // Для столбца найден заголовок
+                        field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
 //                        if (tableName.left(16) != "СписокДокументов" && !field.constReadOnly)
 //                            field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
                         fields->removeAt(i);
@@ -2216,29 +2217,24 @@ void DBFactory::appendCommand(UpdateValues value)
 }
 
 
+void DBFactory::clearCommands()
+{
+    updateValues.clear();
+    commands.clear();
+}
+
+
+bool DBFactory::isExistsCommands()
+{
+    if (updateValues.count() > 1 || commands.count() > 1)
+        return true;
+    return false;
+}
+
+
 bool DBFactory::execCommands()
 {
-    // Сначала выполним готовые команды
-    if (commands.count() > 1)
-        beginTransaction();
-
-    for (int i = 0; i < commands.count(); i++)
-    {
-        if (!exec(commands.at(i)))
-        {
-            if (commands.count() > 1)
-                rollbackTransaction();
-            commands.clear();
-            return false;
-        }
-    }
-
-    if (commands.count() > 1)
-        commitTransaction();
-    commands.clear();
-
-
-    // Теперь соберем и выполним команды, скомпоновав вместе все данные для обновления отдельной записи
+    // Соберем команды, скомпоновав вместе все данные для обновления отдельной записи
     QList<UpdateIds> ids;
     for (int i = 0; i < updateValues.count(); i++)
     {
@@ -2257,9 +2253,6 @@ bool DBFactory::execCommands()
         if (!found)
             ids.append(id);
     }
-
-    if (ids.count() > 1)
-        beginTransaction();
 
     if (ids.count() > 0)
     {
@@ -2281,22 +2274,32 @@ bool DBFactory::execCommands()
             if (table.size() > 0)
             {
                 command = QString("UPDATE \"%1\" SET %2 WHERE %3=%4").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
-                if (!exec(command))
-                {
-                    if (ids.count() > 1)
-                        rollbackTransaction();
-                    updateValues.clear();
-                    return false;
-                }
-
+                appendCommand(command);     // Добавим команду к списку готовых команд
             }
         }
     }
 
-    if (ids.count() > 1)
-        commitTransaction();
-
     updateValues.clear();
+
+    // Выполним все команды
+    if (commands.count() > 1)
+        beginTransaction();
+
+    for (int i = 0; i < commands.count(); i++)
+    {
+        if (!exec(commands.at(i)))
+        {
+            if (commands.count() > 1)
+                rollbackTransaction();
+            commands.clear();
+            return false;
+        }
+    }
+
+    if (commands.count() > 1)
+        commitTransaction();
+    commands.clear();
+
     return true;
 }
 

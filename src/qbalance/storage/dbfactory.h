@@ -254,6 +254,8 @@ public:
     bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
     void setToperPermition(int operNumber, QString user, bool menu);
     bool    execCommands();
+    void    clearCommands();
+    bool    isExistsCommands();
     void    appendCommand(QString);
     void    appendCommand(UpdateValues);
 

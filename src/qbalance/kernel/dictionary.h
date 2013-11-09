@@ -44,6 +44,7 @@ public:
     virtual bool                        calculate(const QModelIndex &);
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     virtual void                        setOrderClause();
+    Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
 
 // Функции для работы справочника в составе документа
 // Используются в момент добавления новых записей в документ
@@ -89,7 +90,6 @@ protected:
     bool            lMustShow;
     bool            lIsConst;
     bool            lAutoSelect;
-    bool            isDepend;
     bool            lIsSaldo;
     QStringList     fieldList;
     virtual void    prepareSelectCurrentRowCommand();
@@ -98,6 +98,7 @@ protected:
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
     bool            lsetIdEnabled;
+    bool            isDepend;
     QString         dictTitle;
 };
 

@@ -30,6 +30,12 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
     pictSize = 200;
     setFixedSize(pictSize, pictSize);
     pictureDrawn = "";
+    isBigPicture = false;
+    bigPictRect.setRect(QApplication::desktop()->availableGeometry().x(),
+                        QApplication::desktop()->availableGeometry().y(),
+                        QApplication::desktop()->availableGeometry().width() * 0.8,
+                        QApplication::desktop()->availableGeometry().height() * 0.8);
+    photoWindowTitle = "";
 }
 
 
@@ -43,33 +49,34 @@ void Picture::setApp(TApplication* a)
     // Установим высоту и ширину картинки как 20% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
     pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.2 / 2;
     setFixedSize(pictSize, pictSize);
+//    bigPictRect.setRect(0, 0, app->getMainWindow()->centralWidget()->width(), app->getMainWindow()->centralWidget()->height());
 }
 
 
-void Picture::setPictureName(QString fileName)
+void Picture::setPhotoFileName(QString fileName)
 {
-    pictureFileName = fileName.size() > 0 && QDir().exists(fileName) ? fileName : "";
+    photoFileName = fileName.size() > 0 && QDir().exists(fileName) ? fileName : "";
 }
 
 
 void Picture::show(QString fileName) {
-    setPictureName(fileName);
+    setPhotoFileName(fileName);
     update();
 }
 
 
 void Picture::paintEvent(QPaintEvent*) {
     QImage image(size(), QImage::Format_ARGB32_Premultiplied);
-    if (pictureFileName.size() > 0)
-        image.load(pictureFileName);
+    if (photoFileName.size() > 0)
+        image.load(photoFileName);
     else
         image.load(":noimage");
     image = image.scaled(size(), Qt::KeepAspectRatio);
     QPainter painter(this);
     painter.setClipping(false);
-    painter.drawImage(0, 0, image);
+    painter.drawImage((this->width() - image.width()) / 2, (this->height() - image.height()) / 2, image);
     painter.end();
-    pictureDrawn = pictureFileName;
+    pictureDrawn = photoFileName;
 }
 
 
@@ -85,15 +92,28 @@ void Picture::setVisibility(bool vis)
 
 void Picture::mouseDoubleClickEvent(QMouseEvent*)
 {
-    showBigPicture();
+    if (! isBigPicture)
+        showBigPicture();
 }
 
 
 void Picture::showBigPicture()
 {
-    QDialog bigPicture(app->getMainWindow()->centralWidget());
-    bigPicture.resize(app->getMainWindow()->centralWidget()->size());
-    bigPicture.exec();
+    if (photoFileName.size() > 0)
+    {
+        QDialog bigPicture(QApplication::activeWindow());
+        bigPicture.resize(bigPictRect.size());
+        if (photoWindowTitle.size() > 0)
+            bigPicture.setWindowTitle(photoWindowTitle);
+
+        Picture picture(&bigPicture);
+        picture.setIsBig(true);
+        picture.setFixedSize(bigPicture.width(), bigPicture.height());
+        picture.show(photoFileName);
+
+        bigPicture.exec();
+        bigPictRect = bigPicture.rect();
+    }
 }
 
 

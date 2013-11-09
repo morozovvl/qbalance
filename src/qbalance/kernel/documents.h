@@ -42,7 +42,7 @@ public:
     virtual void setScriptEngine() { scriptEngine = 0; ; scriptEngineEnabled = false; }
     QList<ToperType>*   getTopersList() { return &topersList; }
     Q_INVOKABLE virtual void setValue(QString, QVariant);
-    Q_INVOKABLE virtual QVariant getValue(QString);
+    Q_INVOKABLE virtual QVariant getValue(QString, int = -1);
     QString getAttrPrefix() { return prefix; }
     virtual void            setOrderClause();
     Q_INVOKABLE virtual void  setForm(QString = "");
@@ -50,7 +50,6 @@ public:
 
 
 protected:
-    virtual void        prepareSelectCurrentRowCommand();
     virtual bool        setTableModel(int = 0);
 
 private:
@@ -61,7 +60,7 @@ private:
     QList<ToperType>    topersList;
     QList<FieldType>    attrFields;
 
-    void                setCurrentDocument();       // Зафиксировать текущий документ
+    void                setCurrentDocument(int);       // Зафиксировать текущий документ
 
 };
 

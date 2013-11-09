@@ -46,7 +46,6 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     db = app->getDBFactory();
     freeWindow = false;
     subWindow = 0;
-    readedKeyboard = "";
 }
 
 
@@ -119,7 +118,6 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         buttonCancel = qFindChild<QPushButton*>(formWidget, "buttonCancel");
         cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
         vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
-        connect(formWidget, SIGNAL(finished(int)), this, SLOT(hide()));
         defaultForm = false;
     }
     else
@@ -146,13 +144,14 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget->setLayout(vbxLayout);
     }
     if (buttonOk != 0)
+    {
         connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
+//        connect(formWidget, SIGNAL(finished(int)), SLOT(cmdOk()));
+    }
     if (buttonCancel != 0)
     {
         connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
-        if (defaultForm)
-            connect(formWidget, SIGNAL(finished(int)), SLOT(cmdCancel()));
-        buttonCancel->hide();
+//        connect(formWidget, SIGNAL(finished(int)), SLOT(cmdCancel()));
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
     freeWindow = !appendToMdi;
@@ -162,19 +161,19 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 
 void Form::cmdOk()
 {
-    hide();
     lSelected = true;
     if (parent != 0)
         parent->cmdOk();
+    hide();
 }
 
 
 void Form::cmdCancel()
 {
-    hide();
     lSelected = false;
     if (parent != 0)
         parent->cmdCancel();
+    hide();
 }
 
 
@@ -184,7 +183,7 @@ int Form::exec()
     {
         lSelected = false;
         if (parent != 0)
-            parent->beforeShowFormEvent();
+            parent->beforeShowFormEvent(this);
 
         checkVisibility();
 
@@ -216,7 +215,7 @@ void Form::show()
     {
         lSelected = false;
         if (parent != 0)
-            parent->beforeShowFormEvent();
+            parent->beforeShowFormEvent(this);
 
         checkVisibility();
 
@@ -225,7 +224,7 @@ void Form::show()
 
         formWidget->show();
         if (parent != 0)
-            parent->afterShowFormEvent();
+            parent->afterShowFormEvent(this);
 
     }
 }
@@ -285,7 +284,7 @@ void Form::hide()
     {
 
         if (parent != 0)
-            parent->beforeHideFormEvent();
+            parent->beforeHideFormEvent(this);
 
         if (!freeWindow)
         {
@@ -298,7 +297,7 @@ void Form::hide()
         formWidget->hide();
 
         if (parent != 0)
-            parent->afterHideFormEvent();
+            parent->afterHideFormEvent(this);
 
     }
 }
@@ -358,23 +357,9 @@ void Form::keyPressEvent(QKeyEvent *event)
     }
     else
     {
-        switch (event->key())
-        {
-            case Qt::Key_Escape:
-                cmdCancel();
-                break;
-            case Qt::Key_Return:
-                if (readedKeyboard.size() > 0)
-                {
-                    if (parent != 0)
-                        parent->keyboardReaded(readedKeyboard);
-                    readedKeyboard = "";
-                }
-                break;
-            default:
-                readedKeyboard.append(event->text().toUtf8());
-                return;
-        }
+        if (event->key() == Qt::Key_Escape)
+            cmdCancel();
+        return;
     }
     event->accept();
 }

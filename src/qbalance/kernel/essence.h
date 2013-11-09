@@ -93,6 +93,7 @@ public:
     Q_INVOKABLE QString getPhotoPath();
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
+    Q_INVOKABLE QString getPhotoNameField() { return photoNameField; }
     Q_INVOKABLE void savePhotoToServer(QString, QString);
     Q_INVOKABLE qulonglong getPhotoCheckSum(QString file) { return db->getFileCheckSum(file, PictureFileType, true); }
     Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
@@ -126,12 +127,12 @@ public:
 
 
 // Скриптовые события
-    void                initFormEvent();
-    void                beforeShowFormEvent();
-    void                afterShowFormEvent();
-    void                beforeHideFormEvent();
-    void                afterHideFormEvent();
-    void                closeFormEvent();
+    void                initFormEvent(Form *);
+    void                beforeShowFormEvent(Form *);
+    void                afterShowFormEvent(Form *);
+    void                beforeHideFormEvent(Form *);
+    void                afterHideFormEvent(Form *);
+    void                closeFormEvent(Form *);
     QString             preparePictureUrl();
     virtual void        afterRowChanged();
 
@@ -166,6 +167,7 @@ protected:
     bool                lPrintable;
     bool                isDictionary;
     bool                enabled;
+    bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();

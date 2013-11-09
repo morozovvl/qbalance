@@ -22,44 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/documents.h"
 
 
-// класс Documents
-Q_DECLARE_METATYPE(Documents*)
-
-QScriptValue DocumentsConstructor(QScriptContext *context, QScriptEngine *engine) {
-     Documents *object = new Documents(context->argument(0).toInteger());
-     return engine->newQObject(object, QScriptEngine::QtOwnership);
-}
-
-
-QScriptValue DocumentsToScriptValue(QScriptEngine *engine, Documents* const &in) {
-    return engine->newQObject(in, QScriptEngine::QtOwnership, QScriptEngine::PreferExistingWrapperObject);
-}
-
-
-void DocumentsFromScriptValue(const QScriptValue &object, Documents* &out) {
-    out = qobject_cast<Documents*>(object.toQObject());
-}
-
-
-// класс Document
-Q_DECLARE_METATYPE(Document*)
-
-QScriptValue DocumentConstructor(QScriptContext *context, QScriptEngine *engine) {
-    Documents* docs;
-    DocumentsFromScriptValue(context->argument(1), docs);
-    Document *object = new Document(context->argument(0).toInteger(), docs);
-    return engine->newQObject(object, QScriptEngine::QtOwnership);
-}
-
-QScriptValue DocumentToScriptValue(QScriptEngine *engine, Document* const &in) {
-    return engine->newQObject(in, QScriptEngine::QtOwnership);
-}
-
-void DocumentFromScriptValue(const QScriptValue &object, Document* &out) {
-    out = qobject_cast<Document*>(object.toQObject());
-}
-
-
 QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue dictName = context->argument(0);
     if (dictName.isString() && engine->evaluate("document").isValid())
@@ -105,21 +67,21 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 :ScriptEngine(parent)
 {
+    document = (Document*)parent;
+    documents = document->getParent();
 }
 
 
 void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
-    qScriptRegisterMetaType(this, DocumentsToScriptValue, DocumentsFromScriptValue);
-    globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
-    qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
-    globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
     globalObject().setProperty("getSaldo", newFunction(getSaldo));
     globalObject().setProperty("getSumValue", newFunction(getSumValue));
     globalObject().setProperty("saveVariable", newFunction(saveVariable));
     globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
+    globalObject().setProperty("document", newQObject(document));
+    globalObject().setProperty("documents", newQObject(documents));
 }
 
 

@@ -97,7 +97,6 @@ private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;
     bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
-    QString                 readedKeyboard;     // строка, прочитанная с клавиатуры до нажатия кнопки Enter
 
     void                    checkVisibility();
     MyMdiSubWindow*         getSubWindow();

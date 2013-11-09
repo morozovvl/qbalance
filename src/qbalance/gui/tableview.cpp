@@ -290,9 +290,12 @@ void TableView::selectNextColumn(QModelIndex* idx)
             QModelIndex newIndex = index.sibling(index.row(), logicalIndex);
             if (newIndex.row() == -1 && newIndex.column() == -1)
             {
+/*
                 column = 0;
                 logicalIndex = horizontalHeader()->logicalIndex(column);
                 newIndex = index.sibling(index.row(), logicalIndex);
+*/
+                return;
             }
             if (!horizontalHeader()->isSectionHidden(logicalIndex))
             {

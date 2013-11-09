@@ -56,6 +56,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     lPrintable  = false;
     isDictionary = true;
     enabled     = true;
+    isCurrentCalculate = false;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
     scriptEngine = 0;
@@ -98,6 +99,7 @@ bool Essence::calculate(const QModelIndex &)
         }
         if (!scriptEngine->getScriptResult())
         {
+            isCurrentCalculate = false;
             return false;
         }
     }
@@ -108,33 +110,36 @@ bool Essence::calculate(const QModelIndex &)
 QVariant Essence::getValue(QString n, int row)
 {
     QVariant result;
-    QString name = n.toUpper();
-    QSqlRecord record = tableModel->record();
-    if (record.contains(name))
+    if (n.size() > 0)
     {
-        if (row >= 0)
+        QString name = n.toUpper();
+        QSqlRecord record = tableModel->record();
+        if (record.contains(name))
         {
-            result =  tableModel->record(row).value(name);
+            if (row >= 0)
+            {
+                result =  tableModel->record(row).value(name);
+            }
+            else
+            {
+                int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+                result = tableModel->record(r).value(name);
+            }
+            QVariant::Type type = record.field(name).type();
+            if (type == QVariant::Double ||
+                type == QVariant::Int)
+            {
+                if (!result.isValid())
+                    result = QVariant(0);
+                result.convert(type);
+                result = QString::number(result.toDouble(), 'f', record.field(name).precision()).toDouble();
+            }
+
+            // Округлим значение числового поля до точности как и в БД
         }
         else
-        {
-            int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
-            result = tableModel->record(r).value(name);
-        }
-        QVariant::Type type = record.field(name).type();
-        if (type == QVariant::Double ||
-            type == QVariant::Int)
-        {
-            if (!result.isValid())
-                result = QVariant(0);
-            result.convert(type);
-            result = QString::number(result.toDouble(), 'f', record.field(name).precision()).toDouble();
-        }
-
-        // Округлим значение числового поля до точности как и в БД
+            app->showError(QObject::trUtf8("Не существует колонки ") + n);
     }
-    else
-        app->showError(QObject::trUtf8("Не существует колонки ") + n);
     return result;
 }
 
@@ -153,14 +158,11 @@ void Essence::setValue(QString n, QVariant value, int row)
         index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), fieldColumn);
         tableModel->setData(index, value);
 
+        if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            tableModel->submit(index);
+
         if (doSubmit)
-        {
-            if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-            {
-                tableModel->submit(index);
-                db->execCommands();
-            }
-        }
+            db->execCommands();
 
         if (row >= 0)
             form->setCurrentIndex(oldIndex);
@@ -240,8 +242,6 @@ QString Essence::getPhotoFile()
 
     if (photoEnabled)
     {
-        pictureUrl = preparePictureUrl();
-
         // Сначала получим имя поля из которого будем брать значение идентификатора
         if (photoIdField.size() == 0 && isDictionary)
         {
@@ -252,6 +252,8 @@ QString Essence::getPhotoFile()
         // Теперь получим значение идентификатора
         if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
         {
+            pictureUrl = preparePictureUrl();
+
             int id = getValue(photoIdField).toInt();
             if (id != 0)
             {
@@ -415,7 +417,6 @@ void Essence::show()
     {
         activeWidget = app->activeWindow();
         form->show();
-        prepareSelectCurrentRowCommand();
     }
 }
 
@@ -443,6 +444,7 @@ bool Essence::open()
     {
         setOrderClause();
         setScriptEngine();
+        prepareSelectCurrentRowCommand();
         return true;
     }
     return false;
@@ -453,7 +455,7 @@ void Essence::close()
 {
     if (form != 0)
     {
-        closeFormEvent();
+        closeFormEvent(form);
         form->close();
         delete form;
     }
@@ -572,7 +574,7 @@ FormGrid* Essence::getForm()
 }
 
 
-void Essence::initFormEvent()
+void Essence::initFormEvent(Form* form)
 {
     if (scriptEngineEnabled)
     {
@@ -581,7 +583,7 @@ void Essence::initFormEvent()
 }
 
 
-void Essence::beforeShowFormEvent()
+void Essence::beforeShowFormEvent(Form* form)
 {
     if (scriptEngineEnabled)
     {
@@ -590,28 +592,28 @@ void Essence::beforeShowFormEvent()
 }
 
 
-void Essence::afterShowFormEvent()
+void Essence::afterShowFormEvent(Form* form)
 {
     if (scriptEngineEnabled)
         getScriptEngine()->eventAfterShowForm(form);
 }
 
 
-void Essence::beforeHideFormEvent()
+void Essence::beforeHideFormEvent(Form* form)
 {
     if (scriptEngineEnabled)
         getScriptEngine()->eventBeforeHideForm(form);
 }
 
 
-void Essence::afterHideFormEvent()
+void Essence::afterHideFormEvent(Form* form)
 {
     if (scriptEngineEnabled)
         getScriptEngine()->eventAfterHideForm(form);
 }
 
 
-void Essence::closeFormEvent()
+void Essence::closeFormEvent(Form* form)
 {
     if (scriptEngineEnabled)
         getScriptEngine()->eventCloseForm(form);

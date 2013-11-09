@@ -64,7 +64,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
         }
     }
     lIsSet = db->isSet(tableName);
-    setDoSubmit(true);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
+    setDoSubmit(true);
 }
 
 
@@ -154,7 +154,6 @@ bool Dictionary::add()
                 tableModel->insertRow(newRow);
                 form->getGridTable()->reset();
                 form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                form->getGridTable()->selectNextColumn();
                 updateCurrentRow(strNum);
             }
             return true;
@@ -182,30 +181,45 @@ bool Dictionary::remove()
 }
 
 
-bool Dictionary::calculate(const QModelIndex& index) {
-    if (Essence::calculate(index))
-    {   // Если в вычислениях не было ошибки
+void Dictionary::setValue(QString name, QVariant value, int row)
+{
+    Essence::setValue(name, value, row);
+/*
+    if (dictionaries->getDocument() == 0)
+        calculate(tableModel->index(row, tableModel->fieldIndex(name)));
+*/
+}
 
-        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-        int row = form->getCurrentIndex().row();
-        for (int i = 0; i < tableModel->record().count(); i++)
-        {
-            QString fieldName = tableModel->record().fieldName(i).toUpper();
-            if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+
+bool Dictionary::calculate(const QModelIndex& index) {
+    if (!isCurrentCalculate)
+    {
+        isCurrentCalculate = true;
+        if (Essence::calculate(index))
+        {   // Если в вычислениях не было ошибки
+
+            // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+            int row = form->getCurrentIndex().row();
+            for (int i = 0; i < tableModel->record().count(); i++)
             {
-                tableModel->submit(tableModel->index(row, i));
+                QString fieldName = tableModel->record().fieldName(i).toUpper();
+                if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                {
+                    tableModel->submit(tableModel->index(row, i));
+                }
+            }
+
+            if (db->execCommands())
+            {   // Если во время работы скриптов ошибки не произошло
+                // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+                updateCurrentRow();
+            }
+            else
+            {   // Во время работы скриптов произошла ошибка
+                restoreOldValues();
             }
         }
-
-        if (db->execCommands())
-        {   // Если во время работы скриптов ошибки не произошло
-            // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-            updateCurrentRow();
-        }
-        else
-        {   // Во время работы скриптов произошла ошибка
-            restoreOldValues();
-        }
+        isCurrentCalculate = false;
     }
     return true;
 }
@@ -344,7 +358,10 @@ bool Dictionary::open(int)
         query();
         tableModel->setTestSelect(false);
 
-        initFormEvent();
+        initFormEvent(form);
+
+        if (isFieldExists(nameFieldName))
+            setPhotoNameField(nameFieldName);
 
         return true;
     }

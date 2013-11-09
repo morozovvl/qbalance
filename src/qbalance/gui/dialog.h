@@ -48,9 +48,6 @@ public:
     void    findCmdOk();
     virtual void keyPressEvent(QKeyEvent*);
 
-signals:
-    void cmdOkPressed();
-
 protected:
     virtual void showEvent(QShowEvent*);
 

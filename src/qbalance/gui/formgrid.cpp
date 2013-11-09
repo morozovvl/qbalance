@@ -601,6 +601,8 @@ void FormGrid::showPhoto()
                 else
                     photoFileName = "";
             }
+            if (parent->getPhotoNameField().size() > 0)
+                picture->setPhotoWindowTitle(parent->getValue(parent->getPhotoNameField()).toString().trimmed());
             picture->show(photoFileName);
         }
         else

@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 
+
 struct prvSaldo {
     double  dbQuan;
     double  dbSaldo;
@@ -85,6 +86,8 @@ public:
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать
+    Q_INVOKABLE bool isModified() { return db->isExistsCommands(); }
+    Q_INVOKABLE void calcItog();
 
 
 protected:
@@ -110,7 +113,6 @@ private:
 
     bool showNextDict();
     void showItog();
-    void calcItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
     bool    compareSumValues();     // Сравнивает новые значения полей СУММА проводок со старыми. Если значения различаются, то дается добро на сохранение данных проводки на сервере
     void    openLocalDictionaries();

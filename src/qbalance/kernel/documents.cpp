@@ -78,15 +78,21 @@ bool Documents::add()
     int strNum = db->addDoc(operNumber, date);
     if (strNum > 0)
     {
-        if (tableModel->rowCount() == 0)
-            query();
-
         int newRow = tableModel->rowCount();
-        tableModel->insertRow(newRow);
-        form->getGridTable()->reset();
-        form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-        updateCurrentRow(strNum);
-        setCurrentDocument();
+        if (newRow == 0)
+        {
+            query();
+            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        }
+        else
+        {
+            tableModel->insertRow(newRow);
+            form->getGridTable()->reset();
+            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            updateCurrentRow(strNum);
+        }
+        setCurrentDocument(strNum);
+        Essence::saveOldValues();
         return true;
     }
     return false;
@@ -112,14 +118,14 @@ bool Documents::remove()
 
 void Documents::view()
 {
-    setCurrentDocument();
+    setCurrentDocument(getValue("код").toInt());
     currentDocument->show();
 }
 
 
-void Documents::setCurrentDocument()
+void Documents::setCurrentDocument(int strNum)
 {
-    currentDocument->setDocId(getValue("код").toInt());
+    currentDocument->setDocId(strNum);
 }
 
 
@@ -140,7 +146,6 @@ void Documents::query(QString filter)
     if (tableModel->rowCount() > 0)
     {
         // Восстановим указатель на текущую запись
-        form->getGridTable()->reset();
         if (tableModel->rowCount() > 0 && currentDocId > 0)
         {
             for (int i = 0; i < tableModel->rowCount(); i++)
@@ -162,7 +167,7 @@ void Documents::query(QString filter)
 
 bool Documents::open()
 {
-    if (Essence::open())
+    if (operNumber > 0 && Essence::open())
     {     // Откроем этот справочник
 
         initForm();
@@ -206,7 +211,7 @@ void Documents::setValue(QString n, QVariant value)
     {
         if (n.toUpper() == columnsProperties.at(i).column)
         {
-            Dictionary::setValue(n, value);
+            Essence::setValue(n, value);
             return;
         }
     }
@@ -214,28 +219,28 @@ void Documents::setValue(QString n, QVariant value)
     {
         if ((n.toUpper() == attrFields.at(i).column) || (n.toUpper() == prefix + attrFields.at(i).column))
         {
-            Dictionary::setValue(prefix + n, value);
+            Essence::setValue(prefix + n, value);
             return;
         }
     }
 }
 
 
-QVariant Documents::getValue(QString n)
+QVariant Documents::getValue(QString n, int row)
 {
     QVariant result;
     for (int i = 0; i < columnsProperties.count(); i++)
     {
         if (n.toUpper() == columnsProperties.at(i).column)
         {
-            return Dictionary::getValue(n);
+            return Dictionary::getValue(n, row);
         }
     }
     for (int i = 0; i < attrFields.count(); i++)
     {
         if (n.toUpper() == attrFields.at(i).column)
         {
-            return Dictionary::getValue(prefix + n);
+            return Dictionary::getValue(prefix + n, row);
         }
     }
     return result;
@@ -259,20 +264,6 @@ void Documents::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера)"));
 
     form->open(parentForm, this, formName);
-}
-
-
-void Documents::prepareSelectCurrentRowCommand()
-{
-    preparedSelectCurrentRow.clear();
-
-    // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
-    QString command = tableModel->selectStatement();
-
-    command = command.left(command.indexOf(" WHERE "));
-    command += QString(" WHERE \"%1\".\"%2\"=:value").arg(getTableName()).arg(idFieldName);
-
-    preparedSelectCurrentRow.prepare(command);
 }
 
 
