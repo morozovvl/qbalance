@@ -57,11 +57,11 @@ public:
 
     void setButtonAdd(bool);
     void setButtonDelete(bool);
-    void    setButtons();
+    void setButtons();
 
     virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE virtual void setEnabled(bool);
-    virtual void    readColumnsSettings();
+    virtual void readColumnsSettings();
     virtual void activateWidget();
 
 public slots:

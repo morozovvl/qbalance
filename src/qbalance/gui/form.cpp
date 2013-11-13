@@ -46,6 +46,7 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     db = app->getDBFactory();
     freeWindow = false;
     subWindow = 0;
+    autoSelect = false;
 }
 
 
@@ -64,8 +65,6 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
         createForm(fileName, pwgt);
     app->setIcons(formWidget);
     readSettings();
-
-//    buttonOk = qFindChild<QPushButton*>(formWidget, "buttonOk");
 
     //  Установим подписи ко всем кнопкам
     foreach (QString key, toolTips.keys())
@@ -142,20 +141,20 @@ void Form::createForm(QString fileName, QWidget* pwgt)
 
         vbxLayout->addLayout(cmdButtonLayout);
         formWidget->setLayout(vbxLayout);
-    }
-    if (buttonOk != 0)
-    {
-        connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
-//        connect(formWidget, SIGNAL(finished(int)), SLOT(cmdOk()));
+        if (buttonOk != 0)                  // Для стандартной формы соединяем нажатие кнопки "Ok" с обработчиком
+        {                                   // Для нестандартной формы обработчик подключается во время загрузки формы
+            connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
+        }
     }
     if (buttonCancel != 0)
     {
         connect(buttonCancel, SIGNAL(clicked()), SLOT(cmdCancel()));
-//        connect(formWidget, SIGNAL(finished(int)), SLOT(cmdCancel()));
     }
     formWidget->setFocusPolicy(Qt::StrongFocus);
     freeWindow = !appendToMdi;
-    formWidget->setForm(this);
+
+    if (parent != 0)
+        formWidget->setForm(this);
 }
 
 
@@ -163,8 +162,12 @@ void Form::cmdOk()
 {
     lSelected = true;
     if (parent != 0)
+    {
         parent->cmdOk();
-    hide();
+        parent->hide();
+    }
+    else
+        hide();
 }
 
 
@@ -172,8 +175,12 @@ void Form::cmdCancel()
 {
     lSelected = false;
     if (parent != 0)
+    {
         parent->cmdCancel();
-    hide();
+        parent->hide();
+    }
+    else
+        hide();
 }
 
 
@@ -182,8 +189,6 @@ int Form::exec()
     if (formWidget != 0)
     {
         lSelected = false;
-        if (parent != 0)
-            parent->beforeShowFormEvent(this);
 
         checkVisibility();
 
@@ -195,13 +200,23 @@ int Form::exec()
             formWidget->setGeometry(subWindow->x(), subWindow->y(), subWindow->width(), subWindow->height());
 
             formWidget->setParent(app->getMainWindow(), Qt::Dialog);
-            formWidget->exec();
+            if (!autoSelect)
+                formWidget->exec();
+            else
+                cmdOk();
+            autoSelect = false;
 
             subWindow->setGeometry(formWidget->x(), formWidget->y(), formWidget->width(), formWidget->height());
             subWindow->setWidget(formWidget);
         }
         else
-            formWidget->exec();
+        {
+            if (!autoSelect)
+                formWidget->exec();
+            else
+                cmdOk();
+            autoSelect = false;
+        }
 
         return lSelected;
     }
@@ -214,18 +229,19 @@ void Form::show()
     if (formWidget != 0)
     {
         lSelected = false;
-        if (parent != 0)
-            parent->beforeShowFormEvent(this);
 
         checkVisibility();
 
         if (getSubWindow() != 0)
-            subWindow->show();
+        {
+            if (!autoSelect)
+                subWindow->show();
+            else
+                cmdOk();
+            autoSelect = false;
+        }
 
         formWidget->show();
-        if (parent != 0)
-            parent->afterShowFormEvent(this);
-
     }
 }
 
@@ -282,10 +298,6 @@ void Form::hide()
 {
     if (formWidget != 0)
     {
-
-        if (parent != 0)
-            parent->beforeHideFormEvent(this);
-
         if (!freeWindow)
         {
             if (subWindow != 0)
@@ -293,12 +305,7 @@ void Form::hide()
                 subWindow->hide();
             }
         }
-
         formWidget->hide();
-
-        if (parent != 0)
-            parent->afterHideFormEvent(this);
-
     }
 }
 
@@ -343,25 +350,20 @@ void Form::keyPressEvent(QKeyEvent *event)
 {
     if (event->modifiers() == Qt::ControlModifier)
     {
-        switch (event->key())
+        if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
         {
-            case Qt::Key_Enter:
                 cmdOk();
-                break;
-            case Qt::Key_Return:
-                cmdOk();
-                break;
-            default:
-                return;
+                event->accept();
         }
     }
     else
     {
         if (event->key() == Qt::Key_Escape)
+        {
             cmdCancel();
-        return;
+            event->accept();
+        }
     }
-    event->accept();
 }
 
 

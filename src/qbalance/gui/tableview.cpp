@@ -87,22 +87,39 @@ void TableView::keyPressEvent(QKeyEvent* event)
         switch (event->key())
         {
             case Qt::Key_Return:
-                selectNextColumn();
-                return;
+                {
+                    selectNextColumn();
+                    event->accept();
+                }
+                break;
             case Qt::Key_Enter:
-                selectNextColumn();
-                return;
+                {
+                    selectNextColumn();
+                    event->accept();
+                }
+                break;
             case Qt::Key_Right:
-                selectNextColumn();
-                return;
+                {
+                    selectNextColumn();
+                    event->accept();
+                }
+                break;
             case Qt::Key_Tab:
-                selectNextColumn();
-                return;
+                {
+                    selectNextColumn();
+                    event->accept();
+                }
+                break;
             case Qt::Key_Left:
-                selectPreviousColumn();
-                return;
+                {
+                    selectPreviousColumn();
+                    event->accept();
+                }
+                break;
             default:
-                QTableView::keyPressEvent(event);
+                {
+                    QTableView::keyPressEvent(event);
+                }
         }
     }
     parent->keyPressEvent(event);
@@ -290,12 +307,9 @@ void TableView::selectNextColumn(QModelIndex* idx)
             QModelIndex newIndex = index.sibling(index.row(), logicalIndex);
             if (newIndex.row() == -1 && newIndex.column() == -1)
             {
-/*
                 column = 0;
                 logicalIndex = horizontalHeader()->logicalIndex(column);
                 newIndex = index.sibling(index.row(), logicalIndex);
-*/
-                return;
             }
             if (!horizontalHeader()->isSectionHidden(logicalIndex))
             {

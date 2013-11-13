@@ -201,14 +201,17 @@ void Essence::query(QString filter)
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
         Table::query(filter + " AND " + defaultFilter);
-        return;
     }
-    if (defaultFilter.size() > 0)
+    else if (defaultFilter.size() > 0)
     {
         Table::query(defaultFilter);
-        return;
     }
-    Table::query(filter);
+    else
+        Table::query(filter);
+
+    if (form->getGridTable() != 0)
+        form->getGridTable()->reset();
+
     if (tableModel->rowCount() == 0)
     {
         form->showPhoto();
@@ -397,6 +400,7 @@ bool Essence::remove()
 
 int Essence::exec()
 {
+    bool result;
     if (!opened)
     {
         open();
@@ -404,7 +408,12 @@ int Essence::exec()
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();
-        return form->exec();
+
+        beforeShowFormEvent(form);
+        result = form->exec();
+        afterShowFormEvent(form);
+
+        return result;
     }
     return 0;
 }
@@ -416,7 +425,12 @@ void Essence::show()
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();
+
+        beforeShowFormEvent(form);
         form->show();
+        afterShowFormEvent(form);
+
+        prepareSelectCurrentRowCommand();
     }
 }
 
@@ -425,7 +439,11 @@ void Essence::hide()
 {
     if (opened && form != 0)
     {
+
+        beforeHideFormEvent(form);
         form->hide();
+        afterHideFormEvent(form);
+
         app->setActiveWindow(activeWidget);
     }
 }
@@ -560,6 +578,7 @@ bool Essence::isFormSelected()
 
 void Essence::cmdOk()
 {
+
 }
 
 

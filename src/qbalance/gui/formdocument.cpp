@@ -210,7 +210,6 @@ void FormDocument::show()
 void FormDocument::hide()
 {
     FormGrid::hide();
-    getParent()->getParent()->getForm()->activateSubWindow();
     getParent()->saveVariablesToDB();
 }
 
@@ -223,12 +222,25 @@ void FormDocument::cmdDelete()
 
 void FormDocument::cmdOk()
 {
-    if (dateEdit != 0)
-        getParent()->getParent()->setValue("дата", QVariant(dateEdit->date()));
-    if (numberEdit != 0)
-        getParent()->getParent()->setValue("номер", QVariant(numberEdit->text()));
     FormGrid::cmdOk();
-    getParent()->getParent()->getForm()->activateSubWindow();
+    if (getParent() != 0)
+    {
+        if (dateEdit != 0)
+            getParent()->getParent()->setValue("дата", QVariant(dateEdit->date()));
+        if (numberEdit != 0)
+            getParent()->getParent()->setValue("номер", QVariant(numberEdit->text()));
+        getParent()->getParent()->getForm()->setGridFocus();
+    }
+}
+
+
+void FormDocument::cmdCancel()
+{
+    FormGrid::cmdCancel();
+    if (getParent() != 0)
+    {
+        getParent()->getParent()->getForm()->setGridFocus();
+    }
 }
 
 

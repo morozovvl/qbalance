@@ -122,6 +122,7 @@ public:
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
     void                evaluateEngine();
     virtual bool        calculate(const QModelIndex &);
+    Q_INVOKABLE void    calculate() { form->calculate(); }
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
 

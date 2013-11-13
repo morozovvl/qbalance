@@ -43,8 +43,8 @@ public:
     Q_INVOKABLE bool isFormSelected() { return form->isFormSelected(); }
 
     void setApp(TApplication*);
+    void setForm(Form* f) { form = f; }
     Form* getForm() { return form; }
-    void    setForm(Form* f) { form = f; }
     void    findCmdOk();
     virtual void keyPressEvent(QKeyEvent*);
 
@@ -56,6 +56,8 @@ private:
     Form*                       form;
     QPushButton*                buttonOk;
 
+private slots:
+    void    cmdOk();
 };
 
 #endif // DIALOG_H

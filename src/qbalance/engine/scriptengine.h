@@ -57,6 +57,8 @@ public:
     void eventParametersChanged();
     void eventBeforeAddString();
     void eventAfterAddString();
+    void eventBeforeDeleteString();
+    void eventAfterDeleteString();
     void eventInitForm(Form*);
     void eventBeforeShowForm(Form*);
     void eventAfterShowForm(Form*);

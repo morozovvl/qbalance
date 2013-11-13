@@ -86,7 +86,7 @@ public:
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать
-    Q_INVOKABLE bool isModified() { return db->isExistsCommands(); }
+    Q_INVOKABLE bool isModified() { return docModified; }
     Q_INVOKABLE void calcItog();
 
 
@@ -110,6 +110,7 @@ private:
     QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
     bool                            localDictsOpened;
+    bool                            docModified;
 
     bool showNextDict();
     void showItog();

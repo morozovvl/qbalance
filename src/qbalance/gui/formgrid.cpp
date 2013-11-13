@@ -400,14 +400,12 @@ void FormGrid::cmdAdd()
                 if (buttonDelete != 0)
                     buttonDelete->setDisabled(false);
             }
+            setButtons();
+            setGridFocus();
+
+            if (parent->getScriptEngine() != 0)
+                parent->getScriptEngine()->eventAfterAddString();
         }
-        activateSubWindow();
-        if (grdTable != 0)
-        {
-            grdTable->setFocus();
-            grdTable->selectNextColumn();
-        }
-        setButtons();
     }
 }
 
@@ -434,12 +432,8 @@ void FormGrid::cmdDelete()
                 picture->setVisibility(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
             }
         }
-        activateSubWindow();
-        if (grdTable != 0)
-        {
-            grdTable->setFocus();
-        }
         setButtons();
+        setGridFocus();
     }
 }
 
@@ -459,13 +453,9 @@ void FormGrid::cmdRequery()
 {
     app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + parent->getTagName() + "...");
     parent->query();
-    activateSubWindow();
-    if (grdTable != 0)
-    {
-        grdTable->setFocus();
-    }
     app->showMessageOnStatusBar("");
     setButtons();
+    setGridFocus();
 }
 
 
@@ -532,9 +522,7 @@ void FormGrid::cmdPrint()
                     parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
             }
         }
-        activateSubWindow();
-        if (grdTable != 0)
-            grdTable->setFocus();
+        setGridFocus();
     }
 }
 
@@ -656,14 +644,15 @@ void FormGrid::setGridFocus()
     if (grdTable != 0)
     {
         grdTable->setFocus();
+        grdTable->selectNextColumn();
     }
 }
 
 
 void FormGrid::selectRow(int row)
 {
+    setGridFocus();
     grdTable->selectRow(row);
-    grdTable->selectNextColumn();
 }
 
 
@@ -674,14 +663,19 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
         switch (event->key())
         {
             case Qt::Key_Insert:
-                cmdAdd();
+                {
+                    cmdAdd();
+                    event->accept();
+                }
                 break;
             case Qt::Key_Delete:
-                cmdDelete();
+                {
+                    cmdDelete();
+                    event->accept();
+                }
                 break;
             default:
                 Form::keyPressEvent(event);
-                return;
         }
     }
     else
@@ -689,14 +683,15 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
         switch (event->key())
         {
             case Qt::Key_F2:
-                cmdView();
+                {
+                    cmdView();
+                    event->accept();
+                }
                 break;
             default:
                 Form::keyPressEvent(event);
-                return;
         }
     }
-    event->accept();
 }
 
 

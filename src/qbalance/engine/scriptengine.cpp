@@ -735,6 +735,34 @@ void ScriptEngine::eventAfterAddString()
 }
 
 
+void ScriptEngine::eventBeforeDeleteString()
+{
+    QString eventName = "EventBeforeDeleteString";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
+}
+
+
+void ScriptEngine::eventAfterDeleteString()
+{
+    QString eventName = "EventAfterDeleteString";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
+}
+
+
 void ScriptEngine::eventSetEnabled(bool enabled)
 {
     QString eventName = "EventSetEnabled";
@@ -909,6 +937,18 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
 
     func.comment = QObject::trUtf8("Событие происходит после прочтения штрих-кода");
     appendEvent("EventBarCodeReaded(barCode)", func);
+
+    func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
+    appendEvent("EventBeforeAddString()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
+    appendEvent("EventAfterAddString()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит перед удалением строки из документа");
+    appendEvent("EventBeforeDeleteString()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит после удаления строки из документа");
+    appendEvent("EventAfterDeleteString()", func);
 
     return &eventsList;
 }

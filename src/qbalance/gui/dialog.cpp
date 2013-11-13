@@ -35,7 +35,6 @@ void Dialog::setApp(TApplication* a)
 {
     app = a;
     setParent(app->getMainWindow(), Qt::Dialog);
-
 }
 
 
@@ -44,8 +43,16 @@ void Dialog::findCmdOk()
     buttonOk = qFindChild<QPushButton*>(this, "buttonOk");
     if (buttonOk != 0)
     {
-        connect(buttonOk, SIGNAL(clicked()), this, SLOT(accept()));
+        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
     }
+}
+
+
+void Dialog::cmdOk()
+{
+    if (form != 0)
+        form->cmdOk();
+    accept();
 }
 
 
@@ -76,8 +83,8 @@ void Dialog::keyPressEvent(QKeyEvent *event)
         {
             if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
             {
-                accept();
-                return;
+                cmdOk();
+                event->accept();
             }
         }
         else

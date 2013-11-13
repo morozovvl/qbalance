@@ -48,6 +48,7 @@ public slots:
     virtual void cmdQueryAdd();
     virtual void cmdDelete();
     virtual void cmdOk();
+    virtual void cmdCancel();
     Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void hide();
 protected:

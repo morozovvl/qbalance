@@ -54,6 +54,7 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool) { ; }
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
+    void setAutoSelect(bool select) { autoSelect = select; }
 
 public slots:
     Q_INVOKABLE virtual int exec();
@@ -97,6 +98,7 @@ private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;
     bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
+    bool    autoSelect;
 
     void                    checkVisibility();
     MyMdiSubWindow*         getSubWindow();

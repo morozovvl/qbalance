@@ -101,3 +101,4 @@ void FormGridSearch::activateWidget()
     if (parameters != 0)
         parameters->setFocus();
 }
+

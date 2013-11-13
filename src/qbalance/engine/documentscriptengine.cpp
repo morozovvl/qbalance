@@ -107,10 +107,6 @@ QMap<QString, EventFunction>* DocumentScriptEngine::getEventsList()
     EventFunction func;
     func.comment = QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
     appendEvent("EventParametersChanged()", func);
-    func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
-    appendEvent("EventBeforeAddString()", func);
-    func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
-    appendEvent("EventAfterAddString()", func);
     func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
     appendEvent("EventAfterCalculate()", func);
     func.comment = QObject::trUtf8("Вызывается при добавлении новой записи из запроса");

@@ -127,7 +127,6 @@ bool Dictionaries::addSaldo(QString acc)
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionaries.insert(alias, saldo);
             saldo->setDictionaries(this);
-            saldo->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
             saldo->setQuan(true);
             return true;
         }

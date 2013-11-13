@@ -45,6 +45,7 @@ Document::Document(int oper, Documents* par): Essence()
     idFieldName = "P1__" + db->getObjectName("код");
     freePrv = 0;
     localDictsOpened = false;
+    docModified = false;
     setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
 
     // Подготовим структуру для хранения локальных справочников
@@ -99,6 +100,7 @@ bool Document::calculate(const QModelIndex& index)
             ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
             calcItog();
             saveChanges();
+            docModified = true;
         }
         else
         {
@@ -349,24 +351,19 @@ bool Document::add()
             if (newRow == 0)
             {
                 query();
-                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                form->selectRow(0);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             }
             else
             {
                 tableModel->insertRow(newRow);
-                form->getGridTable()->reset();
                 form->selectRow(newRow);
-                updateCurrentRow(newRow);
+                updateCurrentRow(strNum);
             }
             form->showPhoto();
-            form->setButtons();
 // Конец второго способа
 
             saveOldValues();
 
-            scriptEngine->eventAfterAddString();
-
-            // Сохраним данные, которые изменились после работы события "EventAfterAddString"
             int row = form->getCurrentIndex().row();
             for (int i = 0; i < tableModel->record().count(); i++)
             {
@@ -413,6 +410,7 @@ bool Document::remove()
 {
     if (lDeleteable)
     {
+        scriptEngine->eventBeforeDeleteString();
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove())
         {
@@ -422,6 +420,7 @@ bool Document::remove()
                 scriptEngine->eventAfterCalculate();
                 calcItog();
                 saveChanges();     // Принудительно обновим итог при удалении строки
+                scriptEngine->eventAfterDeleteString();
                 return true;
             }
             app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
@@ -606,6 +605,7 @@ QVariant Document::getSumValue(QString name)
 
 void Document::show()
 {
+    docModified = false;
     loadDocument();
     Essence::show();
 }
@@ -818,7 +818,7 @@ void Document::prepareSelectCurrentRowCommand()
     }
     else
     {
-        command.replace(" WHERE ", QString(" WHERE p1.%1=:value AND ").arg(db->getObjectNameCom("проводки.стр")));
+        command.replace(" WHERE ", QString(" WHERE p1.%1=:str AND ").arg(db->getObjectNameCom("проводки.стр")));
     }
     preparedSelectCurrentRow.prepare(command);
 }
@@ -1067,7 +1067,7 @@ void Document::updateCurrentRow(int strNum)
     else
     {
         int str = strNum == 0 ? getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt() : strNum;
-        preparedSelectCurrentRow.bindValue(":value", str);
+        preparedSelectCurrentRow.bindValue(":str", str);
     }
 
     Essence::updateCurrentRow();
@@ -1114,15 +1114,13 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
 void Document::cmdOk()
 {
     saveChanges();
-    getParent()->getForm()->setGridFocus();
 }
 
 
 void Document::cmdCancel()
 {
-    db->clearCommands();
-    restoreOldValues();
-    getParent()->getForm()->setGridFocus();
+    db->clearCommands();        // Отменим все изменения
+    restoreOldValues();         // Восстановим старые значения
 }
 
 

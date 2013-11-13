@@ -479,6 +479,11 @@ void Dictionary::query(QString defaultFilter)
         else
             form->selectRow(0);                         // параметры запроса изменились, перейдем на первую запись
     }
+
+    if (lAutoSelect && tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
+    {
+        form->setAutoSelect(true);
+    }
 }
 
 

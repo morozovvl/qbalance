@@ -85,6 +85,7 @@ Documents* TApplication::getDocuments(int opNumber) {
         if (!doc->open())
             return 0;
         doc->query();
+        doc->getForm()->selectRow(doc->getTableModel()->rowCount() - 1);
         documents.insert(operName, doc);
     }
     return documents[operName];

@@ -58,7 +58,7 @@ public:
     bool isSet() { return lIsSet; }
     bool isSaldo() { return lIsSaldo; }
     Q_INVOKABLE void setConst(bool);
-    void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
+    Q_INVOKABLE void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
                                                                             // которые будут блокироваться при добавлении записи в документ
     Dictionaries* getDictionaries() { return dictionaries; }
@@ -78,7 +78,6 @@ public:
     void    setIdEnabled(bool e) { lsetIdEnabled = e; }
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
-
 
 protected:
     Dictionaries*   dictionaries;

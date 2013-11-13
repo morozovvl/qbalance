@@ -51,15 +51,7 @@ Documents::~Documents()
 void Documents::show()
 {
     QModelIndex index = form->getCurrentIndex();
-    bool gotoLast = tableModel->rowCount() > 0 ? false : true;  // если список документов пока пустой, то после его загрузки
-                                                                // перейдем к последней записи, иначе останемся на той записи,
-                                                                // на которой находимся сейчас
-    query();
     form->restoreCurrentIndex(index);
-    if (gotoLast)
-    {
-        form->selectRow(tableModel->rowCount() - 1);
-    }
     Dictionary::show();
 }
 
@@ -82,7 +74,7 @@ bool Documents::add()
         if (newRow == 0)
         {
             query();
-            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            setId(strNum);
         }
         else
         {
