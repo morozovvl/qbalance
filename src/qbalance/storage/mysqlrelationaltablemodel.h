@@ -48,6 +48,7 @@ class MySqlRelationalTableModel : public QSqlRelationalTableModel {
     Q_OBJECT
 public:
     MySqlRelationalTableModel(QString, Table* = 0);
+    ~MySqlRelationalTableModel();
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений
     virtual int fieldIndex(const QString &) const;

@@ -7,7 +7,7 @@ QT += network
 CONFIG += designer \
     plugin \
     uitools
-#CONFIG += debug
+CONFIG += debug
 
 unix:TARGET = ../../../plugins/designer/plugins
 win32:TARGET = ../../../../plugins/designer/plugins

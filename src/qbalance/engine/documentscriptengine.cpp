@@ -68,7 +68,8 @@ DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 :ScriptEngine(parent)
 {
     document = (Document*)parent;
-    documents = document->getParent();
+    if (document != 0)
+        documents = document->getParent();
 }
 
 

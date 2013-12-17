@@ -38,9 +38,10 @@ class QDESIGNER_WIDGET_EXPORT Dialog : public QDialog
 public:
 
     Dialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~Dialog();
     Q_INVOKABLE QWidget* findChild(QString);
     Q_INVOKABLE QString test() { return "test"; }
-    Q_INVOKABLE bool isFormSelected() { return form->isFormSelected(); }
+    Q_INVOKABLE bool isFormSelected();
 
     void setApp(TApplication*);
     void setForm(Form* f) { form = f; }
@@ -55,6 +56,7 @@ private:
     TApplication*               app;
     Form*                       form;
     QPushButton*                buttonOk;
+    bool                        isSelected;
 
 private slots:
     void    cmdOk();

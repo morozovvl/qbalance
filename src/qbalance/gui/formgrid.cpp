@@ -258,7 +258,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     setButtonDelete(true);
     // Подключим кнопку "Добавить"
     setButtonAdd(true);
-    grdTable->setReadOnly(parent->isReadOnly());
+    if (parent != 0 && grdTable != 0)
+        grdTable->setReadOnly(parent->isReadOnly());
 }
 
 
@@ -818,7 +819,8 @@ void FormGrid::setEnabled(bool enabled)
 {
     buttonAdd->setEnabled(enabled);
     buttonDelete->setEnabled(enabled);
-    grdTable->setReadOnly(!enabled);
+    if (grdTable != 0)
+        grdTable->setReadOnly(!enabled);
 }
 
 

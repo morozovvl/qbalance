@@ -73,7 +73,7 @@ private:
     TApplication*               app;
     DBFactory*                  db;
     MySqlRelationalTableModel*  tableModel;
-    QMap<int, QString>          columns;            // Список видимых столбцов и их порядок
+    QMap<int, QString>         columns;            // Список видимых столбцов и их порядок
 
     MyItemDelegate*             getColumnDelegate(FieldType);
 };

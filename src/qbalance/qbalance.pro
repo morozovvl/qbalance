@@ -27,7 +27,6 @@ CONFIG -= app_bundle
 TEMPLATE = app
 CONFIG += debug
 
-
 SOURCES += main.cpp \
     kernel/app.cpp \
     storage/dbfactory.cpp \
@@ -181,6 +180,7 @@ unix {
     LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_sal.so.3
 
   LIBS += /usr/lib/libdrvfr.so
+  LIBS += /home/vladimir/work/qbalance1/plugins/designer/libplugins.so
 
 }
 

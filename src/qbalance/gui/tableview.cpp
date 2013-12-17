@@ -49,7 +49,6 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
 
 TableView::~TableView()
 {
-//    columns.clear();
     QItemSelectionModel *oldModel = selectionModel();
     delete oldModel;
 }

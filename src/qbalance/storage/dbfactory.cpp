@@ -1914,7 +1914,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     else
                     {  // Это обычный справочник
                         getColumnsProperties(&fields, dictName);
-                        foreach (QString field, getFieldsList(dictName)) {
+                        foreach (QString field, getFieldsList(dictName, 0)) {
                             selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
                             for (int i = 0; i < fields.count(); i++)
                                 if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == field.toUpper() && columnsProperties != 0)
@@ -1929,7 +1929,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             getColumnsProperties(&fields, salTableName);
             QString field;
             if (topersList->at(i).dbSaldoVisible) {
-                dictName = QString("дбсальдо%1").arg(prv);
+                dictName = QString("дб%1").arg(topersList->at(i).dbAcc);
                 if (topersList->at(i).dbQuan) {
                     field = getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));
@@ -1950,7 +1950,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                 fromClause.append(QString(" LEFT OUTER JOIN %1 %2 ON p.\"P%3__%4\"=%2.%5 AND p.\"P%3__%6\"=%2.%7").arg(getObjectNameCom("сальдо")).arg(dictName).arg(prv).arg(getObjectName("проводки.дбсчет").toUpper()).arg(getObjectNameCom("сальдо.счет")).arg(getObjectName("проводки.дбкод").toUpper()).arg(getObjectNameCom("сальдо.код")));
             }
             if (topersList->at(i).crSaldoVisible) {
-                dictName = QString("крсальдо%1").arg(prv);
+                dictName = QString("кр%1").arg(topersList->at(i).crAcc);
                 if (topersList->at(i).crQuan) {
                     field = getObjectName("сальдо.конкол");
                     selectClause.append(QString(",%1.\"%2\" AS \"%3__%4\"").arg(dictName).arg(field).arg(dictName.toUpper()).arg(field.toUpper()));

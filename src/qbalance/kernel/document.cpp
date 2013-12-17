@@ -950,7 +950,8 @@ bool Document::setTableModel(int)
             }
             else
             {
-                field = field.mid(field.indexOf("__") + 2);
+                if (field.contains("__"))
+                    field = field.mid(field.indexOf("__") + 2);
                 if (field == db->getObjectName("проводки.код").toUpper())
                     // Если в списке полей встретилось поле ключа
                     keyColumn = columnCount;                                    // Запомним номер столбца с ключом

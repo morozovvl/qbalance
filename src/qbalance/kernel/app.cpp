@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDate>
 #include <QtGui/QMessageBox>
 #include <QtCore/QObject>
-#include <QtUiTools/QUiLoader>
 #include <QtCore/QTextCodec>
 #include <QtGui/QPushButton>
 #include <QDebug>
@@ -32,7 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
-#include "../qextserialport/src/qextserialport.h"
+#include "../../qextserialport/src/qextserialport.h"
 #include "../engine/documentscriptengine.h"
 
 
@@ -51,10 +50,21 @@ TApplication::TApplication(int & argc, char** argv)
 
     db  = new DBFactory();
     gui = new GUIFactory(db);
+
+    formLoader = new QUiLoader(this);
+    formLoader->addPluginPath(applicationDirPath() + "/plugins/");
+    formLoader->setWorkingDirectory(getFormsPath());
+
     dictionaryList = 0;
     topersList = 0;
     driverFR = new DriverFR(this);
+
+#ifdef Q_OS_WIN32
+    barCodeReaderComPort = new QextSerialPort("COM3", QextSerialPort::EventDriven);
+#else
     barCodeReaderComPort = new QextSerialPort("/dev/ttyUSB0", QextSerialPort::EventDriven);
+#endif
+
     barCodeString = "";
     driverFRisValid = false;
 
@@ -71,6 +81,7 @@ TApplication::TApplication(int & argc, char** argv)
 
 TApplication::~TApplication()
 {
+    delete formLoader;
     delete barCodeReaderComPort;
     delete driverFR;
     delete gui;
@@ -286,10 +297,7 @@ Dialog* TApplication::createForm(QString fileName)
         QFile file(path + fName);
         if (file.open(QIODevice::ReadOnly))
         {
-            QUiLoader loader(this);
-            loader.addPluginPath(applicationDirPath() + "/plugins/");
-            loader.setWorkingDirectory(path);
-            formWidget = (Dialog*)loader.load(&file);
+            formWidget = (Dialog*)formLoader->load(&file);
             file.close();
             if (QString::compare(formWidget->metaObject()->className(), "Dialog",  Qt::CaseSensitive) != 0)
             {

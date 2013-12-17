@@ -18,13 +18,13 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
 bool DriverFR::open()
 {
     // Инициализация драйвера
-    fr = drvfrInitialize();
-    prop = fr->prop;
+//    fr = drvfrInitialize();
+//    prop = fr->prop;
 
     // Установление связи с ккм
-    prop->ComPortNumber = 1;            // COM1
-    prop->BaudRate      = 6;            // 115200
-    prop->Timeout       = 50;
+//    prop->ComPortNumber = 1;            // COM1
+//    prop->BaudRate      = 6;            // 115200
+//    prop->Timeout       = 50;
 
     return true;
 }

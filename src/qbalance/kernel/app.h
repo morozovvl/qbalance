@@ -25,6 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDate>
 #include <QtCore/QString>
 #include <QtCore/QDir>
+#include <QtUiTools/QUiLoader>
+#include <QtCore/QPluginLoader>
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
@@ -141,6 +143,7 @@ private:
     static TApplication*    Exemplar;
     QextSerialPort*         barCodeReaderComPort;
     QString                 barCodeString;
+    QUiLoader*              formLoader;
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати

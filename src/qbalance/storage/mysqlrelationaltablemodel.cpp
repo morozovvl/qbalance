@@ -50,6 +50,12 @@ MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* p
 }
 
 
+MySqlRelationalTableModel::~MySqlRelationalTableModel()
+{
+    updateInfo.clear();
+}
+
+
 int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 {
     int result;

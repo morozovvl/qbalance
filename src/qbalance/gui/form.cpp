@@ -52,6 +52,7 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
 
 Form::~Form()
 {
+        toolTips.clear();
 }
 
 

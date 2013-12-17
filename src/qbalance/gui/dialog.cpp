@@ -28,6 +28,12 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     app = 0;
     form = 0;
     buttonOk = 0;
+    isSelected = false;
+}
+
+
+Dialog::~Dialog()
+{
 }
 
 
@@ -50,14 +56,24 @@ void Dialog::findCmdOk()
 
 void Dialog::cmdOk()
 {
+    isSelected = true;
     if (form != 0)
         form->cmdOk();
     accept();
 }
 
 
+bool Dialog::isFormSelected()
+{
+    if (form != 0)
+        return form->isFormSelected();
+    return isSelected;
+}
+
+
 void Dialog::showEvent(QShowEvent* event)
 {
+    isSelected = false;
     QDialog::showEvent(event);
     if (form != 0)
         form->activateWidget();
