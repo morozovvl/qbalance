@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QStyleOptionViewItemV2>
-#include <QtGui/QLineEdit>
+#include <QDoubleValidator>
+#include <QStyleOptionViewItemV2>
+#include <QLineEdit>
 #include "mynumericitemdelegate.h"
 #include "formgrid.h"
 #include "../kernel/essence.h"

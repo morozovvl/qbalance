@@ -22,9 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "../storage/dbfactory.h"
 #include <QtCore/QString>
-#include <QtGui/QMessageBox>
-#include <QtGui/QErrorMessage>
-#include <QtGui/QDesktopWidget>
+#include <QMessageBox>
+#include <QErrorMessage>
+#include <QDesktopWidget>
 
 class MainWindow;
 

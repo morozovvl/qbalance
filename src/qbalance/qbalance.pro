@@ -6,26 +6,29 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-include(../qextserialport/src/qextserialport.pri)
+#//456 include(../qextserialport/src/qextserialport.pri)
 
 QT += sql \
       xml \
       core \
       script \
       gui \
-      network
+      network \
+      widgets \
+      designer \
+      uitools
 
 CONFIG(debug) {
     DESTDIR = ./
 }
 
 TARGET = ../../qbalance
-CONFIG += designer \
-    plugin \
-    uitools
+
 CONFIG -= app_bundle
+
 TEMPLATE = app
-CONFIG += debug
+
+#CONFIG += debug
 
 SOURCES += main.cpp \
     kernel/app.cpp \
@@ -180,7 +183,7 @@ unix {
     LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_sal.so.3
 
   LIBS += /usr/lib/libdrvfr.so
-  LIBS += /home/vladimir/work/qbalance1/plugins/designer/libplugins.so
+#  LIBS += /home/vladimir/work/qbalance1/plugins/designer/libplugins.so
 
 }
 

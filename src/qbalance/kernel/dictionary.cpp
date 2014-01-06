@@ -85,7 +85,7 @@ bool Dictionary::add()
     bool lAddDict = true;
     if (!isSet())
     {
-        SearchParameters* parameters = (SearchParameters*)qFindChild<QFrame*>(form->getFormWidget(), "searchParameters");
+        SearchParameters* parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
         if (parameters != 0)
         {
             QVector<sParam> searchParameters = parameters->getParameters();

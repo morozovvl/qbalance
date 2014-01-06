@@ -17,11 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QTreeWidgetItem>
-#include <QtGui/QFrame>
-#include <QtGui/QSizePolicy>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
+#include <QTreeWidgetItem>
+#include <QFrame>
+#include <QSizePolicy>
+#include <QLabel>
+#include <QLineEdit>
 #include "configform.h"
 #include "../kernel/app.h"
 #include "guifactory.h"
@@ -72,7 +72,7 @@ bool ConfigForm::open(QWidget* pwgt) {
         QHBoxLayout* hLayout = new QHBoxLayout();
         hLayout->addWidget(treeWidget);
         hLayout->addWidget(frame);
-        QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
+        QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
         if (vbxLayout != 0) {
             vbxLayout->insertLayout(0, hLayout);
         }

@@ -24,8 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-#include <QtGui/QMessageBox>
-#include <QtGui/QMenu>
+#include <QMessageBox>
+#include <QMenu>
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 #include <QDebug>

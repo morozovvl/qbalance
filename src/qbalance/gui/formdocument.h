@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMDOCUMENT_H
 #define FORMDOCUMENT_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QDateEdit>
+#include <QWidget>
+#include <QDateEdit>
 #include "formgrid.h"
 #include "mynumericedit.h"
 #include "docparameters.h"

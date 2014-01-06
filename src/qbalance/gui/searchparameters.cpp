@@ -18,15 +18,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QString>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QSizePolicy>
-#include <QtGui/QFrame>
-#include <QtGui/QLayout>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QSizePolicy>
+#include <QFrame>
+#include <QLayout>
+#include <QKeyEvent>
+#include <QCheckBox>
+#include <QLineEdit>
 #include "searchparameters.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/dictionaries.h"
@@ -146,7 +146,7 @@ QVector<sParam> SearchParameters::getParameters()
     for(int i = 0; i < parameters.size(); i++)
     {
         QString field = parameters.at(i);
-        MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, field);
+        MyComboBox* cmb = this->findChild<MyComboBox*>(field);
         QString text = cmb->currentText().trimmed();
         while (text.contains("  ")) // Если есть пробелы, идущие подряд
             text.replace("  ", " "); // то уберем их
@@ -155,7 +155,7 @@ QVector<sParam> SearchParameters::getParameters()
         par.field = programNameFieldName;
         par.value = text;
         // Определим, включен ли полнотекстовый поиск
-        QCheckBox* chb = (QCheckBox*)qFindChild<QCheckBox*>(this, field);
+        QCheckBox* chb = this->findChild<QCheckBox*>(field);
         par.isFtsEnabled = (chb != 0 ? chb->isChecked(): false);
         param.append(par);
     }
@@ -213,7 +213,7 @@ void SearchParameters::dictionaryButtonPressed()
             dict->exec();
             if (dict->isFormSelected())
             {
-                MyComboBox* cmb = (MyComboBox*)qFindChild<QComboBox*>(this, sender()->objectName() + "." + programNameFieldName);
+                MyComboBox* cmb = this->findChild<MyComboBox*>(sender()->objectName() + "." + programNameFieldName);
                 QString text = dict->getValue(programNameFieldName).toString().trimmed();
                 int index = cmb->findText(text);
                 if (index > 0)

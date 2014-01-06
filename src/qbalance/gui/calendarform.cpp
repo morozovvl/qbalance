@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QLabel>
+#include <QLabel>
 #include "calendarform.h"
 #include "../kernel/app.h"
 
@@ -52,7 +52,7 @@ bool CalendarForm::open(QWidget* pwgt) {
         ptopLayout->addWidget(pBeginCalendar, 1, 0, Qt::AlignCenter);
         ptopLayout->addWidget(pEndCalendar, 1, 1, Qt::AlignCenter);
 
-        QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
+        QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, ptopLayout);
         app->setIcons(formWidget);

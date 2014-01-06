@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QPushButton>
+#include <QPushButton>
 #include "../kernel/app.h"
 #include "dialog.h"
 
@@ -46,7 +46,7 @@ void Dialog::setApp(TApplication* a)
 
 void Dialog::findCmdOk()
 {
-    buttonOk = qFindChild<QPushButton*>(this, "buttonOk");
+    buttonOk = (QPushButton*)this->findChild("buttonOk");
     if (buttonOk != 0)
     {
         connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));

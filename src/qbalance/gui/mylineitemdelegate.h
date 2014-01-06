@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MYLINEITEMDELEGATE_H
 
 #include <QtCore/QObject>
-#include <QtGui/QItemDelegate>
+#include <QItemDelegate>
 #include <QtDesigner/QDesignerExportWidget>
 #include "myitemdelegate.h"
 

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMGRIDSEARCH_H
 #define FORMGRIDSEARCH_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QtSql/QSqlTableModel>
 #include "formgrid.h"
 

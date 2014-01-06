@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class SqlRecordClass : public QObject, QScriptClass
 {
+    Q_OBJECT
 public:
     SqlRecordClass(QScriptEngine *engine, SqlFieldClass*);
     ~SqlRecordClass();

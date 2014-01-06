@@ -18,9 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QModelIndex>
-#include <QtGui/QProgressBar>
-#include <QtXml/QXmlStreamWriter>
-#include <QtXml/QXmlStreamReader>
+#include <QProgressBar>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 #include <QDebug>
 #include "dictionary.h"
 #include "saldo.h"
@@ -213,7 +213,7 @@ void Document::calcItog()
 
 void Document::showItog()
 {
-    MyNumericEdit* itogWidget = (MyNumericEdit*)qFindChild<QLineEdit*>(form->getFormWidget(), "itogNumeric");
+    MyNumericEdit* itogWidget = (MyNumericEdit*)form->getFormWidget()->findChild("itogNumeric");
     if (itogWidget != 0)
         itogWidget->setValue(parent->getValue(db->getObjectName("документы.сумма")));
 }

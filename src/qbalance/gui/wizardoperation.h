@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef WIZARDOPERATION_H
 #define WIZARDOPERATION_H
 
-#include <QtGui/QTextEdit>
+#include <QTextEdit>
 #include "wizarddictionary.h"
 //#include "mytextedit.h"
 #include "mysyntaxhighlighter.h"

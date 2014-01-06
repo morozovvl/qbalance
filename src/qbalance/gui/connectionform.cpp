@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QIntValidator>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QIntValidator>
+#include <QLabel>
+#include <QPushButton>
 #include <QtCore/QSettings>
 #include <QtCore/QStringList>
 #include "connectionform.h"
@@ -65,11 +65,11 @@ void ConnectionForm::initForm(QString hostName, QString dbName, int portNum, boo
     ptopLayout->addWidget(ptxtHost, 1, 1);
     ptopLayout->addWidget(ptxtPort, 2, 1);
     ptopLayout->addWidget(ptxtDatabase, 3, 1);
-    QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
+    QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
     if (vbxLayout != 0)
     {
         vbxLayout->insertLayout(0, ptopLayout);
-        QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
+        QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
         if (cmdButtonLayout != 0)
         {
             QPushButton* buttonDelete = new QPushButton();

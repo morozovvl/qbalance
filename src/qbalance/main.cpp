@@ -75,7 +75,7 @@ void test() {
 }
 
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 /*
     qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
@@ -98,9 +98,10 @@ int main(int argc, char **argv)
 
     // Инициируем переменные, которые нуждаются в этом
 
-    QTextCodec::setCodecForTr(TApplication::codec());
+/*
+//    QTextCodec::setCodecForTr(TApplication::codec());
     QTextCodec::setCodecForLocale(TApplication::codec());
-    QTextCodec::setCodecForCStrings(TApplication::codec());
+//    QTextCodec::setCodecForCStrings(TApplication::codec());
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
@@ -110,6 +111,7 @@ int main(int argc, char **argv)
         QDir dir(QApplication::applicationDirPath());
         QStringList paths = application.libraryPaths();
         paths << dir.absolutePath() + "/plugins";
+        qDebug() << paths;
         application.setLibraryPaths(paths);
 
         if (application.open()) {       // Если приложение удалось создать
@@ -122,4 +124,5 @@ int main(int argc, char **argv)
 
     TApplication::debug(" Program shutdown.\n\n");
     return lResult;
+*/
 }

@@ -1,13 +1,13 @@
-QT += sql
-QT += core
-QT += script
-QT += gui
-QT += xml
-QT += network
-CONFIG += designer \
-    plugin \
-    uitools
-CONFIG += debug
+QT += sql \
+      core \
+      script \
+      gui \
+      xml \
+      network \
+      designer \
+      uitools
+
+#CONFIG += debug
 
 unix:TARGET = ../../../plugins/designer/plugins
 win32:TARGET = ../../../../plugins/designer/plugins

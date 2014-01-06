@@ -17,20 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QStringList>
-#include <QtGui/QAbstractItemView>
+#include <QAbstractItemView>
 #include <QtCore/QModelIndex>
 #include <QtCore/QRect>
-#include <QtGui/QPalette>
-#include <QtGui/QPixmap>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPainter>
+#include <QPalette>
+#include <QPixmap>
+#include <QHBoxLayout>
+#include <QPainter>
 #include <QtCore/QUrl>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
-#include <QtGui/QInputDialog>
+#include <QHeaderView>
+#include <QPushButton>
+#include <QInputDialog>
 #include <QDebug>
 #include "formgrid.h"
 #include "picture.h"
@@ -94,7 +94,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable->setTagName(getParent()->getTagName());
         grdTable->setObjectName("tableView");
         grdTable->setTableModel(tableModel);
-        grdTable->horizontalHeader()->setClickable(false);
+        grdTable->horizontalHeader()->setSectionsClickable(false);
         grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
@@ -106,8 +106,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     else
     {   // Была загружена пользовательская форма
-        tableLayout = (QVBoxLayout*)qFindChild<QVBoxLayout*>(formWidget, "tableLayout");
-        grdTable = qFindChild<TableView*>(formWidget, "tableView");
+        tableLayout = (QVBoxLayout*)formWidget->findChild("tableLayout");
+        grdTable = (TableView*)formWidget->findChild("tableView");
         if (grdTable != 0)
         {
             grdTable->setApp(app);
@@ -115,7 +115,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->setParent(formWidget);
             grdTable->setFormGrid(this);
             grdTable->setTableModel(tableModel);
-            grdTable->horizontalHeader()->setClickable(false);
+            grdTable->horizontalHeader()->setSectionsClickable(false);
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         }
     }
@@ -134,7 +134,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     else
     {
-        picture = (Picture*)qFindChild<QFrame*>(formWidget, "picture");
+        picture = (Picture*)formWidget->findChild("picture");
     }
     if (picture != 0)
     {
@@ -159,7 +159,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             if (formWidget != 0)
             {
-                buttonLoad = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonLoad");
+                buttonLoad = (QPushButton*)formWidget->findChild("buttonLoad");
             }
         }
         if (buttonLoad != 0)
@@ -182,7 +182,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             if (formWidget != 0)
             {
-                buttonSave = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonSave");
+                buttonSave = (QPushButton*)formWidget->findChild("buttonSave");
             }
         }
         if (buttonSave != 0)
@@ -205,7 +205,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             if (formWidget != 0)
             {
-                buttonPrint = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonPrint");
+                buttonPrint = (QPushButton*)formWidget->findChild("buttonPrint");
             }
         }
         if (buttonPrint != 0)
@@ -226,7 +226,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     else
     {
-        buttonRequery = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonRequery");
+        buttonRequery = (QPushButton*)formWidget->findChild("buttonRequery");
     }
     if (buttonRequery != 0)
     {
@@ -243,7 +243,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
         else
         {
-            buttonView = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonView");
+            buttonView = (QPushButton*)formWidget->findChild("buttonView");
         }
         if (buttonView != 0)
         {
@@ -277,7 +277,7 @@ void FormGrid::setButtonAdd(bool set)
             }
             else
             {
-                buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
+                buttonAdd = (QPushButton*)formWidget->findChild("buttonAdd");
             }
             if (buttonAdd != 0)
             {
@@ -293,7 +293,7 @@ void FormGrid::setButtonAdd(bool set)
     else
     {
         if (!defaultForm)
-            buttonAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonAdd");
+            buttonAdd = (QPushButton*)formWidget->findChild("buttonAdd");
         if (parent != 0 && buttonAdd != 0)
         {
             cmdButtonLayout->removeWidget(buttonAdd);
@@ -323,7 +323,7 @@ void FormGrid::setButtonDelete(bool set)
             }
             else
             {
-                buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
+                buttonDelete = (QPushButton*)formWidget->findChild("buttonDelete");
             }
             if (buttonDelete != 0)
             {
@@ -339,7 +339,7 @@ void FormGrid::setButtonDelete(bool set)
     else
     {
         if (!defaultForm)
-            buttonDelete = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonDelete");
+            buttonDelete = (QPushButton*)formWidget->findChild("buttonDelete");
         if (parent != 0 && buttonDelete != 0)
         {
             cmdButtonLayout->removeWidget(buttonDelete);
@@ -498,7 +498,7 @@ void FormGrid::cmdPrint()
                 }
             }
         }
-        QHBoxLayout* cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
+        QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
         if (cmdButtonLayout != 0)
         {
             QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));

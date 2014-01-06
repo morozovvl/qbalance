@@ -21,12 +21,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MYITEMDELEGATE_H
 
 #include <QtCore/QObject>
-#include <QtGui/QItemDelegate>
-#include <QtGui/QPainter>
-#include <QtGui/QStyleOptionViewItem>
-#include <QtGui/QStyleOptionViewItemV2>
+#include <QItemDelegate>
+#include <QPainter>
+#include <QStyleOptionViewItem>
+#include <QStyleOptionViewItemV2>
 #include <QtCore/QModelIndex>
-#include <QtGui/QPalette>
+#include <QPalette>
 #include <QtCore/QVariant>
 #include <QtDesigner/QDesignerExportWidget>
 

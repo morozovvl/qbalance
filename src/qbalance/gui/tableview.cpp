@@ -17,11 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QLineEdit>
-#include <QtGui/QTableView>
+#include <QLineEdit>
+#include <QTableView>
 #include <QtScript/QScriptContextInfo>
-#include <QtGui/QTableView>
-#include <QtGui/QHeaderView>
+#include <QTableView>
+#include <QHeaderView>
 #include <QDebug>
 #include "../kernel/app.h"
 #include "tableview.h"
@@ -144,7 +144,7 @@ bool TableView::setColumnsHeaders()
     if (!columnsHeadersSeted)
     {   // Если заголовки столбцов еще не установлены
         QHeaderView* header = horizontalHeader();
-        header->setMovable(true);
+        header->setSectionsMovable(true);
         header->setSortIndicatorShown(true);
         QList<FieldType>* fields = parent->getParent()->getColumnsProperties();
         db->getColumnsHeaders(tagName, fields);

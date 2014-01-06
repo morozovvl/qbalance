@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QComboBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QFormLayout>
-#include <QtGui/QLabel>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QLabel>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -54,7 +54,7 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
     if (Form::open(pwgt))
     {
         connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
-        QVBoxLayout* vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
+        QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, layout);
         formWidget->setMinimumHeight(100);

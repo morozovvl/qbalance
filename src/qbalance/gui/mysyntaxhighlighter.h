@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYSYNTAXHIGHLIGHTER_H
 #define MYSYNTAXHIGHLIGHTER_H
 
-#include <QtGui/QSyntaxHighlighter>
+#include <QSyntaxHighlighter>
 
 class MySyntaxHighlighter : public QSyntaxHighlighter
 {

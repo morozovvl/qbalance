@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtGui/QWidget>
-#include <QtGui/QFont>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
+#include <QWidget>
+#include <QFont>
+#include <QPushButton>
+#include <QLabel>
 #include "tableview.h"
 #include "formgrid.h"
 #include "formdocument.h"
@@ -67,7 +67,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             if (formWidget != 0)
             {
-                buttonQueryAdd = (QPushButton*)qFindChild<QPushButton*>(formWidget, "buttonQueryAdd");
+                buttonQueryAdd = (QPushButton*)formWidget->findChild("buttonQueryAdd");
             }
         }
         if (buttonQueryAdd != 0)
@@ -158,11 +158,11 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (docParams)
         {
-            parameters = (DocParameters*)qFindChild<QFrame*>(formWidget, "docParameters");
+            parameters = (DocParameters*)formWidget->findChild("docParameters");
         }
-        dateEdit = qFindChild<QDateEdit*>(formWidget, "dateEdit");
-        numberEdit = qFindChild<QLineEdit*>(formWidget, "numberEdit");
-        itogNumeric = (MyNumericEdit*)qFindChild<QLineEdit*>(formWidget, "itogNumeric");
+        dateEdit = (QDateEdit*)formWidget->findChild("dateEdit");
+        numberEdit = (QLineEdit*)formWidget->findChild("numberEdit");
+        itogNumeric = (MyNumericEdit*)formWidget->findChild("itogNumeric");
     }
     if (parameters != 0)
     {

@@ -22,11 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QMap>
 #include <QtCore/QList>
-#include <QtGui/QFrame>
+#include <QFrame>
 #include <QtCore/QString>
 #include <QtCore/QObject>
-#include <QtGui/QWidget>
-#include <QtGui/QVBoxLayout>
+#include <QWidget>
+#include <QVBoxLayout>
 #include <QtCore/QStringList>
 #include <QtDesigner/QDesignerExportWidget>
 #include "../kernel/app.h"
@@ -44,7 +44,7 @@ public:
     ~DocParameters();
 
     void addString(QString);
-    void removeString(int);
+    virtual void removeString(int);
     void setFocus();
     void showText(QString);
     QStringList getKeys() { return dictList; }

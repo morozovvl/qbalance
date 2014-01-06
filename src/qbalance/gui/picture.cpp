@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDir>
-#include <QtGui/QPainter>
+#include <QPainter>
 #include <QtCore/QUrl>
 #include "picture.h"
 #include "../kernel/app.h"
@@ -42,6 +42,7 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
 Picture::~Picture()
 {
 }
+
 
 void Picture::setApp(TApplication* a)
 {
@@ -92,7 +93,7 @@ void Picture::setVisibility(bool vis)
 
 void Picture::mouseDoubleClickEvent(QMouseEvent*)
 {
-    if (! isBigPicture)
+    if (!isBigPicture)
         showBigPicture();
 }
 

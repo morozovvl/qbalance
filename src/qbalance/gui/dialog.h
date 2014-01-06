@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include <QtGui/QDialog>
-#include <QtGui/QKeyEvent>
+#include <QDialog>
+#include <QKeyEvent>
 #include <QtDesigner/QDesignerExportWidget>
 #include "../kernel/app.h"
 #include "mymdisubwindow.h"

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef APP_H
 #define APP_H
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtCore/QMap>
 #include <QtCore/QDate>
 #include <QtCore/QString>
@@ -42,7 +42,7 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 class Dialog;
-class QextSerialPort;
+//456 class QextSerialPort;
 
 
 enum  ReportTemplateTypes
@@ -141,7 +141,7 @@ private:
     static bool             DebugMode;
     static QTextStream*     DebugStream;
     static TApplication*    Exemplar;
-    QextSerialPort*         barCodeReaderComPort;
+//456     QextSerialPort*         barCodeReaderComPort;
     QString                 barCodeString;
     QUiLoader*              formLoader;
 

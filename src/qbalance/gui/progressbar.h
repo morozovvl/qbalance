@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef PROGRESSBAR_H
 #define PROGRESSBAR_H
 
-#include <QtGui/QDialog>
+#include <QDialog>
 
 class ProgressBar : public QDialog
 {

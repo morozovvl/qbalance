@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtScript/QScriptValueIterator>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QPushButton>
-#include <QtGui/QFileDialog>
-#include <QtGui/QLineEdit>
+#include <QKeyEvent>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QLineEdit>
 #include <QDebug>
 #include "scriptengine.h"
 #include "../kernel/app.h"

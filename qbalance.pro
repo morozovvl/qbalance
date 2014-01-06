@@ -7,7 +7,10 @@ QT += sql \
       core \
       script \
       gui \
-      network
+      network \
+      widgets \
+      designer \
+      uitools
 
 
 #CONFIG(debug) {
@@ -16,9 +19,6 @@ QT += sql \
 
 #CONFIG += debug
 TARGET = ../qbalance
-CONFIG += designer \
-    plugin \
-    uitools
 CONFIG -= app_bundle
 TEMPLATE = subdirs
 SUBDIRS = src/qbalance/plugins src/qbalance src/drvfr

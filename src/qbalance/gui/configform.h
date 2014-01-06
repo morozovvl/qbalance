@@ -19,8 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef CONFIGFORM_H
 #define CONFIGFORM_H
-#include <QtGui/QFrame>
-#include <QtGui/QTreeWidgetItem>
+#include <QFrame>
+#include <QTreeWidgetItem>
 #include "form.h"
 
 class ConfigForm : public Form

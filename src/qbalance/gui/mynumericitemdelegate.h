@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYNUMERICITEMDELEGATE_H
 #define MYNUMERICITEMDELEGATE_H
 
-#include <QtGui/QItemDelegate>
+#include <QItemDelegate>
 #include <QtCore/QString>
-#include <QtGui/QPainter>
-#include <QtGui/QStyleOptionViewItem>
+#include <QPainter>
+#include <QStyleOptionViewItem>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
 #include <QtDesigner/QDesignerExportWidget>

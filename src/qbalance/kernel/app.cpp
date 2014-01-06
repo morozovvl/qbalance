@@ -18,10 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDate>
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
-#include <QtGui/QPushButton>
+#include <QPushButton>
 #include <QDebug>
 #include "app.h"
 #include "dictionaries.h"
@@ -59,11 +59,14 @@ TApplication::TApplication(int & argc, char** argv)
     topersList = 0;
     driverFR = new DriverFR(this);
 
+//456
+/*
 #ifdef Q_OS_WIN32
     barCodeReaderComPort = new QextSerialPort("COM3", QextSerialPort::EventDriven);
 #else
     barCodeReaderComPort = new QextSerialPort("/dev/ttyUSB0", QextSerialPort::EventDriven);
 #endif
+*/
 
     barCodeString = "";
     driverFRisValid = false;
@@ -82,7 +85,7 @@ TApplication::TApplication(int & argc, char** argv)
 TApplication::~TApplication()
 {
     delete formLoader;
-    delete barCodeReaderComPort;
+//456     delete barCodeReaderComPort;
     delete driverFR;
     delete gui;
     delete db;
@@ -158,6 +161,8 @@ bool TApplication::open() {
                     gui->getMainWindow()->showPeriod();
                     if (driverFR->open())
                         driverFRisValid = true;
+//456
+/*
                     if (barCodeReaderComPort != 0)
                     {
                         barCodeReaderComPort->setBaudRate(BAUD9600);
@@ -169,6 +174,7 @@ bool TApplication::open() {
                             connect(barCodeReaderComPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
 
                     }
+*/
 
                     // Загрузим константы
                     Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
@@ -370,7 +376,7 @@ TApplication* TApplication::exemplar()
 
 void TApplication::setIcons(QWidget* formWidget)
 {
-    QList<QPushButton*> widgets = qFindChildren<QPushButton*>(formWidget);
+    QList<QPushButton*> widgets = formWidget->findChildren<QPushButton*>();
     for (int i = 0; i < widgets.size(); i++)
     {
         widgets.at(i)->setIcon(QIcon(":" + widgets.at(i)->objectName()));
@@ -430,12 +436,13 @@ bool TApplication::runProcess(QString command, QString progName)
 
 void TApplication::barCodeReadyRead()
 {
-    if (barCodeReaderComPort->bytesAvailable())
-    {
-        QString readedPart = QString::fromLatin1(barCodeReaderComPort->readAll());
-        if (readedPart.right(1) == QString('\n'))
-        {
-            barCodeString.append(readedPart);
+//456
+//456     if (barCodeReaderComPort->bytesAvailable())
+//456     {
+//456         QString readedPart = QString::fromLatin1(barCodeReaderComPort->readAll());
+//456         if (readedPart.right(1) == QString('\n'))
+//456         {
+//456             barCodeString.append(readedPart);
 
             if (getActiveSubWindow() != 0 && getMainWindow() != 0)
             {
@@ -449,11 +456,11 @@ void TApplication::barCodeReadyRead()
                     }
                 }
             }
-            barCodeString = "";
-        }
-        else
-            barCodeString.append(readedPart);
-    }
+//456             barCodeString = "";
+//456         }
+//456         else
+//456             barCodeString.append(readedPart);
+//456     }
 }
 
 

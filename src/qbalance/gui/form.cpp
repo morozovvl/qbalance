@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtUiTools/QUiLoader>
 #include <QtCore/QTextCodec>
 #include <QtCore/QList>
-#include <QtGui/QPushButton>
-#include <QtGui/QDesktopWidget>
+#include <QPushButton>
+#include <QDesktopWidget>
 #include <QDebug>
 #include "form.h"
 #include "../kernel/app.h"
@@ -70,7 +70,7 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
     //  Установим подписи ко всем кнопкам
     foreach (QString key, toolTips.keys())
     {
-        QPushButton* button = qFindChild<QPushButton*>(formWidget, key);
+        QPushButton* button = (QPushButton*)formWidget->findChild(key);
         if (button != 0 && button->toolTip().isEmpty())
             button->setToolTip(toolTips.value(key, ""));
     }
@@ -114,10 +114,10 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         formWidget->setParent(pwgt);
         formWidget->setVisible(false);
         formWidget->setWindowFlags(Qt::Window | Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint);
-        buttonOk = qFindChild<QPushButton*>(formWidget, "buttonOk");
-        buttonCancel = qFindChild<QPushButton*>(formWidget, "buttonCancel");
-        cmdButtonLayout = qFindChild<QHBoxLayout*>(formWidget, "cmdButtonLayout");
-        vbxLayout = qFindChild<QVBoxLayout*>(formWidget, "vbxLayout");
+        buttonOk = (QPushButton*)formWidget->findChild("buttonOk");
+        buttonCancel = (QPushButton*)formWidget->findChild("buttonCancel");
+        cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
+        vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
         defaultForm = false;
     }
     else
