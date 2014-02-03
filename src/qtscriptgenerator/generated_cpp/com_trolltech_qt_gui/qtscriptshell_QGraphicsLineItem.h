@@ -8,9 +8,9 @@
 class QtScriptShell_QGraphicsLineItem : public QGraphicsLineItem
 {
 public:
-    QtScriptShell_QGraphicsLineItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsLineItem(const QLineF&  line, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsLineItem(qreal  x1, qreal  y1, qreal  x2, qreal  y2, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsLineItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsLineItem(const QLineF&  line, QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsLineItem(qreal  x1, qreal  y1, qreal  x2, qreal  y2, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsLineItem();
 
     void advance(int  phase);

@@ -26,7 +26,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QPaintEvent>
 #include <QtDesigner/QDesignerExportWidget>
 
+
 class TApplication;
+class FormGrid;
 
 
 class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
@@ -42,6 +44,7 @@ public:
     Q_INVOKABLE QString getPhotoFileName() { return photoFileName; }
     Q_INVOKABLE void setPhotoWindowTitle(QString title) { photoWindowTitle = title; }
     void        setIsBig(bool big) { isBigPicture = big; }
+    void        setForm(FormGrid* f) { form = f; }
 
 protected:
     QString pictureDrawn;
@@ -50,6 +53,7 @@ protected:
 
 private:
     TApplication*               app;
+    FormGrid*                   form;
     int                         pictSize;
     QRect                       bigPictRect;
     bool                        isBigPicture;

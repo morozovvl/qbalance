@@ -11,8 +11,6 @@
 #include <qdatastream.h>
 #include <qiodevice.h>
 
-#include "qtscriptshell_QDataStream.h"
-
 static const char * const qtscript_QDataStream_function_names[] = {
     "QDataStream"
     // static
@@ -133,7 +131,6 @@ static QScriptValue qtscript_QDataStream_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QDataStream*)
-Q_DECLARE_METATYPE(QtScriptShell_QDataStream*)
 Q_DECLARE_METATYPE(QDataStream::FloatingPointPrecision)
 Q_DECLARE_METATYPE(QDataStream::Version)
 Q_DECLARE_METATYPE(QDataStream::Status)
@@ -239,6 +236,8 @@ static const QDataStream::Version qtscript_QDataStream_Version_values[] = {
     , QDataStream::Qt_4_4
     , QDataStream::Qt_4_5
     , QDataStream::Qt_4_6
+    , QDataStream::Qt_5_0
+    , QDataStream::Qt_5_1
 };
 
 static const char * const qtscript_QDataStream_Version_keys[] = {
@@ -254,11 +253,13 @@ static const char * const qtscript_QDataStream_Version_keys[] = {
     , "Qt_4_4"
     , "Qt_4_5"
     , "Qt_4_6"
+    , "Qt_5_0"
+    , "Qt_5_1"
 };
 
 static QString qtscript_QDataStream_Version_toStringHelper(QDataStream::Version value)
 {
-    if ((value >= QDataStream::Qt_1_0) && (value <= QDataStream::Qt_4_6))
+    if ((value >= QDataStream::Qt_1_0) && (value <= QDataStream::Qt_5_1))
         return qtscript_QDataStream_Version_keys[static_cast<int>(value)-static_cast<int>(QDataStream::Qt_1_0)];
     return QString();
 }
@@ -277,7 +278,7 @@ static void qtscript_QDataStream_Version_fromScriptValue(const QScriptValue &val
 static QScriptValue qtscript_construct_QDataStream_Version(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QDataStream::Qt_1_0) && (arg <= QDataStream::Qt_4_6))
+    if ((arg >= QDataStream::Qt_1_0) && (arg <= QDataStream::Qt_5_1))
         return qScriptValueFromValue(engine,  static_cast<QDataStream::Version>(arg));
     return context->throwError(QString::fromLatin1("Version(): invalid enum value (%0)").arg(arg));
 }
@@ -301,7 +302,7 @@ static QScriptValue qtscript_create_QDataStream_Version_class(QScriptEngine *eng
         qtscript_QDataStream_Version_valueOf, qtscript_QDataStream_Version_toString);
     qScriptRegisterMetaType<QDataStream::Version>(engine, qtscript_QDataStream_Version_toScriptValue,
         qtscript_QDataStream_Version_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 14; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QDataStream_Version_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QDataStream_Version_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -317,17 +318,19 @@ static const QDataStream::Status qtscript_QDataStream_Status_values[] = {
     QDataStream::Ok
     , QDataStream::ReadPastEnd
     , QDataStream::ReadCorruptData
+    , QDataStream::WriteFailed
 };
 
 static const char * const qtscript_QDataStream_Status_keys[] = {
     "Ok"
     , "ReadPastEnd"
     , "ReadCorruptData"
+    , "WriteFailed"
 };
 
 static QString qtscript_QDataStream_Status_toStringHelper(QDataStream::Status value)
 {
-    if ((value >= QDataStream::Ok) && (value <= QDataStream::ReadCorruptData))
+    if ((value >= QDataStream::Ok) && (value <= QDataStream::WriteFailed))
         return qtscript_QDataStream_Status_keys[static_cast<int>(value)-static_cast<int>(QDataStream::Ok)];
     return QString();
 }
@@ -346,7 +349,7 @@ static void qtscript_QDataStream_Status_fromScriptValue(const QScriptValue &valu
 static QScriptValue qtscript_construct_QDataStream_Status(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QDataStream::Ok) && (arg <= QDataStream::ReadCorruptData))
+    if ((arg >= QDataStream::Ok) && (arg <= QDataStream::WriteFailed))
         return qScriptValueFromValue(engine,  static_cast<QDataStream::Status>(arg));
     return context->throwError(QString::fromLatin1("Status(): invalid enum value (%0)").arg(arg));
 }
@@ -370,7 +373,7 @@ static QScriptValue qtscript_create_QDataStream_Status_class(QScriptEngine *engi
         qtscript_QDataStream_Status_valueOf, qtscript_QDataStream_Status_toString);
     qScriptRegisterMetaType<QDataStream::Status>(engine, qtscript_QDataStream_Status_toScriptValue,
         qtscript_QDataStream_Status_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QDataStream_Status_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QDataStream_Status_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -693,30 +696,26 @@ static QScriptValue qtscript_QDataStream_static_call(QScriptContext *context, QS
         return context->throwError(QString::fromLatin1("QDataStream(): Did you forget to construct with 'new'?"));
     }
     if (context->argumentCount() == 0) {
-        QtScriptShell_QDataStream* _q_cpp_result = new QtScriptShell_QDataStream();
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDataStream*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
+        QDataStream* _q_cpp_result = new QDataStream();
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     } else if (context->argumentCount() == 1) {
         if (qscriptvalue_cast<QIODevice*>(context->argument(0))) {
             QIODevice* _q_arg0 = qscriptvalue_cast<QIODevice*>(context->argument(0));
-            QtScriptShell_QDataStream* _q_cpp_result = new QtScriptShell_QDataStream(_q_arg0);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDataStream*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDataStream* _q_cpp_result = new QDataStream(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            QtScriptShell_QDataStream* _q_cpp_result = new QtScriptShell_QDataStream(_q_arg0);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDataStream*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDataStream* _q_cpp_result = new QDataStream(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
         QByteArray* _q_arg0 = qscriptvalue_cast<QByteArray*>(context->argument(0));
         QFlags<QIODevice::OpenModeFlag> _q_arg1 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(1));
-        QtScriptShell_QDataStream* _q_cpp_result = new QtScriptShell_QDataStream(_q_arg0, _q_arg1);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDataStream*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
+        QDataStream* _q_cpp_result = new QDataStream(_q_arg0, _q_arg1);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     }
     break;

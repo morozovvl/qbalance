@@ -25,12 +25,12 @@ static const char * const qtscript_QNetworkReply_function_names[] = {
     "QNetworkReply"
     // static
     // prototype
-    , "abort"
     , "attribute"
-    , "error"
+    , "getError"
     , "hasRawHeader"
     , "header"
     , "ignoreSslErrors"
+    , "ignoreSslErrorsImplementation"
     , "isFinished"
     , "isRunning"
     , "manager"
@@ -40,9 +40,19 @@ static const char * const qtscript_QNetworkReply_function_names[] = {
     , "rawHeaderPairs"
     , "readBufferSize"
     , "request"
+    , "setAttribute"
+    , "setError"
+    , "setFinished"
+    , "setHeader"
+    , "setOperation"
+    , "setRawHeader"
     , "setReadBufferSize"
+    , "setRequest"
     , "setSslConfiguration"
+    , "setSslConfigurationImplementation"
+    , "setUrl"
     , "sslConfiguration"
+    , "sslConfigurationImplementation"
     , "url"
     , "toString"
 };
@@ -51,12 +61,12 @@ static const char * const qtscript_QNetworkReply_function_signatures[] = {
     ""
     // static
     // prototype
-    , ""
     , "Attribute code"
     , ""
     , "QByteArray headerName"
     , "KnownHeaders header"
     , "List errors"
+    , "List arg__1"
     , ""
     , ""
     , ""
@@ -66,9 +76,19 @@ static const char * const qtscript_QNetworkReply_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "Attribute code, Object value"
+    , "NetworkError errorCode, String errorString"
+    , "bool arg__1"
+    , "KnownHeaders header, Object value"
+    , "Operation operation"
+    , "QByteArray headerName, QByteArray value"
     , "qint64 size"
+    , "QNetworkRequest request"
     , "QSslConfiguration configuration"
+    , "QSslConfiguration arg__1"
+    , "QUrl url"
     , ""
+    , "QSslConfiguration arg__1"
     , ""
 ""
 };
@@ -77,26 +97,56 @@ static const int qtscript_QNetworkReply_function_lengths[] = {
     0
     // static
     // prototype
-    , 0
     , 1
     , 0
     , 1
     , 1
     , 1
-    , 0
-    , 0
-    , 0
-    , 0
     , 1
     , 0
     , 0
     , 0
     , 0
     , 1
+    , 0
+    , 0
+    , 0
+    , 0
+    , 2
+    , 2
+    , 1
+    , 2
+    , 1
+    , 2
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 0
     , 1
     , 0
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QNetworkReply : public QNetworkReply
+{
+    friend QScriptValue qtscript_QNetworkReply_ignoreSslErrorsImplementation(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setAttribute(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setError(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setFinished(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setHeader(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setOperation(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setRawHeader(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setRequest(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setSslConfigurationImplementation(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_setUrl(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QNetworkReply_sslConfigurationImplementation(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QNetworkReply_throw_ambiguity_error_helper(
@@ -117,13 +167,13 @@ static const QMetaObject *qtscript_QNetworkReply_metaObject()
 
 Q_DECLARE_METATYPE(QNetworkReply*)
 Q_DECLARE_METATYPE(QtScriptShell_QNetworkReply*)
-Q_DECLARE_METATYPE(QNetworkReply::NetworkError)
 Q_DECLARE_METATYPE(QNetworkRequest::Attribute)
 Q_DECLARE_METATYPE(QNetworkRequest::KnownHeaders)
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QNetworkAccessManager*)
 Q_DECLARE_METATYPE(QNetworkAccessManager::Operation)
 Q_DECLARE_METATYPE(QList<QByteArray>)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<QByteArray,QByteArray> > \
 { \
@@ -136,6 +186,23 @@ struct QMetaTypeId< QPair<QByteArray,QByteArray> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<QByteArray,QByteArray> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<QByteArray,QByteArray> >("QPair<QByteArray,QByteArray>", reinterpret_cast< QPair<QByteArray,QByteArray> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > > \
 { \
@@ -148,7 +215,22 @@ struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > > \
         return metatype_id; \
     } \
 };
-Q_DECLARE_METATYPE(QSslConfiguration)
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QList<QPair<QByteArray,QByteArray> > >("QList<QPair<QByteArray,QByteArray> >", reinterpret_cast< QList<QPair<QByteArray,QByteArray> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QIODevice*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -178,6 +260,8 @@ static const QNetworkReply::NetworkError qtscript_QNetworkReply_NetworkError_val
     , QNetworkReply::OperationCanceledError
     , QNetworkReply::SslHandshakeFailedError
     , QNetworkReply::TemporaryNetworkFailureError
+    , QNetworkReply::NetworkSessionFailedError
+    , QNetworkReply::BackgroundRequestNotAllowedError
     , QNetworkReply::UnknownNetworkError
     , QNetworkReply::ProxyConnectionRefusedError
     , QNetworkReply::ProxyConnectionClosedError
@@ -205,6 +289,8 @@ static const char * const qtscript_QNetworkReply_NetworkError_keys[] = {
     , "OperationCanceledError"
     , "SslHandshakeFailedError"
     , "TemporaryNetworkFailureError"
+    , "NetworkSessionFailedError"
+    , "BackgroundRequestNotAllowedError"
     , "UnknownNetworkError"
     , "ProxyConnectionRefusedError"
     , "ProxyConnectionClosedError"
@@ -274,7 +360,7 @@ static QScriptValue qtscript_create_QNetworkReply_NetworkError_class(QScriptEngi
         qtscript_QNetworkReply_NetworkError_valueOf, qtscript_QNetworkReply_NetworkError_toString);
     qScriptRegisterMetaType<QNetworkReply::NetworkError>(engine, qtscript_QNetworkReply_NetworkError_toScriptValue,
         qtscript_QNetworkReply_NetworkError_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 24; ++i) {
+    for (int i = 0; i < 26; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QNetworkReply_NetworkError_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QNetworkReply_NetworkError_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -296,11 +382,11 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 19;
+        _id = 0xBABE0000 + 29;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QNetworkReply* _q_self = qscriptvalue_cast<QNetworkReply*>(context->thisObject());
+    qtscript_QNetworkReply* _q_self = reinterpret_cast<qtscript_QNetworkReply*>(qscriptvalue_cast<QNetworkReply*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QNetworkReply.%0(): this object is not a QNetworkReply")
@@ -309,13 +395,6 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        _q_self->abort();
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 1:
     if (context->argumentCount() == 1) {
         QNetworkRequest::Attribute _q_arg0 = qscriptvalue_cast<QNetworkRequest::Attribute>(context->argument(0));
         QVariant _q_result = _q_self->attribute(_q_arg0);
@@ -323,14 +402,14 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 2:
+    case 1:
     if (context->argumentCount() == 0) {
         QNetworkReply::NetworkError _q_result = _q_self->error();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 2:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         bool _q_result = _q_self->hasRawHeader(_q_arg0);
@@ -338,7 +417,7 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 4:
+    case 3:
     if (context->argumentCount() == 1) {
         QNetworkRequest::KnownHeaders _q_arg0 = qscriptvalue_cast<QNetworkRequest::KnownHeaders>(context->argument(0));
         QVariant _q_result = _q_self->header(_q_arg0);
@@ -346,11 +425,20 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 1) {
         QList<QSslError> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
         _q_self->ignoreSslErrors(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
+        QList<QSslError> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        _q_self->ignoreSslErrorsImplementation(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -420,6 +508,58 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     break;
 
     case 15:
+    if (context->argumentCount() == 2) {
+        QNetworkRequest::Attribute _q_arg0 = qscriptvalue_cast<QNetworkRequest::Attribute>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setAttribute(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 16:
+    if (context->argumentCount() == 2) {
+        QNetworkReply::NetworkError _q_arg0 = qscriptvalue_cast<QNetworkReply::NetworkError>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        _q_self->setError(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 17:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setFinished(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 2) {
+        QNetworkRequest::KnownHeaders _q_arg0 = qscriptvalue_cast<QNetworkRequest::KnownHeaders>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setHeader(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 19:
+    if (context->argumentCount() == 1) {
+        QNetworkAccessManager::Operation _q_arg0 = qscriptvalue_cast<QNetworkAccessManager::Operation>(context->argument(0));
+        _q_self->setOperation(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 20:
+    if (context->argumentCount() == 2) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        QByteArray _q_arg1 = qscriptvalue_cast<QByteArray>(context->argument(1));
+        _q_self->setRawHeader(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 1) {
         qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
         _q_self->setReadBufferSize(_q_arg0);
@@ -427,7 +567,15 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 16:
+    case 22:
+    if (context->argumentCount() == 1) {
+        QNetworkRequest _q_arg0 = qscriptvalue_cast<QNetworkRequest>(context->argument(0));
+        _q_self->setRequest(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 23:
     if (context->argumentCount() == 1) {
         QSslConfiguration _q_arg0 = qscriptvalue_cast<QSslConfiguration>(context->argument(0));
         _q_self->setSslConfiguration(_q_arg0);
@@ -435,21 +583,45 @@ static QScriptValue qtscript_QNetworkReply_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 17:
+    case 24:
+    if (context->argumentCount() == 1) {
+        QSslConfiguration _q_arg0 = qscriptvalue_cast<QSslConfiguration>(context->argument(0));
+        _q_self->setSslConfigurationImplementation(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 25:
+    if (context->argumentCount() == 1) {
+        QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
+        _q_self->setUrl(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 26:
     if (context->argumentCount() == 0) {
         QSslConfiguration _q_result = _q_self->sslConfiguration();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 27:
+    if (context->argumentCount() == 1) {
+        QSslConfiguration _q_arg0 = qscriptvalue_cast<QSslConfiguration>(context->argument(0));
+        _q_self->sslConfigurationImplementation(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 28:
     if (context->argumentCount() == 0) {
         QUrl _q_result = _q_self->url();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 19: {
+    case 29: {
     QString result = QString::fromLatin1("QNetworkReply");
     return QScriptValue(context->engine(), result);
     }
@@ -496,7 +668,7 @@ QScriptValue qtscript_create_QNetworkReply_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QNetworkReply*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkReply*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QIODevice*>()));
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 30; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkReply_prototype_call, qtscript_QNetworkReply_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkReply_function_names[i+1]),

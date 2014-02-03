@@ -26,6 +26,7 @@ static const char * const qtscript_QNetworkInterface_function_names[] = {
     , "index"
     , "isValid"
     , "name"
+    , "swap"
     , "toString"
 };
 
@@ -44,6 +45,7 @@ static const char * const qtscript_QNetworkInterface_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QNetworkInterface other"
 ""
 };
 
@@ -62,6 +64,7 @@ static const int qtscript_QNetworkInterface_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
     , 0
 };
 
@@ -286,7 +289,7 @@ static QScriptValue qtscript_QNetworkInterface_prototype_call(QScriptContext *co
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 7;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -347,7 +350,15 @@ static QScriptValue qtscript_QNetworkInterface_prototype_call(QScriptContext *co
     }
     break;
 
-    case 7: {
+    case 7:
+    if (context->argumentCount() == 1) {
+        QNetworkInterface _q_arg0 = qscriptvalue_cast<QNetworkInterface>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 8: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -426,7 +437,7 @@ QScriptValue qtscript_create_QNetworkInterface_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QNetworkInterface*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkInterface*)0));
-    for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkInterface_prototype_call, qtscript_QNetworkInterface_function_lengths[i+5]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkInterface_function_names[i+5]),

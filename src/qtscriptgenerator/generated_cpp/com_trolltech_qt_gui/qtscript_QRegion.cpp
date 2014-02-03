@@ -21,11 +21,10 @@ static const char * const qtscript_QRegion_function_names[] = {
     // prototype
     , "boundingRect"
     , "contains"
-    , "intersect"
     , "intersected"
     , "intersects"
     , "isEmpty"
-    , "numRects"
+    , "isNull"
     , "operator_add"
     , "operator_and"
     , "equals"
@@ -34,9 +33,9 @@ static const char * const qtscript_QRegion_function_names[] = {
     , "rects"
     , "setRects"
     , "subtracted"
+    , "swap"
     , "translate"
     , "translated"
-    , "unite"
     , "united"
     , "writeTo"
     , "xored"
@@ -49,7 +48,6 @@ static const char * const qtscript_QRegion_function_signatures[] = {
     // prototype
     , ""
     , "QPoint p\nQRect r"
-    , "QRect r"
     , "QRect r\nQRegion r"
     , "QRect r\nQRegion r"
     , ""
@@ -62,9 +60,9 @@ static const char * const qtscript_QRegion_function_signatures[] = {
     , ""
     , "QRect rect, int num"
     , "QRegion r"
+    , "QRegion other"
     , "QPoint p\nint dx, int dy"
     , "QPoint p\nint dx, int dy"
-    , "QRect r"
     , "QRect r\nQRegion r"
     , "QDataStream arg__1"
     , "QRegion r"
@@ -79,7 +77,6 @@ static const int qtscript_QRegion_function_lengths[] = {
     , 1
     , 1
     , 1
-    , 1
     , 0
     , 0
     , 1
@@ -90,9 +87,9 @@ static const int qtscript_QRegion_function_lengths[] = {
     , 0
     , 2
     , 1
-    , 2
-    , 2
     , 1
+    , 2
+    , 2
     , 1
     , 1
     , 1
@@ -212,7 +209,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 20;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -247,9 +244,15 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
 
     case 2:
     if (context->argumentCount() == 1) {
-        QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
-        QRegion _q_result = _q_self->intersect(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        if ((qMetaTypeId<QRect>() == context->argument(0).toVariant().userType())) {
+            QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
+            QRegion _q_result = _q_self->intersected(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QRegion>() == context->argument(0).toVariant().userType())) {
+            QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
+            QRegion _q_result = _q_self->intersected(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
     }
     break;
 
@@ -257,45 +260,31 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QRect>() == context->argument(0).toVariant().userType())) {
             QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
-            QRegion _q_result = _q_self->intersected(_q_arg0);
-            return qScriptValueFromValue(context->engine(), _q_result);
+            bool _q_result = _q_self->intersects(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
         } else if ((qMetaTypeId<QRegion>() == context->argument(0).toVariant().userType())) {
             QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
-            QRegion _q_result = _q_self->intersected(_q_arg0);
-            return qScriptValueFromValue(context->engine(), _q_result);
+            bool _q_result = _q_self->intersects(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
         }
     }
     break;
 
     case 4:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<QRect>() == context->argument(0).toVariant().userType())) {
-            QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
-            bool _q_result = _q_self->intersects(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QRegion>() == context->argument(0).toVariant().userType())) {
-            QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
-            bool _q_result = _q_self->intersects(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    break;
-
-    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEmpty();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->numRects();
+        bool _q_result = _q_self->isNull();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 1) {
         QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
         QRegion _q_result = _q_self->operator+(_q_arg0);
@@ -303,7 +292,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 1) {
         QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
         QRegion _q_result = _q_self->operator&(_q_arg0);
@@ -311,7 +300,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 9:
+    case 8:
     if (context->argumentCount() == 1) {
         QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -319,7 +308,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 10:
+    case 9:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -327,21 +316,21 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 11:
+    case 10:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->rectCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 11:
     if (context->argumentCount() == 0) {
         QVector<QRect> _q_result = _q_self->rects();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 12:
     if (context->argumentCount() == 2) {
         QRect* _q_arg0 = qscriptvalue_cast<QRect*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
@@ -350,11 +339,19 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 14:
+    case 13:
     if (context->argumentCount() == 1) {
         QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
         QRegion _q_result = _q_self->subtracted(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 14:
+    if (context->argumentCount() == 1) {
+        QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
@@ -388,14 +385,6 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
 
     case 17:
     if (context->argumentCount() == 1) {
-        QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
-        QRegion _q_result = _q_self->unite(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 18:
-    if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QRect>() == context->argument(0).toVariant().userType())) {
             QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
             QRegion _q_result = _q_self->united(_q_arg0);
@@ -408,7 +397,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 19:
+    case 18:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -416,7 +405,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 20:
+    case 19:
     if (context->argumentCount() == 1) {
         QRegion _q_arg0 = qscriptvalue_cast<QRegion>(context->argument(0));
         QRegion _q_result = _q_self->xored(_q_arg0);
@@ -424,7 +413,7 @@ static QScriptValue qtscript_QRegion_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 21: {
+    case 20: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -523,7 +512,7 @@ QScriptValue qtscript_create_QRegion_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QRegion*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QRegion*)0));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 21; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QRegion_prototype_call, qtscript_QRegion_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QRegion_function_names[i+1]),

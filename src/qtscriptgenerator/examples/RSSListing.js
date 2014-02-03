@@ -50,10 +50,9 @@ function RSSListing(parent)
     this.currentTag = "";
     this.linkString = "";
     this.titleString = "";
-    this.connectionId = -1;
 
     this.lineEdit = new QLineEdit(this);
-    this.lineEdit.text = "http://labs.trolltech.com/blogs/feed";
+    this.lineEdit.text = "http://blog.qt.digia.com/feed/";
 
     this.fetchButton = new QPushButton(tr("Fetch"), this);
     this.abortButton = new QPushButton(tr("Abort"), this);
@@ -66,27 +65,25 @@ function RSSListing(parent)
     headerLabels.push(tr("Title"));
     headerLabels.push(tr("Link"));
     this.treeWidget.setHeaderLabels(headerLabels);
-    this.treeWidget.header().setResizeMode(QHeaderView.ResizeToContents);
+    this.treeWidget.header().resizeMode = QHeaderView.ResizeToContents;
 
-    this.http = new QHttp(this);
-    this.http.readyRead.connect(this, this.readData);
-    this.http.requestFinished.connect(this, this.finished);
+    this.manager = new QNetworkAccessManager(this);
 
     this.lineEdit.returnPressed.connect(this, this.fetch);
     this.fetchButton.clicked.connect(this, this.fetch);
-    this.abortButton.clicked.connect(this.http, this.http.abort);
+    this.abortButton.clicked.connect(this, this.abort);
 
     var layout = new QVBoxLayout(this);
 
     var hboxLayout = new QHBoxLayout();
 
     // ### working around problem with addWidget() binding
-    hboxLayout.addWidget(this.lineEdit, 0, Qt.AlignLeft);
-    hboxLayout.addWidget(this.fetchButton, 0, Qt.AlignLeft);
-    hboxLayout.addWidget(this.abortButton, 0, Qt.AlignLeft);
+    hboxLayout.addWidget(this.lineEdit, 0, 0);
+    hboxLayout.addWidget(this.fetchButton, 0, 0);
+    hboxLayout.addWidget(this.abortButton, 0, 0);
 
     layout.addLayout(hboxLayout);
-    layout.addWidget(this.treeWidget, 0, Qt.AlignLeft);
+    layout.addWidget(this.treeWidget, 0, 0);
 
     this.windowTitle = tr("RSS listing example");
     this.resize(640,480);
@@ -105,32 +102,38 @@ RSSListing.prototype.fetch = function()
 
     var url = new QUrl(this.lineEdit.text);
 
-    this.http.setHost(url.host());
-    this.connectionId = this.http.get(url.path());
+    this.reply = this.manager.get(new QNetworkRequest(url));
+    this.reply.readyRead.connect(this, this.readData);
+    this.reply.finished.connect(this, this.finished);
 }
 
-RSSListing.prototype.readData = function(resp)
+RSSListing.prototype.abort = function()
 {
-    if (resp.statusCode() != 200)
-        this.http.abort();
-    else {
-        this.xml.addData(this.http.readAll());
+    if (this.reply)
+        this.reply.abort();
+}
+
+RSSListing.prototype.readData = function()
+{
+    if (this.reply.getError() != QNetworkReply.NoError) {
+        this.abort();
+    } else {
+        this.xml.addData(this.reply.readAll());
         this.parseXml();
     }
 }
 
-RSSListing.prototype.finished = function(id, error)
+RSSListing.prototype.finished = function()
 {
-    if (error) {
+    if (this.reply.getError() != QNetworkReply.NoError)
         print("Received error during HTTP fetch."); // ### qWarning()
-        this.lineEdit.readOnly = false;
-        this.abortButton.enabled = false;
-        this.fetchButton.enabled = true;
-    } else if (id == this.connectionId) {
-        this.lineEdit.readOnly = false;
-        this.abortButton.enabled = false;
-        this.fetchButton.enabled = true;
-    }
+    this.lineEdit.readOnly = false;
+    this.abortButton.enabled = false;
+    this.fetchButton.enabled = true;
+    this.reply.readyRead.disconnect(this, this.readData);
+    this.reply.finished.disconnect(this, this.finished);
+    this.reply.deleteLater();
+    this.reply = null;
 }
 
 RSSListing.prototype.parseXml = function()
@@ -162,7 +165,7 @@ RSSListing.prototype.parseXml = function()
     }
     if (this.xml.hasError() && (this.xml.error() != QXmlStreamReader.PrematureEndOfDocumentError)) {
         print("XML ERROR:", this.xml.lineNumber() + ":", this.xml.errorString());
-        this.http.abort();
+        this.abort();
     }
 }
 

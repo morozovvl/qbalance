@@ -21,6 +21,10 @@ static const char * const qtscript_QTextBlockGroup_function_names[] = {
     "QTextBlockGroup"
     // static
     // prototype
+    , "blockFormatChanged"
+    , "blockInserted"
+    , "blockList"
+    , "blockRemoved"
     , "toString"
 };
 
@@ -28,6 +32,10 @@ static const char * const qtscript_QTextBlockGroup_function_signatures[] = {
     ""
     // static
     // prototype
+    , "QTextBlock block"
+    , "QTextBlock block"
+    , ""
+    , "QTextBlock block"
 ""
 };
 
@@ -35,7 +43,24 @@ static const int qtscript_QTextBlockGroup_function_lengths[] = {
     0
     // static
     // prototype
+    , 1
+    , 1
     , 0
+    , 1
+    , 0
+};
+
+static QScriptValue qtscript_QTextBlockGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextBlockGroup : public QTextBlockGroup
+{
+    friend QScriptValue qtscript_QTextBlockGroup_blockFormatChanged(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextBlockGroup_blockInserted(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextBlockGroup_blockList(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextBlockGroup_blockRemoved(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTextBlockGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTextBlockGroup_throw_ambiguity_error_helper(
@@ -51,6 +76,8 @@ static QScriptValue qtscript_QTextBlockGroup_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTextBlockGroup*)
 Q_DECLARE_METATYPE(QtScriptShell_QTextBlockGroup*)
+Q_DECLARE_METATYPE(QTextBlock)
+Q_DECLARE_METATYPE(QList<QTextBlock>)
 Q_DECLARE_METATYPE(QTextObject*)
 
 //
@@ -67,11 +94,11 @@ static QScriptValue qtscript_QTextBlockGroup_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 0;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextBlockGroup* _q_self = qscriptvalue_cast<QTextBlockGroup*>(context->thisObject());
+    qtscript_QTextBlockGroup* _q_self = reinterpret_cast<qtscript_QTextBlockGroup*>(qscriptvalue_cast<QTextBlockGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextBlockGroup.%0(): this object is not a QTextBlockGroup")
@@ -79,7 +106,38 @@ static QScriptValue qtscript_QTextBlockGroup_prototype_call(QScriptContext *cont
     }
 
     switch (_id) {
-    case 0: {
+    case 0:
+    if (context->argumentCount() == 1) {
+        QTextBlock _q_arg0 = qscriptvalue_cast<QTextBlock>(context->argument(0));
+        _q_self->blockFormatChanged(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 1) {
+        QTextBlock _q_arg0 = qscriptvalue_cast<QTextBlock>(context->argument(0));
+        _q_self->blockInserted(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 0) {
+        QList<QTextBlock> _q_result = _q_self->blockList();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 1) {
+        QTextBlock _q_arg0 = qscriptvalue_cast<QTextBlock>(context->argument(0));
+        _q_self->blockRemoved(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4: {
     QString result = QString::fromLatin1("QTextBlockGroup");
     return QScriptValue(context->engine(), result);
     }
@@ -126,6 +184,12 @@ QScriptValue qtscript_create_QTextBlockGroup_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTextBlockGroup*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextBlockGroup*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QTextObject*>()));
+    for (int i = 0; i < 5; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QTextBlockGroup_prototype_call, qtscript_QTextBlockGroup_function_lengths[i+1]);
+        fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
+        proto.setProperty(QString::fromLatin1(qtscript_QTextBlockGroup_function_names[i+1]),
+            fun, QScriptValue::SkipInEnumeration);
+    }
 
     qScriptRegisterMetaType<QTextBlockGroup*>(engine, qtscript_QTextBlockGroup_toScriptValue, 
         qtscript_QTextBlockGroup_fromScriptValue, proto);

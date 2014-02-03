@@ -515,7 +515,7 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
 
 void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString table, QString name, QString type, int length, int precision, bool read, bool constRead, int number)
 {
-    // Выясним, нет ли уже такого поля, чтобы избежать появления полей
+    // Выясним, нет ли уже такого поля, чтобы избежать появления двойных полей
     int maxKey = 0;
     if (columnsProperties->count() > 0)
     {
@@ -1016,7 +1016,8 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                     if ((column1 == fields->at(i).name.toUpper()) &&
                             ((table == fields->at(i).table.toLower()) ||
                              (table == "проводки") ||
-                             (table == "документы")))
+                             (table == "документы") ||
+                             (table == "saldo")))
                     {
                         // Заголовок для столбца найден
                         counter++;

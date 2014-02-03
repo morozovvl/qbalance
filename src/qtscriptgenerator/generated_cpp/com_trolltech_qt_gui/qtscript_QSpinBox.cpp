@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qspinbox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -38,6 +38,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QSpinBox.h"
 
@@ -46,6 +47,8 @@ static const char * const qtscript_QSpinBox_function_names[] = {
     // static
     // prototype
     , "setRange"
+    , "textFromValue"
+    , "valueFromText"
     , "toString"
 };
 
@@ -54,6 +57,8 @@ static const char * const qtscript_QSpinBox_function_signatures[] = {
     // static
     // prototype
     , "int min, int max"
+    , "int val"
+    , "String text"
 ""
 };
 
@@ -62,7 +67,20 @@ static const int qtscript_QSpinBox_function_lengths[] = {
     // static
     // prototype
     , 2
+    , 1
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QSpinBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSpinBox : public QSpinBox
+{
+    friend QScriptValue qtscript_QSpinBox_textFromValue(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSpinBox_valueFromText(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSpinBox_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSpinBox_throw_ambiguity_error_helper(
@@ -78,6 +96,7 @@ static QScriptValue qtscript_QSpinBox_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QSpinBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QSpinBox*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractSpinBox*)
 
 //
@@ -94,11 +113,11 @@ static QScriptValue qtscript_QSpinBox_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 1;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSpinBox* _q_self = qscriptvalue_cast<QSpinBox*>(context->thisObject());
+    qtscript_QSpinBox* _q_self = reinterpret_cast<qtscript_QSpinBox*>(qscriptvalue_cast<QSpinBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSpinBox.%0(): this object is not a QSpinBox")
@@ -115,7 +134,23 @@ static QScriptValue qtscript_QSpinBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 1: {
+    case 1:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QString _q_result = _q_self->textFromValue(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        int _q_result = _q_self->valueFromText(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3: {
     QString result = QString::fromLatin1("QSpinBox");
     return QScriptValue(context->engine(), result);
     }
@@ -175,7 +210,7 @@ QScriptValue qtscript_create_QSpinBox_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSpinBox*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSpinBox*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractSpinBox*>()));
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSpinBox_prototype_call, qtscript_QSpinBox_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSpinBox_function_names[i+1]),

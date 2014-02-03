@@ -9,6 +9,8 @@
 #include <QVariant>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
+#include <qpoint.h>
 
 #include "qtscriptshell_QPaintDevice.h"
 
@@ -19,15 +21,19 @@ static const char * const qtscript_QPaintDevice_function_names[] = {
     , "colorCount"
     , "depth"
     , "devType"
+    , "devicePixelRatio"
     , "height"
     , "heightMM"
+    , "initPainter"
     , "logicalDpiX"
     , "logicalDpiY"
-    , "numColors"
+    , "metric"
     , "paintEngine"
     , "paintingActive"
     , "physicalDpiX"
     , "physicalDpiY"
+    , "redirected"
+    , "sharedPainter"
     , "width"
     , "widthMM"
     , "toString"
@@ -43,11 +49,15 @@ static const char * const qtscript_QPaintDevice_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QPainter painter"
+    , ""
+    , ""
+    , "PaintDeviceMetric metric"
     , ""
     , ""
     , ""
     , ""
-    , ""
+    , "QPoint offset"
     , ""
     , ""
     , ""
@@ -64,15 +74,28 @@ static const int qtscript_QPaintDevice_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
+    , 0
+    , 0
+    , 1
     , 0
     , 0
     , 0
     , 0
+    , 1
     , 0
     , 0
     , 0
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QPaintDevice_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPaintDevice : public QPaintDevice
+{
+
+    friend QScriptValue qtscript_QPaintDevice_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPaintDevice_throw_ambiguity_error_helper(
@@ -89,7 +112,9 @@ static QScriptValue qtscript_QPaintDevice_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QPaintDevice*)
 Q_DECLARE_METATYPE(QtScriptShell_QPaintDevice*)
 Q_DECLARE_METATYPE(QPaintDevice::PaintDeviceMetric)
+Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QPaintEngine*)
+Q_DECLARE_METATYPE(QPoint*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -120,6 +145,7 @@ static const QPaintDevice::PaintDeviceMetric qtscript_QPaintDevice_PaintDeviceMe
     , QPaintDevice::PdmDpiY
     , QPaintDevice::PdmPhysicalDpiX
     , QPaintDevice::PdmPhysicalDpiY
+    , QPaintDevice::PdmDevicePixelRatio
 };
 
 static const char * const qtscript_QPaintDevice_PaintDeviceMetric_keys[] = {
@@ -133,11 +159,12 @@ static const char * const qtscript_QPaintDevice_PaintDeviceMetric_keys[] = {
     , "PdmDpiY"
     , "PdmPhysicalDpiX"
     , "PdmPhysicalDpiY"
+    , "PdmDevicePixelRatio"
 };
 
 static QString qtscript_QPaintDevice_PaintDeviceMetric_toStringHelper(QPaintDevice::PaintDeviceMetric value)
 {
-    if ((value >= QPaintDevice::PdmWidth) && (value <= QPaintDevice::PdmPhysicalDpiY))
+    if ((value >= QPaintDevice::PdmWidth) && (value <= QPaintDevice::PdmDevicePixelRatio))
         return qtscript_QPaintDevice_PaintDeviceMetric_keys[static_cast<int>(value)-static_cast<int>(QPaintDevice::PdmWidth)];
     return QString();
 }
@@ -156,7 +183,7 @@ static void qtscript_QPaintDevice_PaintDeviceMetric_fromScriptValue(const QScrip
 static QScriptValue qtscript_construct_QPaintDevice_PaintDeviceMetric(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QPaintDevice::PdmWidth) && (arg <= QPaintDevice::PdmPhysicalDpiY))
+    if ((arg >= QPaintDevice::PdmWidth) && (arg <= QPaintDevice::PdmDevicePixelRatio))
         return qScriptValueFromValue(engine,  static_cast<QPaintDevice::PaintDeviceMetric>(arg));
     return context->throwError(QString::fromLatin1("PaintDeviceMetric(): invalid enum value (%0)").arg(arg));
 }
@@ -180,7 +207,7 @@ static QScriptValue qtscript_create_QPaintDevice_PaintDeviceMetric_class(QScript
         qtscript_QPaintDevice_PaintDeviceMetric_valueOf, qtscript_QPaintDevice_PaintDeviceMetric_toString);
     qScriptRegisterMetaType<QPaintDevice::PaintDeviceMetric>(engine, qtscript_QPaintDevice_PaintDeviceMetric_toScriptValue,
         qtscript_QPaintDevice_PaintDeviceMetric_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QPaintDevice_PaintDeviceMetric_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QPaintDevice_PaintDeviceMetric_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -202,11 +229,11 @@ static QScriptValue qtscript_QPaintDevice_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 14;
+        _id = 0xBABE0000 + 18;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPaintDevice* _q_self = qscriptvalue_cast<QPaintDevice*>(context->thisObject());
+    qtscript_QPaintDevice* _q_self = reinterpret_cast<qtscript_QPaintDevice*>(qscriptvalue_cast<QPaintDevice*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPaintDevice.%0(): this object is not a QPaintDevice")
@@ -237,82 +264,113 @@ static QScriptValue qtscript_QPaintDevice_prototype_call(QScriptContext *context
 
     case 3:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->height();
+        int _q_result = _q_self->devicePixelRatio();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->heightMM();
+        int _q_result = _q_self->height();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 5:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->logicalDpiX();
+        int _q_result = _q_self->heightMM();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 6:
-    if (context->argumentCount() == 0) {
-        int _q_result = _q_self->logicalDpiY();
-        return QScriptValue(context->engine(), _q_result);
+    if (context->argumentCount() == 1) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        _q_self->initPainter(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 7:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->numColors();
+        int _q_result = _q_self->logicalDpiX();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 8:
     if (context->argumentCount() == 0) {
-        QPaintEngine* _q_result = _q_self->paintEngine();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        int _q_result = _q_self->logicalDpiY();
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 9:
-    if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->paintingActive();
+    if (context->argumentCount() == 1) {
+        QPaintDevice::PaintDeviceMetric _q_arg0 = qscriptvalue_cast<QPaintDevice::PaintDeviceMetric>(context->argument(0));
+        int _q_result = _q_self->metric(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 10:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->physicalDpiX();
-        return QScriptValue(context->engine(), _q_result);
+        QPaintEngine* _q_result = _q_self->paintEngine();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 11:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->physicalDpiY();
+        bool _q_result = _q_self->paintingActive();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 12:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->width();
+        int _q_result = _q_self->physicalDpiX();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 13:
     if (context->argumentCount() == 0) {
+        int _q_result = _q_self->physicalDpiY();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 14:
+    if (context->argumentCount() == 1) {
+        QPoint* _q_arg0 = qscriptvalue_cast<QPoint*>(context->argument(0));
+        QPaintDevice* _q_result = _q_self->redirected(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 15:
+    if (context->argumentCount() == 0) {
+        QPainter* _q_result = _q_self->sharedPainter();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
+    if (context->argumentCount() == 0) {
+        int _q_result = _q_self->width();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17:
+    if (context->argumentCount() == 0) {
         int _q_result = _q_self->widthMM();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14: {
+    case 18: {
     QString result = QString::fromLatin1("QPaintDevice");
     return QScriptValue(context->engine(), result);
     }
@@ -348,7 +406,7 @@ QScriptValue qtscript_create_QPaintDevice_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QPaintDevice*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPaintDevice*)0));
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 19; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPaintDevice_prototype_call, qtscript_QPaintDevice_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPaintDevice_function_names[i+1]),

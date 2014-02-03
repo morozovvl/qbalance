@@ -86,6 +86,15 @@ static const int qtscript_QGraphicsLinearLayout_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsLinearLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsLinearLayout : public QGraphicsLinearLayout
+{
+
+    friend QScriptValue qtscript_QGraphicsLinearLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGraphicsLinearLayout_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -122,7 +131,7 @@ static QScriptValue qtscript_QGraphicsLinearLayout_prototype_call(QScriptContext
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsLinearLayout* _q_self = qscriptvalue_cast<QGraphicsLinearLayout*>(context->thisObject());
+    qtscript_QGraphicsLinearLayout* _q_self = reinterpret_cast<qtscript_QGraphicsLinearLayout*>(qscriptvalue_cast<QGraphicsLinearLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsLinearLayout.%0(): this object is not a QGraphicsLinearLayout")

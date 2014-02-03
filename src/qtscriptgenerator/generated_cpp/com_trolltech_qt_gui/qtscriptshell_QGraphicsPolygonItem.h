@@ -8,8 +8,8 @@
 class QtScriptShell_QGraphicsPolygonItem : public QGraphicsPolygonItem
 {
 public:
-    QtScriptShell_QGraphicsPolygonItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsPolygonItem(const QPolygonF&  polygon, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsPolygonItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsPolygonItem(const QPolygonF&  polygon, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsPolygonItem();
 
     void advance(int  phase);

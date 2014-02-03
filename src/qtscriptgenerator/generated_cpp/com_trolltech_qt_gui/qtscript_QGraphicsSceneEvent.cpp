@@ -46,6 +46,7 @@ static QScriptValue qtscript_QGraphicsSceneEvent_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QGraphicsSceneEvent*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QEvent::Type)
 Q_DECLARE_METATYPE(QEvent*)
 

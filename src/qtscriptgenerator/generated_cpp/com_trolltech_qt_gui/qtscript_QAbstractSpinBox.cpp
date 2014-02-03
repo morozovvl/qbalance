@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qabstractspinbox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractspinbox.h>
 #include <qaction.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -38,6 +38,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAbstractSpinBox.h"
 
@@ -46,10 +47,14 @@ static const char * const qtscript_QAbstractSpinBox_function_names[] = {
     // static
     // prototype
     , "fixup"
+    , "initStyleOption"
     , "interpretText"
+    , "lineEdit"
     , "minimumSizeHint"
+    , "setLineEdit"
     , "sizeHint"
     , "stepBy"
+    , "stepEnabled"
     , "validate"
     , "toString"
 };
@@ -59,10 +64,14 @@ static const char * const qtscript_QAbstractSpinBox_function_signatures[] = {
     // static
     // prototype
     , "String input"
+    , "QStyleOptionSpinBox option"
     , ""
     , ""
+    , ""
+    , "QLineEdit edit"
     , ""
     , "int steps"
+    , ""
     , "String input, int pos"
 ""
 };
@@ -72,12 +81,29 @@ static const int qtscript_QAbstractSpinBox_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 1
     , 0
     , 0
     , 0
     , 1
+    , 0
+    , 1
+    , 0
     , 2
     , 0
+};
+
+static QScriptValue qtscript_QAbstractSpinBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractSpinBox : public QAbstractSpinBox
+{
+    friend QScriptValue qtscript_QAbstractSpinBox_initStyleOption(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractSpinBox_lineEdit(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractSpinBox_setLineEdit(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractSpinBox_stepEnabled(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractSpinBox_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractSpinBox_throw_ambiguity_error_helper(
@@ -98,11 +124,14 @@ static const QMetaObject *qtscript_QAbstractSpinBox_metaObject()
 
 Q_DECLARE_METATYPE(QAbstractSpinBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractSpinBox*)
+Q_DECLARE_METATYPE(QAbstractSpinBox::CorrectionMode)
 Q_DECLARE_METATYPE(QAbstractSpinBox::StepEnabledFlag)
 Q_DECLARE_METATYPE(QFlags<QAbstractSpinBox::StepEnabledFlag>)
-Q_DECLARE_METATYPE(QAbstractSpinBox::CorrectionMode)
 Q_DECLARE_METATYPE(QAbstractSpinBox::ButtonSymbols)
+Q_DECLARE_METATYPE(QStyleOptionSpinBox*)
+Q_DECLARE_METATYPE(QLineEdit*)
 Q_DECLARE_METATYPE(QValidator::State)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -133,6 +162,79 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
+}
+
+//
+// QAbstractSpinBox::CorrectionMode
+//
+
+static const QAbstractSpinBox::CorrectionMode qtscript_QAbstractSpinBox_CorrectionMode_values[] = {
+    QAbstractSpinBox::CorrectToPreviousValue
+    , QAbstractSpinBox::CorrectToNearestValue
+};
+
+static const char * const qtscript_QAbstractSpinBox_CorrectionMode_keys[] = {
+    "CorrectToPreviousValue"
+    , "CorrectToNearestValue"
+};
+
+static QString qtscript_QAbstractSpinBox_CorrectionMode_toStringHelper(QAbstractSpinBox::CorrectionMode value)
+{
+    const QMetaObject *meta = qtscript_QAbstractSpinBox_metaObject();
+    int idx = meta->indexOfEnumerator("CorrectionMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QAbstractSpinBox_CorrectionMode_toScriptValue(QScriptEngine *engine, const QAbstractSpinBox::CorrectionMode &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractSpinBox"));
+    return clazz.property(qtscript_QAbstractSpinBox_CorrectionMode_toStringHelper(value));
+}
+
+static void qtscript_QAbstractSpinBox_CorrectionMode_fromScriptValue(const QScriptValue &value, QAbstractSpinBox::CorrectionMode &out)
+{
+    out = qvariant_cast<QAbstractSpinBox::CorrectionMode>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QAbstractSpinBox_CorrectionMode(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QAbstractSpinBox_metaObject();
+    int idx = meta->indexOfEnumerator("CorrectionMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QAbstractSpinBox::CorrectionMode>(arg));
+    return context->throwError(QString::fromLatin1("CorrectionMode(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QAbstractSpinBox_CorrectionMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractSpinBox::CorrectionMode value = qscriptvalue_cast<QAbstractSpinBox::CorrectionMode>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QAbstractSpinBox_CorrectionMode_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractSpinBox::CorrectionMode value = qscriptvalue_cast<QAbstractSpinBox::CorrectionMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QAbstractSpinBox_CorrectionMode_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QAbstractSpinBox_CorrectionMode_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QAbstractSpinBox_CorrectionMode,
+        qtscript_QAbstractSpinBox_CorrectionMode_valueOf, qtscript_QAbstractSpinBox_CorrectionMode_toString);
+    qScriptRegisterMetaType<QAbstractSpinBox::CorrectionMode>(engine, qtscript_QAbstractSpinBox_CorrectionMode_toScriptValue,
+        qtscript_QAbstractSpinBox_CorrectionMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractSpinBox_CorrectionMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QAbstractSpinBox_CorrectionMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -281,79 +383,6 @@ static QScriptValue qtscript_create_QAbstractSpinBox_StepEnabled_class(QScriptEn
 }
 
 //
-// QAbstractSpinBox::CorrectionMode
-//
-
-static const QAbstractSpinBox::CorrectionMode qtscript_QAbstractSpinBox_CorrectionMode_values[] = {
-    QAbstractSpinBox::CorrectToPreviousValue
-    , QAbstractSpinBox::CorrectToNearestValue
-};
-
-static const char * const qtscript_QAbstractSpinBox_CorrectionMode_keys[] = {
-    "CorrectToPreviousValue"
-    , "CorrectToNearestValue"
-};
-
-static QString qtscript_QAbstractSpinBox_CorrectionMode_toStringHelper(QAbstractSpinBox::CorrectionMode value)
-{
-    const QMetaObject *meta = qtscript_QAbstractSpinBox_metaObject();
-    int idx = meta->indexOfEnumerator("CorrectionMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QAbstractSpinBox_CorrectionMode_toScriptValue(QScriptEngine *engine, const QAbstractSpinBox::CorrectionMode &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractSpinBox"));
-    return clazz.property(qtscript_QAbstractSpinBox_CorrectionMode_toStringHelper(value));
-}
-
-static void qtscript_QAbstractSpinBox_CorrectionMode_fromScriptValue(const QScriptValue &value, QAbstractSpinBox::CorrectionMode &out)
-{
-    out = qvariant_cast<QAbstractSpinBox::CorrectionMode>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QAbstractSpinBox_CorrectionMode(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QAbstractSpinBox_metaObject();
-    int idx = meta->indexOfEnumerator("CorrectionMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QAbstractSpinBox::CorrectionMode>(arg));
-    return context->throwError(QString::fromLatin1("CorrectionMode(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QAbstractSpinBox_CorrectionMode_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractSpinBox::CorrectionMode value = qscriptvalue_cast<QAbstractSpinBox::CorrectionMode>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QAbstractSpinBox_CorrectionMode_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractSpinBox::CorrectionMode value = qscriptvalue_cast<QAbstractSpinBox::CorrectionMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QAbstractSpinBox_CorrectionMode_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QAbstractSpinBox_CorrectionMode_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QAbstractSpinBox_CorrectionMode,
-        qtscript_QAbstractSpinBox_CorrectionMode_valueOf, qtscript_QAbstractSpinBox_CorrectionMode_toString);
-    qScriptRegisterMetaType<QAbstractSpinBox::CorrectionMode>(engine, qtscript_QAbstractSpinBox_CorrectionMode_toScriptValue,
-        qtscript_QAbstractSpinBox_CorrectionMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractSpinBox_CorrectionMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QAbstractSpinBox_CorrectionMode_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QAbstractSpinBox::ButtonSymbols
 //
 
@@ -442,11 +471,11 @@ static QScriptValue qtscript_QAbstractSpinBox_prototype_call(QScriptContext *con
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 6;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractSpinBox* _q_self = qscriptvalue_cast<QAbstractSpinBox*>(context->thisObject());
+    qtscript_QAbstractSpinBox* _q_self = reinterpret_cast<qtscript_QAbstractSpinBox*>(qscriptvalue_cast<QAbstractSpinBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractSpinBox.%0(): this object is not a QAbstractSpinBox")
@@ -463,27 +492,50 @@ static QScriptValue qtscript_QAbstractSpinBox_prototype_call(QScriptContext *con
     break;
 
     case 1:
-    if (context->argumentCount() == 0) {
-        _q_self->interpretText();
+    if (context->argumentCount() == 1) {
+        QStyleOptionSpinBox* _q_arg0 = qscriptvalue_cast<QStyleOptionSpinBox*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
+        _q_self->interpretText();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 0) {
+        QLineEdit* _q_result = _q_self->lineEdit();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 5:
+    if (context->argumentCount() == 1) {
+        QLineEdit* _q_arg0 = qscriptvalue_cast<QLineEdit*>(context->argument(0));
+        _q_self->setLineEdit(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 7:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->stepBy(_q_arg0);
@@ -491,7 +543,14 @@ static QScriptValue qtscript_QAbstractSpinBox_prototype_call(QScriptContext *con
     }
     break;
 
-    case 5:
+    case 8:
+    if (context->argumentCount() == 0) {
+        QFlags<QAbstractSpinBox::StepEnabledFlag> _q_result = _q_self->stepEnabled();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         int _q_arg1 = context->argument(1).toInt32();
@@ -500,7 +559,7 @@ static QScriptValue qtscript_QAbstractSpinBox_prototype_call(QScriptContext *con
     }
     break;
 
-    case 6: {
+    case 10: {
     QString result = QString::fromLatin1("QAbstractSpinBox");
     return QScriptValue(context->engine(), result);
     }
@@ -560,7 +619,7 @@ QScriptValue qtscript_create_QAbstractSpinBox_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractSpinBox*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractSpinBox*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractSpinBox_prototype_call, qtscript_QAbstractSpinBox_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractSpinBox_function_names[i+1]),
@@ -573,12 +632,12 @@ QScriptValue qtscript_create_QAbstractSpinBox_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QAbstractSpinBox_static_call, proto, qtscript_QAbstractSpinBox_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("CorrectionMode"),
+        qtscript_create_QAbstractSpinBox_CorrectionMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StepEnabledFlag"),
         qtscript_create_QAbstractSpinBox_StepEnabledFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StepEnabled"),
         qtscript_create_QAbstractSpinBox_StepEnabled_class(engine));
-    ctor.setProperty(QString::fromLatin1("CorrectionMode"),
-        qtscript_create_QAbstractSpinBox_CorrectionMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ButtonSymbols"),
         qtscript_create_QAbstractSpinBox_ButtonSymbols_class(engine, ctor));
     return ctor;

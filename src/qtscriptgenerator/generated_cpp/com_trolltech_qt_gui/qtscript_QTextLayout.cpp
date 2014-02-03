@@ -30,11 +30,13 @@ static const char * const qtscript_QTextLayout_function_names[] = {
     , "clearAdditionalFormats"
     , "clearLayout"
     , "createLine"
+    , "cursorMoveStyle"
     , "draw"
     , "drawCursor"
     , "endLayout"
     , "font"
     , "isValidCursorPosition"
+    , "leftCursorPosition"
     , "lineAt"
     , "lineCount"
     , "lineForTextPosition"
@@ -45,8 +47,10 @@ static const char * const qtscript_QTextLayout_function_names[] = {
     , "preeditAreaPosition"
     , "preeditAreaText"
     , "previousCursorPosition"
+    , "rightCursorPosition"
     , "setAdditionalFormats"
     , "setCacheEnabled"
+    , "setCursorMoveStyle"
     , "setFlags"
     , "setFont"
     , "setPosition"
@@ -69,11 +73,13 @@ static const char * const qtscript_QTextLayout_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
     , "QPainter p, QPointF pos, List selections, QRectF clip"
     , "QPainter p, QPointF pos, int cursorPosition\nQPainter p, QPointF pos, int cursorPosition, int width"
     , ""
     , ""
     , "int pos"
+    , "int oldPos"
     , "int i"
     , ""
     , "int pos"
@@ -84,8 +90,10 @@ static const char * const qtscript_QTextLayout_function_signatures[] = {
     , ""
     , ""
     , "int oldPos, CursorMode mode"
+    , "int oldPos"
     , "List overrides"
     , "bool enable"
+    , "CursorMoveStyle style"
     , "int flags"
     , "QFont f"
     , "QPointF p"
@@ -108,10 +116,12 @@ static const int qtscript_QTextLayout_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 0
     , 4
     , 4
     , 0
     , 0
+    , 1
     , 1
     , 1
     , 0
@@ -123,6 +133,8 @@ static const int qtscript_QTextLayout_function_lengths[] = {
     , 0
     , 0
     , 2
+    , 1
+    , 1
     , 1
     , 1
     , 1
@@ -152,6 +164,7 @@ Q_DECLARE_METATYPE(QTextLayout::CursorMode)
 Q_DECLARE_METATYPE(QTextLayout::FormatRange)
 Q_DECLARE_METATYPE(QList<QTextLayout::FormatRange>)
 Q_DECLARE_METATYPE(QTextLine)
+Q_DECLARE_METATYPE(Qt::CursorMoveStyle)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QVector<QTextLayout::FormatRange>)
 Q_DECLARE_METATYPE(QTextOption)
@@ -253,7 +266,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 32;
+        _id = 0xBABE0000 + 36;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -315,6 +328,13 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     break;
 
     case 7:
+    if (context->argumentCount() == 0) {
+        Qt::CursorMoveStyle _q_result = _q_self->cursorMoveStyle();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 8:
     if (context->argumentCount() == 3) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
@@ -334,7 +354,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 3) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
@@ -352,21 +372,21 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 0) {
         _q_self->endLayout();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 0) {
         QFont _q_result = _q_self->font();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->isValidCursorPosition(_q_arg0);
@@ -374,17 +394,10 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
-        QTextLine _q_result = _q_self->lineAt(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 13:
-    if (context->argumentCount() == 0) {
-        int _q_result = _q_self->lineCount();
+        int _q_result = _q_self->leftCursorPosition(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -392,26 +405,41 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     case 14:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
-        QTextLine _q_result = _q_self->lineForTextPosition(_q_arg0);
+        QTextLine _q_result = _q_self->lineAt(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 15:
     if (context->argumentCount() == 0) {
+        int _q_result = _q_self->lineCount();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QTextLine _q_result = _q_self->lineForTextPosition(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17:
+    if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->maximumWidth();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->minimumWidth();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->nextCursorPosition(_q_arg0);
@@ -425,28 +453,28 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 0) {
         QPointF _q_result = _q_self->position();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->preeditAreaPosition();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->preeditAreaText();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->previousCursorPosition(_q_arg0);
@@ -460,7 +488,15 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 22:
+    case 24:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_result = _q_self->rightCursorPosition(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 25:
     if (context->argumentCount() == 1) {
         QList<QTextLayout::FormatRange> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -469,7 +505,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 23:
+    case 26:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setCacheEnabled(_q_arg0);
@@ -477,7 +513,15 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 24:
+    case 27:
+    if (context->argumentCount() == 1) {
+        Qt::CursorMoveStyle _q_arg0 = qscriptvalue_cast<Qt::CursorMoveStyle>(context->argument(0));
+        _q_self->setCursorMoveStyle(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 28:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setFlags(_q_arg0);
@@ -485,7 +529,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 25:
+    case 29:
     if (context->argumentCount() == 1) {
         QFont _q_arg0 = qscriptvalue_cast<QFont>(context->argument(0));
         _q_self->setFont(_q_arg0);
@@ -493,7 +537,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 26:
+    case 30:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->setPosition(_q_arg0);
@@ -501,7 +545,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 27:
+    case 31:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -510,7 +554,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 28:
+    case 32:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setText(_q_arg0);
@@ -518,7 +562,7 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 29:
+    case 33:
     if (context->argumentCount() == 1) {
         QTextOption _q_arg0 = qscriptvalue_cast<QTextOption>(context->argument(0));
         _q_self->setTextOption(_q_arg0);
@@ -526,21 +570,21 @@ static QScriptValue qtscript_QTextLayout_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 30:
+    case 34:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->text();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 31:
+    case 35:
     if (context->argumentCount() == 0) {
         QTextOption _q_result = _q_self->textOption();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 32: {
+    case 36: {
     QString result = QString::fromLatin1("QTextLayout");
     return QScriptValue(context->engine(), result);
     }
@@ -607,7 +651,7 @@ QScriptValue qtscript_create_QTextLayout_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QTextLayout*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextLayout*)0));
-    for (int i = 0; i < 33; ++i) {
+    for (int i = 0; i < 37; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTextLayout_prototype_call, qtscript_QTextLayout_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTextLayout_function_names[i+1]),

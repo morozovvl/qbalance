@@ -475,6 +475,8 @@ bool Handler::startElement(const QString &, const QString &n,
             attributes["lower-bound"] = QString();
             attributes["force-integer"] = "no";
             attributes["extensible"] = "no";
+            attributes["known"] = "no";
+            attributes["flags-known"] = "no";
 
             break;
 
@@ -561,6 +563,7 @@ bool Handler::startElement(const QString &, const QString &n,
             m_current_enum->setLowerBound(attributes["lower-bound"]);
             m_current_enum->setForceInteger(convertBoolean(attributes["force-integer"], "force-integer", false));
             m_current_enum->setExtensible(convertBoolean(attributes["extensible"], "extensible", false));
+            m_current_enum->setKnown(convertBoolean(attributes["known"], "known", false));
 
             // put in the flags parallel...
             if (!attributes["flags"].isEmpty() && attributes["flags"].toLower() != "no") {
@@ -568,6 +571,7 @@ bool Handler::startElement(const QString &, const QString &n,
                 ftype->setOriginator(m_current_enum);
                 ftype->setOriginalName(attributes["flags"]);
                 ftype->setCodeGeneration(m_generate);
+                ftype->setKnown(convertBoolean(attributes["flags-known"], "flags-known", false));
                 QString origname = ftype->originalName();
 
                 QStringList lst = origname.split("::");
@@ -657,7 +661,7 @@ bool Handler::startElement(const QString &, const QString &n,
                     element->type == StackElement::ValueTypeEntry ||
                     element->type == StackElement::ObjectTypeEntry) {
                     if (convertBoolean(attributes["delete-in-main-thread"], "delete-in-main-thread", false))
-			            ctype->setTypeFlags(ctype->typeFlags() | ComplexTypeEntry::DeleteInMainThread);
+                        ctype->setTypeFlags(ctype->typeFlags() | ComplexTypeEntry::DeleteInMainThread);
                 }
 
                 QString targetType = attributes["target-type"];
@@ -730,7 +734,7 @@ bool Handler::startElement(const QString &, const QString &n,
             break;
         case StackElement::ModifyArgument:
             attributes["index"] = QString();
-	        attributes["replace-value"] = QString();
+            attributes["replace-value"] = QString();
             attributes["invalidate-after-use"] = QString("no");
             break;
         case StackElement::ModifyField:
@@ -906,15 +910,15 @@ bool Handler::startElement(const QString &, const QString &n,
                     return false;
                 }
 
-		        QString replace_value = attributes["replace-value"];
+                QString replace_value = attributes["replace-value"];
 
-		        if (!replace_value.isEmpty() && idx != 0) {
-		            m_error = QString("replace-value is only supported for return values (index=0).");
-		            return false;
-		        }
+                if (!replace_value.isEmpty() && idx != 0) {
+                    m_error = QString("replace-value is only supported for return values (index=0).");
+                    return false;
+                }
 
-		        ArgumentModification argumentModification = ArgumentModification(idx);
-		        argumentModification.replace_value = replace_value;
+                ArgumentModification argumentModification = ArgumentModification(idx);
+                argumentModification.replace_value = replace_value;
                 argumentModification.reset_after_use = convertBoolean(attributes["invalidate-after-use"], "invalidate-after-use", false);
                 m_function_mods.last().argument_mods.append(argumentModification);
             }

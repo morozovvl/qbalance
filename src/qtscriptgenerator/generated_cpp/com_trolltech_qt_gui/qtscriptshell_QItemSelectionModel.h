@@ -14,12 +14,14 @@ public:
 
     void childEvent(QChildEvent*  arg__1);
     void clear();
+    void clearCurrentIndex();
     void customEvent(QEvent*  arg__1);
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     void reset();
     void select(const QItemSelection&  selection, QItemSelectionModel::SelectionFlags  command);
     void select(const QModelIndex&  index, QItemSelectionModel::SelectionFlags  command);
+    void setCurrentIndex(const QModelIndex&  index, QItemSelectionModel::SelectionFlags  command);
     void timerEvent(QTimerEvent*  arg__1);
 
     QScriptValue __qtscript_self;

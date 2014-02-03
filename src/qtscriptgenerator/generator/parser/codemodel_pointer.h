@@ -116,9 +116,27 @@ private:
         return *this;
     }
 
+#if QT_VERSION < 0x050000
     inline T *data() { return (T *) *this; }
     inline const T *data() const { return (const T *) *this; }
     inline const T *constData() const { return (const T *) *this; }
+#else
+    inline T *data() { return (T *) this->fetchAndAddAcquire(0); }
+    inline const T *data() const { return (const T *) this->loadAcquire(); }
+    inline const T *constData() const { return (const T *) this->loadAcquire(); }
+#endif
+
+#endif
+
+#if QT_VERSION >= 0x050000
+public:
+    inline T &operator*() { return *this->data(); }
+    inline const T &operator*() const { return *this->data(); }
+    inline T *operator->() { return this->data(); }
+    inline const T *operator->() const { return this->data(); }
+    inline operator T *() { return this->data(); }
+    inline operator const T *() const { return this->data(); }
+    inline bool operator!() const { return !this->data(); }
 #endif
 };
 

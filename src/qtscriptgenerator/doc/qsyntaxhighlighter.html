@@ -14,7 +14,6 @@
 <ul>
 <li><div class="fn"/><b>void QSyntaxHighlighter(QObject parent)</b></li>
 <li><div class="fn"/><b>void QSyntaxHighlighter(QTextDocument parent)</b></li>
-<li><div class="fn"/><b>void QSyntaxHighlighter(QTextEdit parent)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
@@ -23,8 +22,17 @@
 <h3>Prototype Object Properties</h3>
 <p>The QSyntaxHighlighter prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>QTextBlock currentBlock()</b></li>
+<li><div class="fn"/><b>int currentBlockState()</b></li>
+<li><div class="fn"/><b>QTextBlockUserData currentBlockUserData()</b></li>
 <li><div class="fn"/><b>QTextDocument document()</b></li>
+<li><div class="fn"/><b>QTextCharFormat format(int pos)</b></li>
+<li><div class="fn"/><b>void highlightBlock(String text)</b></li>
+<li><div class="fn"/><b>int previousBlockState()</b></li>
+<li><div class="fn"/><b>void setCurrentBlockState(int newState)</b></li>
+<li><div class="fn"/><b>void setCurrentBlockUserData(QTextBlockUserData data)</b></li>
 <li><div class="fn"/><b>void setDocument(QTextDocument doc)</b></li>
+<li><div class="fn"/><b>void setFormat(int start, int count, QColor color)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QSyntaxHighlighter objects have no special properties beyond those inherited from the QSyntaxHighlighter prototype object.</p>

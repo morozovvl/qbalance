@@ -9,6 +9,7 @@
 #include <QVariant>
 #include <qbytearray.h>
 #include <qcryptographichash.h>
+#include <qiodevice.h>
 
 static const char * const qtscript_QCryptographicHash_function_names[] = {
     "QCryptographicHash"
@@ -26,7 +27,7 @@ static const char * const qtscript_QCryptographicHash_function_signatures[] = {
     // static
     , "QByteArray data, Algorithm method"
     // prototype
-    , "QByteArray data"
+    , "QIODevice device\nQByteArray data"
     , ""
     , ""
 ""
@@ -56,6 +57,7 @@ static QScriptValue qtscript_QCryptographicHash_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QCryptographicHash*)
 Q_DECLARE_METATYPE(QCryptographicHash::Algorithm)
+Q_DECLARE_METATYPE(QIODevice*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -79,17 +81,33 @@ static const QCryptographicHash::Algorithm qtscript_QCryptographicHash_Algorithm
     QCryptographicHash::Md4
     , QCryptographicHash::Md5
     , QCryptographicHash::Sha1
+    , QCryptographicHash::Sha224
+    , QCryptographicHash::Sha256
+    , QCryptographicHash::Sha384
+    , QCryptographicHash::Sha512
+    , QCryptographicHash::Sha3_224
+    , QCryptographicHash::Sha3_256
+    , QCryptographicHash::Sha3_384
+    , QCryptographicHash::Sha3_512
 };
 
 static const char * const qtscript_QCryptographicHash_Algorithm_keys[] = {
     "Md4"
     , "Md5"
     , "Sha1"
+    , "Sha224"
+    , "Sha256"
+    , "Sha384"
+    , "Sha512"
+    , "Sha3_224"
+    , "Sha3_256"
+    , "Sha3_384"
+    , "Sha3_512"
 };
 
 static QString qtscript_QCryptographicHash_Algorithm_toStringHelper(QCryptographicHash::Algorithm value)
 {
-    if ((value >= QCryptographicHash::Md4) && (value <= QCryptographicHash::Sha1))
+    if ((value >= QCryptographicHash::Md4) && (value <= QCryptographicHash::Sha3_512))
         return qtscript_QCryptographicHash_Algorithm_keys[static_cast<int>(value)-static_cast<int>(QCryptographicHash::Md4)];
     return QString();
 }
@@ -108,7 +126,7 @@ static void qtscript_QCryptographicHash_Algorithm_fromScriptValue(const QScriptV
 static QScriptValue qtscript_construct_QCryptographicHash_Algorithm(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QCryptographicHash::Md4) && (arg <= QCryptographicHash::Sha1))
+    if ((arg >= QCryptographicHash::Md4) && (arg <= QCryptographicHash::Sha3_512))
         return qScriptValueFromValue(engine,  static_cast<QCryptographicHash::Algorithm>(arg));
     return context->throwError(QString::fromLatin1("Algorithm(): invalid enum value (%0)").arg(arg));
 }
@@ -132,7 +150,7 @@ static QScriptValue qtscript_create_QCryptographicHash_Algorithm_class(QScriptEn
         qtscript_QCryptographicHash_Algorithm_valueOf, qtscript_QCryptographicHash_Algorithm_toString);
     qScriptRegisterMetaType<QCryptographicHash::Algorithm>(engine, qtscript_QCryptographicHash_Algorithm_toScriptValue,
         qtscript_QCryptographicHash_Algorithm_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 11; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QCryptographicHash_Algorithm_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QCryptographicHash_Algorithm_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -168,9 +186,15 @@ static QScriptValue qtscript_QCryptographicHash_prototype_call(QScriptContext *c
     switch (_id) {
     case 0:
     if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->addData(_q_arg0);
-        return context->engine()->undefinedValue();
+        if (qscriptvalue_cast<QIODevice*>(context->argument(0))) {
+            QIODevice* _q_arg0 = qscriptvalue_cast<QIODevice*>(context->argument(0));
+            bool _q_result = _q_self->addData(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
+            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+            _q_self->addData(_q_arg0);
+            return context->engine()->undefinedValue();
+        }
     }
     break;
 

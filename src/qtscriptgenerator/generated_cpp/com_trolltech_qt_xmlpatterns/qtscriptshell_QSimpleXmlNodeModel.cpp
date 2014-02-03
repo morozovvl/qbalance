@@ -27,13 +27,17 @@ QVector<QXmlNodeModelIndex >  QtScriptShell_QSimpleXmlNodeModel::attributes(cons
 {
     QScriptValue _q_function = __qtscript_self.property("attributes");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("attributes") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("attributes") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::attributes() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVector<QXmlNodeModelIndex > >(_q_function.call(__qtscript_self,
+        QVector<QXmlNodeModelIndex > _q_retval = qscriptvalue_cast<QVector<QXmlNodeModelIndex > >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, element)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -41,13 +45,17 @@ QUrl  QtScriptShell_QSimpleXmlNodeModel::baseUri(const QXmlNodeModelIndex&  node
 {
     QScriptValue _q_function = __qtscript_self.property("baseUri");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("baseUri") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("baseUri") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSimpleXmlNodeModel::baseUri(node);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QUrl >(_q_function.call(__qtscript_self,
+        QUrl _q_retval = qscriptvalue_cast<QUrl >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, node)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -55,14 +63,18 @@ QXmlNodeModelIndex::DocumentOrder  QtScriptShell_QSimpleXmlNodeModel::compareOrd
 {
     QScriptValue _q_function = __qtscript_self.property("compareOrder");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("compareOrder") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("compareOrder") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::compareOrder() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QXmlNodeModelIndex::DocumentOrder >(_q_function.call(__qtscript_self,
+        QXmlNodeModelIndex::DocumentOrder _q_retval = qscriptvalue_cast<QXmlNodeModelIndex::DocumentOrder >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, ni1)
             << qScriptValueFromValue(_q_engine, ni2)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -70,13 +82,17 @@ QUrl  QtScriptShell_QSimpleXmlNodeModel::documentUri(const QXmlNodeModelIndex&  
 {
     QScriptValue _q_function = __qtscript_self.property("documentUri");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("documentUri") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("documentUri") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::documentUri() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QUrl >(_q_function.call(__qtscript_self,
+        QUrl _q_retval = qscriptvalue_cast<QUrl >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, ni)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -84,13 +100,17 @@ QXmlNodeModelIndex  QtScriptShell_QSimpleXmlNodeModel::elementById(const QXmlNam
 {
     QScriptValue _q_function = __qtscript_self.property("elementById");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("elementById") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("elementById") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSimpleXmlNodeModel::elementById(id);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QXmlNodeModelIndex >(_q_function.call(__qtscript_self,
+        QXmlNodeModelIndex _q_retval = qscriptvalue_cast<QXmlNodeModelIndex >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, id)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -98,13 +118,17 @@ QXmlNodeModelIndex::NodeKind  QtScriptShell_QSimpleXmlNodeModel::kind(const QXml
 {
     QScriptValue _q_function = __qtscript_self.property("kind");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("kind") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("kind") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::kind() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QXmlNodeModelIndex::NodeKind >(_q_function.call(__qtscript_self,
+        QXmlNodeModelIndex::NodeKind _q_retval = qscriptvalue_cast<QXmlNodeModelIndex::NodeKind >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, ni)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -112,13 +136,17 @@ QXmlName  QtScriptShell_QSimpleXmlNodeModel::name(const QXmlNodeModelIndex&  ni)
 {
     QScriptValue _q_function = __qtscript_self.property("name");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("name") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("name") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::name() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QXmlName >(_q_function.call(__qtscript_self,
+        QXmlName _q_retval = qscriptvalue_cast<QXmlName >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, ni)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -126,13 +154,17 @@ QVector<QXmlName >  QtScriptShell_QSimpleXmlNodeModel::namespaceBindings(const Q
 {
     QScriptValue _q_function = __qtscript_self.property("namespaceBindings");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("namespaceBindings") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("namespaceBindings") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSimpleXmlNodeModel::namespaceBindings(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVector<QXmlName > >(_q_function.call(__qtscript_self,
+        QVector<QXmlName > _q_retval = qscriptvalue_cast<QVector<QXmlName > >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -140,14 +172,18 @@ QXmlNodeModelIndex  QtScriptShell_QSimpleXmlNodeModel::nextFromSimpleAxis(QAbstr
 {
     QScriptValue _q_function = __qtscript_self.property("nextFromSimpleAxis");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("nextFromSimpleAxis") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("nextFromSimpleAxis") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::nextFromSimpleAxis() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QXmlNodeModelIndex >(_q_function.call(__qtscript_self,
+        QXmlNodeModelIndex _q_retval = qscriptvalue_cast<QXmlNodeModelIndex >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, axis)
             << qScriptValueFromValue(_q_engine, origin)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -155,13 +191,17 @@ QVector<QXmlNodeModelIndex >  QtScriptShell_QSimpleXmlNodeModel::nodesByIdref(co
 {
     QScriptValue _q_function = __qtscript_self.property("nodesByIdref");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("nodesByIdref") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("nodesByIdref") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSimpleXmlNodeModel::nodesByIdref(idref);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVector<QXmlNodeModelIndex > >(_q_function.call(__qtscript_self,
+        QVector<QXmlNodeModelIndex > _q_retval = qscriptvalue_cast<QVector<QXmlNodeModelIndex > >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, idref)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -169,13 +209,17 @@ QXmlNodeModelIndex  QtScriptShell_QSimpleXmlNodeModel::root(const QXmlNodeModelI
 {
     QScriptValue _q_function = __qtscript_self.property("root");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("root") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("root") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::root() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QXmlNodeModelIndex >(_q_function.call(__qtscript_self,
+        QXmlNodeModelIndex _q_retval = qscriptvalue_cast<QXmlNodeModelIndex >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, n)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -183,13 +227,17 @@ QString  QtScriptShell_QSimpleXmlNodeModel::stringValue(const QXmlNodeModelIndex
 {
     QScriptValue _q_function = __qtscript_self.property("stringValue");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("stringValue") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("stringValue") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSimpleXmlNodeModel::stringValue(node);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QString >(_q_function.call(__qtscript_self,
+        QString _q_retval = qscriptvalue_cast<QString >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, node)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -197,13 +245,17 @@ QVariant  QtScriptShell_QSimpleXmlNodeModel::typedValue(const QXmlNodeModelIndex
 {
     QScriptValue _q_function = __qtscript_self.property("typedValue");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("typedValue") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("typedValue") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSimpleXmlNodeModel::typedValue() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, n)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 

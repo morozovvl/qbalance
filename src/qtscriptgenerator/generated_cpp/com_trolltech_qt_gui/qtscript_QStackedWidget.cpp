@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qstackedwidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qstackedwidget.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QStackedWidget.h"
 
@@ -78,6 +79,15 @@ static const int qtscript_QStackedWidget_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStackedWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStackedWidget : public QStackedWidget
+{
+
+    friend QScriptValue qtscript_QStackedWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStackedWidget_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -91,6 +101,7 @@ static QScriptValue qtscript_QStackedWidget_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QStackedWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QStackedWidget*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFrame*)
 
 //
@@ -111,7 +122,7 @@ static QScriptValue qtscript_QStackedWidget_prototype_call(QScriptContext *conte
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStackedWidget* _q_self = qscriptvalue_cast<QStackedWidget*>(context->thisObject());
+    qtscript_QStackedWidget* _q_self = reinterpret_cast<qtscript_QStackedWidget*>(qscriptvalue_cast<QStackedWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStackedWidget.%0(): this object is not a QStackedWidget")

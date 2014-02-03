@@ -13,7 +13,7 @@ static const char * const qtscript_QLibraryInfo_function_names[] = {
     "QLibraryInfo"
     // static
     , "buildDate"
-    , "buildKey"
+    , "isDebugBuild"
     , "licensedProducts"
     , "licensee"
     , "location"
@@ -82,14 +82,17 @@ static const QLibraryInfo::LibraryLocation qtscript_QLibraryInfo_LibraryLocation
     , QLibraryInfo::DocumentationPath
     , QLibraryInfo::HeadersPath
     , QLibraryInfo::LibrariesPath
+    , QLibraryInfo::LibraryExecutablesPath
     , QLibraryInfo::BinariesPath
     , QLibraryInfo::PluginsPath
+    , QLibraryInfo::ImportsPath
+    , QLibraryInfo::Qml2ImportsPath
+    , QLibraryInfo::ArchDataPath
     , QLibraryInfo::DataPath
     , QLibraryInfo::TranslationsPath
-    , QLibraryInfo::SettingsPath
-    , QLibraryInfo::DemosPath
     , QLibraryInfo::ExamplesPath
-    , QLibraryInfo::ImportsPath
+    , QLibraryInfo::TestsPath
+    , QLibraryInfo::SettingsPath
 };
 
 static const char * const qtscript_QLibraryInfo_LibraryLocation_keys[] = {
@@ -97,20 +100,25 @@ static const char * const qtscript_QLibraryInfo_LibraryLocation_keys[] = {
     , "DocumentationPath"
     , "HeadersPath"
     , "LibrariesPath"
+    , "LibraryExecutablesPath"
     , "BinariesPath"
     , "PluginsPath"
+    , "ImportsPath"
+    , "Qml2ImportsPath"
+    , "ArchDataPath"
     , "DataPath"
     , "TranslationsPath"
-    , "SettingsPath"
-    , "DemosPath"
     , "ExamplesPath"
-    , "ImportsPath"
+    , "TestsPath"
+    , "SettingsPath"
 };
 
 static QString qtscript_QLibraryInfo_LibraryLocation_toStringHelper(QLibraryInfo::LibraryLocation value)
 {
-    if ((value >= QLibraryInfo::PrefixPath) && (value <= QLibraryInfo::ImportsPath))
-        return qtscript_QLibraryInfo_LibraryLocation_keys[static_cast<int>(value)-static_cast<int>(QLibraryInfo::PrefixPath)];
+    for (int i = 0; i < 15; ++i) {
+        if (qtscript_QLibraryInfo_LibraryLocation_values[i] == value)
+            return QString::fromLatin1(qtscript_QLibraryInfo_LibraryLocation_keys[i]);
+    }
     return QString();
 }
 
@@ -128,8 +136,10 @@ static void qtscript_QLibraryInfo_LibraryLocation_fromScriptValue(const QScriptV
 static QScriptValue qtscript_construct_QLibraryInfo_LibraryLocation(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QLibraryInfo::PrefixPath) && (arg <= QLibraryInfo::ImportsPath))
-        return qScriptValueFromValue(engine,  static_cast<QLibraryInfo::LibraryLocation>(arg));
+    for (int i = 0; i < 15; ++i) {
+        if (qtscript_QLibraryInfo_LibraryLocation_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QLibraryInfo::LibraryLocation>(arg));
+    }
     return context->throwError(QString::fromLatin1("LibraryLocation(): invalid enum value (%0)").arg(arg));
 }
 
@@ -152,7 +162,7 @@ static QScriptValue qtscript_create_QLibraryInfo_LibraryLocation_class(QScriptEn
         qtscript_QLibraryInfo_LibraryLocation_valueOf, qtscript_QLibraryInfo_LibraryLocation_toString);
     qScriptRegisterMetaType<QLibraryInfo::LibraryLocation>(engine, qtscript_QLibraryInfo_LibraryLocation_toScriptValue,
         qtscript_QLibraryInfo_LibraryLocation_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 15; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QLibraryInfo_LibraryLocation_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QLibraryInfo_LibraryLocation_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -219,7 +229,7 @@ static QScriptValue qtscript_QLibraryInfo_static_call(QScriptContext *context, Q
 
     case 2:
     if (context->argumentCount() == 0) {
-        QString _q_result = QLibraryInfo::buildKey();
+        bool _q_result = QLibraryInfo::isDebugBuild();
         return QScriptValue(context->engine(), _q_result);
     }
     break;

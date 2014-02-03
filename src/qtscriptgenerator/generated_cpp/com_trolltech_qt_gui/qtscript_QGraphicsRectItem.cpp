@@ -37,26 +37,44 @@ static const char * const qtscript_QGraphicsRectItem_function_names[] = {
     // static
     // prototype
     , "rect"
+    , "setExtension"
     , "setRect"
+    , "supportsExtension"
     , "toString"
 };
 
 static const char * const qtscript_QGraphicsRectItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene\nQRectF rect, QGraphicsItem parent, QGraphicsScene scene\nqreal x, qreal y, qreal w, qreal h, QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent\nQRectF rect, QGraphicsItem parent\nqreal x, qreal y, qreal w, qreal h, QGraphicsItem parent"
     // static
     // prototype
     , ""
+    , "Extension extension, Object variant"
     , "QRectF rect\nqreal x, qreal y, qreal w, qreal h"
+    , "Extension extension"
 ""
 };
 
 static const int qtscript_QGraphicsRectItem_function_lengths[] = {
-    6
+    5
     // static
     // prototype
     , 0
+    , 2
     , 4
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsRectItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsRectItem : public QGraphicsRectItem
+{
+    friend QScriptValue qtscript_QGraphicsRectItem_setExtension(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsRectItem_supportsExtension(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsRectItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsRectItem_throw_ambiguity_error_helper(
@@ -72,6 +90,7 @@ static QScriptValue qtscript_QGraphicsRectItem_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGraphicsRectItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsRectItem*)
+Q_DECLARE_METATYPE(QGraphicsItem::Extension)
 Q_DECLARE_METATYPE(QAbstractGraphicsShapeItem*)
 
 //
@@ -88,11 +107,11 @@ static QScriptValue qtscript_QGraphicsRectItem_prototype_call(QScriptContext *co
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsRectItem* _q_self = qscriptvalue_cast<QGraphicsRectItem*>(context->thisObject());
+    qtscript_QGraphicsRectItem* _q_self = reinterpret_cast<qtscript_QGraphicsRectItem*>(qscriptvalue_cast<QGraphicsRectItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsRectItem.%0(): this object is not a QGraphicsRectItem")
@@ -108,6 +127,15 @@ static QScriptValue qtscript_QGraphicsRectItem_prototype_call(QScriptContext *co
     break;
 
     case 1:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setExtension(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         _q_self->setRect(_q_arg0);
@@ -123,7 +151,15 @@ static QScriptValue qtscript_QGraphicsRectItem_prototype_call(QScriptContext *co
     }
     break;
 
-    case 2: {
+    case 3:
+    if (context->argumentCount() == 1) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        bool _q_result = _q_self->supportsExtension(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4: {
     QString result = QString::fromLatin1("QGraphicsRectItem");
     return QScriptValue(context->engine(), result);
     }
@@ -166,28 +202,9 @@ static QScriptValue qtscript_QGraphicsRectItem_static_call(QScriptContext *conte
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
-            && qscriptvalue_cast<QGraphicsScene*>(context->argument(1))) {
-            QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-            QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-            QtScriptShell_QGraphicsRectItem* _q_cpp_result = new QtScriptShell_QGraphicsRectItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsRectItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && qscriptvalue_cast<QGraphicsItem*>(context->argument(1))) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-            QtScriptShell_QGraphicsRectItem* _q_cpp_result = new QtScriptShell_QGraphicsRectItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsRectItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 3) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-        QGraphicsScene* _q_arg2 = qscriptvalue_cast<QGraphicsScene*>(context->argument(2));
-        QtScriptShell_QGraphicsRectItem* _q_cpp_result = new QtScriptShell_QGraphicsRectItem(_q_arg0, _q_arg1, _q_arg2);
+        QtScriptShell_QGraphicsRectItem* _q_cpp_result = new QtScriptShell_QGraphicsRectItem(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsRectItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -210,17 +227,6 @@ static QScriptValue qtscript_QGraphicsRectItem_static_call(QScriptContext *conte
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsRectItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
-    } else if (context->argumentCount() == 6) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
-        QGraphicsItem* _q_arg4 = qscriptvalue_cast<QGraphicsItem*>(context->argument(4));
-        QGraphicsScene* _q_arg5 = qscriptvalue_cast<QGraphicsScene*>(context->argument(5));
-        QtScriptShell_QGraphicsRectItem* _q_cpp_result = new QtScriptShell_QGraphicsRectItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsRectItem*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
     }
     break;
 
@@ -237,7 +243,7 @@ QScriptValue qtscript_create_QGraphicsRectItem_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsRectItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsRectItem*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractGraphicsShapeItem*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsRectItem_prototype_call, qtscript_QGraphicsRectItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsRectItem_function_names[i+1]),

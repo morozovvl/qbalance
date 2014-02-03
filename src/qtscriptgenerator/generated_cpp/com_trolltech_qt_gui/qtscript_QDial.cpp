@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qdial.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QDial.h"
 
@@ -44,9 +45,11 @@ static const char * const qtscript_QDial_function_names[] = {
     "QDial"
     // static
     // prototype
+    , "initStyleOption"
     , "minimumSizeHint"
     , "setNotchTarget"
     , "sizeHint"
+    , "sliderChange"
     , "toString"
 };
 
@@ -54,9 +57,11 @@ static const char * const qtscript_QDial_function_signatures[] = {
     "QWidget parent"
     // static
     // prototype
+    , "QStyleOptionSlider option"
     , ""
     , "double target"
     , ""
+    , "SliderChange change"
 ""
 };
 
@@ -64,10 +69,24 @@ static const int qtscript_QDial_function_lengths[] = {
     1
     // static
     // prototype
+    , 1
     , 0
     , 1
     , 0
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QDial_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDial : public QDial
+{
+    friend QScriptValue qtscript_QDial_initStyleOption(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QDial_sliderChange(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QDial_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractSlider::SliderChange >;
 };
 
 static QScriptValue qtscript_QDial_throw_ambiguity_error_helper(
@@ -83,6 +102,9 @@ static QScriptValue qtscript_QDial_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QDial*)
 Q_DECLARE_METATYPE(QtScriptShell_QDial*)
+Q_DECLARE_METATYPE(QStyleOptionSlider*)
+Q_DECLARE_METATYPE(QAbstractSlider::SliderChange)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractSlider*)
 
 //
@@ -99,11 +121,11 @@ static QScriptValue qtscript_QDial_prototype_call(QScriptContext *context, QScri
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 5;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDial* _q_self = qscriptvalue_cast<QDial*>(context->thisObject());
+    qtscript_QDial* _q_self = reinterpret_cast<qtscript_QDial*>(qscriptvalue_cast<QDial*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDial.%0(): this object is not a QDial")
@@ -112,13 +134,21 @@ static QScriptValue qtscript_QDial_prototype_call(QScriptContext *context, QScri
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionSlider* _q_arg0 = qscriptvalue_cast<QStyleOptionSlider*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 1) {
         double _q_arg0 = context->argument(0).toNumber();
         _q_self->setNotchTarget(_q_arg0);
@@ -126,14 +156,22 @@ static QScriptValue qtscript_QDial_prototype_call(QScriptContext *context, QScri
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3: {
+    case 4:
+    if (context->argumentCount() == 1) {
+        QAbstractSlider::SliderChange _q_arg0 = qscriptvalue_cast<QAbstractSlider::SliderChange>(context->argument(0));
+        _q_self->sliderChange(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5: {
     QString result = QString::fromLatin1("QDial");
     return QScriptValue(context->engine(), result);
     }
@@ -193,7 +231,7 @@ QScriptValue qtscript_create_QDial_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QDial*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDial*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractSlider*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 6; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDial_prototype_call, qtscript_QDial_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QDial_function_names[i+1]),

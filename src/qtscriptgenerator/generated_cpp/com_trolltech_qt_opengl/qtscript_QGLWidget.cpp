@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qgl.h>
+#include <QIconEngine>
 #include <QImage>
 #include <QPixmap>
 #include <QVariant>
@@ -21,9 +22,7 @@
 #include <qglcolormap.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
 #include <qimage.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -42,6 +41,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QGLWidget.h"
 
@@ -50,24 +50,31 @@ static const char * const qtscript_QGLWidget_function_names[] = {
     // static
     , "convertToGLFormat"
     // prototype
-    , "bindTexture"
+    , "autoBufferSwap"
     , "colormap"
     , "context"
-    , "deleteTexture"
     , "doneCurrent"
     , "doubleBuffer"
-    , "drawTexture"
     , "format"
+    , "glDraw"
+    , "glInit"
     , "grabFrameBuffer"
+    , "initializeGL"
+    , "initializeOverlayGL"
     , "isSharing"
     , "isValid"
     , "makeCurrent"
     , "makeOverlayCurrent"
     , "overlayContext"
+    , "paintGL"
+    , "paintOverlayGL"
     , "qglClearColor"
     , "qglColor"
     , "renderPixmap"
     , "renderText"
+    , "resizeGL"
+    , "resizeOverlayGL"
+    , "setAutoBufferSwap"
     , "setColormap"
     , "swapBuffers"
     , "toString"
@@ -78,15 +85,19 @@ static const char * const qtscript_QGLWidget_function_signatures[] = {
     // static
     , "QImage img"
     // prototype
-    , "QImage image, unsigned int target, int format\nQImage image, unsigned int target, int format, BindOptions options\nQPixmap pixmap, unsigned int target, int format\nQPixmap pixmap, unsigned int target, int format, BindOptions options\nString fileName"
     , ""
     , ""
-    , "unsigned int tx_id"
     , ""
     , ""
-    , "QPointF point, unsigned int textureId, unsigned int textureTarget\nQRectF target, unsigned int textureId, unsigned int textureTarget"
+    , ""
+    , ""
+    , ""
     , ""
     , "bool withAlpha"
+    , ""
+    , ""
+    , ""
+    , ""
     , ""
     , ""
     , ""
@@ -95,7 +106,10 @@ static const char * const qtscript_QGLWidget_function_signatures[] = {
     , "QColor c"
     , "QColor c"
     , "int w, int h, bool useContext"
-    , "double x, double y, double z, String str, QFont fnt, int listBase\nint x, int y, String str, QFont fnt, int listBase"
+    , "double x, double y, double z, String str, QFont fnt\nint x, int y, String str, QFont fnt"
+    , "int w, int h"
+    , "int w, int h"
+    , "bool on"
     , "QGLColormap map"
     , ""
 ""
@@ -106,27 +120,53 @@ static const int qtscript_QGLWidget_function_lengths[] = {
     // static
     , 1
     // prototype
-    , 4
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
     , 0
     , 0
     , 1
     , 0
     , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 1
+    , 1
     , 3
-    , 0
-    , 1
-    , 0
-    , 0
-    , 0
-    , 0
-    , 0
+    , 5
+    , 2
+    , 2
     , 1
     , 1
-    , 3
-    , 6
-    , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGLWidget : public QGLWidget
+{
+    friend QScriptValue qtscript_QGLWidget_autoBufferSwap(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_glDraw(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_glInit(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_initializeGL(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_initializeOverlayGL(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_paintGL(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_paintOverlayGL(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_resizeGL(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_resizeOverlayGL(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLWidget_setAutoBufferSwap(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGLWidget_throw_ambiguity_error_helper(
@@ -142,10 +182,10 @@ static QScriptValue qtscript_QGLWidget_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGLWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QGLWidget*)
-Q_DECLARE_METATYPE(QFlags<QGLContext::BindOption>)
 Q_DECLARE_METATYPE(QGLColormap)
 Q_DECLARE_METATYPE(QGLContext*)
 Q_DECLARE_METATYPE(QGLFormat)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 
 //
@@ -162,11 +202,11 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 20;
+        _id = 0xBABE0000 + 27;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGLWidget* _q_self = qscriptvalue_cast<QGLWidget*>(context->thisObject());
+    qtscript_QGLWidget* _q_self = reinterpret_cast<qtscript_QGLWidget*>(qscriptvalue_cast<QGLWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGLWidget.%0(): this object is not a QGLWidget")
@@ -175,77 +215,9 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<QImage>() == context->argument(0).toVariant().userType())) {
-            QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
-            uint _q_result = _q_self->bindTexture(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            uint _q_result = _q_self->bindTexture(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if (context->argument(0).isString()) {
-            QString _q_arg0 = context->argument(0).toString();
-            uint _q_result = _q_self->bindTexture(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QImage>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if ((qMetaTypeId<QImage>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1, _q_arg2);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1, _q_arg2);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    if (context->argumentCount() == 4) {
-        if ((qMetaTypeId<QImage>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && (qMetaTypeId<QFlags<QGLContext::BindOption> >() == context->argument(3).toVariant().userType())) {
-            QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            QFlags<QGLContext::BindOption> _q_arg3 = qscriptvalue_cast<QFlags<QGLContext::BindOption> >(context->argument(3));
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && (qMetaTypeId<QFlags<QGLContext::BindOption> >() == context->argument(3).toVariant().userType())) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            QFlags<QGLContext::BindOption> _q_arg3 = qscriptvalue_cast<QFlags<QGLContext::BindOption> >(context->argument(3));
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return QScriptValue(context->engine(), _q_result);
-        }
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->autoBufferSwap();
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
@@ -258,74 +230,43 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
 
     case 2:
     if (context->argumentCount() == 0) {
-        QGLContext* _q_result = const_cast<QGLContext*>(_q_self->context());
+        QGLContext* _q_result = _q_self->context();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->deleteTexture(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 4:
     if (context->argumentCount() == 0) {
         _q_self->doneCurrent();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->doubleBuffer();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
-    if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
+    case 5:
+    if (context->argumentCount() == 0) {
+        QGLFormat _q_result = _q_self->format();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
-    if (context->argumentCount() == 3) {
-        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 0) {
+        _q_self->glDraw();
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 7:
     if (context->argumentCount() == 0) {
-        QGLFormat _q_result = _q_self->format();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        _q_self->glInit();
+        return context->engine()->undefinedValue();
     }
     break;
 
@@ -343,40 +284,68 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
 
     case 9:
     if (context->argumentCount() == 0) {
+        _q_self->initializeGL();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10:
+    if (context->argumentCount() == 0) {
+        _q_self->initializeOverlayGL();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
+    if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isSharing();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isValid();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 0) {
         _q_self->makeCurrent();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 0) {
         _q_self->makeOverlayCurrent();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 0) {
         QGLContext* _q_result = const_cast<QGLContext*>(_q_self->overlayContext());
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 16:
+    if (context->argumentCount() == 0) {
+        _q_self->paintGL();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 17:
+    if (context->argumentCount() == 0) {
+        _q_self->paintOverlayGL();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
     if (context->argumentCount() == 1) {
         QColor _q_arg0 = qscriptvalue_cast<QColor>(context->argument(0));
         _q_self->qglClearColor(_q_arg0);
@@ -384,7 +353,7 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 15:
+    case 19:
     if (context->argumentCount() == 1) {
         QColor _q_arg0 = qscriptvalue_cast<QColor>(context->argument(0));
         _q_self->qglColor(_q_arg0);
@@ -392,7 +361,7 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 16:
+    case 20:
     if (context->argumentCount() == 0) {
         QPixmap _q_result = _q_self->renderPixmap();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -417,7 +386,7 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 17:
+    case 21:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -449,45 +418,43 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
         }
     }
     if (context->argumentCount() == 5) {
-        if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isString()
-            && (qMetaTypeId<QFont>() == context->argument(4).toVariant().userType())) {
-            double _q_arg0 = context->argument(0).toNumber();
-            double _q_arg1 = context->argument(1).toNumber();
-            double _q_arg2 = context->argument(2).toNumber();
-            QString _q_arg3 = context->argument(3).toString();
-            QFont _q_arg4 = qscriptvalue_cast<QFont>(context->argument(4));
-            _q_self->renderText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isString()
-            && (qMetaTypeId<QFont>() == context->argument(3).toVariant().userType())
-            && context->argument(4).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            QString _q_arg2 = context->argument(2).toString();
-            QFont _q_arg3 = qscriptvalue_cast<QFont>(context->argument(3));
-            int _q_arg4 = context->argument(4).toInt32();
-            _q_self->renderText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 6) {
         double _q_arg0 = context->argument(0).toNumber();
         double _q_arg1 = context->argument(1).toNumber();
         double _q_arg2 = context->argument(2).toNumber();
         QString _q_arg3 = context->argument(3).toString();
         QFont _q_arg4 = qscriptvalue_cast<QFont>(context->argument(4));
-        int _q_arg5 = context->argument(5).toInt32();
-        _q_self->renderText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
+        _q_self->renderText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 18:
+    case 22:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->resizeGL(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 23:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->resizeOverlayGL(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 24:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setAutoBufferSwap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 25:
     if (context->argumentCount() == 1) {
         QGLColormap _q_arg0 = qscriptvalue_cast<QGLColormap>(context->argument(0));
         _q_self->setColormap(_q_arg0);
@@ -495,14 +462,14 @@ static QScriptValue qtscript_QGLWidget_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 19:
+    case 26:
     if (context->argumentCount() == 0) {
         _q_self->swapBuffers();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 20: {
+    case 27: {
     QString result = QString::fromLatin1("QGLWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -668,7 +635,7 @@ QScriptValue qtscript_create_QGLWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGLWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 21; ++i) {
+    for (int i = 0; i < 28; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLWidget_prototype_call, qtscript_QGLWidget_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGLWidget_function_names[i+2]),

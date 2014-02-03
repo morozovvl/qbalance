@@ -57,6 +57,7 @@ static const char * const qtscript_QTextFormat_function_names[] = {
     , "setObjectType"
     , "setProperty"
     , "stringProperty"
+    , "swap"
     , "toBlockFormat"
     , "toCharFormat"
     , "toFrameFormat"
@@ -112,6 +113,7 @@ static const char * const qtscript_QTextFormat_function_signatures[] = {
     , "int type"
     , "int propertyId, Object value"
     , "int propertyId"
+    , "QTextFormat other"
     , ""
     , ""
     , ""
@@ -167,6 +169,7 @@ static const int qtscript_QTextFormat_function_lengths[] = {
     , 1
     , 2
     , 1
+    , 1
     , 0
     , 0
     , 0
@@ -197,12 +200,13 @@ static const QMetaObject *qtscript_QTextFormat_metaObject()
 
 Q_DECLARE_METATYPE(QTextFormat*)
 Q_DECLARE_METATYPE(QTextFormat::Property)
-Q_DECLARE_METATYPE(QTextFormat::FormatType)
 Q_DECLARE_METATYPE(QTextFormat::ObjectTypes)
 Q_DECLARE_METATYPE(QTextFormat::PageBreakFlag)
 Q_DECLARE_METATYPE(QFlags<QTextFormat::PageBreakFlag>)
+Q_DECLARE_METATYPE(QTextFormat::FormatType)
 Q_DECLARE_METATYPE(Qt::LayoutDirection)
 Q_DECLARE_METATYPE(QVector<QTextLength>)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QMap<int,QVariant> > \
 { \
@@ -215,6 +219,22 @@ struct QMetaTypeId< QMap<int,QVariant> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QMap<int,QVariant> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QMap<int,QVariant> >("QMap<int,QVariant>", reinterpret_cast< QMap<int,QVariant> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(QTextBlockFormat)
 Q_DECLARE_METATYPE(QTextCharFormat)
@@ -275,6 +295,8 @@ static const QTextFormat::Property qtscript_QTextFormat_Property_values[] = {
     , QTextFormat::TextIndent
     , QTextFormat::TabPositions
     , QTextFormat::BlockIndent
+    , QTextFormat::LineHeight
+    , QTextFormat::LineHeightType
     , QTextFormat::BlockNonBreakableLines
     , QTextFormat::BlockTrailingHorizontalRulerWidth
     , QTextFormat::FirstFontProperty
@@ -283,6 +305,7 @@ static const QTextFormat::Property qtscript_QTextFormat_Property_values[] = {
     , QTextFormat::FontStyleHint
     , QTextFormat::FontStyleStrategy
     , QTextFormat::FontKerning
+    , QTextFormat::FontHintingPreference
     , QTextFormat::FontFamily
     , QTextFormat::FontPointSize
     , QTextFormat::FontSizeAdjustment
@@ -301,9 +324,13 @@ static const QTextFormat::Property qtscript_QTextFormat_Property_values[] = {
     , QTextFormat::IsAnchor
     , QTextFormat::AnchorHref
     , QTextFormat::AnchorName
+    , QTextFormat::FontLetterSpacingType
+    , QTextFormat::FontStretch
     , QTextFormat::ObjectType
     , QTextFormat::ListStyle
     , QTextFormat::ListIndent
+    , QTextFormat::ListNumberPrefix
+    , QTextFormat::ListNumberSuffix
     , QTextFormat::FrameBorder
     , QTextFormat::FrameMargin
     , QTextFormat::FramePadding
@@ -350,6 +377,8 @@ static const char * const qtscript_QTextFormat_Property_keys[] = {
     , "TextIndent"
     , "TabPositions"
     , "BlockIndent"
+    , "LineHeight"
+    , "LineHeightType"
     , "BlockNonBreakableLines"
     , "BlockTrailingHorizontalRulerWidth"
     , "FirstFontProperty"
@@ -358,6 +387,7 @@ static const char * const qtscript_QTextFormat_Property_keys[] = {
     , "FontStyleHint"
     , "FontStyleStrategy"
     , "FontKerning"
+    , "FontHintingPreference"
     , "FontFamily"
     , "FontPointSize"
     , "FontSizeAdjustment"
@@ -376,9 +406,13 @@ static const char * const qtscript_QTextFormat_Property_keys[] = {
     , "IsAnchor"
     , "AnchorHref"
     , "AnchorName"
+    , "FontLetterSpacingType"
+    , "FontStretch"
     , "ObjectType"
     , "ListStyle"
     , "ListIndent"
+    , "ListNumberPrefix"
+    , "ListNumberSuffix"
     , "FrameBorder"
     , "FrameMargin"
     , "FramePadding"
@@ -460,92 +494,9 @@ static QScriptValue qtscript_create_QTextFormat_Property_class(QScriptEngine *en
         qtscript_QTextFormat_Property_valueOf, qtscript_QTextFormat_Property_toString);
     qScriptRegisterMetaType<QTextFormat::Property>(engine, qtscript_QTextFormat_Property_toScriptValue,
         qtscript_QTextFormat_Property_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 72; ++i) {
+    for (int i = 0; i < 79; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QTextFormat_Property_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QTextFormat_Property_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QTextFormat::FormatType
-//
-
-static const QTextFormat::FormatType qtscript_QTextFormat_FormatType_values[] = {
-    QTextFormat::InvalidFormat
-    , QTextFormat::BlockFormat
-    , QTextFormat::CharFormat
-    , QTextFormat::ListFormat
-    , QTextFormat::TableFormat
-    , QTextFormat::FrameFormat
-    , QTextFormat::UserFormat
-};
-
-static const char * const qtscript_QTextFormat_FormatType_keys[] = {
-    "InvalidFormat"
-    , "BlockFormat"
-    , "CharFormat"
-    , "ListFormat"
-    , "TableFormat"
-    , "FrameFormat"
-    , "UserFormat"
-};
-
-static QString qtscript_QTextFormat_FormatType_toStringHelper(QTextFormat::FormatType value)
-{
-    const QMetaObject *meta = qtscript_QTextFormat_metaObject();
-    int idx = meta->indexOfEnumerator("FormatType");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QTextFormat_FormatType_toScriptValue(QScriptEngine *engine, const QTextFormat::FormatType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextFormat"));
-    return clazz.property(qtscript_QTextFormat_FormatType_toStringHelper(value));
-}
-
-static void qtscript_QTextFormat_FormatType_fromScriptValue(const QScriptValue &value, QTextFormat::FormatType &out)
-{
-    out = qvariant_cast<QTextFormat::FormatType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTextFormat_FormatType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QTextFormat_metaObject();
-    int idx = meta->indexOfEnumerator("FormatType");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QTextFormat::FormatType>(arg));
-    return context->throwError(QString::fromLatin1("FormatType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTextFormat_FormatType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextFormat::FormatType value = qscriptvalue_cast<QTextFormat::FormatType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTextFormat_FormatType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextFormat::FormatType value = qscriptvalue_cast<QTextFormat::FormatType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTextFormat_FormatType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTextFormat_FormatType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTextFormat_FormatType,
-        qtscript_QTextFormat_FormatType_valueOf, qtscript_QTextFormat_FormatType_toString);
-    qScriptRegisterMetaType<QTextFormat::FormatType>(engine, qtscript_QTextFormat_FormatType_toScriptValue,
-        qtscript_QTextFormat_FormatType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 7; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTextFormat_FormatType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTextFormat_FormatType_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -780,6 +731,89 @@ static QScriptValue qtscript_create_QTextFormat_PageBreakFlags_class(QScriptEngi
 }
 
 //
+// QTextFormat::FormatType
+//
+
+static const QTextFormat::FormatType qtscript_QTextFormat_FormatType_values[] = {
+    QTextFormat::InvalidFormat
+    , QTextFormat::BlockFormat
+    , QTextFormat::CharFormat
+    , QTextFormat::ListFormat
+    , QTextFormat::TableFormat
+    , QTextFormat::FrameFormat
+    , QTextFormat::UserFormat
+};
+
+static const char * const qtscript_QTextFormat_FormatType_keys[] = {
+    "InvalidFormat"
+    , "BlockFormat"
+    , "CharFormat"
+    , "ListFormat"
+    , "TableFormat"
+    , "FrameFormat"
+    , "UserFormat"
+};
+
+static QString qtscript_QTextFormat_FormatType_toStringHelper(QTextFormat::FormatType value)
+{
+    const QMetaObject *meta = qtscript_QTextFormat_metaObject();
+    int idx = meta->indexOfEnumerator("FormatType");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QTextFormat_FormatType_toScriptValue(QScriptEngine *engine, const QTextFormat::FormatType &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextFormat"));
+    return clazz.property(qtscript_QTextFormat_FormatType_toStringHelper(value));
+}
+
+static void qtscript_QTextFormat_FormatType_fromScriptValue(const QScriptValue &value, QTextFormat::FormatType &out)
+{
+    out = qvariant_cast<QTextFormat::FormatType>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QTextFormat_FormatType(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QTextFormat_metaObject();
+    int idx = meta->indexOfEnumerator("FormatType");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QTextFormat::FormatType>(arg));
+    return context->throwError(QString::fromLatin1("FormatType(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QTextFormat_FormatType_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextFormat::FormatType value = qscriptvalue_cast<QTextFormat::FormatType>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QTextFormat_FormatType_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextFormat::FormatType value = qscriptvalue_cast<QTextFormat::FormatType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QTextFormat_FormatType_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QTextFormat_FormatType_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QTextFormat_FormatType,
+        qtscript_QTextFormat_FormatType_valueOf, qtscript_QTextFormat_FormatType_toString);
+    qScriptRegisterMetaType<QTextFormat::FormatType>(engine, qtscript_QTextFormat_FormatType_toScriptValue,
+        qtscript_QTextFormat_FormatType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 7; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QTextFormat_FormatType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QTextFormat_FormatType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QTextFormat
 //
 
@@ -793,7 +827,7 @@ static QScriptValue qtscript_QTextFormat_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 48;
+        _id = 0xBABE0000 + 49;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -1104,62 +1138,70 @@ static QScriptValue qtscript_QTextFormat_prototype_call(QScriptContext *context,
     break;
 
     case 39:
+    if (context->argumentCount() == 1) {
+        QTextFormat _q_arg0 = qscriptvalue_cast<QTextFormat>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 40:
     if (context->argumentCount() == 0) {
         QTextBlockFormat _q_result = _q_self->toBlockFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 40:
+    case 41:
     if (context->argumentCount() == 0) {
         QTextCharFormat _q_result = _q_self->toCharFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 41:
+    case 42:
     if (context->argumentCount() == 0) {
         QTextFrameFormat _q_result = _q_self->toFrameFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 42:
+    case 43:
     if (context->argumentCount() == 0) {
         QTextImageFormat _q_result = _q_self->toImageFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 43:
+    case 44:
     if (context->argumentCount() == 0) {
         QTextListFormat _q_result = _q_self->toListFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 44:
+    case 45:
     if (context->argumentCount() == 0) {
         QTextTableCellFormat _q_result = _q_self->toTableCellFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 45:
+    case 46:
     if (context->argumentCount() == 0) {
         QTextTableFormat _q_result = _q_self->toTableFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 46:
+    case 47:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->type();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 47:
+    case 48:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -1167,8 +1209,10 @@ static QScriptValue qtscript_QTextFormat_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 48: {
-    QString result = QString::fromLatin1("QTextFormat");
+    case 49: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -1229,7 +1273,7 @@ QScriptValue qtscript_create_QTextFormat_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QTextFormat*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextFormat*)0));
-    for (int i = 0; i < 49; ++i) {
+    for (int i = 0; i < 50; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTextFormat_prototype_call, qtscript_QTextFormat_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTextFormat_function_names[i+1]),
@@ -1244,13 +1288,13 @@ QScriptValue qtscript_create_QTextFormat_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("Property"),
         qtscript_create_QTextFormat_Property_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("FormatType"),
-        qtscript_create_QTextFormat_FormatType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ObjectTypes"),
         qtscript_create_QTextFormat_ObjectTypes_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("PageBreakFlag"),
         qtscript_create_QTextFormat_PageBreakFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("PageBreakFlags"),
         qtscript_create_QTextFormat_PageBreakFlags_class(engine));
+    ctor.setProperty(QString::fromLatin1("FormatType"),
+        qtscript_create_QTextFormat_FormatType_class(engine, ctor));
     return ctor;
 }

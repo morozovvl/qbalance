@@ -61,6 +61,15 @@ static const int qtscript_QAnimationGroup_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QAnimationGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAnimationGroup : public QAnimationGroup
+{
+
+    friend QScriptValue qtscript_QAnimationGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QAnimationGroup_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -94,7 +103,7 @@ static QScriptValue qtscript_QAnimationGroup_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAnimationGroup* _q_self = qscriptvalue_cast<QAnimationGroup*>(context->thisObject());
+    qtscript_QAnimationGroup* _q_self = reinterpret_cast<qtscript_QAnimationGroup*>(qscriptvalue_cast<QAnimationGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAnimationGroup.%0(): this object is not a QAnimationGroup")

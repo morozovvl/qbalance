@@ -38,32 +38,50 @@ static const char * const qtscript_QGraphicsSimpleTextItem_function_names[] = {
     // static
     // prototype
     , "font"
+    , "setExtension"
     , "setFont"
     , "setText"
+    , "supportsExtension"
     , "text"
     , "toString"
 };
 
 static const char * const qtscript_QGraphicsSimpleTextItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene\nString text, QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent\nString text, QGraphicsItem parent"
     // static
     // prototype
     , ""
+    , "Extension extension, Object variant"
     , "QFont font"
     , "String text"
+    , "Extension extension"
     , ""
 ""
 };
 
 static const int qtscript_QGraphicsSimpleTextItem_function_lengths[] = {
-    3
+    2
     // static
     // prototype
     , 0
+    , 2
+    , 1
     , 1
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsSimpleTextItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsSimpleTextItem : public QGraphicsSimpleTextItem
+{
+    friend QScriptValue qtscript_QGraphicsSimpleTextItem_setExtension(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsSimpleTextItem_supportsExtension(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsSimpleTextItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsSimpleTextItem_throw_ambiguity_error_helper(
@@ -79,6 +97,7 @@ static QScriptValue qtscript_QGraphicsSimpleTextItem_throw_ambiguity_error_helpe
 
 Q_DECLARE_METATYPE(QGraphicsSimpleTextItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsSimpleTextItem*)
+Q_DECLARE_METATYPE(QGraphicsItem::Extension)
 Q_DECLARE_METATYPE(QAbstractGraphicsShapeItem*)
 
 //
@@ -95,11 +114,11 @@ static QScriptValue qtscript_QGraphicsSimpleTextItem_prototype_call(QScriptConte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsSimpleTextItem* _q_self = qscriptvalue_cast<QGraphicsSimpleTextItem*>(context->thisObject());
+    qtscript_QGraphicsSimpleTextItem* _q_self = reinterpret_cast<qtscript_QGraphicsSimpleTextItem*>(qscriptvalue_cast<QGraphicsSimpleTextItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsSimpleTextItem.%0(): this object is not a QGraphicsSimpleTextItem")
@@ -115,6 +134,15 @@ static QScriptValue qtscript_QGraphicsSimpleTextItem_prototype_call(QScriptConte
     break;
 
     case 1:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setExtension(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         QFont _q_arg0 = qscriptvalue_cast<QFont>(context->argument(0));
         _q_self->setFont(_q_arg0);
@@ -122,7 +150,7 @@ static QScriptValue qtscript_QGraphicsSimpleTextItem_prototype_call(QScriptConte
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setText(_q_arg0);
@@ -130,14 +158,22 @@ static QScriptValue qtscript_QGraphicsSimpleTextItem_prototype_call(QScriptConte
     }
     break;
 
-    case 3:
+    case 4:
+    if (context->argumentCount() == 1) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        bool _q_result = _q_self->supportsExtension(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->text();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4: {
+    case 6: {
     QString result = QString::fromLatin1("QGraphicsSimpleTextItem");
     return QScriptValue(context->engine(), result);
     }
@@ -180,28 +216,9 @@ static QScriptValue qtscript_QGraphicsSimpleTextItem_static_call(QScriptContext 
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
-            && qscriptvalue_cast<QGraphicsScene*>(context->argument(1))) {
-            QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-            QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-            QtScriptShell_QGraphicsSimpleTextItem* _q_cpp_result = new QtScriptShell_QGraphicsSimpleTextItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsSimpleTextItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if (context->argument(0).isString()
-            && qscriptvalue_cast<QGraphicsItem*>(context->argument(1))) {
-            QString _q_arg0 = context->argument(0).toString();
-            QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-            QtScriptShell_QGraphicsSimpleTextItem* _q_cpp_result = new QtScriptShell_QGraphicsSimpleTextItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsSimpleTextItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 3) {
         QString _q_arg0 = context->argument(0).toString();
         QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-        QGraphicsScene* _q_arg2 = qscriptvalue_cast<QGraphicsScene*>(context->argument(2));
-        QtScriptShell_QGraphicsSimpleTextItem* _q_cpp_result = new QtScriptShell_QGraphicsSimpleTextItem(_q_arg0, _q_arg1, _q_arg2);
+        QtScriptShell_QGraphicsSimpleTextItem* _q_cpp_result = new QtScriptShell_QGraphicsSimpleTextItem(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsSimpleTextItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -221,7 +238,7 @@ QScriptValue qtscript_create_QGraphicsSimpleTextItem_class(QScriptEngine *engine
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsSimpleTextItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsSimpleTextItem*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractGraphicsShapeItem*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsSimpleTextItem_prototype_call, qtscript_QGraphicsSimpleTextItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsSimpleTextItem_function_names[i+1]),

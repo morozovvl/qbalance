@@ -49,6 +49,7 @@ static QScriptValue qtscript_QWidgetItem_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QWidgetItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QWidgetItem*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QLayoutItem*)
 
 //

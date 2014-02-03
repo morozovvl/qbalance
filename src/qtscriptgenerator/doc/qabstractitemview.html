@@ -17,6 +17,29 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QAbstractItemView prototype object</li>
+<li><b>NoEditTriggers = 0</b></li>
+<li><b>CurrentChanged = 1</b></li>
+<li><b>DoubleClicked = 2</b></li>
+<li><b>SelectedClicked = 4</b></li>
+<li><b>EditKeyPressed = 8</b></li>
+<li><b>AnyKeyPressed = 16</b></li>
+<li><b>AllEditTriggers = 31</b></li>
+<li><b>EditTrigger( value )</b></li>
+<li><b>EditTriggers( value1, value2, ... )</b></li>
+<li><b>NoSelection</b></li>
+<li><b>SingleSelection</b></li>
+<li><b>MultiSelection</b></li>
+<li><b>ExtendedSelection</b></li>
+<li><b>ContiguousSelection</b></li>
+<li><b>SelectionMode( value )</b></li>
+<li><b>EnsureVisible</b></li>
+<li><b>PositionAtTop</b></li>
+<li><b>PositionAtBottom</b></li>
+<li><b>PositionAtCenter</b></li>
+<li><b>ScrollHint( value )</b></li>
+<li><b>ScrollPerItem</b></li>
+<li><b>ScrollPerPixel</b></li>
+<li><b>ScrollMode( value )</b></li>
 <li><b>NoDragDrop</b></li>
 <li><b>DragOnly</b></li>
 <li><b>DropOnly</b></li>
@@ -27,37 +50,21 @@
 <li><b>SelectRows</b></li>
 <li><b>SelectColumns</b></li>
 <li><b>SelectionBehavior( value )</b></li>
-<li><b>NoEditTriggers = 0</b></li>
-<li><b>CurrentChanged = 1</b></li>
-<li><b>DoubleClicked = 2</b></li>
-<li><b>SelectedClicked = 4</b></li>
-<li><b>EditKeyPressed = 8</b></li>
-<li><b>AnyKeyPressed = 16</b></li>
-<li><b>AllEditTriggers = 31</b></li>
-<li><b>EditTrigger( value )</b></li>
-<li><b>EditTriggers( value1, value2, ... )</b></li>
-<li><b>ScrollPerItem</b></li>
-<li><b>ScrollPerPixel</b></li>
-<li><b>ScrollMode( value )</b></li>
-<li><b>EnsureVisible</b></li>
-<li><b>PositionAtTop</b></li>
-<li><b>PositionAtBottom</b></li>
-<li><b>PositionAtCenter</b></li>
-<li><b>ScrollHint( value )</b></li>
-<li><b>NoSelection</b></li>
-<li><b>SingleSelection</b></li>
-<li><b>MultiSelection</b></li>
-<li><b>ExtendedSelection</b></li>
-<li><b>ContiguousSelection</b></li>
-<li><b>SelectionMode( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QAbstractItemView prototype object inherits properties from the <a href="qabstractscrollarea.html">QAbstractScrollArea</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>void closePersistentEditor(QModelIndex index)</b></li>
 <li><div class="fn"/><b>QModelIndex currentIndex()</b></li>
+<li><div class="fn"/><b>QPoint dirtyRegionOffset()</b></li>
+<li><div class="fn"/><b>void doAutoScroll()</b></li>
+<li><div class="fn"/><b>DropIndicatorPosition dropIndicatorPosition()</b></li>
+<li><div class="fn"/><b>bool edit(QModelIndex index, EditTrigger trigger, QEvent event)</b></li>
+<li><div class="fn"/><b>void executeDelayedItemsLayout()</b></li>
+<li><div class="fn"/><b>int horizontalOffset()</b></li>
 <li><div class="fn"/><b>QModelIndex indexAt(QPoint point)</b></li>
 <li><div class="fn"/><b>QWidget indexWidget(QModelIndex index)</b></li>
+<li><div class="fn"/><b>bool isIndexHidden(QModelIndex index)</b></li>
 <li><div class="fn"/><b>QAbstractItemDelegate itemDelegate()</b></li>
 <li><div class="fn"/><b>QAbstractItemDelegate itemDelegateForColumn(int column)</b></li>
 <li><div class="fn"/><b>QAbstractItemDelegate itemDelegateForRow(int row)</b></li>
@@ -65,18 +72,32 @@
 <li><div class="fn"/><b>QAbstractItemModel model()</b></li>
 <li><div class="fn"/><b>void openPersistentEditor(QModelIndex index)</b></li>
 <li><div class="fn"/><b>QModelIndex rootIndex()</b></li>
+<li><div class="fn"/><b>void scheduleDelayedItemsLayout()</b></li>
+<li><div class="fn"/><b>void scrollDirtyRegion(int dx, int dy)</b></li>
 <li><div class="fn"/><b>void scrollTo(QModelIndex index, ScrollHint hint)</b></li>
+<li><div class="fn"/><b>List selectedIndexes()</b></li>
+<li><div class="fn"/><b>SelectionFlags selectionCommand(QModelIndex index, QEvent event)</b></li>
 <li><div class="fn"/><b>QItemSelectionModel selectionModel()</b></li>
+<li><div class="fn"/><b>void setDirtyRegion(QRegion region)</b></li>
 <li><div class="fn"/><b>void setIndexWidget(QModelIndex index, QWidget widget)</b></li>
 <li><div class="fn"/><b>void setItemDelegate(QAbstractItemDelegate delegate)</b></li>
 <li><div class="fn"/><b>void setItemDelegateForColumn(int column, QAbstractItemDelegate delegate)</b></li>
 <li><div class="fn"/><b>void setItemDelegateForRow(int row, QAbstractItemDelegate delegate)</b></li>
 <li><div class="fn"/><b>void setModel(QAbstractItemModel model)</b></li>
+<li><div class="fn"/><b>void setSelection(QRect rect, SelectionFlags command)</b></li>
 <li><div class="fn"/><b>void setSelectionModel(QItemSelectionModel selectionModel)</b></li>
+<li><div class="fn"/><b>void setState(State state)</b></li>
 <li><div class="fn"/><b>int sizeHintForColumn(int column)</b></li>
 <li><div class="fn"/><b>QSize sizeHintForIndex(QModelIndex index)</b></li>
 <li><div class="fn"/><b>int sizeHintForRow(int row)</b></li>
+<li><div class="fn"/><b>void startAutoScroll()</b></li>
+<li><div class="fn"/><b>void startDrag(DropActions supportedActions)</b></li>
+<li><div class="fn"/><b>State state()</b></li>
+<li><div class="fn"/><b>void stopAutoScroll()</b></li>
+<li><div class="fn"/><b>int verticalOffset()</b></li>
+<li><div class="fn"/><b>QStyleOptionViewItem viewOptions()</b></li>
 <li><div class="fn"/><b>QRect visualRect(QModelIndex index)</b></li>
+<li><div class="fn"/><b>QRegion visualRegionForSelection(QItemSelection selection)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QAbstractItemView objects inherit properties from the QAbstractItemView prototype object and also have the following properties.</p>

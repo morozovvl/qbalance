@@ -62,17 +62,17 @@ static const char * const qtscript_QMatrix4x4_function_names[] = {
 };
 
 static const char * const qtscript_QMatrix4x4_function_signatures[] = {
-    "\nQMatrix matrix\nQTransform transform\nqreal values\nqreal values, int cols, int rows\nqreal m11, qreal m12, qreal m13, qreal m14, qreal m21, qreal m22, qreal m23, qreal m24, qreal m31, qreal m32, qreal m33, qreal m34, qreal m41, qreal m42, qreal m43, qreal m44"
+    "\nQMatrix matrix\nQTransform transform\nfloat values\nfloat values, int cols, int rows\nfloat m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44"
     // static
     // prototype
     , "int index"
     , ""
-    , "qreal values"
+    , "float values"
     , ""
     , ""
-    , "qreal value"
+    , "float value"
     , ""
-    , "qreal left, qreal right, qreal bottom, qreal top, qreal nearPlane, qreal farPlane"
+    , "float left, float right, float bottom, float top, float nearPlane, float farPlane"
     , "bool invertible"
     , ""
     , "QVector3D eye, QVector3D center, QVector3D up"
@@ -82,23 +82,23 @@ static const char * const qtscript_QMatrix4x4_function_signatures[] = {
     , ""
     , "QMatrix4x4 other"
     , "int row, int column"
-    , "qreal divisor"
+    , "float divisor"
     , "QMatrix4x4 other"
-    , "QMatrix4x4 other\nqreal factor"
+    , "QMatrix4x4 other\nfloat factor"
     , "QMatrix4x4 other"
     , ""
-    , "QRect rect\nQRectF rect\nqreal left, qreal right, qreal bottom, qreal top, qreal nearPlane, qreal farPlane"
-    , "qreal angle, qreal aspect, qreal nearPlane, qreal farPlane"
+    , "QRect rect\nQRectF rect\nfloat left, float right, float bottom, float top, float nearPlane, float farPlane"
+    , "float verticalAngle, float aspectRatio, float nearPlane, float farPlane"
     , "QDataStream arg__1"
-    , "QQuaternion quaternion\nqreal angle, QVector3D vector\nqreal angle, qreal x, qreal y, qreal z"
+    , "QQuaternion quaternion\nfloat angle, QVector3D vector\nfloat angle, float x, float y, float z"
     , "int index"
-    , "QVector3D vector\nqreal factor\nqreal x, qreal y\nqreal x, qreal y, qreal z"
+    , "QVector3D vector\nfloat factor\nfloat x, float y\nfloat x, float y, float z"
     , "int index, QVector4D value"
     , "int index, QVector4D value"
     , ""
     , ""
-    , "\nqreal distanceToPlane"
-    , "QVector3D vector\nqreal x, qreal y\nqreal x, qreal y, qreal z"
+    , "\nfloat distanceToPlane"
+    , "QVector3D vector\nfloat x, float y\nfloat x, float y, float z"
     , ""
     , "QDataStream arg__1"
 ""
@@ -159,7 +159,7 @@ static QScriptValue qtscript_QMatrix4x4_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QMatrix4x4*)
-Q_DECLARE_METATYPE(qreal*)
+Q_DECLARE_METATYPE(float*)
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(QDataStream*)
 
@@ -199,14 +199,14 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
 
     case 1:
     if (context->argumentCount() == 0) {
-        qreal* _q_result = const_cast<qreal*>(_q_self->constData());
+        float* _q_result = const_cast<float*>(_q_self->constData());
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 2:
     if (context->argumentCount() == 1) {
-        qreal* _q_arg0 = qscriptvalue_cast<qreal*>(context->argument(0));
+        float* _q_arg0 = qscriptvalue_cast<float*>(context->argument(0));
         _q_self->copyDataTo(_q_arg0);
         return context->engine()->undefinedValue();
     }
@@ -214,21 +214,21 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
 
     case 3:
     if (context->argumentCount() == 0) {
-        qreal* _q_result = _q_self->data();
+        float* _q_result = _q_self->data();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->determinant();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        double _q_result = _q_self->determinant();
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 5:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->fill(_q_arg0);
         return context->engine()->undefinedValue();
     }
@@ -243,12 +243,12 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
 
     case 7:
     if (context->argumentCount() == 6) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
-        qreal _q_arg4 = qscriptvalue_cast<qreal>(context->argument(4));
-        qreal _q_arg5 = qscriptvalue_cast<qreal>(context->argument(5));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
+        float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
+        float _q_arg5 = qscriptvalue_cast<float>(context->argument(5));
         _q_self->frustum(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
         return context->engine()->undefinedValue();
     }
@@ -346,14 +346,14 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
-        qreal _q_result = _q_self->operator()(_q_arg0, _q_arg1);
+        float _q_result = _q_self->operator()(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 17:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         QMatrix4x4 _q_result = _q_self->operator/=(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -373,8 +373,8 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
             QMatrix4x4 _q_arg0 = qscriptvalue_cast<QMatrix4x4>(context->argument(0));
             QMatrix4x4 _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
-            qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        } else if (context->argument(0).isNumber()) {
+            float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
             QMatrix4x4 _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
         }
@@ -409,12 +409,12 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
         }
     }
     if (context->argumentCount() == 6) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
-        qreal _q_arg4 = qscriptvalue_cast<qreal>(context->argument(4));
-        qreal _q_arg5 = qscriptvalue_cast<qreal>(context->argument(5));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
+        float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
+        float _q_arg5 = qscriptvalue_cast<float>(context->argument(5));
         _q_self->ortho(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
         return context->engine()->undefinedValue();
     }
@@ -422,10 +422,10 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
 
     case 23:
     if (context->argumentCount() == 4) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
         _q_self->perspective(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
         return context->engine()->undefinedValue();
     }
@@ -446,23 +446,23 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         QVector3D _q_arg1 = qscriptvalue_cast<QVector3D>(context->argument(1));
         _q_self->rotate(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 3) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
         _q_self->rotate(_q_arg0, _q_arg1, _q_arg2);
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 4) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
         _q_self->rotate(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
         return context->engine()->undefinedValue();
     }
@@ -482,22 +482,22 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
             QVector3D _q_arg0 = qscriptvalue_cast<QVector3D>(context->argument(0));
             _q_self->scale(_q_arg0);
             return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
-            qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        } else if (context->argument(0).isNumber()) {
+            float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
             _q_self->scale(_q_arg0);
             return context->engine()->undefinedValue();
         }
     }
     if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
         _q_self->scale(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 3) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
         _q_self->scale(_q_arg0, _q_arg1, _q_arg2);
         return context->engine()->undefinedValue();
     }
@@ -541,7 +541,7 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         QTransform _q_result = _q_self->toTransform(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -554,15 +554,15 @@ static QScriptValue qtscript_QMatrix4x4_prototype_call(QScriptContext *context, 
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
         _q_self->translate(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 3) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
         _q_self->translate(_q_arg0, _q_arg1, _q_arg2);
         return context->engine()->undefinedValue();
     }
@@ -623,36 +623,36 @@ static QScriptValue qtscript_QMatrix4x4_static_call(QScriptContext *context, QSc
             QMatrix4x4 _q_cpp_result(_q_arg0);
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
-        } else if (qscriptvalue_cast<qreal*>(context->argument(0))) {
-            qreal* _q_arg0 = qscriptvalue_cast<qreal*>(context->argument(0));
+        } else if (qscriptvalue_cast<float*>(context->argument(0))) {
+            float* _q_arg0 = qscriptvalue_cast<float*>(context->argument(0));
             QMatrix4x4 _q_cpp_result(_q_arg0);
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         }
     } else if (context->argumentCount() == 3) {
-        qreal* _q_arg0 = qscriptvalue_cast<qreal*>(context->argument(0));
+        float* _q_arg0 = qscriptvalue_cast<float*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
         int _q_arg2 = context->argument(2).toInt32();
         QMatrix4x4 _q_cpp_result(_q_arg0, _q_arg1, _q_arg2);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     } else if (context->argumentCount() == 16) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
-        qreal _q_arg4 = qscriptvalue_cast<qreal>(context->argument(4));
-        qreal _q_arg5 = qscriptvalue_cast<qreal>(context->argument(5));
-        qreal _q_arg6 = qscriptvalue_cast<qreal>(context->argument(6));
-        qreal _q_arg7 = qscriptvalue_cast<qreal>(context->argument(7));
-        qreal _q_arg8 = qscriptvalue_cast<qreal>(context->argument(8));
-        qreal _q_arg9 = qscriptvalue_cast<qreal>(context->argument(9));
-        qreal _q_arg10 = qscriptvalue_cast<qreal>(context->argument(10));
-        qreal _q_arg11 = qscriptvalue_cast<qreal>(context->argument(11));
-        qreal _q_arg12 = qscriptvalue_cast<qreal>(context->argument(12));
-        qreal _q_arg13 = qscriptvalue_cast<qreal>(context->argument(13));
-        qreal _q_arg14 = qscriptvalue_cast<qreal>(context->argument(14));
-        qreal _q_arg15 = qscriptvalue_cast<qreal>(context->argument(15));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
+        float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
+        float _q_arg5 = qscriptvalue_cast<float>(context->argument(5));
+        float _q_arg6 = qscriptvalue_cast<float>(context->argument(6));
+        float _q_arg7 = qscriptvalue_cast<float>(context->argument(7));
+        float _q_arg8 = qscriptvalue_cast<float>(context->argument(8));
+        float _q_arg9 = qscriptvalue_cast<float>(context->argument(9));
+        float _q_arg10 = qscriptvalue_cast<float>(context->argument(10));
+        float _q_arg11 = qscriptvalue_cast<float>(context->argument(11));
+        float _q_arg12 = qscriptvalue_cast<float>(context->argument(12));
+        float _q_arg13 = qscriptvalue_cast<float>(context->argument(13));
+        float _q_arg14 = qscriptvalue_cast<float>(context->argument(14));
+        float _q_arg15 = qscriptvalue_cast<float>(context->argument(15));
         QMatrix4x4 _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7, _q_arg8, _q_arg9, _q_arg10, _q_arg11, _q_arg12, _q_arg13, _q_arg14, _q_arg15);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;

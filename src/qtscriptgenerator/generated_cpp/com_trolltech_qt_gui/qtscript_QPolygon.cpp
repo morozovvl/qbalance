@@ -46,6 +46,8 @@ static const char * const qtscript_QPolygon_function_names[] = {
     , "push_front"
     , "readFrom"
     , "remove"
+    , "removeFirst"
+    , "removeLast"
     , "replace"
     , "reserve"
     , "resize"
@@ -54,6 +56,9 @@ static const char * const qtscript_QPolygon_function_names[] = {
     , "squeeze"
     , "startsWith"
     , "subtracted"
+    , "swap"
+    , "takeFirst"
+    , "takeLast"
     , "toList"
     , "translate"
     , "translated"
@@ -95,6 +100,8 @@ static const char * const qtscript_QPolygon_function_signatures[] = {
     , "QPoint t"
     , "QDataStream stream"
     , "int i\nint i, int n"
+    , ""
+    , ""
     , "int i, QPoint t"
     , "int size"
     , "int size"
@@ -103,6 +110,9 @@ static const char * const qtscript_QPolygon_function_signatures[] = {
     , ""
     , "QPoint t"
     , "QPolygon r"
+    , "QPolygon other"
+    , ""
+    , ""
     , ""
     , "QPoint offset\nint dx, int dy"
     , "QPoint offset\nint dx, int dy"
@@ -144,6 +154,8 @@ static const int qtscript_QPolygon_function_lengths[] = {
     , 1
     , 1
     , 2
+    , 0
+    , 0
     , 2
     , 1
     , 1
@@ -152,6 +164,9 @@ static const int qtscript_QPolygon_function_lengths[] = {
     , 0
     , 1
     , 1
+    , 1
+    , 0
+    , 0
     , 0
     , 2
     , 2
@@ -192,7 +207,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 41;
+        _id = 0xBABE0000 + 46;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -449,6 +464,20 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     break;
 
     case 27:
+    if (context->argumentCount() == 0) {
+        _q_self->removeFirst();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 28:
+    if (context->argumentCount() == 0) {
+        _q_self->removeLast();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 29:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QPoint _q_arg1 = qscriptvalue_cast<QPoint>(context->argument(1));
@@ -457,7 +486,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 28:
+    case 30:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->reserve(_q_arg0);
@@ -465,7 +494,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 29:
+    case 31:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->resize(_q_arg0);
@@ -473,7 +502,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 30:
+    case 32:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setSharable(_q_arg0);
@@ -481,21 +510,21 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 31:
+    case 33:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->size();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 32:
+    case 34:
     if (context->argumentCount() == 0) {
         _q_self->squeeze();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 33:
+    case 35:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         bool _q_result = _q_self->startsWith(_q_arg0);
@@ -503,7 +532,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 34:
+    case 36:
     if (context->argumentCount() == 1) {
         QPolygon _q_arg0 = qscriptvalue_cast<QPolygon>(context->argument(0));
         QPolygon _q_result = _q_self->subtracted(_q_arg0);
@@ -511,14 +540,36 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 35:
+    case 37:
+    if (context->argumentCount() == 1) {
+        QPolygon _q_arg0 = qscriptvalue_cast<QPolygon>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 38:
+    if (context->argumentCount() == 0) {
+        QPoint _q_result = _q_self->takeFirst();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 39:
+    if (context->argumentCount() == 0) {
+        QPoint _q_result = _q_self->takeLast();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 40:
     if (context->argumentCount() == 0) {
         QList<QPoint> _q_result = _q_self->toList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 36:
+    case 41:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         _q_self->translate(_q_arg0);
@@ -532,7 +583,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 37:
+    case 42:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         QPolygon _q_result = _q_self->translated(_q_arg0);
@@ -546,7 +597,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 38:
+    case 43:
     if (context->argumentCount() == 1) {
         QPolygon _q_arg0 = qscriptvalue_cast<QPolygon>(context->argument(0));
         QPolygon _q_result = _q_self->united(_q_arg0);
@@ -554,7 +605,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 39:
+    case 44:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QPoint _q_result = _q_self->value(_q_arg0);
@@ -568,7 +619,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 40:
+    case 45:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -576,7 +627,7 @@ static QScriptValue qtscript_QPolygon_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 41: {
+    case 46: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -658,7 +709,7 @@ QScriptValue qtscript_create_QPolygon_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QPolygon*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPolygon*)0));
-    for (int i = 0; i < 42; ++i) {
+    for (int i = 0; i < 47; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPolygon_prototype_call, qtscript_QPolygon_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPolygon_function_names[i+2]),

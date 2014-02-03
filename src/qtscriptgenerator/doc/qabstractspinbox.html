@@ -17,14 +17,14 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QAbstractSpinBox prototype object</li>
+<li><b>CorrectToPreviousValue</b></li>
+<li><b>CorrectToNearestValue</b></li>
+<li><b>CorrectionMode( value )</b></li>
 <li><b>StepNone = 0x00</b></li>
 <li><b>StepUpEnabled = 0x01</b></li>
 <li><b>StepDownEnabled = 0x02</b></li>
 <li><b>StepEnabledFlag( value )</b></li>
 <li><b>StepEnabled( value1, value2, ... )</b></li>
-<li><b>CorrectToPreviousValue</b></li>
-<li><b>CorrectToNearestValue</b></li>
-<li><b>CorrectionMode( value )</b></li>
 <li><b>UpDownArrows</b></li>
 <li><b>PlusMinus</b></li>
 <li><b>NoButtons</b></li>
@@ -34,10 +34,14 @@
 <p>The QAbstractSpinBox prototype object inherits properties from the <a href="qwidget.html">QWidget</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>void fixup(String input)</b></li>
+<li><div class="fn"/><b>void initStyleOption(QStyleOptionSpinBox option)</b></li>
 <li><div class="fn"/><b>void interpretText()</b></li>
+<li><div class="fn"/><b>QLineEdit lineEdit()</b></li>
 <li><div class="fn"/><b>QSize minimumSizeHint()</b></li>
+<li><div class="fn"/><b>void setLineEdit(QLineEdit edit)</b></li>
 <li><div class="fn"/><b>QSize sizeHint()</b></li>
 <li><div class="fn"/><b>void stepBy(int steps)</b></li>
+<li><div class="fn"/><b>StepEnabled stepEnabled()</b></li>
 <li><div class="fn"/><b>State validate(String input, int pos)</b></li>
 </ul>
 <h3>Instance Properties</h3>

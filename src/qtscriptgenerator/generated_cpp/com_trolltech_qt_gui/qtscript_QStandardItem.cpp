@@ -6,12 +6,12 @@
 #include <qmetaobject.h>
 
 #include <qstandarditemmodel.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemmodel.h>
 #include <qbrush.h>
 #include <qdatastream.h>
 #include <qfont.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qsize.h>
 #include <qstandarditemmodel.h>
@@ -34,6 +34,7 @@ static const char * const qtscript_QStandardItem_function_names[] = {
     , "column"
     , "columnCount"
     , "data"
+    , "emitDataChanged"
     , "flags"
     , "font"
     , "foreground"
@@ -122,6 +123,7 @@ static const char * const qtscript_QStandardItem_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
     , "int column, List items"
     , "int column, int count"
     , "int row, QStandardItem item\nint row, List items"
@@ -204,6 +206,7 @@ static const int qtscript_QStandardItem_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 0
     , 2
     , 2
     , 2
@@ -264,6 +267,16 @@ static const int qtscript_QStandardItem_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStandardItem : public QStandardItem
+{
+    friend QScriptValue qtscript_QStandardItem_emitDataChanged(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStandardItem_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -281,7 +294,6 @@ Q_DECLARE_METATYPE(QStandardItem::ItemType)
 Q_DECLARE_METATYPE(QList<QStandardItem*>)
 Q_DECLARE_METATYPE(Qt::CheckState)
 Q_DECLARE_METATYPE(QFlags<Qt::ItemFlag>)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QStandardItemModel*)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
@@ -386,11 +398,11 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 75;
+        _id = 0xBABE0000 + 76;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStandardItem* _q_self = qscriptvalue_cast<QStandardItem*>(context->thisObject());
+    qtscript_QStandardItem* _q_self = reinterpret_cast<qtscript_QStandardItem*>(qscriptvalue_cast<QStandardItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStandardItem.%0(): this object is not a QStandardItem")
@@ -508,47 +520,54 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
 
     case 12:
     if (context->argumentCount() == 0) {
-        QFlags<Qt::ItemFlag> _q_result = _q_self->flags();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        _q_self->emitDataChanged();
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 13:
     if (context->argumentCount() == 0) {
-        QFont _q_result = _q_self->font();
+        QFlags<Qt::ItemFlag> _q_result = _q_self->flags();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 14:
     if (context->argumentCount() == 0) {
-        QBrush _q_result = _q_self->foreground();
+        QFont _q_result = _q_self->font();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 15:
     if (context->argumentCount() == 0) {
+        QBrush _q_result = _q_self->foreground();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
+    if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasChildren();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 0) {
         QIcon _q_result = _q_self->icon();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 0) {
         QModelIndex _q_result = _q_self->index();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QStandardItem*> _q_arg1;
@@ -558,7 +577,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -567,7 +586,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isNumber()
             && qscriptvalue_cast<QStandardItem*>(context->argument(1))) {
@@ -586,7 +605,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 21:
+    case 22:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isNumber()
             && context->argument(1).isArray()) {
@@ -605,70 +624,70 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 22:
+    case 23:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isCheckable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
+    case 24:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isDragEnabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 24:
+    case 25:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isDropEnabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 25:
+    case 26:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEditable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 26:
+    case 27:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEnabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 27:
+    case 28:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isSelectable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 28:
+    case 29:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isTristate();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 29:
+    case 30:
     if (context->argumentCount() == 0) {
         QStandardItemModel* _q_result = _q_self->model();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 30:
+    case 31:
     if (context->argumentCount() == 0) {
         QStandardItem* _q_result = _q_self->parent();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 31:
+    case 32:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -676,7 +695,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 32:
+    case 33:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removeColumn(_q_arg0);
@@ -684,7 +703,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 33:
+    case 34:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -693,7 +712,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 34:
+    case 35:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removeRow(_q_arg0);
@@ -701,7 +720,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 35:
+    case 36:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -710,21 +729,21 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 36:
+    case 37:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->row();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 37:
+    case 38:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->rowCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 38:
+    case 39:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setAccessibleDescription(_q_arg0);
@@ -732,7 +751,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 39:
+    case 40:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setAccessibleText(_q_arg0);
@@ -740,7 +759,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 40:
+    case 41:
     if (context->argumentCount() == 1) {
         QBrush _q_arg0 = qscriptvalue_cast<QBrush>(context->argument(0));
         _q_self->setBackground(_q_arg0);
@@ -748,7 +767,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 41:
+    case 42:
     if (context->argumentCount() == 1) {
         Qt::CheckState _q_arg0 = qscriptvalue_cast<Qt::CheckState>(context->argument(0));
         _q_self->setCheckState(_q_arg0);
@@ -756,7 +775,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 42:
+    case 43:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setCheckable(_q_arg0);
@@ -764,7 +783,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 43:
+    case 44:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_arg1 = qscriptvalue_cast<QStandardItem*>(context->argument(1));
@@ -780,7 +799,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 44:
+    case 45:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setColumnCount(_q_arg0);
@@ -788,7 +807,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 45:
+    case 46:
     if (context->argumentCount() == 1) {
         QVariant _q_arg0 = context->argument(0).toVariant();
         _q_self->setData(_q_arg0);
@@ -802,7 +821,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 46:
+    case 47:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setDragEnabled(_q_arg0);
@@ -810,7 +829,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 47:
+    case 48:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setDropEnabled(_q_arg0);
@@ -818,7 +837,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 48:
+    case 49:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setEditable(_q_arg0);
@@ -826,7 +845,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 49:
+    case 50:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setEnabled(_q_arg0);
@@ -834,7 +853,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 50:
+    case 51:
     if (context->argumentCount() == 1) {
         QFlags<Qt::ItemFlag> _q_arg0 = qscriptvalue_cast<QFlags<Qt::ItemFlag> >(context->argument(0));
         _q_self->setFlags(_q_arg0);
@@ -842,7 +861,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 51:
+    case 52:
     if (context->argumentCount() == 1) {
         QFont _q_arg0 = qscriptvalue_cast<QFont>(context->argument(0));
         _q_self->setFont(_q_arg0);
@@ -850,7 +869,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 52:
+    case 53:
     if (context->argumentCount() == 1) {
         QBrush _q_arg0 = qscriptvalue_cast<QBrush>(context->argument(0));
         _q_self->setForeground(_q_arg0);
@@ -858,7 +877,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 53:
+    case 54:
     if (context->argumentCount() == 1) {
         QIcon _q_arg0 = qscriptvalue_cast<QIcon>(context->argument(0));
         _q_self->setIcon(_q_arg0);
@@ -866,7 +885,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 54:
+    case 55:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setRowCount(_q_arg0);
@@ -874,7 +893,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 55:
+    case 56:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setSelectable(_q_arg0);
@@ -882,7 +901,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 56:
+    case 57:
     if (context->argumentCount() == 1) {
         QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
         _q_self->setSizeHint(_q_arg0);
@@ -890,7 +909,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 57:
+    case 58:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setStatusTip(_q_arg0);
@@ -898,7 +917,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 58:
+    case 59:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setText(_q_arg0);
@@ -906,7 +925,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 59:
+    case 60:
     if (context->argumentCount() == 1) {
         QFlags<Qt::AlignmentFlag> _q_arg0 = qscriptvalue_cast<QFlags<Qt::AlignmentFlag> >(context->argument(0));
         _q_self->setTextAlignment(_q_arg0);
@@ -914,7 +933,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 60:
+    case 61:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setToolTip(_q_arg0);
@@ -922,7 +941,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 61:
+    case 62:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setTristate(_q_arg0);
@@ -930,7 +949,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 62:
+    case 63:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setWhatsThis(_q_arg0);
@@ -938,14 +957,14 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 63:
+    case 64:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 64:
+    case 65:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->sortChildren(_q_arg0);
@@ -959,14 +978,14 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 65:
+    case 66:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->statusTip();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 66:
+    case 67:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_result = _q_self->takeChild(_q_arg0);
@@ -980,7 +999,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 67:
+    case 68:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QStandardItem*> _q_result = _q_self->takeColumn(_q_arg0);
@@ -988,7 +1007,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 68:
+    case 69:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QStandardItem*> _q_result = _q_self->takeRow(_q_arg0);
@@ -996,42 +1015,42 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 69:
+    case 70:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->text();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 70:
+    case 71:
     if (context->argumentCount() == 0) {
         QFlags<Qt::AlignmentFlag> _q_result = _q_self->textAlignment();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 71:
+    case 72:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->toolTip();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 72:
+    case 73:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->type();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 73:
+    case 74:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->whatsThis();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 74:
+    case 75:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -1039,7 +1058,7 @@ static QScriptValue qtscript_QStandardItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 75: {
+    case 76: {
     QString result = QString::fromLatin1("QStandardItem");
     return QScriptValue(context->engine(), result);
     }
@@ -1114,7 +1133,7 @@ QScriptValue qtscript_create_QStandardItem_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QStandardItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QStandardItem*)0));
-    for (int i = 0; i < 76; ++i) {
+    for (int i = 0; i < 77; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QStandardItem_prototype_call, qtscript_QStandardItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QStandardItem_function_names[i+1]),

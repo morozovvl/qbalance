@@ -41,6 +41,7 @@ static const char * const qtscript_QPen_function_names[] = {
     , "setWidth"
     , "setWidthF"
     , "style"
+    , "swap"
     , "width"
     , "widthF"
     , "writeTo"
@@ -74,6 +75,7 @@ static const char * const qtscript_QPen_function_signatures[] = {
     , "int width"
     , "qreal width"
     , ""
+    , "QPen other"
     , ""
     , ""
     , "QDataStream arg__1"
@@ -107,6 +109,7 @@ static const int qtscript_QPen_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 1
     , 0
     , 0
     , 1
@@ -145,7 +148,7 @@ static QScriptValue qtscript_QPen_prototype_call(QScriptContext *context, QScrip
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 26;
+        _id = 0xBABE0000 + 27;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -333,20 +336,28 @@ static QScriptValue qtscript_QPen_prototype_call(QScriptContext *context, QScrip
     break;
 
     case 23:
+    if (context->argumentCount() == 1) {
+        QPen _q_arg0 = qscriptvalue_cast<QPen>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 24:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->width();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 24:
+    case 25:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->widthF();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 25:
+    case 26:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -354,7 +365,7 @@ static QScriptValue qtscript_QPen_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 26: {
+    case 27: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -445,7 +456,7 @@ QScriptValue qtscript_create_QPen_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QPen*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPen*)0));
-    for (int i = 0; i < 27; ++i) {
+    for (int i = 0; i < 28; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPen_prototype_call, qtscript_QPen_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPen_function_names[i+1]),

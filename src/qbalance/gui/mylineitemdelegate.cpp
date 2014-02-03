@@ -35,7 +35,7 @@ MyLineItemDelegate::~MyLineItemDelegate()
 }
 
 
-QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex &) const
+QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex&) const
 {
     if (!readOnly) {
         parentForm->getParent()->saveOldValues();
@@ -45,3 +45,5 @@ QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionView
     }
     return 0;
 }
+
+

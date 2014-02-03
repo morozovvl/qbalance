@@ -12,7 +12,7 @@
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QSslCertificate(QIODevice device, EncodingFormat format)</b></li>
-<li><div class="fn"/><b>void QSslCertificate(QByteArray encoded, EncodingFormat format)</b></li>
+<li><div class="fn"/><b>void QSslCertificate(QByteArray data, EncodingFormat format)</b></li>
 <li><div class="fn"/><b>void QSslCertificate(QSslCertificate other)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
@@ -21,32 +21,41 @@
 <li><div class="fn"/><b>List fromData(QByteArray data, EncodingFormat format)</b></li>
 <li><div class="fn"/><b>List fromDevice(QIODevice device, EncodingFormat format)</b></li>
 <li><div class="fn"/><b>List fromPath(String path, EncodingFormat format, PatternSyntax syntax)</b></li>
+<li><div class="fn"/><b>List verify(List certificateChain, String hostName)</b></li>
 <li><b>Organization</b></li>
 <li><b>CommonName</b></li>
 <li><b>LocalityName</b></li>
 <li><b>OrganizationalUnitName</b></li>
 <li><b>CountryName</b></li>
 <li><b>StateOrProvinceName</b></li>
+<li><b>DistinguishedNameQualifier</b></li>
+<li><b>SerialNumber</b></li>
+<li><b>EmailAddress</b></li>
 <li><b>SubjectInfo( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
-<li><div class="fn"/><b>SortedMap alternateSubjectNames()</b></li>
 <li><div class="fn"/><b>void clear()</b></li>
 <li><div class="fn"/><b>QByteArray digest(Algorithm algorithm)</b></li>
 <li><div class="fn"/><b>QDateTime effectiveDate()</b></li>
 <li><div class="fn"/><b>QDateTime expiryDate()</b></li>
+<li><div class="fn"/><b>List extensions()</b></li>
 <li><div class="fn"/><b>Qt::HANDLE handle()</b></li>
+<li><div class="fn"/><b>bool isBlacklisted()</b></li>
 <li><div class="fn"/><b>bool isNull()</b></li>
-<li><div class="fn"/><b>bool isValid()</b></li>
-<li><div class="fn"/><b>String issuerInfo(SubjectInfo info)</b></li>
+<li><div class="fn"/><b>List issuerInfo(SubjectInfo info)</b></li>
+<li><div class="fn"/><b>List issuerInfoAttributes()</b></li>
 <li><div class="fn"/><b>QSslCertificate operator_assign(QSslCertificate other)</b></li>
 <li><div class="fn"/><b>bool operator_equal(QSslCertificate other)</b></li>
 <li><div class="fn"/><b>QSslKey publicKey()</b></li>
 <li><div class="fn"/><b>QByteArray serialNumber()</b></li>
-<li><div class="fn"/><b>String subjectInfo(SubjectInfo info)</b></li>
+<li><div class="fn"/><b>SortedMap subjectAlternativeNames()</b></li>
+<li><div class="fn"/><b>List subjectInfo(SubjectInfo info)</b></li>
+<li><div class="fn"/><b>List subjectInfoAttributes()</b></li>
+<li><div class="fn"/><b>void swap(QSslCertificate other)</b></li>
 <li><div class="fn"/><b>QByteArray toDer()</b></li>
 <li><div class="fn"/><b>QByteArray toPem()</b></li>
+<li><div class="fn"/><b>String toText()</b></li>
 <li><div class="fn"/><b>QByteArray version()</b></li>
 </ul>
 <h3>Instance Properties</h3>

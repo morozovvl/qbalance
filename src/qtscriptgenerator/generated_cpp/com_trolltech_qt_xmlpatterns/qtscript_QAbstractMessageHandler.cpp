@@ -21,6 +21,7 @@ static const char * const qtscript_QAbstractMessageHandler_function_names[] = {
     "QAbstractMessageHandler"
     // static
     // prototype
+    , "handleMessage"
     , "message"
     , "toString"
 };
@@ -30,6 +31,7 @@ static const char * const qtscript_QAbstractMessageHandler_function_signatures[]
     // static
     // prototype
     , "QtMsgType type, String description, QUrl identifier, QSourceLocation sourceLocation"
+    , "QtMsgType type, String description, QUrl identifier, QSourceLocation sourceLocation"
 ""
 };
 
@@ -38,7 +40,18 @@ static const int qtscript_QAbstractMessageHandler_function_lengths[] = {
     // static
     // prototype
     , 4
+    , 4
     , 0
+};
+
+static QScriptValue qtscript_QAbstractMessageHandler_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractMessageHandler : public QAbstractMessageHandler
+{
+    friend QScriptValue qtscript_QAbstractMessageHandler_handleMessage(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractMessageHandler_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractMessageHandler_throw_ambiguity_error_helper(
@@ -70,11 +83,11 @@ static QScriptValue qtscript_QAbstractMessageHandler_prototype_call(QScriptConte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 1;
+        _id = 0xBABE0000 + 2;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractMessageHandler* _q_self = qscriptvalue_cast<QAbstractMessageHandler*>(context->thisObject());
+    qtscript_QAbstractMessageHandler* _q_self = reinterpret_cast<qtscript_QAbstractMessageHandler*>(qscriptvalue_cast<QAbstractMessageHandler*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractMessageHandler.%0(): this object is not a QAbstractMessageHandler")
@@ -83,6 +96,17 @@ static QScriptValue qtscript_QAbstractMessageHandler_prototype_call(QScriptConte
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 4) {
+        QtMsgType _q_arg0 = qscriptvalue_cast<QtMsgType>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QUrl _q_arg2 = qscriptvalue_cast<QUrl>(context->argument(2));
+        QSourceLocation _q_arg3 = qscriptvalue_cast<QSourceLocation>(context->argument(3));
+        _q_self->handleMessage(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 2) {
         QtMsgType _q_arg0 = qscriptvalue_cast<QtMsgType>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -106,7 +130,7 @@ static QScriptValue qtscript_QAbstractMessageHandler_prototype_call(QScriptConte
     }
     break;
 
-    case 1: {
+    case 2: {
     QString result = QString::fromLatin1("QAbstractMessageHandler");
     return QScriptValue(context->engine(), result);
     }
@@ -153,7 +177,7 @@ QScriptValue qtscript_create_QAbstractMessageHandler_class(QScriptEngine *engine
     engine->setDefaultPrototype(qMetaTypeId<QAbstractMessageHandler*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractMessageHandler*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractMessageHandler_prototype_call, qtscript_QAbstractMessageHandler_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractMessageHandler_function_names[i+1]),

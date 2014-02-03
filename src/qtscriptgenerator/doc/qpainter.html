@@ -19,6 +19,16 @@
 <li><div class="fn"/><b>QPaintDevice redirected(QPaintDevice device, QPoint offset)</b></li>
 <li><div class="fn"/><b>void restoreRedirected(QPaintDevice device)</b></li>
 <li><div class="fn"/><b>void setRedirected(QPaintDevice device, QPaintDevice replacement, QPoint offset)</b></li>
+<li><b>Antialiasing = 0x01</b></li>
+<li><b>TextAntialiasing = 0x02</b></li>
+<li><b>SmoothPixmapTransform = 0x04</b></li>
+<li><b>HighQualityAntialiasing = 0x08</b></li>
+<li><b>NonCosmeticDefaultPen = 0x10</b></li>
+<li><b>Qt4CompatiblePainting = 0x20</b></li>
+<li><b>RenderHint( value )</b></li>
+<li><b>RenderHints( value1, value2, ... )</b></li>
+<li><b>OpaqueHint = 0x01</b></li>
+<li><b>PixmapFragmentHint( value )</b></li>
 <li><b>CompositionMode_SourceOver</b></li>
 <li><b>CompositionMode_DestinationOver</b></li>
 <li><b>CompositionMode_Clear</b></li>
@@ -52,16 +62,12 @@
 <li><b>RasterOp_NotSource</b></li>
 <li><b>RasterOp_NotSourceAndDestination</b></li>
 <li><b>RasterOp_SourceAndNotDestination</b></li>
+<li><b>RasterOp_NotSourceOrDestination</b></li>
+<li><b>RasterOp_SourceOrNotDestination</b></li>
+<li><b>RasterOp_ClearDestination</b></li>
+<li><b>RasterOp_SetDestination</b></li>
+<li><b>RasterOp_NotDestination</b></li>
 <li><b>CompositionMode( value )</b></li>
-<li><b>Antialiasing = 0x01</b></li>
-<li><b>TextAntialiasing = 0x02</b></li>
-<li><b>SmoothPixmapTransform = 0x04</b></li>
-<li><b>HighQualityAntialiasing = 0x08</b></li>
-<li><b>NonCosmeticDefaultPen = 0x10</b></li>
-<li><b>RenderHint( value )</b></li>
-<li><b>RenderHints( value1, value2, ... )</b></li>
-<li><b>OpaqueHint = 0x01</b></li>
-<li><b>PixmapFragmentHint( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -72,6 +78,7 @@
 <li><div class="fn"/><b>QRect boundingRect(QRect rect, int flags, String text)</b></li>
 <li><div class="fn"/><b>QBrush brush()</b></li>
 <li><div class="fn"/><b>QPoint brushOrigin()</b></li>
+<li><div class="fn"/><b>QRectF clipBoundingRect()</b></li>
 <li><div class="fn"/><b>QPainterPath clipPath()</b></li>
 <li><div class="fn"/><b>QRegion clipRegion()</b></li>
 <li><div class="fn"/><b>QMatrix combinedMatrix()</b></li>
@@ -113,7 +120,7 @@
 <li><div class="fn"/><b>void fillRect(QRect arg__1, QBrush arg__2)</b></li>
 <li><div class="fn"/><b>QFont font()</b></li>
 <li><div class="fn"/><b>bool hasClipping()</b></li>
-<li><div class="fn"/><b>void initFrom(QWidget widget)</b></li>
+<li><div class="fn"/><b>void initFrom(QPaintDevice device)</b></li>
 <li><div class="fn"/><b>bool isActive()</b></li>
 <li><div class="fn"/><b>LayoutDirection layoutDirection()</b></li>
 <li><div class="fn"/><b>qreal opacity()</b></li>

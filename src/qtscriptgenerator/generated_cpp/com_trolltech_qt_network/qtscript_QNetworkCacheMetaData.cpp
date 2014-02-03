@@ -34,6 +34,7 @@ static const char * const qtscript_QNetworkCacheMetaData_function_names[] = {
     , "setRawHeaders"
     , "setSaveToDisk"
     , "setUrl"
+    , "swap"
     , "url"
     , "writeTo"
     , "toString"
@@ -57,6 +58,7 @@ static const char * const qtscript_QNetworkCacheMetaData_function_signatures[] =
     , "List headers"
     , "bool allow"
     , "QUrl url"
+    , "QNetworkCacheMetaData other"
     , ""
     , "QDataStream arg__1"
 ""
@@ -74,6 +76,7 @@ static const int qtscript_QNetworkCacheMetaData_function_lengths[] = {
     , 0
     , 1
     , 0
+    , 1
     , 1
     , 1
     , 1
@@ -99,6 +102,7 @@ static QScriptValue qtscript_QNetworkCacheMetaData_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QNetworkCacheMetaData)
 Q_DECLARE_METATYPE(QNetworkCacheMetaData*)
 Q_DECLARE_METATYPE(QNetworkRequest::Attribute)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QHash<QNetworkRequest::Attribute,QVariant> > \
 { \
@@ -111,6 +115,23 @@ struct QMetaTypeId< QHash<QNetworkRequest::Attribute,QVariant> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QHash<QNetworkRequest::Attribute,QVariant> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QHash<QNetworkRequest::Attribute,QVariant> >("QHash<QNetworkRequest::Attribute,QVariant>", reinterpret_cast< QHash<QNetworkRequest::Attribute,QVariant> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<QByteArray,QByteArray> > \
 { \
@@ -123,6 +144,23 @@ struct QMetaTypeId< QPair<QByteArray,QByteArray> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<QByteArray,QByteArray> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<QByteArray,QByteArray> >("QPair<QByteArray,QByteArray>", reinterpret_cast< QPair<QByteArray,QByteArray> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > > \
 { \
@@ -135,6 +173,22 @@ struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QList<QPair<QByteArray,QByteArray> > >("QList<QPair<QByteArray,QByteArray> >", reinterpret_cast< QList<QPair<QByteArray,QByteArray> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QDataStream*)
 
 //
@@ -151,7 +205,7 @@ static QScriptValue qtscript_QNetworkCacheMetaData_prototype_call(QScriptContext
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 16;
+        _id = 0xBABE0000 + 17;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -271,13 +325,21 @@ static QScriptValue qtscript_QNetworkCacheMetaData_prototype_call(QScriptContext
     break;
 
     case 14:
+    if (context->argumentCount() == 1) {
+        QNetworkCacheMetaData _q_arg0 = qscriptvalue_cast<QNetworkCacheMetaData>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 15:
     if (context->argumentCount() == 0) {
         QUrl _q_result = _q_self->url();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -285,7 +347,7 @@ static QScriptValue qtscript_QNetworkCacheMetaData_prototype_call(QScriptContext
     }
     break;
 
-    case 16: {
+    case 17: {
     QString result = QString::fromLatin1("QNetworkCacheMetaData");
     return QScriptValue(context->engine(), result);
     }
@@ -332,7 +394,7 @@ QScriptValue qtscript_create_QNetworkCacheMetaData_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QNetworkCacheMetaData*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkCacheMetaData*)0));
-    for (int i = 0; i < 17; ++i) {
+    for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkCacheMetaData_prototype_call, qtscript_QNetworkCacheMetaData_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkCacheMetaData_function_names[i+1]),

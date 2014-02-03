@@ -23,9 +23,6 @@
 <li><b>prototype</b>: The QImage prototype object</li>
 <li><div class="fn"/><b>QImage fromData(QByteArray data, char format)</b></li>
 <li><div class="fn"/><b>QMatrix trueMatrix(QMatrix arg__1, int w, int h)</b></li>
-<li><b>InvertRgb</b></li>
-<li><b>InvertRgba</b></li>
-<li><b>InvertMode( value )</b></li>
 <li><b>Format_Invalid</b></li>
 <li><b>Format_Mono</b></li>
 <li><b>Format_MonoLSB</b></li>
@@ -44,6 +41,9 @@
 <li><b>Format_ARGB4444_Premultiplied</b></li>
 <li><b>NImageFormats</b></li>
 <li><b>Format( value )</b></li>
+<li><b>InvertRgb</b></li>
+<li><b>InvertRgba</b></li>
+<li><b>InvertMode( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -64,7 +64,7 @@
 <li><div class="fn"/><b>QImage createMaskFromColor(unsigned int color, MaskMode mode)</b></li>
 <li><div class="fn"/><b>int dotsPerMeterX()</b></li>
 <li><div class="fn"/><b>int dotsPerMeterY()</b></li>
-<li><div class="fn"/><b>void fill(uint pixel)</b></li>
+<li><div class="fn"/><b>void fill(GlobalColor color)</b></li>
 <li><div class="fn"/><b>Format format()</b></li>
 <li><div class="fn"/><b>bool hasAlphaChannel()</b></li>
 <li><div class="fn"/><b>void invertPixels(InvertMode arg__1)</b></li>
@@ -73,7 +73,6 @@
 <li><div class="fn"/><b>bool load(QIODevice device, char format)</b></li>
 <li><div class="fn"/><b>bool loadFromData(QByteArray data, char aformat)</b></li>
 <li><div class="fn"/><b>QImage mirrored(bool horizontally, bool vertically)</b></li>
-<li><div class="fn"/><b>int numBytes()</b></li>
 <li><div class="fn"/><b>QPoint offset()</b></li>
 <li><div class="fn"/><b>bool operator_equal(QImage arg__1)</b></li>
 <li><div class="fn"/><b>unsigned int pixel(QPoint pt)</b></li>
@@ -88,13 +87,14 @@
 <li><div class="fn"/><b>void setAlphaChannel(QImage alphaChannel)</b></li>
 <li><div class="fn"/><b>void setColor(int i, unsigned int c)</b></li>
 <li><div class="fn"/><b>void setColorCount(int arg__1)</b></li>
+<li><div class="fn"/><b>void setDevicePixelRatio(qreal scaleFactor)</b></li>
 <li><div class="fn"/><b>void setDotsPerMeterX(int arg__1)</b></li>
 <li><div class="fn"/><b>void setDotsPerMeterY(int arg__1)</b></li>
-<li><div class="fn"/><b>void setNumColors(int arg__1)</b></li>
 <li><div class="fn"/><b>void setOffset(QPoint arg__1)</b></li>
 <li><div class="fn"/><b>void setPixel(QPoint pt, uint index_or_rgb)</b></li>
 <li><div class="fn"/><b>void setText(String key, String value)</b></li>
 <li><div class="fn"/><b>QSize size()</b></li>
+<li><div class="fn"/><b>void swap(QImage other)</b></li>
 <li><div class="fn"/><b>String text(String key)</b></li>
 <li><div class="fn"/><b>List textKeys()</b></li>
 <li><div class="fn"/><b>QImage transformed(QMatrix matrix, TransformationMode mode)</b></li>

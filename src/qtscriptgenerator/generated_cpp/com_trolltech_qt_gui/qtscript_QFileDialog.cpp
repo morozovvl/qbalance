@@ -6,6 +6,8 @@
 #include <qmetaobject.h>
 
 #include <qfiledialog.h>
+#include <QAbstractProxyModel>
+#include <QIconEngine>
 #include <QUrl>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
@@ -21,8 +23,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -33,6 +33,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -42,6 +43,7 @@
 #include <qstyle.h>
 #include <qurl.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QFileDialog.h"
 
@@ -55,7 +57,6 @@ static const char * const qtscript_QFileDialog_function_names[] = {
     // prototype
     , "directory"
     , "filter"
-    , "filters"
     , "history"
     , "iconProvider"
     , "isNameFilterDetailsVisible"
@@ -67,14 +68,11 @@ static const char * const qtscript_QFileDialog_function_names[] = {
     , "restoreState"
     , "saveState"
     , "selectFile"
-    , "selectFilter"
     , "selectNameFilter"
     , "selectedFiles"
-    , "selectedFilter"
     , "selectedNameFilter"
     , "setDirectory"
     , "setFilter"
-    , "setFilters"
     , "setHistory"
     , "setIconProvider"
     , "setItemDelegate"
@@ -104,7 +102,6 @@ static const char * const qtscript_QFileDialog_function_signatures[] = {
     , ""
     , ""
     , ""
-    , ""
     , "DialogLabel label"
     , ""
     , "QObject receiver, char member"
@@ -113,13 +110,10 @@ static const char * const qtscript_QFileDialog_function_signatures[] = {
     , ""
     , "String filename"
     , "String filter"
-    , "String filter"
-    , ""
     , ""
     , ""
     , "QDir directory\nString directory"
-    , "Filters filters\nString filter"
-    , "List filters"
+    , "Filters filters"
     , "List paths"
     , "QFileIconProvider provider"
     , "QAbstractItemDelegate delegate"
@@ -149,7 +143,6 @@ static const int qtscript_QFileDialog_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 0
     , 1
     , 0
     , 2
@@ -158,11 +151,8 @@ static const int qtscript_QFileDialog_function_lengths[] = {
     , 0
     , 1
     , 1
-    , 1
     , 0
     , 0
-    , 0
-    , 1
     , 1
     , 1
     , 1
@@ -178,6 +168,15 @@ static const int qtscript_QFileDialog_function_lengths[] = {
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFileDialog : public QFileDialog
+{
+
+    friend QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QFileDialog_throw_ambiguity_error_helper(
@@ -199,11 +198,11 @@ static const QMetaObject *qtscript_QFileDialog_metaObject()
 Q_DECLARE_METATYPE(QFileDialog*)
 Q_DECLARE_METATYPE(QtScriptShell_QFileDialog*)
 Q_DECLARE_METATYPE(QFileDialog::FileMode)
+Q_DECLARE_METATYPE(QFileDialog::AcceptMode)
 Q_DECLARE_METATYPE(QFileDialog::Option)
 Q_DECLARE_METATYPE(QFlags<QFileDialog::Option>)
-Q_DECLARE_METATYPE(QFileDialog::DialogLabel)
 Q_DECLARE_METATYPE(QFileDialog::ViewMode)
-Q_DECLARE_METATYPE(QFileDialog::AcceptMode)
+Q_DECLARE_METATYPE(QFileDialog::DialogLabel)
 Q_DECLARE_METATYPE(QDir)
 Q_DECLARE_METATYPE(QFlags<QDir::Filter>)
 Q_DECLARE_METATYPE(QFileIconProvider*)
@@ -211,6 +210,7 @@ Q_DECLARE_METATYPE(QAbstractItemDelegate*)
 Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QAbstractProxyModel*)
 Q_DECLARE_METATYPE(QList<QUrl>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QString*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QDialog*)
@@ -320,6 +320,79 @@ static QScriptValue qtscript_create_QFileDialog_FileMode_class(QScriptEngine *en
     for (int i = 0; i < 5; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QFileDialog_FileMode_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QFileDialog_FileMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QFileDialog::AcceptMode
+//
+
+static const QFileDialog::AcceptMode qtscript_QFileDialog_AcceptMode_values[] = {
+    QFileDialog::AcceptOpen
+    , QFileDialog::AcceptSave
+};
+
+static const char * const qtscript_QFileDialog_AcceptMode_keys[] = {
+    "AcceptOpen"
+    , "AcceptSave"
+};
+
+static QString qtscript_QFileDialog_AcceptMode_toStringHelper(QFileDialog::AcceptMode value)
+{
+    const QMetaObject *meta = qtscript_QFileDialog_metaObject();
+    int idx = meta->indexOfEnumerator("AcceptMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QFileDialog_AcceptMode_toScriptValue(QScriptEngine *engine, const QFileDialog::AcceptMode &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFileDialog"));
+    return clazz.property(qtscript_QFileDialog_AcceptMode_toStringHelper(value));
+}
+
+static void qtscript_QFileDialog_AcceptMode_fromScriptValue(const QScriptValue &value, QFileDialog::AcceptMode &out)
+{
+    out = qvariant_cast<QFileDialog::AcceptMode>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QFileDialog_AcceptMode(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QFileDialog_metaObject();
+    int idx = meta->indexOfEnumerator("AcceptMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QFileDialog::AcceptMode>(arg));
+    return context->throwError(QString::fromLatin1("AcceptMode(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QFileDialog_AcceptMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QFileDialog::AcceptMode value = qscriptvalue_cast<QFileDialog::AcceptMode>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QFileDialog_AcceptMode_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QFileDialog::AcceptMode value = qscriptvalue_cast<QFileDialog::AcceptMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QFileDialog_AcceptMode_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QFileDialog_AcceptMode_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QFileDialog_AcceptMode,
+        qtscript_QFileDialog_AcceptMode_valueOf, qtscript_QFileDialog_AcceptMode_toString);
+    qScriptRegisterMetaType<QFileDialog::AcceptMode>(engine, qtscript_QFileDialog_AcceptMode_toScriptValue,
+        qtscript_QFileDialog_AcceptMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QFileDialog_AcceptMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QFileDialog_AcceptMode_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -485,79 +558,6 @@ static QScriptValue qtscript_create_QFileDialog_Options_class(QScriptEngine *eng
 }
 
 //
-// QFileDialog::DialogLabel
-//
-
-static const QFileDialog::DialogLabel qtscript_QFileDialog_DialogLabel_values[] = {
-    QFileDialog::LookIn
-    , QFileDialog::FileName
-    , QFileDialog::FileType
-    , QFileDialog::Accept
-    , QFileDialog::Reject
-};
-
-static const char * const qtscript_QFileDialog_DialogLabel_keys[] = {
-    "LookIn"
-    , "FileName"
-    , "FileType"
-    , "Accept"
-    , "Reject"
-};
-
-static QString qtscript_QFileDialog_DialogLabel_toStringHelper(QFileDialog::DialogLabel value)
-{
-    if ((value >= QFileDialog::LookIn) && (value <= QFileDialog::Reject))
-        return qtscript_QFileDialog_DialogLabel_keys[static_cast<int>(value)-static_cast<int>(QFileDialog::LookIn)];
-    return QString();
-}
-
-static QScriptValue qtscript_QFileDialog_DialogLabel_toScriptValue(QScriptEngine *engine, const QFileDialog::DialogLabel &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFileDialog"));
-    return clazz.property(qtscript_QFileDialog_DialogLabel_toStringHelper(value));
-}
-
-static void qtscript_QFileDialog_DialogLabel_fromScriptValue(const QScriptValue &value, QFileDialog::DialogLabel &out)
-{
-    out = qvariant_cast<QFileDialog::DialogLabel>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QFileDialog_DialogLabel(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QFileDialog::LookIn) && (arg <= QFileDialog::Reject))
-        return qScriptValueFromValue(engine,  static_cast<QFileDialog::DialogLabel>(arg));
-    return context->throwError(QString::fromLatin1("DialogLabel(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QFileDialog_DialogLabel_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QFileDialog::DialogLabel value = qscriptvalue_cast<QFileDialog::DialogLabel>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QFileDialog_DialogLabel_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QFileDialog::DialogLabel value = qscriptvalue_cast<QFileDialog::DialogLabel>(context->thisObject());
-    return QScriptValue(engine, qtscript_QFileDialog_DialogLabel_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QFileDialog_DialogLabel_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QFileDialog_DialogLabel,
-        qtscript_QFileDialog_DialogLabel_valueOf, qtscript_QFileDialog_DialogLabel_toString);
-    qScriptRegisterMetaType<QFileDialog::DialogLabel>(engine, qtscript_QFileDialog_DialogLabel_toScriptValue,
-        qtscript_QFileDialog_DialogLabel_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 5; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QFileDialog_DialogLabel_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QFileDialog_DialogLabel_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QFileDialog::ViewMode
 //
 
@@ -631,73 +631,73 @@ static QScriptValue qtscript_create_QFileDialog_ViewMode_class(QScriptEngine *en
 }
 
 //
-// QFileDialog::AcceptMode
+// QFileDialog::DialogLabel
 //
 
-static const QFileDialog::AcceptMode qtscript_QFileDialog_AcceptMode_values[] = {
-    QFileDialog::AcceptOpen
-    , QFileDialog::AcceptSave
+static const QFileDialog::DialogLabel qtscript_QFileDialog_DialogLabel_values[] = {
+    QFileDialog::LookIn
+    , QFileDialog::FileName
+    , QFileDialog::FileType
+    , QFileDialog::Accept
+    , QFileDialog::Reject
 };
 
-static const char * const qtscript_QFileDialog_AcceptMode_keys[] = {
-    "AcceptOpen"
-    , "AcceptSave"
+static const char * const qtscript_QFileDialog_DialogLabel_keys[] = {
+    "LookIn"
+    , "FileName"
+    , "FileType"
+    , "Accept"
+    , "Reject"
 };
 
-static QString qtscript_QFileDialog_AcceptMode_toStringHelper(QFileDialog::AcceptMode value)
+static QString qtscript_QFileDialog_DialogLabel_toStringHelper(QFileDialog::DialogLabel value)
 {
-    const QMetaObject *meta = qtscript_QFileDialog_metaObject();
-    int idx = meta->indexOfEnumerator("AcceptMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
+    if ((value >= QFileDialog::LookIn) && (value <= QFileDialog::Reject))
+        return qtscript_QFileDialog_DialogLabel_keys[static_cast<int>(value)-static_cast<int>(QFileDialog::LookIn)];
+    return QString();
 }
 
-static QScriptValue qtscript_QFileDialog_AcceptMode_toScriptValue(QScriptEngine *engine, const QFileDialog::AcceptMode &value)
+static QScriptValue qtscript_QFileDialog_DialogLabel_toScriptValue(QScriptEngine *engine, const QFileDialog::DialogLabel &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFileDialog"));
-    return clazz.property(qtscript_QFileDialog_AcceptMode_toStringHelper(value));
+    return clazz.property(qtscript_QFileDialog_DialogLabel_toStringHelper(value));
 }
 
-static void qtscript_QFileDialog_AcceptMode_fromScriptValue(const QScriptValue &value, QFileDialog::AcceptMode &out)
+static void qtscript_QFileDialog_DialogLabel_fromScriptValue(const QScriptValue &value, QFileDialog::DialogLabel &out)
 {
-    out = qvariant_cast<QFileDialog::AcceptMode>(value.toVariant());
+    out = qvariant_cast<QFileDialog::DialogLabel>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QFileDialog_AcceptMode(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QFileDialog_DialogLabel(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QFileDialog_metaObject();
-    int idx = meta->indexOfEnumerator("AcceptMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QFileDialog::AcceptMode>(arg));
-    return context->throwError(QString::fromLatin1("AcceptMode(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QFileDialog::LookIn) && (arg <= QFileDialog::Reject))
+        return qScriptValueFromValue(engine,  static_cast<QFileDialog::DialogLabel>(arg));
+    return context->throwError(QString::fromLatin1("DialogLabel(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QFileDialog_AcceptMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QFileDialog_DialogLabel_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QFileDialog::AcceptMode value = qscriptvalue_cast<QFileDialog::AcceptMode>(context->thisObject());
+    QFileDialog::DialogLabel value = qscriptvalue_cast<QFileDialog::DialogLabel>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QFileDialog_AcceptMode_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QFileDialog_DialogLabel_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QFileDialog::AcceptMode value = qscriptvalue_cast<QFileDialog::AcceptMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QFileDialog_AcceptMode_toStringHelper(value));
+    QFileDialog::DialogLabel value = qscriptvalue_cast<QFileDialog::DialogLabel>(context->thisObject());
+    return QScriptValue(engine, qtscript_QFileDialog_DialogLabel_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QFileDialog_AcceptMode_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QFileDialog_DialogLabel_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QFileDialog_AcceptMode,
-        qtscript_QFileDialog_AcceptMode_valueOf, qtscript_QFileDialog_AcceptMode_toString);
-    qScriptRegisterMetaType<QFileDialog::AcceptMode>(engine, qtscript_QFileDialog_AcceptMode_toScriptValue,
-        qtscript_QFileDialog_AcceptMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QFileDialog_AcceptMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QFileDialog_AcceptMode_values[i])),
+        engine, qtscript_construct_QFileDialog_DialogLabel,
+        qtscript_QFileDialog_DialogLabel_valueOf, qtscript_QFileDialog_DialogLabel_toString);
+    qScriptRegisterMetaType<QFileDialog::DialogLabel>(engine, qtscript_QFileDialog_DialogLabel_toScriptValue,
+        qtscript_QFileDialog_DialogLabel_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 5; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QFileDialog_DialogLabel_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QFileDialog_DialogLabel_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -717,11 +717,11 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 34;
+        _id = 0xBABE0000 + 30;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFileDialog* _q_self = qscriptvalue_cast<QFileDialog*>(context->thisObject());
+    qtscript_QFileDialog* _q_self = reinterpret_cast<qtscript_QFileDialog*>(qscriptvalue_cast<QFileDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFileDialog.%0(): this object is not a QFileDialog")
@@ -745,40 +745,33 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
 
     case 2:
     if (context->argumentCount() == 0) {
-        QStringList _q_result = _q_self->filters();
+        QStringList _q_result = _q_self->history();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
     case 3:
     if (context->argumentCount() == 0) {
-        QStringList _q_result = _q_self->history();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 4:
-    if (context->argumentCount() == 0) {
         QFileIconProvider* _q_result = _q_self->iconProvider();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isNameFilterDetailsVisible();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         QAbstractItemDelegate* _q_result = _q_self->itemDelegate();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 1) {
         QFileDialog::DialogLabel _q_arg0 = qscriptvalue_cast<QFileDialog::DialogLabel>(context->argument(0));
         QString _q_result = _q_self->labelText(_q_arg0);
@@ -786,14 +779,14 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 0) {
         QStringList _q_result = _q_self->nameFilters();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 8:
     if (context->argumentCount() == 2) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         char* _q_arg1 = qscriptvalue_cast<char*>(context->argument(1));
@@ -802,14 +795,14 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 10:
+    case 9:
     if (context->argumentCount() == 0) {
         QAbstractProxyModel* _q_result = _q_self->proxyModel();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 10:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         bool _q_result = _q_self->restoreState(_q_arg0);
@@ -817,14 +810,14 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 12:
+    case 11:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->saveState();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 12:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->selectFile(_q_arg0);
@@ -832,15 +825,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 14:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->selectFilter(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 15:
+    case 13:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->selectNameFilter(_q_arg0);
@@ -848,28 +833,21 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 16:
+    case 14:
     if (context->argumentCount() == 0) {
         QStringList _q_result = _q_self->selectedFiles();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 17:
-    if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->selectedFilter();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 18:
+    case 15:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->selectedNameFilter();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 16:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QDir>() == context->argument(0).toVariant().userType())) {
             QDir _q_arg0 = qscriptvalue_cast<QDir>(context->argument(0));
@@ -883,30 +861,15 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 20:
+    case 17:
     if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<QFlags<QDir::Filter> >() == context->argument(0).toVariant().userType())) {
-            QFlags<QDir::Filter> _q_arg0 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(0));
-            _q_self->setFilter(_q_arg0);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isString()) {
-            QString _q_arg0 = context->argument(0).toString();
-            _q_self->setFilter(_q_arg0);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 21:
-    if (context->argumentCount() == 1) {
-        QStringList _q_arg0;
-        qScriptValueToSequence(context->argument(0), _q_arg0);
-        _q_self->setFilters(_q_arg0);
+        QFlags<QDir::Filter> _q_arg0 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(0));
+        _q_self->setFilter(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 22:
+    case 18:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -915,7 +878,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 23:
+    case 19:
     if (context->argumentCount() == 1) {
         QFileIconProvider* _q_arg0 = qscriptvalue_cast<QFileIconProvider*>(context->argument(0));
         _q_self->setIconProvider(_q_arg0);
@@ -923,7 +886,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 24:
+    case 20:
     if (context->argumentCount() == 1) {
         QAbstractItemDelegate* _q_arg0 = qscriptvalue_cast<QAbstractItemDelegate*>(context->argument(0));
         _q_self->setItemDelegate(_q_arg0);
@@ -931,7 +894,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 25:
+    case 21:
     if (context->argumentCount() == 2) {
         QFileDialog::DialogLabel _q_arg0 = qscriptvalue_cast<QFileDialog::DialogLabel>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -940,7 +903,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 26:
+    case 22:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setNameFilter(_q_arg0);
@@ -948,7 +911,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 27:
+    case 23:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setNameFilterDetailsVisible(_q_arg0);
@@ -956,7 +919,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 28:
+    case 24:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -965,7 +928,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 29:
+    case 25:
     if (context->argumentCount() == 1) {
         QFileDialog::Option _q_arg0 = qscriptvalue_cast<QFileDialog::Option>(context->argument(0));
         _q_self->setOption(_q_arg0);
@@ -979,7 +942,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 30:
+    case 26:
     if (context->argumentCount() == 1) {
         QAbstractProxyModel* _q_arg0 = qscriptvalue_cast<QAbstractProxyModel*>(context->argument(0));
         _q_self->setProxyModel(_q_arg0);
@@ -987,7 +950,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 31:
+    case 27:
     if (context->argumentCount() == 1) {
         QList<QUrl> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -996,14 +959,14 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 32:
+    case 28:
     if (context->argumentCount() == 0) {
         QList<QUrl> _q_result = _q_self->sidebarUrls();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 33:
+    case 29:
     if (context->argumentCount() == 1) {
         QFileDialog::Option _q_arg0 = qscriptvalue_cast<QFileDialog::Option>(context->argument(0));
         bool _q_result = _q_self->testOption(_q_arg0);
@@ -1011,7 +974,7 @@ static QScriptValue qtscript_QFileDialog_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 34: {
+    case 30: {
     QString result = QString::fromLatin1("QFileDialog");
     return QScriptValue(context->engine(), result);
     }
@@ -1295,7 +1258,7 @@ QScriptValue qtscript_create_QFileDialog_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QFileDialog*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFileDialog*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QDialog*>()));
-    for (int i = 0; i < 35; ++i) {
+    for (int i = 0; i < 31; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFileDialog_prototype_call, qtscript_QFileDialog_function_lengths[i+5]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFileDialog_function_names[i+5]),
@@ -1317,15 +1280,15 @@ QScriptValue qtscript_create_QFileDialog_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("FileMode"),
         qtscript_create_QFileDialog_FileMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("AcceptMode"),
+        qtscript_create_QFileDialog_AcceptMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Option"),
         qtscript_create_QFileDialog_Option_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Options"),
         qtscript_create_QFileDialog_Options_class(engine));
-    ctor.setProperty(QString::fromLatin1("DialogLabel"),
-        qtscript_create_QFileDialog_DialogLabel_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ViewMode"),
         qtscript_create_QFileDialog_ViewMode_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("AcceptMode"),
-        qtscript_create_QFileDialog_AcceptMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("DialogLabel"),
+        qtscript_create_QFileDialog_DialogLabel_class(engine, ctor));
     return ctor;
 }

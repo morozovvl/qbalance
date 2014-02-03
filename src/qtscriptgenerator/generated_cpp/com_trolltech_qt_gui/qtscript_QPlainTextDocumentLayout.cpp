@@ -22,6 +22,7 @@ static const char * const qtscript_QPlainTextDocumentLayout_function_names[] = {
     // static
     // prototype
     , "blockBoundingRect"
+    , "documentChanged"
     , "documentSize"
     , "draw"
     , "ensureBlockLayout"
@@ -37,6 +38,7 @@ static const char * const qtscript_QPlainTextDocumentLayout_function_signatures[
     // static
     // prototype
     , "QTextBlock block"
+    , "int from, int arg__2, int charsAdded"
     , ""
     , "QPainter arg__1, QAbstractTextDocumentLayout_PaintContext arg__2"
     , "QTextBlock block"
@@ -52,6 +54,7 @@ static const int qtscript_QPlainTextDocumentLayout_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 3
     , 0
     , 2
     , 1
@@ -60,6 +63,16 @@ static const int qtscript_QPlainTextDocumentLayout_function_lengths[] = {
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPlainTextDocumentLayout : public QPlainTextDocumentLayout
+{
+    friend QScriptValue qtscript_QPlainTextDocumentLayout_documentChanged(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPlainTextDocumentLayout_throw_ambiguity_error_helper(
@@ -96,11 +109,11 @@ static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptCont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 9;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPlainTextDocumentLayout* _q_self = qscriptvalue_cast<QPlainTextDocumentLayout*>(context->thisObject());
+    qtscript_QPlainTextDocumentLayout* _q_self = reinterpret_cast<qtscript_QPlainTextDocumentLayout*>(qscriptvalue_cast<QPlainTextDocumentLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPlainTextDocumentLayout.%0(): this object is not a QPlainTextDocumentLayout")
@@ -117,13 +130,23 @@ static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptCont
     break;
 
     case 1:
+    if (context->argumentCount() == 3) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        int _q_arg2 = context->argument(2).toInt32();
+        _q_self->documentChanged(_q_arg0, _q_arg1, _q_arg2);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         QSizeF _q_result = _q_self->documentSize();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 2) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         QAbstractTextDocumentLayout::PaintContext _q_arg1 = qscriptvalue_cast<QAbstractTextDocumentLayout::PaintContext>(context->argument(1));
@@ -132,7 +155,7 @@ static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptCont
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QTextBlock _q_arg0 = qscriptvalue_cast<QTextBlock>(context->argument(0));
         _q_self->ensureBlockLayout(_q_arg0);
@@ -140,7 +163,7 @@ static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptCont
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         QTextFrame* _q_arg0 = qscriptvalue_cast<QTextFrame*>(context->argument(0));
         QRectF _q_result = _q_self->frameBoundingRect(_q_arg0);
@@ -148,7 +171,7 @@ static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptCont
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 2) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         Qt::HitTestAccuracy _q_arg1 = qscriptvalue_cast<Qt::HitTestAccuracy>(context->argument(1));
@@ -157,21 +180,21 @@ static QScriptValue qtscript_QPlainTextDocumentLayout_prototype_call(QScriptCont
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->pageCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 0) {
         _q_self->requestUpdate();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 8: {
+    case 9: {
     QString result = QString::fromLatin1("QPlainTextDocumentLayout");
     return QScriptValue(context->engine(), result);
     }
@@ -215,7 +238,7 @@ QScriptValue qtscript_create_QPlainTextDocumentLayout_class(QScriptEngine *engin
 {
     engine->setDefaultPrototype(qMetaTypeId<QPlainTextDocumentLayout*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPlainTextDocumentLayout*)0));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPlainTextDocumentLayout_prototype_call, qtscript_QPlainTextDocumentLayout_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPlainTextDocumentLayout_function_names[i+1]),

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtableview.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -19,8 +20,6 @@
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
 #include <qheaderview.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -32,6 +31,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -41,7 +41,9 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qtableview.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTableView.h"
 
@@ -57,6 +59,7 @@ static const char * const qtscript_QTableView_function_names[] = {
     , "horizontalHeader"
     , "isColumnHidden"
     , "isRowHidden"
+    , "moveCursor"
     , "rowAt"
     , "rowHeight"
     , "rowSpan"
@@ -85,6 +88,7 @@ static const char * const qtscript_QTableView_function_signatures[] = {
     , ""
     , "int column"
     , "int row"
+    , "CursorAction cursorAction, KeyboardModifiers modifiers"
     , "int y"
     , "int row"
     , "int row, int column"
@@ -113,6 +117,7 @@ static const int qtscript_QTableView_function_lengths[] = {
     , 0
     , 1
     , 1
+    , 2
     , 1
     , 1
     , 2
@@ -129,6 +134,19 @@ static const int qtscript_QTableView_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTableView : public QTableView
+{
+    friend QScriptValue qtscript_QTableView_moveCursor(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTableView_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
+};
+
 static QScriptValue qtscript_QTableView_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -143,7 +161,10 @@ static QScriptValue qtscript_QTableView_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QTableView*)
 Q_DECLARE_METATYPE(QtScriptShell_QTableView*)
 Q_DECLARE_METATYPE(QHeaderView*)
+Q_DECLARE_METATYPE(QAbstractItemView::CursorAction)
+Q_DECLARE_METATYPE(QFlags<Qt::KeyboardModifier>)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractItemView*)
 
 //
@@ -160,11 +181,11 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTableView* _q_self = qscriptvalue_cast<QTableView*>(context->thisObject());
+    qtscript_QTableView* _q_self = reinterpret_cast<qtscript_QTableView*>(qscriptvalue_cast<QTableView*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTableView.%0(): this object is not a QTableView")
@@ -236,6 +257,15 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     break;
 
     case 8:
+    if (context->argumentCount() == 2) {
+        QAbstractItemView::CursorAction _q_arg0 = qscriptvalue_cast<QAbstractItemView::CursorAction>(context->argument(0));
+        QFlags<Qt::KeyboardModifier> _q_arg1 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(1));
+        QModelIndex _q_result = _q_self->moveCursor(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->rowAt(_q_arg0);
@@ -243,7 +273,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->rowHeight(_q_arg0);
@@ -251,7 +281,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -260,7 +290,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->rowViewportPosition(_q_arg0);
@@ -268,7 +298,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -277,7 +307,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -286,7 +316,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 1) {
         QHeaderView* _q_arg0 = qscriptvalue_cast<QHeaderView*>(context->argument(0));
         _q_self->setHorizontalHeader(_q_arg0);
@@ -294,7 +324,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -303,7 +333,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -312,7 +342,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 4) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -323,7 +353,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 1) {
         QHeaderView* _q_arg0 = qscriptvalue_cast<QHeaderView*>(context->argument(0));
         _q_self->setVerticalHeader(_q_arg0);
@@ -331,7 +361,7 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::SortOrder _q_arg1 = qscriptvalue_cast<Qt::SortOrder>(context->argument(1));
@@ -340,14 +370,14 @@ static QScriptValue qtscript_QTableView_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 0) {
         QHeaderView* _q_result = _q_self->verticalHeader();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 21: {
+    case 22: {
     QString result = QString::fromLatin1("QTableView");
     return QScriptValue(context->engine(), result);
     }
@@ -407,7 +437,7 @@ QScriptValue qtscript_create_QTableView_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTableView*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTableView*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemView*>()));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTableView_prototype_call, qtscript_QTableView_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTableView_function_names[i+1]),

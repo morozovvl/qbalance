@@ -13,6 +13,7 @@
 static const char * const qtscript_QPointF_function_names[] = {
     "QPointF"
     // static
+    , "dotProduct"
     // prototype
     , "isNull"
     , "manhattanLength"
@@ -34,6 +35,7 @@ static const char * const qtscript_QPointF_function_names[] = {
 static const char * const qtscript_QPointF_function_signatures[] = {
     "\nQPoint p\nqreal xpos, qreal ypos"
     // static
+    , "QPointF p1, QPointF p2"
     // prototype
     , ""
     , ""
@@ -55,6 +57,7 @@ static const char * const qtscript_QPointF_function_signatures[] = {
 static const int qtscript_QPointF_function_lengths[] = {
     2
     // static
+    , 2
     // prototype
     , 0
     , 0
@@ -109,7 +112,7 @@ static QScriptValue qtscript_QPointF_prototype_call(QScriptContext *context, QSc
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPointF.%0(): this object is not a QPointF")
-            .arg(qtscript_QPointF_function_names[_id+1]));
+            .arg(qtscript_QPointF_function_names[_id+2]));
     }
 
     switch (_id) {
@@ -231,8 +234,8 @@ static QScriptValue qtscript_QPointF_prototype_call(QScriptContext *context, QSc
     Q_ASSERT(false);
     }
     return qtscript_QPointF_throw_ambiguity_error_helper(context,
-        qtscript_QPointF_function_names[_id+1],
-        qtscript_QPointF_function_signatures[_id+1]);
+        qtscript_QPointF_function_names[_id+2],
+        qtscript_QPointF_function_signatures[_id+2]);
 }
 
 static QScriptValue qtscript_QPointF_static_call(QScriptContext *context, QScriptEngine *)
@@ -263,6 +266,15 @@ static QScriptValue qtscript_QPointF_static_call(QScriptContext *context, QScrip
     }
     break;
 
+    case 1:
+    if (context->argumentCount() == 2) {
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
+        qreal _q_result = QPointF::dotProduct(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
     default:
     Q_ASSERT(false);
     }
@@ -276,9 +288,9 @@ QScriptValue qtscript_create_QPointF_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPointF*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPointF*)0));
     for (int i = 0; i < 15; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QPointF_prototype_call, qtscript_QPointF_function_lengths[i+1]);
+        QScriptValue fun = engine->newFunction(qtscript_QPointF_prototype_call, qtscript_QPointF_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QPointF_function_names[i+1]),
+        proto.setProperty(QString::fromLatin1(qtscript_QPointF_function_names[i+2]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -287,6 +299,13 @@ QScriptValue qtscript_create_QPointF_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QPointF_static_call, proto, qtscript_QPointF_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
+    for (int i = 0; i < 1; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QPointF_static_call,
+            qtscript_QPointF_function_lengths[i+1]);
+        fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));
+        ctor.setProperty(QString::fromLatin1(qtscript_QPointF_function_names[i+1]),
+            fun, QScriptValue::SkipInEnumeration);
+    }
 
     return ctor;
 }

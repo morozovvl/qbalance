@@ -26,9 +26,11 @@
 <li><div class="fn"/><b>void closePersistentEditor(QTreeWidgetItem item, int column)</b></li>
 <li><div class="fn"/><b>int currentColumn()</b></li>
 <li><div class="fn"/><b>QTreeWidgetItem currentItem()</b></li>
+<li><div class="fn"/><b>bool dropMimeData(QTreeWidgetItem parent, int index, QMimeData data, DropAction action)</b></li>
 <li><div class="fn"/><b>void editItem(QTreeWidgetItem item, int column)</b></li>
 <li><div class="fn"/><b>List findItems(String text, MatchFlags flags, int column)</b></li>
 <li><div class="fn"/><b>QTreeWidgetItem headerItem()</b></li>
+<li><div class="fn"/><b>QModelIndex indexFromItem(QTreeWidgetItem item, int column)</b></li>
 <li><div class="fn"/><b>int indexOfTopLevelItem(QTreeWidgetItem item)</b></li>
 <li><div class="fn"/><b>void insertTopLevelItem(int index, QTreeWidgetItem item)</b></li>
 <li><div class="fn"/><b>void insertTopLevelItems(int index, List items)</b></li>
@@ -37,7 +39,9 @@
 <li><div class="fn"/><b>QTreeWidgetItem itemAbove(QTreeWidgetItem item)</b></li>
 <li><div class="fn"/><b>QTreeWidgetItem itemAt(QPoint p)</b></li>
 <li><div class="fn"/><b>QTreeWidgetItem itemBelow(QTreeWidgetItem item)</b></li>
+<li><div class="fn"/><b>QTreeWidgetItem itemFromIndex(QModelIndex index)</b></li>
 <li><div class="fn"/><b>QWidget itemWidget(QTreeWidgetItem item, int column)</b></li>
+<li><div class="fn"/><b>List mimeTypes()</b></li>
 <li><div class="fn"/><b>void openPersistentEditor(QTreeWidgetItem item, int column)</b></li>
 <li><div class="fn"/><b>void removeItemWidget(QTreeWidgetItem item, int column)</b></li>
 <li><div class="fn"/><b>List selectedItems()</b></li>
@@ -49,6 +53,7 @@
 <li><div class="fn"/><b>void setItemWidget(QTreeWidgetItem item, int column, QWidget widget)</b></li>
 <li><div class="fn"/><b>int sortColumn()</b></li>
 <li><div class="fn"/><b>void sortItems(int column, SortOrder order)</b></li>
+<li><div class="fn"/><b>DropActions supportedDropActions()</b></li>
 <li><div class="fn"/><b>QTreeWidgetItem takeTopLevelItem(int index)</b></li>
 <li><div class="fn"/><b>QTreeWidgetItem topLevelItem(int index)</b></li>
 <li><div class="fn"/><b>QRect visualItemRect(QTreeWidgetItem item)</b></li>

@@ -20,6 +20,10 @@
 <li><b>Shape_Mask = 0x000f</b></li>
 <li><b>Shadow_Mask = 0x00f0</b></li>
 <li><b>StyleMask( value )</b></li>
+<li><b>Plain = 0x0010</b></li>
+<li><b>Raised = 0x0020</b></li>
+<li><b>Sunken = 0x0030</b></li>
+<li><b>Shadow( value )</b></li>
 <li><b>NoFrame = 0</b></li>
 <li><b>Box = 0x0001</b></li>
 <li><b>Panel = 0x0002</b></li>
@@ -28,14 +32,11 @@
 <li><b>VLine = 0x0005</b></li>
 <li><b>StyledPanel = 0x0006</b></li>
 <li><b>Shape( value )</b></li>
-<li><b>Plain = 0x0010</b></li>
-<li><b>Raised = 0x0020</b></li>
-<li><b>Sunken = 0x0030</b></li>
-<li><b>Shadow( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QFrame prototype object inherits properties from the <a href="qwidget.html">QWidget</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>void drawFrame(QPainter arg__1)</b></li>
 <li><div class="fn"/><b>int frameStyle()</b></li>
 <li><div class="fn"/><b>void setFrameStyle(int arg__1)</b></li>
 <li><div class="fn"/><b>QSize sizeHint()</b></li>

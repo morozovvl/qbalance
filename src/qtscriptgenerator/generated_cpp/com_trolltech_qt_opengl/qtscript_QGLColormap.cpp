@@ -20,9 +20,11 @@ static const char * const qtscript_QGLColormap_function_names[] = {
     , "entryRgb"
     , "find"
     , "findNearest"
+    , "handle"
     , "isEmpty"
     , "setEntries"
     , "setEntry"
+    , "setHandle"
     , "size"
     , "toString"
 };
@@ -36,8 +38,10 @@ static const char * const qtscript_QGLColormap_function_signatures[] = {
     , "unsigned int color"
     , "unsigned int color"
     , ""
+    , ""
     , "int count, unsigned int colors, int base"
     , "int idx, QColor color\nint idx, unsigned int color"
+    , "Qt::HANDLE ahandle"
     , ""
 ""
 };
@@ -51,10 +55,23 @@ static const int qtscript_QGLColormap_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 0
     , 3
     , 2
+    , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QGLColormap_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGLColormap : public QGLColormap
+{
+    friend QScriptValue qtscript_QGLColormap_handle(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGLColormap_setHandle(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGLColormap_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGLColormap_throw_ambiguity_error_helper(
@@ -72,6 +89,7 @@ Q_DECLARE_METATYPE(QGLColormap)
 Q_DECLARE_METATYPE(QGLColormap*)
 Q_DECLARE_METATYPE(QtScriptShell_QGLColormap)
 Q_DECLARE_METATYPE(QtScriptShell_QGLColormap*)
+Q_DECLARE_METATYPE(Qt::HANDLE)
 Q_DECLARE_METATYPE(uint*)
 
 //
@@ -88,11 +106,11 @@ static QScriptValue qtscript_QGLColormap_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGLColormap* _q_self = qscriptvalue_cast<QGLColormap*>(context->thisObject());
+    qtscript_QGLColormap* _q_self = reinterpret_cast<qtscript_QGLColormap*>(qscriptvalue_cast<QGLColormap*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGLColormap.%0(): this object is not a QGLColormap")
@@ -134,12 +152,19 @@ static QScriptValue qtscript_QGLColormap_prototype_call(QScriptContext *context,
 
     case 4:
     if (context->argumentCount() == 0) {
+        Qt::HANDLE _q_result = _q_self->handle();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEmpty();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         uint* _q_arg1 = qscriptvalue_cast<uint*>(context->argument(1));
@@ -155,7 +180,7 @@ static QScriptValue qtscript_QGLColormap_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isNumber()
             && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
@@ -173,14 +198,22 @@ static QScriptValue qtscript_QGLColormap_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 7:
+    case 8:
+    if (context->argumentCount() == 1) {
+        Qt::HANDLE _q_arg0 = qscriptvalue_cast<Qt::HANDLE>(context->argument(0));
+        _q_self->setHandle(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->size();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 8: {
+    case 10: {
     QString result = QString::fromLatin1("QGLColormap");
     return QScriptValue(context->engine(), result);
     }
@@ -229,7 +262,7 @@ QScriptValue qtscript_create_QGLColormap_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QGLColormap*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLColormap*)0));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLColormap_prototype_call, qtscript_QGLColormap_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGLColormap_function_names[i+1]),

@@ -7,6 +7,7 @@
 
 #include <qfontinfo.h>
 #include <QVariant>
+#include "fontprivate.h"
 #include <qfont.h>
 #include <qfontinfo.h>
 
@@ -27,6 +28,8 @@ static const char * const qtscript_QFontInfo_function_names[] = {
     , "strikeOut"
     , "style"
     , "styleHint"
+    , "styleName"
+    , "swap"
     , "underline"
     , "weight"
     , "toString"
@@ -50,6 +53,8 @@ static const char * const qtscript_QFontInfo_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QFontInfo other"
+    , ""
     , ""
 ""
 };
@@ -71,6 +76,8 @@ static const int qtscript_QFontInfo_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 0
+    , 1
     , 0
     , 0
     , 0
@@ -105,7 +112,7 @@ static QScriptValue qtscript_QFontInfo_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 15;
+        _id = 0xBABE0000 + 17;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -210,19 +217,34 @@ static QScriptValue qtscript_QFontInfo_prototype_call(QScriptContext *context, Q
 
     case 13:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->underline();
+        QString _q_result = _q_self->styleName();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 14:
+    if (context->argumentCount() == 1) {
+        QFontInfo _q_arg0 = qscriptvalue_cast<QFontInfo>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 15:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->underline();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->weight();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15: {
+    case 17: {
     QString result = QString::fromLatin1("QFontInfo");
     return QScriptValue(context->engine(), result);
     }
@@ -273,7 +295,7 @@ QScriptValue qtscript_create_QFontInfo_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QFontInfo*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFontInfo*)0));
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFontInfo_prototype_call, qtscript_QFontInfo_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFontInfo_function_names[i+1]),

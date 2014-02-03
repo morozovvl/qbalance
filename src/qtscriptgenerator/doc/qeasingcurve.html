@@ -61,12 +61,16 @@
 <li><b>OutCurve</b></li>
 <li><b>SineCurve</b></li>
 <li><b>CosineCurve</b></li>
+<li><b>BezierSpline</b></li>
+<li><b>TCBSpline</b></li>
 <li><b>Custom</b></li>
 <li><b>NCurveTypes</b></li>
 <li><b>Type( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
+<li><div class="fn"/><b>void addCubicBezierSegment(QPointF c1, QPointF c2, QPointF endPoint)</b></li>
+<li><div class="fn"/><b>void addTCBSegment(QPointF nextPoint, qreal t, qreal c, qreal b)</b></li>
 <li><div class="fn"/><b>qreal amplitude()</b></li>
 <li><div class="fn"/><b>qreal overshoot()</b></li>
 <li><div class="fn"/><b>qreal period()</b></li>
@@ -75,6 +79,8 @@
 <li><div class="fn"/><b>void setOvershoot(qreal overshoot)</b></li>
 <li><div class="fn"/><b>void setPeriod(qreal period)</b></li>
 <li><div class="fn"/><b>void setType(Type type)</b></li>
+<li><div class="fn"/><b>void swap(QEasingCurve other)</b></li>
+<li><div class="fn"/><b>List toCubicSpline()</b></li>
 <li><div class="fn"/><b>Type type()</b></li>
 <li><div class="fn"/><b>qreal valueForProgress(qreal progress)</b></li>
 <li><div class="fn"/><b>void writeTo(QDataStream arg__1)</b></li>

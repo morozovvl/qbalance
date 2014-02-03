@@ -23,10 +23,12 @@ static const char * const qtscript_QVariantAnimation_function_names[] = {
     "QVariantAnimation"
     // static
     // prototype
+    , "interpolated"
     , "keyValueAt"
     , "keyValues"
     , "setKeyValueAt"
     , "setKeyValues"
+    , "updateCurrentValue"
     , "toString"
 };
 
@@ -34,10 +36,12 @@ static const char * const qtscript_QVariantAnimation_function_signatures[] = {
     "QObject parent"
     // static
     // prototype
+    , "Object from, Object to, qreal progress"
     , "qreal step"
     , ""
     , "qreal step, Object value"
     , "List values"
+    , "Object value"
 ""
 };
 
@@ -45,11 +49,24 @@ static const int qtscript_QVariantAnimation_function_lengths[] = {
     1
     // static
     // prototype
+    , 3
     , 1
     , 0
     , 2
     , 1
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QVariantAnimation : public QVariantAnimation
+{
+    friend QScriptValue qtscript_QVariantAnimation_interpolated(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QVariantAnimation_updateCurrentValue(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QVariantAnimation_throw_ambiguity_error_helper(
@@ -65,6 +82,7 @@ static QScriptValue qtscript_QVariantAnimation_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QVariantAnimation*)
 Q_DECLARE_METATYPE(QtScriptShell_QVariantAnimation*)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<qreal,QVariant> > \
 { \
@@ -77,6 +95,23 @@ struct QMetaTypeId< QPair<qreal,QVariant> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<qreal,QVariant> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<qreal,QVariant> >("QPair<qreal,QVariant>", reinterpret_cast< QPair<qreal,QVariant> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QVector<QPair<qreal,QVariant> > > \
 { \
@@ -89,6 +124,22 @@ struct QMetaTypeId< QVector<QPair<qreal,QVariant> > > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QVector<QPair<qreal,QVariant> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QVector<QPair<qreal,QVariant> > >("QVector<QPair<qreal,QVariant> >", reinterpret_cast< QVector<QPair<qreal,QVariant> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QAbstractAnimation*)
 
 //
@@ -105,11 +156,11 @@ static QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *co
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QVariantAnimation* _q_self = qscriptvalue_cast<QVariantAnimation*>(context->thisObject());
+    qtscript_QVariantAnimation* _q_self = reinterpret_cast<qtscript_QVariantAnimation*>(qscriptvalue_cast<QVariantAnimation*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QVariantAnimation.%0(): this object is not a QVariantAnimation")
@@ -118,6 +169,16 @@ static QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *co
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 3) {
+        QVariant _q_arg0 = context->argument(0).toVariant();
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        QVariant _q_result = _q_self->interpolated(_q_arg0, _q_arg1, _q_arg2);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         QVariant _q_result = _q_self->keyValueAt(_q_arg0);
@@ -125,14 +186,14 @@ static QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *co
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         QVector<QPair<qreal,QVariant> > _q_result = _q_self->keyValues();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         QVariant _q_arg1 = context->argument(1).toVariant();
@@ -141,7 +202,7 @@ static QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *co
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QVector<QPair<qreal,QVariant> > _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -150,7 +211,15 @@ static QScriptValue qtscript_QVariantAnimation_prototype_call(QScriptContext *co
     }
     break;
 
-    case 4: {
+    case 5:
+    if (context->argumentCount() == 1) {
+        QVariant _q_arg0 = context->argument(0).toVariant();
+        _q_self->updateCurrentValue(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6: {
     QString result = QString::fromLatin1("QVariantAnimation");
     return QScriptValue(context->engine(), result);
     }
@@ -210,7 +279,7 @@ QScriptValue qtscript_create_QVariantAnimation_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QVariantAnimation*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QVariantAnimation*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractAnimation*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QVariantAnimation_prototype_call, qtscript_QVariantAnimation_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QVariantAnimation_function_names[i+1]),

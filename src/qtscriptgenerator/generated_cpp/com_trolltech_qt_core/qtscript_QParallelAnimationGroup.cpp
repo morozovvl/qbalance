@@ -38,6 +38,15 @@ static const int qtscript_QParallelAnimationGroup_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QParallelAnimationGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QParallelAnimationGroup : public QParallelAnimationGroup
+{
+
+    friend QScriptValue qtscript_QParallelAnimationGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QParallelAnimationGroup_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -71,7 +80,7 @@ static QScriptValue qtscript_QParallelAnimationGroup_prototype_call(QScriptConte
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QParallelAnimationGroup* _q_self = qscriptvalue_cast<QParallelAnimationGroup*>(context->thisObject());
+    qtscript_QParallelAnimationGroup* _q_self = reinterpret_cast<qtscript_QParallelAnimationGroup*>(qscriptvalue_cast<QParallelAnimationGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QParallelAnimationGroup.%0(): this object is not a QParallelAnimationGroup")

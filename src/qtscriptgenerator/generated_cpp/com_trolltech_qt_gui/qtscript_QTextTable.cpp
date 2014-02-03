@@ -90,6 +90,15 @@ static const int qtscript_QTextTable_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTextTable_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextTable : public QTextTable
+{
+
+    friend QScriptValue qtscript_QTextTable_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTextTable_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -127,7 +136,7 @@ static QScriptValue qtscript_QTextTable_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextTable* _q_self = qscriptvalue_cast<QTextTable*>(context->thisObject());
+    qtscript_QTextTable* _q_self = reinterpret_cast<qtscript_QTextTable*>(qscriptvalue_cast<QTextTable*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextTable.%0(): this object is not a QTextTable")

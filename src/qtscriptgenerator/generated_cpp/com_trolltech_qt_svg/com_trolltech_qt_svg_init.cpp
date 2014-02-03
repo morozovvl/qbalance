@@ -1,20 +1,20 @@
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 
-QScriptValue qtscript_create_QSvgGenerator_class(QScriptEngine *engine);
 QScriptValue qtscript_create_QSvgRenderer_class(QScriptEngine *engine);
+QScriptValue qtscript_create_QSvgGenerator_class(QScriptEngine *engine);
 QScriptValue qtscript_create_QSvgWidget_class(QScriptEngine *engine);
 
 static const char * const qtscript_com_trolltech_qt_svg_class_names[] = {
-    "QSvgGenerator"
-    , "QSvgRenderer"
+    "QSvgRenderer"
+    , "QSvgGenerator"
     , "QSvgWidget"
 };
 
 typedef QScriptValue (*QtBindingCreator)(QScriptEngine *engine);
 static const QtBindingCreator qtscript_com_trolltech_qt_svg_class_functions[] = {
-    qtscript_create_QSvgGenerator_class
-    , qtscript_create_QSvgRenderer_class
+    qtscript_create_QSvgRenderer_class
+    , qtscript_create_QSvgGenerator_class
     , qtscript_create_QSvgWidget_class
 };
 

@@ -15,22 +15,30 @@ static const char * const qtscript_QWheelEvent_function_names[] = {
     "QWheelEvent"
     // static
     // prototype
+    , "angleDelta"
     , "buttons"
     , "delta"
     , "globalPos"
+    , "globalPosF"
     , "globalX"
     , "globalY"
     , "orientation"
+    , "pixelDelta"
     , "pos"
+    , "posF"
     , "x"
     , "y"
     , "toString"
 };
 
 static const char * const qtscript_QWheelEvent_function_signatures[] = {
-    "QPoint pos, QPoint globalPos, int delta, MouseButtons buttons, KeyboardModifiers modifiers, Orientation orient\nQPoint pos, int delta, MouseButtons buttons, KeyboardModifiers modifiers, Orientation orient"
+    "QPointF pos, QPointF globalPos, QPoint pixelDelta, QPoint angleDelta, int qt4Delta, Orientation qt4Orientation, MouseButtons buttons, KeyboardModifiers modifiers\nQPointF pos, QPointF globalPos, int delta, MouseButtons buttons, KeyboardModifiers modifiers, Orientation orient\nQPointF pos, int delta, MouseButtons buttons, KeyboardModifiers modifiers, Orientation orient"
     // static
     // prototype
+    , ""
+    , ""
+    , ""
+    , ""
     , ""
     , ""
     , ""
@@ -44,9 +52,13 @@ static const char * const qtscript_QWheelEvent_function_signatures[] = {
 };
 
 static const int qtscript_QWheelEvent_function_lengths[] = {
-    6
+    8
     // static
     // prototype
+    , 0
+    , 0
+    , 0
+    , 0
     , 0
     , 0
     , 0
@@ -91,7 +103,7 @@ static QScriptValue qtscript_QWheelEvent_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 9;
+        _id = 0xBABE0000 + 13;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -105,68 +117,96 @@ static QScriptValue qtscript_QWheelEvent_prototype_call(QScriptContext *context,
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
-        QFlags<Qt::MouseButton> _q_result = _q_self->buttons();
+        QPoint _q_result = _q_self->angleDelta();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
     if (context->argumentCount() == 0) {
+        QFlags<Qt::MouseButton> _q_result = _q_self->buttons();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 0) {
         int _q_result = _q_self->delta();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         QPoint _q_result = _q_self->globalPos();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
+    if (context->argumentCount() == 0) {
+        QPointF _q_result = _q_self->globalPosF();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->globalX();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->globalY();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         Qt::Orientation _q_result = _q_self->orientation();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
+    if (context->argumentCount() == 0) {
+        QPoint _q_result = _q_self->pixelDelta();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         QPoint _q_result = _q_self->pos();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 10:
+    if (context->argumentCount() == 0) {
+        QPointF _q_result = _q_self->posF();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->x();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 12:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->y();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9: {
+    case 13: {
     QString result = QString::fromLatin1("QWheelEvent");
     return QScriptValue(context->engine(), result);
     }
@@ -190,7 +230,7 @@ static QScriptValue qtscript_QWheelEvent_static_call(QScriptContext *context, QS
         return context->throwError(QString::fromLatin1("QWheelEvent(): Did you forget to construct with 'new'?"));
     }
     if (context->argumentCount() == 4) {
-        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
         QFlags<Qt::MouseButton> _q_arg2 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(2));
         QFlags<Qt::KeyboardModifier> _q_arg3 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(3));
@@ -199,13 +239,13 @@ static QScriptValue qtscript_QWheelEvent_static_call(QScriptContext *context, QS
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
     } else if (context->argumentCount() == 5) {
-        if ((qMetaTypeId<QPoint>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<QPoint>() == context->argument(1).toVariant().userType())
+        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
+            && (qMetaTypeId<QPointF>() == context->argument(1).toVariant().userType())
             && context->argument(2).isNumber()
             && (qMetaTypeId<QFlags<Qt::MouseButton> >() == context->argument(3).toVariant().userType())
             && (qMetaTypeId<QFlags<Qt::KeyboardModifier> >() == context->argument(4).toVariant().userType())) {
-            QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
-            QPoint _q_arg1 = qscriptvalue_cast<QPoint>(context->argument(1));
+            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+            QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
             int _q_arg2 = context->argument(2).toInt32();
             QFlags<Qt::MouseButton> _q_arg3 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(3));
             QFlags<Qt::KeyboardModifier> _q_arg4 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(4));
@@ -213,12 +253,12 @@ static QScriptValue qtscript_QWheelEvent_static_call(QScriptContext *context, QS
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QWheelEvent*)_q_cpp_result));
             _q_cpp_result->__qtscript_self = _q_result;
             return _q_result;
-        } else if ((qMetaTypeId<QPoint>() == context->argument(0).toVariant().userType())
+        } else if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
             && context->argument(1).isNumber()
             && (qMetaTypeId<QFlags<Qt::MouseButton> >() == context->argument(2).toVariant().userType())
             && (qMetaTypeId<QFlags<Qt::KeyboardModifier> >() == context->argument(3).toVariant().userType())
             && (qMetaTypeId<Qt::Orientation>() == context->argument(4).toVariant().userType())) {
-            QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
             int _q_arg1 = context->argument(1).toInt32();
             QFlags<Qt::MouseButton> _q_arg2 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(2));
             QFlags<Qt::KeyboardModifier> _q_arg3 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(3));
@@ -229,13 +269,26 @@ static QScriptValue qtscript_QWheelEvent_static_call(QScriptContext *context, QS
             return _q_result;
         }
     } else if (context->argumentCount() == 6) {
-        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
-        QPoint _q_arg1 = qscriptvalue_cast<QPoint>(context->argument(1));
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
         int _q_arg2 = context->argument(2).toInt32();
         QFlags<Qt::MouseButton> _q_arg3 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(3));
         QFlags<Qt::KeyboardModifier> _q_arg4 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(4));
         Qt::Orientation _q_arg5 = qscriptvalue_cast<Qt::Orientation>(context->argument(5));
         QtScriptShell_QWheelEvent* _q_cpp_result = new QtScriptShell_QWheelEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QWheelEvent*)_q_cpp_result));
+        _q_cpp_result->__qtscript_self = _q_result;
+        return _q_result;
+    } else if (context->argumentCount() == 8) {
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
+        QPoint _q_arg2 = qscriptvalue_cast<QPoint>(context->argument(2));
+        QPoint _q_arg3 = qscriptvalue_cast<QPoint>(context->argument(3));
+        int _q_arg4 = context->argument(4).toInt32();
+        Qt::Orientation _q_arg5 = qscriptvalue_cast<Qt::Orientation>(context->argument(5));
+        QFlags<Qt::MouseButton> _q_arg6 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(6));
+        QFlags<Qt::KeyboardModifier> _q_arg7 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(7));
+        QtScriptShell_QWheelEvent* _q_cpp_result = new QtScriptShell_QWheelEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QWheelEvent*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -255,7 +308,7 @@ QScriptValue qtscript_create_QWheelEvent_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QWheelEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QWheelEvent*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QInputEvent*>()));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 14; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QWheelEvent_prototype_call, qtscript_QWheelEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QWheelEvent_function_names[i+1]),

@@ -21,7 +21,6 @@ static const char * const qtscript_QMatrix_function_names[] = {
     "QMatrix"
     // static
     // prototype
-    , "det"
     , "determinant"
     , "dx"
     , "dy"
@@ -63,7 +62,6 @@ static const char * const qtscript_QMatrix_function_signatures[] = {
     , ""
     , ""
     , ""
-    , ""
     , "QLine l\nQLineF l\nQPainterPath p\nQPoint p\nQPointF p\nQPolygon a\nQPolygonF a\nQRegion r"
     , "QRect arg__1\nQRectF arg__1"
     , "QRect r"
@@ -85,7 +83,6 @@ static const int qtscript_QMatrix_function_lengths[] = {
     6
     // static
     // prototype
-    , 0
     , 0
     , 0
     , 0
@@ -126,7 +123,6 @@ static QScriptValue qtscript_QMatrix_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QMatrix*)
 Q_DECLARE_METATYPE(QPainterPath)
-Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(QDataStream*)
 
 //
@@ -143,7 +139,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 25;
+        _id = 0xBABE0000 + 24;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -157,82 +153,75 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->det();
+        qreal _q_result = _q_self->determinant();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->determinant();
+        qreal _q_result = _q_self->dx();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->dx();
+        qreal _q_result = _q_self->dy();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->dy();
+        QMatrix _q_result = _q_self->inverted();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
-        QMatrix _q_result = _q_self->inverted();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 5:
-    if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isIdentity();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isInvertible();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->m11();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->m12();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 8:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->m21();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 9:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->m22();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 10:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QLine>() == context->argument(0).toVariant().userType())) {
             QLine _q_arg0 = qscriptvalue_cast<QLine>(context->argument(0));
@@ -270,7 +259,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 12:
+    case 11:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QRect>() == context->argument(0).toVariant().userType())) {
             QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
@@ -284,7 +273,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 13:
+    case 12:
     if (context->argumentCount() == 1) {
         QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
         QPolygon _q_result = _q_self->mapToPolygon(_q_arg0);
@@ -292,7 +281,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 14:
+    case 13:
     if (context->argumentCount() == 1) {
         QMatrix _q_arg0 = qscriptvalue_cast<QMatrix>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -300,7 +289,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 15:
+    case 14:
     if (context->argumentCount() == 1) {
         QMatrix _q_arg0 = qscriptvalue_cast<QMatrix>(context->argument(0));
         QMatrix _q_result = _q_self->operator*(_q_arg0);
@@ -308,7 +297,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 16:
+    case 15:
     if (context->argumentCount() == 1) {
         QMatrix _q_arg0 = qscriptvalue_cast<QMatrix>(context->argument(0));
         QMatrix _q_result = _q_self->operator*=(_q_arg0);
@@ -316,7 +305,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 17:
+    case 16:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -324,14 +313,14 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 18:
+    case 17:
     if (context->argumentCount() == 0) {
         _q_self->reset();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 19:
+    case 18:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         QMatrix _q_result = _q_self->rotate(_q_arg0);
@@ -339,7 +328,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 20:
+    case 19:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -348,7 +337,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 21:
+    case 20:
     if (context->argumentCount() == 6) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -361,7 +350,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 22:
+    case 21:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -370,7 +359,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 23:
+    case 22:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -379,7 +368,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 24:
+    case 23:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -387,7 +376,7 @@ static QScriptValue qtscript_QMatrix_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 25: {
+    case 24: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -446,7 +435,7 @@ QScriptValue qtscript_create_QMatrix_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QMatrix*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QMatrix*)0));
-    for (int i = 0; i < 26; ++i) {
+    for (int i = 0; i < 25; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QMatrix_prototype_call, qtscript_QMatrix_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QMatrix_function_names[i+1]),

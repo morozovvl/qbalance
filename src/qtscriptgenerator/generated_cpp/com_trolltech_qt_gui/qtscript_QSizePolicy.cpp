@@ -17,6 +17,7 @@ static const char * const qtscript_QSizePolicy_function_names[] = {
     , "controlType"
     , "expandingDirections"
     , "hasHeightForWidth"
+    , "hasWidthForHeight"
     , "horizontalPolicy"
     , "horizontalStretch"
     , "equals"
@@ -27,6 +28,7 @@ static const char * const qtscript_QSizePolicy_function_names[] = {
     , "setHorizontalStretch"
     , "setVerticalPolicy"
     , "setVerticalStretch"
+    , "setWidthForHeight"
     , "transpose"
     , "verticalPolicy"
     , "verticalStretch"
@@ -35,9 +37,10 @@ static const char * const qtscript_QSizePolicy_function_names[] = {
 };
 
 static const char * const qtscript_QSizePolicy_function_signatures[] = {
-    "\nPolicy horizontal, Policy vertical\nPolicy horizontal, Policy vertical, ControlType type"
+    "\nPolicy horizontal, Policy vertical, ControlType type"
     // static
     // prototype
+    , ""
     , ""
     , ""
     , ""
@@ -48,9 +51,10 @@ static const char * const qtscript_QSizePolicy_function_signatures[] = {
     , "ControlType type"
     , "bool b"
     , "Policy d"
-    , "uchar stretchFactor"
+    , "int stretchFactor"
     , "Policy d"
-    , "uchar stretchFactor"
+    , "int stretchFactor"
+    , "bool b"
     , ""
     , ""
     , ""
@@ -67,6 +71,8 @@ static const int qtscript_QSizePolicy_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 0
+    , 1
     , 1
     , 1
     , 1
@@ -99,9 +105,9 @@ static const QMetaObject *qtscript_QSizePolicy_metaObject()
 }
 
 Q_DECLARE_METATYPE(QSizePolicy*)
+Q_DECLARE_METATYPE(QSizePolicy::PolicyFlag)
 Q_DECLARE_METATYPE(QSizePolicy::ControlType)
 Q_DECLARE_METATYPE(QFlags<QSizePolicy::ControlType>)
-Q_DECLARE_METATYPE(QSizePolicy::PolicyFlag)
 Q_DECLARE_METATYPE(QSizePolicy::Policy)
 Q_DECLARE_METATYPE(QFlags<Qt::Orientation>)
 Q_DECLARE_METATYPE(QDataStream*)
@@ -135,6 +141,81 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
+}
+
+//
+// QSizePolicy::PolicyFlag
+//
+
+static const QSizePolicy::PolicyFlag qtscript_QSizePolicy_PolicyFlag_values[] = {
+    QSizePolicy::GrowFlag
+    , QSizePolicy::ExpandFlag
+    , QSizePolicy::ShrinkFlag
+    , QSizePolicy::IgnoreFlag
+};
+
+static const char * const qtscript_QSizePolicy_PolicyFlag_keys[] = {
+    "GrowFlag"
+    , "ExpandFlag"
+    , "ShrinkFlag"
+    , "IgnoreFlag"
+};
+
+static QString qtscript_QSizePolicy_PolicyFlag_toStringHelper(QSizePolicy::PolicyFlag value)
+{
+    for (int i = 0; i < 4; ++i) {
+        if (qtscript_QSizePolicy_PolicyFlag_values[i] == value)
+            return QString::fromLatin1(qtscript_QSizePolicy_PolicyFlag_keys[i]);
+    }
+    return QString();
+}
+
+static QScriptValue qtscript_QSizePolicy_PolicyFlag_toScriptValue(QScriptEngine *engine, const QSizePolicy::PolicyFlag &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QSizePolicy"));
+    return clazz.property(qtscript_QSizePolicy_PolicyFlag_toStringHelper(value));
+}
+
+static void qtscript_QSizePolicy_PolicyFlag_fromScriptValue(const QScriptValue &value, QSizePolicy::PolicyFlag &out)
+{
+    out = qvariant_cast<QSizePolicy::PolicyFlag>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QSizePolicy_PolicyFlag(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    for (int i = 0; i < 4; ++i) {
+        if (qtscript_QSizePolicy_PolicyFlag_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QSizePolicy::PolicyFlag>(arg));
+    }
+    return context->throwError(QString::fromLatin1("PolicyFlag(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QSizePolicy_PolicyFlag_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QSizePolicy::PolicyFlag value = qscriptvalue_cast<QSizePolicy::PolicyFlag>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QSizePolicy_PolicyFlag_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QSizePolicy::PolicyFlag value = qscriptvalue_cast<QSizePolicy::PolicyFlag>(context->thisObject());
+    return QScriptValue(engine, qtscript_QSizePolicy_PolicyFlag_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QSizePolicy_PolicyFlag_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QSizePolicy_PolicyFlag,
+        qtscript_QSizePolicy_PolicyFlag_valueOf, qtscript_QSizePolicy_PolicyFlag_toString);
+    qScriptRegisterMetaType<QSizePolicy::PolicyFlag>(engine, qtscript_QSizePolicy_PolicyFlag_toScriptValue,
+        qtscript_QSizePolicy_PolicyFlag_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 4; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QSizePolicy_PolicyFlag_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QSizePolicy_PolicyFlag_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -311,81 +392,6 @@ static QScriptValue qtscript_create_QSizePolicy_ControlTypes_class(QScriptEngine
 }
 
 //
-// QSizePolicy::PolicyFlag
-//
-
-static const QSizePolicy::PolicyFlag qtscript_QSizePolicy_PolicyFlag_values[] = {
-    QSizePolicy::GrowFlag
-    , QSizePolicy::ExpandFlag
-    , QSizePolicy::ShrinkFlag
-    , QSizePolicy::IgnoreFlag
-};
-
-static const char * const qtscript_QSizePolicy_PolicyFlag_keys[] = {
-    "GrowFlag"
-    , "ExpandFlag"
-    , "ShrinkFlag"
-    , "IgnoreFlag"
-};
-
-static QString qtscript_QSizePolicy_PolicyFlag_toStringHelper(QSizePolicy::PolicyFlag value)
-{
-    for (int i = 0; i < 4; ++i) {
-        if (qtscript_QSizePolicy_PolicyFlag_values[i] == value)
-            return QString::fromLatin1(qtscript_QSizePolicy_PolicyFlag_keys[i]);
-    }
-    return QString();
-}
-
-static QScriptValue qtscript_QSizePolicy_PolicyFlag_toScriptValue(QScriptEngine *engine, const QSizePolicy::PolicyFlag &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QSizePolicy"));
-    return clazz.property(qtscript_QSizePolicy_PolicyFlag_toStringHelper(value));
-}
-
-static void qtscript_QSizePolicy_PolicyFlag_fromScriptValue(const QScriptValue &value, QSizePolicy::PolicyFlag &out)
-{
-    out = qvariant_cast<QSizePolicy::PolicyFlag>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QSizePolicy_PolicyFlag(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 4; ++i) {
-        if (qtscript_QSizePolicy_PolicyFlag_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QSizePolicy::PolicyFlag>(arg));
-    }
-    return context->throwError(QString::fromLatin1("PolicyFlag(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QSizePolicy_PolicyFlag_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QSizePolicy::PolicyFlag value = qscriptvalue_cast<QSizePolicy::PolicyFlag>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QSizePolicy_PolicyFlag_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QSizePolicy::PolicyFlag value = qscriptvalue_cast<QSizePolicy::PolicyFlag>(context->thisObject());
-    return QScriptValue(engine, qtscript_QSizePolicy_PolicyFlag_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QSizePolicy_PolicyFlag_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QSizePolicy_PolicyFlag,
-        qtscript_QSizePolicy_PolicyFlag_valueOf, qtscript_QSizePolicy_PolicyFlag_toString);
-    qScriptRegisterMetaType<QSizePolicy::PolicyFlag>(engine, qtscript_QSizePolicy_PolicyFlag_toScriptValue,
-        qtscript_QSizePolicy_PolicyFlag_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 4; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QSizePolicy_PolicyFlag_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QSizePolicy_PolicyFlag_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QSizePolicy::Policy
 //
 
@@ -482,7 +488,7 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 17;
+        _id = 0xBABE0000 + 19;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -517,19 +523,26 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
 
     case 3:
     if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->hasWidthForHeight();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 0) {
         QSizePolicy::Policy _q_result = _q_self->horizontalPolicy();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->horizontalStretch();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         QSizePolicy _q_arg0 = qscriptvalue_cast<QSizePolicy>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -537,7 +550,7 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -545,7 +558,7 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         QSizePolicy::ControlType _q_arg0 = qscriptvalue_cast<QSizePolicy::ControlType>(context->argument(0));
         _q_self->setControlType(_q_arg0);
@@ -553,7 +566,7 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setHeightForWidth(_q_arg0);
@@ -561,7 +574,7 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         QSizePolicy::Policy _q_arg0 = qscriptvalue_cast<QSizePolicy::Policy>(context->argument(0));
         _q_self->setHorizontalPolicy(_q_arg0);
@@ -569,15 +582,15 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 1) {
-        uchar _q_arg0 = qscriptvalue_cast<uchar>(context->argument(0));
+        int _q_arg0 = context->argument(0).toInt32();
         _q_self->setHorizontalStretch(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 1) {
         QSizePolicy::Policy _q_arg0 = qscriptvalue_cast<QSizePolicy::Policy>(context->argument(0));
         _q_self->setVerticalPolicy(_q_arg0);
@@ -585,36 +598,44 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 1) {
-        uchar _q_arg0 = qscriptvalue_cast<uchar>(context->argument(0));
+        int _q_arg0 = context->argument(0).toInt32();
         _q_self->setVerticalStretch(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 13:
+    case 14:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setWidthForHeight(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 15:
     if (context->argumentCount() == 0) {
         _q_self->transpose();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 0) {
         QSizePolicy::Policy _q_result = _q_self->verticalPolicy();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->verticalStretch();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -622,8 +643,10 @@ static QScriptValue qtscript_QSizePolicy_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 17: {
-    QString result = QString::fromLatin1("QSizePolicy");
+    case 19: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -677,7 +700,7 @@ QScriptValue qtscript_create_QSizePolicy_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSizePolicy*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSizePolicy*)0));
-    for (int i = 0; i < 18; ++i) {
+    for (int i = 0; i < 20; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSizePolicy_prototype_call, qtscript_QSizePolicy_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSizePolicy_function_names[i+1]),
@@ -690,12 +713,12 @@ QScriptValue qtscript_create_QSizePolicy_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QSizePolicy_static_call, proto, qtscript_QSizePolicy_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("PolicyFlag"),
+        qtscript_create_QSizePolicy_PolicyFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ControlType"),
         qtscript_create_QSizePolicy_ControlType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ControlTypes"),
         qtscript_create_QSizePolicy_ControlTypes_class(engine));
-    ctor.setProperty(QString::fromLatin1("PolicyFlag"),
-        qtscript_create_QSizePolicy_PolicyFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Policy"),
         qtscript_create_QSizePolicy_Policy_class(engine, ctor));
     return ctor;

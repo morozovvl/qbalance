@@ -9,9 +9,11 @@
 #include <QVariant>
 #include <qaccessible.h>
 #include <qaccessibleobject.h>
-#include <qlist.h>
 #include <qobject.h>
+#include <qpair.h>
 #include <qrect.h>
+#include <qvector.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAccessibleObject.h"
 

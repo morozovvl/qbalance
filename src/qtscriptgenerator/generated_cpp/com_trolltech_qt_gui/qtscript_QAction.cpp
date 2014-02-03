@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qaction.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qactiongroup.h>
@@ -13,7 +14,6 @@
 #include <qcoreevent.h>
 #include <qfont.h>
 #include <qgraphicswidget.h>
-#include <qicon.h>
 #include <qkeysequence.h>
 #include <qlist.h>
 #include <qmenu.h>
@@ -88,6 +88,15 @@ static const int qtscript_QAction_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QAction_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAction : public QAction
+{
+
+    friend QScriptValue qtscript_QAction_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QAction_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -106,13 +115,13 @@ static const QMetaObject *qtscript_QAction_metaObject()
 
 Q_DECLARE_METATYPE(QAction*)
 Q_DECLARE_METATYPE(QtScriptShell_QAction*)
-Q_DECLARE_METATYPE(QAction::Priority)
 Q_DECLARE_METATYPE(QAction::ActionEvent)
-Q_DECLARE_METATYPE(QAction::SoftKeyRole)
+Q_DECLARE_METATYPE(QAction::Priority)
 Q_DECLARE_METATYPE(QAction::MenuRole)
 Q_DECLARE_METATYPE(QActionGroup*)
 Q_DECLARE_METATYPE(QGraphicsWidget*)
 Q_DECLARE_METATYPE(QList<QGraphicsWidget*>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QList<QWidget*>)
 Q_DECLARE_METATYPE(QMenu*)
 Q_DECLARE_METATYPE(QKeySequence::StandardKey)
@@ -130,6 +139,73 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QAction::ActionEvent
+//
+
+static const QAction::ActionEvent qtscript_QAction_ActionEvent_values[] = {
+    QAction::Trigger
+    , QAction::Hover
+};
+
+static const char * const qtscript_QAction_ActionEvent_keys[] = {
+    "Trigger"
+    , "Hover"
+};
+
+static QString qtscript_QAction_ActionEvent_toStringHelper(QAction::ActionEvent value)
+{
+    if ((value >= QAction::Trigger) && (value <= QAction::Hover))
+        return qtscript_QAction_ActionEvent_keys[static_cast<int>(value)-static_cast<int>(QAction::Trigger)];
+    return QString();
+}
+
+static QScriptValue qtscript_QAction_ActionEvent_toScriptValue(QScriptEngine *engine, const QAction::ActionEvent &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAction"));
+    return clazz.property(qtscript_QAction_ActionEvent_toStringHelper(value));
+}
+
+static void qtscript_QAction_ActionEvent_fromScriptValue(const QScriptValue &value, QAction::ActionEvent &out)
+{
+    out = qvariant_cast<QAction::ActionEvent>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QAction_ActionEvent(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QAction::Trigger) && (arg <= QAction::Hover))
+        return qScriptValueFromValue(engine,  static_cast<QAction::ActionEvent>(arg));
+    return context->throwError(QString::fromLatin1("ActionEvent(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QAction_ActionEvent_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QAction::ActionEvent value = qscriptvalue_cast<QAction::ActionEvent>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QAction_ActionEvent_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QAction::ActionEvent value = qscriptvalue_cast<QAction::ActionEvent>(context->thisObject());
+    return QScriptValue(engine, qtscript_QAction_ActionEvent_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QAction_ActionEvent_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QAction_ActionEvent,
+        qtscript_QAction_ActionEvent_valueOf, qtscript_QAction_ActionEvent_toString);
+    qScriptRegisterMetaType<QAction::ActionEvent>(engine, qtscript_QAction_ActionEvent_toScriptValue,
+        qtscript_QAction_ActionEvent_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QAction_ActionEvent_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QAction_ActionEvent_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -202,150 +278,6 @@ static QScriptValue qtscript_create_QAction_Priority_class(QScriptEngine *engine
     for (int i = 0; i < 3; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QAction_Priority_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QAction_Priority_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QAction::ActionEvent
-//
-
-static const QAction::ActionEvent qtscript_QAction_ActionEvent_values[] = {
-    QAction::Trigger
-    , QAction::Hover
-};
-
-static const char * const qtscript_QAction_ActionEvent_keys[] = {
-    "Trigger"
-    , "Hover"
-};
-
-static QString qtscript_QAction_ActionEvent_toStringHelper(QAction::ActionEvent value)
-{
-    if ((value >= QAction::Trigger) && (value <= QAction::Hover))
-        return qtscript_QAction_ActionEvent_keys[static_cast<int>(value)-static_cast<int>(QAction::Trigger)];
-    return QString();
-}
-
-static QScriptValue qtscript_QAction_ActionEvent_toScriptValue(QScriptEngine *engine, const QAction::ActionEvent &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAction"));
-    return clazz.property(qtscript_QAction_ActionEvent_toStringHelper(value));
-}
-
-static void qtscript_QAction_ActionEvent_fromScriptValue(const QScriptValue &value, QAction::ActionEvent &out)
-{
-    out = qvariant_cast<QAction::ActionEvent>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QAction_ActionEvent(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QAction::Trigger) && (arg <= QAction::Hover))
-        return qScriptValueFromValue(engine,  static_cast<QAction::ActionEvent>(arg));
-    return context->throwError(QString::fromLatin1("ActionEvent(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QAction_ActionEvent_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QAction::ActionEvent value = qscriptvalue_cast<QAction::ActionEvent>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QAction_ActionEvent_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QAction::ActionEvent value = qscriptvalue_cast<QAction::ActionEvent>(context->thisObject());
-    return QScriptValue(engine, qtscript_QAction_ActionEvent_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QAction_ActionEvent_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QAction_ActionEvent,
-        qtscript_QAction_ActionEvent_valueOf, qtscript_QAction_ActionEvent_toString);
-    qScriptRegisterMetaType<QAction::ActionEvent>(engine, qtscript_QAction_ActionEvent_toScriptValue,
-        qtscript_QAction_ActionEvent_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QAction_ActionEvent_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QAction_ActionEvent_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QAction::SoftKeyRole
-//
-
-static const QAction::SoftKeyRole qtscript_QAction_SoftKeyRole_values[] = {
-    QAction::NoSoftKey
-    , QAction::PositiveSoftKey
-    , QAction::NegativeSoftKey
-    , QAction::SelectSoftKey
-};
-
-static const char * const qtscript_QAction_SoftKeyRole_keys[] = {
-    "NoSoftKey"
-    , "PositiveSoftKey"
-    , "NegativeSoftKey"
-    , "SelectSoftKey"
-};
-
-static QString qtscript_QAction_SoftKeyRole_toStringHelper(QAction::SoftKeyRole value)
-{
-    const QMetaObject *meta = qtscript_QAction_metaObject();
-    int idx = meta->indexOfEnumerator("SoftKeyRole");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QAction_SoftKeyRole_toScriptValue(QScriptEngine *engine, const QAction::SoftKeyRole &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAction"));
-    return clazz.property(qtscript_QAction_SoftKeyRole_toStringHelper(value));
-}
-
-static void qtscript_QAction_SoftKeyRole_fromScriptValue(const QScriptValue &value, QAction::SoftKeyRole &out)
-{
-    out = qvariant_cast<QAction::SoftKeyRole>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QAction_SoftKeyRole(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QAction_metaObject();
-    int idx = meta->indexOfEnumerator("SoftKeyRole");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QAction::SoftKeyRole>(arg));
-    return context->throwError(QString::fromLatin1("SoftKeyRole(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QAction_SoftKeyRole_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QAction::SoftKeyRole value = qscriptvalue_cast<QAction::SoftKeyRole>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QAction_SoftKeyRole_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QAction::SoftKeyRole value = qscriptvalue_cast<QAction::SoftKeyRole>(context->thisObject());
-    return QScriptValue(engine, qtscript_QAction_SoftKeyRole_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QAction_SoftKeyRole_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QAction_SoftKeyRole,
-        qtscript_QAction_SoftKeyRole_valueOf, qtscript_QAction_SoftKeyRole_toString);
-    qScriptRegisterMetaType<QAction::SoftKeyRole>(engine, qtscript_QAction_SoftKeyRole_toScriptValue,
-        qtscript_QAction_SoftKeyRole_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 4; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QAction_SoftKeyRole_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QAction_SoftKeyRole_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -452,7 +384,7 @@ static QScriptValue qtscript_QAction_prototype_call(QScriptContext *context, QSc
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAction* _q_self = qscriptvalue_cast<QAction*>(context->thisObject());
+    qtscript_QAction* _q_self = reinterpret_cast<qtscript_QAction*>(qscriptvalue_cast<QAction*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAction.%0(): this object is not a QAction")
@@ -666,12 +598,10 @@ QScriptValue qtscript_create_QAction_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QAction_static_call, proto, qtscript_QAction_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("Priority"),
-        qtscript_create_QAction_Priority_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ActionEvent"),
         qtscript_create_QAction_ActionEvent_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("SoftKeyRole"),
-        qtscript_create_QAction_SoftKeyRole_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("Priority"),
+        qtscript_create_QAction_Priority_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("MenuRole"),
         qtscript_create_QAction_MenuRole_class(engine, ctor));
     return ctor;

@@ -18,6 +18,7 @@ static const char * const qtscript_QHostAddress_function_names[] = {
     // prototype
     , "clear"
     , "isInSubnet"
+    , "isLoopback"
     , "isNull"
     , "equals"
     , "protocol"
@@ -39,6 +40,7 @@ static const char * const qtscript_QHostAddress_function_signatures[] = {
     , ""
     , "QHostAddress subnet, int netmask\nQPair subnet"
     , ""
+    , ""
     , "SpecialAddress address\nQHostAddress address"
     , ""
     , "QDataStream arg__1"
@@ -58,6 +60,7 @@ static const int qtscript_QHostAddress_function_lengths[] = {
     // prototype
     , 0
     , 2
+    , 0
     , 0
     , 1
     , 0
@@ -85,6 +88,7 @@ static QScriptValue qtscript_QHostAddress_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QHostAddress*)
 Q_DECLARE_METATYPE(QHostAddress::SpecialAddress)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<QHostAddress,int> > \
 { \
@@ -97,6 +101,22 @@ struct QMetaTypeId< QPair<QHostAddress,int> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<QHostAddress,int> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<QHostAddress,int> >("QPair<QHostAddress,int>", reinterpret_cast< QPair<QHostAddress,int> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QAbstractSocket::NetworkLayerProtocol)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(QIPv6Address)
@@ -126,6 +146,7 @@ static const QHostAddress::SpecialAddress qtscript_QHostAddress_SpecialAddress_v
     , QHostAddress::LocalHostIPv6
     , QHostAddress::Any
     , QHostAddress::AnyIPv6
+    , QHostAddress::AnyIPv4
 };
 
 static const char * const qtscript_QHostAddress_SpecialAddress_keys[] = {
@@ -135,11 +156,12 @@ static const char * const qtscript_QHostAddress_SpecialAddress_keys[] = {
     , "LocalHostIPv6"
     , "Any"
     , "AnyIPv6"
+    , "AnyIPv4"
 };
 
 static QString qtscript_QHostAddress_SpecialAddress_toStringHelper(QHostAddress::SpecialAddress value)
 {
-    if ((value >= QHostAddress::Null) && (value <= QHostAddress::AnyIPv6))
+    if ((value >= QHostAddress::Null) && (value <= QHostAddress::AnyIPv4))
         return qtscript_QHostAddress_SpecialAddress_keys[static_cast<int>(value)-static_cast<int>(QHostAddress::Null)];
     return QString();
 }
@@ -158,7 +180,7 @@ static void qtscript_QHostAddress_SpecialAddress_fromScriptValue(const QScriptVa
 static QScriptValue qtscript_construct_QHostAddress_SpecialAddress(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QHostAddress::Null) && (arg <= QHostAddress::AnyIPv6))
+    if ((arg >= QHostAddress::Null) && (arg <= QHostAddress::AnyIPv4))
         return qScriptValueFromValue(engine,  static_cast<QHostAddress::SpecialAddress>(arg));
     return context->throwError(QString::fromLatin1("SpecialAddress(): invalid enum value (%0)").arg(arg));
 }
@@ -182,7 +204,7 @@ static QScriptValue qtscript_create_QHostAddress_SpecialAddress_class(QScriptEng
         qtscript_QHostAddress_SpecialAddress_valueOf, qtscript_QHostAddress_SpecialAddress_toString);
     qScriptRegisterMetaType<QHostAddress::SpecialAddress>(engine, qtscript_QHostAddress_SpecialAddress_toScriptValue,
         qtscript_QHostAddress_SpecialAddress_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 7; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QHostAddress_SpecialAddress_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QHostAddress_SpecialAddress_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -204,7 +226,7 @@ static QScriptValue qtscript_QHostAddress_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 13;
+        _id = 0xBABE0000 + 14;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -239,12 +261,19 @@ static QScriptValue qtscript_QHostAddress_prototype_call(QScriptContext *context
 
     case 2:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isNull();
+        bool _q_result = _q_self->isLoopback();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->isNull();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QHostAddress::SpecialAddress>() == context->argument(0).toVariant().userType())) {
             QHostAddress::SpecialAddress _q_arg0 = qscriptvalue_cast<QHostAddress::SpecialAddress>(context->argument(0));
@@ -258,14 +287,14 @@ static QScriptValue qtscript_QHostAddress_prototype_call(QScriptContext *context
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         QAbstractSocket::NetworkLayerProtocol _q_result = _q_self->protocol();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -273,14 +302,14 @@ static QScriptValue qtscript_QHostAddress_prototype_call(QScriptContext *context
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->scopeId();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QIPv6Address>() == context->argument(0).toVariant().userType())) {
             QIPv6Address _q_arg0 = qscriptvalue_cast<QIPv6Address>(context->argument(0));
@@ -298,7 +327,7 @@ static QScriptValue qtscript_QHostAddress_prototype_call(QScriptContext *context
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setScopeId(_q_arg0);
@@ -306,28 +335,28 @@ static QScriptValue qtscript_QHostAddress_prototype_call(QScriptContext *context
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 0) {
         uint _q_result = _q_self->toIPv4Address();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 0) {
         QIPv6Address _q_result = _q_self->toIPv6Address();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->toString();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -407,7 +436,7 @@ QScriptValue qtscript_create_QHostAddress_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QHostAddress*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QHostAddress*)0));
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 14; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QHostAddress_prototype_call, qtscript_QHostAddress_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QHostAddress_function_names[i+2]),

@@ -11,8 +11,8 @@ public:
     QtScriptShell_QItemEditorFactory();
     ~QtScriptShell_QItemEditorFactory();
 
-    QWidget*  createEditor(QVariant::Type  type, QWidget*  parent) const;
-    QByteArray  valuePropertyName(QVariant::Type  type) const;
+    QWidget*  createEditor(int  userType, QWidget*  parent) const;
+    QByteArray  valuePropertyName(int  userType) const;
 
     QScriptValue __qtscript_self;
 };

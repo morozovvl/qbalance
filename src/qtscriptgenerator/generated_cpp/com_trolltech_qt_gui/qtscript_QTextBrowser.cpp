@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtextbrowser.h>
+#include <QIconEngine>
 #include <QTextEdit>
 #include <QVariant>
 #include <qaction.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -32,8 +31,8 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
-#include <qprinter.h>
 #include <qrect.h>
 #include <qregion.h>
 #include <qscrollbar.h>
@@ -47,6 +46,7 @@
 #include <qtextformat.h>
 #include <qurl.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTextBrowser.h"
 
@@ -92,6 +92,15 @@ static const int qtscript_QTextBrowser_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTextBrowser_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextBrowser : public QTextBrowser
+{
+
+    friend QScriptValue qtscript_QTextBrowser_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTextBrowser_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -105,6 +114,7 @@ static QScriptValue qtscript_QTextBrowser_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTextBrowser*)
 Q_DECLARE_METATYPE(QtScriptShell_QTextBrowser*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QTextEdit*)
 
 //
@@ -125,7 +135,7 @@ static QScriptValue qtscript_QTextBrowser_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextBrowser* _q_self = qscriptvalue_cast<QTextBrowser*>(context->thisObject());
+    qtscript_QTextBrowser* _q_self = reinterpret_cast<qtscript_QTextBrowser*>(qscriptvalue_cast<QTextBrowser*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextBrowser.%0(): this object is not a QTextBrowser")

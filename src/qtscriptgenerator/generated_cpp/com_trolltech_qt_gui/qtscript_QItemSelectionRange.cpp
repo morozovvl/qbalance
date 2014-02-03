@@ -27,6 +27,7 @@ static const char * const qtscript_QItemSelectionRange_function_names[] = {
     , "left"
     , "model"
     , "equals"
+    , "operator_less"
     , "parent"
     , "right"
     , "top"
@@ -50,6 +51,7 @@ static const char * const qtscript_QItemSelectionRange_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QItemSelectionRange other"
     , "QItemSelectionRange other"
     , ""
     , ""
@@ -75,6 +77,7 @@ static const int qtscript_QItemSelectionRange_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 1
     , 0
     , 0
     , 0
@@ -96,7 +99,7 @@ static QScriptValue qtscript_QItemSelectionRange_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QItemSelectionRange)
 Q_DECLARE_METATYPE(QItemSelectionRange*)
-Q_DECLARE_METATYPE(QModelIndex)
+Q_DECLARE_METATYPE(QPersistentModelIndex)
 Q_DECLARE_METATYPE(QList<QModelIndex>)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
@@ -114,7 +117,7 @@ static QScriptValue qtscript_QItemSelectionRange_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 17;
+        _id = 0xBABE0000 + 18;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -135,7 +138,7 @@ static QScriptValue qtscript_QItemSelectionRange_prototype_call(QScriptContext *
 
     case 1:
     if (context->argumentCount() == 0) {
-        QModelIndex _q_result = _q_self->bottomRight();
+        QPersistentModelIndex _q_result = _q_self->bottomRight();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -222,41 +225,49 @@ static QScriptValue qtscript_QItemSelectionRange_prototype_call(QScriptContext *
     break;
 
     case 12:
+    if (context->argumentCount() == 1) {
+        QItemSelectionRange _q_arg0 = qscriptvalue_cast<QItemSelectionRange>(context->argument(0));
+        bool _q_result = _q_self->operator<(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 13:
     if (context->argumentCount() == 0) {
         QModelIndex _q_result = _q_self->parent();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->right();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->top();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 0) {
-        QModelIndex _q_result = _q_self->topLeft();
+        QPersistentModelIndex _q_result = _q_self->topLeft();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->width();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 17: {
+    case 18: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -318,7 +329,7 @@ QScriptValue qtscript_create_QItemSelectionRange_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QItemSelectionRange*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QItemSelectionRange*)0));
-    for (int i = 0; i < 18; ++i) {
+    for (int i = 0; i < 19; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QItemSelectionRange_prototype_call, qtscript_QItemSelectionRange_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QItemSelectionRange_function_names[i+1]),

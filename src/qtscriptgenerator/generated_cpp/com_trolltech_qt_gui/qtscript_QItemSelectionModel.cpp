@@ -22,6 +22,7 @@ static const char * const qtscript_QItemSelectionModel_function_names[] = {
     // prototype
     , "columnIntersectsSelection"
     , "currentIndex"
+    , "emitSelectionChanged"
     , "hasSelection"
     , "isColumnSelected"
     , "isRowSelected"
@@ -41,6 +42,7 @@ static const char * const qtscript_QItemSelectionModel_function_signatures[] = {
     // prototype
     , "int column, QModelIndex parent"
     , ""
+    , "QItemSelection newSelection, QItemSelection oldSelection"
     , ""
     , "int column, QModelIndex parent"
     , "int row, QModelIndex parent"
@@ -60,6 +62,7 @@ static const int qtscript_QItemSelectionModel_function_lengths[] = {
     // prototype
     , 2
     , 0
+    , 2
     , 0
     , 2
     , 2
@@ -71,6 +74,16 @@ static const int qtscript_QItemSelectionModel_function_lengths[] = {
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QItemSelectionModel : public QItemSelectionModel
+{
+    friend QScriptValue qtscript_QItemSelectionModel_emitSelectionChanged(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QItemSelectionModel_throw_ambiguity_error_helper(
@@ -88,10 +101,9 @@ Q_DECLARE_METATYPE(QItemSelectionModel*)
 Q_DECLARE_METATYPE(QtScriptShell_QItemSelectionModel*)
 Q_DECLARE_METATYPE(QItemSelectionModel::SelectionFlag)
 Q_DECLARE_METATYPE(QFlags<QItemSelectionModel::SelectionFlag>)
-Q_DECLARE_METATYPE(QModelIndex)
+Q_DECLARE_METATYPE(QItemSelection)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 Q_DECLARE_METATYPE(QList<QModelIndex>)
-Q_DECLARE_METATYPE(QItemSelection)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -303,11 +315,11 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 12;
+        _id = 0xBABE0000 + 13;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QItemSelectionModel* _q_self = qscriptvalue_cast<QItemSelectionModel*>(context->thisObject());
+    qtscript_QItemSelectionModel* _q_self = reinterpret_cast<qtscript_QItemSelectionModel*>(qscriptvalue_cast<QItemSelectionModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QItemSelectionModel.%0(): this object is not a QItemSelectionModel")
@@ -332,17 +344,17 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     break;
 
     case 2:
-    if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->hasSelection();
-        return QScriptValue(context->engine(), _q_result);
+    if (context->argumentCount() == 2) {
+        QItemSelection _q_arg0 = qscriptvalue_cast<QItemSelection>(context->argument(0));
+        QItemSelection _q_arg1 = qscriptvalue_cast<QItemSelection>(context->argument(1));
+        _q_self->emitSelectionChanged(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 3:
-    if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
-        bool _q_result = _q_self->isColumnSelected(_q_arg0, _q_arg1);
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->hasSelection();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -351,12 +363,21 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
-        bool _q_result = _q_self->isRowSelected(_q_arg0, _q_arg1);
+        bool _q_result = _q_self->isColumnSelected(_q_arg0, _q_arg1);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 5:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
+        bool _q_result = _q_self->isRowSelected(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 1) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         bool _q_result = _q_self->isSelected(_q_arg0);
@@ -364,14 +385,14 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         QAbstractItemModel* _q_result = const_cast<QAbstractItemModel*>(_q_self->model());
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -380,7 +401,7 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 0) {
         QList<QModelIndex> _q_result = _q_self->selectedColumns();
         return qScriptValueFromSequence(context->engine(), _q_result);
@@ -392,14 +413,14 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 0) {
         QList<QModelIndex> _q_result = _q_self->selectedIndexes();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 0) {
         QList<QModelIndex> _q_result = _q_self->selectedRows();
         return qScriptValueFromSequence(context->engine(), _q_result);
@@ -411,14 +432,14 @@ static QScriptValue qtscript_QItemSelectionModel_prototype_call(QScriptContext *
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 0) {
         QItemSelection _q_result = _q_self->selection();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12: {
+    case 13: {
     QString result = QString::fromLatin1("QItemSelectionModel");
     return QScriptValue(context->engine(), result);
     }
@@ -480,7 +501,7 @@ QScriptValue qtscript_create_QItemSelectionModel_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QItemSelectionModel*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QItemSelectionModel*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 14; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QItemSelectionModel_prototype_call, qtscript_QItemSelectionModel_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QItemSelectionModel_function_names[i+1]),

@@ -18,6 +18,8 @@ static const char * const qtscript_QVector2D_function_names[] = {
     // static
     , "dotProduct"
     // prototype
+    , "distanceToLine"
+    , "distanceToPoint"
     , "isNull"
     , "length"
     , "lengthSquared"
@@ -42,23 +44,25 @@ static const char * const qtscript_QVector2D_function_names[] = {
 };
 
 static const char * const qtscript_QVector2D_function_signatures[] = {
-    "\nQPoint point\nQPointF point\nQVector3D vector\nQVector4D vector\nqreal xpos, qreal ypos"
+    "\nQPoint point\nQPointF point\nQVector3D vector\nQVector4D vector\nfloat xpos, float ypos"
     // static
     , "QVector2D v1, QVector2D v2"
     // prototype
+    , "QVector2D point, QVector2D direction"
+    , "QVector2D point"
     , ""
     , ""
     , ""
     , ""
     , ""
     , "QVector2D vector"
-    , "qreal divisor"
+    , "float divisor"
     , "QVector2D v2"
-    , "QVector2D vector\nqreal factor"
+    , "QVector2D vector\nfloat factor"
     , "QVector2D vector"
     , "QDataStream arg__1"
-    , "qreal x"
-    , "qreal y"
+    , "float x"
+    , "float y"
     , ""
     , ""
     , ""
@@ -74,6 +78,8 @@ static const int qtscript_QVector2D_function_lengths[] = {
     // static
     , 2
     // prototype
+    , 2
+    , 1
     , 0
     , 0
     , 0
@@ -125,7 +131,7 @@ static QScriptValue qtscript_QVector2D_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 20;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -138,52 +144,53 @@ static QScriptValue qtscript_QVector2D_prototype_call(QScriptContext *context, Q
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isNull();
-        return QScriptValue(context->engine(), _q_result);
+    if (context->argumentCount() == 2) {
+        QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
+        QVector2D _q_arg1 = qscriptvalue_cast<QVector2D>(context->argument(1));
+        float _q_result = _q_self->distanceToLine(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
-    if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->length();
+    if (context->argumentCount() == 1) {
+        QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
+        float _q_result = _q_self->distanceToPoint(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->lengthSquared();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        bool _q_result = _q_self->isNull();
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
+    if (context->argumentCount() == 0) {
+        float _q_result = _q_self->length();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 0) {
+        float _q_result = _q_self->lengthSquared();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 0) {
         _q_self->normalize();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 0) {
         QVector2D _q_result = _q_self->normalized();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 5:
-    if (context->argumentCount() == 1) {
-        QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
-        QVector2D _q_result = _q_self->operator+=(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 6:
-    if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        QVector2D _q_result = _q_self->operator/=(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -191,26 +198,42 @@ static QScriptValue qtscript_QVector2D_prototype_call(QScriptContext *context, Q
     case 7:
     if (context->argumentCount() == 1) {
         QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
-        bool _q_result = operator==(*_q_self, _q_arg0);
-        return QScriptValue(context->engine(), _q_result);
+        QVector2D _q_result = _q_self->operator+=(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 8:
     if (context->argumentCount() == 1) {
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        QVector2D _q_result = _q_self->operator/=(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 1) {
+        QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
+        bool _q_result = operator==(*_q_self, _q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
+    if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QVector2D>() == context->argument(0).toVariant().userType())) {
             QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
             QVector2D _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
-            qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        } else if (context->argument(0).isNumber()) {
+            float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
             QVector2D _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
         }
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 1) {
         QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
         QVector2D _q_result = _q_self->operator-=(_q_arg0);
@@ -218,7 +241,7 @@ static QScriptValue qtscript_QVector2D_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -226,51 +249,51 @@ static QScriptValue qtscript_QVector2D_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->setX(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->setY(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 0) {
         QPoint _q_result = _q_self->toPoint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 0) {
         QPointF _q_result = _q_self->toPointF();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 0) {
         QVector3D _q_result = _q_self->toVector3D();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 0) {
         QVector4D _q_result = _q_self->toVector4D();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -278,21 +301,21 @@ static QScriptValue qtscript_QVector2D_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->x();
+        float _q_result = _q_self->x();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->y();
+        float _q_result = _q_self->y();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20: {
+    case 22: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -344,8 +367,8 @@ static QScriptValue qtscript_QVector2D_static_call(QScriptContext *context, QScr
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
         QVector2D _q_cpp_result(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
@@ -356,7 +379,7 @@ static QScriptValue qtscript_QVector2D_static_call(QScriptContext *context, QScr
     if (context->argumentCount() == 2) {
         QVector2D _q_arg0 = qscriptvalue_cast<QVector2D>(context->argument(0));
         QVector2D _q_arg1 = qscriptvalue_cast<QVector2D>(context->argument(1));
-        qreal _q_result = QVector2D::dotProduct(_q_arg0, _q_arg1);
+        float _q_result = QVector2D::dotProduct(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -373,7 +396,7 @@ QScriptValue qtscript_create_QVector2D_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QVector2D*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QVector2D*)0));
-    for (int i = 0; i < 21; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QVector2D_prototype_call, qtscript_QVector2D_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QVector2D_function_names[i+2]),

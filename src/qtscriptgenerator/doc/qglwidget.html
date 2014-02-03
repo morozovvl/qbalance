@@ -24,24 +24,31 @@
 <h3>Prototype Object Properties</h3>
 <p>The QGLWidget prototype object inherits properties from the <a href="qwidget.html">QWidget</a> prototype object and also has the following properties.</p>
 <ul>
-<li><div class="fn"/><b>unsigned int bindTexture(QImage image, unsigned int target, int format)</b></li>
+<li><div class="fn"/><b>bool autoBufferSwap()</b></li>
 <li><div class="fn"/><b>QGLColormap colormap()</b></li>
 <li><div class="fn"/><b>QGLContext context()</b></li>
-<li><div class="fn"/><b>void deleteTexture(unsigned int tx_id)</b></li>
 <li><div class="fn"/><b>void doneCurrent()</b></li>
 <li><div class="fn"/><b>bool doubleBuffer()</b></li>
-<li><div class="fn"/><b>void drawTexture(QPointF point, unsigned int textureId, unsigned int textureTarget)</b></li>
 <li><div class="fn"/><b>QGLFormat format()</b></li>
+<li><div class="fn"/><b>void glDraw()</b></li>
+<li><div class="fn"/><b>void glInit()</b></li>
 <li><div class="fn"/><b>QImage grabFrameBuffer(bool withAlpha)</b></li>
+<li><div class="fn"/><b>void initializeGL()</b></li>
+<li><div class="fn"/><b>void initializeOverlayGL()</b></li>
 <li><div class="fn"/><b>bool isSharing()</b></li>
 <li><div class="fn"/><b>bool isValid()</b></li>
 <li><div class="fn"/><b>void makeCurrent()</b></li>
 <li><div class="fn"/><b>void makeOverlayCurrent()</b></li>
 <li><div class="fn"/><b>QGLContext overlayContext()</b></li>
+<li><div class="fn"/><b>void paintGL()</b></li>
+<li><div class="fn"/><b>void paintOverlayGL()</b></li>
 <li><div class="fn"/><b>void qglClearColor(QColor c)</b></li>
 <li><div class="fn"/><b>void qglColor(QColor c)</b></li>
 <li><div class="fn"/><b>QPixmap renderPixmap(int w, int h, bool useContext)</b></li>
-<li><div class="fn"/><b>void renderText(double x, double y, double z, String str, QFont fnt, int listBase)</b></li>
+<li><div class="fn"/><b>void renderText(double x, double y, double z, String str, QFont fnt)</b></li>
+<li><div class="fn"/><b>void resizeGL(int w, int h)</b></li>
+<li><div class="fn"/><b>void resizeOverlayGL(int w, int h)</b></li>
+<li><div class="fn"/><b>void setAutoBufferSwap(bool on)</b></li>
 <li><div class="fn"/><b>void setColormap(QGLColormap map)</b></li>
 <li><div class="fn"/><b>void swapBuffers()</b></li>
 </ul>

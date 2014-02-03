@@ -14,6 +14,10 @@ public:
     QSize  actualSize(const QSize&  size, QIcon::Mode  mode, QIcon::State  state);
     void addFile(const QString&  fileName, const QSize&  size, QIcon::Mode  mode, QIcon::State  state);
     void addPixmap(const QPixmap&  pixmap, QIcon::Mode  mode, QIcon::State  state);
+    QList<QSize >  availableSizes(QIcon::Mode  mode = QIcon::Normal, QIcon::State  state = QIcon::Off) const;
+    QIconEngine*  clone() const;
+    QString  iconName() const;
+    QString  key() const;
     void paint(QPainter*  painter, const QRect&  rect, QIcon::Mode  mode, QIcon::State  state);
     QPixmap  pixmap(const QSize&  size, QIcon::Mode  mode, QIcon::State  state);
 

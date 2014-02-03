@@ -48,14 +48,6 @@ Documents::~Documents()
 }
 
 
-void Documents::show()
-{
-    QModelIndex index = form->getCurrentIndex();
-    form->restoreCurrentIndex(index);
-    Dictionary::show();
-}
-
-
 bool Documents::add()
 {
     QDate date = QDate().currentDate();
@@ -121,39 +113,14 @@ void Documents::setCurrentDocument(int strNum)
 }
 
 
-void Documents::query(QString filter)
+void Documents::query(QString)
 {
-    Q_UNUSED(filter)
-
-    // Чтобы не потерять текущий документ после обновления, запомним его номер, а потом поставим на него указатель записи
-    qulonglong currentDocId = getId();
-    QModelIndex index = form->getCurrentIndex();
-
     Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
                                                                                                        .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
                                                                                                        .arg(TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy"))
                                                                                                        .arg(db->getObjectNameCom("документы.авто"))
                                                                                                        .arg(db->getObjectNameCom("документы.опер"))
                                                                                                        .arg(QString::number(operNumber)));
-    if (tableModel->rowCount() > 0)
-    {
-        // Восстановим указатель на текущую запись
-        if (tableModel->rowCount() > 0 && currentDocId > 0)
-        {
-            for (int i = 0; i < tableModel->rowCount(); i++)
-            {
-                if (getId(i) == currentDocId)
-                {
-                    form->selectRow(i);             // Текущая запись найдена
-                    return;                         // Перейдем на нее
-                }
-            }
-        }
-        if (index.row() > tableModel->rowCount() - 1)       // Если мы стояли на последней записи, но она теперь удалена
-            form->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
-        else
-            form->restoreCurrentIndex(index);   // Иначе останемся стоять на том же месте на экране
-    }
 }
 
 
@@ -199,6 +166,7 @@ void Documents::setOrderClause()
 
 void Documents::setValue(QString n, QVariant value)
 {
+
     for (int i = 0; i < columnsProperties.count(); i++)
     {
         if (n.toUpper() == columnsProperties.at(i).column)
@@ -311,3 +279,4 @@ bool Documents::setTableModel(int)
     }
     return false;
 }
+

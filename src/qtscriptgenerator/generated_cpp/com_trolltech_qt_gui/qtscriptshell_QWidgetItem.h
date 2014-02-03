@@ -11,6 +11,7 @@ public:
     QtScriptShell_QWidgetItem(QWidget*  w);
     ~QtScriptShell_QWidgetItem();
 
+    QSizePolicy::ControlTypes  controlTypes() const;
     Qt::Orientations  expandingDirections() const;
     QRect  geometry() const;
     bool  hasHeightForWidth() const;

@@ -12,13 +12,13 @@
 <p>Inherits <a href="qinputevent.html">QInputEvent</a>.</p>
 <h3>Constructor</h3>
 <ul>
-<li><div class="fn"/><b>void QMouseEvent(Type type, QPoint pos, MouseButton button, MouseButtons buttons, KeyboardModifiers modifiers)</b></li>
-<li><div class="fn"/><b>void QMouseEvent(Type type, QPoint pos, QPoint globalPos, MouseButton button, MouseButtons buttons, KeyboardModifiers modifiers)</b></li>
+<li><div class="fn"/><b>void QMouseEvent(Type type, QPointF localPos, MouseButton button, MouseButtons buttons, KeyboardModifiers modifiers)</b></li>
+<li><div class="fn"/><b>void QMouseEvent(Type type, QPointF localPos, QPointF screenPos, MouseButton button, MouseButtons buttons, KeyboardModifiers modifiers)</b></li>
+<li><div class="fn"/><b>void QMouseEvent(Type type, QPointF localPos, QPointF windowPos, QPointF screenPos, MouseButton button, MouseButtons buttons, KeyboardModifiers modifiers)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QMouseEvent prototype object</li>
-<li><div class="fn"/><b>QMouseEvent createExtendedMouseEvent(Type type, QPointF pos, QPoint globalPos, MouseButton button, MouseButtons buttons, KeyboardModifiers modifiers)</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QMouseEvent prototype object inherits properties from the <a href="qinputevent.html">QInputEvent</a> prototype object and also has the following properties.</p>
@@ -28,9 +28,10 @@
 <li><div class="fn"/><b>QPoint globalPos()</b></li>
 <li><div class="fn"/><b>int globalX()</b></li>
 <li><div class="fn"/><b>int globalY()</b></li>
-<li><div class="fn"/><b>bool hasExtendedInfo()</b></li>
+<li><div class="fn"/><b>QPointF localPos()</b></li>
 <li><div class="fn"/><b>QPoint pos()</b></li>
-<li><div class="fn"/><b>QPointF posF()</b></li>
+<li><div class="fn"/><b>QPointF screenPos()</b></li>
+<li><div class="fn"/><b>QPointF windowPos()</b></li>
 <li><div class="fn"/><b>int x()</b></li>
 <li><div class="fn"/><b>int y()</b></li>
 </ul>

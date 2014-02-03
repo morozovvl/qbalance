@@ -72,6 +72,7 @@ public:
     void eventAfterRowChanged();
     void eventPhotoLoaded();
     virtual QString preparePictureUrl(Essence*);
+    virtual QString getFilter();
     void eventBarCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:

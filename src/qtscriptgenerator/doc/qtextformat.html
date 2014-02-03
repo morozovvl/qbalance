@@ -33,6 +33,8 @@
 <li><b>TextIndent = 0x1034</b></li>
 <li><b>TabPositions = 0x1035</b></li>
 <li><b>BlockIndent = 0x1040</b></li>
+<li><b>LineHeight = 0x1048</b></li>
+<li><b>LineHeightType = 0x1049</b></li>
 <li><b>BlockNonBreakableLines = 0x1050</b></li>
 <li><b>BlockTrailingHorizontalRulerWidth = 0x1060</b></li>
 <li><b>FirstFontProperty = 0x1FE0</b></li>
@@ -41,6 +43,7 @@
 <li><b>FontStyleHint = 0x1FE3</b></li>
 <li><b>FontStyleStrategy = 0x1FE4</b></li>
 <li><b>FontKerning = 0x1FE5</b></li>
+<li><b>FontHintingPreference = 0x1FE6</b></li>
 <li><b>FontFamily = 0x2000</b></li>
 <li><b>FontPointSize = 0x2001</b></li>
 <li><b>FontSizeAdjustment = 0x2002</b></li>
@@ -59,9 +62,13 @@
 <li><b>IsAnchor = 0x2030</b></li>
 <li><b>AnchorHref = 0x2031</b></li>
 <li><b>AnchorName = 0x2032</b></li>
+<li><b>FontLetterSpacingType = 0x2033</b></li>
+<li><b>FontStretch = 0x2034</b></li>
 <li><b>ObjectType = 0x2f00</b></li>
 <li><b>ListStyle = 0x3000</b></li>
 <li><b>ListIndent = 0x3001</b></li>
+<li><b>ListNumberPrefix = 0x3002</b></li>
+<li><b>ListNumberSuffix = 0x3003</b></li>
 <li><b>FrameBorder = 0x4000</b></li>
 <li><b>FrameMargin = 0x4001</b></li>
 <li><b>FramePadding = 0x4002</b></li>
@@ -91,14 +98,6 @@
 <li><b>PageBreakPolicy = 0x7000</b></li>
 <li><b>UserProperty = 0x100000</b></li>
 <li><b>Property( value )</b></li>
-<li><b>InvalidFormat = -1</b></li>
-<li><b>BlockFormat = 1</b></li>
-<li><b>CharFormat = 2</b></li>
-<li><b>ListFormat = 3</b></li>
-<li><b>TableFormat = 4</b></li>
-<li><b>FrameFormat = 5</b></li>
-<li><b>UserFormat = 100</b></li>
-<li><b>FormatType( value )</b></li>
 <li><b>NoObject</b></li>
 <li><b>ImageObject</b></li>
 <li><b>TableObject</b></li>
@@ -110,6 +109,14 @@
 <li><b>PageBreak_AlwaysAfter = 0x010</b></li>
 <li><b>PageBreakFlag( value )</b></li>
 <li><b>PageBreakFlags( value1, value2, ... )</b></li>
+<li><b>InvalidFormat = -1</b></li>
+<li><b>BlockFormat = 1</b></li>
+<li><b>CharFormat = 2</b></li>
+<li><b>ListFormat = 3</b></li>
+<li><b>TableFormat = 4</b></li>
+<li><b>FrameFormat = 5</b></li>
+<li><b>UserFormat = 100</b></li>
+<li><b>FormatType( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -152,6 +159,7 @@
 <li><div class="fn"/><b>void setObjectType(int type)</b></li>
 <li><div class="fn"/><b>void setProperty(int propertyId, Object value)</b></li>
 <li><div class="fn"/><b>String stringProperty(int propertyId)</b></li>
+<li><div class="fn"/><b>void swap(QTextFormat other)</b></li>
 <li><div class="fn"/><b>QTextBlockFormat toBlockFormat()</b></li>
 <li><div class="fn"/><b>QTextCharFormat toCharFormat()</b></li>
 <li><div class="fn"/><b>QTextFrameFormat toFrameFormat()</b></li>

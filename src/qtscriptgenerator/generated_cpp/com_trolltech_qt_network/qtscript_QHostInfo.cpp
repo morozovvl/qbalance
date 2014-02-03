@@ -89,7 +89,6 @@ static QScriptValue qtscript_QHostInfo_throw_ambiguity_error_helper(
         .arg(functionName).arg(fullSignatures.join(QLatin1String("\n"))));
 }
 
-Q_DECLARE_METATYPE(QHostInfo)
 Q_DECLARE_METATYPE(QHostInfo*)
 Q_DECLARE_METATYPE(QHostInfo::HostInfoError)
 Q_DECLARE_METATYPE(QHostAddress)
@@ -357,11 +356,11 @@ static QScriptValue qtscript_QHostInfo_static_call(QScriptContext *context, QScr
         QString _q_arg0 = context->argument(0).toString();
         QObject* _q_arg1 = context->argument(1).toQObject();
 
-          // TEMPLATE - core.convert_string_arg_to_char* - START
+					// TEMPLATE - core.convert_string_arg_to_char* - START
           QByteArray tmp__q_arg2 = context->argument(2).toString().toLatin1();
           const char * _q_arg2 = tmp__q_arg2.constData();
     // TEMPLATE - core.convert_string_arg_to_char* - END
-                int _q_result = QHostInfo::lookupHost(_q_arg0, _q_arg1, _q_arg2);
+				        int _q_result = QHostInfo::lookupHost(_q_arg0, _q_arg1, _q_arg2);
         return QScriptValue(context->engine(), _q_result);
     }
     break;

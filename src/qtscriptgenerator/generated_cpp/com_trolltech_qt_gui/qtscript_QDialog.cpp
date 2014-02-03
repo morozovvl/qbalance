@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qdialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QDialog.h"
 
@@ -43,6 +44,7 @@ static const char * const qtscript_QDialog_function_names[] = {
     "QDialog"
     // static
     // prototype
+    , "adjustPosition"
     , "minimumSizeHint"
     , "result"
     , "setResult"
@@ -55,6 +57,7 @@ static const char * const qtscript_QDialog_function_signatures[] = {
     "QWidget parent, WindowFlags f"
     // static
     // prototype
+    , "QWidget arg__1"
     , ""
     , ""
     , "int r"
@@ -67,12 +70,23 @@ static const int qtscript_QDialog_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
     , 0
     , 0
     , 1
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDialog : public QDialog
+{
+    friend QScriptValue qtscript_QDialog_adjustPosition(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QDialog_throw_ambiguity_error_helper(
@@ -89,6 +103,7 @@ static QScriptValue qtscript_QDialog_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QDialog*)
 Q_DECLARE_METATYPE(QtScriptShell_QDialog*)
 Q_DECLARE_METATYPE(QDialog::DialogCode)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -186,11 +201,11 @@ static QScriptValue qtscript_QDialog_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDialog* _q_self = qscriptvalue_cast<QDialog*>(context->thisObject());
+    qtscript_QDialog* _q_self = reinterpret_cast<qtscript_QDialog*>(qscriptvalue_cast<QDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDialog.%0(): this object is not a QDialog")
@@ -199,20 +214,28 @@ static QScriptValue qtscript_QDialog_prototype_call(QScriptContext *context, QSc
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        _q_self->adjustPosition(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->result();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setResult(_q_arg0);
@@ -220,7 +243,7 @@ static QScriptValue qtscript_QDialog_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setVisible(_q_arg0);
@@ -228,14 +251,14 @@ static QScriptValue qtscript_QDialog_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5: {
+    case 6: {
     QString result = QString::fromLatin1("QDialog");
     return QScriptValue(context->engine(), result);
     }
@@ -302,7 +325,7 @@ QScriptValue qtscript_create_QDialog_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QDialog*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDialog*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDialog_prototype_call, qtscript_QDialog_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QDialog_function_names[i+1]),

@@ -17,6 +17,7 @@
 #include <qpainter.h>
 #include <qsize.h>
 #include <qstyleoption.h>
+#include <qvector.h>
 #include <qwidget.h>
 
 #include "qtscriptshell_QAbstractItemDelegate.h"
@@ -26,8 +27,11 @@ static const char * const qtscript_QAbstractItemDelegate_function_names[] = {
     // static
     // prototype
     , "createEditor"
+    , "destroyEditor"
     , "editorEvent"
+    , "helpEvent"
     , "paint"
+    , "paintingRoles"
     , "setEditorData"
     , "setModelData"
     , "sizeHint"
@@ -40,8 +44,11 @@ static const char * const qtscript_QAbstractItemDelegate_function_signatures[] =
     // static
     // prototype
     , "QWidget parent, QStyleOptionViewItem option, QModelIndex index"
+    , "QWidget editor, QModelIndex index"
     , "QEvent event, QAbstractItemModel model, QStyleOptionViewItem option, QModelIndex index"
+    , "QHelpEvent event, QAbstractItemView view, QStyleOptionViewItem option, QModelIndex index"
     , "QPainter painter, QStyleOptionViewItem option, QModelIndex index"
+    , ""
     , "QWidget editor, QModelIndex index"
     , "QWidget editor, QAbstractItemModel model, QModelIndex index"
     , "QStyleOptionViewItem option, QModelIndex index"
@@ -54,13 +61,25 @@ static const int qtscript_QAbstractItemDelegate_function_lengths[] = {
     // static
     // prototype
     , 3
+    , 2
+    , 4
     , 4
     , 3
+    , 0
     , 2
     , 3
     , 2
     , 3
     , 0
+};
+
+static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractItemDelegate : public QAbstractItemDelegate
+{
+
+    friend QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractItemDelegate_throw_ambiguity_error_helper(
@@ -77,11 +96,14 @@ static QScriptValue qtscript_QAbstractItemDelegate_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QAbstractItemDelegate*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractItemDelegate*)
 Q_DECLARE_METATYPE(QAbstractItemDelegate::EndEditHint)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QStyleOptionViewItem)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
+Q_DECLARE_METATYPE(QHelpEvent*)
+Q_DECLARE_METATYPE(QAbstractItemView*)
 Q_DECLARE_METATYPE(QPainter*)
+Q_DECLARE_METATYPE(QVector<int>)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -184,11 +206,11 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 7;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractItemDelegate* _q_self = qscriptvalue_cast<QAbstractItemDelegate*>(context->thisObject());
+    qtscript_QAbstractItemDelegate* _q_self = reinterpret_cast<qtscript_QAbstractItemDelegate*>(qscriptvalue_cast<QAbstractItemDelegate*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractItemDelegate.%0(): this object is not a QAbstractItemDelegate")
@@ -207,6 +229,15 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     break;
 
     case 1:
+    if (context->argumentCount() == 2) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
+        _q_self->destroyEditor(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 4) {
         QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
         QAbstractItemModel* _q_arg1 = qscriptvalue_cast<QAbstractItemModel*>(context->argument(1));
@@ -217,7 +248,18 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     }
     break;
 
-    case 2:
+    case 3:
+    if (context->argumentCount() == 4) {
+        QHelpEvent* _q_arg0 = qscriptvalue_cast<QHelpEvent*>(context->argument(0));
+        QAbstractItemView* _q_arg1 = qscriptvalue_cast<QAbstractItemView*>(context->argument(1));
+        QStyleOptionViewItem _q_arg2 = qscriptvalue_cast<QStyleOptionViewItem>(context->argument(2));
+        QModelIndex _q_arg3 = qscriptvalue_cast<QModelIndex>(context->argument(3));
+        bool _q_result = _q_self->helpEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 3) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         QStyleOptionViewItem _q_arg1 = qscriptvalue_cast<QStyleOptionViewItem>(context->argument(1));
@@ -227,7 +269,14 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     }
     break;
 
-    case 3:
+    case 5:
+    if (context->argumentCount() == 0) {
+        QVector<int> _q_result = _q_self->paintingRoles();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 2) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -236,7 +285,7 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     }
     break;
 
-    case 4:
+    case 7:
     if (context->argumentCount() == 3) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         QAbstractItemModel* _q_arg1 = qscriptvalue_cast<QAbstractItemModel*>(context->argument(1));
@@ -246,7 +295,7 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     }
     break;
 
-    case 5:
+    case 8:
     if (context->argumentCount() == 2) {
         QStyleOptionViewItem _q_arg0 = qscriptvalue_cast<QStyleOptionViewItem>(context->argument(0));
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -255,7 +304,7 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     }
     break;
 
-    case 6:
+    case 9:
     if (context->argumentCount() == 3) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         QStyleOptionViewItem _q_arg1 = qscriptvalue_cast<QStyleOptionViewItem>(context->argument(1));
@@ -265,7 +314,7 @@ static QScriptValue qtscript_QAbstractItemDelegate_prototype_call(QScriptContext
     }
     break;
 
-    case 7: {
+    case 10: {
     QString result = QString::fromLatin1("QAbstractItemDelegate");
     return QScriptValue(context->engine(), result);
     }
@@ -325,7 +374,7 @@ QScriptValue qtscript_create_QAbstractItemDelegate_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractItemDelegate*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractItemDelegate*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractItemDelegate_prototype_call, qtscript_QAbstractItemDelegate_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractItemDelegate_function_names[i+1]),

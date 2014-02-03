@@ -23,6 +23,9 @@ static const char * const qtscript_QAbstractAnimation_function_names[] = {
     , "currentLoopTime"
     , "group"
     , "totalDuration"
+    , "updateCurrentTime"
+    , "updateDirection"
+    , "updateState"
     , "toString"
 };
 
@@ -33,6 +36,9 @@ static const char * const qtscript_QAbstractAnimation_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "int currentTime"
+    , "Direction direction"
+    , "State newState, State oldState"
 ""
 };
 
@@ -43,7 +49,22 @@ static const int qtscript_QAbstractAnimation_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
+    , 1
+    , 2
     , 0
+};
+
+static QScriptValue qtscript_QAbstractAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractAnimation : public QAbstractAnimation
+{
+    friend QScriptValue qtscript_QAbstractAnimation_updateCurrentTime(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractAnimation_updateDirection(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractAnimation_updateState(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractAnimation_throw_ambiguity_error_helper(
@@ -65,8 +86,8 @@ static const QMetaObject *qtscript_QAbstractAnimation_metaObject()
 Q_DECLARE_METATYPE(QAbstractAnimation*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractAnimation*)
 Q_DECLARE_METATYPE(QAbstractAnimation::Direction)
-Q_DECLARE_METATYPE(QAbstractAnimation::DeletionPolicy)
 Q_DECLARE_METATYPE(QAbstractAnimation::State)
+Q_DECLARE_METATYPE(QAbstractAnimation::DeletionPolicy)
 Q_DECLARE_METATYPE(QAnimationGroup*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -157,73 +178,6 @@ static QScriptValue qtscript_create_QAbstractAnimation_Direction_class(QScriptEn
 }
 
 //
-// QAbstractAnimation::DeletionPolicy
-//
-
-static const QAbstractAnimation::DeletionPolicy qtscript_QAbstractAnimation_DeletionPolicy_values[] = {
-    QAbstractAnimation::KeepWhenStopped
-    , QAbstractAnimation::DeleteWhenStopped
-};
-
-static const char * const qtscript_QAbstractAnimation_DeletionPolicy_keys[] = {
-    "KeepWhenStopped"
-    , "DeleteWhenStopped"
-};
-
-static QString qtscript_QAbstractAnimation_DeletionPolicy_toStringHelper(QAbstractAnimation::DeletionPolicy value)
-{
-    if ((value >= QAbstractAnimation::KeepWhenStopped) && (value <= QAbstractAnimation::DeleteWhenStopped))
-        return qtscript_QAbstractAnimation_DeletionPolicy_keys[static_cast<int>(value)-static_cast<int>(QAbstractAnimation::KeepWhenStopped)];
-    return QString();
-}
-
-static QScriptValue qtscript_QAbstractAnimation_DeletionPolicy_toScriptValue(QScriptEngine *engine, const QAbstractAnimation::DeletionPolicy &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractAnimation"));
-    return clazz.property(qtscript_QAbstractAnimation_DeletionPolicy_toStringHelper(value));
-}
-
-static void qtscript_QAbstractAnimation_DeletionPolicy_fromScriptValue(const QScriptValue &value, QAbstractAnimation::DeletionPolicy &out)
-{
-    out = qvariant_cast<QAbstractAnimation::DeletionPolicy>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QAbstractAnimation_DeletionPolicy(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QAbstractAnimation::KeepWhenStopped) && (arg <= QAbstractAnimation::DeleteWhenStopped))
-        return qScriptValueFromValue(engine,  static_cast<QAbstractAnimation::DeletionPolicy>(arg));
-    return context->throwError(QString::fromLatin1("DeletionPolicy(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QAbstractAnimation_DeletionPolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractAnimation::DeletionPolicy value = qscriptvalue_cast<QAbstractAnimation::DeletionPolicy>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QAbstractAnimation_DeletionPolicy_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractAnimation::DeletionPolicy value = qscriptvalue_cast<QAbstractAnimation::DeletionPolicy>(context->thisObject());
-    return QScriptValue(engine, qtscript_QAbstractAnimation_DeletionPolicy_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QAbstractAnimation_DeletionPolicy_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QAbstractAnimation_DeletionPolicy,
-        qtscript_QAbstractAnimation_DeletionPolicy_valueOf, qtscript_QAbstractAnimation_DeletionPolicy_toString);
-    qScriptRegisterMetaType<QAbstractAnimation::DeletionPolicy>(engine, qtscript_QAbstractAnimation_DeletionPolicy_toScriptValue,
-        qtscript_QAbstractAnimation_DeletionPolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractAnimation_DeletionPolicy_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QAbstractAnimation_DeletionPolicy_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QAbstractAnimation::State
 //
 
@@ -299,6 +253,73 @@ static QScriptValue qtscript_create_QAbstractAnimation_State_class(QScriptEngine
 }
 
 //
+// QAbstractAnimation::DeletionPolicy
+//
+
+static const QAbstractAnimation::DeletionPolicy qtscript_QAbstractAnimation_DeletionPolicy_values[] = {
+    QAbstractAnimation::KeepWhenStopped
+    , QAbstractAnimation::DeleteWhenStopped
+};
+
+static const char * const qtscript_QAbstractAnimation_DeletionPolicy_keys[] = {
+    "KeepWhenStopped"
+    , "DeleteWhenStopped"
+};
+
+static QString qtscript_QAbstractAnimation_DeletionPolicy_toStringHelper(QAbstractAnimation::DeletionPolicy value)
+{
+    if ((value >= QAbstractAnimation::KeepWhenStopped) && (value <= QAbstractAnimation::DeleteWhenStopped))
+        return qtscript_QAbstractAnimation_DeletionPolicy_keys[static_cast<int>(value)-static_cast<int>(QAbstractAnimation::KeepWhenStopped)];
+    return QString();
+}
+
+static QScriptValue qtscript_QAbstractAnimation_DeletionPolicy_toScriptValue(QScriptEngine *engine, const QAbstractAnimation::DeletionPolicy &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractAnimation"));
+    return clazz.property(qtscript_QAbstractAnimation_DeletionPolicy_toStringHelper(value));
+}
+
+static void qtscript_QAbstractAnimation_DeletionPolicy_fromScriptValue(const QScriptValue &value, QAbstractAnimation::DeletionPolicy &out)
+{
+    out = qvariant_cast<QAbstractAnimation::DeletionPolicy>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QAbstractAnimation_DeletionPolicy(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QAbstractAnimation::KeepWhenStopped) && (arg <= QAbstractAnimation::DeleteWhenStopped))
+        return qScriptValueFromValue(engine,  static_cast<QAbstractAnimation::DeletionPolicy>(arg));
+    return context->throwError(QString::fromLatin1("DeletionPolicy(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QAbstractAnimation_DeletionPolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractAnimation::DeletionPolicy value = qscriptvalue_cast<QAbstractAnimation::DeletionPolicy>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QAbstractAnimation_DeletionPolicy_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractAnimation::DeletionPolicy value = qscriptvalue_cast<QAbstractAnimation::DeletionPolicy>(context->thisObject());
+    return QScriptValue(engine, qtscript_QAbstractAnimation_DeletionPolicy_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QAbstractAnimation_DeletionPolicy_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QAbstractAnimation_DeletionPolicy,
+        qtscript_QAbstractAnimation_DeletionPolicy_valueOf, qtscript_QAbstractAnimation_DeletionPolicy_toString);
+    qScriptRegisterMetaType<QAbstractAnimation::DeletionPolicy>(engine, qtscript_QAbstractAnimation_DeletionPolicy_toScriptValue,
+        qtscript_QAbstractAnimation_DeletionPolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractAnimation_DeletionPolicy_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QAbstractAnimation_DeletionPolicy_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QAbstractAnimation
 //
 
@@ -312,11 +333,11 @@ static QScriptValue qtscript_QAbstractAnimation_prototype_call(QScriptContext *c
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractAnimation* _q_self = qscriptvalue_cast<QAbstractAnimation*>(context->thisObject());
+    qtscript_QAbstractAnimation* _q_self = reinterpret_cast<qtscript_QAbstractAnimation*>(qscriptvalue_cast<QAbstractAnimation*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractAnimation.%0(): this object is not a QAbstractAnimation")
@@ -345,7 +366,32 @@ static QScriptValue qtscript_QAbstractAnimation_prototype_call(QScriptContext *c
     }
     break;
 
-    case 3: {
+    case 3:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->updateCurrentTime(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
+        QAbstractAnimation::Direction _q_arg0 = qscriptvalue_cast<QAbstractAnimation::Direction>(context->argument(0));
+        _q_self->updateDirection(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 2) {
+        QAbstractAnimation::State _q_arg0 = qscriptvalue_cast<QAbstractAnimation::State>(context->argument(0));
+        QAbstractAnimation::State _q_arg1 = qscriptvalue_cast<QAbstractAnimation::State>(context->argument(1));
+        _q_self->updateState(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6: {
     QString result = QString::fromLatin1("QAbstractAnimation");
     return QScriptValue(context->engine(), result);
     }
@@ -405,7 +451,7 @@ QScriptValue qtscript_create_QAbstractAnimation_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractAnimation*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractAnimation*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractAnimation_prototype_call, qtscript_QAbstractAnimation_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractAnimation_function_names[i+1]),
@@ -420,9 +466,9 @@ QScriptValue qtscript_create_QAbstractAnimation_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("Direction"),
         qtscript_create_QAbstractAnimation_Direction_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("DeletionPolicy"),
-        qtscript_create_QAbstractAnimation_DeletionPolicy_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("State"),
         qtscript_create_QAbstractAnimation_State_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("DeletionPolicy"),
+        qtscript_create_QAbstractAnimation_DeletionPolicy_class(engine, ctor));
     return ctor;
 }

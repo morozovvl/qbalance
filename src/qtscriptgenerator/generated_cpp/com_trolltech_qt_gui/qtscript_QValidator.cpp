@@ -49,6 +49,15 @@ static const int qtscript_QValidator_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QValidator_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QValidator : public QValidator
+{
+
+    friend QScriptValue qtscript_QValidator_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QValidator_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -165,7 +174,7 @@ static QScriptValue qtscript_QValidator_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QValidator* _q_self = qscriptvalue_cast<QValidator*>(context->thisObject());
+    qtscript_QValidator* _q_self = reinterpret_cast<qtscript_QValidator*>(qscriptvalue_cast<QValidator*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QValidator.%0(): this object is not a QValidator")

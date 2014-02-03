@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qsplitter.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qtextstream.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QSplitter.h"
 
@@ -45,18 +46,22 @@ static const char * const qtscript_QSplitter_function_names[] = {
     // static
     // prototype
     , "addWidget"
+    , "closestLegalPosition"
     , "count"
+    , "createHandle"
     , "getRange"
     , "handle"
     , "indexOf"
     , "insertWidget"
     , "isCollapsible"
     , "minimumSizeHint"
+    , "moveSplitter"
     , "readFrom"
     , "refresh"
     , "restoreState"
     , "saveState"
     , "setCollapsible"
+    , "setRubberBand"
     , "setSizes"
     , "setStretchFactor"
     , "sizes"
@@ -70,6 +75,8 @@ static const char * const qtscript_QSplitter_function_signatures[] = {
     // static
     // prototype
     , "QWidget widget"
+    , "int arg__1, int arg__2"
+    , ""
     , ""
     , "int index, int arg__2, int arg__3"
     , "int index"
@@ -77,11 +84,13 @@ static const char * const qtscript_QSplitter_function_signatures[] = {
     , "int index, QWidget widget"
     , "int index"
     , ""
+    , "int pos, int index"
     , "QTextStream arg__1"
     , ""
     , "QByteArray state"
     , ""
     , "int index, bool arg__2"
+    , "int position"
     , "List list"
     , "int index, int stretch"
     , ""
@@ -95,6 +104,8 @@ static const int qtscript_QSplitter_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 2
+    , 0
     , 0
     , 3
     , 1
@@ -102,17 +113,32 @@ static const int qtscript_QSplitter_function_lengths[] = {
     , 2
     , 1
     , 0
+    , 2
     , 1
     , 0
     , 1
     , 0
     , 2
     , 1
+    , 1
     , 2
     , 0
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSplitter : public QSplitter
+{
+    friend QScriptValue qtscript_QSplitter_closestLegalPosition(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSplitter_createHandle(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSplitter_moveSplitter(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSplitter_setRubberBand(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSplitter_throw_ambiguity_error_helper(
@@ -128,8 +154,9 @@ static QScriptValue qtscript_QSplitter_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QSplitter*)
 Q_DECLARE_METATYPE(QtScriptShell_QSplitter*)
-Q_DECLARE_METATYPE(int*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QSplitterHandle*)
+Q_DECLARE_METATYPE(int*)
 Q_DECLARE_METATYPE(QTextStream*)
 Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(Qt::Orientation)
@@ -149,11 +176,11 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 18;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSplitter* _q_self = qscriptvalue_cast<QSplitter*>(context->thisObject());
+    qtscript_QSplitter* _q_self = reinterpret_cast<qtscript_QSplitter*>(qscriptvalue_cast<QSplitter*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSplitter.%0(): this object is not a QSplitter")
@@ -170,13 +197,29 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     break;
 
     case 1:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        int _q_result = _q_self->closestLegalPosition(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->count();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
+    if (context->argumentCount() == 0) {
+        QSplitterHandle* _q_result = _q_self->createHandle();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int* _q_arg1 = qscriptvalue_cast<int*>(context->argument(1));
@@ -186,7 +229,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QSplitterHandle* _q_result = _q_self->handle(_q_arg0);
@@ -194,7 +237,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         int _q_result = _q_self->indexOf(_q_arg0);
@@ -202,7 +245,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -211,7 +254,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->isCollapsible(_q_arg0);
@@ -219,14 +262,23 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 10:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->moveSplitter(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 1) {
         QTextStream* _q_arg0 = qscriptvalue_cast<QTextStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -234,14 +286,14 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 9:
+    case 12:
     if (context->argumentCount() == 0) {
         _q_self->refresh();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 10:
+    case 13:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         bool _q_result = _q_self->restoreState(_q_arg0);
@@ -249,14 +301,14 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 11:
+    case 14:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->saveState();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 15:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -265,7 +317,15 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 13:
+    case 16:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->setRubberBand(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 17:
     if (context->argumentCount() == 1) {
         QList<int> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -274,7 +334,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 14:
+    case 18:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -283,14 +343,14 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 15:
+    case 19:
     if (context->argumentCount() == 0) {
         QList<int> _q_result = _q_self->sizes();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 20:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_result = _q_self->widget(_q_arg0);
@@ -298,7 +358,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 17:
+    case 21:
     if (context->argumentCount() == 1) {
         QTextStream* _q_arg0 = qscriptvalue_cast<QTextStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -306,7 +366,7 @@ static QScriptValue qtscript_QSplitter_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 18: {
+    case 22: {
     QString result = QString::fromLatin1("QSplitter");
     return QScriptValue(context->engine(), result);
     }
@@ -381,7 +441,7 @@ QScriptValue qtscript_create_QSplitter_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSplitter*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSplitter*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QFrame*>()));
-    for (int i = 0; i < 19; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSplitter_prototype_call, qtscript_QSplitter_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSplitter_function_names[i+1]),

@@ -7,6 +7,7 @@
 
 #include <qsvgwidget.h>
 #include <QByteArray>
+#include <QIconEngine>
 #include <QSize>
 #include <QSvgRenderer>
 #include <QVariant>
@@ -19,8 +20,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -31,6 +30,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -40,6 +40,7 @@
 #include <qsvgrenderer.h>
 #include <qsvgwidget.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QSvgWidget.h"
 
@@ -70,6 +71,15 @@ static const int qtscript_QSvgWidget_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSvgWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSvgWidget : public QSvgWidget
+{
+
+    friend QScriptValue qtscript_QSvgWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSvgWidget_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -84,6 +94,7 @@ static QScriptValue qtscript_QSvgWidget_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QSvgWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QSvgWidget*)
 Q_DECLARE_METATYPE(QSvgRenderer*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QSvgWidget
@@ -103,7 +114,7 @@ static QScriptValue qtscript_QSvgWidget_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSvgWidget* _q_self = qscriptvalue_cast<QSvgWidget*>(context->thisObject());
+    qtscript_QSvgWidget* _q_self = reinterpret_cast<qtscript_QSvgWidget*>(qscriptvalue_cast<QSvgWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSvgWidget.%0(): this object is not a QSvgWidget")

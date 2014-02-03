@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qsplitter.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsplitter.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QSplitterHandle.h"
 
@@ -43,6 +44,8 @@ static const char * const qtscript_QSplitterHandle_function_names[] = {
     "QSplitterHandle"
     // static
     // prototype
+    , "closestLegalPosition"
+    , "moveSplitter"
     , "opaqueResize"
     , "orientation"
     , "setOrientation"
@@ -55,6 +58,8 @@ static const char * const qtscript_QSplitterHandle_function_signatures[] = {
     "Orientation o, QSplitter parent"
     // static
     // prototype
+    , "int p"
+    , "int p"
     , ""
     , ""
     , "Orientation o"
@@ -67,12 +72,25 @@ static const int qtscript_QSplitterHandle_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
+    , 1
     , 0
     , 0
     , 1
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QSplitterHandle_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSplitterHandle : public QSplitterHandle
+{
+    friend QScriptValue qtscript_QSplitterHandle_closestLegalPosition(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSplitterHandle_moveSplitter(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSplitterHandle_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSplitterHandle_throw_ambiguity_error_helper(
@@ -90,6 +108,7 @@ Q_DECLARE_METATYPE(QSplitterHandle*)
 Q_DECLARE_METATYPE(QtScriptShell_QSplitterHandle*)
 Q_DECLARE_METATYPE(Qt::Orientation)
 Q_DECLARE_METATYPE(QSplitter*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QSplitterHandle
@@ -105,11 +124,11 @@ static QScriptValue qtscript_QSplitterHandle_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 7;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSplitterHandle* _q_self = qscriptvalue_cast<QSplitterHandle*>(context->thisObject());
+    qtscript_QSplitterHandle* _q_self = reinterpret_cast<qtscript_QSplitterHandle*>(qscriptvalue_cast<QSplitterHandle*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSplitterHandle.%0(): this object is not a QSplitterHandle")
@@ -118,20 +137,36 @@ static QScriptValue qtscript_QSplitterHandle_prototype_call(QScriptContext *cont
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_result = _q_self->closestLegalPosition(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->moveSplitter(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->opaqueResize();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 3:
     if (context->argumentCount() == 0) {
         Qt::Orientation _q_result = _q_self->orientation();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 4:
     if (context->argumentCount() == 1) {
         Qt::Orientation _q_arg0 = qscriptvalue_cast<Qt::Orientation>(context->argument(0));
         _q_self->setOrientation(_q_arg0);
@@ -139,21 +174,21 @@ static QScriptValue qtscript_QSplitterHandle_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 0) {
         QSplitter* _q_result = _q_self->splitter();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5: {
+    case 7: {
     QString result = QString::fromLatin1("QSplitterHandle");
     return QScriptValue(context->engine(), result);
     }
@@ -209,7 +244,7 @@ QScriptValue qtscript_create_QSplitterHandle_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSplitterHandle*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSplitterHandle*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 8; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSplitterHandle_prototype_call, qtscript_QSplitterHandle_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSplitterHandle_function_names[i+1]),

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qfocusframe.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QFocusFrame.h"
 
@@ -44,6 +45,7 @@ static const char * const qtscript_QFocusFrame_function_names[] = {
     "QFocusFrame"
     // static
     // prototype
+    , "initStyleOption"
     , "setWidget"
     , "widget"
     , "toString"
@@ -53,6 +55,7 @@ static const char * const qtscript_QFocusFrame_function_signatures[] = {
     "QWidget parent"
     // static
     // prototype
+    , "QStyleOption option"
     , "QWidget widget"
     , ""
 ""
@@ -63,8 +66,19 @@ static const int qtscript_QFocusFrame_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QFocusFrame_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFocusFrame : public QFocusFrame
+{
+    friend QScriptValue qtscript_QFocusFrame_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QFocusFrame_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QFocusFrame_throw_ambiguity_error_helper(
@@ -80,6 +94,8 @@ static QScriptValue qtscript_QFocusFrame_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QFocusFrame*)
 Q_DECLARE_METATYPE(QtScriptShell_QFocusFrame*)
+Q_DECLARE_METATYPE(QStyleOption*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QFocusFrame
@@ -95,11 +111,11 @@ static QScriptValue qtscript_QFocusFrame_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFocusFrame* _q_self = qscriptvalue_cast<QFocusFrame*>(context->thisObject());
+    qtscript_QFocusFrame* _q_self = reinterpret_cast<qtscript_QFocusFrame*>(qscriptvalue_cast<QFocusFrame*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFocusFrame.%0(): this object is not a QFocusFrame")
@@ -109,20 +125,28 @@ static QScriptValue qtscript_QFocusFrame_prototype_call(QScriptContext *context,
     switch (_id) {
     case 0:
     if (context->argumentCount() == 1) {
+        QStyleOption* _q_arg0 = qscriptvalue_cast<QStyleOption*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setWidget(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->widget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2: {
+    case 3: {
     QString result = QString::fromLatin1("QFocusFrame");
     return QScriptValue(context->engine(), result);
     }
@@ -182,7 +206,7 @@ QScriptValue qtscript_create_QFocusFrame_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QFocusFrame*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFocusFrame*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFocusFrame_prototype_call, qtscript_QFocusFrame_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFocusFrame_function_names[i+1]),

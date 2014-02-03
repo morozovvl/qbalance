@@ -6,11 +6,11 @@
 #include <qmetaobject.h>
 
 #include <qtreewidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qbrush.h>
 #include <qdatastream.h>
 #include <qfont.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qsize.h>
 #include <qstringlist.h>
@@ -32,6 +32,7 @@ static const char * const qtscript_QTreeWidgetItem_function_names[] = {
     , "clone"
     , "columnCount"
     , "data"
+    , "emitDataChanged"
     , "flags"
     , "font"
     , "foreground"
@@ -96,6 +97,7 @@ static const char * const qtscript_QTreeWidgetItem_function_signatures[] = {
     , ""
     , "int column, int role"
     , ""
+    , ""
     , "int column"
     , "int column"
     , "int column"
@@ -159,6 +161,7 @@ static const int qtscript_QTreeWidgetItem_function_lengths[] = {
     , 0
     , 2
     , 0
+    , 0
     , 1
     , 1
     , 1
@@ -207,6 +210,16 @@ static const int qtscript_QTreeWidgetItem_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTreeWidgetItem : public QTreeWidgetItem
+{
+    friend QScriptValue qtscript_QTreeWidgetItem_emitDataChanged(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTreeWidgetItem_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -220,8 +233,8 @@ static QScriptValue qtscript_QTreeWidgetItem_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTreeWidgetItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QTreeWidgetItem*)
-Q_DECLARE_METATYPE(QTreeWidgetItem::ItemType)
 Q_DECLARE_METATYPE(QTreeWidgetItem::ChildIndicatorPolicy)
+Q_DECLARE_METATYPE(QTreeWidgetItem::ItemType)
 Q_DECLARE_METATYPE(QList<QTreeWidgetItem*>)
 Q_DECLARE_METATYPE(Qt::CheckState)
 Q_DECLARE_METATYPE(QFlags<Qt::ItemFlag>)
@@ -241,6 +254,75 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QTreeWidgetItem::ChildIndicatorPolicy
+//
+
+static const QTreeWidgetItem::ChildIndicatorPolicy qtscript_QTreeWidgetItem_ChildIndicatorPolicy_values[] = {
+    QTreeWidgetItem::ShowIndicator
+    , QTreeWidgetItem::DontShowIndicator
+    , QTreeWidgetItem::DontShowIndicatorWhenChildless
+};
+
+static const char * const qtscript_QTreeWidgetItem_ChildIndicatorPolicy_keys[] = {
+    "ShowIndicator"
+    , "DontShowIndicator"
+    , "DontShowIndicatorWhenChildless"
+};
+
+static QString qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toStringHelper(QTreeWidgetItem::ChildIndicatorPolicy value)
+{
+    if ((value >= QTreeWidgetItem::ShowIndicator) && (value <= QTreeWidgetItem::DontShowIndicatorWhenChildless))
+        return qtscript_QTreeWidgetItem_ChildIndicatorPolicy_keys[static_cast<int>(value)-static_cast<int>(QTreeWidgetItem::ShowIndicator)];
+    return QString();
+}
+
+static QScriptValue qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toScriptValue(QScriptEngine *engine, const QTreeWidgetItem::ChildIndicatorPolicy &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTreeWidgetItem"));
+    return clazz.property(qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toStringHelper(value));
+}
+
+static void qtscript_QTreeWidgetItem_ChildIndicatorPolicy_fromScriptValue(const QScriptValue &value, QTreeWidgetItem::ChildIndicatorPolicy &out)
+{
+    out = qvariant_cast<QTreeWidgetItem::ChildIndicatorPolicy>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QTreeWidgetItem_ChildIndicatorPolicy(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QTreeWidgetItem::ShowIndicator) && (arg <= QTreeWidgetItem::DontShowIndicatorWhenChildless))
+        return qScriptValueFromValue(engine,  static_cast<QTreeWidgetItem::ChildIndicatorPolicy>(arg));
+    return context->throwError(QString::fromLatin1("ChildIndicatorPolicy(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QTreeWidgetItem_ChildIndicatorPolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QTreeWidgetItem::ChildIndicatorPolicy value = qscriptvalue_cast<QTreeWidgetItem::ChildIndicatorPolicy>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QTreeWidgetItem::ChildIndicatorPolicy value = qscriptvalue_cast<QTreeWidgetItem::ChildIndicatorPolicy>(context->thisObject());
+    return QScriptValue(engine, qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QTreeWidgetItem_ChildIndicatorPolicy_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QTreeWidgetItem_ChildIndicatorPolicy,
+        qtscript_QTreeWidgetItem_ChildIndicatorPolicy_valueOf, qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toString);
+    qScriptRegisterMetaType<QTreeWidgetItem::ChildIndicatorPolicy>(engine, qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toScriptValue,
+        qtscript_QTreeWidgetItem_ChildIndicatorPolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QTreeWidgetItem_ChildIndicatorPolicy_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QTreeWidgetItem_ChildIndicatorPolicy_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -315,75 +397,6 @@ static QScriptValue qtscript_create_QTreeWidgetItem_ItemType_class(QScriptEngine
 }
 
 //
-// QTreeWidgetItem::ChildIndicatorPolicy
-//
-
-static const QTreeWidgetItem::ChildIndicatorPolicy qtscript_QTreeWidgetItem_ChildIndicatorPolicy_values[] = {
-    QTreeWidgetItem::ShowIndicator
-    , QTreeWidgetItem::DontShowIndicator
-    , QTreeWidgetItem::DontShowIndicatorWhenChildless
-};
-
-static const char * const qtscript_QTreeWidgetItem_ChildIndicatorPolicy_keys[] = {
-    "ShowIndicator"
-    , "DontShowIndicator"
-    , "DontShowIndicatorWhenChildless"
-};
-
-static QString qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toStringHelper(QTreeWidgetItem::ChildIndicatorPolicy value)
-{
-    if ((value >= QTreeWidgetItem::ShowIndicator) && (value <= QTreeWidgetItem::DontShowIndicatorWhenChildless))
-        return qtscript_QTreeWidgetItem_ChildIndicatorPolicy_keys[static_cast<int>(value)-static_cast<int>(QTreeWidgetItem::ShowIndicator)];
-    return QString();
-}
-
-static QScriptValue qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toScriptValue(QScriptEngine *engine, const QTreeWidgetItem::ChildIndicatorPolicy &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTreeWidgetItem"));
-    return clazz.property(qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toStringHelper(value));
-}
-
-static void qtscript_QTreeWidgetItem_ChildIndicatorPolicy_fromScriptValue(const QScriptValue &value, QTreeWidgetItem::ChildIndicatorPolicy &out)
-{
-    out = qvariant_cast<QTreeWidgetItem::ChildIndicatorPolicy>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTreeWidgetItem_ChildIndicatorPolicy(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QTreeWidgetItem::ShowIndicator) && (arg <= QTreeWidgetItem::DontShowIndicatorWhenChildless))
-        return qScriptValueFromValue(engine,  static_cast<QTreeWidgetItem::ChildIndicatorPolicy>(arg));
-    return context->throwError(QString::fromLatin1("ChildIndicatorPolicy(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTreeWidgetItem_ChildIndicatorPolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTreeWidgetItem::ChildIndicatorPolicy value = qscriptvalue_cast<QTreeWidgetItem::ChildIndicatorPolicy>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTreeWidgetItem::ChildIndicatorPolicy value = qscriptvalue_cast<QTreeWidgetItem::ChildIndicatorPolicy>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTreeWidgetItem_ChildIndicatorPolicy_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTreeWidgetItem_ChildIndicatorPolicy,
-        qtscript_QTreeWidgetItem_ChildIndicatorPolicy_valueOf, qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toString);
-    qScriptRegisterMetaType<QTreeWidgetItem::ChildIndicatorPolicy>(engine, qtscript_QTreeWidgetItem_ChildIndicatorPolicy_toScriptValue,
-        qtscript_QTreeWidgetItem_ChildIndicatorPolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTreeWidgetItem_ChildIndicatorPolicy_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTreeWidgetItem_ChildIndicatorPolicy_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QTreeWidgetItem
 //
 
@@ -397,11 +410,11 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 56;
+        _id = 0xBABE0000 + 57;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTreeWidgetItem* _q_self = qscriptvalue_cast<QTreeWidgetItem*>(context->thisObject());
+    qtscript_QTreeWidgetItem* _q_self = reinterpret_cast<qtscript_QTreeWidgetItem*>(qscriptvalue_cast<QTreeWidgetItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTreeWidgetItem.%0(): this object is not a QTreeWidgetItem")
@@ -489,15 +502,14 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
 
     case 10:
     if (context->argumentCount() == 0) {
-        QFlags<Qt::ItemFlag> _q_result = _q_self->flags();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        _q_self->emitDataChanged();
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 11:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QFont _q_result = _q_self->font(_q_arg0);
+    if (context->argumentCount() == 0) {
+        QFlags<Qt::ItemFlag> _q_result = _q_self->flags();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -505,7 +517,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     case 12:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
-        QBrush _q_result = _q_self->foreground(_q_arg0);
+        QFont _q_result = _q_self->font(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -513,12 +525,20 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     case 13:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
-        QIcon _q_result = _q_self->icon(_q_arg0);
+        QBrush _q_result = _q_self->foreground(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 14:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QIcon _q_result = _q_self->icon(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 15:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         int _q_result = _q_self->indexOfChild(_q_arg0);
@@ -526,7 +546,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QTreeWidgetItem* _q_arg1 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(1));
@@ -535,7 +555,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QTreeWidgetItem*> _q_arg1;
@@ -545,49 +565,49 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isDisabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isExpanded();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isFirstColumnSpanned();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isHidden();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 22:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isSelected();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 23:
     if (context->argumentCount() == 0) {
         QTreeWidgetItem* _q_result = _q_self->parent();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
+    case 24:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -595,7 +615,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 24:
+    case 25:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         _q_self->removeChild(_q_arg0);
@@ -603,7 +623,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 25:
+    case 26:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QBrush _q_arg1 = qscriptvalue_cast<QBrush>(context->argument(1));
@@ -612,7 +632,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 26:
+    case 27:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::CheckState _q_arg1 = qscriptvalue_cast<Qt::CheckState>(context->argument(1));
@@ -621,7 +641,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 27:
+    case 28:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem::ChildIndicatorPolicy _q_arg0 = qscriptvalue_cast<QTreeWidgetItem::ChildIndicatorPolicy>(context->argument(0));
         _q_self->setChildIndicatorPolicy(_q_arg0);
@@ -629,7 +649,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 28:
+    case 29:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -639,7 +659,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 29:
+    case 30:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setDisabled(_q_arg0);
@@ -647,7 +667,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 30:
+    case 31:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setExpanded(_q_arg0);
@@ -655,7 +675,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 31:
+    case 32:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setFirstColumnSpanned(_q_arg0);
@@ -663,7 +683,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 32:
+    case 33:
     if (context->argumentCount() == 1) {
         QFlags<Qt::ItemFlag> _q_arg0 = qscriptvalue_cast<QFlags<Qt::ItemFlag> >(context->argument(0));
         _q_self->setFlags(_q_arg0);
@@ -671,7 +691,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 33:
+    case 34:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(1));
@@ -680,7 +700,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 34:
+    case 35:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QBrush _q_arg1 = qscriptvalue_cast<QBrush>(context->argument(1));
@@ -689,7 +709,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 35:
+    case 36:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setHidden(_q_arg0);
@@ -697,7 +717,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 36:
+    case 37:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QIcon _q_arg1 = qscriptvalue_cast<QIcon>(context->argument(1));
@@ -706,7 +726,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 37:
+    case 38:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setSelected(_q_arg0);
@@ -714,7 +734,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 38:
+    case 39:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
@@ -723,7 +743,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 39:
+    case 40:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -732,7 +752,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 40:
+    case 41:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -741,7 +761,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 41:
+    case 42:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -750,7 +770,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 42:
+    case 43:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -759,7 +779,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 43:
+    case 44:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -768,7 +788,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 44:
+    case 45:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QSize _q_result = _q_self->sizeHint(_q_arg0);
@@ -776,7 +796,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 45:
+    case 46:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::SortOrder _q_arg1 = qscriptvalue_cast<Qt::SortOrder>(context->argument(1));
@@ -785,7 +805,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 46:
+    case 47:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->statusTip(_q_arg0);
@@ -793,7 +813,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 47:
+    case 48:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTreeWidgetItem* _q_result = _q_self->takeChild(_q_arg0);
@@ -801,14 +821,14 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 48:
+    case 49:
     if (context->argumentCount() == 0) {
         QList<QTreeWidgetItem*> _q_result = _q_self->takeChildren();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 49:
+    case 50:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->text(_q_arg0);
@@ -816,7 +836,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 50:
+    case 51:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->textAlignment(_q_arg0);
@@ -824,7 +844,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 51:
+    case 52:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->toolTip(_q_arg0);
@@ -832,21 +852,21 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 52:
+    case 53:
     if (context->argumentCount() == 0) {
         QTreeWidget* _q_result = _q_self->treeWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 53:
+    case 54:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->type();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 54:
+    case 55:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->whatsThis(_q_arg0);
@@ -854,7 +874,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 55:
+    case 56:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -862,7 +882,7 @@ static QScriptValue qtscript_QTreeWidgetItem_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 56: {
+    case 57: {
     QString result = QString::fromLatin1("QTreeWidgetItem");
     return QScriptValue(context->engine(), result);
     }
@@ -1037,7 +1057,7 @@ QScriptValue qtscript_create_QTreeWidgetItem_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QTreeWidgetItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTreeWidgetItem*)0));
-    for (int i = 0; i < 57; ++i) {
+    for (int i = 0; i < 58; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTreeWidgetItem_prototype_call, qtscript_QTreeWidgetItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTreeWidgetItem_function_names[i+1]),
@@ -1049,9 +1069,9 @@ QScriptValue qtscript_create_QTreeWidgetItem_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QTreeWidgetItem_static_call, proto, qtscript_QTreeWidgetItem_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("ItemType"),
-        qtscript_create_QTreeWidgetItem_ItemType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ChildIndicatorPolicy"),
         qtscript_create_QTreeWidgetItem_ChildIndicatorPolicy_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ItemType"),
+        qtscript_create_QTreeWidgetItem_ItemType_class(engine, ctor));
     return ctor;
 }

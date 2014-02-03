@@ -10,6 +10,7 @@
 #include <qbytearray.h>
 #include <qcoreevent.h>
 #include <qlist.h>
+#include <qlocale.h>
 #include <qobject.h>
 #include <qtranslator.h>
 
@@ -21,7 +22,6 @@ static const char * const qtscript_QTranslator_function_names[] = {
     // prototype
     , "isEmpty"
     , "load"
-    , "translate"
     , "toString"
 };
 
@@ -30,8 +30,7 @@ static const char * const qtscript_QTranslator_function_signatures[] = {
     // static
     // prototype
     , ""
-    , "String filename, String directory, String search_delimiters, String suffix\nuchar data, int len"
-    , "char context, char sourceText, char disambiguation"
+    , "QLocale locale, String filename, String prefix, String directory, String suffix\nString filename, String directory, String search_delimiters, String suffix\nuchar data, int len, String directory"
 ""
 };
 
@@ -40,9 +39,17 @@ static const int qtscript_QTranslator_function_lengths[] = {
     // static
     // prototype
     , 0
-    , 4
-    , 3
+    , 5
     , 0
+};
+
+static QScriptValue qtscript_QTranslator_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTranslator : public QTranslator
+{
+
+    friend QScriptValue qtscript_QTranslator_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTranslator_throw_ambiguity_error_helper(
@@ -59,7 +66,6 @@ static QScriptValue qtscript_QTranslator_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QTranslator*)
 Q_DECLARE_METATYPE(QtScriptShell_QTranslator*)
 Q_DECLARE_METATYPE(uchar*)
-Q_DECLARE_METATYPE(char*)
 
 //
 // QTranslator
@@ -75,11 +81,11 @@ static QScriptValue qtscript_QTranslator_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 2;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTranslator* _q_self = qscriptvalue_cast<QTranslator*>(context->thisObject());
+    qtscript_QTranslator* _q_self = reinterpret_cast<qtscript_QTranslator*>(qscriptvalue_cast<QTranslator*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTranslator.%0(): this object is not a QTranslator")
@@ -101,7 +107,13 @@ static QScriptValue qtscript_QTranslator_prototype_call(QScriptContext *context,
         return QScriptValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 2) {
-        if (context->argument(0).isString()
+        if ((qMetaTypeId<QLocale>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isString()) {
+            QLocale _q_arg0 = qscriptvalue_cast<QLocale>(context->argument(0));
+            QString _q_arg1 = context->argument(1).toString();
+            bool _q_result = _q_self->load(_q_arg0, _q_arg1);
+            return QScriptValue(context->engine(), _q_result);
+        } else if (context->argument(0).isString()
             && context->argument(1).isString()) {
             QString _q_arg0 = context->argument(0).toString();
             QString _q_arg1 = context->argument(1).toString();
@@ -116,39 +128,67 @@ static QScriptValue qtscript_QTranslator_prototype_call(QScriptContext *context,
         }
     }
     if (context->argumentCount() == 3) {
-        QString _q_arg0 = context->argument(0).toString();
-        QString _q_arg1 = context->argument(1).toString();
-        QString _q_arg2 = context->argument(2).toString();
-        bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2);
-        return QScriptValue(context->engine(), _q_result);
+        if ((qMetaTypeId<QLocale>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isString()
+            && context->argument(2).isString()) {
+            QLocale _q_arg0 = qscriptvalue_cast<QLocale>(context->argument(0));
+            QString _q_arg1 = context->argument(1).toString();
+            QString _q_arg2 = context->argument(2).toString();
+            bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2);
+            return QScriptValue(context->engine(), _q_result);
+        } else if (context->argument(0).isString()
+            && context->argument(1).isString()
+            && context->argument(2).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            QString _q_arg1 = context->argument(1).toString();
+            QString _q_arg2 = context->argument(2).toString();
+            bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2);
+            return QScriptValue(context->engine(), _q_result);
+        } else if (qscriptvalue_cast<uchar*>(context->argument(0))
+            && context->argument(1).isNumber()
+            && context->argument(2).isString()) {
+            uchar* _q_arg0 = qscriptvalue_cast<uchar*>(context->argument(0));
+            int _q_arg1 = context->argument(1).toInt32();
+            QString _q_arg2 = context->argument(2).toString();
+            bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2);
+            return QScriptValue(context->engine(), _q_result);
+        }
     }
     if (context->argumentCount() == 4) {
-        QString _q_arg0 = context->argument(0).toString();
+        if ((qMetaTypeId<QLocale>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isString()
+            && context->argument(2).isString()
+            && context->argument(3).isString()) {
+            QLocale _q_arg0 = qscriptvalue_cast<QLocale>(context->argument(0));
+            QString _q_arg1 = context->argument(1).toString();
+            QString _q_arg2 = context->argument(2).toString();
+            QString _q_arg3 = context->argument(3).toString();
+            bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            return QScriptValue(context->engine(), _q_result);
+        } else if (context->argument(0).isString()
+            && context->argument(1).isString()
+            && context->argument(2).isString()
+            && context->argument(3).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            QString _q_arg1 = context->argument(1).toString();
+            QString _q_arg2 = context->argument(2).toString();
+            QString _q_arg3 = context->argument(3).toString();
+            bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            return QScriptValue(context->engine(), _q_result);
+        }
+    }
+    if (context->argumentCount() == 5) {
+        QLocale _q_arg0 = qscriptvalue_cast<QLocale>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
         QString _q_arg2 = context->argument(2).toString();
         QString _q_arg3 = context->argument(3).toString();
-        bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        QString _q_arg4 = context->argument(4).toString();
+        bool _q_result = _q_self->load(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
-    if (context->argumentCount() == 2) {
-        char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-        char* _q_arg1 = qscriptvalue_cast<char*>(context->argument(1));
-        QString _q_result = _q_self->translate(_q_arg0, _q_arg1);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    if (context->argumentCount() == 3) {
-        char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-        char* _q_arg1 = qscriptvalue_cast<char*>(context->argument(1));
-        char* _q_arg2 = qscriptvalue_cast<char*>(context->argument(2));
-        QString _q_result = _q_self->translate(_q_arg0, _q_arg1, _q_arg2);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 3: {
+    case 2: {
     QString result = QString::fromLatin1("QTranslator");
     return QScriptValue(context->engine(), result);
     }
@@ -208,7 +248,7 @@ QScriptValue qtscript_create_QTranslator_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTranslator*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTranslator*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTranslator_prototype_call, qtscript_QTranslator_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTranslator_function_names[i+1]),

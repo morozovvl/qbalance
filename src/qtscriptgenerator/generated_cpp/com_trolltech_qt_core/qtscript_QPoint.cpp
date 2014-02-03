@@ -13,6 +13,7 @@
 static const char * const qtscript_QPoint_function_names[] = {
     "QPoint"
     // static
+    , "dotProduct"
     // prototype
     , "isNull"
     , "manhattanLength"
@@ -33,13 +34,14 @@ static const char * const qtscript_QPoint_function_names[] = {
 static const char * const qtscript_QPoint_function_signatures[] = {
     "\nint xpos, int ypos"
     // static
+    , "QPoint p1, QPoint p2"
     // prototype
     , ""
     , ""
     , "QPoint p"
-    , "qreal c"
+    , "qreal divisor"
     , "QPoint p2"
-    , "qreal c"
+    , "double factor\nfloat factor\nint factor"
     , "QPoint p"
     , "QDataStream arg__1"
     , "int x"
@@ -53,6 +55,7 @@ static const char * const qtscript_QPoint_function_signatures[] = {
 static const int qtscript_QPoint_function_lengths[] = {
     2
     // static
+    , 2
     // prototype
     , 0
     , 0
@@ -106,7 +109,7 @@ static QScriptValue qtscript_QPoint_prototype_call(QScriptContext *context, QScr
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPoint.%0(): this object is not a QPoint")
-            .arg(qtscript_QPoint_function_names[_id+1]));
+            .arg(qtscript_QPoint_function_names[_id+2]));
     }
 
     switch (_id) {
@@ -150,9 +153,19 @@ static QScriptValue qtscript_QPoint_prototype_call(QScriptContext *context, QScr
 
     case 5:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        QPoint _q_result = _q_self->operator*=(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        if (context->argument(0).isNumber()) {
+            double _q_arg0 = context->argument(0).toNumber();
+            QPoint _q_result = _q_self->operator*=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()) {
+            float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+            QPoint _q_result = _q_self->operator*=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QPoint _q_result = _q_self->operator*=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
     }
     break;
 
@@ -221,8 +234,8 @@ static QScriptValue qtscript_QPoint_prototype_call(QScriptContext *context, QScr
     Q_ASSERT(false);
     }
     return qtscript_QPoint_throw_ambiguity_error_helper(context,
-        qtscript_QPoint_function_names[_id+1],
-        qtscript_QPoint_function_signatures[_id+1]);
+        qtscript_QPoint_function_names[_id+2],
+        qtscript_QPoint_function_signatures[_id+2]);
 }
 
 static QScriptValue qtscript_QPoint_static_call(QScriptContext *context, QScriptEngine *)
@@ -248,6 +261,15 @@ static QScriptValue qtscript_QPoint_static_call(QScriptContext *context, QScript
     }
     break;
 
+    case 1:
+    if (context->argumentCount() == 2) {
+        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+        QPoint _q_arg1 = qscriptvalue_cast<QPoint>(context->argument(1));
+        int _q_result = QPoint::dotProduct(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
     default:
     Q_ASSERT(false);
     }
@@ -261,9 +283,9 @@ QScriptValue qtscript_create_QPoint_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPoint*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPoint*)0));
     for (int i = 0; i < 14; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QPoint_prototype_call, qtscript_QPoint_function_lengths[i+1]);
+        QScriptValue fun = engine->newFunction(qtscript_QPoint_prototype_call, qtscript_QPoint_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QPoint_function_names[i+1]),
+        proto.setProperty(QString::fromLatin1(qtscript_QPoint_function_names[i+2]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -272,6 +294,13 @@ QScriptValue qtscript_create_QPoint_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QPoint_static_call, proto, qtscript_QPoint_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
+    for (int i = 0; i < 1; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QPoint_static_call,
+            qtscript_QPoint_function_lengths[i+1]);
+        fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));
+        ctor.setProperty(QString::fromLatin1(qtscript_QPoint_function_names[i+1]),
+            fun, QScriptValue::SkipInEnumeration);
+    }
 
     return ctor;
 }

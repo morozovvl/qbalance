@@ -292,7 +292,6 @@ private:
     int getTypeId(QString);
     void clearError();
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
-
 };
 
 #endif

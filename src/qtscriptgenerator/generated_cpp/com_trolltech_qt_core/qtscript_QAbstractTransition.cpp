@@ -25,7 +25,9 @@ static const char * const qtscript_QAbstractTransition_function_names[] = {
     // prototype
     , "addAnimation"
     , "animations"
+    , "eventTest"
     , "machine"
+    , "onTransition"
     , "removeAnimation"
     , "toString"
 };
@@ -36,7 +38,9 @@ static const char * const qtscript_QAbstractTransition_function_signatures[] = {
     // prototype
     , "QAbstractAnimation animation"
     , ""
+    , "QEvent event"
     , ""
+    , "QEvent event"
     , "QAbstractAnimation animation"
 ""
 };
@@ -47,9 +51,22 @@ static const int qtscript_QAbstractTransition_function_lengths[] = {
     // prototype
     , 1
     , 0
-    , 0
     , 1
     , 0
+    , 1
+    , 1
+    , 0
+};
+
+static QScriptValue qtscript_QAbstractTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractTransition : public QAbstractTransition
+{
+    friend QScriptValue qtscript_QAbstractTransition_eventTest(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractTransition_onTransition(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractTransition_throw_ambiguity_error_helper(
@@ -67,6 +84,7 @@ Q_DECLARE_METATYPE(QAbstractTransition*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractTransition*)
 Q_DECLARE_METATYPE(QAbstractAnimation*)
 Q_DECLARE_METATYPE(QList<QAbstractAnimation*>)
+Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QStateMachine*)
 Q_DECLARE_METATYPE(QState*)
 
@@ -84,11 +102,11 @@ static QScriptValue qtscript_QAbstractTransition_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractTransition* _q_self = qscriptvalue_cast<QAbstractTransition*>(context->thisObject());
+    qtscript_QAbstractTransition* _q_self = reinterpret_cast<qtscript_QAbstractTransition*>(qscriptvalue_cast<QAbstractTransition*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractTransition.%0(): this object is not a QAbstractTransition")
@@ -112,13 +130,29 @@ static QScriptValue qtscript_QAbstractTransition_prototype_call(QScriptContext *
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        bool _q_result = _q_self->eventTest(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         QStateMachine* _q_result = _q_self->machine();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->onTransition(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 1) {
         QAbstractAnimation* _q_arg0 = qscriptvalue_cast<QAbstractAnimation*>(context->argument(0));
         _q_self->removeAnimation(_q_arg0);
@@ -126,7 +160,7 @@ static QScriptValue qtscript_QAbstractTransition_prototype_call(QScriptContext *
     }
     break;
 
-    case 4: {
+    case 6: {
     QString result = QString::fromLatin1("QAbstractTransition");
     return QScriptValue(context->engine(), result);
     }
@@ -186,7 +220,7 @@ QScriptValue qtscript_create_QAbstractTransition_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractTransition*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractTransition*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractTransition_prototype_call, qtscript_QAbstractTransition_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractTransition_function_names[i+1]),

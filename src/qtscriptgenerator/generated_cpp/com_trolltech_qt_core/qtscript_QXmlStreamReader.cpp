@@ -117,7 +117,7 @@ static const char * const qtscript_QXmlStreamReader_function_signatures[] = {
     , ""
     , ""
     , "String message"
-    , "\nReadElementTextBehaviour behaviour"
+    , "ReadElementTextBehaviour behaviour"
     , ""
     , ""
     , "QIODevice device"
@@ -202,8 +202,8 @@ static QScriptValue qtscript_QXmlStreamReader_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QXmlStreamReader*)
 Q_DECLARE_METATYPE(QXmlStreamReader::Error)
-Q_DECLARE_METATYPE(QXmlStreamReader::TokenType)
 Q_DECLARE_METATYPE(QXmlStreamReader::ReadElementTextBehaviour)
+Q_DECLARE_METATYPE(QXmlStreamReader::TokenType)
 Q_DECLARE_METATYPE(QXmlStreamNamespaceDeclaration)
 Q_DECLARE_METATYPE(QVector<QXmlStreamNamespaceDeclaration>)
 Q_DECLARE_METATYPE(QXmlStreamAttributes)
@@ -303,6 +303,75 @@ static QScriptValue qtscript_create_QXmlStreamReader_Error_class(QScriptEngine *
 }
 
 //
+// QXmlStreamReader::ReadElementTextBehaviour
+//
+
+static const QXmlStreamReader::ReadElementTextBehaviour qtscript_QXmlStreamReader_ReadElementTextBehaviour_values[] = {
+    QXmlStreamReader::ErrorOnUnexpectedElement
+    , QXmlStreamReader::IncludeChildElements
+    , QXmlStreamReader::SkipChildElements
+};
+
+static const char * const qtscript_QXmlStreamReader_ReadElementTextBehaviour_keys[] = {
+    "ErrorOnUnexpectedElement"
+    , "IncludeChildElements"
+    , "SkipChildElements"
+};
+
+static QString qtscript_QXmlStreamReader_ReadElementTextBehaviour_toStringHelper(QXmlStreamReader::ReadElementTextBehaviour value)
+{
+    if ((value >= QXmlStreamReader::ErrorOnUnexpectedElement) && (value <= QXmlStreamReader::SkipChildElements))
+        return qtscript_QXmlStreamReader_ReadElementTextBehaviour_keys[static_cast<int>(value)-static_cast<int>(QXmlStreamReader::ErrorOnUnexpectedElement)];
+    return QString();
+}
+
+static QScriptValue qtscript_QXmlStreamReader_ReadElementTextBehaviour_toScriptValue(QScriptEngine *engine, const QXmlStreamReader::ReadElementTextBehaviour &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QXmlStreamReader"));
+    return clazz.property(qtscript_QXmlStreamReader_ReadElementTextBehaviour_toStringHelper(value));
+}
+
+static void qtscript_QXmlStreamReader_ReadElementTextBehaviour_fromScriptValue(const QScriptValue &value, QXmlStreamReader::ReadElementTextBehaviour &out)
+{
+    out = qvariant_cast<QXmlStreamReader::ReadElementTextBehaviour>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QXmlStreamReader_ReadElementTextBehaviour(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QXmlStreamReader::ErrorOnUnexpectedElement) && (arg <= QXmlStreamReader::SkipChildElements))
+        return qScriptValueFromValue(engine,  static_cast<QXmlStreamReader::ReadElementTextBehaviour>(arg));
+    return context->throwError(QString::fromLatin1("ReadElementTextBehaviour(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QXmlStreamReader_ReadElementTextBehaviour_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QXmlStreamReader::ReadElementTextBehaviour value = qscriptvalue_cast<QXmlStreamReader::ReadElementTextBehaviour>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QXmlStreamReader_ReadElementTextBehaviour_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QXmlStreamReader::ReadElementTextBehaviour value = qscriptvalue_cast<QXmlStreamReader::ReadElementTextBehaviour>(context->thisObject());
+    return QScriptValue(engine, qtscript_QXmlStreamReader_ReadElementTextBehaviour_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QXmlStreamReader_ReadElementTextBehaviour_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QXmlStreamReader_ReadElementTextBehaviour,
+        qtscript_QXmlStreamReader_ReadElementTextBehaviour_valueOf, qtscript_QXmlStreamReader_ReadElementTextBehaviour_toString);
+    qScriptRegisterMetaType<QXmlStreamReader::ReadElementTextBehaviour>(engine, qtscript_QXmlStreamReader_ReadElementTextBehaviour_toScriptValue,
+        qtscript_QXmlStreamReader_ReadElementTextBehaviour_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QXmlStreamReader_ReadElementTextBehaviour_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QXmlStreamReader_ReadElementTextBehaviour_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QXmlStreamReader::TokenType
 //
 
@@ -382,75 +451,6 @@ static QScriptValue qtscript_create_QXmlStreamReader_TokenType_class(QScriptEngi
     for (int i = 0; i < 11; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QXmlStreamReader_TokenType_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QXmlStreamReader_TokenType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QXmlStreamReader::ReadElementTextBehaviour
-//
-
-static const QXmlStreamReader::ReadElementTextBehaviour qtscript_QXmlStreamReader_ReadElementTextBehaviour_values[] = {
-    QXmlStreamReader::ErrorOnUnexpectedElement
-    , QXmlStreamReader::IncludeChildElements
-    , QXmlStreamReader::SkipChildElements
-};
-
-static const char * const qtscript_QXmlStreamReader_ReadElementTextBehaviour_keys[] = {
-    "ErrorOnUnexpectedElement"
-    , "IncludeChildElements"
-    , "SkipChildElements"
-};
-
-static QString qtscript_QXmlStreamReader_ReadElementTextBehaviour_toStringHelper(QXmlStreamReader::ReadElementTextBehaviour value)
-{
-    if ((value >= QXmlStreamReader::ErrorOnUnexpectedElement) && (value <= QXmlStreamReader::SkipChildElements))
-        return qtscript_QXmlStreamReader_ReadElementTextBehaviour_keys[static_cast<int>(value)-static_cast<int>(QXmlStreamReader::ErrorOnUnexpectedElement)];
-    return QString();
-}
-
-static QScriptValue qtscript_QXmlStreamReader_ReadElementTextBehaviour_toScriptValue(QScriptEngine *engine, const QXmlStreamReader::ReadElementTextBehaviour &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QXmlStreamReader"));
-    return clazz.property(qtscript_QXmlStreamReader_ReadElementTextBehaviour_toStringHelper(value));
-}
-
-static void qtscript_QXmlStreamReader_ReadElementTextBehaviour_fromScriptValue(const QScriptValue &value, QXmlStreamReader::ReadElementTextBehaviour &out)
-{
-    out = qvariant_cast<QXmlStreamReader::ReadElementTextBehaviour>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QXmlStreamReader_ReadElementTextBehaviour(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QXmlStreamReader::ErrorOnUnexpectedElement) && (arg <= QXmlStreamReader::SkipChildElements))
-        return qScriptValueFromValue(engine,  static_cast<QXmlStreamReader::ReadElementTextBehaviour>(arg));
-    return context->throwError(QString::fromLatin1("ReadElementTextBehaviour(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QXmlStreamReader_ReadElementTextBehaviour_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QXmlStreamReader::ReadElementTextBehaviour value = qscriptvalue_cast<QXmlStreamReader::ReadElementTextBehaviour>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QXmlStreamReader_ReadElementTextBehaviour_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QXmlStreamReader::ReadElementTextBehaviour value = qscriptvalue_cast<QXmlStreamReader::ReadElementTextBehaviour>(context->thisObject());
-    return QScriptValue(engine, qtscript_QXmlStreamReader_ReadElementTextBehaviour_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QXmlStreamReader_ReadElementTextBehaviour_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QXmlStreamReader_ReadElementTextBehaviour,
-        qtscript_QXmlStreamReader_ReadElementTextBehaviour_valueOf, qtscript_QXmlStreamReader_ReadElementTextBehaviour_toString);
-    qScriptRegisterMetaType<QXmlStreamReader::ReadElementTextBehaviour>(engine, qtscript_QXmlStreamReader_ReadElementTextBehaviour_toScriptValue,
-        qtscript_QXmlStreamReader_ReadElementTextBehaviour_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QXmlStreamReader_ReadElementTextBehaviour_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QXmlStreamReader_ReadElementTextBehaviour_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -990,9 +990,9 @@ QScriptValue qtscript_create_QXmlStreamReader_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("Error"),
         qtscript_create_QXmlStreamReader_Error_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("TokenType"),
-        qtscript_create_QXmlStreamReader_TokenType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ReadElementTextBehaviour"),
         qtscript_create_QXmlStreamReader_ReadElementTextBehaviour_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("TokenType"),
+        qtscript_create_QXmlStreamReader_TokenType_class(engine, ctor));
     return ctor;
 }

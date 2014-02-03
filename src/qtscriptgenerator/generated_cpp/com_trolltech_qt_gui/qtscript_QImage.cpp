@@ -10,12 +10,14 @@
 #include <QStringList>
 #include <QVariant>
 #include <qbytearray.h>
+#include <qcolor.h>
 #include <qdatastream.h>
 #include <qimage.h>
 #include <qiodevice.h>
 #include <qmatrix.h>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qsize.h>
@@ -57,7 +59,6 @@ static const char * const qtscript_QImage_function_names[] = {
     , "load"
     , "loadFromData"
     , "mirrored"
-    , "numBytes"
     , "offset"
     , "equals"
     , "pixel"
@@ -72,13 +73,14 @@ static const char * const qtscript_QImage_function_names[] = {
     , "setAlphaChannel"
     , "setColor"
     , "setColorCount"
+    , "setDevicePixelRatio"
     , "setDotsPerMeterX"
     , "setDotsPerMeterY"
-    , "setNumColors"
     , "setOffset"
     , "setPixel"
     , "setText"
     , "size"
+    , "swap"
     , "text"
     , "textKeys"
     , "transformed"
@@ -110,7 +112,7 @@ static const char * const qtscript_QImage_function_signatures[] = {
     , "unsigned int color, MaskMode mode"
     , ""
     , ""
-    , "uint pixel"
+    , "GlobalColor color\nQColor color\nuint pixel"
     , ""
     , ""
     , "InvertMode arg__1"
@@ -119,7 +121,6 @@ static const char * const qtscript_QImage_function_signatures[] = {
     , "QIODevice device, char format\nString fileName, char format"
     , "QByteArray data, char aformat"
     , "bool horizontally, bool vertically"
-    , ""
     , ""
     , "QImage arg__1"
     , "QPoint pt\nint x, int y"
@@ -134,13 +135,14 @@ static const char * const qtscript_QImage_function_signatures[] = {
     , "QImage alphaChannel"
     , "int i, unsigned int c"
     , "int arg__1"
-    , "int arg__1"
+    , "qreal scaleFactor"
     , "int arg__1"
     , "int arg__1"
     , "QPoint arg__1"
     , "QPoint pt, uint index_or_rgb\nint x, int y, uint index_or_rgb"
     , "String key, String value"
     , ""
+    , "QImage other"
     , "String key"
     , ""
     , "QMatrix matrix, TransformationMode mode\nQTransform matrix, TransformationMode mode"
@@ -182,7 +184,6 @@ static const int qtscript_QImage_function_lengths[] = {
     , 2
     , 2
     , 0
-    , 0
     , 1
     , 2
     , 2
@@ -204,11 +205,21 @@ static const int qtscript_QImage_function_lengths[] = {
     , 2
     , 0
     , 1
+    , 1
     , 0
     , 2
     , 2
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QImage_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QImage : public QImage
+{
+
+    friend QScriptValue qtscript_QImage_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QImage_throw_ambiguity_error_helper(
@@ -225,12 +236,13 @@ static QScriptValue qtscript_QImage_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QImage*)
 Q_DECLARE_METATYPE(QtScriptShell_QImage)
 Q_DECLARE_METATYPE(QtScriptShell_QImage*)
-Q_DECLARE_METATYPE(QImage::InvertMode)
 Q_DECLARE_METATYPE(QImage::Format)
+Q_DECLARE_METATYPE(QImage::InvertMode)
 Q_DECLARE_METATYPE(QVector<uint>)
 Q_DECLARE_METATYPE(uchar*)
 Q_DECLARE_METATYPE(QFlags<Qt::ImageConversionFlag>)
 Q_DECLARE_METATYPE(Qt::MaskMode)
+Q_DECLARE_METATYPE(Qt::GlobalColor)
 Q_DECLARE_METATYPE(QIODevice*)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(Qt::AspectRatioMode)
@@ -249,73 +261,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QImage::InvertMode
-//
-
-static const QImage::InvertMode qtscript_QImage_InvertMode_values[] = {
-    QImage::InvertRgb
-    , QImage::InvertRgba
-};
-
-static const char * const qtscript_QImage_InvertMode_keys[] = {
-    "InvertRgb"
-    , "InvertRgba"
-};
-
-static QString qtscript_QImage_InvertMode_toStringHelper(QImage::InvertMode value)
-{
-    if ((value >= QImage::InvertRgb) && (value <= QImage::InvertRgba))
-        return qtscript_QImage_InvertMode_keys[static_cast<int>(value)-static_cast<int>(QImage::InvertRgb)];
-    return QString();
-}
-
-static QScriptValue qtscript_QImage_InvertMode_toScriptValue(QScriptEngine *engine, const QImage::InvertMode &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QImage"));
-    return clazz.property(qtscript_QImage_InvertMode_toStringHelper(value));
-}
-
-static void qtscript_QImage_InvertMode_fromScriptValue(const QScriptValue &value, QImage::InvertMode &out)
-{
-    out = qvariant_cast<QImage::InvertMode>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QImage_InvertMode(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QImage::InvertRgb) && (arg <= QImage::InvertRgba))
-        return qScriptValueFromValue(engine,  static_cast<QImage::InvertMode>(arg));
-    return context->throwError(QString::fromLatin1("InvertMode(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QImage_InvertMode_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QImage::InvertMode value = qscriptvalue_cast<QImage::InvertMode>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QImage_InvertMode_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QImage::InvertMode value = qscriptvalue_cast<QImage::InvertMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QImage_InvertMode_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QImage_InvertMode_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QImage_InvertMode,
-        qtscript_QImage_InvertMode_valueOf, qtscript_QImage_InvertMode_toString);
-    qScriptRegisterMetaType<QImage::InvertMode>(engine, qtscript_QImage_InvertMode_toScriptValue,
-        qtscript_QImage_InvertMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QImage_InvertMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QImage_InvertMode_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -416,6 +361,73 @@ static QScriptValue qtscript_create_QImage_Format_class(QScriptEngine *engine, Q
 }
 
 //
+// QImage::InvertMode
+//
+
+static const QImage::InvertMode qtscript_QImage_InvertMode_values[] = {
+    QImage::InvertRgb
+    , QImage::InvertRgba
+};
+
+static const char * const qtscript_QImage_InvertMode_keys[] = {
+    "InvertRgb"
+    , "InvertRgba"
+};
+
+static QString qtscript_QImage_InvertMode_toStringHelper(QImage::InvertMode value)
+{
+    if ((value >= QImage::InvertRgb) && (value <= QImage::InvertRgba))
+        return qtscript_QImage_InvertMode_keys[static_cast<int>(value)-static_cast<int>(QImage::InvertRgb)];
+    return QString();
+}
+
+static QScriptValue qtscript_QImage_InvertMode_toScriptValue(QScriptEngine *engine, const QImage::InvertMode &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QImage"));
+    return clazz.property(qtscript_QImage_InvertMode_toStringHelper(value));
+}
+
+static void qtscript_QImage_InvertMode_fromScriptValue(const QScriptValue &value, QImage::InvertMode &out)
+{
+    out = qvariant_cast<QImage::InvertMode>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QImage_InvertMode(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QImage::InvertRgb) && (arg <= QImage::InvertRgba))
+        return qScriptValueFromValue(engine,  static_cast<QImage::InvertMode>(arg));
+    return context->throwError(QString::fromLatin1("InvertMode(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QImage_InvertMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QImage::InvertMode value = qscriptvalue_cast<QImage::InvertMode>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QImage_InvertMode_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QImage::InvertMode value = qscriptvalue_cast<QImage::InvertMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QImage_InvertMode_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QImage_InvertMode_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QImage_InvertMode,
+        qtscript_QImage_InvertMode_valueOf, qtscript_QImage_InvertMode_toString);
+    qScriptRegisterMetaType<QImage::InvertMode>(engine, qtscript_QImage_InvertMode_toScriptValue,
+        qtscript_QImage_InvertMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QImage_InvertMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QImage_InvertMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QImage
 //
 
@@ -433,7 +445,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QImage* _q_self = qscriptvalue_cast<QImage*>(context->thisObject());
+    qtscript_QImage* _q_self = reinterpret_cast<qtscript_QImage*>(qscriptvalue_cast<QImage*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QImage.%0(): this object is not a QImage")
@@ -619,9 +631,19 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
 
     case 17:
     if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->fill(_q_arg0);
-        return context->engine()->undefinedValue();
+        if ((qMetaTypeId<Qt::GlobalColor>() == context->argument(0).toVariant().userType())) {
+            Qt::GlobalColor _q_arg0 = qscriptvalue_cast<Qt::GlobalColor>(context->argument(0));
+            _q_self->fill(_q_arg0);
+            return context->engine()->undefinedValue();
+        } else if ((qMetaTypeId<QColor>() == context->argument(0).toVariant().userType())) {
+            QColor _q_arg0 = qscriptvalue_cast<QColor>(context->argument(0));
+            _q_self->fill(_q_arg0);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()) {
+            uint _q_arg0 = context->argument(0).toUInt32();
+            _q_self->fill(_q_arg0);
+            return context->engine()->undefinedValue();
+        }
     }
     break;
 
@@ -724,19 +746,12 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
 
     case 26:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->numBytes();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 27:
-    if (context->argumentCount() == 0) {
         QPoint _q_result = _q_self->offset();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 28:
+    case 27:
     if (context->argumentCount() == 1) {
         QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -744,7 +759,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 29:
+    case 28:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         uint _q_result = _q_self->pixel(_q_arg0);
@@ -758,7 +773,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 30:
+    case 29:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         int _q_result = _q_self->pixelIndex(_q_arg0);
@@ -772,7 +787,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 31:
+    case 30:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -780,21 +795,21 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 32:
+    case 31:
     if (context->argumentCount() == 0) {
         QRect _q_result = _q_self->rect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 33:
+    case 32:
     if (context->argumentCount() == 0) {
         QImage _q_result = _q_self->rgbSwapped();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 34:
+    case 33:
     if (context->argumentCount() == 1) {
         if (qscriptvalue_cast<QIODevice*>(context->argument(0))) {
             QIODevice* _q_arg0 = qscriptvalue_cast<QIODevice*>(context->argument(0));
@@ -858,7 +873,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 35:
+    case 34:
     if (context->argumentCount() == 1) {
         QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
         QImage _q_result = _q_self->scaled(_q_arg0);
@@ -908,7 +923,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 36:
+    case 35:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QImage _q_result = _q_self->scaledToHeight(_q_arg0);
@@ -922,7 +937,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 37:
+    case 36:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QImage _q_result = _q_self->scaledToWidth(_q_arg0);
@@ -936,7 +951,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 38:
+    case 37:
     if (context->argumentCount() == 1) {
         QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
         _q_self->setAlphaChannel(_q_arg0);
@@ -944,7 +959,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 39:
+    case 38:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         uint _q_arg1 = context->argument(1).toUInt32();
@@ -953,10 +968,18 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 40:
+    case 39:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setColorCount(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 40:
+    if (context->argumentCount() == 1) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        _q_self->setDevicePixelRatio(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -979,21 +1002,13 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
 
     case 43:
     if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        _q_self->setNumColors(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 44:
-    if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         _q_self->setOffset(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 45:
+    case 44:
     if (context->argumentCount() == 2) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         uint _q_arg1 = context->argument(1).toUInt32();
@@ -1009,7 +1024,7 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 46:
+    case 45:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_arg1 = context->argument(1).toString();
@@ -1018,10 +1033,18 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 47:
+    case 46:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->size();
         return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 47:
+    if (context->argumentCount() == 1) {
+        QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
@@ -1096,7 +1119,9 @@ static QScriptValue qtscript_QImage_prototype_call(QScriptContext *context, QScr
     break;
 
     case 53: {
-    QString result = QString::fromLatin1("QImage");
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -1238,9 +1263,9 @@ QScriptValue qtscript_create_QImage_class(QScriptEngine *engine)
             fun, QScriptValue::SkipInEnumeration);
     }
 
-    ctor.setProperty(QString::fromLatin1("InvertMode"),
-        qtscript_create_QImage_InvertMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Format"),
         qtscript_create_QImage_Format_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("InvertMode"),
+        qtscript_create_QImage_InvertMode_class(engine, ctor));
     return ctor;
 }

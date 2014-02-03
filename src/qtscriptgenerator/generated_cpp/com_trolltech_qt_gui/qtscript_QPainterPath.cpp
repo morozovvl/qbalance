@@ -69,6 +69,7 @@ static const char * const qtscript_QPainterPath_function_names[] = {
     , "slopeAtPercent"
     , "subtracted"
     , "subtractedInverted"
+    , "swap"
     , "toFillPolygon"
     , "toFillPolygons"
     , "toReversed"
@@ -130,6 +131,7 @@ static const char * const qtscript_QPainterPath_function_signatures[] = {
     , "qreal t"
     , "QPainterPath r"
     , "QPainterPath r"
+    , "QPainterPath other"
     , "QMatrix matrix\nQTransform matrix"
     , "QMatrix matrix\nQTransform matrix"
     , ""
@@ -193,6 +195,7 @@ static const int qtscript_QPainterPath_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
     , 0
     , 1
     , 2
@@ -216,7 +219,6 @@ static QScriptValue qtscript_QPainterPath_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPainterPath*)
 Q_DECLARE_METATYPE(QPainterPath::ElementType)
-Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(Qt::SizeMode)
 Q_DECLARE_METATYPE(QPainterPath::Element)
 Q_DECLARE_METATYPE(Qt::FillRule)
@@ -322,7 +324,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 54;
+        _id = 0xBABE0000 + 55;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -858,6 +860,14 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     break;
 
     case 46:
+    if (context->argumentCount() == 1) {
+        QPainterPath _q_arg0 = qscriptvalue_cast<QPainterPath>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 47:
     if (context->argumentCount() == 0) {
         QPolygonF _q_result = _q_self->toFillPolygon();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -875,7 +885,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 47:
+    case 48:
     if (context->argumentCount() == 0) {
         QList<QPolygonF> _q_result = _q_self->toFillPolygons();
         return qScriptValueFromSequence(context->engine(), _q_result);
@@ -893,14 +903,14 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 48:
+    case 49:
     if (context->argumentCount() == 0) {
         QPainterPath _q_result = _q_self->toReversed();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 49:
+    case 50:
     if (context->argumentCount() == 0) {
         QList<QPolygonF> _q_result = _q_self->toSubpathPolygons();
         return qScriptValueFromSequence(context->engine(), _q_result);
@@ -918,7 +928,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 50:
+    case 51:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->translate(_q_arg0);
@@ -932,7 +942,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 51:
+    case 52:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         QPainterPath _q_result = _q_self->translated(_q_arg0);
@@ -946,7 +956,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 52:
+    case 53:
     if (context->argumentCount() == 1) {
         QPainterPath _q_arg0 = qscriptvalue_cast<QPainterPath>(context->argument(0));
         QPainterPath _q_result = _q_self->united(_q_arg0);
@@ -954,7 +964,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 53:
+    case 54:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -962,7 +972,7 @@ static QScriptValue qtscript_QPainterPath_prototype_call(QScriptContext *context
     }
     break;
 
-    case 54: {
+    case 55: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -1018,7 +1028,7 @@ QScriptValue qtscript_create_QPainterPath_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QPainterPath*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPainterPath*)0));
-    for (int i = 0; i < 55; ++i) {
+    for (int i = 0; i < 56; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPainterPath_prototype_call, qtscript_QPainterPath_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPainterPath_function_names[i+1]),

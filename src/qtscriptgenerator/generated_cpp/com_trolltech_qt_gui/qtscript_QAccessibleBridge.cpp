@@ -24,7 +24,7 @@ static const char * const qtscript_QAccessibleBridge_function_signatures[] = {
     ""
     // static
     // prototype
-    , "int arg__1, QAccessibleInterface arg__2, int arg__3"
+    , "QAccessibleEvent event"
     , "QAccessibleInterface arg__1"
 ""
 };
@@ -33,7 +33,7 @@ static const int qtscript_QAccessibleBridge_function_lengths[] = {
     0
     // static
     // prototype
-    , 3
+    , 1
     , 1
     , 0
 };
@@ -51,6 +51,7 @@ static QScriptValue qtscript_QAccessibleBridge_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QAccessibleBridge*)
 Q_DECLARE_METATYPE(QtScriptShell_QAccessibleBridge*)
+Q_DECLARE_METATYPE(QAccessibleEvent*)
 Q_DECLARE_METATYPE(QAccessibleInterface*)
 
 //
@@ -80,11 +81,9 @@ static QScriptValue qtscript_QAccessibleBridge_prototype_call(QScriptContext *co
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 3) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QAccessibleInterface* _q_arg1 = qscriptvalue_cast<QAccessibleInterface*>(context->argument(1));
-        int _q_arg2 = context->argument(2).toInt32();
-        _q_self->notifyAccessibilityUpdate(_q_arg0, _q_arg1, _q_arg2);
+    if (context->argumentCount() == 1) {
+        QAccessibleEvent* _q_arg0 = qscriptvalue_cast<QAccessibleEvent*>(context->argument(0));
+        _q_self->notifyAccessibilityUpdate(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;

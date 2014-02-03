@@ -13,24 +13,27 @@
 <p>This class has no public constructors. Calling the constructor function will cause a TypeError.</p><h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QAbstractXmlNodeModel prototype object</li>
+<li><b>InheritNamespaces = 0x1</b></li>
+<li><b>PreserveNamespaces = 0x2</b></li>
+<li><b>NodeCopySetting( value )</b></li>
 <li><b>Parent</b></li>
 <li><b>FirstChild</b></li>
 <li><b>PreviousSibling</b></li>
 <li><b>NextSibling</b></li>
 <li><b>SimpleAxis( value )</b></li>
-<li><b>InheritNamespaces = 0x1</b></li>
-<li><b>PreserveNamespaces = 0x2</b></li>
-<li><b>NodeCopySetting( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
+<li><div class="fn"/><b>List attributes(QXmlNodeModelIndex element)</b></li>
 <li><div class="fn"/><b>QUrl baseUri(QXmlNodeModelIndex ni)</b></li>
 <li><div class="fn"/><b>DocumentOrder compareOrder(QXmlNodeModelIndex ni1, QXmlNodeModelIndex ni2)</b></li>
+<li><div class="fn"/><b>QXmlNodeModelIndex createIndex(qint64 data)</b></li>
 <li><div class="fn"/><b>QUrl documentUri(QXmlNodeModelIndex ni)</b></li>
 <li><div class="fn"/><b>QXmlNodeModelIndex elementById(QXmlName NCName)</b></li>
 <li><div class="fn"/><b>NodeKind kind(QXmlNodeModelIndex ni)</b></li>
 <li><div class="fn"/><b>QXmlName name(QXmlNodeModelIndex ni)</b></li>
 <li><div class="fn"/><b>List namespaceBindings(QXmlNodeModelIndex n)</b></li>
+<li><div class="fn"/><b>QXmlNodeModelIndex nextFromSimpleAxis(SimpleAxis axis, QXmlNodeModelIndex origin)</b></li>
 <li><div class="fn"/><b>List nodesByIdref(QXmlName NCName)</b></li>
 <li><div class="fn"/><b>QXmlNodeModelIndex root(QXmlNodeModelIndex n)</b></li>
 <li><div class="fn"/><b>QSourceLocation sourceLocation(QXmlNodeModelIndex index)</b></li>

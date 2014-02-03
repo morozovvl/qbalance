@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtreewidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -19,8 +20,6 @@
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
 #include <qheaderview.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -33,6 +32,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -43,7 +43,9 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qtreewidget.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTreeWidget.h"
 
@@ -56,9 +58,11 @@ static const char * const qtscript_QTreeWidget_function_names[] = {
     , "closePersistentEditor"
     , "currentColumn"
     , "currentItem"
+    , "dropMimeData"
     , "editItem"
     , "findItems"
     , "headerItem"
+    , "indexFromItem"
     , "indexOfTopLevelItem"
     , "insertTopLevelItem"
     , "insertTopLevelItems"
@@ -67,7 +71,9 @@ static const char * const qtscript_QTreeWidget_function_names[] = {
     , "itemAbove"
     , "itemAt"
     , "itemBelow"
+    , "itemFromIndex"
     , "itemWidget"
+    , "mimeTypes"
     , "openPersistentEditor"
     , "removeItemWidget"
     , "selectedItems"
@@ -79,6 +85,7 @@ static const char * const qtscript_QTreeWidget_function_names[] = {
     , "setItemWidget"
     , "sortColumn"
     , "sortItems"
+    , "supportedDropActions"
     , "takeTopLevelItem"
     , "topLevelItem"
     , "visualItemRect"
@@ -94,9 +101,11 @@ static const char * const qtscript_QTreeWidget_function_signatures[] = {
     , "QTreeWidgetItem item, int column"
     , ""
     , ""
+    , "QTreeWidgetItem parent, int index, QMimeData data, DropAction action"
     , "QTreeWidgetItem item, int column"
     , "String text, MatchFlags flags, int column"
     , ""
+    , "QTreeWidgetItem item, int column"
     , "QTreeWidgetItem item"
     , "int index, QTreeWidgetItem item"
     , "int index, List items"
@@ -105,7 +114,9 @@ static const char * const qtscript_QTreeWidget_function_signatures[] = {
     , "QTreeWidgetItem item"
     , "QPoint p\nint x, int y"
     , "QTreeWidgetItem item"
+    , "QModelIndex index"
     , "QTreeWidgetItem item, int column"
+    , ""
     , "QTreeWidgetItem item, int column"
     , "QTreeWidgetItem item, int column"
     , ""
@@ -117,6 +128,7 @@ static const char * const qtscript_QTreeWidget_function_signatures[] = {
     , "QTreeWidgetItem item, int column, QWidget widget"
     , ""
     , "int column, SortOrder order"
+    , ""
     , "int index"
     , "int index"
     , "QTreeWidgetItem item"
@@ -132,9 +144,11 @@ static const int qtscript_QTreeWidget_function_lengths[] = {
     , 2
     , 0
     , 0
+    , 4
     , 2
     , 3
     , 0
+    , 2
     , 1
     , 2
     , 2
@@ -143,7 +157,9 @@ static const int qtscript_QTreeWidget_function_lengths[] = {
     , 1
     , 2
     , 1
+    , 1
     , 2
+    , 0
     , 2
     , 2
     , 0
@@ -155,10 +171,28 @@ static const int qtscript_QTreeWidget_function_lengths[] = {
     , 3
     , 0
     , 2
+    , 0
     , 1
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTreeWidget : public QTreeWidget
+{
+    friend QScriptValue qtscript_QTreeWidget_dropMimeData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeWidget_indexFromItem(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeWidget_itemFromIndex(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeWidget_mimeTypes(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeWidget_supportedDropActions(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QTreeWidget_throw_ambiguity_error_helper(
@@ -176,9 +210,13 @@ Q_DECLARE_METATYPE(QTreeWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QTreeWidget*)
 Q_DECLARE_METATYPE(QTreeWidgetItem*)
 Q_DECLARE_METATYPE(QList<QTreeWidgetItem*>)
+Q_DECLARE_METATYPE(QMimeData*)
+Q_DECLARE_METATYPE(Qt::DropAction)
 Q_DECLARE_METATYPE(QFlags<Qt::MatchFlag>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<QItemSelectionModel::SelectionFlag>)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(QFlags<Qt::DropAction>)
 Q_DECLARE_METATYPE(QTreeView*)
 
 //
@@ -195,11 +233,11 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 31;
+        _id = 0xBABE0000 + 36;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTreeWidget* _q_self = qscriptvalue_cast<QTreeWidget*>(context->thisObject());
+    qtscript_QTreeWidget* _q_self = reinterpret_cast<qtscript_QTreeWidget*>(qscriptvalue_cast<QTreeWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTreeWidget.%0(): this object is not a QTreeWidget")
@@ -253,6 +291,17 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     break;
 
     case 5:
+    if (context->argumentCount() == 4) {
+        QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
+        int _q_arg1 = context->argument(1).toInt32();
+        QMimeData* _q_arg2 = qscriptvalue_cast<QMimeData*>(context->argument(2));
+        Qt::DropAction _q_arg3 = qscriptvalue_cast<Qt::DropAction>(context->argument(3));
+        bool _q_result = _q_self->dropMimeData(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         _q_self->editItem(_q_arg0);
@@ -266,7 +315,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QFlags<Qt::MatchFlag> _q_arg1 = qscriptvalue_cast<QFlags<Qt::MatchFlag> >(context->argument(1));
@@ -282,14 +331,28 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 0) {
         QTreeWidgetItem* _q_result = _q_self->headerItem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 9:
+    if (context->argumentCount() == 1) {
+        QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
+        QModelIndex _q_result = _q_self->indexFromItem(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
+        int _q_arg1 = context->argument(1).toInt32();
+        QModelIndex _q_result = _q_self->indexFromItem(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         int _q_result = _q_self->indexOfTopLevelItem(_q_arg0);
@@ -297,7 +360,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QTreeWidgetItem* _q_arg1 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(1));
@@ -306,7 +369,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QTreeWidgetItem*> _q_arg1;
@@ -316,14 +379,14 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 0) {
         QTreeWidgetItem* _q_result = _q_self->invisibleRootItem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         bool _q_result = _q_self->isFirstItemColumnSpanned(_q_arg0);
@@ -331,7 +394,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         QTreeWidgetItem* _q_result = _q_self->itemAbove(_q_arg0);
@@ -339,7 +402,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         QTreeWidgetItem* _q_result = _q_self->itemAt(_q_arg0);
@@ -353,7 +416,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         QTreeWidgetItem* _q_result = _q_self->itemBelow(_q_arg0);
@@ -361,7 +424,15 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 16:
+    case 18:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        QTreeWidgetItem* _q_result = _q_self->itemFromIndex(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 19:
     if (context->argumentCount() == 2) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
@@ -370,7 +441,14 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 17:
+    case 20:
+    if (context->argumentCount() == 0) {
+        QStringList _q_result = _q_self->mimeTypes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         _q_self->openPersistentEditor(_q_arg0);
@@ -384,7 +462,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 18:
+    case 22:
     if (context->argumentCount() == 2) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
@@ -393,14 +471,14 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 19:
+    case 23:
     if (context->argumentCount() == 0) {
         QList<QTreeWidgetItem*> _q_result = _q_self->selectedItems();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 24:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         _q_self->setCurrentItem(_q_arg0);
@@ -421,7 +499,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 21:
+    case 25:
     if (context->argumentCount() == 2) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -430,7 +508,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 22:
+    case 26:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         _q_self->setHeaderItem(_q_arg0);
@@ -438,7 +516,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 23:
+    case 27:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setHeaderLabel(_q_arg0);
@@ -446,7 +524,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 24:
+    case 28:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -455,7 +533,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 25:
+    case 29:
     if (context->argumentCount() == 3) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
@@ -465,14 +543,14 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 26:
+    case 30:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->sortColumn();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 27:
+    case 31:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::SortOrder _q_arg1 = qscriptvalue_cast<Qt::SortOrder>(context->argument(1));
@@ -481,7 +559,14 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 28:
+    case 32:
+    if (context->argumentCount() == 0) {
+        QFlags<Qt::DropAction> _q_result = _q_self->supportedDropActions();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 33:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTreeWidgetItem* _q_result = _q_self->takeTopLevelItem(_q_arg0);
@@ -489,7 +574,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 29:
+    case 34:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTreeWidgetItem* _q_result = _q_self->topLevelItem(_q_arg0);
@@ -497,7 +582,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 30:
+    case 35:
     if (context->argumentCount() == 1) {
         QTreeWidgetItem* _q_arg0 = qscriptvalue_cast<QTreeWidgetItem*>(context->argument(0));
         QRect _q_result = _q_self->visualItemRect(_q_arg0);
@@ -505,7 +590,7 @@ static QScriptValue qtscript_QTreeWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 31: {
+    case 36: {
     QString result = QString::fromLatin1("QTreeWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -565,7 +650,7 @@ QScriptValue qtscript_create_QTreeWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTreeWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTreeWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QTreeView*>()));
-    for (int i = 0; i < 32; ++i) {
+    for (int i = 0; i < 37; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTreeWidget_prototype_call, qtscript_QTreeWidget_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTreeWidget_function_names[i+1]),

@@ -79,10 +79,6 @@ QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
         parentForm->getParent()->saveOldValues();
         QLineEdit* editor = new QLineEdit(parent);
         editor->setAlignment(Qt::AlignRight);
-        QDoubleValidator* validator = new QDoubleValidator(editor);
-        validator->setDecimals(precision);
-        validator->setRange(-columnMask.toDouble(), columnMask.toDouble(), precision);
-        editor->setValidator(validator);
         return editor;
     }
     return 0;

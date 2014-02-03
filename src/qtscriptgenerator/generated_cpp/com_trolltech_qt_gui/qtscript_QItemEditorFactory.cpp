@@ -31,9 +31,9 @@ static const char * const qtscript_QItemEditorFactory_function_signatures[] = {
     , ""
     , "QItemEditorFactory factory"
     // prototype
-    , "QVariant::Type type, QWidget parent"
-    , "QVariant::Type type, QItemEditorCreatorBase creator"
-    , "QVariant::Type type"
+    , "int userType, QWidget parent"
+    , "int userType, QItemEditorCreatorBase creator"
+    , "int userType"
 ""
 };
 
@@ -62,7 +62,7 @@ static QScriptValue qtscript_QItemEditorFactory_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QItemEditorFactory*)
 Q_DECLARE_METATYPE(QtScriptShell_QItemEditorFactory*)
-Q_DECLARE_METATYPE(QVariant::Type)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QItemEditorCreatorBase*)
 
 //
@@ -93,7 +93,7 @@ static QScriptValue qtscript_QItemEditorFactory_prototype_call(QScriptContext *c
     switch (_id) {
     case 0:
     if (context->argumentCount() == 2) {
-        QVariant::Type _q_arg0 = qscriptvalue_cast<QVariant::Type>(context->argument(0));
+        int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
         QWidget* _q_result = _q_self->createEditor(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -102,7 +102,7 @@ static QScriptValue qtscript_QItemEditorFactory_prototype_call(QScriptContext *c
 
     case 1:
     if (context->argumentCount() == 2) {
-        QVariant::Type _q_arg0 = qscriptvalue_cast<QVariant::Type>(context->argument(0));
+        int _q_arg0 = context->argument(0).toInt32();
         QItemEditorCreatorBase* _q_arg1 = qscriptvalue_cast<QItemEditorCreatorBase*>(context->argument(1));
         _q_self->registerEditor(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
@@ -111,7 +111,7 @@ static QScriptValue qtscript_QItemEditorFactory_prototype_call(QScriptContext *c
 
     case 2:
     if (context->argumentCount() == 1) {
-        QVariant::Type _q_arg0 = qscriptvalue_cast<QVariant::Type>(context->argument(0));
+        int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->valuePropertyName(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }

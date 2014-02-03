@@ -40,7 +40,7 @@ static const char * const qtscript_QGraphicsItemGroup_function_names[] = {
 };
 
 static const char * const qtscript_QGraphicsItemGroup_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent"
     // static
     // prototype
     , "QGraphicsItem item"
@@ -49,12 +49,22 @@ static const char * const qtscript_QGraphicsItemGroup_function_signatures[] = {
 };
 
 static const int qtscript_QGraphicsItemGroup_function_lengths[] = {
-    2
+    1
     // static
     // prototype
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsItemGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsItemGroup : public QGraphicsItemGroup
+{
+
+    friend QScriptValue qtscript_QGraphicsItemGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsItemGroup_throw_ambiguity_error_helper(
@@ -89,7 +99,7 @@ static QScriptValue qtscript_QGraphicsItemGroup_prototype_call(QScriptContext *c
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsItemGroup* _q_self = qscriptvalue_cast<QGraphicsItemGroup*>(context->thisObject());
+    qtscript_QGraphicsItemGroup* _q_self = reinterpret_cast<qtscript_QGraphicsItemGroup*>(qscriptvalue_cast<QGraphicsItemGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsItemGroup.%0(): this object is not a QGraphicsItemGroup")
@@ -144,13 +154,6 @@ static QScriptValue qtscript_QGraphicsItemGroup_static_call(QScriptContext *cont
     } else if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         QtScriptShell_QGraphicsItemGroup* _q_cpp_result = new QtScriptShell_QGraphicsItemGroup(_q_arg0);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsItemGroup*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
-    } else if (context->argumentCount() == 2) {
-        QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-        QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-        QtScriptShell_QGraphicsItemGroup* _q_cpp_result = new QtScriptShell_QGraphicsItemGroup(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsItemGroup*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;

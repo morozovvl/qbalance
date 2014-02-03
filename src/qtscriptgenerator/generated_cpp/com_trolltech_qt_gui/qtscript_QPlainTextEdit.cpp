@@ -7,6 +7,7 @@
 
 #include <qplaintextedit.h>
 #include <QAbstractTextDocumentLayout>
+#include <QIconEngine>
 #include <QTextEdit>
 #include <QVariant>
 #include <qaction.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -32,9 +31,9 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qplaintextedit.h>
 #include <qpoint.h>
-#include <qprinter.h>
 #include <qrect.h>
 #include <qregion.h>
 #include <qscrollbar.h>
@@ -47,6 +46,7 @@
 #include <qtextobject.h>
 #include <qurl.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QPlainTextEdit.h"
 
@@ -55,19 +55,27 @@ static const char * const qtscript_QPlainTextEdit_function_names[] = {
     // static
     // prototype
     , "anchorAt"
+    , "blockBoundingGeometry"
+    , "blockBoundingRect"
+    , "canInsertFromMimeData"
     , "canPaste"
+    , "contentOffset"
+    , "createMimeDataFromSelection"
     , "createStandardContextMenu"
     , "currentCharFormat"
     , "cursorForPosition"
     , "cursorRect"
+    , "doSetTextCursor"
     , "document"
     , "ensureCursorVisible"
     , "extraSelections"
     , "find"
+    , "firstVisibleBlock"
+    , "getPaintContext"
+    , "insertFromMimeData"
     , "loadResource"
     , "mergeCurrentCharFormat"
     , "moveCursor"
-    , "print"
     , "setCurrentCharFormat"
     , "setDocument"
     , "setExtraSelections"
@@ -83,19 +91,27 @@ static const char * const qtscript_QPlainTextEdit_function_signatures[] = {
     // static
     // prototype
     , "QPoint pos"
+    , "QTextBlock block"
+    , "QTextBlock block"
+    , "QMimeData source"
+    , ""
+    , ""
     , ""
     , ""
     , ""
     , "QPoint pos"
     , "\nQTextCursor cursor"
+    , "QTextCursor cursor"
     , ""
     , ""
     , ""
     , "String exp, FindFlags options"
+    , ""
+    , ""
+    , "QMimeData source"
     , "int type, QUrl name"
     , "QTextCharFormat modifier"
     , "MoveOperation operation, MoveMode mode"
-    , "QPrinter printer"
     , "QTextCharFormat format"
     , "QTextDocument document"
     , "List selections"
@@ -111,15 +127,24 @@ static const int qtscript_QPlainTextEdit_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 1
+    , 1
+    , 1
     , 0
     , 0
     , 0
+    , 0
+    , 0
+    , 1
     , 1
     , 1
     , 0
     , 0
     , 0
     , 2
+    , 0
+    , 0
+    , 1
     , 2
     , 1
     , 2
@@ -128,10 +153,27 @@ static const int qtscript_QPlainTextEdit_function_lengths[] = {
     , 1
     , 1
     , 1
-    , 1
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPlainTextEdit : public QPlainTextEdit
+{
+    friend QScriptValue qtscript_QPlainTextEdit_blockBoundingGeometry(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_blockBoundingRect(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_canInsertFromMimeData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_contentOffset(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_createMimeDataFromSelection(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_doSetTextCursor(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_firstVisibleBlock(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_getPaintContext(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QPlainTextEdit_insertFromMimeData(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPlainTextEdit_throw_ambiguity_error_helper(
@@ -153,6 +195,8 @@ static const QMetaObject *qtscript_QPlainTextEdit_metaObject()
 Q_DECLARE_METATYPE(QPlainTextEdit*)
 Q_DECLARE_METATYPE(QtScriptShell_QPlainTextEdit*)
 Q_DECLARE_METATYPE(QPlainTextEdit::LineWrapMode)
+Q_DECLARE_METATYPE(QTextBlock)
+Q_DECLARE_METATYPE(QMimeData*)
 Q_DECLARE_METATYPE(QMenu*)
 Q_DECLARE_METATYPE(QTextCharFormat)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -160,10 +204,11 @@ Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextEdit::ExtraSelection)
 Q_DECLARE_METATYPE(QList<QTextEdit::ExtraSelection>)
 Q_DECLARE_METATYPE(QFlags<QTextDocument::FindFlag>)
+Q_DECLARE_METATYPE(QAbstractTextDocumentLayout::PaintContext)
 Q_DECLARE_METATYPE(QTextCursor::MoveOperation)
 Q_DECLARE_METATYPE(QTextCursor::MoveMode)
-Q_DECLARE_METATYPE(QPrinter*)
 Q_DECLARE_METATYPE(QTextOption::WrapMode)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractScrollArea*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -267,11 +312,11 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 29;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPlainTextEdit* _q_self = qscriptvalue_cast<QPlainTextEdit*>(context->thisObject());
+    qtscript_QPlainTextEdit* _q_self = reinterpret_cast<qtscript_QPlainTextEdit*>(qscriptvalue_cast<QPlainTextEdit*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPlainTextEdit.%0(): this object is not a QPlainTextEdit")
@@ -288,27 +333,65 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QTextBlock _q_arg0 = qscriptvalue_cast<QTextBlock>(context->argument(0));
+        QRectF _q_result = _q_self->blockBoundingGeometry(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
+        QTextBlock _q_arg0 = qscriptvalue_cast<QTextBlock>(context->argument(0));
+        QRectF _q_result = _q_self->blockBoundingRect(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 1) {
+        QMimeData* _q_arg0 = qscriptvalue_cast<QMimeData*>(context->argument(0));
+        bool _q_result = _q_self->canInsertFromMimeData(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->canPaste();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 5:
+    if (context->argumentCount() == 0) {
+        QPointF _q_result = _q_self->contentOffset();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 0) {
+        QMimeData* _q_result = _q_self->createMimeDataFromSelection();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 0) {
         QMenu* _q_result = _q_self->createStandardContextMenu();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 8:
     if (context->argumentCount() == 0) {
         QTextCharFormat _q_result = _q_self->currentCharFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 9:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         QTextCursor _q_result = _q_self->cursorForPosition(_q_arg0);
@@ -316,7 +399,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 5:
+    case 10:
     if (context->argumentCount() == 0) {
         QRect _q_result = _q_self->cursorRect();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -328,28 +411,36 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 6:
+    case 11:
+    if (context->argumentCount() == 1) {
+        QTextCursor _q_arg0 = qscriptvalue_cast<QTextCursor>(context->argument(0));
+        _q_self->doSetTextCursor(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 12:
     if (context->argumentCount() == 0) {
         QTextDocument* _q_result = _q_self->document();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 13:
     if (context->argumentCount() == 0) {
         _q_self->ensureCursorVisible();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 8:
+    case 14:
     if (context->argumentCount() == 0) {
         QList<QTextEdit::ExtraSelection> _q_result = _q_self->extraSelections();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 15:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->find(_q_arg0);
@@ -363,7 +454,29 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 10:
+    case 16:
+    if (context->argumentCount() == 0) {
+        QTextBlock _q_result = _q_self->firstVisibleBlock();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17:
+    if (context->argumentCount() == 0) {
+        QAbstractTextDocumentLayout::PaintContext _q_result = _q_self->getPaintContext();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 1) {
+        QMimeData* _q_arg0 = qscriptvalue_cast<QMimeData*>(context->argument(0));
+        _q_self->insertFromMimeData(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 19:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QUrl _q_arg1 = qscriptvalue_cast<QUrl>(context->argument(1));
@@ -372,7 +485,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 11:
+    case 20:
     if (context->argumentCount() == 1) {
         QTextCharFormat _q_arg0 = qscriptvalue_cast<QTextCharFormat>(context->argument(0));
         _q_self->mergeCurrentCharFormat(_q_arg0);
@@ -380,7 +493,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 12:
+    case 21:
     if (context->argumentCount() == 1) {
         QTextCursor::MoveOperation _q_arg0 = qscriptvalue_cast<QTextCursor::MoveOperation>(context->argument(0));
         _q_self->moveCursor(_q_arg0);
@@ -394,15 +507,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 13:
-    if (context->argumentCount() == 1) {
-        QPrinter* _q_arg0 = qscriptvalue_cast<QPrinter*>(context->argument(0));
-        _q_self->print(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 14:
+    case 22:
     if (context->argumentCount() == 1) {
         QTextCharFormat _q_arg0 = qscriptvalue_cast<QTextCharFormat>(context->argument(0));
         _q_self->setCurrentCharFormat(_q_arg0);
@@ -410,7 +515,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 15:
+    case 23:
     if (context->argumentCount() == 1) {
         QTextDocument* _q_arg0 = qscriptvalue_cast<QTextDocument*>(context->argument(0));
         _q_self->setDocument(_q_arg0);
@@ -418,7 +523,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 16:
+    case 24:
     if (context->argumentCount() == 1) {
         QList<QTextEdit::ExtraSelection> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -427,7 +532,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 17:
+    case 25:
     if (context->argumentCount() == 1) {
         QTextCursor _q_arg0 = qscriptvalue_cast<QTextCursor>(context->argument(0));
         _q_self->setTextCursor(_q_arg0);
@@ -435,7 +540,7 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 18:
+    case 26:
     if (context->argumentCount() == 1) {
         QTextOption::WrapMode _q_arg0 = qscriptvalue_cast<QTextOption::WrapMode>(context->argument(0));
         _q_self->setWordWrapMode(_q_arg0);
@@ -443,21 +548,21 @@ static QScriptValue qtscript_QPlainTextEdit_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 19:
+    case 27:
     if (context->argumentCount() == 0) {
         QTextCursor _q_result = _q_self->textCursor();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 28:
     if (context->argumentCount() == 0) {
         QTextOption::WrapMode _q_result = _q_self->wordWrapMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 21: {
+    case 29: {
     QString result = QString::fromLatin1("QPlainTextEdit");
     return QScriptValue(context->engine(), result);
     }
@@ -532,7 +637,7 @@ QScriptValue qtscript_create_QPlainTextEdit_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPlainTextEdit*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPlainTextEdit*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractScrollArea*>()));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 30; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPlainTextEdit_prototype_call, qtscript_QPlainTextEdit_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPlainTextEdit_function_names[i+1]),

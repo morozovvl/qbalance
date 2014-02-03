@@ -32,6 +32,8 @@ static const char * const qtscript_QSslSocket_function_names[] = {
     , "defaultCiphers"
     , "setDefaultCaCertificates"
     , "setDefaultCiphers"
+    , "sslLibraryVersionNumber"
+    , "sslLibraryVersionString"
     , "supportedCiphers"
     , "supportsSsl"
     , "systemCaCertificates"
@@ -46,19 +48,23 @@ static const char * const qtscript_QSslSocket_function_names[] = {
     , "ignoreSslErrors"
     , "isEncrypted"
     , "localCertificate"
+    , "localCertificateChain"
     , "mode"
     , "peerCertificate"
     , "peerCertificateChain"
     , "peerVerifyDepth"
     , "peerVerifyMode"
+    , "peerVerifyName"
     , "privateKey"
     , "protocol"
     , "sessionCipher"
     , "setCaCertificates"
     , "setCiphers"
     , "setLocalCertificate"
+    , "setLocalCertificateChain"
     , "setPeerVerifyDepth"
     , "setPeerVerifyMode"
+    , "setPeerVerifyName"
     , "setPrivateKey"
     , "setProtocol"
     , "setSslConfiguration"
@@ -80,12 +86,14 @@ static const char * const qtscript_QSslSocket_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
+    , ""
     // prototype
     , "QSslCertificate certificate"
     , "List certificates\nString path, EncodingFormat format, PatternSyntax syntax"
     , ""
     , ""
-    , "String hostName, unsigned short port, OpenMode mode\nString hostName, unsigned short port, String sslPeerName, OpenMode mode"
+    , "String hostName, unsigned short port, OpenMode mode, NetworkLayerProtocol protocol\nString hostName, unsigned short port, String sslPeerName, OpenMode mode, NetworkLayerProtocol protocol"
     , ""
     , ""
     , "List errors"
@@ -99,11 +107,15 @@ static const char * const qtscript_QSslSocket_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
+    , ""
     , "List certificates"
     , "List ciphers\nString ciphers"
     , "QSslCertificate certificate\nString fileName, EncodingFormat format"
+    , "List localChain"
     , "int depth"
     , "PeerVerifyMode mode"
+    , "String hostName"
     , "QSslKey key\nString fileName, KeyAlgorithm algorithm, EncodingFormat format, QByteArray passPhrase"
     , "SslProtocol protocol"
     , "QSslConfiguration config"
@@ -125,15 +137,19 @@ static const int qtscript_QSslSocket_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 0
+    , 0
     // prototype
     , 1
     , 3
     , 0
     , 0
-    , 4
+    , 5
     , 0
     , 0
     , 1
+    , 0
+    , 0
     , 0
     , 0
     , 0
@@ -149,6 +165,8 @@ static const int qtscript_QSslSocket_function_lengths[] = {
     , 2
     , 1
     , 1
+    , 1
+    , 1
     , 4
     , 1
     , 1
@@ -156,6 +174,15 @@ static const int qtscript_QSslSocket_function_lengths[] = {
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSslSocket : public QSslSocket
+{
+
+    friend QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSslSocket_throw_ambiguity_error_helper(
@@ -173,18 +200,17 @@ Q_DECLARE_METATYPE(QSslSocket*)
 Q_DECLARE_METATYPE(QtScriptShell_QSslSocket*)
 Q_DECLARE_METATYPE(QSslSocket::SslMode)
 Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
-Q_DECLARE_METATYPE(QSslCertificate)
 Q_DECLARE_METATYPE(QList<QSslCertificate>)
 Q_DECLARE_METATYPE(QSsl::EncodingFormat)
 Q_DECLARE_METATYPE(QRegExp::PatternSyntax)
 Q_DECLARE_METATYPE(QSslCipher)
 Q_DECLARE_METATYPE(QList<QSslCipher>)
 Q_DECLARE_METATYPE(QFlags<QIODevice::OpenModeFlag>)
+Q_DECLARE_METATYPE(QAbstractSocket::NetworkLayerProtocol)
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslKey)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
 Q_DECLARE_METATYPE(QSsl::KeyAlgorithm)
-Q_DECLARE_METATYPE(QSslConfiguration)
 Q_DECLARE_METATYPE(QTcpSocket*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -355,15 +381,15 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 29;
+        _id = 0xBABE0000 + 33;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSslSocket* _q_self = qscriptvalue_cast<QSslSocket*>(context->thisObject());
+    qtscript_QSslSocket* _q_self = reinterpret_cast<qtscript_QSslSocket*>(qscriptvalue_cast<QSslSocket*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSslSocket.%0(): this object is not a QSslSocket")
-            .arg(qtscript_QSslSocket_function_names[_id+10]));
+            .arg(qtscript_QSslSocket_function_names[_id+12]));
     }
 
     switch (_id) {
@@ -444,11 +470,35 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
         }
     }
     if (context->argumentCount() == 4) {
+        if (context->argument(0).isString()
+            && context->argument(1).isNumber()
+            && (qMetaTypeId<QFlags<QIODevice::OpenModeFlag> >() == context->argument(2).toVariant().userType())
+            && (qMetaTypeId<QAbstractSocket::NetworkLayerProtocol>() == context->argument(3).toVariant().userType())) {
+            QString _q_arg0 = context->argument(0).toString();
+            unsigned short _q_arg1 = qscriptvalue_cast<unsigned short>(context->argument(1));
+            QFlags<QIODevice::OpenModeFlag> _q_arg2 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(2));
+            QAbstractSocket::NetworkLayerProtocol _q_arg3 = qscriptvalue_cast<QAbstractSocket::NetworkLayerProtocol>(context->argument(3));
+            _q_self->connectToHostEncrypted(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isString()
+            && context->argument(1).isNumber()
+            && context->argument(2).isString()
+            && (qMetaTypeId<QFlags<QIODevice::OpenModeFlag> >() == context->argument(3).toVariant().userType())) {
+            QString _q_arg0 = context->argument(0).toString();
+            unsigned short _q_arg1 = qscriptvalue_cast<unsigned short>(context->argument(1));
+            QString _q_arg2 = context->argument(2).toString();
+            QFlags<QIODevice::OpenModeFlag> _q_arg3 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(3));
+            _q_self->connectToHostEncrypted(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            return context->engine()->undefinedValue();
+        }
+    }
+    if (context->argumentCount() == 5) {
         QString _q_arg0 = context->argument(0).toString();
         unsigned short _q_arg1 = qscriptvalue_cast<unsigned short>(context->argument(1));
         QString _q_arg2 = context->argument(2).toString();
         QFlags<QIODevice::OpenModeFlag> _q_arg3 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(3));
-        _q_self->connectToHostEncrypted(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        QAbstractSocket::NetworkLayerProtocol _q_arg4 = qscriptvalue_cast<QAbstractSocket::NetworkLayerProtocol>(context->argument(4));
+        _q_self->connectToHostEncrypted(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
         return context->engine()->undefinedValue();
     }
     break;
@@ -492,61 +542,75 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
 
     case 10:
     if (context->argumentCount() == 0) {
-        QSslSocket::SslMode _q_result = _q_self->mode();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        QList<QSslCertificate> _q_result = _q_self->localCertificateChain();
+        return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
     case 11:
     if (context->argumentCount() == 0) {
-        QSslCertificate _q_result = _q_self->peerCertificate();
+        QSslSocket::SslMode _q_result = _q_self->mode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 12:
     if (context->argumentCount() == 0) {
+        QSslCertificate _q_result = _q_self->peerCertificate();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 13:
+    if (context->argumentCount() == 0) {
         QList<QSslCertificate> _q_result = _q_self->peerCertificateChain();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->peerVerifyDepth();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 0) {
         QSslSocket::PeerVerifyMode _q_result = _q_self->peerVerifyMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 16:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->peerVerifyName();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17:
     if (context->argumentCount() == 0) {
         QSslKey _q_result = _q_self->privateKey();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 0) {
         QSsl::SslProtocol _q_result = _q_self->protocol();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 0) {
         QSslCipher _q_result = _q_self->sessionCipher();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 1) {
         QList<QSslCertificate> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -555,7 +619,7 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 1) {
         if (context->argument(0).isArray()) {
             QList<QSslCipher> _q_arg0;
@@ -570,7 +634,7 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QSslCertificate>() == context->argument(0).toVariant().userType())) {
             QSslCertificate _q_arg0 = qscriptvalue_cast<QSslCertificate>(context->argument(0));
@@ -590,7 +654,16 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 21:
+    case 23:
+    if (context->argumentCount() == 1) {
+        QList<QSslCertificate> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        _q_self->setLocalCertificateChain(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 24:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setPeerVerifyDepth(_q_arg0);
@@ -598,7 +671,7 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 22:
+    case 25:
     if (context->argumentCount() == 1) {
         QSslSocket::PeerVerifyMode _q_arg0 = qscriptvalue_cast<QSslSocket::PeerVerifyMode>(context->argument(0));
         _q_self->setPeerVerifyMode(_q_arg0);
@@ -606,7 +679,15 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 23:
+    case 26:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setPeerVerifyName(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 27:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QSslKey>() == context->argument(0).toVariant().userType())) {
             QSslKey _q_arg0 = qscriptvalue_cast<QSslKey>(context->argument(0));
@@ -641,7 +722,7 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 24:
+    case 28:
     if (context->argumentCount() == 1) {
         QSsl::SslProtocol _q_arg0 = qscriptvalue_cast<QSsl::SslProtocol>(context->argument(0));
         _q_self->setProtocol(_q_arg0);
@@ -649,7 +730,7 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 25:
+    case 29:
     if (context->argumentCount() == 1) {
         QSslConfiguration _q_arg0 = qscriptvalue_cast<QSslConfiguration>(context->argument(0));
         _q_self->setSslConfiguration(_q_arg0);
@@ -657,21 +738,21 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 26:
+    case 30:
     if (context->argumentCount() == 0) {
         QSslConfiguration _q_result = _q_self->sslConfiguration();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 27:
+    case 31:
     if (context->argumentCount() == 0) {
         QList<QSslError> _q_result = _q_self->sslErrors();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 28:
+    case 32:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->waitForEncrypted();
         return QScriptValue(context->engine(), _q_result);
@@ -683,7 +764,7 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 29: {
+    case 33: {
     QString result = QString::fromLatin1("QSslSocket");
     return QScriptValue(context->engine(), result);
     }
@@ -692,8 +773,8 @@ static QScriptValue qtscript_QSslSocket_prototype_call(QScriptContext *context, 
     Q_ASSERT(false);
     }
     return qtscript_QSslSocket_throw_ambiguity_error_helper(context,
-        qtscript_QSslSocket_function_names[_id+10],
-        qtscript_QSslSocket_function_signatures[_id+10]);
+        qtscript_QSslSocket_function_names[_id+12],
+        qtscript_QSslSocket_function_signatures[_id+12]);
 }
 
 static QScriptValue qtscript_QSslSocket_static_call(QScriptContext *context, QScriptEngine *)
@@ -790,19 +871,33 @@ static QScriptValue qtscript_QSslSocket_static_call(QScriptContext *context, QSc
 
     case 7:
     if (context->argumentCount() == 0) {
+        long _q_result = QSslSocket::sslLibraryVersionNumber();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 8:
+    if (context->argumentCount() == 0) {
+        QString _q_result = QSslSocket::sslLibraryVersionString();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 0) {
         QList<QSslCipher> _q_result = QSslSocket::supportedCiphers();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 0) {
         bool _q_result = QSslSocket::supportsSsl();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 0) {
         QList<QSslCertificate> _q_result = QSslSocket::systemCaCertificates();
         return qScriptValueFromSequence(context->engine(), _q_result);
@@ -832,10 +927,10 @@ QScriptValue qtscript_create_QSslSocket_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSslSocket*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSslSocket*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QTcpSocket*>()));
-    for (int i = 0; i < 30; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QSslSocket_prototype_call, qtscript_QSslSocket_function_lengths[i+10]);
+    for (int i = 0; i < 34; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QSslSocket_prototype_call, qtscript_QSslSocket_function_lengths[i+12]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QSslSocket_function_names[i+10]),
+        proto.setProperty(QString::fromLatin1(qtscript_QSslSocket_function_names[i+12]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -844,7 +939,7 @@ QScriptValue qtscript_create_QSslSocket_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QSslSocket_static_call, proto, qtscript_QSslSocket_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSslSocket_static_call,
             qtscript_QSslSocket_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

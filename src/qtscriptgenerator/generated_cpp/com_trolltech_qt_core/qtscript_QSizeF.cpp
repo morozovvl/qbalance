@@ -27,10 +27,12 @@ static const char * const qtscript_QSizeF_function_names[] = {
     , "operator_subtract_assign"
     , "readFrom"
     , "scale"
+    , "scaled"
     , "setHeight"
     , "setWidth"
     , "toSize"
     , "transpose"
+    , "transposed"
     , "width"
     , "writeTo"
     , "toString"
@@ -53,8 +55,10 @@ static const char * const qtscript_QSizeF_function_signatures[] = {
     , "QSizeF arg__1"
     , "QDataStream arg__1"
     , "QSizeF s, AspectRatioMode mode\nqreal w, qreal h, AspectRatioMode mode"
+    , "QSizeF s, AspectRatioMode mode\nqreal w, qreal h, AspectRatioMode mode"
     , "qreal h"
     , "qreal w"
+    , ""
     , ""
     , ""
     , ""
@@ -79,8 +83,10 @@ static const int qtscript_QSizeF_function_lengths[] = {
     , 1
     , 1
     , 3
+    , 3
     , 1
     , 1
+    , 0
     , 0
     , 0
     , 0
@@ -117,7 +123,7 @@ static QScriptValue qtscript_QSizeF_prototype_call(QScriptContext *context, QScr
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 19;
+        _id = 0xBABE0000 + 21;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -238,6 +244,22 @@ static QScriptValue qtscript_QSizeF_prototype_call(QScriptContext *context, QScr
     break;
 
     case 13:
+    if (context->argumentCount() == 2) {
+        QSizeF _q_arg0 = qscriptvalue_cast<QSizeF>(context->argument(0));
+        Qt::AspectRatioMode _q_arg1 = qscriptvalue_cast<Qt::AspectRatioMode>(context->argument(1));
+        QSizeF _q_result = _q_self->scaled(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 3) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        Qt::AspectRatioMode _q_arg2 = qscriptvalue_cast<Qt::AspectRatioMode>(context->argument(2));
+        QSizeF _q_result = _q_self->scaled(_q_arg0, _q_arg1, _q_arg2);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 14:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setHeight(_q_arg0);
@@ -245,7 +267,7 @@ static QScriptValue qtscript_QSizeF_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setWidth(_q_arg0);
@@ -253,28 +275,35 @@ static QScriptValue qtscript_QSizeF_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->toSize();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 0) {
         _q_self->transpose();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 17:
+    case 18:
+    if (context->argumentCount() == 0) {
+        QSizeF _q_result = _q_self->transposed();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 19:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->width();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -282,7 +311,7 @@ static QScriptValue qtscript_QSizeF_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 19: {
+    case 21: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -337,7 +366,7 @@ QScriptValue qtscript_create_QSizeF_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSizeF*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSizeF*)0));
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 22; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSizeF_prototype_call, qtscript_QSizeF_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSizeF_function_names[i+1]),

@@ -8,7 +8,7 @@
 class QtScriptShell_QCoreApplication : public QCoreApplication
 {
 public:
-    QtScriptShell_QCoreApplication(int&  argc, char**  argv);
+    QtScriptShell_QCoreApplication(int&  argc, char**  argv, int  arg__3 = ApplicationFlags);
     ~QtScriptShell_QCoreApplication();
 
     void childEvent(QChildEvent*  arg__1);

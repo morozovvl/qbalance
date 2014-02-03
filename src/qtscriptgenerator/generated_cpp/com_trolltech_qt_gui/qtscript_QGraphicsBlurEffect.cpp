@@ -40,6 +40,15 @@ static const int qtscript_QGraphicsBlurEffect_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsBlurEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsBlurEffect : public QGraphicsBlurEffect
+{
+
+    friend QScriptValue qtscript_QGraphicsBlurEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGraphicsBlurEffect_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -251,7 +260,7 @@ static QScriptValue qtscript_QGraphicsBlurEffect_prototype_call(QScriptContext *
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsBlurEffect* _q_self = qscriptvalue_cast<QGraphicsBlurEffect*>(context->thisObject());
+    qtscript_QGraphicsBlurEffect* _q_self = reinterpret_cast<qtscript_QGraphicsBlurEffect*>(qscriptvalue_cast<QGraphicsBlurEffect*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsBlurEffect.%0(): this object is not a QGraphicsBlurEffect")

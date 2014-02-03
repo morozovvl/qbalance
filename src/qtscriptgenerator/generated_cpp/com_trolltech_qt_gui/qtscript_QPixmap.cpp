@@ -16,15 +16,16 @@
 #include <qimagewriter.h>
 #include <qiodevice.h>
 #include <qmatrix.h>
+#include <qobject.h>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
 #include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
 #include <qsize.h>
 #include <qtransform.h>
-#include <qwidget.h>
 
 #include "qtscriptshell_QPixmap.h"
 
@@ -38,7 +39,6 @@ static const char * const qtscript_QPixmap_function_names[] = {
     , "grabWindow"
     , "trueMatrix"
     // prototype
-    , "alphaChannel"
     , "cacheKey"
     , "convertFromImage"
     , "copy"
@@ -59,9 +59,10 @@ static const char * const qtscript_QPixmap_function_names[] = {
     , "scaledToHeight"
     , "scaledToWidth"
     , "scroll"
-    , "setAlphaChannel"
+    , "setDevicePixelRatio"
     , "setMask"
     , "size"
+    , "swap"
     , "toImage"
     , "transformed"
     , "writeTo"
@@ -69,22 +70,21 @@ static const char * const qtscript_QPixmap_function_names[] = {
 };
 
 static const char * const qtscript_QPixmap_function_signatures[] = {
-    "\nQPixmap arg__1\nQSize arg__1\nString fileName, char format, ImageConversionFlags flags\nchar xpm\nint w, int h"
+    "\nQPixmap arg__1\nQSize arg__1\nString fileName, char format, ImageConversionFlags flags\nint w, int h"
     // static
     , ""
     , "QImage image, ImageConversionFlags flags"
     , "QImageReader imageReader, ImageConversionFlags flags"
-    , "QWidget widget, QRect rect\nQWidget widget, int x, int y, int w, int h"
+    , "QObject widget, QRect rect\nQObject widget, int x, int y, int w, int h"
     , "WId arg__1, int x, int y, int w, int h"
     , "QMatrix m, int w, int h\nQTransform m, int w, int h"
     // prototype
     , ""
-    , ""
     , "QImage img, ImageConversionFlags flags"
     , "QRect rect\nint x, int y, int width, int height"
     , "bool clipTight"
-    , "QColor maskColor\nQColor maskColor, MaskMode mode"
-    , "QColor fillColor\nQWidget widget, QPoint ofs\nQWidget widget, int xofs, int yofs"
+    , "QColor maskColor, MaskMode mode"
+    , "QColor fillColor\nQPaintDevice device, QPoint ofs\nQPaintDevice device, int xofs, int yofs"
     , ""
     , ""
     , ""
@@ -99,9 +99,10 @@ static const char * const qtscript_QPixmap_function_signatures[] = {
     , "int h, TransformationMode mode"
     , "int w, TransformationMode mode"
     , "int dx, int dy, QRect rect, QRegion exposed\nint dx, int dy, int x, int y, int width, int height, QRegion exposed"
-    , "QPixmap arg__1"
+    , "qreal scaleFactor"
     , "QBitmap arg__1"
     , ""
+    , "QPixmap other"
     , ""
     , "QMatrix arg__1, TransformationMode mode\nQTransform arg__1, TransformationMode mode"
     , "QDataStream arg__1"
@@ -118,7 +119,6 @@ static const int qtscript_QPixmap_function_lengths[] = {
     , 5
     , 3
     // prototype
-    , 0
     , 0
     , 2
     , 4
@@ -142,10 +142,20 @@ static const int qtscript_QPixmap_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 1
     , 0
     , 2
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPixmap : public QPixmap
+{
+
+    friend QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPixmap_throw_ambiguity_error_helper(
@@ -164,6 +174,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QPixmap)
 Q_DECLARE_METATYPE(QtScriptShell_QPixmap*)
 Q_DECLARE_METATYPE(QFlags<Qt::ImageConversionFlag>)
 Q_DECLARE_METATYPE(Qt::MaskMode)
+Q_DECLARE_METATYPE(QPaintDevice*)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(QIODevice*)
 Q_DECLARE_METATYPE(Qt::AspectRatioMode)
@@ -171,8 +182,6 @@ Q_DECLARE_METATYPE(Qt::TransformationMode)
 Q_DECLARE_METATYPE(QRegion*)
 Q_DECLARE_METATYPE(QImageReader*)
 Q_DECLARE_METATYPE(WId)
-Q_DECLARE_METATYPE(char**)
-Q_DECLARE_METATYPE(QPaintDevice*)
 
 //
 // QPixmap
@@ -192,7 +201,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPixmap* _q_self = qscriptvalue_cast<QPixmap*>(context->thisObject());
+    qtscript_QPixmap* _q_self = reinterpret_cast<qtscript_QPixmap*>(qscriptvalue_cast<QPixmap*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPixmap.%0(): this object is not a QPixmap")
@@ -202,19 +211,12 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
-        QPixmap _q_result = _q_self->alphaChannel();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 1:
-    if (context->argumentCount() == 0) {
         qint64 _q_result = _q_self->cacheKey();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 1:
     if (context->argumentCount() == 1) {
         QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
         bool _q_result = _q_self->convertFromImage(_q_arg0);
@@ -228,7 +230,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 3:
+    case 2:
     if (context->argumentCount() == 0) {
         QPixmap _q_result = _q_self->copy();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -248,7 +250,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 4:
+    case 3:
     if (context->argumentCount() == 0) {
         QBitmap _q_result = _q_self->createHeuristicMask();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -260,7 +262,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 1) {
         QColor _q_arg0 = qscriptvalue_cast<QColor>(context->argument(0));
         QBitmap _q_result = _q_self->createMaskFromColor(_q_arg0);
@@ -274,7 +276,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         _q_self->fill();
         return context->engine()->undefinedValue();
@@ -285,13 +287,13 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 2) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QPaintDevice* _q_arg0 = qscriptvalue_cast<QPaintDevice*>(context->argument(0));
         QPoint _q_arg1 = qscriptvalue_cast<QPoint>(context->argument(1));
         _q_self->fill(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 3) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QPaintDevice* _q_arg0 = qscriptvalue_cast<QPaintDevice*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
         int _q_arg2 = context->argument(2).toInt32();
         _q_self->fill(_q_arg0, _q_arg1, _q_arg2);
@@ -299,35 +301,35 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasAlpha();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasAlphaChannel();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 8:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isNull();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 9:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isQBitmap();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 10:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->load(_q_arg0);
@@ -356,7 +358,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 12:
+    case 11:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         bool _q_result = _q_self->loadFromData(_q_arg0);
@@ -385,14 +387,14 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 13:
+    case 12:
     if (context->argumentCount() == 0) {
         QBitmap _q_result = _q_self->mask();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 13:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -400,14 +402,14 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 15:
+    case 14:
     if (context->argumentCount() == 0) {
         QRect _q_result = _q_self->rect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 15:
     if (context->argumentCount() == 1) {
         if (qscriptvalue_cast<QIODevice*>(context->argument(0))) {
             QIODevice* _q_arg0 = qscriptvalue_cast<QIODevice*>(context->argument(0));
@@ -471,7 +473,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 17:
+    case 16:
     if (context->argumentCount() == 1) {
         QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
         QPixmap _q_result = _q_self->scaled(_q_arg0);
@@ -521,7 +523,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 18:
+    case 17:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QPixmap _q_result = _q_self->scaledToHeight(_q_arg0);
@@ -535,7 +537,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 19:
+    case 18:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QPixmap _q_result = _q_self->scaledToWidth(_q_arg0);
@@ -549,7 +551,7 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 20:
+    case 19:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -588,15 +590,15 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 21:
+    case 20:
     if (context->argumentCount() == 1) {
-        QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-        _q_self->setAlphaChannel(_q_arg0);
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        _q_self->setDevicePixelRatio(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 22:
+    case 21:
     if (context->argumentCount() == 1) {
         QBitmap _q_arg0 = qscriptvalue_cast<QBitmap>(context->argument(0));
         _q_self->setMask(_q_arg0);
@@ -604,10 +606,18 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 23:
+    case 22:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->size();
         return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 23:
+    if (context->argumentCount() == 1) {
+        QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
@@ -645,7 +655,9 @@ static QScriptValue qtscript_QPixmap_prototype_call(QScriptContext *context, QSc
     break;
 
     case 27: {
-    QString result = QString::fromLatin1("QPixmap");
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -687,12 +699,6 @@ static QScriptValue qtscript_QPixmap_static_call(QScriptContext *context, QScrip
             return _q_result;
         } else if (context->argument(0).isString()) {
             QString _q_arg0 = context->argument(0).toString();
-            QtScriptShell_QPixmap _q_cpp_result(_q_arg0);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QPixmap)_q_cpp_result));
-            _q_cpp_result.__qtscript_self = _q_result;
-            return _q_result;
-        } else if (qscriptvalue_cast<char**>(context->argument(0))) {
-            char** _q_arg0 = qscriptvalue_cast<char**>(context->argument(0));
             QtScriptShell_QPixmap _q_cpp_result(_q_arg0);
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QPixmap)_q_cpp_result));
             _q_cpp_result.__qtscript_self = _q_result;
@@ -772,34 +778,34 @@ static QScriptValue qtscript_QPixmap_static_call(QScriptContext *context, QScrip
 
     case 4:
     if (context->argumentCount() == 1) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QObject* _q_arg0 = context->argument(0).toQObject();
         QPixmap _q_result = QPixmap::grabWidget(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<QWidget*>(context->argument(0))
+        if (context->argument(0).isQObject()
             && (qMetaTypeId<QRect>() == context->argument(1).toVariant().userType())) {
-            QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+            QObject* _q_arg0 = context->argument(0).toQObject();
             QRect _q_arg1 = qscriptvalue_cast<QRect>(context->argument(1));
             QPixmap _q_result = QPixmap::grabWidget(_q_arg0, _q_arg1);
             return qScriptValueFromValue(context->engine(), _q_result);
-        } else if (qscriptvalue_cast<QWidget*>(context->argument(0))
+        } else if (context->argument(0).isQObject()
             && context->argument(1).isNumber()) {
-            QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+            QObject* _q_arg0 = context->argument(0).toQObject();
             int _q_arg1 = context->argument(1).toInt32();
             QPixmap _q_result = QPixmap::grabWidget(_q_arg0, _q_arg1);
             return qScriptValueFromValue(context->engine(), _q_result);
         }
     }
     if (context->argumentCount() == 3) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QObject* _q_arg0 = context->argument(0).toQObject();
         int _q_arg1 = context->argument(1).toInt32();
         int _q_arg2 = context->argument(2).toInt32();
         QPixmap _q_result = QPixmap::grabWidget(_q_arg0, _q_arg1, _q_arg2);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 4) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QObject* _q_arg0 = context->argument(0).toQObject();
         int _q_arg1 = context->argument(1).toInt32();
         int _q_arg2 = context->argument(2).toInt32();
         int _q_arg3 = context->argument(3).toInt32();
@@ -807,7 +813,7 @@ static QScriptValue qtscript_QPixmap_static_call(QScriptContext *context, QScrip
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 5) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QObject* _q_arg0 = context->argument(0).toQObject();
         int _q_arg1 = context->argument(1).toInt32();
         int _q_arg2 = context->argument(2).toInt32();
         int _q_arg3 = context->argument(3).toInt32();

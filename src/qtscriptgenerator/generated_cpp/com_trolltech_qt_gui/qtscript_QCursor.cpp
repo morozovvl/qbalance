@@ -13,6 +13,7 @@
 #include <qdatastream.h>
 #include <qpixmap.h>
 #include <qpoint.h>
+#include <qscreen.h>
 
 static const char * const qtscript_QCursor_function_names[] = {
     "QCursor"
@@ -34,8 +35,8 @@ static const char * const qtscript_QCursor_function_names[] = {
 static const char * const qtscript_QCursor_function_signatures[] = {
     "\nCursorShape shape\nQBitmap bitmap, QBitmap mask, int hotX, int hotY\nQCursor cursor\nQPixmap pixmap, int hotX, int hotY"
     // static
-    , ""
-    , "QPoint p\nint x, int y"
+    , "\nQScreen screen"
+    , "QScreen screen, QPoint p\nQScreen screen, int x, int y\nQPoint p\nint x, int y"
     // prototype
     , ""
     , ""
@@ -51,8 +52,8 @@ static const char * const qtscript_QCursor_function_signatures[] = {
 static const int qtscript_QCursor_function_lengths[] = {
     4
     // static
-    , 0
-    , 2
+    , 1
+    , 3
     // prototype
     , 0
     , 0
@@ -80,6 +81,7 @@ Q_DECLARE_METATYPE(QCursor*)
 Q_DECLARE_METATYPE(QBitmap*)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(Qt::CursorShape)
+Q_DECLARE_METATYPE(QScreen*)
 
 //
 // QCursor
@@ -167,7 +169,9 @@ static QScriptValue qtscript_QCursor_prototype_call(QScriptContext *context, QSc
     break;
 
     case 8: {
-    QString result = QString::fromLatin1("QCursor");
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -262,6 +266,11 @@ static QScriptValue qtscript_QCursor_static_call(QScriptContext *context, QScrip
         QPoint _q_result = QCursor::pos();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
+    if (context->argumentCount() == 1) {
+        QScreen* _q_arg0 = qscriptvalue_cast<QScreen*>(context->argument(0));
+        QPoint _q_result = QCursor::pos(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
     break;
 
     case 2:
@@ -271,9 +280,25 @@ static QScriptValue qtscript_QCursor_static_call(QScriptContext *context, QScrip
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
+        if (qscriptvalue_cast<QScreen*>(context->argument(0))
+            && (qMetaTypeId<QPoint>() == context->argument(1).toVariant().userType())) {
+            QScreen* _q_arg0 = qscriptvalue_cast<QScreen*>(context->argument(0));
+            QPoint _q_arg1 = qscriptvalue_cast<QPoint>(context->argument(1));
+            QCursor::setPos(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && context->argument(1).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            int _q_arg1 = context->argument(1).toInt32();
+            QCursor::setPos(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        }
+    }
+    if (context->argumentCount() == 3) {
+        QScreen* _q_arg0 = qscriptvalue_cast<QScreen*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
-        QCursor::setPos(_q_arg0, _q_arg1);
+        int _q_arg2 = context->argument(2).toInt32();
+        QCursor::setPos(_q_arg0, _q_arg1, _q_arg2);
         return context->engine()->undefinedValue();
     }
     break;

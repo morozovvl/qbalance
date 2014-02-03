@@ -18,6 +18,7 @@ static const char * const qtscript_QXmlInputSource_function_names[] = {
     // prototype
     , "data"
     , "fetchData"
+    , "fromRawData"
     , "next"
     , "reset"
     , "setData"
@@ -30,6 +31,7 @@ static const char * const qtscript_QXmlInputSource_function_signatures[] = {
     // prototype
     , ""
     , ""
+    , "QByteArray data, bool beginning"
     , ""
     , ""
     , "QByteArray dat\nString dat"
@@ -42,10 +44,21 @@ static const int qtscript_QXmlInputSource_function_lengths[] = {
     // prototype
     , 0
     , 0
+    , 2
     , 0
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QXmlInputSource_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QXmlInputSource : public QXmlInputSource
+{
+    friend QScriptValue qtscript_QXmlInputSource_fromRawData(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QXmlInputSource_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QXmlInputSource_throw_ambiguity_error_helper(
@@ -77,11 +90,11 @@ static QScriptValue qtscript_QXmlInputSource_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QXmlInputSource* _q_self = qscriptvalue_cast<QXmlInputSource*>(context->thisObject());
+    qtscript_QXmlInputSource* _q_self = reinterpret_cast<qtscript_QXmlInputSource*>(qscriptvalue_cast<QXmlInputSource*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QXmlInputSource.%0(): this object is not a QXmlInputSource")
@@ -104,20 +117,34 @@ static QScriptValue qtscript_QXmlInputSource_prototype_call(QScriptContext *cont
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        QString _q_result = _q_self->fromRawData(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        bool _q_arg1 = context->argument(1).toBoolean();
+        QString _q_result = _q_self->fromRawData(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         QChar _q_result = _q_self->next();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         _q_self->reset();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
@@ -131,7 +158,7 @@ static QScriptValue qtscript_QXmlInputSource_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 5: {
+    case 6: {
     QString result = QString::fromLatin1("QXmlInputSource");
     return QScriptValue(context->engine(), result);
     }
@@ -180,7 +207,7 @@ QScriptValue qtscript_create_QXmlInputSource_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QXmlInputSource*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QXmlInputSource*)0));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QXmlInputSource_prototype_call, qtscript_QXmlInputSource_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QXmlInputSource_function_names[i+1]),

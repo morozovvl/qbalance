@@ -17,7 +17,6 @@ public:
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     bool  isEmpty() const;
     void timerEvent(QTimerEvent*  arg__1);
-    QString  translate(const char*  context, const char*  sourceText, const char*  disambiguation = 0) const;
 
     QScriptValue __qtscript_self;
 };

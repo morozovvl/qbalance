@@ -9,7 +9,7 @@ class QtScriptShell_QRegExpValidator : public QRegExpValidator
 {
 public:
     QtScriptShell_QRegExpValidator(QObject*  parent = 0);
-    QtScriptShell_QRegExpValidator(const QRegExp&  rx, QObject*  parent);
+    QtScriptShell_QRegExpValidator(const QRegExp&  rx, QObject*  parent = 0);
     ~QtScriptShell_QRegExpValidator();
 
     void childEvent(QChildEvent*  arg__1);

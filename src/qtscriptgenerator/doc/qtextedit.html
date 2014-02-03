@@ -18,29 +18,31 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QTextEdit prototype object</li>
-<li><b>AutoAll = 0xffffffff</b></li>
-<li><b>AutoNone = 0</b></li>
-<li><b>AutoBulletList = 0x00000001</b></li>
-<li><b>AutoFormattingFlag( value )</b></li>
-<li><b>AutoFormatting( value1, value2, ... )</b></li>
 <li><b>NoWrap</b></li>
 <li><b>WidgetWidth</b></li>
 <li><b>FixedPixelWidth</b></li>
 <li><b>FixedColumnWidth</b></li>
 <li><b>LineWrapMode( value )</b></li>
+<li><b>AutoAll = 0xffffffff</b></li>
+<li><b>AutoNone = 0</b></li>
+<li><b>AutoBulletList = 0x00000001</b></li>
+<li><b>AutoFormattingFlag( value )</b></li>
+<li><b>AutoFormatting( value1, value2, ... )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QTextEdit prototype object inherits properties from the <a href="qabstractscrollarea.html">QAbstractScrollArea</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>Alignment alignment()</b></li>
 <li><div class="fn"/><b>String anchorAt(QPoint pos)</b></li>
+<li><div class="fn"/><b>bool canInsertFromMimeData(QMimeData source)</b></li>
 <li><div class="fn"/><b>bool canPaste()</b></li>
+<li><div class="fn"/><b>QMimeData createMimeDataFromSelection()</b></li>
 <li><div class="fn"/><b>QMenu createStandardContextMenu()</b></li>
 <li><div class="fn"/><b>QTextCharFormat currentCharFormat()</b></li>
 <li><div class="fn"/><b>QFont currentFont()</b></li>
 <li><div class="fn"/><b>QTextCursor cursorForPosition(QPoint pos)</b></li>
 <li><div class="fn"/><b>QRect cursorRect()</b></li>
-<li><div class="fn"/><b>QTextDocument document()</b></li>
+<li><div class="fn"/><b>void doSetTextCursor(QTextCursor cursor)</b></li>
 <li><div class="fn"/><b>void ensureCursorVisible()</b></li>
 <li><div class="fn"/><b>List extraSelections()</b></li>
 <li><div class="fn"/><b>bool find(String exp, FindFlags options)</b></li>
@@ -49,12 +51,10 @@
 <li><div class="fn"/><b>qreal fontPointSize()</b></li>
 <li><div class="fn"/><b>bool fontUnderline()</b></li>
 <li><div class="fn"/><b>int fontWeight()</b></li>
-<li><div class="fn"/><b>Object loadResource(int type, QUrl name)</b></li>
+<li><div class="fn"/><b>void insertFromMimeData(QMimeData source)</b></li>
 <li><div class="fn"/><b>void mergeCurrentCharFormat(QTextCharFormat modifier)</b></li>
 <li><div class="fn"/><b>void moveCursor(MoveOperation operation, MoveMode mode)</b></li>
-<li><div class="fn"/><b>void print(QPrinter printer)</b></li>
 <li><div class="fn"/><b>void setCurrentCharFormat(QTextCharFormat format)</b></li>
-<li><div class="fn"/><b>void setDocument(QTextDocument document)</b></li>
 <li><div class="fn"/><b>void setExtraSelections(List selections)</b></li>
 <li><div class="fn"/><b>void setTextCursor(QTextCursor cursor)</b></li>
 <li><div class="fn"/><b>void setWordWrapMode(WrapMode policy)</b></li>
@@ -80,6 +80,7 @@
 <li><div class="fn"/><b>acceptRichText</b></li>
 <li><div class="fn"/><b>cursorWidth</b></li>
 <li><div class="fn"/><b>textInteractionFlags</b></li>
+<li><div class="fn"/><b>*document</b></li>
 </ul>
 </body>
 </html>

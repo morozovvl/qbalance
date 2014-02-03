@@ -21,6 +21,7 @@ public:
     QMimeData*  createMimeDataFromSelection() const;
     void customEvent(QEvent*  arg__1);
     int  devType() const;
+    void doSetTextCursor(const QTextCursor&  cursor);
     void dragEnterEvent(QDragEnterEvent*  e);
     void dragLeaveEvent(QDragLeaveEvent*  e);
     void dragMoveEvent(QDragMoveEvent*  e);
@@ -31,14 +32,15 @@ public:
     void focusInEvent(QFocusEvent*  e);
     bool  focusNextPrevChild(bool  next);
     void focusOutEvent(QFocusEvent*  e);
+    bool  hasHeightForWidth() const;
     int  heightForWidth(int  arg__1) const;
     void hideEvent(QHideEvent*  arg__1);
+    void initPainter(QPainter*  painter) const;
     void inputMethodEvent(QInputMethodEvent*  arg__1);
     QVariant  inputMethodQuery(Qt::InputMethodQuery  property) const;
     void insertFromMimeData(const QMimeData*  source);
     void keyPressEvent(QKeyEvent*  e);
     void keyReleaseEvent(QKeyEvent*  e);
-    void languageChange();
     void leaveEvent(QEvent*  arg__1);
     QVariant  loadResource(int  type, const QUrl&  name);
     int  metric(QPaintDevice::PaintDeviceMetric  arg__1) const;
@@ -47,14 +49,19 @@ public:
     void mousePressEvent(QMouseEvent*  e);
     void mouseReleaseEvent(QMouseEvent*  e);
     void moveEvent(QMoveEvent*  arg__1);
+    bool  nativeEvent(const QByteArray&  eventType, void*  message, long*  result);
     QPaintEngine*  paintEngine() const;
     void paintEvent(QPaintEvent*  e);
+    QPaintDevice*  redirected(QPoint*  offset) const;
     void resizeEvent(QResizeEvent*  e);
     void scrollContentsBy(int  dx, int  dy);
+    void setupViewport(QWidget*  viewport);
+    QPainter*  sharedPainter() const;
     void showEvent(QShowEvent*  arg__1);
     void tabletEvent(QTabletEvent*  arg__1);
     void timerEvent(QTimerEvent*  e);
     bool  viewportEvent(QEvent*  arg__1);
+    QSize  viewportSizeHint() const;
     void wheelEvent(QWheelEvent*  e);
 
     QScriptValue __qtscript_self;

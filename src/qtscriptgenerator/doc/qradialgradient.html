@@ -13,8 +13,10 @@
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QRadialGradient()</b></li>
+<li><div class="fn"/><b>void QRadialGradient(QPointF center, qreal centerRadius, QPointF focalPoint, qreal focalRadius)</b></li>
 <li><div class="fn"/><b>void QRadialGradient(QPointF center, qreal radius)</b></li>
 <li><div class="fn"/><b>void QRadialGradient(QPointF center, qreal radius, QPointF focalPoint)</b></li>
+<li><div class="fn"/><b>void QRadialGradient(qreal cx, qreal cy, qreal centerRadius, qreal fx, qreal fy, qreal focalRadius)</b></li>
 <li><div class="fn"/><b>void QRadialGradient(qreal cx, qreal cy, qreal radius)</b></li>
 <li><div class="fn"/><b>void QRadialGradient(qreal cx, qreal cy, qreal radius, qreal fx, qreal fy)</b></li>
 </ul>
@@ -26,10 +28,14 @@
 <p>The QRadialGradient prototype object inherits properties from the <a href="qgradient.html">QGradient</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>QPointF center()</b></li>
+<li><div class="fn"/><b>qreal centerRadius()</b></li>
 <li><div class="fn"/><b>QPointF focalPoint()</b></li>
+<li><div class="fn"/><b>qreal focalRadius()</b></li>
 <li><div class="fn"/><b>qreal radius()</b></li>
 <li><div class="fn"/><b>void setCenter(QPointF center)</b></li>
+<li><div class="fn"/><b>void setCenterRadius(qreal radius)</b></li>
 <li><div class="fn"/><b>void setFocalPoint(QPointF focalPoint)</b></li>
+<li><div class="fn"/><b>void setFocalRadius(qreal radius)</b></li>
 <li><div class="fn"/><b>void setRadius(qreal radius)</b></li>
 </ul>
 <h3>Instance Properties</h3>

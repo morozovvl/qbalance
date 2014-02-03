@@ -7,6 +7,8 @@
 
 #include <qmargins.h>
 #include <QVariant>
+#include <qdatastream.h>
+#include <qmargins.h>
 
 static const char * const qtscript_QMargins_function_names[] = {
     "QMargins"
@@ -15,13 +17,19 @@ static const char * const qtscript_QMargins_function_names[] = {
     , "bottom"
     , "isNull"
     , "left"
+    , "operator_add_assign"
+    , "operator_divide_assign"
     , "equals"
+    , "operator_multiply_assign"
+    , "operator_subtract_assign"
+    , "readFrom"
     , "right"
     , "setBottom"
     , "setLeft"
     , "setRight"
     , "setTop"
     , "top"
+    , "writeTo"
     , "toString"
 };
 
@@ -32,13 +40,19 @@ static const char * const qtscript_QMargins_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QMargins margins\nint arg__1"
+    , "int arg__1\nqreal arg__1"
     , "QMargins m2"
+    , "int arg__1\nqreal arg__1"
+    , "QMargins margins\nint arg__1"
+    , "QDataStream arg__1"
     , ""
     , "int bottom"
     , "int left"
     , "int right"
     , "int top"
     , ""
+    , "QDataStream arg__1"
 ""
 };
 
@@ -50,12 +64,18 @@ static const int qtscript_QMargins_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
     , 0
     , 1
     , 1
     , 1
     , 1
     , 0
+    , 1
     , 0
 };
 
@@ -72,6 +92,7 @@ static QScriptValue qtscript_QMargins_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QMargins)
 Q_DECLARE_METATYPE(QMargins*)
+Q_DECLARE_METATYPE(QDataStream*)
 
 //
 // QMargins
@@ -87,7 +108,7 @@ static QScriptValue qtscript_QMargins_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 10;
+        _id = 0xBABE0000 + 16;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -122,20 +143,84 @@ static QScriptValue qtscript_QMargins_prototype_call(QScriptContext *context, QS
 
     case 3:
     if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<QMargins>() == context->argument(0).toVariant().userType())) {
+            QMargins _q_arg0 = qscriptvalue_cast<QMargins>(context->argument(0));
+            QMargins _q_result = _q_self->operator+=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QMargins _q_result = _q_self->operator+=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
+        if (context->argument(0).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QMargins _q_result = _q_self->operator/=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()) {
+            qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+            QMargins _q_result = _q_self->operator/=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
         QMargins _q_arg0 = qscriptvalue_cast<QMargins>(context->argument(0));
         bool _q_result = operator==(*_q_self, _q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 6:
+    if (context->argumentCount() == 1) {
+        if (context->argument(0).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QMargins _q_result = _q_self->operator*=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()) {
+            qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+            QMargins _q_result = _q_self->operator*=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 7:
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<QMargins>() == context->argument(0).toVariant().userType())) {
+            QMargins _q_arg0 = qscriptvalue_cast<QMargins>(context->argument(0));
+            QMargins _q_result = _q_self->operator-=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QMargins _q_result = _q_self->operator-=(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 8:
+    if (context->argumentCount() == 1) {
+        QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
+        operator>>(*_q_arg0, *_q_self);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->right();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 10:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setBottom(_q_arg0);
@@ -143,7 +228,7 @@ static QScriptValue qtscript_QMargins_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 6:
+    case 11:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setLeft(_q_arg0);
@@ -151,7 +236,7 @@ static QScriptValue qtscript_QMargins_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 7:
+    case 12:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setRight(_q_arg0);
@@ -159,7 +244,7 @@ static QScriptValue qtscript_QMargins_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 8:
+    case 13:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setTop(_q_arg0);
@@ -167,14 +252,22 @@ static QScriptValue qtscript_QMargins_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 9:
+    case 14:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->top();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10: {
+    case 15:
+    if (context->argumentCount() == 1) {
+        QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
+        operator<<(*_q_arg0, *_q_self);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 16: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -226,7 +319,7 @@ QScriptValue qtscript_create_QMargins_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QMargins*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QMargins*)0));
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 17; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QMargins_prototype_call, qtscript_QMargins_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QMargins_function_names[i+1]),

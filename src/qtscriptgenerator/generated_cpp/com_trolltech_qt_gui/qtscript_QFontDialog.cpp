@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qfontdialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfontdialog.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QFontDialog.h"
 
@@ -54,7 +55,7 @@ static const char * const qtscript_QFontDialog_function_names[] = {
 static const char * const qtscript_QFontDialog_function_signatures[] = {
     "QWidget parent\nQFont initial, QWidget parent"
     // static
-    , "QWidget parent\nQFont initial, QWidget parent\nQFont initial, QWidget parent, String title\nbool ok, QFont initial, QWidget parent, String title, FontDialogOptions options"
+    , "QWidget parent\nbool ok, QFont initial, QWidget parent, String title, FontDialogOptions options"
     // prototype
     , "QObject receiver, char member"
     , ""
@@ -73,6 +74,15 @@ static const int qtscript_QFontDialog_function_lengths[] = {
     , 2
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QFontDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFontDialog : public QFontDialog
+{
+
+    friend QScriptValue qtscript_QFontDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QFontDialog_throw_ambiguity_error_helper(
@@ -96,6 +106,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QFontDialog*)
 Q_DECLARE_METATYPE(QFontDialog::FontDialogOption)
 Q_DECLARE_METATYPE(QFlags<QFontDialog::FontDialogOption>)
 Q_DECLARE_METATYPE(char*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(QDialog*)
 
@@ -300,7 +311,7 @@ static QScriptValue qtscript_QFontDialog_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFontDialog* _q_self = qscriptvalue_cast<QFontDialog*>(context->thisObject());
+    qtscript_QFontDialog* _q_self = reinterpret_cast<qtscript_QFontDialog*>(qscriptvalue_cast<QFontDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFontDialog.%0(): this object is not a QFontDialog")
@@ -417,15 +428,14 @@ static QScriptValue qtscript_QFontDialog_static_call(QScriptContext *context, QS
           return qScriptValueFromValue(context->engine(), _q_convertedResult);
     }
     if (context->argumentCount() == 1) {
-        if (qscriptvalue_cast<QWidget*>(context->argument(0))) {
 
           // TEMPLATE - core.prepare_removed_bool*_argument - START
           bool __ok;
           bool *_q_arg0 = &__ok;
     // TEMPLATE - core.prepare_removed_bool*_argument - END
-                      QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(0));
-            QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1);
-            
+                  QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1);
+        
           // TEMPLATE - core.convert_to_null_or_wrap - START
           QScriptValue _q_convertedResult;
           if (!__ok)
@@ -434,63 +444,27 @@ static QScriptValue qtscript_QFontDialog_static_call(QScriptContext *context, QS
               _q_convertedResult = qScriptValueFromValue(context->engine(), _q_result);
     // TEMPLATE - core.convert_to_null_or_wrap - END
           return qScriptValueFromValue(context->engine(), _q_convertedResult);
-        } else if ((qMetaTypeId<QFont>() == context->argument(0).toVariant().userType())) {
-
-          // TEMPLATE - core.prepare_removed_bool*_argument - START
-          bool __ok;
-          bool *_q_arg0 = &__ok;
-    // TEMPLATE - core.prepare_removed_bool*_argument - END
-                      QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(0));
-            QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1);
-            
-          // TEMPLATE - core.convert_to_null_or_wrap - START
-          QScriptValue _q_convertedResult;
-          if (!__ok)
-              _q_convertedResult = context->engine()->nullValue();
-          else
-              _q_convertedResult = qScriptValueFromValue(context->engine(), _q_result);
-    // TEMPLATE - core.convert_to_null_or_wrap - END
-          return qScriptValueFromValue(context->engine(), _q_convertedResult);
-        }
     }
     if (context->argumentCount() == 2) {
-
-          // TEMPLATE - core.prepare_removed_bool*_argument - START
-          bool __ok;
-          bool *_q_arg0 = &__ok;
-    // TEMPLATE - core.prepare_removed_bool*_argument - END
-                  QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(0));
-        QWidget* _q_arg2 = qscriptvalue_cast<QWidget*>(context->argument(1));
-        QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1, _q_arg2);
-        
-          // TEMPLATE - core.convert_to_null_or_wrap - START
-          QScriptValue _q_convertedResult;
-          if (!__ok)
-              _q_convertedResult = context->engine()->nullValue();
-          else
-              _q_convertedResult = qScriptValueFromValue(context->engine(), _q_result);
-    // TEMPLATE - core.convert_to_null_or_wrap - END
-          return qScriptValueFromValue(context->engine(), _q_convertedResult);
+        bool* _q_arg0 = qscriptvalue_cast<bool*>(context->argument(0));
+        QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(1));
+        QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 3) {
-
-          // TEMPLATE - core.prepare_removed_bool*_argument - START
-          bool __ok;
-          bool *_q_arg0 = &__ok;
-    // TEMPLATE - core.prepare_removed_bool*_argument - END
-                  QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(0));
-        QWidget* _q_arg2 = qscriptvalue_cast<QWidget*>(context->argument(1));
-        QString _q_arg3 = context->argument(2).toString();
+        bool* _q_arg0 = qscriptvalue_cast<bool*>(context->argument(0));
+        QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(1));
+        QWidget* _q_arg2 = qscriptvalue_cast<QWidget*>(context->argument(2));
+        QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1, _q_arg2);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 4) {
+        bool* _q_arg0 = qscriptvalue_cast<bool*>(context->argument(0));
+        QFont _q_arg1 = qscriptvalue_cast<QFont>(context->argument(1));
+        QWidget* _q_arg2 = qscriptvalue_cast<QWidget*>(context->argument(2));
+        QString _q_arg3 = context->argument(3).toString();
         QFont _q_result = QFontDialog::getFont(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-        
-          // TEMPLATE - core.convert_to_null_or_wrap - START
-          QScriptValue _q_convertedResult;
-          if (!__ok)
-              _q_convertedResult = context->engine()->nullValue();
-          else
-              _q_convertedResult = qScriptValueFromValue(context->engine(), _q_result);
-    // TEMPLATE - core.convert_to_null_or_wrap - END
-          return qScriptValueFromValue(context->engine(), _q_convertedResult);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 5) {
         bool* _q_arg0 = qscriptvalue_cast<bool*>(context->argument(0));

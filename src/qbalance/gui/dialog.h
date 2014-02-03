@@ -39,7 +39,7 @@ public:
 
     Dialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~Dialog();
-    Q_INVOKABLE QWidget* findChild(QString);
+    Q_INVOKABLE QObject* findChild(QString);
     Q_INVOKABLE QString test() { return "test"; }
     Q_INVOKABLE bool isFormSelected();
 

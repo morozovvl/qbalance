@@ -25,7 +25,7 @@ static const char * const qtscript_QBasicTimer_function_signatures[] = {
     // static
     // prototype
     , ""
-    , "int msec, QObject obj"
+    , "int msec, QObject obj\nint msec, TimerType timerType, QObject obj"
     , ""
     , ""
 ""
@@ -36,7 +36,7 @@ static const int qtscript_QBasicTimer_function_lengths[] = {
     // static
     // prototype
     , 0
-    , 2
+    , 3
     , 0
     , 0
     , 0
@@ -55,6 +55,7 @@ static QScriptValue qtscript_QBasicTimer_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QBasicTimer)
 Q_DECLARE_METATYPE(QBasicTimer*)
+Q_DECLARE_METATYPE(Qt::TimerType)
 
 //
 // QBasicTimer
@@ -94,6 +95,13 @@ static QScriptValue qtscript_QBasicTimer_prototype_call(QScriptContext *context,
         int _q_arg0 = context->argument(0).toInt32();
         QObject* _q_arg1 = context->argument(1).toQObject();
         _q_self->start(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 3) {
+        int _q_arg0 = context->argument(0).toInt32();
+        Qt::TimerType _q_arg1 = qscriptvalue_cast<Qt::TimerType>(context->argument(1));
+        QObject* _q_arg2 = context->argument(2).toQObject();
+        _q_self->start(_q_arg0, _q_arg1, _q_arg2);
         return context->engine()->undefinedValue();
     }
     break;

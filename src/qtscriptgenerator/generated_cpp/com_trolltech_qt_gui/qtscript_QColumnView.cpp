@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qcolumnview.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -20,8 +21,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -33,6 +32,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -41,7 +41,9 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qstyleoption.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QColumnView.h"
 
@@ -50,6 +52,9 @@ static const char * const qtscript_QColumnView_function_names[] = {
     // static
     // prototype
     , "columnWidths"
+    , "createColumn"
+    , "initializeColumn"
+    , "moveCursor"
     , "previewWidget"
     , "setColumnWidths"
     , "setPreviewWidget"
@@ -61,6 +66,9 @@ static const char * const qtscript_QColumnView_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "QModelIndex rootIndex"
+    , "QAbstractItemView column"
+    , "CursorAction cursorAction, KeyboardModifiers modifiers"
     , ""
     , "List list"
     , "QWidget widget"
@@ -72,10 +80,28 @@ static const int qtscript_QColumnView_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 1
+    , 1
+    , 2
     , 0
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QColumnView_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QColumnView : public QColumnView
+{
+    friend QScriptValue qtscript_QColumnView_createColumn(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QColumnView_initializeColumn(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QColumnView_moveCursor(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QColumnView_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QColumnView_throw_ambiguity_error_helper(
@@ -93,6 +119,9 @@ Q_DECLARE_METATYPE(QColumnView*)
 Q_DECLARE_METATYPE(QtScriptShell_QColumnView*)
 Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(QAbstractItemView*)
+Q_DECLARE_METATYPE(QAbstractItemView::CursorAction)
+Q_DECLARE_METATYPE(QFlags<Qt::KeyboardModifier>)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QColumnView
@@ -108,11 +137,11 @@ static QScriptValue qtscript_QColumnView_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 7;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QColumnView* _q_self = qscriptvalue_cast<QColumnView*>(context->thisObject());
+    qtscript_QColumnView* _q_self = reinterpret_cast<qtscript_QColumnView*>(qscriptvalue_cast<QColumnView*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QColumnView.%0(): this object is not a QColumnView")
@@ -128,13 +157,38 @@ static QScriptValue qtscript_QColumnView_prototype_call(QScriptContext *context,
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        QAbstractItemView* _q_result = _q_self->createColumn(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
+        QAbstractItemView* _q_arg0 = qscriptvalue_cast<QAbstractItemView*>(context->argument(0));
+        _q_self->initializeColumn(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 2) {
+        QAbstractItemView::CursorAction _q_arg0 = qscriptvalue_cast<QAbstractItemView::CursorAction>(context->argument(0));
+        QFlags<Qt::KeyboardModifier> _q_arg1 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(1));
+        QModelIndex _q_result = _q_self->moveCursor(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->previewWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 5:
     if (context->argumentCount() == 1) {
         QList<int> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -143,7 +197,7 @@ static QScriptValue qtscript_QColumnView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 3:
+    case 6:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setPreviewWidget(_q_arg0);
@@ -151,7 +205,7 @@ static QScriptValue qtscript_QColumnView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 4: {
+    case 7: {
     QString result = QString::fromLatin1("QColumnView");
     return QScriptValue(context->engine(), result);
     }
@@ -211,7 +265,7 @@ QScriptValue qtscript_create_QColumnView_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QColumnView*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QColumnView*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemView*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 8; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QColumnView_prototype_call, qtscript_QColumnView_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QColumnView_function_names[i+1]),

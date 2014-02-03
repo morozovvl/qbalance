@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qmessagebox.h>
+#include <QIconEngine>
 #include <QPixmap>
 #include <QVariant>
 #include <qabstractbutton.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -40,6 +39,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QMessageBox.h"
 
@@ -118,6 +118,15 @@ static const int qtscript_QMessageBox_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QMessageBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMessageBox : public QMessageBox
+{
+
+    friend QScriptValue qtscript_QMessageBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QMessageBox_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -136,14 +145,15 @@ static const QMetaObject *qtscript_QMessageBox_metaObject()
 
 Q_DECLARE_METATYPE(QMessageBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QMessageBox*)
-Q_DECLARE_METATYPE(QMessageBox::ButtonRole)
 Q_DECLARE_METATYPE(QMessageBox::StandardButton)
 Q_DECLARE_METATYPE(QFlags<QMessageBox::StandardButton>)
 Q_DECLARE_METATYPE(QMessageBox::Icon)
+Q_DECLARE_METATYPE(QMessageBox::ButtonRole)
 Q_DECLARE_METATYPE(QAbstractButton*)
 Q_DECLARE_METATYPE(QPushButton*)
 Q_DECLARE_METATYPE(QList<QAbstractButton*>)
 Q_DECLARE_METATYPE(char*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QDialog*)
 
@@ -176,91 +186,6 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
-}
-
-//
-// QMessageBox::ButtonRole
-//
-
-static const QMessageBox::ButtonRole qtscript_QMessageBox_ButtonRole_values[] = {
-    QMessageBox::InvalidRole
-    , QMessageBox::AcceptRole
-    , QMessageBox::RejectRole
-    , QMessageBox::DestructiveRole
-    , QMessageBox::ActionRole
-    , QMessageBox::HelpRole
-    , QMessageBox::YesRole
-    , QMessageBox::NoRole
-    , QMessageBox::ResetRole
-    , QMessageBox::ApplyRole
-    , QMessageBox::NRoles
-};
-
-static const char * const qtscript_QMessageBox_ButtonRole_keys[] = {
-    "InvalidRole"
-    , "AcceptRole"
-    , "RejectRole"
-    , "DestructiveRole"
-    , "ActionRole"
-    , "HelpRole"
-    , "YesRole"
-    , "NoRole"
-    , "ResetRole"
-    , "ApplyRole"
-    , "NRoles"
-};
-
-static QString qtscript_QMessageBox_ButtonRole_toStringHelper(QMessageBox::ButtonRole value)
-{
-    if ((value >= QMessageBox::InvalidRole) && (value <= QMessageBox::NRoles))
-        return qtscript_QMessageBox_ButtonRole_keys[static_cast<int>(value)-static_cast<int>(QMessageBox::InvalidRole)];
-    return QString();
-}
-
-static QScriptValue qtscript_QMessageBox_ButtonRole_toScriptValue(QScriptEngine *engine, const QMessageBox::ButtonRole &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QMessageBox"));
-    return clazz.property(qtscript_QMessageBox_ButtonRole_toStringHelper(value));
-}
-
-static void qtscript_QMessageBox_ButtonRole_fromScriptValue(const QScriptValue &value, QMessageBox::ButtonRole &out)
-{
-    out = qvariant_cast<QMessageBox::ButtonRole>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QMessageBox_ButtonRole(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QMessageBox::InvalidRole) && (arg <= QMessageBox::NRoles))
-        return qScriptValueFromValue(engine,  static_cast<QMessageBox::ButtonRole>(arg));
-    return context->throwError(QString::fromLatin1("ButtonRole(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QMessageBox_ButtonRole_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QMessageBox::ButtonRole value = qscriptvalue_cast<QMessageBox::ButtonRole>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QMessageBox_ButtonRole_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QMessageBox::ButtonRole value = qscriptvalue_cast<QMessageBox::ButtonRole>(context->thisObject());
-    return QScriptValue(engine, qtscript_QMessageBox_ButtonRole_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QMessageBox_ButtonRole_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QMessageBox_ButtonRole,
-        qtscript_QMessageBox_ButtonRole_valueOf, qtscript_QMessageBox_ButtonRole_toString);
-    qScriptRegisterMetaType<QMessageBox::ButtonRole>(engine, qtscript_QMessageBox_ButtonRole_toScriptValue,
-        qtscript_QMessageBox_ButtonRole_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 11; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QMessageBox_ButtonRole_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QMessageBox_ButtonRole_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -532,6 +457,91 @@ static QScriptValue qtscript_create_QMessageBox_Icon_class(QScriptEngine *engine
 }
 
 //
+// QMessageBox::ButtonRole
+//
+
+static const QMessageBox::ButtonRole qtscript_QMessageBox_ButtonRole_values[] = {
+    QMessageBox::InvalidRole
+    , QMessageBox::AcceptRole
+    , QMessageBox::RejectRole
+    , QMessageBox::DestructiveRole
+    , QMessageBox::ActionRole
+    , QMessageBox::HelpRole
+    , QMessageBox::YesRole
+    , QMessageBox::NoRole
+    , QMessageBox::ResetRole
+    , QMessageBox::ApplyRole
+    , QMessageBox::NRoles
+};
+
+static const char * const qtscript_QMessageBox_ButtonRole_keys[] = {
+    "InvalidRole"
+    , "AcceptRole"
+    , "RejectRole"
+    , "DestructiveRole"
+    , "ActionRole"
+    , "HelpRole"
+    , "YesRole"
+    , "NoRole"
+    , "ResetRole"
+    , "ApplyRole"
+    , "NRoles"
+};
+
+static QString qtscript_QMessageBox_ButtonRole_toStringHelper(QMessageBox::ButtonRole value)
+{
+    if ((value >= QMessageBox::InvalidRole) && (value <= QMessageBox::NRoles))
+        return qtscript_QMessageBox_ButtonRole_keys[static_cast<int>(value)-static_cast<int>(QMessageBox::InvalidRole)];
+    return QString();
+}
+
+static QScriptValue qtscript_QMessageBox_ButtonRole_toScriptValue(QScriptEngine *engine, const QMessageBox::ButtonRole &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QMessageBox"));
+    return clazz.property(qtscript_QMessageBox_ButtonRole_toStringHelper(value));
+}
+
+static void qtscript_QMessageBox_ButtonRole_fromScriptValue(const QScriptValue &value, QMessageBox::ButtonRole &out)
+{
+    out = qvariant_cast<QMessageBox::ButtonRole>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QMessageBox_ButtonRole(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QMessageBox::InvalidRole) && (arg <= QMessageBox::NRoles))
+        return qScriptValueFromValue(engine,  static_cast<QMessageBox::ButtonRole>(arg));
+    return context->throwError(QString::fromLatin1("ButtonRole(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QMessageBox_ButtonRole_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QMessageBox::ButtonRole value = qscriptvalue_cast<QMessageBox::ButtonRole>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QMessageBox_ButtonRole_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QMessageBox::ButtonRole value = qscriptvalue_cast<QMessageBox::ButtonRole>(context->thisObject());
+    return QScriptValue(engine, qtscript_QMessageBox_ButtonRole_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QMessageBox_ButtonRole_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QMessageBox_ButtonRole,
+        qtscript_QMessageBox_ButtonRole_valueOf, qtscript_QMessageBox_ButtonRole_toString);
+    qScriptRegisterMetaType<QMessageBox::ButtonRole>(engine, qtscript_QMessageBox_ButtonRole_toScriptValue,
+        qtscript_QMessageBox_ButtonRole_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 11; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QMessageBox_ButtonRole_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QMessageBox_ButtonRole_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QMessageBox
 //
 
@@ -549,7 +559,7 @@ static QScriptValue qtscript_QMessageBox_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMessageBox* _q_self = qscriptvalue_cast<QMessageBox*>(context->thisObject());
+    qtscript_QMessageBox* _q_self = reinterpret_cast<qtscript_QMessageBox*>(qscriptvalue_cast<QMessageBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMessageBox.%0(): this object is not a QMessageBox")
@@ -1014,13 +1024,13 @@ QScriptValue qtscript_create_QMessageBox_class(QScriptEngine *engine)
             fun, QScriptValue::SkipInEnumeration);
     }
 
-    ctor.setProperty(QString::fromLatin1("ButtonRole"),
-        qtscript_create_QMessageBox_ButtonRole_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StandardButton"),
         qtscript_create_QMessageBox_StandardButton_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StandardButtons"),
         qtscript_create_QMessageBox_StandardButtons_class(engine));
     ctor.setProperty(QString::fromLatin1("Icon"),
         qtscript_create_QMessageBox_Icon_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ButtonRole"),
+        qtscript_create_QMessageBox_ButtonRole_class(engine, ctor));
     return ctor;
 }

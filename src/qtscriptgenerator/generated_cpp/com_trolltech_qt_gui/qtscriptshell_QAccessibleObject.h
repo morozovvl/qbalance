@@ -11,21 +11,23 @@ public:
     QtScriptShell_QAccessibleObject(QObject*  object);
     ~QtScriptShell_QAccessibleObject();
 
-    QString  actionText(int  action, QAccessible::Text  t, int  child) const;
-    int  childAt(int  x, int  y) const;
+    QAccessibleInterface*  child(int  index) const;
+    QAccessibleInterface*  childAt(int  x, int  y) const;
     int  childCount() const;
-    bool  doAction(int  action, int  child, const QList<QVariant >&  params);
+    QAccessibleInterface*  focusChild() const;
     int  indexOfChild(const QAccessibleInterface*  arg__1) const;
+    void*  interface_cast(QAccessible::InterfaceType  arg__1);
     bool  isValid() const;
-    int  navigate(QAccessible::RelationFlag  relation, int  index, QAccessibleInterface**  iface) const;
     QObject*  object() const;
-    QRect  rect(int  child) const;
-    QAccessible::Relation  relationTo(int  child, const QAccessibleInterface*  other, int  otherChild) const;
-    QAccessible::Role  role(int  child) const;
-    void setText(QAccessible::Text  t, int  child, const QString&  text);
-    QAccessible::State  state(int  child) const;
-    QString  text(QAccessible::Text  t, int  child) const;
-    int  userActionCount(int  child) const;
+    QAccessibleInterface*  parent() const;
+    QRect  rect() const;
+    QVector<QPair<QAccessibleInterface* , QAccessible::Relation >  >  relations(QAccessible::Relation  match) const;
+    QAccessible::Role  role() const;
+    void setText(QAccessible::Text  t, const QString&  text);
+    QAccessible::State  state() const;
+    QString  text(QAccessible::Text  t) const;
+    void virtual_hook(int  id, void*  data);
+    QWindow*  window() const;
 
     QScriptValue __qtscript_self;
 };

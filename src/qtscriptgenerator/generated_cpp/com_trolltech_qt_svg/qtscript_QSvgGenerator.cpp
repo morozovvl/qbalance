@@ -10,6 +10,8 @@
 #include <qiodevice.h>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
+#include <qpoint.h>
 #include <qrect.h>
 #include <qsize.h>
 
@@ -40,6 +42,15 @@ static const int qtscript_QSvgGenerator_function_lengths[] = {
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QSvgGenerator_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSvgGenerator : public QSvgGenerator
+{
+
+    friend QScriptValue qtscript_QSvgGenerator_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSvgGenerator_throw_ambiguity_error_helper(
@@ -75,7 +86,7 @@ static QScriptValue qtscript_QSvgGenerator_prototype_call(QScriptContext *contex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSvgGenerator* _q_self = qscriptvalue_cast<QSvgGenerator*>(context->thisObject());
+    qtscript_QSvgGenerator* _q_self = reinterpret_cast<qtscript_QSvgGenerator*>(qscriptvalue_cast<QSvgGenerator*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSvgGenerator.%0(): this object is not a QSvgGenerator")

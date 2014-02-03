@@ -16,12 +16,19 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QIconEngine prototype object</li>
+<li><b>AvailableSizesHook = 1</b></li>
+<li><b>IconNameHook</b></li>
+<li><b>IconEngineHook( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
 <li><div class="fn"/><b>QSize actualSize(QSize size, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>void addFile(String fileName, QSize size, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>void addPixmap(QPixmap pixmap, Mode mode, State state)</b></li>
+<li><div class="fn"/><b>List availableSizes(Mode mode, State state)</b></li>
+<li><div class="fn"/><b>QIconEngine clone()</b></li>
+<li><div class="fn"/><b>String iconName()</b></li>
+<li><div class="fn"/><b>String key()</b></li>
 <li><div class="fn"/><b>void paint(QPainter painter, QRect rect, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>QPixmap pixmap(QSize size, Mode mode, State state)</b></li>
 </ul>

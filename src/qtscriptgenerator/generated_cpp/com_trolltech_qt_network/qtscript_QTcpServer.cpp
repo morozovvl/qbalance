@@ -22,14 +22,18 @@ static const char * const qtscript_QTcpServer_function_names[] = {
     "QTcpServer"
     // static
     // prototype
+    , "addPendingConnection"
     , "close"
     , "errorString"
     , "hasPendingConnections"
+    , "incomingConnection"
     , "isListening"
     , "listen"
     , "maxPendingConnections"
     , "nextPendingConnection"
+    , "pauseAccepting"
     , "proxy"
+    , "resumeAccepting"
     , "serverAddress"
     , "serverError"
     , "serverPort"
@@ -45,9 +49,11 @@ static const char * const qtscript_QTcpServer_function_signatures[] = {
     "QObject parent"
     // static
     // prototype
+    , "QTcpSocket socket"
     , ""
     , ""
     , ""
+    , "qintptr handle"
     , ""
     , "QHostAddress address, unsigned short port"
     , ""
@@ -56,9 +62,11 @@ static const char * const qtscript_QTcpServer_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
+    , ""
     , "int numConnections"
     , "QNetworkProxy networkProxy"
-    , "int socketDescriptor"
+    , "qintptr socketDescriptor"
     , ""
     , "int msec"
 ""
@@ -68,23 +76,38 @@ static const int qtscript_QTcpServer_function_lengths[] = {
     1
     // static
     // prototype
-    , 0
-    , 0
-    , 0
-    , 0
-    , 2
-    , 0
-    , 0
-    , 0
-    , 0
-    , 0
-    , 0
     , 1
-    , 1
+    , 0
+    , 0
+    , 0
     , 1
     , 0
     , 2
     , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 1
+    , 1
+    , 1
+    , 0
+    , 2
+    , 0
+};
+
+static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTcpServer : public QTcpServer
+{
+    friend QScriptValue qtscript_QTcpServer_addPendingConnection(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTcpServer_incomingConnection(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTcpServer_throw_ambiguity_error_helper(
@@ -100,10 +123,9 @@ static QScriptValue qtscript_QTcpServer_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTcpServer*)
 Q_DECLARE_METATYPE(QtScriptShell_QTcpServer*)
-Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QTcpSocket*)
-Q_DECLARE_METATYPE(QNetworkProxy)
-Q_DECLARE_METATYPE(QAbstractSocket::SocketError)
+Q_DECLARE_METATYPE(qintptr)
+Q_DECLARE_METATYPE(QHostAddress)
 
 //
 // QTcpServer
@@ -119,11 +141,11 @@ static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 16;
+        _id = 0xBABE0000 + 20;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTcpServer* _q_self = qscriptvalue_cast<QTcpServer*>(context->thisObject());
+    qtscript_QTcpServer* _q_self = reinterpret_cast<qtscript_QTcpServer*>(qscriptvalue_cast<QTcpServer*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTcpServer.%0(): this object is not a QTcpServer")
@@ -132,34 +154,50 @@ static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *context, 
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        _q_self->close();
+    if (context->argumentCount() == 1) {
+        QTcpSocket* _q_arg0 = qscriptvalue_cast<QTcpSocket*>(context->argument(0));
+        _q_self->addPendingConnection(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 1:
     if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->errorString();
-        return QScriptValue(context->engine(), _q_result);
+        _q_self->close();
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->hasPendingConnections();
+        QString _q_result = _q_self->errorString();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isListening();
+        bool _q_result = _q_self->hasPendingConnections();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 4:
+    if (context->argumentCount() == 1) {
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
+        _q_self->incomingConnection(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->isListening();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->listen();
         return QScriptValue(context->engine(), _q_result);
@@ -177,49 +215,63 @@ static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->maxPendingConnections();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 0) {
         QTcpSocket* _q_result = _q_self->nextPendingConnection();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
+    if (context->argumentCount() == 0) {
+        _q_self->pauseAccepting();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 0) {
         QNetworkProxy _q_result = _q_self->proxy();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 11:
+    if (context->argumentCount() == 0) {
+        _q_self->resumeAccepting();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 12:
     if (context->argumentCount() == 0) {
         QHostAddress _q_result = _q_self->serverAddress();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 13:
     if (context->argumentCount() == 0) {
         QAbstractSocket::SocketError _q_result = _q_self->serverError();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 14:
     if (context->argumentCount() == 0) {
         unsigned short _q_result = _q_self->serverPort();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 15:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setMaxPendingConnections(_q_arg0);
@@ -227,7 +279,7 @@ static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 12:
+    case 16:
     if (context->argumentCount() == 1) {
         QNetworkProxy _q_arg0 = qscriptvalue_cast<QNetworkProxy>(context->argument(0));
         _q_self->setProxy(_q_arg0);
@@ -235,22 +287,22 @@ static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 13:
+    case 17:
     if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
         bool _q_result = _q_self->setSocketDescriptor(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 18:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->socketDescriptor();
-        return QScriptValue(context->engine(), _q_result);
+        qintptr _q_result = _q_self->socketDescriptor();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 19:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->waitForNewConnection();
         return QScriptValue(context->engine(), _q_result);
@@ -262,7 +314,7 @@ static QScriptValue qtscript_QTcpServer_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 16: {
+    case 20: {
     QString result = QString::fromLatin1("QTcpServer");
     return QScriptValue(context->engine(), result);
     }
@@ -322,7 +374,7 @@ QScriptValue qtscript_create_QTcpServer_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTcpServer*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTcpServer*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 17; ++i) {
+    for (int i = 0; i < 21; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTcpServer_prototype_call, qtscript_QTcpServer_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTcpServer_function_names[i+1]),

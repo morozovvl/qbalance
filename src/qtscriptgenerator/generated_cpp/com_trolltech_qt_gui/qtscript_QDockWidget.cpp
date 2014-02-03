@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qdockwidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QDockWidget.h"
 
@@ -45,6 +46,7 @@ static const char * const qtscript_QDockWidget_function_names[] = {
     // static
     // prototype
     , "allowedAreas"
+    , "initStyleOption"
     , "isAreaAllowed"
     , "setAllowedAreas"
     , "setTitleBarWidget"
@@ -60,6 +62,7 @@ static const char * const qtscript_QDockWidget_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "QStyleOptionDockWidget option"
     , "DockWidgetArea area"
     , "DockWidgetAreas areas"
     , "QWidget widget"
@@ -79,10 +82,21 @@ static const int qtscript_QDockWidget_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
     , 0
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDockWidget : public QDockWidget
+{
+    friend QScriptValue qtscript_QDockWidget_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QDockWidget_throw_ambiguity_error_helper(
@@ -101,7 +115,9 @@ Q_DECLARE_METATYPE(QtScriptShell_QDockWidget*)
 Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeature)
 Q_DECLARE_METATYPE(QFlags<QDockWidget::DockWidgetFeature>)
 Q_DECLARE_METATYPE(QFlags<Qt::DockWidgetArea>)
+Q_DECLARE_METATYPE(QStyleOptionDockWidget*)
 Q_DECLARE_METATYPE(Qt::DockWidgetArea)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAction*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 
@@ -309,11 +325,11 @@ static QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 9;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDockWidget* _q_self = qscriptvalue_cast<QDockWidget*>(context->thisObject());
+    qtscript_QDockWidget* _q_self = reinterpret_cast<qtscript_QDockWidget*>(qscriptvalue_cast<QDockWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDockWidget.%0(): this object is not a QDockWidget")
@@ -330,13 +346,21 @@ static QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *context,
 
     case 1:
     if (context->argumentCount() == 1) {
+        QStyleOptionDockWidget* _q_arg0 = qscriptvalue_cast<QStyleOptionDockWidget*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
         Qt::DockWidgetArea _q_arg0 = qscriptvalue_cast<Qt::DockWidgetArea>(context->argument(0));
         bool _q_result = _q_self->isAreaAllowed(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QFlags<Qt::DockWidgetArea> _q_arg0 = qscriptvalue_cast<QFlags<Qt::DockWidgetArea> >(context->argument(0));
         _q_self->setAllowedAreas(_q_arg0);
@@ -344,7 +368,7 @@ static QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setTitleBarWidget(_q_arg0);
@@ -352,7 +376,7 @@ static QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setWidget(_q_arg0);
@@ -360,28 +384,28 @@ static QScriptValue qtscript_QDockWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->titleBarWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         QAction* _q_result = _q_self->toggleViewAction();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->widget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8: {
+    case 9: {
     QString result = QString::fromLatin1("QDockWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -475,7 +499,7 @@ QScriptValue qtscript_create_QDockWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QDockWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDockWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDockWidget_prototype_call, qtscript_QDockWidget_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QDockWidget_function_names[i+1]),

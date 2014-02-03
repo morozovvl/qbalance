@@ -40,11 +40,12 @@ Q_DECLARE_METATYPE(QKeyEvent*)
 Q_DECLARE_METATYPE(QGraphicsSceneMouseEvent*)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QStyleOptionGraphicsItem*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QGraphicsSceneWheelEvent*)
 
-QtScriptShell_QAbstractGraphicsShapeItem::QtScriptShell_QAbstractGraphicsShapeItem(QGraphicsItem*  parent, QGraphicsScene*  scene)
-    : QAbstractGraphicsShapeItem(parent, scene) {}
+QtScriptShell_QAbstractGraphicsShapeItem::QtScriptShell_QAbstractGraphicsShapeItem(QGraphicsItem*  parent)
+    : QAbstractGraphicsShapeItem(parent) {}
 
 QtScriptShell_QAbstractGraphicsShapeItem::~QtScriptShell_QAbstractGraphicsShapeItem() {}
 
@@ -52,13 +53,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::advance(int  phase)
 {
     QScriptValue _q_function = __qtscript_self.property("advance");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("advance") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("advance") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::advance(phase);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, phase));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -66,10 +70,14 @@ QRectF  QtScriptShell_QAbstractGraphicsShapeItem::boundingRect() const
 {
     QScriptValue _q_function = __qtscript_self.property("boundingRect");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("boundingRect") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("boundingRect") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QAbstractGraphicsShapeItem::boundingRect() is abstract!");
     } else {
-        return qscriptvalue_cast<QRectF >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QRectF _q_retval = qscriptvalue_cast<QRectF >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -77,14 +85,18 @@ bool  QtScriptShell_QAbstractGraphicsShapeItem::collidesWithItem(const QGraphics
 {
     QScriptValue _q_function = __qtscript_self.property("collidesWithItem");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("collidesWithItem") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("collidesWithItem") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::collidesWithItem(other, mode);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, const_cast<QGraphicsItem *>(other))
             << qScriptValueFromValue(_q_engine, mode)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -92,14 +104,18 @@ bool  QtScriptShell_QAbstractGraphicsShapeItem::collidesWithPath(const QPainterP
 {
     QScriptValue _q_function = __qtscript_self.property("collidesWithPath");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("collidesWithPath") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("collidesWithPath") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::collidesWithPath(path, mode);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, path)
             << qScriptValueFromValue(_q_engine, mode)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -107,13 +123,17 @@ bool  QtScriptShell_QAbstractGraphicsShapeItem::contains(const QPointF&  point) 
 {
     QScriptValue _q_function = __qtscript_self.property("contains");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("contains") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("contains") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::contains(point);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, point)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -121,13 +141,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::contextMenuEvent(QGraphicsSceneCo
 {
     QScriptValue _q_function = __qtscript_self.property("contextMenuEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("contextMenuEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("contextMenuEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::contextMenuEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -135,13 +158,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::dragEnterEvent(QGraphicsSceneDrag
 {
     QScriptValue _q_function = __qtscript_self.property("dragEnterEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragEnterEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragEnterEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::dragEnterEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -149,13 +175,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::dragLeaveEvent(QGraphicsSceneDrag
 {
     QScriptValue _q_function = __qtscript_self.property("dragLeaveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragLeaveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragLeaveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::dragLeaveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -163,13 +192,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::dragMoveEvent(QGraphicsSceneDragD
 {
     QScriptValue _q_function = __qtscript_self.property("dragMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::dragMoveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -177,13 +209,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::dropEvent(QGraphicsSceneDragDropE
 {
     QScriptValue _q_function = __qtscript_self.property("dropEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dropEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dropEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::dropEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -191,13 +226,17 @@ QVariant  QtScriptShell_QAbstractGraphicsShapeItem::extension(const QVariant&  v
 {
     QScriptValue _q_function = __qtscript_self.property("extension");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("extension") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("extension") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::extension(variant);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, variant)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -205,13 +244,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::focusInEvent(QFocusEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("focusInEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusInEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusInEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::focusInEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -219,13 +261,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::focusOutEvent(QFocusEvent*  event
 {
     QScriptValue _q_function = __qtscript_self.property("focusOutEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusOutEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusOutEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::focusOutEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -233,13 +278,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::hoverEnterEvent(QGraphicsSceneHov
 {
     QScriptValue _q_function = __qtscript_self.property("hoverEnterEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hoverEnterEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hoverEnterEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::hoverEnterEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -247,13 +295,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::hoverLeaveEvent(QGraphicsSceneHov
 {
     QScriptValue _q_function = __qtscript_self.property("hoverLeaveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hoverLeaveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hoverLeaveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::hoverLeaveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -261,13 +312,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::hoverMoveEvent(QGraphicsSceneHove
 {
     QScriptValue _q_function = __qtscript_self.property("hoverMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hoverMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hoverMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::hoverMoveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -275,13 +329,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::inputMethodEvent(QInputMethodEven
 {
     QScriptValue _q_function = __qtscript_self.property("inputMethodEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("inputMethodEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("inputMethodEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::inputMethodEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -289,13 +346,17 @@ QVariant  QtScriptShell_QAbstractGraphicsShapeItem::inputMethodQuery(Qt::InputMe
 {
     QScriptValue _q_function = __qtscript_self.property("inputMethodQuery");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("inputMethodQuery") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("inputMethodQuery") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::inputMethodQuery(query);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, query)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -303,13 +364,17 @@ bool  QtScriptShell_QAbstractGraphicsShapeItem::isObscuredBy(const QGraphicsItem
 {
     QScriptValue _q_function = __qtscript_self.property("isObscuredBy");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("isObscuredBy") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("isObscuredBy") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::isObscuredBy(item);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, const_cast<QGraphicsItem *>(item))));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -317,14 +382,18 @@ QVariant  QtScriptShell_QAbstractGraphicsShapeItem::itemChange(QGraphicsItem::Gr
 {
     QScriptValue _q_function = __qtscript_self.property("itemChange");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("itemChange") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("itemChange") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::itemChange(change, value);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, change)
             << qScriptValueFromValue(_q_engine, value)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -332,13 +401,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::keyPressEvent(QKeyEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("keyPressEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keyPressEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("keyPressEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::keyPressEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -346,13 +418,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::keyReleaseEvent(QKeyEvent*  event
 {
     QScriptValue _q_function = __qtscript_self.property("keyReleaseEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keyReleaseEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("keyReleaseEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::keyReleaseEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -360,13 +435,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::mouseDoubleClickEvent(QGraphicsSc
 {
     QScriptValue _q_function = __qtscript_self.property("mouseDoubleClickEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseDoubleClickEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseDoubleClickEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::mouseDoubleClickEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -374,13 +452,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::mouseMoveEvent(QGraphicsSceneMous
 {
     QScriptValue _q_function = __qtscript_self.property("mouseMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::mouseMoveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -388,13 +469,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::mousePressEvent(QGraphicsSceneMou
 {
     QScriptValue _q_function = __qtscript_self.property("mousePressEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mousePressEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mousePressEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::mousePressEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -402,13 +486,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::mouseReleaseEvent(QGraphicsSceneM
 {
     QScriptValue _q_function = __qtscript_self.property("mouseReleaseEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseReleaseEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseReleaseEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::mouseReleaseEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -416,10 +503,14 @@ QPainterPath  QtScriptShell_QAbstractGraphicsShapeItem::opaqueArea() const
 {
     QScriptValue _q_function = __qtscript_self.property("opaqueArea");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("opaqueArea") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("opaqueArea") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::opaqueArea();
     } else {
-        return qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QPainterPath _q_retval = qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -427,15 +518,18 @@ void QtScriptShell_QAbstractGraphicsShapeItem::paint(QPainter*  painter, const Q
 {
     QScriptValue _q_function = __qtscript_self.property("paint");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("paint") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("paint") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QAbstractGraphicsShapeItem::paint() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, painter)
             << qScriptValueFromValue(_q_engine, const_cast<QStyleOptionGraphicsItem *>(option))
             << qScriptValueFromValue(_q_engine, widget));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -443,13 +537,17 @@ bool  QtScriptShell_QAbstractGraphicsShapeItem::sceneEvent(QEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("sceneEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("sceneEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("sceneEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::sceneEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -457,14 +555,18 @@ bool  QtScriptShell_QAbstractGraphicsShapeItem::sceneEventFilter(QGraphicsItem* 
 {
     QScriptValue _q_function = __qtscript_self.property("sceneEventFilter");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("sceneEventFilter") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("sceneEventFilter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::sceneEventFilter(watched, event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, watched)
             << qScriptValueFromValue(_q_engine, event)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -472,10 +574,14 @@ QPainterPath  QtScriptShell_QAbstractGraphicsShapeItem::shape() const
 {
     QScriptValue _q_function = __qtscript_self.property("shape");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("shape") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("shape") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::shape();
     } else {
-        return qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QPainterPath _q_retval = qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -483,10 +589,14 @@ int  QtScriptShell_QAbstractGraphicsShapeItem::type() const
 {
     QScriptValue _q_function = __qtscript_self.property("type");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("type") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("type") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QAbstractGraphicsShapeItem::type();
     } else {
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -494,13 +604,16 @@ void QtScriptShell_QAbstractGraphicsShapeItem::wheelEvent(QGraphicsSceneWheelEve
 {
     QScriptValue _q_function = __qtscript_self.property("wheelEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("wheelEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("wheelEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QAbstractGraphicsShapeItem::wheelEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 

@@ -49,11 +49,11 @@ static const char * const qtscript_QQuaternion_function_names[] = {
 };
 
 static const char * const qtscript_QQuaternion_function_signatures[] = {
-    "\nQVector4D vector\nqreal scalar, QVector3D vector\nqreal scalar, qreal xpos, qreal ypos, qreal zpos"
+    "\nQVector4D vector\nfloat scalar, QVector3D vector\nfloat scalar, float xpos, float ypos, float zpos"
     // static
-    , "QVector3D axis, qreal angle\nqreal x, qreal y, qreal z, qreal angle"
-    , "QQuaternion q1, QQuaternion q2, qreal t"
-    , "QQuaternion q1, QQuaternion q2, qreal t"
+    , "QVector3D axis, float angle\nfloat x, float y, float z, float angle"
+    , "QQuaternion q1, QQuaternion q2, float t"
+    , "QQuaternion q1, QQuaternion q2, float t"
     // prototype
     , ""
     , ""
@@ -63,18 +63,18 @@ static const char * const qtscript_QQuaternion_function_signatures[] = {
     , ""
     , ""
     , "QQuaternion quaternion"
-    , "qreal divisor"
+    , "float divisor"
     , "QQuaternion q2"
-    , "QQuaternion quaternion\nqreal factor"
+    , "QQuaternion quaternion\nfloat factor"
     , "QQuaternion quaternion"
     , "QDataStream arg__1"
     , "QVector3D vector"
     , ""
-    , "qreal scalar"
-    , "QVector3D vector\nqreal x, qreal y, qreal z"
-    , "qreal x"
-    , "qreal y"
-    , "qreal z"
+    , "float scalar"
+    , "QVector3D vector\nfloat x, float y, float z"
+    , "float x"
+    , "float y"
+    , "float z"
     , ""
     , ""
     , "QDataStream arg__1"
@@ -183,14 +183,14 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 3:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->length();
+        float _q_result = _q_self->length();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->lengthSquared();
+        float _q_result = _q_self->lengthSquared();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -219,7 +219,7 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 8:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         QQuaternion _q_result = _q_self->operator/=(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -239,8 +239,8 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
             QQuaternion _q_arg0 = qscriptvalue_cast<QQuaternion>(context->argument(0));
             QQuaternion _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
-            qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        } else if (context->argument(0).isNumber()) {
+            float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
             QQuaternion _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
         }
@@ -273,14 +273,14 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 14:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->scalar();
+        float _q_result = _q_self->scalar();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 15:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->setScalar(_q_arg0);
         return context->engine()->undefinedValue();
     }
@@ -293,9 +293,9 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
         return context->engine()->undefinedValue();
     }
     if (context->argumentCount() == 3) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
         _q_self->setVector(_q_arg0, _q_arg1, _q_arg2);
         return context->engine()->undefinedValue();
     }
@@ -303,7 +303,7 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 17:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->setX(_q_arg0);
         return context->engine()->undefinedValue();
     }
@@ -311,7 +311,7 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 18:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->setY(_q_arg0);
         return context->engine()->undefinedValue();
     }
@@ -319,7 +319,7 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 19:
     if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         _q_self->setZ(_q_arg0);
         return context->engine()->undefinedValue();
     }
@@ -349,21 +349,21 @@ static QScriptValue qtscript_QQuaternion_prototype_call(QScriptContext *context,
 
     case 23:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->x();
+        float _q_result = _q_self->x();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 24:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->y();
+        float _q_result = _q_self->y();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 25:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->z();
+        float _q_result = _q_self->z();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -403,16 +403,16 @@ static QScriptValue qtscript_QQuaternion_static_call(QScriptContext *context, QS
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     } else if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
         QVector3D _q_arg1 = qscriptvalue_cast<QVector3D>(context->argument(1));
         QQuaternion _q_cpp_result(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     } else if (context->argumentCount() == 4) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
         QQuaternion _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
@@ -422,15 +422,15 @@ static QScriptValue qtscript_QQuaternion_static_call(QScriptContext *context, QS
     case 1:
     if (context->argumentCount() == 2) {
         QVector3D _q_arg0 = qscriptvalue_cast<QVector3D>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
         QQuaternion _q_result = QQuaternion::fromAxisAndAngle(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 4) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
+        float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
         QQuaternion _q_result = QQuaternion::fromAxisAndAngle(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -440,7 +440,7 @@ static QScriptValue qtscript_QQuaternion_static_call(QScriptContext *context, QS
     if (context->argumentCount() == 3) {
         QQuaternion _q_arg0 = qscriptvalue_cast<QQuaternion>(context->argument(0));
         QQuaternion _q_arg1 = qscriptvalue_cast<QQuaternion>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
         QQuaternion _q_result = QQuaternion::nlerp(_q_arg0, _q_arg1, _q_arg2);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -450,7 +450,7 @@ static QScriptValue qtscript_QQuaternion_static_call(QScriptContext *context, QS
     if (context->argumentCount() == 3) {
         QQuaternion _q_arg0 = qscriptvalue_cast<QQuaternion>(context->argument(0));
         QQuaternion _q_arg1 = qscriptvalue_cast<QQuaternion>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
         QQuaternion _q_result = QQuaternion::slerp(_q_arg0, _q_arg1, _q_arg2);
         return qScriptValueFromValue(context->engine(), _q_result);
     }

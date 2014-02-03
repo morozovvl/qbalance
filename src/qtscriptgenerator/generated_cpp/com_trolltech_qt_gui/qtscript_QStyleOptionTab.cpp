@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionTab_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionTab_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionTab : public QStyleOptionTab
+{
+
+    friend QScriptValue qtscript_QStyleOptionTab_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionTab_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,12 +57,14 @@ Q_DECLARE_METATYPE(QStyleOptionTab)
 Q_DECLARE_METATYPE(QStyleOptionTab*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionTab)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionTab*)
+Q_DECLARE_METATYPE(QStyleOptionTab::TabPosition)
+Q_DECLARE_METATYPE(QStyleOptionTab::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOptionTab::StyleOptionVersion)
+Q_DECLARE_METATYPE(QStyleOptionTab::TabFeature)
+Q_DECLARE_METATYPE(QFlags<QStyleOptionTab::TabFeature>)
+Q_DECLARE_METATYPE(QStyleOptionTab::SelectedPosition)
 Q_DECLARE_METATYPE(QStyleOptionTab::CornerWidget)
 Q_DECLARE_METATYPE(QFlags<QStyleOptionTab::CornerWidget>)
-Q_DECLARE_METATYPE(QStyleOptionTab::TabPosition)
-Q_DECLARE_METATYPE(QStyleOptionTab::SelectedPosition)
-Q_DECLARE_METATYPE(QStyleOptionTab::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -85,6 +96,142 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
+}
+
+//
+// QStyleOptionTab::TabPosition
+//
+
+static const QStyleOptionTab::TabPosition qtscript_QStyleOptionTab_TabPosition_values[] = {
+    QStyleOptionTab::Beginning
+    , QStyleOptionTab::Middle
+    , QStyleOptionTab::End
+    , QStyleOptionTab::OnlyOneTab
+};
+
+static const char * const qtscript_QStyleOptionTab_TabPosition_keys[] = {
+    "Beginning"
+    , "Middle"
+    , "End"
+    , "OnlyOneTab"
+};
+
+static QString qtscript_QStyleOptionTab_TabPosition_toStringHelper(QStyleOptionTab::TabPosition value)
+{
+    if ((value >= QStyleOptionTab::Beginning) && (value <= QStyleOptionTab::OnlyOneTab))
+        return qtscript_QStyleOptionTab_TabPosition_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::Beginning)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabPosition_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::TabPosition &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
+    return clazz.property(qtscript_QStyleOptionTab_TabPosition_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionTab_TabPosition_fromScriptValue(const QScriptValue &value, QStyleOptionTab::TabPosition &out)
+{
+    out = qvariant_cast<QStyleOptionTab::TabPosition>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTab_TabPosition(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionTab::Beginning) && (arg <= QStyleOptionTab::OnlyOneTab))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::TabPosition>(arg));
+    return context->throwError(QString::fromLatin1("TabPosition(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabPosition_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabPosition value = qscriptvalue_cast<QStyleOptionTab::TabPosition>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabPosition_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabPosition value = qscriptvalue_cast<QStyleOptionTab::TabPosition>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionTab_TabPosition_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTab_TabPosition_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionTab_TabPosition,
+        qtscript_QStyleOptionTab_TabPosition_valueOf, qtscript_QStyleOptionTab_TabPosition_toString);
+    qScriptRegisterMetaType<QStyleOptionTab::TabPosition>(engine, qtscript_QStyleOptionTab_TabPosition_toScriptValue,
+        qtscript_QStyleOptionTab_TabPosition_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 4; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_TabPosition_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_TabPosition_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyleOptionTab::StyleOptionType
+//
+
+static const QStyleOptionTab::StyleOptionType qtscript_QStyleOptionTab_StyleOptionType_values[] = {
+    QStyleOptionTab::Type
+};
+
+static const char * const qtscript_QStyleOptionTab_StyleOptionType_keys[] = {
+    "Type"
+};
+
+static QString qtscript_QStyleOptionTab_StyleOptionType_toStringHelper(QStyleOptionTab::StyleOptionType value)
+{
+    if ((value >= QStyleOptionTab::Type) && (value <= QStyleOptionTab::Type))
+        return qtscript_QStyleOptionTab_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::Type)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionTab_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::StyleOptionType &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
+    return clazz.property(qtscript_QStyleOptionTab_StyleOptionType_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionTab_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionTab::StyleOptionType &out)
+{
+    out = qvariant_cast<QStyleOptionTab::StyleOptionType>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTab_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionTab::Type) && (arg <= QStyleOptionTab::Type))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::StyleOptionType>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::StyleOptionType value = qscriptvalue_cast<QStyleOptionTab::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::StyleOptionType value = qscriptvalue_cast<QStyleOptionTab::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionTab_StyleOptionType_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTab_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionTab_StyleOptionType,
+        qtscript_QStyleOptionTab_StyleOptionType_valueOf, qtscript_QStyleOptionTab_StyleOptionType_toString);
+    qScriptRegisterMetaType<QStyleOptionTab::StyleOptionType>(engine, qtscript_QStyleOptionTab_StyleOptionType_toScriptValue,
+        qtscript_QStyleOptionTab_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_StyleOptionType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_StyleOptionType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -147,6 +294,218 @@ static QScriptValue qtscript_create_QStyleOptionTab_StyleOptionVersion_class(QSc
     for (int i = 0; i < 1; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_StyleOptionVersion_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyleOptionTab::TabFeature
+//
+
+static const QStyleOptionTab::TabFeature qtscript_QStyleOptionTab_TabFeature_values[] = {
+    QStyleOptionTab::None
+    , QStyleOptionTab::HasFrame
+};
+
+static const char * const qtscript_QStyleOptionTab_TabFeature_keys[] = {
+    "None"
+    , "HasFrame"
+};
+
+static QString qtscript_QStyleOptionTab_TabFeature_toStringHelper(QStyleOptionTab::TabFeature value)
+{
+    if ((value >= QStyleOptionTab::None) && (value <= QStyleOptionTab::HasFrame))
+        return qtscript_QStyleOptionTab_TabFeature_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::None)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeature_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::TabFeature &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
+    return clazz.property(qtscript_QStyleOptionTab_TabFeature_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionTab_TabFeature_fromScriptValue(const QScriptValue &value, QStyleOptionTab::TabFeature &out)
+{
+    out = qvariant_cast<QStyleOptionTab::TabFeature>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTab_TabFeature(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionTab::None) && (arg <= QStyleOptionTab::HasFrame))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::TabFeature>(arg));
+    return context->throwError(QString::fromLatin1("TabFeature(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeature_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabFeature value = qscriptvalue_cast<QStyleOptionTab::TabFeature>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeature_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabFeature value = qscriptvalue_cast<QStyleOptionTab::TabFeature>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionTab_TabFeature_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTab_TabFeature_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionTab_TabFeature,
+        qtscript_QStyleOptionTab_TabFeature_valueOf, qtscript_QStyleOptionTab_TabFeature_toString);
+    qScriptRegisterMetaType<QStyleOptionTab::TabFeature>(engine, qtscript_QStyleOptionTab_TabFeature_toScriptValue,
+        qtscript_QStyleOptionTab_TabFeature_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_TabFeature_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_TabFeature_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyleOptionTab::TabFeatures
+//
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeatures_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::TabFeatures &value)
+{
+    return engine->newVariant(qVariantFromValue(value));
+}
+
+static void qtscript_QStyleOptionTab_TabFeatures_fromScriptValue(const QScriptValue &value, QStyleOptionTab::TabFeatures &out)
+{
+    QVariant var = value.toVariant();
+    if (var.userType() == qMetaTypeId<QStyleOptionTab::TabFeatures>())
+        out = qvariant_cast<QStyleOptionTab::TabFeatures>(var);
+    else if (var.userType() == qMetaTypeId<QStyleOptionTab::TabFeature>())
+        out = qvariant_cast<QStyleOptionTab::TabFeature>(var);
+    else
+        out = 0;
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTab_TabFeatures(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabFeatures result = 0;
+    if ((context->argumentCount() == 1) && context->argument(0).isNumber()) {
+        result = static_cast<QStyleOptionTab::TabFeatures>(context->argument(0).toInt32());
+    } else {
+        for (int i = 0; i < context->argumentCount(); ++i) {
+            QVariant v = context->argument(i).toVariant();
+            if (v.userType() != qMetaTypeId<QStyleOptionTab::TabFeature>()) {
+                return context->throwError(QScriptContext::TypeError,
+                    QString::fromLatin1("TabFeatures(): argument %0 is not of type TabFeature").arg(i));
+            }
+            result |= qvariant_cast<QStyleOptionTab::TabFeature>(v);
+        }
+   }
+    return engine->newVariant(qVariantFromValue(result));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeatures_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabFeatures value = qscriptvalue_cast<QStyleOptionTab::TabFeatures>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeatures_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::TabFeatures value = qscriptvalue_cast<QStyleOptionTab::TabFeatures>(context->thisObject());
+    QString result;
+    for (int i = 0; i < 2; ++i) {
+        if ((value & qtscript_QStyleOptionTab_TabFeature_values[i]) == qtscript_QStyleOptionTab_TabFeature_values[i]) {
+            if (!result.isEmpty())
+                result.append(QString::fromLatin1(","));
+            result.append(QString::fromLatin1(qtscript_QStyleOptionTab_TabFeature_keys[i]));
+        }
+    }
+    return QScriptValue(engine, result);
+}
+
+static QScriptValue qtscript_QStyleOptionTab_TabFeatures_equals(QScriptContext *context, QScriptEngine *engine)
+{
+    QVariant thisObj = context->thisObject().toVariant();
+    QVariant otherObj = context->argument(0).toVariant();
+    return QScriptValue(engine, ((thisObj.userType() == otherObj.userType()) &&
+                                 (thisObj.value<QStyleOptionTab::TabFeatures>() == otherObj.value<QStyleOptionTab::TabFeatures>())));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTab_TabFeatures_class(QScriptEngine *engine)
+{
+    QScriptValue ctor = qtscript_create_flags_class_helper(
+        engine, qtscript_construct_QStyleOptionTab_TabFeatures, qtscript_QStyleOptionTab_TabFeatures_valueOf,
+        qtscript_QStyleOptionTab_TabFeatures_toString, qtscript_QStyleOptionTab_TabFeatures_equals);
+    qScriptRegisterMetaType<QStyleOptionTab::TabFeatures>(engine, qtscript_QStyleOptionTab_TabFeatures_toScriptValue,
+        qtscript_QStyleOptionTab_TabFeatures_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    return ctor;
+}
+
+//
+// QStyleOptionTab::SelectedPosition
+//
+
+static const QStyleOptionTab::SelectedPosition qtscript_QStyleOptionTab_SelectedPosition_values[] = {
+    QStyleOptionTab::NotAdjacent
+    , QStyleOptionTab::NextIsSelected
+    , QStyleOptionTab::PreviousIsSelected
+};
+
+static const char * const qtscript_QStyleOptionTab_SelectedPosition_keys[] = {
+    "NotAdjacent"
+    , "NextIsSelected"
+    , "PreviousIsSelected"
+};
+
+static QString qtscript_QStyleOptionTab_SelectedPosition_toStringHelper(QStyleOptionTab::SelectedPosition value)
+{
+    if ((value >= QStyleOptionTab::NotAdjacent) && (value <= QStyleOptionTab::PreviousIsSelected))
+        return qtscript_QStyleOptionTab_SelectedPosition_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::NotAdjacent)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionTab_SelectedPosition_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::SelectedPosition &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
+    return clazz.property(qtscript_QStyleOptionTab_SelectedPosition_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionTab_SelectedPosition_fromScriptValue(const QScriptValue &value, QStyleOptionTab::SelectedPosition &out)
+{
+    out = qvariant_cast<QStyleOptionTab::SelectedPosition>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTab_SelectedPosition(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionTab::NotAdjacent) && (arg <= QStyleOptionTab::PreviousIsSelected))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::SelectedPosition>(arg));
+    return context->throwError(QString::fromLatin1("SelectedPosition(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_SelectedPosition_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::SelectedPosition value = qscriptvalue_cast<QStyleOptionTab::SelectedPosition>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTab_SelectedPosition_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTab::SelectedPosition value = qscriptvalue_cast<QStyleOptionTab::SelectedPosition>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionTab_SelectedPosition_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTab_SelectedPosition_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionTab_SelectedPosition,
+        qtscript_QStyleOptionTab_SelectedPosition_valueOf, qtscript_QStyleOptionTab_SelectedPosition_toString);
+    qScriptRegisterMetaType<QStyleOptionTab::SelectedPosition>(engine, qtscript_QStyleOptionTab_SelectedPosition_toScriptValue,
+        qtscript_QStyleOptionTab_SelectedPosition_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_SelectedPosition_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_SelectedPosition_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -298,211 +657,6 @@ static QScriptValue qtscript_create_QStyleOptionTab_CornerWidgets_class(QScriptE
 }
 
 //
-// QStyleOptionTab::TabPosition
-//
-
-static const QStyleOptionTab::TabPosition qtscript_QStyleOptionTab_TabPosition_values[] = {
-    QStyleOptionTab::Beginning
-    , QStyleOptionTab::Middle
-    , QStyleOptionTab::End
-    , QStyleOptionTab::OnlyOneTab
-};
-
-static const char * const qtscript_QStyleOptionTab_TabPosition_keys[] = {
-    "Beginning"
-    , "Middle"
-    , "End"
-    , "OnlyOneTab"
-};
-
-static QString qtscript_QStyleOptionTab_TabPosition_toStringHelper(QStyleOptionTab::TabPosition value)
-{
-    if ((value >= QStyleOptionTab::Beginning) && (value <= QStyleOptionTab::OnlyOneTab))
-        return qtscript_QStyleOptionTab_TabPosition_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::Beginning)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionTab_TabPosition_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::TabPosition &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
-    return clazz.property(qtscript_QStyleOptionTab_TabPosition_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionTab_TabPosition_fromScriptValue(const QScriptValue &value, QStyleOptionTab::TabPosition &out)
-{
-    out = qvariant_cast<QStyleOptionTab::TabPosition>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionTab_TabPosition(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionTab::Beginning) && (arg <= QStyleOptionTab::OnlyOneTab))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::TabPosition>(arg));
-    return context->throwError(QString::fromLatin1("TabPosition(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionTab_TabPosition_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTab::TabPosition value = qscriptvalue_cast<QStyleOptionTab::TabPosition>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionTab_TabPosition_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTab::TabPosition value = qscriptvalue_cast<QStyleOptionTab::TabPosition>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionTab_TabPosition_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionTab_TabPosition_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionTab_TabPosition,
-        qtscript_QStyleOptionTab_TabPosition_valueOf, qtscript_QStyleOptionTab_TabPosition_toString);
-    qScriptRegisterMetaType<QStyleOptionTab::TabPosition>(engine, qtscript_QStyleOptionTab_TabPosition_toScriptValue,
-        qtscript_QStyleOptionTab_TabPosition_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 4; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_TabPosition_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_TabPosition_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyleOptionTab::SelectedPosition
-//
-
-static const QStyleOptionTab::SelectedPosition qtscript_QStyleOptionTab_SelectedPosition_values[] = {
-    QStyleOptionTab::NotAdjacent
-    , QStyleOptionTab::NextIsSelected
-    , QStyleOptionTab::PreviousIsSelected
-};
-
-static const char * const qtscript_QStyleOptionTab_SelectedPosition_keys[] = {
-    "NotAdjacent"
-    , "NextIsSelected"
-    , "PreviousIsSelected"
-};
-
-static QString qtscript_QStyleOptionTab_SelectedPosition_toStringHelper(QStyleOptionTab::SelectedPosition value)
-{
-    if ((value >= QStyleOptionTab::NotAdjacent) && (value <= QStyleOptionTab::PreviousIsSelected))
-        return qtscript_QStyleOptionTab_SelectedPosition_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::NotAdjacent)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionTab_SelectedPosition_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::SelectedPosition &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
-    return clazz.property(qtscript_QStyleOptionTab_SelectedPosition_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionTab_SelectedPosition_fromScriptValue(const QScriptValue &value, QStyleOptionTab::SelectedPosition &out)
-{
-    out = qvariant_cast<QStyleOptionTab::SelectedPosition>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionTab_SelectedPosition(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionTab::NotAdjacent) && (arg <= QStyleOptionTab::PreviousIsSelected))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::SelectedPosition>(arg));
-    return context->throwError(QString::fromLatin1("SelectedPosition(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionTab_SelectedPosition_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTab::SelectedPosition value = qscriptvalue_cast<QStyleOptionTab::SelectedPosition>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionTab_SelectedPosition_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTab::SelectedPosition value = qscriptvalue_cast<QStyleOptionTab::SelectedPosition>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionTab_SelectedPosition_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionTab_SelectedPosition_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionTab_SelectedPosition,
-        qtscript_QStyleOptionTab_SelectedPosition_valueOf, qtscript_QStyleOptionTab_SelectedPosition_toString);
-    qScriptRegisterMetaType<QStyleOptionTab::SelectedPosition>(engine, qtscript_QStyleOptionTab_SelectedPosition_toScriptValue,
-        qtscript_QStyleOptionTab_SelectedPosition_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_SelectedPosition_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_SelectedPosition_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyleOptionTab::StyleOptionType
-//
-
-static const QStyleOptionTab::StyleOptionType qtscript_QStyleOptionTab_StyleOptionType_values[] = {
-    QStyleOptionTab::Type
-};
-
-static const char * const qtscript_QStyleOptionTab_StyleOptionType_keys[] = {
-    "Type"
-};
-
-static QString qtscript_QStyleOptionTab_StyleOptionType_toStringHelper(QStyleOptionTab::StyleOptionType value)
-{
-    if ((value >= QStyleOptionTab::Type) && (value <= QStyleOptionTab::Type))
-        return qtscript_QStyleOptionTab_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTab::Type)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionTab_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionTab::StyleOptionType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTab"));
-    return clazz.property(qtscript_QStyleOptionTab_StyleOptionType_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionTab_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionTab::StyleOptionType &out)
-{
-    out = qvariant_cast<QStyleOptionTab::StyleOptionType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionTab_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionTab::Type) && (arg <= QStyleOptionTab::Type))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTab::StyleOptionType>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionTab_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTab::StyleOptionType value = qscriptvalue_cast<QStyleOptionTab::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionTab_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTab::StyleOptionType value = qscriptvalue_cast<QStyleOptionTab::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionTab_StyleOptionType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionTab_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionTab_StyleOptionType,
-        qtscript_QStyleOptionTab_StyleOptionType_valueOf, qtscript_QStyleOptionTab_StyleOptionType_toString);
-    qScriptRegisterMetaType<QStyleOptionTab::StyleOptionType>(engine, qtscript_QStyleOptionTab_StyleOptionType_toScriptValue,
-        qtscript_QStyleOptionTab_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTab_StyleOptionType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTab_StyleOptionType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QStyleOptionTab
 //
 
@@ -520,7 +674,7 @@ static QScriptValue qtscript_QStyleOptionTab_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionTab* _q_self = qscriptvalue_cast<QStyleOptionTab*>(context->thisObject());
+    qtscript_QStyleOptionTab* _q_self = reinterpret_cast<qtscript_QStyleOptionTab*>(qscriptvalue_cast<QStyleOptionTab*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionTab.%0(): this object is not a QStyleOptionTab")
@@ -585,17 +739,21 @@ QScriptValue qtscript_create_QStyleOptionTab_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionTab_static_call, proto, qtscript_QStyleOptionTab_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("TabPosition"),
+        qtscript_create_QStyleOptionTab_TabPosition_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
+        qtscript_create_QStyleOptionTab_StyleOptionType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
         qtscript_create_QStyleOptionTab_StyleOptionVersion_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("TabFeature"),
+        qtscript_create_QStyleOptionTab_TabFeature_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("TabFeatures"),
+        qtscript_create_QStyleOptionTab_TabFeatures_class(engine));
+    ctor.setProperty(QString::fromLatin1("SelectedPosition"),
+        qtscript_create_QStyleOptionTab_SelectedPosition_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("CornerWidget"),
         qtscript_create_QStyleOptionTab_CornerWidget_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("CornerWidgets"),
         qtscript_create_QStyleOptionTab_CornerWidgets_class(engine));
-    ctor.setProperty(QString::fromLatin1("TabPosition"),
-        qtscript_create_QStyleOptionTab_TabPosition_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("SelectedPosition"),
-        qtscript_create_QStyleOptionTab_SelectedPosition_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
-        qtscript_create_QStyleOptionTab_StyleOptionType_class(engine, ctor));
     return ctor;
 }

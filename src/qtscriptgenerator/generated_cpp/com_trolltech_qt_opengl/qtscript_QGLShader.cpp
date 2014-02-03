@@ -25,7 +25,6 @@ static const char * const qtscript_QGLShader_function_names[] = {
     , "compileSourceFile"
     , "isCompiled"
     , "log"
-    , "shaderId"
     , "shaderType"
     , "sourceCode"
     , "toString"
@@ -38,7 +37,6 @@ static const char * const qtscript_QGLShader_function_signatures[] = {
     // prototype
     , "QByteArray source\nString source\nchar source"
     , "String fileName"
-    , ""
     , ""
     , ""
     , ""
@@ -58,7 +56,15 @@ static const int qtscript_QGLShader_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QGLShader_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGLShader : public QGLShader
+{
+
+    friend QScriptValue qtscript_QGLShader_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGLShader_throw_ambiguity_error_helper(
@@ -273,11 +279,11 @@ static QScriptValue qtscript_QGLShader_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 7;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGLShader* _q_self = qscriptvalue_cast<QGLShader*>(context->thisObject());
+    qtscript_QGLShader* _q_self = reinterpret_cast<qtscript_QGLShader*>(qscriptvalue_cast<QGLShader*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGLShader.%0(): this object is not a QGLShader")
@@ -327,26 +333,19 @@ static QScriptValue qtscript_QGLShader_prototype_call(QScriptContext *context, Q
 
     case 4:
     if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->shaderId();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 5:
-    if (context->argumentCount() == 0) {
         QFlags<QGLShader::ShaderTypeBit> _q_result = _q_self->shaderType();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->sourceCode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7: {
+    case 6: {
     QString result = QString::fromLatin1("QGLShader");
     return QScriptValue(context->engine(), result);
     }
@@ -441,7 +440,7 @@ QScriptValue qtscript_create_QGLShader_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGLShader*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLShader*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLShader_prototype_call, qtscript_QGLShader_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGLShader_function_names[i+2]),

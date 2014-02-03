@@ -40,6 +40,15 @@ static const int qtscript_QDoubleValidator_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QDoubleValidator_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDoubleValidator : public QDoubleValidator
+{
+
+    friend QScriptValue qtscript_QDoubleValidator_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QDoubleValidator_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -166,7 +175,7 @@ static QScriptValue qtscript_QDoubleValidator_prototype_call(QScriptContext *con
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDoubleValidator* _q_self = qscriptvalue_cast<QDoubleValidator*>(context->thisObject());
+    qtscript_QDoubleValidator* _q_self = reinterpret_cast<qtscript_QDoubleValidator*>(qscriptvalue_cast<QDoubleValidator*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDoubleValidator.%0(): this object is not a QDoubleValidator")
@@ -221,6 +230,14 @@ static QScriptValue qtscript_QDoubleValidator_static_call(QScriptContext *contex
     } else if (context->argumentCount() == 1) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         QtScriptShell_QDoubleValidator* _q_cpp_result = new QtScriptShell_QDoubleValidator(_q_arg0);
+        QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QDoubleValidator*)_q_cpp_result, QScriptEngine::AutoOwnership);
+        _q_cpp_result->__qtscript_self = _q_result;
+        return _q_result;
+    } else if (context->argumentCount() == 3) {
+        double _q_arg0 = context->argument(0).toNumber();
+        double _q_arg1 = context->argument(1).toNumber();
+        int _q_arg2 = context->argument(2).toInt32();
+        QtScriptShell_QDoubleValidator* _q_cpp_result = new QtScriptShell_QDoubleValidator(_q_arg0, _q_arg1, _q_arg2);
         QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QDoubleValidator*)_q_cpp_result, QScriptEngine::AutoOwnership);
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;

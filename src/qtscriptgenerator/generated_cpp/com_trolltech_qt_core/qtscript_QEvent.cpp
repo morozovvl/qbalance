@@ -7,6 +7,7 @@
 
 #include <qcoreevent.h>
 #include <QVariant>
+#include <qcoreevent.h>
 
 #include "qtscriptshell_QEvent.h"
 
@@ -25,7 +26,7 @@ static const char * const qtscript_QEvent_function_names[] = {
 };
 
 static const char * const qtscript_QEvent_function_signatures[] = {
-    "Type type"
+    "Type type\nQEvent other"
     // static
     , "int hint"
     // prototype
@@ -114,6 +115,7 @@ static const QEvent::Type qtscript_QEvent_Type_values[] = {
     , QEvent::Quit
     , QEvent::ParentChange
     , QEvent::ThreadChange
+    , QEvent::FocusAboutToChange
     , QEvent::WindowActivate
     , QEvent::WindowDeactivate
     , QEvent::ShowToParent
@@ -151,7 +153,6 @@ static const QEvent::Type qtscript_QEvent_Type_values[] = {
     , QEvent::DeactivateControl
     , QEvent::ContextMenu
     , QEvent::InputMethod
-    , QEvent::AccessibilityPrepare
     , QEvent::TabletMove
     , QEvent::LocaleChange
     , QEvent::LanguageChange
@@ -181,7 +182,6 @@ static const QEvent::Type qtscript_QEvent_Type_values[] = {
     , QEvent::FileOpen
     , QEvent::Shortcut
     , QEvent::WhatsThisClicked
-    , QEvent::AccessibilityHelp
     , QEvent::ToolBarChange
     , QEvent::ApplicationActivate
     , QEvent::ApplicationDeactivate
@@ -192,11 +192,9 @@ static const QEvent::Type qtscript_QEvent_Type_values[] = {
     , QEvent::HoverEnter
     , QEvent::HoverLeave
     , QEvent::HoverMove
-    , QEvent::AccessibilityDescription
     , QEvent::ParentAboutToChange
     , QEvent::WinEventAct
     , QEvent::AcceptDropsChange
-    , QEvent::MenubarUpdated
     , QEvent::ZeroTimerEvent
     , QEvent::GraphicsSceneMouseMove
     , QEvent::GraphicsSceneMousePress
@@ -243,9 +241,19 @@ static const QEvent::Type qtscript_QEvent_Type_values[] = {
     , QEvent::Gesture
     , QEvent::RequestSoftwareInputPanel
     , QEvent::CloseSoftwareInputPanel
-    , QEvent::UpdateSoftKeys
     , QEvent::GestureOverride
     , QEvent::WinIdChange
+    , QEvent::ScrollPrepare
+    , QEvent::Scroll
+    , QEvent::Expose
+    , QEvent::InputMethodQuery
+    , QEvent::OrientationChange
+    , QEvent::TouchCancel
+    , QEvent::ThemeChange
+    , QEvent::SockClose
+    , QEvent::PlatformPanel
+    , QEvent::StyleAnimationUpdate
+    , QEvent::ApplicationStateChange
     , QEvent::User
     , QEvent::MaxUser
 };
@@ -274,6 +282,7 @@ static const char * const qtscript_QEvent_Type_keys[] = {
     , "Quit"
     , "ParentChange"
     , "ThreadChange"
+    , "FocusAboutToChange"
     , "WindowActivate"
     , "WindowDeactivate"
     , "ShowToParent"
@@ -311,7 +320,6 @@ static const char * const qtscript_QEvent_Type_keys[] = {
     , "DeactivateControl"
     , "ContextMenu"
     , "InputMethod"
-    , "AccessibilityPrepare"
     , "TabletMove"
     , "LocaleChange"
     , "LanguageChange"
@@ -341,7 +349,6 @@ static const char * const qtscript_QEvent_Type_keys[] = {
     , "FileOpen"
     , "Shortcut"
     , "WhatsThisClicked"
-    , "AccessibilityHelp"
     , "ToolBarChange"
     , "ApplicationActivate"
     , "ApplicationDeactivate"
@@ -352,11 +359,9 @@ static const char * const qtscript_QEvent_Type_keys[] = {
     , "HoverEnter"
     , "HoverLeave"
     , "HoverMove"
-    , "AccessibilityDescription"
     , "ParentAboutToChange"
     , "WinEventAct"
     , "AcceptDropsChange"
-    , "MenubarUpdated"
     , "ZeroTimerEvent"
     , "GraphicsSceneMouseMove"
     , "GraphicsSceneMousePress"
@@ -403,9 +408,19 @@ static const char * const qtscript_QEvent_Type_keys[] = {
     , "Gesture"
     , "RequestSoftwareInputPanel"
     , "CloseSoftwareInputPanel"
-    , "UpdateSoftKeys"
     , "GestureOverride"
     , "WinIdChange"
+    , "ScrollPrepare"
+    , "Scroll"
+    , "Expose"
+    , "InputMethodQuery"
+    , "OrientationChange"
+    , "TouchCancel"
+    , "ThemeChange"
+    , "SockClose"
+    , "PlatformPanel"
+    , "StyleAnimationUpdate"
+    , "ApplicationStateChange"
     , "User"
     , "MaxUser"
 };
@@ -461,7 +476,7 @@ static QScriptValue qtscript_create_QEvent_Type_class(QScriptEngine *engine, QSc
         qtscript_QEvent_Type_valueOf, qtscript_QEvent_Type_toString);
     qScriptRegisterMetaType<QEvent::Type>(engine, qtscript_QEvent_Type_toScriptValue,
         qtscript_QEvent_Type_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 157; ++i) {
+    for (int i = 0; i < 164; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QEvent_Type_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QEvent_Type_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -564,11 +579,20 @@ static QScriptValue qtscript_QEvent_static_call(QScriptContext *context, QScript
         return context->throwError(QString::fromLatin1("QEvent(): Did you forget to construct with 'new'?"));
     }
     if (context->argumentCount() == 1) {
-        QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
-        QtScriptShell_QEvent* _q_cpp_result = new QtScriptShell_QEvent(_q_arg0);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QEvent*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
+        if ((qMetaTypeId<QEvent::Type>() == context->argument(0).toVariant().userType())) {
+            QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
+            QtScriptShell_QEvent* _q_cpp_result = new QtScriptShell_QEvent(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QEvent*)_q_cpp_result));
+            _q_cpp_result->__qtscript_self = _q_result;
+            return _q_result;
+        } else if (qscriptvalue_cast<QEvent*>(context->argument(0))) {
+
+        QEvent & _q_arg0 = *qscriptvalue_cast<QEvent*>(context->argument(0));
+                    QtScriptShell_QEvent* _q_cpp_result = new QtScriptShell_QEvent(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QEvent*)_q_cpp_result));
+            _q_cpp_result->__qtscript_self = _q_result;
+            return _q_result;
+        }
     }
     break;
 

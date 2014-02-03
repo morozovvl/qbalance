@@ -16,35 +16,39 @@ static const char * const qtscript_QKeySequence_function_names[] = {
     // static
     , "fromString"
     , "keyBindings"
+    , "listFromString"
+    , "listToString"
     , "mnemonic"
     // prototype
     , "count"
     , "isEmpty"
     , "matches"
-    , "operator_cast_int"
     , "equals"
     , "operator_less"
     , "operator_subscript"
     , "readFrom"
+    , "swap"
     , "toString"
     , "writeTo"
 };
 
 static const char * const qtscript_QKeySequence_function_signatures[] = {
-    "\nStandardKey key\nQKeySequence ks\nString key\nString key, SequenceFormat format\nint k1, int k2, int k3, int k4"
+    "\nStandardKey key\nQKeySequence ks\nString key, SequenceFormat format\nint k1, int k2, int k3, int k4"
     // static
     , "String str, SequenceFormat format"
     , "StandardKey key"
+    , "String str, SequenceFormat format"
+    , "List list, SequenceFormat format"
     , "String text"
     // prototype
     , ""
     , ""
     , "QKeySequence seq"
-    , ""
     , "QKeySequence other"
     , "QKeySequence ks"
     , "uint i"
     , "QDataStream out"
+    , "QKeySequence other"
     , "SequenceFormat format"
     , "QDataStream in"
 };
@@ -54,12 +58,14 @@ static const int qtscript_QKeySequence_function_lengths[] = {
     // static
     , 2
     , 1
+    , 2
+    , 2
     , 1
     // prototype
     , 0
     , 0
     , 1
-    , 0
+    , 1
     , 1
     , 1
     , 1
@@ -80,9 +86,9 @@ static QScriptValue qtscript_QKeySequence_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QKeySequence*)
-Q_DECLARE_METATYPE(QKeySequence::SequenceFormat)
 Q_DECLARE_METATYPE(QKeySequence::StandardKey)
 Q_DECLARE_METATYPE(QKeySequence::SequenceMatch)
+Q_DECLARE_METATYPE(QKeySequence::SequenceFormat)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(QList<QKeySequence>)
 
@@ -98,73 +104,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QKeySequence::SequenceFormat
-//
-
-static const QKeySequence::SequenceFormat qtscript_QKeySequence_SequenceFormat_values[] = {
-    QKeySequence::NativeText
-    , QKeySequence::PortableText
-};
-
-static const char * const qtscript_QKeySequence_SequenceFormat_keys[] = {
-    "NativeText"
-    , "PortableText"
-};
-
-static QString qtscript_QKeySequence_SequenceFormat_toStringHelper(QKeySequence::SequenceFormat value)
-{
-    if ((value >= QKeySequence::NativeText) && (value <= QKeySequence::PortableText))
-        return qtscript_QKeySequence_SequenceFormat_keys[static_cast<int>(value)-static_cast<int>(QKeySequence::NativeText)];
-    return QString();
-}
-
-static QScriptValue qtscript_QKeySequence_SequenceFormat_toScriptValue(QScriptEngine *engine, const QKeySequence::SequenceFormat &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QKeySequence"));
-    return clazz.property(qtscript_QKeySequence_SequenceFormat_toStringHelper(value));
-}
-
-static void qtscript_QKeySequence_SequenceFormat_fromScriptValue(const QScriptValue &value, QKeySequence::SequenceFormat &out)
-{
-    out = qvariant_cast<QKeySequence::SequenceFormat>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QKeySequence_SequenceFormat(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QKeySequence::NativeText) && (arg <= QKeySequence::PortableText))
-        return qScriptValueFromValue(engine,  static_cast<QKeySequence::SequenceFormat>(arg));
-    return context->throwError(QString::fromLatin1("SequenceFormat(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QKeySequence_SequenceFormat_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QKeySequence::SequenceFormat value = qscriptvalue_cast<QKeySequence::SequenceFormat>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QKeySequence_SequenceFormat_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QKeySequence::SequenceFormat value = qscriptvalue_cast<QKeySequence::SequenceFormat>(context->thisObject());
-    return QScriptValue(engine, qtscript_QKeySequence_SequenceFormat_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QKeySequence_SequenceFormat_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QKeySequence_SequenceFormat,
-        qtscript_QKeySequence_SequenceFormat_valueOf, qtscript_QKeySequence_SequenceFormat_toString);
-    qScriptRegisterMetaType<QKeySequence::SequenceFormat>(engine, qtscript_QKeySequence_SequenceFormat_toScriptValue,
-        qtscript_QKeySequence_SequenceFormat_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QKeySequence_SequenceFormat_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QKeySequence_SequenceFormat_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -238,6 +177,8 @@ static const QKeySequence::StandardKey qtscript_QKeySequence_StandardKey_values[
     , QKeySequence::SaveAs
     , QKeySequence::Preferences
     , QKeySequence::Quit
+    , QKeySequence::FullScreen
+    , QKeySequence::Deselect
 };
 
 static const char * const qtscript_QKeySequence_StandardKey_keys[] = {
@@ -307,11 +248,13 @@ static const char * const qtscript_QKeySequence_StandardKey_keys[] = {
     , "SaveAs"
     , "Preferences"
     , "Quit"
+    , "FullScreen"
+    , "Deselect"
 };
 
 static QString qtscript_QKeySequence_StandardKey_toStringHelper(QKeySequence::StandardKey value)
 {
-    if ((value >= QKeySequence::UnknownKey) && (value <= QKeySequence::Quit))
+    if ((value >= QKeySequence::UnknownKey) && (value <= QKeySequence::Deselect))
         return qtscript_QKeySequence_StandardKey_keys[static_cast<int>(value)-static_cast<int>(QKeySequence::UnknownKey)];
     return QString();
 }
@@ -330,7 +273,7 @@ static void qtscript_QKeySequence_StandardKey_fromScriptValue(const QScriptValue
 static QScriptValue qtscript_construct_QKeySequence_StandardKey(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QKeySequence::UnknownKey) && (arg <= QKeySequence::Quit))
+    if ((arg >= QKeySequence::UnknownKey) && (arg <= QKeySequence::Deselect))
         return qScriptValueFromValue(engine,  static_cast<QKeySequence::StandardKey>(arg));
     return context->throwError(QString::fromLatin1("StandardKey(): invalid enum value (%0)").arg(arg));
 }
@@ -354,7 +297,7 @@ static QScriptValue qtscript_create_QKeySequence_StandardKey_class(QScriptEngine
         qtscript_QKeySequence_StandardKey_valueOf, qtscript_QKeySequence_StandardKey_toString);
     qScriptRegisterMetaType<QKeySequence::StandardKey>(engine, qtscript_QKeySequence_StandardKey_toScriptValue,
         qtscript_QKeySequence_StandardKey_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 66; ++i) {
+    for (int i = 0; i < 68; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QKeySequence_StandardKey_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QKeySequence_StandardKey_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -432,6 +375,73 @@ static QScriptValue qtscript_create_QKeySequence_SequenceMatch_class(QScriptEngi
 }
 
 //
+// QKeySequence::SequenceFormat
+//
+
+static const QKeySequence::SequenceFormat qtscript_QKeySequence_SequenceFormat_values[] = {
+    QKeySequence::NativeText
+    , QKeySequence::PortableText
+};
+
+static const char * const qtscript_QKeySequence_SequenceFormat_keys[] = {
+    "NativeText"
+    , "PortableText"
+};
+
+static QString qtscript_QKeySequence_SequenceFormat_toStringHelper(QKeySequence::SequenceFormat value)
+{
+    if ((value >= QKeySequence::NativeText) && (value <= QKeySequence::PortableText))
+        return qtscript_QKeySequence_SequenceFormat_keys[static_cast<int>(value)-static_cast<int>(QKeySequence::NativeText)];
+    return QString();
+}
+
+static QScriptValue qtscript_QKeySequence_SequenceFormat_toScriptValue(QScriptEngine *engine, const QKeySequence::SequenceFormat &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QKeySequence"));
+    return clazz.property(qtscript_QKeySequence_SequenceFormat_toStringHelper(value));
+}
+
+static void qtscript_QKeySequence_SequenceFormat_fromScriptValue(const QScriptValue &value, QKeySequence::SequenceFormat &out)
+{
+    out = qvariant_cast<QKeySequence::SequenceFormat>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QKeySequence_SequenceFormat(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QKeySequence::NativeText) && (arg <= QKeySequence::PortableText))
+        return qScriptValueFromValue(engine,  static_cast<QKeySequence::SequenceFormat>(arg));
+    return context->throwError(QString::fromLatin1("SequenceFormat(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QKeySequence_SequenceFormat_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QKeySequence::SequenceFormat value = qscriptvalue_cast<QKeySequence::SequenceFormat>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QKeySequence_SequenceFormat_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QKeySequence::SequenceFormat value = qscriptvalue_cast<QKeySequence::SequenceFormat>(context->thisObject());
+    return QScriptValue(engine, qtscript_QKeySequence_SequenceFormat_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QKeySequence_SequenceFormat_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QKeySequence_SequenceFormat,
+        qtscript_QKeySequence_SequenceFormat_valueOf, qtscript_QKeySequence_SequenceFormat_toString);
+    qScriptRegisterMetaType<QKeySequence::SequenceFormat>(engine, qtscript_QKeySequence_SequenceFormat_toScriptValue,
+        qtscript_QKeySequence_SequenceFormat_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QKeySequence_SequenceFormat_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QKeySequence_SequenceFormat_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QKeySequence
 //
 
@@ -453,13 +463,13 @@ static QScriptValue qtscript_QKeySequence_prototype_call(QScriptContext *context
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QKeySequence.%0(): this object is not a QKeySequence")
-            .arg(qtscript_QKeySequence_function_names[_id+4]));
+            .arg(qtscript_QKeySequence_function_names[_id+6]));
     }
 
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->count();
+        int _q_result = _q_self->count();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -480,13 +490,6 @@ static QScriptValue qtscript_QKeySequence_prototype_call(QScriptContext *context
     break;
 
     case 3:
-    if (context->argumentCount() == 0) {
-        int _q_result = _q_self->operator int();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 4:
     if (context->argumentCount() == 1) {
         QKeySequence _q_arg0 = qscriptvalue_cast<QKeySequence>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -494,7 +497,7 @@ static QScriptValue qtscript_QKeySequence_prototype_call(QScriptContext *context
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 1) {
         QKeySequence _q_arg0 = qscriptvalue_cast<QKeySequence>(context->argument(0));
         bool _q_result = _q_self->operator<(_q_arg0);
@@ -502,7 +505,7 @@ static QScriptValue qtscript_QKeySequence_prototype_call(QScriptContext *context
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 1) {
         uint _q_arg0 = context->argument(0).toUInt32();
         int _q_result = _q_self->operator[](_q_arg0);
@@ -510,10 +513,18 @@ static QScriptValue qtscript_QKeySequence_prototype_call(QScriptContext *context
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
+    if (context->argumentCount() == 1) {
+        QKeySequence _q_arg0 = qscriptvalue_cast<QKeySequence>(context->argument(0));
+        _q_self->swap(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -542,8 +553,8 @@ static QScriptValue qtscript_QKeySequence_prototype_call(QScriptContext *context
     Q_ASSERT(false);
     }
     return qtscript_QKeySequence_throw_ambiguity_error_helper(context,
-        qtscript_QKeySequence_function_names[_id+4],
-        qtscript_QKeySequence_function_signatures[_id+4]);
+        qtscript_QKeySequence_function_names[_id+6],
+        qtscript_QKeySequence_function_signatures[_id+6]);
 }
 
 static QScriptValue qtscript_QKeySequence_static_call(QScriptContext *context, QScriptEngine *)
@@ -641,6 +652,36 @@ static QScriptValue qtscript_QKeySequence_static_call(QScriptContext *context, Q
     case 3:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
+        QList<QKeySequence> _q_result = QKeySequence::listFromString(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QKeySequence::SequenceFormat _q_arg1 = qscriptvalue_cast<QKeySequence::SequenceFormat>(context->argument(1));
+        QList<QKeySequence> _q_result = QKeySequence::listFromString(_q_arg0, _q_arg1);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
+        QList<QKeySequence> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        QString _q_result = QKeySequence::listToString(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        QList<QKeySequence> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        QKeySequence::SequenceFormat _q_arg1 = qscriptvalue_cast<QKeySequence::SequenceFormat>(context->argument(1));
+        QString _q_result = QKeySequence::listToString(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
         QKeySequence _q_result = QKeySequence::mnemonic(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -659,9 +700,9 @@ QScriptValue qtscript_create_QKeySequence_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QKeySequence*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QKeySequence*)0));
     for (int i = 0; i < 10; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QKeySequence_prototype_call, qtscript_QKeySequence_function_lengths[i+4]);
+        QScriptValue fun = engine->newFunction(qtscript_QKeySequence_prototype_call, qtscript_QKeySequence_function_lengths[i+6]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QKeySequence_function_names[i+4]),
+        proto.setProperty(QString::fromLatin1(qtscript_QKeySequence_function_names[i+6]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -670,7 +711,7 @@ QScriptValue qtscript_create_QKeySequence_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QKeySequence_static_call, proto, qtscript_QKeySequence_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QKeySequence_static_call,
             qtscript_QKeySequence_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));
@@ -678,11 +719,11 @@ QScriptValue qtscript_create_QKeySequence_class(QScriptEngine *engine)
             fun, QScriptValue::SkipInEnumeration);
     }
 
-    ctor.setProperty(QString::fromLatin1("SequenceFormat"),
-        qtscript_create_QKeySequence_SequenceFormat_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StandardKey"),
         qtscript_create_QKeySequence_StandardKey_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SequenceMatch"),
         qtscript_create_QKeySequence_SequenceMatch_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("SequenceFormat"),
+        qtscript_create_QKeySequence_SequenceFormat_class(engine, ctor));
     return ctor;
 }

@@ -81,6 +81,7 @@ Q_DECLARE_METATYPE(QGradient*)
 Q_DECLARE_METATYPE(QGradient::CoordinateMode)
 Q_DECLARE_METATYPE(QGradient::Spread)
 Q_DECLARE_METATYPE(QGradient::Type)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<qreal,QColor> > \
 { \
@@ -93,6 +94,23 @@ struct QMetaTypeId< QPair<qreal,QColor> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<qreal,QColor> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<qreal,QColor> >("QPair<qreal,QColor>", reinterpret_cast< QPair<qreal,QColor> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QVector<QPair<qreal,QColor> > > \
 { \
@@ -105,6 +123,22 @@ struct QMetaTypeId< QVector<QPair<qreal,QColor> > > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QVector<QPair<qreal,QColor> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QVector<QPair<qreal,QColor> > >("QVector<QPair<qreal,QColor> >", reinterpret_cast< QVector<QPair<qreal,QColor> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,

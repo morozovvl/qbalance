@@ -53,7 +53,9 @@ void Table::query(QString filter)
     {
         tableModel->setFilter(filter);
         if (!tableModel->select())
+        {
             app->showError(tableModel->lastError().text());
+        }
     }
     app->debug("Query: " + tableModel->selectStatement() + "\n");
  }

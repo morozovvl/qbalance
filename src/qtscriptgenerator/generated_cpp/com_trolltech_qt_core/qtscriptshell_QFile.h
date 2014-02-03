@@ -23,14 +23,17 @@ public:
     void customEvent(QEvent*  arg__1);
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
-    QAbstractFileEngine*  fileEngine() const;
+    QString  fileName() const;
     bool  isSequential() const;
     bool  open(QIODevice::OpenMode  flags);
+    QFileDevice::Permissions  permissions() const;
     qint64  pos() const;
     qint64  readData(char*  data, qint64  maxlen);
     qint64  readLineData(char*  data, qint64  maxlen);
     bool  reset();
+    bool  resize(qint64  sz);
     bool  seek(qint64  offset);
+    bool  setPermissions(QFileDevice::Permissions  permissionSpec);
     qint64  size() const;
     void timerEvent(QTimerEvent*  arg__1);
     bool  waitForBytesWritten(int  msecs);

@@ -19,6 +19,10 @@
 <ul>
 <li><b>prototype</b>: The QRegExp prototype object</li>
 <li><div class="fn"/><b>String escape(String str)</b></li>
+<li><b>CaretAtZero</b></li>
+<li><b>CaretAtOffset</b></li>
+<li><b>CaretWontMatch</b></li>
+<li><b>CaretMode( value )</b></li>
 <li><b>RegExp</b></li>
 <li><b>Wildcard</b></li>
 <li><b>FixedString</b></li>
@@ -26,10 +30,6 @@
 <li><b>WildcardUnix</b></li>
 <li><b>W3CXmlSchema11</b></li>
 <li><b>PatternSyntax( value )</b></li>
-<li><b>CaretAtZero</b></li>
-<li><b>CaretAtOffset</b></li>
-<li><b>CaretWontMatch</b></li>
-<li><b>CaretMode( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -45,7 +45,6 @@
 <li><div class="fn"/><b>bool isValid()</b></li>
 <li><div class="fn"/><b>int lastIndexIn(String str, int offset, CaretMode caretMode)</b></li>
 <li><div class="fn"/><b>int matchedLength()</b></li>
-<li><div class="fn"/><b>int numCaptures()</b></li>
 <li><div class="fn"/><b>bool operator_equal(QRegExp rx)</b></li>
 <li><div class="fn"/><b>String pattern()</b></li>
 <li><div class="fn"/><b>PatternSyntax patternSyntax()</b></li>
@@ -55,6 +54,7 @@
 <li><div class="fn"/><b>void setMinimal(bool minimal)</b></li>
 <li><div class="fn"/><b>void setPattern(String pattern)</b></li>
 <li><div class="fn"/><b>void setPatternSyntax(PatternSyntax syntax)</b></li>
+<li><div class="fn"/><b>void swap(QRegExp other)</b></li>
 <li><div class="fn"/><b>void writeTo(QDataStream out)</b></li>
 </ul>
 <h3>Instance Properties</h3>

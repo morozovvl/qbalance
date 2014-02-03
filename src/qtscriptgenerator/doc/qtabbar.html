@@ -17,13 +17,6 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QTabBar prototype object</li>
-<li><b>SelectLeftTab</b></li>
-<li><b>SelectRightTab</b></li>
-<li><b>SelectPreviousTab</b></li>
-<li><b>SelectionBehavior( value )</b></li>
-<li><b>LeftSide</b></li>
-<li><b>RightSide</b></li>
-<li><b>ButtonPosition( value )</b></li>
 <li><b>RoundedNorth</b></li>
 <li><b>RoundedSouth</b></li>
 <li><b>RoundedWest</b></li>
@@ -33,14 +26,23 @@
 <li><b>TriangularWest</b></li>
 <li><b>TriangularEast</b></li>
 <li><b>Shape( value )</b></li>
+<li><b>LeftSide</b></li>
+<li><b>RightSide</b></li>
+<li><b>ButtonPosition( value )</b></li>
+<li><b>SelectLeftTab</b></li>
+<li><b>SelectRightTab</b></li>
+<li><b>SelectPreviousTab</b></li>
+<li><b>SelectionBehavior( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QTabBar prototype object inherits properties from the <a href="qwidget.html">QWidget</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>int addTab(QIcon icon, String text)</b></li>
+<li><div class="fn"/><b>void initStyleOption(QStyleOptionTab option, int tabIndex)</b></li>
 <li><div class="fn"/><b>int insertTab(int index, QIcon icon, String text)</b></li>
 <li><div class="fn"/><b>bool isTabEnabled(int index)</b></li>
 <li><div class="fn"/><b>QSize minimumSizeHint()</b></li>
+<li><div class="fn"/><b>QSize minimumTabSizeHint(int index)</b></li>
 <li><div class="fn"/><b>void moveTab(int from, int to)</b></li>
 <li><div class="fn"/><b>void removeTab(int index)</b></li>
 <li><div class="fn"/><b>void setTabButton(int index, ButtonPosition position, QWidget widget)</b></li>
@@ -56,7 +58,11 @@
 <li><div class="fn"/><b>QWidget tabButton(int index, ButtonPosition position)</b></li>
 <li><div class="fn"/><b>Object tabData(int index)</b></li>
 <li><div class="fn"/><b>QIcon tabIcon(int index)</b></li>
+<li><div class="fn"/><b>void tabInserted(int index)</b></li>
+<li><div class="fn"/><b>void tabLayoutChange()</b></li>
 <li><div class="fn"/><b>QRect tabRect(int index)</b></li>
+<li><div class="fn"/><b>void tabRemoved(int index)</b></li>
+<li><div class="fn"/><b>QSize tabSizeHint(int index)</b></li>
 <li><div class="fn"/><b>String tabText(int index)</b></li>
 <li><div class="fn"/><b>QColor tabTextColor(int index)</b></li>
 <li><div class="fn"/><b>String tabToolTip(int index)</b></li>

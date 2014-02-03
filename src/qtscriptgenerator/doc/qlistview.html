@@ -17,28 +17,33 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QListView prototype object</li>
-<li><b>Fixed</b></li>
-<li><b>Adjust</b></li>
-<li><b>ResizeMode( value )</b></li>
 <li><b>SinglePass</b></li>
 <li><b>Batched</b></li>
 <li><b>LayoutMode( value )</b></li>
+<li><b>Static</b></li>
+<li><b>Free</b></li>
+<li><b>Snap</b></li>
+<li><b>Movement( value )</b></li>
+<li><b>Fixed</b></li>
+<li><b>Adjust</b></li>
+<li><b>ResizeMode( value )</b></li>
 <li><b>ListMode</b></li>
 <li><b>IconMode</b></li>
 <li><b>ViewMode( value )</b></li>
 <li><b>LeftToRight</b></li>
 <li><b>TopToBottom</b></li>
 <li><b>Flow( value )</b></li>
-<li><b>Static</b></li>
-<li><b>Free</b></li>
-<li><b>Snap</b></li>
-<li><b>Movement( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QListView prototype object inherits properties from the <a href="qabstractitemview.html">QAbstractItemView</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>void clearPropertyFlags()</b></li>
+<li><div class="fn"/><b>QSize contentsSize()</b></li>
 <li><div class="fn"/><b>bool isRowHidden(int row)</b></li>
+<li><div class="fn"/><b>QModelIndex moveCursor(CursorAction cursorAction, KeyboardModifiers modifiers)</b></li>
+<li><div class="fn"/><b>QRect rectForIndex(QModelIndex index)</b></li>
+<li><div class="fn"/><b>void resizeContents(int width, int height)</b></li>
+<li><div class="fn"/><b>void setPositionForIndex(QPoint position, QModelIndex index)</b></li>
 <li><div class="fn"/><b>void setRowHidden(int row, bool hide)</b></li>
 </ul>
 <h3>Instance Properties</h3>

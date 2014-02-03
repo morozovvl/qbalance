@@ -9,6 +9,7 @@ class QtScriptShell_QStateMachine : public QStateMachine
 {
 public:
     QtScriptShell_QStateMachine(QObject*  parent = 0);
+    QtScriptShell_QStateMachine(QState::ChildMode  childMode, QObject*  parent = 0);
     ~QtScriptShell_QStateMachine();
 
     void beginMicrostep(QEvent*  event);

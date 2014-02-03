@@ -23,6 +23,11 @@
 <li><b>MoveAnchor</b></li>
 <li><b>KeepAnchor</b></li>
 <li><b>MoveMode( value )</b></li>
+<li><b>WordUnderCursor</b></li>
+<li><b>LineUnderCursor</b></li>
+<li><b>BlockUnderCursor</b></li>
+<li><b>Document</b></li>
+<li><b>SelectionType( value )</b></li>
 <li><b>NoMove</b></li>
 <li><b>Start</b></li>
 <li><b>Up</b></li>
@@ -49,11 +54,6 @@
 <li><b>NextRow</b></li>
 <li><b>PreviousRow</b></li>
 <li><b>MoveOperation( value )</b></li>
-<li><b>WordUnderCursor</b></li>
-<li><b>LineUnderCursor</b></li>
-<li><b>BlockUnderCursor</b></li>
-<li><b>Document</b></li>
-<li><b>SelectionType( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -114,6 +114,7 @@
 <li><div class="fn"/><b>void setPosition(int pos, MoveMode mode)</b></li>
 <li><div class="fn"/><b>void setVerticalMovementX(int x)</b></li>
 <li><div class="fn"/><b>void setVisualNavigation(bool b)</b></li>
+<li><div class="fn"/><b>void swap(QTextCursor other)</b></li>
 <li><div class="fn"/><b>int verticalMovementX()</b></li>
 <li><div class="fn"/><b>bool visualNavigation()</b></li>
 </ul>

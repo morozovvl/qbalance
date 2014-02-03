@@ -17,6 +17,7 @@ static const char * const qtscript_QImageWriter_function_names[] = {
     "QImageWriter"
     // static
     , "supportedImageFormats"
+    , "supportedMimeTypes"
     // prototype
     , "canWrite"
     , "compression"
@@ -43,6 +44,7 @@ static const char * const qtscript_QImageWriter_function_signatures[] = {
     "\nQIODevice device, QByteArray format\nString fileName, QByteArray format"
     // static
     , ""
+    , ""
     // prototype
     , ""
     , ""
@@ -68,6 +70,7 @@ static const char * const qtscript_QImageWriter_function_signatures[] = {
 static const int qtscript_QImageWriter_function_lengths[] = {
     2
     // static
+    , 0
     , 0
     // prototype
     , 0
@@ -213,7 +216,7 @@ static QScriptValue qtscript_QImageWriter_prototype_call(QScriptContext *context
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QImageWriter.%0(): this object is not a QImageWriter")
-            .arg(qtscript_QImageWriter_function_names[_id+2]));
+            .arg(qtscript_QImageWriter_function_names[_id+3]));
     }
 
     switch (_id) {
@@ -362,8 +365,8 @@ static QScriptValue qtscript_QImageWriter_prototype_call(QScriptContext *context
     Q_ASSERT(false);
     }
     return qtscript_QImageWriter_throw_ambiguity_error_helper(context,
-        qtscript_QImageWriter_function_names[_id+2],
-        qtscript_QImageWriter_function_signatures[_id+2]);
+        qtscript_QImageWriter_function_names[_id+3],
+        qtscript_QImageWriter_function_signatures[_id+3]);
 }
 
 static QScriptValue qtscript_QImageWriter_static_call(QScriptContext *context, QScriptEngine *)
@@ -411,6 +414,13 @@ static QScriptValue qtscript_QImageWriter_static_call(QScriptContext *context, Q
     }
     break;
 
+    case 2:
+    if (context->argumentCount() == 0) {
+        QList<QByteArray> _q_result = QImageWriter::supportedMimeTypes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
     default:
     Q_ASSERT(false);
     }
@@ -424,9 +434,9 @@ QScriptValue qtscript_create_QImageWriter_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QImageWriter*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QImageWriter*)0));
     for (int i = 0; i < 19; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QImageWriter_prototype_call, qtscript_QImageWriter_function_lengths[i+2]);
+        QScriptValue fun = engine->newFunction(qtscript_QImageWriter_prototype_call, qtscript_QImageWriter_function_lengths[i+3]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QImageWriter_function_names[i+2]),
+        proto.setProperty(QString::fromLatin1(qtscript_QImageWriter_function_names[i+3]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -434,7 +444,7 @@ QScriptValue qtscript_create_QImageWriter_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QImageWriter_static_call, proto, qtscript_QImageWriter_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < 2; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QImageWriter_static_call,
             qtscript_QImageWriter_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

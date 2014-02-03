@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "picture.h"
 
 class TableView;
+class Picture;
 
 class FormGrid : public Form {
     Q_OBJECT
@@ -44,8 +45,9 @@ public:
     void restoreCurrentIndex(QModelIndex);
     void setCalculateColumn(int column) { calculateColumn = column; }
     void selectRow(int = 0);
-    virtual void setGridFocus();
+    Q_INVOKABLE virtual void setGridFocus();
     TableView* getGridTable() { return grdTable; }
+    MySqlRelationalTableModel* getTableModel() { return tableModel; }
 
     Q_INVOKABLE QPushButton* getButtonAdd() { return buttonAdd; }
     Q_INVOKABLE QPushButton* getButtonDelete() { return buttonDelete; }

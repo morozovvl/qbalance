@@ -1,9 +1,19 @@
 ************************************************************************
 Not in type system
+ - enum_3
 ************************************************************************
 
 ************************************************************************
 Generation disabled by type system
+ - QCoreApplication::enum_1
+ - QDataStream::ByteOrder
+ - QFont::ResolveProperties
+ - QGradient::InterpolationMode
+ - QXmlNodeModelIndex::Axis
+ - Qt::Initialization
+ - Qt::Modifier
+ - enum_1
+ - enum_2
 ************************************************************************
 
 ************************************************************************

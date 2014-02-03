@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qradiobutton.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qradiobutton.h>
 #include <qrect.h>
@@ -38,6 +38,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QRadioButton.h"
 
@@ -45,6 +46,8 @@ static const char * const qtscript_QRadioButton_function_names[] = {
     "QRadioButton"
     // static
     // prototype
+    , "initStyleOption"
+    , "minimumSizeHint"
     , "sizeHint"
     , "toString"
 };
@@ -53,6 +56,8 @@ static const char * const qtscript_QRadioButton_function_signatures[] = {
     "QWidget parent\nString text, QWidget parent"
     // static
     // prototype
+    , "QStyleOptionButton button"
+    , ""
     , ""
 ""
 };
@@ -61,8 +66,20 @@ static const int qtscript_QRadioButton_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
     , 0
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QRadioButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QRadioButton : public QRadioButton
+{
+    friend QScriptValue qtscript_QRadioButton_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QRadioButton_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QRadioButton_throw_ambiguity_error_helper(
@@ -78,6 +95,8 @@ static QScriptValue qtscript_QRadioButton_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QRadioButton*)
 Q_DECLARE_METATYPE(QtScriptShell_QRadioButton*)
+Q_DECLARE_METATYPE(QStyleOptionButton*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractButton*)
 
 //
@@ -94,11 +113,11 @@ static QScriptValue qtscript_QRadioButton_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 1;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QRadioButton* _q_self = qscriptvalue_cast<QRadioButton*>(context->thisObject());
+    qtscript_QRadioButton* _q_self = reinterpret_cast<qtscript_QRadioButton*>(qscriptvalue_cast<QRadioButton*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QRadioButton.%0(): this object is not a QRadioButton")
@@ -107,13 +126,28 @@ static QScriptValue qtscript_QRadioButton_prototype_call(QScriptContext *context
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionButton* _q_arg0 = qscriptvalue_cast<QStyleOptionButton*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 0) {
+        QSize _q_result = _q_self->minimumSizeHint();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1: {
+    case 3: {
     QString result = QString::fromLatin1("QRadioButton");
     return QScriptValue(context->engine(), result);
     }
@@ -188,7 +222,7 @@ QScriptValue qtscript_create_QRadioButton_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QRadioButton*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QRadioButton*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractButton*>()));
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QRadioButton_prototype_call, qtscript_QRadioButton_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QRadioButton_function_names[i+1]),

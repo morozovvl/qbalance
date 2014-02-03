@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qgroupbox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
 #include <qgroupbox.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QGroupBox.h"
 
@@ -44,6 +45,7 @@ static const char * const qtscript_QGroupBox_function_names[] = {
     "QGroupBox"
     // static
     // prototype
+    , "initStyleOption"
     , "minimumSizeHint"
     , "setAlignment"
     , "toString"
@@ -53,6 +55,7 @@ static const char * const qtscript_QGroupBox_function_signatures[] = {
     "QWidget parent\nString title, QWidget parent"
     // static
     // prototype
+    , "QStyleOptionGroupBox option"
     , ""
     , "int alignment"
 ""
@@ -62,9 +65,20 @@ static const int qtscript_QGroupBox_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QGroupBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGroupBox : public QGroupBox
+{
+    friend QScriptValue qtscript_QGroupBox_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGroupBox_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGroupBox_throw_ambiguity_error_helper(
@@ -80,6 +94,8 @@ static QScriptValue qtscript_QGroupBox_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGroupBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QGroupBox*)
+Q_DECLARE_METATYPE(QStyleOptionGroupBox*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QGroupBox
@@ -95,11 +111,11 @@ static QScriptValue qtscript_QGroupBox_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGroupBox* _q_self = qscriptvalue_cast<QGroupBox*>(context->thisObject());
+    qtscript_QGroupBox* _q_self = reinterpret_cast<qtscript_QGroupBox*>(qscriptvalue_cast<QGroupBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGroupBox.%0(): this object is not a QGroupBox")
@@ -108,13 +124,21 @@ static QScriptValue qtscript_QGroupBox_prototype_call(QScriptContext *context, Q
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionGroupBox* _q_arg0 = qscriptvalue_cast<QStyleOptionGroupBox*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setAlignment(_q_arg0);
@@ -122,7 +146,7 @@ static QScriptValue qtscript_QGroupBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 2: {
+    case 3: {
     QString result = QString::fromLatin1("QGroupBox");
     return QScriptValue(context->engine(), result);
     }
@@ -197,7 +221,7 @@ QScriptValue qtscript_create_QGroupBox_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGroupBox*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGroupBox*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGroupBox_prototype_call, qtscript_QGroupBox_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGroupBox_function_names[i+1]),

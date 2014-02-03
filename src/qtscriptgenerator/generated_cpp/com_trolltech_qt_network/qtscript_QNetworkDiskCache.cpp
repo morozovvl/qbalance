@@ -23,6 +23,7 @@ static const char * const qtscript_QNetworkDiskCache_function_names[] = {
     // static
     // prototype
     , "cacheDirectory"
+    , "expire"
     , "fileMetaData"
     , "maximumCacheSize"
     , "setCacheDirectory"
@@ -34,6 +35,7 @@ static const char * const qtscript_QNetworkDiskCache_function_signatures[] = {
     "QObject parent"
     // static
     // prototype
+    , ""
     , ""
     , "String fileName"
     , ""
@@ -47,11 +49,22 @@ static const int qtscript_QNetworkDiskCache_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 0
     , 1
     , 0
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QNetworkDiskCache : public QNetworkDiskCache
+{
+    friend QScriptValue qtscript_QNetworkDiskCache_expire(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QNetworkDiskCache_throw_ambiguity_error_helper(
@@ -84,11 +97,11 @@ static QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *co
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QNetworkDiskCache* _q_self = qscriptvalue_cast<QNetworkDiskCache*>(context->thisObject());
+    qtscript_QNetworkDiskCache* _q_self = reinterpret_cast<qtscript_QNetworkDiskCache*>(qscriptvalue_cast<QNetworkDiskCache*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QNetworkDiskCache.%0(): this object is not a QNetworkDiskCache")
@@ -104,6 +117,13 @@ static QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *co
     break;
 
     case 1:
+    if (context->argumentCount() == 0) {
+        qint64 _q_result = _q_self->expire();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QNetworkCacheMetaData _q_result = _q_self->fileMetaData(_q_arg0);
@@ -111,14 +131,14 @@ static QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *co
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         qint64 _q_result = _q_self->maximumCacheSize();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setCacheDirectory(_q_arg0);
@@ -126,7 +146,7 @@ static QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *co
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
         _q_self->setMaximumCacheSize(_q_arg0);
@@ -134,7 +154,7 @@ static QScriptValue qtscript_QNetworkDiskCache_prototype_call(QScriptContext *co
     }
     break;
 
-    case 5: {
+    case 6: {
     QString result = QString::fromLatin1("QNetworkDiskCache");
     return QScriptValue(context->engine(), result);
     }
@@ -194,7 +214,7 @@ QScriptValue qtscript_create_QNetworkDiskCache_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QNetworkDiskCache*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkDiskCache*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractNetworkCache*>()));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkDiskCache_prototype_call, qtscript_QNetworkDiskCache_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkDiskCache_function_names[i+1]),

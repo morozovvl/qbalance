@@ -11,6 +11,7 @@ public:
     QtScriptShell_QLayoutItem(Qt::Alignment  alignment = 0);
     ~QtScriptShell_QLayoutItem();
 
+    QSizePolicy::ControlTypes  controlTypes() const;
     Qt::Orientations  expandingDirections() const;
     QRect  geometry() const;
     bool  hasHeightForWidth() const;

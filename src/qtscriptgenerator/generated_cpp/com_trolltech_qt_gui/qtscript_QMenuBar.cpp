@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qmenubar.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -38,6 +38,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QMenuBar.h"
 
@@ -53,6 +54,7 @@ static const char * const qtscript_QMenuBar_function_names[] = {
     , "addSeparator"
     , "clear"
     , "cornerWidget"
+    , "initStyleOption"
     , "insertMenu"
     , "insertSeparator"
     , "minimumSizeHint"
@@ -74,6 +76,7 @@ static const char * const qtscript_QMenuBar_function_signatures[] = {
     , ""
     , ""
     , "Corner corner"
+    , "QStyleOptionMenuItem option, QAction action"
     , "QAction before, QMenu menu"
     , "QAction before"
     , ""
@@ -96,12 +99,23 @@ static const int qtscript_QMenuBar_function_lengths[] = {
     , 0
     , 1
     , 2
+    , 2
     , 1
     , 0
     , 1
     , 2
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMenuBar : public QMenuBar
+{
+    friend QScriptValue qtscript_QMenuBar_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QMenuBar_throw_ambiguity_error_helper(
@@ -120,6 +134,8 @@ Q_DECLARE_METATYPE(QtScriptShell_QMenuBar*)
 Q_DECLARE_METATYPE(QAction*)
 Q_DECLARE_METATYPE(QMenu*)
 Q_DECLARE_METATYPE(Qt::Corner)
+Q_DECLARE_METATYPE(QWidget*)
+Q_DECLARE_METATYPE(QStyleOptionMenuItem*)
 
 //
 // QMenuBar
@@ -135,11 +151,11 @@ static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 14;
+        _id = 0xBABE0000 + 15;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMenuBar* _q_self = qscriptvalue_cast<QMenuBar*>(context->thisObject());
+    qtscript_QMenuBar* _q_self = reinterpret_cast<qtscript_QMenuBar*>(qscriptvalue_cast<QMenuBar*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMenuBar.%0(): this object is not a QMenuBar")
@@ -226,6 +242,15 @@ static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *context, QS
 
     case 8:
     if (context->argumentCount() == 2) {
+        QStyleOptionMenuItem* _q_arg0 = qscriptvalue_cast<QStyleOptionMenuItem*>(context->argument(0));
+        QAction* _q_arg1 = qscriptvalue_cast<QAction*>(context->argument(1));
+        _q_self->initStyleOption(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 2) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QMenu* _q_arg1 = qscriptvalue_cast<QMenu*>(context->argument(1));
         QAction* _q_result = _q_self->insertMenu(_q_arg0, _q_arg1);
@@ -233,7 +258,7 @@ static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QAction* _q_result = _q_self->insertSeparator(_q_arg0);
@@ -241,14 +266,14 @@ static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 1) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         _q_self->setActiveAction(_q_arg0);
@@ -256,7 +281,7 @@ static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setCornerWidget(_q_arg0);
@@ -270,14 +295,14 @@ static QScriptValue qtscript_QMenuBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14: {
+    case 15: {
     QString result = QString::fromLatin1("QMenuBar");
     return QScriptValue(context->engine(), result);
     }
@@ -337,7 +362,7 @@ QScriptValue qtscript_create_QMenuBar_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QMenuBar*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QMenuBar*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 16; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QMenuBar_prototype_call, qtscript_QMenuBar_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QMenuBar_function_names[i+1]),

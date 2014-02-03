@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qprintpreviewwidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qprinter.h>
 #include <qrect.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QPrintPreviewWidget.h"
 
@@ -44,7 +45,6 @@ static const char * const qtscript_QPrintPreviewWidget_function_names[] = {
     // static
     // prototype
     , "currentPage"
-    , "numPages"
     , "orientation"
     , "pageCount"
     , "setVisible"
@@ -58,7 +58,6 @@ static const char * const qtscript_QPrintPreviewWidget_function_signatures[] = {
     "QPrinter printer, QWidget parent, WindowFlags flags\nQWidget parent, WindowFlags flags"
     // static
     // prototype
-    , ""
     , ""
     , ""
     , ""
@@ -76,12 +75,20 @@ static const int qtscript_QPrintPreviewWidget_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 0
     , 1
     , 0
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QPrintPreviewWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPrintPreviewWidget : public QPrintPreviewWidget
+{
+
+    friend QScriptValue qtscript_QPrintPreviewWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPrintPreviewWidget_throw_ambiguity_error_helper(
@@ -101,6 +108,7 @@ Q_DECLARE_METATYPE(QPrintPreviewWidget::ZoomMode)
 Q_DECLARE_METATYPE(QPrintPreviewWidget::ViewMode)
 Q_DECLARE_METATYPE(QPrinter::Orientation)
 Q_DECLARE_METATYPE(QPrinter*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -269,11 +277,11 @@ static QScriptValue qtscript_QPrintPreviewWidget_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 7;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPrintPreviewWidget* _q_self = qscriptvalue_cast<QPrintPreviewWidget*>(context->thisObject());
+    qtscript_QPrintPreviewWidget* _q_self = reinterpret_cast<qtscript_QPrintPreviewWidget*>(qscriptvalue_cast<QPrintPreviewWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPrintPreviewWidget.%0(): this object is not a QPrintPreviewWidget")
@@ -290,26 +298,19 @@ static QScriptValue qtscript_QPrintPreviewWidget_prototype_call(QScriptContext *
 
     case 1:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->numPages();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 2:
-    if (context->argumentCount() == 0) {
         QPrinter::Orientation _q_result = _q_self->orientation();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 2:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->pageCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 3:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setVisible(_q_arg0);
@@ -317,28 +318,28 @@ static QScriptValue qtscript_QPrintPreviewWidget_prototype_call(QScriptContext *
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 0) {
         QPrintPreviewWidget::ViewMode _q_result = _q_self->viewMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->zoomFactor();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 0) {
         QPrintPreviewWidget::ZoomMode _q_result = _q_self->zoomMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8: {
+    case 7: {
     QString result = QString::fromLatin1("QPrintPreviewWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -432,7 +433,7 @@ QScriptValue qtscript_create_QPrintPreviewWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPrintPreviewWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPrintPreviewWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 8; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPrintPreviewWidget_prototype_call, qtscript_QPrintPreviewWidget_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPrintPreviewWidget_function_names[i+1]),

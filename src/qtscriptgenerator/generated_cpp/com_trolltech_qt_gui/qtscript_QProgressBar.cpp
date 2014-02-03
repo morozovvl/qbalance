@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qprogressbar.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qprogressbar.h>
 #include <qrect.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QProgressBar.h"
 
@@ -44,7 +45,9 @@ static const char * const qtscript_QProgressBar_function_names[] = {
     "QProgressBar"
     // static
     // prototype
+    , "initStyleOption"
     , "minimumSizeHint"
+    , "resetFormat"
     , "sizeHint"
     , "toString"
 };
@@ -53,6 +56,8 @@ static const char * const qtscript_QProgressBar_function_signatures[] = {
     "QWidget parent"
     // static
     // prototype
+    , "QStyleOptionProgressBar option"
+    , ""
     , ""
     , ""
 ""
@@ -62,9 +67,21 @@ static const int qtscript_QProgressBar_function_lengths[] = {
     1
     // static
     // prototype
+    , 1
     , 0
     , 0
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QProgressBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QProgressBar : public QProgressBar
+{
+    friend QScriptValue qtscript_QProgressBar_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QProgressBar_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QProgressBar_throw_ambiguity_error_helper(
@@ -86,6 +103,8 @@ static const QMetaObject *qtscript_QProgressBar_metaObject()
 Q_DECLARE_METATYPE(QProgressBar*)
 Q_DECLARE_METATYPE(QtScriptShell_QProgressBar*)
 Q_DECLARE_METATYPE(QProgressBar::Direction)
+Q_DECLARE_METATYPE(QStyleOptionProgressBar*)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -188,11 +207,11 @@ static QScriptValue qtscript_QProgressBar_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QProgressBar* _q_self = qscriptvalue_cast<QProgressBar*>(context->thisObject());
+    qtscript_QProgressBar* _q_self = reinterpret_cast<qtscript_QProgressBar*>(qscriptvalue_cast<QProgressBar*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QProgressBar.%0(): this object is not a QProgressBar")
@@ -201,20 +220,35 @@ static QScriptValue qtscript_QProgressBar_prototype_call(QScriptContext *context
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionProgressBar* _q_arg0 = qscriptvalue_cast<QStyleOptionProgressBar*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
+    if (context->argumentCount() == 0) {
+        _q_self->resetFormat();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2: {
+    case 4: {
     QString result = QString::fromLatin1("QProgressBar");
     return QScriptValue(context->engine(), result);
     }
@@ -274,7 +308,7 @@ QScriptValue qtscript_create_QProgressBar_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QProgressBar*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QProgressBar*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QProgressBar_prototype_call, qtscript_QProgressBar_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QProgressBar_function_names[i+1]),

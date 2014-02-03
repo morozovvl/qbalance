@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qprintdialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractprintdialog.h>
 #include <qaction.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qprinter.h>
 #include <qrect.h>
@@ -37,6 +37,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QPrintDialog.h"
 
@@ -70,6 +71,15 @@ static const int qtscript_QPrintDialog_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QPrintDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPrintDialog : public QPrintDialog
+{
+
+    friend QScriptValue qtscript_QPrintDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QPrintDialog_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -86,6 +96,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QPrintDialog*)
 Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QAbstractPrintDialog::PrintDialogOption)
 Q_DECLARE_METATYPE(QPrinter*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractPrintDialog*)
 
 //
@@ -106,7 +117,7 @@ static QScriptValue qtscript_QPrintDialog_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPrintDialog* _q_self = qscriptvalue_cast<QPrintDialog*>(context->thisObject());
+    qtscript_QPrintDialog* _q_self = reinterpret_cast<qtscript_QPrintDialog*>(qscriptvalue_cast<QPrintDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPrintDialog.%0(): this object is not a QPrintDialog")

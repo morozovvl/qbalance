@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qwizard.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -36,6 +35,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 #include <qwizard.h>
 
 #include "qtscriptshell_QWizardPage.h"
@@ -46,17 +46,21 @@ static const char * const qtscript_QWizardPage_function_names[] = {
     // prototype
     , "buttonText"
     , "cleanupPage"
+    , "field"
     , "initializePage"
     , "isCommitPage"
     , "isComplete"
     , "isFinalPage"
     , "nextId"
     , "pixmap"
+    , "registerField"
     , "setButtonText"
     , "setCommitPage"
+    , "setField"
     , "setFinalPage"
     , "setPixmap"
     , "validatePage"
+    , "wizard"
     , "toString"
 };
 
@@ -66,16 +70,20 @@ static const char * const qtscript_QWizardPage_function_signatures[] = {
     // prototype
     , "WizardButton which"
     , ""
+    , "String name"
     , ""
     , ""
     , ""
     , ""
     , ""
     , "WizardPixmap which"
+    , "String name, QWidget widget, char property, char changedSignal"
     , "WizardButton which, String text"
     , "bool commitPage"
+    , "String name, Object value"
     , "bool finalPage"
     , "WizardPixmap which, QPixmap pixmap"
+    , ""
     , ""
 ""
 };
@@ -86,18 +94,35 @@ static const int qtscript_QWizardPage_function_lengths[] = {
     // prototype
     , 1
     , 0
+    , 1
     , 0
     , 0
     , 0
     , 0
     , 0
+    , 1
+    , 4
+    , 2
     , 1
     , 2
     , 1
-    , 1
     , 2
     , 0
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QWizardPage : public QWizardPage
+{
+    friend QScriptValue qtscript_QWizardPage_field(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QWizardPage_registerField(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QWizardPage_setField(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QWizardPage_wizard(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QWizardPage_throw_ambiguity_error_helper(
@@ -115,6 +140,9 @@ Q_DECLARE_METATYPE(QWizardPage*)
 Q_DECLARE_METATYPE(QtScriptShell_QWizardPage*)
 Q_DECLARE_METATYPE(QWizard::WizardButton)
 Q_DECLARE_METATYPE(QWizard::WizardPixmap)
+Q_DECLARE_METATYPE(QWidget*)
+Q_DECLARE_METATYPE(char*)
+Q_DECLARE_METATYPE(QWizard*)
 
 //
 // QWizardPage
@@ -130,11 +158,11 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 13;
+        _id = 0xBABE0000 + 17;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QWizardPage* _q_self = qscriptvalue_cast<QWizardPage*>(context->thisObject());
+    qtscript_QWizardPage* _q_self = reinterpret_cast<qtscript_QWizardPage*>(qscriptvalue_cast<QWizardPage*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QWizardPage.%0(): this object is not a QWizardPage")
@@ -158,41 +186,49 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        QVariant _q_result = _q_self->field(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         _q_self->initializePage();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isCommitPage();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isComplete();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isFinalPage();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->nextId();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         QWizard::WizardPixmap _q_arg0 = qscriptvalue_cast<QWizard::WizardPixmap>(context->argument(0));
         QPixmap _q_result = _q_self->pixmap(_q_arg0);
@@ -200,7 +236,18 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 8:
+    case 9:
+    if (context->argumentCount() == 4) {
+        QString _q_arg0 = context->argument(0).toString();
+        QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
+        char* _q_arg2 = qscriptvalue_cast<char*>(context->argument(2));
+        char* _q_arg3 = qscriptvalue_cast<char*>(context->argument(3));
+        _q_self->registerField(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 2) {
         QWizard::WizardButton _q_arg0 = qscriptvalue_cast<QWizard::WizardButton>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -209,7 +256,7 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setCommitPage(_q_arg0);
@@ -217,7 +264,16 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 10:
+    case 12:
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setField(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 13:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setFinalPage(_q_arg0);
@@ -225,7 +281,7 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 11:
+    case 14:
     if (context->argumentCount() == 2) {
         QWizard::WizardPixmap _q_arg0 = qscriptvalue_cast<QWizard::WizardPixmap>(context->argument(0));
         QPixmap _q_arg1 = qscriptvalue_cast<QPixmap>(context->argument(1));
@@ -234,14 +290,21 @@ static QScriptValue qtscript_QWizardPage_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 12:
+    case 15:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->validatePage();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13: {
+    case 16:
+    if (context->argumentCount() == 0) {
+        QWizard* _q_result = _q_self->wizard();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17: {
     QString result = QString::fromLatin1("QWizardPage");
     return QScriptValue(context->engine(), result);
     }
@@ -301,7 +364,7 @@ QScriptValue qtscript_create_QWizardPage_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QWizardPage*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QWizardPage*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 14; ++i) {
+    for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QWizardPage_prototype_call, qtscript_QWizardPage_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QWizardPage_function_names[i+1]),

@@ -14,10 +14,14 @@ public:
     void childEvent(QChildEvent*  arg__1);
     QList<QNetworkCookie >  cookiesForUrl(const QUrl&  url) const;
     void customEvent(QEvent*  arg__1);
+    bool  deleteCookie(const QNetworkCookie&  cookie);
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
+    bool  insertCookie(const QNetworkCookie&  cookie);
     bool  setCookiesFromUrl(const QList<QNetworkCookie >&  cookieList, const QUrl&  url);
     void timerEvent(QTimerEvent*  arg__1);
+    bool  updateCookie(const QNetworkCookie&  cookie);
+    bool  validateCookie(const QNetworkCookie&  cookie, const QUrl&  url) const;
 
     QScriptValue __qtscript_self;
 };

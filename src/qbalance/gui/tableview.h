@@ -49,7 +49,8 @@ public:
     void                        setApp(TApplication*);
     void                        setTableModel(MySqlRelationalTableModel*);
     void                        setTagName(QString tag) { tagName = tag; }
-    void                        selectNextColumn(QModelIndex* = 0);         // Перемещает курсор в следующий столбец, разрешенный к редактированию
+    bool                        columnIsReadOnly();
+    void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     void                        selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
     void                        setReadOnly(bool);
     bool                        setColumnsHeaders();
@@ -58,10 +59,13 @@ public:
     void                        showGridSection(QString);
     void                        showAllGridSections();
 
+public slots:
+    void                        selectRow(int = 0);
 
 protected:
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void                currentChanged(const QModelIndex &, const QModelIndex &);
+    void                        focusInEvent(QFocusEvent*);
 
 private:
     bool                        columnsHeadersSeted;
@@ -73,7 +77,7 @@ private:
     TApplication*               app;
     DBFactory*                  db;
     MySqlRelationalTableModel*  tableModel;
-    QMap<int, QString>         columns;            // Список видимых столбцов и их порядок
+    QMap<int, QString>          columns;            // Список видимых столбцов и их порядок
 
     MyItemDelegate*             getColumnDelegate(FieldType);
 };

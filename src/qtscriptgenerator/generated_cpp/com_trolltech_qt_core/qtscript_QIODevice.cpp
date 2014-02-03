@@ -38,15 +38,20 @@ static const char * const qtscript_QIODevice_function_names[] = {
     , "putChar"
     , "read"
     , "readAll"
+    , "readData"
     , "readLine"
+    , "readLineData"
     , "reset"
     , "seek"
+    , "setErrorString"
+    , "setOpenMode"
     , "setTextModeEnabled"
     , "size"
     , "ungetChar"
     , "waitForBytesWritten"
     , "waitForReadyRead"
     , "write"
+    , "writeData"
     , "toString"
 };
 
@@ -73,15 +78,20 @@ static const char * const qtscript_QIODevice_function_signatures[] = {
     , "char c"
     , "qint64 maxlen"
     , ""
+    , "char data, qint64 maxlen"
     , "qint64 maxlen"
+    , "char data, qint64 maxlen"
     , ""
     , "qint64 pos"
+    , "String errorString"
+    , "OpenMode openMode"
     , "bool enabled"
     , ""
     , "char c"
     , "int msecs"
     , "int msecs"
     , "QByteArray data\nchar data"
+    , "char data, qint64 len"
 ""
 };
 
@@ -108,16 +118,35 @@ static const int qtscript_QIODevice_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 2
+    , 1
+    , 2
+    , 0
+    , 1
+    , 1
+    , 1
     , 1
     , 0
     , 1
     , 1
+    , 1
+    , 1
+    , 2
     , 0
-    , 1
-    , 1
-    , 1
-    , 1
-    , 0
+};
+
+static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QIODevice : public QIODevice
+{
+    friend QScriptValue qtscript_QIODevice_readData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QIODevice_readLineData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QIODevice_setErrorString(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QIODevice_setOpenMode(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QIODevice_writeData(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QIODevice_throw_ambiguity_error_helper(
@@ -341,11 +370,11 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 28;
+        _id = 0xBABE0000 + 33;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QIODevice* _q_self = qscriptvalue_cast<QIODevice*>(context->thisObject());
+    qtscript_QIODevice* _q_self = reinterpret_cast<qtscript_QIODevice*>(qscriptvalue_cast<QIODevice*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QIODevice.%0(): this object is not a QIODevice")
@@ -492,6 +521,15 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     break;
 
     case 19:
+    if (context->argumentCount() == 2) {
+        char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+        qint64 _q_arg1 = qscriptvalue_cast<qint64>(context->argument(1));
+        qint64 _q_result = _q_self->readData(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 20:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->readLine();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -503,14 +541,23 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 20:
+    case 21:
+    if (context->argumentCount() == 2) {
+        char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+        qint64 _q_arg1 = qscriptvalue_cast<qint64>(context->argument(1));
+        qint64 _q_result = _q_self->readLineData(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 22:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->reset();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 1) {
         qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
         bool _q_result = _q_self->seek(_q_arg0);
@@ -518,7 +565,23 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 22:
+    case 24:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setErrorString(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 25:
+    if (context->argumentCount() == 1) {
+        QFlags<QIODevice::OpenModeFlag> _q_arg0 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(0));
+        _q_self->setOpenMode(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 26:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setTextModeEnabled(_q_arg0);
@@ -526,14 +589,14 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 23:
+    case 27:
     if (context->argumentCount() == 0) {
         qint64 _q_result = _q_self->size();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 24:
+    case 28:
     if (context->argumentCount() == 1) {
         char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
         _q_self->ungetChar(_q_arg0);
@@ -541,7 +604,7 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 25:
+    case 29:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->waitForBytesWritten(_q_arg0);
@@ -549,7 +612,7 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 26:
+    case 30:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->waitForReadyRead(_q_arg0);
@@ -557,7 +620,7 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 27:
+    case 31:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
@@ -571,7 +634,16 @@ static QScriptValue qtscript_QIODevice_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 28: {
+    case 32:
+    if (context->argumentCount() == 2) {
+        char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+        qint64 _q_arg1 = qscriptvalue_cast<qint64>(context->argument(1));
+        qint64 _q_result = _q_self->writeData(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 33: {
     QString result = QString::fromLatin1("QIODevice");
     return QScriptValue(context->engine(), result);
     }
@@ -631,7 +703,7 @@ QScriptValue qtscript_create_QIODevice_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QIODevice*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QIODevice*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 29; ++i) {
+    for (int i = 0; i < 34; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QIODevice_prototype_call, qtscript_QIODevice_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QIODevice_function_names[i+1]),

@@ -9,6 +9,7 @@ class QtScriptShell_QKeyEvent : public QKeyEvent
 {
 public:
     QtScriptShell_QKeyEvent(QEvent::Type  type, int  key, Qt::KeyboardModifiers  modifiers, const QString&  text = QString(), bool  autorep = false, ushort  count = 1);
+    QtScriptShell_QKeyEvent(QEvent::Type  type, int  key, Qt::KeyboardModifiers  modifiers, unsigned int  nativeScanCode, unsigned int  nativeVirtualKey, unsigned int  nativeModifiers, const QString&  text = QString(), bool  autorep = false, ushort  count = 1);
     ~QtScriptShell_QKeyEvent();
 
 

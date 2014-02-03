@@ -8,7 +8,7 @@
 class QtScriptShell_QDropEvent : public QDropEvent
 {
 public:
-    QtScriptShell_QDropEvent(const QPoint&  pos, Qt::DropActions  actions, const QMimeData*  data, Qt::MouseButtons  buttons, Qt::KeyboardModifiers  modifiers, QEvent::Type  type = QEvent::Drop);
+    QtScriptShell_QDropEvent(const QPointF&  pos, Qt::DropActions  actions, const QMimeData*  data, Qt::MouseButtons  buttons, Qt::KeyboardModifiers  modifiers, QEvent::Type  type = QEvent::Drop);
     ~QtScriptShell_QDropEvent();
 
 

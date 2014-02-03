@@ -8,9 +8,9 @@
 class QtScriptShell_QGraphicsEllipseItem : public QGraphicsEllipseItem
 {
 public:
-    QtScriptShell_QGraphicsEllipseItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsEllipseItem(const QRectF&  rect, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsEllipseItem(qreal  x, qreal  y, qreal  w, qreal  h, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsEllipseItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsEllipseItem(const QRectF&  rect, QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsEllipseItem(qreal  x, qreal  y, qreal  w, qreal  h, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsEllipseItem();
 
     void advance(int  phase);

@@ -41,7 +41,7 @@ public:
     QString toolTip() const;
     QString whatsThis() const;
     QWidget *createWidget(QWidget *parent);
-    void initialize( QDesignerFormEditorInterface *core );
+    void initialize(QDesignerFormEditorInterface *core );
 
 private:
     bool m_initialized;

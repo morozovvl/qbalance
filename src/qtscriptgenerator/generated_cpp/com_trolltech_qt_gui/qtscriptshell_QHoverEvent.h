@@ -8,7 +8,7 @@
 class QtScriptShell_QHoverEvent : public QHoverEvent
 {
 public:
-    QtScriptShell_QHoverEvent(QEvent::Type  type, const QPoint&  pos, const QPoint&  oldPos);
+    QtScriptShell_QHoverEvent(QEvent::Type  type, const QPointF&  pos, const QPointF&  oldPos, Qt::KeyboardModifiers  modifiers = Qt::NoModifier);
     ~QtScriptShell_QHoverEvent();
 
 

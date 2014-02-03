@@ -33,6 +33,7 @@ static const char * const qtscript_QBrush_function_names[] = {
     , "setTextureImage"
     , "setTransform"
     , "style"
+    , "swap"
     , "texture"
     , "textureImage"
     , "transform"
@@ -57,6 +58,7 @@ static const char * const qtscript_QBrush_function_signatures[] = {
     , "QImage image"
     , "QTransform arg__1"
     , ""
+    , "QBrush other"
     , ""
     , ""
     , ""
@@ -81,6 +83,7 @@ static const int qtscript_QBrush_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 1
     , 0
     , 0
     , 0
@@ -119,7 +122,7 @@ static QScriptValue qtscript_QBrush_prototype_call(QScriptContext *context, QScr
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 17;
+        _id = 0xBABE0000 + 18;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -237,27 +240,35 @@ static QScriptValue qtscript_QBrush_prototype_call(QScriptContext *context, QScr
     break;
 
     case 13:
+    if (context->argumentCount() == 1) {
+        QBrush _q_arg0 = qscriptvalue_cast<QBrush>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 14:
     if (context->argumentCount() == 0) {
         QPixmap _q_result = _q_self->texture();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 0) {
         QImage _q_result = _q_self->textureImage();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 0) {
         QTransform _q_result = _q_self->transform();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -265,7 +276,7 @@ static QScriptValue qtscript_QBrush_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 17: {
+    case 18: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -365,7 +376,7 @@ QScriptValue qtscript_create_QBrush_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QBrush*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QBrush*)0));
-    for (int i = 0; i < 18; ++i) {
+    for (int i = 0; i < 19; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QBrush_prototype_call, qtscript_QBrush_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QBrush_function_names[i+1]),

@@ -8,7 +8,7 @@
 class QtScriptShell_QTouchEvent : public QTouchEvent
 {
 public:
-    QtScriptShell_QTouchEvent(QEvent::Type  eventType, QTouchEvent::DeviceType  deviceType = QTouchEvent::TouchScreen, Qt::KeyboardModifiers  modifiers = Qt::NoModifier, Qt::TouchPointStates  touchPointStates = 0, const QList<QTouchEvent::TouchPoint >&  touchPoints = QList<QTouchEvent::TouchPoint>());
+    QtScriptShell_QTouchEvent(QEvent::Type  eventType, QTouchDevice*  device = 0, Qt::KeyboardModifiers  modifiers = Qt::NoModifier, Qt::TouchPointStates  touchPointStates = 0, const QList<QTouchEvent::TouchPoint >&  touchPoints = QList<QTouchEvent::TouchPoint>());
     ~QtScriptShell_QTouchEvent();
 
 

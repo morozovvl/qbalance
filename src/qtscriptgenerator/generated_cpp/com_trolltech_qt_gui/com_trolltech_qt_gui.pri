@@ -3,32 +3,23 @@ HEADERS += \
            $$PWD/qtscriptshell_QAbstractGraphicsShapeItem.h \
            $$PWD/qtscriptshell_QAbstractItemDelegate.h \
            $$PWD/qtscriptshell_QAbstractItemView.h \
-           $$PWD/qtscriptshell_QAbstractPageSetupDialog.h \
            $$PWD/qtscriptshell_QAbstractPrintDialog.h \
            $$PWD/qtscriptshell_QAbstractScrollArea.h \
            $$PWD/qtscriptshell_QAbstractSlider.h \
            $$PWD/qtscriptshell_QAbstractSpinBox.h \
-           $$PWD/qtscriptshell_QAccessible.h \
-           $$PWD/qtscriptshell_QAccessible2Interface.h \
            $$PWD/qtscriptshell_QAccessibleBridge.h \
+           $$PWD/qtscriptshell_QAccessibleEvent.h \
            $$PWD/qtscriptshell_QAccessibleInterface.h \
-           $$PWD/qtscriptshell_QAccessibleInterfaceEx.h \
            $$PWD/qtscriptshell_QAccessibleObject.h \
-           $$PWD/qtscriptshell_QAccessibleObjectEx.h \
            $$PWD/qtscriptshell_QAccessiblePlugin.h \
-           $$PWD/qtscriptshell_QAccessibleTableInterface.h \
-           $$PWD/qtscriptshell_QAccessibleWidget.h \
-           $$PWD/qtscriptshell_QAccessibleWidgetEx.h \
            $$PWD/qtscriptshell_QAction.h \
            $$PWD/qtscriptshell_QActionGroup.h \
            $$PWD/qtscriptshell_QApplication.h \
            $$PWD/qtscriptshell_QBitmap.h \
            $$PWD/qtscriptshell_QBoxLayout.h \
            $$PWD/qtscriptshell_QButtonGroup.h \
-           $$PWD/qtscriptshell_QCDEStyle.h \
            $$PWD/qtscriptshell_QCalendarWidget.h \
            $$PWD/qtscriptshell_QCheckBox.h \
-           $$PWD/qtscriptshell_QCleanlooksStyle.h \
            $$PWD/qtscriptshell_QColorDialog.h \
            $$PWD/qtscriptshell_QColumnView.h \
            $$PWD/qtscriptshell_QComboBox.h \
@@ -49,7 +40,6 @@ HEADERS += \
            $$PWD/qtscriptshell_QDoubleValidator.h \
            $$PWD/qtscriptshell_QDrag.h \
            $$PWD/qtscriptshell_QDragMoveEvent.h \
-           $$PWD/qtscriptshell_QDragResponseEvent.h \
            $$PWD/qtscriptshell_QDropEvent.h \
            $$PWD/qtscriptshell_QErrorMessage.h \
            $$PWD/qtscriptshell_QFileDialog.h \
@@ -91,17 +81,14 @@ HEADERS += \
            $$PWD/qtscriptshell_QGraphicsWidget.h \
            $$PWD/qtscriptshell_QGridLayout.h \
            $$PWD/qtscriptshell_QGroupBox.h \
+           $$PWD/qtscriptshell_QGuiApplication.h \
            $$PWD/qtscriptshell_QHBoxLayout.h \
            $$PWD/qtscriptshell_QHeaderView.h \
            $$PWD/qtscriptshell_QHoverEvent.h \
            $$PWD/qtscriptshell_QIconEngine.h \
-           $$PWD/qtscriptshell_QIconEnginePluginV2.h \
            $$PWD/qtscriptshell_QImage.h \
            $$PWD/qtscriptshell_QImageIOHandler.h \
            $$PWD/qtscriptshell_QImageIOPlugin.h \
-           $$PWD/qtscriptshell_QInputContext.h \
-           $$PWD/qtscriptshell_QInputContextFactory.h \
-           $$PWD/qtscriptshell_QInputContextPlugin.h \
            $$PWD/qtscriptshell_QInputDialog.h \
            $$PWD/qtscriptshell_QInputEvent.h \
            $$PWD/qtscriptshell_QIntValidator.h \
@@ -126,7 +113,6 @@ HEADERS += \
            $$PWD/qtscriptshell_QMenu.h \
            $$PWD/qtscriptshell_QMenuBar.h \
            $$PWD/qtscriptshell_QMessageBox.h \
-           $$PWD/qtscriptshell_QMotifStyle.h \
            $$PWD/qtscriptshell_QMouseEvent.h \
            $$PWD/qtscriptshell_QMouseEventTransition.h \
            $$PWD/qtscriptshell_QMoveEvent.h \
@@ -143,7 +129,6 @@ HEADERS += \
            $$PWD/qtscriptshell_QPixmapCache.h \
            $$PWD/qtscriptshell_QPlainTextDocumentLayout.h \
            $$PWD/qtscriptshell_QPlainTextEdit.h \
-           $$PWD/qtscriptshell_QPlastiqueStyle.h \
            $$PWD/qtscriptshell_QPrintDialog.h \
            $$PWD/qtscriptshell_QPrintEngine.h \
            $$PWD/qtscriptshell_QPrintPreviewDialog.h \
@@ -162,7 +147,6 @@ HEADERS += \
            $$PWD/qtscriptshell_QShortcutEvent.h \
            $$PWD/qtscriptshell_QSizeGrip.h \
            $$PWD/qtscriptshell_QSlider.h \
-           $$PWD/qtscriptshell_QSound.h \
            $$PWD/qtscriptshell_QSpacerItem.h \
            $$PWD/qtscriptshell_QSpinBox.h \
            $$PWD/qtscriptshell_QSplashScreen.h \
@@ -184,38 +168,28 @@ HEADERS += \
            $$PWD/qtscriptshell_QStyleOptionComboBox.h \
            $$PWD/qtscriptshell_QStyleOptionComplex.h \
            $$PWD/qtscriptshell_QStyleOptionDockWidget.h \
-           $$PWD/qtscriptshell_QStyleOptionDockWidgetV2.h \
            $$PWD/qtscriptshell_QStyleOptionFocusRect.h \
            $$PWD/qtscriptshell_QStyleOptionFrame.h \
-           $$PWD/qtscriptshell_QStyleOptionFrameV2.h \
-           $$PWD/qtscriptshell_QStyleOptionFrameV3.h \
            $$PWD/qtscriptshell_QStyleOptionGraphicsItem.h \
            $$PWD/qtscriptshell_QStyleOptionGroupBox.h \
            $$PWD/qtscriptshell_QStyleOptionHeader.h \
            $$PWD/qtscriptshell_QStyleOptionMenuItem.h \
            $$PWD/qtscriptshell_QStyleOptionProgressBar.h \
-           $$PWD/qtscriptshell_QStyleOptionProgressBarV2.h \
            $$PWD/qtscriptshell_QStyleOptionRubberBand.h \
            $$PWD/qtscriptshell_QStyleOptionSizeGrip.h \
            $$PWD/qtscriptshell_QStyleOptionSlider.h \
            $$PWD/qtscriptshell_QStyleOptionSpinBox.h \
            $$PWD/qtscriptshell_QStyleOptionTab.h \
            $$PWD/qtscriptshell_QStyleOptionTabBarBase.h \
-           $$PWD/qtscriptshell_QStyleOptionTabBarBaseV2.h \
-           $$PWD/qtscriptshell_QStyleOptionTabV2.h \
-           $$PWD/qtscriptshell_QStyleOptionTabV3.h \
            $$PWD/qtscriptshell_QStyleOptionTabWidgetFrame.h \
            $$PWD/qtscriptshell_QStyleOptionTitleBar.h \
            $$PWD/qtscriptshell_QStyleOptionToolBar.h \
            $$PWD/qtscriptshell_QStyleOptionToolBox.h \
-           $$PWD/qtscriptshell_QStyleOptionToolBoxV2.h \
            $$PWD/qtscriptshell_QStyleOptionToolButton.h \
            $$PWD/qtscriptshell_QStyleOptionViewItem.h \
-           $$PWD/qtscriptshell_QStyleOptionViewItemV2.h \
-           $$PWD/qtscriptshell_QStyleOptionViewItemV3.h \
-           $$PWD/qtscriptshell_QStyleOptionViewItemV4.h \
            $$PWD/qtscriptshell_QStylePlugin.h \
            $$PWD/qtscriptshell_QStyledItemDelegate.h \
+           $$PWD/qtscriptshell_QSurface.h \
            $$PWD/qtscriptshell_QSwipeGesture.h \
            $$PWD/qtscriptshell_QSyntaxHighlighter.h \
            $$PWD/qtscriptshell_QSystemTrayIcon.h \
@@ -261,33 +235,25 @@ HEADERS += \
            $$PWD/qtscriptshell_QWidget.h \
            $$PWD/qtscriptshell_QWidgetAction.h \
            $$PWD/qtscriptshell_QWidgetItem.h \
-           $$PWD/qtscriptshell_QWindowsStyle.h \
+           $$PWD/qtscriptshell_QWindow.h \
            $$PWD/qtscriptshell_QWizard.h \
            $$PWD/qtscriptshell_QWizardPage.h \
-           $$PWD/qtscriptshell_QWorkspace.h \
 
 SOURCES += \
            $$PWD/qtscript_QAbstractButton.cpp \
            $$PWD/qtscript_QAbstractGraphicsShapeItem.cpp \
            $$PWD/qtscript_QAbstractItemDelegate.cpp \
            $$PWD/qtscript_QAbstractItemView.cpp \
-           $$PWD/qtscript_QAbstractPageSetupDialog.cpp \
            $$PWD/qtscript_QAbstractPrintDialog.cpp \
            $$PWD/qtscript_QAbstractScrollArea.cpp \
            $$PWD/qtscript_QAbstractSlider.cpp \
            $$PWD/qtscript_QAbstractSpinBox.cpp \
            $$PWD/qtscript_QAccessible.cpp \
-           $$PWD/qtscript_QAccessible2Interface.cpp \
            $$PWD/qtscript_QAccessibleBridge.cpp \
            $$PWD/qtscript_QAccessibleEvent.cpp \
            $$PWD/qtscript_QAccessibleInterface.cpp \
-           $$PWD/qtscript_QAccessibleInterfaceEx.cpp \
            $$PWD/qtscript_QAccessibleObject.cpp \
-           $$PWD/qtscript_QAccessibleObjectEx.cpp \
            $$PWD/qtscript_QAccessiblePlugin.cpp \
-           $$PWD/qtscript_QAccessibleTableInterface.cpp \
-           $$PWD/qtscript_QAccessibleWidget.cpp \
-           $$PWD/qtscript_QAccessibleWidgetEx.cpp \
            $$PWD/qtscript_QAction.cpp \
            $$PWD/qtscript_QActionEvent.cpp \
            $$PWD/qtscript_QActionGroup.cpp \
@@ -296,12 +262,9 @@ SOURCES += \
            $$PWD/qtscript_QBoxLayout.cpp \
            $$PWD/qtscript_QBrush.cpp \
            $$PWD/qtscript_QButtonGroup.cpp \
-           $$PWD/qtscript_QCDEStyle.cpp \
            $$PWD/qtscript_QCalendarWidget.cpp \
            $$PWD/qtscript_QCheckBox.cpp \
-           $$PWD/qtscript_QCleanlooksStyle.cpp \
            $$PWD/qtscript_QClipboard.cpp \
-           $$PWD/qtscript_QClipboardEvent.cpp \
            $$PWD/qtscript_QCloseEvent.cpp \
            $$PWD/qtscript_QColor.cpp \
            $$PWD/qtscript_QColorDialog.cpp \
@@ -328,7 +291,6 @@ SOURCES += \
            $$PWD/qtscript_QDragEnterEvent.cpp \
            $$PWD/qtscript_QDragLeaveEvent.cpp \
            $$PWD/qtscript_QDragMoveEvent.cpp \
-           $$PWD/qtscript_QDragResponseEvent.cpp \
            $$PWD/qtscript_QDropEvent.cpp \
            $$PWD/qtscript_QErrorMessage.cpp \
            $$PWD/qtscript_QFileDialog.cpp \
@@ -387,6 +349,7 @@ SOURCES += \
            $$PWD/qtscript_QGraphicsWidget.cpp \
            $$PWD/qtscript_QGridLayout.cpp \
            $$PWD/qtscript_QGroupBox.cpp \
+           $$PWD/qtscript_QGuiApplication.cpp \
            $$PWD/qtscript_QHBoxLayout.cpp \
            $$PWD/qtscript_QHeaderView.cpp \
            $$PWD/qtscript_QHelpEvent.cpp \
@@ -395,15 +358,11 @@ SOURCES += \
            $$PWD/qtscript_QIcon.cpp \
            $$PWD/qtscript_QIconDragEvent.cpp \
            $$PWD/qtscript_QIconEngine.cpp \
-           $$PWD/qtscript_QIconEnginePluginV2.cpp \
            $$PWD/qtscript_QImage.cpp \
            $$PWD/qtscript_QImageIOHandler.cpp \
            $$PWD/qtscript_QImageIOPlugin.cpp \
            $$PWD/qtscript_QImageReader.cpp \
            $$PWD/qtscript_QImageWriter.cpp \
-           $$PWD/qtscript_QInputContext.cpp \
-           $$PWD/qtscript_QInputContextFactory.cpp \
-           $$PWD/qtscript_QInputContextPlugin.cpp \
            $$PWD/qtscript_QInputDialog.cpp \
            $$PWD/qtscript_QInputEvent.cpp \
            $$PWD/qtscript_QIntValidator.cpp \
@@ -436,7 +395,6 @@ SOURCES += \
            $$PWD/qtscript_QMenu.cpp \
            $$PWD/qtscript_QMenuBar.cpp \
            $$PWD/qtscript_QMessageBox.cpp \
-           $$PWD/qtscript_QMotifStyle.cpp \
            $$PWD/qtscript_QMouseEvent.cpp \
            $$PWD/qtscript_QMouseEventTransition.cpp \
            $$PWD/qtscript_QMoveEvent.cpp \
@@ -460,7 +418,6 @@ SOURCES += \
            $$PWD/qtscript_QPixmapCache_Key.cpp \
            $$PWD/qtscript_QPlainTextDocumentLayout.cpp \
            $$PWD/qtscript_QPlainTextEdit.cpp \
-           $$PWD/qtscript_QPlastiqueStyle.cpp \
            $$PWD/qtscript_QPolygon.cpp \
            $$PWD/qtscript_QPolygonF.cpp \
            $$PWD/qtscript_QPrintDialog.cpp \
@@ -478,6 +435,7 @@ SOURCES += \
            $$PWD/qtscript_QRegion.cpp \
            $$PWD/qtscript_QResizeEvent.cpp \
            $$PWD/qtscript_QRubberBand.cpp \
+           $$PWD/qtscript_QScreen.cpp \
            $$PWD/qtscript_QScrollArea.cpp \
            $$PWD/qtscript_QScrollBar.cpp \
            $$PWD/qtscript_QSessionManager.cpp \
@@ -487,7 +445,6 @@ SOURCES += \
            $$PWD/qtscript_QSizeGrip.cpp \
            $$PWD/qtscript_QSizePolicy.cpp \
            $$PWD/qtscript_QSlider.cpp \
-           $$PWD/qtscript_QSound.cpp \
            $$PWD/qtscript_QSpacerItem.cpp \
            $$PWD/qtscript_QSpinBox.cpp \
            $$PWD/qtscript_QSplashScreen.cpp \
@@ -510,39 +467,29 @@ SOURCES += \
            $$PWD/qtscript_QStyleOptionComboBox.cpp \
            $$PWD/qtscript_QStyleOptionComplex.cpp \
            $$PWD/qtscript_QStyleOptionDockWidget.cpp \
-           $$PWD/qtscript_QStyleOptionDockWidgetV2.cpp \
            $$PWD/qtscript_QStyleOptionFocusRect.cpp \
            $$PWD/qtscript_QStyleOptionFrame.cpp \
-           $$PWD/qtscript_QStyleOptionFrameV2.cpp \
-           $$PWD/qtscript_QStyleOptionFrameV3.cpp \
            $$PWD/qtscript_QStyleOptionGraphicsItem.cpp \
            $$PWD/qtscript_QStyleOptionGroupBox.cpp \
            $$PWD/qtscript_QStyleOptionHeader.cpp \
            $$PWD/qtscript_QStyleOptionMenuItem.cpp \
            $$PWD/qtscript_QStyleOptionProgressBar.cpp \
-           $$PWD/qtscript_QStyleOptionProgressBarV2.cpp \
            $$PWD/qtscript_QStyleOptionRubberBand.cpp \
            $$PWD/qtscript_QStyleOptionSizeGrip.cpp \
            $$PWD/qtscript_QStyleOptionSlider.cpp \
            $$PWD/qtscript_QStyleOptionSpinBox.cpp \
            $$PWD/qtscript_QStyleOptionTab.cpp \
            $$PWD/qtscript_QStyleOptionTabBarBase.cpp \
-           $$PWD/qtscript_QStyleOptionTabBarBaseV2.cpp \
-           $$PWD/qtscript_QStyleOptionTabV2.cpp \
-           $$PWD/qtscript_QStyleOptionTabV3.cpp \
            $$PWD/qtscript_QStyleOptionTabWidgetFrame.cpp \
            $$PWD/qtscript_QStyleOptionTitleBar.cpp \
            $$PWD/qtscript_QStyleOptionToolBar.cpp \
            $$PWD/qtscript_QStyleOptionToolBox.cpp \
-           $$PWD/qtscript_QStyleOptionToolBoxV2.cpp \
            $$PWD/qtscript_QStyleOptionToolButton.cpp \
            $$PWD/qtscript_QStyleOptionViewItem.cpp \
-           $$PWD/qtscript_QStyleOptionViewItemV2.cpp \
-           $$PWD/qtscript_QStyleOptionViewItemV3.cpp \
-           $$PWD/qtscript_QStyleOptionViewItemV4.cpp \
            $$PWD/qtscript_QStylePainter.cpp \
            $$PWD/qtscript_QStylePlugin.cpp \
            $$PWD/qtscript_QStyledItemDelegate.cpp \
+           $$PWD/qtscript_QSurface.cpp \
            $$PWD/qtscript_QSwipeGesture.cpp \
            $$PWD/qtscript_QSyntaxHighlighter.cpp \
            $$PWD/qtscript_QSystemTrayIcon.cpp \
@@ -588,6 +535,7 @@ SOURCES += \
            $$PWD/qtscript_QToolBox.cpp \
            $$PWD/qtscript_QToolButton.cpp \
            $$PWD/qtscript_QToolTip.cpp \
+           $$PWD/qtscript_QTouchDevice.cpp \
            $$PWD/qtscript_QTouchEvent.cpp \
            $$PWD/qtscript_QTouchEvent_TouchPoint.cpp \
            $$PWD/qtscript_QTransform.cpp \
@@ -609,41 +557,31 @@ SOURCES += \
            $$PWD/qtscript_QWidget.cpp \
            $$PWD/qtscript_QWidgetAction.cpp \
            $$PWD/qtscript_QWidgetItem.cpp \
+           $$PWD/qtscript_QWindow.cpp \
            $$PWD/qtscript_QWindowStateChangeEvent.cpp \
-           $$PWD/qtscript_QWindowsStyle.cpp \
            $$PWD/qtscript_QWizard.cpp \
            $$PWD/qtscript_QWizardPage.cpp \
-           $$PWD/qtscript_QWorkspace.cpp \
            $$PWD/qtscriptshell_QAbstractButton.cpp \
            $$PWD/qtscriptshell_QAbstractGraphicsShapeItem.cpp \
            $$PWD/qtscriptshell_QAbstractItemDelegate.cpp \
            $$PWD/qtscriptshell_QAbstractItemView.cpp \
-           $$PWD/qtscriptshell_QAbstractPageSetupDialog.cpp \
            $$PWD/qtscriptshell_QAbstractPrintDialog.cpp \
            $$PWD/qtscriptshell_QAbstractScrollArea.cpp \
            $$PWD/qtscriptshell_QAbstractSlider.cpp \
            $$PWD/qtscriptshell_QAbstractSpinBox.cpp \
-           $$PWD/qtscriptshell_QAccessible.cpp \
-           $$PWD/qtscriptshell_QAccessible2Interface.cpp \
            $$PWD/qtscriptshell_QAccessibleBridge.cpp \
+           $$PWD/qtscriptshell_QAccessibleEvent.cpp \
            $$PWD/qtscriptshell_QAccessibleInterface.cpp \
-           $$PWD/qtscriptshell_QAccessibleInterfaceEx.cpp \
            $$PWD/qtscriptshell_QAccessibleObject.cpp \
-           $$PWD/qtscriptshell_QAccessibleObjectEx.cpp \
            $$PWD/qtscriptshell_QAccessiblePlugin.cpp \
-           $$PWD/qtscriptshell_QAccessibleTableInterface.cpp \
-           $$PWD/qtscriptshell_QAccessibleWidget.cpp \
-           $$PWD/qtscriptshell_QAccessibleWidgetEx.cpp \
            $$PWD/qtscriptshell_QAction.cpp \
            $$PWD/qtscriptshell_QActionGroup.cpp \
            $$PWD/qtscriptshell_QApplication.cpp \
            $$PWD/qtscriptshell_QBitmap.cpp \
            $$PWD/qtscriptshell_QBoxLayout.cpp \
            $$PWD/qtscriptshell_QButtonGroup.cpp \
-           $$PWD/qtscriptshell_QCDEStyle.cpp \
            $$PWD/qtscriptshell_QCalendarWidget.cpp \
            $$PWD/qtscriptshell_QCheckBox.cpp \
-           $$PWD/qtscriptshell_QCleanlooksStyle.cpp \
            $$PWD/qtscriptshell_QColorDialog.cpp \
            $$PWD/qtscriptshell_QColumnView.cpp \
            $$PWD/qtscriptshell_QComboBox.cpp \
@@ -664,7 +602,6 @@ SOURCES += \
            $$PWD/qtscriptshell_QDoubleValidator.cpp \
            $$PWD/qtscriptshell_QDrag.cpp \
            $$PWD/qtscriptshell_QDragMoveEvent.cpp \
-           $$PWD/qtscriptshell_QDragResponseEvent.cpp \
            $$PWD/qtscriptshell_QDropEvent.cpp \
            $$PWD/qtscriptshell_QErrorMessage.cpp \
            $$PWD/qtscriptshell_QFileDialog.cpp \
@@ -706,17 +643,14 @@ SOURCES += \
            $$PWD/qtscriptshell_QGraphicsWidget.cpp \
            $$PWD/qtscriptshell_QGridLayout.cpp \
            $$PWD/qtscriptshell_QGroupBox.cpp \
+           $$PWD/qtscriptshell_QGuiApplication.cpp \
            $$PWD/qtscriptshell_QHBoxLayout.cpp \
            $$PWD/qtscriptshell_QHeaderView.cpp \
            $$PWD/qtscriptshell_QHoverEvent.cpp \
            $$PWD/qtscriptshell_QIconEngine.cpp \
-           $$PWD/qtscriptshell_QIconEnginePluginV2.cpp \
            $$PWD/qtscriptshell_QImage.cpp \
            $$PWD/qtscriptshell_QImageIOHandler.cpp \
            $$PWD/qtscriptshell_QImageIOPlugin.cpp \
-           $$PWD/qtscriptshell_QInputContext.cpp \
-           $$PWD/qtscriptshell_QInputContextFactory.cpp \
-           $$PWD/qtscriptshell_QInputContextPlugin.cpp \
            $$PWD/qtscriptshell_QInputDialog.cpp \
            $$PWD/qtscriptshell_QInputEvent.cpp \
            $$PWD/qtscriptshell_QIntValidator.cpp \
@@ -741,7 +675,6 @@ SOURCES += \
            $$PWD/qtscriptshell_QMenu.cpp \
            $$PWD/qtscriptshell_QMenuBar.cpp \
            $$PWD/qtscriptshell_QMessageBox.cpp \
-           $$PWD/qtscriptshell_QMotifStyle.cpp \
            $$PWD/qtscriptshell_QMouseEvent.cpp \
            $$PWD/qtscriptshell_QMouseEventTransition.cpp \
            $$PWD/qtscriptshell_QMoveEvent.cpp \
@@ -758,7 +691,6 @@ SOURCES += \
            $$PWD/qtscriptshell_QPixmapCache.cpp \
            $$PWD/qtscriptshell_QPlainTextDocumentLayout.cpp \
            $$PWD/qtscriptshell_QPlainTextEdit.cpp \
-           $$PWD/qtscriptshell_QPlastiqueStyle.cpp \
            $$PWD/qtscriptshell_QPrintDialog.cpp \
            $$PWD/qtscriptshell_QPrintEngine.cpp \
            $$PWD/qtscriptshell_QPrintPreviewDialog.cpp \
@@ -777,7 +709,6 @@ SOURCES += \
            $$PWD/qtscriptshell_QShortcutEvent.cpp \
            $$PWD/qtscriptshell_QSizeGrip.cpp \
            $$PWD/qtscriptshell_QSlider.cpp \
-           $$PWD/qtscriptshell_QSound.cpp \
            $$PWD/qtscriptshell_QSpacerItem.cpp \
            $$PWD/qtscriptshell_QSpinBox.cpp \
            $$PWD/qtscriptshell_QSplashScreen.cpp \
@@ -799,38 +730,28 @@ SOURCES += \
            $$PWD/qtscriptshell_QStyleOptionComboBox.cpp \
            $$PWD/qtscriptshell_QStyleOptionComplex.cpp \
            $$PWD/qtscriptshell_QStyleOptionDockWidget.cpp \
-           $$PWD/qtscriptshell_QStyleOptionDockWidgetV2.cpp \
            $$PWD/qtscriptshell_QStyleOptionFocusRect.cpp \
            $$PWD/qtscriptshell_QStyleOptionFrame.cpp \
-           $$PWD/qtscriptshell_QStyleOptionFrameV2.cpp \
-           $$PWD/qtscriptshell_QStyleOptionFrameV3.cpp \
            $$PWD/qtscriptshell_QStyleOptionGraphicsItem.cpp \
            $$PWD/qtscriptshell_QStyleOptionGroupBox.cpp \
            $$PWD/qtscriptshell_QStyleOptionHeader.cpp \
            $$PWD/qtscriptshell_QStyleOptionMenuItem.cpp \
            $$PWD/qtscriptshell_QStyleOptionProgressBar.cpp \
-           $$PWD/qtscriptshell_QStyleOptionProgressBarV2.cpp \
            $$PWD/qtscriptshell_QStyleOptionRubberBand.cpp \
            $$PWD/qtscriptshell_QStyleOptionSizeGrip.cpp \
            $$PWD/qtscriptshell_QStyleOptionSlider.cpp \
            $$PWD/qtscriptshell_QStyleOptionSpinBox.cpp \
            $$PWD/qtscriptshell_QStyleOptionTab.cpp \
            $$PWD/qtscriptshell_QStyleOptionTabBarBase.cpp \
-           $$PWD/qtscriptshell_QStyleOptionTabBarBaseV2.cpp \
-           $$PWD/qtscriptshell_QStyleOptionTabV2.cpp \
-           $$PWD/qtscriptshell_QStyleOptionTabV3.cpp \
            $$PWD/qtscriptshell_QStyleOptionTabWidgetFrame.cpp \
            $$PWD/qtscriptshell_QStyleOptionTitleBar.cpp \
            $$PWD/qtscriptshell_QStyleOptionToolBar.cpp \
            $$PWD/qtscriptshell_QStyleOptionToolBox.cpp \
-           $$PWD/qtscriptshell_QStyleOptionToolBoxV2.cpp \
            $$PWD/qtscriptshell_QStyleOptionToolButton.cpp \
            $$PWD/qtscriptshell_QStyleOptionViewItem.cpp \
-           $$PWD/qtscriptshell_QStyleOptionViewItemV2.cpp \
-           $$PWD/qtscriptshell_QStyleOptionViewItemV3.cpp \
-           $$PWD/qtscriptshell_QStyleOptionViewItemV4.cpp \
            $$PWD/qtscriptshell_QStylePlugin.cpp \
            $$PWD/qtscriptshell_QStyledItemDelegate.cpp \
+           $$PWD/qtscriptshell_QSurface.cpp \
            $$PWD/qtscriptshell_QSwipeGesture.cpp \
            $$PWD/qtscriptshell_QSyntaxHighlighter.cpp \
            $$PWD/qtscriptshell_QSystemTrayIcon.cpp \
@@ -876,8 +797,7 @@ SOURCES += \
            $$PWD/qtscriptshell_QWidget.cpp \
            $$PWD/qtscriptshell_QWidgetAction.cpp \
            $$PWD/qtscriptshell_QWidgetItem.cpp \
-           $$PWD/qtscriptshell_QWindowsStyle.cpp \
+           $$PWD/qtscriptshell_QWindow.cpp \
            $$PWD/qtscriptshell_QWizard.cpp \
            $$PWD/qtscriptshell_QWizardPage.cpp \
-           $$PWD/qtscriptshell_QWorkspace.cpp \
            $$PWD/com_trolltech_qt_gui_init.cpp

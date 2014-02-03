@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qabstractbutton.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractbutton.h>
 #include <qaction.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAbstractButton.h"
 
@@ -44,7 +45,10 @@ static const char * const qtscript_QAbstractButton_function_names[] = {
     "QAbstractButton"
     // static
     // prototype
+    , "checkStateSet"
     , "group"
+    , "hitButton"
+    , "nextCheckState"
     , "toString"
 };
 
@@ -52,6 +56,9 @@ static const char * const qtscript_QAbstractButton_function_signatures[] = {
     "QWidget parent"
     // static
     // prototype
+    , ""
+    , ""
+    , "QPoint pos"
     , ""
 ""
 };
@@ -62,6 +69,21 @@ static const int qtscript_QAbstractButton_function_lengths[] = {
     // prototype
     , 0
     , 0
+    , 1
+    , 0
+    , 0
+};
+
+static QScriptValue qtscript_QAbstractButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractButton : public QAbstractButton
+{
+    friend QScriptValue qtscript_QAbstractButton_checkStateSet(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractButton_hitButton(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractButton_nextCheckState(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractButton_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractButton_throw_ambiguity_error_helper(
@@ -78,6 +100,7 @@ static QScriptValue qtscript_QAbstractButton_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QAbstractButton*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractButton*)
 Q_DECLARE_METATYPE(QButtonGroup*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QAbstractButton
@@ -93,11 +116,11 @@ static QScriptValue qtscript_QAbstractButton_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 1;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractButton* _q_self = qscriptvalue_cast<QAbstractButton*>(context->thisObject());
+    qtscript_QAbstractButton* _q_self = reinterpret_cast<qtscript_QAbstractButton*>(qscriptvalue_cast<QAbstractButton*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractButton.%0(): this object is not a QAbstractButton")
@@ -107,12 +130,34 @@ static QScriptValue qtscript_QAbstractButton_prototype_call(QScriptContext *cont
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
+        _q_self->checkStateSet();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 0) {
         QButtonGroup* _q_result = _q_self->group();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1: {
+    case 2:
+    if (context->argumentCount() == 1) {
+        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+        bool _q_result = _q_self->hitButton(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 0) {
+        _q_self->nextCheckState();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4: {
     QString result = QString::fromLatin1("QAbstractButton");
     return QScriptValue(context->engine(), result);
     }
@@ -172,7 +217,7 @@ QScriptValue qtscript_create_QAbstractButton_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractButton*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractButton*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractButton_prototype_call, qtscript_QAbstractButton_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractButton_function_names[i+1]),

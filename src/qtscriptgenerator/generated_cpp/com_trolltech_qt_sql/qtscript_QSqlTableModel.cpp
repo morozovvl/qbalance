@@ -24,6 +24,7 @@
 #include <qsqlquery.h>
 #include <qsqlrecord.h>
 #include <qstringlist.h>
+#include <qvector.h>
 
 #include "qtscriptshell_QSqlTableModel.h"
 
@@ -32,20 +33,26 @@ static const char * const qtscript_QSqlTableModel_function_names[] = {
     // static
     // prototype
     , "database"
+    , "deleteRowFromTable"
     , "editStrategy"
     , "fieldIndex"
     , "filter"
     , "insertRecord"
+    , "insertRowIntoTable"
     , "isDirty"
+    , "orderByClause"
     , "primaryKey"
+    , "primaryValues"
     , "revertRow"
-    , "select"
+    , "selectStatement"
     , "setEditStrategy"
     , "setFilter"
+    , "setPrimaryKey"
     , "setRecord"
     , "setSort"
     , "setTable"
     , "tableName"
+    , "updateRowInTable"
     , "toString"
 };
 
@@ -54,20 +61,26 @@ static const char * const qtscript_QSqlTableModel_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "int row"
     , ""
     , "String fieldName"
     , ""
     , "int row, QSqlRecord record"
-    , "QModelIndex index"
+    , "QSqlRecord values"
+    , "\nQModelIndex index"
     , ""
+    , ""
+    , "int row"
     , "int row"
     , ""
     , "EditStrategy strategy"
     , "String filter"
+    , "QSqlIndex key"
     , "int row, QSqlRecord record"
     , "int column, SortOrder order"
     , "String tableName"
     , ""
+    , "int row, QSqlRecord values"
 ""
 };
 
@@ -76,21 +89,43 @@ static const int qtscript_QSqlTableModel_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 1
     , 0
     , 1
     , 0
     , 2
     , 1
-    , 0
     , 1
     , 0
+    , 0
+    , 1
+    , 1
+    , 0
+    , 1
     , 1
     , 1
     , 2
     , 2
     , 1
     , 0
+    , 2
     , 0
+};
+
+static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSqlTableModel : public QSqlTableModel
+{
+    friend QScriptValue qtscript_QSqlTableModel_deleteRowFromTable(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlTableModel_insertRowIntoTable(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlTableModel_orderByClause(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlTableModel_primaryValues(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlTableModel_selectStatement(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlTableModel_setPrimaryKey(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlTableModel_updateRowInTable(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSqlTableModel_throw_ambiguity_error_helper(
@@ -109,7 +144,6 @@ Q_DECLARE_METATYPE(QtScriptShell_QSqlTableModel*)
 Q_DECLARE_METATYPE(QSqlTableModel::EditStrategy)
 Q_DECLARE_METATYPE(QSqlDatabase)
 Q_DECLARE_METATYPE(QSqlRecord)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QSqlIndex)
 Q_DECLARE_METATYPE(Qt::SortOrder)
 Q_DECLARE_METATYPE(QSqlQueryModel*)
@@ -211,11 +245,11 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 15;
+        _id = 0xBABE0000 + 21;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSqlTableModel* _q_self = qscriptvalue_cast<QSqlTableModel*>(context->thisObject());
+    qtscript_QSqlTableModel* _q_self = reinterpret_cast<qtscript_QSqlTableModel*>(qscriptvalue_cast<QSqlTableModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSqlTableModel.%0(): this object is not a QSqlTableModel")
@@ -231,13 +265,21 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        bool _q_result = _q_self->deleteRowFromTable(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         QSqlTableModel::EditStrategy _q_result = _q_self->editStrategy();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         int _q_result = _q_self->fieldIndex(_q_arg0);
@@ -245,14 +287,14 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->filter();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QSqlRecord _q_arg1 = qscriptvalue_cast<QSqlRecord>(context->argument(1));
@@ -261,7 +303,19 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 5:
+    case 6:
+    if (context->argumentCount() == 1) {
+        QSqlRecord _q_arg0 = qscriptvalue_cast<QSqlRecord>(context->argument(0));
+        bool _q_result = _q_self->insertRowIntoTable(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->isDirty();
+        return QScriptValue(context->engine(), _q_result);
+    }
     if (context->argumentCount() == 1) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         bool _q_result = _q_self->isDirty(_q_arg0);
@@ -269,14 +323,29 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 6:
+    case 8:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->orderByClause();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         QSqlIndex _q_result = _q_self->primaryKey();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 10:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QSqlRecord _q_result = _q_self->primaryValues(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->revertRow(_q_arg0);
@@ -284,14 +353,14 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 8:
+    case 12:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->select();
+        QString _q_result = _q_self->selectStatement();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 13:
     if (context->argumentCount() == 1) {
         QSqlTableModel::EditStrategy _q_arg0 = qscriptvalue_cast<QSqlTableModel::EditStrategy>(context->argument(0));
         _q_self->setEditStrategy(_q_arg0);
@@ -299,7 +368,7 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 10:
+    case 14:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setFilter(_q_arg0);
@@ -307,7 +376,15 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 11:
+    case 15:
+    if (context->argumentCount() == 1) {
+        QSqlIndex _q_arg0 = qscriptvalue_cast<QSqlIndex>(context->argument(0));
+        _q_self->setPrimaryKey(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 16:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QSqlRecord _q_arg1 = qscriptvalue_cast<QSqlRecord>(context->argument(1));
@@ -316,7 +393,7 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 12:
+    case 17:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::SortOrder _q_arg1 = qscriptvalue_cast<Qt::SortOrder>(context->argument(1));
@@ -325,7 +402,7 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 13:
+    case 18:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setTable(_q_arg0);
@@ -333,14 +410,23 @@ static QScriptValue qtscript_QSqlTableModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 14:
+    case 19:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->tableName();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15: {
+    case 20:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QSqlRecord _q_arg1 = qscriptvalue_cast<QSqlRecord>(context->argument(1));
+        bool _q_result = _q_self->updateRowInTable(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 21: {
     QString result = QString::fromLatin1("QSqlTableModel");
     return QScriptValue(context->engine(), result);
     }
@@ -407,7 +493,7 @@ QScriptValue qtscript_create_QSqlTableModel_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSqlTableModel*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSqlTableModel*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QSqlQueryModel*>()));
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 22; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSqlTableModel_prototype_call, qtscript_QSqlTableModel_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSqlTableModel_function_names[i+1]),

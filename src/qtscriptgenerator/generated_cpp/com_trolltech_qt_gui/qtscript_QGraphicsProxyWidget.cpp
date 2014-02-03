@@ -74,6 +74,16 @@ static const int qtscript_QGraphicsProxyWidget_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsProxyWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsProxyWidget : public QGraphicsProxyWidget
+{
+
+    friend QScriptValue qtscript_QGraphicsProxyWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
+};
+
 static QScriptValue qtscript_QGraphicsProxyWidget_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -87,6 +97,7 @@ static QScriptValue qtscript_QGraphicsProxyWidget_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGraphicsProxyWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsProxyWidget*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QGraphicsWidget*)
 
@@ -108,7 +119,7 @@ static QScriptValue qtscript_QGraphicsProxyWidget_prototype_call(QScriptContext 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsProxyWidget* _q_self = qscriptvalue_cast<QGraphicsProxyWidget*>(context->thisObject());
+    qtscript_QGraphicsProxyWidget* _q_self = reinterpret_cast<qtscript_QGraphicsProxyWidget*>(qscriptvalue_cast<QGraphicsProxyWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsProxyWidget.%0(): this object is not a QGraphicsProxyWidget")

@@ -78,50 +78,10 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
 void TableView::keyPressEvent(QKeyEvent* event)
 {
-    if (event->modifiers() == Qt::ControlModifier)
-    {
-    }
-    else
-    {
-        switch (event->key())
-        {
-            case Qt::Key_Return:
-                {
-                    selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Enter:
-                {
-                    selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Right:
-                {
-                    selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Tab:
-                {
-                    selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Left:
-                {
-                    selectPreviousColumn();
-                    event->accept();
-                }
-                break;
-            default:
-                {
-                    QTableView::keyPressEvent(event);
-                }
-        }
-    }
+    event->setAccepted(false);
     parent->keyPressEvent(event);
+    if (!event->isAccepted())
+        QTableView::keyPressEvent(event);
 }
 
 
@@ -283,33 +243,57 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 }
 
 
-void TableView::selectNextColumn(QModelIndex* idx)
+bool TableView::columnIsReadOnly()
+{
+    if (tableModel->rowCount() > 0)
+    {
+        QModelIndex index = currentIndex();
+        if (index.row() == -1 && index.column() == -1)
+            return true;
+        int column = horizontalHeader()->visualIndex(index.column());
+        int logicalIndex = horizontalHeader()->logicalIndex(column);
+        if (!horizontalHeader()->isSectionHidden(logicalIndex))
+        {
+            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
+            if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+void TableView::selectNextColumn()
 // Ищет следующую колонку для редактирования
 {
     if (tableModel->rowCount() > 0)
     {
-        QModelIndex index;
-        if (idx != 0)
-            index = *idx;
-        else
-            index = currentIndex();
-
+        QModelIndex index = currentIndex();
         if (index.row() == -1 && index.column() == -1)
             return;
         int column = horizontalHeader()->visualIndex(index.column());
         int oldColumn = column > 0 ? column : 0;
         int logicalIndex;
+        QModelIndex newIndex;
         while (true)
         {
-            column++;   // Перейдем в следующий столбец
+            column++;                       // Перейдем в следующий столбец
             logicalIndex = horizontalHeader()->logicalIndex(column);
-            QModelIndex newIndex = index.sibling(index.row(), logicalIndex);
+            newIndex = index.sibling(index.row(), logicalIndex);
             if (newIndex.row() == -1 && newIndex.column() == -1)
             {
+                newIndex = index.sibling(index.row(), 0);
+                if (newIndex.row() == -1 && newIndex.column() == -1)
+                {
+                    setCurrentIndex(index);
+                    break;
+                }
                 column = 0;
                 logicalIndex = horizontalHeader()->logicalIndex(column);
-                newIndex = index.sibling(index.row(), logicalIndex);
             }
+
             if (!horizontalHeader()->isSectionHidden(logicalIndex))
             {
                 MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
@@ -347,6 +331,11 @@ void TableView::selectPreviousColumn()
             column = maxColumn;
             logicalIndex = horizontalHeader()->logicalIndex(column);
             newIndex = index.sibling(index.row(), logicalIndex);
+            if (newIndex.row() == -1 && newIndex.column() == -1)
+            {
+                setCurrentIndex(index);
+                break;
+            }
         }
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
@@ -358,6 +347,12 @@ void TableView::selectPreviousColumn()
         if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
             break;
     }
+}
+
+
+void TableView::selectRow(int row)
+{
+    QTableView::selectRow(row);
 }
 
 
@@ -381,4 +376,11 @@ void TableView::setReadOnly(bool ro)
     }
 }
 
+
+void TableView::focusInEvent(QFocusEvent* event)
+{
+    QTableView::focusInEvent(event);
+    if (columnIsReadOnly())
+        selectNextColumn();
+}
 

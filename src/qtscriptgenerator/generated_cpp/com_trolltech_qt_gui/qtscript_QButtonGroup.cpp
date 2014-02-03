@@ -35,7 +35,7 @@ static const char * const qtscript_QButtonGroup_function_signatures[] = {
     "QObject parent"
     // static
     // prototype
-    , "QAbstractButton arg__1\nQAbstractButton arg__1, int id"
+    , "QAbstractButton arg__1, int id"
     , "int id"
     , ""
     , ""
@@ -59,6 +59,15 @@ static const int qtscript_QButtonGroup_function_lengths[] = {
     , 1
     , 2
     , 0
+};
+
+static QScriptValue qtscript_QButtonGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QButtonGroup : public QButtonGroup
+{
+
+    friend QScriptValue qtscript_QButtonGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QButtonGroup_throw_ambiguity_error_helper(
@@ -95,7 +104,7 @@ static QScriptValue qtscript_QButtonGroup_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QButtonGroup* _q_self = qscriptvalue_cast<QButtonGroup*>(context->thisObject());
+    qtscript_QButtonGroup* _q_self = reinterpret_cast<qtscript_QButtonGroup*>(qscriptvalue_cast<QButtonGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QButtonGroup.%0(): this object is not a QButtonGroup")

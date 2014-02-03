@@ -13,17 +13,16 @@
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QKeyEvent(Type type, int key, KeyboardModifiers modifiers, String text, bool autorep, ushort count)</b></li>
+<li><div class="fn"/><b>void QKeyEvent(Type type, int key, KeyboardModifiers modifiers, unsigned int nativeScanCode, unsigned int nativeVirtualKey, unsigned int nativeModifiers, String text, bool autorep, ushort count)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QKeyEvent prototype object</li>
-<li><div class="fn"/><b>QKeyEvent createExtendedKeyEvent(Type type, int key, KeyboardModifiers modifiers, unsigned int nativeScanCode, unsigned int nativeVirtualKey, unsigned int nativeModifiers, String text, bool autorep, ushort count)</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QKeyEvent prototype object inherits properties from the <a href="qinputevent.html">QInputEvent</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>int count()</b></li>
-<li><div class="fn"/><b>bool hasExtendedInfo()</b></li>
 <li><div class="fn"/><b>bool isAutoRepeat()</b></li>
 <li><div class="fn"/><b>int key()</b></li>
 <li><div class="fn"/><b>bool matches(StandardKey key)</b></li>

@@ -14,7 +14,6 @@
 <li><div class="fn"/><b>void QKeySequence()</b></li>
 <li><div class="fn"/><b>void QKeySequence(StandardKey key)</b></li>
 <li><div class="fn"/><b>void QKeySequence(QKeySequence ks)</b></li>
-<li><div class="fn"/><b>void QKeySequence(String key)</b></li>
 <li><div class="fn"/><b>void QKeySequence(String key, SequenceFormat format)</b></li>
 <li><div class="fn"/><b>void QKeySequence(int k1, int k2, int k3, int k4)</b></li>
 </ul>
@@ -23,10 +22,9 @@
 <li><b>prototype</b>: The QKeySequence prototype object</li>
 <li><div class="fn"/><b>QKeySequence fromString(String str, SequenceFormat format)</b></li>
 <li><div class="fn"/><b>List keyBindings(StandardKey key)</b></li>
+<li><div class="fn"/><b>List listFromString(String str, SequenceFormat format)</b></li>
+<li><div class="fn"/><b>String listToString(List list, SequenceFormat format)</b></li>
 <li><div class="fn"/><b>QKeySequence mnemonic(String text)</b></li>
-<li><b>NativeText</b></li>
-<li><b>PortableText</b></li>
-<li><b>SequenceFormat( value )</b></li>
 <li><b>UnknownKey</b></li>
 <li><b>HelpContents</b></li>
 <li><b>WhatsThis</b></li>
@@ -93,22 +91,27 @@
 <li><b>SaveAs</b></li>
 <li><b>Preferences</b></li>
 <li><b>Quit</b></li>
+<li><b>FullScreen</b></li>
+<li><b>Deselect</b></li>
 <li><b>StandardKey( value )</b></li>
 <li><b>NoMatch</b></li>
 <li><b>PartialMatch</b></li>
 <li><b>ExactMatch</b></li>
 <li><b>SequenceMatch( value )</b></li>
+<li><b>NativeText</b></li>
+<li><b>PortableText</b></li>
+<li><b>SequenceFormat( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
-<li><div class="fn"/><b>uint count()</b></li>
+<li><div class="fn"/><b>int count()</b></li>
 <li><div class="fn"/><b>bool isEmpty()</b></li>
 <li><div class="fn"/><b>SequenceMatch matches(QKeySequence seq)</b></li>
-<li><div class="fn"/><b>int operator_cast_int()</b></li>
 <li><div class="fn"/><b>bool operator_equal(QKeySequence other)</b></li>
 <li><div class="fn"/><b>bool operator_less(QKeySequence ks)</b></li>
 <li><div class="fn"/><b>int operator_subscript(uint i)</b></li>
 <li><div class="fn"/><b>void readFrom(QDataStream out)</b></li>
+<li><div class="fn"/><b>void swap(QKeySequence other)</b></li>
 <li><div class="fn"/><b>String toString(SequenceFormat format)</b></li>
 <li><div class="fn"/><b>void writeTo(QDataStream in)</b></li>
 </ul>

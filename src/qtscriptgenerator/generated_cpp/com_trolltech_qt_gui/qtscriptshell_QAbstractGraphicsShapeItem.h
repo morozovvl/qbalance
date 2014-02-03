@@ -8,7 +8,7 @@
 class QtScriptShell_QAbstractGraphicsShapeItem : public QAbstractGraphicsShapeItem
 {
 public:
-    QtScriptShell_QAbstractGraphicsShapeItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QAbstractGraphicsShapeItem(QGraphicsItem*  parent = 0);
     ~QtScriptShell_QAbstractGraphicsShapeItem();
 
     void advance(int  phase);

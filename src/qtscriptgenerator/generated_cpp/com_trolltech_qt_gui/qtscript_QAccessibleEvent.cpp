@@ -7,23 +7,31 @@
 
 #include <qaccessible.h>
 #include <QVariant>
+#include <qaccessible.h>
+#include <qobject.h>
+
+#include "qtscriptshell_QAccessibleEvent.h"
 
 static const char * const qtscript_QAccessibleEvent_function_names[] = {
     "QAccessibleEvent"
     // static
     // prototype
+    , "accessibleInterface"
     , "child"
-    , "setValue"
-    , "value"
+    , "object"
+    , "setChild"
+    , "type"
     , "toString"
 };
 
 static const char * const qtscript_QAccessibleEvent_function_signatures[] = {
-    "Type type, int child"
+    "QObject obj, Event typ"
     // static
     // prototype
     , ""
-    , "String aText"
+    , ""
+    , ""
+    , "int chld"
     , ""
 ""
 };
@@ -32,6 +40,8 @@ static const int qtscript_QAccessibleEvent_function_lengths[] = {
     2
     // static
     // prototype
+    , 0
+    , 0
     , 0
     , 1
     , 0
@@ -50,8 +60,9 @@ static QScriptValue qtscript_QAccessibleEvent_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QAccessibleEvent*)
-Q_DECLARE_METATYPE(QEvent::Type)
-Q_DECLARE_METATYPE(QEvent*)
+Q_DECLARE_METATYPE(QtScriptShell_QAccessibleEvent*)
+Q_DECLARE_METATYPE(QAccessibleInterface*)
+Q_DECLARE_METATYPE(QAccessible::Event)
 
 //
 // QAccessibleEvent
@@ -67,7 +78,7 @@ static QScriptValue qtscript_QAccessibleEvent_prototype_call(QScriptContext *con
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 5;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -81,28 +92,44 @@ static QScriptValue qtscript_QAccessibleEvent_prototype_call(QScriptContext *con
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
+        QAccessibleInterface* _q_result = _q_self->accessibleInterface();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 0) {
         int _q_result = _q_self->child();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
+    if (context->argumentCount() == 0) {
+        QObject* _q_result = _q_self->object();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->setValue(_q_arg0);
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->setChild(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 2:
+    case 4:
     if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->value();
-        return QScriptValue(context->engine(), _q_result);
+        QAccessible::Event _q_result = _q_self->type();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3: {
-    QString result = QString::fromLatin1("QAccessibleEvent");
+    case 5: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -125,10 +152,11 @@ static QScriptValue qtscript_QAccessibleEvent_static_call(QScriptContext *contex
         return context->throwError(QString::fromLatin1("QAccessibleEvent(): Did you forget to construct with 'new'?"));
     }
     if (context->argumentCount() == 2) {
-        QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QAccessibleEvent* _q_cpp_result = new QAccessibleEvent(_q_arg0, _q_arg1);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+        QObject* _q_arg0 = context->argument(0).toQObject();
+        QAccessible::Event _q_arg1 = qscriptvalue_cast<QAccessible::Event>(context->argument(1));
+        QtScriptShell_QAccessibleEvent* _q_cpp_result = new QtScriptShell_QAccessibleEvent(_q_arg0, _q_arg1);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QAccessibleEvent*)_q_cpp_result));
+        _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
     }
     break;
@@ -145,8 +173,7 @@ QScriptValue qtscript_create_QAccessibleEvent_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QAccessibleEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAccessibleEvent*)0));
-    proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QEvent*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 6; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAccessibleEvent_prototype_call, qtscript_QAccessibleEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAccessibleEvent_function_names[i+1]),

@@ -25,7 +25,13 @@ static const char * const qtscript_QGraphicsEffect_function_names[] = {
     // prototype
     , "boundingRect"
     , "boundingRectFor"
-    , "source"
+    , "draw"
+    , "drawSource"
+    , "sourceBoundingRect"
+    , "sourceChanged"
+    , "sourceIsPixmap"
+    , "sourcePixmap"
+    , "updateBoundingRect"
     , "toString"
 };
 
@@ -35,6 +41,12 @@ static const char * const qtscript_QGraphicsEffect_function_signatures[] = {
     // prototype
     , ""
     , "QRectF sourceRect"
+    , "QPainter painter"
+    , "QPainter painter"
+    , "CoordinateSystem system"
+    , "ChangeFlags flags"
+    , ""
+    , "CoordinateSystem system, QPoint offset, PixmapPadMode mode"
     , ""
 ""
 };
@@ -45,8 +57,30 @@ static const int qtscript_QGraphicsEffect_function_lengths[] = {
     // prototype
     , 0
     , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 0
+    , 3
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsEffect : public QGraphicsEffect
+{
+    friend QScriptValue qtscript_QGraphicsEffect_draw(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEffect_drawSource(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEffect_sourceBoundingRect(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEffect_sourceChanged(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEffect_sourceIsPixmap(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEffect_sourcePixmap(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEffect_updateBoundingRect(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGraphicsEffect_throw_ambiguity_error_helper(
@@ -65,7 +99,9 @@ Q_DECLARE_METATYPE(QtScriptShell_QGraphicsEffect*)
 Q_DECLARE_METATYPE(QGraphicsEffect::PixmapPadMode)
 Q_DECLARE_METATYPE(QGraphicsEffect::ChangeFlag)
 Q_DECLARE_METATYPE(QFlags<QGraphicsEffect::ChangeFlag>)
-Q_DECLARE_METATYPE(QGraphicsEffectSource*)
+Q_DECLARE_METATYPE(QPainter*)
+Q_DECLARE_METATYPE(Qt::CoordinateSystem)
+Q_DECLARE_METATYPE(QPoint*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -332,11 +368,11 @@ static QScriptValue qtscript_QGraphicsEffect_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 9;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsEffect* _q_self = qscriptvalue_cast<QGraphicsEffect*>(context->thisObject());
+    qtscript_QGraphicsEffect* _q_self = reinterpret_cast<qtscript_QGraphicsEffect*>(qscriptvalue_cast<QGraphicsEffect*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsEffect.%0(): this object is not a QGraphicsEffect")
@@ -360,13 +396,81 @@ static QScriptValue qtscript_QGraphicsEffect_prototype_call(QScriptContext *cont
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        _q_self->draw(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 1) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        _q_self->drawSource(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 0) {
-        QGraphicsEffectSource* _q_result = _q_self->source();
+        QRectF _q_result = _q_self->sourceBoundingRect();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 1) {
+        Qt::CoordinateSystem _q_arg0 = qscriptvalue_cast<Qt::CoordinateSystem>(context->argument(0));
+        QRectF _q_result = _q_self->sourceBoundingRect(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3: {
+    case 5:
+    if (context->argumentCount() == 1) {
+        QFlags<QGraphicsEffect::ChangeFlag> _q_arg0 = qscriptvalue_cast<QFlags<QGraphicsEffect::ChangeFlag> >(context->argument(0));
+        _q_self->sourceChanged(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->sourceIsPixmap();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
+    if (context->argumentCount() == 0) {
+        QPixmap _q_result = _q_self->sourcePixmap();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 1) {
+        Qt::CoordinateSystem _q_arg0 = qscriptvalue_cast<Qt::CoordinateSystem>(context->argument(0));
+        QPixmap _q_result = _q_self->sourcePixmap(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        Qt::CoordinateSystem _q_arg0 = qscriptvalue_cast<Qt::CoordinateSystem>(context->argument(0));
+        QPoint* _q_arg1 = qscriptvalue_cast<QPoint*>(context->argument(1));
+        QPixmap _q_result = _q_self->sourcePixmap(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 3) {
+        Qt::CoordinateSystem _q_arg0 = qscriptvalue_cast<Qt::CoordinateSystem>(context->argument(0));
+        QPoint* _q_arg1 = qscriptvalue_cast<QPoint*>(context->argument(1));
+        QGraphicsEffect::PixmapPadMode _q_arg2 = qscriptvalue_cast<QGraphicsEffect::PixmapPadMode>(context->argument(2));
+        QPixmap _q_result = _q_self->sourcePixmap(_q_arg0, _q_arg1, _q_arg2);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 8:
+    if (context->argumentCount() == 0) {
+        _q_self->updateBoundingRect();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9: {
     QString result = QString::fromLatin1("QGraphicsEffect");
     return QScriptValue(context->engine(), result);
     }
@@ -426,7 +530,7 @@ QScriptValue qtscript_create_QGraphicsEffect_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsEffect*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsEffect*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsEffect_prototype_call, qtscript_QGraphicsEffect_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsEffect_function_names[i+1]),

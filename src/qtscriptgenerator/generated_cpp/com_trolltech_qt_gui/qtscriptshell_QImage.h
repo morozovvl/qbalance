@@ -12,18 +12,16 @@ public:
     QtScriptShell_QImage(const QImage&  arg__1);
     QtScriptShell_QImage(const QSize&  size, QImage::Format  format);
     QtScriptShell_QImage(const QString&  fileName, const char*  format = 0);
-    QtScriptShell_QImage(const char*  fileName, const char*  format = 0);
     QtScriptShell_QImage(const char**  xpm);
-    QtScriptShell_QImage(const uchar*  data, int  width, int  height, QImage::Format  format);
-    QtScriptShell_QImage(const uchar*  data, int  width, int  height, int  bytesPerLine, QImage::Format  format);
     QtScriptShell_QImage(int  width, int  height, QImage::Format  format);
-    QtScriptShell_QImage(uchar*  data, int  width, int  height, QImage::Format  format);
-    QtScriptShell_QImage(uchar*  data, int  width, int  height, int  bytesPerLine, QImage::Format  format);
     ~QtScriptShell_QImage();
 
     int  devType() const;
+    void initPainter(QPainter*  painter) const;
     int  metric(QPaintDevice::PaintDeviceMetric  metric) const;
     QPaintEngine*  paintEngine() const;
+    QPaintDevice*  redirected(QPoint*  offset) const;
+    QPainter*  sharedPainter() const;
 
     QScriptValue __qtscript_self;
 };

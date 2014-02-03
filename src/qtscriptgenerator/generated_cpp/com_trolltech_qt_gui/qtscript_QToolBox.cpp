@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtoolbox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qstyle.h>
 #include <qtoolbox.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QToolBox.h"
 
@@ -49,6 +50,8 @@ static const char * const qtscript_QToolBox_function_names[] = {
     , "insertItem"
     , "isItemEnabled"
     , "itemIcon"
+    , "itemInserted"
+    , "itemRemoved"
     , "itemText"
     , "itemToolTip"
     , "removeItem"
@@ -68,6 +71,8 @@ static const char * const qtscript_QToolBox_function_signatures[] = {
     , ""
     , "QWidget widget"
     , "int index, QWidget widget, QIcon icon, String text\nint index, QWidget widget, String text"
+    , "int index"
+    , "int index"
     , "int index"
     , "int index"
     , "int index"
@@ -94,12 +99,25 @@ static const int qtscript_QToolBox_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
+    , 1
     , 2
     , 2
     , 2
     , 2
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QToolBox : public QToolBox
+{
+    friend QScriptValue qtscript_QToolBox_itemInserted(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QToolBox_itemRemoved(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QToolBox_throw_ambiguity_error_helper(
@@ -115,6 +133,7 @@ static QScriptValue qtscript_QToolBox_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QToolBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QToolBox*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QFrame*)
 
@@ -132,11 +151,11 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 14;
+        _id = 0xBABE0000 + 16;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QToolBox* _q_self = qscriptvalue_cast<QToolBox*>(context->thisObject());
+    qtscript_QToolBox* _q_self = reinterpret_cast<qtscript_QToolBox*>(qscriptvalue_cast<QToolBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QToolBox.%0(): this object is not a QToolBox")
@@ -212,12 +231,28 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     case 6:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
+        _q_self->itemInserted(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->itemRemoved(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 8:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->itemText(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->itemToolTip(_q_arg0);
@@ -225,7 +260,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removeItem(_q_arg0);
@@ -233,7 +268,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -242,7 +277,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QIcon _q_arg1 = qscriptvalue_cast<QIcon>(context->argument(1));
@@ -251,7 +286,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -260,7 +295,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -269,7 +304,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_result = _q_self->widget(_q_arg0);
@@ -277,7 +312,7 @@ static QScriptValue qtscript_QToolBox_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 14: {
+    case 16: {
     QString result = QString::fromLatin1("QToolBox");
     return QScriptValue(context->engine(), result);
     }
@@ -344,7 +379,7 @@ QScriptValue qtscript_create_QToolBox_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QToolBox*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QToolBox*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QFrame*>()));
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 17; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QToolBox_prototype_call, qtscript_QToolBox_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QToolBox_function_names[i+1]),

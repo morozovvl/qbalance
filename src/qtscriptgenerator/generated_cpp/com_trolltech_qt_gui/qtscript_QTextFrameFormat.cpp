@@ -114,6 +114,15 @@ static const int qtscript_QTextFrameFormat_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTextFrameFormat_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextFrameFormat : public QTextFrameFormat
+{
+
+    friend QScriptValue qtscript_QTextFrameFormat_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTextFrameFormat_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -320,7 +329,7 @@ static QScriptValue qtscript_QTextFrameFormat_prototype_call(QScriptContext *con
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextFrameFormat* _q_self = qscriptvalue_cast<QTextFrameFormat*>(context->thisObject());
+    qtscript_QTextFrameFormat* _q_self = reinterpret_cast<qtscript_QTextFrameFormat*>(qscriptvalue_cast<QTextFrameFormat*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextFrameFormat.%0(): this object is not a QTextFrameFormat")
@@ -443,7 +452,7 @@ static QScriptValue qtscript_QTextFrameFormat_prototype_call(QScriptContext *con
             QTextLength _q_arg0 = qscriptvalue_cast<QTextLength>(context->argument(0));
             _q_self->setHeight(_q_arg0);
             return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
+        } else if (context->argument(0).isNumber()) {
             qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
             _q_self->setHeight(_q_arg0);
             return context->engine()->undefinedValue();
@@ -513,7 +522,7 @@ static QScriptValue qtscript_QTextFrameFormat_prototype_call(QScriptContext *con
             QTextLength _q_arg0 = qscriptvalue_cast<QTextLength>(context->argument(0));
             _q_self->setWidth(_q_arg0);
             return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
+        } else if (context->argument(0).isNumber()) {
             qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
             _q_self->setWidth(_q_arg0);
             return context->engine()->undefinedValue();

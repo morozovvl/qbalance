@@ -1,15 +1,4 @@
-#include <QtScript/QScriptExtensionPlugin>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
-
-void qtscript_initialize_com_trolltech_qt_uitools_bindings(QScriptValue &);
-
-class com_trolltech_qt_uitools_ScriptPlugin : public QScriptExtensionPlugin
-{
-public:
-    QStringList keys() const;
-    void initialize(const QString &key, QScriptEngine *engine);
-};
+#include "plugin.h"
 
 QStringList com_trolltech_qt_uitools_ScriptPlugin::keys() const
 {
@@ -30,5 +19,7 @@ void com_trolltech_qt_uitools_ScriptPlugin::initialize(const QString &key, QScri
     }
 }
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_STATIC_PLUGIN(com_trolltech_qt_uitools_ScriptPlugin)
 Q_EXPORT_PLUGIN2(qtscript_com_trolltech_qt_uitools, com_trolltech_qt_uitools_ScriptPlugin)
+#endif

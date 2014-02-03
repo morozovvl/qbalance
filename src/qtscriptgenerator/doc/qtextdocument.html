@@ -18,23 +18,23 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QTextDocument prototype object</li>
+<li><b>UndoStack = 0x01</b></li>
+<li><b>RedoStack = 0x02</b></li>
+<li><b>UndoAndRedoStacks = UndoStack|RedoStack</b></li>
+<li><b>Stacks( value )</b></li>
+<li><b>DocumentTitle</b></li>
+<li><b>DocumentUrl</b></li>
+<li><b>MetaInformation( value )</b></li>
 <li><b>HtmlResource = 1</b></li>
 <li><b>ImageResource = 2</b></li>
 <li><b>StyleSheetResource = 3</b></li>
 <li><b>UserResource = 100</b></li>
 <li><b>ResourceType( value )</b></li>
-<li><b>UndoStack = 0x01</b></li>
-<li><b>RedoStack = 0x02</b></li>
-<li><b>UndoAndRedoStacks = UndoStack|RedoStack</b></li>
-<li><b>Stacks( value )</b></li>
 <li><b>FindBackward = 0x00001</b></li>
 <li><b>FindCaseSensitively = 0x00002</b></li>
 <li><b>FindWholeWords = 0x00004</b></li>
 <li><b>FindFlag( value )</b></li>
 <li><b>FindFlags( value1, value2, ... )</b></li>
-<li><b>DocumentTitle</b></li>
-<li><b>DocumentUrl</b></li>
-<li><b>MetaInformation( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QTextDocument prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
@@ -50,6 +50,8 @@
 <li><div class="fn"/><b>void clear()</b></li>
 <li><div class="fn"/><b>void clearUndoRedoStacks(Stacks historyToClear)</b></li>
 <li><div class="fn"/><b>QTextDocument clone(QObject parent)</b></li>
+<li><div class="fn"/><b>QTextObject createObject(QTextFormat f)</b></li>
+<li><div class="fn"/><b>CursorMoveStyle defaultCursorMoveStyle()</b></li>
 <li><div class="fn"/><b>QTextOption defaultTextOption()</b></li>
 <li><div class="fn"/><b>QAbstractTextDocumentLayout documentLayout()</b></li>
 <li><div class="fn"/><b>void drawContents(QPainter painter, QRectF rect)</b></li>
@@ -71,11 +73,11 @@
 <li><div class="fn"/><b>QTextObject object(int objectIndex)</b></li>
 <li><div class="fn"/><b>QTextObject objectForFormat(QTextFormat arg__1)</b></li>
 <li><div class="fn"/><b>int pageCount()</b></li>
-<li><div class="fn"/><b>void print(QPrinter printer)</b></li>
 <li><div class="fn"/><b>void redo(QTextCursor cursor)</b></li>
 <li><div class="fn"/><b>Object resource(int type, QUrl name)</b></li>
 <li><div class="fn"/><b>int revision()</b></li>
 <li><div class="fn"/><b>QTextFrame rootFrame()</b></li>
+<li><div class="fn"/><b>void setDefaultCursorMoveStyle(CursorMoveStyle style)</b></li>
 <li><div class="fn"/><b>void setDefaultTextOption(QTextOption option)</b></li>
 <li><div class="fn"/><b>void setDocumentLayout(QAbstractTextDocumentLayout layout)</b></li>
 <li><div class="fn"/><b>void setHtml(String html)</b></li>

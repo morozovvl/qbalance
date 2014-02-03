@@ -53,6 +53,7 @@ public:
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
     QString getFilter();
     virtual void keyPressEvent(QKeyEvent*);
+    void searchGridLayout();
 
 signals:
     void requery();

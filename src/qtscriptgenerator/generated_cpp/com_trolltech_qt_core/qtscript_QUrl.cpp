@@ -11,9 +11,9 @@
 #include <qbytearray.h>
 #include <qdatastream.h>
 #include <qlist.h>
-#include <qpair.h>
 #include <qstringlist.h>
 #include <qurl.h>
+#include <qurlquery.h>
 
 static const char * const qtscript_QUrl_function_names[] = {
     "QUrl"
@@ -22,34 +22,22 @@ static const char * const qtscript_QUrl_function_names[] = {
     , "fromEncoded"
     , "fromLocalFile"
     , "fromPercentEncoding"
+    , "fromStringList"
     , "fromUserInput"
     , "idnWhitelist"
     , "setIdnWhitelist"
     , "toAce"
     , "toPercentEncoding"
     // prototype
-    , "addEncodedQueryItem"
-    , "addQueryItem"
-    , "allEncodedQueryItemValues"
-    , "allQueryItemValues"
     , "authority"
     , "clear"
-    , "encodedFragment"
-    , "encodedHost"
-    , "encodedPassword"
-    , "encodedPath"
-    , "encodedQuery"
-    , "encodedQueryItemValue"
-    , "encodedQueryItems"
-    , "encodedUserName"
     , "errorString"
     , "fragment"
-    , "hasEncodedQueryItem"
     , "hasFragment"
     , "hasQuery"
-    , "hasQueryItem"
     , "host"
     , "isEmpty"
+    , "isLocalFile"
     , "isParentOf"
     , "isRelative"
     , "isValid"
@@ -58,78 +46,51 @@ static const char * const qtscript_QUrl_function_names[] = {
     , "password"
     , "path"
     , "port"
-    , "queryItemValue"
-    , "queryItems"
-    , "queryPairDelimiter"
-    , "queryValueDelimiter"
+    , "query"
     , "readFrom"
-    , "removeAllEncodedQueryItems"
-    , "removeAllQueryItems"
-    , "removeEncodedQueryItem"
-    , "removeQueryItem"
     , "resolved"
     , "scheme"
     , "setAuthority"
-    , "setEncodedFragment"
-    , "setEncodedHost"
-    , "setEncodedPassword"
-    , "setEncodedPath"
-    , "setEncodedQuery"
-    , "setEncodedQueryItems"
-    , "setEncodedUrl"
-    , "setEncodedUserName"
     , "setFragment"
     , "setHost"
     , "setPassword"
     , "setPath"
     , "setPort"
-    , "setQueryDelimiters"
-    , "setQueryItems"
+    , "setQuery"
     , "setScheme"
     , "setUrl"
     , "setUserInfo"
     , "setUserName"
-    , "toEncoded"
+    , "swap"
     , "toLocalFile"
-    , "toString"
+    , "topLevelDomain"
     , "userInfo"
     , "userName"
     , "writeTo"
+    , "toString"
 };
 
 static const char * const qtscript_QUrl_function_signatures[] = {
-    "\nString url\nString url, ParsingMode mode\nQUrl copy"
+    "\nString url, ParsingMode mode\nQUrl copy"
     // static
     , "QByteArray arg__1"
-    , "QByteArray url\nQByteArray url, ParsingMode mode"
+    , "QByteArray url, ParsingMode mode"
     , "String localfile"
     , "QByteArray arg__1"
+    , "List uris, ParsingMode mode"
     , "String userInput"
     , ""
     , "List arg__1"
     , "String arg__1"
     , "String arg__1, QByteArray exclude, QByteArray include"
     // prototype
-    , "QByteArray key, QByteArray value"
-    , "String key, String value"
-    , "QByteArray key"
-    , "String key"
+    , "ComponentFormattingOptions options"
     , ""
     , ""
+    , "ComponentFormattingOptions options"
     , ""
     , ""
-    , ""
-    , ""
-    , ""
-    , "QByteArray key"
-    , ""
-    , ""
-    , ""
-    , ""
-    , "QByteArray key"
-    , ""
-    , ""
-    , "String key"
+    , "ComponentFormattingOptions arg__1"
     , ""
     , ""
     , "QUrl url"
@@ -137,46 +98,31 @@ static const char * const qtscript_QUrl_function_signatures[] = {
     , ""
     , "QUrl url"
     , "QUrl url"
-    , ""
-    , ""
-    , "\nint defaultPort"
-    , "String key"
-    , ""
-    , ""
-    , ""
+    , "ComponentFormattingOptions arg__1"
+    , "ComponentFormattingOptions options"
+    , "int defaultPort"
+    , "ComponentFormattingOptions arg__1"
     , "QDataStream arg__1"
-    , "QByteArray key"
-    , "String key"
-    , "QByteArray key"
-    , "String key"
     , "QUrl relative"
     , ""
-    , "String authority"
-    , "QByteArray fragment"
-    , "QByteArray host"
-    , "QByteArray password"
-    , "QByteArray path"
-    , "QByteArray query"
-    , "List query"
-    , "QByteArray url\nQByteArray url, ParsingMode mode"
-    , "QByteArray userName"
-    , "String fragment"
-    , "String host"
-    , "String password"
-    , "String path"
+    , "String authority, ParsingMode mode"
+    , "String fragment, ParsingMode mode"
+    , "String host, ParsingMode mode"
+    , "String password, ParsingMode mode"
+    , "String path, ParsingMode mode"
     , "int port"
-    , "char valueDelimiter, char pairDelimiter"
-    , "List query"
+    , "String query, ParsingMode mode\nQUrlQuery query"
     , "String scheme"
-    , "String url\nString url, ParsingMode mode"
-    , "String userInfo"
-    , "String userName"
-    , "FormattingOptions options"
+    , "String url, ParsingMode mode"
+    , "String userInfo, ParsingMode mode"
+    , "String userName, ParsingMode mode"
+    , "QUrl other"
     , ""
-    , "FormattingOptions options"
-    , ""
-    , ""
+    , "ComponentFormattingOptions options"
+    , "ComponentFormattingOptions options"
+    , "ComponentFormattingOptions options"
     , "QDataStream arg__1"
+""
 };
 
 static const int qtscript_QUrl_function_lengths[] = {
@@ -186,79 +132,52 @@ static const int qtscript_QUrl_function_lengths[] = {
     , 2
     , 1
     , 1
+    , 2
     , 1
     , 0
     , 1
     , 1
     , 3
     // prototype
+    , 1
+    , 0
+    , 0
+    , 1
+    , 0
+    , 0
+    , 1
+    , 0
+    , 0
+    , 1
+    , 0
+    , 0
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 0
     , 2
     , 2
-    , 1
-    , 1
-    , 0
-    , 0
-    , 0
-    , 0
-    , 0
-    , 0
-    , 0
-    , 1
-    , 0
-    , 0
-    , 0
-    , 0
-    , 1
-    , 0
-    , 0
-    , 1
-    , 0
-    , 0
-    , 1
-    , 0
-    , 0
-    , 1
-    , 1
-    , 0
-    , 0
-    , 1
-    , 1
-    , 0
-    , 0
-    , 0
-    , 1
-    , 1
-    , 1
-    , 1
-    , 1
-    , 1
-    , 0
-    , 1
-    , 1
-    , 1
-    , 1
-    , 1
-    , 1
+    , 2
+    , 2
+    , 2
     , 1
     , 2
     , 1
-    , 1
-    , 1
-    , 1
-    , 1
-    , 1
+    , 2
+    , 2
     , 2
     , 1
+    , 0
     , 1
-    , 2
     , 1
     , 1
     , 1
     , 0
-    , 1
-    , 0
-    , 0
-    , 1
 };
 
 static QScriptValue qtscript_QUrl_throw_ambiguity_error_helper(
@@ -274,58 +193,12 @@ static QScriptValue qtscript_QUrl_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QUrl*)
 Q_DECLARE_METATYPE(QUrl::ParsingMode)
-Q_DECLARE_METATYPE(QUrl::FormattingOption)
-Q_DECLARE_METATYPE(QFlags<QUrl::FormattingOption>)
-Q_DECLARE_METATYPE(QList<QByteArray>)
-template <> \
-struct QMetaTypeId< QPair<QByteArray,QByteArray> > \
-{ \
-    enum { Defined = 1 }; \
-    static int qt_metatype_id() \
-    { \
-        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
-        if (!metatype_id) \
-            metatype_id = qRegisterMetaType< QPair<QByteArray,QByteArray> >("QPair<QByteArray,QByteArray>"); \
-        return metatype_id; \
-    } \
-};
-template <> \
-struct QMetaTypeId< QList<QPair<QByteArray,QByteArray> > > \
-{ \
-    enum { Defined = 1 }; \
-    static int qt_metatype_id() \
-    { \
-        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
-        if (!metatype_id) \
-            metatype_id = qRegisterMetaType< QList<QPair<QByteArray,QByteArray> > >("QList<QPair<QByteArray,QByteArray> >"); \
-        return metatype_id; \
-    } \
-};
-template <> \
-struct QMetaTypeId< QPair<QString,QString> > \
-{ \
-    enum { Defined = 1 }; \
-    static int qt_metatype_id() \
-    { \
-        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
-        if (!metatype_id) \
-            metatype_id = qRegisterMetaType< QPair<QString,QString> >("QPair<QString,QString>"); \
-        return metatype_id; \
-    } \
-};
-template <> \
-struct QMetaTypeId< QList<QPair<QString,QString> > > \
-{ \
-    enum { Defined = 1 }; \
-    static int qt_metatype_id() \
-    { \
-        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
-        if (!metatype_id) \
-            metatype_id = qRegisterMetaType< QList<QPair<QString,QString> > >("QList<QPair<QString,QString> >"); \
-        return metatype_id; \
-    } \
-};
+Q_DECLARE_METATYPE(QUrl::UrlFormattingOption)
+Q_DECLARE_METATYPE(QUrl::ComponentFormattingOption)
+Q_DECLARE_METATYPE(QFlags<QUrl::ComponentFormattingOption>)
 Q_DECLARE_METATYPE(QDataStream*)
+Q_DECLARE_METATYPE(QUrlQuery)
+Q_DECLARE_METATYPE(QList<QUrl>)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -365,16 +238,18 @@ static QScriptValue qtscript_create_flags_class_helper(
 static const QUrl::ParsingMode qtscript_QUrl_ParsingMode_values[] = {
     QUrl::TolerantMode
     , QUrl::StrictMode
+    , QUrl::DecodedMode
 };
 
 static const char * const qtscript_QUrl_ParsingMode_keys[] = {
     "TolerantMode"
     , "StrictMode"
+    , "DecodedMode"
 };
 
 static QString qtscript_QUrl_ParsingMode_toStringHelper(QUrl::ParsingMode value)
 {
-    if ((value >= QUrl::TolerantMode) && (value <= QUrl::StrictMode))
+    if ((value >= QUrl::TolerantMode) && (value <= QUrl::DecodedMode))
         return qtscript_QUrl_ParsingMode_keys[static_cast<int>(value)-static_cast<int>(QUrl::TolerantMode)];
     return QString();
 }
@@ -393,7 +268,7 @@ static void qtscript_QUrl_ParsingMode_fromScriptValue(const QScriptValue &value,
 static QScriptValue qtscript_construct_QUrl_ParsingMode(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QUrl::TolerantMode) && (arg <= QUrl::StrictMode))
+    if ((arg >= QUrl::TolerantMode) && (arg <= QUrl::DecodedMode))
         return qScriptValueFromValue(engine,  static_cast<QUrl::ParsingMode>(arg));
     return context->throwError(QString::fromLatin1("ParsingMode(): invalid enum value (%0)").arg(arg));
 }
@@ -417,7 +292,7 @@ static QScriptValue qtscript_create_QUrl_ParsingMode_class(QScriptEngine *engine
         qtscript_QUrl_ParsingMode_valueOf, qtscript_QUrl_ParsingMode_toString);
     qScriptRegisterMetaType<QUrl::ParsingMode>(engine, qtscript_QUrl_ParsingMode_toScriptValue,
         qtscript_QUrl_ParsingMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 3; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QUrl_ParsingMode_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QUrl_ParsingMode_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -426,10 +301,10 @@ static QScriptValue qtscript_create_QUrl_ParsingMode_class(QScriptEngine *engine
 }
 
 //
-// QUrl::FormattingOption
+// QUrl::UrlFormattingOption
 //
 
-static const QUrl::FormattingOption qtscript_QUrl_FormattingOption_values[] = {
+static const QUrl::UrlFormattingOption qtscript_QUrl_UrlFormattingOption_values[] = {
     QUrl::None
     , QUrl::RemoveScheme
     , QUrl::RemovePassword
@@ -439,10 +314,11 @@ static const QUrl::FormattingOption qtscript_QUrl_FormattingOption_values[] = {
     , QUrl::RemovePath
     , QUrl::RemoveQuery
     , QUrl::RemoveFragment
+    , QUrl::PreferLocalFile
     , QUrl::StripTrailingSlash
 };
 
-static const char * const qtscript_QUrl_FormattingOption_keys[] = {
+static const char * const qtscript_QUrl_UrlFormattingOption_keys[] = {
     "None"
     , "RemoveScheme"
     , "RemovePassword"
@@ -452,139 +328,223 @@ static const char * const qtscript_QUrl_FormattingOption_keys[] = {
     , "RemovePath"
     , "RemoveQuery"
     , "RemoveFragment"
+    , "PreferLocalFile"
     , "StripTrailingSlash"
 };
 
-static QString qtscript_QUrl_FormattingOption_toStringHelper(QUrl::FormattingOption value)
+static QString qtscript_QUrl_UrlFormattingOption_toStringHelper(QUrl::UrlFormattingOption value)
 {
-    for (int i = 0; i < 10; ++i) {
-        if (qtscript_QUrl_FormattingOption_values[i] == value)
-            return QString::fromLatin1(qtscript_QUrl_FormattingOption_keys[i]);
+    for (int i = 0; i < 11; ++i) {
+        if (qtscript_QUrl_UrlFormattingOption_values[i] == value)
+            return QString::fromLatin1(qtscript_QUrl_UrlFormattingOption_keys[i]);
     }
     return QString();
 }
 
-static QScriptValue qtscript_QUrl_FormattingOption_toScriptValue(QScriptEngine *engine, const QUrl::FormattingOption &value)
+static QScriptValue qtscript_QUrl_UrlFormattingOption_toScriptValue(QScriptEngine *engine, const QUrl::UrlFormattingOption &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QUrl"));
-    return clazz.property(qtscript_QUrl_FormattingOption_toStringHelper(value));
+    return clazz.property(qtscript_QUrl_UrlFormattingOption_toStringHelper(value));
 }
 
-static void qtscript_QUrl_FormattingOption_fromScriptValue(const QScriptValue &value, QUrl::FormattingOption &out)
+static void qtscript_QUrl_UrlFormattingOption_fromScriptValue(const QScriptValue &value, QUrl::UrlFormattingOption &out)
 {
-    out = qvariant_cast<QUrl::FormattingOption>(value.toVariant());
+    out = qvariant_cast<QUrl::UrlFormattingOption>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QUrl_FormattingOption(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QUrl_UrlFormattingOption(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 10; ++i) {
-        if (qtscript_QUrl_FormattingOption_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QUrl::FormattingOption>(arg));
+    for (int i = 0; i < 11; ++i) {
+        if (qtscript_QUrl_UrlFormattingOption_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QUrl::UrlFormattingOption>(arg));
     }
-    return context->throwError(QString::fromLatin1("FormattingOption(): invalid enum value (%0)").arg(arg));
+    return context->throwError(QString::fromLatin1("UrlFormattingOption(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QUrl_FormattingOption_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QUrl_UrlFormattingOption_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QUrl::FormattingOption value = qscriptvalue_cast<QUrl::FormattingOption>(context->thisObject());
+    QUrl::UrlFormattingOption value = qscriptvalue_cast<QUrl::UrlFormattingOption>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QUrl_FormattingOption_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QUrl_UrlFormattingOption_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QUrl::FormattingOption value = qscriptvalue_cast<QUrl::FormattingOption>(context->thisObject());
-    return QScriptValue(engine, qtscript_QUrl_FormattingOption_toStringHelper(value));
+    QUrl::UrlFormattingOption value = qscriptvalue_cast<QUrl::UrlFormattingOption>(context->thisObject());
+    return QScriptValue(engine, qtscript_QUrl_UrlFormattingOption_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QUrl_FormattingOption_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QUrl_UrlFormattingOption_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QUrl_FormattingOption,
-        qtscript_QUrl_FormattingOption_valueOf, qtscript_QUrl_FormattingOption_toString);
-    qScriptRegisterMetaType<QUrl::FormattingOption>(engine, qtscript_QUrl_FormattingOption_toScriptValue,
-        qtscript_QUrl_FormattingOption_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 10; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QUrl_FormattingOption_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QUrl_FormattingOption_values[i])),
+        engine, qtscript_construct_QUrl_UrlFormattingOption,
+        qtscript_QUrl_UrlFormattingOption_valueOf, qtscript_QUrl_UrlFormattingOption_toString);
+    qScriptRegisterMetaType<QUrl::UrlFormattingOption>(engine, qtscript_QUrl_UrlFormattingOption_toScriptValue,
+        qtscript_QUrl_UrlFormattingOption_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 11; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QUrl_UrlFormattingOption_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QUrl_UrlFormattingOption_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
 }
 
 //
-// QUrl::FormattingOptions
+// QUrl::ComponentFormattingOption
 //
 
-static QScriptValue qtscript_QUrl_FormattingOptions_toScriptValue(QScriptEngine *engine, const QUrl::FormattingOptions &value)
+static const QUrl::ComponentFormattingOption qtscript_QUrl_ComponentFormattingOption_values[] = {
+    QUrl::PrettyDecoded
+    , QUrl::EncodeSpaces
+    , QUrl::EncodeUnicode
+    , QUrl::EncodeDelimiters
+    , QUrl::EncodeReserved
+    , QUrl::FullyEncoded
+    , QUrl::DecodeReserved
+    , QUrl::FullyDecoded
+};
+
+static const char * const qtscript_QUrl_ComponentFormattingOption_keys[] = {
+    "PrettyDecoded"
+    , "EncodeSpaces"
+    , "EncodeUnicode"
+    , "EncodeDelimiters"
+    , "EncodeReserved"
+    , "FullyEncoded"
+    , "DecodeReserved"
+    , "FullyDecoded"
+};
+
+static QString qtscript_QUrl_ComponentFormattingOption_toStringHelper(QUrl::ComponentFormattingOption value)
+{
+    for (int i = 0; i < 8; ++i) {
+        if (qtscript_QUrl_ComponentFormattingOption_values[i] == value)
+            return QString::fromLatin1(qtscript_QUrl_ComponentFormattingOption_keys[i]);
+    }
+    return QString();
+}
+
+static QScriptValue qtscript_QUrl_ComponentFormattingOption_toScriptValue(QScriptEngine *engine, const QUrl::ComponentFormattingOption &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QUrl"));
+    return clazz.property(qtscript_QUrl_ComponentFormattingOption_toStringHelper(value));
+}
+
+static void qtscript_QUrl_ComponentFormattingOption_fromScriptValue(const QScriptValue &value, QUrl::ComponentFormattingOption &out)
+{
+    out = qvariant_cast<QUrl::ComponentFormattingOption>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QUrl_ComponentFormattingOption(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    for (int i = 0; i < 8; ++i) {
+        if (qtscript_QUrl_ComponentFormattingOption_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QUrl::ComponentFormattingOption>(arg));
+    }
+    return context->throwError(QString::fromLatin1("ComponentFormattingOption(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QUrl_ComponentFormattingOption_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QUrl::ComponentFormattingOption value = qscriptvalue_cast<QUrl::ComponentFormattingOption>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QUrl_ComponentFormattingOption_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QUrl::ComponentFormattingOption value = qscriptvalue_cast<QUrl::ComponentFormattingOption>(context->thisObject());
+    return QScriptValue(engine, qtscript_QUrl_ComponentFormattingOption_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QUrl_ComponentFormattingOption_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QUrl_ComponentFormattingOption,
+        qtscript_QUrl_ComponentFormattingOption_valueOf, qtscript_QUrl_ComponentFormattingOption_toString);
+    qScriptRegisterMetaType<QUrl::ComponentFormattingOption>(engine, qtscript_QUrl_ComponentFormattingOption_toScriptValue,
+        qtscript_QUrl_ComponentFormattingOption_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 8; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QUrl_ComponentFormattingOption_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QUrl_ComponentFormattingOption_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QUrl::ComponentFormattingOptions
+//
+
+static QScriptValue qtscript_QUrl_ComponentFormattingOptions_toScriptValue(QScriptEngine *engine, const QUrl::ComponentFormattingOptions &value)
 {
     return engine->newVariant(qVariantFromValue(value));
 }
 
-static void qtscript_QUrl_FormattingOptions_fromScriptValue(const QScriptValue &value, QUrl::FormattingOptions &out)
+static void qtscript_QUrl_ComponentFormattingOptions_fromScriptValue(const QScriptValue &value, QUrl::ComponentFormattingOptions &out)
 {
     QVariant var = value.toVariant();
-    if (var.userType() == qMetaTypeId<QUrl::FormattingOptions>())
-        out = qvariant_cast<QUrl::FormattingOptions>(var);
-    else if (var.userType() == qMetaTypeId<QUrl::FormattingOption>())
-        out = qvariant_cast<QUrl::FormattingOption>(var);
+    if (var.userType() == qMetaTypeId<QUrl::ComponentFormattingOptions>())
+        out = qvariant_cast<QUrl::ComponentFormattingOptions>(var);
+    else if (var.userType() == qMetaTypeId<QUrl::ComponentFormattingOption>())
+        out = qvariant_cast<QUrl::ComponentFormattingOption>(var);
     else
         out = 0;
 }
 
-static QScriptValue qtscript_construct_QUrl_FormattingOptions(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QUrl_ComponentFormattingOptions(QScriptContext *context, QScriptEngine *engine)
 {
-    QUrl::FormattingOptions result = 0;
+    QUrl::ComponentFormattingOptions result = 0;
     if ((context->argumentCount() == 1) && context->argument(0).isNumber()) {
-        result = static_cast<QUrl::FormattingOptions>(context->argument(0).toInt32());
+        result = static_cast<QUrl::ComponentFormattingOptions>(context->argument(0).toInt32());
     } else {
         for (int i = 0; i < context->argumentCount(); ++i) {
             QVariant v = context->argument(i).toVariant();
-            if (v.userType() != qMetaTypeId<QUrl::FormattingOption>()) {
+            if (v.userType() != qMetaTypeId<QUrl::ComponentFormattingOption>()) {
                 return context->throwError(QScriptContext::TypeError,
-                    QString::fromLatin1("FormattingOptions(): argument %0 is not of type FormattingOption").arg(i));
+                    QString::fromLatin1("ComponentFormattingOptions(): argument %0 is not of type ComponentFormattingOption").arg(i));
             }
-            result |= qvariant_cast<QUrl::FormattingOption>(v);
+            result |= qvariant_cast<QUrl::ComponentFormattingOption>(v);
         }
    }
     return engine->newVariant(qVariantFromValue(result));
 }
 
-static QScriptValue qtscript_QUrl_FormattingOptions_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QUrl_ComponentFormattingOptions_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QUrl::FormattingOptions value = qscriptvalue_cast<QUrl::FormattingOptions>(context->thisObject());
+    QUrl::ComponentFormattingOptions value = qscriptvalue_cast<QUrl::ComponentFormattingOptions>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QUrl_FormattingOptions_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QUrl_ComponentFormattingOptions_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QUrl::FormattingOptions value = qscriptvalue_cast<QUrl::FormattingOptions>(context->thisObject());
+    QUrl::ComponentFormattingOptions value = qscriptvalue_cast<QUrl::ComponentFormattingOptions>(context->thisObject());
     QString result;
-    for (int i = 0; i < 10; ++i) {
-        if ((value & qtscript_QUrl_FormattingOption_values[i]) == qtscript_QUrl_FormattingOption_values[i]) {
+    for (int i = 0; i < 8; ++i) {
+        if ((value & qtscript_QUrl_ComponentFormattingOption_values[i]) == qtscript_QUrl_ComponentFormattingOption_values[i]) {
             if (!result.isEmpty())
                 result.append(QString::fromLatin1(","));
-            result.append(QString::fromLatin1(qtscript_QUrl_FormattingOption_keys[i]));
+            result.append(QString::fromLatin1(qtscript_QUrl_ComponentFormattingOption_keys[i]));
         }
     }
     return QScriptValue(engine, result);
 }
 
-static QScriptValue qtscript_QUrl_FormattingOptions_equals(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QUrl_ComponentFormattingOptions_equals(QScriptContext *context, QScriptEngine *engine)
 {
     QVariant thisObj = context->thisObject().toVariant();
     QVariant otherObj = context->argument(0).toVariant();
     return QScriptValue(engine, ((thisObj.userType() == otherObj.userType()) &&
-                                 (thisObj.value<QUrl::FormattingOptions>() == otherObj.value<QUrl::FormattingOptions>())));
+                                 (thisObj.value<QUrl::ComponentFormattingOptions>() == otherObj.value<QUrl::ComponentFormattingOptions>())));
 }
 
-static QScriptValue qtscript_create_QUrl_FormattingOptions_class(QScriptEngine *engine)
+static QScriptValue qtscript_create_QUrl_ComponentFormattingOptions_class(QScriptEngine *engine)
 {
     QScriptValue ctor = qtscript_create_flags_class_helper(
-        engine, qtscript_construct_QUrl_FormattingOptions, qtscript_QUrl_FormattingOptions_valueOf,
-        qtscript_QUrl_FormattingOptions_toString, qtscript_QUrl_FormattingOptions_equals);
-    qScriptRegisterMetaType<QUrl::FormattingOptions>(engine, qtscript_QUrl_FormattingOptions_toScriptValue,
-        qtscript_QUrl_FormattingOptions_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+        engine, qtscript_construct_QUrl_ComponentFormattingOptions, qtscript_QUrl_ComponentFormattingOptions_valueOf,
+        qtscript_QUrl_ComponentFormattingOptions_toString, qtscript_QUrl_ComponentFormattingOptions_equals);
+    qScriptRegisterMetaType<QUrl::ComponentFormattingOptions>(engine, qtscript_QUrl_ComponentFormattingOptions_toScriptValue,
+        qtscript_QUrl_ComponentFormattingOptions_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
     return ctor;
 }
 
@@ -602,7 +562,7 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 67;
+        _id = 0xBABE0000 + 38;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -610,174 +570,89 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QUrl.%0(): this object is not a QUrl")
-            .arg(qtscript_QUrl_function_names[_id+10]));
+            .arg(qtscript_QUrl_function_names[_id+11]));
     }
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 2) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        QByteArray _q_arg1 = qscriptvalue_cast<QByteArray>(context->argument(1));
-        _q_self->addEncodedQueryItem(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 1:
-    if (context->argumentCount() == 2) {
-        QString _q_arg0 = context->argument(0).toString();
-        QString _q_arg1 = context->argument(1).toString();
-        _q_self->addQueryItem(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 2:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        QList<QByteArray> _q_result = _q_self->allEncodedQueryItemValues(_q_arg0);
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 3:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        QStringList _q_result = _q_self->allQueryItemValues(_q_arg0);
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 4:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->authority();
         return QScriptValue(context->engine(), _q_result);
     }
+    if (context->argumentCount() == 1) {
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->authority(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
     break;
 
-    case 5:
+    case 1:
     if (context->argumentCount() == 0) {
         _q_self->clear();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 6:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->encodedFragment();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 7:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->encodedHost();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 8:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->encodedPassword();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 9:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->encodedPath();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 10:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->encodedQuery();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 11:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        QByteArray _q_result = _q_self->encodedQueryItemValue(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 12:
-    if (context->argumentCount() == 0) {
-        QList<QPair<QByteArray,QByteArray> > _q_result = _q_self->encodedQueryItems();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 13:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->encodedUserName();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 14:
+    case 2:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->errorString();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 3:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->fragment();
         return QScriptValue(context->engine(), _q_result);
     }
-    break;
-
-    case 16:
     if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        bool _q_result = _q_self->hasEncodedQueryItem(_q_arg0);
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->fragment(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasFragment();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasQuery();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        bool _q_result = _q_self->hasQueryItem(_q_arg0);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 20:
+    case 6:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->host();
         return QScriptValue(context->engine(), _q_result);
     }
+    if (context->argumentCount() == 1) {
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->host(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
     break;
 
-    case 21:
+    case 7:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEmpty();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 8:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->isLocalFile();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 1) {
         QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
         bool _q_result = _q_self->isParentOf(_q_arg0);
@@ -785,21 +660,21 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 23:
+    case 10:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isRelative();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 24:
+    case 11:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isValid();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 25:
+    case 12:
     if (context->argumentCount() == 1) {
         QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -807,7 +682,7 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 26:
+    case 13:
     if (context->argumentCount() == 1) {
         QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
         bool _q_result = _q_self->operator<(_q_arg0);
@@ -815,21 +690,31 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 27:
+    case 14:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->password();
         return QScriptValue(context->engine(), _q_result);
     }
-    break;
-
-    case 28:
-    if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->path();
+    if (context->argumentCount() == 1) {
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->password(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 29:
+    case 15:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->path();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 1) {
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->path(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->port();
         return QScriptValue(context->engine(), _q_result);
@@ -841,36 +726,19 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 30:
+    case 17:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->query();
+        return QScriptValue(context->engine(), _q_result);
+    }
     if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        QString _q_result = _q_self->queryItemValue(_q_arg0);
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->query(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 31:
-    if (context->argumentCount() == 0) {
-        QList<QPair<QString,QString> > _q_result = _q_self->queryItems();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 32:
-    if (context->argumentCount() == 0) {
-        char _q_result = _q_self->queryPairDelimiter();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 33:
-    if (context->argumentCount() == 0) {
-        char _q_result = _q_self->queryValueDelimiter();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 34:
+    case 18:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -878,39 +746,7 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 35:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->removeAllEncodedQueryItems(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 36:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->removeAllQueryItems(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 37:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->removeEncodedQueryItem(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 38:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->removeQueryItem(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 39:
+    case 19:
     if (context->argumentCount() == 1) {
         QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
         QUrl _q_result = _q_self->resolved(_q_arg0);
@@ -918,125 +754,84 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 40:
+    case 20:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->scheme();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 41:
+    case 21:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setAuthority(_q_arg0);
         return context->engine()->undefinedValue();
     }
-    break;
-
-    case 42:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedFragment(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 43:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedHost(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 44:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedPassword(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 45:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedPath(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 46:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedQuery(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 47:
-    if (context->argumentCount() == 1) {
-        QList<QPair<QByteArray,QByteArray> > _q_arg0;
-        qScriptValueToSequence(context->argument(0), _q_arg0);
-        _q_self->setEncodedQueryItems(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 48:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedUrl(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
     if (context->argumentCount() == 2) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        QString _q_arg0 = context->argument(0).toString();
         QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
-        _q_self->setEncodedUrl(_q_arg0, _q_arg1);
+        _q_self->setAuthority(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 49:
-    if (context->argumentCount() == 1) {
-        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-        _q_self->setEncodedUserName(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 50:
+    case 22:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setFragment(_q_arg0);
         return context->engine()->undefinedValue();
     }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setFragment(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
     break;
 
-    case 51:
+    case 23:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setHost(_q_arg0);
         return context->engine()->undefinedValue();
     }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setHost(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
     break;
 
-    case 52:
+    case 24:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setPassword(_q_arg0);
         return context->engine()->undefinedValue();
     }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setPassword(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
     break;
 
-    case 53:
+    case 25:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setPath(_q_arg0);
         return context->engine()->undefinedValue();
     }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setPath(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
     break;
 
-    case 54:
+    case 26:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setPort(_q_arg0);
@@ -1044,25 +839,27 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 55:
-    if (context->argumentCount() == 2) {
-        char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
-        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
-        _q_self->setQueryDelimiters(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 56:
+    case 27:
     if (context->argumentCount() == 1) {
-        QList<QPair<QString,QString> > _q_arg0;
-        qScriptValueToSequence(context->argument(0), _q_arg0);
-        _q_self->setQueryItems(_q_arg0);
+        if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            _q_self->setQuery(_q_arg0);
+            return context->engine()->undefinedValue();
+        } else if ((qMetaTypeId<QUrlQuery>() == context->argument(0).toVariant().userType())) {
+            QUrlQuery _q_arg0 = qscriptvalue_cast<QUrlQuery>(context->argument(0));
+            _q_self->setQuery(_q_arg0);
+            return context->engine()->undefinedValue();
+        }
+    }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setQuery(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 57:
+    case 28:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setScheme(_q_arg0);
@@ -1070,7 +867,7 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 58:
+    case 29:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setUrl(_q_arg0);
@@ -1084,68 +881,86 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 59:
+    case 30:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setUserInfo(_q_arg0);
         return context->engine()->undefinedValue();
     }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setUserInfo(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
     break;
 
-    case 60:
+    case 31:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setUserName(_q_arg0);
         return context->engine()->undefinedValue();
     }
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        _q_self->setUserName(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
     break;
 
-    case 61:
-    if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->toEncoded();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
+    case 32:
     if (context->argumentCount() == 1) {
-        QFlags<QUrl::FormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::FormattingOption> >(context->argument(0));
-        QByteArray _q_result = _q_self->toEncoded(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
-    case 62:
+    case 33:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->toLocalFile();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 63:
+    case 34:
     if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->toString();
+        QString _q_result = _q_self->topLevelDomain();
         return QScriptValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 1) {
-        QFlags<QUrl::FormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::FormattingOption> >(context->argument(0));
-        QString _q_result = _q_self->toString(_q_arg0);
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->topLevelDomain(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 64:
+    case 35:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->userInfo();
         return QScriptValue(context->engine(), _q_result);
     }
-    break;
-
-    case 65:
-    if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->userName();
+    if (context->argumentCount() == 1) {
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->userInfo(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 66:
+    case 36:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->userName();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 1) {
+        QFlags<QUrl::ComponentFormattingOption> _q_arg0 = qscriptvalue_cast<QFlags<QUrl::ComponentFormattingOption> >(context->argument(0));
+        QString _q_result = _q_self->userName(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 37:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -1153,12 +968,19 @@ static QScriptValue qtscript_QUrl_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
+    case 38: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
+    return QScriptValue(context->engine(), result);
+    }
+
     default:
     Q_ASSERT(false);
     }
     return qtscript_QUrl_throw_ambiguity_error_helper(context,
-        qtscript_QUrl_function_names[_id+10],
-        qtscript_QUrl_function_signatures[_id+10]);
+        qtscript_QUrl_function_names[_id+11],
+        qtscript_QUrl_function_signatures[_id+11]);
 }
 
 static QScriptValue qtscript_QUrl_static_call(QScriptContext *context, QScriptEngine *)
@@ -1236,20 +1058,36 @@ static QScriptValue qtscript_QUrl_static_call(QScriptContext *context, QScriptEn
 
     case 5:
     if (context->argumentCount() == 1) {
+        QStringList _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        QList<QUrl> _q_result = QUrl::fromStringList(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        QStringList _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        QUrl::ParsingMode _q_arg1 = qscriptvalue_cast<QUrl::ParsingMode>(context->argument(1));
+        QList<QUrl> _q_result = QUrl::fromStringList(_q_arg0, _q_arg1);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QUrl _q_result = QUrl::fromUserInput(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         QStringList _q_result = QUrl::idnWhitelist();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -1258,7 +1096,7 @@ static QScriptValue qtscript_QUrl_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QByteArray _q_result = QUrl::toAce(_q_arg0);
@@ -1266,7 +1104,7 @@ static QScriptValue qtscript_QUrl_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QByteArray _q_result = QUrl::toPercentEncoding(_q_arg0);
@@ -1299,10 +1137,10 @@ QScriptValue qtscript_create_QUrl_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QUrl*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QUrl*)0));
-    for (int i = 0; i < 67; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QUrl_prototype_call, qtscript_QUrl_function_lengths[i+10]);
+    for (int i = 0; i < 39; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QUrl_prototype_call, qtscript_QUrl_function_lengths[i+11]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QUrl_function_names[i+10]),
+        proto.setProperty(QString::fromLatin1(qtscript_QUrl_function_names[i+11]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -1311,7 +1149,7 @@ QScriptValue qtscript_create_QUrl_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QUrl_static_call, proto, qtscript_QUrl_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QUrl_static_call,
             qtscript_QUrl_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));
@@ -1321,9 +1159,11 @@ QScriptValue qtscript_create_QUrl_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("ParsingMode"),
         qtscript_create_QUrl_ParsingMode_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("FormattingOption"),
-        qtscript_create_QUrl_FormattingOption_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("FormattingOptions"),
-        qtscript_create_QUrl_FormattingOptions_class(engine));
+    ctor.setProperty(QString::fromLatin1("UrlFormattingOption"),
+        qtscript_create_QUrl_UrlFormattingOption_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ComponentFormattingOption"),
+        qtscript_create_QUrl_ComponentFormattingOption_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ComponentFormattingOptions"),
+        qtscript_create_QUrl_ComponentFormattingOptions_class(engine));
     return ctor;
 }

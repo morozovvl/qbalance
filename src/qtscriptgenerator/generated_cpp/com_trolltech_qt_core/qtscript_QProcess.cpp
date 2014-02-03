@@ -23,26 +23,32 @@ static const char * const qtscript_QProcess_function_names[] = {
     , "startDetached"
     , "systemEnvironment"
     // prototype
+    , "arguments"
     , "closeReadChannel"
     , "closeWriteChannel"
     , "environment"
-    , "error"
     , "exitCode"
     , "exitStatus"
+    , "getError"
     , "processChannelMode"
     , "processEnvironment"
+    , "program"
     , "readAllStandardError"
     , "readAllStandardOutput"
     , "readChannel"
+    , "setArguments"
     , "setEnvironment"
     , "setProcessChannelMode"
     , "setProcessEnvironment"
+    , "setProcessState"
+    , "setProgram"
     , "setReadChannel"
     , "setStandardErrorFile"
     , "setStandardInputFile"
     , "setStandardOutputFile"
     , "setStandardOutputProcess"
     , "setWorkingDirectory"
+    , "setupChildProcess"
     , "start"
     , "state"
     , "waitForFinished"
@@ -58,6 +64,7 @@ static const char * const qtscript_QProcess_function_signatures[] = {
     , "String program\nString program, List arguments\nString program, List arguments, String workingDirectory, qint64 pid"
     , ""
     // prototype
+    , ""
     , "ProcessChannel channel"
     , ""
     , ""
@@ -69,16 +76,21 @@ static const char * const qtscript_QProcess_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
+    , "List arguments"
     , "List environment"
     , "ProcessChannelMode mode"
     , "QProcessEnvironment environment"
+    , "ProcessState state"
+    , "String program"
     , "ProcessChannel channel"
     , "String fileName, OpenMode mode"
     , "String fileName"
     , "String fileName, OpenMode mode"
     , "QProcess destination"
     , "String dir"
-    , "String program, OpenMode mode\nString program, List arguments, OpenMode mode"
+    , ""
+    , "OpenMode mode\nString command, OpenMode mode\nString program, List arguments, OpenMode mode"
     , ""
     , "int msecs"
     , "int msecs"
@@ -93,6 +105,7 @@ static const int qtscript_QProcess_function_lengths[] = {
     , 4
     , 0
     // prototype
+    , 0
     , 1
     , 0
     , 0
@@ -104,6 +117,10 @@ static const int qtscript_QProcess_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 0
+    , 1
+    , 1
+    , 1
     , 1
     , 1
     , 1
@@ -113,12 +130,24 @@ static const int qtscript_QProcess_function_lengths[] = {
     , 2
     , 1
     , 1
+    , 0
     , 3
     , 0
     , 1
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QProcess : public QProcess
+{
+    friend QScriptValue qtscript_QProcess_setProcessState(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QProcess_setupChildProcess(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QProcess_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QProcess_throw_ambiguity_error_helper(
@@ -134,11 +163,11 @@ static QScriptValue qtscript_QProcess_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QProcess*)
 Q_DECLARE_METATYPE(QtScriptShell_QProcess*)
-Q_DECLARE_METATYPE(QProcess::ProcessError)
-Q_DECLARE_METATYPE(QProcess::ProcessChannelMode)
+Q_DECLARE_METATYPE(QProcess::ExitStatus)
 Q_DECLARE_METATYPE(QProcess::ProcessChannel)
 Q_DECLARE_METATYPE(QProcess::ProcessState)
-Q_DECLARE_METATYPE(QProcess::ExitStatus)
+Q_DECLARE_METATYPE(QProcess::ProcessChannelMode)
+Q_DECLARE_METATYPE(QProcess::ProcessError)
 Q_DECLARE_METATYPE(QProcessEnvironment)
 Q_DECLARE_METATYPE(QFlags<QIODevice::OpenModeFlag>)
 Q_DECLARE_METATYPE(qint64*)
@@ -159,144 +188,67 @@ static QScriptValue qtscript_create_enum_class_helper(
 }
 
 //
-// QProcess::ProcessError
+// QProcess::ExitStatus
 //
 
-static const QProcess::ProcessError qtscript_QProcess_ProcessError_values[] = {
-    QProcess::FailedToStart
-    , QProcess::Crashed
-    , QProcess::Timedout
-    , QProcess::ReadError
-    , QProcess::WriteError
-    , QProcess::UnknownError
+static const QProcess::ExitStatus qtscript_QProcess_ExitStatus_values[] = {
+    QProcess::NormalExit
+    , QProcess::CrashExit
 };
 
-static const char * const qtscript_QProcess_ProcessError_keys[] = {
-    "FailedToStart"
-    , "Crashed"
-    , "Timedout"
-    , "ReadError"
-    , "WriteError"
-    , "UnknownError"
+static const char * const qtscript_QProcess_ExitStatus_keys[] = {
+    "NormalExit"
+    , "CrashExit"
 };
 
-static QString qtscript_QProcess_ProcessError_toStringHelper(QProcess::ProcessError value)
+static QString qtscript_QProcess_ExitStatus_toStringHelper(QProcess::ExitStatus value)
 {
-    if ((value >= QProcess::FailedToStart) && (value <= QProcess::UnknownError))
-        return qtscript_QProcess_ProcessError_keys[static_cast<int>(value)-static_cast<int>(QProcess::FailedToStart)];
+    if ((value >= QProcess::NormalExit) && (value <= QProcess::CrashExit))
+        return qtscript_QProcess_ExitStatus_keys[static_cast<int>(value)-static_cast<int>(QProcess::NormalExit)];
     return QString();
 }
 
-static QScriptValue qtscript_QProcess_ProcessError_toScriptValue(QScriptEngine *engine, const QProcess::ProcessError &value)
+static QScriptValue qtscript_QProcess_ExitStatus_toScriptValue(QScriptEngine *engine, const QProcess::ExitStatus &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QProcess"));
-    return clazz.property(qtscript_QProcess_ProcessError_toStringHelper(value));
+    return clazz.property(qtscript_QProcess_ExitStatus_toStringHelper(value));
 }
 
-static void qtscript_QProcess_ProcessError_fromScriptValue(const QScriptValue &value, QProcess::ProcessError &out)
+static void qtscript_QProcess_ExitStatus_fromScriptValue(const QScriptValue &value, QProcess::ExitStatus &out)
 {
-    out = qvariant_cast<QProcess::ProcessError>(value.toVariant());
+    out = qvariant_cast<QProcess::ExitStatus>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QProcess_ProcessError(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QProcess_ExitStatus(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QProcess::FailedToStart) && (arg <= QProcess::UnknownError))
-        return qScriptValueFromValue(engine,  static_cast<QProcess::ProcessError>(arg));
-    return context->throwError(QString::fromLatin1("ProcessError(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QProcess::NormalExit) && (arg <= QProcess::CrashExit))
+        return qScriptValueFromValue(engine,  static_cast<QProcess::ExitStatus>(arg));
+    return context->throwError(QString::fromLatin1("ExitStatus(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QProcess_ProcessError_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QProcess_ExitStatus_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QProcess::ProcessError value = qscriptvalue_cast<QProcess::ProcessError>(context->thisObject());
+    QProcess::ExitStatus value = qscriptvalue_cast<QProcess::ExitStatus>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QProcess_ProcessError_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QProcess_ExitStatus_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QProcess::ProcessError value = qscriptvalue_cast<QProcess::ProcessError>(context->thisObject());
-    return QScriptValue(engine, qtscript_QProcess_ProcessError_toStringHelper(value));
+    QProcess::ExitStatus value = qscriptvalue_cast<QProcess::ExitStatus>(context->thisObject());
+    return QScriptValue(engine, qtscript_QProcess_ExitStatus_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QProcess_ProcessError_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QProcess_ExitStatus_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QProcess_ProcessError,
-        qtscript_QProcess_ProcessError_valueOf, qtscript_QProcess_ProcessError_toString);
-    qScriptRegisterMetaType<QProcess::ProcessError>(engine, qtscript_QProcess_ProcessError_toScriptValue,
-        qtscript_QProcess_ProcessError_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 6; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QProcess_ProcessError_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QProcess_ProcessError_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QProcess::ProcessChannelMode
-//
-
-static const QProcess::ProcessChannelMode qtscript_QProcess_ProcessChannelMode_values[] = {
-    QProcess::SeparateChannels
-    , QProcess::MergedChannels
-    , QProcess::ForwardedChannels
-};
-
-static const char * const qtscript_QProcess_ProcessChannelMode_keys[] = {
-    "SeparateChannels"
-    , "MergedChannels"
-    , "ForwardedChannels"
-};
-
-static QString qtscript_QProcess_ProcessChannelMode_toStringHelper(QProcess::ProcessChannelMode value)
-{
-    if ((value >= QProcess::SeparateChannels) && (value <= QProcess::ForwardedChannels))
-        return qtscript_QProcess_ProcessChannelMode_keys[static_cast<int>(value)-static_cast<int>(QProcess::SeparateChannels)];
-    return QString();
-}
-
-static QScriptValue qtscript_QProcess_ProcessChannelMode_toScriptValue(QScriptEngine *engine, const QProcess::ProcessChannelMode &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QProcess"));
-    return clazz.property(qtscript_QProcess_ProcessChannelMode_toStringHelper(value));
-}
-
-static void qtscript_QProcess_ProcessChannelMode_fromScriptValue(const QScriptValue &value, QProcess::ProcessChannelMode &out)
-{
-    out = qvariant_cast<QProcess::ProcessChannelMode>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QProcess_ProcessChannelMode(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QProcess::SeparateChannels) && (arg <= QProcess::ForwardedChannels))
-        return qScriptValueFromValue(engine,  static_cast<QProcess::ProcessChannelMode>(arg));
-    return context->throwError(QString::fromLatin1("ProcessChannelMode(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QProcess_ProcessChannelMode_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QProcess::ProcessChannelMode value = qscriptvalue_cast<QProcess::ProcessChannelMode>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QProcess_ProcessChannelMode_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QProcess::ProcessChannelMode value = qscriptvalue_cast<QProcess::ProcessChannelMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QProcess_ProcessChannelMode_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QProcess_ProcessChannelMode_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QProcess_ProcessChannelMode,
-        qtscript_QProcess_ProcessChannelMode_valueOf, qtscript_QProcess_ProcessChannelMode_toString);
-    qScriptRegisterMetaType<QProcess::ProcessChannelMode>(engine, qtscript_QProcess_ProcessChannelMode_toScriptValue,
-        qtscript_QProcess_ProcessChannelMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QProcess_ProcessChannelMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QProcess_ProcessChannelMode_values[i])),
+        engine, qtscript_construct_QProcess_ExitStatus,
+        qtscript_QProcess_ExitStatus_valueOf, qtscript_QProcess_ExitStatus_toString);
+    qScriptRegisterMetaType<QProcess::ExitStatus>(engine, qtscript_QProcess_ExitStatus_toScriptValue,
+        qtscript_QProcess_ExitStatus_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QProcess_ExitStatus_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QProcess_ExitStatus_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -439,67 +391,144 @@ static QScriptValue qtscript_create_QProcess_ProcessState_class(QScriptEngine *e
 }
 
 //
-// QProcess::ExitStatus
+// QProcess::ProcessChannelMode
 //
 
-static const QProcess::ExitStatus qtscript_QProcess_ExitStatus_values[] = {
-    QProcess::NormalExit
-    , QProcess::CrashExit
+static const QProcess::ProcessChannelMode qtscript_QProcess_ProcessChannelMode_values[] = {
+    QProcess::SeparateChannels
+    , QProcess::MergedChannels
+    , QProcess::ForwardedChannels
 };
 
-static const char * const qtscript_QProcess_ExitStatus_keys[] = {
-    "NormalExit"
-    , "CrashExit"
+static const char * const qtscript_QProcess_ProcessChannelMode_keys[] = {
+    "SeparateChannels"
+    , "MergedChannels"
+    , "ForwardedChannels"
 };
 
-static QString qtscript_QProcess_ExitStatus_toStringHelper(QProcess::ExitStatus value)
+static QString qtscript_QProcess_ProcessChannelMode_toStringHelper(QProcess::ProcessChannelMode value)
 {
-    if ((value >= QProcess::NormalExit) && (value <= QProcess::CrashExit))
-        return qtscript_QProcess_ExitStatus_keys[static_cast<int>(value)-static_cast<int>(QProcess::NormalExit)];
+    if ((value >= QProcess::SeparateChannels) && (value <= QProcess::ForwardedChannels))
+        return qtscript_QProcess_ProcessChannelMode_keys[static_cast<int>(value)-static_cast<int>(QProcess::SeparateChannels)];
     return QString();
 }
 
-static QScriptValue qtscript_QProcess_ExitStatus_toScriptValue(QScriptEngine *engine, const QProcess::ExitStatus &value)
+static QScriptValue qtscript_QProcess_ProcessChannelMode_toScriptValue(QScriptEngine *engine, const QProcess::ProcessChannelMode &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QProcess"));
-    return clazz.property(qtscript_QProcess_ExitStatus_toStringHelper(value));
+    return clazz.property(qtscript_QProcess_ProcessChannelMode_toStringHelper(value));
 }
 
-static void qtscript_QProcess_ExitStatus_fromScriptValue(const QScriptValue &value, QProcess::ExitStatus &out)
+static void qtscript_QProcess_ProcessChannelMode_fromScriptValue(const QScriptValue &value, QProcess::ProcessChannelMode &out)
 {
-    out = qvariant_cast<QProcess::ExitStatus>(value.toVariant());
+    out = qvariant_cast<QProcess::ProcessChannelMode>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QProcess_ExitStatus(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QProcess_ProcessChannelMode(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QProcess::NormalExit) && (arg <= QProcess::CrashExit))
-        return qScriptValueFromValue(engine,  static_cast<QProcess::ExitStatus>(arg));
-    return context->throwError(QString::fromLatin1("ExitStatus(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QProcess::SeparateChannels) && (arg <= QProcess::ForwardedChannels))
+        return qScriptValueFromValue(engine,  static_cast<QProcess::ProcessChannelMode>(arg));
+    return context->throwError(QString::fromLatin1("ProcessChannelMode(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QProcess_ExitStatus_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QProcess_ProcessChannelMode_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QProcess::ExitStatus value = qscriptvalue_cast<QProcess::ExitStatus>(context->thisObject());
+    QProcess::ProcessChannelMode value = qscriptvalue_cast<QProcess::ProcessChannelMode>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QProcess_ExitStatus_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QProcess_ProcessChannelMode_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QProcess::ExitStatus value = qscriptvalue_cast<QProcess::ExitStatus>(context->thisObject());
-    return QScriptValue(engine, qtscript_QProcess_ExitStatus_toStringHelper(value));
+    QProcess::ProcessChannelMode value = qscriptvalue_cast<QProcess::ProcessChannelMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QProcess_ProcessChannelMode_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QProcess_ExitStatus_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QProcess_ProcessChannelMode_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QProcess_ExitStatus,
-        qtscript_QProcess_ExitStatus_valueOf, qtscript_QProcess_ExitStatus_toString);
-    qScriptRegisterMetaType<QProcess::ExitStatus>(engine, qtscript_QProcess_ExitStatus_toScriptValue,
-        qtscript_QProcess_ExitStatus_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QProcess_ExitStatus_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QProcess_ExitStatus_values[i])),
+        engine, qtscript_construct_QProcess_ProcessChannelMode,
+        qtscript_QProcess_ProcessChannelMode_valueOf, qtscript_QProcess_ProcessChannelMode_toString);
+    qScriptRegisterMetaType<QProcess::ProcessChannelMode>(engine, qtscript_QProcess_ProcessChannelMode_toScriptValue,
+        qtscript_QProcess_ProcessChannelMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QProcess_ProcessChannelMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QProcess_ProcessChannelMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QProcess::ProcessError
+//
+
+static const QProcess::ProcessError qtscript_QProcess_ProcessError_values[] = {
+    QProcess::FailedToStart
+    , QProcess::Crashed
+    , QProcess::Timedout
+    , QProcess::ReadError
+    , QProcess::WriteError
+    , QProcess::UnknownError
+};
+
+static const char * const qtscript_QProcess_ProcessError_keys[] = {
+    "FailedToStart"
+    , "Crashed"
+    , "Timedout"
+    , "ReadError"
+    , "WriteError"
+    , "UnknownError"
+};
+
+static QString qtscript_QProcess_ProcessError_toStringHelper(QProcess::ProcessError value)
+{
+    if ((value >= QProcess::FailedToStart) && (value <= QProcess::UnknownError))
+        return qtscript_QProcess_ProcessError_keys[static_cast<int>(value)-static_cast<int>(QProcess::FailedToStart)];
+    return QString();
+}
+
+static QScriptValue qtscript_QProcess_ProcessError_toScriptValue(QScriptEngine *engine, const QProcess::ProcessError &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QProcess"));
+    return clazz.property(qtscript_QProcess_ProcessError_toStringHelper(value));
+}
+
+static void qtscript_QProcess_ProcessError_fromScriptValue(const QScriptValue &value, QProcess::ProcessError &out)
+{
+    out = qvariant_cast<QProcess::ProcessError>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QProcess_ProcessError(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QProcess::FailedToStart) && (arg <= QProcess::UnknownError))
+        return qScriptValueFromValue(engine,  static_cast<QProcess::ProcessError>(arg));
+    return context->throwError(QString::fromLatin1("ProcessError(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QProcess_ProcessError_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QProcess::ProcessError value = qscriptvalue_cast<QProcess::ProcessError>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QProcess_ProcessError_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QProcess::ProcessError value = qscriptvalue_cast<QProcess::ProcessError>(context->thisObject());
+    return QScriptValue(engine, qtscript_QProcess_ProcessError_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QProcess_ProcessError_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QProcess_ProcessError,
+        qtscript_QProcess_ProcessError_valueOf, qtscript_QProcess_ProcessError_toString);
+    qScriptRegisterMetaType<QProcess::ProcessError>(engine, qtscript_QProcess_ProcessError_toScriptValue,
+        qtscript_QProcess_ProcessError_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 6; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QProcess_ProcessError_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QProcess_ProcessError_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -519,11 +548,11 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 25;
+        _id = 0xBABE0000 + 31;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QProcess* _q_self = qscriptvalue_cast<QProcess*>(context->thisObject());
+    qtscript_QProcess* _q_self = reinterpret_cast<qtscript_QProcess*>(qscriptvalue_cast<QProcess*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QProcess.%0(): this object is not a QProcess")
@@ -532,6 +561,13 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 0) {
+        QStringList _q_result = _q_self->arguments();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 1) {
         QProcess::ProcessChannel _q_arg0 = qscriptvalue_cast<QProcess::ProcessChannel>(context->argument(0));
         _q_self->closeReadChannel(_q_arg0);
@@ -539,24 +575,17 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         _q_self->closeWriteChannel();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         QStringList _q_result = _q_self->environment();
         return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 3:
-    if (context->argumentCount() == 0) {
-        QProcess::ProcessError _q_result = _q_self->error();
-        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -576,40 +605,63 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
 
     case 6:
     if (context->argumentCount() == 0) {
-        QProcess::ProcessChannelMode _q_result = _q_self->processChannelMode();
+        QProcess::ProcessError _q_result = _q_self->error();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 7:
     if (context->argumentCount() == 0) {
-        QProcessEnvironment _q_result = _q_self->processEnvironment();
+        QProcess::ProcessChannelMode _q_result = _q_self->processChannelMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 8:
     if (context->argumentCount() == 0) {
-        QByteArray _q_result = _q_self->readAllStandardError();
+        QProcessEnvironment _q_result = _q_self->processEnvironment();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 9:
     if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->program();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
+    if (context->argumentCount() == 0) {
+        QByteArray _q_result = _q_self->readAllStandardError();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 11:
+    if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->readAllStandardOutput();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 0) {
         QProcess::ProcessChannel _q_result = _q_self->readChannel();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 13:
+    if (context->argumentCount() == 1) {
+        QStringList _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        _q_self->setArguments(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 14:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -618,7 +670,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 12:
+    case 15:
     if (context->argumentCount() == 1) {
         QProcess::ProcessChannelMode _q_arg0 = qscriptvalue_cast<QProcess::ProcessChannelMode>(context->argument(0));
         _q_self->setProcessChannelMode(_q_arg0);
@@ -626,7 +678,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 13:
+    case 16:
     if (context->argumentCount() == 1) {
         QProcessEnvironment _q_arg0 = qscriptvalue_cast<QProcessEnvironment>(context->argument(0));
         _q_self->setProcessEnvironment(_q_arg0);
@@ -634,7 +686,23 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 14:
+    case 17:
+    if (context->argumentCount() == 1) {
+        QProcess::ProcessState _q_arg0 = qscriptvalue_cast<QProcess::ProcessState>(context->argument(0));
+        _q_self->setProcessState(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setProgram(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 19:
     if (context->argumentCount() == 1) {
         QProcess::ProcessChannel _q_arg0 = qscriptvalue_cast<QProcess::ProcessChannel>(context->argument(0));
         _q_self->setReadChannel(_q_arg0);
@@ -642,7 +710,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 15:
+    case 20:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setStandardErrorFile(_q_arg0);
@@ -656,7 +724,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 16:
+    case 21:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setStandardInputFile(_q_arg0);
@@ -664,7 +732,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 17:
+    case 22:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setStandardOutputFile(_q_arg0);
@@ -678,7 +746,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 18:
+    case 23:
     if (context->argumentCount() == 1) {
         QProcess* _q_arg0 = qscriptvalue_cast<QProcess*>(context->argument(0));
         _q_self->setStandardOutputProcess(_q_arg0);
@@ -686,7 +754,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 19:
+    case 24:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setWorkingDirectory(_q_arg0);
@@ -694,11 +762,28 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 20:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->start(_q_arg0);
+    case 25:
+    if (context->argumentCount() == 0) {
+        _q_self->setupChildProcess();
         return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 26:
+    if (context->argumentCount() == 0) {
+        _q_self->start();
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<QFlags<QIODevice::OpenModeFlag> >() == context->argument(0).toVariant().userType())) {
+            QFlags<QIODevice::OpenModeFlag> _q_arg0 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(0));
+            _q_self->start(_q_arg0);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            _q_self->start(_q_arg0);
+            return context->engine()->undefinedValue();
+        }
     }
     if (context->argumentCount() == 2) {
         if (context->argument(0).isString()
@@ -726,14 +811,14 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 21:
+    case 27:
     if (context->argumentCount() == 0) {
         QProcess::ProcessState _q_result = _q_self->state();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 28:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->waitForFinished();
         return QScriptValue(context->engine(), _q_result);
@@ -745,7 +830,7 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 23:
+    case 29:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->waitForStarted();
         return QScriptValue(context->engine(), _q_result);
@@ -757,14 +842,14 @@ static QScriptValue qtscript_QProcess_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 24:
+    case 30:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->workingDirectory();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 25: {
+    case 31: {
     QString result = QString::fromLatin1("QProcess");
     return QScriptValue(context->engine(), result);
     }
@@ -878,7 +963,7 @@ QScriptValue qtscript_create_QProcess_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QProcess*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QProcess*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QIODevice*>()));
-    for (int i = 0; i < 26; ++i) {
+    for (int i = 0; i < 32; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QProcess_prototype_call, qtscript_QProcess_function_lengths[i+4]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QProcess_function_names[i+4]),
@@ -898,15 +983,15 @@ QScriptValue qtscript_create_QProcess_class(QScriptEngine *engine)
             fun, QScriptValue::SkipInEnumeration);
     }
 
-    ctor.setProperty(QString::fromLatin1("ProcessError"),
-        qtscript_create_QProcess_ProcessError_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("ProcessChannelMode"),
-        qtscript_create_QProcess_ProcessChannelMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ExitStatus"),
+        qtscript_create_QProcess_ExitStatus_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ProcessChannel"),
         qtscript_create_QProcess_ProcessChannel_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ProcessState"),
         qtscript_create_QProcess_ProcessState_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("ExitStatus"),
-        qtscript_create_QProcess_ExitStatus_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ProcessChannelMode"),
+        qtscript_create_QProcess_ProcessChannelMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ProcessError"),
+        qtscript_create_QProcess_ProcessError_class(engine, ctor));
     return ctor;
 }

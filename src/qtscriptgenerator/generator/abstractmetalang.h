@@ -770,6 +770,7 @@ public:
     bool hasVirtualSlots() const { return m_has_virtual_slots; }
     bool hasVirtualFunctions() const { return !isFinal() && m_has_virtuals; }
     bool hasProtectedFunctions() const;
+    bool hasOrHadProtectedFunctions() const;
 
     QList<TypeEntry *> templateArguments() const { return m_template_args; }
     void setTemplateArguments(const QList<TypeEntry *> &args) { m_template_args = args; }

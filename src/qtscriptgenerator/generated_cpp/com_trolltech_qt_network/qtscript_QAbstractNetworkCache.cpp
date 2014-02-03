@@ -59,6 +59,15 @@ static const int qtscript_QAbstractNetworkCache_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QAbstractNetworkCache_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractNetworkCache : public QAbstractNetworkCache
+{
+
+    friend QScriptValue qtscript_QAbstractNetworkCache_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QAbstractNetworkCache_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -93,7 +102,7 @@ static QScriptValue qtscript_QAbstractNetworkCache_prototype_call(QScriptContext
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractNetworkCache* _q_self = qscriptvalue_cast<QAbstractNetworkCache*>(context->thisObject());
+    qtscript_QAbstractNetworkCache* _q_self = reinterpret_cast<qtscript_QAbstractNetworkCache*>(qscriptvalue_cast<QAbstractNetworkCache*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractNetworkCache.%0(): this object is not a QAbstractNetworkCache")

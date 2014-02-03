@@ -32,11 +32,10 @@ class Documents : public Dictionary {
 public:
     Documents(int, QObject *parent = 0);
     ~Documents();
-    virtual void show();
-    virtual bool add();
-    virtual bool remove();
-    virtual void view();
-    virtual void query(QString filter = "");
+    Q_INVOKABLE virtual bool add();
+    Q_INVOKABLE virtual bool remove();
+    Q_INVOKABLE virtual void view();
+    Q_INVOKABLE virtual void query(QString filter = "");
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine() { scriptEngine = 0; ; scriptEngineEnabled = false; }
@@ -44,7 +43,7 @@ public:
     Q_INVOKABLE virtual void setValue(QString, QVariant);
     Q_INVOKABLE virtual QVariant getValue(QString, int = -1);
     QString getAttrPrefix() { return prefix; }
-    virtual void            setOrderClause();
+    Q_INVOKABLE virtual void            setOrderClause();
     Q_INVOKABLE virtual void  setForm(QString = "");
     Q_INVOKABLE Document* getDocument() { return currentDocument; }
 

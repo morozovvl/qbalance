@@ -44,9 +44,9 @@ static QScriptValue qtscript_QStyleHintReturn_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QStyleHintReturn*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleHintReturn*)
-Q_DECLARE_METATYPE(QStyleHintReturn::HintReturnType)
-Q_DECLARE_METATYPE(QStyleHintReturn::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleHintReturn::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleHintReturn::StyleOptionVersion)
+Q_DECLARE_METATYPE(QStyleHintReturn::HintReturnType)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -63,69 +63,65 @@ static QScriptValue qtscript_create_enum_class_helper(
 }
 
 //
-// QStyleHintReturn::HintReturnType
+// QStyleHintReturn::StyleOptionType
 //
 
-static const QStyleHintReturn::HintReturnType qtscript_QStyleHintReturn_HintReturnType_values[] = {
-    QStyleHintReturn::SH_Default
-    , QStyleHintReturn::SH_Mask
-    , QStyleHintReturn::SH_Variant
+static const QStyleHintReturn::StyleOptionType qtscript_QStyleHintReturn_StyleOptionType_values[] = {
+    QStyleHintReturn::Type
 };
 
-static const char * const qtscript_QStyleHintReturn_HintReturnType_keys[] = {
-    "SH_Default"
-    , "SH_Mask"
-    , "SH_Variant"
+static const char * const qtscript_QStyleHintReturn_StyleOptionType_keys[] = {
+    "Type"
 };
 
-static QString qtscript_QStyleHintReturn_HintReturnType_toStringHelper(QStyleHintReturn::HintReturnType value)
+static QString qtscript_QStyleHintReturn_StyleOptionType_toStringHelper(QStyleHintReturn::StyleOptionType value)
 {
-    if ((value >= QStyleHintReturn::SH_Default) && (value <= QStyleHintReturn::SH_Variant))
-        return qtscript_QStyleHintReturn_HintReturnType_keys[static_cast<int>(value)-static_cast<int>(QStyleHintReturn::SH_Default)];
+    if ((value >= QStyleHintReturn::Type) && (value <= QStyleHintReturn::Type))
+        return qtscript_QStyleHintReturn_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleHintReturn::Type)];
     return QString();
 }
 
-static QScriptValue qtscript_QStyleHintReturn_HintReturnType_toScriptValue(QScriptEngine *engine, const QStyleHintReturn::HintReturnType &value)
+static QScriptValue qtscript_QStyleHintReturn_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleHintReturn::StyleOptionType &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleHintReturn"));
-    return clazz.property(qtscript_QStyleHintReturn_HintReturnType_toStringHelper(value));
+    return clazz.property(qtscript_QStyleHintReturn_StyleOptionType_toStringHelper(value));
 }
 
-static void qtscript_QStyleHintReturn_HintReturnType_fromScriptValue(const QScriptValue &value, QStyleHintReturn::HintReturnType &out)
+static void qtscript_QStyleHintReturn_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleHintReturn::StyleOptionType &out)
 {
-    out = qvariant_cast<QStyleHintReturn::HintReturnType>(value.toVariant());
+    out = qvariant_cast<QStyleHintReturn::StyleOptionType>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QStyleHintReturn_HintReturnType(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QStyleHintReturn_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleHintReturn::SH_Default) && (arg <= QStyleHintReturn::SH_Variant))
-        return qScriptValueFromValue(engine,  static_cast<QStyleHintReturn::HintReturnType>(arg));
-    return context->throwError(QString::fromLatin1("HintReturnType(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QStyleHintReturn::Type) && (arg <= QStyleHintReturn::Type))
+        return qScriptValueFromValue(engine,  static_cast<QStyleHintReturn::StyleOptionType>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QStyleHintReturn_HintReturnType_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyleHintReturn_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyleHintReturn::HintReturnType value = qscriptvalue_cast<QStyleHintReturn::HintReturnType>(context->thisObject());
+    QStyleHintReturn::StyleOptionType value = qscriptvalue_cast<QStyleHintReturn::StyleOptionType>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QStyleHintReturn_HintReturnType_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyleHintReturn_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyleHintReturn::HintReturnType value = qscriptvalue_cast<QStyleHintReturn::HintReturnType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleHintReturn_HintReturnType_toStringHelper(value));
+    QStyleHintReturn::StyleOptionType value = qscriptvalue_cast<QStyleHintReturn::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleHintReturn_StyleOptionType_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QStyleHintReturn_HintReturnType_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QStyleHintReturn_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleHintReturn_HintReturnType,
-        qtscript_QStyleHintReturn_HintReturnType_valueOf, qtscript_QStyleHintReturn_HintReturnType_toString);
-    qScriptRegisterMetaType<QStyleHintReturn::HintReturnType>(engine, qtscript_QStyleHintReturn_HintReturnType_toScriptValue,
-        qtscript_QStyleHintReturn_HintReturnType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturn_HintReturnType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturn_HintReturnType_values[i])),
+        engine, qtscript_construct_QStyleHintReturn_StyleOptionType,
+        qtscript_QStyleHintReturn_StyleOptionType_valueOf, qtscript_QStyleHintReturn_StyleOptionType_toString);
+    qScriptRegisterMetaType<QStyleHintReturn::StyleOptionType>(engine, qtscript_QStyleHintReturn_StyleOptionType_toScriptValue,
+        qtscript_QStyleHintReturn_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturn_StyleOptionType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturn_StyleOptionType_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -197,65 +193,69 @@ static QScriptValue qtscript_create_QStyleHintReturn_StyleOptionVersion_class(QS
 }
 
 //
-// QStyleHintReturn::StyleOptionType
+// QStyleHintReturn::HintReturnType
 //
 
-static const QStyleHintReturn::StyleOptionType qtscript_QStyleHintReturn_StyleOptionType_values[] = {
-    QStyleHintReturn::Type
+static const QStyleHintReturn::HintReturnType qtscript_QStyleHintReturn_HintReturnType_values[] = {
+    QStyleHintReturn::SH_Default
+    , QStyleHintReturn::SH_Mask
+    , QStyleHintReturn::SH_Variant
 };
 
-static const char * const qtscript_QStyleHintReturn_StyleOptionType_keys[] = {
-    "Type"
+static const char * const qtscript_QStyleHintReturn_HintReturnType_keys[] = {
+    "SH_Default"
+    , "SH_Mask"
+    , "SH_Variant"
 };
 
-static QString qtscript_QStyleHintReturn_StyleOptionType_toStringHelper(QStyleHintReturn::StyleOptionType value)
+static QString qtscript_QStyleHintReturn_HintReturnType_toStringHelper(QStyleHintReturn::HintReturnType value)
 {
-    if ((value >= QStyleHintReturn::Type) && (value <= QStyleHintReturn::Type))
-        return qtscript_QStyleHintReturn_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleHintReturn::Type)];
+    if ((value >= QStyleHintReturn::SH_Default) && (value <= QStyleHintReturn::SH_Variant))
+        return qtscript_QStyleHintReturn_HintReturnType_keys[static_cast<int>(value)-static_cast<int>(QStyleHintReturn::SH_Default)];
     return QString();
 }
 
-static QScriptValue qtscript_QStyleHintReturn_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleHintReturn::StyleOptionType &value)
+static QScriptValue qtscript_QStyleHintReturn_HintReturnType_toScriptValue(QScriptEngine *engine, const QStyleHintReturn::HintReturnType &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleHintReturn"));
-    return clazz.property(qtscript_QStyleHintReturn_StyleOptionType_toStringHelper(value));
+    return clazz.property(qtscript_QStyleHintReturn_HintReturnType_toStringHelper(value));
 }
 
-static void qtscript_QStyleHintReturn_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleHintReturn::StyleOptionType &out)
+static void qtscript_QStyleHintReturn_HintReturnType_fromScriptValue(const QScriptValue &value, QStyleHintReturn::HintReturnType &out)
 {
-    out = qvariant_cast<QStyleHintReturn::StyleOptionType>(value.toVariant());
+    out = qvariant_cast<QStyleHintReturn::HintReturnType>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QStyleHintReturn_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QStyleHintReturn_HintReturnType(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleHintReturn::Type) && (arg <= QStyleHintReturn::Type))
-        return qScriptValueFromValue(engine,  static_cast<QStyleHintReturn::StyleOptionType>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QStyleHintReturn::SH_Default) && (arg <= QStyleHintReturn::SH_Variant))
+        return qScriptValueFromValue(engine,  static_cast<QStyleHintReturn::HintReturnType>(arg));
+    return context->throwError(QString::fromLatin1("HintReturnType(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QStyleHintReturn_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyleHintReturn_HintReturnType_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyleHintReturn::StyleOptionType value = qscriptvalue_cast<QStyleHintReturn::StyleOptionType>(context->thisObject());
+    QStyleHintReturn::HintReturnType value = qscriptvalue_cast<QStyleHintReturn::HintReturnType>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QStyleHintReturn_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyleHintReturn_HintReturnType_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyleHintReturn::StyleOptionType value = qscriptvalue_cast<QStyleHintReturn::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleHintReturn_StyleOptionType_toStringHelper(value));
+    QStyleHintReturn::HintReturnType value = qscriptvalue_cast<QStyleHintReturn::HintReturnType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleHintReturn_HintReturnType_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QStyleHintReturn_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QStyleHintReturn_HintReturnType_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleHintReturn_StyleOptionType,
-        qtscript_QStyleHintReturn_StyleOptionType_valueOf, qtscript_QStyleHintReturn_StyleOptionType_toString);
-    qScriptRegisterMetaType<QStyleHintReturn::StyleOptionType>(engine, qtscript_QStyleHintReturn_StyleOptionType_toScriptValue,
-        qtscript_QStyleHintReturn_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturn_StyleOptionType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturn_StyleOptionType_values[i])),
+        engine, qtscript_construct_QStyleHintReturn_HintReturnType,
+        qtscript_QStyleHintReturn_HintReturnType_valueOf, qtscript_QStyleHintReturn_HintReturnType_toString);
+    qScriptRegisterMetaType<QStyleHintReturn::HintReturnType>(engine, qtscript_QStyleHintReturn_HintReturnType_toScriptValue,
+        qtscript_QStyleHintReturn_HintReturnType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturn_HintReturnType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturn_HintReturnType_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -349,11 +349,11 @@ QScriptValue qtscript_create_QStyleHintReturn_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleHintReturn_static_call, proto, qtscript_QStyleHintReturn_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("HintReturnType"),
-        qtscript_create_QStyleHintReturn_HintReturnType_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleHintReturn_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleHintReturn_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleHintReturn_StyleOptionVersion_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("HintReturnType"),
+        qtscript_create_QStyleHintReturn_HintReturnType_class(engine, ctor));
     return ctor;
 }

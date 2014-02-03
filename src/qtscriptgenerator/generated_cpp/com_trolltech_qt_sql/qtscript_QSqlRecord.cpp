@@ -27,6 +27,7 @@ static const char * const qtscript_QSqlRecord_function_names[] = {
     , "isEmpty"
     , "isGenerated"
     , "isNull"
+    , "keyValues"
     , "equals"
     , "remove"
     , "replace"
@@ -53,6 +54,7 @@ static const char * const qtscript_QSqlRecord_function_signatures[] = {
     , ""
     , "String name\nint i"
     , "String name\nint i"
+    , "QSqlRecord keyFields"
     , "QSqlRecord other"
     , "int pos"
     , "int pos, QSqlField field"
@@ -77,6 +79,7 @@ static const int qtscript_QSqlRecord_function_lengths[] = {
     , 1
     , 2
     , 0
+    , 1
     , 1
     , 1
     , 1
@@ -118,7 +121,7 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 19;
+        _id = 0xBABE0000 + 20;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -244,12 +247,20 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
     case 12:
     if (context->argumentCount() == 1) {
         QSqlRecord _q_arg0 = qscriptvalue_cast<QSqlRecord>(context->argument(0));
+        QSqlRecord _q_result = _q_self->keyValues(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 13:
+    if (context->argumentCount() == 1) {
+        QSqlRecord _q_arg0 = qscriptvalue_cast<QSqlRecord>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->remove(_q_arg0);
@@ -257,7 +268,7 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QSqlField _q_arg1 = qscriptvalue_cast<QSqlField>(context->argument(1));
@@ -266,7 +277,7 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isString()
             && context->argument(1).isBoolean()) {
@@ -279,26 +290,26 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
             int _q_arg0 = context->argument(0).toInt32();
             bool _q_arg1 = context->argument(1).toBoolean();
             _q_self->setGenerated(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 16:
-    if (context->argumentCount() == 1) {
-        if (context->argument(0).isString()) {
-            QString _q_arg0 = context->argument(0).toString();
-            _q_self->setNull(_q_arg0);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            _q_self->setNull(_q_arg0);
             return context->engine()->undefinedValue();
         }
     }
     break;
 
     case 17:
+    if (context->argumentCount() == 1) {
+        if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            _q_self->setNull(_q_arg0);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            _q_self->setNull(_q_arg0);
+            return context->engine()->undefinedValue();
+        }
+    }
+    break;
+
+    case 18:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isString()
             && true) {
@@ -316,7 +327,7 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 1) {
         if (context->argument(0).isString()) {
             QString _q_arg0 = context->argument(0).toString();
@@ -330,7 +341,7 @@ static QScriptValue qtscript_QSqlRecord_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 19: {
+    case 20: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -379,7 +390,7 @@ QScriptValue qtscript_create_QSqlRecord_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSqlRecord*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSqlRecord*)0));
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 21; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSqlRecord_prototype_call, qtscript_QSqlRecord_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSqlRecord_function_names[i+1]),

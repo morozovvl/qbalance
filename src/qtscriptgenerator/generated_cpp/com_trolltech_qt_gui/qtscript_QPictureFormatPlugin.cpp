@@ -12,7 +12,6 @@
 #include <qlist.h>
 #include <qobject.h>
 #include <qpicture.h>
-#include <qstringlist.h>
 
 #include "qtscriptshell_QPictureFormatPlugin.h"
 
@@ -21,7 +20,6 @@ static const char * const qtscript_QPictureFormatPlugin_function_names[] = {
     // static
     // prototype
     , "installIOHandler"
-    , "keys"
     , "loadPicture"
     , "savePicture"
     , "toString"
@@ -32,7 +30,6 @@ static const char * const qtscript_QPictureFormatPlugin_function_signatures[] = 
     // static
     // prototype
     , "String format"
-    , ""
     , "String format, String filename, QPicture pic"
     , "String format, String filename, QPicture pic"
 ""
@@ -43,10 +40,18 @@ static const int qtscript_QPictureFormatPlugin_function_lengths[] = {
     // static
     // prototype
     , 1
-    , 0
     , 3
     , 3
     , 0
+};
+
+static QScriptValue qtscript_QPictureFormatPlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPictureFormatPlugin : public QPictureFormatPlugin
+{
+
+    friend QScriptValue qtscript_QPictureFormatPlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPictureFormatPlugin_throw_ambiguity_error_helper(
@@ -79,11 +84,11 @@ static QScriptValue qtscript_QPictureFormatPlugin_prototype_call(QScriptContext 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPictureFormatPlugin* _q_self = qscriptvalue_cast<QPictureFormatPlugin*>(context->thisObject());
+    qtscript_QPictureFormatPlugin* _q_self = reinterpret_cast<qtscript_QPictureFormatPlugin*>(qscriptvalue_cast<QPictureFormatPlugin*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPictureFormatPlugin.%0(): this object is not a QPictureFormatPlugin")
@@ -100,13 +105,6 @@ static QScriptValue qtscript_QPictureFormatPlugin_prototype_call(QScriptContext 
     break;
 
     case 1:
-    if (context->argumentCount() == 0) {
-        QStringList _q_result = _q_self->keys();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 2:
     if (context->argumentCount() == 3) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_arg1 = context->argument(1).toString();
@@ -116,7 +114,7 @@ static QScriptValue qtscript_QPictureFormatPlugin_prototype_call(QScriptContext 
     }
     break;
 
-    case 3:
+    case 2:
     if (context->argumentCount() == 3) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_arg1 = context->argument(1).toString();
@@ -126,7 +124,7 @@ static QScriptValue qtscript_QPictureFormatPlugin_prototype_call(QScriptContext 
     }
     break;
 
-    case 4: {
+    case 3: {
     QString result = QString::fromLatin1("QPictureFormatPlugin");
     return QScriptValue(context->engine(), result);
     }
@@ -186,7 +184,7 @@ QScriptValue qtscript_create_QPictureFormatPlugin_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPictureFormatPlugin*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPictureFormatPlugin*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPictureFormatPlugin_prototype_call, qtscript_QPictureFormatPlugin_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPictureFormatPlugin_function_names[i+1]),

@@ -6,13 +6,13 @@
 #include <qmetaobject.h>
 
 #include <qwidgetaction.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qactiongroup.h>
 #include <qbytearray.h>
 #include <qcoreevent.h>
 #include <qfont.h>
 #include <qgraphicswidget.h>
-#include <qicon.h>
 #include <qkeysequence.h>
 #include <qlist.h>
 #include <qmenu.h>
@@ -26,7 +26,10 @@ static const char * const qtscript_QWidgetAction_function_names[] = {
     "QWidgetAction"
     // static
     // prototype
+    , "createWidget"
+    , "createdWidgets"
     , "defaultWidget"
+    , "deleteWidget"
     , "releaseWidget"
     , "requestWidget"
     , "setDefaultWidget"
@@ -37,7 +40,10 @@ static const char * const qtscript_QWidgetAction_function_signatures[] = {
     "QObject parent"
     // static
     // prototype
+    , "QWidget parent"
     , ""
+    , ""
+    , "QWidget widget"
     , "QWidget widget"
     , "QWidget parent"
     , "QWidget w"
@@ -48,11 +54,26 @@ static const int qtscript_QWidgetAction_function_lengths[] = {
     1
     // static
     // prototype
+    , 1
+    , 0
     , 0
     , 1
     , 1
     , 1
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QWidgetAction_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QWidgetAction : public QWidgetAction
+{
+    friend QScriptValue qtscript_QWidgetAction_createWidget(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QWidgetAction_createdWidgets(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QWidgetAction_deleteWidget(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QWidgetAction_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QWidgetAction_throw_ambiguity_error_helper(
@@ -68,6 +89,8 @@ static QScriptValue qtscript_QWidgetAction_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QWidgetAction*)
 Q_DECLARE_METATYPE(QtScriptShell_QWidgetAction*)
+Q_DECLARE_METATYPE(QWidget*)
+Q_DECLARE_METATYPE(QList<QWidget*>)
 Q_DECLARE_METATYPE(QAction*)
 
 //
@@ -84,11 +107,11 @@ static QScriptValue qtscript_QWidgetAction_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 7;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QWidgetAction* _q_self = qscriptvalue_cast<QWidgetAction*>(context->thisObject());
+    qtscript_QWidgetAction* _q_self = reinterpret_cast<qtscript_QWidgetAction*>(qscriptvalue_cast<QWidgetAction*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QWidgetAction.%0(): this object is not a QWidgetAction")
@@ -97,24 +120,23 @@ static QScriptValue qtscript_QWidgetAction_prototype_call(QScriptContext *contex
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        QWidget* _q_result = _q_self->defaultWidget();
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QWidget* _q_result = _q_self->createWidget(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
-    if (context->argumentCount() == 1) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
-        _q_self->releaseWidget(_q_arg0);
-        return context->engine()->undefinedValue();
+    if (context->argumentCount() == 0) {
+        QList<QWidget*> _q_result = _q_self->createdWidgets();
+        return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
     case 2:
-    if (context->argumentCount() == 1) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
-        QWidget* _q_result = _q_self->requestWidget(_q_arg0);
+    if (context->argumentCount() == 0) {
+        QWidget* _q_result = _q_self->defaultWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -122,12 +144,36 @@ static QScriptValue qtscript_QWidgetAction_prototype_call(QScriptContext *contex
     case 3:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        _q_self->deleteWidget(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        _q_self->releaseWidget(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QWidget* _q_result = _q_self->requestWidget(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setDefaultWidget(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 4: {
+    case 7: {
     QString result = QString::fromLatin1("QWidgetAction");
     return QScriptValue(context->engine(), result);
     }
@@ -182,7 +228,7 @@ QScriptValue qtscript_create_QWidgetAction_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QWidgetAction*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QWidgetAction*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAction*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 8; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QWidgetAction_prototype_call, qtscript_QWidgetAction_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QWidgetAction_function_names[i+1]),

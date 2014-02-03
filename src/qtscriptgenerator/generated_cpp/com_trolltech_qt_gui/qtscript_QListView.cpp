@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qlistview.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -32,6 +31,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -40,7 +40,9 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qstyleoption.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QListView.h"
 
@@ -49,7 +51,12 @@ static const char * const qtscript_QListView_function_names[] = {
     // static
     // prototype
     , "clearPropertyFlags"
+    , "contentsSize"
     , "isRowHidden"
+    , "moveCursor"
+    , "rectForIndex"
+    , "resizeContents"
+    , "setPositionForIndex"
     , "setRowHidden"
     , "toString"
 };
@@ -59,7 +66,12 @@ static const char * const qtscript_QListView_function_signatures[] = {
     // static
     // prototype
     , ""
+    , ""
     , "int row"
+    , "CursorAction cursorAction, KeyboardModifiers modifiers"
+    , "QModelIndex index"
+    , "int width, int height"
+    , "QPoint position, QModelIndex index"
     , "int row, bool hide"
 ""
 };
@@ -69,9 +81,31 @@ static const int qtscript_QListView_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 0
     , 1
     , 2
+    , 1
+    , 2
+    , 2
+    , 2
     , 0
+};
+
+static QScriptValue qtscript_QListView_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QListView : public QListView
+{
+    friend QScriptValue qtscript_QListView_contentsSize(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListView_moveCursor(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListView_rectForIndex(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListView_resizeContents(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListView_setPositionForIndex(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QListView_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QListView_throw_ambiguity_error_helper(
@@ -92,11 +126,14 @@ static const QMetaObject *qtscript_QListView_metaObject()
 
 Q_DECLARE_METATYPE(QListView*)
 Q_DECLARE_METATYPE(QtScriptShell_QListView*)
-Q_DECLARE_METATYPE(QListView::ResizeMode)
 Q_DECLARE_METATYPE(QListView::LayoutMode)
+Q_DECLARE_METATYPE(QListView::Movement)
+Q_DECLARE_METATYPE(QListView::ResizeMode)
 Q_DECLARE_METATYPE(QListView::ViewMode)
 Q_DECLARE_METATYPE(QListView::Flow)
-Q_DECLARE_METATYPE(QListView::Movement)
+Q_DECLARE_METATYPE(QAbstractItemView::CursorAction)
+Q_DECLARE_METATYPE(QFlags<Qt::KeyboardModifier>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractItemView*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -111,79 +148,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QListView::ResizeMode
-//
-
-static const QListView::ResizeMode qtscript_QListView_ResizeMode_values[] = {
-    QListView::Fixed
-    , QListView::Adjust
-};
-
-static const char * const qtscript_QListView_ResizeMode_keys[] = {
-    "Fixed"
-    , "Adjust"
-};
-
-static QString qtscript_QListView_ResizeMode_toStringHelper(QListView::ResizeMode value)
-{
-    const QMetaObject *meta = qtscript_QListView_metaObject();
-    int idx = meta->indexOfEnumerator("ResizeMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QListView_ResizeMode_toScriptValue(QScriptEngine *engine, const QListView::ResizeMode &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QListView"));
-    return clazz.property(qtscript_QListView_ResizeMode_toStringHelper(value));
-}
-
-static void qtscript_QListView_ResizeMode_fromScriptValue(const QScriptValue &value, QListView::ResizeMode &out)
-{
-    out = qvariant_cast<QListView::ResizeMode>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QListView_ResizeMode(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QListView_metaObject();
-    int idx = meta->indexOfEnumerator("ResizeMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QListView::ResizeMode>(arg));
-    return context->throwError(QString::fromLatin1("ResizeMode(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QListView_ResizeMode_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QListView::ResizeMode value = qscriptvalue_cast<QListView::ResizeMode>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QListView_ResizeMode_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QListView::ResizeMode value = qscriptvalue_cast<QListView::ResizeMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QListView_ResizeMode_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QListView_ResizeMode_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QListView_ResizeMode,
-        qtscript_QListView_ResizeMode_valueOf, qtscript_QListView_ResizeMode_toString);
-    qScriptRegisterMetaType<QListView::ResizeMode>(engine, qtscript_QListView_ResizeMode_toScriptValue,
-        qtscript_QListView_ResizeMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QListView_ResizeMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QListView_ResizeMode_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -254,6 +218,154 @@ static QScriptValue qtscript_create_QListView_LayoutMode_class(QScriptEngine *en
     for (int i = 0; i < 2; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QListView_LayoutMode_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QListView_LayoutMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QListView::Movement
+//
+
+static const QListView::Movement qtscript_QListView_Movement_values[] = {
+    QListView::Static
+    , QListView::Free
+    , QListView::Snap
+};
+
+static const char * const qtscript_QListView_Movement_keys[] = {
+    "Static"
+    , "Free"
+    , "Snap"
+};
+
+static QString qtscript_QListView_Movement_toStringHelper(QListView::Movement value)
+{
+    const QMetaObject *meta = qtscript_QListView_metaObject();
+    int idx = meta->indexOfEnumerator("Movement");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QListView_Movement_toScriptValue(QScriptEngine *engine, const QListView::Movement &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QListView"));
+    return clazz.property(qtscript_QListView_Movement_toStringHelper(value));
+}
+
+static void qtscript_QListView_Movement_fromScriptValue(const QScriptValue &value, QListView::Movement &out)
+{
+    out = qvariant_cast<QListView::Movement>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QListView_Movement(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QListView_metaObject();
+    int idx = meta->indexOfEnumerator("Movement");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QListView::Movement>(arg));
+    return context->throwError(QString::fromLatin1("Movement(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QListView_Movement_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QListView::Movement value = qscriptvalue_cast<QListView::Movement>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QListView_Movement_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QListView::Movement value = qscriptvalue_cast<QListView::Movement>(context->thisObject());
+    return QScriptValue(engine, qtscript_QListView_Movement_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QListView_Movement_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QListView_Movement,
+        qtscript_QListView_Movement_valueOf, qtscript_QListView_Movement_toString);
+    qScriptRegisterMetaType<QListView::Movement>(engine, qtscript_QListView_Movement_toScriptValue,
+        qtscript_QListView_Movement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QListView_Movement_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QListView_Movement_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QListView::ResizeMode
+//
+
+static const QListView::ResizeMode qtscript_QListView_ResizeMode_values[] = {
+    QListView::Fixed
+    , QListView::Adjust
+};
+
+static const char * const qtscript_QListView_ResizeMode_keys[] = {
+    "Fixed"
+    , "Adjust"
+};
+
+static QString qtscript_QListView_ResizeMode_toStringHelper(QListView::ResizeMode value)
+{
+    const QMetaObject *meta = qtscript_QListView_metaObject();
+    int idx = meta->indexOfEnumerator("ResizeMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QListView_ResizeMode_toScriptValue(QScriptEngine *engine, const QListView::ResizeMode &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QListView"));
+    return clazz.property(qtscript_QListView_ResizeMode_toStringHelper(value));
+}
+
+static void qtscript_QListView_ResizeMode_fromScriptValue(const QScriptValue &value, QListView::ResizeMode &out)
+{
+    out = qvariant_cast<QListView::ResizeMode>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QListView_ResizeMode(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QListView_metaObject();
+    int idx = meta->indexOfEnumerator("ResizeMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QListView::ResizeMode>(arg));
+    return context->throwError(QString::fromLatin1("ResizeMode(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QListView_ResizeMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QListView::ResizeMode value = qscriptvalue_cast<QListView::ResizeMode>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QListView_ResizeMode_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QListView::ResizeMode value = qscriptvalue_cast<QListView::ResizeMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QListView_ResizeMode_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QListView_ResizeMode_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QListView_ResizeMode,
+        qtscript_QListView_ResizeMode_valueOf, qtscript_QListView_ResizeMode_toString);
+    qScriptRegisterMetaType<QListView::ResizeMode>(engine, qtscript_QListView_ResizeMode_toScriptValue,
+        qtscript_QListView_ResizeMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QListView_ResizeMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QListView_ResizeMode_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -406,81 +518,6 @@ static QScriptValue qtscript_create_QListView_Flow_class(QScriptEngine *engine, 
 }
 
 //
-// QListView::Movement
-//
-
-static const QListView::Movement qtscript_QListView_Movement_values[] = {
-    QListView::Static
-    , QListView::Free
-    , QListView::Snap
-};
-
-static const char * const qtscript_QListView_Movement_keys[] = {
-    "Static"
-    , "Free"
-    , "Snap"
-};
-
-static QString qtscript_QListView_Movement_toStringHelper(QListView::Movement value)
-{
-    const QMetaObject *meta = qtscript_QListView_metaObject();
-    int idx = meta->indexOfEnumerator("Movement");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QListView_Movement_toScriptValue(QScriptEngine *engine, const QListView::Movement &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QListView"));
-    return clazz.property(qtscript_QListView_Movement_toStringHelper(value));
-}
-
-static void qtscript_QListView_Movement_fromScriptValue(const QScriptValue &value, QListView::Movement &out)
-{
-    out = qvariant_cast<QListView::Movement>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QListView_Movement(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QListView_metaObject();
-    int idx = meta->indexOfEnumerator("Movement");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QListView::Movement>(arg));
-    return context->throwError(QString::fromLatin1("Movement(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QListView_Movement_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QListView::Movement value = qscriptvalue_cast<QListView::Movement>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QListView_Movement_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QListView::Movement value = qscriptvalue_cast<QListView::Movement>(context->thisObject());
-    return QScriptValue(engine, qtscript_QListView_Movement_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QListView_Movement_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QListView_Movement,
-        qtscript_QListView_Movement_valueOf, qtscript_QListView_Movement_toString);
-    qScriptRegisterMetaType<QListView::Movement>(engine, qtscript_QListView_Movement_toScriptValue,
-        qtscript_QListView_Movement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QListView_Movement_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QListView_Movement_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QListView
 //
 
@@ -494,11 +531,11 @@ static QScriptValue qtscript_QListView_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QListView* _q_self = qscriptvalue_cast<QListView*>(context->thisObject());
+    qtscript_QListView* _q_self = reinterpret_cast<qtscript_QListView*>(qscriptvalue_cast<QListView*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QListView.%0(): this object is not a QListView")
@@ -514,6 +551,13 @@ static QScriptValue qtscript_QListView_prototype_call(QScriptContext *context, Q
     break;
 
     case 1:
+    if (context->argumentCount() == 0) {
+        QSize _q_result = _q_self->contentsSize();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->isRowHidden(_q_arg0);
@@ -521,7 +565,42 @@ static QScriptValue qtscript_QListView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 2:
+    case 3:
+    if (context->argumentCount() == 2) {
+        QAbstractItemView::CursorAction _q_arg0 = qscriptvalue_cast<QAbstractItemView::CursorAction>(context->argument(0));
+        QFlags<Qt::KeyboardModifier> _q_arg1 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(1));
+        QModelIndex _q_result = _q_self->moveCursor(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        QRect _q_result = _q_self->rectForIndex(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->resizeContents(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 2) {
+        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+        QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
+        _q_self->setPositionForIndex(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -530,7 +609,7 @@ static QScriptValue qtscript_QListView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 3: {
+    case 8: {
     QString result = QString::fromLatin1("QListView");
     return QScriptValue(context->engine(), result);
     }
@@ -590,7 +669,7 @@ QScriptValue qtscript_create_QListView_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QListView*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QListView*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemView*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QListView_prototype_call, qtscript_QListView_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QListView_function_names[i+1]),
@@ -603,15 +682,15 @@ QScriptValue qtscript_create_QListView_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QListView_static_call, proto, qtscript_QListView_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("ResizeMode"),
-        qtscript_create_QListView_ResizeMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("LayoutMode"),
         qtscript_create_QListView_LayoutMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("Movement"),
+        qtscript_create_QListView_Movement_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ResizeMode"),
+        qtscript_create_QListView_ResizeMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ViewMode"),
         qtscript_create_QListView_ViewMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Flow"),
         qtscript_create_QListView_Flow_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("Movement"),
-        qtscript_create_QListView_Movement_class(engine, ctor));
     return ctor;
 }

@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionToolButton_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionToolButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionToolButton : public QStyleOptionToolButton
+{
+
+    friend QScriptValue qtscript_QStyleOptionToolButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionToolButton_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,10 +57,10 @@ Q_DECLARE_METATYPE(QStyleOptionToolButton)
 Q_DECLARE_METATYPE(QStyleOptionToolButton*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionToolButton)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionToolButton*)
-Q_DECLARE_METATYPE(QStyleOptionToolButton::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionToolButton::ToolButtonFeature)
 Q_DECLARE_METATYPE(QFlags<QStyleOptionToolButton::ToolButtonFeature>)
 Q_DECLARE_METATYPE(QStyleOptionToolButton::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionToolButton::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionComplex*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -83,71 +92,6 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
-}
-
-//
-// QStyleOptionToolButton::StyleOptionVersion
-//
-
-static const QStyleOptionToolButton::StyleOptionVersion qtscript_QStyleOptionToolButton_StyleOptionVersion_values[] = {
-    QStyleOptionToolButton::Version
-};
-
-static const char * const qtscript_QStyleOptionToolButton_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionToolButton_StyleOptionVersion_toStringHelper(QStyleOptionToolButton::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionToolButton::Version) && (value <= QStyleOptionToolButton::Version))
-        return qtscript_QStyleOptionToolButton_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionToolButton::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionToolButton_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionToolButton::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionToolButton"));
-    return clazz.property(qtscript_QStyleOptionToolButton_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionToolButton_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionToolButton::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionToolButton::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionToolButton_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionToolButton::Version) && (arg <= QStyleOptionToolButton::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionToolButton::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionToolButton_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionToolButton::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolButton::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionToolButton_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionToolButton::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolButton::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionToolButton_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionToolButton_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionToolButton_StyleOptionVersion,
-        qtscript_QStyleOptionToolButton_StyleOptionVersion_valueOf, qtscript_QStyleOptionToolButton_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionToolButton::StyleOptionVersion>(engine, qtscript_QStyleOptionToolButton_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionToolButton_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionToolButton_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionToolButton_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -369,6 +313,71 @@ static QScriptValue qtscript_create_QStyleOptionToolButton_StyleOptionType_class
 }
 
 //
+// QStyleOptionToolButton::StyleOptionVersion
+//
+
+static const QStyleOptionToolButton::StyleOptionVersion qtscript_QStyleOptionToolButton_StyleOptionVersion_values[] = {
+    QStyleOptionToolButton::Version
+};
+
+static const char * const qtscript_QStyleOptionToolButton_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionToolButton_StyleOptionVersion_toStringHelper(QStyleOptionToolButton::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionToolButton::Version) && (value <= QStyleOptionToolButton::Version))
+        return qtscript_QStyleOptionToolButton_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionToolButton::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionToolButton_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionToolButton::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionToolButton"));
+    return clazz.property(qtscript_QStyleOptionToolButton_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionToolButton_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionToolButton::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionToolButton::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionToolButton_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionToolButton::Version) && (arg <= QStyleOptionToolButton::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionToolButton::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionToolButton_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionToolButton::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolButton::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionToolButton_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionToolButton::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolButton::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionToolButton_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionToolButton_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionToolButton_StyleOptionVersion,
+        qtscript_QStyleOptionToolButton_StyleOptionVersion_valueOf, qtscript_QStyleOptionToolButton_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionToolButton::StyleOptionVersion>(engine, qtscript_QStyleOptionToolButton_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionToolButton_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionToolButton_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionToolButton_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionToolButton
 //
 
@@ -386,7 +395,7 @@ static QScriptValue qtscript_QStyleOptionToolButton_prototype_call(QScriptContex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionToolButton* _q_self = qscriptvalue_cast<QStyleOptionToolButton*>(context->thisObject());
+    qtscript_QStyleOptionToolButton* _q_self = reinterpret_cast<qtscript_QStyleOptionToolButton*>(qscriptvalue_cast<QStyleOptionToolButton*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionToolButton.%0(): this object is not a QStyleOptionToolButton")
@@ -451,13 +460,13 @@ QScriptValue qtscript_create_QStyleOptionToolButton_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionToolButton_static_call, proto, qtscript_QStyleOptionToolButton_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionToolButton_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ToolButtonFeature"),
         qtscript_create_QStyleOptionToolButton_ToolButtonFeature_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ToolButtonFeatures"),
         qtscript_create_QStyleOptionToolButton_ToolButtonFeatures_class(engine));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionToolButton_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionToolButton_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

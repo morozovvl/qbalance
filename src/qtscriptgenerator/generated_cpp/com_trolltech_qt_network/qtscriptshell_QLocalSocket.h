@@ -21,7 +21,7 @@ public:
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     bool  isSequential() const;
-    bool  open(QIODevice::OpenMode  mode);
+    bool  open(QIODevice::OpenMode  openMode = ReadWrite);
     qint64  pos() const;
     qint64  readData(char*  arg__1, qint64  arg__2);
     qint64  readLineData(char*  data, qint64  maxlen);

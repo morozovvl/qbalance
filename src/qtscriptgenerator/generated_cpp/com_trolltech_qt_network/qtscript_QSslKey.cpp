@@ -22,6 +22,7 @@ static const char * const qtscript_QSslKey_function_names[] = {
     , "length"
     , "operator_assign"
     , "equals"
+    , "swap"
     , "toDer"
     , "toPem"
     , "type"
@@ -29,7 +30,7 @@ static const char * const qtscript_QSslKey_function_names[] = {
 };
 
 static const char * const qtscript_QSslKey_function_signatures[] = {
-    "\nQIODevice device, KeyAlgorithm algorithm, EncodingFormat format, KeyType type, QByteArray passPhrase\nQByteArray encoded, KeyAlgorithm algorithm, EncodingFormat format, KeyType type, QByteArray passPhrase\nQSslKey other"
+    "\nQIODevice device, KeyAlgorithm algorithm, EncodingFormat format, KeyType type, QByteArray passPhrase\nQt::HANDLE handle, KeyType type\nQByteArray encoded, KeyAlgorithm algorithm, EncodingFormat format, KeyType type, QByteArray passPhrase\nQSslKey other"
     // static
     // prototype
     , ""
@@ -39,6 +40,7 @@ static const char * const qtscript_QSslKey_function_signatures[] = {
     , ""
     , "QSslKey other"
     , "QSslKey key"
+    , "QSslKey other"
     , "QByteArray passPhrase"
     , "QByteArray passPhrase"
     , ""
@@ -54,6 +56,7 @@ static const int qtscript_QSslKey_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
     , 1
     , 1
     , 1
@@ -95,7 +98,7 @@ static QScriptValue qtscript_QSslKey_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 10;
+        _id = 0xBABE0000 + 11;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -159,6 +162,14 @@ static QScriptValue qtscript_QSslKey_prototype_call(QScriptContext *context, QSc
     break;
 
     case 7:
+    if (context->argumentCount() == 1) {
+        QSslKey _q_arg0 = qscriptvalue_cast<QSslKey>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 8:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toDer();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -170,7 +181,7 @@ static QScriptValue qtscript_QSslKey_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toPem();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -182,14 +193,14 @@ static QScriptValue qtscript_QSslKey_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 0) {
         QSsl::KeyType _q_result = _q_self->type();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 10: {
+    case 11: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -219,15 +230,29 @@ static QScriptValue qtscript_QSslKey_static_call(QScriptContext *context, QScrip
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     } else if (context->argumentCount() == 1) {
-        QSslKey _q_arg0 = qscriptvalue_cast<QSslKey>(context->argument(0));
-        QSslKey _q_cpp_result(_q_arg0);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
-        return _q_result;
+        if ((qMetaTypeId<Qt::HANDLE>() == context->argument(0).toVariant().userType())) {
+            Qt::HANDLE _q_arg0 = qscriptvalue_cast<Qt::HANDLE>(context->argument(0));
+            QSslKey _q_cpp_result(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if ((qMetaTypeId<QSslKey>() == context->argument(0).toVariant().userType())) {
+            QSslKey _q_arg0 = qscriptvalue_cast<QSslKey>(context->argument(0));
+            QSslKey _q_cpp_result(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        }
     } else if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<QIODevice*>(context->argument(0))
             && (qMetaTypeId<QSsl::KeyAlgorithm>() == context->argument(1).toVariant().userType())) {
             QIODevice* _q_arg0 = qscriptvalue_cast<QIODevice*>(context->argument(0));
             QSsl::KeyAlgorithm _q_arg1 = qscriptvalue_cast<QSsl::KeyAlgorithm>(context->argument(1));
+            QSslKey _q_cpp_result(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if ((qMetaTypeId<Qt::HANDLE>() == context->argument(0).toVariant().userType())
+            && (qMetaTypeId<QSsl::KeyType>() == context->argument(1).toVariant().userType())) {
+            Qt::HANDLE _q_arg0 = qscriptvalue_cast<Qt::HANDLE>(context->argument(0));
+            QSsl::KeyType _q_arg1 = qscriptvalue_cast<QSsl::KeyType>(context->argument(1));
             QSslKey _q_cpp_result(_q_arg0, _q_arg1);
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
@@ -326,7 +351,7 @@ QScriptValue qtscript_create_QSslKey_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSslKey*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSslKey*)0));
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 12; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSslKey_prototype_call, qtscript_QSslKey_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSslKey_function_names[i+1]),

@@ -28,13 +28,14 @@ public:
     void focusInEvent(QFocusEvent*  focusInEvent);
     bool  focusNextPrevChild(bool  next);
     void focusOutEvent(QFocusEvent*  focusOutEvent);
+    bool  hasHeightForWidth() const;
     int  heightForWidth(int  arg__1) const;
     void hideEvent(QHideEvent*  hideEvent);
+    void initPainter(QPainter*  painter) const;
     void inputMethodEvent(QInputMethodEvent*  arg__1);
     QVariant  inputMethodQuery(Qt::InputMethodQuery  arg__1) const;
     void keyPressEvent(QKeyEvent*  keyEvent);
     void keyReleaseEvent(QKeyEvent*  arg__1);
-    void languageChange();
     void leaveEvent(QEvent*  leaveEvent);
     int  metric(QPaintDevice::PaintDeviceMetric  arg__1) const;
     void mouseDoubleClickEvent(QMouseEvent*  mouseEvent);
@@ -42,9 +43,12 @@ public:
     void mousePressEvent(QMouseEvent*  mouseEvent);
     void mouseReleaseEvent(QMouseEvent*  mouseEvent);
     void moveEvent(QMoveEvent*  moveEvent);
+    bool  nativeEvent(const QByteArray&  eventType, void*  message, long*  result);
     QPaintEngine*  paintEngine() const;
     void paintEvent(QPaintEvent*  paintEvent);
+    QPaintDevice*  redirected(QPoint*  offset) const;
     void resizeEvent(QResizeEvent*  resizeEvent);
+    QPainter*  sharedPainter() const;
     void showEvent(QShowEvent*  showEvent);
     void tabletEvent(QTabletEvent*  arg__1);
     void timerEvent(QTimerEvent*  timerEvent);

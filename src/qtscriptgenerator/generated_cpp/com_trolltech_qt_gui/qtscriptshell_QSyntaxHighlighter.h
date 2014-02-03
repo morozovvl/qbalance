@@ -10,7 +10,6 @@ class QtScriptShell_QSyntaxHighlighter : public QSyntaxHighlighter
 public:
     QtScriptShell_QSyntaxHighlighter(QObject*  parent);
     QtScriptShell_QSyntaxHighlighter(QTextDocument*  parent);
-    QtScriptShell_QSyntaxHighlighter(QTextEdit*  parent);
     ~QtScriptShell_QSyntaxHighlighter();
 
     void childEvent(QChildEvent*  arg__1);

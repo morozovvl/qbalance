@@ -16,7 +16,6 @@ public:
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     bool  installIOHandler(const QString&  format);
-    QStringList  keys() const;
     bool  loadPicture(const QString&  format, const QString&  filename, QPicture*  pic);
     bool  savePicture(const QString&  format, const QString&  filename, const QPicture&  pic);
     void timerEvent(QTimerEvent*  arg__1);

@@ -255,27 +255,49 @@ void SetupGenerator::generate()
         }
 
         {
-            FileOut pluginFile(m_out_dir + "/generated_cpp/" + packName + "/plugin.cpp");
+            FileOut pluginFile(m_out_dir + "/generated_cpp/" + packName + "/plugin.h");
             QTextStream &s = pluginFile.stream;
 
             if (FileOut::license)
                 writeQtScriptQtBindingsLicense(s);
+
+            s << "#ifndef PLUGIN_H" << endl
+              << "#define PLUGIN_H" << endl << endl;
 
             s << "#include <QtScript/QScriptExtensionPlugin>" << endl
               << "#include <QtScript/QScriptValue>" << endl
               << "#include <QtScript/QScriptEngine>" << endl << endl;
 
             // declare the init function
-            s << "void qtscript_initialize_" << packName << "_bindings(QScriptValue &);" << endl << endl;
+            s << "Q_DECL_HIDDEN void qtscript_initialize_" << packName << "_bindings(QScriptValue &);" << endl << endl;
 
             // plugin class declaration
             s << "class " << packName << "_ScriptPlugin : public QScriptExtensionPlugin" << endl
               << "{" << endl
+              << "    Q_OBJECT" << endl
+              << "#if QT_VERSION >= 0x050000" << endl
+              << "    Q_PLUGIN_METADATA(IID \"org.qt-project.Qt.QScriptExtensionInterface\")" << endl
+              << "#endif" << endl
               << "public:" << endl
               << "    QStringList keys() const;" << endl
               << "    void initialize(const QString &key, QScriptEngine *engine);" << endl
               << "};" << endl
-              << "" << endl;
+              << "" << endl
+              << "#endif // PLUGIN_H" << endl;
+
+            if (pluginFile.done())
+                ++m_num_generated_written;
+            ++m_num_generated;
+        }
+
+        {
+            FileOut pluginFile(m_out_dir + "/generated_cpp/" + packName + "/plugin.cpp");
+            QTextStream &s = pluginFile.stream;
+
+            if (FileOut::license)
+                writeQtScriptQtBindingsLicense(s);
+
+            s << "#include \"plugin.h\"" << endl << endl;
 
             // keys()
             s << "QStringList " << packName << "_ScriptPlugin::keys() const" << endl
@@ -324,8 +346,10 @@ void SetupGenerator::generate()
               << "    }" << endl
               << "}" << endl << endl;
 
-            s << "Q_EXPORT_STATIC_PLUGIN(" << packName << "_ScriptPlugin)" << endl
-              << "Q_EXPORT_PLUGIN2(qtscript_" << packName.toLower() << ", " << packName << "_ScriptPlugin)" << endl;
+            s << "#if QT_VERSION < 0x050000" << endl
+              << "Q_EXPORT_STATIC_PLUGIN(" << packName << "_ScriptPlugin)" << endl
+              << "Q_EXPORT_PLUGIN2(qtscript_" << packName.toLower() << ", " << packName << "_ScriptPlugin)" << endl
+              << "#endif" << endl;
 
             if (pluginFile.done())
                 ++m_num_generated_written;

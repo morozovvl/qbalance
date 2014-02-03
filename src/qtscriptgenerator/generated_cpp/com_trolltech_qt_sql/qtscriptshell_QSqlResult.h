@@ -14,7 +14,9 @@ public:
     void bindValue(const QString&  placeholder, const QVariant&  val, QSql::ParamType  type);
     void bindValue(int  pos, const QVariant&  val, QSql::ParamType  type);
     QVariant  data(int  i);
+    void detachFromResultSet();
     bool  exec();
+    bool  execBatch(bool  arrayBind = false);
     bool  fetch(int  i);
     bool  fetchFirst();
     bool  fetchLast();
@@ -23,6 +25,7 @@ public:
     QVariant  handle() const;
     bool  isNull(int  i);
     QVariant  lastInsertId() const;
+    bool  nextResult();
     int  numRowsAffected();
     bool  prepare(const QString&  query);
     QSqlRecord  record() const;
@@ -32,6 +35,7 @@ public:
     void setAt(int  at);
     void setForwardOnly(bool  forward);
     void setLastError(const QSqlError&  e);
+    void setNumericalPrecisionPolicy(QSql::NumericalPrecisionPolicy  policy);
     void setQuery(const QString&  query);
     void setSelect(bool  s);
     int  size();

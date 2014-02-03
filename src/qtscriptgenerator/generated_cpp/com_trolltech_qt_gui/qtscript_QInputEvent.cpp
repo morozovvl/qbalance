@@ -16,6 +16,8 @@ static const char * const qtscript_QInputEvent_function_names[] = {
     // prototype
     , "modifiers"
     , "setModifiers"
+    , "setTimestamp"
+    , "timestamp"
     , "toString"
 };
 
@@ -25,6 +27,8 @@ static const char * const qtscript_QInputEvent_function_signatures[] = {
     // prototype
     , ""
     , "KeyboardModifiers amodifiers"
+    , "ulong atimestamp"
+    , ""
 ""
 };
 
@@ -34,6 +38,8 @@ static const int qtscript_QInputEvent_function_lengths[] = {
     // prototype
     , 0
     , 1
+    , 1
+    , 0
     , 0
 };
 
@@ -68,7 +74,7 @@ static QScriptValue qtscript_QInputEvent_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -95,7 +101,22 @@ static QScriptValue qtscript_QInputEvent_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 2: {
+    case 2:
+    if (context->argumentCount() == 1) {
+        ulong _q_arg0 = qscriptvalue_cast<ulong>(context->argument(0));
+        _q_self->setTimestamp(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 0) {
+        ulong _q_result = _q_self->timestamp();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4: {
     QString result = QString::fromLatin1("QInputEvent");
     return QScriptValue(context->engine(), result);
     }
@@ -147,7 +168,7 @@ QScriptValue qtscript_create_QInputEvent_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QInputEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QInputEvent*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QEvent*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QInputEvent_prototype_call, qtscript_QInputEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QInputEvent_function_names[i+1]),

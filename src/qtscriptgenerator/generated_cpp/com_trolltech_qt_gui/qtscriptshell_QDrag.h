@@ -8,7 +8,7 @@
 class QtScriptShell_QDrag : public QDrag
 {
 public:
-    QtScriptShell_QDrag(QWidget*  dragSource);
+    QtScriptShell_QDrag(QObject*  dragSource);
     ~QtScriptShell_QDrag();
 
     void childEvent(QChildEvent*  arg__1);

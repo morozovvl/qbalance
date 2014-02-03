@@ -21,8 +21,14 @@
 <h3>Prototype Object Properties</h3>
 <p>The QNetworkCookieJar prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>List allCookies()</b></li>
 <li><div class="fn"/><b>List cookiesForUrl(QUrl url)</b></li>
+<li><div class="fn"/><b>bool deleteCookie(QNetworkCookie cookie)</b></li>
+<li><div class="fn"/><b>bool insertCookie(QNetworkCookie cookie)</b></li>
+<li><div class="fn"/><b>void setAllCookies(List cookieList)</b></li>
 <li><div class="fn"/><b>bool setCookiesFromUrl(List cookieList, QUrl url)</b></li>
+<li><div class="fn"/><b>bool updateCookie(QNetworkCookie cookie)</b></li>
+<li><div class="fn"/><b>bool validateCookie(QNetworkCookie cookie, QUrl url)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QNetworkCookieJar objects have no special properties beyond those inherited from the QNetworkCookieJar prototype object.</p>

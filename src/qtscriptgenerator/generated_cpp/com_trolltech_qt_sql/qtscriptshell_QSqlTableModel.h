@@ -12,6 +12,7 @@ public:
     ~QtScriptShell_QSqlTableModel();
 
     QModelIndex  buddy(const QModelIndex&  index) const;
+    bool  canDropMimeData(const QMimeData*  data, Qt::DropAction  action, int  row, int  column, const QModelIndex&  parent) const;
     bool  canFetchMore(const QModelIndex&  parent) const;
     void childEvent(QChildEvent*  arg__1);
     void clear();
@@ -26,6 +27,7 @@ public:
     Qt::ItemFlags  flags(const QModelIndex&  index) const;
     QVariant  headerData(int  section, Qt::Orientation  orientation, int  role = Qt::DisplayRole) const;
     QModelIndex  index(int  row, int  column, const QModelIndex&  parent) const;
+    QModelIndex  indexInQuery(const QModelIndex&  item) const;
     bool  insertColumns(int  column, int  count, const QModelIndex&  parent);
     bool  insertRowIntoTable(const QSqlRecord&  values);
     bool  insertRows(int  row, int  count, const QModelIndex&  parent = QModelIndex());
@@ -33,14 +35,18 @@ public:
     QList<QModelIndex >  match(const QModelIndex&  start, int  role, const QVariant&  value, int  hits, Qt::MatchFlags  flags) const;
     QMimeData*  mimeData(const QList<QModelIndex >&  indexes) const;
     QStringList  mimeTypes() const;
+    bool  moveColumns(const QModelIndex&  sourceParent, int  sourceColumn, int  count, const QModelIndex&  destinationParent, int  destinationChild);
+    bool  moveRows(const QModelIndex&  sourceParent, int  sourceRow, int  count, const QModelIndex&  destinationParent, int  destinationChild);
     QString  orderByClause() const;
     void queryChange();
     bool  removeColumns(int  column, int  count, const QModelIndex&  parent = QModelIndex());
     bool  removeRows(int  row, int  count, const QModelIndex&  parent = QModelIndex());
     void revert();
     void revertRow(int  row);
+    QHash<int , QByteArray >  roleNames() const;
     int  rowCount(const QModelIndex&  parent = QModelIndex()) const;
     bool  select();
+    bool  selectRow(int  row);
     QString  selectStatement() const;
     bool  setData(const QModelIndex&  index, const QVariant&  value, int  role = Qt::EditRole);
     void setEditStrategy(QSqlTableModel::EditStrategy  strategy);
@@ -49,9 +55,11 @@ public:
     bool  setItemData(const QModelIndex&  index, const QMap<int , QVariant >&  roles);
     void setSort(int  column, Qt::SortOrder  order);
     void setTable(const QString&  tableName);
+    QModelIndex  sibling(int  row, int  column, const QModelIndex&  idx) const;
     void sort(int  column, Qt::SortOrder  order);
     QSize  span(const QModelIndex&  index) const;
     bool  submit();
+    Qt::DropActions  supportedDragActions() const;
     Qt::DropActions  supportedDropActions() const;
     void timerEvent(QTimerEvent*  arg__1);
     bool  updateRowInTable(int  row, const QSqlRecord&  values);

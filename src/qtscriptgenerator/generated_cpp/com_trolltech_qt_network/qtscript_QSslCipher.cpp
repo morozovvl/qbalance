@@ -23,6 +23,7 @@ static const char * const qtscript_QSslCipher_function_names[] = {
     , "protocol"
     , "protocolString"
     , "supportedBits"
+    , "swap"
     , "usedBits"
     , "toString"
 };
@@ -41,6 +42,7 @@ static const char * const qtscript_QSslCipher_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QSslCipher other"
     , ""
 ""
 };
@@ -59,6 +61,7 @@ static const int qtscript_QSslCipher_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
     , 0
     , 0
 };
@@ -92,7 +95,7 @@ static QScriptValue qtscript_QSslCipher_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 11;
+        _id = 0xBABE0000 + 12;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -177,13 +180,21 @@ static QScriptValue qtscript_QSslCipher_prototype_call(QScriptContext *context, 
     break;
 
     case 10:
+    if (context->argumentCount() == 1) {
+        QSslCipher _q_arg0 = qscriptvalue_cast<QSslCipher>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->usedBits();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 11: {
+    case 12: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -238,7 +249,7 @@ QScriptValue qtscript_create_QSslCipher_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSslCipher*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSslCipher*)0));
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 13; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSslCipher_prototype_call, qtscript_QSslCipher_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSslCipher_function_names[i+1]),

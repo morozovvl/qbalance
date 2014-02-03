@@ -13,7 +13,6 @@
 #include <qiodevice.h>
 #include <qlist.h>
 #include <qobject.h>
-#include <qstringlist.h>
 
 #include "qtscriptshell_QImageIOPlugin.h"
 
@@ -23,7 +22,6 @@ static const char * const qtscript_QImageIOPlugin_function_names[] = {
     // prototype
     , "capabilities"
     , "create"
-    , "keys"
     , "toString"
 };
 
@@ -33,7 +31,6 @@ static const char * const qtscript_QImageIOPlugin_function_signatures[] = {
     // prototype
     , "QIODevice device, QByteArray format"
     , "QIODevice device, QByteArray format"
-    , ""
 ""
 };
 
@@ -44,7 +41,15 @@ static const int qtscript_QImageIOPlugin_function_lengths[] = {
     , 2
     , 2
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QImageIOPlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QImageIOPlugin : public QImageIOPlugin
+{
+
+    friend QScriptValue qtscript_QImageIOPlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QImageIOPlugin_throw_ambiguity_error_helper(
@@ -259,11 +264,11 @@ static QScriptValue qtscript_QImageIOPlugin_prototype_call(QScriptContext *conte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 2;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QImageIOPlugin* _q_self = qscriptvalue_cast<QImageIOPlugin*>(context->thisObject());
+    qtscript_QImageIOPlugin* _q_self = reinterpret_cast<qtscript_QImageIOPlugin*>(qscriptvalue_cast<QImageIOPlugin*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QImageIOPlugin.%0(): this object is not a QImageIOPlugin")
@@ -294,14 +299,7 @@ static QScriptValue qtscript_QImageIOPlugin_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 2:
-    if (context->argumentCount() == 0) {
-        QStringList _q_result = _q_self->keys();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 3: {
+    case 2: {
     QString result = QString::fromLatin1("QImageIOPlugin");
     return QScriptValue(context->engine(), result);
     }
@@ -361,7 +359,7 @@ QScriptValue qtscript_create_QImageIOPlugin_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QImageIOPlugin*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QImageIOPlugin*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QImageIOPlugin_prototype_call, qtscript_QImageIOPlugin_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QImageIOPlugin_function_names[i+1]),

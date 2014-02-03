@@ -80,6 +80,15 @@ static const int qtscript_QFormLayout_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QFormLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFormLayout : public QFormLayout
+{
+
+    friend QScriptValue qtscript_QFormLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QFormLayout_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -98,10 +107,11 @@ static const QMetaObject *qtscript_QFormLayout_metaObject()
 
 Q_DECLARE_METATYPE(QFormLayout*)
 Q_DECLARE_METATYPE(QtScriptShell_QFormLayout*)
-Q_DECLARE_METATYPE(QFormLayout::FieldGrowthPolicy)
 Q_DECLARE_METATYPE(QFormLayout::RowWrapPolicy)
+Q_DECLARE_METATYPE(QFormLayout::FieldGrowthPolicy)
 Q_DECLARE_METATYPE(QFormLayout::ItemRole)
 Q_DECLARE_METATYPE(QLayout*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(int*)
 Q_DECLARE_METATYPE(QFormLayout::ItemRole*)
 Q_DECLARE_METATYPE(QLayoutItem*)
@@ -118,81 +128,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QFormLayout::FieldGrowthPolicy
-//
-
-static const QFormLayout::FieldGrowthPolicy qtscript_QFormLayout_FieldGrowthPolicy_values[] = {
-    QFormLayout::FieldsStayAtSizeHint
-    , QFormLayout::ExpandingFieldsGrow
-    , QFormLayout::AllNonFixedFieldsGrow
-};
-
-static const char * const qtscript_QFormLayout_FieldGrowthPolicy_keys[] = {
-    "FieldsStayAtSizeHint"
-    , "ExpandingFieldsGrow"
-    , "AllNonFixedFieldsGrow"
-};
-
-static QString qtscript_QFormLayout_FieldGrowthPolicy_toStringHelper(QFormLayout::FieldGrowthPolicy value)
-{
-    const QMetaObject *meta = qtscript_QFormLayout_metaObject();
-    int idx = meta->indexOfEnumerator("FieldGrowthPolicy");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QFormLayout_FieldGrowthPolicy_toScriptValue(QScriptEngine *engine, const QFormLayout::FieldGrowthPolicy &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFormLayout"));
-    return clazz.property(qtscript_QFormLayout_FieldGrowthPolicy_toStringHelper(value));
-}
-
-static void qtscript_QFormLayout_FieldGrowthPolicy_fromScriptValue(const QScriptValue &value, QFormLayout::FieldGrowthPolicy &out)
-{
-    out = qvariant_cast<QFormLayout::FieldGrowthPolicy>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QFormLayout_FieldGrowthPolicy(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QFormLayout_metaObject();
-    int idx = meta->indexOfEnumerator("FieldGrowthPolicy");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QFormLayout::FieldGrowthPolicy>(arg));
-    return context->throwError(QString::fromLatin1("FieldGrowthPolicy(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QFormLayout_FieldGrowthPolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QFormLayout::FieldGrowthPolicy value = qscriptvalue_cast<QFormLayout::FieldGrowthPolicy>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QFormLayout_FieldGrowthPolicy_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QFormLayout::FieldGrowthPolicy value = qscriptvalue_cast<QFormLayout::FieldGrowthPolicy>(context->thisObject());
-    return QScriptValue(engine, qtscript_QFormLayout_FieldGrowthPolicy_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QFormLayout_FieldGrowthPolicy_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QFormLayout_FieldGrowthPolicy,
-        qtscript_QFormLayout_FieldGrowthPolicy_valueOf, qtscript_QFormLayout_FieldGrowthPolicy_toString);
-    qScriptRegisterMetaType<QFormLayout::FieldGrowthPolicy>(engine, qtscript_QFormLayout_FieldGrowthPolicy_toScriptValue,
-        qtscript_QFormLayout_FieldGrowthPolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QFormLayout_FieldGrowthPolicy_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QFormLayout_FieldGrowthPolicy_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -265,6 +200,81 @@ static QScriptValue qtscript_create_QFormLayout_RowWrapPolicy_class(QScriptEngin
     for (int i = 0; i < 3; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QFormLayout_RowWrapPolicy_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QFormLayout_RowWrapPolicy_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QFormLayout::FieldGrowthPolicy
+//
+
+static const QFormLayout::FieldGrowthPolicy qtscript_QFormLayout_FieldGrowthPolicy_values[] = {
+    QFormLayout::FieldsStayAtSizeHint
+    , QFormLayout::ExpandingFieldsGrow
+    , QFormLayout::AllNonFixedFieldsGrow
+};
+
+static const char * const qtscript_QFormLayout_FieldGrowthPolicy_keys[] = {
+    "FieldsStayAtSizeHint"
+    , "ExpandingFieldsGrow"
+    , "AllNonFixedFieldsGrow"
+};
+
+static QString qtscript_QFormLayout_FieldGrowthPolicy_toStringHelper(QFormLayout::FieldGrowthPolicy value)
+{
+    const QMetaObject *meta = qtscript_QFormLayout_metaObject();
+    int idx = meta->indexOfEnumerator("FieldGrowthPolicy");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QFormLayout_FieldGrowthPolicy_toScriptValue(QScriptEngine *engine, const QFormLayout::FieldGrowthPolicy &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFormLayout"));
+    return clazz.property(qtscript_QFormLayout_FieldGrowthPolicy_toStringHelper(value));
+}
+
+static void qtscript_QFormLayout_FieldGrowthPolicy_fromScriptValue(const QScriptValue &value, QFormLayout::FieldGrowthPolicy &out)
+{
+    out = qvariant_cast<QFormLayout::FieldGrowthPolicy>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QFormLayout_FieldGrowthPolicy(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QFormLayout_metaObject();
+    int idx = meta->indexOfEnumerator("FieldGrowthPolicy");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QFormLayout::FieldGrowthPolicy>(arg));
+    return context->throwError(QString::fromLatin1("FieldGrowthPolicy(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QFormLayout_FieldGrowthPolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QFormLayout::FieldGrowthPolicy value = qscriptvalue_cast<QFormLayout::FieldGrowthPolicy>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QFormLayout_FieldGrowthPolicy_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QFormLayout::FieldGrowthPolicy value = qscriptvalue_cast<QFormLayout::FieldGrowthPolicy>(context->thisObject());
+    return QScriptValue(engine, qtscript_QFormLayout_FieldGrowthPolicy_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QFormLayout_FieldGrowthPolicy_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QFormLayout_FieldGrowthPolicy,
+        qtscript_QFormLayout_FieldGrowthPolicy_valueOf, qtscript_QFormLayout_FieldGrowthPolicy_toString);
+    qScriptRegisterMetaType<QFormLayout::FieldGrowthPolicy>(engine, qtscript_QFormLayout_FieldGrowthPolicy_toScriptValue,
+        qtscript_QFormLayout_FieldGrowthPolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QFormLayout_FieldGrowthPolicy_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QFormLayout_FieldGrowthPolicy_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -363,7 +373,7 @@ static QScriptValue qtscript_QFormLayout_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFormLayout* _q_self = qscriptvalue_cast<QFormLayout*>(context->thisObject());
+    qtscript_QFormLayout* _q_self = reinterpret_cast<qtscript_QFormLayout*>(qscriptvalue_cast<QFormLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFormLayout.%0(): this object is not a QFormLayout")
@@ -643,10 +653,10 @@ QScriptValue qtscript_create_QFormLayout_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QFormLayout_static_call, proto, qtscript_QFormLayout_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("FieldGrowthPolicy"),
-        qtscript_create_QFormLayout_FieldGrowthPolicy_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("RowWrapPolicy"),
         qtscript_create_QFormLayout_RowWrapPolicy_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("FieldGrowthPolicy"),
+        qtscript_create_QFormLayout_FieldGrowthPolicy_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ItemRole"),
         qtscript_create_QFormLayout_ItemRole_class(engine, ctor));
     return ctor;

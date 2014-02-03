@@ -15,15 +15,12 @@
 <li><b>prototype</b>: The QTextCodec prototype object</li>
 <li><div class="fn"/><b>List availableCodecs()</b></li>
 <li><div class="fn"/><b>List availableMibs()</b></li>
-<li><div class="fn"/><b>QTextCodec codecForCStrings()</b></li>
 <li><div class="fn"/><b>QTextCodec codecForHtml(QByteArray ba)</b></li>
 <li><div class="fn"/><b>QTextCodec codecForLocale()</b></li>
 <li><div class="fn"/><b>QTextCodec codecForMib(int mib)</b></li>
 <li><div class="fn"/><b>QTextCodec codecForName(QByteArray name)</b></li>
 <li><div class="fn"/><b>QTextCodec codecForUtfText(QByteArray ba)</b></li>
-<li><div class="fn"/><b>void setCodecForCStrings(QTextCodec c)</b></li>
 <li><div class="fn"/><b>void setCodecForLocale(QTextCodec c)</b></li>
-<li><div class="fn"/><b>void setCodecForTr(QTextCodec c)</b></li>
 <li><b>ConvertInvalidToNull = 0x80000000</b></li>
 <li><b>DefaultConversion</b></li>
 <li><b>IgnoreHeader = 0x1</b></li>
@@ -35,9 +32,11 @@
 <ul>
 <li><div class="fn"/><b>List aliases()</b></li>
 <li><div class="fn"/><b>bool canEncode(char arg__1)</b></li>
+<li><div class="fn"/><b>QByteArray convertFromUnicode(char in, int length, QTextCodec_ConverterState state)</b></li>
+<li><div class="fn"/><b>String convertToUnicode(char in, int length, QTextCodec_ConverterState state)</b></li>
 <li><div class="fn"/><b>QByteArray fromUnicode(String uc)</b></li>
-<li><div class="fn"/><b>QTextDecoder makeDecoder()</b></li>
-<li><div class="fn"/><b>QTextEncoder makeEncoder()</b></li>
+<li><div class="fn"/><b>QTextDecoder makeDecoder(ConversionFlags flags)</b></li>
+<li><div class="fn"/><b>QTextEncoder makeEncoder(ConversionFlags flags)</b></li>
 <li><div class="fn"/><b>int mibEnum()</b></li>
 <li><div class="fn"/><b>QByteArray name()</b></li>
 <li><div class="fn"/><b>String toUnicode(QByteArray arg__1)</b></li>

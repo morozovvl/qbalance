@@ -18,6 +18,7 @@
 #include <qobject.h>
 #include <qsize.h>
 #include <qstringlist.h>
+#include <qvector.h>
 
 #include "qtscriptshell_QAbstractListModel.h"
 
@@ -40,6 +41,15 @@ static const int qtscript_QAbstractListModel_function_lengths[] = {
     // static
     // prototype
     , 0
+};
+
+static QScriptValue qtscript_QAbstractListModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractListModel : public QAbstractListModel
+{
+
+    friend QScriptValue qtscript_QAbstractListModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractListModel_throw_ambiguity_error_helper(
@@ -75,7 +85,7 @@ static QScriptValue qtscript_QAbstractListModel_prototype_call(QScriptContext *c
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractListModel* _q_self = qscriptvalue_cast<QAbstractListModel*>(context->thisObject());
+    qtscript_QAbstractListModel* _q_self = reinterpret_cast<qtscript_QAbstractListModel*>(qscriptvalue_cast<QAbstractListModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractListModel.%0(): this object is not a QAbstractListModel")

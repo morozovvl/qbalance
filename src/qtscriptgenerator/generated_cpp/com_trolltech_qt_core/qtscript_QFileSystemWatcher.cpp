@@ -55,6 +55,15 @@ static const int qtscript_QFileSystemWatcher_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFileSystemWatcher : public QFileSystemWatcher
+{
+
+    friend QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QFileSystemWatcher_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -87,7 +96,7 @@ static QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *c
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFileSystemWatcher* _q_self = qscriptvalue_cast<QFileSystemWatcher*>(context->thisObject());
+    qtscript_QFileSystemWatcher* _q_self = reinterpret_cast<qtscript_QFileSystemWatcher*>(qscriptvalue_cast<QFileSystemWatcher*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFileSystemWatcher.%0(): this object is not a QFileSystemWatcher")
@@ -98,8 +107,8 @@ static QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *c
     case 0:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
-        _q_self->addPath(_q_arg0);
-        return context->engine()->undefinedValue();
+        bool _q_result = _q_self->addPath(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
@@ -107,8 +116,8 @@ static QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *c
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
-        _q_self->addPaths(_q_arg0);
-        return context->engine()->undefinedValue();
+        QStringList _q_result = _q_self->addPaths(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
@@ -129,8 +138,8 @@ static QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *c
     case 4:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
-        _q_self->removePath(_q_arg0);
-        return context->engine()->undefinedValue();
+        bool _q_result = _q_self->removePath(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
@@ -138,8 +147,8 @@ static QScriptValue qtscript_QFileSystemWatcher_prototype_call(QScriptContext *c
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
-        _q_self->removePaths(_q_arg0);
-        return context->engine()->undefinedValue();
+        QStringList _q_result = _q_self->removePaths(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 

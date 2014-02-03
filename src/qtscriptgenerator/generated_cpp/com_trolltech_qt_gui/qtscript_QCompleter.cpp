@@ -83,6 +83,15 @@ static const int qtscript_QCompleter_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QCompleter_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QCompleter : public QCompleter
+{
+
+    friend QScriptValue qtscript_QCompleter_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QCompleter_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -99,8 +108,8 @@ Q_DECLARE_METATYPE(QtScriptShell_QCompleter*)
 Q_DECLARE_METATYPE(QCompleter::ModelSorting)
 Q_DECLARE_METATYPE(QCompleter::CompletionMode)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QAbstractItemView*)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -272,7 +281,7 @@ static QScriptValue qtscript_QCompleter_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QCompleter* _q_self = qscriptvalue_cast<QCompleter*>(context->thisObject());
+    qtscript_QCompleter* _q_self = reinterpret_cast<qtscript_QCompleter*>(qscriptvalue_cast<QCompleter*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QCompleter.%0(): this object is not a QCompleter")

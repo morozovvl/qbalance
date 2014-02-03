@@ -105,6 +105,7 @@ Q_DECLARE_METATYPE(QFlags<QSizePolicy::ControlType>)
 Q_DECLARE_METATYPE(QFlags<Qt::Orientation>)
 Q_DECLARE_METATYPE(QLayout*)
 Q_DECLARE_METATYPE(QSpacerItem*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QLayoutItem

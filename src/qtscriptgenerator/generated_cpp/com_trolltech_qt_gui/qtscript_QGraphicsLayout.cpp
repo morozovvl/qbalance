@@ -24,6 +24,7 @@ static const char * const qtscript_QGraphicsLayout_function_names[] = {
     , "setInstantInvalidatePropagation"
     // prototype
     , "activate"
+    , "addChildLayoutItem"
     , "count"
     , "invalidate"
     , "isActivated"
@@ -41,6 +42,7 @@ static const char * const qtscript_QGraphicsLayout_function_signatures[] = {
     , "bool enable"
     // prototype
     , ""
+    , "QGraphicsLayoutItem layoutItem"
     , ""
     , ""
     , ""
@@ -58,6 +60,7 @@ static const int qtscript_QGraphicsLayout_function_lengths[] = {
     , 1
     // prototype
     , 0
+    , 1
     , 0
     , 0
     , 0
@@ -66,6 +69,16 @@ static const int qtscript_QGraphicsLayout_function_lengths[] = {
     , 4
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsLayout : public QGraphicsLayout
+{
+    friend QScriptValue qtscript_QGraphicsLayout_addChildLayoutItem(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGraphicsLayout_throw_ambiguity_error_helper(
@@ -98,11 +111,11 @@ static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 9;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsLayout* _q_self = qscriptvalue_cast<QGraphicsLayout*>(context->thisObject());
+    qtscript_QGraphicsLayout* _q_self = reinterpret_cast<qtscript_QGraphicsLayout*>(qscriptvalue_cast<QGraphicsLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsLayout.%0(): this object is not a QGraphicsLayout")
@@ -118,27 +131,35 @@ static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *cont
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QGraphicsLayoutItem* _q_arg0 = qscriptvalue_cast<QGraphicsLayoutItem*>(context->argument(0));
+        _q_self->addChildLayoutItem(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->count();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         _q_self->invalidate();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isActivated();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QGraphicsLayoutItem* _q_result = _q_self->itemAt(_q_arg0);
@@ -146,7 +167,7 @@ static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removeAt(_q_arg0);
@@ -154,7 +175,7 @@ static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 4) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -165,7 +186,7 @@ static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
         _q_self->widgetEvent(_q_arg0);
@@ -173,7 +194,7 @@ static QScriptValue qtscript_QGraphicsLayout_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 8: {
+    case 9: {
     QString result = QString::fromLatin1("QGraphicsLayout");
     return QScriptValue(context->engine(), result);
     }
@@ -238,7 +259,7 @@ QScriptValue qtscript_create_QGraphicsLayout_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsLayout*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsLayout*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QGraphicsLayoutItem*>()));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsLayout_prototype_call, qtscript_QGraphicsLayout_function_lengths[i+3]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsLayout_function_names[i+3]),

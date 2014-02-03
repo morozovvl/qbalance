@@ -70,6 +70,7 @@ static QScriptValue qtscript_QToolTip_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QToolTip*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QToolTip

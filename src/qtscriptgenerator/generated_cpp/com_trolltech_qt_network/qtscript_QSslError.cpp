@@ -19,6 +19,7 @@ static const char * const qtscript_QSslError_function_names[] = {
     , "errorString"
     , "operator_assign"
     , "equals"
+    , "swap"
     , "toString"
 };
 
@@ -31,6 +32,7 @@ static const char * const qtscript_QSslError_function_signatures[] = {
     , ""
     , "QSslError other"
     , "QSslError other"
+    , "QSslError other"
 ""
 };
 
@@ -41,6 +43,7 @@ static const int qtscript_QSslError_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
     , 1
     , 1
     , 0
@@ -60,7 +63,6 @@ static QScriptValue qtscript_QSslError_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslError*)
 Q_DECLARE_METATYPE(QSslError::SslError)
-Q_DECLARE_METATYPE(QSslCertificate)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -106,6 +108,7 @@ static const QSslError::SslError qtscript_QSslError_SslError_values[] = {
     , QSslError::NoPeerCertificate
     , QSslError::HostNameMismatch
     , QSslError::NoSslSupport
+    , QSslError::CertificateBlacklisted
 };
 
 static const char * const qtscript_QSslError_SslError_keys[] = {
@@ -134,11 +137,12 @@ static const char * const qtscript_QSslError_SslError_keys[] = {
     , "NoPeerCertificate"
     , "HostNameMismatch"
     , "NoSslSupport"
+    , "CertificateBlacklisted"
 };
 
 static QString qtscript_QSslError_SslError_toStringHelper(QSslError::SslError value)
 {
-    if ((value >= QSslError::UnspecifiedError) && (value <= QSslError::NoSslSupport))
+    if ((value >= QSslError::UnspecifiedError) && (value <= QSslError::CertificateBlacklisted))
         return qtscript_QSslError_SslError_keys[static_cast<int>(value)-static_cast<int>(QSslError::UnspecifiedError)];
     return QString();
 }
@@ -157,7 +161,7 @@ static void qtscript_QSslError_SslError_fromScriptValue(const QScriptValue &valu
 static QScriptValue qtscript_construct_QSslError_SslError(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QSslError::UnspecifiedError) && (arg <= QSslError::NoSslSupport))
+    if ((arg >= QSslError::UnspecifiedError) && (arg <= QSslError::CertificateBlacklisted))
         return qScriptValueFromValue(engine,  static_cast<QSslError::SslError>(arg));
     return context->throwError(QString::fromLatin1("SslError(): invalid enum value (%0)").arg(arg));
 }
@@ -181,7 +185,7 @@ static QScriptValue qtscript_create_QSslError_SslError_class(QScriptEngine *engi
         qtscript_QSslError_SslError_valueOf, qtscript_QSslError_SslError_toString);
     qScriptRegisterMetaType<QSslError::SslError>(engine, qtscript_QSslError_SslError_toScriptValue,
         qtscript_QSslError_SslError_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 25; ++i) {
+    for (int i = 0; i < 26; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QSslError_SslError_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QSslError_SslError_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -203,7 +207,7 @@ static QScriptValue qtscript_QSslError_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -252,7 +256,15 @@ static QScriptValue qtscript_QSslError_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 5: {
+    case 5:
+    if (context->argumentCount() == 1) {
+        QSslError _q_arg0 = qscriptvalue_cast<QSslError>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -314,7 +326,7 @@ QScriptValue qtscript_create_QSslError_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSslError*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSslError*)0));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSslError_prototype_call, qtscript_QSslError_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSslError_function_names[i+1]),

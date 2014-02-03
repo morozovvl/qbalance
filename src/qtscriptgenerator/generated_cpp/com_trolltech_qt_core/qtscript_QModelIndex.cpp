@@ -30,7 +30,7 @@ static const char * const qtscript_QModelIndex_function_names[] = {
 };
 
 static const char * const qtscript_QModelIndex_function_signatures[] = {
-    "\nQModelIndex other"
+    ""
     // static
     // prototype
     , "int row, int column"
@@ -50,7 +50,7 @@ static const char * const qtscript_QModelIndex_function_signatures[] = {
 };
 
 static const int qtscript_QModelIndex_function_lengths[] = {
-    1
+    0
     // static
     // prototype
     , 2
@@ -80,9 +80,9 @@ static QScriptValue qtscript_QModelIndex_throw_ambiguity_error_helper(
         .arg(functionName).arg(fullSignatures.join(QLatin1String("\n"))));
 }
 
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QModelIndex*)
 Q_DECLARE_METATYPE(QFlags<Qt::ItemFlag>)
+Q_DECLARE_METATYPE(quintptr)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
 //
@@ -148,7 +148,7 @@ static QScriptValue qtscript_QModelIndex_prototype_call(QScriptContext *context,
 
     case 4:
     if (context->argumentCount() == 0) {
-        qint64 _q_result = _q_self->internalId();
+        quintptr _q_result = _q_self->internalId();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -240,11 +240,6 @@ static QScriptValue qtscript_QModelIndex_static_call(QScriptContext *context, QS
     }
     if (context->argumentCount() == 0) {
         QModelIndex _q_cpp_result;
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
-        return _q_result;
-    } else if (context->argumentCount() == 1) {
-        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
-        QModelIndex _q_cpp_result(_q_arg0);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     }

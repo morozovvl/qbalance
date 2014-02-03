@@ -11,7 +11,7 @@ public:
     QtScriptShell_QAccessibleBridge();
     ~QtScriptShell_QAccessibleBridge();
 
-    void notifyAccessibilityUpdate(int  arg__1, QAccessibleInterface*  arg__2, int  arg__3);
+    void notifyAccessibilityUpdate(QAccessibleEvent*  event);
     void setRootObject(QAccessibleInterface*  arg__1);
 
     QScriptValue __qtscript_self;

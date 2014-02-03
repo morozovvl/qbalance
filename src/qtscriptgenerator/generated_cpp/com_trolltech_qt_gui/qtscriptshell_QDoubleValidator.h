@@ -9,7 +9,7 @@ class QtScriptShell_QDoubleValidator : public QDoubleValidator
 {
 public:
     QtScriptShell_QDoubleValidator(QObject*  parent = 0);
-    QtScriptShell_QDoubleValidator(double  bottom, double  top, int  decimals, QObject*  parent);
+    QtScriptShell_QDoubleValidator(double  bottom, double  top, int  decimals, QObject*  parent = 0);
     ~QtScriptShell_QDoubleValidator();
 
     void childEvent(QChildEvent*  arg__1);

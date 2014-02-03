@@ -36,6 +36,15 @@ static const int qtscript_QSwipeGesture_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSwipeGesture_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSwipeGesture : public QSwipeGesture
+{
+
+    friend QScriptValue qtscript_QSwipeGesture_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSwipeGesture_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -168,7 +177,7 @@ static QScriptValue qtscript_QSwipeGesture_prototype_call(QScriptContext *contex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSwipeGesture* _q_self = qscriptvalue_cast<QSwipeGesture*>(context->thisObject());
+    qtscript_QSwipeGesture* _q_self = reinterpret_cast<qtscript_QSwipeGesture*>(qscriptvalue_cast<QSwipeGesture*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSwipeGesture.%0(): this object is not a QSwipeGesture")

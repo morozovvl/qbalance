@@ -60,6 +60,16 @@ static const int qtscript_QGraphicsObject_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsObject_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsObject : public QGraphicsObject
+{
+
+    friend QScriptValue qtscript_QGraphicsObject_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
+};
+
 static QScriptValue qtscript_QGraphicsObject_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -93,7 +103,7 @@ static QScriptValue qtscript_QGraphicsObject_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsObject* _q_self = qscriptvalue_cast<QGraphicsObject*>(context->thisObject());
+    qtscript_QGraphicsObject* _q_self = reinterpret_cast<qtscript_QGraphicsObject*>(qscriptvalue_cast<QGraphicsObject*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsObject.%0(): this object is not a QGraphicsObject")

@@ -66,7 +66,7 @@ function CalendarWidget(parent) {
 CalendarWidget.prototype = new QWidget();
 
 CalendarWidget.prototype.localeChanged = function(index) {
-    this.calendar.setLocale(this.localeCombo.itemData(index));
+    this.calendar.locale = this.localeCombo.itemData(index);
 }
 
 CalendarWidget.prototype.firstDayChanged = function(index) {
@@ -95,7 +95,7 @@ CalendarWidget.prototype.minimumDateChanged = function(date) {
 }
 
 CalendarWidget.prototype.maximumDateChanged = function(date) {
-    this.calendar.setMaximumDate(date);
+    this.calendar.maximumDate = date;
     this.minimumDateEdit.setDate(this.calendar.minimumDate);
 }
 
@@ -175,26 +175,23 @@ CalendarWidget.prototype.createGeneralOptionsGroupBox = function() {
     var curLocaleIndex = -1;
     var index = 0;
 
-    
-
-    for (var lang in QLocale.Language) {
+    for (var i = 0; i <= QLocale.Ugaritic; ++i) {
+        var lang = QLocale.Language(i);
         var countries = QLocale.countriesForLanguage(lang);
-            
         for (var country in countries) {
             var label = QLocale.languageToString(lang);
             label += "/";
-            label += QLocale.countryToString(country);
+            label += QLocale.countryToString(QLocale.Country(country));
             var locale = new QLocale(lang, country);
-            if (this.locale().language() == lang && this.locale().country() == country)
+            if (this.locale.language() == lang && this.locale.country() == country)
                 curLocaleIndex = index;
-
-            localeCombo.addItem(label, locale);
+            this.localeCombo.addItem(label, locale);
             ++index;
         }
     }
 
     if (curLocaleIndex != -1)
-        localeCombo.setCurrentIndex(curLocaleIndex);
+        this.localeCombo.setCurrentIndex(curLocaleIndex);
     this.localeLabel = new QLabel(tr("&Locale"));
     this.localeLabel.setBuddy(this.localeCombo);
     

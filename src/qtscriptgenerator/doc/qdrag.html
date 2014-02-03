@@ -12,7 +12,7 @@
 <p>Inherits <a href="qobject.html">QObject</a>.</p>
 <h3>Constructor</h3>
 <ul>
-<li><div class="fn"/><b>void QDrag(QWidget dragSource)</b></li>
+<li><div class="fn"/><b>void QDrag(QObject dragSource)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
@@ -21,6 +21,8 @@
 <h3>Prototype Object Properties</h3>
 <p>The QDrag prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>DropAction defaultAction()</b></li>
+<li><div class="fn"/><b>QPixmap dragCursor(DropAction action)</b></li>
 <li><div class="fn"/><b>DropAction exec(DropActions supportedActions)</b></li>
 <li><div class="fn"/><b>QPoint hotSpot()</b></li>
 <li><div class="fn"/><b>QMimeData mimeData()</b></li>
@@ -29,8 +31,9 @@
 <li><div class="fn"/><b>void setHotSpot(QPoint hotspot)</b></li>
 <li><div class="fn"/><b>void setMimeData(QMimeData data)</b></li>
 <li><div class="fn"/><b>void setPixmap(QPixmap arg__1)</b></li>
-<li><div class="fn"/><b>QWidget source()</b></li>
-<li><div class="fn"/><b>QWidget target()</b></li>
+<li><div class="fn"/><b>QObject source()</b></li>
+<li><div class="fn"/><b>DropActions supportedActions()</b></li>
+<li><div class="fn"/><b>QObject target()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QDrag objects have no special properties beyond those inherited from the QDrag prototype object.</p>

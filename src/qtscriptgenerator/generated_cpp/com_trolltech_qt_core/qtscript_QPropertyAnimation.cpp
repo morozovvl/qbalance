@@ -40,6 +40,15 @@ static const int qtscript_QPropertyAnimation_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QPropertyAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPropertyAnimation : public QPropertyAnimation
+{
+
+    friend QScriptValue qtscript_QPropertyAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QPropertyAnimation_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -73,7 +82,7 @@ static QScriptValue qtscript_QPropertyAnimation_prototype_call(QScriptContext *c
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPropertyAnimation* _q_self = qscriptvalue_cast<QPropertyAnimation*>(context->thisObject());
+    qtscript_QPropertyAnimation* _q_self = reinterpret_cast<qtscript_QPropertyAnimation*>(qscriptvalue_cast<QPropertyAnimation*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPropertyAnimation.%0(): this object is not a QPropertyAnimation")

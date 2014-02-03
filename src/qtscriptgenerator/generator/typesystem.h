@@ -633,7 +633,8 @@ public:
         : TypeEntry(nspace.isEmpty() ? enumName : nspace + QLatin1String("::") + enumName,
                     EnumType),
           m_flags(0),
-          m_extensible(false)
+          m_extensible(false),
+          m_known(false)
     {
         m_qualifier = nspace;
         m_java_name = enumName;
@@ -684,6 +685,8 @@ public:
     bool forceInteger() const { return m_force_integer; }
     void setForceInteger(bool force) { m_force_integer = force; }
 
+    bool known() const { return m_known; }
+    void setKnown(bool known) { m_known = known; }
 private:
     Include m_include;
     QString m_package_name;
@@ -700,12 +703,13 @@ private:
 
     bool m_extensible;
     bool m_force_integer;
+    bool m_known;
 };
 
 class FlagsTypeEntry : public TypeEntry
 {
 public:
-    FlagsTypeEntry(const QString &name) : TypeEntry(name, FlagsType), m_enum(0)
+    FlagsTypeEntry(const QString &name) : TypeEntry(name, FlagsType), m_enum(0), m_known(false)
     {
     }
 
@@ -727,10 +731,13 @@ public:
 
     QString javaPackage() const { return m_enum->javaPackage(); }
 
+    bool known() const { return m_known; }
+    void setKnown(bool known) { m_known = known; }
 private:
     QString m_original_name;
     QString m_java_name;
     EnumTypeEntry *m_enum;
+    bool m_known;
 };
 
 
@@ -739,7 +746,7 @@ class ComplexTypeEntry : public TypeEntry
 public:
     enum TypeFlag {
         ForceAbstract      = 0x1,
-	    DeleteInMainThread = 0x2,
+        DeleteInMainThread = 0x2,
         Deprecated         = 0x4
     };
     typedef QFlags<TypeFlag> TypeFlags;

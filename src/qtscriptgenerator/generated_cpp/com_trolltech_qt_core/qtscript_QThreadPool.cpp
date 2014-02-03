@@ -38,7 +38,7 @@ static const char * const qtscript_QThreadPool_function_signatures[] = {
     , ""
     , "QRunnable runnable, int priority"
     , "QRunnable runnable"
-    , ""
+    , "int msecs"
 ""
 };
 
@@ -51,8 +51,17 @@ static const int qtscript_QThreadPool_function_lengths[] = {
     , 0
     , 2
     , 1
+    , 1
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QThreadPool_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QThreadPool : public QThreadPool
+{
+
+    friend QScriptValue qtscript_QThreadPool_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QThreadPool_throw_ambiguity_error_helper(
@@ -88,7 +97,7 @@ static QScriptValue qtscript_QThreadPool_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QThreadPool* _q_self = qscriptvalue_cast<QThreadPool*>(context->thisObject());
+    qtscript_QThreadPool* _q_self = reinterpret_cast<qtscript_QThreadPool*>(qscriptvalue_cast<QThreadPool*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QThreadPool.%0(): this object is not a QThreadPool")
@@ -134,8 +143,13 @@ static QScriptValue qtscript_QThreadPool_prototype_call(QScriptContext *context,
 
     case 4:
     if (context->argumentCount() == 0) {
-        _q_self->waitForDone();
-        return context->engine()->undefinedValue();
+        bool _q_result = _q_self->waitForDone();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        bool _q_result = _q_self->waitForDone(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 

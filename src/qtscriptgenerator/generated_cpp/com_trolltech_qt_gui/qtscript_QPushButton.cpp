@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qpushbutton.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qpushbutton.h>
 #include <qrect.h>
@@ -39,6 +39,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QPushButton.h"
 
@@ -46,6 +47,7 @@ static const char * const qtscript_QPushButton_function_names[] = {
     "QPushButton"
     // static
     // prototype
+    , "initStyleOption"
     , "menu"
     , "minimumSizeHint"
     , "setMenu"
@@ -57,6 +59,7 @@ static const char * const qtscript_QPushButton_function_signatures[] = {
     "QWidget parent\nQIcon icon, String text, QWidget parent\nString text, QWidget parent"
     // static
     // prototype
+    , "QStyleOptionButton option"
     , ""
     , ""
     , "QMenu menu"
@@ -68,11 +71,22 @@ static const int qtscript_QPushButton_function_lengths[] = {
     3
     // static
     // prototype
+    , 1
     , 0
     , 0
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QPushButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPushButton : public QPushButton
+{
+    friend QScriptValue qtscript_QPushButton_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QPushButton_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPushButton_throw_ambiguity_error_helper(
@@ -88,7 +102,9 @@ static QScriptValue qtscript_QPushButton_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QPushButton*)
 Q_DECLARE_METATYPE(QtScriptShell_QPushButton*)
+Q_DECLARE_METATYPE(QStyleOptionButton*)
 Q_DECLARE_METATYPE(QMenu*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractButton*)
 
 //
@@ -105,11 +121,11 @@ static QScriptValue qtscript_QPushButton_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 5;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPushButton* _q_self = qscriptvalue_cast<QPushButton*>(context->thisObject());
+    qtscript_QPushButton* _q_self = reinterpret_cast<qtscript_QPushButton*>(qscriptvalue_cast<QPushButton*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPushButton.%0(): this object is not a QPushButton")
@@ -118,20 +134,28 @@ static QScriptValue qtscript_QPushButton_prototype_call(QScriptContext *context,
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionButton* _q_arg0 = qscriptvalue_cast<QStyleOptionButton*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         QMenu* _q_result = _q_self->menu();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QMenu* _q_arg0 = qscriptvalue_cast<QMenu*>(context->argument(0));
         _q_self->setMenu(_q_arg0);
@@ -139,14 +163,14 @@ static QScriptValue qtscript_QPushButton_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4: {
+    case 5: {
     QString result = QString::fromLatin1("QPushButton");
     return QScriptValue(context->engine(), result);
     }
@@ -240,7 +264,7 @@ QScriptValue qtscript_create_QPushButton_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPushButton*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPushButton*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractButton*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 6; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPushButton_prototype_call, qtscript_QPushButton_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPushButton_function_names[i+1]),

@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionTabWidgetFrame_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionTabWidgetFrame_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionTabWidgetFrame : public QStyleOptionTabWidgetFrame
+{
+
+    friend QScriptValue qtscript_QStyleOptionTabWidgetFrame_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionTabWidgetFrame_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionTabWidgetFrame)
 Q_DECLARE_METATYPE(QStyleOptionTabWidgetFrame*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionTabWidgetFrame)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionTabWidgetFrame*)
-Q_DECLARE_METATYPE(QStyleOptionTabWidgetFrame::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionTabWidgetFrame::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionTabWidgetFrame::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionTabWidgetFrame::StyleOptionVersion
-//
-
-static const QStyleOptionTabWidgetFrame::StyleOptionVersion qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_values[] = {
-    QStyleOptionTabWidgetFrame::Version
-};
-
-static const char * const qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toStringHelper(QStyleOptionTabWidgetFrame::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionTabWidgetFrame::Version) && (value <= QStyleOptionTabWidgetFrame::Version))
-        return qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTabWidgetFrame::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionTabWidgetFrame::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTabWidgetFrame"));
-    return clazz.property(qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionTabWidgetFrame::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionTabWidgetFrame_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionTabWidgetFrame::Version) && (arg <= QStyleOptionTabWidgetFrame::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTabWidgetFrame::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTabWidgetFrame::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionTabWidgetFrame_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionTabWidgetFrame_StyleOptionVersion,
-        qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_valueOf, qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionTabWidgetFrame::StyleOptionVersion>(engine, qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionTabWidgetFrame_StyleOptionType_c
 }
 
 //
+// QStyleOptionTabWidgetFrame::StyleOptionVersion
+//
+
+static const QStyleOptionTabWidgetFrame::StyleOptionVersion qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_values[] = {
+    QStyleOptionTabWidgetFrame::Version
+};
+
+static const char * const qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toStringHelper(QStyleOptionTabWidgetFrame::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionTabWidgetFrame::Version) && (value <= QStyleOptionTabWidgetFrame::Version))
+        return qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTabWidgetFrame::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionTabWidgetFrame::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTabWidgetFrame"));
+    return clazz.property(qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionTabWidgetFrame::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTabWidgetFrame_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionTabWidgetFrame::Version) && (arg <= QStyleOptionTabWidgetFrame::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTabWidgetFrame::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTabWidgetFrame::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTabWidgetFrame::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTabWidgetFrame_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionTabWidgetFrame_StyleOptionVersion,
+        qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_valueOf, qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionTabWidgetFrame::StyleOptionVersion>(engine, qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTabWidgetFrame_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionTabWidgetFrame
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionTabWidgetFrame_prototype_call(QScriptCo
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionTabWidgetFrame* _q_self = qscriptvalue_cast<QStyleOptionTabWidgetFrame*>(context->thisObject());
+    qtscript_QStyleOptionTabWidgetFrame* _q_self = reinterpret_cast<qtscript_QStyleOptionTabWidgetFrame*>(qscriptvalue_cast<QStyleOptionTabWidgetFrame*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionTabWidgetFrame.%0(): this object is not a QStyleOptionTabWidgetFrame")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionTabWidgetFrame_class(QScriptEngine *eng
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionTabWidgetFrame_static_call, proto, qtscript_QStyleOptionTabWidgetFrame_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionTabWidgetFrame_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionTabWidgetFrame_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionTabWidgetFrame_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

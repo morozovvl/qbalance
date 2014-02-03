@@ -12,26 +12,25 @@
 <p>Inherits <a href="qinputevent.html">QInputEvent</a>.</p>
 <h3>Constructor</h3>
 <ul>
-<li><div class="fn"/><b>void QTouchEvent(Type eventType, DeviceType deviceType, KeyboardModifiers modifiers, TouchPointStates touchPointStates, List touchPoints)</b></li>
+<li><div class="fn"/><b>void QTouchEvent(Type eventType, QTouchDevice device, KeyboardModifiers modifiers, TouchPointStates touchPointStates, List touchPoints)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QTouchEvent prototype object</li>
-<li><b>TouchScreen</b></li>
-<li><b>TouchPad</b></li>
-<li><b>DeviceType( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QTouchEvent prototype object inherits properties from the <a href="qinputevent.html">QInputEvent</a> prototype object and also has the following properties.</p>
 <ul>
-<li><div class="fn"/><b>DeviceType deviceType()</b></li>
-<li><div class="fn"/><b>void setDeviceType(DeviceType adeviceType)</b></li>
+<li><div class="fn"/><b>QTouchDevice device()</b></li>
+<li><div class="fn"/><b>void setDevice(QTouchDevice adevice)</b></li>
+<li><div class="fn"/><b>void setTarget(QObject atarget)</b></li>
 <li><div class="fn"/><b>void setTouchPointStates(TouchPointStates aTouchPointStates)</b></li>
 <li><div class="fn"/><b>void setTouchPoints(List atouchPoints)</b></li>
-<li><div class="fn"/><b>void setWidget(QWidget awidget)</b></li>
+<li><div class="fn"/><b>void setWindow(QWindow awindow)</b></li>
+<li><div class="fn"/><b>QObject target()</b></li>
 <li><div class="fn"/><b>TouchPointStates touchPointStates()</b></li>
 <li><div class="fn"/><b>List touchPoints()</b></li>
-<li><div class="fn"/><b>QWidget widget()</b></li>
+<li><div class="fn"/><b>QWindow window()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QTouchEvent objects have no special properties beyond those inherited from the QTouchEvent prototype object.</p>

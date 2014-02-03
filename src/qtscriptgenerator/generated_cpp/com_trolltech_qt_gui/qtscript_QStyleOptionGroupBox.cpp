@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionGroupBox_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionGroupBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionGroupBox : public QStyleOptionGroupBox
+{
+
+    friend QScriptValue qtscript_QStyleOptionGroupBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionGroupBox_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionGroupBox)
 Q_DECLARE_METATYPE(QStyleOptionGroupBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionGroupBox)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionGroupBox*)
-Q_DECLARE_METATYPE(QStyleOptionGroupBox::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionGroupBox::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionGroupBox::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionComplex*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionGroupBox::StyleOptionVersion
-//
-
-static const QStyleOptionGroupBox::StyleOptionVersion qtscript_QStyleOptionGroupBox_StyleOptionVersion_values[] = {
-    QStyleOptionGroupBox::Version
-};
-
-static const char * const qtscript_QStyleOptionGroupBox_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionGroupBox_StyleOptionVersion_toStringHelper(QStyleOptionGroupBox::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionGroupBox::Version) && (value <= QStyleOptionGroupBox::Version))
-        return qtscript_QStyleOptionGroupBox_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionGroupBox::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionGroupBox_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionGroupBox::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionGroupBox"));
-    return clazz.property(qtscript_QStyleOptionGroupBox_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionGroupBox_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionGroupBox::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionGroupBox::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionGroupBox_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionGroupBox::Version) && (arg <= QStyleOptionGroupBox::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionGroupBox::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionGroupBox_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionGroupBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGroupBox::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionGroupBox_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionGroupBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGroupBox::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionGroupBox_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionGroupBox_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionGroupBox_StyleOptionVersion,
-        qtscript_QStyleOptionGroupBox_StyleOptionVersion_valueOf, qtscript_QStyleOptionGroupBox_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionGroupBox::StyleOptionVersion>(engine, qtscript_QStyleOptionGroupBox_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionGroupBox_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionGroupBox_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionGroupBox_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionGroupBox_StyleOptionType_class(Q
 }
 
 //
+// QStyleOptionGroupBox::StyleOptionVersion
+//
+
+static const QStyleOptionGroupBox::StyleOptionVersion qtscript_QStyleOptionGroupBox_StyleOptionVersion_values[] = {
+    QStyleOptionGroupBox::Version
+};
+
+static const char * const qtscript_QStyleOptionGroupBox_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionGroupBox_StyleOptionVersion_toStringHelper(QStyleOptionGroupBox::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionGroupBox::Version) && (value <= QStyleOptionGroupBox::Version))
+        return qtscript_QStyleOptionGroupBox_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionGroupBox::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionGroupBox_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionGroupBox::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionGroupBox"));
+    return clazz.property(qtscript_QStyleOptionGroupBox_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionGroupBox_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionGroupBox::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionGroupBox::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionGroupBox_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionGroupBox::Version) && (arg <= QStyleOptionGroupBox::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionGroupBox::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionGroupBox_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionGroupBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGroupBox::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionGroupBox_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionGroupBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGroupBox::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionGroupBox_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionGroupBox_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionGroupBox_StyleOptionVersion,
+        qtscript_QStyleOptionGroupBox_StyleOptionVersion_valueOf, qtscript_QStyleOptionGroupBox_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionGroupBox::StyleOptionVersion>(engine, qtscript_QStyleOptionGroupBox_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionGroupBox_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionGroupBox_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionGroupBox_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionGroupBox
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionGroupBox_prototype_call(QScriptContext 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionGroupBox* _q_self = qscriptvalue_cast<QStyleOptionGroupBox*>(context->thisObject());
+    qtscript_QStyleOptionGroupBox* _q_self = reinterpret_cast<qtscript_QStyleOptionGroupBox*>(qscriptvalue_cast<QStyleOptionGroupBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionGroupBox.%0(): this object is not a QStyleOptionGroupBox")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionGroupBox_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionGroupBox_static_call, proto, qtscript_QStyleOptionGroupBox_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionGroupBox_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionGroupBox_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionGroupBox_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

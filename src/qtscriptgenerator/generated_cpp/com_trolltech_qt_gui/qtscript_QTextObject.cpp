@@ -25,6 +25,7 @@ static const char * const qtscript_QTextObject_function_names[] = {
     , "format"
     , "formatIndex"
     , "objectIndex"
+    , "setFormat"
     , "toString"
 };
 
@@ -36,6 +37,7 @@ static const char * const qtscript_QTextObject_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QTextFormat format"
 ""
 };
 
@@ -47,7 +49,18 @@ static const int qtscript_QTextObject_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QTextObject_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextObject : public QTextObject
+{
+    friend QScriptValue qtscript_QTextObject_setFormat(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTextObject_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTextObject_throw_ambiguity_error_helper(
@@ -79,11 +92,11 @@ static QScriptValue qtscript_QTextObject_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 5;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextObject* _q_self = qscriptvalue_cast<QTextObject*>(context->thisObject());
+    qtscript_QTextObject* _q_self = reinterpret_cast<qtscript_QTextObject*>(qscriptvalue_cast<QTextObject*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextObject.%0(): this object is not a QTextObject")
@@ -119,7 +132,15 @@ static QScriptValue qtscript_QTextObject_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 4: {
+    case 4:
+    if (context->argumentCount() == 1) {
+        QTextFormat _q_arg0 = qscriptvalue_cast<QTextFormat>(context->argument(0));
+        _q_self->setFormat(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5: {
     QString result = QString::fromLatin1("QTextObject");
     return QScriptValue(context->engine(), result);
     }
@@ -166,7 +187,7 @@ QScriptValue qtscript_create_QTextObject_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTextObject*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextObject*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 6; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTextObject_prototype_call, qtscript_QTextObject_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTextObject_function_names[i+1]),

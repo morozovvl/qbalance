@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qdatetimeedit.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -19,8 +20,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -32,6 +31,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -40,6 +40,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QDateTimeEdit.h"
 
@@ -54,6 +55,8 @@ static const char * const qtscript_QDateTimeEdit_function_names[] = {
     , "clearMinimumDate"
     , "clearMinimumDateTime"
     , "clearMinimumTime"
+    , "dateTimeFromText"
+    , "initDateTimeEditStyleOption"
     , "sectionAt"
     , "sectionText"
     , "setCalendarWidget"
@@ -61,6 +64,7 @@ static const char * const qtscript_QDateTimeEdit_function_names[] = {
     , "setDateTimeRange"
     , "setSelectedSection"
     , "setTimeRange"
+    , "textFromDateTime"
     , "toString"
 };
 
@@ -75,6 +79,8 @@ static const char * const qtscript_QDateTimeEdit_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "String text"
+    , "QStyleOptionSpinBox option"
     , "int index"
     , "Section section"
     , "QCalendarWidget calendarWidget"
@@ -82,6 +88,7 @@ static const char * const qtscript_QDateTimeEdit_function_signatures[] = {
     , "QDateTime min, QDateTime max"
     , "Section section"
     , "QTime min, QTime max"
+    , "QDateTime dt"
 ""
 };
 
@@ -99,11 +106,26 @@ static const int qtscript_QDateTimeEdit_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
+    , 1
     , 2
     , 2
     , 1
     , 2
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDateTimeEdit : public QDateTimeEdit
+{
+    friend QScriptValue qtscript_QDateTimeEdit_dateTimeFromText(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QDateTimeEdit_initDateTimeEditStyleOption(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QDateTimeEdit_textFromDateTime(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QDateTimeEdit_throw_ambiguity_error_helper(
@@ -127,6 +149,8 @@ Q_DECLARE_METATYPE(QtScriptShell_QDateTimeEdit*)
 Q_DECLARE_METATYPE(QDateTimeEdit::Section)
 Q_DECLARE_METATYPE(QFlags<QDateTimeEdit::Section>)
 Q_DECLARE_METATYPE(QCalendarWidget*)
+Q_DECLARE_METATYPE(QStyleOptionSpinBox*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractSpinBox*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -341,11 +365,11 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 14;
+        _id = 0xBABE0000 + 17;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDateTimeEdit* _q_self = qscriptvalue_cast<QDateTimeEdit*>(context->thisObject());
+    qtscript_QDateTimeEdit* _q_self = reinterpret_cast<qtscript_QDateTimeEdit*>(qscriptvalue_cast<QDateTimeEdit*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDateTimeEdit.%0(): this object is not a QDateTimeEdit")
@@ -404,13 +428,29 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
 
     case 7:
     if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        QDateTime _q_result = _q_self->dateTimeFromText(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 8:
+    if (context->argumentCount() == 1) {
+        QStyleOptionSpinBox* _q_arg0 = qscriptvalue_cast<QStyleOptionSpinBox*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QDateTimeEdit::Section _q_result = _q_self->sectionAt(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 1) {
         QDateTimeEdit::Section _q_arg0 = qscriptvalue_cast<QDateTimeEdit::Section>(context->argument(0));
         QString _q_result = _q_self->sectionText(_q_arg0);
@@ -418,7 +458,7 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 1) {
         QCalendarWidget* _q_arg0 = qscriptvalue_cast<QCalendarWidget*>(context->argument(0));
         _q_self->setCalendarWidget(_q_arg0);
@@ -426,7 +466,7 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 2) {
         QDate _q_arg0 = qscriptvalue_cast<QDate>(context->argument(0));
         QDate _q_arg1 = qscriptvalue_cast<QDate>(context->argument(1));
@@ -435,7 +475,7 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 2) {
         QDateTime _q_arg0 = context->argument(0).toDateTime();
         QDateTime _q_arg1 = context->argument(1).toDateTime();
@@ -444,7 +484,7 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 1) {
         QDateTimeEdit::Section _q_arg0 = qscriptvalue_cast<QDateTimeEdit::Section>(context->argument(0));
         _q_self->setSelectedSection(_q_arg0);
@@ -452,7 +492,7 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 2) {
         QTime _q_arg0 = qscriptvalue_cast<QTime>(context->argument(0));
         QTime _q_arg1 = qscriptvalue_cast<QTime>(context->argument(1));
@@ -461,7 +501,15 @@ static QScriptValue qtscript_QDateTimeEdit_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 14: {
+    case 16:
+    if (context->argumentCount() == 1) {
+        QDateTime _q_arg0 = context->argument(0).toDateTime();
+        QString _q_result = _q_self->textFromDateTime(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17: {
     QString result = QString::fromLatin1("QDateTimeEdit");
     return QScriptValue(context->engine(), result);
     }
@@ -567,7 +615,7 @@ QScriptValue qtscript_create_QDateTimeEdit_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QDateTimeEdit*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDateTimeEdit*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractSpinBox*>()));
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDateTimeEdit_prototype_call, qtscript_QDateTimeEdit_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QDateTimeEdit_function_names[i+1]),

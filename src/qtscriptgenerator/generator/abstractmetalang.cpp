@@ -1130,6 +1130,14 @@ bool AbstractMetaClass::hasProtectedFunctions() const {
     return false;
 }
 
+bool AbstractMetaClass::hasOrHadProtectedFunctions() const {
+    foreach (AbstractMetaFunction *func, m_functions) {
+        if (func->isProtected() || func->wasProtected())
+            return true;
+    }
+    return false;
+}
+
 bool AbstractMetaClass::generateShellClass() const
 {
     return m_force_shell_class ||

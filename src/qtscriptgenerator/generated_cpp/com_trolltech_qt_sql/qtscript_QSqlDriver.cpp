@@ -48,7 +48,10 @@ static const char * const qtscript_QSqlDriver_function_names[] = {
     , "primaryIndex"
     , "record"
     , "rollbackTransaction"
+    , "setLastError"
     , "setNumericalPrecisionPolicy"
+    , "setOpen"
+    , "setOpenError"
     , "sqlStatement"
     , "stripDelimiters"
     , "subscribeToNotification"
@@ -79,7 +82,10 @@ static const char * const qtscript_QSqlDriver_function_signatures[] = {
     , "String tableName"
     , "String tableName"
     , ""
+    , "QSqlError e"
     , "NumericalPrecisionPolicy precisionPolicy"
+    , "bool o"
+    , "bool e"
     , "StatementType type, String tableName, QSqlRecord rec, bool preparedStatement"
     , "String identifier, IdentifierType type"
     , "String name"
@@ -111,6 +117,9 @@ static const int qtscript_QSqlDriver_function_lengths[] = {
     , 1
     , 0
     , 1
+    , 1
+    , 1
+    , 1
     , 4
     , 2
     , 1
@@ -118,6 +127,18 @@ static const int qtscript_QSqlDriver_function_lengths[] = {
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSqlDriver : public QSqlDriver
+{
+    friend QScriptValue qtscript_QSqlDriver_setLastError(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlDriver_setOpen(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlDriver_setOpenError(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSqlDriver_throw_ambiguity_error_helper(
@@ -133,9 +154,10 @@ static QScriptValue qtscript_QSqlDriver_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QSqlDriver*)
 Q_DECLARE_METATYPE(QtScriptShell_QSqlDriver*)
+Q_DECLARE_METATYPE(QSqlDriver::DriverFeature)
 Q_DECLARE_METATYPE(QSqlDriver::StatementType)
 Q_DECLARE_METATYPE(QSqlDriver::IdentifierType)
-Q_DECLARE_METATYPE(QSqlDriver::DriverFeature)
+Q_DECLARE_METATYPE(QSqlDriver::NotificationSource)
 Q_DECLARE_METATYPE(QSqlResult*)
 Q_DECLARE_METATYPE(QSqlField)
 Q_DECLARE_METATYPE(QSqlError)
@@ -156,6 +178,99 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QSqlDriver::DriverFeature
+//
+
+static const QSqlDriver::DriverFeature qtscript_QSqlDriver_DriverFeature_values[] = {
+    QSqlDriver::Transactions
+    , QSqlDriver::QuerySize
+    , QSqlDriver::BLOB
+    , QSqlDriver::Unicode
+    , QSqlDriver::PreparedQueries
+    , QSqlDriver::NamedPlaceholders
+    , QSqlDriver::PositionalPlaceholders
+    , QSqlDriver::LastInsertId
+    , QSqlDriver::BatchOperations
+    , QSqlDriver::SimpleLocking
+    , QSqlDriver::LowPrecisionNumbers
+    , QSqlDriver::EventNotifications
+    , QSqlDriver::FinishQuery
+    , QSqlDriver::MultipleResultSets
+    , QSqlDriver::CancelQuery
+};
+
+static const char * const qtscript_QSqlDriver_DriverFeature_keys[] = {
+    "Transactions"
+    , "QuerySize"
+    , "BLOB"
+    , "Unicode"
+    , "PreparedQueries"
+    , "NamedPlaceholders"
+    , "PositionalPlaceholders"
+    , "LastInsertId"
+    , "BatchOperations"
+    , "SimpleLocking"
+    , "LowPrecisionNumbers"
+    , "EventNotifications"
+    , "FinishQuery"
+    , "MultipleResultSets"
+    , "CancelQuery"
+};
+
+static QString qtscript_QSqlDriver_DriverFeature_toStringHelper(QSqlDriver::DriverFeature value)
+{
+    if ((value >= QSqlDriver::Transactions) && (value <= QSqlDriver::CancelQuery))
+        return qtscript_QSqlDriver_DriverFeature_keys[static_cast<int>(value)-static_cast<int>(QSqlDriver::Transactions)];
+    return QString();
+}
+
+static QScriptValue qtscript_QSqlDriver_DriverFeature_toScriptValue(QScriptEngine *engine, const QSqlDriver::DriverFeature &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QSqlDriver"));
+    return clazz.property(qtscript_QSqlDriver_DriverFeature_toStringHelper(value));
+}
+
+static void qtscript_QSqlDriver_DriverFeature_fromScriptValue(const QScriptValue &value, QSqlDriver::DriverFeature &out)
+{
+    out = qvariant_cast<QSqlDriver::DriverFeature>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QSqlDriver_DriverFeature(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QSqlDriver::Transactions) && (arg <= QSqlDriver::CancelQuery))
+        return qScriptValueFromValue(engine,  static_cast<QSqlDriver::DriverFeature>(arg));
+    return context->throwError(QString::fromLatin1("DriverFeature(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QSqlDriver_DriverFeature_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QSqlDriver::DriverFeature value = qscriptvalue_cast<QSqlDriver::DriverFeature>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QSqlDriver_DriverFeature_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QSqlDriver::DriverFeature value = qscriptvalue_cast<QSqlDriver::DriverFeature>(context->thisObject());
+    return QScriptValue(engine, qtscript_QSqlDriver_DriverFeature_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QSqlDriver_DriverFeature_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QSqlDriver_DriverFeature,
+        qtscript_QSqlDriver_DriverFeature_valueOf, qtscript_QSqlDriver_DriverFeature_toString);
+    qScriptRegisterMetaType<QSqlDriver::DriverFeature>(engine, qtscript_QSqlDriver_DriverFeature_toScriptValue,
+        qtscript_QSqlDriver_DriverFeature_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 15; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QSqlDriver_DriverFeature_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QSqlDriver_DriverFeature_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -299,91 +414,69 @@ static QScriptValue qtscript_create_QSqlDriver_IdentifierType_class(QScriptEngin
 }
 
 //
-// QSqlDriver::DriverFeature
+// QSqlDriver::NotificationSource
 //
 
-static const QSqlDriver::DriverFeature qtscript_QSqlDriver_DriverFeature_values[] = {
-    QSqlDriver::Transactions
-    , QSqlDriver::QuerySize
-    , QSqlDriver::BLOB
-    , QSqlDriver::Unicode
-    , QSqlDriver::PreparedQueries
-    , QSqlDriver::NamedPlaceholders
-    , QSqlDriver::PositionalPlaceholders
-    , QSqlDriver::LastInsertId
-    , QSqlDriver::BatchOperations
-    , QSqlDriver::SimpleLocking
-    , QSqlDriver::LowPrecisionNumbers
-    , QSqlDriver::EventNotifications
-    , QSqlDriver::FinishQuery
-    , QSqlDriver::MultipleResultSets
+static const QSqlDriver::NotificationSource qtscript_QSqlDriver_NotificationSource_values[] = {
+    QSqlDriver::UnknownSource
+    , QSqlDriver::SelfSource
+    , QSqlDriver::OtherSource
 };
 
-static const char * const qtscript_QSqlDriver_DriverFeature_keys[] = {
-    "Transactions"
-    , "QuerySize"
-    , "BLOB"
-    , "Unicode"
-    , "PreparedQueries"
-    , "NamedPlaceholders"
-    , "PositionalPlaceholders"
-    , "LastInsertId"
-    , "BatchOperations"
-    , "SimpleLocking"
-    , "LowPrecisionNumbers"
-    , "EventNotifications"
-    , "FinishQuery"
-    , "MultipleResultSets"
+static const char * const qtscript_QSqlDriver_NotificationSource_keys[] = {
+    "UnknownSource"
+    , "SelfSource"
+    , "OtherSource"
 };
 
-static QString qtscript_QSqlDriver_DriverFeature_toStringHelper(QSqlDriver::DriverFeature value)
+static QString qtscript_QSqlDriver_NotificationSource_toStringHelper(QSqlDriver::NotificationSource value)
 {
-    if ((value >= QSqlDriver::Transactions) && (value <= QSqlDriver::MultipleResultSets))
-        return qtscript_QSqlDriver_DriverFeature_keys[static_cast<int>(value)-static_cast<int>(QSqlDriver::Transactions)];
+    if ((value >= QSqlDriver::UnknownSource) && (value <= QSqlDriver::OtherSource))
+        return qtscript_QSqlDriver_NotificationSource_keys[static_cast<int>(value)-static_cast<int>(QSqlDriver::UnknownSource)];
     return QString();
 }
 
-static QScriptValue qtscript_QSqlDriver_DriverFeature_toScriptValue(QScriptEngine *engine, const QSqlDriver::DriverFeature &value)
+static QScriptValue qtscript_QSqlDriver_NotificationSource_toScriptValue(QScriptEngine *engine, const QSqlDriver::NotificationSource &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QSqlDriver"));
-    return clazz.property(qtscript_QSqlDriver_DriverFeature_toStringHelper(value));
+    return clazz.property(qtscript_QSqlDriver_NotificationSource_toStringHelper(value));
 }
 
-static void qtscript_QSqlDriver_DriverFeature_fromScriptValue(const QScriptValue &value, QSqlDriver::DriverFeature &out)
+static void qtscript_QSqlDriver_NotificationSource_fromScriptValue(const QScriptValue &value, QSqlDriver::NotificationSource &out)
 {
-    out = qvariant_cast<QSqlDriver::DriverFeature>(value.toVariant());
+    out = qvariant_cast<QSqlDriver::NotificationSource>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QSqlDriver_DriverFeature(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QSqlDriver_NotificationSource(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QSqlDriver::Transactions) && (arg <= QSqlDriver::MultipleResultSets))
-        return qScriptValueFromValue(engine,  static_cast<QSqlDriver::DriverFeature>(arg));
-    return context->throwError(QString::fromLatin1("DriverFeature(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QSqlDriver::UnknownSource) && (arg <= QSqlDriver::OtherSource))
+        return qScriptValueFromValue(engine,  static_cast<QSqlDriver::NotificationSource>(arg));
+    return context->throwError(QString::fromLatin1("NotificationSource(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QSqlDriver_DriverFeature_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QSqlDriver_NotificationSource_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QSqlDriver::DriverFeature value = qscriptvalue_cast<QSqlDriver::DriverFeature>(context->thisObject());
+    QSqlDriver::NotificationSource value = qscriptvalue_cast<QSqlDriver::NotificationSource>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QSqlDriver_DriverFeature_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QSqlDriver_NotificationSource_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QSqlDriver::DriverFeature value = qscriptvalue_cast<QSqlDriver::DriverFeature>(context->thisObject());
-    return QScriptValue(engine, qtscript_QSqlDriver_DriverFeature_toStringHelper(value));
+    QSqlDriver::NotificationSource value = qscriptvalue_cast<QSqlDriver::NotificationSource>(context->thisObject());
+    return QScriptValue(engine, qtscript_QSqlDriver_NotificationSource_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QSqlDriver_DriverFeature_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QSqlDriver_NotificationSource_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QSqlDriver_DriverFeature,
-        qtscript_QSqlDriver_DriverFeature_valueOf, qtscript_QSqlDriver_DriverFeature_toString);
-    qScriptRegisterMetaType<QSqlDriver::DriverFeature>(engine, qtscript_QSqlDriver_DriverFeature_toScriptValue,
-        qtscript_QSqlDriver_DriverFeature_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 14; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QSqlDriver_DriverFeature_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QSqlDriver_DriverFeature_values[i])),
+        engine, qtscript_construct_QSqlDriver_NotificationSource,
+        qtscript_QSqlDriver_NotificationSource_valueOf, qtscript_QSqlDriver_NotificationSource_toString);
+    qScriptRegisterMetaType<QSqlDriver::NotificationSource>(engine, qtscript_QSqlDriver_NotificationSource_toScriptValue,
+        qtscript_QSqlDriver_NotificationSource_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QSqlDriver_NotificationSource_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QSqlDriver_NotificationSource_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -403,11 +496,11 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 24;
+        _id = 0xBABE0000 + 27;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSqlDriver* _q_self = qscriptvalue_cast<QSqlDriver*>(context->thisObject());
+    qtscript_QSqlDriver* _q_self = reinterpret_cast<qtscript_QSqlDriver*>(qscriptvalue_cast<QSqlDriver*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSqlDriver.%0(): this object is not a QSqlDriver")
@@ -591,13 +684,37 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
 
     case 17:
     if (context->argumentCount() == 1) {
+        QSqlError _q_arg0 = qscriptvalue_cast<QSqlError>(context->argument(0));
+        _q_self->setLastError(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 1) {
         QSql::NumericalPrecisionPolicy _q_arg0 = qscriptvalue_cast<QSql::NumericalPrecisionPolicy>(context->argument(0));
         _q_self->setNumericalPrecisionPolicy(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 18:
+    case 19:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setOpen(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 20:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setOpenError(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 4) {
         QSqlDriver::StatementType _q_arg0 = qscriptvalue_cast<QSqlDriver::StatementType>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -608,7 +725,7 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 19:
+    case 22:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QSqlDriver::IdentifierType _q_arg1 = qscriptvalue_cast<QSqlDriver::IdentifierType>(context->argument(1));
@@ -617,7 +734,7 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 20:
+    case 23:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->subscribeToNotification(_q_arg0);
@@ -625,14 +742,14 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 21:
+    case 24:
     if (context->argumentCount() == 0) {
         QStringList _q_result = _q_self->subscribedToNotifications();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 25:
     if (context->argumentCount() == 1) {
         QSql::TableType _q_arg0 = qscriptvalue_cast<QSql::TableType>(context->argument(0));
         QStringList _q_result = _q_self->tables(_q_arg0);
@@ -640,7 +757,7 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 23:
+    case 26:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->unsubscribeFromNotification(_q_arg0);
@@ -648,7 +765,7 @@ static QScriptValue qtscript_QSqlDriver_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 24: {
+    case 27: {
     QString result = QString::fromLatin1("QSqlDriver");
     return QScriptValue(context->engine(), result);
     }
@@ -708,7 +825,7 @@ QScriptValue qtscript_create_QSqlDriver_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSqlDriver*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSqlDriver*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 25; ++i) {
+    for (int i = 0; i < 28; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSqlDriver_prototype_call, qtscript_QSqlDriver_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSqlDriver_function_names[i+1]),
@@ -721,11 +838,13 @@ QScriptValue qtscript_create_QSqlDriver_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QSqlDriver_static_call, proto, qtscript_QSqlDriver_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("DriverFeature"),
+        qtscript_create_QSqlDriver_DriverFeature_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StatementType"),
         qtscript_create_QSqlDriver_StatementType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("IdentifierType"),
         qtscript_create_QSqlDriver_IdentifierType_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("DriverFeature"),
-        qtscript_create_QSqlDriver_DriverFeature_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("NotificationSource"),
+        qtscript_create_QSqlDriver_NotificationSource_class(engine, ctor));
     return ctor;
 }

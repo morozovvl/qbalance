@@ -23,6 +23,7 @@ static const char * const qtscript_QNetworkAddressEntry_function_names[] = {
     , "setIp"
     , "setNetmask"
     , "setPrefixLength"
+    , "swap"
     , "toString"
 };
 
@@ -39,6 +40,7 @@ static const char * const qtscript_QNetworkAddressEntry_function_signatures[] = 
     , "QHostAddress newIp"
     , "QHostAddress newNetmask"
     , "int length"
+    , "QNetworkAddressEntry other"
 ""
 };
 
@@ -51,6 +53,7 @@ static const int qtscript_QNetworkAddressEntry_function_lengths[] = {
     , 0
     , 1
     , 0
+    , 1
     , 1
     , 1
     , 1
@@ -87,7 +90,7 @@ static QScriptValue qtscript_QNetworkAddressEntry_prototype_call(QScriptContext 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 9;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -167,7 +170,15 @@ static QScriptValue qtscript_QNetworkAddressEntry_prototype_call(QScriptContext 
     }
     break;
 
-    case 9: {
+    case 9:
+    if (context->argumentCount() == 1) {
+        QNetworkAddressEntry _q_arg0 = qscriptvalue_cast<QNetworkAddressEntry>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10: {
     QString result = QString::fromLatin1("QNetworkAddressEntry");
     return QScriptValue(context->engine(), result);
     }
@@ -214,7 +225,7 @@ QScriptValue qtscript_create_QNetworkAddressEntry_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QNetworkAddressEntry*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkAddressEntry*)0));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkAddressEntry_prototype_call, qtscript_QNetworkAddressEntry_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkAddressEntry_function_names[i+1]),

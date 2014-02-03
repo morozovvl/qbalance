@@ -32,13 +32,14 @@ public:
     void focusInEvent(QFocusEvent*  event);
     bool  focusNextPrevChild(bool  next);
     void focusOutEvent(QFocusEvent*  event);
+    bool  hasHeightForWidth() const;
     int  heightForWidth(int  arg__1) const;
     void hideEvent(QHideEvent*  arg__1);
+    void initPainter(QPainter*  painter) const;
     void inputMethodEvent(QInputMethodEvent*  event);
     QVariant  inputMethodQuery(Qt::InputMethodQuery  query) const;
     void keyPressEvent(QKeyEvent*  event);
     void keyReleaseEvent(QKeyEvent*  event);
-    void languageChange();
     void leaveEvent(QEvent*  arg__1);
     int  metric(QPaintDevice::PaintDeviceMetric  arg__1) const;
     void mouseDoubleClickEvent(QMouseEvent*  event);
@@ -46,14 +47,19 @@ public:
     void mousePressEvent(QMouseEvent*  event);
     void mouseReleaseEvent(QMouseEvent*  event);
     void moveEvent(QMoveEvent*  arg__1);
+    bool  nativeEvent(const QByteArray&  eventType, void*  message, long*  result);
     QPaintEngine*  paintEngine() const;
     void paintEvent(QPaintEvent*  event);
+    QPaintDevice*  redirected(QPoint*  offset) const;
     void resizeEvent(QResizeEvent*  event);
     void scrollContentsBy(int  dx, int  dy);
+    void setupViewport(QWidget*  widget);
+    QPainter*  sharedPainter() const;
     void showEvent(QShowEvent*  event);
     void tabletEvent(QTabletEvent*  arg__1);
     void timerEvent(QTimerEvent*  arg__1);
     bool  viewportEvent(QEvent*  event);
+    QSize  viewportSizeHint() const;
     void wheelEvent(QWheelEvent*  event);
 
     QScriptValue __qtscript_self;

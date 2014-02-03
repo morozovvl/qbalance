@@ -26,10 +26,14 @@ static const char * const qtscript_QStateMachine_function_names[] = {
     // prototype
     , "addDefaultAnimation"
     , "addState"
+    , "beginMicrostep"
+    , "beginSelectTransitions"
     , "cancelDelayedEvent"
     , "clearError"
     , "configuration"
     , "defaultAnimations"
+    , "endMicrostep"
+    , "endSelectTransitions"
     , "error"
     , "isRunning"
     , "postDelayedEvent"
@@ -40,15 +44,19 @@ static const char * const qtscript_QStateMachine_function_names[] = {
 };
 
 static const char * const qtscript_QStateMachine_function_signatures[] = {
-    "QObject parent"
+    "QObject parent\nChildMode childMode, QObject parent"
     // static
     // prototype
     , "QAbstractAnimation animation"
     , "QAbstractState state"
+    , "QEvent event"
+    , "QEvent event"
     , "int id"
     , ""
     , ""
     , ""
+    , "QEvent event"
+    , "QEvent event"
     , ""
     , ""
     , "QEvent event, int delay"
@@ -59,15 +67,19 @@ static const char * const qtscript_QStateMachine_function_signatures[] = {
 };
 
 static const int qtscript_QStateMachine_function_lengths[] = {
-    1
+    2
     // static
     // prototype
     , 1
     , 1
     , 1
+    , 1
+    , 1
     , 0
     , 0
     , 0
+    , 1
+    , 1
     , 0
     , 0
     , 2
@@ -75,6 +87,19 @@ static const int qtscript_QStateMachine_function_lengths[] = {
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStateMachine : public QStateMachine
+{
+    friend QScriptValue qtscript_QStateMachine_beginMicrostep(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QStateMachine_beginSelectTransitions(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QStateMachine_endMicrostep(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QStateMachine_endSelectTransitions(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QStateMachine_throw_ambiguity_error_helper(
@@ -88,21 +113,16 @@ static QScriptValue qtscript_QStateMachine_throw_ambiguity_error_helper(
         .arg(functionName).arg(fullSignatures.join(QLatin1String("\n"))));
 }
 
-static const QMetaObject *qtscript_QStateMachine_metaObject()
-{
-    return &QStateMachine::staticMetaObject;
-}
-
 Q_DECLARE_METATYPE(QStateMachine*)
 Q_DECLARE_METATYPE(QtScriptShell_QStateMachine*)
-Q_DECLARE_METATYPE(QStateMachine::Error)
 Q_DECLARE_METATYPE(QStateMachine::EventPriority)
-Q_DECLARE_METATYPE(QStateMachine::RestorePolicy)
+Q_DECLARE_METATYPE(QStateMachine::Error)
 Q_DECLARE_METATYPE(QAbstractAnimation*)
 Q_DECLARE_METATYPE(QAbstractState*)
+Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QSet<QAbstractState*>)
 Q_DECLARE_METATYPE(QList<QAbstractAnimation*>)
-Q_DECLARE_METATYPE(QEvent*)
+Q_DECLARE_METATYPE(QState::ChildMode)
 Q_DECLARE_METATYPE(QState*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -117,6 +137,73 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QStateMachine::EventPriority
+//
+
+static const QStateMachine::EventPriority qtscript_QStateMachine_EventPriority_values[] = {
+    QStateMachine::NormalPriority
+    , QStateMachine::HighPriority
+};
+
+static const char * const qtscript_QStateMachine_EventPriority_keys[] = {
+    "NormalPriority"
+    , "HighPriority"
+};
+
+static QString qtscript_QStateMachine_EventPriority_toStringHelper(QStateMachine::EventPriority value)
+{
+    if ((value >= QStateMachine::NormalPriority) && (value <= QStateMachine::HighPriority))
+        return qtscript_QStateMachine_EventPriority_keys[static_cast<int>(value)-static_cast<int>(QStateMachine::NormalPriority)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStateMachine_EventPriority_toScriptValue(QScriptEngine *engine, const QStateMachine::EventPriority &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStateMachine"));
+    return clazz.property(qtscript_QStateMachine_EventPriority_toStringHelper(value));
+}
+
+static void qtscript_QStateMachine_EventPriority_fromScriptValue(const QScriptValue &value, QStateMachine::EventPriority &out)
+{
+    out = qvariant_cast<QStateMachine::EventPriority>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStateMachine_EventPriority(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStateMachine::NormalPriority) && (arg <= QStateMachine::HighPriority))
+        return qScriptValueFromValue(engine,  static_cast<QStateMachine::EventPriority>(arg));
+    return context->throwError(QString::fromLatin1("EventPriority(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStateMachine_EventPriority_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStateMachine::EventPriority value = qscriptvalue_cast<QStateMachine::EventPriority>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStateMachine_EventPriority_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStateMachine::EventPriority value = qscriptvalue_cast<QStateMachine::EventPriority>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStateMachine_EventPriority_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStateMachine_EventPriority_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStateMachine_EventPriority,
+        qtscript_QStateMachine_EventPriority_valueOf, qtscript_QStateMachine_EventPriority_toString);
+    qScriptRegisterMetaType<QStateMachine::EventPriority>(engine, qtscript_QStateMachine_EventPriority_toScriptValue,
+        qtscript_QStateMachine_EventPriority_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStateMachine_EventPriority_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStateMachine_EventPriority_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -191,146 +278,6 @@ static QScriptValue qtscript_create_QStateMachine_Error_class(QScriptEngine *eng
 }
 
 //
-// QStateMachine::EventPriority
-//
-
-static const QStateMachine::EventPriority qtscript_QStateMachine_EventPriority_values[] = {
-    QStateMachine::NormalPriority
-    , QStateMachine::HighPriority
-};
-
-static const char * const qtscript_QStateMachine_EventPriority_keys[] = {
-    "NormalPriority"
-    , "HighPriority"
-};
-
-static QString qtscript_QStateMachine_EventPriority_toStringHelper(QStateMachine::EventPriority value)
-{
-    if ((value >= QStateMachine::NormalPriority) && (value <= QStateMachine::HighPriority))
-        return qtscript_QStateMachine_EventPriority_keys[static_cast<int>(value)-static_cast<int>(QStateMachine::NormalPriority)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStateMachine_EventPriority_toScriptValue(QScriptEngine *engine, const QStateMachine::EventPriority &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStateMachine"));
-    return clazz.property(qtscript_QStateMachine_EventPriority_toStringHelper(value));
-}
-
-static void qtscript_QStateMachine_EventPriority_fromScriptValue(const QScriptValue &value, QStateMachine::EventPriority &out)
-{
-    out = qvariant_cast<QStateMachine::EventPriority>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStateMachine_EventPriority(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStateMachine::NormalPriority) && (arg <= QStateMachine::HighPriority))
-        return qScriptValueFromValue(engine,  static_cast<QStateMachine::EventPriority>(arg));
-    return context->throwError(QString::fromLatin1("EventPriority(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStateMachine_EventPriority_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStateMachine::EventPriority value = qscriptvalue_cast<QStateMachine::EventPriority>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStateMachine_EventPriority_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStateMachine::EventPriority value = qscriptvalue_cast<QStateMachine::EventPriority>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStateMachine_EventPriority_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStateMachine_EventPriority_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStateMachine_EventPriority,
-        qtscript_QStateMachine_EventPriority_valueOf, qtscript_QStateMachine_EventPriority_toString);
-    qScriptRegisterMetaType<QStateMachine::EventPriority>(engine, qtscript_QStateMachine_EventPriority_toScriptValue,
-        qtscript_QStateMachine_EventPriority_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStateMachine_EventPriority_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStateMachine_EventPriority_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStateMachine::RestorePolicy
-//
-
-static const QStateMachine::RestorePolicy qtscript_QStateMachine_RestorePolicy_values[] = {
-    QStateMachine::DontRestoreProperties
-    , QStateMachine::RestoreProperties
-};
-
-static const char * const qtscript_QStateMachine_RestorePolicy_keys[] = {
-    "DontRestoreProperties"
-    , "RestoreProperties"
-};
-
-static QString qtscript_QStateMachine_RestorePolicy_toStringHelper(QStateMachine::RestorePolicy value)
-{
-    const QMetaObject *meta = qtscript_QStateMachine_metaObject();
-    int idx = meta->indexOfEnumerator("RestorePolicy");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QStateMachine_RestorePolicy_toScriptValue(QScriptEngine *engine, const QStateMachine::RestorePolicy &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStateMachine"));
-    return clazz.property(qtscript_QStateMachine_RestorePolicy_toStringHelper(value));
-}
-
-static void qtscript_QStateMachine_RestorePolicy_fromScriptValue(const QScriptValue &value, QStateMachine::RestorePolicy &out)
-{
-    out = qvariant_cast<QStateMachine::RestorePolicy>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStateMachine_RestorePolicy(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QStateMachine_metaObject();
-    int idx = meta->indexOfEnumerator("RestorePolicy");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QStateMachine::RestorePolicy>(arg));
-    return context->throwError(QString::fromLatin1("RestorePolicy(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStateMachine_RestorePolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStateMachine::RestorePolicy value = qscriptvalue_cast<QStateMachine::RestorePolicy>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStateMachine_RestorePolicy_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStateMachine::RestorePolicy value = qscriptvalue_cast<QStateMachine::RestorePolicy>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStateMachine_RestorePolicy_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStateMachine_RestorePolicy_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStateMachine_RestorePolicy,
-        qtscript_QStateMachine_RestorePolicy_valueOf, qtscript_QStateMachine_RestorePolicy_toString);
-    qScriptRegisterMetaType<QStateMachine::RestorePolicy>(engine, qtscript_QStateMachine_RestorePolicy_toScriptValue,
-        qtscript_QStateMachine_RestorePolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStateMachine_RestorePolicy_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStateMachine_RestorePolicy_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QStateMachine
 //
 
@@ -344,11 +291,11 @@ static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 12;
+        _id = 0xBABE0000 + 16;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStateMachine* _q_self = qscriptvalue_cast<QStateMachine*>(context->thisObject());
+    qtscript_QStateMachine* _q_self = reinterpret_cast<qtscript_QStateMachine*>(qscriptvalue_cast<QStateMachine*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStateMachine.%0(): this object is not a QStateMachine")
@@ -374,48 +321,80 @@ static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *contex
 
     case 2:
     if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->beginMicrostep(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->beginSelectTransitions(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->cancelDelayedEvent(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 0) {
         _q_self->clearError();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 0) {
         QSet<QAbstractState*> _q_result = _q_self->configuration();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         QList<QAbstractAnimation*> _q_result = _q_self->defaultAnimations();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->endMicrostep(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->endSelectTransitions(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 0) {
         QStateMachine::Error _q_result = _q_self->error();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 11:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isRunning();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 12:
     if (context->argumentCount() == 2) {
         QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
@@ -424,7 +403,7 @@ static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 9:
+    case 13:
     if (context->argumentCount() == 1) {
         QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
         _q_self->postEvent(_q_arg0);
@@ -438,7 +417,7 @@ static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 10:
+    case 14:
     if (context->argumentCount() == 1) {
         QAbstractAnimation* _q_arg0 = qscriptvalue_cast<QAbstractAnimation*>(context->argument(0));
         _q_self->removeDefaultAnimation(_q_arg0);
@@ -446,7 +425,7 @@ static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 11:
+    case 15:
     if (context->argumentCount() == 1) {
         QAbstractState* _q_arg0 = qscriptvalue_cast<QAbstractState*>(context->argument(0));
         _q_self->removeState(_q_arg0);
@@ -454,7 +433,7 @@ static QScriptValue qtscript_QStateMachine_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 12: {
+    case 16: {
     QString result = QString::fromLatin1("QStateMachine");
     return QScriptValue(context->engine(), result);
     }
@@ -483,8 +462,23 @@ static QScriptValue qtscript_QStateMachine_static_call(QScriptContext *context, 
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
     } else if (context->argumentCount() == 1) {
-        QObject* _q_arg0 = context->argument(0).toQObject();
-        QtScriptShell_QStateMachine* _q_cpp_result = new QtScriptShell_QStateMachine(_q_arg0);
+        if (context->argument(0).isQObject()) {
+            QObject* _q_arg0 = context->argument(0).toQObject();
+            QtScriptShell_QStateMachine* _q_cpp_result = new QtScriptShell_QStateMachine(_q_arg0);
+            QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QStateMachine*)_q_cpp_result, QScriptEngine::AutoOwnership);
+            _q_cpp_result->__qtscript_self = _q_result;
+            return _q_result;
+        } else if ((qMetaTypeId<QState::ChildMode>() == context->argument(0).toVariant().userType())) {
+            QState::ChildMode _q_arg0 = qscriptvalue_cast<QState::ChildMode>(context->argument(0));
+            QtScriptShell_QStateMachine* _q_cpp_result = new QtScriptShell_QStateMachine(_q_arg0);
+            QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QStateMachine*)_q_cpp_result, QScriptEngine::AutoOwnership);
+            _q_cpp_result->__qtscript_self = _q_result;
+            return _q_result;
+        }
+    } else if (context->argumentCount() == 2) {
+        QState::ChildMode _q_arg0 = qscriptvalue_cast<QState::ChildMode>(context->argument(0));
+        QObject* _q_arg1 = context->argument(1).toQObject();
+        QtScriptShell_QStateMachine* _q_cpp_result = new QtScriptShell_QStateMachine(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QStateMachine*)_q_cpp_result, QScriptEngine::AutoOwnership);
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -514,7 +508,7 @@ QScriptValue qtscript_create_QStateMachine_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QStateMachine*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QStateMachine*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QState*>()));
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 17; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QStateMachine_prototype_call, qtscript_QStateMachine_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QStateMachine_function_names[i+1]),
@@ -527,11 +521,9 @@ QScriptValue qtscript_create_QStateMachine_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStateMachine_static_call, proto, qtscript_QStateMachine_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("Error"),
-        qtscript_create_QStateMachine_Error_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("EventPriority"),
         qtscript_create_QStateMachine_EventPriority_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("RestorePolicy"),
-        qtscript_create_QStateMachine_RestorePolicy_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("Error"),
+        qtscript_create_QStateMachine_Error_class(engine, ctor));
     return ctor;
 }

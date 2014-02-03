@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qframe.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qframe.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QFrame.h"
 
@@ -43,6 +44,7 @@ static const char * const qtscript_QFrame_function_names[] = {
     "QFrame"
     // static
     // prototype
+    , "drawFrame"
     , "frameStyle"
     , "setFrameStyle"
     , "sizeHint"
@@ -53,6 +55,7 @@ static const char * const qtscript_QFrame_function_signatures[] = {
     "QWidget parent, WindowFlags f"
     // static
     // prototype
+    , "QPainter arg__1"
     , ""
     , "int arg__1"
     , ""
@@ -63,10 +66,21 @@ static const int qtscript_QFrame_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
     , 0
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QFrame_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFrame : public QFrame
+{
+    friend QScriptValue qtscript_QFrame_drawFrame(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QFrame_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QFrame_throw_ambiguity_error_helper(
@@ -88,8 +102,10 @@ static const QMetaObject *qtscript_QFrame_metaObject()
 Q_DECLARE_METATYPE(QFrame*)
 Q_DECLARE_METATYPE(QtScriptShell_QFrame*)
 Q_DECLARE_METATYPE(QFrame::StyleMask)
-Q_DECLARE_METATYPE(QFrame::Shape)
 Q_DECLARE_METATYPE(QFrame::Shadow)
+Q_DECLARE_METATYPE(QFrame::Shape)
+Q_DECLARE_METATYPE(QPainter*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -172,6 +188,81 @@ static QScriptValue qtscript_create_QFrame_StyleMask_class(QScriptEngine *engine
     for (int i = 0; i < 2; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QFrame_StyleMask_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QFrame_StyleMask_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QFrame::Shadow
+//
+
+static const QFrame::Shadow qtscript_QFrame_Shadow_values[] = {
+    QFrame::Plain
+    , QFrame::Raised
+    , QFrame::Sunken
+};
+
+static const char * const qtscript_QFrame_Shadow_keys[] = {
+    "Plain"
+    , "Raised"
+    , "Sunken"
+};
+
+static QString qtscript_QFrame_Shadow_toStringHelper(QFrame::Shadow value)
+{
+    const QMetaObject *meta = qtscript_QFrame_metaObject();
+    int idx = meta->indexOfEnumerator("Shadow");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QFrame_Shadow_toScriptValue(QScriptEngine *engine, const QFrame::Shadow &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFrame"));
+    return clazz.property(qtscript_QFrame_Shadow_toStringHelper(value));
+}
+
+static void qtscript_QFrame_Shadow_fromScriptValue(const QScriptValue &value, QFrame::Shadow &out)
+{
+    out = qvariant_cast<QFrame::Shadow>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QFrame_Shadow(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QFrame_metaObject();
+    int idx = meta->indexOfEnumerator("Shadow");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QFrame::Shadow>(arg));
+    return context->throwError(QString::fromLatin1("Shadow(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QFrame_Shadow_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QFrame::Shadow value = qscriptvalue_cast<QFrame::Shadow>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QFrame_Shadow_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QFrame::Shadow value = qscriptvalue_cast<QFrame::Shadow>(context->thisObject());
+    return QScriptValue(engine, qtscript_QFrame_Shadow_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QFrame_Shadow_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QFrame_Shadow,
+        qtscript_QFrame_Shadow_valueOf, qtscript_QFrame_Shadow_toString);
+    qScriptRegisterMetaType<QFrame::Shadow>(engine, qtscript_QFrame_Shadow_toScriptValue,
+        qtscript_QFrame_Shadow_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QFrame_Shadow_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QFrame_Shadow_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -261,81 +352,6 @@ static QScriptValue qtscript_create_QFrame_Shape_class(QScriptEngine *engine, QS
 }
 
 //
-// QFrame::Shadow
-//
-
-static const QFrame::Shadow qtscript_QFrame_Shadow_values[] = {
-    QFrame::Plain
-    , QFrame::Raised
-    , QFrame::Sunken
-};
-
-static const char * const qtscript_QFrame_Shadow_keys[] = {
-    "Plain"
-    , "Raised"
-    , "Sunken"
-};
-
-static QString qtscript_QFrame_Shadow_toStringHelper(QFrame::Shadow value)
-{
-    const QMetaObject *meta = qtscript_QFrame_metaObject();
-    int idx = meta->indexOfEnumerator("Shadow");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QFrame_Shadow_toScriptValue(QScriptEngine *engine, const QFrame::Shadow &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QFrame"));
-    return clazz.property(qtscript_QFrame_Shadow_toStringHelper(value));
-}
-
-static void qtscript_QFrame_Shadow_fromScriptValue(const QScriptValue &value, QFrame::Shadow &out)
-{
-    out = qvariant_cast<QFrame::Shadow>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QFrame_Shadow(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QFrame_metaObject();
-    int idx = meta->indexOfEnumerator("Shadow");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QFrame::Shadow>(arg));
-    return context->throwError(QString::fromLatin1("Shadow(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QFrame_Shadow_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QFrame::Shadow value = qscriptvalue_cast<QFrame::Shadow>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QFrame_Shadow_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QFrame::Shadow value = qscriptvalue_cast<QFrame::Shadow>(context->thisObject());
-    return QScriptValue(engine, qtscript_QFrame_Shadow_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QFrame_Shadow_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QFrame_Shadow,
-        qtscript_QFrame_Shadow_valueOf, qtscript_QFrame_Shadow_toString);
-    qScriptRegisterMetaType<QFrame::Shadow>(engine, qtscript_QFrame_Shadow_toScriptValue,
-        qtscript_QFrame_Shadow_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QFrame_Shadow_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QFrame_Shadow_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QFrame
 //
 
@@ -349,11 +365,11 @@ static QScriptValue qtscript_QFrame_prototype_call(QScriptContext *context, QScr
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFrame* _q_self = qscriptvalue_cast<QFrame*>(context->thisObject());
+    qtscript_QFrame* _q_self = reinterpret_cast<qtscript_QFrame*>(qscriptvalue_cast<QFrame*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFrame.%0(): this object is not a QFrame")
@@ -362,13 +378,21 @@ static QScriptValue qtscript_QFrame_prototype_call(QScriptContext *context, QScr
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        _q_self->drawFrame(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->frameStyle();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setFrameStyle(_q_arg0);
@@ -376,14 +400,14 @@ static QScriptValue qtscript_QFrame_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3: {
+    case 4: {
     QString result = QString::fromLatin1("QFrame");
     return QScriptValue(context->engine(), result);
     }
@@ -450,7 +474,7 @@ QScriptValue qtscript_create_QFrame_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QFrame*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFrame*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFrame_prototype_call, qtscript_QFrame_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFrame_function_names[i+1]),
@@ -465,9 +489,9 @@ QScriptValue qtscript_create_QFrame_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("StyleMask"),
         qtscript_create_QFrame_StyleMask_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("Shape"),
-        qtscript_create_QFrame_Shape_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Shadow"),
         qtscript_create_QFrame_Shadow_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("Shape"),
+        qtscript_create_QFrame_Shape_class(engine, ctor));
     return ctor;
 }

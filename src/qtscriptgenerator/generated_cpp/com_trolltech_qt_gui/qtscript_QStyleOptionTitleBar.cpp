@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionTitleBar_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionTitleBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionTitleBar : public QStyleOptionTitleBar
+{
+
+    friend QScriptValue qtscript_QStyleOptionTitleBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionTitleBar_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionTitleBar)
 Q_DECLARE_METATYPE(QStyleOptionTitleBar*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionTitleBar)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionTitleBar*)
-Q_DECLARE_METATYPE(QStyleOptionTitleBar::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionTitleBar::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionTitleBar::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionComplex*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionTitleBar::StyleOptionVersion
-//
-
-static const QStyleOptionTitleBar::StyleOptionVersion qtscript_QStyleOptionTitleBar_StyleOptionVersion_values[] = {
-    QStyleOptionTitleBar::Version
-};
-
-static const char * const qtscript_QStyleOptionTitleBar_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionTitleBar_StyleOptionVersion_toStringHelper(QStyleOptionTitleBar::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionTitleBar::Version) && (value <= QStyleOptionTitleBar::Version))
-        return qtscript_QStyleOptionTitleBar_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTitleBar::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionTitleBar_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionTitleBar::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTitleBar"));
-    return clazz.property(qtscript_QStyleOptionTitleBar_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionTitleBar_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionTitleBar::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionTitleBar::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionTitleBar_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionTitleBar::Version) && (arg <= QStyleOptionTitleBar::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTitleBar::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionTitleBar_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTitleBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTitleBar::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionTitleBar_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionTitleBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTitleBar::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionTitleBar_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionTitleBar_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionTitleBar_StyleOptionVersion,
-        qtscript_QStyleOptionTitleBar_StyleOptionVersion_valueOf, qtscript_QStyleOptionTitleBar_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionTitleBar::StyleOptionVersion>(engine, qtscript_QStyleOptionTitleBar_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionTitleBar_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTitleBar_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTitleBar_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionTitleBar_StyleOptionType_class(Q
 }
 
 //
+// QStyleOptionTitleBar::StyleOptionVersion
+//
+
+static const QStyleOptionTitleBar::StyleOptionVersion qtscript_QStyleOptionTitleBar_StyleOptionVersion_values[] = {
+    QStyleOptionTitleBar::Version
+};
+
+static const char * const qtscript_QStyleOptionTitleBar_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionTitleBar_StyleOptionVersion_toStringHelper(QStyleOptionTitleBar::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionTitleBar::Version) && (value <= QStyleOptionTitleBar::Version))
+        return qtscript_QStyleOptionTitleBar_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionTitleBar::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionTitleBar_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionTitleBar::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionTitleBar"));
+    return clazz.property(qtscript_QStyleOptionTitleBar_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionTitleBar_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionTitleBar::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionTitleBar::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionTitleBar_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionTitleBar::Version) && (arg <= QStyleOptionTitleBar::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionTitleBar::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionTitleBar_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTitleBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTitleBar::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionTitleBar_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionTitleBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionTitleBar::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionTitleBar_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionTitleBar_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionTitleBar_StyleOptionVersion,
+        qtscript_QStyleOptionTitleBar_StyleOptionVersion_valueOf, qtscript_QStyleOptionTitleBar_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionTitleBar::StyleOptionVersion>(engine, qtscript_QStyleOptionTitleBar_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionTitleBar_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionTitleBar_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionTitleBar_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionTitleBar
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionTitleBar_prototype_call(QScriptContext 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionTitleBar* _q_self = qscriptvalue_cast<QStyleOptionTitleBar*>(context->thisObject());
+    qtscript_QStyleOptionTitleBar* _q_self = reinterpret_cast<qtscript_QStyleOptionTitleBar*>(qscriptvalue_cast<QStyleOptionTitleBar*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionTitleBar.%0(): this object is not a QStyleOptionTitleBar")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionTitleBar_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionTitleBar_static_call, proto, qtscript_QStyleOptionTitleBar_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionTitleBar_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionTitleBar_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionTitleBar_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

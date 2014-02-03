@@ -40,14 +40,15 @@ Q_DECLARE_METATYPE(QKeyEvent*)
 Q_DECLARE_METATYPE(QGraphicsSceneMouseEvent*)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QStyleOptionGraphicsItem*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QGraphicsSceneWheelEvent*)
 
-QtScriptShell_QGraphicsPolygonItem::QtScriptShell_QGraphicsPolygonItem(QGraphicsItem*  parent, QGraphicsScene*  scene)
-    : QGraphicsPolygonItem(parent, scene) {}
+QtScriptShell_QGraphicsPolygonItem::QtScriptShell_QGraphicsPolygonItem(QGraphicsItem*  parent)
+    : QGraphicsPolygonItem(parent) {}
 
-QtScriptShell_QGraphicsPolygonItem::QtScriptShell_QGraphicsPolygonItem(const QPolygonF&  polygon, QGraphicsItem*  parent, QGraphicsScene*  scene)
-    : QGraphicsPolygonItem(polygon, parent, scene) {}
+QtScriptShell_QGraphicsPolygonItem::QtScriptShell_QGraphicsPolygonItem(const QPolygonF&  polygon, QGraphicsItem*  parent)
+    : QGraphicsPolygonItem(polygon, parent) {}
 
 QtScriptShell_QGraphicsPolygonItem::~QtScriptShell_QGraphicsPolygonItem() {}
 
@@ -55,13 +56,16 @@ void QtScriptShell_QGraphicsPolygonItem::advance(int  phase)
 {
     QScriptValue _q_function = __qtscript_self.property("advance");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("advance") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("advance") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::advance(phase);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, phase));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -69,10 +73,14 @@ QRectF  QtScriptShell_QGraphicsPolygonItem::boundingRect() const
 {
     QScriptValue _q_function = __qtscript_self.property("boundingRect");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("boundingRect") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("boundingRect") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::boundingRect();
     } else {
-        return qscriptvalue_cast<QRectF >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QRectF _q_retval = qscriptvalue_cast<QRectF >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -80,14 +88,18 @@ bool  QtScriptShell_QGraphicsPolygonItem::collidesWithItem(const QGraphicsItem* 
 {
     QScriptValue _q_function = __qtscript_self.property("collidesWithItem");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("collidesWithItem") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("collidesWithItem") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::collidesWithItem(other, mode);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, const_cast<QGraphicsItem *>(other))
             << qScriptValueFromValue(_q_engine, mode)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -95,14 +107,18 @@ bool  QtScriptShell_QGraphicsPolygonItem::collidesWithPath(const QPainterPath&  
 {
     QScriptValue _q_function = __qtscript_self.property("collidesWithPath");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("collidesWithPath") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("collidesWithPath") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::collidesWithPath(path, mode);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, path)
             << qScriptValueFromValue(_q_engine, mode)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -110,13 +126,17 @@ bool  QtScriptShell_QGraphicsPolygonItem::contains(const QPointF&  point) const
 {
     QScriptValue _q_function = __qtscript_self.property("contains");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("contains") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("contains") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::contains(point);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, point)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -124,13 +144,16 @@ void QtScriptShell_QGraphicsPolygonItem::contextMenuEvent(QGraphicsSceneContextM
 {
     QScriptValue _q_function = __qtscript_self.property("contextMenuEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("contextMenuEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("contextMenuEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::contextMenuEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -138,13 +161,16 @@ void QtScriptShell_QGraphicsPolygonItem::dragEnterEvent(QGraphicsSceneDragDropEv
 {
     QScriptValue _q_function = __qtscript_self.property("dragEnterEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragEnterEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragEnterEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::dragEnterEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -152,13 +178,16 @@ void QtScriptShell_QGraphicsPolygonItem::dragLeaveEvent(QGraphicsSceneDragDropEv
 {
     QScriptValue _q_function = __qtscript_self.property("dragLeaveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragLeaveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragLeaveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::dragLeaveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -166,13 +195,16 @@ void QtScriptShell_QGraphicsPolygonItem::dragMoveEvent(QGraphicsSceneDragDropEve
 {
     QScriptValue _q_function = __qtscript_self.property("dragMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::dragMoveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -180,13 +212,16 @@ void QtScriptShell_QGraphicsPolygonItem::dropEvent(QGraphicsSceneDragDropEvent* 
 {
     QScriptValue _q_function = __qtscript_self.property("dropEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dropEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dropEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::dropEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -194,13 +229,17 @@ QVariant  QtScriptShell_QGraphicsPolygonItem::extension(const QVariant&  variant
 {
     QScriptValue _q_function = __qtscript_self.property("extension");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("extension") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("extension") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::extension(variant);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, variant)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -208,13 +247,16 @@ void QtScriptShell_QGraphicsPolygonItem::focusInEvent(QFocusEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("focusInEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusInEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusInEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::focusInEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -222,13 +264,16 @@ void QtScriptShell_QGraphicsPolygonItem::focusOutEvent(QFocusEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("focusOutEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusOutEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusOutEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::focusOutEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -236,13 +281,16 @@ void QtScriptShell_QGraphicsPolygonItem::hoverEnterEvent(QGraphicsSceneHoverEven
 {
     QScriptValue _q_function = __qtscript_self.property("hoverEnterEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hoverEnterEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hoverEnterEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::hoverEnterEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -250,13 +298,16 @@ void QtScriptShell_QGraphicsPolygonItem::hoverLeaveEvent(QGraphicsSceneHoverEven
 {
     QScriptValue _q_function = __qtscript_self.property("hoverLeaveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hoverLeaveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hoverLeaveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::hoverLeaveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -264,13 +315,16 @@ void QtScriptShell_QGraphicsPolygonItem::hoverMoveEvent(QGraphicsSceneHoverEvent
 {
     QScriptValue _q_function = __qtscript_self.property("hoverMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hoverMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hoverMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::hoverMoveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -278,13 +332,16 @@ void QtScriptShell_QGraphicsPolygonItem::inputMethodEvent(QInputMethodEvent*  ev
 {
     QScriptValue _q_function = __qtscript_self.property("inputMethodEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("inputMethodEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("inputMethodEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::inputMethodEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -292,13 +349,17 @@ QVariant  QtScriptShell_QGraphicsPolygonItem::inputMethodQuery(Qt::InputMethodQu
 {
     QScriptValue _q_function = __qtscript_self.property("inputMethodQuery");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("inputMethodQuery") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("inputMethodQuery") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::inputMethodQuery(query);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, query)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -306,13 +367,17 @@ bool  QtScriptShell_QGraphicsPolygonItem::isObscuredBy(const QGraphicsItem*  ite
 {
     QScriptValue _q_function = __qtscript_self.property("isObscuredBy");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("isObscuredBy") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("isObscuredBy") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::isObscuredBy(item);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, const_cast<QGraphicsItem *>(item))));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -320,14 +385,18 @@ QVariant  QtScriptShell_QGraphicsPolygonItem::itemChange(QGraphicsItem::Graphics
 {
     QScriptValue _q_function = __qtscript_self.property("itemChange");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("itemChange") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("itemChange") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::itemChange(change, value);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, change)
             << qScriptValueFromValue(_q_engine, value)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -335,13 +404,16 @@ void QtScriptShell_QGraphicsPolygonItem::keyPressEvent(QKeyEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("keyPressEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keyPressEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("keyPressEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::keyPressEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -349,13 +421,16 @@ void QtScriptShell_QGraphicsPolygonItem::keyReleaseEvent(QKeyEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("keyReleaseEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keyReleaseEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("keyReleaseEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::keyReleaseEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -363,13 +438,16 @@ void QtScriptShell_QGraphicsPolygonItem::mouseDoubleClickEvent(QGraphicsSceneMou
 {
     QScriptValue _q_function = __qtscript_self.property("mouseDoubleClickEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseDoubleClickEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseDoubleClickEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::mouseDoubleClickEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -377,13 +455,16 @@ void QtScriptShell_QGraphicsPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent
 {
     QScriptValue _q_function = __qtscript_self.property("mouseMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::mouseMoveEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -391,13 +472,16 @@ void QtScriptShell_QGraphicsPolygonItem::mousePressEvent(QGraphicsSceneMouseEven
 {
     QScriptValue _q_function = __qtscript_self.property("mousePressEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mousePressEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mousePressEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::mousePressEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -405,13 +489,16 @@ void QtScriptShell_QGraphicsPolygonItem::mouseReleaseEvent(QGraphicsSceneMouseEv
 {
     QScriptValue _q_function = __qtscript_self.property("mouseReleaseEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseReleaseEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseReleaseEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::mouseReleaseEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -419,10 +506,14 @@ QPainterPath  QtScriptShell_QGraphicsPolygonItem::opaqueArea() const
 {
     QScriptValue _q_function = __qtscript_self.property("opaqueArea");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("opaqueArea") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("opaqueArea") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::opaqueArea();
     } else {
-        return qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QPainterPath _q_retval = qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -430,15 +521,18 @@ void QtScriptShell_QGraphicsPolygonItem::paint(QPainter*  painter, const QStyleO
 {
     QScriptValue _q_function = __qtscript_self.property("paint");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("paint") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("paint") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::paint(painter, option, widget);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, painter)
             << qScriptValueFromValue(_q_engine, const_cast<QStyleOptionGraphicsItem *>(option))
             << qScriptValueFromValue(_q_engine, widget));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -446,13 +540,17 @@ bool  QtScriptShell_QGraphicsPolygonItem::sceneEvent(QEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("sceneEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("sceneEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("sceneEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::sceneEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -460,14 +558,18 @@ bool  QtScriptShell_QGraphicsPolygonItem::sceneEventFilter(QGraphicsItem*  watch
 {
     QScriptValue _q_function = __qtscript_self.property("sceneEventFilter");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("sceneEventFilter") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("sceneEventFilter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::sceneEventFilter(watched, event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, watched)
             << qScriptValueFromValue(_q_engine, event)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -475,10 +577,14 @@ QPainterPath  QtScriptShell_QGraphicsPolygonItem::shape() const
 {
     QScriptValue _q_function = __qtscript_self.property("shape");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("shape") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("shape") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::shape();
     } else {
-        return qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QPainterPath _q_retval = qscriptvalue_cast<QPainterPath >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -486,10 +592,14 @@ int  QtScriptShell_QGraphicsPolygonItem::type() const
 {
     QScriptValue _q_function = __qtscript_self.property("type");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("type") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("type") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QGraphicsPolygonItem::type();
     } else {
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -497,13 +607,16 @@ void QtScriptShell_QGraphicsPolygonItem::wheelEvent(QGraphicsSceneWheelEvent*  e
 {
     QScriptValue _q_function = __qtscript_self.property("wheelEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("wheelEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("wheelEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QGraphicsPolygonItem::wheelEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 

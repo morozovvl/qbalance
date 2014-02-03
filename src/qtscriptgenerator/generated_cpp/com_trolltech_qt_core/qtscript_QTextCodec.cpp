@@ -19,18 +19,17 @@ static const char * const qtscript_QTextCodec_function_names[] = {
     // static
     , "availableCodecs"
     , "availableMibs"
-    , "codecForCStrings"
     , "codecForHtml"
     , "codecForLocale"
     , "codecForMib"
     , "codecForName"
     , "codecForUtfText"
-    , "setCodecForCStrings"
     , "setCodecForLocale"
-    , "setCodecForTr"
     // prototype
     , "aliases"
     , "canEncode"
+    , "convertFromUnicode"
+    , "convertToUnicode"
     , "fromUnicode"
     , "makeDecoder"
     , "makeEncoder"
@@ -45,21 +44,20 @@ static const char * const qtscript_QTextCodec_function_signatures[] = {
     // static
     , ""
     , ""
-    , ""
     , "QByteArray ba\nQByteArray ba, QTextCodec defaultCodec"
     , ""
     , "int mib"
     , "QByteArray name\nchar name"
     , "QByteArray ba\nQByteArray ba, QTextCodec defaultCodec"
     , "QTextCodec c"
-    , "QTextCodec c"
-    , "QTextCodec c"
     // prototype
     , ""
     , "char arg__1\nString arg__1"
+    , "char in, int length, QTextCodec_ConverterState state"
+    , "char in, int length, QTextCodec_ConverterState state"
     , "String uc"
-    , "\nConversionFlags flags"
-    , "\nConversionFlags flags"
+    , "ConversionFlags flags"
+    , "ConversionFlags flags"
     , ""
     , ""
     , "QByteArray arg__1"
@@ -71,18 +69,17 @@ static const int qtscript_QTextCodec_function_lengths[] = {
     // static
     , 0
     , 0
-    , 0
     , 2
     , 0
     , 1
     , 1
     , 2
-    , 1
-    , 1
     , 1
     // prototype
     , 0
     , 1
+    , 3
+    , 3
     , 1
     , 1
     , 1
@@ -90,6 +87,17 @@ static const int qtscript_QTextCodec_function_lengths[] = {
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextCodec : public QTextCodec
+{
+    friend QScriptValue qtscript_QTextCodec_convertFromUnicode(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextCodec_convertToUnicode(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTextCodec_throw_ambiguity_error_helper(
@@ -108,10 +116,12 @@ Q_DECLARE_METATYPE(QtScriptShell_QTextCodec*)
 Q_DECLARE_METATYPE(QTextCodec::ConversionFlag)
 Q_DECLARE_METATYPE(QFlags<QTextCodec::ConversionFlag>)
 Q_DECLARE_METATYPE(QList<QByteArray>)
+Q_DECLARE_METATYPE(QChar*)
+Q_DECLARE_METATYPE(QTextCodec::ConverterState*)
+Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QTextDecoder*)
 Q_DECLARE_METATYPE(QTextEncoder*)
 Q_DECLARE_METATYPE(QList<int>)
-Q_DECLARE_METATYPE(char*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -309,15 +319,15 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextCodec* _q_self = qscriptvalue_cast<QTextCodec*>(context->thisObject());
+    qtscript_QTextCodec* _q_self = reinterpret_cast<qtscript_QTextCodec*>(qscriptvalue_cast<QTextCodec*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextCodec.%0(): this object is not a QTextCodec")
-            .arg(qtscript_QTextCodec_function_names[_id+12]));
+            .arg(qtscript_QTextCodec_function_names[_id+9]));
     }
 
     switch (_id) {
@@ -343,6 +353,26 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     break;
 
     case 2:
+    if (context->argumentCount() == 3) {
+        QChar* _q_arg0 = qscriptvalue_cast<QChar*>(context->argument(0));
+        int _q_arg1 = context->argument(1).toInt32();
+        QTextCodec::ConverterState* _q_arg2 = qscriptvalue_cast<QTextCodec::ConverterState*>(context->argument(2));
+        QByteArray _q_result = _q_self->convertFromUnicode(_q_arg0, _q_arg1, _q_arg2);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 3) {
+        char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+        int _q_arg1 = context->argument(1).toInt32();
+        QTextCodec::ConverterState* _q_arg2 = qscriptvalue_cast<QTextCodec::ConverterState*>(context->argument(2));
+        QString _q_result = _q_self->convertToUnicode(_q_arg0, _q_arg1, _q_arg2);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QByteArray _q_result = _q_self->fromUnicode(_q_arg0);
@@ -350,7 +380,7 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 0) {
         QTextDecoder* _q_result = _q_self->makeDecoder();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -362,7 +392,7 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 0) {
         QTextEncoder* _q_result = _q_self->makeEncoder();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -374,21 +404,21 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->mibEnum();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->name();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         QString _q_result = _q_self->toUnicode(_q_arg0);
@@ -396,7 +426,7 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 8: {
+    case 10: {
     QString result = QString::fromLatin1("QTextCodec");
     return QScriptValue(context->engine(), result);
     }
@@ -405,8 +435,8 @@ static QScriptValue qtscript_QTextCodec_prototype_call(QScriptContext *context, 
     Q_ASSERT(false);
     }
     return qtscript_QTextCodec_throw_ambiguity_error_helper(context,
-        qtscript_QTextCodec_function_names[_id+12],
-        qtscript_QTextCodec_function_signatures[_id+12]);
+        qtscript_QTextCodec_function_names[_id+9],
+        qtscript_QTextCodec_function_signatures[_id+9]);
 }
 
 static QScriptValue qtscript_QTextCodec_static_call(QScriptContext *context, QScriptEngine *)
@@ -435,13 +465,6 @@ static QScriptValue qtscript_QTextCodec_static_call(QScriptContext *context, QSc
     break;
 
     case 3:
-    if (context->argumentCount() == 0) {
-        QTextCodec* _q_result = QTextCodec::codecForCStrings();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 4:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         QTextCodec* _q_result = QTextCodec::codecForHtml(_q_arg0);
@@ -455,14 +478,14 @@ static QScriptValue qtscript_QTextCodec_static_call(QScriptContext *context, QSc
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 0) {
         QTextCodec* _q_result = QTextCodec::codecForLocale();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTextCodec* _q_result = QTextCodec::codecForMib(_q_arg0);
@@ -470,7 +493,7 @@ static QScriptValue qtscript_QTextCodec_static_call(QScriptContext *context, QSc
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
@@ -484,7 +507,7 @@ static QScriptValue qtscript_QTextCodec_static_call(QScriptContext *context, QSc
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         QTextCodec* _q_result = QTextCodec::codecForUtfText(_q_arg0);
@@ -498,26 +521,10 @@ static QScriptValue qtscript_QTextCodec_static_call(QScriptContext *context, QSc
     }
     break;
 
-    case 9:
-    if (context->argumentCount() == 1) {
-        QTextCodec* _q_arg0 = qscriptvalue_cast<QTextCodec*>(context->argument(0));
-        QTextCodec::setCodecForCStrings(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 10:
+    case 8:
     if (context->argumentCount() == 1) {
         QTextCodec* _q_arg0 = qscriptvalue_cast<QTextCodec*>(context->argument(0));
         QTextCodec::setCodecForLocale(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 11:
-    if (context->argumentCount() == 1) {
-        QTextCodec* _q_arg0 = qscriptvalue_cast<QTextCodec*>(context->argument(0));
-        QTextCodec::setCodecForTr(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -534,10 +541,10 @@ QScriptValue qtscript_create_QTextCodec_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QTextCodec*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextCodec*)0));
-    for (int i = 0; i < 9; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QTextCodec_prototype_call, qtscript_QTextCodec_function_lengths[i+12]);
+    for (int i = 0; i < 11; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QTextCodec_prototype_call, qtscript_QTextCodec_function_lengths[i+9]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QTextCodec_function_names[i+12]),
+        proto.setProperty(QString::fromLatin1(qtscript_QTextCodec_function_names[i+9]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -545,7 +552,7 @@ QScriptValue qtscript_create_QTextCodec_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QTextCodec_static_call, proto, qtscript_QTextCodec_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 8; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTextCodec_static_call,
             qtscript_QTextCodec_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

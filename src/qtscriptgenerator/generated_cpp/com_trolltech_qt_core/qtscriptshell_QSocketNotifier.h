@@ -8,7 +8,7 @@
 class QtScriptShell_QSocketNotifier : public QSocketNotifier
 {
 public:
-    QtScriptShell_QSocketNotifier(int  socket, QSocketNotifier::Type  arg__2, QObject*  parent = 0);
+    QtScriptShell_QSocketNotifier(qintptr  socket, QSocketNotifier::Type  arg__2, QObject*  parent = 0);
     ~QtScriptShell_QSocketNotifier();
 
     void childEvent(QChildEvent*  arg__1);

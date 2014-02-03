@@ -52,6 +52,7 @@ static QScriptValue qtscript_QItemEditorCreatorBase_throw_ambiguity_error_helper
 
 Q_DECLARE_METATYPE(QItemEditorCreatorBase*)
 Q_DECLARE_METATYPE(QtScriptShell_QItemEditorCreatorBase*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QItemEditorCreatorBase

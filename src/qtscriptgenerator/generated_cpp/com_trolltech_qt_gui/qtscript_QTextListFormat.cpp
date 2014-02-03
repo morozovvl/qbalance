@@ -20,7 +20,11 @@ static const char * const qtscript_QTextListFormat_function_names[] = {
     // static
     // prototype
     , "indent"
+    , "numberPrefix"
+    , "numberSuffix"
     , "setIndent"
+    , "setNumberPrefix"
+    , "setNumberSuffix"
     , "setStyle"
     , "style"
     , "toString"
@@ -31,7 +35,11 @@ static const char * const qtscript_QTextListFormat_function_signatures[] = {
     // static
     // prototype
     , ""
+    , ""
+    , ""
     , "int indent"
+    , "String numberPrefix"
+    , "String numberSuffix"
     , "Style style"
     , ""
 ""
@@ -42,10 +50,23 @@ static const int qtscript_QTextListFormat_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 0
+    , 0
+    , 1
+    , 1
     , 1
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QTextListFormat_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextListFormat : public QTextListFormat
+{
+
+    friend QScriptValue qtscript_QTextListFormat_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTextListFormat_throw_ambiguity_error_helper(
@@ -175,11 +196,11 @@ static QScriptValue qtscript_QTextListFormat_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextListFormat* _q_self = qscriptvalue_cast<QTextListFormat*>(context->thisObject());
+    qtscript_QTextListFormat* _q_self = reinterpret_cast<qtscript_QTextListFormat*>(qscriptvalue_cast<QTextListFormat*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextListFormat.%0(): this object is not a QTextListFormat")
@@ -195,6 +216,20 @@ static QScriptValue qtscript_QTextListFormat_prototype_call(QScriptContext *cont
     break;
 
     case 1:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->numberPrefix();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->numberSuffix();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setIndent(_q_arg0);
@@ -202,7 +237,23 @@ static QScriptValue qtscript_QTextListFormat_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 2:
+    case 4:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setNumberPrefix(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setNumberSuffix(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 1) {
         QTextListFormat::Style _q_arg0 = qscriptvalue_cast<QTextListFormat::Style>(context->argument(0));
         _q_self->setStyle(_q_arg0);
@@ -210,14 +261,14 @@ static QScriptValue qtscript_QTextListFormat_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 3:
+    case 7:
     if (context->argumentCount() == 0) {
         QTextListFormat::Style _q_result = _q_self->style();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4: {
+    case 8: {
     QString result = QString::fromLatin1("QTextListFormat");
     return QScriptValue(context->engine(), result);
     }
@@ -261,7 +312,7 @@ QScriptValue qtscript_create_QTextListFormat_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTextListFormat*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextListFormat*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QTextFormat*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTextListFormat_prototype_call, qtscript_QTextListFormat_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTextListFormat_function_names[i+1]),

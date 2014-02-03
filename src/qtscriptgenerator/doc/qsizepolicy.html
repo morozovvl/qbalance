@@ -12,12 +12,16 @@
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QSizePolicy()</b></li>
-<li><div class="fn"/><b>void QSizePolicy(Policy horizontal, Policy vertical)</b></li>
 <li><div class="fn"/><b>void QSizePolicy(Policy horizontal, Policy vertical, ControlType type)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QSizePolicy prototype object</li>
+<li><b>GrowFlag = 1</b></li>
+<li><b>ExpandFlag = 2</b></li>
+<li><b>ShrinkFlag = 4</b></li>
+<li><b>IgnoreFlag = 8</b></li>
+<li><b>PolicyFlag( value )</b></li>
 <li><b>DefaultType = 0x00000001</b></li>
 <li><b>ButtonBox = 0x00000002</b></li>
 <li><b>CheckBox = 0x00000004</b></li>
@@ -35,11 +39,6 @@
 <li><b>ToolButton = 0x00004000</b></li>
 <li><b>ControlType( value )</b></li>
 <li><b>ControlTypes( value1, value2, ... )</b></li>
-<li><b>GrowFlag = 1</b></li>
-<li><b>ExpandFlag = 2</b></li>
-<li><b>ShrinkFlag = 4</b></li>
-<li><b>IgnoreFlag = 8</b></li>
-<li><b>PolicyFlag( value )</b></li>
 <li><b>Fixed = 0</b></li>
 <li><b>Minimum = GrowFlag</b></li>
 <li><b>MinimumExpanding = GrowFlag|ExpandFlag</b></li>
@@ -54,6 +53,7 @@
 <li><div class="fn"/><b>ControlType controlType()</b></li>
 <li><div class="fn"/><b>Orientations expandingDirections()</b></li>
 <li><div class="fn"/><b>bool hasHeightForWidth()</b></li>
+<li><div class="fn"/><b>bool hasWidthForHeight()</b></li>
 <li><div class="fn"/><b>Policy horizontalPolicy()</b></li>
 <li><div class="fn"/><b>int horizontalStretch()</b></li>
 <li><div class="fn"/><b>bool operator_equal(QSizePolicy s)</b></li>
@@ -61,9 +61,10 @@
 <li><div class="fn"/><b>void setControlType(ControlType type)</b></li>
 <li><div class="fn"/><b>void setHeightForWidth(bool b)</b></li>
 <li><div class="fn"/><b>void setHorizontalPolicy(Policy d)</b></li>
-<li><div class="fn"/><b>void setHorizontalStretch(uchar stretchFactor)</b></li>
+<li><div class="fn"/><b>void setHorizontalStretch(int stretchFactor)</b></li>
 <li><div class="fn"/><b>void setVerticalPolicy(Policy d)</b></li>
-<li><div class="fn"/><b>void setVerticalStretch(uchar stretchFactor)</b></li>
+<li><div class="fn"/><b>void setVerticalStretch(int stretchFactor)</b></li>
+<li><div class="fn"/><b>void setWidthForHeight(bool b)</b></li>
 <li><div class="fn"/><b>void transpose()</b></li>
 <li><div class="fn"/><b>Policy verticalPolicy()</b></li>
 <li><div class="fn"/><b>int verticalStretch()</b></li>

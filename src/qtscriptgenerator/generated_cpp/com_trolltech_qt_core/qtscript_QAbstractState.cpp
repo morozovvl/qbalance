@@ -22,6 +22,8 @@ static const char * const qtscript_QAbstractState_function_names[] = {
     // static
     // prototype
     , "machine"
+    , "onEntry"
+    , "onExit"
     , "parentState"
     , "toString"
 };
@@ -31,6 +33,8 @@ static const char * const qtscript_QAbstractState_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "QEvent event"
+    , "QEvent event"
     , ""
 ""
 };
@@ -40,8 +44,21 @@ static const int qtscript_QAbstractState_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 1
+    , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QAbstractState_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractState : public QAbstractState
+{
+    friend QScriptValue qtscript_QAbstractState_onEntry(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractState_onExit(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractState_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractState_throw_ambiguity_error_helper(
@@ -58,6 +75,7 @@ static QScriptValue qtscript_QAbstractState_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QAbstractState*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractState*)
 Q_DECLARE_METATYPE(QStateMachine*)
+Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QState*)
 
 //
@@ -74,11 +92,11 @@ static QScriptValue qtscript_QAbstractState_prototype_call(QScriptContext *conte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractState* _q_self = qscriptvalue_cast<QAbstractState*>(context->thisObject());
+    qtscript_QAbstractState* _q_self = reinterpret_cast<qtscript_QAbstractState*>(qscriptvalue_cast<QAbstractState*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractState.%0(): this object is not a QAbstractState")
@@ -94,13 +112,29 @@ static QScriptValue qtscript_QAbstractState_prototype_call(QScriptContext *conte
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->onEntry(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->onExit(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         QState* _q_result = _q_self->parentState();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2: {
+    case 4: {
     QString result = QString::fromLatin1("QAbstractState");
     return QScriptValue(context->engine(), result);
     }
@@ -147,7 +181,7 @@ QScriptValue qtscript_create_QAbstractState_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractState*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractState*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractState_prototype_call, qtscript_QAbstractState_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractState_function_names[i+1]),

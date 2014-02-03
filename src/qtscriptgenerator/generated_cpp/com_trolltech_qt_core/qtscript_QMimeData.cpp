@@ -36,6 +36,7 @@ static const char * const qtscript_QMimeData_function_names[] = {
     , "html"
     , "imageData"
     , "removeFormat"
+    , "retrieveData"
     , "setColorData"
     , "setData"
     , "setHtml"
@@ -64,6 +65,7 @@ static const char * const qtscript_QMimeData_function_signatures[] = {
     , ""
     , ""
     , "String mimetype"
+    , "String mimetype, QVariant::Type preferredType"
     , "Object color"
     , "String mimetype, QByteArray data"
     , "String html"
@@ -92,6 +94,7 @@ static const int qtscript_QMimeData_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 2
     , 1
     , 2
     , 1
@@ -101,6 +104,16 @@ static const int qtscript_QMimeData_function_lengths[] = {
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMimeData : public QMimeData
+{
+    friend QScriptValue qtscript_QMimeData_retrieveData(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QMimeData_throw_ambiguity_error_helper(
@@ -116,6 +129,7 @@ static QScriptValue qtscript_QMimeData_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QMimeData*)
 Q_DECLARE_METATYPE(QtScriptShell_QMimeData*)
+Q_DECLARE_METATYPE(QVariant::Type)
 Q_DECLARE_METATYPE(QList<QUrl>)
 
 //
@@ -132,11 +146,11 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMimeData* _q_self = qscriptvalue_cast<QMimeData*>(context->thisObject());
+    qtscript_QMimeData* _q_self = reinterpret_cast<qtscript_QMimeData*>(qscriptvalue_cast<QMimeData*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMimeData.%0(): this object is not a QMimeData")
@@ -239,6 +253,15 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     break;
 
     case 13:
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QVariant::Type _q_arg1 = qscriptvalue_cast<QVariant::Type>(context->argument(1));
+        QVariant _q_result = _q_self->retrieveData(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 14:
     if (context->argumentCount() == 1) {
         QVariant _q_arg0 = context->argument(0).toVariant();
         _q_self->setColorData(_q_arg0);
@@ -246,7 +269,7 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QByteArray _q_arg1 = qscriptvalue_cast<QByteArray>(context->argument(1));
@@ -255,7 +278,7 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setHtml(_q_arg0);
@@ -263,7 +286,7 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 1) {
         QVariant _q_arg0 = context->argument(0).toVariant();
         _q_self->setImageData(_q_arg0);
@@ -271,7 +294,7 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setText(_q_arg0);
@@ -279,7 +302,7 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 1) {
         QList<QUrl> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -288,21 +311,21 @@ static QScriptValue qtscript_QMimeData_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->text();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 0) {
         QList<QUrl> _q_result = _q_self->urls();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 21: {
+    case 22: {
     QString result = QString::fromLatin1("QMimeData");
     return QScriptValue(context->engine(), result);
     }
@@ -356,7 +379,7 @@ QScriptValue qtscript_create_QMimeData_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QMimeData*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QMimeData*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QMimeData_prototype_call, qtscript_QMimeData_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QMimeData_function_names[i+1]),

@@ -18,36 +18,48 @@ static const char * const qtscript_QRadialGradient_function_names[] = {
     // static
     // prototype
     , "center"
+    , "centerRadius"
     , "focalPoint"
+    , "focalRadius"
     , "radius"
     , "setCenter"
+    , "setCenterRadius"
     , "setFocalPoint"
+    , "setFocalRadius"
     , "setRadius"
     , "toString"
 };
 
 static const char * const qtscript_QRadialGradient_function_signatures[] = {
-    "\nQPointF center, qreal radius\nQPointF center, qreal radius, QPointF focalPoint\nqreal cx, qreal cy, qreal radius\nqreal cx, qreal cy, qreal radius, qreal fx, qreal fy"
+    "\nQPointF center, qreal centerRadius, QPointF focalPoint, qreal focalRadius\nQPointF center, qreal radius\nQPointF center, qreal radius, QPointF focalPoint\nqreal cx, qreal cy, qreal centerRadius, qreal fx, qreal fy, qreal focalRadius\nqreal cx, qreal cy, qreal radius\nqreal cx, qreal cy, qreal radius, qreal fx, qreal fy"
     // static
     // prototype
     , ""
     , ""
     , ""
+    , ""
+    , ""
     , "QPointF center\nqreal x, qreal y"
+    , "qreal radius"
     , "QPointF focalPoint\nqreal x, qreal y"
+    , "qreal radius"
     , "qreal radius"
 ""
 };
 
 static const int qtscript_QRadialGradient_function_lengths[] = {
-    5
+    6
     // static
     // prototype
     , 0
     , 0
     , 0
+    , 0
+    , 0
     , 2
+    , 1
     , 2
+    , 1
     , 1
     , 0
 };
@@ -82,7 +94,7 @@ static QScriptValue qtscript_QRadialGradient_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 6;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -103,19 +115,33 @@ static QScriptValue qtscript_QRadialGradient_prototype_call(QScriptContext *cont
 
     case 1:
     if (context->argumentCount() == 0) {
-        QPointF _q_result = _q_self->focalPoint();
+        qreal _q_result = _q_self->centerRadius();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
-        qreal _q_result = _q_self->radius();
+        QPointF _q_result = _q_self->focalPoint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
+    if (context->argumentCount() == 0) {
+        qreal _q_result = _q_self->focalRadius();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 0) {
+        qreal _q_result = _q_self->radius();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->setCenter(_q_arg0);
@@ -129,7 +155,15 @@ static QScriptValue qtscript_QRadialGradient_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 4:
+    case 6:
+    if (context->argumentCount() == 1) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        _q_self->setCenterRadius(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->setFocalPoint(_q_arg0);
@@ -143,7 +177,15 @@ static QScriptValue qtscript_QRadialGradient_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 5:
+    case 8:
+    if (context->argumentCount() == 1) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        _q_self->setFocalRadius(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setRadius(_q_arg0);
@@ -151,7 +193,7 @@ static QScriptValue qtscript_QRadialGradient_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 6: {
+    case 10: {
     QString result = QString::fromLatin1("QRadialGradient");
     return QScriptValue(context->engine(), result);
     }
@@ -186,7 +228,7 @@ static QScriptValue qtscript_QRadialGradient_static_call(QScriptContext *context
         return _q_result;
     } else if (context->argumentCount() == 3) {
         if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<qreal>() == context->argument(1).toVariant().userType())
+            && context->argument(1).isNumber()
             && (qMetaTypeId<QPointF>() == context->argument(2).toVariant().userType())) {
             QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
             qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -194,9 +236,9 @@ static QScriptValue qtscript_QRadialGradient_static_call(QScriptContext *context
             QRadialGradient _q_cpp_result(_q_arg0, _q_arg1, _q_arg2);
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<qreal>() == context->argument(1).toVariant().userType())
-            && (qMetaTypeId<qreal>() == context->argument(2).toVariant().userType())) {
+        } else if (context->argument(0).isNumber()
+            && context->argument(1).isNumber()
+            && context->argument(2).isNumber()) {
             qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
             qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
             qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
@@ -204,6 +246,14 @@ static QScriptValue qtscript_QRadialGradient_static_call(QScriptContext *context
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         }
+    } else if (context->argumentCount() == 4) {
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        QPointF _q_arg2 = qscriptvalue_cast<QPointF>(context->argument(2));
+        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        QRadialGradient _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+        return _q_result;
     } else if (context->argumentCount() == 5) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -211,6 +261,16 @@ static QScriptValue qtscript_QRadialGradient_static_call(QScriptContext *context
         qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
         qreal _q_arg4 = qscriptvalue_cast<qreal>(context->argument(4));
         QRadialGradient _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+        return _q_result;
+    } else if (context->argumentCount() == 6) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        qreal _q_arg4 = qscriptvalue_cast<qreal>(context->argument(4));
+        qreal _q_arg5 = qscriptvalue_cast<qreal>(context->argument(5));
+        QRadialGradient _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     }
@@ -229,7 +289,7 @@ QScriptValue qtscript_create_QRadialGradient_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QRadialGradient*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QRadialGradient*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QGradient*>()));
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QRadialGradient_prototype_call, qtscript_QRadialGradient_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QRadialGradient_function_names[i+1]),

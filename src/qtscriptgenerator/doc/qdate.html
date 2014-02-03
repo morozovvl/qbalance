@@ -18,22 +18,21 @@
 <ul>
 <li><b>prototype</b>: The QDate prototype object</li>
 <li><div class="fn"/><b>QDate currentDate()</b></li>
-<li><div class="fn"/><b>QDate fromJulianDay(int jd)</b></li>
+<li><div class="fn"/><b>QDate fromJulianDay(qint64 jd)</b></li>
 <li><div class="fn"/><b>QDate fromString(String s, DateFormat f)</b></li>
-<li><div class="fn"/><b>uint gregorianToJulian(int y, int m, int d)</b></li>
 <li><div class="fn"/><b>bool isLeapYear(int year)</b></li>
 <li><div class="fn"/><b>bool isValid(int y, int m, int d)</b></li>
-<li><div class="fn"/><b>String longDayName(int weekday)</b></li>
-<li><div class="fn"/><b>String longMonthName(int month)</b></li>
-<li><div class="fn"/><b>String shortDayName(int weekday)</b></li>
-<li><div class="fn"/><b>String shortMonthName(int month)</b></li>
+<li><div class="fn"/><b>String longDayName(int weekday, MonthNameType type)</b></li>
+<li><div class="fn"/><b>String longMonthName(int month, MonthNameType type)</b></li>
+<li><div class="fn"/><b>String shortDayName(int weekday, MonthNameType type)</b></li>
+<li><div class="fn"/><b>String shortMonthName(int month, MonthNameType type)</b></li>
 <li><b>DateFormat = 0</b></li>
 <li><b>StandaloneFormat</b></li>
 <li><b>MonthNameType( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
-<li><div class="fn"/><b>QDate addDays(int days)</b></li>
+<li><div class="fn"/><b>QDate addDays(qint64 days)</b></li>
 <li><div class="fn"/><b>QDate addMonths(int months)</b></li>
 <li><div class="fn"/><b>QDate addYears(int years)</b></li>
 <li><div class="fn"/><b>int day()</b></li>
@@ -41,7 +40,7 @@
 <li><div class="fn"/><b>int dayOfYear()</b></li>
 <li><div class="fn"/><b>int daysInMonth()</b></li>
 <li><div class="fn"/><b>int daysInYear()</b></li>
-<li><div class="fn"/><b>int daysTo(QDate arg__1)</b></li>
+<li><div class="fn"/><b>qint64 daysTo(QDate arg__1)</b></li>
 <li><div class="fn"/><b>void getDate(int year, int month, int day)</b></li>
 <li><div class="fn"/><b>bool isNull()</b></li>
 <li><div class="fn"/><b>bool isValid()</b></li>
@@ -50,7 +49,7 @@
 <li><div class="fn"/><b>bool operator_less(QDate other)</b></li>
 <li><div class="fn"/><b>void readFrom(QDataStream arg__1)</b></li>
 <li><div class="fn"/><b>bool setDate(int year, int month, int day)</b></li>
-<li><div class="fn"/><b>int toJulianDay()</b></li>
+<li><div class="fn"/><b>qint64 toJulianDay()</b></li>
 <li><div class="fn"/><b>String toString(DateFormat f)</b></li>
 <li><div class="fn"/><b>int weekNumber(int yearNum)</b></li>
 <li><div class="fn"/><b>void writeTo(QDataStream arg__1)</b></li>

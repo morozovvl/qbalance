@@ -62,7 +62,6 @@ static QScriptValue qtscript_QNetworkProxyFactory_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QNetworkProxyFactory*)
 Q_DECLARE_METATYPE(QtScriptShell_QNetworkProxyFactory*)
 Q_DECLARE_METATYPE(QNetworkProxyQuery)
-Q_DECLARE_METATYPE(QNetworkProxy)
 Q_DECLARE_METATYPE(QList<QNetworkProxy>)
 
 //

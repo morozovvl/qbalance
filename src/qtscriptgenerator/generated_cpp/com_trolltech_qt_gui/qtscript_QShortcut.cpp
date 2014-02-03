@@ -43,6 +43,15 @@ static const int qtscript_QShortcut_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QShortcut_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QShortcut : public QShortcut
+{
+
+    friend QScriptValue qtscript_QShortcut_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QShortcut_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -56,6 +65,7 @@ static QScriptValue qtscript_QShortcut_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QShortcut*)
 Q_DECLARE_METATYPE(QtScriptShell_QShortcut*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(Qt::ShortcutContext)
 
@@ -77,7 +87,7 @@ static QScriptValue qtscript_QShortcut_prototype_call(QScriptContext *context, Q
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QShortcut* _q_self = qscriptvalue_cast<QShortcut*>(context->thisObject());
+    qtscript_QShortcut* _q_self = reinterpret_cast<qtscript_QShortcut*>(qscriptvalue_cast<QShortcut*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QShortcut.%0(): this object is not a QShortcut")

@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionComboBox_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionComboBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionComboBox : public QStyleOptionComboBox
+{
+
+    friend QScriptValue qtscript_QStyleOptionComboBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionComboBox_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionComboBox)
 Q_DECLARE_METATYPE(QStyleOptionComboBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionComboBox)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionComboBox*)
-Q_DECLARE_METATYPE(QStyleOptionComboBox::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionComboBox::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionComboBox::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionComplex*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionComboBox::StyleOptionVersion
-//
-
-static const QStyleOptionComboBox::StyleOptionVersion qtscript_QStyleOptionComboBox_StyleOptionVersion_values[] = {
-    QStyleOptionComboBox::Version
-};
-
-static const char * const qtscript_QStyleOptionComboBox_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionComboBox_StyleOptionVersion_toStringHelper(QStyleOptionComboBox::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionComboBox::Version) && (value <= QStyleOptionComboBox::Version))
-        return qtscript_QStyleOptionComboBox_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionComboBox::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionComboBox_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionComboBox::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionComboBox"));
-    return clazz.property(qtscript_QStyleOptionComboBox_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionComboBox_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionComboBox::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionComboBox::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionComboBox_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionComboBox::Version) && (arg <= QStyleOptionComboBox::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionComboBox::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionComboBox_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionComboBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionComboBox::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionComboBox_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionComboBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionComboBox::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionComboBox_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionComboBox_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionComboBox_StyleOptionVersion,
-        qtscript_QStyleOptionComboBox_StyleOptionVersion_valueOf, qtscript_QStyleOptionComboBox_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionComboBox::StyleOptionVersion>(engine, qtscript_QStyleOptionComboBox_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionComboBox_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionComboBox_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionComboBox_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionComboBox_StyleOptionType_class(Q
 }
 
 //
+// QStyleOptionComboBox::StyleOptionVersion
+//
+
+static const QStyleOptionComboBox::StyleOptionVersion qtscript_QStyleOptionComboBox_StyleOptionVersion_values[] = {
+    QStyleOptionComboBox::Version
+};
+
+static const char * const qtscript_QStyleOptionComboBox_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionComboBox_StyleOptionVersion_toStringHelper(QStyleOptionComboBox::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionComboBox::Version) && (value <= QStyleOptionComboBox::Version))
+        return qtscript_QStyleOptionComboBox_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionComboBox::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionComboBox_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionComboBox::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionComboBox"));
+    return clazz.property(qtscript_QStyleOptionComboBox_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionComboBox_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionComboBox::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionComboBox::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionComboBox_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionComboBox::Version) && (arg <= QStyleOptionComboBox::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionComboBox::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionComboBox_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionComboBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionComboBox::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionComboBox_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionComboBox::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionComboBox::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionComboBox_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionComboBox_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionComboBox_StyleOptionVersion,
+        qtscript_QStyleOptionComboBox_StyleOptionVersion_valueOf, qtscript_QStyleOptionComboBox_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionComboBox::StyleOptionVersion>(engine, qtscript_QStyleOptionComboBox_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionComboBox_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionComboBox_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionComboBox_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionComboBox
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionComboBox_prototype_call(QScriptContext 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionComboBox* _q_self = qscriptvalue_cast<QStyleOptionComboBox*>(context->thisObject());
+    qtscript_QStyleOptionComboBox* _q_self = reinterpret_cast<qtscript_QStyleOptionComboBox*>(qscriptvalue_cast<QStyleOptionComboBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionComboBox.%0(): this object is not a QStyleOptionComboBox")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionComboBox_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionComboBox_static_call, proto, qtscript_QStyleOptionComboBox_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionComboBox_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionComboBox_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionComboBox_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

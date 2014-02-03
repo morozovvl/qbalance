@@ -1,15 +1,4 @@
-#include <QtScript/QScriptExtensionPlugin>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
-
-void qtscript_initialize_com_trolltech_qt_xmlpatterns_bindings(QScriptValue &);
-
-class com_trolltech_qt_xmlpatterns_ScriptPlugin : public QScriptExtensionPlugin
-{
-public:
-    QStringList keys() const;
-    void initialize(const QString &key, QScriptEngine *engine);
-};
+#include "plugin.h"
 
 QStringList com_trolltech_qt_xmlpatterns_ScriptPlugin::keys() const
 {
@@ -30,5 +19,7 @@ void com_trolltech_qt_xmlpatterns_ScriptPlugin::initialize(const QString &key, Q
     }
 }
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_STATIC_PLUGIN(com_trolltech_qt_xmlpatterns_ScriptPlugin)
 Q_EXPORT_PLUGIN2(qtscript_com_trolltech_qt_xmlpatterns, com_trolltech_qt_xmlpatterns_ScriptPlugin)
+#endif

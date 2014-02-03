@@ -124,9 +124,13 @@ void GUIFactory::show() {
 int GUIFactory::showError(QString errorText) {
     QMdiSubWindow* window = mainWindow->getWorkSpace()->activeSubWindow();
     QErrorMessage msgBox;
+    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
     mainWindow->setUpdatesEnabled(false);
+    msgBox.show();
+    msgBox.activateWindow();
+    msgBox.raise();
     msgBox.exec();
     mainWindow->setUpdatesEnabled(true);
     if (window != 0)
@@ -134,20 +138,26 @@ int GUIFactory::showError(QString errorText) {
     return 0;
 }
 
+
 int GUIFactory::showCriticalError(QString errorText) {
     QMdiSubWindow* window = mainWindow->getWorkSpace()->activeSubWindow();
     QMessageBox msgBox;
+    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Критическая ошибка!"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText(errorText);
     mainWindow->setUpdatesEnabled(false);
+    msgBox.show();
+    msgBox.activateWindow();
+    msgBox.raise();
     msgBox.exec();
     mainWindow->setUpdatesEnabled(true);
     if (window != 0)
         mainWindow->getWorkSpace()->setActiveSubWindow(window);
     return 0;
 }
+
 
 int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
     QMessageBox msgBox;

@@ -109,7 +109,7 @@ static const char * const qtscript_QItemSelection_function_signatures[] = {
     , "bool sharable"
     , ""
     , "QItemSelectionRange t"
-    , "int i, int j"
+    , "List other\nint i, int j"
     , "int i"
     , ""
     , ""
@@ -186,7 +186,6 @@ Q_DECLARE_METATYPE(QItemSelection)
 Q_DECLARE_METATYPE(QItemSelection*)
 Q_DECLARE_METATYPE(QItemSelectionRange)
 Q_DECLARE_METATYPE(QList<QItemSelectionRange>)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QList<QModelIndex>)
 Q_DECLARE_METATYPE(QFlags<QItemSelectionModel::SelectionFlag>)
 Q_DECLARE_METATYPE(QVector<QItemSelectionRange>)
@@ -542,6 +541,12 @@ static QScriptValue qtscript_QItemSelection_prototype_call(QScriptContext *conte
     break;
 
     case 38:
+    if (context->argumentCount() == 1) {
+        QList<QItemSelectionRange> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();

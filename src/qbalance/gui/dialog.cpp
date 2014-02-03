@@ -59,7 +59,8 @@ void Dialog::cmdOk()
     isSelected = true;
     if (form != 0)
         form->cmdOk();
-    accept();
+    else
+        accept();
 }
 
 
@@ -80,32 +81,33 @@ void Dialog::showEvent(QShowEvent* event)
 }
 
 
-QWidget* Dialog::findChild(QString name)
+QObject* Dialog::findChild(QString name)
 {
-    QWidget* widget = QDialog::findChild<QWidget*>(name);
-    if (widget == 0)
-        app->showError(QString(QObject::trUtf8("Не найден объект %1")).arg(name));
+    QObject* widget = QDialog::findChild<QObject*>(name);
     return widget;
 }
 
 
 void Dialog::keyPressEvent(QKeyEvent *event)
 {
-    if (form != 0)
+    event->setAccepted(false);                  // Будем считать, что событие не обработано
+
+    if (form != 0)                              // Если у формы есть владелец, то запустим его обработчик
         form->keyPressEvent(event);
-    else
+
+    if (!event->isAccepted())                   // Если событие не обработано, то попытаемся обработать нажатие клавиш Ctrl+Enter
     {
         if (event->modifiers() == Qt::ControlModifier)
         {
             if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
             {
                 cmdOk();
-                event->accept();
             }
         }
-        else
-            QDialog::keyPressEvent(event);
     }
+
+    if (!event->isAccepted())                   // Если события до сих пор не обработаны, то запустим базовый обработчик
+        QDialog::keyPressEvent(event);
 }
 
 

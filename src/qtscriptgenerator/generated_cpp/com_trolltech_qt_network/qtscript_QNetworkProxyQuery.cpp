@@ -7,6 +7,7 @@
 
 #include <qnetworkproxy.h>
 #include <QVariant>
+#include <qnetworkconfiguration.h>
 #include <qnetworkproxy.h>
 #include <qurl.h>
 
@@ -15,25 +16,29 @@ static const char * const qtscript_QNetworkProxyQuery_function_names[] = {
     // static
     // prototype
     , "localPort"
+    , "networkConfiguration"
     , "equals"
     , "peerHostName"
     , "peerPort"
     , "protocolTag"
     , "queryType"
     , "setLocalPort"
+    , "setNetworkConfiguration"
     , "setPeerHostName"
     , "setPeerPort"
     , "setProtocolTag"
     , "setQueryType"
     , "setUrl"
+    , "swap"
     , "url"
     , "toString"
 };
 
 static const char * const qtscript_QNetworkProxyQuery_function_signatures[] = {
-    "\nQNetworkProxyQuery other\nString hostname, int port, String protocolTag, QueryType queryType\nQUrl requestUrl, QueryType queryType\nunsigned short bindPort, String protocolTag, QueryType queryType"
+    "\nQNetworkConfiguration networkConfiguration, String hostname, int port, String protocolTag, QueryType queryType\nQNetworkConfiguration networkConfiguration, QUrl requestUrl, QueryType queryType\nQNetworkConfiguration networkConfiguration, unsigned short bindPort, String protocolTag, QueryType queryType\nQNetworkProxyQuery other\nString hostname, int port, String protocolTag, QueryType queryType\nQUrl requestUrl, QueryType queryType\nunsigned short bindPort, String protocolTag, QueryType queryType"
     // static
     // prototype
+    , ""
     , ""
     , "QNetworkProxyQuery other"
     , ""
@@ -41,25 +46,30 @@ static const char * const qtscript_QNetworkProxyQuery_function_signatures[] = {
     , ""
     , ""
     , "int port"
+    , "QNetworkConfiguration networkConfiguration"
     , "String hostname"
     , "int port"
     , "String protocolTag"
     , "QueryType type"
     , "QUrl url"
+    , "QNetworkProxyQuery other"
     , ""
 ""
 };
 
 static const int qtscript_QNetworkProxyQuery_function_lengths[] = {
-    4
+    5
     // static
     // prototype
+    , 0
     , 0
     , 1
     , 0
     , 0
     , 0
     , 0
+    , 1
+    , 1
     , 1
     , 1
     , 1
@@ -188,7 +198,7 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 13;
+        _id = 0xBABE0000 + 16;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -208,6 +218,13 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     break;
 
     case 1:
+    if (context->argumentCount() == 0) {
+        QNetworkConfiguration _q_result = _q_self->networkConfiguration();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         QNetworkProxyQuery _q_arg0 = qscriptvalue_cast<QNetworkProxyQuery>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -215,35 +232,35 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->peerHostName();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->peerPort();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->protocolTag();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 0) {
         QNetworkProxyQuery::QueryType _q_result = _q_self->queryType();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setLocalPort(_q_arg0);
@@ -251,18 +268,10 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     }
     break;
 
-    case 7:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->setPeerHostName(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
     case 8:
     if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        _q_self->setPeerPort(_q_arg0);
+        QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+        _q_self->setNetworkConfiguration(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -270,12 +279,28 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     case 9:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
-        _q_self->setProtocolTag(_q_arg0);
+        _q_self->setPeerHostName(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 10:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->setPeerPort(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
+    if (context->argumentCount() == 1) {
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setProtocolTag(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 12:
     if (context->argumentCount() == 1) {
         QNetworkProxyQuery::QueryType _q_arg0 = qscriptvalue_cast<QNetworkProxyQuery::QueryType>(context->argument(0));
         _q_self->setQueryType(_q_arg0);
@@ -283,7 +308,7 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 1) {
         QUrl _q_arg0 = qscriptvalue_cast<QUrl>(context->argument(0));
         _q_self->setUrl(_q_arg0);
@@ -291,14 +316,22 @@ static QScriptValue qtscript_QNetworkProxyQuery_prototype_call(QScriptContext *c
     }
     break;
 
-    case 12:
+    case 14:
+    if (context->argumentCount() == 1) {
+        QNetworkProxyQuery _q_arg0 = qscriptvalue_cast<QNetworkProxyQuery>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 15:
     if (context->argumentCount() == 0) {
         QUrl _q_result = _q_self->url();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13: {
+    case 16: {
     QString result = QString::fromLatin1("QNetworkProxyQuery");
     return QScriptValue(context->engine(), result);
     }
@@ -343,7 +376,21 @@ static QScriptValue qtscript_QNetworkProxyQuery_static_call(QScriptContext *cont
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        if (context->argument(0).isString()
+        if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && (qMetaTypeId<QUrl>() == context->argument(1).toVariant().userType())) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            QUrl _q_arg1 = qscriptvalue_cast<QUrl>(context->argument(1));
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isNumber()) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            unsigned short _q_arg1 = qscriptvalue_cast<unsigned short>(context->argument(1));
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if (context->argument(0).isString()
             && context->argument(1).isNumber()) {
             QString _q_arg0 = context->argument(0).toString();
             int _q_arg1 = context->argument(1).toInt32();
@@ -366,7 +413,34 @@ static QScriptValue qtscript_QNetworkProxyQuery_static_call(QScriptContext *cont
             return _q_result;
         }
     } else if (context->argumentCount() == 3) {
-        if (context->argument(0).isString()
+        if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isString()
+            && context->argument(2).isNumber()) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            QString _q_arg1 = context->argument(1).toString();
+            int _q_arg2 = context->argument(2).toInt32();
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && (qMetaTypeId<QUrl>() == context->argument(1).toVariant().userType())
+            && (qMetaTypeId<QNetworkProxyQuery::QueryType>() == context->argument(2).toVariant().userType())) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            QUrl _q_arg1 = qscriptvalue_cast<QUrl>(context->argument(1));
+            QNetworkProxyQuery::QueryType _q_arg2 = qscriptvalue_cast<QNetworkProxyQuery::QueryType>(context->argument(2));
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isNumber()
+            && context->argument(2).isString()) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            unsigned short _q_arg1 = qscriptvalue_cast<unsigned short>(context->argument(1));
+            QString _q_arg2 = context->argument(2).toString();
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if (context->argument(0).isString()
             && context->argument(1).isNumber()
             && context->argument(2).isString()) {
             QString _q_arg0 = context->argument(0).toString();
@@ -386,11 +460,47 @@ static QScriptValue qtscript_QNetworkProxyQuery_static_call(QScriptContext *cont
             return _q_result;
         }
     } else if (context->argumentCount() == 4) {
-        QString _q_arg0 = context->argument(0).toString();
-        int _q_arg1 = context->argument(1).toInt32();
-        QString _q_arg2 = context->argument(2).toString();
-        QNetworkProxyQuery::QueryType _q_arg3 = qscriptvalue_cast<QNetworkProxyQuery::QueryType>(context->argument(3));
-        QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isString()
+            && context->argument(2).isNumber()
+            && context->argument(3).isString()) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            QString _q_arg1 = context->argument(1).toString();
+            int _q_arg2 = context->argument(2).toInt32();
+            QString _q_arg3 = context->argument(3).toString();
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if ((qMetaTypeId<QNetworkConfiguration>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isNumber()
+            && context->argument(2).isString()
+            && (qMetaTypeId<QNetworkProxyQuery::QueryType>() == context->argument(3).toVariant().userType())) {
+            QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+            unsigned short _q_arg1 = qscriptvalue_cast<unsigned short>(context->argument(1));
+            QString _q_arg2 = context->argument(2).toString();
+            QNetworkProxyQuery::QueryType _q_arg3 = qscriptvalue_cast<QNetworkProxyQuery::QueryType>(context->argument(3));
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if (context->argument(0).isString()
+            && context->argument(1).isNumber()
+            && context->argument(2).isString()
+            && (qMetaTypeId<QNetworkProxyQuery::QueryType>() == context->argument(3).toVariant().userType())) {
+            QString _q_arg0 = context->argument(0).toString();
+            int _q_arg1 = context->argument(1).toInt32();
+            QString _q_arg2 = context->argument(2).toString();
+            QNetworkProxyQuery::QueryType _q_arg3 = qscriptvalue_cast<QNetworkProxyQuery::QueryType>(context->argument(3));
+            QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        }
+    } else if (context->argumentCount() == 5) {
+        QNetworkConfiguration _q_arg0 = qscriptvalue_cast<QNetworkConfiguration>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        int _q_arg2 = context->argument(2).toInt32();
+        QString _q_arg3 = context->argument(3).toString();
+        QNetworkProxyQuery::QueryType _q_arg4 = qscriptvalue_cast<QNetworkProxyQuery::QueryType>(context->argument(4));
+        QNetworkProxyQuery _q_cpp_result(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     }
@@ -408,7 +518,7 @@ QScriptValue qtscript_create_QNetworkProxyQuery_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QNetworkProxyQuery*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkProxyQuery*)0));
-    for (int i = 0; i < 14; ++i) {
+    for (int i = 0; i < 17; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkProxyQuery_prototype_call, qtscript_QNetworkProxyQuery_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkProxyQuery_function_names[i+1]),

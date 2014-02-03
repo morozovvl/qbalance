@@ -37,6 +37,15 @@ static const int qtscript_QStyleOptionGraphicsItem_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionGraphicsItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionGraphicsItem : public QStyleOptionGraphicsItem
+{
+
+    friend QScriptValue qtscript_QStyleOptionGraphicsItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionGraphicsItem_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -52,8 +61,8 @@ Q_DECLARE_METATYPE(QStyleOptionGraphicsItem)
 Q_DECLARE_METATYPE(QStyleOptionGraphicsItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionGraphicsItem)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionGraphicsItem*)
-Q_DECLARE_METATYPE(QStyleOptionGraphicsItem::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionGraphicsItem::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionGraphicsItem::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -68,71 +77,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionGraphicsItem::StyleOptionVersion
-//
-
-static const QStyleOptionGraphicsItem::StyleOptionVersion qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_values[] = {
-    QStyleOptionGraphicsItem::Version
-};
-
-static const char * const qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toStringHelper(QStyleOptionGraphicsItem::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionGraphicsItem::Version) && (value <= QStyleOptionGraphicsItem::Version))
-        return qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionGraphicsItem::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionGraphicsItem::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionGraphicsItem"));
-    return clazz.property(qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionGraphicsItem::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionGraphicsItem_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionGraphicsItem::Version) && (arg <= QStyleOptionGraphicsItem::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionGraphicsItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionGraphicsItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionGraphicsItem_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionGraphicsItem_StyleOptionVersion,
-        qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_valueOf, qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionGraphicsItem::StyleOptionVersion>(engine, qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -201,6 +145,71 @@ static QScriptValue qtscript_create_QStyleOptionGraphicsItem_StyleOptionType_cla
 }
 
 //
+// QStyleOptionGraphicsItem::StyleOptionVersion
+//
+
+static const QStyleOptionGraphicsItem::StyleOptionVersion qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_values[] = {
+    QStyleOptionGraphicsItem::Version
+};
+
+static const char * const qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toStringHelper(QStyleOptionGraphicsItem::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionGraphicsItem::Version) && (value <= QStyleOptionGraphicsItem::Version))
+        return qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionGraphicsItem::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionGraphicsItem::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionGraphicsItem"));
+    return clazz.property(qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionGraphicsItem::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionGraphicsItem_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionGraphicsItem::Version) && (arg <= QStyleOptionGraphicsItem::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionGraphicsItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionGraphicsItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionGraphicsItem::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionGraphicsItem_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionGraphicsItem_StyleOptionVersion,
+        qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_valueOf, qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionGraphicsItem::StyleOptionVersion>(engine, qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionGraphicsItem_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionGraphicsItem
 //
 
@@ -218,7 +227,7 @@ static QScriptValue qtscript_QStyleOptionGraphicsItem_prototype_call(QScriptCont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionGraphicsItem* _q_self = qscriptvalue_cast<QStyleOptionGraphicsItem*>(context->thisObject());
+    qtscript_QStyleOptionGraphicsItem* _q_self = reinterpret_cast<qtscript_QStyleOptionGraphicsItem*>(qscriptvalue_cast<QStyleOptionGraphicsItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionGraphicsItem.%0(): this object is not a QStyleOptionGraphicsItem")
@@ -298,9 +307,9 @@ QScriptValue qtscript_create_QStyleOptionGraphicsItem_class(QScriptEngine *engin
             fun, QScriptValue::SkipInEnumeration);
     }
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionGraphicsItem_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionGraphicsItem_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionGraphicsItem_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

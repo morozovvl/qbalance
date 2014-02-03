@@ -13,7 +13,10 @@
 #include <qiodevice.h>
 #include <qlist.h>
 #include <qsslcertificate.h>
+#include <qsslcertificateextension.h>
+#include <qsslerror.h>
 #include <qsslkey.h>
+#include <qstringlist.h>
 
 static const char * const qtscript_QSslCertificate_function_names[] = {
     "QSslCertificate"
@@ -21,35 +24,41 @@ static const char * const qtscript_QSslCertificate_function_names[] = {
     , "fromData"
     , "fromDevice"
     , "fromPath"
+    , "verify"
     // prototype
-    , "alternateSubjectNames"
     , "clear"
     , "digest"
     , "effectiveDate"
     , "expiryDate"
+    , "extensions"
     , "handle"
+    , "isBlacklisted"
     , "isNull"
-    , "isValid"
     , "issuerInfo"
+    , "issuerInfoAttributes"
     , "operator_assign"
     , "equals"
     , "publicKey"
     , "serialNumber"
+    , "subjectAlternativeNames"
     , "subjectInfo"
+    , "subjectInfoAttributes"
+    , "swap"
     , "toDer"
     , "toPem"
+    , "toText"
     , "version"
     , "toString"
 };
 
 static const char * const qtscript_QSslCertificate_function_signatures[] = {
-    "QIODevice device, EncodingFormat format\nQByteArray encoded, EncodingFormat format\nQSslCertificate other"
+    "QIODevice device, EncodingFormat format\nQByteArray data, EncodingFormat format\nQSslCertificate other"
     // static
     , "QByteArray data, EncodingFormat format"
     , "QIODevice device, EncodingFormat format"
     , "String path, EncodingFormat format, PatternSyntax syntax"
+    , "List certificateChain, String hostName"
     // prototype
-    , ""
     , ""
     , "Algorithm algorithm"
     , ""
@@ -57,12 +66,18 @@ static const char * const qtscript_QSslCertificate_function_signatures[] = {
     , ""
     , ""
     , ""
-    , "SubjectInfo info\nQByteArray tag"
+    , ""
+    , "SubjectInfo info\nQByteArray attribute"
+    , ""
     , "QSslCertificate other"
     , "QSslCertificate other"
     , ""
     , ""
-    , "SubjectInfo info\nQByteArray tag"
+    , ""
+    , "SubjectInfo info\nQByteArray attribute"
+    , ""
+    , "QSslCertificate other"
+    , ""
     , ""
     , ""
     , ""
@@ -75,21 +90,27 @@ static const int qtscript_QSslCertificate_function_lengths[] = {
     , 2
     , 2
     , 3
+    , 2
     // prototype
     , 0
-    , 0
     , 1
     , 0
     , 0
     , 0
     , 0
     , 0
+    , 0
     , 1
+    , 0
     , 1
     , 1
     , 0
     , 0
+    , 0
     , 1
+    , 0
+    , 1
+    , 0
     , 0
     , 0
     , 0
@@ -107,29 +128,49 @@ static QScriptValue qtscript_QSslCertificate_throw_ambiguity_error_helper(
         .arg(functionName).arg(fullSignatures.join(QLatin1String("\n"))));
 }
 
-Q_DECLARE_METATYPE(QSslCertificate)
 Q_DECLARE_METATYPE(QSslCertificate*)
 Q_DECLARE_METATYPE(QSslCertificate::SubjectInfo)
-Q_DECLARE_METATYPE(QSsl::AlternateNameEntryType)
+Q_DECLARE_METATYPE(QCryptographicHash::Algorithm)
+Q_DECLARE_METATYPE(QSslCertificateExtension)
+Q_DECLARE_METATYPE(QList<QSslCertificateExtension>)
+Q_DECLARE_METATYPE(Qt::HANDLE)
+Q_DECLARE_METATYPE(QList<QByteArray>)
+Q_DECLARE_METATYPE(QSslKey)
+Q_DECLARE_METATYPE(QSsl::AlternativeNameEntryType)
+#if QT_VERSION < 0x050000
 template <> \
-struct QMetaTypeId< QMultiMap<QSsl::AlternateNameEntryType,QString> > \
+struct QMetaTypeId< QMultiMap<QSsl::AlternativeNameEntryType,QString> > \
 { \
     enum { Defined = 1 }; \
     static int qt_metatype_id() \
     { \
         static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
         if (!metatype_id) \
-            metatype_id = qRegisterMetaType< QMultiMap<QSsl::AlternateNameEntryType,QString> >("QMultiMap<QSsl::AlternateNameEntryType,QString>"); \
+            metatype_id = qRegisterMetaType< QMultiMap<QSsl::AlternativeNameEntryType,QString> >("QMultiMap<QSsl::AlternativeNameEntryType,QString>"); \
         return metatype_id; \
     } \
 };
-Q_DECLARE_METATYPE(QCryptographicHash::Algorithm)
-Q_DECLARE_METATYPE(Qt::HANDLE)
-Q_DECLARE_METATYPE(QSslKey)
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QMultiMap<QSsl::AlternativeNameEntryType,QString> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QMultiMap<QSsl::AlternativeNameEntryType,QString> >("QMultiMap<QSsl::AlternativeNameEntryType,QString>", reinterpret_cast< QMultiMap<QSsl::AlternativeNameEntryType,QString> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QSsl::EncodingFormat)
 Q_DECLARE_METATYPE(QList<QSslCertificate>)
 Q_DECLARE_METATYPE(QIODevice*)
 Q_DECLARE_METATYPE(QRegExp::PatternSyntax)
+Q_DECLARE_METATYPE(QSslError)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -156,6 +197,9 @@ static const QSslCertificate::SubjectInfo qtscript_QSslCertificate_SubjectInfo_v
     , QSslCertificate::OrganizationalUnitName
     , QSslCertificate::CountryName
     , QSslCertificate::StateOrProvinceName
+    , QSslCertificate::DistinguishedNameQualifier
+    , QSslCertificate::SerialNumber
+    , QSslCertificate::EmailAddress
 };
 
 static const char * const qtscript_QSslCertificate_SubjectInfo_keys[] = {
@@ -165,11 +209,14 @@ static const char * const qtscript_QSslCertificate_SubjectInfo_keys[] = {
     , "OrganizationalUnitName"
     , "CountryName"
     , "StateOrProvinceName"
+    , "DistinguishedNameQualifier"
+    , "SerialNumber"
+    , "EmailAddress"
 };
 
 static QString qtscript_QSslCertificate_SubjectInfo_toStringHelper(QSslCertificate::SubjectInfo value)
 {
-    if ((value >= QSslCertificate::Organization) && (value <= QSslCertificate::StateOrProvinceName))
+    if ((value >= QSslCertificate::Organization) && (value <= QSslCertificate::EmailAddress))
         return qtscript_QSslCertificate_SubjectInfo_keys[static_cast<int>(value)-static_cast<int>(QSslCertificate::Organization)];
     return QString();
 }
@@ -188,7 +235,7 @@ static void qtscript_QSslCertificate_SubjectInfo_fromScriptValue(const QScriptVa
 static QScriptValue qtscript_construct_QSslCertificate_SubjectInfo(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QSslCertificate::Organization) && (arg <= QSslCertificate::StateOrProvinceName))
+    if ((arg >= QSslCertificate::Organization) && (arg <= QSslCertificate::EmailAddress))
         return qScriptValueFromValue(engine,  static_cast<QSslCertificate::SubjectInfo>(arg));
     return context->throwError(QString::fromLatin1("SubjectInfo(): invalid enum value (%0)").arg(arg));
 }
@@ -212,7 +259,7 @@ static QScriptValue qtscript_create_QSslCertificate_SubjectInfo_class(QScriptEng
         qtscript_QSslCertificate_SubjectInfo_valueOf, qtscript_QSslCertificate_SubjectInfo_toString);
     qScriptRegisterMetaType<QSslCertificate::SubjectInfo>(engine, qtscript_QSslCertificate_SubjectInfo_toScriptValue,
         qtscript_QSslCertificate_SubjectInfo_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 9; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QSslCertificate_SubjectInfo_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QSslCertificate_SubjectInfo_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -234,7 +281,7 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 17;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -242,25 +289,18 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSslCertificate.%0(): this object is not a QSslCertificate")
-            .arg(qtscript_QSslCertificate_function_names[_id+4]));
+            .arg(qtscript_QSslCertificate_function_names[_id+5]));
     }
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        QMultiMap<QSsl::AlternateNameEntryType,QString> _q_result = _q_self->alternateSubjectNames();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 1:
     if (context->argumentCount() == 0) {
         _q_self->clear();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 2:
+    case 1:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->digest();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -272,17 +312,24 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 3:
+    case 2:
     if (context->argumentCount() == 0) {
         QDateTime _q_result = _q_self->effectiveDate();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 3:
     if (context->argumentCount() == 0) {
         QDateTime _q_result = _q_self->expiryDate();
         return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 0) {
+        QList<QSslCertificateExtension> _q_result = _q_self->extensions();
+        return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
@@ -295,14 +342,14 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
 
     case 6:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isNull();
+        bool _q_result = _q_self->isBlacklisted();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 7:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isValid();
+        bool _q_result = _q_self->isNull();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -311,17 +358,24 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QSslCertificate::SubjectInfo>() == context->argument(0).toVariant().userType())) {
             QSslCertificate::SubjectInfo _q_arg0 = qscriptvalue_cast<QSslCertificate::SubjectInfo>(context->argument(0));
-            QString _q_result = _q_self->issuerInfo(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
+            QStringList _q_result = _q_self->issuerInfo(_q_arg0);
+            return qScriptValueFromSequence(context->engine(), _q_result);
         } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            QString _q_result = _q_self->issuerInfo(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
+            QStringList _q_result = _q_self->issuerInfo(_q_arg0);
+            return qScriptValueFromSequence(context->engine(), _q_result);
         }
     }
     break;
 
     case 9:
+    if (context->argumentCount() == 0) {
+        QList<QByteArray> _q_result = _q_self->issuerInfoAttributes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 1) {
         QSslCertificate _q_arg0 = qscriptvalue_cast<QSslCertificate>(context->argument(0));
         QSslCertificate _q_result = _q_self->operator=(_q_arg0);
@@ -329,7 +383,7 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 1) {
         QSslCertificate _q_arg0 = qscriptvalue_cast<QSslCertificate>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -337,56 +391,85 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 0) {
         QSslKey _q_result = _q_self->publicKey();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->serialNumber();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
+    if (context->argumentCount() == 0) {
+        QMultiMap<QSsl::AlternativeNameEntryType,QString> _q_result = _q_self->subjectAlternativeNames();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 15:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QSslCertificate::SubjectInfo>() == context->argument(0).toVariant().userType())) {
             QSslCertificate::SubjectInfo _q_arg0 = qscriptvalue_cast<QSslCertificate::SubjectInfo>(context->argument(0));
-            QString _q_result = _q_self->subjectInfo(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
+            QStringList _q_result = _q_self->subjectInfo(_q_arg0);
+            return qScriptValueFromSequence(context->engine(), _q_result);
         } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            QString _q_result = _q_self->subjectInfo(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
+            QStringList _q_result = _q_self->subjectInfo(_q_arg0);
+            return qScriptValueFromSequence(context->engine(), _q_result);
         }
     }
     break;
 
-    case 14:
+    case 16:
+    if (context->argumentCount() == 0) {
+        QList<QByteArray> _q_result = _q_self->subjectInfoAttributes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 17:
+    if (context->argumentCount() == 1) {
+        QSslCertificate _q_arg0 = qscriptvalue_cast<QSslCertificate>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toDer();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 19:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toPem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 20:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->toText();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->version();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 17: {
+    case 22: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -397,8 +480,8 @@ static QScriptValue qtscript_QSslCertificate_prototype_call(QScriptContext *cont
     Q_ASSERT(false);
     }
     return qtscript_QSslCertificate_throw_ambiguity_error_helper(context,
-        qtscript_QSslCertificate_function_names[_id+4],
-        qtscript_QSslCertificate_function_signatures[_id+4]);
+        qtscript_QSslCertificate_function_names[_id+5],
+        qtscript_QSslCertificate_function_signatures[_id+5]);
 }
 
 static QScriptValue qtscript_QSslCertificate_static_call(QScriptContext *context, QScriptEngine *)
@@ -500,6 +583,22 @@ static QScriptValue qtscript_QSslCertificate_static_call(QScriptContext *context
     }
     break;
 
+    case 4:
+    if (context->argumentCount() == 1) {
+        QList<QSslCertificate> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        QList<QSslError> _q_result = QSslCertificate::verify(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 2) {
+        QList<QSslCertificate> _q_arg0;
+        qScriptValueToSequence(context->argument(0), _q_arg0);
+        QString _q_arg1 = context->argument(1).toString();
+        QList<QSslError> _q_result = QSslCertificate::verify(_q_arg0, _q_arg1);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
     default:
     Q_ASSERT(false);
     }
@@ -512,10 +611,10 @@ QScriptValue qtscript_create_QSslCertificate_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QSslCertificate*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSslCertificate*)0));
-    for (int i = 0; i < 18; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QSslCertificate_prototype_call, qtscript_QSslCertificate_function_lengths[i+4]);
+    for (int i = 0; i < 23; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QSslCertificate_prototype_call, qtscript_QSslCertificate_function_lengths[i+5]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QSslCertificate_function_names[i+4]),
+        proto.setProperty(QString::fromLatin1(qtscript_QSslCertificate_function_names[i+5]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -524,7 +623,7 @@ QScriptValue qtscript_create_QSslCertificate_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QSslCertificate_static_call, proto, qtscript_QSslCertificate_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSslCertificate_static_call,
             qtscript_QSslCertificate_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

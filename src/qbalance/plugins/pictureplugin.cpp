@@ -41,8 +41,26 @@ QString PicturePlugin::codeTemplate() const {
 }
 
 QString PicturePlugin::domXml() const {
-    return "<widget class=\"Picture\" name=\"picture\">\n"
-           "</widget>\n";
+//    return "<widget class=\"Picture\" name=\"picture\">\n"
+//           "</widget>\n";
+    return "<ui language=\"c++\">\n"
+           " <widget class=\"Picture\" name=\"picture\">\n"
+           "  <property name=\"geometry\">\n"
+           "   <rect>\n"
+           "    <x>0</x>\n"
+           "    <y>0</y>\n"
+           "    <width>100</width>\n"
+           "    <height>100</height>\n"
+           "   </rect>\n"
+           "  </property>\n"
+           "  <property name=\"toolTip\" >\n"
+           "   <string>Picture</string>\n"
+           "  </property>\n"
+           "  <property name=\"whatsThis\" >\n"
+           "   <string>Picture.</string>\n"
+           "  </property>\n"
+           " </widget>\n"
+           "</ui>\n";
 }
 
 QString PicturePlugin::group() const {

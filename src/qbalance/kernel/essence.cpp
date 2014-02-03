@@ -60,7 +60,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
     scriptEngine = 0;
-    scriptFileName =  tableName + ".qs";
+    scriptFileName =  tagName + ".qs";
     scriptEngineEnabled = true;                 // По умолчанию разрешена загрузка скриптового движка
     photoPath = "";
     photoIdField = "";
@@ -198,6 +198,7 @@ void Essence::setId(qulonglong id)
 
 void Essence::query(QString filter)
 {
+    QModelIndex index = form->getCurrentIndex();
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
         Table::query(filter + " AND " + defaultFilter);
@@ -209,13 +210,11 @@ void Essence::query(QString filter)
     else
         Table::query(filter);
 
-    if (form->getGridTable() != 0)
-        form->getGridTable()->reset();
-
     if (tableModel->rowCount() == 0)
     {
         form->showPhoto();
     }
+    form->setCurrentIndex(index);
  }
 
 
@@ -263,51 +262,50 @@ QString Essence::getPhotoFile()
                 idValue = QString("%1").arg(id).trimmed();
                 QString phPath = getPhotoPath();
                 file = app->getPhotosPath(phPath) + "/" + idValue + ".jpg";
-                if (isDictionary)
-                {
-                    localFile = phPath + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
-                    if (!QFile(file).exists())
-                    {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
-                        // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                        if (getPhotoCheckSum(localFile) != 0)
-                        {
-                            app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                            QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                            if (picture.size() > 0)
-                            {   // Если удалось получить какую-то фотографию
-                                saveFile(file, &picture);
-                            }
-                        }
-                        if (!QFile(file).exists())
-                        {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
-                            file = pictureUrl;
-                            // Если в скриптах указано, откуда брать фотографию
-                            if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
-                            {
-                                QUrl url(file);
-                                if (url.isValid())
-                                {
-                                    if (m_networkAccessManager == 0)
-                                    {
-                                        m_networkAccessManager = new QNetworkAccessManager(this);
-                                        connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-                                    }
-                                    urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
-                                    m_request = new QNetworkRequest(url);
-                                    m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
-                                    delete m_request;
-                                    app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                                }
-                                else
-                                    file = "";
-                            }
+
+                localFile = phPath + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+                if (!QFile(file).exists())
+                {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
+                    // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                    if (getPhotoCheckSum(localFile) != 0)
+                    {
+                        app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                        QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                        if (picture.size() > 0)
+                        {   // Если удалось получить какую-то фотографию
+                            saveFile(file, &picture);
                         }
                     }
-                    else
-                    {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        savePhotoToServer(file, localFile);
+                    if (!QFile(file).exists())
+                    {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                        file = pictureUrl;
+                        // Если в скриптах указано, откуда брать фотографию
+                        if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                        {
+                            QUrl url(file);
+                            if (url.isValid())
+                            {
+                                if (m_networkAccessManager == 0)
+                                {
+                                    m_networkAccessManager = new QNetworkAccessManager(this);
+                                    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                                }
+                                urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+                                m_request = new QNetworkRequest(url);
+                                m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
+                                delete m_request;
+                                app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                            }
+                            else
+                                file = "";
+                        }
                     }
                 }
+                else
+                {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
+                    savePhotoToServer(file, localFile);
+                }
+
             }
         }
     }
@@ -452,7 +450,9 @@ void Essence::hide()
 void Essence::view()
 {
     if (form != 0)
+    {
         form->getFormWidget()->setFocus(Qt::OtherFocusReason);
+    }
 }
 
 
@@ -477,11 +477,6 @@ void Essence::close()
         form->close();
         delete form;
     }
-//    if (scriptEngine != 0)
-//    {
-//        scriptEngine->close();
-//        delete scriptEngine;
-//    }
     Table::close();
 }
 
@@ -677,13 +672,13 @@ void Essence::updateCurrentRow()
             TApplication::debug(QString("PreparedQuery: %1\n").arg(command));
             if (preparedSelectCurrentRow.first())
             {
-                QModelIndex index = form->getCurrentIndex();
+                int row = form->getCurrentIndex().row();
                 for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
                 {
                     QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
                     QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-                    if (value != tableModel->record(index.row()).value(fieldName))
-                        tableModel->setData(index.sibling(index.row(), i), value, true);
+                    if (value != tableModel->record(row).value(fieldName))
+                        tableModel->setData(tableModel->index(row, i), value, true);
                 }
             }
         }

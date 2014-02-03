@@ -8,11 +8,16 @@
 #include <qeasingcurve.h>
 #include <QVariant>
 #include <qdatastream.h>
+#include <qeasingcurve.h>
+#include <qpoint.h>
+#include <qvector.h>
 
 static const char * const qtscript_QEasingCurve_function_names[] = {
     "QEasingCurve"
     // static
     // prototype
+    , "addCubicBezierSegment"
+    , "addTCBSegment"
     , "amplitude"
     , "overshoot"
     , "period"
@@ -21,6 +26,8 @@ static const char * const qtscript_QEasingCurve_function_names[] = {
     , "setOvershoot"
     , "setPeriod"
     , "setType"
+    , "swap"
+    , "toCubicSpline"
     , "type"
     , "valueForProgress"
     , "writeTo"
@@ -31,6 +38,8 @@ static const char * const qtscript_QEasingCurve_function_signatures[] = {
     "Type type"
     // static
     // prototype
+    , "QPointF c1, QPointF c2, QPointF endPoint"
+    , "QPointF nextPoint, qreal t, qreal c, qreal b"
     , ""
     , ""
     , ""
@@ -39,6 +48,8 @@ static const char * const qtscript_QEasingCurve_function_signatures[] = {
     , "qreal overshoot"
     , "qreal period"
     , "Type type"
+    , "QEasingCurve other"
+    , ""
     , ""
     , "qreal progress"
     , "QDataStream arg__1"
@@ -49,6 +60,8 @@ static const int qtscript_QEasingCurve_function_lengths[] = {
     1
     // static
     // prototype
+    , 3
+    , 4
     , 0
     , 0
     , 0
@@ -57,6 +70,8 @@ static const int qtscript_QEasingCurve_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
+    , 0
     , 0
     , 1
     , 1
@@ -82,6 +97,7 @@ static const QMetaObject *qtscript_QEasingCurve_metaObject()
 Q_DECLARE_METATYPE(QEasingCurve*)
 Q_DECLARE_METATYPE(QEasingCurve::Type)
 Q_DECLARE_METATYPE(QDataStream*)
+Q_DECLARE_METATYPE(QVector<QPointF>)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -147,6 +163,8 @@ static const QEasingCurve::Type qtscript_QEasingCurve_Type_values[] = {
     , QEasingCurve::OutCurve
     , QEasingCurve::SineCurve
     , QEasingCurve::CosineCurve
+    , QEasingCurve::BezierSpline
+    , QEasingCurve::TCBSpline
     , QEasingCurve::Custom
     , QEasingCurve::NCurveTypes
 };
@@ -197,6 +215,8 @@ static const char * const qtscript_QEasingCurve_Type_keys[] = {
     , "OutCurve"
     , "SineCurve"
     , "CosineCurve"
+    , "BezierSpline"
+    , "TCBSpline"
     , "Custom"
     , "NCurveTypes"
 };
@@ -252,7 +272,7 @@ static QScriptValue qtscript_create_QEasingCurve_Type_class(QScriptEngine *engin
         qtscript_QEasingCurve_Type_valueOf, qtscript_QEasingCurve_Type_toString);
     qScriptRegisterMetaType<QEasingCurve::Type>(engine, qtscript_QEasingCurve_Type_toScriptValue,
         qtscript_QEasingCurve_Type_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 47; ++i) {
+    for (int i = 0; i < 49; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QEasingCurve_Type_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QEasingCurve_Type_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -274,7 +294,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 11;
+        _id = 0xBABE0000 + 15;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -287,27 +307,48 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 3) {
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
+        QPointF _q_arg2 = qscriptvalue_cast<QPointF>(context->argument(2));
+        _q_self->addCubicBezierSegment(_q_arg0, _q_arg1, _q_arg2);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 4) {
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
+        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
+        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
+        _q_self->addTCBSegment(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->amplitude();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 3:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->overshoot();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 4:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->period();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -315,7 +356,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setAmplitude(_q_arg0);
@@ -323,7 +364,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setOvershoot(_q_arg0);
@@ -331,7 +372,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setPeriod(_q_arg0);
@@ -339,7 +380,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 1) {
         QEasingCurve::Type _q_arg0 = qscriptvalue_cast<QEasingCurve::Type>(context->argument(0));
         _q_self->setType(_q_arg0);
@@ -347,14 +388,29 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 8:
+    case 10:
+    if (context->argumentCount() == 1) {
+        QEasingCurve _q_arg0 = qscriptvalue_cast<QEasingCurve>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
+    if (context->argumentCount() == 0) {
+        QVector<QPointF> _q_result = _q_self->toCubicSpline();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 12:
     if (context->argumentCount() == 0) {
         QEasingCurve::Type _q_result = _q_self->type();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 13:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_result = _q_self->valueForProgress(_q_arg0);
@@ -362,7 +418,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 10:
+    case 14:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -370,7 +426,7 @@ static QScriptValue qtscript_QEasingCurve_prototype_call(QScriptContext *context
     }
     break;
 
-    case 11: {
+    case 15: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -419,7 +475,7 @@ QScriptValue qtscript_create_QEasingCurve_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QEasingCurve*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QEasingCurve*)0));
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 16; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QEasingCurve_prototype_call, qtscript_QEasingCurve_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QEasingCurve_function_names[i+1]),

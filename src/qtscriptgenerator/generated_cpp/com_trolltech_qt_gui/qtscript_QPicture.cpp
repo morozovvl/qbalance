@@ -13,6 +13,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpicture.h>
+#include <qpoint.h>
 #include <qrect.h>
 
 #include "qtscriptshell_QPicture.h"
@@ -30,6 +31,7 @@ static const char * const qtscript_QPicture_function_names[] = {
     , "save"
     , "setBoundingRect"
     , "size"
+    , "swap"
     , "writeTo"
     , "toString"
 };
@@ -47,6 +49,7 @@ static const char * const qtscript_QPicture_function_signatures[] = {
     , "QIODevice dev, char format\nString fileName, char format"
     , "QRect r"
     , ""
+    , "QPicture other"
     , "QDataStream arg__1"
 ""
 };
@@ -65,7 +68,17 @@ static const int qtscript_QPicture_function_lengths[] = {
     , 1
     , 0
     , 1
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QPicture_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPicture : public QPicture
+{
+
+    friend QScriptValue qtscript_QPicture_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QPicture_throw_ambiguity_error_helper(
@@ -103,11 +116,11 @@ static QScriptValue qtscript_QPicture_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 10;
+        _id = 0xBABE0000 + 11;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPicture* _q_self = qscriptvalue_cast<QPicture*>(context->thisObject());
+    qtscript_QPicture* _q_self = reinterpret_cast<qtscript_QPicture*>(qscriptvalue_cast<QPicture*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPicture.%0(): this object is not a QPicture")
@@ -243,13 +256,21 @@ static QScriptValue qtscript_QPicture_prototype_call(QScriptContext *context, QS
 
     case 9:
     if (context->argumentCount() == 1) {
+        QPicture _q_arg0 = qscriptvalue_cast<QPicture>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10:
+    if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 10: {
+    case 11: {
     QString result = QString::fromLatin1("QPicture");
     return QScriptValue(context->engine(), result);
     }
@@ -307,7 +328,7 @@ QScriptValue qtscript_create_QPicture_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QPicture*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPicture*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QPaintDevice*>()));
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 12; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPicture_prototype_call, qtscript_QPicture_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPicture_function_names[i+1]),

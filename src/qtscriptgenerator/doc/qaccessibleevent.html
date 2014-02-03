@@ -9,21 +9,21 @@
 <body>
 <h1 align="center">QAccessibleEvent Class Reference</h1>
 <h3 align="center">[<a href="com_trolltech_qt_gui.html">com.trolltech.qt.gui</a> package]</h3>
-<p>Inherits <a href="qevent.html">QEvent</a>.</p>
 <h3>Constructor</h3>
 <ul>
-<li><div class="fn"/><b>void QAccessibleEvent(Type type, int child)</b></li>
+<li><div class="fn"/><b>void QAccessibleEvent(QObject obj, Event typ)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QAccessibleEvent prototype object</li>
 </ul>
 <h3>Prototype Object Properties</h3>
-<p>The QAccessibleEvent prototype object inherits properties from the <a href="qevent.html">QEvent</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>QAccessibleInterface accessibleInterface()</b></li>
 <li><div class="fn"/><b>int child()</b></li>
-<li><div class="fn"/><b>void setValue(String aText)</b></li>
-<li><div class="fn"/><b>String value()</b></li>
+<li><div class="fn"/><b>QObject object()</b></li>
+<li><div class="fn"/><b>void setChild(int chld)</b></li>
+<li><div class="fn"/><b>Event type()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QAccessibleEvent objects have no special properties beyond those inherited from the QAccessibleEvent prototype object.</p>

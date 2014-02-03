@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtextedit.h>
+#include <QIconEngine>
 #include <QTextCursor>
 #include <QTextEdit>
 #include <QVariant>
@@ -19,8 +20,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -33,8 +32,8 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
-#include <qprinter.h>
 #include <qrect.h>
 #include <qregion.h>
 #include <qscrollbar.h>
@@ -47,6 +46,7 @@
 #include <qtextformat.h>
 #include <qurl.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTextEdit.h"
 
@@ -56,13 +56,15 @@ static const char * const qtscript_QTextEdit_function_names[] = {
     // prototype
     , "alignment"
     , "anchorAt"
+    , "canInsertFromMimeData"
     , "canPaste"
+    , "createMimeDataFromSelection"
     , "createStandardContextMenu"
     , "currentCharFormat"
     , "currentFont"
     , "cursorForPosition"
     , "cursorRect"
-    , "document"
+    , "doSetTextCursor"
     , "ensureCursorVisible"
     , "extraSelections"
     , "find"
@@ -71,12 +73,10 @@ static const char * const qtscript_QTextEdit_function_names[] = {
     , "fontPointSize"
     , "fontUnderline"
     , "fontWeight"
-    , "loadResource"
+    , "insertFromMimeData"
     , "mergeCurrentCharFormat"
     , "moveCursor"
-    , "print"
     , "setCurrentCharFormat"
-    , "setDocument"
     , "setExtraSelections"
     , "setTextCursor"
     , "setWordWrapMode"
@@ -93,13 +93,15 @@ static const char * const qtscript_QTextEdit_function_signatures[] = {
     // prototype
     , ""
     , "QPoint pos"
+    , "QMimeData source"
+    , ""
     , ""
     , "\nQPoint position"
     , ""
     , ""
     , "QPoint pos"
     , "\nQTextCursor cursor"
-    , ""
+    , "QTextCursor cursor"
     , ""
     , ""
     , "String exp, FindFlags options"
@@ -108,12 +110,10 @@ static const char * const qtscript_QTextEdit_function_signatures[] = {
     , ""
     , ""
     , ""
-    , "int type, QUrl name"
+    , "QMimeData source"
     , "QTextCharFormat modifier"
     , "MoveOperation operation, MoveMode mode"
-    , "QPrinter printer"
     , "QTextCharFormat format"
-    , "QTextDocument document"
     , "List selections"
     , "QTextCursor cursor"
     , "WrapMode policy"
@@ -130,13 +130,15 @@ static const int qtscript_QTextEdit_function_lengths[] = {
     // prototype
     , 0
     , 1
-    , 0
     , 1
     , 0
     , 0
     , 1
-    , 1
     , 0
+    , 0
+    , 1
+    , 1
+    , 1
     , 0
     , 0
     , 2
@@ -145,12 +147,10 @@ static const int qtscript_QTextEdit_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
+    , 1
     , 2
     , 1
-    , 2
-    , 1
-    , 1
-    , 1
     , 1
     , 1
     , 1
@@ -159,6 +159,19 @@ static const int qtscript_QTextEdit_function_lengths[] = {
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextEdit : public QTextEdit
+{
+    friend QScriptValue qtscript_QTextEdit_canInsertFromMimeData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextEdit_createMimeDataFromSelection(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextEdit_doSetTextCursor(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTextEdit_insertFromMimeData(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTextEdit_throw_ambiguity_error_helper(
@@ -179,21 +192,21 @@ static const QMetaObject *qtscript_QTextEdit_metaObject()
 
 Q_DECLARE_METATYPE(QTextEdit*)
 Q_DECLARE_METATYPE(QtScriptShell_QTextEdit*)
+Q_DECLARE_METATYPE(QTextEdit::LineWrapMode)
 Q_DECLARE_METATYPE(QTextEdit::AutoFormattingFlag)
 Q_DECLARE_METATYPE(QFlags<QTextEdit::AutoFormattingFlag>)
-Q_DECLARE_METATYPE(QTextEdit::LineWrapMode)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
+Q_DECLARE_METATYPE(QMimeData*)
 Q_DECLARE_METATYPE(QMenu*)
 Q_DECLARE_METATYPE(QTextCharFormat)
 Q_DECLARE_METATYPE(QTextCursor)
-Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextEdit::ExtraSelection)
 Q_DECLARE_METATYPE(QList<QTextEdit::ExtraSelection>)
 Q_DECLARE_METATYPE(QFlags<QTextDocument::FindFlag>)
 Q_DECLARE_METATYPE(QTextCursor::MoveOperation)
 Q_DECLARE_METATYPE(QTextCursor::MoveMode)
-Q_DECLARE_METATYPE(QPrinter*)
 Q_DECLARE_METATYPE(QTextOption::WrapMode)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractScrollArea*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -225,6 +238,83 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
+}
+
+//
+// QTextEdit::LineWrapMode
+//
+
+static const QTextEdit::LineWrapMode qtscript_QTextEdit_LineWrapMode_values[] = {
+    QTextEdit::NoWrap
+    , QTextEdit::WidgetWidth
+    , QTextEdit::FixedPixelWidth
+    , QTextEdit::FixedColumnWidth
+};
+
+static const char * const qtscript_QTextEdit_LineWrapMode_keys[] = {
+    "NoWrap"
+    , "WidgetWidth"
+    , "FixedPixelWidth"
+    , "FixedColumnWidth"
+};
+
+static QString qtscript_QTextEdit_LineWrapMode_toStringHelper(QTextEdit::LineWrapMode value)
+{
+    const QMetaObject *meta = qtscript_QTextEdit_metaObject();
+    int idx = meta->indexOfEnumerator("LineWrapMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QTextEdit_LineWrapMode_toScriptValue(QScriptEngine *engine, const QTextEdit::LineWrapMode &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextEdit"));
+    return clazz.property(qtscript_QTextEdit_LineWrapMode_toStringHelper(value));
+}
+
+static void qtscript_QTextEdit_LineWrapMode_fromScriptValue(const QScriptValue &value, QTextEdit::LineWrapMode &out)
+{
+    out = qvariant_cast<QTextEdit::LineWrapMode>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QTextEdit_LineWrapMode(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QTextEdit_metaObject();
+    int idx = meta->indexOfEnumerator("LineWrapMode");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QTextEdit::LineWrapMode>(arg));
+    return context->throwError(QString::fromLatin1("LineWrapMode(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QTextEdit_LineWrapMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextEdit::LineWrapMode value = qscriptvalue_cast<QTextEdit::LineWrapMode>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QTextEdit_LineWrapMode_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextEdit::LineWrapMode value = qscriptvalue_cast<QTextEdit::LineWrapMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QTextEdit_LineWrapMode_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QTextEdit_LineWrapMode_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QTextEdit_LineWrapMode,
+        qtscript_QTextEdit_LineWrapMode_valueOf, qtscript_QTextEdit_LineWrapMode_toString);
+    qScriptRegisterMetaType<QTextEdit::LineWrapMode>(engine, qtscript_QTextEdit_LineWrapMode_toScriptValue,
+        qtscript_QTextEdit_LineWrapMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 4; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QTextEdit_LineWrapMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QTextEdit_LineWrapMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -373,83 +463,6 @@ static QScriptValue qtscript_create_QTextEdit_AutoFormatting_class(QScriptEngine
 }
 
 //
-// QTextEdit::LineWrapMode
-//
-
-static const QTextEdit::LineWrapMode qtscript_QTextEdit_LineWrapMode_values[] = {
-    QTextEdit::NoWrap
-    , QTextEdit::WidgetWidth
-    , QTextEdit::FixedPixelWidth
-    , QTextEdit::FixedColumnWidth
-};
-
-static const char * const qtscript_QTextEdit_LineWrapMode_keys[] = {
-    "NoWrap"
-    , "WidgetWidth"
-    , "FixedPixelWidth"
-    , "FixedColumnWidth"
-};
-
-static QString qtscript_QTextEdit_LineWrapMode_toStringHelper(QTextEdit::LineWrapMode value)
-{
-    const QMetaObject *meta = qtscript_QTextEdit_metaObject();
-    int idx = meta->indexOfEnumerator("LineWrapMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QTextEdit_LineWrapMode_toScriptValue(QScriptEngine *engine, const QTextEdit::LineWrapMode &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextEdit"));
-    return clazz.property(qtscript_QTextEdit_LineWrapMode_toStringHelper(value));
-}
-
-static void qtscript_QTextEdit_LineWrapMode_fromScriptValue(const QScriptValue &value, QTextEdit::LineWrapMode &out)
-{
-    out = qvariant_cast<QTextEdit::LineWrapMode>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTextEdit_LineWrapMode(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QTextEdit_metaObject();
-    int idx = meta->indexOfEnumerator("LineWrapMode");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QTextEdit::LineWrapMode>(arg));
-    return context->throwError(QString::fromLatin1("LineWrapMode(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTextEdit_LineWrapMode_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextEdit::LineWrapMode value = qscriptvalue_cast<QTextEdit::LineWrapMode>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTextEdit_LineWrapMode_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextEdit::LineWrapMode value = qscriptvalue_cast<QTextEdit::LineWrapMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTextEdit_LineWrapMode_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTextEdit_LineWrapMode_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTextEdit_LineWrapMode,
-        qtscript_QTextEdit_LineWrapMode_valueOf, qtscript_QTextEdit_LineWrapMode_toString);
-    qScriptRegisterMetaType<QTextEdit::LineWrapMode>(engine, qtscript_QTextEdit_LineWrapMode_toScriptValue,
-        qtscript_QTextEdit_LineWrapMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 4; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTextEdit_LineWrapMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTextEdit_LineWrapMode_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QTextEdit
 //
 
@@ -467,7 +480,7 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextEdit* _q_self = qscriptvalue_cast<QTextEdit*>(context->thisObject());
+    qtscript_QTextEdit* _q_self = reinterpret_cast<qtscript_QTextEdit*>(qscriptvalue_cast<QTextEdit*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextEdit.%0(): this object is not a QTextEdit")
@@ -491,13 +504,28 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QMimeData* _q_arg0 = qscriptvalue_cast<QMimeData*>(context->argument(0));
+        bool _q_result = _q_self->canInsertFromMimeData(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->canPaste();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
+    if (context->argumentCount() == 0) {
+        QMimeData* _q_result = _q_self->createMimeDataFromSelection();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 0) {
         QMenu* _q_result = _q_self->createStandardContextMenu();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -509,21 +537,21 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 0) {
         QTextCharFormat _q_result = _q_self->currentCharFormat();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         QFont _q_result = _q_self->currentFont();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         QTextCursor _q_result = _q_self->cursorForPosition(_q_arg0);
@@ -531,7 +559,7 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 0) {
         QRect _q_result = _q_self->cursorRect();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -543,28 +571,29 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 8:
-    if (context->argumentCount() == 0) {
-        QTextDocument* _q_result = _q_self->document();
-        return qScriptValueFromValue(context->engine(), _q_result);
+    case 10:
+    if (context->argumentCount() == 1) {
+        QTextCursor _q_arg0 = qscriptvalue_cast<QTextCursor>(context->argument(0));
+        _q_self->doSetTextCursor(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 0) {
         _q_self->ensureCursorVisible();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 0) {
         QList<QTextEdit::ExtraSelection> _q_result = _q_self->extraSelections();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->find(_q_arg0);
@@ -578,51 +607,50 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->fontFamily();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->fontItalic();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->fontPointSize();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->fontUnderline();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->fontWeight();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
-    if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QUrl _q_arg1 = qscriptvalue_cast<QUrl>(context->argument(1));
-        QVariant _q_result = _q_self->loadResource(_q_arg0, _q_arg1);
-        return qScriptValueFromValue(context->engine(), _q_result);
+    case 19:
+    if (context->argumentCount() == 1) {
+        QMimeData* _q_arg0 = qscriptvalue_cast<QMimeData*>(context->argument(0));
+        _q_self->insertFromMimeData(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 1) {
         QTextCharFormat _q_arg0 = qscriptvalue_cast<QTextCharFormat>(context->argument(0));
         _q_self->mergeCurrentCharFormat(_q_arg0);
@@ -630,7 +658,7 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 1) {
         QTextCursor::MoveOperation _q_arg0 = qscriptvalue_cast<QTextCursor::MoveOperation>(context->argument(0));
         _q_self->moveCursor(_q_arg0);
@@ -644,26 +672,10 @@ static QScriptValue qtscript_QTextEdit_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 20:
-    if (context->argumentCount() == 1) {
-        QPrinter* _q_arg0 = qscriptvalue_cast<QPrinter*>(context->argument(0));
-        _q_self->print(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 21:
+    case 22:
     if (context->argumentCount() == 1) {
         QTextCharFormat _q_arg0 = qscriptvalue_cast<QTextCharFormat>(context->argument(0));
         _q_self->setCurrentCharFormat(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 22:
-    if (context->argumentCount() == 1) {
-        QTextDocument* _q_arg0 = qscriptvalue_cast<QTextDocument*>(context->argument(0));
-        _q_self->setDocument(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -809,11 +821,11 @@ QScriptValue qtscript_create_QTextEdit_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QTextEdit_static_call, proto, qtscript_QTextEdit_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("LineWrapMode"),
+        qtscript_create_QTextEdit_LineWrapMode_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("AutoFormattingFlag"),
         qtscript_create_QTextEdit_AutoFormattingFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("AutoFormatting"),
         qtscript_create_QTextEdit_AutoFormatting_class(engine));
-    ctor.setProperty(QString::fromLatin1("LineWrapMode"),
-        qtscript_create_QTextEdit_LineWrapMode_class(engine, ctor));
     return ctor;
 }

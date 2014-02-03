@@ -1,12 +1,12 @@
 #include "qtscriptshell_QStandardItem.h"
 
 #include <QtScript/QScriptEngine>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemmodel.h>
 #include <qbrush.h>
 #include <qdatastream.h>
 #include <qfont.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qsize.h>
 #include <qstandarditemmodel.h>
@@ -36,10 +36,14 @@ QStandardItem*  QtScriptShell_QStandardItem::clone() const
 {
     QScriptValue _q_function = __qtscript_self.property("clone");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("clone") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("clone") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QStandardItem::clone();
     } else {
-        return qscriptvalue_cast<QStandardItem* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QStandardItem* _q_retval = qscriptvalue_cast<QStandardItem* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -47,13 +51,17 @@ QVariant  QtScriptShell_QStandardItem::data(int  role) const
 {
     QScriptValue _q_function = __qtscript_self.property("data");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("data") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("data") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QStandardItem::data(role);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, role)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -61,14 +69,17 @@ void QtScriptShell_QStandardItem::setData(const QVariant&  value, int  role)
 {
     QScriptValue _q_function = __qtscript_self.property("setData");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("setData") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("setData") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QStandardItem::setData(value, role);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, value)
             << qScriptValueFromValue(_q_engine, role));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -76,10 +87,14 @@ int  QtScriptShell_QStandardItem::type() const
 {
     QScriptValue _q_function = __qtscript_self.property("type");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("type") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("type") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QStandardItem::type();
     } else {
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 

@@ -8,9 +8,7 @@
 class QtScriptShell_QApplication : public QApplication
 {
 public:
-    QtScriptShell_QApplication(int&  argc, char**  argv, QApplication::Type  arg__3, int  arg__4 = 0x040704);
-    QtScriptShell_QApplication(int&  argc, char**  argv, bool  GUIenabled, int  arg__4 = 0x040704);
-    QtScriptShell_QApplication(int&  argc, char**  argv, int  arg__3 = 0x040704);
+    QtScriptShell_QApplication(int&  argc, char**  argv, int  arg__3 = ApplicationFlags);
     ~QtScriptShell_QApplication();
 
     void childEvent(QChildEvent*  arg__1);

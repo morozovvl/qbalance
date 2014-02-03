@@ -21,8 +21,18 @@
 <h3>Prototype Object Properties</h3>
 <p>The QItemDelegate prototype object inherits properties from the <a href="qabstractitemdelegate.html">QAbstractItemDelegate</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>QPixmap decoration(QStyleOptionViewItem option, Object variant)</b></li>
+<li><div class="fn"/><b>QRect doCheck(QStyleOptionViewItem option, QRect bounding, Object variant)</b></li>
+<li><div class="fn"/><b>void drawBackground(QPainter painter, QStyleOptionViewItem option, QModelIndex index)</b></li>
+<li><div class="fn"/><b>void drawCheck(QPainter painter, QStyleOptionViewItem option, QRect rect, CheckState state)</b></li>
+<li><div class="fn"/><b>void drawDecoration(QPainter painter, QStyleOptionViewItem option, QRect rect, QPixmap pixmap)</b></li>
+<li><div class="fn"/><b>void drawDisplay(QPainter painter, QStyleOptionViewItem option, QRect rect, String text)</b></li>
+<li><div class="fn"/><b>void drawFocus(QPainter painter, QStyleOptionViewItem option, QRect rect)</b></li>
 <li><div class="fn"/><b>QItemEditorFactory itemEditorFactory()</b></li>
+<li><div class="fn"/><b>QRect rect(QStyleOptionViewItem option, QModelIndex index, int role)</b></li>
 <li><div class="fn"/><b>void setItemEditorFactory(QItemEditorFactory factory)</b></li>
+<li><div class="fn"/><b>QStyleOptionViewItem setOptions(QModelIndex index, QStyleOptionViewItem option)</b></li>
+<li><div class="fn"/><b>QRect textRectangle(QPainter painter, QRect rect, QFont font, String text)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QItemDelegate objects inherit properties from the QItemDelegate prototype object and also have the following properties.</p>

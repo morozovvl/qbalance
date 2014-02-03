@@ -12,8 +12,11 @@ public:
     ~QtScriptShell_QSvgGenerator();
 
     int  devType() const;
+    void initPainter(QPainter*  painter) const;
     int  metric(QPaintDevice::PaintDeviceMetric  metric) const;
     QPaintEngine*  paintEngine() const;
+    QPaintDevice*  redirected(QPoint*  offset) const;
+    QPainter*  sharedPainter() const;
 
     QScriptValue __qtscript_self;
 };

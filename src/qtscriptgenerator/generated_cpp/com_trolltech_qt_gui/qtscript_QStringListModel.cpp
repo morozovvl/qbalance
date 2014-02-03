@@ -17,6 +17,7 @@
 #include <qsize.h>
 #include <qstringlist.h>
 #include <qstringlistmodel.h>
+#include <qvector.h>
 
 #include "qtscriptshell_QStringListModel.h"
 
@@ -45,6 +46,15 @@ static const int qtscript_QStringListModel_function_lengths[] = {
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QStringListModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStringListModel : public QStringListModel
+{
+
+    friend QScriptValue qtscript_QStringListModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QStringListModel_throw_ambiguity_error_helper(
@@ -80,7 +90,7 @@ static QScriptValue qtscript_QStringListModel_prototype_call(QScriptContext *con
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStringListModel* _q_self = qscriptvalue_cast<QStringListModel*>(context->thisObject());
+    qtscript_QStringListModel* _q_self = reinterpret_cast<qtscript_QStringListModel*>(qscriptvalue_cast<QStringListModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStringListModel.%0(): this object is not a QStringListModel")

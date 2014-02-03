@@ -8,8 +8,8 @@
 class QtScriptShell_QSignalTransition : public QSignalTransition
 {
 public:
-    QtScriptShell_QSignalTransition(QObject*  sender, const char*  signal, QState*  sourceState = 0);
     QtScriptShell_QSignalTransition(QState*  sourceState = 0);
+    QtScriptShell_QSignalTransition(const QObject*  sender, const char*  signal, QState*  sourceState = 0);
     ~QtScriptShell_QSignalTransition();
 
     void childEvent(QChildEvent*  arg__1);

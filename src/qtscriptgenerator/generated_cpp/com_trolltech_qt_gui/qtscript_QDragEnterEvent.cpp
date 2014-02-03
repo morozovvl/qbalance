@@ -8,9 +8,9 @@
 #include <qevent.h>
 #include <QVariant>
 #include <qmimedata.h>
+#include <qobject.h>
 #include <qpoint.h>
 #include <qrect.h>
-#include <qwidget.h>
 
 static const char * const qtscript_QDragEnterEvent_function_names[] = {
     "QDragEnterEvent"

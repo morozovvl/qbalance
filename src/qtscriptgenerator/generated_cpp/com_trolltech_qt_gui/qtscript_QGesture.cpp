@@ -39,6 +39,15 @@ static const int qtscript_QGesture_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGesture_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGesture : public QGesture
+{
+
+    friend QScriptValue qtscript_QGesture_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGesture_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -152,7 +161,7 @@ static QScriptValue qtscript_QGesture_prototype_call(QScriptContext *context, QS
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGesture* _q_self = qscriptvalue_cast<QGesture*>(context->thisObject());
+    qtscript_QGesture* _q_self = reinterpret_cast<qtscript_QGesture*>(qscriptvalue_cast<QGesture*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGesture.%0(): this object is not a QGesture")

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qlcdnumber.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlcdnumber.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QLCDNumber.h"
 
@@ -63,6 +64,15 @@ static const int qtscript_QLCDNumber_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QLCDNumber_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QLCDNumber : public QLCDNumber
+{
+
+    friend QScriptValue qtscript_QLCDNumber_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QLCDNumber_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -83,6 +93,7 @@ Q_DECLARE_METATYPE(QLCDNumber*)
 Q_DECLARE_METATYPE(QtScriptShell_QLCDNumber*)
 Q_DECLARE_METATYPE(QLCDNumber::Mode)
 Q_DECLARE_METATYPE(QLCDNumber::SegmentStyle)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFrame*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -269,7 +280,7 @@ static QScriptValue qtscript_QLCDNumber_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QLCDNumber* _q_self = qscriptvalue_cast<QLCDNumber*>(context->thisObject());
+    qtscript_QLCDNumber* _q_self = reinterpret_cast<qtscript_QLCDNumber*>(qscriptvalue_cast<QLCDNumber*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QLCDNumber.%0(): this object is not a QLCDNumber")

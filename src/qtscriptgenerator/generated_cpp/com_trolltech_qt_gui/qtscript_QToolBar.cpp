@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtoolbar.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyleoption.h>
 #include <qtoolbar.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QToolBar.h"
 
@@ -52,6 +53,7 @@ static const char * const qtscript_QToolBar_function_names[] = {
     , "allowedAreas"
     , "clear"
     , "iconSize"
+    , "initStyleOption"
     , "insertSeparator"
     , "insertWidget"
     , "isAreaAllowed"
@@ -80,6 +82,7 @@ static const char * const qtscript_QToolBar_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QStyleOptionToolBar option"
     , "QAction before"
     , "QAction before, QWidget widget"
     , "ToolBarArea area"
@@ -109,6 +112,7 @@ static const int qtscript_QToolBar_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 1
     , 2
     , 1
     , 0
@@ -122,6 +126,16 @@ static const int qtscript_QToolBar_function_lengths[] = {
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QToolBar : public QToolBar
+{
+    friend QScriptValue qtscript_QToolBar_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QToolBar_throw_ambiguity_error_helper(
@@ -138,7 +152,9 @@ static QScriptValue qtscript_QToolBar_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QToolBar*)
 Q_DECLARE_METATYPE(QtScriptShell_QToolBar*)
 Q_DECLARE_METATYPE(QAction*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::ToolBarArea>)
+Q_DECLARE_METATYPE(QStyleOptionToolBar*)
 Q_DECLARE_METATYPE(Qt::ToolBarArea)
 Q_DECLARE_METATYPE(Qt::Orientation)
 Q_DECLARE_METATYPE(Qt::ToolButtonStyle)
@@ -157,11 +173,11 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QToolBar* _q_self = qscriptvalue_cast<QToolBar*>(context->thisObject());
+    qtscript_QToolBar* _q_self = reinterpret_cast<qtscript_QToolBar*>(qscriptvalue_cast<QToolBar*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QToolBar.%0(): this object is not a QToolBar")
@@ -243,13 +259,21 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
 
     case 8:
     if (context->argumentCount() == 1) {
+        QStyleOptionToolBar* _q_arg0 = qscriptvalue_cast<QStyleOptionToolBar*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 1) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QAction* _q_result = _q_self->insertSeparator(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 2) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -258,7 +282,7 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 1) {
         Qt::ToolBarArea _q_arg0 = qscriptvalue_cast<Qt::ToolBarArea>(context->argument(0));
         bool _q_result = _q_self->isAreaAllowed(_q_arg0);
@@ -266,28 +290,28 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isFloatable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isFloating();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         Qt::Orientation _q_result = _q_self->orientation();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 1) {
         QFlags<Qt::ToolBarArea> _q_arg0 = qscriptvalue_cast<QFlags<Qt::ToolBarArea> >(context->argument(0));
         _q_self->setAllowedAreas(_q_arg0);
@@ -295,7 +319,7 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setFloatable(_q_arg0);
@@ -303,7 +327,7 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setMovable(_q_arg0);
@@ -311,7 +335,7 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 1) {
         Qt::Orientation _q_arg0 = qscriptvalue_cast<Qt::Orientation>(context->argument(0));
         _q_self->setOrientation(_q_arg0);
@@ -319,21 +343,21 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 0) {
         QAction* _q_result = _q_self->toggleViewAction();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 0) {
         Qt::ToolButtonStyle _q_result = _q_self->toolButtonStyle();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 1) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QWidget* _q_result = _q_self->widgetForAction(_q_arg0);
@@ -341,7 +365,7 @@ static QScriptValue qtscript_QToolBar_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 21: {
+    case 22: {
     QString result = QString::fromLatin1("QToolBar");
     return QScriptValue(context->engine(), result);
     }
@@ -416,7 +440,7 @@ QScriptValue qtscript_create_QToolBar_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QToolBar*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QToolBar*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QToolBar_prototype_call, qtscript_QToolBar_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QToolBar_function_names[i+1]),

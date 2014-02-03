@@ -40,6 +40,15 @@ static const int qtscript_QGraphicsRotation_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsRotation_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsRotation : public QGraphicsRotation
+{
+
+    friend QScriptValue qtscript_QGraphicsRotation_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGraphicsRotation_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -74,7 +83,7 @@ static QScriptValue qtscript_QGraphicsRotation_prototype_call(QScriptContext *co
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsRotation* _q_self = qscriptvalue_cast<QGraphicsRotation*>(context->thisObject());
+    qtscript_QGraphicsRotation* _q_self = reinterpret_cast<qtscript_QGraphicsRotation*>(qscriptvalue_cast<QGraphicsRotation*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsRotation.%0(): this object is not a QGraphicsRotation")

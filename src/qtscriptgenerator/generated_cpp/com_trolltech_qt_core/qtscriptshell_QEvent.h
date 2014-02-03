@@ -9,6 +9,7 @@ class QtScriptShell_QEvent : public QEvent
 {
 public:
     QtScriptShell_QEvent(QEvent::Type  type);
+    QtScriptShell_QEvent(const QEvent&  other);
     ~QtScriptShell_QEvent();
 
 

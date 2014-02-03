@@ -28,8 +28,11 @@
 <p>The QAbstractItemDelegate prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>QWidget createEditor(QWidget parent, QStyleOptionViewItem option, QModelIndex index)</b></li>
+<li><div class="fn"/><b>void destroyEditor(QWidget editor, QModelIndex index)</b></li>
 <li><div class="fn"/><b>bool editorEvent(QEvent event, QAbstractItemModel model, QStyleOptionViewItem option, QModelIndex index)</b></li>
+<li><div class="fn"/><b>bool helpEvent(QHelpEvent event, QAbstractItemView view, QStyleOptionViewItem option, QModelIndex index)</b></li>
 <li><div class="fn"/><b>void paint(QPainter painter, QStyleOptionViewItem option, QModelIndex index)</b></li>
+<li><div class="fn"/><b>List paintingRoles()</b></li>
 <li><div class="fn"/><b>void setEditorData(QWidget editor, QModelIndex index)</b></li>
 <li><div class="fn"/><b>void setModelData(QWidget editor, QAbstractItemModel model, QModelIndex index)</b></li>
 <li><div class="fn"/><b>QSize sizeHint(QStyleOptionViewItem option, QModelIndex index)</b></li>

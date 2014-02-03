@@ -20,6 +20,7 @@ static const char * const qtscript_QTemporaryFile_function_names[] = {
     "QTemporaryFile"
     // static
     , "createLocalFile"
+    , "createNativeFile"
     // prototype
     , "autoRemove"
     , "fileTemplate"
@@ -33,6 +34,7 @@ static const char * const qtscript_QTemporaryFile_function_names[] = {
 static const char * const qtscript_QTemporaryFile_function_signatures[] = {
     "\nQObject parent\nString templateName\nString templateName, QObject parent"
     // static
+    , "QFile file\nString fileName"
     , "QFile file\nString fileName"
     // prototype
     , ""
@@ -48,6 +50,7 @@ static const int qtscript_QTemporaryFile_function_lengths[] = {
     2
     // static
     , 1
+    , 1
     // prototype
     , 0
     , 0
@@ -56,6 +59,15 @@ static const int qtscript_QTemporaryFile_function_lengths[] = {
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QTemporaryFile_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTemporaryFile : public QTemporaryFile
+{
+
+    friend QScriptValue qtscript_QTemporaryFile_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTemporaryFile_throw_ambiguity_error_helper(
@@ -91,11 +103,11 @@ static QScriptValue qtscript_QTemporaryFile_prototype_call(QScriptContext *conte
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTemporaryFile* _q_self = qscriptvalue_cast<QTemporaryFile*>(context->thisObject());
+    qtscript_QTemporaryFile* _q_self = reinterpret_cast<qtscript_QTemporaryFile*>(qscriptvalue_cast<QTemporaryFile*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTemporaryFile.%0(): this object is not a QTemporaryFile")
-            .arg(qtscript_QTemporaryFile_function_names[_id+2]));
+            .arg(qtscript_QTemporaryFile_function_names[_id+3]));
     }
 
     switch (_id) {
@@ -152,8 +164,8 @@ static QScriptValue qtscript_QTemporaryFile_prototype_call(QScriptContext *conte
     Q_ASSERT(false);
     }
     return qtscript_QTemporaryFile_throw_ambiguity_error_helper(context,
-        qtscript_QTemporaryFile_function_names[_id+2],
-        qtscript_QTemporaryFile_function_signatures[_id+2]);
+        qtscript_QTemporaryFile_function_names[_id+3],
+        qtscript_QTemporaryFile_function_signatures[_id+3]);
 }
 
 static QScriptValue qtscript_QTemporaryFile_static_call(QScriptContext *context, QScriptEngine *)
@@ -210,6 +222,21 @@ static QScriptValue qtscript_QTemporaryFile_static_call(QScriptContext *context,
     }
     break;
 
+    case 2:
+    if (context->argumentCount() == 1) {
+        if (qscriptvalue_cast<QFile*>(context->argument(0))) {
+
+        QFile & _q_arg0 = *qscriptvalue_cast<QFile*>(context->argument(0));
+                    QTemporaryFile* _q_result = QTemporaryFile::createNativeFile(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            QTemporaryFile* _q_result = QTemporaryFile::createNativeFile(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
     default:
     Q_ASSERT(false);
     }
@@ -234,9 +261,9 @@ QScriptValue qtscript_create_QTemporaryFile_class(QScriptEngine *engine)
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTemporaryFile*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QFile*>()));
     for (int i = 0; i < 7; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QTemporaryFile_prototype_call, qtscript_QTemporaryFile_function_lengths[i+2]);
+        QScriptValue fun = engine->newFunction(qtscript_QTemporaryFile_prototype_call, qtscript_QTemporaryFile_function_lengths[i+3]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QTemporaryFile_function_names[i+2]),
+        proto.setProperty(QString::fromLatin1(qtscript_QTemporaryFile_function_names[i+3]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -245,7 +272,7 @@ QScriptValue qtscript_create_QTemporaryFile_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QTemporaryFile_static_call, proto, qtscript_QTemporaryFile_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < 2; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTemporaryFile_static_call,
             qtscript_QTemporaryFile_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

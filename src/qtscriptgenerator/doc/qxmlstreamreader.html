@@ -25,6 +25,10 @@
 <li><b>NotWellFormedError</b></li>
 <li><b>PrematureEndOfDocumentError</b></li>
 <li><b>Error( value )</b></li>
+<li><b>ErrorOnUnexpectedElement</b></li>
+<li><b>IncludeChildElements</b></li>
+<li><b>SkipChildElements</b></li>
+<li><b>ReadElementTextBehaviour( value )</b></li>
 <li><b>NoToken = 0</b></li>
 <li><b>Invalid</b></li>
 <li><b>StartDocument</b></li>
@@ -37,10 +41,6 @@
 <li><b>EntityReference</b></li>
 <li><b>ProcessingInstruction</b></li>
 <li><b>TokenType( value )</b></li>
-<li><b>ErrorOnUnexpectedElement</b></li>
-<li><b>IncludeChildElements</b></li>
-<li><b>SkipChildElements</b></li>
-<li><b>ReadElementTextBehaviour( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -86,7 +86,7 @@
 <li><div class="fn"/><b>String processingInstructionTarget()</b></li>
 <li><div class="fn"/><b>String qualifiedName()</b></li>
 <li><div class="fn"/><b>void raiseError(String message)</b></li>
-<li><div class="fn"/><b>String readElementText()</b></li>
+<li><div class="fn"/><b>String readElementText(ReadElementTextBehaviour behaviour)</b></li>
 <li><div class="fn"/><b>TokenType readNext()</b></li>
 <li><div class="fn"/><b>bool readNextStartElement()</b></li>
 <li><div class="fn"/><b>void setDevice(QIODevice device)</b></li>

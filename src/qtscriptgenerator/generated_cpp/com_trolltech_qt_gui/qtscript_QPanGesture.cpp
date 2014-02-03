@@ -36,6 +36,15 @@ static const int qtscript_QPanGesture_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QPanGesture_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPanGesture : public QPanGesture
+{
+
+    friend QScriptValue qtscript_QPanGesture_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QPanGesture_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -69,7 +78,7 @@ static QScriptValue qtscript_QPanGesture_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPanGesture* _q_self = qscriptvalue_cast<QPanGesture*>(context->thisObject());
+    qtscript_QPanGesture* _q_self = reinterpret_cast<qtscript_QPanGesture*>(qscriptvalue_cast<QPanGesture*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPanGesture.%0(): this object is not a QPanGesture")

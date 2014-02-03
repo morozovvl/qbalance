@@ -131,7 +131,7 @@ static QScriptValue qtscript_QDomCharacterData_prototype_call(QScriptContext *co
 
     case 4:
     if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->length();
+        int _q_result = _q_self->length();
         return QScriptValue(context->engine(), _q_result);
     }
     break;

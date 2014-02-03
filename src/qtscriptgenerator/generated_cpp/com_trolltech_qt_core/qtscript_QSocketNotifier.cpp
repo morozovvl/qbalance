@@ -26,7 +26,7 @@ static const char * const qtscript_QSocketNotifier_function_names[] = {
 };
 
 static const char * const qtscript_QSocketNotifier_function_signatures[] = {
-    "int socket, Type arg__2, QObject parent"
+    "qintptr socket, Type arg__2, QObject parent"
     // static
     // prototype
     , ""
@@ -45,6 +45,15 @@ static const int qtscript_QSocketNotifier_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSocketNotifier_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSocketNotifier : public QSocketNotifier
+{
+
+    friend QScriptValue qtscript_QSocketNotifier_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSocketNotifier_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -59,6 +68,7 @@ static QScriptValue qtscript_QSocketNotifier_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QSocketNotifier*)
 Q_DECLARE_METATYPE(QtScriptShell_QSocketNotifier*)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
+Q_DECLARE_METATYPE(qintptr)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -161,7 +171,7 @@ static QScriptValue qtscript_QSocketNotifier_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSocketNotifier* _q_self = qscriptvalue_cast<QSocketNotifier*>(context->thisObject());
+    qtscript_QSocketNotifier* _q_self = reinterpret_cast<qtscript_QSocketNotifier*>(qscriptvalue_cast<QSocketNotifier*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSocketNotifier.%0(): this object is not a QSocketNotifier")
@@ -178,8 +188,8 @@ static QScriptValue qtscript_QSocketNotifier_prototype_call(QScriptContext *cont
 
     case 1:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->socket();
-        return QScriptValue(context->engine(), _q_result);
+        qintptr _q_result = _q_self->socket();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -214,14 +224,14 @@ static QScriptValue qtscript_QSocketNotifier_static_call(QScriptContext *context
         return context->throwError(QString::fromLatin1("QSocketNotifier(): Did you forget to construct with 'new'?"));
     }
     if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
         QSocketNotifier::Type _q_arg1 = qscriptvalue_cast<QSocketNotifier::Type>(context->argument(1));
         QtScriptShell_QSocketNotifier* _q_cpp_result = new QtScriptShell_QSocketNotifier(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QSocketNotifier*)_q_cpp_result, QScriptEngine::AutoOwnership);
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
     } else if (context->argumentCount() == 3) {
-        int _q_arg0 = context->argument(0).toInt32();
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
         QSocketNotifier::Type _q_arg1 = qscriptvalue_cast<QSocketNotifier::Type>(context->argument(1));
         QObject* _q_arg2 = context->argument(2).toQObject();
         QtScriptShell_QSocketNotifier* _q_cpp_result = new QtScriptShell_QSocketNotifier(_q_arg0, _q_arg1, _q_arg2);

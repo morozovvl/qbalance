@@ -2,6 +2,7 @@
 
 #include <QtScript/QScriptEngine>
 #include <QVariant>
+#include <qbytearray.h>
 #include <qdatastream.h>
 #include <quuid.h>
 
@@ -10,6 +11,9 @@
 
 QtScriptShell_QUuid::QtScriptShell_QUuid()
     : QUuid() {}
+
+QtScriptShell_QUuid::QtScriptShell_QUuid(const QByteArray&  arg__1)
+    : QUuid(arg__1) {}
 
 QtScriptShell_QUuid::QtScriptShell_QUuid(const QString&  arg__1)
     : QUuid(arg__1) {}

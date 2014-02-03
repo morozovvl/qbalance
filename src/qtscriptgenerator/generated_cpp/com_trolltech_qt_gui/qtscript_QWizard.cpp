@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qwizard.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractbutton.h>
 #include <qaction.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -37,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 #include <qwizard.h>
 
 #include "qtscriptshell_QWizard.h"
@@ -48,9 +48,11 @@ static const char * const qtscript_QWizard_function_names[] = {
     , "addPage"
     , "button"
     , "buttonText"
+    , "cleanupPage"
     , "currentPage"
     , "field"
     , "hasVisitedPage"
+    , "initializePage"
     , "nextId"
     , "page"
     , "pageIds"
@@ -78,8 +80,10 @@ static const char * const qtscript_QWizard_function_signatures[] = {
     , "QWizardPage page"
     , "WizardButton which"
     , "WizardButton which"
+    , "int id"
     , ""
     , "String name"
+    , "int id"
     , "int id"
     , ""
     , "int id"
@@ -108,7 +112,9 @@ static const int qtscript_QWizard_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
     , 0
+    , 1
     , 1
     , 1
     , 0
@@ -131,6 +137,17 @@ static const int qtscript_QWizard_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QWizard : public QWizard
+{
+    friend QScriptValue qtscript_QWizard_cleanupPage(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QWizard_initializePage(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QWizard_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QWizard_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -149,15 +166,16 @@ static const QMetaObject *qtscript_QWizard_metaObject()
 
 Q_DECLARE_METATYPE(QWizard*)
 Q_DECLARE_METATYPE(QtScriptShell_QWizard*)
-Q_DECLARE_METATYPE(QWizard::WizardButton)
-Q_DECLARE_METATYPE(QWizard::WizardStyle)
 Q_DECLARE_METATYPE(QWizard::WizardPixmap)
 Q_DECLARE_METATYPE(QWizard::WizardOption)
 Q_DECLARE_METATYPE(QFlags<QWizard::WizardOption>)
+Q_DECLARE_METATYPE(QWizard::WizardButton)
+Q_DECLARE_METATYPE(QWizard::WizardStyle)
 Q_DECLARE_METATYPE(QWizardPage*)
 Q_DECLARE_METATYPE(QAbstractButton*)
 Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(QList<QWizard::WizardButton>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QDialog*)
 
@@ -190,170 +208,6 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
-}
-
-//
-// QWizard::WizardButton
-//
-
-static const QWizard::WizardButton qtscript_QWizard_WizardButton_values[] = {
-    QWizard::NoButton
-    , QWizard::BackButton
-    , QWizard::NextButton
-    , QWizard::CommitButton
-    , QWizard::FinishButton
-    , QWizard::CancelButton
-    , QWizard::HelpButton
-    , QWizard::CustomButton1
-    , QWizard::CustomButton2
-    , QWizard::CustomButton3
-    , QWizard::Stretch
-};
-
-static const char * const qtscript_QWizard_WizardButton_keys[] = {
-    "NoButton"
-    , "BackButton"
-    , "NextButton"
-    , "CommitButton"
-    , "FinishButton"
-    , "CancelButton"
-    , "HelpButton"
-    , "CustomButton1"
-    , "CustomButton2"
-    , "CustomButton3"
-    , "Stretch"
-};
-
-static QString qtscript_QWizard_WizardButton_toStringHelper(QWizard::WizardButton value)
-{
-    if ((value >= QWizard::NoButton) && (value <= QWizard::Stretch))
-        return qtscript_QWizard_WizardButton_keys[static_cast<int>(value)-static_cast<int>(QWizard::NoButton)];
-    return QString();
-}
-
-static QScriptValue qtscript_QWizard_WizardButton_toScriptValue(QScriptEngine *engine, const QWizard::WizardButton &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QWizard"));
-    return clazz.property(qtscript_QWizard_WizardButton_toStringHelper(value));
-}
-
-static void qtscript_QWizard_WizardButton_fromScriptValue(const QScriptValue &value, QWizard::WizardButton &out)
-{
-    out = qvariant_cast<QWizard::WizardButton>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QWizard_WizardButton(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QWizard::NoButton) && (arg <= QWizard::Stretch))
-        return qScriptValueFromValue(engine,  static_cast<QWizard::WizardButton>(arg));
-    return context->throwError(QString::fromLatin1("WizardButton(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QWizard_WizardButton_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QWizard::WizardButton value = qscriptvalue_cast<QWizard::WizardButton>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QWizard_WizardButton_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QWizard::WizardButton value = qscriptvalue_cast<QWizard::WizardButton>(context->thisObject());
-    return QScriptValue(engine, qtscript_QWizard_WizardButton_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QWizard_WizardButton_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QWizard_WizardButton,
-        qtscript_QWizard_WizardButton_valueOf, qtscript_QWizard_WizardButton_toString);
-    qScriptRegisterMetaType<QWizard::WizardButton>(engine, qtscript_QWizard_WizardButton_toScriptValue,
-        qtscript_QWizard_WizardButton_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 11; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QWizard_WizardButton_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QWizard_WizardButton_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QWizard::WizardStyle
-//
-
-static const QWizard::WizardStyle qtscript_QWizard_WizardStyle_values[] = {
-    QWizard::ClassicStyle
-    , QWizard::ModernStyle
-    , QWizard::MacStyle
-    , QWizard::AeroStyle
-    , QWizard::NStyles
-};
-
-static const char * const qtscript_QWizard_WizardStyle_keys[] = {
-    "ClassicStyle"
-    , "ModernStyle"
-    , "MacStyle"
-    , "AeroStyle"
-    , "NStyles"
-};
-
-static QString qtscript_QWizard_WizardStyle_toStringHelper(QWizard::WizardStyle value)
-{
-    const QMetaObject *meta = qtscript_QWizard_metaObject();
-    int idx = meta->indexOfEnumerator("WizardStyle");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QWizard_WizardStyle_toScriptValue(QScriptEngine *engine, const QWizard::WizardStyle &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QWizard"));
-    return clazz.property(qtscript_QWizard_WizardStyle_toStringHelper(value));
-}
-
-static void qtscript_QWizard_WizardStyle_fromScriptValue(const QScriptValue &value, QWizard::WizardStyle &out)
-{
-    out = qvariant_cast<QWizard::WizardStyle>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QWizard_WizardStyle(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QWizard_metaObject();
-    int idx = meta->indexOfEnumerator("WizardStyle");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QWizard::WizardStyle>(arg));
-    return context->throwError(QString::fromLatin1("WizardStyle(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QWizard_WizardStyle_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QWizard::WizardStyle value = qscriptvalue_cast<QWizard::WizardStyle>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QWizard_WizardStyle_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QWizard::WizardStyle value = qscriptvalue_cast<QWizard::WizardStyle>(context->thisObject());
-    return QScriptValue(engine, qtscript_QWizard_WizardStyle_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QWizard_WizardStyle_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QWizard_WizardStyle,
-        qtscript_QWizard_WizardStyle_valueOf, qtscript_QWizard_WizardStyle_toString);
-    qScriptRegisterMetaType<QWizard::WizardStyle>(engine, qtscript_QWizard_WizardStyle_toScriptValue,
-        qtscript_QWizard_WizardStyle_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 5; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QWizard_WizardStyle_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QWizard_WizardStyle_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -607,6 +461,170 @@ static QScriptValue qtscript_create_QWizard_WizardOptions_class(QScriptEngine *e
 }
 
 //
+// QWizard::WizardButton
+//
+
+static const QWizard::WizardButton qtscript_QWizard_WizardButton_values[] = {
+    QWizard::NoButton
+    , QWizard::BackButton
+    , QWizard::NextButton
+    , QWizard::CommitButton
+    , QWizard::FinishButton
+    , QWizard::CancelButton
+    , QWizard::HelpButton
+    , QWizard::CustomButton1
+    , QWizard::CustomButton2
+    , QWizard::CustomButton3
+    , QWizard::Stretch
+};
+
+static const char * const qtscript_QWizard_WizardButton_keys[] = {
+    "NoButton"
+    , "BackButton"
+    , "NextButton"
+    , "CommitButton"
+    , "FinishButton"
+    , "CancelButton"
+    , "HelpButton"
+    , "CustomButton1"
+    , "CustomButton2"
+    , "CustomButton3"
+    , "Stretch"
+};
+
+static QString qtscript_QWizard_WizardButton_toStringHelper(QWizard::WizardButton value)
+{
+    if ((value >= QWizard::NoButton) && (value <= QWizard::Stretch))
+        return qtscript_QWizard_WizardButton_keys[static_cast<int>(value)-static_cast<int>(QWizard::NoButton)];
+    return QString();
+}
+
+static QScriptValue qtscript_QWizard_WizardButton_toScriptValue(QScriptEngine *engine, const QWizard::WizardButton &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QWizard"));
+    return clazz.property(qtscript_QWizard_WizardButton_toStringHelper(value));
+}
+
+static void qtscript_QWizard_WizardButton_fromScriptValue(const QScriptValue &value, QWizard::WizardButton &out)
+{
+    out = qvariant_cast<QWizard::WizardButton>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QWizard_WizardButton(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QWizard::NoButton) && (arg <= QWizard::Stretch))
+        return qScriptValueFromValue(engine,  static_cast<QWizard::WizardButton>(arg));
+    return context->throwError(QString::fromLatin1("WizardButton(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QWizard_WizardButton_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QWizard::WizardButton value = qscriptvalue_cast<QWizard::WizardButton>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QWizard_WizardButton_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QWizard::WizardButton value = qscriptvalue_cast<QWizard::WizardButton>(context->thisObject());
+    return QScriptValue(engine, qtscript_QWizard_WizardButton_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QWizard_WizardButton_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QWizard_WizardButton,
+        qtscript_QWizard_WizardButton_valueOf, qtscript_QWizard_WizardButton_toString);
+    qScriptRegisterMetaType<QWizard::WizardButton>(engine, qtscript_QWizard_WizardButton_toScriptValue,
+        qtscript_QWizard_WizardButton_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 11; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QWizard_WizardButton_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QWizard_WizardButton_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QWizard::WizardStyle
+//
+
+static const QWizard::WizardStyle qtscript_QWizard_WizardStyle_values[] = {
+    QWizard::ClassicStyle
+    , QWizard::ModernStyle
+    , QWizard::MacStyle
+    , QWizard::AeroStyle
+    , QWizard::NStyles
+};
+
+static const char * const qtscript_QWizard_WizardStyle_keys[] = {
+    "ClassicStyle"
+    , "ModernStyle"
+    , "MacStyle"
+    , "AeroStyle"
+    , "NStyles"
+};
+
+static QString qtscript_QWizard_WizardStyle_toStringHelper(QWizard::WizardStyle value)
+{
+    const QMetaObject *meta = qtscript_QWizard_metaObject();
+    int idx = meta->indexOfEnumerator("WizardStyle");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QWizard_WizardStyle_toScriptValue(QScriptEngine *engine, const QWizard::WizardStyle &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QWizard"));
+    return clazz.property(qtscript_QWizard_WizardStyle_toStringHelper(value));
+}
+
+static void qtscript_QWizard_WizardStyle_fromScriptValue(const QScriptValue &value, QWizard::WizardStyle &out)
+{
+    out = qvariant_cast<QWizard::WizardStyle>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QWizard_WizardStyle(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QWizard_metaObject();
+    int idx = meta->indexOfEnumerator("WizardStyle");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QWizard::WizardStyle>(arg));
+    return context->throwError(QString::fromLatin1("WizardStyle(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QWizard_WizardStyle_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QWizard::WizardStyle value = qscriptvalue_cast<QWizard::WizardStyle>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QWizard_WizardStyle_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QWizard::WizardStyle value = qscriptvalue_cast<QWizard::WizardStyle>(context->thisObject());
+    return QScriptValue(engine, qtscript_QWizard_WizardStyle_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QWizard_WizardStyle_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QWizard_WizardStyle,
+        qtscript_QWizard_WizardStyle_valueOf, qtscript_QWizard_WizardStyle_toString);
+    qScriptRegisterMetaType<QWizard::WizardStyle>(engine, qtscript_QWizard_WizardStyle_toScriptValue,
+        qtscript_QWizard_WizardStyle_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 5; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QWizard_WizardStyle_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QWizard_WizardStyle_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QWizard
 //
 
@@ -620,11 +638,11 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 23;
+        _id = 0xBABE0000 + 25;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QWizard* _q_self = qscriptvalue_cast<QWizard*>(context->thisObject());
+    qtscript_QWizard* _q_self = reinterpret_cast<qtscript_QWizard*>(qscriptvalue_cast<QWizard*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QWizard.%0(): this object is not a QWizard")
@@ -657,13 +675,21 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     break;
 
     case 3:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->cleanupPage(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 0) {
         QWizardPage* _q_result = _q_self->currentPage();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QVariant _q_result = _q_self->field(_q_arg0);
@@ -671,7 +697,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->hasVisitedPage(_q_arg0);
@@ -679,14 +705,22 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 6:
+    case 7:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->initializePage(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 8:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->nextId();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QWizardPage* _q_result = _q_self->page(_q_arg0);
@@ -694,14 +728,14 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 0) {
         QList<int> _q_result = _q_self->pageIds();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 1) {
         QWizard::WizardPixmap _q_arg0 = qscriptvalue_cast<QWizard::WizardPixmap>(context->argument(0));
         QPixmap _q_result = _q_self->pixmap(_q_arg0);
@@ -709,7 +743,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removePage(_q_arg0);
@@ -717,7 +751,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 2) {
         QWizard::WizardButton _q_arg0 = qscriptvalue_cast<QWizard::WizardButton>(context->argument(0));
         QAbstractButton* _q_arg1 = qscriptvalue_cast<QAbstractButton*>(context->argument(1));
@@ -726,7 +760,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 1) {
         QList<QWizard::WizardButton> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -735,7 +769,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 2) {
         QWizard::WizardButton _q_arg0 = qscriptvalue_cast<QWizard::WizardButton>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -744,7 +778,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QVariant _q_arg1 = context->argument(1).toVariant();
@@ -753,7 +787,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 1) {
         QWizard::WizardOption _q_arg0 = qscriptvalue_cast<QWizard::WizardOption>(context->argument(0));
         _q_self->setOption(_q_arg0);
@@ -767,7 +801,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QWizardPage* _q_arg1 = qscriptvalue_cast<QWizardPage*>(context->argument(1));
@@ -776,7 +810,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 2) {
         QWizard::WizardPixmap _q_arg0 = qscriptvalue_cast<QWizard::WizardPixmap>(context->argument(0));
         QPixmap _q_arg1 = qscriptvalue_cast<QPixmap>(context->argument(1));
@@ -785,7 +819,7 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setSideWidget(_q_arg0);
@@ -793,14 +827,14 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->sideWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 1) {
         QWizard::WizardOption _q_arg0 = qscriptvalue_cast<QWizard::WizardOption>(context->argument(0));
         bool _q_result = _q_self->testOption(_q_arg0);
@@ -808,21 +842,21 @@ static QScriptValue qtscript_QWizard_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->validateCurrentPage();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 24:
     if (context->argumentCount() == 0) {
         QList<int> _q_result = _q_self->visitedPages();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 23: {
+    case 25: {
     QString result = QString::fromLatin1("QWizard");
     return QScriptValue(context->engine(), result);
     }
@@ -889,7 +923,7 @@ QScriptValue qtscript_create_QWizard_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QWizard*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QWizard*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QDialog*>()));
-    for (int i = 0; i < 24; ++i) {
+    for (int i = 0; i < 26; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QWizard_prototype_call, qtscript_QWizard_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QWizard_function_names[i+1]),
@@ -902,15 +936,15 @@ QScriptValue qtscript_create_QWizard_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QWizard_static_call, proto, qtscript_QWizard_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("WizardButton"),
-        qtscript_create_QWizard_WizardButton_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("WizardStyle"),
-        qtscript_create_QWizard_WizardStyle_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("WizardPixmap"),
         qtscript_create_QWizard_WizardPixmap_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("WizardOption"),
         qtscript_create_QWizard_WizardOption_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("WizardOptions"),
         qtscript_create_QWizard_WizardOptions_class(engine));
+    ctor.setProperty(QString::fromLatin1("WizardButton"),
+        qtscript_create_QWizard_WizardButton_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("WizardStyle"),
+        qtscript_create_QWizard_WizardStyle_class(engine, ctor));
     return ctor;
 }

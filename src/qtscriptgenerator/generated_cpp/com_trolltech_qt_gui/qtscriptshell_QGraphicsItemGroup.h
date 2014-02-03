@@ -8,7 +8,7 @@
 class QtScriptShell_QGraphicsItemGroup : public QGraphicsItemGroup
 {
 public:
-    QtScriptShell_QGraphicsItemGroup(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsItemGroup(QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsItemGroup();
 
     void advance(int  phase);

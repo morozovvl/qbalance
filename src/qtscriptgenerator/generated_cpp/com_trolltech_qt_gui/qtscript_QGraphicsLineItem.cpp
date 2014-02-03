@@ -38,31 +38,49 @@ static const char * const qtscript_QGraphicsLineItem_function_names[] = {
     // prototype
     , "line"
     , "pen"
+    , "setExtension"
     , "setLine"
     , "setPen"
+    , "supportsExtension"
     , "toString"
 };
 
 static const char * const qtscript_QGraphicsLineItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene\nQLineF line, QGraphicsItem parent, QGraphicsScene scene\nqreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent\nQLineF line, QGraphicsItem parent\nqreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem parent"
     // static
     // prototype
     , ""
     , ""
+    , "Extension extension, Object variant"
     , "QLineF line\nqreal x1, qreal y1, qreal x2, qreal y2"
     , "QPen pen"
+    , "Extension extension"
 ""
 };
 
 static const int qtscript_QGraphicsLineItem_function_lengths[] = {
-    6
+    5
     // static
     // prototype
     , 0
     , 0
+    , 2
     , 4
     , 1
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsLineItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsLineItem : public QGraphicsLineItem
+{
+    friend QScriptValue qtscript_QGraphicsLineItem_setExtension(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsLineItem_supportsExtension(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsLineItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsLineItem_throw_ambiguity_error_helper(
@@ -78,6 +96,7 @@ static QScriptValue qtscript_QGraphicsLineItem_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGraphicsLineItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsLineItem*)
+Q_DECLARE_METATYPE(QGraphicsItem::Extension)
 
 //
 // QGraphicsLineItem
@@ -93,11 +112,11 @@ static QScriptValue qtscript_QGraphicsLineItem_prototype_call(QScriptContext *co
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsLineItem* _q_self = qscriptvalue_cast<QGraphicsLineItem*>(context->thisObject());
+    qtscript_QGraphicsLineItem* _q_self = reinterpret_cast<qtscript_QGraphicsLineItem*>(qscriptvalue_cast<QGraphicsLineItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsLineItem.%0(): this object is not a QGraphicsLineItem")
@@ -120,6 +139,15 @@ static QScriptValue qtscript_QGraphicsLineItem_prototype_call(QScriptContext *co
     break;
 
     case 2:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setExtension(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 1) {
         QLineF _q_arg0 = qscriptvalue_cast<QLineF>(context->argument(0));
         _q_self->setLine(_q_arg0);
@@ -135,7 +163,7 @@ static QScriptValue qtscript_QGraphicsLineItem_prototype_call(QScriptContext *co
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QPen _q_arg0 = qscriptvalue_cast<QPen>(context->argument(0));
         _q_self->setPen(_q_arg0);
@@ -143,7 +171,15 @@ static QScriptValue qtscript_QGraphicsLineItem_prototype_call(QScriptContext *co
     }
     break;
 
-    case 4: {
+    case 5:
+    if (context->argumentCount() == 1) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        bool _q_result = _q_self->supportsExtension(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6: {
     QString result = QString::fromLatin1("QGraphicsLineItem");
     return QScriptValue(context->engine(), result);
     }
@@ -186,28 +222,9 @@ static QScriptValue qtscript_QGraphicsLineItem_static_call(QScriptContext *conte
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
-            && qscriptvalue_cast<QGraphicsScene*>(context->argument(1))) {
-            QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-            QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-            QtScriptShell_QGraphicsLineItem* _q_cpp_result = new QtScriptShell_QGraphicsLineItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsLineItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if ((qMetaTypeId<QLineF>() == context->argument(0).toVariant().userType())
-            && qscriptvalue_cast<QGraphicsItem*>(context->argument(1))) {
-            QLineF _q_arg0 = qscriptvalue_cast<QLineF>(context->argument(0));
-            QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-            QtScriptShell_QGraphicsLineItem* _q_cpp_result = new QtScriptShell_QGraphicsLineItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsLineItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 3) {
         QLineF _q_arg0 = qscriptvalue_cast<QLineF>(context->argument(0));
         QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-        QGraphicsScene* _q_arg2 = qscriptvalue_cast<QGraphicsScene*>(context->argument(2));
-        QtScriptShell_QGraphicsLineItem* _q_cpp_result = new QtScriptShell_QGraphicsLineItem(_q_arg0, _q_arg1, _q_arg2);
+        QtScriptShell_QGraphicsLineItem* _q_cpp_result = new QtScriptShell_QGraphicsLineItem(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsLineItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -230,17 +247,6 @@ static QScriptValue qtscript_QGraphicsLineItem_static_call(QScriptContext *conte
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsLineItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
-    } else if (context->argumentCount() == 6) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
-        QGraphicsItem* _q_arg4 = qscriptvalue_cast<QGraphicsItem*>(context->argument(4));
-        QGraphicsScene* _q_arg5 = qscriptvalue_cast<QGraphicsScene*>(context->argument(5));
-        QtScriptShell_QGraphicsLineItem* _q_cpp_result = new QtScriptShell_QGraphicsLineItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsLineItem*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
     }
     break;
 
@@ -257,7 +263,7 @@ QScriptValue qtscript_create_QGraphicsLineItem_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsLineItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsLineItem*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QGraphicsItem*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsLineItem_prototype_call, qtscript_QGraphicsLineItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsLineItem_function_names[i+1]),

@@ -26,6 +26,8 @@ static const char * const qtscript_QByteArray_function_names[] = {
     , "appendByte"
     , "at"
     , "capacity"
+    , "cbegin"
+    , "cend"
     , "chop"
     , "clear"
     , "count"
@@ -68,6 +70,7 @@ static const char * const qtscript_QByteArray_function_names[] = {
     , "split"
     , "squeeze"
     , "startsWith"
+    , "swap"
     , "toBase64"
     , "toDouble"
     , "toFloat"
@@ -84,7 +87,7 @@ static const char * const qtscript_QByteArray_function_names[] = {
 };
 
 static const char * const qtscript_QByteArray_function_signatures[] = {
-    "\nQByteArray arg__1\nchar arg__1\nint size, char c"
+    "\nQByteArray arg__1\nchar arg__1, int size\nint size, char c"
     // static
     , "QByteArray base64"
     , "QByteArray hexEncoded"
@@ -96,6 +99,8 @@ static const char * const qtscript_QByteArray_function_signatures[] = {
     , "QByteArray a\nString s\nchar s, int len"
     , "char c"
     , "int i"
+    , ""
+    , ""
     , ""
     , "int n"
     , ""
@@ -139,6 +144,7 @@ static const char * const qtscript_QByteArray_function_signatures[] = {
     , "char sep"
     , ""
     , "char c\nQByteArray a"
+    , "QByteArray other"
     , ""
     , ""
     , ""
@@ -167,6 +173,8 @@ static const int qtscript_QByteArray_function_lengths[] = {
     , 2
     , 1
     , 1
+    , 0
+    , 0
     , 0
     , 1
     , 0
@@ -209,6 +217,7 @@ static const int qtscript_QByteArray_function_lengths[] = {
     , 0
     , 1
     , 0
+    , 1
     , 1
     , 0
     , 1
@@ -258,7 +267,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 58;
+        _id = 0xBABE0000 + 61;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -321,6 +330,20 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     break;
 
     case 4:
+    if (context->argumentCount() == 0) {
+        char* _q_result = const_cast<char*>(_q_self->cbegin());
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 0) {
+        char* _q_result = const_cast<char*>(_q_self->cend());
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->chop(_q_arg0);
@@ -328,42 +351,42 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         _q_self->clear();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 6:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<char>() == context->argument(0).toVariant().userType())) {
-            char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
-            int _q_result = _q_self->count(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
-            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            int _q_result = _q_self->count(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    break;
-
-    case 7:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<char>() == context->argument(0).toVariant().userType())) {
-            char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
-            bool _q_result = _q_self->endsWith(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
-            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            bool _q_result = _q_self->endsWith(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    break;
-
     case 8:
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<char>() == context->argument(0).toVariant().userType())) {
+            char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
+            int _q_result = _q_self->count(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
+            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+            int _q_result = _q_self->count(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 9:
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<char>() == context->argument(0).toVariant().userType())) {
+            char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
+            bool _q_result = _q_self->endsWith(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
+            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+            bool _q_result = _q_self->endsWith(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 1) {
         char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
         _q_self->fill(_q_arg0);
@@ -377,7 +400,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
@@ -406,7 +429,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 1) {
         char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
         int _q_result = _q_self->indexOf(_q_arg0);
@@ -420,7 +443,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isNumber()
             && (qMetaTypeId<QByteArray>() == context->argument(1).toVariant().userType())) {
@@ -445,7 +468,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
@@ -454,21 +477,21 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEmpty();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isNull();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         bool _q_result = _q_self->isSharedWith(_q_arg0);
@@ -476,7 +499,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
@@ -505,7 +528,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 1) {
         char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
         int _q_result = _q_self->lastIndexOf(_q_arg0);
@@ -519,7 +542,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->left(_q_arg0);
@@ -527,7 +550,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->leftJustified(_q_arg0);
@@ -548,14 +571,14 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->length();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->mid(_q_arg0);
@@ -569,7 +592,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 22:
+    case 24:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         QByteArray _q_result = _q_self->operator=(_q_arg0);
@@ -577,35 +600,35 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 23:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
-            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            bool _q_result = _q_self->operator==(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if (context->argument(0).isString()) {
-            QString _q_arg0 = context->argument(0).toString();
-            bool _q_result = _q_self->operator==(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    break;
-
-    case 24:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
-            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
-            bool _q_result = _q_self->operator<(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if (context->argument(0).isString()) {
-            QString _q_arg0 = context->argument(0).toString();
-            bool _q_result = _q_self->operator<(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    break;
-
     case 25:
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
+            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+            bool _q_result = _q_self->operator==(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        } else if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            bool _q_result = _q_self->operator==(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 26:
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
+            QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+            bool _q_result = _q_self->operator<(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        } else if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            bool _q_result = _q_self->operator<(_q_arg0);
+            return QScriptValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 27:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         _q_self->prepend(_q_arg0);
@@ -619,7 +642,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 26:
+    case 28:
     if (context->argumentCount() == 1) {
         char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
         _q_self->prepend(_q_arg0);
@@ -627,7 +650,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 27:
+    case 29:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator>>(*_q_arg0, *_q_self);
@@ -635,7 +658,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 28:
+    case 30:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -644,7 +667,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 29:
+    case 31:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->repeated(_q_arg0);
@@ -652,7 +675,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 30:
+    case 32:
     if (context->argumentCount() == 2) {
         if ((qMetaTypeId<char>() == context->argument(0).toVariant().userType())
             && (qMetaTypeId<char>() == context->argument(1).toVariant().userType())) {
@@ -718,7 +741,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 31:
+    case 33:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->reserve(_q_arg0);
@@ -726,7 +749,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 32:
+    case 34:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->resize(_q_arg0);
@@ -734,7 +757,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 33:
+    case 35:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->right(_q_arg0);
@@ -742,7 +765,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 34:
+    case 36:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QByteArray _q_result = _q_self->rightJustified(_q_arg0);
@@ -763,64 +786,64 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 35:
-    if (context->argumentCount() == 1) {
-        double _q_arg0 = context->argument(0).toNumber();
-        _q_self->setNum(_q_arg0);
-        return context->thisObject();
-    }
-    if (context->argumentCount() == 2) {
-        double _q_arg0 = context->argument(0).toNumber();
-        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
-        _q_self->setNum(_q_arg0, _q_arg1);
-        return context->thisObject();
-    }
-    if (context->argumentCount() == 3) {
-        double _q_arg0 = context->argument(0).toNumber();
-        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
-        int _q_arg2 = context->argument(2).toInt32();
-        _q_self->setNum(_q_arg0, _q_arg1, _q_arg2);
-        return context->thisObject();
-    }
-    break;
-
-    case 36:
-    if (context->argumentCount() == 1) {
-        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
-        _q_self->setNum(_q_arg0);
-        return context->thisObject();
-    }
-    if (context->argumentCount() == 2) {
-        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
-        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
-        _q_self->setNum(_q_arg0, _q_arg1);
-        return context->thisObject();
-    }
-    if (context->argumentCount() == 3) {
-        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
-        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
-        int _q_arg2 = context->argument(2).toInt32();
-        _q_self->setNum(_q_arg0, _q_arg1, _q_arg2);
-        return context->thisObject();
-    }
-    break;
-
     case 37:
     if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
+        double _q_arg0 = context->argument(0).toNumber();
         _q_self->setNum(_q_arg0);
         return context->thisObject();
     }
     if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
-        int _q_arg1 = context->argument(1).toInt32();
+        double _q_arg0 = context->argument(0).toNumber();
+        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
         _q_self->setNum(_q_arg0, _q_arg1);
+        return context->thisObject();
+    }
+    if (context->argumentCount() == 3) {
+        double _q_arg0 = context->argument(0).toNumber();
+        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
+        int _q_arg2 = context->argument(2).toInt32();
+        _q_self->setNum(_q_arg0, _q_arg1, _q_arg2);
         return context->thisObject();
     }
     break;
 
     case 38:
     if (context->argumentCount() == 1) {
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        _q_self->setNum(_q_arg0);
+        return context->thisObject();
+    }
+    if (context->argumentCount() == 2) {
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
+        _q_self->setNum(_q_arg0, _q_arg1);
+        return context->thisObject();
+    }
+    if (context->argumentCount() == 3) {
+        float _q_arg0 = qscriptvalue_cast<float>(context->argument(0));
+        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
+        int _q_arg2 = context->argument(2).toInt32();
+        _q_self->setNum(_q_arg0, _q_arg1, _q_arg2);
+        return context->thisObject();
+    }
+    break;
+
+    case 39:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->setNum(_q_arg0);
+        return context->thisObject();
+    }
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->setNum(_q_arg0, _q_arg1);
+        return context->thisObject();
+    }
+    break;
+
+    case 40:
+    if (context->argumentCount() == 1) {
         qlonglong _q_arg0 = qscriptvalue_cast<qlonglong>(context->argument(0));
         _q_self->setNum(_q_arg0);
         return context->thisObject();
@@ -833,7 +856,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 39:
+    case 41:
     if (context->argumentCount() == 2) {
         char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
         uint _q_arg1 = context->argument(1).toUInt32();
@@ -842,7 +865,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 40:
+    case 42:
     if (context->argumentCount() == 1) {
         short _q_arg0 = qscriptvalue_cast<short>(context->argument(0));
         _q_self->setNum(_q_arg0);
@@ -856,21 +879,21 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 41:
+    case 43:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->simplified();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 42:
+    case 44:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->size();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 43:
+    case 45:
     if (context->argumentCount() == 1) {
         char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
         QList<QByteArray> _q_result = _q_self->split(_q_arg0);
@@ -878,14 +901,14 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 44:
+    case 46:
     if (context->argumentCount() == 0) {
         _q_self->squeeze();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 45:
+    case 47:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<char>() == context->argument(0).toVariant().userType())) {
             char _q_arg0 = qscriptvalue_cast<char>(context->argument(0));
@@ -899,14 +922,22 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 46:
+    case 48:
+    if (context->argumentCount() == 1) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 49:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toBase64();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 47:
+    case 50:
     if (context->argumentCount() == 0) {
 
           // TEMPLATE - core.prepare_removed_bool*_argument - START
@@ -926,7 +957,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 48:
+    case 51:
     if (context->argumentCount() == 0) {
 
           // TEMPLATE - core.prepare_removed_bool*_argument - START
@@ -946,14 +977,14 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 49:
+    case 52:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toHex();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 50:
+    case 53:
     if (context->argumentCount() == 0) {
 
           // TEMPLATE - core.prepare_removed_bool*_argument - START
@@ -991,14 +1022,14 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 51:
+    case 54:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toLower();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 52:
+    case 55:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toPercentEncoding();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -1023,7 +1054,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 53:
+    case 56:
     if (context->argumentCount() == 0) {
 
           // TEMPLATE - core.prepare_removed_bool*_argument - START
@@ -1061,21 +1092,21 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 54:
+    case 57:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->toUpper();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 55:
+    case 58:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->trimmed();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 56:
+    case 59:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->truncate(_q_arg0);
@@ -1083,7 +1114,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 57:
+    case 60:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -1091,7 +1122,7 @@ static QScriptValue qtscript_QByteArray_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 58: {
+    case 61: {
     QString result = QString::fromLatin1("QByteArray");
     return QScriptValue(context->engine(), result);
     }
@@ -1135,11 +1166,25 @@ static QScriptValue qtscript_QByteArray_static_call(QScriptContext *context, QSc
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
-        char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
-        QByteArray _q_cpp_result(_q_arg0, _q_arg1);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
-        return _q_result;
+        if (context->argument(0).isString()
+            && context->argument(1).isNumber()) {
+
+          // TEMPLATE - core.convert_string_arg_to_char* - START
+          QByteArray tmp__q_arg0 = context->argument(0).toString().toLatin1();
+          const char * _q_arg0 = tmp__q_arg0.constData();
+    // TEMPLATE - core.convert_string_arg_to_char* - END
+                    int _q_arg1 = context->argument(1).toInt32();
+            QByteArray _q_cpp_result(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        } else if (context->argument(0).isNumber()
+            && (qMetaTypeId<char>() == context->argument(1).toVariant().userType())) {
+            int _q_arg0 = context->argument(0).toInt32();
+            char _q_arg1 = qscriptvalue_cast<char>(context->argument(1));
+            QByteArray _q_cpp_result(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
+            return _q_result;
+        }
     }
     break;
 
@@ -1234,7 +1279,7 @@ QScriptValue qtscript_create_QByteArray_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QByteArray*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QByteArray*)0));
-    for (int i = 0; i < 59; ++i) {
+    for (int i = 0; i < 62; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QByteArray_prototype_call, qtscript_QByteArray_function_lengths[i+7]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QByteArray_function_names[i+7]),

@@ -64,6 +64,7 @@ static QScriptValue qtscript_QWhatsThis_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QWhatsThis*)
 Q_DECLARE_METATYPE(QAction*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QWhatsThis

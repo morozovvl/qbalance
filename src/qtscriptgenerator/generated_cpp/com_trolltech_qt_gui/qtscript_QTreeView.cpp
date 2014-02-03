@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtreeview.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -19,8 +20,6 @@
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
 #include <qheaderview.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -32,6 +31,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -41,7 +41,9 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qtreeview.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTreeView.h"
 
@@ -52,13 +54,19 @@ static const char * const qtscript_QTreeView_function_names[] = {
     , "columnAt"
     , "columnViewportPosition"
     , "columnWidth"
+    , "drawBranches"
+    , "drawRow"
+    , "drawTree"
     , "header"
     , "indexAbove"
     , "indexBelow"
+    , "indexRowSizeHint"
     , "isColumnHidden"
     , "isExpanded"
     , "isFirstColumnSpanned"
     , "isRowHidden"
+    , "moveCursor"
+    , "rowHeight"
     , "setColumnHidden"
     , "setColumnWidth"
     , "setExpanded"
@@ -76,13 +84,19 @@ static const char * const qtscript_QTreeView_function_signatures[] = {
     , "int x"
     , "int column"
     , "int column"
+    , "QPainter painter, QRect rect, QModelIndex index"
+    , "QPainter painter, QStyleOptionViewItem options, QModelIndex index"
+    , "QPainter painter, QRegion region"
     , ""
+    , "QModelIndex index"
     , "QModelIndex index"
     , "QModelIndex index"
     , "int column"
     , "QModelIndex index"
     , "int row, QModelIndex parent"
     , "int row, QModelIndex parent"
+    , "CursorAction cursorAction, KeyboardModifiers modifiers"
+    , "QModelIndex index"
     , "int column, bool hide"
     , "int column, int width"
     , "QModelIndex index, bool expand"
@@ -100,13 +114,19 @@ static const int qtscript_QTreeView_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 3
+    , 3
+    , 2
     , 0
     , 1
     , 1
     , 1
     , 1
+    , 1
     , 2
     , 2
+    , 2
+    , 1
     , 2
     , 2
     , 2
@@ -115,6 +135,24 @@ static const int qtscript_QTreeView_function_lengths[] = {
     , 3
     , 2
     , 0
+};
+
+static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTreeView : public QTreeView
+{
+    friend QScriptValue qtscript_QTreeView_drawBranches(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeView_drawRow(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeView_drawTree(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeView_indexRowSizeHint(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeView_moveCursor(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTreeView_rowHeight(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QTreeView_throw_ambiguity_error_helper(
@@ -130,9 +168,13 @@ static QScriptValue qtscript_QTreeView_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTreeView*)
 Q_DECLARE_METATYPE(QtScriptShell_QTreeView*)
+Q_DECLARE_METATYPE(QPainter*)
+Q_DECLARE_METATYPE(QStyleOptionViewItem)
 Q_DECLARE_METATYPE(QHeaderView*)
-Q_DECLARE_METATYPE(QModelIndex)
+Q_DECLARE_METATYPE(QAbstractItemView::CursorAction)
+Q_DECLARE_METATYPE(QFlags<Qt::KeyboardModifier>)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractItemView*)
 
 //
@@ -149,11 +191,11 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 17;
+        _id = 0xBABE0000 + 23;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTreeView* _q_self = qscriptvalue_cast<QTreeView*>(context->thisObject());
+    qtscript_QTreeView* _q_self = reinterpret_cast<qtscript_QTreeView*>(qscriptvalue_cast<QTreeView*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTreeView.%0(): this object is not a QTreeView")
@@ -186,13 +228,42 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     break;
 
     case 3:
+    if (context->argumentCount() == 3) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        QRect _q_arg1 = qscriptvalue_cast<QRect>(context->argument(1));
+        QModelIndex _q_arg2 = qscriptvalue_cast<QModelIndex>(context->argument(2));
+        _q_self->drawBranches(_q_arg0, _q_arg1, _q_arg2);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 3) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        QStyleOptionViewItem _q_arg1 = qscriptvalue_cast<QStyleOptionViewItem>(context->argument(1));
+        QModelIndex _q_arg2 = qscriptvalue_cast<QModelIndex>(context->argument(2));
+        _q_self->drawRow(_q_arg0, _q_arg1, _q_arg2);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 2) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        QRegion _q_arg1 = qscriptvalue_cast<QRegion>(context->argument(1));
+        _q_self->drawTree(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 0) {
         QHeaderView* _q_result = _q_self->header();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 7:
     if (context->argumentCount() == 1) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         QModelIndex _q_result = _q_self->indexAbove(_q_arg0);
@@ -200,7 +271,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 5:
+    case 8:
     if (context->argumentCount() == 1) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         QModelIndex _q_result = _q_self->indexBelow(_q_arg0);
@@ -208,7 +279,15 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 6:
+    case 9:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        int _q_result = _q_self->indexRowSizeHint(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->isColumnHidden(_q_arg0);
@@ -216,7 +295,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 7:
+    case 11:
     if (context->argumentCount() == 1) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         bool _q_result = _q_self->isExpanded(_q_arg0);
@@ -224,7 +303,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 8:
+    case 12:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -233,7 +312,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 9:
+    case 13:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -242,7 +321,24 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 10:
+    case 14:
+    if (context->argumentCount() == 2) {
+        QAbstractItemView::CursorAction _q_arg0 = qscriptvalue_cast<QAbstractItemView::CursorAction>(context->argument(0));
+        QFlags<Qt::KeyboardModifier> _q_arg1 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(1));
+        QModelIndex _q_result = _q_self->moveCursor(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 15:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        int _q_result = _q_self->rowHeight(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -251,7 +347,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 11:
+    case 17:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -260,7 +356,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 12:
+    case 18:
     if (context->argumentCount() == 2) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -269,7 +365,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 13:
+    case 19:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -279,7 +375,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 14:
+    case 20:
     if (context->argumentCount() == 1) {
         QHeaderView* _q_arg0 = qscriptvalue_cast<QHeaderView*>(context->argument(0));
         _q_self->setHeader(_q_arg0);
@@ -287,7 +383,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 15:
+    case 21:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
@@ -297,7 +393,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 16:
+    case 22:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::SortOrder _q_arg1 = qscriptvalue_cast<Qt::SortOrder>(context->argument(1));
@@ -306,7 +402,7 @@ static QScriptValue qtscript_QTreeView_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 17: {
+    case 23: {
     QString result = QString::fromLatin1("QTreeView");
     return QScriptValue(context->engine(), result);
     }
@@ -366,7 +462,7 @@ QScriptValue qtscript_create_QTreeView_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTreeView*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTreeView*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemView*>()));
-    for (int i = 0; i < 18; ++i) {
+    for (int i = 0; i < 24; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTreeView_prototype_call, qtscript_QTreeView_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTreeView_function_names[i+1]),

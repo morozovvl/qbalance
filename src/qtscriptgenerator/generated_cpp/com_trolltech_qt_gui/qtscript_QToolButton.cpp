@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtoolbutton.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -39,6 +39,7 @@
 #include <qstyleoption.h>
 #include <qtoolbutton.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QToolButton.h"
 
@@ -47,6 +48,7 @@ static const char * const qtscript_QToolButton_function_names[] = {
     // static
     // prototype
     , "defaultAction"
+    , "initStyleOption"
     , "menu"
     , "minimumSizeHint"
     , "setMenu"
@@ -59,6 +61,7 @@ static const char * const qtscript_QToolButton_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "QStyleOptionToolButton option"
     , ""
     , ""
     , "QMenu menu"
@@ -71,11 +74,22 @@ static const int qtscript_QToolButton_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 1
     , 0
     , 0
     , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QToolButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QToolButton : public QToolButton
+{
+    friend QScriptValue qtscript_QToolButton_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QToolButton_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QToolButton_throw_ambiguity_error_helper(
@@ -98,7 +112,9 @@ Q_DECLARE_METATYPE(QToolButton*)
 Q_DECLARE_METATYPE(QtScriptShell_QToolButton*)
 Q_DECLARE_METATYPE(QToolButton::ToolButtonPopupMode)
 Q_DECLARE_METATYPE(QAction*)
+Q_DECLARE_METATYPE(QStyleOptionToolButton*)
 Q_DECLARE_METATYPE(QMenu*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractButton*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -204,11 +220,11 @@ static QScriptValue qtscript_QToolButton_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 6;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QToolButton* _q_self = qscriptvalue_cast<QToolButton*>(context->thisObject());
+    qtscript_QToolButton* _q_self = reinterpret_cast<qtscript_QToolButton*>(qscriptvalue_cast<QToolButton*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QToolButton.%0(): this object is not a QToolButton")
@@ -224,20 +240,28 @@ static QScriptValue qtscript_QToolButton_prototype_call(QScriptContext *context,
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QStyleOptionToolButton* _q_arg0 = qscriptvalue_cast<QStyleOptionToolButton*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         QMenu* _q_result = _q_self->menu();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QMenu* _q_arg0 = qscriptvalue_cast<QMenu*>(context->argument(0));
         _q_self->setMenu(_q_arg0);
@@ -245,14 +269,14 @@ static QScriptValue qtscript_QToolButton_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5: {
+    case 6: {
     QString result = QString::fromLatin1("QToolButton");
     return QScriptValue(context->engine(), result);
     }
@@ -312,7 +336,7 @@ QScriptValue qtscript_create_QToolButton_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QToolButton*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QToolButton*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractButton*>()));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 7; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QToolButton_prototype_call, qtscript_QToolButton_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QToolButton_function_names[i+1]),

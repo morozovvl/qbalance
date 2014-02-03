@@ -40,6 +40,15 @@ static const int qtscript_QSimpleXmlNodeModel_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSimpleXmlNodeModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSimpleXmlNodeModel : public QSimpleXmlNodeModel
+{
+
+    friend QScriptValue qtscript_QSimpleXmlNodeModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSimpleXmlNodeModel_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -74,7 +83,7 @@ static QScriptValue qtscript_QSimpleXmlNodeModel_prototype_call(QScriptContext *
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSimpleXmlNodeModel* _q_self = qscriptvalue_cast<QSimpleXmlNodeModel*>(context->thisObject());
+    qtscript_QSimpleXmlNodeModel* _q_self = reinterpret_cast<qtscript_QSimpleXmlNodeModel*>(qscriptvalue_cast<QSimpleXmlNodeModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSimpleXmlNodeModel.%0(): this object is not a QSimpleXmlNodeModel")

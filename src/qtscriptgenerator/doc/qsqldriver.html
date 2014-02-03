@@ -17,15 +17,6 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QSqlDriver prototype object</li>
-<li><b>WhereStatement</b></li>
-<li><b>SelectStatement</b></li>
-<li><b>UpdateStatement</b></li>
-<li><b>InsertStatement</b></li>
-<li><b>DeleteStatement</b></li>
-<li><b>StatementType( value )</b></li>
-<li><b>FieldName</b></li>
-<li><b>TableName</b></li>
-<li><b>IdentifierType( value )</b></li>
 <li><b>Transactions</b></li>
 <li><b>QuerySize</b></li>
 <li><b>BLOB</b></li>
@@ -40,7 +31,21 @@
 <li><b>EventNotifications</b></li>
 <li><b>FinishQuery</b></li>
 <li><b>MultipleResultSets</b></li>
+<li><b>CancelQuery</b></li>
 <li><b>DriverFeature( value )</b></li>
+<li><b>WhereStatement</b></li>
+<li><b>SelectStatement</b></li>
+<li><b>UpdateStatement</b></li>
+<li><b>InsertStatement</b></li>
+<li><b>DeleteStatement</b></li>
+<li><b>StatementType( value )</b></li>
+<li><b>FieldName</b></li>
+<li><b>TableName</b></li>
+<li><b>IdentifierType( value )</b></li>
+<li><b>UnknownSource</b></li>
+<li><b>SelfSource</b></li>
+<li><b>OtherSource</b></li>
+<li><b>NotificationSource( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QSqlDriver prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
@@ -62,7 +67,10 @@
 <li><div class="fn"/><b>QSqlIndex primaryIndex(String tableName)</b></li>
 <li><div class="fn"/><b>QSqlRecord record(String tableName)</b></li>
 <li><div class="fn"/><b>bool rollbackTransaction()</b></li>
+<li><div class="fn"/><b>void setLastError(QSqlError e)</b></li>
 <li><div class="fn"/><b>void setNumericalPrecisionPolicy(NumericalPrecisionPolicy precisionPolicy)</b></li>
+<li><div class="fn"/><b>void setOpen(bool o)</b></li>
+<li><div class="fn"/><b>void setOpenError(bool e)</b></li>
 <li><div class="fn"/><b>String sqlStatement(StatementType type, String tableName, QSqlRecord rec, bool preparedStatement)</b></li>
 <li><div class="fn"/><b>String stripDelimiters(String identifier, IdentifierType type)</b></li>
 <li><div class="fn"/><b>bool subscribeToNotification(String name)</b></li>

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qabstractslider.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractslider.h>
 #include <qaction.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAbstractSlider.h"
 
@@ -43,7 +44,8 @@ static const char * const qtscript_QAbstractSlider_function_names[] = {
     "QAbstractSlider"
     // static
     // prototype
-    , "setRange"
+    , "repeatAction"
+    , "setRepeatAction"
     , "triggerAction"
     , "toString"
 };
@@ -52,7 +54,8 @@ static const char * const qtscript_QAbstractSlider_function_signatures[] = {
     "QWidget parent"
     // static
     // prototype
-    , "int min, int max"
+    , ""
+    , "SliderAction action, int thresholdTime, int repeatTime"
     , "SliderAction action"
 ""
 };
@@ -61,9 +64,22 @@ static const int qtscript_QAbstractSlider_function_lengths[] = {
     1
     // static
     // prototype
-    , 2
+    , 0
+    , 3
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QAbstractSlider_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractSlider : public QAbstractSlider
+{
+    friend QScriptValue qtscript_QAbstractSlider_repeatAction(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractSlider_setRepeatAction(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractSlider_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractSlider::SliderChange >;
 };
 
 static QScriptValue qtscript_QAbstractSlider_throw_ambiguity_error_helper(
@@ -80,6 +96,7 @@ static QScriptValue qtscript_QAbstractSlider_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QAbstractSlider*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractSlider*)
 Q_DECLARE_METATYPE(QAbstractSlider::SliderAction)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -188,11 +205,11 @@ static QScriptValue qtscript_QAbstractSlider_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractSlider* _q_self = qscriptvalue_cast<QAbstractSlider*>(context->thisObject());
+    qtscript_QAbstractSlider* _q_self = reinterpret_cast<qtscript_QAbstractSlider*>(qscriptvalue_cast<QAbstractSlider*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractSlider.%0(): this object is not a QAbstractSlider")
@@ -201,15 +218,34 @@ static QScriptValue qtscript_QAbstractSlider_prototype_call(QScriptContext *cont
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
-        int _q_arg1 = context->argument(1).toInt32();
-        _q_self->setRange(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
+    if (context->argumentCount() == 0) {
+        QAbstractSlider::SliderAction _q_result = _q_self->repeatAction();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QAbstractSlider::SliderAction _q_arg0 = qscriptvalue_cast<QAbstractSlider::SliderAction>(context->argument(0));
+        _q_self->setRepeatAction(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 2) {
+        QAbstractSlider::SliderAction _q_arg0 = qscriptvalue_cast<QAbstractSlider::SliderAction>(context->argument(0));
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->setRepeatAction(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 3) {
+        QAbstractSlider::SliderAction _q_arg0 = qscriptvalue_cast<QAbstractSlider::SliderAction>(context->argument(0));
+        int _q_arg1 = context->argument(1).toInt32();
+        int _q_arg2 = context->argument(2).toInt32();
+        _q_self->setRepeatAction(_q_arg0, _q_arg1, _q_arg2);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         QAbstractSlider::SliderAction _q_arg0 = qscriptvalue_cast<QAbstractSlider::SliderAction>(context->argument(0));
         _q_self->triggerAction(_q_arg0);
@@ -217,7 +253,7 @@ static QScriptValue qtscript_QAbstractSlider_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 2: {
+    case 3: {
     QString result = QString::fromLatin1("QAbstractSlider");
     return QScriptValue(context->engine(), result);
     }
@@ -277,7 +313,7 @@ QScriptValue qtscript_create_QAbstractSlider_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractSlider*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractSlider*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractSlider_prototype_call, qtscript_QAbstractSlider_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractSlider_function_names[i+1]),

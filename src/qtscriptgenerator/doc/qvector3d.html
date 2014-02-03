@@ -15,43 +15,44 @@
 <li><div class="fn"/><b>void QVector3D(QPoint point)</b></li>
 <li><div class="fn"/><b>void QVector3D(QPointF point)</b></li>
 <li><div class="fn"/><b>void QVector3D(QVector2D vector)</b></li>
-<li><div class="fn"/><b>void QVector3D(QVector2D vector, qreal zpos)</b></li>
+<li><div class="fn"/><b>void QVector3D(QVector2D vector, float zpos)</b></li>
 <li><div class="fn"/><b>void QVector3D(QVector4D vector)</b></li>
-<li><div class="fn"/><b>void QVector3D(qreal xpos, qreal ypos, qreal zpos)</b></li>
+<li><div class="fn"/><b>void QVector3D(float xpos, float ypos, float zpos)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QVector3D prototype object</li>
 <li><div class="fn"/><b>QVector3D crossProduct(QVector3D v1, QVector3D v2)</b></li>
-<li><div class="fn"/><b>qreal dotProduct(QVector3D v1, QVector3D v2)</b></li>
+<li><div class="fn"/><b>float dotProduct(QVector3D v1, QVector3D v2)</b></li>
 <li><div class="fn"/><b>QVector3D normal(QVector3D v1, QVector3D v2)</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
-<li><div class="fn"/><b>qreal distanceToLine(QVector3D point, QVector3D direction)</b></li>
-<li><div class="fn"/><b>qreal distanceToPlane(QVector3D plane, QVector3D normal)</b></li>
+<li><div class="fn"/><b>float distanceToLine(QVector3D point, QVector3D direction)</b></li>
+<li><div class="fn"/><b>float distanceToPlane(QVector3D plane, QVector3D normal)</b></li>
+<li><div class="fn"/><b>float distanceToPoint(QVector3D point)</b></li>
 <li><div class="fn"/><b>bool isNull()</b></li>
-<li><div class="fn"/><b>qreal length()</b></li>
-<li><div class="fn"/><b>qreal lengthSquared()</b></li>
+<li><div class="fn"/><b>float length()</b></li>
+<li><div class="fn"/><b>float lengthSquared()</b></li>
 <li><div class="fn"/><b>void normalize()</b></li>
 <li><div class="fn"/><b>QVector3D normalized()</b></li>
 <li><div class="fn"/><b>QVector3D operator_add_assign(QVector3D vector)</b></li>
-<li><div class="fn"/><b>QVector3D operator_divide_assign(qreal divisor)</b></li>
+<li><div class="fn"/><b>QVector3D operator_divide_assign(float divisor)</b></li>
 <li><div class="fn"/><b>bool operator_equal(QVector3D v2)</b></li>
 <li><div class="fn"/><b>QVector3D operator_multiply_assign(QVector3D vector)</b></li>
 <li><div class="fn"/><b>QVector3D operator_subtract_assign(QVector3D vector)</b></li>
 <li><div class="fn"/><b>void readFrom(QDataStream arg__1)</b></li>
-<li><div class="fn"/><b>void setX(qreal x)</b></li>
-<li><div class="fn"/><b>void setY(qreal y)</b></li>
-<li><div class="fn"/><b>void setZ(qreal z)</b></li>
+<li><div class="fn"/><b>void setX(float x)</b></li>
+<li><div class="fn"/><b>void setY(float y)</b></li>
+<li><div class="fn"/><b>void setZ(float z)</b></li>
 <li><div class="fn"/><b>QPoint toPoint()</b></li>
 <li><div class="fn"/><b>QPointF toPointF()</b></li>
 <li><div class="fn"/><b>QVector2D toVector2D()</b></li>
 <li><div class="fn"/><b>QVector4D toVector4D()</b></li>
 <li><div class="fn"/><b>void writeTo(QDataStream arg__1)</b></li>
-<li><div class="fn"/><b>qreal x()</b></li>
-<li><div class="fn"/><b>qreal y()</b></li>
-<li><div class="fn"/><b>qreal z()</b></li>
+<li><div class="fn"/><b>float x()</b></li>
+<li><div class="fn"/><b>float y()</b></li>
+<li><div class="fn"/><b>float z()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QVector3D objects have no special properties beyond those inherited from the QVector3D prototype object.</p>

@@ -194,8 +194,8 @@ Dialog.prototype = new QDialog();
 
 Dialog.prototype.setInteger = function()
 {
-    var i = QInputDialog.getInteger(this, tr("QInputDialog::getInteger()"),
-        tr("Percentage:"), 25, 0, 100, 1, Qt.WindowFlags(0));
+    var i = QInputDialog.getInt(this, tr("QInputDialog::getInteger()"),
+        tr("Percentage:"), 25, 0, 100, 1, null, Qt.WindowFlags(0));
     if (i != null)
         this.integerLabel.text = i;
 }

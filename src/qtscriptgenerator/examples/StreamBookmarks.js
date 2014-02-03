@@ -256,7 +256,7 @@ function MainWindow()
     labels.push(tr("Location"));
 
     this.treeWidget = new QTreeWidget();
-    this.treeWidget.header().setResizeMode(QHeaderView.Stretch);
+    this.treeWidget.header().resizeMode = QHeaderView.Stretch;
     this.treeWidget.setHeaderLabels(labels);
     this.setCentralWidget(this.treeWidget);
 

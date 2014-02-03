@@ -19,13 +19,16 @@ static const char * const qtscript_QAbstractXmlNodeModel_function_names[] = {
     "QAbstractXmlNodeModel"
     // static
     // prototype
+    , "attributes"
     , "baseUri"
     , "compareOrder"
+    , "createIndex"
     , "documentUri"
     , "elementById"
     , "kind"
     , "name"
     , "namespaceBindings"
+    , "nextFromSimpleAxis"
     , "nodesByIdref"
     , "root"
     , "sourceLocation"
@@ -38,13 +41,16 @@ static const char * const qtscript_QAbstractXmlNodeModel_function_signatures[] =
     ""
     // static
     // prototype
+    , "QXmlNodeModelIndex element"
     , "QXmlNodeModelIndex ni"
     , "QXmlNodeModelIndex ni1, QXmlNodeModelIndex ni2"
+    , "qint64 data\nqint64 data, qint64 additionalData\nvoid pointer, qint64 additionalData"
     , "QXmlNodeModelIndex ni"
     , "QXmlName NCName"
     , "QXmlNodeModelIndex ni"
     , "QXmlNodeModelIndex ni"
     , "QXmlNodeModelIndex n"
+    , "SimpleAxis axis, QXmlNodeModelIndex origin"
     , "QXmlName NCName"
     , "QXmlNodeModelIndex n"
     , "QXmlNodeModelIndex index"
@@ -58,18 +64,33 @@ static const int qtscript_QAbstractXmlNodeModel_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 1
+    , 2
     , 2
     , 1
     , 1
     , 1
     , 1
     , 1
+    , 2
     , 1
     , 1
     , 1
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractXmlNodeModel : public QAbstractXmlNodeModel
+{
+    friend QScriptValue qtscript_QAbstractXmlNodeModel_attributes(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractXmlNodeModel_createIndex(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractXmlNodeModel_nextFromSimpleAxis(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractXmlNodeModel_throw_ambiguity_error_helper(
@@ -85,13 +106,13 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QAbstractXmlNodeModel*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractXmlNodeModel*)
-Q_DECLARE_METATYPE(QAbstractXmlNodeModel::SimpleAxis)
 Q_DECLARE_METATYPE(QAbstractXmlNodeModel::NodeCopySetting)
+Q_DECLARE_METATYPE(QAbstractXmlNodeModel::SimpleAxis)
 Q_DECLARE_METATYPE(QXmlNodeModelIndex)
+Q_DECLARE_METATYPE(QVector<QXmlNodeModelIndex>)
 Q_DECLARE_METATYPE(QXmlNodeModelIndex::DocumentOrder)
 Q_DECLARE_METATYPE(QXmlNodeModelIndex::NodeKind)
 Q_DECLARE_METATYPE(QVector<QXmlName>)
-Q_DECLARE_METATYPE(QVector<QXmlNodeModelIndex>)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -105,6 +126,73 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QAbstractXmlNodeModel::NodeCopySetting
+//
+
+static const QAbstractXmlNodeModel::NodeCopySetting qtscript_QAbstractXmlNodeModel_NodeCopySetting_values[] = {
+    QAbstractXmlNodeModel::InheritNamespaces
+    , QAbstractXmlNodeModel::PreserveNamespaces
+};
+
+static const char * const qtscript_QAbstractXmlNodeModel_NodeCopySetting_keys[] = {
+    "InheritNamespaces"
+    , "PreserveNamespaces"
+};
+
+static QString qtscript_QAbstractXmlNodeModel_NodeCopySetting_toStringHelper(QAbstractXmlNodeModel::NodeCopySetting value)
+{
+    if ((value >= QAbstractXmlNodeModel::InheritNamespaces) && (value <= QAbstractXmlNodeModel::PreserveNamespaces))
+        return qtscript_QAbstractXmlNodeModel_NodeCopySetting_keys[static_cast<int>(value)-static_cast<int>(QAbstractXmlNodeModel::InheritNamespaces)];
+    return QString();
+}
+
+static QScriptValue qtscript_QAbstractXmlNodeModel_NodeCopySetting_toScriptValue(QScriptEngine *engine, const QAbstractXmlNodeModel::NodeCopySetting &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractXmlNodeModel"));
+    return clazz.property(qtscript_QAbstractXmlNodeModel_NodeCopySetting_toStringHelper(value));
+}
+
+static void qtscript_QAbstractXmlNodeModel_NodeCopySetting_fromScriptValue(const QScriptValue &value, QAbstractXmlNodeModel::NodeCopySetting &out)
+{
+    out = qvariant_cast<QAbstractXmlNodeModel::NodeCopySetting>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QAbstractXmlNodeModel_NodeCopySetting(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QAbstractXmlNodeModel::InheritNamespaces) && (arg <= QAbstractXmlNodeModel::PreserveNamespaces))
+        return qScriptValueFromValue(engine,  static_cast<QAbstractXmlNodeModel::NodeCopySetting>(arg));
+    return context->throwError(QString::fromLatin1("NodeCopySetting(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QAbstractXmlNodeModel_NodeCopySetting_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractXmlNodeModel::NodeCopySetting value = qscriptvalue_cast<QAbstractXmlNodeModel::NodeCopySetting>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QAbstractXmlNodeModel_NodeCopySetting_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractXmlNodeModel::NodeCopySetting value = qscriptvalue_cast<QAbstractXmlNodeModel::NodeCopySetting>(context->thisObject());
+    return QScriptValue(engine, qtscript_QAbstractXmlNodeModel_NodeCopySetting_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QAbstractXmlNodeModel_NodeCopySetting_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QAbstractXmlNodeModel_NodeCopySetting,
+        qtscript_QAbstractXmlNodeModel_NodeCopySetting_valueOf, qtscript_QAbstractXmlNodeModel_NodeCopySetting_toString);
+    qScriptRegisterMetaType<QAbstractXmlNodeModel::NodeCopySetting>(engine, qtscript_QAbstractXmlNodeModel_NodeCopySetting_toScriptValue,
+        qtscript_QAbstractXmlNodeModel_NodeCopySetting_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractXmlNodeModel_NodeCopySetting_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QAbstractXmlNodeModel_NodeCopySetting_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -179,73 +267,6 @@ static QScriptValue qtscript_create_QAbstractXmlNodeModel_SimpleAxis_class(QScri
 }
 
 //
-// QAbstractXmlNodeModel::NodeCopySetting
-//
-
-static const QAbstractXmlNodeModel::NodeCopySetting qtscript_QAbstractXmlNodeModel_NodeCopySetting_values[] = {
-    QAbstractXmlNodeModel::InheritNamespaces
-    , QAbstractXmlNodeModel::PreserveNamespaces
-};
-
-static const char * const qtscript_QAbstractXmlNodeModel_NodeCopySetting_keys[] = {
-    "InheritNamespaces"
-    , "PreserveNamespaces"
-};
-
-static QString qtscript_QAbstractXmlNodeModel_NodeCopySetting_toStringHelper(QAbstractXmlNodeModel::NodeCopySetting value)
-{
-    if ((value >= QAbstractXmlNodeModel::InheritNamespaces) && (value <= QAbstractXmlNodeModel::PreserveNamespaces))
-        return qtscript_QAbstractXmlNodeModel_NodeCopySetting_keys[static_cast<int>(value)-static_cast<int>(QAbstractXmlNodeModel::InheritNamespaces)];
-    return QString();
-}
-
-static QScriptValue qtscript_QAbstractXmlNodeModel_NodeCopySetting_toScriptValue(QScriptEngine *engine, const QAbstractXmlNodeModel::NodeCopySetting &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractXmlNodeModel"));
-    return clazz.property(qtscript_QAbstractXmlNodeModel_NodeCopySetting_toStringHelper(value));
-}
-
-static void qtscript_QAbstractXmlNodeModel_NodeCopySetting_fromScriptValue(const QScriptValue &value, QAbstractXmlNodeModel::NodeCopySetting &out)
-{
-    out = qvariant_cast<QAbstractXmlNodeModel::NodeCopySetting>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QAbstractXmlNodeModel_NodeCopySetting(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QAbstractXmlNodeModel::InheritNamespaces) && (arg <= QAbstractXmlNodeModel::PreserveNamespaces))
-        return qScriptValueFromValue(engine,  static_cast<QAbstractXmlNodeModel::NodeCopySetting>(arg));
-    return context->throwError(QString::fromLatin1("NodeCopySetting(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QAbstractXmlNodeModel_NodeCopySetting_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractXmlNodeModel::NodeCopySetting value = qscriptvalue_cast<QAbstractXmlNodeModel::NodeCopySetting>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QAbstractXmlNodeModel_NodeCopySetting_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractXmlNodeModel::NodeCopySetting value = qscriptvalue_cast<QAbstractXmlNodeModel::NodeCopySetting>(context->thisObject());
-    return QScriptValue(engine, qtscript_QAbstractXmlNodeModel_NodeCopySetting_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QAbstractXmlNodeModel_NodeCopySetting_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QAbstractXmlNodeModel_NodeCopySetting,
-        qtscript_QAbstractXmlNodeModel_NodeCopySetting_valueOf, qtscript_QAbstractXmlNodeModel_NodeCopySetting_toString);
-    qScriptRegisterMetaType<QAbstractXmlNodeModel::NodeCopySetting>(engine, qtscript_QAbstractXmlNodeModel_NodeCopySetting_toScriptValue,
-        qtscript_QAbstractXmlNodeModel_NodeCopySetting_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractXmlNodeModel_NodeCopySetting_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QAbstractXmlNodeModel_NodeCopySetting_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QAbstractXmlNodeModel
 //
 
@@ -259,11 +280,11 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 12;
+        _id = 0xBABE0000 + 15;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractXmlNodeModel* _q_self = qscriptvalue_cast<QAbstractXmlNodeModel*>(context->thisObject());
+    qtscript_QAbstractXmlNodeModel* _q_self = reinterpret_cast<qtscript_QAbstractXmlNodeModel*>(qscriptvalue_cast<QAbstractXmlNodeModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractXmlNodeModel.%0(): this object is not a QAbstractXmlNodeModel")
@@ -274,12 +295,20 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     case 0:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
+        QVector<QXmlNodeModelIndex> _q_result = _q_self->attributes(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 1) {
+        QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QUrl _q_result = _q_self->baseUri(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 2) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QXmlNodeModelIndex _q_arg1 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(1));
@@ -288,7 +317,36 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 2:
+    case 3:
+    if (context->argumentCount() == 1) {
+        if (context->argument(0).isNumber()) {
+            qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
+            QXmlNodeModelIndex _q_result = _q_self->createIndex(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (qscriptvalue_cast<void*>(context->argument(0))) {
+            void* _q_arg0 = qscriptvalue_cast<void*>(context->argument(0));
+            QXmlNodeModelIndex _q_result = _q_self->createIndex(_q_arg0);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    if (context->argumentCount() == 2) {
+        if (context->argument(0).isNumber()
+            && context->argument(1).isNumber()) {
+            qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
+            qint64 _q_arg1 = qscriptvalue_cast<qint64>(context->argument(1));
+            QXmlNodeModelIndex _q_result = _q_self->createIndex(_q_arg0, _q_arg1);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (qscriptvalue_cast<void*>(context->argument(0))
+            && context->argument(1).isNumber()) {
+            void* _q_arg0 = qscriptvalue_cast<void*>(context->argument(0));
+            qint64 _q_arg1 = qscriptvalue_cast<qint64>(context->argument(1));
+            QXmlNodeModelIndex _q_result = _q_self->createIndex(_q_arg0, _q_arg1);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QUrl _q_result = _q_self->documentUri(_q_arg0);
@@ -296,7 +354,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 1) {
         QXmlName _q_arg0 = qscriptvalue_cast<QXmlName>(context->argument(0));
         QXmlNodeModelIndex _q_result = _q_self->elementById(_q_arg0);
@@ -304,7 +362,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QXmlNodeModelIndex::NodeKind _q_result = _q_self->kind(_q_arg0);
@@ -312,7 +370,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QXmlName _q_result = _q_self->name(_q_arg0);
@@ -320,7 +378,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QVector<QXmlName> _q_result = _q_self->namespaceBindings(_q_arg0);
@@ -328,7 +386,16 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 7:
+    case 9:
+    if (context->argumentCount() == 2) {
+        QAbstractXmlNodeModel::SimpleAxis _q_arg0 = qscriptvalue_cast<QAbstractXmlNodeModel::SimpleAxis>(context->argument(0));
+        QXmlNodeModelIndex _q_arg1 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(1));
+        QXmlNodeModelIndex _q_result = _q_self->nextFromSimpleAxis(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
     if (context->argumentCount() == 1) {
         QXmlName _q_arg0 = qscriptvalue_cast<QXmlName>(context->argument(0));
         QVector<QXmlNodeModelIndex> _q_result = _q_self->nodesByIdref(_q_arg0);
@@ -336,7 +403,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 8:
+    case 11:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QXmlNodeModelIndex _q_result = _q_self->root(_q_arg0);
@@ -344,7 +411,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 9:
+    case 12:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QSourceLocation _q_result = _q_self->sourceLocation(_q_arg0);
@@ -352,7 +419,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 10:
+    case 13:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QString _q_result = _q_self->stringValue(_q_arg0);
@@ -360,7 +427,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 11:
+    case 14:
     if (context->argumentCount() == 1) {
         QXmlNodeModelIndex _q_arg0 = qscriptvalue_cast<QXmlNodeModelIndex>(context->argument(0));
         QVariant _q_result = _q_self->typedValue(_q_arg0);
@@ -368,7 +435,7 @@ static QScriptValue qtscript_QAbstractXmlNodeModel_prototype_call(QScriptContext
     }
     break;
 
-    case 12: {
+    case 15: {
     QString result = QString::fromLatin1("QAbstractXmlNodeModel");
     return QScriptValue(context->engine(), result);
     }
@@ -404,7 +471,7 @@ QScriptValue qtscript_create_QAbstractXmlNodeModel_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QAbstractXmlNodeModel*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractXmlNodeModel*)0));
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 16; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractXmlNodeModel_prototype_call, qtscript_QAbstractXmlNodeModel_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractXmlNodeModel_function_names[i+1]),
@@ -416,9 +483,9 @@ QScriptValue qtscript_create_QAbstractXmlNodeModel_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QAbstractXmlNodeModel_static_call, proto, qtscript_QAbstractXmlNodeModel_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("SimpleAxis"),
-        qtscript_create_QAbstractXmlNodeModel_SimpleAxis_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("NodeCopySetting"),
         qtscript_create_QAbstractXmlNodeModel_NodeCopySetting_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("SimpleAxis"),
+        qtscript_create_QAbstractXmlNodeModel_SimpleAxis_class(engine, ctor));
     return ctor;
 }

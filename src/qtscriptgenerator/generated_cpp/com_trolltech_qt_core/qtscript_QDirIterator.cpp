@@ -12,8 +12,6 @@
 #include <qfileinfo.h>
 #include <qstringlist.h>
 
-#include "qtscriptshell_QDirIterator.h"
-
 static const char * const qtscript_QDirIterator_function_names[] = {
     "QDirIterator"
     // static
@@ -65,10 +63,8 @@ static QScriptValue qtscript_QDirIterator_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QDirIterator*)
-Q_DECLARE_METATYPE(QtScriptShell_QDirIterator*)
 Q_DECLARE_METATYPE(QDirIterator::IteratorFlag)
 Q_DECLARE_METATYPE(QFlags<QDirIterator::IteratorFlag>)
-Q_DECLARE_METATYPE(QFileInfo)
 Q_DECLARE_METATYPE(QDir)
 Q_DECLARE_METATYPE(QFlags<QDir::Filter>)
 
@@ -342,15 +338,13 @@ static QScriptValue qtscript_QDirIterator_static_call(QScriptContext *context, Q
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QDir>() == context->argument(0).toVariant().userType())) {
             QDir _q_arg0 = qscriptvalue_cast<QDir>(context->argument(0));
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         } else if (context->argument(0).isString()) {
             QString _q_arg0 = context->argument(0).toString();
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
@@ -358,34 +352,30 @@ static QScriptValue qtscript_QDirIterator_static_call(QScriptContext *context, Q
             && (qMetaTypeId<QFlags<QDirIterator::IteratorFlag> >() == context->argument(1).toVariant().userType())) {
             QDir _q_arg0 = qscriptvalue_cast<QDir>(context->argument(0));
             QFlags<QDirIterator::IteratorFlag> _q_arg1 = qscriptvalue_cast<QFlags<QDirIterator::IteratorFlag> >(context->argument(1));
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         } else if (context->argument(0).isString()
             && (qMetaTypeId<QFlags<QDir::Filter> >() == context->argument(1).toVariant().userType())) {
             QString _q_arg0 = context->argument(0).toString();
             QFlags<QDir::Filter> _q_arg1 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(1));
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         } else if (context->argument(0).isString()
             && (qMetaTypeId<QFlags<QDirIterator::IteratorFlag> >() == context->argument(1).toVariant().userType())) {
             QString _q_arg0 = context->argument(0).toString();
             QFlags<QDirIterator::IteratorFlag> _q_arg1 = qscriptvalue_cast<QFlags<QDirIterator::IteratorFlag> >(context->argument(1));
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         } else if (context->argument(0).isString()
             && context->argument(1).isArray()) {
             QString _q_arg0 = context->argument(0).toString();
             QStringList _q_arg1;
             qScriptValueToSequence(context->argument(1), _q_arg1);
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         }
     } else if (context->argumentCount() == 3) {
@@ -395,9 +385,8 @@ static QScriptValue qtscript_QDirIterator_static_call(QScriptContext *context, Q
             QString _q_arg0 = context->argument(0).toString();
             QFlags<QDir::Filter> _q_arg1 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(1));
             QFlags<QDirIterator::IteratorFlag> _q_arg2 = qscriptvalue_cast<QFlags<QDirIterator::IteratorFlag> >(context->argument(2));
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1, _q_arg2);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1, _q_arg2);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         } else if (context->argument(0).isString()
             && context->argument(1).isArray()
@@ -406,9 +395,8 @@ static QScriptValue qtscript_QDirIterator_static_call(QScriptContext *context, Q
             QStringList _q_arg1;
             qScriptValueToSequence(context->argument(1), _q_arg1);
             QFlags<QDir::Filter> _q_arg2 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(2));
-            QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1, _q_arg2);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
+            QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1, _q_arg2);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
         }
     } else if (context->argumentCount() == 4) {
@@ -417,9 +405,8 @@ static QScriptValue qtscript_QDirIterator_static_call(QScriptContext *context, Q
         qScriptValueToSequence(context->argument(1), _q_arg1);
         QFlags<QDir::Filter> _q_arg2 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(2));
         QFlags<QDirIterator::IteratorFlag> _q_arg3 = qscriptvalue_cast<QFlags<QDirIterator::IteratorFlag> >(context->argument(3));
-        QtScriptShell_QDirIterator* _q_cpp_result = new QtScriptShell_QDirIterator(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QDirIterator*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
+        QDirIterator* _q_cpp_result = new QDirIterator(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     }
     break;

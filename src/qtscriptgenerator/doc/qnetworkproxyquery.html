@@ -12,6 +12,9 @@
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QNetworkProxyQuery()</b></li>
+<li><div class="fn"/><b>void QNetworkProxyQuery(QNetworkConfiguration networkConfiguration, String hostname, int port, String protocolTag, QueryType queryType)</b></li>
+<li><div class="fn"/><b>void QNetworkProxyQuery(QNetworkConfiguration networkConfiguration, QUrl requestUrl, QueryType queryType)</b></li>
+<li><div class="fn"/><b>void QNetworkProxyQuery(QNetworkConfiguration networkConfiguration, unsigned short bindPort, String protocolTag, QueryType queryType)</b></li>
 <li><div class="fn"/><b>void QNetworkProxyQuery(QNetworkProxyQuery other)</b></li>
 <li><div class="fn"/><b>void QNetworkProxyQuery(String hostname, int port, String protocolTag, QueryType queryType)</b></li>
 <li><div class="fn"/><b>void QNetworkProxyQuery(QUrl requestUrl, QueryType queryType)</b></li>
@@ -29,17 +32,20 @@
 <h3>Prototype Object Properties</h3>
 <ul>
 <li><div class="fn"/><b>int localPort()</b></li>
+<li><div class="fn"/><b>QNetworkConfiguration networkConfiguration()</b></li>
 <li><div class="fn"/><b>bool operator_equal(QNetworkProxyQuery other)</b></li>
 <li><div class="fn"/><b>String peerHostName()</b></li>
 <li><div class="fn"/><b>int peerPort()</b></li>
 <li><div class="fn"/><b>String protocolTag()</b></li>
 <li><div class="fn"/><b>QueryType queryType()</b></li>
 <li><div class="fn"/><b>void setLocalPort(int port)</b></li>
+<li><div class="fn"/><b>void setNetworkConfiguration(QNetworkConfiguration networkConfiguration)</b></li>
 <li><div class="fn"/><b>void setPeerHostName(String hostname)</b></li>
 <li><div class="fn"/><b>void setPeerPort(int port)</b></li>
 <li><div class="fn"/><b>void setProtocolTag(String protocolTag)</b></li>
 <li><div class="fn"/><b>void setQueryType(QueryType type)</b></li>
 <li><div class="fn"/><b>void setUrl(QUrl url)</b></li>
+<li><div class="fn"/><b>void swap(QNetworkProxyQuery other)</b></li>
 <li><div class="fn"/><b>QUrl url()</b></li>
 </ul>
 <h3>Instance Properties</h3>

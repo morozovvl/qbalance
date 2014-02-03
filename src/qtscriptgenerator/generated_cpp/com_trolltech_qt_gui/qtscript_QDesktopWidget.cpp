@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qdesktopwidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QDesktopWidget.h"
 
@@ -75,6 +76,15 @@ static const int qtscript_QDesktopWidget_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QDesktopWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDesktopWidget : public QDesktopWidget
+{
+
+    friend QScriptValue qtscript_QDesktopWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QDesktopWidget_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -88,6 +98,7 @@ static QScriptValue qtscript_QDesktopWidget_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QDesktopWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QDesktopWidget*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QDesktopWidget
@@ -107,7 +118,7 @@ static QScriptValue qtscript_QDesktopWidget_prototype_call(QScriptContext *conte
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDesktopWidget* _q_self = qscriptvalue_cast<QDesktopWidget*>(context->thisObject());
+    qtscript_QDesktopWidget* _q_self = reinterpret_cast<qtscript_QDesktopWidget*>(qscriptvalue_cast<QDesktopWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDesktopWidget.%0(): this object is not a QDesktopWidget")

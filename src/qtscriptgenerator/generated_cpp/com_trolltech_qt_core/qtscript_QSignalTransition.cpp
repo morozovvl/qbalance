@@ -27,7 +27,7 @@ static const char * const qtscript_QSignalTransition_function_names[] = {
 };
 
 static const char * const qtscript_QSignalTransition_function_signatures[] = {
-    "QObject sender, char signal, QState sourceState\nQState sourceState"
+    "QState sourceState\nQObject sender, char signal, QState sourceState"
     // static
     // prototype
 ""
@@ -38,6 +38,15 @@ static const int qtscript_QSignalTransition_function_lengths[] = {
     // static
     // prototype
     , 0
+};
+
+static QScriptValue qtscript_QSignalTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSignalTransition : public QSignalTransition
+{
+
+    friend QScriptValue qtscript_QSignalTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSignalTransition_throw_ambiguity_error_helper(
@@ -53,8 +62,8 @@ static QScriptValue qtscript_QSignalTransition_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QSignalTransition*)
 Q_DECLARE_METATYPE(QtScriptShell_QSignalTransition*)
-Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QState*)
+Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QAbstractTransition*)
 
 //
@@ -75,7 +84,7 @@ static QScriptValue qtscript_QSignalTransition_prototype_call(QScriptContext *co
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSignalTransition* _q_self = qscriptvalue_cast<QSignalTransition*>(context->thisObject());
+    qtscript_QSignalTransition* _q_self = reinterpret_cast<qtscript_QSignalTransition*>(qscriptvalue_cast<QSignalTransition*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSignalTransition.%0(): this object is not a QSignalTransition")

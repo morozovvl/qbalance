@@ -6,11 +6,11 @@
 #include <qmetaobject.h>
 
 #include <qtablewidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qbrush.h>
 #include <qdatastream.h>
 #include <qfont.h>
-#include <qicon.h>
 #include <qsize.h>
 #include <qtablewidget.h>
 

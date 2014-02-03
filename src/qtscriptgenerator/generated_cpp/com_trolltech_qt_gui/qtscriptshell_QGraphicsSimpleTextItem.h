@@ -8,8 +8,8 @@
 class QtScriptShell_QGraphicsSimpleTextItem : public QGraphicsSimpleTextItem
 {
 public:
-    QtScriptShell_QGraphicsSimpleTextItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsSimpleTextItem(const QString&  text, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsSimpleTextItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsSimpleTextItem(const QString&  text, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsSimpleTextItem();
 
     void advance(int  phase);

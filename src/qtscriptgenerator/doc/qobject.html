@@ -20,7 +20,9 @@
 <h3>Prototype Object Properties</h3>
 <ul>
 <li><div class="fn"/><b>bool blockSignals(bool b)</b></li>
+<li><div class="fn"/><b>void childEvent(QChildEvent arg__1)</b></li>
 <li><div class="fn"/><b>List children()</b></li>
+<li><div class="fn"/><b>void customEvent(QEvent arg__1)</b></li>
 <li><div class="fn"/><b>void dumpObjectInfo()</b></li>
 <li><div class="fn"/><b>void dumpObjectTree()</b></li>
 <li><div class="fn"/><b>List dynamicPropertyNames()</b></li>
@@ -29,16 +31,19 @@
 <li><div class="fn"/><b>bool inherits(char classname)</b></li>
 <li><div class="fn"/><b>void installEventFilter(QObject arg__1)</b></li>
 <li><div class="fn"/><b>bool isWidgetType()</b></li>
+<li><div class="fn"/><b>bool isWindowType()</b></li>
 <li><div class="fn"/><b>void killTimer(int id)</b></li>
 <li><div class="fn"/><b>void moveToThread(Thread thread)</b></li>
 <li><div class="fn"/><b>QObject parent()</b></li>
 <li><div class="fn"/><b>Object property(char name)</b></li>
 <li><div class="fn"/><b>void removeEventFilter(QObject arg__1)</b></li>
+<li><div class="fn"/><b>int senderSignalIndex()</b></li>
 <li><div class="fn"/><b>void setParent(QObject arg__1)</b></li>
 <li><div class="fn"/><b>bool setProperty(char name, Object value)</b></li>
 <li><div class="fn"/><b>bool signalsBlocked()</b></li>
-<li><div class="fn"/><b>int startTimer(int interval)</b></li>
+<li><div class="fn"/><b>int startTimer(int interval, TimerType timerType)</b></li>
 <li><div class="fn"/><b>Thread thread()</b></li>
+<li><div class="fn"/><b>void timerEvent(QTimerEvent arg__1)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QObject objects inherit properties from the QObject prototype object and also have the following properties.</p>

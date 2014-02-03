@@ -26,8 +26,12 @@ static const char * const qtscript_QLayout_function_names[] = {
     , "closestAcceptableSize"
     // prototype
     , "activate"
+    , "addChildLayout"
+    , "addChildWidget"
     , "addItem"
     , "addWidget"
+    , "adoptLayout"
+    , "alignmentRect"
     , "contentsMargins"
     , "contentsRect"
     , "count"
@@ -49,6 +53,7 @@ static const char * const qtscript_QLayout_function_names[] = {
     , "totalMinimumSize"
     , "totalSizeHint"
     , "update"
+    , "widgetEvent"
     , "toString"
 };
 
@@ -58,8 +63,12 @@ static const char * const qtscript_QLayout_function_signatures[] = {
     , "QWidget w, QSize s"
     // prototype
     , ""
+    , "QLayout l"
+    , "QWidget w"
     , "QLayoutItem arg__1"
     , "QWidget w"
+    , "QLayout layout"
+    , "QRect arg__1"
     , ""
     , ""
     , ""
@@ -81,6 +90,7 @@ static const char * const qtscript_QLayout_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QEvent arg__1"
 ""
 };
 
@@ -92,6 +102,10 @@ static const int qtscript_QLayout_function_lengths[] = {
     , 0
     , 1
     , 1
+    , 1
+    , 1
+    , 1
+    , 1
     , 0
     , 0
     , 0
@@ -113,7 +127,22 @@ static const int qtscript_QLayout_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QLayout : public QLayout
+{
+    friend QScriptValue qtscript_QLayout_addChildLayout(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QLayout_addChildWidget(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QLayout_adoptLayout(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QLayout_alignmentRect(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QLayout_widgetEvent(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QLayout_throw_ambiguity_error_helper(
@@ -135,10 +164,12 @@ static const QMetaObject *qtscript_QLayout_metaObject()
 Q_DECLARE_METATYPE(QLayout*)
 Q_DECLARE_METATYPE(QtScriptShell_QLayout*)
 Q_DECLARE_METATYPE(QLayout::SizeConstraint)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QLayoutItem*)
 Q_DECLARE_METATYPE(QMargins)
 Q_DECLARE_METATYPE(int*)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
+Q_DECLARE_METATYPE(QEvent*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -249,11 +280,11 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 24;
+        _id = 0xBABE0000 + 29;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QLayout* _q_self = qscriptvalue_cast<QLayout*>(context->thisObject());
+    qtscript_QLayout* _q_self = reinterpret_cast<qtscript_QLayout*>(qscriptvalue_cast<QLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QLayout.%0(): this object is not a QLayout")
@@ -270,8 +301,8 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
 
     case 1:
     if (context->argumentCount() == 1) {
-        QLayoutItem* _q_arg0 = qscriptvalue_cast<QLayoutItem*>(context->argument(0));
-        _q_self->addItem(_q_arg0);
+        QLayout* _q_arg0 = qscriptvalue_cast<QLayout*>(context->argument(0));
+        _q_self->addChildLayout(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -279,33 +310,65 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     case 2:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
-        _q_self->addWidget(_q_arg0);
+        _q_self->addChildWidget(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 3:
+    if (context->argumentCount() == 1) {
+        QLayoutItem* _q_arg0 = qscriptvalue_cast<QLayoutItem*>(context->argument(0));
+        _q_self->addItem(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        _q_self->addWidget(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
+        QLayout* _q_arg0 = qscriptvalue_cast<QLayout*>(context->argument(0));
+        bool _q_result = _q_self->adoptLayout(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 1) {
+        QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
+        QRect _q_result = _q_self->alignmentRect(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 0) {
         QMargins _q_result = _q_self->contentsMargins();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 8:
     if (context->argumentCount() == 0) {
         QRect _q_result = _q_self->contentsRect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 9:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->count();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 10:
     if (context->argumentCount() == 4) {
         int* _q_arg0 = qscriptvalue_cast<int*>(context->argument(0));
         int* _q_arg1 = qscriptvalue_cast<int*>(context->argument(1));
@@ -316,7 +379,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 7:
+    case 11:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         int _q_result = _q_self->indexOf(_q_arg0);
@@ -324,14 +387,14 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 8:
+    case 12:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEnabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 13:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QLayoutItem* _q_result = _q_self->itemAt(_q_arg0);
@@ -339,21 +402,21 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 10:
+    case 14:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->menuBar();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 15:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->parentWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 16:
     if (context->argumentCount() == 1) {
         QLayoutItem* _q_arg0 = qscriptvalue_cast<QLayoutItem*>(context->argument(0));
         _q_self->removeItem(_q_arg0);
@@ -361,7 +424,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 13:
+    case 17:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->removeWidget(_q_arg0);
@@ -369,7 +432,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 14:
+    case 18:
     if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<QLayout*>(context->argument(0))
             && (qMetaTypeId<QFlags<Qt::AlignmentFlag> >() == context->argument(1).toVariant().userType())) {
@@ -387,7 +450,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 15:
+    case 19:
     if (context->argumentCount() == 1) {
         QMargins _q_arg0 = qscriptvalue_cast<QMargins>(context->argument(0));
         _q_self->setContentsMargins(_q_arg0);
@@ -403,7 +466,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 16:
+    case 20:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setEnabled(_q_arg0);
@@ -411,7 +474,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 17:
+    case 21:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setMenuBar(_q_arg0);
@@ -419,7 +482,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 18:
+    case 22:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QLayoutItem* _q_result = _q_self->takeAt(_q_arg0);
@@ -427,7 +490,7 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 19:
+    case 23:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->totalHeightForWidth(_q_arg0);
@@ -435,35 +498,43 @@ static QScriptValue qtscript_QLayout_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 20:
+    case 24:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->totalMaximumSize();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 25:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->totalMinimumSize();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 26:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->totalSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
+    case 27:
     if (context->argumentCount() == 0) {
         _q_self->update();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 24: {
+    case 28:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->widgetEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 29: {
     QString result = QString::fromLatin1("QLayout");
     return QScriptValue(context->engine(), result);
     }
@@ -535,7 +606,7 @@ QScriptValue qtscript_create_QLayout_class(QScriptEngine *engine)
     proto.setProperty(QString::fromLatin1("__QLayoutItem__"),
         engine->defaultPrototype(qMetaTypeId<QLayoutItem*>()),
         QScriptValue::SkipInEnumeration);
-    for (int i = 0; i < 25; ++i) {
+    for (int i = 0; i < 30; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QLayout_prototype_call, qtscript_QLayout_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QLayout_function_names[i+2]),

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qmdiarea.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -31,6 +30,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -39,6 +39,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QMdiArea.h"
 
@@ -84,6 +85,15 @@ static const int qtscript_QMdiArea_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QMdiArea_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMdiArea : public QMdiArea
+{
+
+    friend QScriptValue qtscript_QMdiArea_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QMdiArea_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -107,6 +117,7 @@ Q_DECLARE_METATYPE(QMdiArea::ViewMode)
 Q_DECLARE_METATYPE(QMdiArea::AreaOption)
 Q_DECLARE_METATYPE(QFlags<QMdiArea::AreaOption>)
 Q_DECLARE_METATYPE(QMdiSubWindow*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QList<QMdiSubWindow*>)
 Q_DECLARE_METATYPE(QAbstractScrollArea*)
@@ -449,7 +460,7 @@ static QScriptValue qtscript_QMdiArea_prototype_call(QScriptContext *context, QS
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMdiArea* _q_self = qscriptvalue_cast<QMdiArea*>(context->thisObject());
+    qtscript_QMdiArea* _q_self = reinterpret_cast<qtscript_QMdiArea*>(qscriptvalue_cast<QMdiArea*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMdiArea.%0(): this object is not a QMdiArea")

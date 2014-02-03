@@ -9,7 +9,9 @@
 #include <QVariant>
 #include <qevent.h>
 #include <qlist.h>
-#include <qwidget.h>
+#include <qobject.h>
+#include <qtouchdevice.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTouchEvent.h"
 
@@ -17,26 +19,30 @@ static const char * const qtscript_QTouchEvent_function_names[] = {
     "QTouchEvent"
     // static
     // prototype
-    , "deviceType"
-    , "setDeviceType"
+    , "device"
+    , "setDevice"
+    , "setTarget"
     , "setTouchPointStates"
     , "setTouchPoints"
-    , "setWidget"
+    , "setWindow"
+    , "target"
     , "touchPointStates"
     , "touchPoints"
-    , "widget"
+    , "window"
     , "toString"
 };
 
 static const char * const qtscript_QTouchEvent_function_signatures[] = {
-    "Type eventType, DeviceType deviceType, KeyboardModifiers modifiers, TouchPointStates touchPointStates, List touchPoints"
+    "Type eventType, QTouchDevice device, KeyboardModifiers modifiers, TouchPointStates touchPointStates, List touchPoints"
     // static
     // prototype
     , ""
-    , "DeviceType adeviceType"
+    , "QTouchDevice adevice"
+    , "QObject atarget"
     , "TouchPointStates aTouchPointStates"
     , "List atouchPoints"
-    , "QWidget awidget"
+    , "QWindow awindow"
+    , ""
     , ""
     , ""
     , ""
@@ -52,6 +58,8 @@ static const int qtscript_QTouchEvent_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
+    , 0
     , 0
     , 0
     , 0
@@ -71,94 +79,14 @@ static QScriptValue qtscript_QTouchEvent_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTouchEvent*)
 Q_DECLARE_METATYPE(QtScriptShell_QTouchEvent*)
-Q_DECLARE_METATYPE(QTouchEvent::DeviceType)
+Q_DECLARE_METATYPE(QTouchDevice*)
 Q_DECLARE_METATYPE(QFlags<Qt::TouchPointState>)
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
+Q_DECLARE_METATYPE(QWindow*)
 Q_DECLARE_METATYPE(QEvent::Type)
 Q_DECLARE_METATYPE(QFlags<Qt::KeyboardModifier>)
 Q_DECLARE_METATYPE(QInputEvent*)
-
-static QScriptValue qtscript_create_enum_class_helper(
-    QScriptEngine *engine,
-    QScriptEngine::FunctionSignature construct,
-    QScriptEngine::FunctionSignature valueOf,
-    QScriptEngine::FunctionSignature toString)
-{
-    QScriptValue proto = engine->newObject();
-    proto.setProperty(QString::fromLatin1("valueOf"),
-        engine->newFunction(valueOf), QScriptValue::SkipInEnumeration);
-    proto.setProperty(QString::fromLatin1("toString"),
-        engine->newFunction(toString), QScriptValue::SkipInEnumeration);
-    return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QTouchEvent::DeviceType
-//
-
-static const QTouchEvent::DeviceType qtscript_QTouchEvent_DeviceType_values[] = {
-    QTouchEvent::TouchScreen
-    , QTouchEvent::TouchPad
-};
-
-static const char * const qtscript_QTouchEvent_DeviceType_keys[] = {
-    "TouchScreen"
-    , "TouchPad"
-};
-
-static QString qtscript_QTouchEvent_DeviceType_toStringHelper(QTouchEvent::DeviceType value)
-{
-    if ((value >= QTouchEvent::TouchScreen) && (value <= QTouchEvent::TouchPad))
-        return qtscript_QTouchEvent_DeviceType_keys[static_cast<int>(value)-static_cast<int>(QTouchEvent::TouchScreen)];
-    return QString();
-}
-
-static QScriptValue qtscript_QTouchEvent_DeviceType_toScriptValue(QScriptEngine *engine, const QTouchEvent::DeviceType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTouchEvent"));
-    return clazz.property(qtscript_QTouchEvent_DeviceType_toStringHelper(value));
-}
-
-static void qtscript_QTouchEvent_DeviceType_fromScriptValue(const QScriptValue &value, QTouchEvent::DeviceType &out)
-{
-    out = qvariant_cast<QTouchEvent::DeviceType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTouchEvent_DeviceType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QTouchEvent::TouchScreen) && (arg <= QTouchEvent::TouchPad))
-        return qScriptValueFromValue(engine,  static_cast<QTouchEvent::DeviceType>(arg));
-    return context->throwError(QString::fromLatin1("DeviceType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTouchEvent_DeviceType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTouchEvent::DeviceType value = qscriptvalue_cast<QTouchEvent::DeviceType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTouchEvent_DeviceType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTouchEvent::DeviceType value = qscriptvalue_cast<QTouchEvent::DeviceType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTouchEvent_DeviceType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTouchEvent_DeviceType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTouchEvent_DeviceType,
-        qtscript_QTouchEvent_DeviceType_valueOf, qtscript_QTouchEvent_DeviceType_toString);
-    qScriptRegisterMetaType<QTouchEvent::DeviceType>(engine, qtscript_QTouchEvent_DeviceType_toScriptValue,
-        qtscript_QTouchEvent_DeviceType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTouchEvent_DeviceType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTouchEvent_DeviceType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
 
 //
 // QTouchEvent
@@ -174,7 +102,7 @@ static QScriptValue qtscript_QTouchEvent_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -188,20 +116,28 @@ static QScriptValue qtscript_QTouchEvent_prototype_call(QScriptContext *context,
     switch (_id) {
     case 0:
     if (context->argumentCount() == 0) {
-        QTouchEvent::DeviceType _q_result = _q_self->deviceType();
+        QTouchDevice* _q_result = _q_self->device();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
     if (context->argumentCount() == 1) {
-        QTouchEvent::DeviceType _q_arg0 = qscriptvalue_cast<QTouchEvent::DeviceType>(context->argument(0));
-        _q_self->setDeviceType(_q_arg0);
+        QTouchDevice* _q_arg0 = qscriptvalue_cast<QTouchDevice*>(context->argument(0));
+        _q_self->setDevice(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QObject* _q_arg0 = context->argument(0).toQObject();
+        _q_self->setTarget(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 1) {
         QFlags<Qt::TouchPointState> _q_arg0 = qscriptvalue_cast<QFlags<Qt::TouchPointState> >(context->argument(0));
         _q_self->setTouchPointStates(_q_arg0);
@@ -209,7 +145,7 @@ static QScriptValue qtscript_QTouchEvent_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QList<QTouchEvent::TouchPoint> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -218,36 +154,43 @@ static QScriptValue qtscript_QTouchEvent_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
-        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
-        _q_self->setWidget(_q_arg0);
+        QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+        _q_self->setWindow(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 5:
+    case 6:
+    if (context->argumentCount() == 0) {
+        QObject* _q_result = _q_self->target();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 0) {
         QFlags<Qt::TouchPointState> _q_result = _q_self->touchPointStates();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 0) {
         QList<QTouchEvent::TouchPoint> _q_result = _q_self->touchPoints();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 0) {
-        QWidget* _q_result = _q_self->widget();
+        QWindow* _q_result = _q_self->window();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8: {
+    case 10: {
     QString result = QString::fromLatin1("QTouchEvent");
     return QScriptValue(context->engine(), result);
     }
@@ -272,7 +215,7 @@ static QScriptValue qtscript_QTouchEvent_static_call(QScriptContext *context, QS
     }
     if (context->argumentCount() == 5) {
         QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
-        QTouchEvent::DeviceType _q_arg1 = qscriptvalue_cast<QTouchEvent::DeviceType>(context->argument(1));
+        QTouchDevice* _q_arg1 = qscriptvalue_cast<QTouchDevice*>(context->argument(1));
         QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
         QFlags<Qt::TouchPointState> _q_arg3 = qscriptvalue_cast<QFlags<Qt::TouchPointState> >(context->argument(3));
         QList<QTouchEvent::TouchPoint> _q_arg4;
@@ -297,7 +240,7 @@ QScriptValue qtscript_create_QTouchEvent_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTouchEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTouchEvent*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QInputEvent*>()));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTouchEvent_prototype_call, qtscript_QTouchEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTouchEvent_function_names[i+1]),
@@ -309,7 +252,5 @@ QScriptValue qtscript_create_QTouchEvent_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QTouchEvent_static_call, proto, qtscript_QTouchEvent_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("DeviceType"),
-        qtscript_create_QTouchEvent_DeviceType_class(engine, ctor));
     return ctor;
 }

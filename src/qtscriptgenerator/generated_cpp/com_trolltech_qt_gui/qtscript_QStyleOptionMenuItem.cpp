@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionMenuItem_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionMenuItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionMenuItem : public QStyleOptionMenuItem
+{
+
+    friend QScriptValue qtscript_QStyleOptionMenuItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionMenuItem_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,10 +57,10 @@ Q_DECLARE_METATYPE(QStyleOptionMenuItem)
 Q_DECLARE_METATYPE(QStyleOptionMenuItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionMenuItem)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionMenuItem*)
-Q_DECLARE_METATYPE(QStyleOptionMenuItem::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionMenuItem::StyleOptionType)
-Q_DECLARE_METATYPE(QStyleOptionMenuItem::CheckType)
+Q_DECLARE_METATYPE(QStyleOptionMenuItem::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionMenuItem::MenuItemType)
+Q_DECLARE_METATYPE(QStyleOptionMenuItem::CheckType)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -66,71 +75,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionMenuItem::StyleOptionVersion
-//
-
-static const QStyleOptionMenuItem::StyleOptionVersion qtscript_QStyleOptionMenuItem_StyleOptionVersion_values[] = {
-    QStyleOptionMenuItem::Version
-};
-
-static const char * const qtscript_QStyleOptionMenuItem_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionMenuItem_StyleOptionVersion_toStringHelper(QStyleOptionMenuItem::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionMenuItem::Version) && (value <= QStyleOptionMenuItem::Version))
-        return qtscript_QStyleOptionMenuItem_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionMenuItem::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionMenuItem_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionMenuItem::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionMenuItem"));
-    return clazz.property(qtscript_QStyleOptionMenuItem_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionMenuItem_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionMenuItem::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionMenuItem::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionMenuItem_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionMenuItem::Version) && (arg <= QStyleOptionMenuItem::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionMenuItem::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionMenuItem_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionMenuItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionMenuItem::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionMenuItem_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionMenuItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionMenuItem::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionMenuItem_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionMenuItem_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionMenuItem_StyleOptionVersion,
-        qtscript_QStyleOptionMenuItem_StyleOptionVersion_valueOf, qtscript_QStyleOptionMenuItem_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionMenuItem::StyleOptionVersion>(engine, qtscript_QStyleOptionMenuItem_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionMenuItem_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionMenuItem_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionMenuItem_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -199,69 +143,65 @@ static QScriptValue qtscript_create_QStyleOptionMenuItem_StyleOptionType_class(Q
 }
 
 //
-// QStyleOptionMenuItem::CheckType
+// QStyleOptionMenuItem::StyleOptionVersion
 //
 
-static const QStyleOptionMenuItem::CheckType qtscript_QStyleOptionMenuItem_CheckType_values[] = {
-    QStyleOptionMenuItem::NotCheckable
-    , QStyleOptionMenuItem::Exclusive
-    , QStyleOptionMenuItem::NonExclusive
+static const QStyleOptionMenuItem::StyleOptionVersion qtscript_QStyleOptionMenuItem_StyleOptionVersion_values[] = {
+    QStyleOptionMenuItem::Version
 };
 
-static const char * const qtscript_QStyleOptionMenuItem_CheckType_keys[] = {
-    "NotCheckable"
-    , "Exclusive"
-    , "NonExclusive"
+static const char * const qtscript_QStyleOptionMenuItem_StyleOptionVersion_keys[] = {
+    "Version"
 };
 
-static QString qtscript_QStyleOptionMenuItem_CheckType_toStringHelper(QStyleOptionMenuItem::CheckType value)
+static QString qtscript_QStyleOptionMenuItem_StyleOptionVersion_toStringHelper(QStyleOptionMenuItem::StyleOptionVersion value)
 {
-    if ((value >= QStyleOptionMenuItem::NotCheckable) && (value <= QStyleOptionMenuItem::NonExclusive))
-        return qtscript_QStyleOptionMenuItem_CheckType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionMenuItem::NotCheckable)];
+    if ((value >= QStyleOptionMenuItem::Version) && (value <= QStyleOptionMenuItem::Version))
+        return qtscript_QStyleOptionMenuItem_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionMenuItem::Version)];
     return QString();
 }
 
-static QScriptValue qtscript_QStyleOptionMenuItem_CheckType_toScriptValue(QScriptEngine *engine, const QStyleOptionMenuItem::CheckType &value)
+static QScriptValue qtscript_QStyleOptionMenuItem_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionMenuItem::StyleOptionVersion &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionMenuItem"));
-    return clazz.property(qtscript_QStyleOptionMenuItem_CheckType_toStringHelper(value));
+    return clazz.property(qtscript_QStyleOptionMenuItem_StyleOptionVersion_toStringHelper(value));
 }
 
-static void qtscript_QStyleOptionMenuItem_CheckType_fromScriptValue(const QScriptValue &value, QStyleOptionMenuItem::CheckType &out)
+static void qtscript_QStyleOptionMenuItem_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionMenuItem::StyleOptionVersion &out)
 {
-    out = qvariant_cast<QStyleOptionMenuItem::CheckType>(value.toVariant());
+    out = qvariant_cast<QStyleOptionMenuItem::StyleOptionVersion>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QStyleOptionMenuItem_CheckType(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QStyleOptionMenuItem_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionMenuItem::NotCheckable) && (arg <= QStyleOptionMenuItem::NonExclusive))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionMenuItem::CheckType>(arg));
-    return context->throwError(QString::fromLatin1("CheckType(): invalid enum value (%0)").arg(arg));
+    if ((arg >= QStyleOptionMenuItem::Version) && (arg <= QStyleOptionMenuItem::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionMenuItem::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QStyleOptionMenuItem_CheckType_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyleOptionMenuItem_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyleOptionMenuItem::CheckType value = qscriptvalue_cast<QStyleOptionMenuItem::CheckType>(context->thisObject());
+    QStyleOptionMenuItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionMenuItem::StyleOptionVersion>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QStyleOptionMenuItem_CheckType_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyleOptionMenuItem_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyleOptionMenuItem::CheckType value = qscriptvalue_cast<QStyleOptionMenuItem::CheckType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionMenuItem_CheckType_toStringHelper(value));
+    QStyleOptionMenuItem::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionMenuItem::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionMenuItem_StyleOptionVersion_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QStyleOptionMenuItem_CheckType_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QStyleOptionMenuItem_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionMenuItem_CheckType,
-        qtscript_QStyleOptionMenuItem_CheckType_valueOf, qtscript_QStyleOptionMenuItem_CheckType_toString);
-    qScriptRegisterMetaType<QStyleOptionMenuItem::CheckType>(engine, qtscript_QStyleOptionMenuItem_CheckType_toScriptValue,
-        qtscript_QStyleOptionMenuItem_CheckType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionMenuItem_CheckType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionMenuItem_CheckType_values[i])),
+        engine, qtscript_construct_QStyleOptionMenuItem_StyleOptionVersion,
+        qtscript_QStyleOptionMenuItem_StyleOptionVersion_valueOf, qtscript_QStyleOptionMenuItem_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionMenuItem::StyleOptionVersion>(engine, qtscript_QStyleOptionMenuItem_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionMenuItem_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionMenuItem_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionMenuItem_StyleOptionVersion_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -347,6 +287,75 @@ static QScriptValue qtscript_create_QStyleOptionMenuItem_MenuItemType_class(QScr
 }
 
 //
+// QStyleOptionMenuItem::CheckType
+//
+
+static const QStyleOptionMenuItem::CheckType qtscript_QStyleOptionMenuItem_CheckType_values[] = {
+    QStyleOptionMenuItem::NotCheckable
+    , QStyleOptionMenuItem::Exclusive
+    , QStyleOptionMenuItem::NonExclusive
+};
+
+static const char * const qtscript_QStyleOptionMenuItem_CheckType_keys[] = {
+    "NotCheckable"
+    , "Exclusive"
+    , "NonExclusive"
+};
+
+static QString qtscript_QStyleOptionMenuItem_CheckType_toStringHelper(QStyleOptionMenuItem::CheckType value)
+{
+    if ((value >= QStyleOptionMenuItem::NotCheckable) && (value <= QStyleOptionMenuItem::NonExclusive))
+        return qtscript_QStyleOptionMenuItem_CheckType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionMenuItem::NotCheckable)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionMenuItem_CheckType_toScriptValue(QScriptEngine *engine, const QStyleOptionMenuItem::CheckType &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionMenuItem"));
+    return clazz.property(qtscript_QStyleOptionMenuItem_CheckType_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionMenuItem_CheckType_fromScriptValue(const QScriptValue &value, QStyleOptionMenuItem::CheckType &out)
+{
+    out = qvariant_cast<QStyleOptionMenuItem::CheckType>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionMenuItem_CheckType(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionMenuItem::NotCheckable) && (arg <= QStyleOptionMenuItem::NonExclusive))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionMenuItem::CheckType>(arg));
+    return context->throwError(QString::fromLatin1("CheckType(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionMenuItem_CheckType_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionMenuItem::CheckType value = qscriptvalue_cast<QStyleOptionMenuItem::CheckType>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionMenuItem_CheckType_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionMenuItem::CheckType value = qscriptvalue_cast<QStyleOptionMenuItem::CheckType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionMenuItem_CheckType_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionMenuItem_CheckType_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionMenuItem_CheckType,
+        qtscript_QStyleOptionMenuItem_CheckType_valueOf, qtscript_QStyleOptionMenuItem_CheckType_toString);
+    qScriptRegisterMetaType<QStyleOptionMenuItem::CheckType>(engine, qtscript_QStyleOptionMenuItem_CheckType_toScriptValue,
+        qtscript_QStyleOptionMenuItem_CheckType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionMenuItem_CheckType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionMenuItem_CheckType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionMenuItem
 //
 
@@ -364,7 +373,7 @@ static QScriptValue qtscript_QStyleOptionMenuItem_prototype_call(QScriptContext 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionMenuItem* _q_self = qscriptvalue_cast<QStyleOptionMenuItem*>(context->thisObject());
+    qtscript_QStyleOptionMenuItem* _q_self = reinterpret_cast<qtscript_QStyleOptionMenuItem*>(qscriptvalue_cast<QStyleOptionMenuItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionMenuItem.%0(): this object is not a QStyleOptionMenuItem")
@@ -429,13 +438,13 @@ QScriptValue qtscript_create_QStyleOptionMenuItem_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionMenuItem_static_call, proto, qtscript_QStyleOptionMenuItem_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionMenuItem_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionMenuItem_StyleOptionType_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("CheckType"),
-        qtscript_create_QStyleOptionMenuItem_CheckType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionMenuItem_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("MenuItemType"),
         qtscript_create_QStyleOptionMenuItem_MenuItemType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("CheckType"),
+        qtscript_create_QStyleOptionMenuItem_CheckType_class(engine, ctor));
     return ctor;
 }

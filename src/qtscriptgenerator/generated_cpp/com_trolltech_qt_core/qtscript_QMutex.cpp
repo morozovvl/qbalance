@@ -13,9 +13,7 @@ static const char * const qtscript_QMutex_function_names[] = {
     "QMutex"
     // static
     // prototype
-    , "lock"
     , "tryLock"
-    , "unlock"
     , "toString"
 };
 
@@ -23,9 +21,7 @@ static const char * const qtscript_QMutex_function_signatures[] = {
     "RecursionMode mode"
     // static
     // prototype
-    , ""
-    , "\nint timeout"
-    , ""
+    , "int timeout"
 ""
 };
 
@@ -33,9 +29,7 @@ static const int qtscript_QMutex_function_lengths[] = {
     1
     // static
     // prototype
-    , 0
     , 1
-    , 0
     , 0
 };
 
@@ -52,6 +46,7 @@ static QScriptValue qtscript_QMutex_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QMutex*)
 Q_DECLARE_METATYPE(QMutex::RecursionMode)
+Q_DECLARE_METATYPE(QBasicMutex*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -148,7 +143,7 @@ static QScriptValue qtscript_QMutex_prototype_call(QScriptContext *context, QScr
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 1;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -161,17 +156,6 @@ static QScriptValue qtscript_QMutex_prototype_call(QScriptContext *context, QScr
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        _q_self->lock();
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 1:
-    if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->tryLock();
-        return QScriptValue(context->engine(), _q_result);
-    }
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->tryLock(_q_arg0);
@@ -179,14 +163,7 @@ static QScriptValue qtscript_QMutex_prototype_call(QScriptContext *context, QScr
     }
     break;
 
-    case 2:
-    if (context->argumentCount() == 0) {
-        _q_self->unlock();
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 3: {
+    case 1: {
     QString result = QString::fromLatin1("QMutex");
     return QScriptValue(context->engine(), result);
     }
@@ -233,7 +210,8 @@ QScriptValue qtscript_create_QMutex_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QMutex*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QMutex*)0));
-    for (int i = 0; i < 4; ++i) {
+    proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QBasicMutex*>()));
+    for (int i = 0; i < 2; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QMutex_prototype_call, qtscript_QMutex_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QMutex_function_names[i+1]),

@@ -41,6 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/table.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
+
 FormGrid::FormGrid(QObject* parent/* = 0*/)
 : Form(parent)
 {
@@ -138,6 +139,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     if (picture != 0)
     {
+        picture->setForm(this);
         picture->setApp(app);
         picture->hide();
         if (grdTable != 0)
@@ -385,7 +387,6 @@ void FormGrid::activateWidget()
     if (grdTable != 0)
     {
         grdTable->setFocus();
-        grdTable->selectNextColumn();
     }
 }
 
@@ -394,9 +395,12 @@ void FormGrid::cmdAdd()
 {
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
+        QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
         if (parent != 0 && parent->add())
         {
-            if (parent->getTableModel()->rowCount() > 0)
+            int rowCount = parent->getTableModel()->rowCount();
+            setCurrentIndex(index.sibling(rowCount - 1, index.column()));    // Если была удалена последняя строка
+            if (rowCount > 0)
             {   // Если записей стало больше 0, то активируем кнопку "Удалить"
                 if (buttonDelete != 0)
                     buttonDelete->setDisabled(false);
@@ -404,8 +408,7 @@ void FormGrid::cmdAdd()
             setButtons();
             setGridFocus();
 
-            if (parent->getScriptEngine() != 0)
-                parent->getScriptEngine()->eventAfterAddString();
+            showPhoto();
         }
     }
 }
@@ -553,9 +556,9 @@ void FormGrid::setButtons()
         if (parent->getTableModel()->rowCount() > 0)
         {
             if (buttonDelete != 0)
-                buttonDelete->setEnabled(true);
+                buttonDelete->setEnabled(parent->isDeleteable());
             if (buttonView != 0)
-                buttonView->setEnabled(true);
+                buttonView->setEnabled(parent->isViewable());
             if (buttonPrint != 0)
                 buttonPrint->setEnabled(true);
             if (buttonSave != 0)
@@ -608,7 +611,7 @@ void FormGrid::calculate()
         grdTable->reset();
     else
         grdTable->repaint();
-    grdTable->selectNextColumn(&index);       // Передвинуть курсор на следующую колонку
+    grdTable->selectNextColumn();       // Передвинуть курсор на следующую колонку
     grdTable->setUpdatesEnabled(true);
 }
 
@@ -645,20 +648,19 @@ void FormGrid::setGridFocus()
     if (grdTable != 0)
     {
         grdTable->setFocus();
-        grdTable->selectNextColumn();
     }
 }
 
 
 void FormGrid::selectRow(int row)
 {
-    setGridFocus();
     grdTable->selectRow(row);
 }
 
 
 void FormGrid::keyPressEvent(QKeyEvent *event)
 {
+    Form::keyPressEvent(event);
     if (event->modifiers() == Qt::ControlModifier)
     {
         switch (event->key())
@@ -675,22 +677,48 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
                     event->accept();
                 }
                 break;
-            default:
-                Form::keyPressEvent(event);
         }
     }
     else
     {
         switch (event->key())
         {
+            case Qt::Key_Return:
+                {
+                    grdTable->selectNextColumn();
+                    event->accept();
+                }
+                break;
+            case Qt::Key_Enter:
+                {
+                    grdTable->selectNextColumn();
+                    event->accept();
+                }
+                break;
+            case Qt::Key_Right:
+                {
+                    grdTable->selectNextColumn();
+                    event->accept();
+                }
+                break;
+            case Qt::Key_Tab:
+                {
+                    grdTable->selectNextColumn();
+                    event->accept();
+                }
+                break;
+            case Qt::Key_Left:
+                {
+                    grdTable->selectPreviousColumn();
+                    event->accept();
+                }
+                break;
             case Qt::Key_F2:
                 {
                     cmdView();
                     event->accept();
                 }
                 break;
-            default:
-                Form::keyPressEvent(event);
         }
     }
 }

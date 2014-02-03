@@ -9,7 +9,6 @@
 <body>
 <h1 align="center">QAccessibleInterface Class Reference</h1>
 <h3 align="center">[<a href="com_trolltech_qt_gui.html">com.trolltech.qt.gui</a> package]</h3>
-<p>Inherits <a href="qaccessible.html">QAccessible</a>.</p>
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QAccessibleInterface()</b></li>
@@ -19,25 +18,24 @@
 <li><b>prototype</b>: The QAccessibleInterface prototype object</li>
 </ul>
 <h3>Prototype Object Properties</h3>
-<p>The QAccessibleInterface prototype object inherits properties from the <a href="qaccessible.html">QAccessible</a> prototype object and also has the following properties.</p>
 <ul>
-<li><div class="fn"/><b>String actionText(int action, Text t, int child)</b></li>
-<li><div class="fn"/><b>int childAt(int x, int y)</b></li>
+<li><div class="fn"/><b>QAccessibleInterface child(int index)</b></li>
+<li><div class="fn"/><b>QAccessibleInterface childAt(int x, int y)</b></li>
 <li><div class="fn"/><b>int childCount()</b></li>
-<li><div class="fn"/><b>bool doAction(int action, int child, List params)</b></li>
+<li><div class="fn"/><b>QAccessibleInterface focusChild()</b></li>
 <li><div class="fn"/><b>int indexOfChild(QAccessibleInterface arg__1)</b></li>
-<li><div class="fn"/><b>Object invokeMethod(Method method, int child, List params)</b></li>
+<li><div class="fn"/><b>void interface_cast(InterfaceType arg__1)</b></li>
 <li><div class="fn"/><b>bool isValid()</b></li>
-<li><div class="fn"/><b>int navigate(RelationFlag relation, int index, QAccessibleInterface iface)</b></li>
 <li><div class="fn"/><b>QObject object()</b></li>
-<li><div class="fn"/><b>QRect rect(int child)</b></li>
-<li><div class="fn"/><b>Relation relationTo(int child, QAccessibleInterface other, int otherChild)</b></li>
-<li><div class="fn"/><b>Role role(int child)</b></li>
-<li><div class="fn"/><b>void setText(Text t, int child, String text)</b></li>
-<li><div class="fn"/><b>State state(int child)</b></li>
-<li><div class="fn"/><b>Set supportedMethods()</b></li>
-<li><div class="fn"/><b>String text(Text t, int child)</b></li>
-<li><div class="fn"/><b>int userActionCount(int child)</b></li>
+<li><div class="fn"/><b>QAccessibleInterface parent()</b></li>
+<li><div class="fn"/><b>QRect rect()</b></li>
+<li><div class="fn"/><b>List relations(Relation match)</b></li>
+<li><div class="fn"/><b>Role role()</b></li>
+<li><div class="fn"/><b>void setText(Text t, String text)</b></li>
+<li><div class="fn"/><b>State state()</b></li>
+<li><div class="fn"/><b>String text(Text t)</b></li>
+<li><div class="fn"/><b>void virtual_hook(int id, void data)</b></li>
+<li><div class="fn"/><b>QWindow window()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QAccessibleInterface objects have no special properties beyond those inherited from the QAccessibleInterface prototype object.</p>

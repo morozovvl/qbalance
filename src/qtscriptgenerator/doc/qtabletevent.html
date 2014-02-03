@@ -12,11 +12,16 @@
 <p>Inherits <a href="qinputevent.html">QInputEvent</a>.</p>
 <h3>Constructor</h3>
 <ul>
-<li><div class="fn"/><b>void QTabletEvent(Type t, QPoint pos, QPoint globalPos, QPointF hiResGlobalPos, int device, int pointerType, qreal pressure, int xTilt, int yTilt, qreal tangentialPressure, qreal rotation, int z, KeyboardModifiers keyState, qint64 uniqueID)</b></li>
+<li><div class="fn"/><b>void QTabletEvent(Type t, QPointF pos, QPointF globalPos, int device, int pointerType, qreal pressure, int xTilt, int yTilt, qreal tangentialPressure, qreal rotation, int z, KeyboardModifiers keyState, qint64 uniqueID)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QTabletEvent prototype object</li>
+<li><b>UnknownPointer</b></li>
+<li><b>Pen</b></li>
+<li><b>Cursor</b></li>
+<li><b>Eraser</b></li>
+<li><b>PointerType( value )</b></li>
 <li><b>NoDevice</b></li>
 <li><b>Puck</b></li>
 <li><b>Stylus</b></li>
@@ -25,24 +30,20 @@
 <li><b>XFreeEraser</b></li>
 <li><b>RotationStylus</b></li>
 <li><b>TabletDevice( value )</b></li>
-<li><b>UnknownPointer</b></li>
-<li><b>Pen</b></li>
-<li><b>Cursor</b></li>
-<li><b>Eraser</b></li>
-<li><b>PointerType( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QTabletEvent prototype object inherits properties from the <a href="qinputevent.html">QInputEvent</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>TabletDevice device()</b></li>
 <li><div class="fn"/><b>QPoint globalPos()</b></li>
+<li><div class="fn"/><b>QPointF globalPosF()</b></li>
 <li><div class="fn"/><b>int globalX()</b></li>
 <li><div class="fn"/><b>int globalY()</b></li>
-<li><div class="fn"/><b>QPointF hiResGlobalPos()</b></li>
 <li><div class="fn"/><b>qreal hiResGlobalX()</b></li>
 <li><div class="fn"/><b>qreal hiResGlobalY()</b></li>
 <li><div class="fn"/><b>PointerType pointerType()</b></li>
 <li><div class="fn"/><b>QPoint pos()</b></li>
+<li><div class="fn"/><b>QPointF posF()</b></li>
 <li><div class="fn"/><b>qreal pressure()</b></li>
 <li><div class="fn"/><b>qreal rotation()</b></li>
 <li><div class="fn"/><b>qreal tangentialPressure()</b></li>

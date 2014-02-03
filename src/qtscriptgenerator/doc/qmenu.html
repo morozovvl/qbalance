@@ -18,7 +18,7 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QMenu prototype object</li>
-<li><div class="fn"/><b>QAction exec(List actions, QPoint pos, QAction at)</b></li>
+<li><div class="fn"/><b>QAction exec(List actions, QPoint pos, QAction at, QWidget parent)</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QMenu prototype object inherits properties from the <a href="qwidget.html">QWidget</a> prototype object and also has the following properties.</p>
@@ -28,12 +28,16 @@
 <li><div class="fn"/><b>QAction activeAction()</b></li>
 <li><div class="fn"/><b>QAction addAction(QIcon icon, String text)</b></li>
 <li><div class="fn"/><b>QAction addMenu(QMenu menu)</b></li>
+<li><div class="fn"/><b>QAction addSection(QIcon icon, String text)</b></li>
 <li><div class="fn"/><b>QAction addSeparator()</b></li>
 <li><div class="fn"/><b>void clear()</b></li>
+<li><div class="fn"/><b>int columnCount()</b></li>
 <li><div class="fn"/><b>QAction defaultAction()</b></li>
 <li><div class="fn"/><b>QAction exec()</b></li>
 <li><div class="fn"/><b>void hideTearOffMenu()</b></li>
+<li><div class="fn"/><b>void initStyleOption(QStyleOptionMenuItem option, QAction action)</b></li>
 <li><div class="fn"/><b>QAction insertMenu(QAction before, QMenu menu)</b></li>
+<li><div class="fn"/><b>QAction insertSection(QAction before, QIcon icon, String text)</b></li>
 <li><div class="fn"/><b>QAction insertSeparator(QAction before)</b></li>
 <li><div class="fn"/><b>bool isEmpty()</b></li>
 <li><div class="fn"/><b>bool isTearOffMenuVisible()</b></li>
@@ -50,6 +54,7 @@
 <li><div class="fn"/><b>title</b></li>
 <li><div class="fn"/><b>icon</b></li>
 <li><div class="fn"/><b>separatorsCollapsible</b></li>
+<li><div class="fn"/><b>toolTipsVisible</b></li>
 </ul>
 </body>
 </html>

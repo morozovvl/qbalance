@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qobject.h>
+#include <QThread>
 #include <QVarLengthArray>
 #include <QVariant>
 #include <qbytearray.h>
@@ -20,7 +21,9 @@ static const char * const qtscript_QObject_function_names[] = {
     // static
     // prototype
     , "blockSignals"
+    , "childEvent"
     , "children"
+    , "customEvent"
     , "dumpObjectInfo"
     , "dumpObjectTree"
     , "dynamicPropertyNames"
@@ -29,16 +32,19 @@ static const char * const qtscript_QObject_function_names[] = {
     , "inherits"
     , "installEventFilter"
     , "isWidgetType"
+    , "isWindowType"
     , "killTimer"
     , "moveToThread"
     , "parent"
     , "property"
     , "removeEventFilter"
+    , "senderSignalIndex"
     , "setParent"
     , "setProperty"
     , "signalsBlocked"
     , "startTimer"
     , "thread"
+    , "timerEvent"
     , "toString"
 };
 
@@ -47,7 +53,9 @@ static const char * const qtscript_QObject_function_signatures[] = {
     // static
     // prototype
     , "bool b"
+    , "QChildEvent arg__1"
     , ""
+    , "QEvent arg__1"
     , ""
     , ""
     , ""
@@ -56,16 +64,19 @@ static const char * const qtscript_QObject_function_signatures[] = {
     , "char classname"
     , "QObject arg__1"
     , ""
+    , ""
     , "int id"
     , "Thread thread"
     , ""
     , "char name"
     , "QObject arg__1"
+    , ""
     , "QObject arg__1"
     , "char name, Object value"
     , ""
-    , "int interval"
+    , "int interval, TimerType timerType"
     , ""
+    , "QTimerEvent arg__1"
 ""
 };
 
@@ -74,7 +85,9 @@ static const int qtscript_QObject_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 1
     , 0
+    , 1
     , 0
     , 0
     , 0
@@ -83,17 +96,33 @@ static const int qtscript_QObject_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 0
     , 1
     , 1
     , 0
     , 1
     , 1
+    , 0
     , 1
+    , 2
+    , 0
     , 2
     , 0
     , 1
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QObject_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QObject : public QObject
+{
+    friend QScriptValue qtscript_QObject_childEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QObject_customEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QObject_senderSignalIndex(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QObject_timerEvent(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QObject_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QObject_throw_ambiguity_error_helper(
@@ -108,10 +137,12 @@ static QScriptValue qtscript_QObject_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QtScriptShell_QObject*)
-Q_DECLARE_METATYPE(QList<QObject*>)
-Q_DECLARE_METATYPE(QList<QByteArray>)
+Q_DECLARE_METATYPE(QChildEvent*)
 Q_DECLARE_METATYPE(QEvent*)
+Q_DECLARE_METATYPE(QList<QByteArray>)
 Q_DECLARE_METATYPE(QThread*)
+Q_DECLARE_METATYPE(Qt::TimerType)
+Q_DECLARE_METATYPE(QTimerEvent*)
 
 //
 // QObject
@@ -127,11 +158,11 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 20;
+        _id = 0xBABE0000 + 25;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QObject* _q_self = qscriptvalue_cast<QObject*>(context->thisObject());
+    qtscript_QObject* _q_self = reinterpret_cast<qtscript_QObject*>(qscriptvalue_cast<QObject*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QObject.%0(): this object is not a QObject")
@@ -148,34 +179,50 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QChildEvent* _q_arg0 = qscriptvalue_cast<QChildEvent*>(context->argument(0));
+        _q_self->childEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         QList<QObject*> _q_result = _q_self->children();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 2:
-    if (context->argumentCount() == 0) {
-        _q_self->dumpObjectInfo();
-        return context->engine()->undefinedValue();
-    }
-    break;
-
     case 3:
-    if (context->argumentCount() == 0) {
-        _q_self->dumpObjectTree();
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->customEvent(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
+        _q_self->dumpObjectInfo();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 0) {
+        _q_self->dumpObjectTree();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 0) {
         QList<QByteArray> _q_result = _q_self->dynamicPropertyNames();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 1) {
         QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
         bool _q_result = _q_self->event(_q_arg0);
@@ -183,7 +230,7 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 2) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         QEvent* _q_arg1 = qscriptvalue_cast<QEvent*>(context->argument(1));
@@ -192,7 +239,7 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 1) {
 
           // TEMPLATE - core.convert_string_arg_to_char* - START
@@ -204,7 +251,7 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 1) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         _q_self->installEventFilter(_q_arg0);
@@ -212,14 +259,21 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isWidgetType();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 12:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->isWindowType();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 13:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->killTimer(_q_arg0);
@@ -227,7 +281,7 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 11:
+    case 14:
     if (context->argumentCount() == 1) {
         QThread* _q_arg0 = qscriptvalue_cast<QThread*>(context->argument(0));
         _q_self->moveToThread(_q_arg0);
@@ -235,14 +289,14 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 12:
+    case 15:
     if (context->argumentCount() == 0) {
         QObject* _q_result = _q_self->parent();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 16:
     if (context->argumentCount() == 1) {
 
           // TEMPLATE - core.convert_string_arg_to_char* - START
@@ -254,7 +308,7 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 14:
+    case 17:
     if (context->argumentCount() == 1) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         _q_self->removeEventFilter(_q_arg0);
@@ -262,7 +316,14 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 15:
+    case 18:
+    if (context->argumentCount() == 0) {
+        int _q_result = _q_self->senderSignalIndex();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 19:
     if (context->argumentCount() == 1) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         _q_self->setParent(_q_arg0);
@@ -270,7 +331,7 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 16:
+    case 20:
     if (context->argumentCount() == 2) {
 
           // TEMPLATE - core.convert_string_arg_to_char* - START
@@ -283,29 +344,38 @@ static QScriptValue qtscript_QObject_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 17:
+    case 21:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->signalsBlocked();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
-    if (context->argumentCount() == 1) {
+    case 22:
+    if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
-        int _q_result = _q_self->startTimer(_q_arg0);
+        Qt::TimerType _q_arg1 = qscriptvalue_cast<Qt::TimerType>(context->argument(1));
+        int _q_result = _q_self->startTimer(_q_arg0, _q_arg1);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 23:
     if (context->argumentCount() == 0) {
         QThread* _q_result = _q_self->thread();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20: {
+    case 24:
+    if (context->argumentCount() == 1) {
+        QTimerEvent* _q_arg0 = qscriptvalue_cast<QTimerEvent*>(context->argument(0));
+        _q_self->timerEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 25: {
     QString result;
     QDebug d(&result);
     d << _q_self;
@@ -366,7 +436,7 @@ QScriptValue qtscript_create_QObject_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QObject*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QObject*)0));
-    for (int i = 0; i < 21; ++i) {
+    for (int i = 0; i < 26; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QObject_prototype_call, qtscript_QObject_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QObject_function_names[i+1]),

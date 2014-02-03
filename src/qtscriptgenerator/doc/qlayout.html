@@ -31,8 +31,12 @@
 <p>The QLayout prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>bool activate()</b></li>
+<li><div class="fn"/><b>void addChildLayout(QLayout l)</b></li>
+<li><div class="fn"/><b>void addChildWidget(QWidget w)</b></li>
 <li><div class="fn"/><b>void addItem(QLayoutItem arg__1)</b></li>
 <li><div class="fn"/><b>void addWidget(QWidget w)</b></li>
+<li><div class="fn"/><b>bool adoptLayout(QLayout layout)</b></li>
+<li><div class="fn"/><b>QRect alignmentRect(QRect arg__1)</b></li>
 <li><div class="fn"/><b>QMargins contentsMargins()</b></li>
 <li><div class="fn"/><b>QRect contentsRect()</b></li>
 <li><div class="fn"/><b>int count()</b></li>
@@ -54,6 +58,7 @@
 <li><div class="fn"/><b>QSize totalMinimumSize()</b></li>
 <li><div class="fn"/><b>QSize totalSizeHint()</b></li>
 <li><div class="fn"/><b>void update()</b></li>
+<li><div class="fn"/><b>void widgetEvent(QEvent arg__1)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QLayout objects inherit properties from the QLayout prototype object and also have the following properties.</p>

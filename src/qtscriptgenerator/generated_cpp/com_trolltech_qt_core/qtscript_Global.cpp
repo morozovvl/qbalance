@@ -7,7 +7,7 @@
 
 #include <QVariant>
 
-#include <qglobal.h>
+#include <qlogging.h>
 
 class Global {};
 

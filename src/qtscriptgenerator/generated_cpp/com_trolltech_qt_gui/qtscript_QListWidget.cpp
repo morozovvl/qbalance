@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qlistwidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -33,6 +32,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -42,7 +42,9 @@
 #include <qstringlist.h>
 #include <qstyle.h>
 #include <qstyleoption.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QListWidget.h"
 
@@ -54,13 +56,18 @@ static const char * const qtscript_QListWidget_function_names[] = {
     , "addItems"
     , "closePersistentEditor"
     , "currentItem"
+    , "dropMimeData"
     , "editItem"
     , "findItems"
+    , "indexFromItem"
     , "insertItem"
     , "insertItems"
     , "item"
     , "itemAt"
+    , "itemFromIndex"
     , "itemWidget"
+    , "items"
+    , "mimeTypes"
     , "openPersistentEditor"
     , "removeItemWidget"
     , "row"
@@ -68,6 +75,7 @@ static const char * const qtscript_QListWidget_function_names[] = {
     , "setCurrentItem"
     , "setItemWidget"
     , "sortItems"
+    , "supportedDropActions"
     , "takeItem"
     , "visualItemRect"
     , "toString"
@@ -81,13 +89,18 @@ static const char * const qtscript_QListWidget_function_signatures[] = {
     , "List labels"
     , "QListWidgetItem item"
     , ""
+    , "int index, QMimeData data, DropAction action"
     , "QListWidgetItem item"
     , "String text, MatchFlags flags"
+    , "QListWidgetItem item"
     , "int row, QListWidgetItem item\nint row, String label"
     , "int row, List labels"
     , "int row"
     , "QPoint p\nint x, int y"
+    , "QModelIndex index"
     , "QListWidgetItem item"
+    , "QMimeData data"
+    , ""
     , "QListWidgetItem item"
     , "QListWidgetItem item"
     , "QListWidgetItem item"
@@ -95,6 +108,7 @@ static const char * const qtscript_QListWidget_function_signatures[] = {
     , "QListWidgetItem item\nQListWidgetItem item, SelectionFlags command"
     , "QListWidgetItem item, QWidget widget"
     , "SortOrder order"
+    , ""
     , "int row"
     , "QListWidgetItem item"
 ""
@@ -108,13 +122,18 @@ static const int qtscript_QListWidget_function_lengths[] = {
     , 1
     , 1
     , 0
-    , 1
-    , 2
-    , 2
-    , 2
+    , 3
     , 1
     , 2
     , 1
+    , 2
+    , 2
+    , 1
+    , 2
+    , 1
+    , 1
+    , 1
+    , 0
     , 1
     , 1
     , 1
@@ -122,9 +141,28 @@ static const int qtscript_QListWidget_function_lengths[] = {
     , 2
     , 2
     , 1
+    , 0
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QListWidget : public QListWidget
+{
+    friend QScriptValue qtscript_QListWidget_dropMimeData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListWidget_indexFromItem(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListWidget_itemFromIndex(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListWidget_items(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListWidget_mimeTypes(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QListWidget_supportedDropActions(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QListWidget_throw_ambiguity_error_helper(
@@ -141,10 +179,14 @@ static QScriptValue qtscript_QListWidget_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QListWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QListWidget*)
 Q_DECLARE_METATYPE(QListWidgetItem*)
+Q_DECLARE_METATYPE(QMimeData*)
+Q_DECLARE_METATYPE(Qt::DropAction)
 Q_DECLARE_METATYPE(QFlags<Qt::MatchFlag>)
 Q_DECLARE_METATYPE(QList<QListWidgetItem*>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<QItemSelectionModel::SelectionFlag>)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(QFlags<Qt::DropAction>)
 Q_DECLARE_METATYPE(QListView*)
 
 //
@@ -161,11 +203,11 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 20;
+        _id = 0xBABE0000 + 26;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QListWidget* _q_self = qscriptvalue_cast<QListWidget*>(context->thisObject());
+    qtscript_QListWidget* _q_self = reinterpret_cast<qtscript_QListWidget*>(qscriptvalue_cast<QListWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QListWidget.%0(): this object is not a QListWidget")
@@ -212,6 +254,16 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     break;
 
     case 4:
+    if (context->argumentCount() == 3) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QMimeData* _q_arg1 = qscriptvalue_cast<QMimeData*>(context->argument(1));
+        Qt::DropAction _q_arg2 = qscriptvalue_cast<Qt::DropAction>(context->argument(2));
+        bool _q_result = _q_self->dropMimeData(_q_arg0, _q_arg1, _q_arg2);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         _q_self->editItem(_q_arg0);
@@ -219,7 +271,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QFlags<Qt::MatchFlag> _q_arg1 = qscriptvalue_cast<QFlags<Qt::MatchFlag> >(context->argument(1));
@@ -228,7 +280,15 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 6:
+    case 7:
+    if (context->argumentCount() == 1) {
+        QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
+        QModelIndex _q_result = _q_self->indexFromItem(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 8:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isNumber()
             && qscriptvalue_cast<QListWidgetItem*>(context->argument(1))) {
@@ -246,7 +306,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QStringList _q_arg1;
@@ -256,7 +316,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QListWidgetItem* _q_result = _q_self->item(_q_arg0);
@@ -264,7 +324,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         QListWidgetItem* _q_result = _q_self->itemAt(_q_arg0);
@@ -278,7 +338,15 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 10:
+    case 12:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        QListWidgetItem* _q_result = _q_self->itemFromIndex(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 13:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         QWidget* _q_result = _q_self->itemWidget(_q_arg0);
@@ -286,7 +354,22 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 11:
+    case 14:
+    if (context->argumentCount() == 1) {
+        QMimeData* _q_arg0 = qscriptvalue_cast<QMimeData*>(context->argument(0));
+        QList<QListWidgetItem*> _q_result = _q_self->items(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 15:
+    if (context->argumentCount() == 0) {
+        QStringList _q_result = _q_self->mimeTypes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         _q_self->openPersistentEditor(_q_arg0);
@@ -294,7 +377,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 12:
+    case 17:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         _q_self->removeItemWidget(_q_arg0);
@@ -302,7 +385,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 13:
+    case 18:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         int _q_result = _q_self->row(_q_arg0);
@@ -310,14 +393,14 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 14:
+    case 19:
     if (context->argumentCount() == 0) {
         QList<QListWidgetItem*> _q_result = _q_self->selectedItems();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 20:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         _q_self->setCurrentItem(_q_arg0);
@@ -331,7 +414,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 16:
+    case 21:
     if (context->argumentCount() == 2) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -340,7 +423,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 17:
+    case 22:
     if (context->argumentCount() == 0) {
         _q_self->sortItems();
         return context->engine()->undefinedValue();
@@ -352,7 +435,14 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 18:
+    case 23:
+    if (context->argumentCount() == 0) {
+        QFlags<Qt::DropAction> _q_result = _q_self->supportedDropActions();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 24:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QListWidgetItem* _q_result = _q_self->takeItem(_q_arg0);
@@ -360,7 +450,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 19:
+    case 25:
     if (context->argumentCount() == 1) {
         QListWidgetItem* _q_arg0 = qscriptvalue_cast<QListWidgetItem*>(context->argument(0));
         QRect _q_result = _q_self->visualItemRect(_q_arg0);
@@ -368,7 +458,7 @@ static QScriptValue qtscript_QListWidget_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 20: {
+    case 26: {
     QString result = QString::fromLatin1("QListWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -428,7 +518,7 @@ QScriptValue qtscript_create_QListWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QListWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QListWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QListView*>()));
-    for (int i = 0; i < 21; ++i) {
+    for (int i = 0; i < 27; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QListWidget_prototype_call, qtscript_QListWidget_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QListWidget_function_names[i+1]),

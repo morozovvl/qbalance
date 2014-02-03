@@ -1,6 +1,7 @@
 #include "qtscriptshell_QMainWindow.h"
 
 #include <QtScript/QScriptEngine>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -12,8 +13,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -27,6 +26,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qstyle.h>
 #include <qtoolbar.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #define QTSCRIPT_IS_GENERATED_FUNCTION(fun) ((fun.data().toUInt32() & 0xFFFF0000) == 0xBABE0000)
 
@@ -51,14 +52,18 @@ Q_DECLARE_METATYPE(QDragMoveEvent*)
 Q_DECLARE_METATYPE(QDropEvent*)
 Q_DECLARE_METATYPE(QFocusEvent*)
 Q_DECLARE_METATYPE(QHideEvent*)
+Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QInputMethodEvent*)
 Q_DECLARE_METATYPE(Qt::InputMethodQuery)
 Q_DECLARE_METATYPE(QKeyEvent*)
 Q_DECLARE_METATYPE(QPaintDevice::PaintDeviceMetric)
 Q_DECLARE_METATYPE(QMouseEvent*)
 Q_DECLARE_METATYPE(QMoveEvent*)
+Q_DECLARE_METATYPE(long*)
 Q_DECLARE_METATYPE(QPaintEngine*)
 Q_DECLARE_METATYPE(QPaintEvent*)
+Q_DECLARE_METATYPE(QPoint*)
+Q_DECLARE_METATYPE(QPaintDevice*)
 Q_DECLARE_METATYPE(QResizeEvent*)
 Q_DECLARE_METATYPE(QShowEvent*)
 Q_DECLARE_METATYPE(QTabletEvent*)
@@ -74,13 +79,16 @@ void QtScriptShell_QMainWindow::actionEvent(QActionEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("actionEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("actionEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("actionEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::actionEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -88,13 +96,16 @@ void QtScriptShell_QMainWindow::changeEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("changeEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("changeEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("changeEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::changeEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -102,13 +113,16 @@ void QtScriptShell_QMainWindow::childEvent(QChildEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("childEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::childEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -116,13 +130,16 @@ void QtScriptShell_QMainWindow::closeEvent(QCloseEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("closeEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("closeEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("closeEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::closeEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -130,13 +147,16 @@ void QtScriptShell_QMainWindow::contextMenuEvent(QContextMenuEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("contextMenuEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("contextMenuEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("contextMenuEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::contextMenuEvent(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -144,10 +164,14 @@ QMenu*  QtScriptShell_QMainWindow::createPopupMenu()
 {
     QScriptValue _q_function = __qtscript_self.property("createPopupMenu");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("createPopupMenu") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("createPopupMenu") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::createPopupMenu();
     } else {
-        return qscriptvalue_cast<QMenu* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QMenu* _q_retval = qscriptvalue_cast<QMenu* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -155,13 +179,16 @@ void QtScriptShell_QMainWindow::customEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("customEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::customEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -169,10 +196,14 @@ int  QtScriptShell_QMainWindow::devType() const
 {
     QScriptValue _q_function = __qtscript_self.property("devType");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("devType") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("devType") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::devType();
     } else {
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -180,13 +211,16 @@ void QtScriptShell_QMainWindow::dragEnterEvent(QDragEnterEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("dragEnterEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragEnterEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragEnterEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::dragEnterEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -194,13 +228,16 @@ void QtScriptShell_QMainWindow::dragLeaveEvent(QDragLeaveEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("dragLeaveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragLeaveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragLeaveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::dragLeaveEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -208,13 +245,16 @@ void QtScriptShell_QMainWindow::dragMoveEvent(QDragMoveEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("dragMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dragMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dragMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::dragMoveEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -222,13 +262,16 @@ void QtScriptShell_QMainWindow::dropEvent(QDropEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("dropEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("dropEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("dropEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::dropEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -236,13 +279,16 @@ void QtScriptShell_QMainWindow::enterEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("enterEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("enterEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("enterEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::enterEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -250,13 +296,17 @@ bool  QtScriptShell_QMainWindow::event(QEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("event");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::event(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -264,14 +314,18 @@ bool  QtScriptShell_QMainWindow::eventFilter(QObject*  arg__1, QEvent*  arg__2)
 {
     QScriptValue _q_function = __qtscript_self.property("eventFilter");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::eventFilter(arg__1, arg__2);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)
             << qScriptValueFromValue(_q_engine, arg__2)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -279,13 +333,16 @@ void QtScriptShell_QMainWindow::focusInEvent(QFocusEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("focusInEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusInEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusInEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::focusInEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -293,13 +350,17 @@ bool  QtScriptShell_QMainWindow::focusNextPrevChild(bool  next)
 {
     QScriptValue _q_function = __qtscript_self.property("focusNextPrevChild");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusNextPrevChild") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusNextPrevChild") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::focusNextPrevChild(next);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, next)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -307,13 +368,31 @@ void QtScriptShell_QMainWindow::focusOutEvent(QFocusEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("focusOutEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("focusOutEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("focusOutEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::focusOutEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
+    }
+}
+
+bool  QtScriptShell_QMainWindow::hasHeightForWidth() const
+{
+    QScriptValue _q_function = __qtscript_self.property("hasHeightForWidth");
+    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
+        || (__qtscript_self.propertyFlags("hasHeightForWidth") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
+        return QMainWindow::hasHeightForWidth();
+    } else {
+        _q_function.setData(QScriptValue(true));
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -321,13 +400,17 @@ int  QtScriptShell_QMainWindow::heightForWidth(int  arg__1) const
 {
     QScriptValue _q_function = __qtscript_self.property("heightForWidth");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("heightForWidth") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("heightForWidth") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::heightForWidth(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self,
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -335,13 +418,33 @@ void QtScriptShell_QMainWindow::hideEvent(QHideEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("hideEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("hideEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("hideEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::hideEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
+    }
+}
+
+void QtScriptShell_QMainWindow::initPainter(QPainter*  painter) const
+{
+    QScriptValue _q_function = __qtscript_self.property("initPainter");
+    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
+        || (__qtscript_self.propertyFlags("initPainter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
+        QMainWindow::initPainter(painter);
+    } else {
+        _q_function.setData(QScriptValue(true));
+        QScriptEngine *_q_engine = __qtscript_self.engine();
+        _q_function.call(__qtscript_self,
+            QScriptValueList()
+            << qScriptValueFromValue(_q_engine, painter));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -349,13 +452,16 @@ void QtScriptShell_QMainWindow::inputMethodEvent(QInputMethodEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("inputMethodEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("inputMethodEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("inputMethodEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::inputMethodEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -363,13 +469,17 @@ QVariant  QtScriptShell_QMainWindow::inputMethodQuery(Qt::InputMethodQuery  arg_
 {
     QScriptValue _q_function = __qtscript_self.property("inputMethodQuery");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("inputMethodQuery") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("inputMethodQuery") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::inputMethodQuery(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
+        QVariant _q_retval = qscriptvalue_cast<QVariant >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -377,13 +487,16 @@ void QtScriptShell_QMainWindow::keyPressEvent(QKeyEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("keyPressEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keyPressEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("keyPressEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::keyPressEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -391,24 +504,16 @@ void QtScriptShell_QMainWindow::keyReleaseEvent(QKeyEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("keyReleaseEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keyReleaseEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("keyReleaseEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::keyReleaseEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
-    }
-}
-
-void QtScriptShell_QMainWindow::languageChange()
-{
-    QScriptValue _q_function = __qtscript_self.property("languageChange");
-    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("languageChange") & QScriptValue::QObjectMember)) {
-        QMainWindow::languageChange();
-    } else {
-        _q_function.call(__qtscript_self);
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -416,13 +521,16 @@ void QtScriptShell_QMainWindow::leaveEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("leaveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("leaveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("leaveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::leaveEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -430,13 +538,17 @@ int  QtScriptShell_QMainWindow::metric(QPaintDevice::PaintDeviceMetric  arg__1) 
 {
     QScriptValue _q_function = __qtscript_self.property("metric");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("metric") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("metric") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::metric(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self,
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -444,10 +556,14 @@ QSize  QtScriptShell_QMainWindow::minimumSizeHint() const
 {
     QScriptValue _q_function = __qtscript_self.property("getMinimumSizeHint");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("getMinimumSizeHint") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("getMinimumSizeHint") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::minimumSizeHint();
     } else {
-        return qscriptvalue_cast<QSize >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QSize _q_retval = qscriptvalue_cast<QSize >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -455,13 +571,16 @@ void QtScriptShell_QMainWindow::mouseDoubleClickEvent(QMouseEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("mouseDoubleClickEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseDoubleClickEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseDoubleClickEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::mouseDoubleClickEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -469,13 +588,16 @@ void QtScriptShell_QMainWindow::mouseMoveEvent(QMouseEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("mouseMoveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseMoveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseMoveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::mouseMoveEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -483,13 +605,16 @@ void QtScriptShell_QMainWindow::mousePressEvent(QMouseEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("mousePressEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mousePressEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mousePressEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::mousePressEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -497,13 +622,16 @@ void QtScriptShell_QMainWindow::mouseReleaseEvent(QMouseEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("mouseReleaseEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("mouseReleaseEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("mouseReleaseEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::mouseReleaseEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -511,13 +639,36 @@ void QtScriptShell_QMainWindow::moveEvent(QMoveEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("moveEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("moveEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("moveEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::moveEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
+    }
+}
+
+bool  QtScriptShell_QMainWindow::nativeEvent(const QByteArray&  eventType, void*  message, long*  result)
+{
+    QScriptValue _q_function = __qtscript_self.property("nativeEvent");
+    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
+        || (__qtscript_self.propertyFlags("nativeEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
+        return QMainWindow::nativeEvent(eventType, message, result);
+    } else {
+        _q_function.setData(QScriptValue(true));
+        QScriptEngine *_q_engine = __qtscript_self.engine();
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+            QScriptValueList()
+            << qScriptValueFromValue(_q_engine, eventType)
+            << qScriptValueFromValue(_q_engine, message)
+            << qScriptValueFromValue(_q_engine, result)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -525,10 +676,14 @@ QPaintEngine*  QtScriptShell_QMainWindow::paintEngine() const
 {
     QScriptValue _q_function = __qtscript_self.property("paintEngine");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("paintEngine") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("paintEngine") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::paintEngine();
     } else {
-        return qscriptvalue_cast<QPaintEngine* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QPaintEngine* _q_retval = qscriptvalue_cast<QPaintEngine* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -536,13 +691,34 @@ void QtScriptShell_QMainWindow::paintEvent(QPaintEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("paintEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("paintEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("paintEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::paintEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
+    }
+}
+
+QPaintDevice*  QtScriptShell_QMainWindow::redirected(QPoint*  offset) const
+{
+    QScriptValue _q_function = __qtscript_self.property("redirected");
+    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
+        || (__qtscript_self.propertyFlags("redirected") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
+        return QMainWindow::redirected(offset);
+    } else {
+        _q_function.setData(QScriptValue(true));
+        QScriptEngine *_q_engine = __qtscript_self.engine();
+        QPaintDevice* _q_retval = qscriptvalue_cast<QPaintDevice* >(_q_function.call(__qtscript_self,
+            QScriptValueList()
+            << qScriptValueFromValue(_q_engine, offset)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -550,13 +726,31 @@ void QtScriptShell_QMainWindow::resizeEvent(QResizeEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("resizeEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("resizeEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("resizeEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::resizeEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
+    }
+}
+
+QPainter*  QtScriptShell_QMainWindow::sharedPainter() const
+{
+    QScriptValue _q_function = __qtscript_self.property("sharedPainter");
+    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
+        || (__qtscript_self.propertyFlags("sharedPainter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
+        return QMainWindow::sharedPainter();
+    } else {
+        _q_function.setData(QScriptValue(true));
+        QPainter* _q_retval = qscriptvalue_cast<QPainter* >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -564,13 +758,16 @@ void QtScriptShell_QMainWindow::showEvent(QShowEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("showEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("showEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("showEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::showEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -578,10 +775,14 @@ QSize  QtScriptShell_QMainWindow::sizeHint() const
 {
     QScriptValue _q_function = __qtscript_self.property("getSizeHint");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("getSizeHint") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("getSizeHint") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QMainWindow::sizeHint();
     } else {
-        return qscriptvalue_cast<QSize >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        QSize _q_retval = qscriptvalue_cast<QSize >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -589,13 +790,16 @@ void QtScriptShell_QMainWindow::tabletEvent(QTabletEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("tabletEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("tabletEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("tabletEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::tabletEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -603,13 +807,16 @@ void QtScriptShell_QMainWindow::timerEvent(QTimerEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("timerEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::timerEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -617,13 +824,16 @@ void QtScriptShell_QMainWindow::wheelEvent(QWheelEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("wheelEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("wheelEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("wheelEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QMainWindow::wheelEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 

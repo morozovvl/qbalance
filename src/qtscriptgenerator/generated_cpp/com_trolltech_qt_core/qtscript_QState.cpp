@@ -52,6 +52,15 @@ static const int qtscript_QState_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QState_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QState : public QState
+{
+
+    friend QScriptValue qtscript_QState_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QState_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -71,6 +80,7 @@ static const QMetaObject *qtscript_QState_metaObject()
 Q_DECLARE_METATYPE(QState*)
 Q_DECLARE_METATYPE(QtScriptShell_QState*)
 Q_DECLARE_METATYPE(QState::ChildMode)
+Q_DECLARE_METATYPE(QState::RestorePolicy)
 Q_DECLARE_METATYPE(QAbstractState*)
 Q_DECLARE_METATYPE(QAbstractTransition*)
 Q_DECLARE_METATYPE(QSignalTransition*)
@@ -164,6 +174,79 @@ static QScriptValue qtscript_create_QState_ChildMode_class(QScriptEngine *engine
 }
 
 //
+// QState::RestorePolicy
+//
+
+static const QState::RestorePolicy qtscript_QState_RestorePolicy_values[] = {
+    QState::DontRestoreProperties
+    , QState::RestoreProperties
+};
+
+static const char * const qtscript_QState_RestorePolicy_keys[] = {
+    "DontRestoreProperties"
+    , "RestoreProperties"
+};
+
+static QString qtscript_QState_RestorePolicy_toStringHelper(QState::RestorePolicy value)
+{
+    const QMetaObject *meta = qtscript_QState_metaObject();
+    int idx = meta->indexOfEnumerator("RestorePolicy");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QState_RestorePolicy_toScriptValue(QScriptEngine *engine, const QState::RestorePolicy &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QState"));
+    return clazz.property(qtscript_QState_RestorePolicy_toStringHelper(value));
+}
+
+static void qtscript_QState_RestorePolicy_fromScriptValue(const QScriptValue &value, QState::RestorePolicy &out)
+{
+    out = qvariant_cast<QState::RestorePolicy>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QState_RestorePolicy(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QState_metaObject();
+    int idx = meta->indexOfEnumerator("RestorePolicy");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QState::RestorePolicy>(arg));
+    return context->throwError(QString::fromLatin1("RestorePolicy(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QState_RestorePolicy_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QState::RestorePolicy value = qscriptvalue_cast<QState::RestorePolicy>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QState_RestorePolicy_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QState::RestorePolicy value = qscriptvalue_cast<QState::RestorePolicy>(context->thisObject());
+    return QScriptValue(engine, qtscript_QState_RestorePolicy_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QState_RestorePolicy_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QState_RestorePolicy,
+        qtscript_QState_RestorePolicy_valueOf, qtscript_QState_RestorePolicy_toString);
+    qScriptRegisterMetaType<QState::RestorePolicy>(engine, qtscript_QState_RestorePolicy_toScriptValue,
+        qtscript_QState_RestorePolicy_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QState_RestorePolicy_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QState_RestorePolicy_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QState
 //
 
@@ -181,7 +264,7 @@ static QScriptValue qtscript_QState_prototype_call(QScriptContext *context, QScr
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QState* _q_self = qscriptvalue_cast<QState*>(context->thisObject());
+    qtscript_QState* _q_self = reinterpret_cast<qtscript_QState*>(qscriptvalue_cast<QState*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QState.%0(): this object is not a QState")
@@ -333,5 +416,7 @@ QScriptValue qtscript_create_QState_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("ChildMode"),
         qtscript_create_QState_ChildMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("RestorePolicy"),
+        qtscript_create_QState_RestorePolicy_class(engine, ctor));
     return ctor;
 }

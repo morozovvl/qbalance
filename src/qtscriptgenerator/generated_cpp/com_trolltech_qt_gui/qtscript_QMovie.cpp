@@ -110,6 +110,15 @@ static const int qtscript_QMovie_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QMovie_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMovie : public QMovie
+{
+
+    friend QScriptValue qtscript_QMovie_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QMovie_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -313,7 +322,7 @@ static QScriptValue qtscript_QMovie_prototype_call(QScriptContext *context, QScr
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMovie* _q_self = qscriptvalue_cast<QMovie*>(context->thisObject());
+    qtscript_QMovie* _q_self = reinterpret_cast<qtscript_QMovie*>(qscriptvalue_cast<QMovie*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMovie.%0(): this object is not a QMovie")

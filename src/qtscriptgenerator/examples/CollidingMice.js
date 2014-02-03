@@ -65,7 +65,7 @@ function Mouse(parent) {
 
     this.color = new QColor(Math.random()*256, Math.random()*256,
                             Math.random()*256);
-    this.rotate(Math.random()*360);
+    this.setRotation(this.rotation() + Math.random()*360);
 
     var timer = new QTimer(this);
     timer.singleShot = false;
@@ -182,7 +182,7 @@ Mouse.prototype.move = function() {
     var dx = Math.sin(this.angle) * 10;
     this.mouseEyeDirection = (Math.abs(dx / 5) < 1) ? 0 : dx / 5;
 
-    this.rotate(dx);
+    this.setRotation(this.rotation() + dx);
     this.setPos(this.mapToParent(0, -(3 + Math.sin(this.speed) * 3)));
 }
 

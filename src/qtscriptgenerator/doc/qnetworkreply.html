@@ -22,6 +22,8 @@
 <li><b>OperationCanceledError</b></li>
 <li><b>SslHandshakeFailedError</b></li>
 <li><b>TemporaryNetworkFailureError</b></li>
+<li><b>NetworkSessionFailedError</b></li>
+<li><b>BackgroundRequestNotAllowedError</b></li>
 <li><b>UnknownNetworkError = 99</b></li>
 <li><b>ProxyConnectionRefusedError = 101</b></li>
 <li><b>ProxyConnectionClosedError</b></li>
@@ -43,12 +45,12 @@
 <h3>Prototype Object Properties</h3>
 <p>The QNetworkReply prototype object inherits properties from the <a href="qiodevice.html">QIODevice</a> prototype object and also has the following properties.</p>
 <ul>
-<li><div class="fn"/><b>void abort()</b></li>
 <li><div class="fn"/><b>Object attribute(Attribute code)</b></li>
-<li><div class="fn"/><b>NetworkError error()</b></li>
+<li><div class="fn"/><b>NetworkError getError()</b></li>
 <li><div class="fn"/><b>bool hasRawHeader(QByteArray headerName)</b></li>
 <li><div class="fn"/><b>Object header(KnownHeaders header)</b></li>
 <li><div class="fn"/><b>void ignoreSslErrors(List errors)</b></li>
+<li><div class="fn"/><b>void ignoreSslErrorsImplementation(List arg__1)</b></li>
 <li><div class="fn"/><b>bool isFinished()</b></li>
 <li><div class="fn"/><b>bool isRunning()</b></li>
 <li><div class="fn"/><b>QNetworkAccessManager manager()</b></li>
@@ -58,9 +60,19 @@
 <li><div class="fn"/><b>List rawHeaderPairs()</b></li>
 <li><div class="fn"/><b>qint64 readBufferSize()</b></li>
 <li><div class="fn"/><b>QNetworkRequest request()</b></li>
+<li><div class="fn"/><b>void setAttribute(Attribute code, Object value)</b></li>
+<li><div class="fn"/><b>void setError(NetworkError errorCode, String errorString)</b></li>
+<li><div class="fn"/><b>void setFinished(bool arg__1)</b></li>
+<li><div class="fn"/><b>void setHeader(KnownHeaders header, Object value)</b></li>
+<li><div class="fn"/><b>void setOperation(Operation operation)</b></li>
+<li><div class="fn"/><b>void setRawHeader(QByteArray headerName, QByteArray value)</b></li>
 <li><div class="fn"/><b>void setReadBufferSize(qint64 size)</b></li>
+<li><div class="fn"/><b>void setRequest(QNetworkRequest request)</b></li>
 <li><div class="fn"/><b>void setSslConfiguration(QSslConfiguration configuration)</b></li>
+<li><div class="fn"/><b>void setSslConfigurationImplementation(QSslConfiguration arg__1)</b></li>
+<li><div class="fn"/><b>void setUrl(QUrl url)</b></li>
 <li><div class="fn"/><b>QSslConfiguration sslConfiguration()</b></li>
+<li><div class="fn"/><b>void sslConfigurationImplementation(QSslConfiguration arg__1)</b></li>
 <li><div class="fn"/><b>QUrl url()</b></li>
 </ul>
 <h3>Instance Properties</h3>

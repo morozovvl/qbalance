@@ -17,6 +17,7 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QWidget prototype object</li>
+<li><div class="fn"/><b>QWidget createWindowContainer(QWindow window, QWidget parent, WindowFlags flags)</b></li>
 <li><div class="fn"/><b>QWidget keyboardGrabber()</b></li>
 <li><div class="fn"/><b>QWidget mouseGrabber()</b></li>
 <li><div class="fn"/><b>void setTabOrder(QWidget arg__1, QWidget arg__2)</b></li>
@@ -29,20 +30,35 @@
 <h3>Prototype Object Properties</h3>
 <p>The QWidget prototype object inherits properties from the <a href="qobject.html">QObject</a> prototype object and also has the following properties.</p>
 <ul>
+<li><div class="fn"/><b>void actionEvent(QActionEvent arg__1)</b></li>
 <li><div class="fn"/><b>List actions()</b></li>
 <li><div class="fn"/><b>void activateWindow()</b></li>
 <li><div class="fn"/><b>void addAction(QAction action)</b></li>
 <li><div class="fn"/><b>void addActions(List actions)</b></li>
 <li><div class="fn"/><b>void adjustSize()</b></li>
 <li><div class="fn"/><b>ColorRole backgroundRole()</b></li>
+<li><div class="fn"/><b>void changeEvent(QEvent arg__1)</b></li>
 <li><div class="fn"/><b>QWidget childAt(QPoint p)</b></li>
 <li><div class="fn"/><b>void clearFocus()</b></li>
 <li><div class="fn"/><b>void clearMask()</b></li>
+<li><div class="fn"/><b>void closeEvent(QCloseEvent arg__1)</b></li>
 <li><div class="fn"/><b>QMargins contentsMargins()</b></li>
 <li><div class="fn"/><b>QRect contentsRect()</b></li>
+<li><div class="fn"/><b>void contextMenuEvent(QContextMenuEvent arg__1)</b></li>
 <li><div class="fn"/><b>void createWinId()</b></li>
+<li><div class="fn"/><b>void destroy(bool destroyWindow, bool destroySubWindows)</b></li>
+<li><div class="fn"/><b>void dragEnterEvent(QDragEnterEvent arg__1)</b></li>
+<li><div class="fn"/><b>void dragLeaveEvent(QDragLeaveEvent arg__1)</b></li>
+<li><div class="fn"/><b>void dragMoveEvent(QDragMoveEvent arg__1)</b></li>
+<li><div class="fn"/><b>void dropEvent(QDropEvent arg__1)</b></li>
 <li><div class="fn"/><b>WId effectiveWinId()</b></li>
 <li><div class="fn"/><b>void ensurePolished()</b></li>
+<li><div class="fn"/><b>void enterEvent(QEvent arg__1)</b></li>
+<li><div class="fn"/><b>void focusInEvent(QFocusEvent arg__1)</b></li>
+<li><div class="fn"/><b>bool focusNextChild()</b></li>
+<li><div class="fn"/><b>bool focusNextPrevChild(bool next)</b></li>
+<li><div class="fn"/><b>void focusOutEvent(QFocusEvent arg__1)</b></li>
+<li><div class="fn"/><b>bool focusPreviousChild()</b></li>
 <li><div class="fn"/><b>QWidget focusProxy()</b></li>
 <li><div class="fn"/><b>QWidget focusWidget()</b></li>
 <li><div class="fn"/><b>ColorRole foregroundRole()</b></li>
@@ -53,8 +69,10 @@
 <li><div class="fn"/><b>int grabShortcut(QKeySequence key, ShortcutContext context)</b></li>
 <li><div class="fn"/><b>QGraphicsEffect graphicsEffect()</b></li>
 <li><div class="fn"/><b>QGraphicsProxyWidget graphicsProxyWidget()</b></li>
+<li><div class="fn"/><b>bool hasHeightForWidth()</b></li>
 <li><div class="fn"/><b>int heightForWidth(int arg__1)</b></li>
-<li><div class="fn"/><b>QInputContext inputContext()</b></li>
+<li><div class="fn"/><b>void hideEvent(QHideEvent arg__1)</b></li>
+<li><div class="fn"/><b>void inputMethodEvent(QInputMethodEvent arg__1)</b></li>
 <li><div class="fn"/><b>Object inputMethodQuery(InputMethodQuery arg__1)</b></li>
 <li><div class="fn"/><b>void insertAction(QAction before, QAction action)</b></li>
 <li><div class="fn"/><b>void insertActions(QAction before, List actions)</b></li>
@@ -65,7 +83,10 @@
 <li><div class="fn"/><b>bool isRightToLeft()</b></li>
 <li><div class="fn"/><b>bool isVisibleTo(QWidget arg__1)</b></li>
 <li><div class="fn"/><b>bool isWindow()</b></li>
+<li><div class="fn"/><b>void keyPressEvent(QKeyEvent arg__1)</b></li>
+<li><div class="fn"/><b>void keyReleaseEvent(QKeyEvent arg__1)</b></li>
 <li><div class="fn"/><b>QLayout layout()</b></li>
+<li><div class="fn"/><b>void leaveEvent(QEvent arg__1)</b></li>
 <li><div class="fn"/><b>QPoint mapFrom(QWidget arg__1, QPoint arg__2)</b></li>
 <li><div class="fn"/><b>QPoint mapFromGlobal(QPoint arg__1)</b></li>
 <li><div class="fn"/><b>QPoint mapFromParent(QPoint arg__1)</b></li>
@@ -73,11 +94,18 @@
 <li><div class="fn"/><b>QPoint mapToGlobal(QPoint arg__1)</b></li>
 <li><div class="fn"/><b>QPoint mapToParent(QPoint arg__1)</b></li>
 <li><div class="fn"/><b>QRegion mask()</b></li>
+<li><div class="fn"/><b>void mouseDoubleClickEvent(QMouseEvent arg__1)</b></li>
+<li><div class="fn"/><b>void mouseMoveEvent(QMouseEvent arg__1)</b></li>
+<li><div class="fn"/><b>void mousePressEvent(QMouseEvent arg__1)</b></li>
+<li><div class="fn"/><b>void mouseReleaseEvent(QMouseEvent arg__1)</b></li>
 <li><div class="fn"/><b>void move(int x, int y)</b></li>
+<li><div class="fn"/><b>void moveEvent(QMoveEvent arg__1)</b></li>
+<li><div class="fn"/><b>bool nativeEvent(QByteArray eventType, void message, long result)</b></li>
 <li><div class="fn"/><b>QWidget nativeParentWidget()</b></li>
 <li><div class="fn"/><b>QWidget nextInFocusChain()</b></li>
 <li><div class="fn"/><b>void overrideWindowFlags(WindowFlags type)</b></li>
 <li><div class="fn"/><b>void overrideWindowState(WindowStates state)</b></li>
+<li><div class="fn"/><b>void paintEvent(QPaintEvent arg__1)</b></li>
 <li><div class="fn"/><b>QWidget parentWidget()</b></li>
 <li><div class="fn"/><b>QWidget previousInFocusChain()</b></li>
 <li><div class="fn"/><b>void releaseKeyboard()</b></li>
@@ -87,6 +115,7 @@
 <li><div class="fn"/><b>void render(QPaintDevice target, QPoint targetOffset, QRegion sourceRegion, RenderFlags renderFlags)</b></li>
 <li><div class="fn"/><b>void repaint(QRect arg__1)</b></li>
 <li><div class="fn"/><b>void resize(int w, int h)</b></li>
+<li><div class="fn"/><b>void resizeEvent(QResizeEvent arg__1)</b></li>
 <li><div class="fn"/><b>bool restoreGeometry(QByteArray geometry)</b></li>
 <li><div class="fn"/><b>QByteArray saveGeometry()</b></li>
 <li><div class="fn"/><b>void scroll(int dx, int dy)</b></li>
@@ -102,7 +131,6 @@
 <li><div class="fn"/><b>void setForegroundRole(ColorRole arg__1)</b></li>
 <li><div class="fn"/><b>void setGeometry(int x, int y, int w, int h)</b></li>
 <li><div class="fn"/><b>void setGraphicsEffect(QGraphicsEffect effect)</b></li>
-<li><div class="fn"/><b>void setInputContext(QInputContext arg__1)</b></li>
 <li><div class="fn"/><b>void setLayout(QLayout arg__1)</b></li>
 <li><div class="fn"/><b>void setMask(QBitmap arg__1)</b></li>
 <li><div class="fn"/><b>void setMaximumSize(int maxw, int maxh)</b></li>
@@ -117,8 +145,10 @@
 <li><div class="fn"/><b>void setWindowOpacity(qreal level)</b></li>
 <li><div class="fn"/><b>void setWindowRole(String arg__1)</b></li>
 <li><div class="fn"/><b>void setWindowState(WindowStates state)</b></li>
+<li><div class="fn"/><b>void showEvent(QShowEvent arg__1)</b></li>
 <li><div class="fn"/><b>void stackUnder(QWidget arg__1)</b></li>
 <li><div class="fn"/><b>QStyle style()</b></li>
+<li><div class="fn"/><b>void tabletEvent(QTabletEvent arg__1)</b></li>
 <li><div class="fn"/><b>bool testAttribute(WidgetAttribute arg__1)</b></li>
 <li><div class="fn"/><b>bool underMouse()</b></li>
 <li><div class="fn"/><b>void ungrabGesture(GestureType type)</b></li>
@@ -128,9 +158,11 @@
 <li><div class="fn"/><b>void update(QRect arg__1)</b></li>
 <li><div class="fn"/><b>void updateGeometry()</b></li>
 <li><div class="fn"/><b>QRegion visibleRegion()</b></li>
+<li><div class="fn"/><b>void wheelEvent(QWheelEvent arg__1)</b></li>
 <li><div class="fn"/><b>WId winId()</b></li>
 <li><div class="fn"/><b>QWidget window()</b></li>
 <li><div class="fn"/><b>WindowFlags windowFlags()</b></li>
+<li><div class="fn"/><b>QWindow windowHandle()</b></li>
 <li><div class="fn"/><b>qreal windowOpacity()</b></li>
 <li><div class="fn"/><b>String windowRole()</b></li>
 <li><div class="fn"/><b>WindowStates windowState()</b></li>

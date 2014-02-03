@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     // Инициируем переменные, которые нуждаются в этом
 
-/*
+
 //    QTextCodec::setCodecForTr(TApplication::codec());
     QTextCodec::setCodecForLocale(TApplication::codec());
 //    QTextCodec::setCodecForCStrings(TApplication::codec());
@@ -110,10 +110,9 @@ int main(int argc, char *argv[])
         TApplication application(argc, argv);
         QDir dir(QApplication::applicationDirPath());
         QStringList paths = application.libraryPaths();
-        paths << dir.absolutePath() + "/plugins";
-        qDebug() << paths;
+        paths << dir.absolutePath();
         application.setLibraryPaths(paths);
-
+        QCoreApplication::addLibraryPath(dir.absolutePath() + "/plugins");
         if (application.open()) {       // Если приложение удалось создать
             application.show();         // Откроем приложение
             lResult = application.exec();
@@ -124,5 +123,5 @@ int main(int argc, char *argv[])
 
     TApplication::debug(" Program shutdown.\n\n");
     return lResult;
-*/
+
 }

@@ -44,7 +44,7 @@ static const char * const qtscript_QAbstractGraphicsShapeItem_function_names[] =
 };
 
 static const char * const qtscript_QAbstractGraphicsShapeItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent"
     // static
     // prototype
     , ""
@@ -55,7 +55,7 @@ static const char * const qtscript_QAbstractGraphicsShapeItem_function_signature
 };
 
 static const int qtscript_QAbstractGraphicsShapeItem_function_lengths[] = {
-    2
+    1
     // static
     // prototype
     , 0
@@ -63,6 +63,16 @@ static const int qtscript_QAbstractGraphicsShapeItem_function_lengths[] = {
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QAbstractGraphicsShapeItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractGraphicsShapeItem : public QAbstractGraphicsShapeItem
+{
+
+    friend QScriptValue qtscript_QAbstractGraphicsShapeItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QAbstractGraphicsShapeItem_throw_ambiguity_error_helper(
@@ -97,7 +107,7 @@ static QScriptValue qtscript_QAbstractGraphicsShapeItem_prototype_call(QScriptCo
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractGraphicsShapeItem* _q_self = qscriptvalue_cast<QAbstractGraphicsShapeItem*>(context->thisObject());
+    qtscript_QAbstractGraphicsShapeItem* _q_self = reinterpret_cast<qtscript_QAbstractGraphicsShapeItem*>(qscriptvalue_cast<QAbstractGraphicsShapeItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractGraphicsShapeItem.%0(): this object is not a QAbstractGraphicsShapeItem")
@@ -166,13 +176,6 @@ static QScriptValue qtscript_QAbstractGraphicsShapeItem_static_call(QScriptConte
     } else if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         QtScriptShell_QAbstractGraphicsShapeItem* _q_cpp_result = new QtScriptShell_QAbstractGraphicsShapeItem(_q_arg0);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QAbstractGraphicsShapeItem*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
-    } else if (context->argumentCount() == 2) {
-        QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-        QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-        QtScriptShell_QAbstractGraphicsShapeItem* _q_cpp_result = new QtScriptShell_QAbstractGraphicsShapeItem(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QAbstractGraphicsShapeItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;

@@ -22,6 +22,7 @@ public:
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     void ignoreSslErrors();
+    void ignoreSslErrorsImplementation(const QList<QSslError >&  arg__1);
     bool  isSequential() const;
     bool  open(QIODevice::OpenMode  mode);
     qint64  pos() const;
@@ -30,7 +31,9 @@ public:
     bool  reset();
     bool  seek(qint64  pos);
     void setReadBufferSize(qint64  size);
+    void setSslConfigurationImplementation(const QSslConfiguration&  arg__1);
     qint64  size() const;
+    void sslConfigurationImplementation(QSslConfiguration&  arg__1) const;
     void timerEvent(QTimerEvent*  arg__1);
     bool  waitForBytesWritten(int  msecs);
     bool  waitForReadyRead(int  msecs);

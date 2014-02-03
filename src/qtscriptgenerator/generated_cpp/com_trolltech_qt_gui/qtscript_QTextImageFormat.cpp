@@ -56,6 +56,15 @@ static const int qtscript_QTextImageFormat_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTextImageFormat_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextImageFormat : public QTextImageFormat
+{
+
+    friend QScriptValue qtscript_QTextImageFormat_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTextImageFormat_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -91,7 +100,7 @@ static QScriptValue qtscript_QTextImageFormat_prototype_call(QScriptContext *con
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextImageFormat* _q_self = qscriptvalue_cast<QTextImageFormat*>(context->thisObject());
+    qtscript_QTextImageFormat* _q_self = reinterpret_cast<qtscript_QTextImageFormat*>(qscriptvalue_cast<QTextImageFormat*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextImageFormat.%0(): this object is not a QTextImageFormat")

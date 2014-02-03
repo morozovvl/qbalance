@@ -15,6 +15,7 @@ static const char * const qtscript_QUndoCommand_function_names[] = {
     "QUndoCommand"
     // static
     // prototype
+    , "actionText"
     , "child"
     , "childCount"
     , "id"
@@ -30,6 +31,7 @@ static const char * const qtscript_QUndoCommand_function_signatures[] = {
     "QUndoCommand parent\nString text, QUndoCommand parent"
     // static
     // prototype
+    , ""
     , "int index"
     , ""
     , ""
@@ -45,6 +47,7 @@ static const int qtscript_QUndoCommand_function_lengths[] = {
     2
     // static
     // prototype
+    , 0
     , 1
     , 0
     , 0
@@ -84,7 +87,7 @@ static QScriptValue qtscript_QUndoCommand_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 9;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -97,6 +100,13 @@ static QScriptValue qtscript_QUndoCommand_prototype_call(QScriptContext *context
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 0) {
+        QString _q_result = _q_self->actionText();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QUndoCommand* _q_result = const_cast<QUndoCommand*>(_q_self->child(_q_arg0));
@@ -104,21 +114,21 @@ static QScriptValue qtscript_QUndoCommand_prototype_call(QScriptContext *context
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->childCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->id();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QUndoCommand* _q_arg0 = qscriptvalue_cast<QUndoCommand*>(context->argument(0));
         bool _q_result = _q_self->mergeWith(_q_arg0);
@@ -126,14 +136,14 @@ static QScriptValue qtscript_QUndoCommand_prototype_call(QScriptContext *context
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         _q_self->redo();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setText(_q_arg0);
@@ -141,21 +151,21 @@ static QScriptValue qtscript_QUndoCommand_prototype_call(QScriptContext *context
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->text();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 0) {
         _q_self->undo();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 8: {
+    case 9: {
     QString result = QString::fromLatin1("QUndoCommand");
     return QScriptValue(context->engine(), result);
     }
@@ -219,7 +229,7 @@ QScriptValue qtscript_create_QUndoCommand_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QUndoCommand*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QUndoCommand*)0));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QUndoCommand_prototype_call, qtscript_QUndoCommand_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QUndoCommand_function_names[i+1]),

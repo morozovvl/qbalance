@@ -6,10 +6,10 @@
 #include <qmetaobject.h>
 
 #include <qfileiconprovider.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qfileiconprovider.h>
 #include <qfileinfo.h>
-#include <qicon.h>
 
 #include "qtscriptshell_QFileIconProvider.h"
 
@@ -54,7 +54,6 @@ static QScriptValue qtscript_QFileIconProvider_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QFileIconProvider*)
 Q_DECLARE_METATYPE(QtScriptShell_QFileIconProvider*)
 Q_DECLARE_METATYPE(QFileIconProvider::IconType)
-Q_DECLARE_METATYPE(QFileInfo)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,

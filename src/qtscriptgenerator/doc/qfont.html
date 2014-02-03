@@ -24,10 +24,36 @@
 <li><div class="fn"/><b>void initialize()</b></li>
 <li><div class="fn"/><b>void insertSubstitution(String arg__1, String arg__2)</b></li>
 <li><div class="fn"/><b>void insertSubstitutions(String arg__1, List arg__2)</b></li>
-<li><div class="fn"/><b>void removeSubstitution(String arg__1)</b></li>
+<li><div class="fn"/><b>void removeSubstitutions(String arg__1)</b></li>
 <li><div class="fn"/><b>String substitute(String arg__1)</b></li>
 <li><div class="fn"/><b>List substitutes(String arg__1)</b></li>
 <li><div class="fn"/><b>List substitutions()</b></li>
+<li><b>UltraCondensed = 50</b></li>
+<li><b>ExtraCondensed = 62</b></li>
+<li><b>Condensed = 75</b></li>
+<li><b>SemiCondensed = 87</b></li>
+<li><b>Unstretched = 100</b></li>
+<li><b>SemiExpanded = 112</b></li>
+<li><b>Expanded = 125</b></li>
+<li><b>ExtraExpanded = 150</b></li>
+<li><b>UltraExpanded = 200</b></li>
+<li><b>Stretch( value )</b></li>
+<li><b>MixedCase</b></li>
+<li><b>AllUppercase</b></li>
+<li><b>AllLowercase</b></li>
+<li><b>SmallCaps</b></li>
+<li><b>Capitalize</b></li>
+<li><b>Capitalization( value )</b></li>
+<li><b>Helvetica</b></li>
+<li><b>Times</b></li>
+<li><b>Courier</b></li>
+<li><b>OldEnglish</b></li>
+<li><b>System</b></li>
+<li><b>AnyStyle</b></li>
+<li><b>Cursive</b></li>
+<li><b>Monospace</b></li>
+<li><b>Fantasy</b></li>
+<li><b>StyleHint( value )</b></li>
 <li><b>PreferDefault = 0x0001</b></li>
 <li><b>PreferBitmap = 0x0002</b></li>
 <li><b>PreferDevice = 0x0004</b></li>
@@ -41,45 +67,24 @@
 <li><b>ForceIntegerMetrics = 0x0400</b></li>
 <li><b>NoFontMerging = 0x8000</b></li>
 <li><b>StyleStrategy( value )</b></li>
-<li><b>PercentageSpacing</b></li>
-<li><b>AbsoluteSpacing</b></li>
-<li><b>SpacingType( value )</b></li>
-<li><b>Helvetica</b></li>
-<li><b>Times</b></li>
-<li><b>Courier</b></li>
-<li><b>OldEnglish</b></li>
-<li><b>System</b></li>
-<li><b>AnyStyle</b></li>
-<li><b>Cursive</b></li>
-<li><b>Monospace</b></li>
-<li><b>Fantasy</b></li>
-<li><b>StyleHint( value )</b></li>
 <li><b>Light = 25</b></li>
 <li><b>Normal = 50</b></li>
 <li><b>DemiBold = 63</b></li>
 <li><b>Bold = 75</b></li>
 <li><b>Black = 87</b></li>
 <li><b>Weight( value )</b></li>
-<li><b>MixedCase</b></li>
-<li><b>AllUppercase</b></li>
-<li><b>AllLowercase</b></li>
-<li><b>SmallCaps</b></li>
-<li><b>Capitalize</b></li>
-<li><b>Capitalization( value )</b></li>
-<li><b>UltraCondensed = 50</b></li>
-<li><b>ExtraCondensed = 62</b></li>
-<li><b>Condensed = 75</b></li>
-<li><b>SemiCondensed = 87</b></li>
-<li><b>Unstretched = 100</b></li>
-<li><b>SemiExpanded = 112</b></li>
-<li><b>Expanded = 125</b></li>
-<li><b>ExtraExpanded = 150</b></li>
-<li><b>UltraExpanded = 200</b></li>
-<li><b>Stretch( value )</b></li>
 <li><b>StyleNormal</b></li>
 <li><b>StyleItalic</b></li>
 <li><b>StyleOblique</b></li>
 <li><b>Style( value )</b></li>
+<li><b>PreferDefaultHinting = 0</b></li>
+<li><b>PreferNoHinting = 1</b></li>
+<li><b>PreferVerticalHinting = 2</b></li>
+<li><b>PreferFullHinting = 3</b></li>
+<li><b>HintingPreference( value )</b></li>
+<li><b>PercentageSpacing</b></li>
+<li><b>AbsoluteSpacing</b></li>
+<li><b>SpacingType( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -90,7 +95,7 @@
 <li><div class="fn"/><b>String family()</b></li>
 <li><div class="fn"/><b>bool fixedPitch()</b></li>
 <li><div class="fn"/><b>bool fromString(String arg__1)</b></li>
-<li><div class="fn"/><b>Qt::HANDLE handle()</b></li>
+<li><div class="fn"/><b>HintingPreference hintingPreference()</b></li>
 <li><div class="fn"/><b>bool isCopyOf(QFont arg__1)</b></li>
 <li><div class="fn"/><b>bool italic()</b></li>
 <li><div class="fn"/><b>bool kerning()</b></li>
@@ -113,6 +118,7 @@
 <li><div class="fn"/><b>void setCapitalization(Capitalization arg__1)</b></li>
 <li><div class="fn"/><b>void setFamily(String arg__1)</b></li>
 <li><div class="fn"/><b>void setFixedPitch(bool arg__1)</b></li>
+<li><div class="fn"/><b>void setHintingPreference(HintingPreference hintingPreference)</b></li>
 <li><div class="fn"/><b>void setItalic(bool b)</b></li>
 <li><div class="fn"/><b>void setKerning(bool arg__1)</b></li>
 <li><div class="fn"/><b>void setLetterSpacing(SpacingType type, qreal spacing)</b></li>
@@ -126,6 +132,7 @@
 <li><div class="fn"/><b>void setStrikeOut(bool arg__1)</b></li>
 <li><div class="fn"/><b>void setStyle(Style style)</b></li>
 <li><div class="fn"/><b>void setStyleHint(StyleHint arg__1, StyleStrategy arg__2)</b></li>
+<li><div class="fn"/><b>void setStyleName(String arg__1)</b></li>
 <li><div class="fn"/><b>void setStyleStrategy(StyleStrategy s)</b></li>
 <li><div class="fn"/><b>void setUnderline(bool arg__1)</b></li>
 <li><div class="fn"/><b>void setWeight(int arg__1)</b></li>
@@ -134,7 +141,9 @@
 <li><div class="fn"/><b>bool strikeOut()</b></li>
 <li><div class="fn"/><b>Style style()</b></li>
 <li><div class="fn"/><b>StyleHint styleHint()</b></li>
+<li><div class="fn"/><b>String styleName()</b></li>
 <li><div class="fn"/><b>StyleStrategy styleStrategy()</b></li>
+<li><div class="fn"/><b>void swap(QFont other)</b></li>
 <li><div class="fn"/><b>String toString()</b></li>
 <li><div class="fn"/><b>bool underline()</b></li>
 <li><div class="fn"/><b>int weight()</b></li>

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qslider.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QSlider.h"
 
@@ -44,6 +45,7 @@ static const char * const qtscript_QSlider_function_names[] = {
     "QSlider"
     // static
     // prototype
+    , "initStyleOption"
     , "minimumSizeHint"
     , "sizeHint"
     , "toString"
@@ -53,6 +55,7 @@ static const char * const qtscript_QSlider_function_signatures[] = {
     "QWidget parent\nOrientation orientation, QWidget parent"
     // static
     // prototype
+    , "QStyleOptionSlider option"
     , ""
     , ""
 ""
@@ -62,9 +65,21 @@ static const int qtscript_QSlider_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
     , 0
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QSlider_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSlider : public QSlider
+{
+    friend QScriptValue qtscript_QSlider_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSlider_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractSlider::SliderChange >;
 };
 
 static QScriptValue qtscript_QSlider_throw_ambiguity_error_helper(
@@ -86,6 +101,8 @@ static const QMetaObject *qtscript_QSlider_metaObject()
 Q_DECLARE_METATYPE(QSlider*)
 Q_DECLARE_METATYPE(QtScriptShell_QSlider*)
 Q_DECLARE_METATYPE(QSlider::TickPosition)
+Q_DECLARE_METATYPE(QStyleOptionSlider*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(Qt::Orientation)
 Q_DECLARE_METATYPE(QAbstractSlider*)
 
@@ -194,11 +211,11 @@ static QScriptValue qtscript_QSlider_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSlider* _q_self = qscriptvalue_cast<QSlider*>(context->thisObject());
+    qtscript_QSlider* _q_self = reinterpret_cast<qtscript_QSlider*>(qscriptvalue_cast<QSlider*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSlider.%0(): this object is not a QSlider")
@@ -207,20 +224,28 @@ static QScriptValue qtscript_QSlider_prototype_call(QScriptContext *context, QSc
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionSlider* _q_arg0 = qscriptvalue_cast<QStyleOptionSlider*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2: {
+    case 3: {
     QString result = QString::fromLatin1("QSlider");
     return QScriptValue(context->engine(), result);
     }
@@ -295,7 +320,7 @@ QScriptValue qtscript_create_QSlider_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSlider*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSlider*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractSlider*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSlider_prototype_call, qtscript_QSlider_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSlider_function_names[i+1]),

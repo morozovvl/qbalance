@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QUrl>
 #include "picture.h"
 #include "../kernel/app.h"
+#include "formgrid.h"
 
 
 Picture::Picture(QWidget* parent): QFrame(parent) {
@@ -36,6 +37,8 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
                         QApplication::desktop()->availableGeometry().width() * 0.8,
                         QApplication::desktop()->availableGeometry().height() * 0.8);
     photoWindowTitle = "";
+    app = 0;
+    form = 0;
 }
 
 
@@ -94,7 +97,10 @@ void Picture::setVisibility(bool vis)
 void Picture::mouseDoubleClickEvent(QMouseEvent*)
 {
     if (!isBigPicture)
+    {
         showBigPicture();
+        form->setGridFocus();
+    }
 }
 
 

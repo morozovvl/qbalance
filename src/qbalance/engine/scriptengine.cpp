@@ -469,7 +469,7 @@ void ScriptEngine::loadScriptObjects()
     qScriptRegisterMetaType(this, qLineEditToScriptValue, qLineEditFromScriptValue);
 
     // Объявим глобальные переменные и объекты
-//    globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()->getForm()));
+    globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()));
     globalObject().setProperty("table", newQObject(parent()));
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
@@ -827,6 +827,26 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
 }
 
 
+QString ScriptEngine::getFilter()
+{
+    QString result;
+    QString eventName = "GetFilter";
+    if (globalObject().property(eventName).isFunction())
+    {
+        result = globalObject().property(eventName).call().toString();
+        if (result == "undefined")
+            result = "";
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName, uncaughtException().toString());
+        }
+    }
+    return result;
+}
+
+
+
+
 void ScriptEngine::eventCalcTable()
 {
     errorMessage = "";
@@ -922,6 +942,9 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
 
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
     appendEvent("PreparePictureUrl(object)", func);
+
+    func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
+    appendEvent("GetFilter()", func);
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
     appendEvent("EventCalcTable()", func);

@@ -200,10 +200,13 @@ bool Dictionary::calculate(const QModelIndex& index) {
 
             // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
             int row = form->getCurrentIndex().row();
+
             for (int i = 0; i < tableModel->record().count(); i++)
             {
-                QString fieldName = tableModel->record().fieldName(i).toUpper();
-                if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                QString fieldName = tableModel->record().fieldName(i);
+                QVariant oldValue = getOldValue(fieldName);
+                QVariant newValue = getValue(fieldName);
+                if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
                 {
                     tableModel->submit(tableModel->index(row, i));
                 }
@@ -213,6 +216,7 @@ bool Dictionary::calculate(const QModelIndex& index) {
             {   // Если во время работы скриптов ошибки не произошло
                 // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
                 updateCurrentRow();
+                saveOldValues();
             }
             else
             {   // Во время работы скриптов произошла ошибка
@@ -323,7 +327,8 @@ void Dictionary::setForm(QString formName)
     form->appendToolTip("buttonOk",         trUtf8("Закрыть справочник"));
     form->appendToolTip("buttonAdd",        trUtf8("Создать новую запись в справочнике"));
     form->appendToolTip("buttonDelete",     trUtf8("Удалить запись из справочника"));
-    form->appendToolTip("buttonPrint",      trUtf8("Распечатать выбранные записи из справочника"));
+    if (isPrintable())
+        form->appendToolTip("buttonPrint",      trUtf8("Распечатать выбранные записи из справочника"));
     form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера)"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
@@ -354,11 +359,11 @@ bool Dictionary::open(int)
         initForm();
         evaluateEngine();
 
+        initFormEvent(form);
+
         tableModel->setTestSelect(true);
         query();
         tableModel->setTestSelect(false);
-
-        initFormEvent(form);
 
         if (isFieldExists(nameFieldName))
             setPhotoNameField(nameFieldName);
@@ -463,6 +468,17 @@ void Dictionary::query(QString defaultFilter)
                 resFilter.append(" AND " + filter);
             else
                 resFilter = filter;
+        }
+        if (scriptEngine != 0)
+        {
+            filter = scriptEngine->getFilter();
+            if (filter.size() > 0)
+            {
+                if (resFilter.size() > 0)
+                    resFilter.append(" AND " + filter);
+                else
+                    resFilter = filter;
+            }
         }
     }
     Essence::query(resFilter);

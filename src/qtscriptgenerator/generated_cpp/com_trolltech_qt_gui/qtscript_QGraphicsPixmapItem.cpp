@@ -37,43 +37,61 @@ static const char * const qtscript_QGraphicsPixmapItem_function_names[] = {
     // prototype
     , "offset"
     , "pixmap"
+    , "setExtension"
     , "setOffset"
     , "setPixmap"
     , "setShapeMode"
     , "setTransformationMode"
     , "shapeMode"
+    , "supportsExtension"
     , "transformationMode"
     , "toString"
 };
 
 static const char * const qtscript_QGraphicsPixmapItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene\nQPixmap pixmap, QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent\nQPixmap pixmap, QGraphicsItem parent"
     // static
     // prototype
     , ""
     , ""
+    , "Extension extension, Object variant"
     , "QPointF offset\nqreal x, qreal y"
     , "QPixmap pixmap"
     , "ShapeMode mode"
     , "TransformationMode mode"
     , ""
+    , "Extension extension"
     , ""
 ""
 };
 
 static const int qtscript_QGraphicsPixmapItem_function_lengths[] = {
-    3
+    2
     // static
     // prototype
     , 0
     , 0
     , 2
+    , 2
     , 1
     , 1
     , 1
     , 0
+    , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsPixmapItem : public QGraphicsPixmapItem
+{
+    friend QScriptValue qtscript_QGraphicsPixmapItem_setExtension(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsPixmapItem_supportsExtension(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsPixmapItem_throw_ambiguity_error_helper(
@@ -90,6 +108,7 @@ static QScriptValue qtscript_QGraphicsPixmapItem_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QGraphicsPixmapItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsPixmapItem*)
 Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
+Q_DECLARE_METATYPE(QGraphicsItem::Extension)
 Q_DECLARE_METATYPE(Qt::TransformationMode)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -189,11 +208,11 @@ static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 8;
+        _id = 0xBABE0000 + 10;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsPixmapItem* _q_self = qscriptvalue_cast<QGraphicsPixmapItem*>(context->thisObject());
+    qtscript_QGraphicsPixmapItem* _q_self = reinterpret_cast<qtscript_QGraphicsPixmapItem*>(qscriptvalue_cast<QGraphicsPixmapItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsPixmapItem.%0(): this object is not a QGraphicsPixmapItem")
@@ -216,6 +235,15 @@ static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *
     break;
 
     case 2:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setExtension(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->setOffset(_q_arg0);
@@ -229,7 +257,7 @@ static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
         _q_self->setPixmap(_q_arg0);
@@ -237,7 +265,7 @@ static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 1) {
         QGraphicsPixmapItem::ShapeMode _q_arg0 = qscriptvalue_cast<QGraphicsPixmapItem::ShapeMode>(context->argument(0));
         _q_self->setShapeMode(_q_arg0);
@@ -245,7 +273,7 @@ static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         Qt::TransformationMode _q_arg0 = qscriptvalue_cast<Qt::TransformationMode>(context->argument(0));
         _q_self->setTransformationMode(_q_arg0);
@@ -253,21 +281,29 @@ static QScriptValue qtscript_QGraphicsPixmapItem_prototype_call(QScriptContext *
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         QGraphicsPixmapItem::ShapeMode _q_result = _q_self->shapeMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
+    if (context->argumentCount() == 1) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        bool _q_result = _q_self->supportsExtension(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         Qt::TransformationMode _q_result = _q_self->transformationMode();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8: {
+    case 10: {
     QString result = QString::fromLatin1("QGraphicsPixmapItem");
     return QScriptValue(context->engine(), result);
     }
@@ -310,28 +346,9 @@ static QScriptValue qtscript_QGraphicsPixmapItem_static_call(QScriptContext *con
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
-            && qscriptvalue_cast<QGraphicsScene*>(context->argument(1))) {
-            QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-            QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-            QtScriptShell_QGraphicsPixmapItem* _q_cpp_result = new QtScriptShell_QGraphicsPixmapItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsPixmapItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())
-            && qscriptvalue_cast<QGraphicsItem*>(context->argument(1))) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-            QtScriptShell_QGraphicsPixmapItem* _q_cpp_result = new QtScriptShell_QGraphicsPixmapItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsPixmapItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 3) {
         QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
         QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-        QGraphicsScene* _q_arg2 = qscriptvalue_cast<QGraphicsScene*>(context->argument(2));
-        QtScriptShell_QGraphicsPixmapItem* _q_cpp_result = new QtScriptShell_QGraphicsPixmapItem(_q_arg0, _q_arg1, _q_arg2);
+        QtScriptShell_QGraphicsPixmapItem* _q_cpp_result = new QtScriptShell_QGraphicsPixmapItem(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsPixmapItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -351,7 +368,7 @@ QScriptValue qtscript_create_QGraphicsPixmapItem_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsPixmapItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsPixmapItem*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QGraphicsItem*>()));
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 11; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsPixmapItem_prototype_call, qtscript_QGraphicsPixmapItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsPixmapItem_function_names[i+1]),

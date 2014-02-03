@@ -32,6 +32,7 @@ static const char * const qtscript_QGraphicsGridLayout_function_names[] = {
     , "columnStretchFactor"
     , "horizontalSpacing"
     , "itemAt"
+    , "removeItem"
     , "rowAlignment"
     , "rowCount"
     , "rowMaximumHeight"
@@ -76,6 +77,7 @@ static const char * const qtscript_QGraphicsGridLayout_function_signatures[] = {
     , "int column"
     , ""
     , "int row, int column"
+    , "QGraphicsLayoutItem item"
     , "int row"
     , ""
     , "int row"
@@ -121,32 +123,42 @@ static const int qtscript_QGraphicsGridLayout_function_lengths[] = {
     , 0
     , 2
     , 1
-    , 0
-    , 1
-    , 1
-    , 1
-    , 1
-    , 1
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 1
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 2
-    , 1
     , 1
     , 0
+    , 1
+    , 1
+    , 1
+    , 1
+    , 1
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 1
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 2
+    , 1
+    , 1
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsGridLayout : public QGraphicsGridLayout
+{
+
+    friend QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGraphicsGridLayout_throw_ambiguity_error_helper(
@@ -180,11 +192,11 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 37;
+        _id = 0xBABE0000 + 38;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsGridLayout* _q_self = qscriptvalue_cast<QGraphicsGridLayout*>(context->thisObject());
+    qtscript_QGraphicsGridLayout* _q_self = reinterpret_cast<qtscript_QGraphicsGridLayout*>(qscriptvalue_cast<QGraphicsGridLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsGridLayout.%0(): this object is not a QGraphicsGridLayout")
@@ -310,20 +322,28 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
 
     case 11:
     if (context->argumentCount() == 1) {
+        QGraphicsLayoutItem* _q_arg0 = qscriptvalue_cast<QGraphicsLayoutItem*>(context->argument(0));
+        _q_self->removeItem(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 12:
+    if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QFlags<Qt::AlignmentFlag> _q_result = _q_self->rowAlignment(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->rowCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_result = _q_self->rowMaximumHeight(_q_arg0);
@@ -331,7 +351,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_result = _q_self->rowMinimumHeight(_q_arg0);
@@ -339,7 +359,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_result = _q_self->rowPreferredHeight(_q_arg0);
@@ -347,7 +367,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_result = _q_self->rowSpacing(_q_arg0);
@@ -355,7 +375,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->rowStretchFactor(_q_arg0);
@@ -363,7 +383,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 2) {
         QGraphicsLayoutItem* _q_arg0 = qscriptvalue_cast<QGraphicsLayoutItem*>(context->argument(0));
         QFlags<Qt::AlignmentFlag> _q_arg1 = qscriptvalue_cast<QFlags<Qt::AlignmentFlag> >(context->argument(1));
@@ -372,7 +392,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QFlags<Qt::AlignmentFlag> _q_arg1 = qscriptvalue_cast<QFlags<Qt::AlignmentFlag> >(context->argument(1));
@@ -381,7 +401,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -390,7 +410,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 21:
+    case 22:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -399,7 +419,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 22:
+    case 23:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -408,7 +428,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 23:
+    case 24:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -417,7 +437,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 24:
+    case 25:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -426,7 +446,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 25:
+    case 26:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -435,7 +455,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 26:
+    case 27:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setHorizontalSpacing(_q_arg0);
@@ -443,7 +463,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 27:
+    case 28:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QFlags<Qt::AlignmentFlag> _q_arg1 = qscriptvalue_cast<QFlags<Qt::AlignmentFlag> >(context->argument(1));
@@ -452,7 +472,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 28:
+    case 29:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -461,7 +481,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 29:
+    case 30:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -470,7 +490,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 30:
+    case 31:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -479,7 +499,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 31:
+    case 32:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -488,7 +508,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 32:
+    case 33:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -497,7 +517,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 33:
+    case 34:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -506,7 +526,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 34:
+    case 35:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setSpacing(_q_arg0);
@@ -514,7 +534,7 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 35:
+    case 36:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setVerticalSpacing(_q_arg0);
@@ -522,14 +542,14 @@ static QScriptValue qtscript_QGraphicsGridLayout_prototype_call(QScriptContext *
     }
     break;
 
-    case 36:
+    case 37:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->verticalSpacing();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 37: {
+    case 38: {
     QString result = QString::fromLatin1("QGraphicsGridLayout");
     return QScriptValue(context->engine(), result);
     }
@@ -579,7 +599,7 @@ QScriptValue qtscript_create_QGraphicsGridLayout_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsGridLayout*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsGridLayout*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QGraphicsLayout*>()));
-    for (int i = 0; i < 38; ++i) {
+    for (int i = 0; i < 39; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsGridLayout_prototype_call, qtscript_QGraphicsGridLayout_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsGridLayout_function_names[i+1]),

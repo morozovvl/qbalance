@@ -112,6 +112,7 @@
   <enum-type name="QSql::NumericalPrecisionPolicy"/>
   <enum-type name="QSqlDriver::DriverFeature"/>
   <enum-type name="QSqlDriver::IdentifierType"/>
+  <enum-type name="QSqlDriver::NotificationSource"/>
   <enum-type name="QSqlDriver::StatementType"/>
   <enum-type name="QSqlError::ErrorType"/>
   <enum-type name="QSqlField::RequiredStatus"/>
@@ -119,6 +120,7 @@
   <enum-type name="QSqlResult::BindingSyntax"/>
   <enum-type name="QSqlResult::VirtualHookOperation"/>
   <enum-type name="QSqlTableModel::EditStrategy"/>
+  <enum-type name="QSqlRelationalTableModel::JoinMode"/>
 
   <suppress-warning text="WARNING(MetaJavaBuilder) :: Class 'QSqlField' has equals operators but no qHash() function. Hashcode of objects will consistently be 0."/>
   <suppress-warning text="WARNING(MetaJavaBuilder) :: Class 'QSqlRecord' has equals operators but no qHash() function. Hashcode of objects will consistently be 0."/>
@@ -126,5 +128,5 @@
   <suppress-warning text="WARNING(CppImplGenerator) :: protected function '*' in final class '*'"/>
   <suppress-warning text="WARNING(MetaJavaBuilder) :: visibility of function '*' modified in class '*'"/>
   <suppress-warning text="WARNING(MetaJavaBuilder) :: hiding of function '*' in class '*'"/>
-
+  <suppress-warning text="WARNING(MetaJavaBuilder) :: signal 'notification' in class 'QSqlDriver' is overloaded."/>
 </typesystem>

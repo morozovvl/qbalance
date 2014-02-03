@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionToolBar_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionToolBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionToolBar : public QStyleOptionToolBar
+{
+
+    friend QScriptValue qtscript_QStyleOptionToolBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionToolBar_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,11 +57,11 @@ Q_DECLARE_METATYPE(QStyleOptionToolBar)
 Q_DECLARE_METATYPE(QStyleOptionToolBar*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionToolBar)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionToolBar*)
-Q_DECLARE_METATYPE(QStyleOptionToolBar::StyleOptionVersion)
-Q_DECLARE_METATYPE(QStyleOptionToolBar::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOptionToolBar::ToolBarPosition)
 Q_DECLARE_METATYPE(QStyleOptionToolBar::ToolBarFeature)
 Q_DECLARE_METATYPE(QFlags<QStyleOptionToolBar::ToolBarFeature>)
+Q_DECLARE_METATYPE(QStyleOptionToolBar::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionToolBar::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -84,136 +93,6 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
-}
-
-//
-// QStyleOptionToolBar::StyleOptionVersion
-//
-
-static const QStyleOptionToolBar::StyleOptionVersion qtscript_QStyleOptionToolBar_StyleOptionVersion_values[] = {
-    QStyleOptionToolBar::Version
-};
-
-static const char * const qtscript_QStyleOptionToolBar_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionToolBar_StyleOptionVersion_toStringHelper(QStyleOptionToolBar::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionToolBar::Version) && (value <= QStyleOptionToolBar::Version))
-        return qtscript_QStyleOptionToolBar_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionToolBar::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionToolBar::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionToolBar"));
-    return clazz.property(qtscript_QStyleOptionToolBar_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionToolBar_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionToolBar::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionToolBar::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionToolBar_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionToolBar::Version) && (arg <= QStyleOptionToolBar::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionToolBar::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionToolBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionToolBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionToolBar_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionToolBar_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionToolBar_StyleOptionVersion,
-        qtscript_QStyleOptionToolBar_StyleOptionVersion_valueOf, qtscript_QStyleOptionToolBar_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionToolBar::StyleOptionVersion>(engine, qtscript_QStyleOptionToolBar_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionToolBar_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionToolBar_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionToolBar_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyleOptionToolBar::StyleOptionType
-//
-
-static const QStyleOptionToolBar::StyleOptionType qtscript_QStyleOptionToolBar_StyleOptionType_values[] = {
-    QStyleOptionToolBar::Type
-};
-
-static const char * const qtscript_QStyleOptionToolBar_StyleOptionType_keys[] = {
-    "Type"
-};
-
-static QString qtscript_QStyleOptionToolBar_StyleOptionType_toStringHelper(QStyleOptionToolBar::StyleOptionType value)
-{
-    if ((value >= QStyleOptionToolBar::Type) && (value <= QStyleOptionToolBar::Type))
-        return qtscript_QStyleOptionToolBar_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionToolBar::Type)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionToolBar::StyleOptionType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionToolBar"));
-    return clazz.property(qtscript_QStyleOptionToolBar_StyleOptionType_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionToolBar_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionToolBar::StyleOptionType &out)
-{
-    out = qvariant_cast<QStyleOptionToolBar::StyleOptionType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionToolBar_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionToolBar::Type) && (arg <= QStyleOptionToolBar::Type))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionToolBar::StyleOptionType>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionToolBar::StyleOptionType value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionToolBar::StyleOptionType value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionToolBar_StyleOptionType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionToolBar_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionToolBar_StyleOptionType,
-        qtscript_QStyleOptionToolBar_StyleOptionType_valueOf, qtscript_QStyleOptionToolBar_StyleOptionType_toString);
-    qScriptRegisterMetaType<QStyleOptionToolBar::StyleOptionType>(engine, qtscript_QStyleOptionToolBar_StyleOptionType_toScriptValue,
-        qtscript_QStyleOptionToolBar_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionToolBar_StyleOptionType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionToolBar_StyleOptionType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -431,6 +310,136 @@ static QScriptValue qtscript_create_QStyleOptionToolBar_ToolBarFeatures_class(QS
 }
 
 //
+// QStyleOptionToolBar::StyleOptionType
+//
+
+static const QStyleOptionToolBar::StyleOptionType qtscript_QStyleOptionToolBar_StyleOptionType_values[] = {
+    QStyleOptionToolBar::Type
+};
+
+static const char * const qtscript_QStyleOptionToolBar_StyleOptionType_keys[] = {
+    "Type"
+};
+
+static QString qtscript_QStyleOptionToolBar_StyleOptionType_toStringHelper(QStyleOptionToolBar::StyleOptionType value)
+{
+    if ((value >= QStyleOptionToolBar::Type) && (value <= QStyleOptionToolBar::Type))
+        return qtscript_QStyleOptionToolBar_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionToolBar::Type)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionToolBar::StyleOptionType &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionToolBar"));
+    return clazz.property(qtscript_QStyleOptionToolBar_StyleOptionType_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionToolBar_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionToolBar::StyleOptionType &out)
+{
+    out = qvariant_cast<QStyleOptionToolBar::StyleOptionType>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionToolBar_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionToolBar::Type) && (arg <= QStyleOptionToolBar::Type))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionToolBar::StyleOptionType>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionToolBar::StyleOptionType value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionToolBar::StyleOptionType value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionToolBar_StyleOptionType_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionToolBar_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionToolBar_StyleOptionType,
+        qtscript_QStyleOptionToolBar_StyleOptionType_valueOf, qtscript_QStyleOptionToolBar_StyleOptionType_toString);
+    qScriptRegisterMetaType<QStyleOptionToolBar::StyleOptionType>(engine, qtscript_QStyleOptionToolBar_StyleOptionType_toScriptValue,
+        qtscript_QStyleOptionToolBar_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionToolBar_StyleOptionType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionToolBar_StyleOptionType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyleOptionToolBar::StyleOptionVersion
+//
+
+static const QStyleOptionToolBar::StyleOptionVersion qtscript_QStyleOptionToolBar_StyleOptionVersion_values[] = {
+    QStyleOptionToolBar::Version
+};
+
+static const char * const qtscript_QStyleOptionToolBar_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionToolBar_StyleOptionVersion_toStringHelper(QStyleOptionToolBar::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionToolBar::Version) && (value <= QStyleOptionToolBar::Version))
+        return qtscript_QStyleOptionToolBar_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionToolBar::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionToolBar::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionToolBar"));
+    return clazz.property(qtscript_QStyleOptionToolBar_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionToolBar_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionToolBar::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionToolBar::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionToolBar_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionToolBar::Version) && (arg <= QStyleOptionToolBar::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionToolBar::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionToolBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionToolBar_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionToolBar::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionToolBar::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionToolBar_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionToolBar_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionToolBar_StyleOptionVersion,
+        qtscript_QStyleOptionToolBar_StyleOptionVersion_valueOf, qtscript_QStyleOptionToolBar_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionToolBar::StyleOptionVersion>(engine, qtscript_QStyleOptionToolBar_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionToolBar_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionToolBar_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionToolBar_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionToolBar
 //
 
@@ -448,7 +457,7 @@ static QScriptValue qtscript_QStyleOptionToolBar_prototype_call(QScriptContext *
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionToolBar* _q_self = qscriptvalue_cast<QStyleOptionToolBar*>(context->thisObject());
+    qtscript_QStyleOptionToolBar* _q_self = reinterpret_cast<qtscript_QStyleOptionToolBar*>(qscriptvalue_cast<QStyleOptionToolBar*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionToolBar.%0(): this object is not a QStyleOptionToolBar")
@@ -513,15 +522,15 @@ QScriptValue qtscript_create_QStyleOptionToolBar_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionToolBar_static_call, proto, qtscript_QStyleOptionToolBar_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionToolBar_StyleOptionVersion_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
-        qtscript_create_QStyleOptionToolBar_StyleOptionType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ToolBarPosition"),
         qtscript_create_QStyleOptionToolBar_ToolBarPosition_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ToolBarFeature"),
         qtscript_create_QStyleOptionToolBar_ToolBarFeature_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ToolBarFeatures"),
         qtscript_create_QStyleOptionToolBar_ToolBarFeatures_class(engine));
+    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
+        qtscript_create_QStyleOptionToolBar_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionToolBar_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

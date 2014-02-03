@@ -7,17 +7,14 @@
 
 #include <qevent.h>
 #include <QVariant>
-#include <qevent.h>
 
 #include "qtscriptshell_QKeyEvent.h"
 
 static const char * const qtscript_QKeyEvent_function_names[] = {
     "QKeyEvent"
     // static
-    , "createExtendedKeyEvent"
     // prototype
     , "count"
-    , "hasExtendedInfo"
     , "isAutoRepeat"
     , "key"
     , "matches"
@@ -29,11 +26,9 @@ static const char * const qtscript_QKeyEvent_function_names[] = {
 };
 
 static const char * const qtscript_QKeyEvent_function_signatures[] = {
-    "Type type, int key, KeyboardModifiers modifiers, String text, bool autorep, ushort count"
+    "Type type, int key, KeyboardModifiers modifiers, String text, bool autorep, ushort count\nType type, int key, KeyboardModifiers modifiers, unsigned int nativeScanCode, unsigned int nativeVirtualKey, unsigned int nativeModifiers, String text, bool autorep, ushort count"
     // static
-    , "Type type, int key, KeyboardModifiers modifiers, unsigned int nativeScanCode, unsigned int nativeVirtualKey, unsigned int nativeModifiers, String text, bool autorep, ushort count"
     // prototype
-    , ""
     , ""
     , ""
     , ""
@@ -46,11 +41,9 @@ static const char * const qtscript_QKeyEvent_function_signatures[] = {
 };
 
 static const int qtscript_QKeyEvent_function_lengths[] = {
-    6
+    9
     // static
-    , 9
     // prototype
-    , 0
     , 0
     , 0
     , 0
@@ -94,7 +87,7 @@ static QScriptValue qtscript_QKeyEvent_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 9;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -102,7 +95,7 @@ static QScriptValue qtscript_QKeyEvent_prototype_call(QScriptContext *context, Q
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QKeyEvent.%0(): this object is not a QKeyEvent")
-            .arg(qtscript_QKeyEvent_function_names[_id+2]));
+            .arg(qtscript_QKeyEvent_function_names[_id+1]));
     }
 
     switch (_id) {
@@ -115,26 +108,19 @@ static QScriptValue qtscript_QKeyEvent_prototype_call(QScriptContext *context, Q
 
     case 1:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->hasExtendedInfo();
+        bool _q_result = _q_self->isAutoRepeat();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isAutoRepeat();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 3:
-    if (context->argumentCount() == 0) {
         int _q_result = _q_self->key();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 3:
     if (context->argumentCount() == 1) {
         QKeySequence::StandardKey _q_arg0 = qscriptvalue_cast<QKeySequence::StandardKey>(context->argument(0));
         bool _q_result = _q_self->matches(_q_arg0);
@@ -142,35 +128,35 @@ static QScriptValue qtscript_QKeyEvent_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 0) {
         uint _q_result = _q_self->nativeModifiers();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         uint _q_result = _q_self->nativeScanCode();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 0) {
         uint _q_result = _q_self->nativeVirtualKey();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->text();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9: {
+    case 8: {
     QString result = QString::fromLatin1("QKeyEvent");
     return QScriptValue(context->engine(), result);
     }
@@ -179,8 +165,8 @@ static QScriptValue qtscript_QKeyEvent_prototype_call(QScriptContext *context, Q
     Q_ASSERT(false);
     }
     return qtscript_QKeyEvent_throw_ambiguity_error_helper(context,
-        qtscript_QKeyEvent_function_names[_id+2],
-        qtscript_QKeyEvent_function_signatures[_id+2]);
+        qtscript_QKeyEvent_function_names[_id+1],
+        qtscript_QKeyEvent_function_signatures[_id+1]);
 }
 
 static QScriptValue qtscript_QKeyEvent_static_call(QScriptContext *context, QScriptEngine *)
@@ -221,31 +207,40 @@ static QScriptValue qtscript_QKeyEvent_static_call(QScriptContext *context, QScr
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
     } else if (context->argumentCount() == 6) {
-        QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
-        QString _q_arg3 = context->argument(3).toString();
-        bool _q_arg4 = context->argument(4).toBoolean();
-        ushort _q_arg5 = qscriptvalue_cast<ushort>(context->argument(5));
-        QtScriptShell_QKeyEvent* _q_cpp_result = new QtScriptShell_QKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QKeyEvent*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
-    }
-    break;
-
-    case 1:
-    if (context->argumentCount() == 6) {
-        QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
-        uint _q_arg3 = context->argument(3).toUInt32();
-        uint _q_arg4 = context->argument(4).toUInt32();
-        uint _q_arg5 = context->argument(5).toUInt32();
-        QKeyEvent* _q_result = QKeyEvent::createExtendedKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    if (context->argumentCount() == 7) {
+        if ((qMetaTypeId<QEvent::Type>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isNumber()
+            && (qMetaTypeId<QFlags<Qt::KeyboardModifier> >() == context->argument(2).toVariant().userType())
+            && context->argument(3).isString()
+            && context->argument(4).isBoolean()
+            && context->argument(5).isNumber()) {
+            QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
+            int _q_arg1 = context->argument(1).toInt32();
+            QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
+            QString _q_arg3 = context->argument(3).toString();
+            bool _q_arg4 = context->argument(4).toBoolean();
+            ushort _q_arg5 = qscriptvalue_cast<ushort>(context->argument(5));
+            QtScriptShell_QKeyEvent* _q_cpp_result = new QtScriptShell_QKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QKeyEvent*)_q_cpp_result));
+            _q_cpp_result->__qtscript_self = _q_result;
+            return _q_result;
+        } else if ((qMetaTypeId<QEvent::Type>() == context->argument(0).toVariant().userType())
+            && context->argument(1).isNumber()
+            && (qMetaTypeId<QFlags<Qt::KeyboardModifier> >() == context->argument(2).toVariant().userType())
+            && context->argument(3).isNumber()
+            && context->argument(4).isNumber()
+            && context->argument(5).isNumber()) {
+            QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
+            int _q_arg1 = context->argument(1).toInt32();
+            QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
+            uint _q_arg3 = context->argument(3).toUInt32();
+            uint _q_arg4 = context->argument(4).toUInt32();
+            uint _q_arg5 = context->argument(5).toUInt32();
+            QtScriptShell_QKeyEvent* _q_cpp_result = new QtScriptShell_QKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
+            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QKeyEvent*)_q_cpp_result));
+            _q_cpp_result->__qtscript_self = _q_result;
+            return _q_result;
+        }
+    } else if (context->argumentCount() == 7) {
         QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
         QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
@@ -253,10 +248,11 @@ static QScriptValue qtscript_QKeyEvent_static_call(QScriptContext *context, QScr
         uint _q_arg4 = context->argument(4).toUInt32();
         uint _q_arg5 = context->argument(5).toUInt32();
         QString _q_arg6 = context->argument(6).toString();
-        QKeyEvent* _q_result = QKeyEvent::createExtendedKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    if (context->argumentCount() == 8) {
+        QtScriptShell_QKeyEvent* _q_cpp_result = new QtScriptShell_QKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QKeyEvent*)_q_cpp_result));
+        _q_cpp_result->__qtscript_self = _q_result;
+        return _q_result;
+    } else if (context->argumentCount() == 8) {
         QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
         QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
@@ -265,10 +261,11 @@ static QScriptValue qtscript_QKeyEvent_static_call(QScriptContext *context, QScr
         uint _q_arg5 = context->argument(5).toUInt32();
         QString _q_arg6 = context->argument(6).toString();
         bool _q_arg7 = context->argument(7).toBoolean();
-        QKeyEvent* _q_result = QKeyEvent::createExtendedKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7);
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    if (context->argumentCount() == 9) {
+        QtScriptShell_QKeyEvent* _q_cpp_result = new QtScriptShell_QKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QKeyEvent*)_q_cpp_result));
+        _q_cpp_result->__qtscript_self = _q_result;
+        return _q_result;
+    } else if (context->argumentCount() == 9) {
         QEvent::Type _q_arg0 = qscriptvalue_cast<QEvent::Type>(context->argument(0));
         int _q_arg1 = context->argument(1).toInt32();
         QFlags<Qt::KeyboardModifier> _q_arg2 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(2));
@@ -278,8 +275,10 @@ static QScriptValue qtscript_QKeyEvent_static_call(QScriptContext *context, QScr
         QString _q_arg6 = context->argument(6).toString();
         bool _q_arg7 = context->argument(7).toBoolean();
         ushort _q_arg8 = qscriptvalue_cast<ushort>(context->argument(8));
-        QKeyEvent* _q_result = QKeyEvent::createExtendedKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7, _q_arg8);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        QtScriptShell_QKeyEvent* _q_cpp_result = new QtScriptShell_QKeyEvent(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7, _q_arg8);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QKeyEvent*)_q_cpp_result));
+        _q_cpp_result->__qtscript_self = _q_result;
+        return _q_result;
     }
     break;
 
@@ -296,10 +295,10 @@ QScriptValue qtscript_create_QKeyEvent_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QKeyEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QKeyEvent*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QInputEvent*>()));
-    for (int i = 0; i < 10; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QKeyEvent_prototype_call, qtscript_QKeyEvent_function_lengths[i+2]);
+    for (int i = 0; i < 9; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QKeyEvent_prototype_call, qtscript_QKeyEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QKeyEvent_function_names[i+2]),
+        proto.setProperty(QString::fromLatin1(qtscript_QKeyEvent_function_names[i+1]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -307,13 +306,6 @@ QScriptValue qtscript_create_QKeyEvent_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QKeyEvent_static_call, proto, qtscript_QKeyEvent_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 1; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QKeyEvent_static_call,
-            qtscript_QKeyEvent_function_lengths[i+1]);
-        fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));
-        ctor.setProperty(QString::fromLatin1(qtscript_QKeyEvent_function_names[i+1]),
-            fun, QScriptValue::SkipInEnumeration);
-    }
 
     return ctor;
 }

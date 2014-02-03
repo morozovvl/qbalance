@@ -17,20 +17,17 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QUdpSocket prototype object</li>
-<li><b>DefaultForPlatform = 0x0</b></li>
-<li><b>ShareAddress = 0x1</b></li>
-<li><b>DontShareAddress = 0x2</b></li>
-<li><b>ReuseAddressHint = 0x4</b></li>
-<li><b>BindFlag( value )</b></li>
-<li><b>BindMode( value1, value2, ... )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QUdpSocket prototype object inherits properties from the <a href="qabstractsocket.html">QAbstractSocket</a> prototype object and also has the following properties.</p>
 <ul>
-<li><div class="fn"/><b>bool bind(QHostAddress address, unsigned short port)</b></li>
 <li><div class="fn"/><b>bool hasPendingDatagrams()</b></li>
+<li><div class="fn"/><b>bool joinMulticastGroup(QHostAddress groupAddress)</b></li>
+<li><div class="fn"/><b>bool leaveMulticastGroup(QHostAddress groupAddress)</b></li>
+<li><div class="fn"/><b>QNetworkInterface multicastInterface()</b></li>
 <li><div class="fn"/><b>qint64 pendingDatagramSize()</b></li>
 <li><div class="fn"/><b>qint64 readDatagram(char data, qint64 maxlen, QHostAddress host, unsigned short port)</b></li>
+<li><div class="fn"/><b>void setMulticastInterface(QNetworkInterface iface)</b></li>
 <li><div class="fn"/><b>qint64 writeDatagram(QByteArray datagram, QHostAddress host, unsigned short port)</b></li>
 </ul>
 <h3>Instance Properties</h3>

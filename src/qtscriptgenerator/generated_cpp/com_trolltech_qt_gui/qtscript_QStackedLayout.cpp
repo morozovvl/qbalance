@@ -54,6 +54,15 @@ static const int qtscript_QStackedLayout_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStackedLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStackedLayout : public QStackedLayout
+{
+
+    friend QScriptValue qtscript_QStackedLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStackedLayout_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -73,6 +82,7 @@ static const QMetaObject *qtscript_QStackedLayout_metaObject()
 Q_DECLARE_METATYPE(QStackedLayout*)
 Q_DECLARE_METATYPE(QtScriptShell_QStackedLayout*)
 Q_DECLARE_METATYPE(QStackedLayout::StackingMode)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QLayout*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -180,7 +190,7 @@ static QScriptValue qtscript_QStackedLayout_prototype_call(QScriptContext *conte
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStackedLayout* _q_self = qscriptvalue_cast<QStackedLayout*>(context->thisObject());
+    qtscript_QStackedLayout* _q_self = reinterpret_cast<qtscript_QStackedLayout*>(qscriptvalue_cast<QStackedLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStackedLayout.%0(): this object is not a QStackedLayout")

@@ -8,8 +8,8 @@
 #include <qevent.h>
 #include <QVariant>
 #include <qmimedata.h>
+#include <qobject.h>
 #include <qpoint.h>
-#include <qwidget.h>
 
 #include "qtscriptshell_QDropEvent.h"
 
@@ -23,6 +23,7 @@ static const char * const qtscript_QDropEvent_function_names[] = {
     , "mimeData"
     , "mouseButtons"
     , "pos"
+    , "posF"
     , "possibleActions"
     , "proposedAction"
     , "setDropAction"
@@ -31,9 +32,10 @@ static const char * const qtscript_QDropEvent_function_names[] = {
 };
 
 static const char * const qtscript_QDropEvent_function_signatures[] = {
-    "QPoint pos, DropActions actions, QMimeData data, MouseButtons buttons, KeyboardModifiers modifiers, Type type"
+    "QPointF pos, DropActions actions, QMimeData data, MouseButtons buttons, KeyboardModifiers modifiers, Type type"
     // static
     // prototype
+    , ""
     , ""
     , ""
     , ""
@@ -51,6 +53,7 @@ static const int qtscript_QDropEvent_function_lengths[] = {
     6
     // static
     // prototype
+    , 0
     , 0
     , 0
     , 0
@@ -99,7 +102,7 @@ static QScriptValue qtscript_QDropEvent_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 10;
+        _id = 0xBABE0000 + 11;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -155,19 +158,26 @@ static QScriptValue qtscript_QDropEvent_prototype_call(QScriptContext *context, 
 
     case 6:
     if (context->argumentCount() == 0) {
-        QFlags<Qt::DropAction> _q_result = _q_self->possibleActions();
+        QPointF _q_result = _q_self->posF();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 7:
     if (context->argumentCount() == 0) {
-        Qt::DropAction _q_result = _q_self->proposedAction();
+        QFlags<Qt::DropAction> _q_result = _q_self->possibleActions();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 8:
+    if (context->argumentCount() == 0) {
+        Qt::DropAction _q_result = _q_self->proposedAction();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 1) {
         Qt::DropAction _q_arg0 = qscriptvalue_cast<Qt::DropAction>(context->argument(0));
         _q_self->setDropAction(_q_arg0);
@@ -175,14 +185,14 @@ static QScriptValue qtscript_QDropEvent_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 0) {
-        QWidget* _q_result = _q_self->source();
+        QObject* _q_result = _q_self->source();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 10: {
+    case 11: {
     QString result = QString::fromLatin1("QDropEvent");
     return QScriptValue(context->engine(), result);
     }
@@ -206,7 +216,7 @@ static QScriptValue qtscript_QDropEvent_static_call(QScriptContext *context, QSc
         return context->throwError(QString::fromLatin1("QDropEvent(): Did you forget to construct with 'new'?"));
     }
     if (context->argumentCount() == 5) {
-        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         QFlags<Qt::DropAction> _q_arg1 = qscriptvalue_cast<QFlags<Qt::DropAction> >(context->argument(1));
         QMimeData* _q_arg2 = qscriptvalue_cast<QMimeData*>(context->argument(2));
         QFlags<Qt::MouseButton> _q_arg3 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(3));
@@ -216,7 +226,7 @@ static QScriptValue qtscript_QDropEvent_static_call(QScriptContext *context, QSc
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
     } else if (context->argumentCount() == 6) {
-        QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         QFlags<Qt::DropAction> _q_arg1 = qscriptvalue_cast<QFlags<Qt::DropAction> >(context->argument(1));
         QMimeData* _q_arg2 = qscriptvalue_cast<QMimeData*>(context->argument(2));
         QFlags<Qt::MouseButton> _q_arg3 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(3));
@@ -242,7 +252,7 @@ QScriptValue qtscript_create_QDropEvent_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QDropEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDropEvent*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QEvent*>()));
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 12; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDropEvent_prototype_call, qtscript_QDropEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QDropEvent_function_names[i+1]),

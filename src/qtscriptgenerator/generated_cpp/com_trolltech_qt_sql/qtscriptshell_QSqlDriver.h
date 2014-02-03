@@ -12,6 +12,7 @@ public:
     ~QtScriptShell_QSqlDriver();
 
     bool  beginTransaction();
+    bool  cancelQuery();
     void childEvent(QChildEvent*  arg__1);
     void close();
     bool  commitTransaction();
@@ -23,6 +24,7 @@ public:
     QString  formatValue(const QSqlField&  field, bool  trimStrings = false) const;
     QVariant  handle() const;
     bool  hasFeature(QSqlDriver::DriverFeature  f) const;
+    bool  isIdentifierEscaped(const QString&  identifier, QSqlDriver::IdentifierType  type) const;
     bool  isOpen() const;
     bool  open(const QString&  db, const QString&  user = QString(), const QString&  password = QString(), const QString&  host = QString(), int  port = -1, const QString&  connOpts = QString());
     QSqlIndex  primaryIndex(const QString&  tableName) const;
@@ -32,8 +34,12 @@ public:
     void setOpen(bool  o);
     void setOpenError(bool  e);
     QString  sqlStatement(QSqlDriver::StatementType  type, const QString&  tableName, const QSqlRecord&  rec, bool  preparedStatement) const;
+    QString  stripDelimiters(const QString&  identifier, QSqlDriver::IdentifierType  type) const;
+    bool  subscribeToNotification(const QString&  name);
+    QStringList  subscribedToNotifications() const;
     QStringList  tables(QSql::TableType  tableType) const;
     void timerEvent(QTimerEvent*  arg__1);
+    bool  unsubscribeFromNotification(const QString&  name);
 
     QScriptValue __qtscript_self;
 };

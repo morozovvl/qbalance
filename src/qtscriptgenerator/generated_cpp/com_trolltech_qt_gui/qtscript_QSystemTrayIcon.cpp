@@ -6,10 +6,10 @@
 #include <qmetaobject.h>
 
 #include <qsystemtrayicon.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qbytearray.h>
 #include <qcoreevent.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qmenu.h>
 #include <qobject.h>
@@ -55,6 +55,15 @@ static const int qtscript_QSystemTrayIcon_function_lengths[] = {
     , 1
     , 4
     , 0
+};
+
+static QScriptValue qtscript_QSystemTrayIcon_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSystemTrayIcon : public QSystemTrayIcon
+{
+
+    friend QScriptValue qtscript_QSystemTrayIcon_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSystemTrayIcon_throw_ambiguity_error_helper(
@@ -250,7 +259,7 @@ static QScriptValue qtscript_QSystemTrayIcon_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSystemTrayIcon* _q_self = qscriptvalue_cast<QSystemTrayIcon*>(context->thisObject());
+    qtscript_QSystemTrayIcon* _q_self = reinterpret_cast<qtscript_QSystemTrayIcon*>(qscriptvalue_cast<QSystemTrayIcon*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSystemTrayIcon.%0(): this object is not a QSystemTrayIcon")

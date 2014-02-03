@@ -42,6 +42,15 @@ static const int qtscript_QHBoxLayout_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QHBoxLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QHBoxLayout : public QHBoxLayout
+{
+
+    friend QScriptValue qtscript_QHBoxLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QHBoxLayout_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -55,6 +64,7 @@ static QScriptValue qtscript_QHBoxLayout_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QHBoxLayout*)
 Q_DECLARE_METATYPE(QtScriptShell_QHBoxLayout*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QBoxLayout*)
 
 //
@@ -75,7 +85,7 @@ static QScriptValue qtscript_QHBoxLayout_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QHBoxLayout* _q_self = qscriptvalue_cast<QHBoxLayout*>(context->thisObject());
+    qtscript_QHBoxLayout* _q_self = reinterpret_cast<qtscript_QHBoxLayout*>(qscriptvalue_cast<QHBoxLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QHBoxLayout.%0(): this object is not a QHBoxLayout")

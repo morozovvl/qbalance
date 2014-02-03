@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qinputdialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qinputdialog.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qstringlist.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QInputDialog.h"
 
@@ -44,8 +45,7 @@ static const char * const qtscript_QInputDialog_function_names[] = {
     "QInputDialog"
     // static
     , "getDouble"
-    , "getInt_private"
-    , "getInteger"
+    , "getInt"
     , "getItem"
     , "getText"
     // prototype
@@ -96,9 +96,8 @@ static const char * const qtscript_QInputDialog_function_signatures[] = {
     // static
     , "QWidget parent, String title, String label, double value, double minValue, double maxValue, int decimals, WindowFlags flags"
     , "QWidget parent, String title, String label, int value, int minValue, int maxValue, int step, bool ok, WindowFlags flags"
-    , "QWidget parent, String title, String label, int value, int minValue, int maxValue, int step, WindowFlags flags"
-    , "QWidget parent, String title, String label, List items, int current, bool editable, WindowFlags flags"
-    , "QWidget parent, String title, String label, EchoMode echo, String text, WindowFlags flags"
+    , "QWidget parent, String title, String label, List items, int current, bool editable, bool ok, WindowFlags flags, InputMethodHints inputMethodHints"
+    , "QWidget parent, String title, String label, EchoMode echo, String text, bool ok, WindowFlags flags, InputMethodHints inputMethodHints"
     // prototype
     , ""
     , ""
@@ -149,7 +148,6 @@ static const int qtscript_QInputDialog_function_lengths[] = {
     , 9
     , 9
     , 8
-    , 7
     // prototype
     , 0
     , 0
@@ -193,6 +191,15 @@ static const int qtscript_QInputDialog_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QInputDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QInputDialog : public QInputDialog
+{
+
+    friend QScriptValue qtscript_QInputDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QInputDialog_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -211,8 +218,10 @@ Q_DECLARE_METATYPE(QInputDialog::InputDialogOption)
 Q_DECLARE_METATYPE(QFlags<QInputDialog::InputDialogOption>)
 Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QLineEdit::EchoMode)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(bool*)
+Q_DECLARE_METATYPE(QFlags<Qt::InputMethodHint>)
 Q_DECLARE_METATYPE(QDialog*)
 
 
@@ -479,11 +488,11 @@ static QScriptValue qtscript_QInputDialog_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QInputDialog* _q_self = qscriptvalue_cast<QInputDialog*>(context->thisObject());
+    qtscript_QInputDialog* _q_self = reinterpret_cast<qtscript_QInputDialog*>(qscriptvalue_cast<QInputDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QInputDialog.%0(): this object is not a QInputDialog")
-            .arg(qtscript_QInputDialog_function_names[_id+6]));
+            .arg(qtscript_QInputDialog_function_names[_id+5]));
     }
 
     switch (_id) {
@@ -801,8 +810,8 @@ static QScriptValue qtscript_QInputDialog_prototype_call(QScriptContext *context
     Q_ASSERT(false);
     }
     return qtscript_QInputDialog_throw_ambiguity_error_helper(context,
-        qtscript_QInputDialog_function_names[_id+6],
-        qtscript_QInputDialog_function_signatures[_id+6]);
+        qtscript_QInputDialog_function_names[_id+5],
+        qtscript_QInputDialog_function_signatures[_id+5]);
 }
 
 static QScriptValue qtscript_QInputDialog_static_call(QScriptContext *context, QScriptEngine *)
@@ -881,34 +890,36 @@ static QScriptValue qtscript_QInputDialog_static_call(QScriptContext *context, Q
     break;
 
     case 3:
-    if (context->argumentCount() == 8) {
+    if (context->argumentCount() == 4) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
         QString _q_arg2 = context->argument(2).toString();
-        int _q_arg3 = context->argument(3).toInt32();
-        int _q_arg4 = context->argument(4).toInt32();
-        int _q_arg5 = context->argument(5).toInt32();
-        int _q_arg6 = context->argument(6).toInt32();
-
-          // TEMPLATE - core.prepare_removed_bool*_argument - START
-          bool __ok;
-          bool *_q_arg7 = &__ok;
-    // TEMPLATE - core.prepare_removed_bool*_argument - END
-                  QFlags<Qt::WindowType> _q_arg8 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(7));
-        int _q_result = QInputDialog::getInteger(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7, _q_arg8);
-        
-          // TEMPLATE - core.convert_to_null_or_primitive - START
-          QScriptValue _q_convertedResult;
-          if (!__ok)
-              _q_convertedResult = context->engine()->nullValue();
-          else
-              _q_convertedResult = QScriptValue(context->engine(), _q_result);
-    // TEMPLATE - core.convert_to_null_or_primitive - END
-          return qScriptValueFromValue(context->engine(), _q_convertedResult);
+        QStringList _q_arg3;
+        qScriptValueToSequence(context->argument(3), _q_arg3);
+        QString _q_result = QInputDialog::getItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return QScriptValue(context->engine(), _q_result);
     }
-    break;
-
-    case 4:
+    if (context->argumentCount() == 5) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QStringList _q_arg3;
+        qScriptValueToSequence(context->argument(3), _q_arg3);
+        int _q_arg4 = context->argument(4).toInt32();
+        QString _q_result = QInputDialog::getItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 6) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QStringList _q_arg3;
+        qScriptValueToSequence(context->argument(3), _q_arg3);
+        int _q_arg4 = context->argument(4).toInt32();
+        bool _q_arg5 = context->argument(5).toBoolean();
+        QString _q_result = QInputDialog::getItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
+        return QScriptValue(context->engine(), _q_result);
+    }
     if (context->argumentCount() == 7) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -917,48 +928,96 @@ static QScriptValue qtscript_QInputDialog_static_call(QScriptContext *context, Q
         qScriptValueToSequence(context->argument(3), _q_arg3);
         int _q_arg4 = context->argument(4).toInt32();
         bool _q_arg5 = context->argument(5).toBoolean();
-
-          // TEMPLATE - core.prepare_removed_bool*_argument - START
-          bool __ok;
-          bool *_q_arg6 = &__ok;
-    // TEMPLATE - core.prepare_removed_bool*_argument - END
-                  QFlags<Qt::WindowType> _q_arg7 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(6));
+        bool* _q_arg6 = qscriptvalue_cast<bool*>(context->argument(6));
+        QString _q_result = QInputDialog::getItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 8) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QStringList _q_arg3;
+        qScriptValueToSequence(context->argument(3), _q_arg3);
+        int _q_arg4 = context->argument(4).toInt32();
+        bool _q_arg5 = context->argument(5).toBoolean();
+        bool* _q_arg6 = qscriptvalue_cast<bool*>(context->argument(6));
+        QFlags<Qt::WindowType> _q_arg7 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(7));
         QString _q_result = QInputDialog::getItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7);
-        
-          // TEMPLATE - core.convert_to_null_or_primitive - START
-          QScriptValue _q_convertedResult;
-          if (!__ok)
-              _q_convertedResult = context->engine()->nullValue();
-          else
-              _q_convertedResult = QScriptValue(context->engine(), _q_result);
-    // TEMPLATE - core.convert_to_null_or_primitive - END
-          return qScriptValueFromValue(context->engine(), _q_convertedResult);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 9) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QStringList _q_arg3;
+        qScriptValueToSequence(context->argument(3), _q_arg3);
+        int _q_arg4 = context->argument(4).toInt32();
+        bool _q_arg5 = context->argument(5).toBoolean();
+        bool* _q_arg6 = qscriptvalue_cast<bool*>(context->argument(6));
+        QFlags<Qt::WindowType> _q_arg7 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(7));
+        QFlags<Qt::InputMethodHint> _q_arg8 = qscriptvalue_cast<QFlags<Qt::InputMethodHint> >(context->argument(8));
+        QString _q_result = QInputDialog::getItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7, _q_arg8);
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 4:
+    if (context->argumentCount() == 3) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QString _q_result = QInputDialog::getText(_q_arg0, _q_arg1, _q_arg2);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 4) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QLineEdit::EchoMode _q_arg3 = qscriptvalue_cast<QLineEdit::EchoMode>(context->argument(3));
+        QString _q_result = QInputDialog::getText(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 5) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QLineEdit::EchoMode _q_arg3 = qscriptvalue_cast<QLineEdit::EchoMode>(context->argument(3));
+        QString _q_arg4 = context->argument(4).toString();
+        QString _q_result = QInputDialog::getText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
+        return QScriptValue(context->engine(), _q_result);
+    }
     if (context->argumentCount() == 6) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
         QString _q_arg2 = context->argument(2).toString();
         QLineEdit::EchoMode _q_arg3 = qscriptvalue_cast<QLineEdit::EchoMode>(context->argument(3));
         QString _q_arg4 = context->argument(4).toString();
-
-          // TEMPLATE - core.prepare_removed_bool*_argument - START
-          bool __ok;
-          bool *_q_arg5 = &__ok;
-    // TEMPLATE - core.prepare_removed_bool*_argument - END
-                  QFlags<Qt::WindowType> _q_arg6 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(5));
+        bool* _q_arg5 = qscriptvalue_cast<bool*>(context->argument(5));
+        QString _q_result = QInputDialog::getText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 7) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QLineEdit::EchoMode _q_arg3 = qscriptvalue_cast<QLineEdit::EchoMode>(context->argument(3));
+        QString _q_arg4 = context->argument(4).toString();
+        bool* _q_arg5 = qscriptvalue_cast<bool*>(context->argument(5));
+        QFlags<Qt::WindowType> _q_arg6 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(6));
         QString _q_result = QInputDialog::getText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6);
-        
-          // TEMPLATE - core.convert_to_null_or_primitive - START
-          QScriptValue _q_convertedResult;
-          if (!__ok)
-              _q_convertedResult = context->engine()->nullValue();
-          else
-              _q_convertedResult = QScriptValue(context->engine(), _q_result);
-    // TEMPLATE - core.convert_to_null_or_primitive - END
-          return qScriptValueFromValue(context->engine(), _q_convertedResult);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 8) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        QString _q_arg1 = context->argument(1).toString();
+        QString _q_arg2 = context->argument(2).toString();
+        QLineEdit::EchoMode _q_arg3 = qscriptvalue_cast<QLineEdit::EchoMode>(context->argument(3));
+        QString _q_arg4 = context->argument(4).toString();
+        bool* _q_arg5 = qscriptvalue_cast<bool*>(context->argument(5));
+        QFlags<Qt::WindowType> _q_arg6 = qscriptvalue_cast<QFlags<Qt::WindowType> >(context->argument(6));
+        QFlags<Qt::InputMethodHint> _q_arg7 = qscriptvalue_cast<QFlags<Qt::InputMethodHint> >(context->argument(7));
+        QString _q_result = QInputDialog::getText(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5, _q_arg6, _q_arg7);
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
@@ -986,9 +1045,9 @@ QScriptValue qtscript_create_QInputDialog_class(QScriptEngine *engine)
     QScriptValue proto = engine->newVariant(qVariantFromValue((QInputDialog*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QDialog*>()));
     for (int i = 0; i < 40; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QInputDialog_prototype_call, qtscript_QInputDialog_function_lengths[i+6]);
+        QScriptValue fun = engine->newFunction(qtscript_QInputDialog_prototype_call, qtscript_QInputDialog_function_lengths[i+5]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QInputDialog_function_names[i+6]),
+        proto.setProperty(QString::fromLatin1(qtscript_QInputDialog_function_names[i+5]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -997,7 +1056,7 @@ QScriptValue qtscript_create_QInputDialog_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QInputDialog_static_call, proto, qtscript_QInputDialog_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QInputDialog_static_call,
             qtscript_QInputDialog_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

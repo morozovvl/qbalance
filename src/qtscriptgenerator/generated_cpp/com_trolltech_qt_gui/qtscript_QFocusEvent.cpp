@@ -14,7 +14,6 @@ static const char * const qtscript_QFocusEvent_function_names[] = {
     // prototype
     , "gotFocus"
     , "lostFocus"
-    , "reason"
     , "toString"
 };
 
@@ -24,7 +23,6 @@ static const char * const qtscript_QFocusEvent_function_signatures[] = {
     // prototype
     , ""
     , ""
-    , ""
 ""
 };
 
@@ -32,7 +30,6 @@ static const int qtscript_QFocusEvent_function_lengths[] = {
     2
     // static
     // prototype
-    , 0
     , 0
     , 0
     , 0
@@ -50,8 +47,8 @@ static QScriptValue qtscript_QFocusEvent_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QFocusEvent*)
-Q_DECLARE_METATYPE(Qt::FocusReason)
 Q_DECLARE_METATYPE(QEvent::Type)
+Q_DECLARE_METATYPE(Qt::FocusReason)
 Q_DECLARE_METATYPE(QEvent*)
 
 //
@@ -68,7 +65,7 @@ static QScriptValue qtscript_QFocusEvent_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 2;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -94,14 +91,7 @@ static QScriptValue qtscript_QFocusEvent_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 2:
-    if (context->argumentCount() == 0) {
-        Qt::FocusReason _q_result = _q_self->reason();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 3: {
+    case 2: {
     QString result = QString::fromLatin1("QFocusEvent");
     return QScriptValue(context->engine(), result);
     }
@@ -151,7 +141,7 @@ QScriptValue qtscript_create_QFocusEvent_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QFocusEvent*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFocusEvent*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QEvent*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFocusEvent_prototype_call, qtscript_QFocusEvent_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFocusEvent_function_names[i+1]),

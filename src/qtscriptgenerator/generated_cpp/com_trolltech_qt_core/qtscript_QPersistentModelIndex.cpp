@@ -26,6 +26,7 @@ static const char * const qtscript_QPersistentModelIndex_function_names[] = {
     , "parent"
     , "row"
     , "sibling"
+    , "swap"
     , "toString"
 };
 
@@ -46,6 +47,7 @@ static const char * const qtscript_QPersistentModelIndex_function_signatures[] =
     , ""
     , ""
     , "int row, int column"
+    , "QPersistentModelIndex other"
 ""
 };
 
@@ -66,6 +68,7 @@ static const int qtscript_QPersistentModelIndex_function_lengths[] = {
     , 0
     , 0
     , 2
+    , 1
     , 0
 };
 
@@ -82,8 +85,8 @@ static QScriptValue qtscript_QPersistentModelIndex_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QPersistentModelIndex)
 Q_DECLARE_METATYPE(QPersistentModelIndex*)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QFlags<Qt::ItemFlag>)
+Q_DECLARE_METATYPE(quintptr)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
 //
@@ -100,7 +103,7 @@ static QScriptValue qtscript_QPersistentModelIndex_prototype_call(QScriptContext
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 13;
+        _id = 0xBABE0000 + 14;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -149,7 +152,7 @@ static QScriptValue qtscript_QPersistentModelIndex_prototype_call(QScriptContext
 
     case 4:
     if (context->argumentCount() == 0) {
-        qint64 _q_result = _q_self->internalId();
+        quintptr _q_result = _q_self->internalId();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -220,7 +223,15 @@ static QScriptValue qtscript_QPersistentModelIndex_prototype_call(QScriptContext
     }
     break;
 
-    case 13: {
+    case 13:
+    if (context->argumentCount() == 1) {
+        QPersistentModelIndex _q_arg0 = qscriptvalue_cast<QPersistentModelIndex>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 14: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -276,7 +287,7 @@ QScriptValue qtscript_create_QPersistentModelIndex_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QPersistentModelIndex*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPersistentModelIndex*)0));
-    for (int i = 0; i < 14; ++i) {
+    for (int i = 0; i < 15; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPersistentModelIndex_prototype_call, qtscript_QPersistentModelIndex_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPersistentModelIndex_function_names[i+1]),

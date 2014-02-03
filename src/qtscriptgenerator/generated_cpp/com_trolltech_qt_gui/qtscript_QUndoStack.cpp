@@ -85,6 +85,15 @@ static const int qtscript_QUndoStack_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QUndoStack_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QUndoStack : public QUndoStack
+{
+
+    friend QScriptValue qtscript_QUndoStack_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QUndoStack_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -119,7 +128,7 @@ static QScriptValue qtscript_QUndoStack_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QUndoStack* _q_self = qscriptvalue_cast<QUndoStack*>(context->thisObject());
+    qtscript_QUndoStack* _q_self = reinterpret_cast<qtscript_QUndoStack*>(qscriptvalue_cast<QUndoStack*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QUndoStack.%0(): this object is not a QUndoStack")

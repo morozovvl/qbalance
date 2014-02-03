@@ -12,18 +12,13 @@
 <p>Inherits <a href="qpaintdevice.html">QPaintDevice</a>.</p>
 <h3>Constructor</h3>
 <ul>
-<li><div class="fn"/><b>void QGLFramebufferObject(QSize size, Attachment attachment, unsigned int target, unsigned int internal_format)</b></li>
 <li><div class="fn"/><b>void QGLFramebufferObject(QSize size, QGLFramebufferObjectFormat format)</b></li>
-<li><div class="fn"/><b>void QGLFramebufferObject(QSize size, unsigned int target)</b></li>
-<li><div class="fn"/><b>void QGLFramebufferObject(int width, int height, Attachment attachment, unsigned int target, unsigned int internal_format)</b></li>
 <li><div class="fn"/><b>void QGLFramebufferObject(int width, int height, QGLFramebufferObjectFormat format)</b></li>
-<li><div class="fn"/><b>void QGLFramebufferObject(int width, int height, unsigned int target)</b></li>
 </ul>
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QGLFramebufferObject prototype object</li>
 <li><div class="fn"/><b>bool bindDefault()</b></li>
-<li><div class="fn"/><b>void blitFramebuffer(QGLFramebufferObject target, QRect targetRect, QGLFramebufferObject source, QRect sourceRect, unsigned int buffers, unsigned int filter)</b></li>
 <li><div class="fn"/><b>bool hasOpenGLFramebufferBlit()</b></li>
 <li><div class="fn"/><b>bool hasOpenGLFramebufferObjects()</b></li>
 <li><b>NoAttachment</b></li>
@@ -35,14 +30,11 @@
 <ul>
 <li><div class="fn"/><b>Attachment attachment()</b></li>
 <li><div class="fn"/><b>bool bind()</b></li>
-<li><div class="fn"/><b>void drawTexture(QPointF point, unsigned int textureId, unsigned int textureTarget)</b></li>
 <li><div class="fn"/><b>QGLFramebufferObjectFormat format()</b></li>
-<li><div class="fn"/><b>unsigned int handle()</b></li>
 <li><div class="fn"/><b>bool isBound()</b></li>
 <li><div class="fn"/><b>bool isValid()</b></li>
 <li><div class="fn"/><b>bool release()</b></li>
 <li><div class="fn"/><b>QSize size()</b></li>
-<li><div class="fn"/><b>unsigned int texture()</b></li>
 <li><div class="fn"/><b>QImage toImage()</b></li>
 </ul>
 <h3>Instance Properties</h3>

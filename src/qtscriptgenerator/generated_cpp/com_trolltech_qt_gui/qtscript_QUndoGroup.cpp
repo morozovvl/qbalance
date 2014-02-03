@@ -71,6 +71,15 @@ static const int qtscript_QUndoGroup_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QUndoGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QUndoGroup : public QUndoGroup
+{
+
+    friend QScriptValue qtscript_QUndoGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QUndoGroup_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -106,7 +115,7 @@ static QScriptValue qtscript_QUndoGroup_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QUndoGroup* _q_self = qscriptvalue_cast<QUndoGroup*>(context->thisObject());
+    qtscript_QUndoGroup* _q_self = reinterpret_cast<qtscript_QUndoGroup*>(qscriptvalue_cast<QUndoGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QUndoGroup.%0(): this object is not a QUndoGroup")

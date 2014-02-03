@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qheaderview.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -19,8 +20,6 @@
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
 #include <qheaderview.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -32,6 +31,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -40,7 +40,9 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qstyleoption.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QHeaderView.h"
 
@@ -51,30 +53,36 @@ static const char * const qtscript_QHeaderView_function_names[] = {
     , "count"
     , "hiddenSectionCount"
     , "hideSection"
-    , "isClickable"
-    , "isMovable"
+    , "initStyleOption"
+    , "initialize"
+    , "initializeSections"
     , "isSectionHidden"
     , "length"
     , "logicalIndex"
     , "logicalIndexAt"
+    , "moveCursor"
     , "moveSection"
     , "offset"
     , "orientation"
-    , "resizeMode"
+    , "paintSection"
     , "resizeSection"
     , "resizeSections"
     , "restoreState"
     , "saveState"
     , "sectionPosition"
+    , "sectionResizeMode"
     , "sectionSize"
+    , "sectionSizeFromContents"
     , "sectionSizeHint"
     , "sectionViewportPosition"
+    , "sectionsClickable"
     , "sectionsHidden"
+    , "sectionsMovable"
     , "sectionsMoved"
-    , "setClickable"
-    , "setMovable"
-    , "setResizeMode"
     , "setSectionHidden"
+    , "setSectionResizeMode"
+    , "setSectionsClickable"
+    , "setSectionsMovable"
     , "setSortIndicator"
     , "showSection"
     , "sortIndicatorOrder"
@@ -93,16 +101,18 @@ static const char * const qtscript_QHeaderView_function_signatures[] = {
     , ""
     , ""
     , "int logicalIndex"
+    , "QStyleOptionHeader option"
     , ""
-    , ""
+    , "\nint start, int end"
     , "int logicalIndex"
     , ""
     , "int visualIndex"
     , "QPoint pos\nint position\nint x, int y"
+    , "CursorAction arg__1, KeyboardModifiers arg__2"
     , "int from, int to"
     , ""
     , ""
-    , "int logicalIndex"
+    , "QPainter painter, QRect rect, int logicalIndex"
     , "int logicalIndex, int size"
     , "ResizeMode mode"
     , "QByteArray state"
@@ -111,12 +121,16 @@ static const char * const qtscript_QHeaderView_function_signatures[] = {
     , "int logicalIndex"
     , "int logicalIndex"
     , "int logicalIndex"
+    , "int logicalIndex"
+    , "int logicalIndex"
     , ""
     , ""
+    , ""
+    , ""
+    , "int logicalIndex, bool hide"
+    , "ResizeMode mode\nint logicalIndex, ResizeMode mode"
     , "bool clickable"
     , "bool movable"
-    , "ResizeMode mode\nint logicalIndex, ResizeMode mode"
-    , "int logicalIndex, bool hide"
     , "int logicalIndex, SortOrder order"
     , "int logicalIndex"
     , ""
@@ -135,16 +149,18 @@ static const int qtscript_QHeaderView_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 1
     , 0
-    , 0
+    , 2
     , 1
     , 0
     , 1
     , 2
     , 2
+    , 2
     , 0
     , 0
-    , 1
+    , 3
     , 2
     , 1
     , 1
@@ -153,21 +169,43 @@ static const int qtscript_QHeaderView_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
+    , 1
     , 0
-    , 0
-    , 1
-    , 1
-    , 2
-    , 2
-    , 2
-    , 1
     , 0
     , 0
     , 0
     , 2
+    , 2
+    , 1
+    , 1
+    , 2
+    , 1
+    , 0
+    , 0
+    , 0
+    , 2
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QHeaderView : public QHeaderView
+{
+    friend QScriptValue qtscript_QHeaderView_initStyleOption(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QHeaderView_initialize(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QHeaderView_initializeSections(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QHeaderView_moveCursor(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QHeaderView_paintSection(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QHeaderView_sectionSizeFromContents(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QHeaderView_throw_ambiguity_error_helper(
@@ -189,8 +227,13 @@ static const QMetaObject *qtscript_QHeaderView_metaObject()
 Q_DECLARE_METATYPE(QHeaderView*)
 Q_DECLARE_METATYPE(QtScriptShell_QHeaderView*)
 Q_DECLARE_METATYPE(QHeaderView::ResizeMode)
+Q_DECLARE_METATYPE(QStyleOptionHeader*)
+Q_DECLARE_METATYPE(QAbstractItemView::CursorAction)
+Q_DECLARE_METATYPE(QFlags<Qt::KeyboardModifier>)
 Q_DECLARE_METATYPE(Qt::Orientation)
+Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractItemView*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -298,11 +341,11 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 35;
+        _id = 0xBABE0000 + 41;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QHeaderView* _q_self = qscriptvalue_cast<QHeaderView*>(context->thisObject());
+    qtscript_QHeaderView* _q_self = reinterpret_cast<qtscript_QHeaderView*>(qscriptvalue_cast<QHeaderView*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QHeaderView.%0(): this object is not a QHeaderView")
@@ -333,20 +376,34 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     break;
 
     case 3:
-    if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isClickable();
-        return QScriptValue(context->engine(), _q_result);
+    if (context->argumentCount() == 1) {
+        QStyleOptionHeader* _q_arg0 = qscriptvalue_cast<QStyleOptionHeader*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isMovable();
-        return QScriptValue(context->engine(), _q_result);
+        _q_self->initialize();
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 5:
+    if (context->argumentCount() == 0) {
+        _q_self->initializeSections();
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->initializeSections(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->isSectionHidden(_q_arg0);
@@ -354,14 +411,14 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->length();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->logicalIndex(_q_arg0);
@@ -369,7 +426,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QPoint>() == context->argument(0).toVariant().userType())) {
             QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
@@ -389,7 +446,16 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 9:
+    case 10:
+    if (context->argumentCount() == 2) {
+        QAbstractItemView::CursorAction _q_arg0 = qscriptvalue_cast<QAbstractItemView::CursorAction>(context->argument(0));
+        QFlags<Qt::KeyboardModifier> _q_arg1 = qscriptvalue_cast<QFlags<Qt::KeyboardModifier> >(context->argument(1));
+        QModelIndex _q_result = _q_self->moveCursor(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -398,29 +464,31 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->offset();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 0) {
         Qt::Orientation _q_result = _q_self->orientation();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QHeaderView::ResizeMode _q_result = _q_self->resizeMode(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
+    case 14:
+    if (context->argumentCount() == 3) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        QRect _q_arg1 = qscriptvalue_cast<QRect>(context->argument(1));
+        int _q_arg2 = context->argument(2).toInt32();
+        _q_self->paintSection(_q_arg0, _q_arg1, _q_arg2);
+        return context->engine()->undefinedValue();
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -429,7 +497,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 1) {
         QHeaderView::ResizeMode _q_arg0 = qscriptvalue_cast<QHeaderView::ResizeMode>(context->argument(0));
         _q_self->resizeSections(_q_arg0);
@@ -437,7 +505,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 1) {
         QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
         bool _q_result = _q_self->restoreState(_q_arg0);
@@ -445,14 +513,14 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 0) {
         QByteArray _q_result = _q_self->saveState();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->sectionPosition(_q_arg0);
@@ -460,7 +528,15 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 18:
+    case 20:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QHeaderView::ResizeMode _q_result = _q_self->sectionResizeMode(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->sectionSize(_q_arg0);
@@ -468,7 +544,15 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 19:
+    case 22:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QSize _q_result = _q_self->sectionSizeFromContents(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 23:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->sectionSizeHint(_q_arg0);
@@ -476,7 +560,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 20:
+    case 24:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->sectionViewportPosition(_q_arg0);
@@ -484,51 +568,35 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 21:
+    case 25:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->sectionsClickable();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 26:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->sectionsHidden();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 27:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->sectionsMovable();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 28:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->sectionsMoved();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
-    if (context->argumentCount() == 1) {
-        bool _q_arg0 = context->argument(0).toBoolean();
-        _q_self->setClickable(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 24:
-    if (context->argumentCount() == 1) {
-        bool _q_arg0 = context->argument(0).toBoolean();
-        _q_self->setMovable(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 25:
-    if (context->argumentCount() == 1) {
-        QHeaderView::ResizeMode _q_arg0 = qscriptvalue_cast<QHeaderView::ResizeMode>(context->argument(0));
-        _q_self->setResizeMode(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    if (context->argumentCount() == 2) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QHeaderView::ResizeMode _q_arg1 = qscriptvalue_cast<QHeaderView::ResizeMode>(context->argument(1));
-        _q_self->setResizeMode(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 26:
+    case 29:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -537,7 +605,37 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 27:
+    case 30:
+    if (context->argumentCount() == 1) {
+        QHeaderView::ResizeMode _q_arg0 = qscriptvalue_cast<QHeaderView::ResizeMode>(context->argument(0));
+        _q_self->setSectionResizeMode(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QHeaderView::ResizeMode _q_arg1 = qscriptvalue_cast<QHeaderView::ResizeMode>(context->argument(1));
+        _q_self->setSectionResizeMode(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 31:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setSectionsClickable(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 32:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setSectionsMovable(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 33:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         Qt::SortOrder _q_arg1 = qscriptvalue_cast<Qt::SortOrder>(context->argument(1));
@@ -546,7 +644,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 28:
+    case 34:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->showSection(_q_arg0);
@@ -554,28 +652,28 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 29:
+    case 35:
     if (context->argumentCount() == 0) {
         Qt::SortOrder _q_result = _q_self->sortIndicatorOrder();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 30:
+    case 36:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->sortIndicatorSection();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 31:
+    case 37:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->stretchSectionCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 32:
+    case 38:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -584,7 +682,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 33:
+    case 39:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->visualIndex(_q_arg0);
@@ -592,7 +690,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 34:
+    case 40:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->visualIndexAt(_q_arg0);
@@ -600,7 +698,7 @@ static QScriptValue qtscript_QHeaderView_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 35: {
+    case 41: {
     QString result = QString::fromLatin1("QHeaderView");
     return QScriptValue(context->engine(), result);
     }
@@ -662,7 +760,7 @@ QScriptValue qtscript_create_QHeaderView_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QHeaderView*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QHeaderView*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemView*>()));
-    for (int i = 0; i < 36; ++i) {
+    for (int i = 0; i < 42; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QHeaderView_prototype_call, qtscript_QHeaderView_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QHeaderView_function_names[i+1]),

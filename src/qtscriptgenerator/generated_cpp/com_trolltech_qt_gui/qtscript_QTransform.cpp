@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtransform.h>
+#include <QTouchDevice>
 #include <QVariant>
 #include <qdatastream.h>
 #include <qline.h>
@@ -193,7 +194,6 @@ static QScriptValue qtscript_QTransform_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QTransform*)
 Q_DECLARE_METATYPE(QTransform::TransformationType)
 Q_DECLARE_METATYPE(QPainterPath)
-Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(Qt::Axis)
 
@@ -561,7 +561,7 @@ static QScriptValue qtscript_QTransform_prototype_call(QScriptContext *context, 
             QTransform _q_arg0 = qscriptvalue_cast<QTransform>(context->argument(0));
             QTransform _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<qreal>() == context->argument(0).toVariant().userType())) {
+        } else if (context->argument(0).isNumber()) {
             qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
             QTransform _q_result = _q_self->operator*=(_q_arg0);
             return qScriptValueFromValue(context->engine(), _q_result);

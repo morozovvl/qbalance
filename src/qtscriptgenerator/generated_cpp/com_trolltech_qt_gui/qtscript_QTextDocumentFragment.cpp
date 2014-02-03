@@ -31,7 +31,7 @@ static const char * const qtscript_QTextDocumentFragment_function_signatures[] =
     , "String plainText"
     // prototype
     , ""
-    , "\nQByteArray encoding"
+    , "QByteArray encoding"
     , ""
 ""
 };

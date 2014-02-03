@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtabwidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -38,6 +38,7 @@
 #include <qtabbar.h>
 #include <qtabwidget.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTabWidget.h"
 
@@ -50,18 +51,23 @@ static const char * const qtscript_QTabWidget_function_names[] = {
     , "cornerWidget"
     , "currentWidget"
     , "indexOf"
+    , "initStyleOption"
     , "insertTab"
     , "isTabEnabled"
     , "minimumSizeHint"
     , "removeTab"
     , "setCornerWidget"
+    , "setTabBar"
     , "setTabEnabled"
     , "setTabIcon"
     , "setTabText"
     , "setTabToolTip"
     , "setTabWhatsThis"
     , "sizeHint"
+    , "tabBar"
     , "tabIcon"
+    , "tabInserted"
+    , "tabRemoved"
     , "tabText"
     , "tabToolTip"
     , "tabWhatsThis"
@@ -78,17 +84,22 @@ static const char * const qtscript_QTabWidget_function_signatures[] = {
     , "Corner corner"
     , ""
     , "QWidget widget"
+    , "QStyleOptionTabWidgetFrame option"
     , "int index, QWidget widget, QIcon icon, String label\nint index, QWidget widget, String arg__3"
     , "int index"
     , ""
     , "int index"
     , "QWidget w, Corner corner"
+    , "QTabBar arg__1"
     , "int index, bool arg__2"
     , "int index, QIcon icon"
     , "int index, String arg__2"
     , "int index, String tip"
     , "int index, String text"
     , ""
+    , ""
+    , "int index"
+    , "int index"
     , "int index"
     , "int index"
     , "int index"
@@ -106,23 +117,41 @@ static const int qtscript_QTabWidget_function_lengths[] = {
     , 1
     , 0
     , 1
+    , 1
     , 4
     , 1
     , 0
     , 1
     , 2
+    , 1
     , 2
     , 2
     , 2
     , 2
     , 2
     , 0
+    , 0
+    , 1
+    , 1
     , 1
     , 1
     , 1
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTabWidget : public QTabWidget
+{
+    friend QScriptValue qtscript_QTabWidget_initStyleOption(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTabWidget_setTabBar(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTabWidget_tabInserted(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTabWidget_tabRemoved(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTabWidget_throw_ambiguity_error_helper(
@@ -143,9 +172,12 @@ static const QMetaObject *qtscript_QTabWidget_metaObject()
 
 Q_DECLARE_METATYPE(QTabWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QTabWidget*)
-Q_DECLARE_METATYPE(QTabWidget::TabShape)
 Q_DECLARE_METATYPE(QTabWidget::TabPosition)
+Q_DECLARE_METATYPE(QTabWidget::TabShape)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(Qt::Corner)
+Q_DECLARE_METATYPE(QStyleOptionTabWidgetFrame*)
+Q_DECLARE_METATYPE(QTabBar*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -159,79 +191,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QTabWidget::TabShape
-//
-
-static const QTabWidget::TabShape qtscript_QTabWidget_TabShape_values[] = {
-    QTabWidget::Rounded
-    , QTabWidget::Triangular
-};
-
-static const char * const qtscript_QTabWidget_TabShape_keys[] = {
-    "Rounded"
-    , "Triangular"
-};
-
-static QString qtscript_QTabWidget_TabShape_toStringHelper(QTabWidget::TabShape value)
-{
-    const QMetaObject *meta = qtscript_QTabWidget_metaObject();
-    int idx = meta->indexOfEnumerator("TabShape");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QTabWidget_TabShape_toScriptValue(QScriptEngine *engine, const QTabWidget::TabShape &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTabWidget"));
-    return clazz.property(qtscript_QTabWidget_TabShape_toStringHelper(value));
-}
-
-static void qtscript_QTabWidget_TabShape_fromScriptValue(const QScriptValue &value, QTabWidget::TabShape &out)
-{
-    out = qvariant_cast<QTabWidget::TabShape>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTabWidget_TabShape(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QTabWidget_metaObject();
-    int idx = meta->indexOfEnumerator("TabShape");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QTabWidget::TabShape>(arg));
-    return context->throwError(QString::fromLatin1("TabShape(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTabWidget_TabShape_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTabWidget::TabShape value = qscriptvalue_cast<QTabWidget::TabShape>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTabWidget_TabShape_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTabWidget::TabShape value = qscriptvalue_cast<QTabWidget::TabShape>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTabWidget_TabShape_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTabWidget_TabShape_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTabWidget_TabShape,
-        qtscript_QTabWidget_TabShape_valueOf, qtscript_QTabWidget_TabShape_toString);
-    qScriptRegisterMetaType<QTabWidget::TabShape>(engine, qtscript_QTabWidget_TabShape_toScriptValue,
-        qtscript_QTabWidget_TabShape_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTabWidget_TabShape_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTabWidget_TabShape_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -312,6 +271,79 @@ static QScriptValue qtscript_create_QTabWidget_TabPosition_class(QScriptEngine *
 }
 
 //
+// QTabWidget::TabShape
+//
+
+static const QTabWidget::TabShape qtscript_QTabWidget_TabShape_values[] = {
+    QTabWidget::Rounded
+    , QTabWidget::Triangular
+};
+
+static const char * const qtscript_QTabWidget_TabShape_keys[] = {
+    "Rounded"
+    , "Triangular"
+};
+
+static QString qtscript_QTabWidget_TabShape_toStringHelper(QTabWidget::TabShape value)
+{
+    const QMetaObject *meta = qtscript_QTabWidget_metaObject();
+    int idx = meta->indexOfEnumerator("TabShape");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QTabWidget_TabShape_toScriptValue(QScriptEngine *engine, const QTabWidget::TabShape &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTabWidget"));
+    return clazz.property(qtscript_QTabWidget_TabShape_toStringHelper(value));
+}
+
+static void qtscript_QTabWidget_TabShape_fromScriptValue(const QScriptValue &value, QTabWidget::TabShape &out)
+{
+    out = qvariant_cast<QTabWidget::TabShape>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QTabWidget_TabShape(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QTabWidget_metaObject();
+    int idx = meta->indexOfEnumerator("TabShape");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QTabWidget::TabShape>(arg));
+    return context->throwError(QString::fromLatin1("TabShape(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QTabWidget_TabShape_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QTabWidget::TabShape value = qscriptvalue_cast<QTabWidget::TabShape>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QTabWidget_TabShape_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QTabWidget::TabShape value = qscriptvalue_cast<QTabWidget::TabShape>(context->thisObject());
+    return QScriptValue(engine, qtscript_QTabWidget_TabShape_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QTabWidget_TabShape_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QTabWidget_TabShape,
+        qtscript_QTabWidget_TabShape_valueOf, qtscript_QTabWidget_TabShape_toString);
+    qScriptRegisterMetaType<QTabWidget::TabShape>(engine, qtscript_QTabWidget_TabShape_toScriptValue,
+        qtscript_QTabWidget_TabShape_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QTabWidget_TabShape_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QTabWidget_TabShape_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QTabWidget
 //
 
@@ -325,11 +357,11 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 26;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTabWidget* _q_self = qscriptvalue_cast<QTabWidget*>(context->thisObject());
+    qtscript_QTabWidget* _q_self = reinterpret_cast<qtscript_QTabWidget*>(qscriptvalue_cast<QTabWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTabWidget.%0(): this object is not a QTabWidget")
@@ -388,6 +420,14 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     break;
 
     case 5:
+    if (context->argumentCount() == 1) {
+        QStyleOptionTabWidgetFrame* _q_arg0 = qscriptvalue_cast<QStyleOptionTabWidgetFrame*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -405,7 +445,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = _q_self->isTabEnabled(_q_arg0);
@@ -413,14 +453,14 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removeTab(_q_arg0);
@@ -428,7 +468,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setCornerWidget(_q_arg0);
@@ -442,7 +482,15 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 10:
+    case 11:
+    if (context->argumentCount() == 1) {
+        QTabBar* _q_arg0 = qscriptvalue_cast<QTabBar*>(context->argument(0));
+        _q_self->setTabBar(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 12:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -451,7 +499,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QIcon _q_arg1 = qscriptvalue_cast<QIcon>(context->argument(1));
@@ -460,7 +508,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -469,7 +517,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -478,7 +526,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -487,14 +535,21 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 18:
+    if (context->argumentCount() == 0) {
+        QTabBar* _q_result = _q_self->tabBar();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 19:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QIcon _q_result = _q_self->tabIcon(_q_arg0);
@@ -502,7 +557,23 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 17:
+    case 20:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->tabInserted(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 21:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        _q_self->tabRemoved(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 22:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->tabText(_q_arg0);
@@ -510,7 +581,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 18:
+    case 23:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->tabToolTip(_q_arg0);
@@ -518,7 +589,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 19:
+    case 24:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->tabWhatsThis(_q_arg0);
@@ -526,7 +597,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 20:
+    case 25:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_result = _q_self->widget(_q_arg0);
@@ -534,7 +605,7 @@ static QScriptValue qtscript_QTabWidget_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 21: {
+    case 26: {
     QString result = QString::fromLatin1("QTabWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -594,7 +665,7 @@ QScriptValue qtscript_create_QTabWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTabWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTabWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 27; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTabWidget_prototype_call, qtscript_QTabWidget_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTabWidget_function_names[i+1]),
@@ -607,9 +678,9 @@ QScriptValue qtscript_create_QTabWidget_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QTabWidget_static_call, proto, qtscript_QTabWidget_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("TabShape"),
-        qtscript_create_QTabWidget_TabShape_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("TabPosition"),
         qtscript_create_QTabWidget_TabPosition_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("TabShape"),
+        qtscript_create_QTabWidget_TabShape_class(engine, ctor));
     return ctor;
 }

@@ -66,6 +66,15 @@ static const int qtscript_QTextList_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTextList_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextList : public QTextList
+{
+
+    friend QScriptValue qtscript_QTextList_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTextList_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -102,7 +111,7 @@ static QScriptValue qtscript_QTextList_prototype_call(QScriptContext *context, Q
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextList* _q_self = qscriptvalue_cast<QTextList*>(context->thisObject());
+    qtscript_QTextList* _q_self = reinterpret_cast<qtscript_QTextList*>(qscriptvalue_cast<QTextList*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextList.%0(): this object is not a QTextList")

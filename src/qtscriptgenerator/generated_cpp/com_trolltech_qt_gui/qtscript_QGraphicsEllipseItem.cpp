@@ -37,38 +37,56 @@ static const char * const qtscript_QGraphicsEllipseItem_function_names[] = {
     // static
     // prototype
     , "rect"
+    , "setExtension"
     , "setRect"
     , "setSpanAngle"
     , "setStartAngle"
     , "spanAngle"
     , "startAngle"
+    , "supportsExtension"
     , "toString"
 };
 
 static const char * const qtscript_QGraphicsEllipseItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene\nQRectF rect, QGraphicsItem parent, QGraphicsScene scene\nqreal x, qreal y, qreal w, qreal h, QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent\nQRectF rect, QGraphicsItem parent\nqreal x, qreal y, qreal w, qreal h, QGraphicsItem parent"
     // static
     // prototype
     , ""
+    , "Extension extension, Object variant"
     , "QRectF rect\nqreal x, qreal y, qreal w, qreal h"
     , "int angle"
     , "int angle"
     , ""
     , ""
+    , "Extension extension"
 ""
 };
 
 static const int qtscript_QGraphicsEllipseItem_function_lengths[] = {
-    6
+    5
     // static
     // prototype
     , 0
+    , 2
     , 4
     , 1
     , 1
     , 0
     , 0
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsEllipseItem : public QGraphicsEllipseItem
+{
+    friend QScriptValue qtscript_QGraphicsEllipseItem_setExtension(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsEllipseItem_supportsExtension(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsEllipseItem_throw_ambiguity_error_helper(
@@ -84,6 +102,7 @@ static QScriptValue qtscript_QGraphicsEllipseItem_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGraphicsEllipseItem*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsEllipseItem*)
+Q_DECLARE_METATYPE(QGraphicsItem::Extension)
 Q_DECLARE_METATYPE(QAbstractGraphicsShapeItem*)
 
 //
@@ -100,11 +119,11 @@ static QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 6;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsEllipseItem* _q_self = qscriptvalue_cast<QGraphicsEllipseItem*>(context->thisObject());
+    qtscript_QGraphicsEllipseItem* _q_self = reinterpret_cast<qtscript_QGraphicsEllipseItem*>(qscriptvalue_cast<QGraphicsEllipseItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsEllipseItem.%0(): this object is not a QGraphicsEllipseItem")
@@ -120,6 +139,15 @@ static QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext 
     break;
 
     case 1:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setExtension(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 1) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         _q_self->setRect(_q_arg0);
@@ -135,7 +163,7 @@ static QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext 
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setSpanAngle(_q_arg0);
@@ -143,7 +171,7 @@ static QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext 
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setStartAngle(_q_arg0);
@@ -151,21 +179,29 @@ static QScriptValue qtscript_QGraphicsEllipseItem_prototype_call(QScriptContext 
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->spanAngle();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->startAngle();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6: {
+    case 7:
+    if (context->argumentCount() == 1) {
+        QGraphicsItem::Extension _q_arg0 = qscriptvalue_cast<QGraphicsItem::Extension>(context->argument(0));
+        bool _q_result = _q_self->supportsExtension(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 8: {
     QString result = QString::fromLatin1("QGraphicsEllipseItem");
     return QScriptValue(context->engine(), result);
     }
@@ -208,28 +244,9 @@ static QScriptValue qtscript_QGraphicsEllipseItem_static_call(QScriptContext *co
             return _q_result;
         }
     } else if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
-            && qscriptvalue_cast<QGraphicsScene*>(context->argument(1))) {
-            QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-            QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-            QtScriptShell_QGraphicsEllipseItem* _q_cpp_result = new QtScriptShell_QGraphicsEllipseItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsEllipseItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && qscriptvalue_cast<QGraphicsItem*>(context->argument(1))) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-            QtScriptShell_QGraphicsEllipseItem* _q_cpp_result = new QtScriptShell_QGraphicsEllipseItem(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsEllipseItem*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 3) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         QGraphicsItem* _q_arg1 = qscriptvalue_cast<QGraphicsItem*>(context->argument(1));
-        QGraphicsScene* _q_arg2 = qscriptvalue_cast<QGraphicsScene*>(context->argument(2));
-        QtScriptShell_QGraphicsEllipseItem* _q_cpp_result = new QtScriptShell_QGraphicsEllipseItem(_q_arg0, _q_arg1, _q_arg2);
+        QtScriptShell_QGraphicsEllipseItem* _q_cpp_result = new QtScriptShell_QGraphicsEllipseItem(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsEllipseItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -252,17 +269,6 @@ static QScriptValue qtscript_QGraphicsEllipseItem_static_call(QScriptContext *co
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsEllipseItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
-    } else if (context->argumentCount() == 6) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        qreal _q_arg2 = qscriptvalue_cast<qreal>(context->argument(2));
-        qreal _q_arg3 = qscriptvalue_cast<qreal>(context->argument(3));
-        QGraphicsItem* _q_arg4 = qscriptvalue_cast<QGraphicsItem*>(context->argument(4));
-        QGraphicsScene* _q_arg5 = qscriptvalue_cast<QGraphicsScene*>(context->argument(5));
-        QtScriptShell_QGraphicsEllipseItem* _q_cpp_result = new QtScriptShell_QGraphicsEllipseItem(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsEllipseItem*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
     }
     break;
 
@@ -279,7 +285,7 @@ QScriptValue qtscript_create_QGraphicsEllipseItem_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsEllipseItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsEllipseItem*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractGraphicsShapeItem*>()));
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsEllipseItem_prototype_call, qtscript_QGraphicsEllipseItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsEllipseItem_function_names[i+1]),

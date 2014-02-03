@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionRubberBand_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionRubberBand_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionRubberBand : public QStyleOptionRubberBand
+{
+
+    friend QScriptValue qtscript_QStyleOptionRubberBand_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionRubberBand_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionRubberBand)
 Q_DECLARE_METATYPE(QStyleOptionRubberBand*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionRubberBand)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionRubberBand*)
-Q_DECLARE_METATYPE(QStyleOptionRubberBand::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionRubberBand::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionRubberBand::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionRubberBand::StyleOptionVersion
-//
-
-static const QStyleOptionRubberBand::StyleOptionVersion qtscript_QStyleOptionRubberBand_StyleOptionVersion_values[] = {
-    QStyleOptionRubberBand::Version
-};
-
-static const char * const qtscript_QStyleOptionRubberBand_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionRubberBand_StyleOptionVersion_toStringHelper(QStyleOptionRubberBand::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionRubberBand::Version) && (value <= QStyleOptionRubberBand::Version))
-        return qtscript_QStyleOptionRubberBand_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionRubberBand::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionRubberBand_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionRubberBand::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionRubberBand"));
-    return clazz.property(qtscript_QStyleOptionRubberBand_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionRubberBand_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionRubberBand::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionRubberBand::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionRubberBand_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionRubberBand::Version) && (arg <= QStyleOptionRubberBand::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionRubberBand::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionRubberBand_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionRubberBand::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionRubberBand::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionRubberBand_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionRubberBand::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionRubberBand::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionRubberBand_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionRubberBand_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionRubberBand_StyleOptionVersion,
-        qtscript_QStyleOptionRubberBand_StyleOptionVersion_valueOf, qtscript_QStyleOptionRubberBand_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionRubberBand::StyleOptionVersion>(engine, qtscript_QStyleOptionRubberBand_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionRubberBand_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionRubberBand_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionRubberBand_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionRubberBand_StyleOptionType_class
 }
 
 //
+// QStyleOptionRubberBand::StyleOptionVersion
+//
+
+static const QStyleOptionRubberBand::StyleOptionVersion qtscript_QStyleOptionRubberBand_StyleOptionVersion_values[] = {
+    QStyleOptionRubberBand::Version
+};
+
+static const char * const qtscript_QStyleOptionRubberBand_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionRubberBand_StyleOptionVersion_toStringHelper(QStyleOptionRubberBand::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionRubberBand::Version) && (value <= QStyleOptionRubberBand::Version))
+        return qtscript_QStyleOptionRubberBand_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionRubberBand::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionRubberBand_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionRubberBand::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionRubberBand"));
+    return clazz.property(qtscript_QStyleOptionRubberBand_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionRubberBand_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionRubberBand::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionRubberBand::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionRubberBand_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionRubberBand::Version) && (arg <= QStyleOptionRubberBand::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionRubberBand::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionRubberBand_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionRubberBand::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionRubberBand::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionRubberBand_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionRubberBand::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionRubberBand::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionRubberBand_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionRubberBand_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionRubberBand_StyleOptionVersion,
+        qtscript_QStyleOptionRubberBand_StyleOptionVersion_valueOf, qtscript_QStyleOptionRubberBand_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionRubberBand::StyleOptionVersion>(engine, qtscript_QStyleOptionRubberBand_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionRubberBand_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionRubberBand_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionRubberBand_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionRubberBand
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionRubberBand_prototype_call(QScriptContex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionRubberBand* _q_self = qscriptvalue_cast<QStyleOptionRubberBand*>(context->thisObject());
+    qtscript_QStyleOptionRubberBand* _q_self = reinterpret_cast<qtscript_QStyleOptionRubberBand*>(qscriptvalue_cast<QStyleOptionRubberBand*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionRubberBand.%0(): this object is not a QStyleOptionRubberBand")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionRubberBand_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionRubberBand_static_call, proto, qtscript_QStyleOptionRubberBand_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionRubberBand_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionRubberBand_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionRubberBand_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

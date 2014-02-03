@@ -5,10 +5,10 @@
 #include <QtCore/QDebug>
 #include <qmetaobject.h>
 
-#include <qicon.h>
+#include <QIconEngine>
+#include <QIconEngine>
 #include <QVariant>
 #include <qdatastream.h>
-#include <qicon.h>
 #include <qiconengine.h>
 #include <qlist.h>
 #include <qpainter.h>
@@ -16,6 +16,7 @@
 #include <qrect.h>
 #include <qsize.h>
 #include <qstringlist.h>
+#include <qwindow.h>
 
 static const char * const qtscript_QIcon_function_names[] = {
     "QIcon"
@@ -37,12 +38,13 @@ static const char * const qtscript_QIcon_function_names[] = {
     , "paint"
     , "pixmap"
     , "readFrom"
+    , "swap"
     , "writeTo"
     , "toString"
 };
 
 static const char * const qtscript_QIcon_function_signatures[] = {
-    "\nQIconEngine engine\nQIconEngineV2 engine\nQIcon other\nQPixmap pixmap\nString fileName"
+    "\nQIconEngine engine\nQIcon other\nQPixmap pixmap\nString fileName"
     // static
     , "String name, QIcon fallback"
     , "String name"
@@ -51,7 +53,7 @@ static const char * const qtscript_QIcon_function_signatures[] = {
     , ""
     , ""
     // prototype
-    , "QSize size, Mode mode, State state"
+    , "QWindow window, QSize size, Mode mode, State state\nQSize size, Mode mode, State state"
     , "String fileName, QSize size, Mode mode, State state"
     , "QPixmap pixmap, Mode mode, State state"
     , "Mode mode, State state"
@@ -59,8 +61,9 @@ static const char * const qtscript_QIcon_function_signatures[] = {
     , ""
     , ""
     , "QPainter painter, QRect rect, Alignment alignment, Mode mode, State state\nQPainter painter, int x, int y, int w, int h, Alignment alignment, Mode mode, State state"
-    , "QSize size, Mode mode, State state\nint extent, Mode mode, State state\nint w, int h, Mode mode, State state"
+    , "QWindow window, QSize size, Mode mode, State state\nQSize size, Mode mode, State state\nint extent, Mode mode, State state\nint w, int h, Mode mode, State state"
     , "QDataStream arg__1"
+    , "QIcon other"
     , "QDataStream arg__1"
 ""
 };
@@ -75,7 +78,7 @@ static const int qtscript_QIcon_function_lengths[] = {
     , 0
     , 0
     // prototype
-    , 3
+    , 4
     , 4
     , 3
     , 2
@@ -84,6 +87,7 @@ static const int qtscript_QIcon_function_lengths[] = {
     , 0
     , 8
     , 4
+    , 1
     , 1
     , 1
     , 0
@@ -103,12 +107,12 @@ static QScriptValue qtscript_QIcon_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QIcon*)
 Q_DECLARE_METATYPE(QIcon::Mode)
 Q_DECLARE_METATYPE(QIcon::State)
+Q_DECLARE_METATYPE(QWindow*)
 Q_DECLARE_METATYPE(QList<QSize>)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(QIconEngine*)
-Q_DECLARE_METATYPE(QIconEngineV2*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -276,7 +280,7 @@ static QScriptValue qtscript_QIcon_prototype_call(QScriptContext *context, QScri
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 11;
+        _id = 0xBABE0000 + 12;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -295,16 +299,45 @@ static QScriptValue qtscript_QIcon_prototype_call(QScriptContext *context, QScri
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 2) {
-        QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-        QIcon::Mode _q_arg1 = qscriptvalue_cast<QIcon::Mode>(context->argument(1));
-        QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        if (qscriptvalue_cast<QWindow*>(context->argument(0))
+            && (qMetaTypeId<QSize>() == context->argument(1).toVariant().userType())) {
+            QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+            QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
+            QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
+            && (qMetaTypeId<QIcon::Mode>() == context->argument(1).toVariant().userType())) {
+            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
+            QIcon::Mode _q_arg1 = qscriptvalue_cast<QIcon::Mode>(context->argument(1));
+            QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
     }
     if (context->argumentCount() == 3) {
-        QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-        QIcon::Mode _q_arg1 = qscriptvalue_cast<QIcon::Mode>(context->argument(1));
-        QIcon::State _q_arg2 = qscriptvalue_cast<QIcon::State>(context->argument(2));
-        QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1, _q_arg2);
+        if (qscriptvalue_cast<QWindow*>(context->argument(0))
+            && (qMetaTypeId<QSize>() == context->argument(1).toVariant().userType())
+            && (qMetaTypeId<QIcon::Mode>() == context->argument(2).toVariant().userType())) {
+            QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+            QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
+            QIcon::Mode _q_arg2 = qscriptvalue_cast<QIcon::Mode>(context->argument(2));
+            QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1, _q_arg2);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
+            && (qMetaTypeId<QIcon::Mode>() == context->argument(1).toVariant().userType())
+            && (qMetaTypeId<QIcon::State>() == context->argument(2).toVariant().userType())) {
+            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
+            QIcon::Mode _q_arg1 = qscriptvalue_cast<QIcon::Mode>(context->argument(1));
+            QIcon::State _q_arg2 = qscriptvalue_cast<QIcon::State>(context->argument(2));
+            QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1, _q_arg2);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
+    }
+    if (context->argumentCount() == 4) {
+        QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+        QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
+        QIcon::Mode _q_arg2 = qscriptvalue_cast<QIcon::Mode>(context->argument(2));
+        QIcon::State _q_arg3 = qscriptvalue_cast<QIcon::State>(context->argument(3));
+        QSize _q_result = _q_self->actualSize(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -495,7 +528,13 @@ static QScriptValue qtscript_QIcon_prototype_call(QScriptContext *context, QScri
         }
     }
     if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
+        if (qscriptvalue_cast<QWindow*>(context->argument(0))
+            && (qMetaTypeId<QSize>() == context->argument(1).toVariant().userType())) {
+            QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+            QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
+            QPixmap _q_result = _q_self->pixmap(_q_arg0, _q_arg1);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
             && (qMetaTypeId<QIcon::Mode>() == context->argument(1).toVariant().userType())) {
             QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
             QIcon::Mode _q_arg1 = qscriptvalue_cast<QIcon::Mode>(context->argument(1));
@@ -516,7 +555,15 @@ static QScriptValue qtscript_QIcon_prototype_call(QScriptContext *context, QScri
         }
     }
     if (context->argumentCount() == 3) {
-        if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
+        if (qscriptvalue_cast<QWindow*>(context->argument(0))
+            && (qMetaTypeId<QSize>() == context->argument(1).toVariant().userType())
+            && (qMetaTypeId<QIcon::Mode>() == context->argument(2).toVariant().userType())) {
+            QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+            QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
+            QIcon::Mode _q_arg2 = qscriptvalue_cast<QIcon::Mode>(context->argument(2));
+            QPixmap _q_result = _q_self->pixmap(_q_arg0, _q_arg1, _q_arg2);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
             && (qMetaTypeId<QIcon::Mode>() == context->argument(1).toVariant().userType())
             && (qMetaTypeId<QIcon::State>() == context->argument(2).toVariant().userType())) {
             QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
@@ -543,12 +590,27 @@ static QScriptValue qtscript_QIcon_prototype_call(QScriptContext *context, QScri
         }
     }
     if (context->argumentCount() == 4) {
-        int _q_arg0 = context->argument(0).toInt32();
-        int _q_arg1 = context->argument(1).toInt32();
-        QIcon::Mode _q_arg2 = qscriptvalue_cast<QIcon::Mode>(context->argument(2));
-        QIcon::State _q_arg3 = qscriptvalue_cast<QIcon::State>(context->argument(3));
-        QPixmap _q_result = _q_self->pixmap(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        if (qscriptvalue_cast<QWindow*>(context->argument(0))
+            && (qMetaTypeId<QSize>() == context->argument(1).toVariant().userType())
+            && (qMetaTypeId<QIcon::Mode>() == context->argument(2).toVariant().userType())
+            && (qMetaTypeId<QIcon::State>() == context->argument(3).toVariant().userType())) {
+            QWindow* _q_arg0 = qscriptvalue_cast<QWindow*>(context->argument(0));
+            QSize _q_arg1 = qscriptvalue_cast<QSize>(context->argument(1));
+            QIcon::Mode _q_arg2 = qscriptvalue_cast<QIcon::Mode>(context->argument(2));
+            QIcon::State _q_arg3 = qscriptvalue_cast<QIcon::State>(context->argument(3));
+            QPixmap _q_result = _q_self->pixmap(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        } else if (context->argument(0).isNumber()
+            && context->argument(1).isNumber()
+            && (qMetaTypeId<QIcon::Mode>() == context->argument(2).toVariant().userType())
+            && (qMetaTypeId<QIcon::State>() == context->argument(3).toVariant().userType())) {
+            int _q_arg0 = context->argument(0).toInt32();
+            int _q_arg1 = context->argument(1).toInt32();
+            QIcon::Mode _q_arg2 = qscriptvalue_cast<QIcon::Mode>(context->argument(2));
+            QIcon::State _q_arg3 = qscriptvalue_cast<QIcon::State>(context->argument(3));
+            QPixmap _q_result = _q_self->pixmap(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            return qScriptValueFromValue(context->engine(), _q_result);
+        }
     }
     break;
 
@@ -562,14 +624,24 @@ static QScriptValue qtscript_QIcon_prototype_call(QScriptContext *context, QScri
 
     case 10:
     if (context->argumentCount() == 1) {
+        QIcon _q_arg0 = qscriptvalue_cast<QIcon>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
+    if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 11: {
-    QString result = QString::fromLatin1("QIcon");
+    case 12: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -598,11 +670,6 @@ static QScriptValue qtscript_QIcon_static_call(QScriptContext *context, QScriptE
     } else if (context->argumentCount() == 1) {
         if (qscriptvalue_cast<QIconEngine*>(context->argument(0))) {
             QIconEngine* _q_arg0 = qscriptvalue_cast<QIconEngine*>(context->argument(0));
-            QIcon _q_cpp_result(_q_arg0);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
-            return _q_result;
-        } else if (qscriptvalue_cast<QIconEngineV2*>(context->argument(0))) {
-            QIconEngineV2* _q_arg0 = qscriptvalue_cast<QIconEngineV2*>(context->argument(0));
             QIcon _q_cpp_result(_q_arg0);
             QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
             return _q_result;
@@ -690,7 +757,7 @@ QScriptValue qtscript_create_QIcon_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QIcon*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QIcon*)0));
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 13; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QIcon_prototype_call, qtscript_QIcon_function_lengths[i+7]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QIcon_function_names[i+7]),

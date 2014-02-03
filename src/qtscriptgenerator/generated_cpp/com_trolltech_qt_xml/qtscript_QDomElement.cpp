@@ -272,7 +272,7 @@ static QScriptValue qtscript_QDomElement_prototype_call(QScriptContext *context,
             _q_self->setAttribute(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
         } else if (context->argument(0).isString()
-            && (qMetaTypeId<qlonglong>() == context->argument(1).toVariant().userType())) {
+            && context->argument(1).isNumber()) {
             QString _q_arg0 = context->argument(0).toString();
             qlonglong _q_arg1 = qscriptvalue_cast<qlonglong>(context->argument(1));
             _q_self->setAttribute(_q_arg0, _q_arg1);
@@ -309,7 +309,7 @@ static QScriptValue qtscript_QDomElement_prototype_call(QScriptContext *context,
             return context->engine()->undefinedValue();
         } else if (context->argument(0).isString()
             && context->argument(1).isString()
-            && (qMetaTypeId<qlonglong>() == context->argument(2).toVariant().userType())) {
+            && context->argument(2).isNumber()) {
             QString _q_arg0 = context->argument(0).toString();
             QString _q_arg1 = context->argument(1).toString();
             qlonglong _q_arg2 = qscriptvalue_cast<qlonglong>(context->argument(2));

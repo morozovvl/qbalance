@@ -28,6 +28,9 @@
 <li><b>ExistingFiles</b></li>
 <li><b>DirectoryOnly</b></li>
 <li><b>FileMode( value )</b></li>
+<li><b>AcceptOpen</b></li>
+<li><b>AcceptSave</b></li>
+<li><b>AcceptMode( value )</b></li>
 <li><b>ShowDirsOnly = 0x00000001</b></li>
 <li><b>DontResolveSymlinks = 0x00000002</b></li>
 <li><b>DontConfirmOverwrite = 0x00000004</b></li>
@@ -37,25 +40,21 @@
 <li><b>HideNameFilterDetails = 0x00000040</b></li>
 <li><b>Option( value )</b></li>
 <li><b>Options( value1, value2, ... )</b></li>
+<li><b>Detail</b></li>
+<li><b>List</b></li>
+<li><b>ViewMode( value )</b></li>
 <li><b>LookIn</b></li>
 <li><b>FileName</b></li>
 <li><b>FileType</b></li>
 <li><b>Accept</b></li>
 <li><b>Reject</b></li>
 <li><b>DialogLabel( value )</b></li>
-<li><b>Detail</b></li>
-<li><b>List</b></li>
-<li><b>ViewMode( value )</b></li>
-<li><b>AcceptOpen</b></li>
-<li><b>AcceptSave</b></li>
-<li><b>AcceptMode( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QFileDialog prototype object inherits properties from the <a href="qdialog.html">QDialog</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>QDir directory()</b></li>
 <li><div class="fn"/><b>Filters filter()</b></li>
-<li><div class="fn"/><b>List filters()</b></li>
 <li><div class="fn"/><b>List history()</b></li>
 <li><div class="fn"/><b>QFileIconProvider iconProvider()</b></li>
 <li><div class="fn"/><b>bool isNameFilterDetailsVisible()</b></li>
@@ -67,14 +66,11 @@
 <li><div class="fn"/><b>bool restoreState(QByteArray state)</b></li>
 <li><div class="fn"/><b>QByteArray saveState()</b></li>
 <li><div class="fn"/><b>void selectFile(String filename)</b></li>
-<li><div class="fn"/><b>void selectFilter(String filter)</b></li>
 <li><div class="fn"/><b>void selectNameFilter(String filter)</b></li>
 <li><div class="fn"/><b>List selectedFiles()</b></li>
-<li><div class="fn"/><b>String selectedFilter()</b></li>
 <li><div class="fn"/><b>String selectedNameFilter()</b></li>
 <li><div class="fn"/><b>void setDirectory(QDir directory)</b></li>
 <li><div class="fn"/><b>void setFilter(Filters filters)</b></li>
-<li><div class="fn"/><b>void setFilters(List filters)</b></li>
 <li><div class="fn"/><b>void setHistory(List paths)</b></li>
 <li><div class="fn"/><b>void setIconProvider(QFileIconProvider provider)</b></li>
 <li><div class="fn"/><b>void setItemDelegate(QAbstractItemDelegate delegate)</b></li>

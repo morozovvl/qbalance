@@ -33,7 +33,13 @@
 <ul>
 <li><div class="fn"/><b>QRectF boundingRect()</b></li>
 <li><div class="fn"/><b>QRectF boundingRectFor(QRectF sourceRect)</b></li>
-<li><div class="fn"/><b>QGraphicsEffectSource source()</b></li>
+<li><div class="fn"/><b>void draw(QPainter painter)</b></li>
+<li><div class="fn"/><b>void drawSource(QPainter painter)</b></li>
+<li><div class="fn"/><b>QRectF sourceBoundingRect(CoordinateSystem system)</b></li>
+<li><div class="fn"/><b>void sourceChanged(ChangeFlags flags)</b></li>
+<li><div class="fn"/><b>bool sourceIsPixmap()</b></li>
+<li><div class="fn"/><b>QPixmap sourcePixmap(CoordinateSystem system, QPoint offset, PixmapPadMode mode)</b></li>
+<li><div class="fn"/><b>void updateBoundingRect()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QGraphicsEffect objects inherit properties from the QGraphicsEffect prototype object and also have the following properties.</p>

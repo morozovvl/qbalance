@@ -8,7 +8,6 @@
 #include <qiodevice.h>
 #include <qlist.h>
 #include <qobject.h>
-#include <qstringlist.h>
 
 #define QTSCRIPT_IS_GENERATED_FUNCTION(fun) ((fun.data().toUInt32() & 0xFFFF0000) == 0xBABE0000)
 
@@ -28,14 +27,18 @@ QImageIOPlugin::Capabilities  QtScriptShell_QImageIOPlugin::capabilities(QIODevi
 {
     QScriptValue _q_function = __qtscript_self.property("capabilities");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("capabilities") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("capabilities") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QImageIOPlugin::capabilities() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QImageIOPlugin::Capabilities >(_q_function.call(__qtscript_self,
+        QImageIOPlugin::Capabilities _q_retval = qscriptvalue_cast<QImageIOPlugin::Capabilities >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, device)
             << qScriptValueFromValue(_q_engine, format)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -43,13 +46,16 @@ void QtScriptShell_QImageIOPlugin::childEvent(QChildEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("childEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QImageIOPlugin::childEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -57,14 +63,18 @@ QImageIOHandler*  QtScriptShell_QImageIOPlugin::create(QIODevice*  device, const
 {
     QScriptValue _q_function = __qtscript_self.property("create");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("create") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("create") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QImageIOPlugin::create() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<QImageIOHandler* >(_q_function.call(__qtscript_self,
+        QImageIOHandler* _q_retval = qscriptvalue_cast<QImageIOHandler* >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, device)
             << qScriptValueFromValue(_q_engine, format)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -72,13 +82,16 @@ void QtScriptShell_QImageIOPlugin::customEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("customEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QImageIOPlugin::customEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -86,13 +99,17 @@ bool  QtScriptShell_QImageIOPlugin::event(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("event");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QImageIOPlugin::event(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -100,25 +117,18 @@ bool  QtScriptShell_QImageIOPlugin::eventFilter(QObject*  arg__1, QEvent*  arg__
 {
     QScriptValue _q_function = __qtscript_self.property("eventFilter");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QImageIOPlugin::eventFilter(arg__1, arg__2);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)
             << qScriptValueFromValue(_q_engine, arg__2)));
-    }
-}
-
-QStringList  QtScriptShell_QImageIOPlugin::keys() const
-{
-    QScriptValue _q_function = __qtscript_self.property("keys");
-    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("keys") & QScriptValue::QObjectMember)) {
-        qFatal("QImageIOPlugin::keys() is abstract!");
-    } else {
-        return qscriptvalue_cast<QStringList >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -126,13 +136,16 @@ void QtScriptShell_QImageIOPlugin::timerEvent(QTimerEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("timerEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QImageIOPlugin::timerEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 

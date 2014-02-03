@@ -5,6 +5,69 @@
     <rejection class="QXmlNamespaceSupport"/>
 
     <value-type name="QDomNode">
+        <modify-function signature="appendChild(const QDomNode &amp;)">
+            <modify-argument index="1">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+        </modify-function>
+
+        <modify-function signature="insertAfter(const QDomNode &amp;, const QDomNode &amp;)">
+            <modify-argument index="1">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+            <modify-argument index="2">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+        </modify-function>
+
+        <modify-function signature="insertBefore(const QDomNode &amp;, const QDomNode &amp;)">
+            <modify-argument index="1">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+            <modify-argument index="2">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+        </modify-function>
+
+        <modify-function signature="removeChild(const QDomNode &amp;)">
+            <modify-argument index="1">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+        </modify-function>
+
+        <modify-function signature="replaceChild(const QDomNode &amp;, const QDomNode &amp;)">
+            <modify-argument index="1">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+            <modify-argument index="2">
+                <replace-type modified-type="QDomNode*"/>
+                <conversion-rule class="native">
+                QDomNode &amp; %out% = *qscriptvalue_cast&lt;QDomNode*&gt;(%in%);
+                </conversion-rule>
+            </modify-argument>
+        </modify-function>
+
         <modify-function signature="save(QTextStream&amp;,int)const">
             <modify-argument index="1">
                 <replace-type modified-type="QTextStream*"/>

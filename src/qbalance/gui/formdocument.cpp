@@ -41,6 +41,7 @@ FormDocument::FormDocument(): FormGrid()
     numberEdit = 0;
     parameters = 0;
     itogNumeric = 0;
+    textEdit = 0;
     buttonQueryAdd = 0;
     queriesMenu = 0;
 }
@@ -105,11 +106,22 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (vbxLayout != 0)
         {
+            // Вставим текстовое содержимое документа
+
+            textEdit = new QTextEdit();
+            QFontMetrics m(textEdit->font());
+            int rowHeight = m.lineSpacing();
+            textEdit->setFixedHeight(5 * rowHeight);    // В комментарии покажем 4 строки
+            textEdit->setObjectName("commentText");
+            textEdit->setVisible(false);
+            vbxLayout->insertWidget(2, textEdit);
+
             // Вставим строчку "Итого"
             QHBoxLayout* phbxItogLayout = new QHBoxLayout();
             phbxItogLayout->setObjectName("phbxItogLayout");
             phbxItogLayout->addStretch(1);
             phbxItogLayout->addWidget(new QLabel(LABEL_ITOG, formWidget), 0, Qt::AlignRight);
+
             // Создадим и вставим строчку с ИТОГО документа
             itogNumeric = new MyNumericEdit();
             itogNumeric->setReadOnly(true);
@@ -123,6 +135,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             pvbxItogLayout->addLayout(phbxItogLayout);
             pvbxItogLayout->addStretch(1);
             imageLayout->addLayout(pvbxItogLayout);
+
             if (docParams)
             {
                 parameters = new DocParameters();
@@ -163,6 +176,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         dateEdit = (QDateEdit*)formWidget->findChild("dateEdit");
         numberEdit = (QLineEdit*)formWidget->findChild("numberEdit");
         itogNumeric = (MyNumericEdit*)formWidget->findChild("itogNumeric");
+        textEdit = (QTextEdit*)formWidget->findChild("commentText");
     }
     if (parameters != 0)
     {
@@ -203,7 +217,16 @@ void FormDocument::show()
         foreach (QString dictName, parameters->getKeys())
             parameters->showText(dictName);
     }
+    if (textEdit != 0)
+        textEdit->setText(getParent()->getParent()->getValue("описание").toString());
     FormGrid::show();
+
+    if (grdTable->currentIndex().row() + 1 > tableModel->rowCount())
+    {
+        selectRow(tableModel->rowCount() - 1);
+        if (grdTable->columnIsReadOnly())
+            grdTable->selectNextColumn();
+    }
 }
 
 
@@ -211,6 +234,18 @@ void FormDocument::hide()
 {
     FormGrid::hide();
     getParent()->saveVariablesToDB();
+}
+
+
+void FormDocument::cmdAdd()
+{
+    FormGrid::cmdAdd();
+    if (grdTable->currentIndex().row() + 2 > tableModel->rowCount())
+    {
+        selectRow(tableModel->rowCount() - 1);
+    }
+    if (grdTable->columnIsReadOnly())
+        grdTable->selectNextColumn();
 }
 
 
@@ -268,6 +303,8 @@ void FormDocument::setEnabled(bool enabled)
     FormGrid::setEnabled(enabled);
     dateEdit->setReadOnly(!enabled);
     numberEdit->setReadOnly(!enabled);
+    if (textEdit != 0)
+        textEdit->setEnabled(!enabled);
     if (parameters != 0)
         parameters->setEnabled(enabled);
     if (queriesMenu != 0)

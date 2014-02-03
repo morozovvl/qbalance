@@ -34,13 +34,12 @@ static const char * const qtscript_QUiLoader_function_names[] = {
     , "createActionGroup"
     , "createLayout"
     , "createWidget"
+    , "errorString"
     , "isLanguageChangeEnabled"
-    , "isScriptingEnabled"
     , "isTranslationEnabled"
     , "load"
     , "pluginPaths"
     , "setLanguageChangeEnabled"
-    , "setScriptingEnabled"
     , "setTranslationEnabled"
     , "setWorkingDirectory"
     , "workingDirectory"
@@ -64,7 +63,6 @@ static const char * const qtscript_QUiLoader_function_signatures[] = {
     , ""
     , "QIODevice device, QWidget parentWidget"
     , ""
-    , "bool enabled"
     , "bool enabled"
     , "bool enabled"
     , "QDir dir"
@@ -92,9 +90,17 @@ static const int qtscript_QUiLoader_function_lengths[] = {
     , 1
     , 1
     , 1
-    , 1
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QUiLoader_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QUiLoader : public QUiLoader
+{
+
+    friend QScriptValue qtscript_QUiLoader_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QUiLoader_throw_ambiguity_error_helper(
@@ -113,6 +119,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QUiLoader*)
 Q_DECLARE_METATYPE(QAction*)
 Q_DECLARE_METATYPE(QActionGroup*)
 Q_DECLARE_METATYPE(QLayout*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QIODevice*)
 Q_DECLARE_METATYPE(QDir)
 
@@ -130,11 +137,11 @@ static QScriptValue qtscript_QUiLoader_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 18;
+        _id = 0xBABE0000 + 17;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QUiLoader* _q_self = qscriptvalue_cast<QUiLoader*>(context->thisObject());
+    qtscript_QUiLoader* _q_self = reinterpret_cast<qtscript_QUiLoader*>(qscriptvalue_cast<QUiLoader*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QUiLoader.%0(): this object is not a QUiLoader")
@@ -251,14 +258,14 @@ static QScriptValue qtscript_QUiLoader_prototype_call(QScriptContext *context, Q
 
     case 8:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isLanguageChangeEnabled();
+        QString _q_result = _q_self->errorString();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 9:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isScriptingEnabled();
+        bool _q_result = _q_self->isLanguageChangeEnabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -302,20 +309,12 @@ static QScriptValue qtscript_QUiLoader_prototype_call(QScriptContext *context, Q
     case 14:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
-        _q_self->setScriptingEnabled(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 15:
-    if (context->argumentCount() == 1) {
-        bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setTranslationEnabled(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 16:
+    case 15:
     if (context->argumentCount() == 1) {
         QDir _q_arg0 = qscriptvalue_cast<QDir>(context->argument(0));
         _q_self->setWorkingDirectory(_q_arg0);
@@ -323,14 +322,14 @@ static QScriptValue qtscript_QUiLoader_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 17:
+    case 16:
     if (context->argumentCount() == 0) {
         QDir _q_result = _q_self->workingDirectory();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18: {
+    case 17: {
     QString result = QString::fromLatin1("QUiLoader");
     return QScriptValue(context->engine(), result);
     }
@@ -390,7 +389,7 @@ QScriptValue qtscript_create_QUiLoader_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QUiLoader*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QUiLoader*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 19; ++i) {
+    for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QUiLoader_prototype_call, qtscript_QUiLoader_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QUiLoader_function_names[i+1]),

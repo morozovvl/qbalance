@@ -17,10 +17,14 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QAbstractSocket prototype object</li>
-<li><b>UnknownSocketType = -1</b></li>
-<li><b>TcpSocket</b></li>
-<li><b>UdpSocket</b></li>
-<li><b>SocketType( value )</b></li>
+<li><b>UnconnectedState</b></li>
+<li><b>HostLookupState</b></li>
+<li><b>ConnectingState</b></li>
+<li><b>ConnectedState</b></li>
+<li><b>BoundState</b></li>
+<li><b>ListeningState</b></li>
+<li><b>ClosingState</b></li>
+<li><b>SocketState( value )</b></li>
 <li><b>UnknownSocketError = -1</b></li>
 <li><b>ConnectionRefusedError</b></li>
 <li><b>RemoteHostClosedError</b></li>
@@ -41,44 +45,69 @@
 <li><b>ProxyConnectionTimeoutError</b></li>
 <li><b>ProxyNotFoundError</b></li>
 <li><b>ProxyProtocolError</b></li>
+<li><b>OperationError</b></li>
+<li><b>SslInternalError</b></li>
+<li><b>SslInvalidUserDataError</b></li>
+<li><b>TemporaryError</b></li>
 <li><b>SocketError( value )</b></li>
 <li><b>UnknownNetworkLayerProtocol = -1</b></li>
 <li><b>IPv4Protocol</b></li>
 <li><b>IPv6Protocol</b></li>
+<li><b>AnyIPProtocol</b></li>
 <li><b>NetworkLayerProtocol( value )</b></li>
 <li><b>LowDelayOption</b></li>
 <li><b>KeepAliveOption</b></li>
+<li><b>MulticastTtlOption</b></li>
+<li><b>MulticastLoopbackOption</b></li>
+<li><b>TypeOfServiceOption</b></li>
 <li><b>SocketOption( value )</b></li>
-<li><b>UnconnectedState</b></li>
-<li><b>HostLookupState</b></li>
-<li><b>ConnectingState</b></li>
-<li><b>ConnectedState</b></li>
-<li><b>BoundState</b></li>
-<li><b>ListeningState</b></li>
-<li><b>ClosingState</b></li>
-<li><b>SocketState( value )</b></li>
+<li><b>PauseNever = 0x0</b></li>
+<li><b>PauseOnSslErrors = 0x1</b></li>
+<li><b>PauseMode( value )</b></li>
+<li><b>PauseModes( value1, value2, ... )</b></li>
+<li><b>UnknownSocketType = -1</b></li>
+<li><b>TcpSocket</b></li>
+<li><b>UdpSocket</b></li>
+<li><b>SocketType( value )</b></li>
+<li><b>DefaultForPlatform = 0x0</b></li>
+<li><b>ShareAddress = 0x1</b></li>
+<li><b>DontShareAddress = 0x2</b></li>
+<li><b>ReuseAddressHint = 0x4</b></li>
+<li><b>BindFlag( value )</b></li>
+<li><b>BindMode( value1, value2, ... )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QAbstractSocket prototype object inherits properties from the <a href="qiodevice.html">QIODevice</a> prototype object and also has the following properties.</p>
 <ul>
 <li><div class="fn"/><b>void abort()</b></li>
+<li><div class="fn"/><b>bool bind(QHostAddress address, unsigned short port, BindMode mode)</b></li>
 <li><div class="fn"/><b>void connectToHost(QHostAddress address, unsigned short port, OpenMode mode)</b></li>
 <li><div class="fn"/><b>void disconnectFromHost()</b></li>
-<li><div class="fn"/><b>SocketError error()</b></li>
 <li><div class="fn"/><b>bool flush()</b></li>
+<li><div class="fn"/><b>SocketError getError()</b></li>
 <li><div class="fn"/><b>bool isValid()</b></li>
 <li><div class="fn"/><b>QHostAddress localAddress()</b></li>
 <li><div class="fn"/><b>unsigned short localPort()</b></li>
+<li><div class="fn"/><b>PauseModes pauseMode()</b></li>
 <li><div class="fn"/><b>QHostAddress peerAddress()</b></li>
 <li><div class="fn"/><b>String peerName()</b></li>
 <li><div class="fn"/><b>unsigned short peerPort()</b></li>
 <li><div class="fn"/><b>QNetworkProxy proxy()</b></li>
 <li><div class="fn"/><b>qint64 readBufferSize()</b></li>
+<li><div class="fn"/><b>void resume()</b></li>
+<li><div class="fn"/><b>void setLocalAddress(QHostAddress address)</b></li>
+<li><div class="fn"/><b>void setLocalPort(unsigned short port)</b></li>
+<li><div class="fn"/><b>void setPauseMode(PauseModes pauseMode)</b></li>
+<li><div class="fn"/><b>void setPeerAddress(QHostAddress address)</b></li>
+<li><div class="fn"/><b>void setPeerName(String name)</b></li>
+<li><div class="fn"/><b>void setPeerPort(unsigned short port)</b></li>
 <li><div class="fn"/><b>void setProxy(QNetworkProxy networkProxy)</b></li>
 <li><div class="fn"/><b>void setReadBufferSize(qint64 size)</b></li>
-<li><div class="fn"/><b>bool setSocketDescriptor(int socketDescriptor, SocketState state, OpenMode openMode)</b></li>
+<li><div class="fn"/><b>bool setSocketDescriptor(qintptr socketDescriptor, SocketState state, OpenMode openMode)</b></li>
+<li><div class="fn"/><b>void setSocketError(SocketError socketError)</b></li>
 <li><div class="fn"/><b>void setSocketOption(SocketOption option, Object value)</b></li>
-<li><div class="fn"/><b>int socketDescriptor()</b></li>
+<li><div class="fn"/><b>void setSocketState(SocketState state)</b></li>
+<li><div class="fn"/><b>qintptr socketDescriptor()</b></li>
 <li><div class="fn"/><b>Object socketOption(SocketOption option)</b></li>
 <li><div class="fn"/><b>SocketType socketType()</b></li>
 <li><div class="fn"/><b>SocketState state()</b></li>

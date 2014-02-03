@@ -28,7 +28,7 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-#CONFIG += debug
+#CONFIG += release
 
 SOURCES += main.cpp \
     kernel/app.cpp \
@@ -174,17 +174,6 @@ unix {
  icons.path =  $$PIXMAPSDIR
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
-
-    INCLUDEPATH += $$(OO_SDK_HOME)/include
-    INCLUDEPATH += $$(OO_SDK_HOME)/includecppu
-    LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_cppuhelpergcc3.so.3
-    LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_cppu.so.3
-    LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_salhelpergcc3.so.3
-    LIBS += $$(OO_SDK_URE_LIB_DIR)/libuno_sal.so.3
-
-  LIBS += /usr/lib/libdrvfr.so
-#  LIBS += /home/vladimir/work/qbalance1/plugins/designer/libplugins.so
-
 }
 
 windows {

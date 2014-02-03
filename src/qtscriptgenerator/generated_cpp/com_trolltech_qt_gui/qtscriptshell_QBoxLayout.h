@@ -13,6 +13,7 @@ public:
 
     void addItem(QLayoutItem*  arg__1);
     void childEvent(QChildEvent*  e);
+    QSizePolicy::ControlTypes  controlTypes() const;
     int  count() const;
     void customEvent(QEvent*  arg__1);
     bool  event(QEvent*  arg__1);

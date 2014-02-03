@@ -25,6 +25,8 @@ static const char * const qtscript_QGraphicsItemAnimation_function_names[] = {
     "QGraphicsItemAnimation"
     // static
     // prototype
+    , "afterAnimationStep"
+    , "beforeAnimationStep"
     , "clear"
     , "horizontalScaleAt"
     , "horizontalShearAt"
@@ -56,6 +58,8 @@ static const char * const qtscript_QGraphicsItemAnimation_function_signatures[] 
     "QObject parent"
     // static
     // prototype
+    , "qreal step"
+    , "qreal step"
     , ""
     , "qreal step"
     , "qreal step"
@@ -87,6 +91,8 @@ static const int qtscript_QGraphicsItemAnimation_function_lengths[] = {
     1
     // static
     // prototype
+    , 1
+    , 1
     , 0
     , 1
     , 1
@@ -112,6 +118,17 @@ static const int qtscript_QGraphicsItemAnimation_function_lengths[] = {
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsItemAnimation : public QGraphicsItemAnimation
+{
+    friend QScriptValue qtscript_QGraphicsItemAnimation_afterAnimationStep(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsItemAnimation_beforeAnimationStep(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGraphicsItemAnimation_throw_ambiguity_error_helper(
@@ -127,6 +144,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_throw_ambiguity_error_helper
 
 Q_DECLARE_METATYPE(QGraphicsItemAnimation*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsItemAnimation*)
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<qreal,QPointF> > \
 { \
@@ -139,6 +157,23 @@ struct QMetaTypeId< QPair<qreal,QPointF> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<qreal,QPointF> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<qreal,QPointF> >("QPair<qreal,QPointF>", reinterpret_cast< QPair<qreal,QPointF> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QList<QPair<qreal,QPointF> > > \
 { \
@@ -151,6 +186,23 @@ struct QMetaTypeId< QList<QPair<qreal,QPointF> > > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QList<QPair<qreal,QPointF> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QList<QPair<qreal,QPointF> > >("QList<QPair<qreal,QPointF> >", reinterpret_cast< QList<QPair<qreal,QPointF> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QPair<qreal,qreal> > \
 { \
@@ -163,6 +215,23 @@ struct QMetaTypeId< QPair<qreal,qreal> > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<qreal,qreal> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<qreal,qreal> >("QPair<qreal,qreal>", reinterpret_cast< QPair<qreal,qreal> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
 template <> \
 struct QMetaTypeId< QList<QPair<qreal,qreal> > > \
 { \
@@ -175,6 +244,22 @@ struct QMetaTypeId< QList<QPair<qreal,qreal> > > \
         return metatype_id; \
     } \
 };
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QList<QPair<qreal,qreal> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QList<QPair<qreal,qreal> > >("QList<QPair<qreal,qreal> >", reinterpret_cast< QList<QPair<qreal,qreal> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QTimeLine*)
 
 //
@@ -191,11 +276,11 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 24;
+        _id = 0xBABE0000 + 26;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsItemAnimation* _q_self = qscriptvalue_cast<QGraphicsItemAnimation*>(context->thisObject());
+    qtscript_QGraphicsItemAnimation* _q_self = reinterpret_cast<qtscript_QGraphicsItemAnimation*>(qscriptvalue_cast<QGraphicsItemAnimation*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsItemAnimation.%0(): this object is not a QGraphicsItemAnimation")
@@ -204,8 +289,9 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 0) {
-        _q_self->clear();
+    if (context->argumentCount() == 1) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        _q_self->afterAnimationStep(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -213,22 +299,22 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     case 1:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_result = _q_self->horizontalScaleAt(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
+        _q_self->beforeAnimationStep(_q_arg0);
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 2:
-    if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_result = _q_self->horizontalShearAt(_q_arg0);
-        return qScriptValueFromValue(context->engine(), _q_result);
+    if (context->argumentCount() == 0) {
+        _q_self->clear();
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 3:
-    if (context->argumentCount() == 0) {
-        QGraphicsItem* _q_result = _q_self->item();
+    if (context->argumentCount() == 1) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        qreal _q_result = _q_self->horizontalScaleAt(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -236,12 +322,27 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     case 4:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        QMatrix _q_result = _q_self->matrixAt(_q_arg0);
+        qreal _q_result = _q_self->horizontalShearAt(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 5:
+    if (context->argumentCount() == 0) {
+        QGraphicsItem* _q_result = _q_self->item();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 1) {
+        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
+        QMatrix _q_result = _q_self->matrixAt(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         QPointF _q_result = _q_self->posAt(_q_arg0);
@@ -249,14 +350,14 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 0) {
         QList<QPair<qreal,QPointF> > _q_result = _q_self->posList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_result = _q_self->rotationAt(_q_arg0);
@@ -264,21 +365,21 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 0) {
         QList<QPair<qreal,qreal> > _q_result = _q_self->rotationList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 11:
     if (context->argumentCount() == 0) {
         QList<QPair<qreal,QPointF> > _q_result = _q_self->scaleList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         _q_self->setItem(_q_arg0);
@@ -286,7 +387,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 11:
+    case 13:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         QPointF _q_arg1 = qscriptvalue_cast<QPointF>(context->argument(1));
@@ -295,7 +396,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 12:
+    case 14:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -304,7 +405,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 13:
+    case 15:
     if (context->argumentCount() == 3) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -314,7 +415,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 3) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -324,7 +425,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 1) {
         QTimeLine* _q_arg0 = qscriptvalue_cast<QTimeLine*>(context->argument(0));
         _q_self->setTimeLine(_q_arg0);
@@ -332,7 +433,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 3) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -342,28 +443,28 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 0) {
         QList<QPair<qreal,QPointF> > _q_result = _q_self->shearList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 0) {
         QTimeLine* _q_result = _q_self->timeLine();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 0) {
         QList<QPair<qreal,QPointF> > _q_result = _q_self->translationList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_result = _q_self->verticalScaleAt(_q_arg0);
@@ -371,7 +472,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_result = _q_self->verticalShearAt(_q_arg0);
@@ -379,7 +480,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 22:
+    case 24:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_result = _q_self->xTranslationAt(_q_arg0);
@@ -387,7 +488,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 23:
+    case 25:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_result = _q_self->yTranslationAt(_q_arg0);
@@ -395,7 +496,7 @@ static QScriptValue qtscript_QGraphicsItemAnimation_prototype_call(QScriptContex
     }
     break;
 
-    case 24: {
+    case 26: {
     QString result = QString::fromLatin1("QGraphicsItemAnimation");
     return QScriptValue(context->engine(), result);
     }
@@ -455,7 +556,7 @@ QScriptValue qtscript_create_QGraphicsItemAnimation_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsItemAnimation*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsItemAnimation*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 25; ++i) {
+    for (int i = 0; i < 27; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsItemAnimation_prototype_call, qtscript_QGraphicsItemAnimation_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsItemAnimation_function_names[i+1]),

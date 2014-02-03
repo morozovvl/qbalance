@@ -342,11 +342,6 @@ bool Document::add()
         if (strNum > 0)
         {
 
-// Первый способ обновления документа после вставки новой строки. Не оптимальный
-//            query();
-//           form->selectRow(tableModel->rowCount() - 1);
-
-// Второй способ обновления документа после вставки новой строки, более оптимальный, без загрузки всего документа, а загрузки только новой строки
             int newRow = tableModel->rowCount();
             if (newRow == 0)
             {
@@ -356,24 +351,18 @@ bool Document::add()
             else
             {
                 tableModel->insertRow(newRow);
-                form->selectRow(newRow);
+                form->getGridTable()->reset();
+                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 updateCurrentRow(strNum);
             }
-            form->showPhoto();
-// Конец второго способа
 
-            saveOldValues();
 
-            int row = form->getCurrentIndex().row();
-            for (int i = 0; i < tableModel->record().count(); i++)
+            if (getScriptEngine() != 0)
             {
-                QString fieldName = tableModel->record().fieldName(i);
-                if (getValue(fieldName) != getOldValue(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                {
-                    tableModel->submit(tableModel->index(row, i));
-                }
+                getScriptEngine()->eventAfterAddString();
+                saveChanges();
             }
-            db->execCommands();
+
             return true;
         }
     }
@@ -523,7 +512,7 @@ QVariant Document::getValue(QString name, int row)
     {
         int __pos = name.indexOf("__");
         int operNum = name.mid(1, __pos - 1).toInt();
-        if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
+        if (operNum == freePrv)     // Если мы хотим получить значение из свободной проводки
         {
             result = Essence::getValue(name, findFreePrv());
         }
@@ -747,19 +736,22 @@ void Document::setConstDictId(QString dName, QVariant id)
                 // Если справочник, в котором мы устанавливаем идентификатор, является постоянным
                 // и у него имеется "родитель"-набор, который задействован в проводке
                 Dictionary* constDict = getDictionaries()->value(dName);
-                if (constDict->isConst() &&
-                    constDict->getParentDict()->getPrototypeName() == dictName)
+                if (constDict->isConst())
                 {
-                    constDict->setIdEnabled(false);
-                    dict = getDictionaries()->value(dictName);
-                    for (int r = 0; r < tableModel->rowCount(); r++)
+                    Dictionary* parentDict = constDict->getParentDict();
+                    if (parentDict != 0 && parentDict->getPrototypeName() == dictName)
                     {
-                        qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
-                        dict->setId(id);
-                        id = dict->getId();
-                        setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), id, r);
+                        constDict->setIdEnabled(false);
+                        dict = getDictionaries()->value(dictName);
+                        for (int r = 0; r < tableModel->rowCount(); r++)
+                        {
+                            qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
+                            dict->setId(id);
+                            id = dict->getId();
+                            setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), id, r);
+                        }
+                        constDict->setIdEnabled(true);
                     }
-                    constDict->setIdEnabled(true);
                 }
             }
             dictName = topersList->at(i).crDictAlias;
@@ -780,19 +772,22 @@ void Document::setConstDictId(QString dName, QVariant id)
                 // Если справочник, в котором мы устанавливаем идентификатор, является постоянным
                 // и у него имеется "родитель"-набор, который задействован в проводке
                 Dictionary* constDict = getDictionaries()->value(dName);
-                if (constDict->isConst() &&
-                    constDict->getParentDict()->getPrototypeName() == dictName)
+                if (constDict->isConst())
                 {
-                    constDict->setIdEnabled(false);
-                    dict = getDictionaries()->value(dictName);
-                    for (int r = 0; r < tableModel->rowCount(); r++)
+                    Dictionary* parentDict = constDict->getParentDict();
+                    if (parentDict != 0 && parentDict->getPrototypeName() == dictName)
                     {
-                        qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
-                        dict->setId(id);
-                        id = dict->getId();
-                        setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), id, r);
+                        constDict->setIdEnabled(false);
+                        dict = getDictionaries()->value(dictName);
+                        for (int r = 0; r < tableModel->rowCount(); r++)
+                        {
+                            qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
+                            dict->setId(id);
+                            id = dict->getId();
+                            setValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), id, r);
+                        }
+                        constDict->setIdEnabled(true);
                     }
-                    constDict->setIdEnabled(true);
                 }
             }
         }
@@ -862,8 +857,9 @@ void Document::setForm(QString formName)
     form->appendToolTip("buttonQueryAdd", trUtf8("Добавить строки в документ из запроса"));
     form->appendToolTip("buttonDelete", trUtf8("Удалить строку из документа"));
     form->appendToolTip("buttonRequery", trUtf8("Обновить документ (загрузить повторно с сервера)"));
-    form->appendToolTip("buttonPrint", trUtf8("Распечатать документ"));
-    form->appendToolTip("buutonSave", trUtf8("Экспорт документа"));
+    if (isPrintable())
+        form->appendToolTip("buttonPrint", trUtf8("Распечатать документ"));
+    form->appendToolTip("buttonSave", trUtf8("Экспорт документа"));
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
     form->open(parentForm, (Document*)this, formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);

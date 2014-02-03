@@ -17,7 +17,6 @@ static const char * const qtscript_QDir_function_names[] = {
     // static
     , "addSearchPath"
     , "cleanPath"
-    , "convertSeparators"
     , "current"
     , "currentPath"
     , "drives"
@@ -64,6 +63,7 @@ static const char * const qtscript_QDir_function_names[] = {
     , "refresh"
     , "relativeFilePath"
     , "remove"
+    , "removeRecursively"
     , "rename"
     , "rmdir"
     , "rmpath"
@@ -72,6 +72,7 @@ static const char * const qtscript_QDir_function_names[] = {
     , "setPath"
     , "setSorting"
     , "sorting"
+    , "swap"
     , "toString"
 };
 
@@ -80,7 +81,6 @@ static const char * const qtscript_QDir_function_signatures[] = {
     // static
     , "String prefix, String path"
     , "String path"
-    , "String pathName"
     , ""
     , ""
     , ""
@@ -127,6 +127,7 @@ static const char * const qtscript_QDir_function_signatures[] = {
     , ""
     , "String fileName"
     , "String fileName"
+    , ""
     , "String oldName, String newName"
     , "String dirName"
     , "String dirPath"
@@ -135,6 +136,7 @@ static const char * const qtscript_QDir_function_signatures[] = {
     , "String path"
     , "SortFlags sort"
     , ""
+    , "QDir other"
 ""
 };
 
@@ -142,7 +144,6 @@ static const int qtscript_QDir_function_lengths[] = {
     4
     // static
     , 2
-    , 1
     , 1
     , 0
     , 0
@@ -190,6 +191,7 @@ static const int qtscript_QDir_function_lengths[] = {
     , 0
     , 1
     , 1
+    , 0
     , 2
     , 1
     , 1
@@ -198,6 +200,7 @@ static const int qtscript_QDir_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 1
     , 0
 };
 
@@ -218,7 +221,6 @@ Q_DECLARE_METATYPE(QDir::Filter)
 Q_DECLARE_METATYPE(QFlags<QDir::Filter>)
 Q_DECLARE_METATYPE(QDir::SortFlag)
 Q_DECLARE_METATYPE(QFlags<QDir::SortFlag>)
-Q_DECLARE_METATYPE(QFileInfo)
 Q_DECLARE_METATYPE(QList<QFileInfo>)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -274,9 +276,9 @@ static const QDir::Filter qtscript_QDir_Filter_values[] = {
     , QDir::AccessMask
     , QDir::AllDirs
     , QDir::CaseSensitive
-    , QDir::NoDotAndDotDot
     , QDir::NoDot
     , QDir::NoDotDot
+    , QDir::NoDotAndDotDot
 };
 
 static const char * const qtscript_QDir_Filter_keys[] = {
@@ -297,9 +299,9 @@ static const char * const qtscript_QDir_Filter_keys[] = {
     , "AccessMask"
     , "AllDirs"
     , "CaseSensitive"
-    , "NoDotAndDotDot"
     , "NoDot"
     , "NoDotDot"
+    , "NoDotAndDotDot"
 };
 
 static QString qtscript_QDir_Filter_toStringHelper(QDir::Filter value)
@@ -614,7 +616,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 34;
+        _id = 0xBABE0000 + 36;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -622,7 +624,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDir.%0(): this object is not a QDir")
-            .arg(qtscript_QDir_function_names[_id+23]));
+            .arg(qtscript_QDir_function_names[_id+22]));
     }
 
     switch (_id) {
@@ -895,6 +897,13 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     break;
 
     case 26:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->removeRecursively();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 27:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_arg1 = context->argument(1).toString();
@@ -903,7 +912,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 27:
+    case 28:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->rmdir(_q_arg0);
@@ -911,7 +920,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 28:
+    case 29:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = _q_self->rmpath(_q_arg0);
@@ -919,7 +928,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 29:
+    case 30:
     if (context->argumentCount() == 1) {
         QFlags<QDir::Filter> _q_arg0 = qscriptvalue_cast<QFlags<QDir::Filter> >(context->argument(0));
         _q_self->setFilter(_q_arg0);
@@ -927,7 +936,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 30:
+    case 31:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -936,7 +945,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 31:
+    case 32:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setPath(_q_arg0);
@@ -944,7 +953,7 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 32:
+    case 33:
     if (context->argumentCount() == 1) {
         QFlags<QDir::SortFlag> _q_arg0 = qscriptvalue_cast<QFlags<QDir::SortFlag> >(context->argument(0));
         _q_self->setSorting(_q_arg0);
@@ -952,14 +961,22 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     }
     break;
 
-    case 33:
+    case 34:
     if (context->argumentCount() == 0) {
         QFlags<QDir::SortFlag> _q_result = _q_self->sorting();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 34: {
+    case 35:
+    if (context->argumentCount() == 1) {
+        QDir _q_arg0 = qscriptvalue_cast<QDir>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 36: {
     QString result;
     QDebug d(&result);
     d << *_q_self;
@@ -970,8 +987,8 @@ static QScriptValue qtscript_QDir_prototype_call(QScriptContext *context, QScrip
     Q_ASSERT(false);
     }
     return qtscript_QDir_throw_ambiguity_error_helper(context,
-        qtscript_QDir_function_names[_id+23],
-        qtscript_QDir_function_signatures[_id+23]);
+        qtscript_QDir_function_names[_id+22],
+        qtscript_QDir_function_signatures[_id+22]);
 }
 
 static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEngine *)
@@ -1042,35 +1059,27 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     break;
 
     case 3:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        QString _q_result = QDir::convertSeparators(_q_arg0);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 4:
     if (context->argumentCount() == 0) {
         QDir _q_result = QDir::current();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 4:
     if (context->argumentCount() == 0) {
         QString _q_result = QDir::currentPath();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 0) {
         QList<QFileInfo> _q_result = QDir::drives();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_result = QDir::fromNativeSeparators(_q_arg0);
@@ -1078,21 +1087,21 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 0) {
         QDir _q_result = QDir::home();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 8:
     if (context->argumentCount() == 0) {
         QString _q_result = QDir::homePath();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 9:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = QDir::isAbsolutePath(_q_arg0);
@@ -1100,7 +1109,7 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 11:
+    case 10:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = QDir::isRelativePath(_q_arg0);
@@ -1108,7 +1117,7 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 12:
+    case 11:
     if (context->argumentCount() == 2) {
         if (context->argument(0).isString()
             && context->argument(1).isString()) {
@@ -1127,7 +1136,7 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 13:
+    case 12:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QStringList _q_result = QDir::nameFiltersFromString(_q_arg0);
@@ -1135,21 +1144,21 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 14:
+    case 13:
     if (context->argumentCount() == 0) {
         QDir _q_result = QDir::root();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 14:
     if (context->argumentCount() == 0) {
         QString _q_result = QDir::rootPath();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 15:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QStringList _q_result = QDir::searchPaths(_q_arg0);
@@ -1157,14 +1166,14 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 17:
+    case 16:
     if (context->argumentCount() == 0) {
         QChar _q_result = QDir::separator();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 17:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         bool _q_result = QDir::setCurrent(_q_arg0);
@@ -1172,7 +1181,7 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 19:
+    case 18:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QStringList _q_arg1;
@@ -1182,21 +1191,21 @@ static QScriptValue qtscript_QDir_static_call(QScriptContext *context, QScriptEn
     }
     break;
 
-    case 20:
+    case 19:
     if (context->argumentCount() == 0) {
         QDir _q_result = QDir::temp();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 20:
     if (context->argumentCount() == 0) {
         QString _q_result = QDir::tempPath();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 21:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_result = QDir::toNativeSeparators(_q_arg0);
@@ -1216,10 +1225,10 @@ QScriptValue qtscript_create_QDir_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QDir*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDir*)0));
-    for (int i = 0; i < 35; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QDir_prototype_call, qtscript_QDir_function_lengths[i+23]);
+    for (int i = 0; i < 37; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QDir_prototype_call, qtscript_QDir_function_lengths[i+22]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QDir_function_names[i+23]),
+        proto.setProperty(QString::fromLatin1(qtscript_QDir_function_names[i+22]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -1228,7 +1237,7 @@ QScriptValue qtscript_create_QDir_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QDir_static_call, proto, qtscript_QDir_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 21; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDir_static_call,
             qtscript_QDir_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

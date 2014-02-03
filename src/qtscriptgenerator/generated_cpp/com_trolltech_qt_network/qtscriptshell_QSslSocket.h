@@ -17,7 +17,9 @@ public:
     bool  canReadLine() const;
     void childEvent(QChildEvent*  arg__1);
     void close();
+    void connectToHost(const QString&  hostName, unsigned short  port, QIODevice::OpenMode  openMode = ReadWrite, QAbstractSocket::NetworkLayerProtocol  protocol = QAbstractSocket::AnyIPProtocol);
     void customEvent(QEvent*  arg__1);
+    void disconnectFromHost();
     bool  event(QEvent*  arg__1);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     bool  isSequential() const;
@@ -26,10 +28,18 @@ public:
     qint64  readData(char*  data, qint64  maxlen);
     qint64  readLineData(char*  data, qint64  maxlen);
     bool  reset();
+    void resume();
     bool  seek(qint64  pos);
+    void setReadBufferSize(qint64  size);
+    bool  setSocketDescriptor(qintptr  socketDescriptor, QAbstractSocket::SocketState  state = QAbstractSocket::ConnectedState, QIODevice::OpenMode  openMode = ReadWrite);
+    void setSocketOption(QAbstractSocket::SocketOption  option, const QVariant&  value);
     qint64  size() const;
+    qintptr  socketDescriptor() const;
+    QVariant  socketOption(QAbstractSocket::SocketOption  option);
     void timerEvent(QTimerEvent*  arg__1);
     bool  waitForBytesWritten(int  msecs = 30000);
+    bool  waitForConnected(int  msecs = 30000);
+    bool  waitForDisconnected(int  msecs = 30000);
     bool  waitForReadyRead(int  msecs = 30000);
     qint64  writeData(const char*  data, qint64  len);
 

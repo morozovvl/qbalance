@@ -22,7 +22,7 @@ static const char * const qtscript_QReadWriteLock_function_names[] = {
 };
 
 static const char * const qtscript_QReadWriteLock_function_signatures[] = {
-    "\nRecursionMode recursionMode"
+    "RecursionMode recursionMode"
     // static
     // prototype
     , ""

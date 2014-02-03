@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionHeader_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionHeader_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionHeader : public QStyleOptionHeader
+{
+
+    friend QScriptValue qtscript_QStyleOptionHeader_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionHeader_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,10 +57,10 @@ Q_DECLARE_METATYPE(QStyleOptionHeader)
 Q_DECLARE_METATYPE(QStyleOptionHeader*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionHeader)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionHeader*)
+Q_DECLARE_METATYPE(QStyleOptionHeader::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOptionHeader::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionHeader::SectionPosition)
 Q_DECLARE_METATYPE(QStyleOptionHeader::SelectedPosition)
-Q_DECLARE_METATYPE(QStyleOptionHeader::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOptionHeader::SortIndicator)
 Q_DECLARE_METATYPE(QStyleOption*)
 
@@ -67,6 +76,71 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QStyleOptionHeader::StyleOptionType
+//
+
+static const QStyleOptionHeader::StyleOptionType qtscript_QStyleOptionHeader_StyleOptionType_values[] = {
+    QStyleOptionHeader::Type
+};
+
+static const char * const qtscript_QStyleOptionHeader_StyleOptionType_keys[] = {
+    "Type"
+};
+
+static QString qtscript_QStyleOptionHeader_StyleOptionType_toStringHelper(QStyleOptionHeader::StyleOptionType value)
+{
+    if ((value >= QStyleOptionHeader::Type) && (value <= QStyleOptionHeader::Type))
+        return qtscript_QStyleOptionHeader_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionHeader::Type)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionHeader_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionHeader::StyleOptionType &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionHeader"));
+    return clazz.property(qtscript_QStyleOptionHeader_StyleOptionType_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionHeader_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionHeader::StyleOptionType &out)
+{
+    out = qvariant_cast<QStyleOptionHeader::StyleOptionType>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionHeader_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionHeader::Type) && (arg <= QStyleOptionHeader::Type))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionHeader::StyleOptionType>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionHeader_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionHeader::StyleOptionType value = qscriptvalue_cast<QStyleOptionHeader::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionHeader_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionHeader::StyleOptionType value = qscriptvalue_cast<QStyleOptionHeader::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionHeader_StyleOptionType_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionHeader_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionHeader_StyleOptionType,
+        qtscript_QStyleOptionHeader_StyleOptionType_valueOf, qtscript_QStyleOptionHeader_StyleOptionType_toString);
+    qScriptRegisterMetaType<QStyleOptionHeader::StyleOptionType>(engine, qtscript_QStyleOptionHeader_StyleOptionType_toScriptValue,
+        qtscript_QStyleOptionHeader_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionHeader_StyleOptionType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionHeader_StyleOptionType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -277,71 +351,6 @@ static QScriptValue qtscript_create_QStyleOptionHeader_SelectedPosition_class(QS
 }
 
 //
-// QStyleOptionHeader::StyleOptionType
-//
-
-static const QStyleOptionHeader::StyleOptionType qtscript_QStyleOptionHeader_StyleOptionType_values[] = {
-    QStyleOptionHeader::Type
-};
-
-static const char * const qtscript_QStyleOptionHeader_StyleOptionType_keys[] = {
-    "Type"
-};
-
-static QString qtscript_QStyleOptionHeader_StyleOptionType_toStringHelper(QStyleOptionHeader::StyleOptionType value)
-{
-    if ((value >= QStyleOptionHeader::Type) && (value <= QStyleOptionHeader::Type))
-        return qtscript_QStyleOptionHeader_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionHeader::Type)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionHeader_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionHeader::StyleOptionType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionHeader"));
-    return clazz.property(qtscript_QStyleOptionHeader_StyleOptionType_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionHeader_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionHeader::StyleOptionType &out)
-{
-    out = qvariant_cast<QStyleOptionHeader::StyleOptionType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionHeader_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionHeader::Type) && (arg <= QStyleOptionHeader::Type))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionHeader::StyleOptionType>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionHeader_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionHeader::StyleOptionType value = qscriptvalue_cast<QStyleOptionHeader::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionHeader_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionHeader::StyleOptionType value = qscriptvalue_cast<QStyleOptionHeader::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionHeader_StyleOptionType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionHeader_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionHeader_StyleOptionType,
-        qtscript_QStyleOptionHeader_StyleOptionType_valueOf, qtscript_QStyleOptionHeader_StyleOptionType_toString);
-    qScriptRegisterMetaType<QStyleOptionHeader::StyleOptionType>(engine, qtscript_QStyleOptionHeader_StyleOptionType_toScriptValue,
-        qtscript_QStyleOptionHeader_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionHeader_StyleOptionType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionHeader_StyleOptionType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QStyleOptionHeader::SortIndicator
 //
 
@@ -428,7 +437,7 @@ static QScriptValue qtscript_QStyleOptionHeader_prototype_call(QScriptContext *c
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionHeader* _q_self = qscriptvalue_cast<QStyleOptionHeader*>(context->thisObject());
+    qtscript_QStyleOptionHeader* _q_self = reinterpret_cast<qtscript_QStyleOptionHeader*>(qscriptvalue_cast<QStyleOptionHeader*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionHeader.%0(): this object is not a QStyleOptionHeader")
@@ -493,14 +502,14 @@ QScriptValue qtscript_create_QStyleOptionHeader_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionHeader_static_call, proto, qtscript_QStyleOptionHeader_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
+        qtscript_create_QStyleOptionHeader_StyleOptionType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
         qtscript_create_QStyleOptionHeader_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SectionPosition"),
         qtscript_create_QStyleOptionHeader_SectionPosition_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SelectedPosition"),
         qtscript_create_QStyleOptionHeader_SelectedPosition_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
-        qtscript_create_QStyleOptionHeader_StyleOptionType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SortIndicator"),
         qtscript_create_QStyleOptionHeader_SortIndicator_class(engine, ctor));
     return ctor;

@@ -220,7 +220,9 @@ static QScriptValue qtscript_QTextLength_prototype_call(QScriptContext *context,
     break;
 
     case 6: {
-    QString result = QString::fromLatin1("QTextLength");
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 

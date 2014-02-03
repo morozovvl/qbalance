@@ -8,8 +8,8 @@
 class QtScriptShell_QGraphicsPathItem : public QGraphicsPathItem
 {
 public:
-    QtScriptShell_QGraphicsPathItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsPathItem(const QPainterPath&  path, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsPathItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsPathItem(const QPainterPath&  path, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsPathItem();
 
     void advance(int  phase);

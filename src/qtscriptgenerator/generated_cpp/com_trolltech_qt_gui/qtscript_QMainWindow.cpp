@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qmainwindow.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -32,6 +31,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -41,6 +41,7 @@
 #include <qstyle.h>
 #include <qtoolbar.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QMainWindow.h"
 
@@ -158,6 +159,15 @@ static const int qtscript_QMainWindow_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QMainWindow_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMainWindow : public QMainWindow
+{
+
+    friend QScriptValue qtscript_QMainWindow_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QMainWindow_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -183,6 +193,7 @@ Q_DECLARE_METATYPE(QDockWidget*)
 Q_DECLARE_METATYPE(Qt::Orientation)
 Q_DECLARE_METATYPE(QToolBar*)
 Q_DECLARE_METATYPE(Qt::ToolBarArea)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(Qt::Corner)
 Q_DECLARE_METATYPE(QMenu*)
 Q_DECLARE_METATYPE(QMenuBar*)
@@ -396,7 +407,7 @@ static QScriptValue qtscript_QMainWindow_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMainWindow* _q_self = qscriptvalue_cast<QMainWindow*>(context->thisObject());
+    qtscript_QMainWindow* _q_self = reinterpret_cast<qtscript_QMainWindow*>(qscriptvalue_cast<QMainWindow*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMainWindow.%0(): this object is not a QMainWindow")

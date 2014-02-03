@@ -27,6 +27,7 @@ static const char * const qtscript_QImageReader_function_names[] = {
     // static
     , "imageFormat"
     , "supportedImageFormats"
+    , "supportedMimeTypes"
     // prototype
     , "autoDetectImageFormat"
     , "backgroundColor"
@@ -73,6 +74,7 @@ static const char * const qtscript_QImageReader_function_signatures[] = {
     // static
     , "QIODevice device\nString fileName"
     , ""
+    , ""
     // prototype
     , ""
     , ""
@@ -118,6 +120,7 @@ static const int qtscript_QImageReader_function_lengths[] = {
     2
     // static
     , 1
+    , 0
     , 0
     // prototype
     , 0
@@ -287,7 +290,7 @@ static QScriptValue qtscript_QImageReader_prototype_call(QScriptContext *context
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QImageReader.%0(): this object is not a QImageReader")
-            .arg(qtscript_QImageReader_function_names[_id+3]));
+            .arg(qtscript_QImageReader_function_names[_id+4]));
     }
 
     switch (_id) {
@@ -572,8 +575,8 @@ static QScriptValue qtscript_QImageReader_prototype_call(QScriptContext *context
     Q_ASSERT(false);
     }
     return qtscript_QImageReader_throw_ambiguity_error_helper(context,
-        qtscript_QImageReader_function_names[_id+3],
-        qtscript_QImageReader_function_signatures[_id+3]);
+        qtscript_QImageReader_function_names[_id+4],
+        qtscript_QImageReader_function_signatures[_id+4]);
 }
 
 static QScriptValue qtscript_QImageReader_static_call(QScriptContext *context, QScriptEngine *)
@@ -642,6 +645,13 @@ static QScriptValue qtscript_QImageReader_static_call(QScriptContext *context, Q
     }
     break;
 
+    case 3:
+    if (context->argumentCount() == 0) {
+        QList<QByteArray> _q_result = QImageReader::supportedMimeTypes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
     default:
     Q_ASSERT(false);
     }
@@ -655,9 +665,9 @@ QScriptValue qtscript_create_QImageReader_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QImageReader*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QImageReader*)0));
     for (int i = 0; i < 38; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QImageReader_prototype_call, qtscript_QImageReader_function_lengths[i+3]);
+        QScriptValue fun = engine->newFunction(qtscript_QImageReader_prototype_call, qtscript_QImageReader_function_lengths[i+4]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QImageReader_function_names[i+3]),
+        proto.setProperty(QString::fromLatin1(qtscript_QImageReader_function_names[i+4]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -665,7 +675,7 @@ QScriptValue qtscript_create_QImageReader_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QImageReader_static_call, proto, qtscript_QImageReader_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QImageReader_static_call,
             qtscript_QImageReader_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

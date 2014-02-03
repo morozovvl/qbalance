@@ -16,7 +16,6 @@ static const char * const qtscript_QDate_function_names[] = {
     , "currentDate"
     , "fromJulianDay"
     , "fromString"
-    , "gregorianToJulian"
     , "isLeapYear"
     , "isValid"
     , "longDayName"
@@ -52,17 +51,16 @@ static const char * const qtscript_QDate_function_signatures[] = {
     "\nint y, int m, int d"
     // static
     , ""
-    , "int jd"
+    , "qint64 jd"
     , "String s, DateFormat f\nString s, String format"
-    , "int y, int m, int d"
     , "int year"
     , "int y, int m, int d"
-    , "int weekday\nint weekday, MonthNameType type"
-    , "int month\nint month, MonthNameType type"
-    , "int weekday\nint weekday, MonthNameType type"
-    , "int month\nint month, MonthNameType type"
+    , "int weekday, MonthNameType type"
+    , "int month, MonthNameType type"
+    , "int weekday, MonthNameType type"
+    , "int month, MonthNameType type"
     // prototype
-    , "int days"
+    , "qint64 days"
     , "int months"
     , "int years"
     , ""
@@ -92,7 +90,6 @@ static const int qtscript_QDate_function_lengths[] = {
     , 0
     , 1
     , 2
-    , 3
     , 1
     , 3
     , 2
@@ -244,13 +241,13 @@ static QScriptValue qtscript_QDate_prototype_call(QScriptContext *context, QScri
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDate.%0(): this object is not a QDate")
-            .arg(qtscript_QDate_function_names[_id+11]));
+            .arg(qtscript_QDate_function_names[_id+10]));
     }
 
     switch (_id) {
     case 0:
     if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
+        qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
         QDate _q_result = _q_self->addDays(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -310,8 +307,8 @@ static QScriptValue qtscript_QDate_prototype_call(QScriptContext *context, QScri
     case 8:
     if (context->argumentCount() == 1) {
         QDate _q_arg0 = qscriptvalue_cast<QDate>(context->argument(0));
-        int _q_result = _q_self->daysTo(_q_arg0);
-        return QScriptValue(context->engine(), _q_result);
+        qint64 _q_result = _q_self->daysTo(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -382,8 +379,8 @@ static QScriptValue qtscript_QDate_prototype_call(QScriptContext *context, QScri
 
     case 17:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->toJulianDay();
-        return QScriptValue(context->engine(), _q_result);
+        qint64 _q_result = _q_self->toJulianDay();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -436,8 +433,8 @@ static QScriptValue qtscript_QDate_prototype_call(QScriptContext *context, QScri
     Q_ASSERT(false);
     }
     return qtscript_QDate_throw_ambiguity_error_helper(context,
-        qtscript_QDate_function_names[_id+11],
-        qtscript_QDate_function_signatures[_id+11]);
+        qtscript_QDate_function_names[_id+10],
+        qtscript_QDate_function_signatures[_id+10]);
 }
 
 static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptEngine *)
@@ -473,7 +470,7 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
 
     case 2:
     if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
+        qint64 _q_arg0 = qscriptvalue_cast<qint64>(context->argument(0));
         QDate _q_result = QDate::fromJulianDay(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
@@ -503,16 +500,6 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
     break;
 
     case 4:
-    if (context->argumentCount() == 3) {
-        int _q_arg0 = context->argument(0).toInt32();
-        int _q_arg1 = context->argument(1).toInt32();
-        int _q_arg2 = context->argument(2).toInt32();
-        uint _q_result = QDate::gregorianToJulian(_q_arg0, _q_arg1, _q_arg2);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 5:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         bool _q_result = QDate::isLeapYear(_q_arg0);
@@ -520,7 +507,7 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
     }
     break;
 
-    case 6:
+    case 5:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -530,7 +517,7 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
     }
     break;
 
-    case 7:
+    case 6:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = QDate::longDayName(_q_arg0);
@@ -544,7 +531,7 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
     }
     break;
 
-    case 8:
+    case 7:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = QDate::longMonthName(_q_arg0);
@@ -558,7 +545,7 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
     }
     break;
 
-    case 9:
+    case 8:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = QDate::shortDayName(_q_arg0);
@@ -572,7 +559,7 @@ static QScriptValue qtscript_QDate_static_call(QScriptContext *context, QScriptE
     }
     break;
 
-    case 10:
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = QDate::shortMonthName(_q_arg0);
@@ -599,9 +586,9 @@ QScriptValue qtscript_create_QDate_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QDate*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QDate*)0));
     for (int i = 0; i < 22; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QDate_prototype_call, qtscript_QDate_function_lengths[i+11]);
+        QScriptValue fun = engine->newFunction(qtscript_QDate_prototype_call, qtscript_QDate_function_lengths[i+10]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QDate_function_names[i+11]),
+        proto.setProperty(QString::fromLatin1(qtscript_QDate_function_names[i+10]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -610,7 +597,7 @@ QScriptValue qtscript_create_QDate_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QDate_static_call, proto, qtscript_QDate_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QDate_static_call,
             qtscript_QDate_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qcombobox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -21,8 +22,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -34,6 +33,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -44,6 +44,7 @@
 #include <qstyleoption.h>
 #include <qvalidator.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QComboBox.h"
 
@@ -57,6 +58,7 @@ static const char * const qtscript_QComboBox_function_names[] = {
     , "findData"
     , "findText"
     , "hidePopup"
+    , "initStyleOption"
     , "insertItem"
     , "insertItems"
     , "insertSeparator"
@@ -96,6 +98,7 @@ static const char * const qtscript_QComboBox_function_signatures[] = {
     , "Object data, int role, MatchFlags flags"
     , "String text, MatchFlags flags"
     , ""
+    , "QStyleOptionComboBox option"
     , "int index, QIcon icon, String text, Object userData\nint index, String text, Object userData"
     , "int index, List texts"
     , "int index"
@@ -135,6 +138,7 @@ static const int qtscript_QComboBox_function_lengths[] = {
     , 3
     , 2
     , 0
+    , 1
     , 4
     , 2
     , 1
@@ -164,6 +168,16 @@ static const int qtscript_QComboBox_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QComboBox : public QComboBox
+{
+    friend QScriptValue qtscript_QComboBox_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QComboBox_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -186,12 +200,13 @@ Q_DECLARE_METATYPE(QComboBox::InsertPolicy)
 Q_DECLARE_METATYPE(QComboBox::SizeAdjustPolicy)
 Q_DECLARE_METATYPE(QCompleter*)
 Q_DECLARE_METATYPE(QFlags<Qt::MatchFlag>)
+Q_DECLARE_METATYPE(QStyleOptionComboBox*)
 Q_DECLARE_METATYPE(QAbstractItemDelegate*)
 Q_DECLARE_METATYPE(QLineEdit*)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
-Q_DECLARE_METATYPE(QModelIndex)
 Q_DECLARE_METATYPE(QValidator*)
 Q_DECLARE_METATYPE(QAbstractItemView*)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -381,11 +396,11 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 32;
+        _id = 0xBABE0000 + 33;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QComboBox* _q_self = qscriptvalue_cast<QComboBox*>(context->thisObject());
+    qtscript_QComboBox* _q_self = reinterpret_cast<qtscript_QComboBox*>(qscriptvalue_cast<QComboBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QComboBox.%0(): this object is not a QComboBox")
@@ -482,6 +497,14 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     break;
 
     case 6:
+    if (context->argumentCount() == 1) {
+        QStyleOptionComboBox* _q_arg0 = qscriptvalue_cast<QStyleOptionComboBox*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -517,7 +540,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QStringList _q_arg1;
@@ -527,7 +550,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->insertSeparator(_q_arg0);
@@ -535,7 +558,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QVariant _q_result = _q_self->itemData(_q_arg0);
@@ -549,17 +572,9 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 0) {
         QAbstractItemDelegate* _q_result = _q_self->itemDelegate();
-        return qScriptValueFromValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 11:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QIcon _q_result = _q_self->itemIcon(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -567,33 +582,41 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     case 12:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
+        QIcon _q_result = _q_self->itemIcon(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 13:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
         QString _q_result = _q_self->itemText(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         QLineEdit* _q_result = _q_self->lineEdit();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->minimumSizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 0) {
         QAbstractItemModel* _q_result = _q_self->model();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->removeItem(_q_arg0);
@@ -601,14 +624,14 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 0) {
         QModelIndex _q_result = _q_self->rootModelIndex();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 1) {
         QCompleter* _q_arg0 = qscriptvalue_cast<QCompleter*>(context->argument(0));
         _q_self->setCompleter(_q_arg0);
@@ -616,7 +639,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QVariant _q_arg1 = context->argument(1).toVariant();
@@ -632,7 +655,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 1) {
         QAbstractItemDelegate* _q_arg0 = qscriptvalue_cast<QAbstractItemDelegate*>(context->argument(0));
         _q_self->setItemDelegate(_q_arg0);
@@ -640,7 +663,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 21:
+    case 22:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QIcon _q_arg1 = qscriptvalue_cast<QIcon>(context->argument(1));
@@ -649,7 +672,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 22:
+    case 23:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -658,7 +681,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 23:
+    case 24:
     if (context->argumentCount() == 1) {
         QLineEdit* _q_arg0 = qscriptvalue_cast<QLineEdit*>(context->argument(0));
         _q_self->setLineEdit(_q_arg0);
@@ -666,7 +689,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 24:
+    case 25:
     if (context->argumentCount() == 1) {
         QAbstractItemModel* _q_arg0 = qscriptvalue_cast<QAbstractItemModel*>(context->argument(0));
         _q_self->setModel(_q_arg0);
@@ -674,7 +697,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 25:
+    case 26:
     if (context->argumentCount() == 1) {
         QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
         _q_self->setRootModelIndex(_q_arg0);
@@ -682,7 +705,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 26:
+    case 27:
     if (context->argumentCount() == 1) {
         QValidator* _q_arg0 = qscriptvalue_cast<QValidator*>(context->argument(0));
         _q_self->setValidator(_q_arg0);
@@ -690,7 +713,7 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 27:
+    case 28:
     if (context->argumentCount() == 1) {
         QAbstractItemView* _q_arg0 = qscriptvalue_cast<QAbstractItemView*>(context->argument(0));
         _q_self->setView(_q_arg0);
@@ -698,35 +721,35 @@ static QScriptValue qtscript_QComboBox_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 28:
+    case 29:
     if (context->argumentCount() == 0) {
         _q_self->showPopup();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 29:
+    case 30:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->sizeHint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 30:
+    case 31:
     if (context->argumentCount() == 0) {
         QValidator* _q_result = const_cast<QValidator*>(_q_self->validator());
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 31:
+    case 32:
     if (context->argumentCount() == 0) {
         QAbstractItemView* _q_result = _q_self->view();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 32: {
+    case 33: {
     QString result = QString::fromLatin1("QComboBox");
     return QScriptValue(context->engine(), result);
     }
@@ -786,7 +809,7 @@ QScriptValue qtscript_create_QComboBox_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QComboBox*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QComboBox*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 33; ++i) {
+    for (int i = 0; i < 34; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QComboBox_prototype_call, qtscript_QComboBox_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QComboBox_function_names[i+1]),

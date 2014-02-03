@@ -22,13 +22,14 @@ static const char * const qtscript_QLocalSocket_function_names[] = {
     , "abort"
     , "connectToServer"
     , "disconnectFromServer"
-    , "error"
     , "flush"
     , "fullServerName"
+    , "getError"
     , "isValid"
     , "readBufferSize"
     , "serverName"
     , "setReadBufferSize"
+    , "setServerName"
     , "setSocketDescriptor"
     , "socketDescriptor"
     , "state"
@@ -42,7 +43,7 @@ static const char * const qtscript_QLocalSocket_function_signatures[] = {
     // static
     // prototype
     , ""
-    , "String name, OpenMode openMode"
+    , "OpenMode openMode\nString name, OpenMode openMode"
     , ""
     , ""
     , ""
@@ -51,7 +52,8 @@ static const char * const qtscript_QLocalSocket_function_signatures[] = {
     , ""
     , ""
     , "qint64 size"
-    , "quintptr socketDescriptor, LocalSocketState socketState, OpenMode openMode"
+    , "String name"
+    , "qintptr socketDescriptor, LocalSocketState socketState, OpenMode openMode"
     , ""
     , ""
     , "int msecs"
@@ -73,12 +75,22 @@ static const int qtscript_QLocalSocket_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 1
     , 3
     , 0
     , 0
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QLocalSocket : public QLocalSocket
+{
+
+    friend QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QLocalSocket_throw_ambiguity_error_helper(
@@ -97,7 +109,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QLocalSocket*)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QFlags<QIODevice::OpenModeFlag>)
-Q_DECLARE_METATYPE(quintptr)
+Q_DECLARE_METATYPE(qintptr)
 Q_DECLARE_METATYPE(QIODevice*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -204,6 +216,7 @@ static const QLocalSocket::LocalSocketError qtscript_QLocalSocket_LocalSocketErr
     , QLocalSocket::DatagramTooLargeError
     , QLocalSocket::ConnectionError
     , QLocalSocket::UnsupportedSocketOperationError
+    , QLocalSocket::OperationError
 };
 
 static const char * const qtscript_QLocalSocket_LocalSocketError_keys[] = {
@@ -217,11 +230,12 @@ static const char * const qtscript_QLocalSocket_LocalSocketError_keys[] = {
     , "DatagramTooLargeError"
     , "ConnectionError"
     , "UnsupportedSocketOperationError"
+    , "OperationError"
 };
 
 static QString qtscript_QLocalSocket_LocalSocketError_toStringHelper(QLocalSocket::LocalSocketError value)
 {
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         if (qtscript_QLocalSocket_LocalSocketError_values[i] == value)
             return QString::fromLatin1(qtscript_QLocalSocket_LocalSocketError_keys[i]);
     }
@@ -242,7 +256,7 @@ static void qtscript_QLocalSocket_LocalSocketError_fromScriptValue(const QScript
 static QScriptValue qtscript_construct_QLocalSocket_LocalSocketError(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         if (qtscript_QLocalSocket_LocalSocketError_values[i] == arg)
             return qScriptValueFromValue(engine,  static_cast<QLocalSocket::LocalSocketError>(arg));
     }
@@ -268,7 +282,7 @@ static QScriptValue qtscript_create_QLocalSocket_LocalSocketError_class(QScriptE
         qtscript_QLocalSocket_LocalSocketError_valueOf, qtscript_QLocalSocket_LocalSocketError_toString);
     qScriptRegisterMetaType<QLocalSocket::LocalSocketError>(engine, qtscript_QLocalSocket_LocalSocketError_toScriptValue,
         qtscript_QLocalSocket_LocalSocketError_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QLocalSocket_LocalSocketError_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QLocalSocket_LocalSocketError_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
@@ -290,11 +304,11 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 15;
+        _id = 0xBABE0000 + 16;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QLocalSocket* _q_self = qscriptvalue_cast<QLocalSocket*>(context->thisObject());
+    qtscript_QLocalSocket* _q_self = reinterpret_cast<qtscript_QLocalSocket*>(qscriptvalue_cast<QLocalSocket*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QLocalSocket.%0(): this object is not a QLocalSocket")
@@ -310,10 +324,20 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
     break;
 
     case 1:
-    if (context->argumentCount() == 1) {
-        QString _q_arg0 = context->argument(0).toString();
-        _q_self->connectToServer(_q_arg0);
+    if (context->argumentCount() == 0) {
+        _q_self->connectToServer();
         return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 1) {
+        if ((qMetaTypeId<QFlags<QIODevice::OpenModeFlag> >() == context->argument(0).toVariant().userType())) {
+            QFlags<QIODevice::OpenModeFlag> _q_arg0 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(0));
+            _q_self->connectToServer(_q_arg0);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isString()) {
+            QString _q_arg0 = context->argument(0).toString();
+            _q_self->connectToServer(_q_arg0);
+            return context->engine()->undefinedValue();
+        }
     }
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
@@ -332,22 +356,22 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
 
     case 3:
     if (context->argumentCount() == 0) {
-        QLocalSocket::LocalSocketError _q_result = _q_self->error();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        bool _q_result = _q_self->flush();
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 4:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->flush();
+        QString _q_result = _q_self->fullServerName();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 5:
     if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->fullServerName();
-        return QScriptValue(context->engine(), _q_result);
+        QLocalSocket::LocalSocketError _q_result = _q_self->error();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -382,18 +406,26 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
 
     case 10:
     if (context->argumentCount() == 1) {
-        quintptr _q_arg0 = qscriptvalue_cast<quintptr>(context->argument(0));
+        QString _q_arg0 = context->argument(0).toString();
+        _q_self->setServerName(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
+    if (context->argumentCount() == 1) {
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
         bool _q_result = _q_self->setSocketDescriptor(_q_arg0);
         return QScriptValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 2) {
-        quintptr _q_arg0 = qscriptvalue_cast<quintptr>(context->argument(0));
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
         QLocalSocket::LocalSocketState _q_arg1 = qscriptvalue_cast<QLocalSocket::LocalSocketState>(context->argument(1));
         bool _q_result = _q_self->setSocketDescriptor(_q_arg0, _q_arg1);
         return QScriptValue(context->engine(), _q_result);
     }
     if (context->argumentCount() == 3) {
-        quintptr _q_arg0 = qscriptvalue_cast<quintptr>(context->argument(0));
+        qintptr _q_arg0 = qscriptvalue_cast<qintptr>(context->argument(0));
         QLocalSocket::LocalSocketState _q_arg1 = qscriptvalue_cast<QLocalSocket::LocalSocketState>(context->argument(1));
         QFlags<QIODevice::OpenModeFlag> _q_arg2 = qscriptvalue_cast<QFlags<QIODevice::OpenModeFlag> >(context->argument(2));
         bool _q_result = _q_self->setSocketDescriptor(_q_arg0, _q_arg1, _q_arg2);
@@ -401,21 +433,21 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 0) {
-        quintptr _q_result = _q_self->socketDescriptor();
+        qintptr _q_result = _q_self->socketDescriptor();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 0) {
         QLocalSocket::LocalSocketState _q_result = _q_self->state();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->waitForConnected();
         return QScriptValue(context->engine(), _q_result);
@@ -427,7 +459,7 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->waitForDisconnected();
         return QScriptValue(context->engine(), _q_result);
@@ -439,7 +471,7 @@ static QScriptValue qtscript_QLocalSocket_prototype_call(QScriptContext *context
     }
     break;
 
-    case 15: {
+    case 16: {
     QString result = QString::fromLatin1("QLocalSocket");
     return QScriptValue(context->engine(), result);
     }
@@ -499,7 +531,7 @@ QScriptValue qtscript_create_QLocalSocket_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QLocalSocket*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QLocalSocket*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QIODevice*>()));
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 17; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QLocalSocket_prototype_call, qtscript_QLocalSocket_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QLocalSocket_function_names[i+1]),

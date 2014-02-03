@@ -7,7 +7,8 @@ QT += sql \
       designer \
       uitools
 
-#CONFIG += debug
+CONFIG += plugin
+#CONFIG += release
 
 unix:TARGET = ../../../plugins/designer/plugins
 win32:TARGET = ../../../../plugins/designer/plugins
@@ -74,7 +75,7 @@ unix {
   DATAROOT =   $$PREFIX/share
   DESKTOPDIR =   $$DATAROOT/applications
   PIXMAPSDIR =   $$DATAROOT/pixmaps
- target.path =  $$BINDIR
+ target.path =  $$[QT_INSTALL_PLUGINS]/designer
  desktop.path =  $$DESKTOPDIR
  desktop.files =  qbalance.desktop
  icons.path =  $$PIXMAPSDIR

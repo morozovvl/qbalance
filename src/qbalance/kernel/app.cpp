@@ -40,6 +40,8 @@ QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile
 bool    TApplication::DebugMode        = false;
 TApplication* TApplication::Exemplar   = 0;
 
+
+
 TApplication::TApplication(int & argc, char** argv)
     : QApplication(argc, argv)
 {
@@ -52,11 +54,12 @@ TApplication::TApplication(int & argc, char** argv)
     gui = new GUIFactory(db);
 
     formLoader = new QUiLoader(this);
-    formLoader->addPluginPath(applicationDirPath() + "/plugins/");
+    formLoader->addPluginPath(applicationDirPath() + "/plugins");
     formLoader->setWorkingDirectory(getFormsPath());
 
     dictionaryList = 0;
     topersList = 0;
+    plugins = 0;
     driverFR = new DriverFR(this);
 
 //456
@@ -183,6 +186,10 @@ bool TApplication::open() {
                         constDict->setPhotoEnabled(false);
                         constDict->query();
                     }
+
+                    QPluginLoader pluginLoader;
+                    plugins = pluginLoader.instance();
+
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
                 }

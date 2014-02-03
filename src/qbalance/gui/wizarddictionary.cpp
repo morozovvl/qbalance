@@ -221,8 +221,21 @@ void WizardDictionary::getData()
         fields.append(field);
     }
     else
-    {   // Получим список полей таблицы
+    {
+        // Получим список полей таблицы
         db->getColumnsProperties(&fields, table);
+        if (fields.count() == 0)
+        {
+            if (table.left(5).toLower() == "saldo")
+            {
+                QString acc = table;
+                acc.replace("saldo", "");
+                if (app->getDictionaries()->addSaldo(acc))
+                {
+                    fields.append(*app->getDictionaries()->getSaldo(acc)->getColumnsProperties());
+                }
+            }
+        }
         // Прочитаем данные о заголовках столбцов
         db->getColumnsHeaders(table, &fields);
 

@@ -14,15 +14,13 @@ static const char * const qtscript_QGLFramebufferObjectFormat_function_names[] =
     // static
     // prototype
     , "attachment"
-    , "internalTextureFormat"
+    , "mipmap"
     , "operator_assign"
     , "equals"
     , "samples"
     , "setAttachment"
-    , "setInternalTextureFormat"
+    , "setMipmap"
     , "setSamples"
-    , "setTextureTarget"
-    , "textureTarget"
     , "toString"
 };
 
@@ -36,10 +34,8 @@ static const char * const qtscript_QGLFramebufferObjectFormat_function_signature
     , "QGLFramebufferObjectFormat other"
     , ""
     , "Attachment attachment"
-    , "unsigned int internalTextureFormat"
+    , "bool enabled"
     , "int samples"
-    , "unsigned int target"
-    , ""
 ""
 };
 
@@ -55,8 +51,6 @@ static const int qtscript_QGLFramebufferObjectFormat_function_lengths[] = {
     , 1
     , 1
     , 1
-    , 1
-    , 0
     , 0
 };
 
@@ -89,7 +83,7 @@ static QScriptValue qtscript_QGLFramebufferObjectFormat_prototype_call(QScriptCo
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 10;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -110,7 +104,7 @@ static QScriptValue qtscript_QGLFramebufferObjectFormat_prototype_call(QScriptCo
 
     case 1:
     if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->internalTextureFormat();
+        bool _q_result = _q_self->mipmap();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -148,8 +142,8 @@ static QScriptValue qtscript_QGLFramebufferObjectFormat_prototype_call(QScriptCo
 
     case 6:
     if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->setInternalTextureFormat(_q_arg0);
+        bool _q_arg0 = context->argument(0).toBoolean();
+        _q_self->setMipmap(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
@@ -162,22 +156,7 @@ static QScriptValue qtscript_QGLFramebufferObjectFormat_prototype_call(QScriptCo
     }
     break;
 
-    case 8:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->setTextureTarget(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 9:
-    if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->textureTarget();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 10: {
+    case 8: {
     QString result = QString::fromLatin1("QGLFramebufferObjectFormat");
     return QScriptValue(context->engine(), result);
     }
@@ -224,7 +203,7 @@ QScriptValue qtscript_create_QGLFramebufferObjectFormat_class(QScriptEngine *eng
 {
     engine->setDefaultPrototype(qMetaTypeId<QGLFramebufferObjectFormat*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLFramebufferObjectFormat*)0));
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLFramebufferObjectFormat_prototype_call, qtscript_QGLFramebufferObjectFormat_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGLFramebufferObjectFormat_function_names[i+1]),

@@ -129,6 +129,15 @@ static const int qtscript_QSettings_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSettings_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSettings : public QSettings
+{
+
+    friend QScriptValue qtscript_QSettings_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSettings_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -421,7 +430,7 @@ static QScriptValue qtscript_QSettings_prototype_call(QScriptContext *context, Q
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSettings* _q_self = qscriptvalue_cast<QSettings*>(context->thisObject());
+    qtscript_QSettings* _q_self = reinterpret_cast<qtscript_QSettings*>(qscriptvalue_cast<QSettings*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSettings.%0(): this object is not a QSettings")

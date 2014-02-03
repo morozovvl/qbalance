@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionButton_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionButton : public QStyleOptionButton
+{
+
+    friend QScriptValue qtscript_QStyleOptionButton_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionButton_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,10 +57,10 @@ Q_DECLARE_METATYPE(QStyleOptionButton)
 Q_DECLARE_METATYPE(QStyleOptionButton*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionButton)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionButton*)
+Q_DECLARE_METATYPE(QStyleOptionButton::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOptionButton::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionButton::ButtonFeature)
 Q_DECLARE_METATYPE(QFlags<QStyleOptionButton::ButtonFeature>)
-Q_DECLARE_METATYPE(QStyleOptionButton::StyleOptionType)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -83,6 +92,71 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
+}
+
+//
+// QStyleOptionButton::StyleOptionType
+//
+
+static const QStyleOptionButton::StyleOptionType qtscript_QStyleOptionButton_StyleOptionType_values[] = {
+    QStyleOptionButton::Type
+};
+
+static const char * const qtscript_QStyleOptionButton_StyleOptionType_keys[] = {
+    "Type"
+};
+
+static QString qtscript_QStyleOptionButton_StyleOptionType_toStringHelper(QStyleOptionButton::StyleOptionType value)
+{
+    if ((value >= QStyleOptionButton::Type) && (value <= QStyleOptionButton::Type))
+        return qtscript_QStyleOptionButton_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionButton::Type)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionButton_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionButton::StyleOptionType &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionButton"));
+    return clazz.property(qtscript_QStyleOptionButton_StyleOptionType_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionButton_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionButton::StyleOptionType &out)
+{
+    out = qvariant_cast<QStyleOptionButton::StyleOptionType>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionButton_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionButton::Type) && (arg <= QStyleOptionButton::Type))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionButton::StyleOptionType>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionButton_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionButton::StyleOptionType value = qscriptvalue_cast<QStyleOptionButton::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionButton_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionButton::StyleOptionType value = qscriptvalue_cast<QStyleOptionButton::StyleOptionType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionButton_StyleOptionType_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionButton_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionButton_StyleOptionType,
+        qtscript_QStyleOptionButton_StyleOptionType_valueOf, qtscript_QStyleOptionButton_StyleOptionType_toString);
+    qScriptRegisterMetaType<QStyleOptionButton::StyleOptionType>(engine, qtscript_QStyleOptionButton_StyleOptionType_toScriptValue,
+        qtscript_QStyleOptionButton_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionButton_StyleOptionType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionButton_StyleOptionType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -306,71 +380,6 @@ static QScriptValue qtscript_create_QStyleOptionButton_ButtonFeatures_class(QScr
 }
 
 //
-// QStyleOptionButton::StyleOptionType
-//
-
-static const QStyleOptionButton::StyleOptionType qtscript_QStyleOptionButton_StyleOptionType_values[] = {
-    QStyleOptionButton::Type
-};
-
-static const char * const qtscript_QStyleOptionButton_StyleOptionType_keys[] = {
-    "Type"
-};
-
-static QString qtscript_QStyleOptionButton_StyleOptionType_toStringHelper(QStyleOptionButton::StyleOptionType value)
-{
-    if ((value >= QStyleOptionButton::Type) && (value <= QStyleOptionButton::Type))
-        return qtscript_QStyleOptionButton_StyleOptionType_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionButton::Type)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionButton_StyleOptionType_toScriptValue(QScriptEngine *engine, const QStyleOptionButton::StyleOptionType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionButton"));
-    return clazz.property(qtscript_QStyleOptionButton_StyleOptionType_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionButton_StyleOptionType_fromScriptValue(const QScriptValue &value, QStyleOptionButton::StyleOptionType &out)
-{
-    out = qvariant_cast<QStyleOptionButton::StyleOptionType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionButton_StyleOptionType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionButton::Type) && (arg <= QStyleOptionButton::Type))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionButton::StyleOptionType>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionButton_StyleOptionType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionButton::StyleOptionType value = qscriptvalue_cast<QStyleOptionButton::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionButton_StyleOptionType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionButton::StyleOptionType value = qscriptvalue_cast<QStyleOptionButton::StyleOptionType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionButton_StyleOptionType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionButton_StyleOptionType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionButton_StyleOptionType,
-        qtscript_QStyleOptionButton_StyleOptionType_valueOf, qtscript_QStyleOptionButton_StyleOptionType_toString);
-    qScriptRegisterMetaType<QStyleOptionButton::StyleOptionType>(engine, qtscript_QStyleOptionButton_StyleOptionType_toScriptValue,
-        qtscript_QStyleOptionButton_StyleOptionType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionButton_StyleOptionType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionButton_StyleOptionType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QStyleOptionButton
 //
 
@@ -388,7 +397,7 @@ static QScriptValue qtscript_QStyleOptionButton_prototype_call(QScriptContext *c
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionButton* _q_self = qscriptvalue_cast<QStyleOptionButton*>(context->thisObject());
+    qtscript_QStyleOptionButton* _q_self = reinterpret_cast<qtscript_QStyleOptionButton*>(qscriptvalue_cast<QStyleOptionButton*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionButton.%0(): this object is not a QStyleOptionButton")
@@ -453,13 +462,13 @@ QScriptValue qtscript_create_QStyleOptionButton_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionButton_static_call, proto, qtscript_QStyleOptionButton_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
+    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
+        qtscript_create_QStyleOptionButton_StyleOptionType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
         qtscript_create_QStyleOptionButton_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ButtonFeature"),
         qtscript_create_QStyleOptionButton_ButtonFeature_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ButtonFeatures"),
         qtscript_create_QStyleOptionButton_ButtonFeatures_class(engine));
-    ctor.setProperty(QString::fromLatin1("StyleOptionType"),
-        qtscript_create_QStyleOptionButton_StyleOptionType_class(engine, ctor));
     return ctor;
 }

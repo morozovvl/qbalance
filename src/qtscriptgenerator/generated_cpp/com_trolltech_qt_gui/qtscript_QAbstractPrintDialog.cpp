@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qabstractprintdialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractprintdialog.h>
 #include <qaction.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qprinter.h>
 #include <qrect.h>
@@ -37,6 +37,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAbstractPrintDialog.h"
 
@@ -103,6 +104,15 @@ static const int qtscript_QAbstractPrintDialog_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QAbstractPrintDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractPrintDialog : public QAbstractPrintDialog
+{
+
+    friend QScriptValue qtscript_QAbstractPrintDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QAbstractPrintDialog_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -116,10 +126,11 @@ static QScriptValue qtscript_QAbstractPrintDialog_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QAbstractPrintDialog*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractPrintDialog*)
-Q_DECLARE_METATYPE(QAbstractPrintDialog::PrintRange)
 Q_DECLARE_METATYPE(QAbstractPrintDialog::PrintDialogOption)
 Q_DECLARE_METATYPE(QFlags<QAbstractPrintDialog::PrintDialogOption>)
+Q_DECLARE_METATYPE(QAbstractPrintDialog::PrintRange)
 Q_DECLARE_METATYPE(QPrinter*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QList<QWidget*>)
 Q_DECLARE_METATYPE(QDialog*)
 
@@ -152,77 +163,6 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
-}
-
-//
-// QAbstractPrintDialog::PrintRange
-//
-
-static const QAbstractPrintDialog::PrintRange qtscript_QAbstractPrintDialog_PrintRange_values[] = {
-    QAbstractPrintDialog::AllPages
-    , QAbstractPrintDialog::Selection
-    , QAbstractPrintDialog::PageRange
-    , QAbstractPrintDialog::CurrentPage
-};
-
-static const char * const qtscript_QAbstractPrintDialog_PrintRange_keys[] = {
-    "AllPages"
-    , "Selection"
-    , "PageRange"
-    , "CurrentPage"
-};
-
-static QString qtscript_QAbstractPrintDialog_PrintRange_toStringHelper(QAbstractPrintDialog::PrintRange value)
-{
-    if ((value >= QAbstractPrintDialog::AllPages) && (value <= QAbstractPrintDialog::CurrentPage))
-        return qtscript_QAbstractPrintDialog_PrintRange_keys[static_cast<int>(value)-static_cast<int>(QAbstractPrintDialog::AllPages)];
-    return QString();
-}
-
-static QScriptValue qtscript_QAbstractPrintDialog_PrintRange_toScriptValue(QScriptEngine *engine, const QAbstractPrintDialog::PrintRange &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractPrintDialog"));
-    return clazz.property(qtscript_QAbstractPrintDialog_PrintRange_toStringHelper(value));
-}
-
-static void qtscript_QAbstractPrintDialog_PrintRange_fromScriptValue(const QScriptValue &value, QAbstractPrintDialog::PrintRange &out)
-{
-    out = qvariant_cast<QAbstractPrintDialog::PrintRange>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QAbstractPrintDialog_PrintRange(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QAbstractPrintDialog::AllPages) && (arg <= QAbstractPrintDialog::CurrentPage))
-        return qScriptValueFromValue(engine,  static_cast<QAbstractPrintDialog::PrintRange>(arg));
-    return context->throwError(QString::fromLatin1("PrintRange(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QAbstractPrintDialog_PrintRange_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractPrintDialog::PrintRange value = qscriptvalue_cast<QAbstractPrintDialog::PrintRange>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QAbstractPrintDialog_PrintRange_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QAbstractPrintDialog::PrintRange value = qscriptvalue_cast<QAbstractPrintDialog::PrintRange>(context->thisObject());
-    return QScriptValue(engine, qtscript_QAbstractPrintDialog_PrintRange_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QAbstractPrintDialog_PrintRange_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QAbstractPrintDialog_PrintRange,
-        qtscript_QAbstractPrintDialog_PrintRange_valueOf, qtscript_QAbstractPrintDialog_PrintRange_toString);
-    qScriptRegisterMetaType<QAbstractPrintDialog::PrintRange>(engine, qtscript_QAbstractPrintDialog_PrintRange_toScriptValue,
-        qtscript_QAbstractPrintDialog_PrintRange_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 4; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractPrintDialog_PrintRange_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QAbstractPrintDialog_PrintRange_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -385,6 +325,77 @@ static QScriptValue qtscript_create_QAbstractPrintDialog_PrintDialogOptions_clas
 }
 
 //
+// QAbstractPrintDialog::PrintRange
+//
+
+static const QAbstractPrintDialog::PrintRange qtscript_QAbstractPrintDialog_PrintRange_values[] = {
+    QAbstractPrintDialog::AllPages
+    , QAbstractPrintDialog::Selection
+    , QAbstractPrintDialog::PageRange
+    , QAbstractPrintDialog::CurrentPage
+};
+
+static const char * const qtscript_QAbstractPrintDialog_PrintRange_keys[] = {
+    "AllPages"
+    , "Selection"
+    , "PageRange"
+    , "CurrentPage"
+};
+
+static QString qtscript_QAbstractPrintDialog_PrintRange_toStringHelper(QAbstractPrintDialog::PrintRange value)
+{
+    if ((value >= QAbstractPrintDialog::AllPages) && (value <= QAbstractPrintDialog::CurrentPage))
+        return qtscript_QAbstractPrintDialog_PrintRange_keys[static_cast<int>(value)-static_cast<int>(QAbstractPrintDialog::AllPages)];
+    return QString();
+}
+
+static QScriptValue qtscript_QAbstractPrintDialog_PrintRange_toScriptValue(QScriptEngine *engine, const QAbstractPrintDialog::PrintRange &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QAbstractPrintDialog"));
+    return clazz.property(qtscript_QAbstractPrintDialog_PrintRange_toStringHelper(value));
+}
+
+static void qtscript_QAbstractPrintDialog_PrintRange_fromScriptValue(const QScriptValue &value, QAbstractPrintDialog::PrintRange &out)
+{
+    out = qvariant_cast<QAbstractPrintDialog::PrintRange>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QAbstractPrintDialog_PrintRange(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QAbstractPrintDialog::AllPages) && (arg <= QAbstractPrintDialog::CurrentPage))
+        return qScriptValueFromValue(engine,  static_cast<QAbstractPrintDialog::PrintRange>(arg));
+    return context->throwError(QString::fromLatin1("PrintRange(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QAbstractPrintDialog_PrintRange_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractPrintDialog::PrintRange value = qscriptvalue_cast<QAbstractPrintDialog::PrintRange>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QAbstractPrintDialog_PrintRange_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QAbstractPrintDialog::PrintRange value = qscriptvalue_cast<QAbstractPrintDialog::PrintRange>(context->thisObject());
+    return QScriptValue(engine, qtscript_QAbstractPrintDialog_PrintRange_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QAbstractPrintDialog_PrintRange_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QAbstractPrintDialog_PrintRange,
+        qtscript_QAbstractPrintDialog_PrintRange_valueOf, qtscript_QAbstractPrintDialog_PrintRange_toString);
+    qScriptRegisterMetaType<QAbstractPrintDialog::PrintRange>(engine, qtscript_QAbstractPrintDialog_PrintRange_toScriptValue,
+        qtscript_QAbstractPrintDialog_PrintRange_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 4; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QAbstractPrintDialog_PrintRange_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QAbstractPrintDialog_PrintRange_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QAbstractPrintDialog
 //
 
@@ -402,7 +413,7 @@ static QScriptValue qtscript_QAbstractPrintDialog_prototype_call(QScriptContext 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractPrintDialog* _q_self = qscriptvalue_cast<QAbstractPrintDialog*>(context->thisObject());
+    qtscript_QAbstractPrintDialog* _q_self = reinterpret_cast<qtscript_QAbstractPrintDialog*>(qscriptvalue_cast<QAbstractPrintDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractPrintDialog.%0(): this object is not a QAbstractPrintDialog")
@@ -593,11 +604,11 @@ QScriptValue qtscript_create_QAbstractPrintDialog_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QAbstractPrintDialog_static_call, proto, qtscript_QAbstractPrintDialog_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("PrintRange"),
-        qtscript_create_QAbstractPrintDialog_PrintRange_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("PrintDialogOption"),
         qtscript_create_QAbstractPrintDialog_PrintDialogOption_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("PrintDialogOptions"),
         qtscript_create_QAbstractPrintDialog_PrintDialogOptions_class(engine));
+    ctor.setProperty(QString::fromLatin1("PrintRange"),
+        qtscript_create_QAbstractPrintDialog_PrintRange_class(engine, ctor));
     return ctor;
 }

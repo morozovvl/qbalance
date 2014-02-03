@@ -44,8 +44,8 @@ static QScriptValue qtscript_QStyleHintReturnVariant_throw_ambiguity_error_helpe
 
 Q_DECLARE_METATYPE(QStyleHintReturnVariant*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleHintReturnVariant*)
-Q_DECLARE_METATYPE(QStyleHintReturnVariant::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleHintReturnVariant::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleHintReturnVariant::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleHintReturn*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -60,71 +60,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleHintReturnVariant::StyleOptionVersion
-//
-
-static const QStyleHintReturnVariant::StyleOptionVersion qtscript_QStyleHintReturnVariant_StyleOptionVersion_values[] = {
-    QStyleHintReturnVariant::Version
-};
-
-static const char * const qtscript_QStyleHintReturnVariant_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleHintReturnVariant_StyleOptionVersion_toStringHelper(QStyleHintReturnVariant::StyleOptionVersion value)
-{
-    if ((value >= QStyleHintReturnVariant::Version) && (value <= QStyleHintReturnVariant::Version))
-        return qtscript_QStyleHintReturnVariant_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleHintReturnVariant::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleHintReturnVariant_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleHintReturnVariant::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleHintReturnVariant"));
-    return clazz.property(qtscript_QStyleHintReturnVariant_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleHintReturnVariant_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleHintReturnVariant::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleHintReturnVariant::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleHintReturnVariant_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleHintReturnVariant::Version) && (arg <= QStyleHintReturnVariant::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleHintReturnVariant::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleHintReturnVariant_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleHintReturnVariant::StyleOptionVersion value = qscriptvalue_cast<QStyleHintReturnVariant::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleHintReturnVariant_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleHintReturnVariant::StyleOptionVersion value = qscriptvalue_cast<QStyleHintReturnVariant::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleHintReturnVariant_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleHintReturnVariant_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleHintReturnVariant_StyleOptionVersion,
-        qtscript_QStyleHintReturnVariant_StyleOptionVersion_valueOf, qtscript_QStyleHintReturnVariant_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleHintReturnVariant::StyleOptionVersion>(engine, qtscript_QStyleHintReturnVariant_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleHintReturnVariant_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturnVariant_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturnVariant_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -187,6 +122,71 @@ static QScriptValue qtscript_create_QStyleHintReturnVariant_StyleOptionType_clas
     for (int i = 0; i < 1; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturnVariant_StyleOptionType_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturnVariant_StyleOptionType_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyleHintReturnVariant::StyleOptionVersion
+//
+
+static const QStyleHintReturnVariant::StyleOptionVersion qtscript_QStyleHintReturnVariant_StyleOptionVersion_values[] = {
+    QStyleHintReturnVariant::Version
+};
+
+static const char * const qtscript_QStyleHintReturnVariant_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleHintReturnVariant_StyleOptionVersion_toStringHelper(QStyleHintReturnVariant::StyleOptionVersion value)
+{
+    if ((value >= QStyleHintReturnVariant::Version) && (value <= QStyleHintReturnVariant::Version))
+        return qtscript_QStyleHintReturnVariant_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleHintReturnVariant::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleHintReturnVariant_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleHintReturnVariant::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleHintReturnVariant"));
+    return clazz.property(qtscript_QStyleHintReturnVariant_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleHintReturnVariant_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleHintReturnVariant::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleHintReturnVariant::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleHintReturnVariant_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleHintReturnVariant::Version) && (arg <= QStyleHintReturnVariant::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleHintReturnVariant::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleHintReturnVariant_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleHintReturnVariant::StyleOptionVersion value = qscriptvalue_cast<QStyleHintReturnVariant::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleHintReturnVariant_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleHintReturnVariant::StyleOptionVersion value = qscriptvalue_cast<QStyleHintReturnVariant::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleHintReturnVariant_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleHintReturnVariant_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleHintReturnVariant_StyleOptionVersion,
+        qtscript_QStyleHintReturnVariant_StyleOptionVersion_valueOf, qtscript_QStyleHintReturnVariant_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleHintReturnVariant::StyleOptionVersion>(engine, qtscript_QStyleHintReturnVariant_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleHintReturnVariant_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleHintReturnVariant_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleHintReturnVariant_StyleOptionVersion_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -268,9 +268,9 @@ QScriptValue qtscript_create_QStyleHintReturnVariant_class(QScriptEngine *engine
     QScriptValue ctor = engine->newFunction(qtscript_QStyleHintReturnVariant_static_call, proto, qtscript_QStyleHintReturnVariant_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleHintReturnVariant_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleHintReturnVariant_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleHintReturnVariant_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

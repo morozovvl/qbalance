@@ -8,9 +8,11 @@
 #include <qaccessible.h>
 #include <QVariant>
 #include <qaccessible.h>
-#include <qlist.h>
 #include <qobject.h>
+#include <qpair.h>
 #include <qrect.h>
+#include <qvector.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAccessibleInterface.h"
 
@@ -18,23 +20,23 @@ static const char * const qtscript_QAccessibleInterface_function_names[] = {
     "QAccessibleInterface"
     // static
     // prototype
-    , "actionText"
+    , "child"
     , "childAt"
     , "childCount"
-    , "doAction"
+    , "focusChild"
     , "indexOfChild"
-    , "invokeMethod"
+    , "interface_cast"
     , "isValid"
-    , "navigate"
     , "object"
+    , "parent"
     , "rect"
-    , "relationTo"
+    , "relations"
     , "role"
     , "setText"
     , "state"
-    , "supportedMethods"
     , "text"
-    , "userActionCount"
+    , "virtual_hook"
+    , "window"
     , "toString"
 };
 
@@ -42,23 +44,23 @@ static const char * const qtscript_QAccessibleInterface_function_signatures[] = 
     ""
     // static
     // prototype
-    , "int action, Text t, int child"
+    , "int index"
     , "int x, int y"
     , ""
-    , "int action, int child, List params"
+    , ""
     , "QAccessibleInterface arg__1"
-    , "Method method, int child, List params"
+    , "InterfaceType arg__1"
     , ""
-    , "RelationFlag relation, int index, QAccessibleInterface iface"
     , ""
-    , "int child"
-    , "int child, QAccessibleInterface other, int otherChild"
-    , "int child"
-    , "Text t, int child, String text"
-    , "int child"
     , ""
-    , "Text t, int child"
-    , "int child"
+    , ""
+    , "Relation match"
+    , ""
+    , "Text t, String text"
+    , ""
+    , "Text t"
+    , "int id, void data"
+    , ""
 ""
 };
 
@@ -66,23 +68,23 @@ static const int qtscript_QAccessibleInterface_function_lengths[] = {
     0
     // static
     // prototype
-    , 3
+    , 1
     , 2
     , 0
-    , 3
-    , 1
-    , 3
-    , 0
-    , 3
     , 0
     , 1
-    , 3
     , 1
-    , 3
+    , 0
+    , 0
+    , 0
+    , 0
     , 1
     , 0
     , 2
+    , 0
     , 1
+    , 2
+    , 0
     , 0
 };
 
@@ -99,14 +101,70 @@ static QScriptValue qtscript_QAccessibleInterface_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QAccessibleInterface*)
 Q_DECLARE_METATYPE(QtScriptShell_QAccessibleInterface*)
-Q_DECLARE_METATYPE(QAccessible::Text)
-Q_DECLARE_METATYPE(QAccessible::Method)
-Q_DECLARE_METATYPE(QAccessible::RelationFlag)
-Q_DECLARE_METATYPE(QAccessibleInterface**)
+Q_DECLARE_METATYPE(QAccessible::InterfaceType)
 Q_DECLARE_METATYPE(QFlags<QAccessible::RelationFlag>)
+#if QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > \
+{ \
+    enum { Defined = 1 }; \
+    static int qt_metatype_id() \
+    { \
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
+        if (!metatype_id) \
+            metatype_id = qRegisterMetaType< QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > >("QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> >"); \
+        return metatype_id; \
+    } \
+};
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > >("QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> >", reinterpret_cast< QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
+#if QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > > \
+{ \
+    enum { Defined = 1 }; \
+    static int qt_metatype_id() \
+    { \
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
+        if (!metatype_id) \
+            metatype_id = qRegisterMetaType< QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > >("QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > >"); \
+        return metatype_id; \
+    } \
+};
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > >("QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > >", reinterpret_cast< QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QAccessible::Role)
-Q_DECLARE_METATYPE(QFlags<QAccessible::StateFlag>)
-Q_DECLARE_METATYPE(QAccessible*)
+Q_DECLARE_METATYPE(QAccessible::Text)
+Q_DECLARE_METATYPE(QAccessible::State)
+Q_DECLARE_METATYPE(QWindow*)
 
 //
 // QAccessibleInterface
@@ -135,12 +193,10 @@ static QScriptValue qtscript_QAccessibleInterface_prototype_call(QScriptContext 
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 3) {
+    if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
-        QAccessible::Text _q_arg1 = qscriptvalue_cast<QAccessible::Text>(context->argument(1));
-        int _q_arg2 = context->argument(2).toInt32();
-        QString _q_result = _q_self->actionText(_q_arg0, _q_arg1, _q_arg2);
-        return QScriptValue(context->engine(), _q_result);
+        QAccessibleInterface* _q_result = _q_self->child(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -148,8 +204,8 @@ static QScriptValue qtscript_QAccessibleInterface_prototype_call(QScriptContext 
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
-        int _q_result = _q_self->childAt(_q_arg0, _q_arg1);
-        return QScriptValue(context->engine(), _q_result);
+        QAccessibleInterface* _q_result = _q_self->childAt(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -161,13 +217,9 @@ static QScriptValue qtscript_QAccessibleInterface_prototype_call(QScriptContext 
     break;
 
     case 3:
-    if (context->argumentCount() == 3) {
-        int _q_arg0 = context->argument(0).toInt32();
-        int _q_arg1 = context->argument(1).toInt32();
-        QList<QVariant> _q_arg2;
-        qScriptValueToSequence(context->argument(2), _q_arg2);
-        bool _q_result = _q_self->doAction(_q_arg0, _q_arg1, _q_arg2);
-        return QScriptValue(context->engine(), _q_result);
+    if (context->argumentCount() == 0) {
+        QAccessibleInterface* _q_result = _q_self->focusChild();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -180,12 +232,9 @@ static QScriptValue qtscript_QAccessibleInterface_prototype_call(QScriptContext 
     break;
 
     case 5:
-    if (context->argumentCount() == 3) {
-        QAccessible::Method _q_arg0 = qscriptvalue_cast<QAccessible::Method>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QList<QVariant> _q_arg2;
-        qScriptValueToSequence(context->argument(2), _q_arg2);
-        QVariant _q_result = _q_self->invokeMethod(_q_arg0, _q_arg1, _q_arg2);
+    if (context->argumentCount() == 1) {
+        QAccessible::InterfaceType _q_arg0 = qscriptvalue_cast<QAccessible::InterfaceType>(context->argument(0));
+        void* _q_result = _q_self->interface_cast(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -198,92 +247,89 @@ static QScriptValue qtscript_QAccessibleInterface_prototype_call(QScriptContext 
     break;
 
     case 7:
-    if (context->argumentCount() == 3) {
-        QAccessible::RelationFlag _q_arg0 = qscriptvalue_cast<QAccessible::RelationFlag>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QAccessibleInterface** _q_arg2 = qscriptvalue_cast<QAccessibleInterface**>(context->argument(2));
-        int _q_result = _q_self->navigate(_q_arg0, _q_arg1, _q_arg2);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 8:
     if (context->argumentCount() == 0) {
         QObject* _q_result = _q_self->object();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
+    case 8:
+    if (context->argumentCount() == 0) {
+        QAccessibleInterface* _q_result = _q_self->parent();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
     case 9:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QRect _q_result = _q_self->rect(_q_arg0);
+    if (context->argumentCount() == 0) {
+        QRect _q_result = _q_self->rect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 10:
-    if (context->argumentCount() == 3) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QAccessibleInterface* _q_arg1 = qscriptvalue_cast<QAccessibleInterface*>(context->argument(1));
-        int _q_arg2 = context->argument(2).toInt32();
-        QFlags<QAccessible::RelationFlag> _q_result = _q_self->relationTo(_q_arg0, _q_arg1, _q_arg2);
-        return qScriptValueFromValue(context->engine(), _q_result);
+    if (context->argumentCount() == 0) {
+        QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > _q_result = _q_self->relations();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    if (context->argumentCount() == 1) {
+        QFlags<QAccessible::RelationFlag> _q_arg0 = qscriptvalue_cast<QFlags<QAccessible::RelationFlag> >(context->argument(0));
+        QVector<QPair<QAccessibleInterface*,QFlags<QAccessible::RelationFlag> > > _q_result = _q_self->relations(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
     case 11:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QAccessible::Role _q_result = _q_self->role(_q_arg0);
+    if (context->argumentCount() == 0) {
+        QAccessible::Role _q_result = _q_self->role();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 12:
-    if (context->argumentCount() == 3) {
+    if (context->argumentCount() == 2) {
         QAccessible::Text _q_arg0 = qscriptvalue_cast<QAccessible::Text>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QString _q_arg2 = context->argument(2).toString();
-        _q_self->setText(_q_arg0, _q_arg1, _q_arg2);
+        QString _q_arg1 = context->argument(1).toString();
+        _q_self->setText(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
     break;
 
     case 13:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        QFlags<QAccessible::StateFlag> _q_result = _q_self->state(_q_arg0);
+    if (context->argumentCount() == 0) {
+        QAccessible::State _q_result = _q_self->state();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 14:
-    if (context->argumentCount() == 0) {
-        QSet<QAccessible::Method> _q_result = _q_self->supportedMethods();
-        return qScriptValueFromSequence(context->engine(), _q_result);
+    if (context->argumentCount() == 1) {
+        QAccessible::Text _q_arg0 = qscriptvalue_cast<QAccessible::Text>(context->argument(0));
+        QString _q_result = _q_self->text(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 15:
     if (context->argumentCount() == 2) {
-        QAccessible::Text _q_arg0 = qscriptvalue_cast<QAccessible::Text>(context->argument(0));
-        int _q_arg1 = context->argument(1).toInt32();
-        QString _q_result = _q_self->text(_q_arg0, _q_arg1);
-        return QScriptValue(context->engine(), _q_result);
+        int _q_arg0 = context->argument(0).toInt32();
+        void* _q_arg1 = qscriptvalue_cast<void*>(context->argument(1));
+        _q_self->virtual_hook(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
     }
     break;
 
     case 16:
-    if (context->argumentCount() == 1) {
-        int _q_arg0 = context->argument(0).toInt32();
-        int _q_result = _q_self->userActionCount(_q_arg0);
-        return QScriptValue(context->engine(), _q_result);
+    if (context->argumentCount() == 0) {
+        QWindow* _q_result = _q_self->window();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 17: {
-    QString result = QString::fromLatin1("QAccessibleInterface");
+    QString result;
+    QDebug d(&result);
+    d << _q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -325,7 +371,6 @@ QScriptValue qtscript_create_QAccessibleInterface_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QAccessibleInterface*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAccessibleInterface*)0));
-    proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAccessible*>()));
     for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAccessibleInterface_prototype_call, qtscript_QAccessibleInterface_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));

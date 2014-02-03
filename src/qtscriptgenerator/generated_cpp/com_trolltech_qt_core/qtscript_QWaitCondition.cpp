@@ -25,7 +25,7 @@ static const char * const qtscript_QWaitCondition_function_signatures[] = {
     ""
     // static
     // prototype
-    , "QMutex mutex, unsigned long time\nQReadWriteLock readWriteLock, unsigned long time"
+    , "QMutex lockedMutex, unsigned long time\nQReadWriteLock lockedReadWriteLock, unsigned long time"
     , ""
     , ""
 ""
@@ -96,13 +96,13 @@ static QScriptValue qtscript_QWaitCondition_prototype_call(QScriptContext *conte
     }
     if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<QMutex*>(context->argument(0))
-            && (qMetaTypeId<ulong>() == context->argument(1).toVariant().userType())) {
+            && context->argument(1).isNumber()) {
             QMutex* _q_arg0 = qscriptvalue_cast<QMutex*>(context->argument(0));
             ulong _q_arg1 = qscriptvalue_cast<ulong>(context->argument(1));
             bool _q_result = _q_self->wait(_q_arg0, _q_arg1);
             return QScriptValue(context->engine(), _q_result);
         } else if (qscriptvalue_cast<QReadWriteLock*>(context->argument(0))
-            && (qMetaTypeId<ulong>() == context->argument(1).toVariant().userType())) {
+            && context->argument(1).isNumber()) {
             QReadWriteLock* _q_arg0 = qscriptvalue_cast<QReadWriteLock*>(context->argument(0));
             ulong _q_arg1 = qscriptvalue_cast<ulong>(context->argument(1));
             bool _q_result = _q_self->wait(_q_arg0, _q_arg1);

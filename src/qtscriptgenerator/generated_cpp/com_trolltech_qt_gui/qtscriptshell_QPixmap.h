@@ -17,8 +17,11 @@ public:
     ~QtScriptShell_QPixmap();
 
     int  devType() const;
+    void initPainter(QPainter*  painter) const;
     int  metric(QPaintDevice::PaintDeviceMetric  arg__1) const;
     QPaintEngine*  paintEngine() const;
+    QPaintDevice*  redirected(QPoint*  offset) const;
+    QPainter*  sharedPainter() const;
 
     QScriptValue __qtscript_self;
 };

@@ -40,6 +40,15 @@ static const int qtscript_QEventTransition_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QEventTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QEventTransition : public QEventTransition
+{
+
+    friend QScriptValue qtscript_QEventTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QEventTransition_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -75,7 +84,7 @@ static QScriptValue qtscript_QEventTransition_prototype_call(QScriptContext *con
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QEventTransition* _q_self = qscriptvalue_cast<QEventTransition*>(context->thisObject());
+    qtscript_QEventTransition* _q_self = reinterpret_cast<qtscript_QEventTransition*>(qscriptvalue_cast<QEventTransition*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QEventTransition.%0(): this object is not a QEventTransition")

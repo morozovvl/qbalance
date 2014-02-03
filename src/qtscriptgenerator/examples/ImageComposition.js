@@ -114,7 +114,8 @@ ImageComposer.prototype.recalculateResult = function()
 {
     var mode = this.currentMode();
 
-    var painter = new QPainter(this.resultImage);
+    var painter = new QPainter();
+    painter.begin(this.resultImage);
     painter.setCompositionMode(QPainter.CompositionMode_Source);
     painter.fillRect(this.resultImage.rect(), new QBrush(new QColor(Qt.transparent)));
     painter.setCompositionMode(QPainter.CompositionMode_SourceOver);
@@ -136,8 +137,8 @@ ImageComposer.prototype.addOp = function(mode, name)
 ImageComposer.prototype.chooseImage = function(title, property, button)
 {
     var fileName = QFileDialog.getOpenFileName(this, title);
-    if (!fileName.isEmpty())
-        loadImage(fileName, property, button);
+    if (fileName != "")
+        this.loadImage(fileName, property, button);
 }
 
 ImageComposer.prototype.loadImage = function(fileName, property, button)
@@ -145,7 +146,8 @@ ImageComposer.prototype.loadImage = function(fileName, property, button)
     var image = new QImage(fileName);
 
     var fixedImage = new QImage(ImageComposer.resultSize, QImage.Format_ARGB32_Premultiplied);
-    var painter = new QPainter(fixedImage);
+    var painter = new QPainter();
+    painter.begin(fixedImage);
     painter.setCompositionMode(QPainter.CompositionMode_Source);
     painter.fillRect(fixedImage.rect(), new QBrush(new QColor(Qt.transparent)));
     painter.setCompositionMode(QPainter.CompositionMode_SourceOver);

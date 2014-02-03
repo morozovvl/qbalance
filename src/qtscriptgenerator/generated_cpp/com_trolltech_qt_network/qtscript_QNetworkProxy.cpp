@@ -7,6 +7,8 @@
 
 #include <qnetworkproxy.h>
 #include <QVariant>
+#include <qbytearray.h>
+#include <qlist.h>
 #include <qnetworkproxy.h>
 
 static const char * const qtscript_QNetworkProxy_function_names[] = {
@@ -16,18 +18,25 @@ static const char * const qtscript_QNetworkProxy_function_names[] = {
     , "setApplicationProxy"
     // prototype
     , "capabilities"
+    , "hasRawHeader"
+    , "header"
     , "hostName"
     , "isCachingProxy"
     , "isTransparentProxy"
     , "equals"
     , "password"
     , "port"
+    , "rawHeader"
+    , "rawHeaderList"
     , "setCapabilities"
+    , "setHeader"
     , "setHostName"
     , "setPassword"
     , "setPort"
+    , "setRawHeader"
     , "setType"
     , "setUser"
+    , "swap"
     , "type"
     , "user"
     , "toString"
@@ -40,18 +49,25 @@ static const char * const qtscript_QNetworkProxy_function_signatures[] = {
     , "QNetworkProxy proxy"
     // prototype
     , ""
+    , "QByteArray headerName"
+    , "KnownHeaders header"
     , ""
     , ""
     , ""
     , "QNetworkProxy other"
     , ""
     , ""
+    , "QByteArray headerName"
+    , ""
     , "Capabilities capab"
+    , "KnownHeaders header, Object value"
     , "String hostName"
     , "String password"
     , "unsigned short port"
+    , "QByteArray headerName, QByteArray value"
     , "ProxyType type"
     , "String userName"
+    , "QNetworkProxy other"
     , ""
     , ""
 ""
@@ -64,6 +80,8 @@ static const int qtscript_QNetworkProxy_function_lengths[] = {
     , 1
     // prototype
     , 0
+    , 1
+    , 1
     , 0
     , 0
     , 0
@@ -71,8 +89,13 @@ static const int qtscript_QNetworkProxy_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 0
+    , 1
+    , 2
     , 1
     , 1
+    , 1
+    , 2
     , 1
     , 1
     , 1
@@ -92,11 +115,12 @@ static QScriptValue qtscript_QNetworkProxy_throw_ambiguity_error_helper(
         .arg(functionName).arg(fullSignatures.join(QLatin1String("\n"))));
 }
 
-Q_DECLARE_METATYPE(QNetworkProxy)
 Q_DECLARE_METATYPE(QNetworkProxy*)
 Q_DECLARE_METATYPE(QNetworkProxy::ProxyType)
 Q_DECLARE_METATYPE(QNetworkProxy::Capability)
 Q_DECLARE_METATYPE(QFlags<QNetworkProxy::Capability>)
+Q_DECLARE_METATYPE(QNetworkRequest::KnownHeaders)
+Q_DECLARE_METATYPE(QList<QByteArray>)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -371,7 +395,7 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 15;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -391,27 +415,43 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     break;
 
     case 1:
+    if (context->argumentCount() == 1) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        bool _q_result = _q_self->hasRawHeader(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
+        QNetworkRequest::KnownHeaders _q_arg0 = qscriptvalue_cast<QNetworkRequest::KnownHeaders>(context->argument(0));
+        QVariant _q_result = _q_self->header(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 3:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->hostName();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isCachingProxy();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 3:
+    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isTransparentProxy();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 6:
     if (context->argumentCount() == 1) {
         QNetworkProxy _q_arg0 = qscriptvalue_cast<QNetworkProxy>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -419,21 +459,36 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 5:
+    case 7:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->password();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 8:
     if (context->argumentCount() == 0) {
         unsigned short _q_result = _q_self->port();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 9:
+    if (context->argumentCount() == 1) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        QByteArray _q_result = _q_self->rawHeader(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 10:
+    if (context->argumentCount() == 0) {
+        QList<QByteArray> _q_result = _q_self->rawHeaderList();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 1) {
         QFlags<QNetworkProxy::Capability> _q_arg0 = qscriptvalue_cast<QFlags<QNetworkProxy::Capability> >(context->argument(0));
         _q_self->setCapabilities(_q_arg0);
@@ -441,7 +496,16 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 8:
+    case 12:
+    if (context->argumentCount() == 2) {
+        QNetworkRequest::KnownHeaders _q_arg0 = qscriptvalue_cast<QNetworkRequest::KnownHeaders>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        _q_self->setHeader(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 13:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setHostName(_q_arg0);
@@ -449,7 +513,7 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 9:
+    case 14:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setPassword(_q_arg0);
@@ -457,7 +521,7 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 10:
+    case 15:
     if (context->argumentCount() == 1) {
         unsigned short _q_arg0 = qscriptvalue_cast<unsigned short>(context->argument(0));
         _q_self->setPort(_q_arg0);
@@ -465,7 +529,16 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 11:
+    case 16:
+    if (context->argumentCount() == 2) {
+        QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
+        QByteArray _q_arg1 = qscriptvalue_cast<QByteArray>(context->argument(1));
+        _q_self->setRawHeader(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 17:
     if (context->argumentCount() == 1) {
         QNetworkProxy::ProxyType _q_arg0 = qscriptvalue_cast<QNetworkProxy::ProxyType>(context->argument(0));
         _q_self->setType(_q_arg0);
@@ -473,7 +546,7 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 12:
+    case 18:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setUser(_q_arg0);
@@ -481,22 +554,32 @@ static QScriptValue qtscript_QNetworkProxy_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 13:
+    case 19:
+    if (context->argumentCount() == 1) {
+        QNetworkProxy _q_arg0 = qscriptvalue_cast<QNetworkProxy>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 20:
     if (context->argumentCount() == 0) {
         QNetworkProxy::ProxyType _q_result = _q_self->type();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 21:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->user();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15: {
-    QString result = QString::fromLatin1("QNetworkProxy");
+    case 22: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -594,7 +677,7 @@ QScriptValue qtscript_create_QNetworkProxy_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QNetworkProxy*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QNetworkProxy*)0));
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QNetworkProxy_prototype_call, qtscript_QNetworkProxy_function_lengths[i+3]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QNetworkProxy_function_names[i+3]),

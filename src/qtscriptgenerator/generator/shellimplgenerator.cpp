@@ -167,7 +167,8 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
         s << "    QScriptValue _q_function = __qtscript_self.property(\""
           << scriptFunctionName << "\");" << endl;
         s << "    if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)" << endl
-          << "        || (__qtscript_self.propertyFlags(\"" << scriptFunctionName << "\") & QScriptValue::QObjectMember)) {" << endl;
+          << "        || (__qtscript_self.propertyFlags(\"" << scriptFunctionName << "\") & QScriptValue::QObjectMember)" << endl
+          << "        || (_q_function.data().toBool() == true)) {" << endl;
 
         AbstractMetaArgumentList args = fun->arguments();
         s << "        ";
@@ -189,12 +190,15 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
 
         s << "    } else {" << endl;
 
+        s << "        _q_function.setData(QScriptValue(true));" << endl;
+
         // call the script function
         if (args.size() > 0)
             s << "        QScriptEngine *_q_engine = __qtscript_self.engine();" << endl;
         s << "        ";
         if (fun->type()) {
-            s << "return qscriptvalue_cast<";
+            writeTypeInfo(s, fun->type());
+            s << "_q_retval = qscriptvalue_cast<";
             writeTypeInfo(s, fun->type());
             s << ">(";
         }
@@ -223,6 +227,11 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
         if (fun->type())
             s << ")";
         s << ";" << endl;
+
+        s << "        _q_function.setData(QScriptValue(false));" << endl;
+
+        if (fun->type())
+            s << "        return _q_retval;" << endl;
 
         s << "    }" << endl;
 

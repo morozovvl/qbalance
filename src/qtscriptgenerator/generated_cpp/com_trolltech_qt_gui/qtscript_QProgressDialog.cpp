@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qprogressdialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qprogressbar.h>
 #include <qprogressdialog.h>
@@ -39,6 +39,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QProgressDialog.h"
 
@@ -75,6 +76,15 @@ static const int qtscript_QProgressDialog_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QProgressDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QProgressDialog : public QProgressDialog
+{
+
+    friend QScriptValue qtscript_QProgressDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QProgressDialog_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -92,6 +102,7 @@ Q_DECLARE_METATYPE(char*)
 Q_DECLARE_METATYPE(QProgressBar*)
 Q_DECLARE_METATYPE(QPushButton*)
 Q_DECLARE_METATYPE(QLabel*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QDialog*)
 
@@ -113,7 +124,7 @@ static QScriptValue qtscript_QProgressDialog_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QProgressDialog* _q_self = qscriptvalue_cast<QProgressDialog*>(context->thisObject());
+    qtscript_QProgressDialog* _q_self = reinterpret_cast<qtscript_QProgressDialog*>(qscriptvalue_cast<QProgressDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QProgressDialog.%0(): this object is not a QProgressDialog")

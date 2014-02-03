@@ -79,6 +79,15 @@ static const int qtscript_QSessionManager_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSessionManager_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSessionManager : public QSessionManager
+{
+
+    friend QScriptValue qtscript_QSessionManager_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSessionManager_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -196,7 +205,7 @@ static QScriptValue qtscript_QSessionManager_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSessionManager* _q_self = qscriptvalue_cast<QSessionManager*>(context->thisObject());
+    qtscript_QSessionManager* _q_self = reinterpret_cast<qtscript_QSessionManager*>(qscriptvalue_cast<QSessionManager*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSessionManager.%0(): this object is not a QSessionManager")

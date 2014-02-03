@@ -105,13 +105,13 @@ static const QPrintEngine::PrintEnginePropertyKey qtscript_QPrintEngine_PrintEng
     , QPrintEngine::PPK_SupportedResolutions
     , QPrintEngine::PPK_WindowsPageSize
     , QPrintEngine::PPK_FontEmbedding
-    , QPrintEngine::PPK_SuppressSystemPrintStatus
     , QPrintEngine::PPK_Duplex
     , QPrintEngine::PPK_PaperSources
     , QPrintEngine::PPK_CustomPaperSize
     , QPrintEngine::PPK_PageMargins
     , QPrintEngine::PPK_CopyCount
     , QPrintEngine::PPK_SupportsMultipleCopies
+    , QPrintEngine::PPK_PaperName
     , QPrintEngine::PPK_CustomBase
 };
 
@@ -136,13 +136,13 @@ static const char * const qtscript_QPrintEngine_PrintEnginePropertyKey_keys[] = 
     , "PPK_SupportedResolutions"
     , "PPK_WindowsPageSize"
     , "PPK_FontEmbedding"
-    , "PPK_SuppressSystemPrintStatus"
     , "PPK_Duplex"
     , "PPK_PaperSources"
     , "PPK_CustomPaperSize"
     , "PPK_PageMargins"
     , "PPK_CopyCount"
     , "PPK_SupportsMultipleCopies"
+    , "PPK_PaperName"
     , "PPK_CustomBase"
 };
 

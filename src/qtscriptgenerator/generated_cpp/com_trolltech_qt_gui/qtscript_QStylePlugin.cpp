@@ -11,7 +11,6 @@
 #include <qcoreevent.h>
 #include <qlist.h>
 #include <qobject.h>
-#include <qstringlist.h>
 #include <qstyle.h>
 
 #include "qtscriptshell_QStylePlugin.h"
@@ -21,7 +20,6 @@ static const char * const qtscript_QStylePlugin_function_names[] = {
     // static
     // prototype
     , "create"
-    , "keys"
     , "toString"
 };
 
@@ -30,7 +28,6 @@ static const char * const qtscript_QStylePlugin_function_signatures[] = {
     // static
     // prototype
     , "String key"
-    , ""
 ""
 };
 
@@ -40,7 +37,15 @@ static const int qtscript_QStylePlugin_function_lengths[] = {
     // prototype
     , 1
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QStylePlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStylePlugin : public QStylePlugin
+{
+
+    friend QScriptValue qtscript_QStylePlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QStylePlugin_throw_ambiguity_error_helper(
@@ -72,11 +77,11 @@ static QScriptValue qtscript_QStylePlugin_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 1;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStylePlugin* _q_self = qscriptvalue_cast<QStylePlugin*>(context->thisObject());
+    qtscript_QStylePlugin* _q_self = reinterpret_cast<qtscript_QStylePlugin*>(qscriptvalue_cast<QStylePlugin*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStylePlugin.%0(): this object is not a QStylePlugin")
@@ -92,14 +97,7 @@ static QScriptValue qtscript_QStylePlugin_prototype_call(QScriptContext *context
     }
     break;
 
-    case 1:
-    if (context->argumentCount() == 0) {
-        QStringList _q_result = _q_self->keys();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 2: {
+    case 1: {
     QString result = QString::fromLatin1("QStylePlugin");
     return QScriptValue(context->engine(), result);
     }
@@ -159,7 +157,7 @@ QScriptValue qtscript_create_QStylePlugin_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QStylePlugin*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QStylePlugin*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 2; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QStylePlugin_prototype_call, qtscript_QStylePlugin_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QStylePlugin_function_names[i+1]),

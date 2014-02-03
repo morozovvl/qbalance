@@ -12,7 +12,6 @@
 #include <qcoreevent.h>
 #include <qlist.h>
 #include <qobject.h>
-#include <qstringlist.h>
 
 #include "qtscriptshell_QAccessiblePlugin.h"
 
@@ -21,7 +20,6 @@ static const char * const qtscript_QAccessiblePlugin_function_names[] = {
     // static
     // prototype
     , "create"
-    , "keys"
     , "toString"
 };
 
@@ -30,7 +28,6 @@ static const char * const qtscript_QAccessiblePlugin_function_signatures[] = {
     // static
     // prototype
     , "String key, QObject object"
-    , ""
 ""
 };
 
@@ -40,7 +37,15 @@ static const int qtscript_QAccessiblePlugin_function_lengths[] = {
     // prototype
     , 2
     , 0
-    , 0
+};
+
+static QScriptValue qtscript_QAccessiblePlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAccessiblePlugin : public QAccessiblePlugin
+{
+
+    friend QScriptValue qtscript_QAccessiblePlugin_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAccessiblePlugin_throw_ambiguity_error_helper(
@@ -72,11 +77,11 @@ static QScriptValue qtscript_QAccessiblePlugin_prototype_call(QScriptContext *co
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 1;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAccessiblePlugin* _q_self = qscriptvalue_cast<QAccessiblePlugin*>(context->thisObject());
+    qtscript_QAccessiblePlugin* _q_self = reinterpret_cast<qtscript_QAccessiblePlugin*>(qscriptvalue_cast<QAccessiblePlugin*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAccessiblePlugin.%0(): this object is not a QAccessiblePlugin")
@@ -93,14 +98,7 @@ static QScriptValue qtscript_QAccessiblePlugin_prototype_call(QScriptContext *co
     }
     break;
 
-    case 1:
-    if (context->argumentCount() == 0) {
-        QStringList _q_result = _q_self->keys();
-        return qScriptValueFromSequence(context->engine(), _q_result);
-    }
-    break;
-
-    case 2: {
+    case 1: {
     QString result = QString::fromLatin1("QAccessiblePlugin");
     return QScriptValue(context->engine(), result);
     }
@@ -160,7 +158,7 @@ QScriptValue qtscript_create_QAccessiblePlugin_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAccessiblePlugin*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAccessiblePlugin*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 2; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAccessiblePlugin_prototype_call, qtscript_QAccessiblePlugin_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAccessiblePlugin_function_names[i+1]),

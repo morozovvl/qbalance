@@ -32,6 +32,7 @@ static const char * const qtscript_QBoxLayout_function_names[] = {
     , "addStrut"
     , "addWidget"
     , "direction"
+    , "insertItem"
     , "insertLayout"
     , "insertSpacerItem"
     , "insertSpacing"
@@ -57,6 +58,7 @@ static const char * const qtscript_QBoxLayout_function_signatures[] = {
     , "int arg__1"
     , "QWidget arg__1, int stretch, Alignment alignment"
     , ""
+    , "int index, QLayoutItem arg__2"
     , "int index, QLayout layout, int stretch"
     , "int index, QSpacerItem spacerItem"
     , "int index, int size"
@@ -82,6 +84,7 @@ static const int qtscript_QBoxLayout_function_lengths[] = {
     , 1
     , 3
     , 0
+    , 2
     , 3
     , 2
     , 2
@@ -94,6 +97,15 @@ static const int qtscript_QBoxLayout_function_lengths[] = {
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QBoxLayout : public QBoxLayout
+{
+
+    friend QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QBoxLayout_throw_ambiguity_error_helper(
@@ -112,7 +124,9 @@ Q_DECLARE_METATYPE(QtScriptShell_QBoxLayout*)
 Q_DECLARE_METATYPE(QBoxLayout::Direction)
 Q_DECLARE_METATYPE(QLayout*)
 Q_DECLARE_METATYPE(QSpacerItem*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
+Q_DECLARE_METATYPE(QLayoutItem*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -213,11 +227,11 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 18;
+        _id = 0xBABE0000 + 19;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QBoxLayout* _q_self = qscriptvalue_cast<QBoxLayout*>(context->thisObject());
+    qtscript_QBoxLayout* _q_self = reinterpret_cast<qtscript_QBoxLayout*>(qscriptvalue_cast<QBoxLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QBoxLayout.%0(): this object is not a QBoxLayout")
@@ -295,6 +309,15 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     case 7:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
+        QLayoutItem* _q_arg1 = qscriptvalue_cast<QLayoutItem*>(context->argument(1));
+        _q_self->insertItem(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 8:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
         QLayout* _q_arg1 = qscriptvalue_cast<QLayout*>(context->argument(1));
         _q_self->insertLayout(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
@@ -308,7 +331,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QSpacerItem* _q_arg1 = qscriptvalue_cast<QSpacerItem*>(context->argument(1));
@@ -317,7 +340,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -326,7 +349,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->insertStretch(_q_arg0);
@@ -340,7 +363,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -364,7 +387,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 1) {
         QBoxLayout::Direction _q_arg0 = qscriptvalue_cast<QBoxLayout::Direction>(context->argument(0));
         _q_self->setDirection(_q_arg0);
@@ -372,7 +395,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setSpacing(_q_arg0);
@@ -380,7 +403,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -389,7 +412,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<QLayout*>(context->argument(0))
             && context->argument(1).isNumber()) {
@@ -407,14 +430,14 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->spacing();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->stretch(_q_arg0);
@@ -422,7 +445,7 @@ static QScriptValue qtscript_QBoxLayout_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 18: {
+    case 19: {
     QString result = QString::fromLatin1("QBoxLayout");
     return QScriptValue(context->engine(), result);
     }
@@ -484,7 +507,7 @@ QScriptValue qtscript_create_QBoxLayout_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QBoxLayout*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QBoxLayout*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QLayout*>()));
-    for (int i = 0; i < 19; ++i) {
+    for (int i = 0; i < 20; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QBoxLayout_prototype_call, qtscript_QBoxLayout_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QBoxLayout_function_names[i+1]),

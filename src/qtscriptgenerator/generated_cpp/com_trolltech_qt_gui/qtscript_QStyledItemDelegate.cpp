@@ -20,6 +20,7 @@
 #include <qsize.h>
 #include <qstyleditemdelegate.h>
 #include <qstyleoption.h>
+#include <qvector.h>
 #include <qwidget.h>
 
 #include "qtscriptshell_QStyledItemDelegate.h"
@@ -29,6 +30,7 @@ static const char * const qtscript_QStyledItemDelegate_function_names[] = {
     // static
     // prototype
     , "displayText"
+    , "initStyleOption"
     , "itemEditorFactory"
     , "setItemEditorFactory"
     , "toString"
@@ -39,6 +41,7 @@ static const char * const qtscript_QStyledItemDelegate_function_signatures[] = {
     // static
     // prototype
     , "Object value, QLocale locale"
+    , "QStyleOptionViewItem option, QModelIndex index"
     , ""
     , "QItemEditorFactory factory"
 ""
@@ -49,9 +52,20 @@ static const int qtscript_QStyledItemDelegate_function_lengths[] = {
     // static
     // prototype
     , 2
+    , 2
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QStyledItemDelegate_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyledItemDelegate : public QStyledItemDelegate
+{
+    friend QScriptValue qtscript_QStyledItemDelegate_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QStyledItemDelegate_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QStyledItemDelegate_throw_ambiguity_error_helper(
@@ -67,6 +81,7 @@ static QScriptValue qtscript_QStyledItemDelegate_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QStyledItemDelegate*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyledItemDelegate*)
+Q_DECLARE_METATYPE(QStyleOptionViewItem*)
 Q_DECLARE_METATYPE(QItemEditorFactory*)
 Q_DECLARE_METATYPE(QAbstractItemDelegate*)
 
@@ -84,11 +99,11 @@ static QScriptValue qtscript_QStyledItemDelegate_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyledItemDelegate* _q_self = qscriptvalue_cast<QStyledItemDelegate*>(context->thisObject());
+    qtscript_QStyledItemDelegate* _q_self = reinterpret_cast<qtscript_QStyledItemDelegate*>(qscriptvalue_cast<QStyledItemDelegate*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyledItemDelegate.%0(): this object is not a QStyledItemDelegate")
@@ -106,13 +121,22 @@ static QScriptValue qtscript_QStyledItemDelegate_prototype_call(QScriptContext *
     break;
 
     case 1:
+    if (context->argumentCount() == 2) {
+        QStyleOptionViewItem* _q_arg0 = qscriptvalue_cast<QStyleOptionViewItem*>(context->argument(0));
+        QModelIndex _q_arg1 = qscriptvalue_cast<QModelIndex>(context->argument(1));
+        _q_self->initStyleOption(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
     if (context->argumentCount() == 0) {
         QItemEditorFactory* _q_result = _q_self->itemEditorFactory();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QItemEditorFactory* _q_arg0 = qscriptvalue_cast<QItemEditorFactory*>(context->argument(0));
         _q_self->setItemEditorFactory(_q_arg0);
@@ -120,7 +144,7 @@ static QScriptValue qtscript_QStyledItemDelegate_prototype_call(QScriptContext *
     }
     break;
 
-    case 3: {
+    case 4: {
     QString result = QString::fromLatin1("QStyledItemDelegate");
     return QScriptValue(context->engine(), result);
     }
@@ -180,7 +204,7 @@ QScriptValue qtscript_create_QStyledItemDelegate_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QStyledItemDelegate*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QStyledItemDelegate*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemDelegate*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QStyledItemDelegate_prototype_call, qtscript_QStyledItemDelegate_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QStyledItemDelegate_function_names[i+1]),

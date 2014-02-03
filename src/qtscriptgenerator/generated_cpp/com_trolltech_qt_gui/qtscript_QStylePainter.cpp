@@ -86,6 +86,7 @@ static QScriptValue qtscript_QStylePainter_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QStylePainter*)
 Q_DECLARE_METATYPE(QPaintDevice*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QStyle::ComplexControl)
 Q_DECLARE_METATYPE(QStyleOptionComplex)
 Q_DECLARE_METATYPE(QStyle::ControlElement)

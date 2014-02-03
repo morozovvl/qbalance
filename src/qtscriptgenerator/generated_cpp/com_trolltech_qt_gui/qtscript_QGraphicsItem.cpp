@@ -38,7 +38,7 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "acceptHoverEvents"
     , "acceptTouchEvents"
     , "acceptedMouseButtons"
-    , "acceptsHoverEvents"
+    , "addToIndex"
     , "advance"
     , "boundingRect"
     , "boundingRegion"
@@ -53,14 +53,22 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "collidingItems"
     , "commonAncestorItem"
     , "contains"
+    , "contextMenuEvent"
     , "cursor"
     , "data"
     , "deviceTransform"
+    , "dragEnterEvent"
+    , "dragLeaveEvent"
+    , "dragMoveEvent"
+    , "dropEvent"
     , "effectiveOpacity"
     , "ensureVisible"
+    , "extension"
     , "filtersChildEvents"
     , "flags"
+    , "focusInEvent"
     , "focusItem"
+    , "focusOutEvent"
     , "focusProxy"
     , "focusScopeItem"
     , "grabKeyboard"
@@ -71,7 +79,12 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "hasCursor"
     , "hasFocus"
     , "hide"
+    , "hoverEnterEvent"
+    , "hoverLeaveEvent"
+    , "hoverMoveEvent"
+    , "inputMethodEvent"
     , "inputMethodHints"
+    , "inputMethodQuery"
     , "installSceneEventFilter"
     , "isActive"
     , "isAncestorOf"
@@ -87,7 +100,10 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "isVisibleTo"
     , "isWidget"
     , "isWindow"
+    , "itemChange"
     , "itemTransform"
+    , "keyPressEvent"
+    , "keyReleaseEvent"
     , "mapFromItem"
     , "mapFromParent"
     , "mapFromScene"
@@ -100,6 +116,10 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "mapToItem"
     , "mapToParent"
     , "mapToScene"
+    , "mouseDoubleClickEvent"
+    , "mouseMoveEvent"
+    , "mousePressEvent"
+    , "mouseReleaseEvent"
     , "moveBy"
     , "opacity"
     , "opaqueArea"
@@ -110,13 +130,16 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "parentObject"
     , "parentWidget"
     , "pos"
+    , "prepareGeometryChange"
+    , "removeFromIndex"
     , "removeSceneEventFilter"
     , "resetTransform"
-    , "rotate"
     , "rotation"
     , "scale"
     , "scene"
     , "sceneBoundingRect"
+    , "sceneEvent"
+    , "sceneEventFilter"
     , "scenePos"
     , "sceneTransform"
     , "scroll"
@@ -124,7 +147,6 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "setAcceptHoverEvents"
     , "setAcceptTouchEvents"
     , "setAcceptedMouseButtons"
-    , "setAcceptsHoverEvents"
     , "setActive"
     , "setBoundingRegionGranularity"
     , "setCacheMode"
@@ -156,7 +178,6 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "setY"
     , "setZValue"
     , "shape"
-    , "shear"
     , "show"
     , "stackBefore"
     , "toGraphicsObject"
@@ -166,12 +187,13 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
     , "transform"
     , "transformOriginPoint"
     , "transformations"
-    , "translate"
     , "type"
     , "ungrabKeyboard"
     , "ungrabMouse"
     , "unsetCursor"
     , "update"
+    , "updateMicroFocus"
+    , "wheelEvent"
     , "window"
     , "x"
     , "y"
@@ -180,7 +202,7 @@ static const char * const qtscript_QGraphicsItem_function_names[] = {
 };
 
 static const char * const qtscript_QGraphicsItem_function_signatures[] = {
-    "QGraphicsItem parent, QGraphicsScene scene"
+    "QGraphicsItem parent"
     // static
     // prototype
     , ""
@@ -202,11 +224,22 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , "ItemSelectionMode mode"
     , "QGraphicsItem other"
     , "QPointF point"
+    , "QGraphicsSceneContextMenuEvent event"
     , ""
     , "int key"
     , "QTransform viewportTransform"
+    , "QGraphicsSceneDragDropEvent event"
+    , "QGraphicsSceneDragDropEvent event"
+    , "QGraphicsSceneDragDropEvent event"
+    , "QGraphicsSceneDragDropEvent event"
     , ""
     , "QRectF rect, int xmargin, int ymargin\nqreal x, qreal y, qreal w, qreal h, int xmargin, int ymargin"
+    , "Object variant"
+    , ""
+    , ""
+    , "QFocusEvent event"
+    , ""
+    , "QFocusEvent event"
     , ""
     , ""
     , ""
@@ -217,17 +250,19 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "QGraphicsSceneHoverEvent event"
+    , "QGraphicsSceneHoverEvent event"
+    , "QGraphicsSceneHoverEvent event"
+    , "QInputMethodEvent event"
     , ""
-    , ""
-    , ""
-    , ""
+    , "InputMethodQuery query"
     , "QGraphicsItem filterItem"
     , ""
     , "QGraphicsItem child"
     , "QGraphicsItem blockingPanel"
     , ""
     , ""
-    , "\nQRectF rect\nqreal x, qreal y, qreal w, qreal h"
+    , "QRectF rect\nqreal x, qreal y, qreal w, qreal h"
     , "QGraphicsItem item"
     , ""
     , ""
@@ -236,7 +271,10 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , "QGraphicsItem parent"
     , ""
     , ""
+    , "GraphicsItemChange change, Object value"
     , "QGraphicsItem other, bool ok"
+    , "QKeyEvent event"
+    , "QKeyEvent event"
     , "QGraphicsItem item, QPainterPath path\nQGraphicsItem item, QPointF point\nQGraphicsItem item, QPolygonF polygon\nQGraphicsItem item, QRectF rect\nQGraphicsItem item, qreal x, qreal y\nQGraphicsItem item, qreal x, qreal y, qreal w, qreal h"
     , "QPainterPath path\nQPointF point\nQPolygonF polygon\nQRectF rect\nqreal x, qreal y\nqreal x, qreal y, qreal w, qreal h"
     , "QPainterPath path\nQPointF point\nQPolygonF polygon\nQRectF rect\nqreal x, qreal y\nqreal x, qreal y, qreal w, qreal h"
@@ -249,6 +287,10 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , "QGraphicsItem item, QPainterPath path\nQGraphicsItem item, QPointF point\nQGraphicsItem item, QPolygonF polygon\nQGraphicsItem item, QRectF rect\nQGraphicsItem item, qreal x, qreal y\nQGraphicsItem item, qreal x, qreal y, qreal w, qreal h"
     , "QPainterPath path\nQPointF point\nQPolygonF polygon\nQRectF rect\nqreal x, qreal y\nqreal x, qreal y, qreal w, qreal h"
     , "QPainterPath path\nQPointF point\nQPolygonF polygon\nQRectF rect\nqreal x, qreal y\nqreal x, qreal y, qreal w, qreal h"
+    , "QGraphicsSceneMouseEvent event"
+    , "QGraphicsSceneMouseEvent event"
+    , "QGraphicsSceneMouseEvent event"
+    , "QGraphicsSceneMouseEvent event"
     , "qreal dx, qreal dy"
     , ""
     , ""
@@ -259,13 +301,16 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , ""
     , ""
     , ""
+    , ""
+    , ""
     , "QGraphicsItem filterItem"
     , ""
-    , "qreal angle"
-    , ""
-    , "\nqreal sx, qreal sy"
     , ""
     , ""
+    , ""
+    , ""
+    , "QEvent event"
+    , "QGraphicsItem watched, QEvent event"
     , ""
     , ""
     , "qreal dx, qreal dy, QRectF rect"
@@ -273,7 +318,6 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , "bool enabled"
     , "bool enabled"
     , "MouseButtons buttons"
-    , "bool enabled"
     , "bool active"
     , "qreal granularity"
     , "CacheMode mode, QSize cacheSize"
@@ -305,7 +349,6 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , "qreal y"
     , "qreal z"
     , ""
-    , "qreal sh, qreal sv"
     , ""
     , "QGraphicsItem sibling"
     , ""
@@ -315,12 +358,13 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
     , ""
     , ""
     , ""
-    , "qreal dx, qreal dy"
     , ""
     , ""
     , ""
     , ""
     , "QRectF rect\nqreal x, qreal y, qreal width, qreal height"
+    , ""
+    , "QGraphicsSceneWheelEvent event"
     , ""
     , ""
     , ""
@@ -329,7 +373,7 @@ static const char * const qtscript_QGraphicsItem_function_signatures[] = {
 };
 
 static const int qtscript_QGraphicsItem_function_lengths[] = {
-    2
+    1
     // static
     // prototype
     , 0
@@ -351,11 +395,22 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 1
     , 1
     , 1
+    , 1
     , 0
+    , 1
+    , 1
+    , 1
+    , 1
     , 1
     , 1
     , 0
     , 6
+    , 1
+    , 0
+    , 0
+    , 1
+    , 0
+    , 1
     , 0
     , 0
     , 0
@@ -366,10 +421,12 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 1
+    , 1
+    , 1
+    , 1
     , 0
-    , 0
-    , 0
-    , 0
+    , 1
     , 1
     , 0
     , 1
@@ -386,6 +443,9 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 0
     , 0
     , 2
+    , 2
+    , 1
+    , 1
     , 5
     , 4
     , 4
@@ -398,6 +458,10 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 5
     , 4
     , 4
+    , 1
+    , 1
+    , 1
+    , 1
     , 2
     , 0
     , 0
@@ -408,13 +472,16 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 1
+    , 0
     , 0
     , 1
     , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 1
     , 2
-    , 0
-    , 0
     , 0
     , 0
     , 3
@@ -424,7 +491,6 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 1
     , 1
     , 1
-    , 1
     , 2
     , 1
     , 2
@@ -454,7 +520,6 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 1
     , 1
     , 0
-    , 2
     , 0
     , 1
     , 0
@@ -464,17 +529,28 @@ static const int qtscript_QGraphicsItem_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 2
     , 0
     , 0
     , 0
     , 0
     , 4
     , 0
+    , 1
     , 0
     , 0
     , 0
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsItem : public QGraphicsItem
+{
+
+    friend QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsItem_throw_ambiguity_error_helper(
@@ -489,28 +565,39 @@ static QScriptValue qtscript_QGraphicsItem_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsItem*)
-Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
-Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
 Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemFlag)
 Q_DECLARE_METATYPE(QFlags<QGraphicsItem::GraphicsItemFlag>)
 Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemChange)
+Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
+Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
 Q_DECLARE_METATYPE(QFlags<Qt::MouseButton>)
 Q_DECLARE_METATYPE(QList<QGraphicsItem*>)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(Qt::ItemSelectionMode)
+Q_DECLARE_METATYPE(QGraphicsSceneContextMenuEvent*)
+Q_DECLARE_METATYPE(QGraphicsSceneDragDropEvent*)
+Q_DECLARE_METATYPE(QFocusEvent*)
 Q_DECLARE_METATYPE(QGraphicsEffect*)
 Q_DECLARE_METATYPE(QGraphicsItemGroup*)
+Q_DECLARE_METATYPE(QGraphicsSceneHoverEvent*)
+Q_DECLARE_METATYPE(QInputMethodEvent*)
 Q_DECLARE_METATYPE(QFlags<Qt::InputMethodHint>)
+Q_DECLARE_METATYPE(Qt::InputMethodQuery)
 Q_DECLARE_METATYPE(QGraphicsItem**)
 Q_DECLARE_METATYPE(bool*)
-Q_DECLARE_METATYPE(QPolygonF)
+Q_DECLARE_METATYPE(QKeyEvent*)
+Q_DECLARE_METATYPE(QGraphicsSceneMouseEvent*)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QStyleOptionGraphicsItem*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QGraphicsObject*)
 Q_DECLARE_METATYPE(QGraphicsWidget*)
+Q_DECLARE_METATYPE(QGraphicsScene*)
+Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(Qt::FocusReason)
 Q_DECLARE_METATYPE(QGraphicsTransform*)
 Q_DECLARE_METATYPE(QList<QGraphicsTransform*>)
+Q_DECLARE_METATYPE(QGraphicsSceneWheelEvent*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -541,144 +628,6 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
-}
-
-//
-// QGraphicsItem::CacheMode
-//
-
-static const QGraphicsItem::CacheMode qtscript_QGraphicsItem_CacheMode_values[] = {
-    QGraphicsItem::NoCache
-    , QGraphicsItem::ItemCoordinateCache
-    , QGraphicsItem::DeviceCoordinateCache
-};
-
-static const char * const qtscript_QGraphicsItem_CacheMode_keys[] = {
-    "NoCache"
-    , "ItemCoordinateCache"
-    , "DeviceCoordinateCache"
-};
-
-static QString qtscript_QGraphicsItem_CacheMode_toStringHelper(QGraphicsItem::CacheMode value)
-{
-    if ((value >= QGraphicsItem::NoCache) && (value <= QGraphicsItem::DeviceCoordinateCache))
-        return qtscript_QGraphicsItem_CacheMode_keys[static_cast<int>(value)-static_cast<int>(QGraphicsItem::NoCache)];
-    return QString();
-}
-
-static QScriptValue qtscript_QGraphicsItem_CacheMode_toScriptValue(QScriptEngine *engine, const QGraphicsItem::CacheMode &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QGraphicsItem"));
-    return clazz.property(qtscript_QGraphicsItem_CacheMode_toStringHelper(value));
-}
-
-static void qtscript_QGraphicsItem_CacheMode_fromScriptValue(const QScriptValue &value, QGraphicsItem::CacheMode &out)
-{
-    out = qvariant_cast<QGraphicsItem::CacheMode>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QGraphicsItem_CacheMode(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QGraphicsItem::NoCache) && (arg <= QGraphicsItem::DeviceCoordinateCache))
-        return qScriptValueFromValue(engine,  static_cast<QGraphicsItem::CacheMode>(arg));
-    return context->throwError(QString::fromLatin1("CacheMode(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QGraphicsItem_CacheMode_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QGraphicsItem::CacheMode value = qscriptvalue_cast<QGraphicsItem::CacheMode>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QGraphicsItem_CacheMode_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QGraphicsItem::CacheMode value = qscriptvalue_cast<QGraphicsItem::CacheMode>(context->thisObject());
-    return QScriptValue(engine, qtscript_QGraphicsItem_CacheMode_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QGraphicsItem_CacheMode_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QGraphicsItem_CacheMode,
-        qtscript_QGraphicsItem_CacheMode_valueOf, qtscript_QGraphicsItem_CacheMode_toString);
-    qScriptRegisterMetaType<QGraphicsItem::CacheMode>(engine, qtscript_QGraphicsItem_CacheMode_toScriptValue,
-        qtscript_QGraphicsItem_CacheMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QGraphicsItem_CacheMode_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QGraphicsItem_CacheMode_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QGraphicsItem::PanelModality
-//
-
-static const QGraphicsItem::PanelModality qtscript_QGraphicsItem_PanelModality_values[] = {
-    QGraphicsItem::NonModal
-    , QGraphicsItem::PanelModal
-    , QGraphicsItem::SceneModal
-};
-
-static const char * const qtscript_QGraphicsItem_PanelModality_keys[] = {
-    "NonModal"
-    , "PanelModal"
-    , "SceneModal"
-};
-
-static QString qtscript_QGraphicsItem_PanelModality_toStringHelper(QGraphicsItem::PanelModality value)
-{
-    if ((value >= QGraphicsItem::NonModal) && (value <= QGraphicsItem::SceneModal))
-        return qtscript_QGraphicsItem_PanelModality_keys[static_cast<int>(value)-static_cast<int>(QGraphicsItem::NonModal)];
-    return QString();
-}
-
-static QScriptValue qtscript_QGraphicsItem_PanelModality_toScriptValue(QScriptEngine *engine, const QGraphicsItem::PanelModality &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QGraphicsItem"));
-    return clazz.property(qtscript_QGraphicsItem_PanelModality_toStringHelper(value));
-}
-
-static void qtscript_QGraphicsItem_PanelModality_fromScriptValue(const QScriptValue &value, QGraphicsItem::PanelModality &out)
-{
-    out = qvariant_cast<QGraphicsItem::PanelModality>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QGraphicsItem_PanelModality(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QGraphicsItem::NonModal) && (arg <= QGraphicsItem::SceneModal))
-        return qScriptValueFromValue(engine,  static_cast<QGraphicsItem::PanelModality>(arg));
-    return context->throwError(QString::fromLatin1("PanelModality(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QGraphicsItem_PanelModality_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QGraphicsItem::PanelModality value = qscriptvalue_cast<QGraphicsItem::PanelModality>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QGraphicsItem_PanelModality_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QGraphicsItem::PanelModality value = qscriptvalue_cast<QGraphicsItem::PanelModality>(context->thisObject());
-    return QScriptValue(engine, qtscript_QGraphicsItem_PanelModality_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QGraphicsItem_PanelModality_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QGraphicsItem_PanelModality,
-        qtscript_QGraphicsItem_PanelModality_valueOf, qtscript_QGraphicsItem_PanelModality_toString);
-    qScriptRegisterMetaType<QGraphicsItem::PanelModality>(engine, qtscript_QGraphicsItem_PanelModality_toScriptValue,
-        qtscript_QGraphicsItem_PanelModality_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QGraphicsItem_PanelModality_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QGraphicsItem_PanelModality_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -994,6 +943,144 @@ static QScriptValue qtscript_create_QGraphicsItem_GraphicsItemChange_class(QScri
 }
 
 //
+// QGraphicsItem::CacheMode
+//
+
+static const QGraphicsItem::CacheMode qtscript_QGraphicsItem_CacheMode_values[] = {
+    QGraphicsItem::NoCache
+    , QGraphicsItem::ItemCoordinateCache
+    , QGraphicsItem::DeviceCoordinateCache
+};
+
+static const char * const qtscript_QGraphicsItem_CacheMode_keys[] = {
+    "NoCache"
+    , "ItemCoordinateCache"
+    , "DeviceCoordinateCache"
+};
+
+static QString qtscript_QGraphicsItem_CacheMode_toStringHelper(QGraphicsItem::CacheMode value)
+{
+    if ((value >= QGraphicsItem::NoCache) && (value <= QGraphicsItem::DeviceCoordinateCache))
+        return qtscript_QGraphicsItem_CacheMode_keys[static_cast<int>(value)-static_cast<int>(QGraphicsItem::NoCache)];
+    return QString();
+}
+
+static QScriptValue qtscript_QGraphicsItem_CacheMode_toScriptValue(QScriptEngine *engine, const QGraphicsItem::CacheMode &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QGraphicsItem"));
+    return clazz.property(qtscript_QGraphicsItem_CacheMode_toStringHelper(value));
+}
+
+static void qtscript_QGraphicsItem_CacheMode_fromScriptValue(const QScriptValue &value, QGraphicsItem::CacheMode &out)
+{
+    out = qvariant_cast<QGraphicsItem::CacheMode>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QGraphicsItem_CacheMode(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QGraphicsItem::NoCache) && (arg <= QGraphicsItem::DeviceCoordinateCache))
+        return qScriptValueFromValue(engine,  static_cast<QGraphicsItem::CacheMode>(arg));
+    return context->throwError(QString::fromLatin1("CacheMode(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QGraphicsItem_CacheMode_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QGraphicsItem::CacheMode value = qscriptvalue_cast<QGraphicsItem::CacheMode>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QGraphicsItem_CacheMode_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QGraphicsItem::CacheMode value = qscriptvalue_cast<QGraphicsItem::CacheMode>(context->thisObject());
+    return QScriptValue(engine, qtscript_QGraphicsItem_CacheMode_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QGraphicsItem_CacheMode_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QGraphicsItem_CacheMode,
+        qtscript_QGraphicsItem_CacheMode_valueOf, qtscript_QGraphicsItem_CacheMode_toString);
+    qScriptRegisterMetaType<QGraphicsItem::CacheMode>(engine, qtscript_QGraphicsItem_CacheMode_toScriptValue,
+        qtscript_QGraphicsItem_CacheMode_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QGraphicsItem_CacheMode_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QGraphicsItem_CacheMode_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QGraphicsItem::PanelModality
+//
+
+static const QGraphicsItem::PanelModality qtscript_QGraphicsItem_PanelModality_values[] = {
+    QGraphicsItem::NonModal
+    , QGraphicsItem::PanelModal
+    , QGraphicsItem::SceneModal
+};
+
+static const char * const qtscript_QGraphicsItem_PanelModality_keys[] = {
+    "NonModal"
+    , "PanelModal"
+    , "SceneModal"
+};
+
+static QString qtscript_QGraphicsItem_PanelModality_toStringHelper(QGraphicsItem::PanelModality value)
+{
+    if ((value >= QGraphicsItem::NonModal) && (value <= QGraphicsItem::SceneModal))
+        return qtscript_QGraphicsItem_PanelModality_keys[static_cast<int>(value)-static_cast<int>(QGraphicsItem::NonModal)];
+    return QString();
+}
+
+static QScriptValue qtscript_QGraphicsItem_PanelModality_toScriptValue(QScriptEngine *engine, const QGraphicsItem::PanelModality &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QGraphicsItem"));
+    return clazz.property(qtscript_QGraphicsItem_PanelModality_toStringHelper(value));
+}
+
+static void qtscript_QGraphicsItem_PanelModality_fromScriptValue(const QScriptValue &value, QGraphicsItem::PanelModality &out)
+{
+    out = qvariant_cast<QGraphicsItem::PanelModality>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QGraphicsItem_PanelModality(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QGraphicsItem::NonModal) && (arg <= QGraphicsItem::SceneModal))
+        return qScriptValueFromValue(engine,  static_cast<QGraphicsItem::PanelModality>(arg));
+    return context->throwError(QString::fromLatin1("PanelModality(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QGraphicsItem_PanelModality_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QGraphicsItem::PanelModality value = qscriptvalue_cast<QGraphicsItem::PanelModality>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QGraphicsItem_PanelModality_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QGraphicsItem::PanelModality value = qscriptvalue_cast<QGraphicsItem::PanelModality>(context->thisObject());
+    return QScriptValue(engine, qtscript_QGraphicsItem_PanelModality_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QGraphicsItem_PanelModality_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QGraphicsItem_PanelModality,
+        qtscript_QGraphicsItem_PanelModality_valueOf, qtscript_QGraphicsItem_PanelModality_toString);
+    qScriptRegisterMetaType<QGraphicsItem::PanelModality>(engine, qtscript_QGraphicsItem_PanelModality_toScriptValue,
+        qtscript_QGraphicsItem_PanelModality_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QGraphicsItem_PanelModality_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QGraphicsItem_PanelModality_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QGraphicsItem
 //
 
@@ -1007,11 +1094,11 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 142;
+        _id = 0xBABE0000 + 164;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsItem* _q_self = qscriptvalue_cast<QGraphicsItem*>(context->thisObject());
+    qtscript_QGraphicsItem* _q_self = reinterpret_cast<qtscript_QGraphicsItem*>(qscriptvalue_cast<QGraphicsItem*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsItem.%0(): this object is not a QGraphicsItem")
@@ -1049,8 +1136,8 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
 
     case 4:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->acceptsHoverEvents();
-        return QScriptValue(context->engine(), _q_result);
+        _q_self->addToIndex();
+        return context->engine()->undefinedValue();
     }
     break;
 
@@ -1176,13 +1263,21 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     break;
 
     case 19:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneContextMenuEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneContextMenuEvent*>(context->argument(0));
+        _q_self->contextMenuEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 20:
     if (context->argumentCount() == 0) {
         QCursor _q_result = _q_self->cursor();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QVariant _q_result = _q_self->data(_q_arg0);
@@ -1190,7 +1285,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 21:
+    case 22:
     if (context->argumentCount() == 1) {
         QTransform _q_arg0 = qscriptvalue_cast<QTransform>(context->argument(0));
         QTransform _q_result = _q_self->deviceTransform(_q_arg0);
@@ -1198,14 +1293,46 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 22:
+    case 23:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneDragDropEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneDragDropEvent*>(context->argument(0));
+        _q_self->dragEnterEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 24:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneDragDropEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneDragDropEvent*>(context->argument(0));
+        _q_self->dragLeaveEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 25:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneDragDropEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneDragDropEvent*>(context->argument(0));
+        _q_self->dragMoveEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 26:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneDragDropEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneDragDropEvent*>(context->argument(0));
+        _q_self->dropEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 27:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->effectiveOpacity();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
+    case 28:
     if (context->argumentCount() == 0) {
         _q_self->ensureVisible();
         return context->engine()->undefinedValue();
@@ -1257,105 +1384,169 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 24:
+    case 29:
+    if (context->argumentCount() == 1) {
+        QVariant _q_arg0 = context->argument(0).toVariant();
+        QVariant _q_result = _q_self->extension(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 30:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->filtersChildEvents();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 25:
+    case 31:
     if (context->argumentCount() == 0) {
         QFlags<QGraphicsItem::GraphicsItemFlag> _q_result = _q_self->flags();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 26:
+    case 32:
+    if (context->argumentCount() == 1) {
+        QFocusEvent* _q_arg0 = qscriptvalue_cast<QFocusEvent*>(context->argument(0));
+        _q_self->focusInEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 33:
     if (context->argumentCount() == 0) {
         QGraphicsItem* _q_result = _q_self->focusItem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 27:
+    case 34:
+    if (context->argumentCount() == 1) {
+        QFocusEvent* _q_arg0 = qscriptvalue_cast<QFocusEvent*>(context->argument(0));
+        _q_self->focusOutEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 35:
     if (context->argumentCount() == 0) {
         QGraphicsItem* _q_result = _q_self->focusProxy();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 28:
+    case 36:
     if (context->argumentCount() == 0) {
         QGraphicsItem* _q_result = _q_self->focusScopeItem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 29:
+    case 37:
     if (context->argumentCount() == 0) {
         _q_self->grabKeyboard();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 30:
+    case 38:
     if (context->argumentCount() == 0) {
         _q_self->grabMouse();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 31:
+    case 39:
     if (context->argumentCount() == 0) {
         QGraphicsEffect* _q_result = _q_self->graphicsEffect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 32:
+    case 40:
     if (context->argumentCount() == 0) {
         QGraphicsItemGroup* _q_result = _q_self->group();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 33:
+    case 41:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->handlesChildEvents();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 34:
+    case 42:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasCursor();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 35:
+    case 43:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->hasFocus();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 36:
+    case 44:
     if (context->argumentCount() == 0) {
         _q_self->hide();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 37:
+    case 45:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneHoverEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneHoverEvent*>(context->argument(0));
+        _q_self->hoverEnterEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 46:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneHoverEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneHoverEvent*>(context->argument(0));
+        _q_self->hoverLeaveEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 47:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneHoverEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneHoverEvent*>(context->argument(0));
+        _q_self->hoverMoveEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 48:
+    if (context->argumentCount() == 1) {
+        QInputMethodEvent* _q_arg0 = qscriptvalue_cast<QInputMethodEvent*>(context->argument(0));
+        _q_self->inputMethodEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 49:
     if (context->argumentCount() == 0) {
         QFlags<Qt::InputMethodHint> _q_result = _q_self->inputMethodHints();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 38:
+    case 50:
+    if (context->argumentCount() == 1) {
+        Qt::InputMethodQuery _q_arg0 = qscriptvalue_cast<Qt::InputMethodQuery>(context->argument(0));
+        QVariant _q_result = _q_self->inputMethodQuery(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 51:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         _q_self->installSceneEventFilter(_q_arg0);
@@ -1363,14 +1554,14 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 39:
+    case 52:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isActive();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 40:
+    case 53:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         bool _q_result = _q_self->isAncestorOf(_q_arg0);
@@ -1378,7 +1569,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 41:
+    case 54:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isBlockedByModalPanel();
         return QScriptValue(context->engine(), _q_result);
@@ -1390,21 +1581,21 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 42:
+    case 55:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isClipped();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 43:
+    case 56:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEnabled();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 44:
+    case 57:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isObscured();
         return QScriptValue(context->engine(), _q_result);
@@ -1424,7 +1615,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 45:
+    case 58:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         bool _q_result = _q_self->isObscuredBy(_q_arg0);
@@ -1432,35 +1623,35 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 46:
+    case 59:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isPanel();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 47:
+    case 60:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isSelected();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 48:
+    case 61:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isUnderMouse();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 49:
+    case 62:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isVisible();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 50:
+    case 63:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         bool _q_result = _q_self->isVisibleTo(_q_arg0);
@@ -1468,21 +1659,30 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 51:
+    case 64:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isWidget();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 52:
+    case 65:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isWindow();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 53:
+    case 66:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem::GraphicsItemChange _q_arg0 = qscriptvalue_cast<QGraphicsItem::GraphicsItemChange>(context->argument(0));
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        QVariant _q_result = _q_self->itemChange(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 67:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         QTransform _q_result = _q_self->itemTransform(_q_arg0);
@@ -1496,7 +1696,23 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 54:
+    case 68:
+    if (context->argumentCount() == 1) {
+        QKeyEvent* _q_arg0 = qscriptvalue_cast<QKeyEvent*>(context->argument(0));
+        _q_self->keyPressEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 69:
+    if (context->argumentCount() == 1) {
+        QKeyEvent* _q_arg0 = qscriptvalue_cast<QKeyEvent*>(context->argument(0));
+        _q_self->keyReleaseEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 70:
     if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
             && (qMetaTypeId<QPainterPath>() == context->argument(1).toVariant().userType())) {
@@ -1542,7 +1758,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 55:
+    case 71:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QPainterPath>() == context->argument(0).toVariant().userType())) {
             QPainterPath _q_arg0 = qscriptvalue_cast<QPainterPath>(context->argument(0));
@@ -1578,7 +1794,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 56:
+    case 72:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QPainterPath>() == context->argument(0).toVariant().userType())) {
             QPainterPath _q_arg0 = qscriptvalue_cast<QPainterPath>(context->argument(0));
@@ -1614,7 +1830,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 57:
+    case 73:
     if (context->argumentCount() == 2) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         QRectF _q_arg1 = qscriptvalue_cast<QRectF>(context->argument(1));
@@ -1632,7 +1848,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 58:
+    case 74:
     if (context->argumentCount() == 1) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         QRectF _q_result = _q_self->mapRectFromParent(_q_arg0);
@@ -1648,7 +1864,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 59:
+    case 75:
     if (context->argumentCount() == 1) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         QRectF _q_result = _q_self->mapRectFromScene(_q_arg0);
@@ -1664,7 +1880,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 60:
+    case 76:
     if (context->argumentCount() == 2) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         QRectF _q_arg1 = qscriptvalue_cast<QRectF>(context->argument(1));
@@ -1682,7 +1898,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 61:
+    case 77:
     if (context->argumentCount() == 1) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         QRectF _q_result = _q_self->mapRectToParent(_q_arg0);
@@ -1698,7 +1914,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 62:
+    case 78:
     if (context->argumentCount() == 1) {
         QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
         QRectF _q_result = _q_self->mapRectToScene(_q_arg0);
@@ -1714,7 +1930,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 63:
+    case 79:
     if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<QGraphicsItem*>(context->argument(0))
             && (qMetaTypeId<QPainterPath>() == context->argument(1).toVariant().userType())) {
@@ -1760,7 +1976,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 64:
+    case 80:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QPainterPath>() == context->argument(0).toVariant().userType())) {
             QPainterPath _q_arg0 = qscriptvalue_cast<QPainterPath>(context->argument(0));
@@ -1796,7 +2012,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 65:
+    case 81:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QPainterPath>() == context->argument(0).toVariant().userType())) {
             QPainterPath _q_arg0 = qscriptvalue_cast<QPainterPath>(context->argument(0));
@@ -1832,7 +2048,39 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 66:
+    case 82:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneMouseEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneMouseEvent*>(context->argument(0));
+        _q_self->mouseDoubleClickEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 83:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneMouseEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneMouseEvent*>(context->argument(0));
+        _q_self->mouseMoveEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 84:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneMouseEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneMouseEvent*>(context->argument(0));
+        _q_self->mousePressEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 85:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneMouseEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneMouseEvent*>(context->argument(0));
+        _q_self->mouseReleaseEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 86:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -1841,21 +2089,21 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 67:
+    case 87:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->opacity();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 68:
+    case 88:
     if (context->argumentCount() == 0) {
         QPainterPath _q_result = _q_self->opaqueArea();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 69:
+    case 89:
     if (context->argumentCount() == 2) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         QStyleOptionGraphicsItem* _q_arg1 = qscriptvalue_cast<QStyleOptionGraphicsItem*>(context->argument(1));
@@ -1871,49 +2119,63 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 70:
+    case 90:
     if (context->argumentCount() == 0) {
         QGraphicsItem* _q_result = _q_self->panel();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 71:
+    case 91:
     if (context->argumentCount() == 0) {
         QGraphicsItem::PanelModality _q_result = _q_self->panelModality();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 72:
+    case 92:
     if (context->argumentCount() == 0) {
         QGraphicsItem* _q_result = _q_self->parentItem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 73:
+    case 93:
     if (context->argumentCount() == 0) {
         QGraphicsObject* _q_result = _q_self->parentObject();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 74:
+    case 94:
     if (context->argumentCount() == 0) {
         QGraphicsWidget* _q_result = _q_self->parentWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 75:
+    case 95:
     if (context->argumentCount() == 0) {
         QPointF _q_result = _q_self->pos();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 76:
+    case 96:
+    if (context->argumentCount() == 0) {
+        _q_self->prepareGeometryChange();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 97:
+    if (context->argumentCount() == 0) {
+        _q_self->removeFromIndex();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 98:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         _q_self->removeSceneEventFilter(_q_arg0);
@@ -1921,70 +2183,73 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 77:
+    case 99:
     if (context->argumentCount() == 0) {
         _q_self->resetTransform();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 78:
-    if (context->argumentCount() == 1) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        _q_self->rotate(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 79:
+    case 100:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->rotation();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 80:
+    case 101:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->scale();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
-    if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        _q_self->scale(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
     break;
 
-    case 81:
+    case 102:
     if (context->argumentCount() == 0) {
         QGraphicsScene* _q_result = _q_self->scene();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 82:
+    case 103:
     if (context->argumentCount() == 0) {
         QRectF _q_result = _q_self->sceneBoundingRect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 83:
+    case 104:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        bool _q_result = _q_self->sceneEvent(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 105:
+    if (context->argumentCount() == 2) {
+        QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
+        QEvent* _q_arg1 = qscriptvalue_cast<QEvent*>(context->argument(1));
+        bool _q_result = _q_self->sceneEventFilter(_q_arg0, _q_arg1);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 106:
     if (context->argumentCount() == 0) {
         QPointF _q_result = _q_self->scenePos();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 84:
+    case 107:
     if (context->argumentCount() == 0) {
         QTransform _q_result = _q_self->sceneTransform();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 85:
+    case 108:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -2000,7 +2265,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 86:
+    case 109:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setAcceptDrops(_q_arg0);
@@ -2008,7 +2273,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 87:
+    case 110:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setAcceptHoverEvents(_q_arg0);
@@ -2016,7 +2281,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 88:
+    case 111:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setAcceptTouchEvents(_q_arg0);
@@ -2024,7 +2289,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 89:
+    case 112:
     if (context->argumentCount() == 1) {
         QFlags<Qt::MouseButton> _q_arg0 = qscriptvalue_cast<QFlags<Qt::MouseButton> >(context->argument(0));
         _q_self->setAcceptedMouseButtons(_q_arg0);
@@ -2032,15 +2297,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 90:
-    if (context->argumentCount() == 1) {
-        bool _q_arg0 = context->argument(0).toBoolean();
-        _q_self->setAcceptsHoverEvents(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 91:
+    case 113:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setActive(_q_arg0);
@@ -2048,7 +2305,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 92:
+    case 114:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setBoundingRegionGranularity(_q_arg0);
@@ -2056,7 +2313,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 93:
+    case 115:
     if (context->argumentCount() == 1) {
         QGraphicsItem::CacheMode _q_arg0 = qscriptvalue_cast<QGraphicsItem::CacheMode>(context->argument(0));
         _q_self->setCacheMode(_q_arg0);
@@ -2070,7 +2327,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 94:
+    case 116:
     if (context->argumentCount() == 1) {
         QCursor _q_arg0 = qscriptvalue_cast<QCursor>(context->argument(0));
         _q_self->setCursor(_q_arg0);
@@ -2078,7 +2335,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 95:
+    case 117:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QVariant _q_arg1 = context->argument(1).toVariant();
@@ -2087,7 +2344,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 96:
+    case 118:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setEnabled(_q_arg0);
@@ -2095,7 +2352,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 97:
+    case 119:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setFiltersChildEvents(_q_arg0);
@@ -2103,7 +2360,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 98:
+    case 120:
     if (context->argumentCount() == 1) {
         QGraphicsItem::GraphicsItemFlag _q_arg0 = qscriptvalue_cast<QGraphicsItem::GraphicsItemFlag>(context->argument(0));
         _q_self->setFlag(_q_arg0);
@@ -2117,7 +2374,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 99:
+    case 121:
     if (context->argumentCount() == 1) {
         QFlags<QGraphicsItem::GraphicsItemFlag> _q_arg0 = qscriptvalue_cast<QFlags<QGraphicsItem::GraphicsItemFlag> >(context->argument(0));
         _q_self->setFlags(_q_arg0);
@@ -2125,7 +2382,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 100:
+    case 122:
     if (context->argumentCount() == 0) {
         _q_self->setFocus();
         return context->engine()->undefinedValue();
@@ -2137,7 +2394,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 101:
+    case 123:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         _q_self->setFocusProxy(_q_arg0);
@@ -2145,7 +2402,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 102:
+    case 124:
     if (context->argumentCount() == 1) {
         QGraphicsEffect* _q_arg0 = qscriptvalue_cast<QGraphicsEffect*>(context->argument(0));
         _q_self->setGraphicsEffect(_q_arg0);
@@ -2153,7 +2410,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 103:
+    case 125:
     if (context->argumentCount() == 1) {
         QGraphicsItemGroup* _q_arg0 = qscriptvalue_cast<QGraphicsItemGroup*>(context->argument(0));
         _q_self->setGroup(_q_arg0);
@@ -2161,7 +2418,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 104:
+    case 126:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setHandlesChildEvents(_q_arg0);
@@ -2169,7 +2426,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 105:
+    case 127:
     if (context->argumentCount() == 1) {
         QFlags<Qt::InputMethodHint> _q_arg0 = qscriptvalue_cast<QFlags<Qt::InputMethodHint> >(context->argument(0));
         _q_self->setInputMethodHints(_q_arg0);
@@ -2177,7 +2434,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 106:
+    case 128:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setOpacity(_q_arg0);
@@ -2185,7 +2442,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 107:
+    case 129:
     if (context->argumentCount() == 1) {
         QGraphicsItem::PanelModality _q_arg0 = qscriptvalue_cast<QGraphicsItem::PanelModality>(context->argument(0));
         _q_self->setPanelModality(_q_arg0);
@@ -2193,7 +2450,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 108:
+    case 130:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         _q_self->setParentItem(_q_arg0);
@@ -2201,7 +2458,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 109:
+    case 131:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->setPos(_q_arg0);
@@ -2215,7 +2472,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 110:
+    case 132:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setRotation(_q_arg0);
@@ -2223,7 +2480,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 111:
+    case 133:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setScale(_q_arg0);
@@ -2231,7 +2488,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 112:
+    case 134:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setSelected(_q_arg0);
@@ -2239,7 +2496,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 113:
+    case 135:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setToolTip(_q_arg0);
@@ -2247,7 +2504,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 114:
+    case 136:
     if (context->argumentCount() == 1) {
         QTransform _q_arg0 = qscriptvalue_cast<QTransform>(context->argument(0));
         _q_self->setTransform(_q_arg0);
@@ -2261,7 +2518,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 115:
+    case 137:
     if (context->argumentCount() == 1) {
         QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
         _q_self->setTransformOriginPoint(_q_arg0);
@@ -2275,7 +2532,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 116:
+    case 138:
     if (context->argumentCount() == 1) {
         QList<QGraphicsTransform*> _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -2284,7 +2541,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 117:
+    case 139:
     if (context->argumentCount() == 1) {
         bool _q_arg0 = context->argument(0).toBoolean();
         _q_self->setVisible(_q_arg0);
@@ -2292,7 +2549,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 118:
+    case 140:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setX(_q_arg0);
@@ -2300,7 +2557,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 119:
+    case 141:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setY(_q_arg0);
@@ -2308,7 +2565,7 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 120:
+    case 142:
     if (context->argumentCount() == 1) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         _q_self->setZValue(_q_arg0);
@@ -2316,30 +2573,21 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 121:
+    case 143:
     if (context->argumentCount() == 0) {
         QPainterPath _q_result = _q_self->shape();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 122:
-    if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        _q_self->shear(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 123:
+    case 144:
     if (context->argumentCount() == 0) {
         _q_self->show();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 124:
+    case 145:
     if (context->argumentCount() == 1) {
         QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
         _q_self->stackBefore(_q_arg0);
@@ -2347,93 +2595,84 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 125:
+    case 146:
     if (context->argumentCount() == 0) {
         QGraphicsObject* _q_result = _q_self->toGraphicsObject();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 126:
+    case 147:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->toolTip();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 127:
+    case 148:
     if (context->argumentCount() == 0) {
         QGraphicsItem* _q_result = _q_self->topLevelItem();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 128:
+    case 149:
     if (context->argumentCount() == 0) {
         QGraphicsWidget* _q_result = _q_self->topLevelWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 129:
+    case 150:
     if (context->argumentCount() == 0) {
         QTransform _q_result = _q_self->transform();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 130:
+    case 151:
     if (context->argumentCount() == 0) {
         QPointF _q_result = _q_self->transformOriginPoint();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 131:
+    case 152:
     if (context->argumentCount() == 0) {
         QList<QGraphicsTransform*> _q_result = _q_self->transformations();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 132:
-    if (context->argumentCount() == 2) {
-        qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
-        qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
-        _q_self->translate(_q_arg0, _q_arg1);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 133:
+    case 153:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->type();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 134:
+    case 154:
     if (context->argumentCount() == 0) {
         _q_self->ungrabKeyboard();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 135:
+    case 155:
     if (context->argumentCount() == 0) {
         _q_self->ungrabMouse();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 136:
+    case 156:
     if (context->argumentCount() == 0) {
         _q_self->unsetCursor();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 137:
+    case 157:
     if (context->argumentCount() == 0) {
         _q_self->update();
         return context->engine()->undefinedValue();
@@ -2453,35 +2692,50 @@ static QScriptValue qtscript_QGraphicsItem_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 138:
+    case 158:
+    if (context->argumentCount() == 0) {
+        _q_self->updateMicroFocus();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 159:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneWheelEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneWheelEvent*>(context->argument(0));
+        _q_self->wheelEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 160:
     if (context->argumentCount() == 0) {
         QGraphicsWidget* _q_result = _q_self->window();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 139:
+    case 161:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->x();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 140:
+    case 162:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->y();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 141:
+    case 163:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->zValue();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 142: {
+    case 164: {
     QString result;
     QDebug d(&result);
     d << _q_self;
@@ -2517,13 +2771,6 @@ static QScriptValue qtscript_QGraphicsItem_static_call(QScriptContext *context, 
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsItem*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
-    } else if (context->argumentCount() == 2) {
-        QGraphicsItem* _q_arg0 = qscriptvalue_cast<QGraphicsItem*>(context->argument(0));
-        QGraphicsScene* _q_arg1 = qscriptvalue_cast<QGraphicsScene*>(context->argument(1));
-        QtScriptShell_QGraphicsItem* _q_cpp_result = new QtScriptShell_QGraphicsItem(_q_arg0, _q_arg1);
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGraphicsItem*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
-        return _q_result;
     }
     break;
 
@@ -2539,7 +2786,7 @@ QScriptValue qtscript_create_QGraphicsItem_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QGraphicsItem*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGraphicsItem*)0));
-    for (int i = 0; i < 143; ++i) {
+    for (int i = 0; i < 165; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsItem_prototype_call, qtscript_QGraphicsItem_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsItem_function_names[i+1]),
@@ -2551,15 +2798,15 @@ QScriptValue qtscript_create_QGraphicsItem_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QGraphicsItem_static_call, proto, qtscript_QGraphicsItem_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("CacheMode"),
-        qtscript_create_QGraphicsItem_CacheMode_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("PanelModality"),
-        qtscript_create_QGraphicsItem_PanelModality_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("GraphicsItemFlag"),
         qtscript_create_QGraphicsItem_GraphicsItemFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("GraphicsItemFlags"),
         qtscript_create_QGraphicsItem_GraphicsItemFlags_class(engine));
     ctor.setProperty(QString::fromLatin1("GraphicsItemChange"),
         qtscript_create_QGraphicsItem_GraphicsItemChange_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("CacheMode"),
+        qtscript_create_QGraphicsItem_CacheMode_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("PanelModality"),
+        qtscript_create_QGraphicsItem_PanelModality_class(engine, ctor));
     return ctor;
 }

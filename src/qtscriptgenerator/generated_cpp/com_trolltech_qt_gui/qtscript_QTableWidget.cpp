@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtablewidget.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -19,8 +20,6 @@
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
 #include <qheaderview.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -33,6 +32,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -43,7 +43,9 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qtablewidget.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QTableWidget.h"
 
@@ -57,12 +59,17 @@ static const char * const qtscript_QTableWidget_function_names[] = {
     , "currentColumn"
     , "currentItem"
     , "currentRow"
+    , "dropMimeData"
     , "editItem"
     , "findItems"
     , "horizontalHeaderItem"
+    , "indexFromItem"
     , "item"
     , "itemAt"
+    , "itemFromIndex"
     , "itemPrototype"
+    , "items"
+    , "mimeTypes"
     , "openPersistentEditor"
     , "removeCellWidget"
     , "row"
@@ -79,6 +86,7 @@ static const char * const qtscript_QTableWidget_function_names[] = {
     , "setVerticalHeaderItem"
     , "setVerticalHeaderLabels"
     , "sortItems"
+    , "supportedDropActions"
     , "takeHorizontalHeaderItem"
     , "takeItem"
     , "takeVerticalHeaderItem"
@@ -99,11 +107,16 @@ static const char * const qtscript_QTableWidget_function_signatures[] = {
     , ""
     , ""
     , ""
+    , "int row, int column, QMimeData data, DropAction action"
     , "QTableWidgetItem item"
     , "String text, MatchFlags flags"
     , "int column"
+    , "QTableWidgetItem item"
     , "int row, int column"
     , "QPoint p\nint x, int y"
+    , "QModelIndex index"
+    , ""
+    , "QMimeData data"
     , ""
     , "QTableWidgetItem item"
     , "int row, int column"
@@ -121,6 +134,7 @@ static const char * const qtscript_QTableWidget_function_signatures[] = {
     , "int row, QTableWidgetItem item"
     , "List labels"
     , "int column, SortOrder order"
+    , ""
     , "int column"
     , "int row, int column"
     , "int row"
@@ -141,11 +155,16 @@ static const int qtscript_QTableWidget_function_lengths[] = {
     , 0
     , 0
     , 0
+    , 4
     , 1
     , 2
     , 1
+    , 1
     , 2
     , 2
+    , 1
+    , 0
+    , 1
     , 0
     , 1
     , 2
@@ -163,6 +182,7 @@ static const int qtscript_QTableWidget_function_lengths[] = {
     , 2
     , 1
     , 2
+    , 0
     , 1
     , 2
     , 1
@@ -171,6 +191,24 @@ static const int qtscript_QTableWidget_function_lengths[] = {
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTableWidget : public QTableWidget
+{
+    friend QScriptValue qtscript_QTableWidget_dropMimeData(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTableWidget_indexFromItem(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTableWidget_itemFromIndex(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTableWidget_items(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTableWidget_mimeTypes(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QTableWidget_supportedDropActions(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
 };
 
 static QScriptValue qtscript_QTableWidget_throw_ambiguity_error_helper(
@@ -186,13 +224,17 @@ static QScriptValue qtscript_QTableWidget_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTableWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QTableWidget*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QTableWidgetItem*)
+Q_DECLARE_METATYPE(QMimeData*)
+Q_DECLARE_METATYPE(Qt::DropAction)
 Q_DECLARE_METATYPE(QFlags<Qt::MatchFlag>)
 Q_DECLARE_METATYPE(QList<QTableWidgetItem*>)
 Q_DECLARE_METATYPE(QTableWidgetSelectionRange)
 Q_DECLARE_METATYPE(QList<QTableWidgetSelectionRange>)
 Q_DECLARE_METATYPE(QFlags<QItemSelectionModel::SelectionFlag>)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(QFlags<Qt::DropAction>)
 Q_DECLARE_METATYPE(QTableView*)
 
 //
@@ -209,11 +251,11 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 35;
+        _id = 0xBABE0000 + 41;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTableWidget* _q_self = qscriptvalue_cast<QTableWidget*>(context->thisObject());
+    qtscript_QTableWidget* _q_self = reinterpret_cast<qtscript_QTableWidget*>(qscriptvalue_cast<QTableWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTableWidget.%0(): this object is not a QTableWidget")
@@ -268,6 +310,17 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     break;
 
     case 6:
+    if (context->argumentCount() == 4) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        QMimeData* _q_arg2 = qscriptvalue_cast<QMimeData*>(context->argument(2));
+        Qt::DropAction _q_arg3 = qscriptvalue_cast<Qt::DropAction>(context->argument(3));
+        bool _q_result = _q_self->dropMimeData(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 1) {
         QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
         _q_self->editItem(_q_arg0);
@@ -275,7 +328,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QFlags<Qt::MatchFlag> _q_arg1 = qscriptvalue_cast<QFlags<Qt::MatchFlag> >(context->argument(1));
@@ -284,7 +337,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTableWidgetItem* _q_result = _q_self->horizontalHeaderItem(_q_arg0);
@@ -292,7 +345,15 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 9:
+    case 10:
+    if (context->argumentCount() == 1) {
+        QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
+        QModelIndex _q_result = _q_self->indexFromItem(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -301,7 +362,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 10:
+    case 12:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         QTableWidgetItem* _q_result = _q_self->itemAt(_q_arg0);
@@ -315,14 +376,37 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 11:
+    case 13:
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        QTableWidgetItem* _q_result = _q_self->itemFromIndex(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 14:
     if (context->argumentCount() == 0) {
         QTableWidgetItem* _q_result = const_cast<QTableWidgetItem*>(_q_self->itemPrototype());
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 15:
+    if (context->argumentCount() == 1) {
+        QMimeData* _q_arg0 = qscriptvalue_cast<QMimeData*>(context->argument(0));
+        QList<QTableWidgetItem*> _q_result = _q_self->items(_q_arg0);
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
+    if (context->argumentCount() == 0) {
+        QStringList _q_result = _q_self->mimeTypes();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 17:
     if (context->argumentCount() == 1) {
         QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
         _q_self->openPersistentEditor(_q_arg0);
@@ -330,7 +414,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 13:
+    case 18:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -339,7 +423,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 14:
+    case 19:
     if (context->argumentCount() == 1) {
         QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
         int _q_result = _q_self->row(_q_arg0);
@@ -347,21 +431,21 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 15:
+    case 20:
     if (context->argumentCount() == 0) {
         QList<QTableWidgetItem*> _q_result = _q_self->selectedItems();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 21:
     if (context->argumentCount() == 0) {
         QList<QTableWidgetSelectionRange> _q_result = _q_self->selectedRanges();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 17:
+    case 22:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -371,7 +455,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 18:
+    case 23:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -387,7 +471,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 19:
+    case 24:
     if (context->argumentCount() == 1) {
         QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
         _q_self->setCurrentItem(_q_arg0);
@@ -401,7 +485,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 20:
+    case 25:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QTableWidgetItem* _q_arg1 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(1));
@@ -410,7 +494,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 21:
+    case 26:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -419,7 +503,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 22:
+    case 27:
     if (context->argumentCount() == 3) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -429,7 +513,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 23:
+    case 28:
     if (context->argumentCount() == 1) {
         QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
         _q_self->setItemPrototype(_q_arg0);
@@ -437,7 +521,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 24:
+    case 29:
     if (context->argumentCount() == 2) {
         QTableWidgetSelectionRange _q_arg0 = qscriptvalue_cast<QTableWidgetSelectionRange>(context->argument(0));
         bool _q_arg1 = context->argument(1).toBoolean();
@@ -446,7 +530,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 25:
+    case 30:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QTableWidgetItem* _q_arg1 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(1));
@@ -455,7 +539,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 26:
+    case 31:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -464,7 +548,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 27:
+    case 32:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->sortItems(_q_arg0);
@@ -478,7 +562,14 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 28:
+    case 33:
+    if (context->argumentCount() == 0) {
+        QFlags<Qt::DropAction> _q_result = _q_self->supportedDropActions();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 34:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTableWidgetItem* _q_result = _q_self->takeHorizontalHeaderItem(_q_arg0);
@@ -486,7 +577,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 29:
+    case 35:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -495,7 +586,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 30:
+    case 36:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTableWidgetItem* _q_result = _q_self->takeVerticalHeaderItem(_q_arg0);
@@ -503,7 +594,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 31:
+    case 37:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTableWidgetItem* _q_result = _q_self->verticalHeaderItem(_q_arg0);
@@ -511,7 +602,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 32:
+    case 38:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->visualColumn(_q_arg0);
@@ -519,7 +610,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 33:
+    case 39:
     if (context->argumentCount() == 1) {
         QTableWidgetItem* _q_arg0 = qscriptvalue_cast<QTableWidgetItem*>(context->argument(0));
         QRect _q_result = _q_self->visualItemRect(_q_arg0);
@@ -527,7 +618,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 34:
+    case 40:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_result = _q_self->visualRow(_q_arg0);
@@ -535,7 +626,7 @@ static QScriptValue qtscript_QTableWidget_prototype_call(QScriptContext *context
     }
     break;
 
-    case 35: {
+    case 41: {
     QString result = QString::fromLatin1("QTableWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -610,7 +701,7 @@ QScriptValue qtscript_create_QTableWidget_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTableWidget*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTableWidget*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QTableView*>()));
-    for (int i = 0; i < 36; ++i) {
+    for (int i = 0; i < 42; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTableWidget_prototype_call, qtscript_QTableWidget_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTableWidget_function_names[i+1]),

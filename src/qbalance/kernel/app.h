@@ -127,6 +127,7 @@ public:
     void virtual showCriticalError(QString);
 
     Q_INVOKABLE bool runProcess(QString, QString = "");
+    QObject* getPlugins() { return plugins; }
 
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников
@@ -144,6 +145,7 @@ private:
 //456     QextSerialPort*         barCodeReaderComPort;
     QString                 barCodeString;
     QUiLoader*              formLoader;
+    QObject*                plugins;
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати

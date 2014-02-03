@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionDockWidget_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionDockWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionDockWidget : public QStyleOptionDockWidget
+{
+
+    friend QScriptValue qtscript_QStyleOptionDockWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionDockWidget_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionDockWidget)
 Q_DECLARE_METATYPE(QStyleOptionDockWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionDockWidget)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionDockWidget*)
-Q_DECLARE_METATYPE(QStyleOptionDockWidget::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionDockWidget::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionDockWidget::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionDockWidget::StyleOptionVersion
-//
-
-static const QStyleOptionDockWidget::StyleOptionVersion qtscript_QStyleOptionDockWidget_StyleOptionVersion_values[] = {
-    QStyleOptionDockWidget::Version
-};
-
-static const char * const qtscript_QStyleOptionDockWidget_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionDockWidget_StyleOptionVersion_toStringHelper(QStyleOptionDockWidget::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionDockWidget::Version) && (value <= QStyleOptionDockWidget::Version))
-        return qtscript_QStyleOptionDockWidget_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionDockWidget::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionDockWidget_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionDockWidget::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionDockWidget"));
-    return clazz.property(qtscript_QStyleOptionDockWidget_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionDockWidget_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionDockWidget::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionDockWidget::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionDockWidget_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionDockWidget::Version) && (arg <= QStyleOptionDockWidget::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionDockWidget::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionDockWidget_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionDockWidget::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionDockWidget::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionDockWidget_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionDockWidget::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionDockWidget::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionDockWidget_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionDockWidget_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionDockWidget_StyleOptionVersion,
-        qtscript_QStyleOptionDockWidget_StyleOptionVersion_valueOf, qtscript_QStyleOptionDockWidget_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionDockWidget::StyleOptionVersion>(engine, qtscript_QStyleOptionDockWidget_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionDockWidget_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionDockWidget_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionDockWidget_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionDockWidget_StyleOptionType_class
 }
 
 //
+// QStyleOptionDockWidget::StyleOptionVersion
+//
+
+static const QStyleOptionDockWidget::StyleOptionVersion qtscript_QStyleOptionDockWidget_StyleOptionVersion_values[] = {
+    QStyleOptionDockWidget::Version
+};
+
+static const char * const qtscript_QStyleOptionDockWidget_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionDockWidget_StyleOptionVersion_toStringHelper(QStyleOptionDockWidget::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionDockWidget::Version) && (value <= QStyleOptionDockWidget::Version))
+        return qtscript_QStyleOptionDockWidget_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionDockWidget::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionDockWidget_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionDockWidget::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionDockWidget"));
+    return clazz.property(qtscript_QStyleOptionDockWidget_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionDockWidget_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionDockWidget::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionDockWidget::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionDockWidget_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionDockWidget::Version) && (arg <= QStyleOptionDockWidget::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionDockWidget::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionDockWidget_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionDockWidget::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionDockWidget::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionDockWidget_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionDockWidget::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionDockWidget::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionDockWidget_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionDockWidget_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionDockWidget_StyleOptionVersion,
+        qtscript_QStyleOptionDockWidget_StyleOptionVersion_valueOf, qtscript_QStyleOptionDockWidget_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionDockWidget::StyleOptionVersion>(engine, qtscript_QStyleOptionDockWidget_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionDockWidget_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionDockWidget_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionDockWidget_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionDockWidget
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionDockWidget_prototype_call(QScriptContex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionDockWidget* _q_self = qscriptvalue_cast<QStyleOptionDockWidget*>(context->thisObject());
+    qtscript_QStyleOptionDockWidget* _q_self = reinterpret_cast<qtscript_QStyleOptionDockWidget*>(qscriptvalue_cast<QStyleOptionDockWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionDockWidget.%0(): this object is not a QStyleOptionDockWidget")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionDockWidget_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionDockWidget_static_call, proto, qtscript_QStyleOptionDockWidget_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionDockWidget_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionDockWidget_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionDockWidget_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

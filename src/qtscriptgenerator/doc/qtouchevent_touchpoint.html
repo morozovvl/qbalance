@@ -17,11 +17,12 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QTouchEvent_TouchPoint prototype object</li>
+<li><b>Pen = 0x0001</b></li>
+<li><b>InfoFlag( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
 <li><div class="fn"/><b>int id()</b></li>
-<li><div class="fn"/><b>bool isPrimary()</b></li>
 <li><div class="fn"/><b>QPointF lastNormalizedPos()</b></li>
 <li><div class="fn"/><b>QPointF lastPos()</b></li>
 <li><div class="fn"/><b>QPointF lastScenePos()</b></li>
@@ -30,6 +31,7 @@
 <li><div class="fn"/><b>QTouchEvent_TouchPoint operator_assign(QTouchEvent_TouchPoint other)</b></li>
 <li><div class="fn"/><b>QPointF pos()</b></li>
 <li><div class="fn"/><b>qreal pressure()</b></li>
+<li><div class="fn"/><b>List rawScreenPositions()</b></li>
 <li><div class="fn"/><b>QRectF rect()</b></li>
 <li><div class="fn"/><b>QPointF scenePos()</b></li>
 <li><div class="fn"/><b>QRectF sceneRect()</b></li>
@@ -43,6 +45,7 @@
 <li><div class="fn"/><b>void setNormalizedPos(QPointF normalizedPos)</b></li>
 <li><div class="fn"/><b>void setPos(QPointF pos)</b></li>
 <li><div class="fn"/><b>void setPressure(qreal pressure)</b></li>
+<li><div class="fn"/><b>void setRawScreenPositions(List positions)</b></li>
 <li><div class="fn"/><b>void setRect(QRectF rect)</b></li>
 <li><div class="fn"/><b>void setScenePos(QPointF scenePos)</b></li>
 <li><div class="fn"/><b>void setSceneRect(QRectF sceneRect)</b></li>
@@ -53,11 +56,14 @@
 <li><div class="fn"/><b>void setStartScenePos(QPointF startScenePos)</b></li>
 <li><div class="fn"/><b>void setStartScreenPos(QPointF startScreenPos)</b></li>
 <li><div class="fn"/><b>void setState(TouchPointStates state)</b></li>
+<li><div class="fn"/><b>void setVelocity(QVector2D v)</b></li>
 <li><div class="fn"/><b>QPointF startNormalizedPos()</b></li>
 <li><div class="fn"/><b>QPointF startPos()</b></li>
 <li><div class="fn"/><b>QPointF startScenePos()</b></li>
 <li><div class="fn"/><b>QPointF startScreenPos()</b></li>
 <li><div class="fn"/><b>TouchPointState state()</b></li>
+<li><div class="fn"/><b>void swap(QTouchEvent_TouchPoint other)</b></li>
+<li><div class="fn"/><b>QVector2D velocity()</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QTouchEvent_TouchPoint objects have no special properties beyond those inherited from the QTouchEvent_TouchPoint prototype object.</p>

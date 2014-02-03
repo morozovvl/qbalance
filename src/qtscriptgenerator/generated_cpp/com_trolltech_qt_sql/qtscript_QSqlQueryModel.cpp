@@ -25,6 +25,7 @@
 #include <qsqlquery.h>
 #include <qsqlrecord.h>
 #include <qstringlist.h>
+#include <qvector.h>
 
 #include "qtscriptshell_QSqlQueryModel.h"
 
@@ -33,9 +34,12 @@ static const char * const qtscript_QSqlQueryModel_function_names[] = {
     // static
     // prototype
     , "clear"
+    , "indexInQuery"
     , "lastError"
     , "query"
+    , "queryChange"
     , "record"
+    , "setLastError"
     , "setQuery"
     , "toString"
 };
@@ -45,9 +49,12 @@ static const char * const qtscript_QSqlQueryModel_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "QModelIndex item"
+    , ""
     , ""
     , ""
     , "\nint row"
+    , "QSqlError error"
     , "QSqlQuery query\nString query, QSqlDatabase db"
 ""
 };
@@ -57,11 +64,26 @@ static const int qtscript_QSqlQueryModel_function_lengths[] = {
     // static
     // prototype
     , 0
+    , 1
+    , 0
     , 0
     , 0
     , 1
+    , 1
     , 2
     , 0
+};
+
+static QScriptValue qtscript_QSqlQueryModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSqlQueryModel : public QSqlQueryModel
+{
+    friend QScriptValue qtscript_QSqlQueryModel_indexInQuery(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlQueryModel_queryChange(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QSqlQueryModel_setLastError(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSqlQueryModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSqlQueryModel_throw_ambiguity_error_helper(
@@ -97,11 +119,11 @@ static QScriptValue qtscript_QSqlQueryModel_prototype_call(QScriptContext *conte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 5;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSqlQueryModel* _q_self = qscriptvalue_cast<QSqlQueryModel*>(context->thisObject());
+    qtscript_QSqlQueryModel* _q_self = reinterpret_cast<qtscript_QSqlQueryModel*>(qscriptvalue_cast<QSqlQueryModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSqlQueryModel.%0(): this object is not a QSqlQueryModel")
@@ -117,20 +139,35 @@ static QScriptValue qtscript_QSqlQueryModel_prototype_call(QScriptContext *conte
     break;
 
     case 1:
-    if (context->argumentCount() == 0) {
-        QSqlError _q_result = _q_self->lastError();
+    if (context->argumentCount() == 1) {
+        QModelIndex _q_arg0 = qscriptvalue_cast<QModelIndex>(context->argument(0));
+        QModelIndex _q_result = _q_self->indexInQuery(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 2:
     if (context->argumentCount() == 0) {
-        QSqlQuery _q_result = _q_self->query();
+        QSqlError _q_result = _q_self->lastError();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 3:
+    if (context->argumentCount() == 0) {
+        QSqlQuery _q_result = _q_self->query();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 4:
+    if (context->argumentCount() == 0) {
+        _q_self->queryChange();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 0) {
         QSqlRecord _q_result = _q_self->record();
         return qScriptValueFromValue(context->engine(), _q_result);
@@ -142,7 +179,15 @@ static QScriptValue qtscript_QSqlQueryModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 4:
+    case 6:
+    if (context->argumentCount() == 1) {
+        QSqlError _q_arg0 = qscriptvalue_cast<QSqlError>(context->argument(0));
+        _q_self->setLastError(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QSqlQuery>() == context->argument(0).toVariant().userType())) {
             QSqlQuery _q_arg0 = qscriptvalue_cast<QSqlQuery>(context->argument(0));
@@ -162,7 +207,7 @@ static QScriptValue qtscript_QSqlQueryModel_prototype_call(QScriptContext *conte
     }
     break;
 
-    case 5: {
+    case 8: {
     QString result = QString::fromLatin1("QSqlQueryModel");
     return QScriptValue(context->engine(), result);
     }
@@ -222,7 +267,7 @@ QScriptValue qtscript_create_QSqlQueryModel_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSqlQueryModel*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSqlQueryModel*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractTableModel*>()));
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSqlQueryModel_prototype_call, qtscript_QSqlQueryModel_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSqlQueryModel_function_names[i+1]),

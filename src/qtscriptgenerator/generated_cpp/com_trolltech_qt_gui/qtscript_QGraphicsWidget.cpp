@@ -49,17 +49,28 @@ static const char * const qtscript_QGraphicsWidget_function_names[] = {
     , "addAction"
     , "addActions"
     , "adjustSize"
+    , "changeEvent"
+    , "closeEvent"
+    , "focusNextPrevChild"
     , "focusWidget"
     , "getWindowFrameMargins"
+    , "grabKeyboardEvent"
+    , "grabMouseEvent"
     , "grabShortcut"
+    , "hideEvent"
+    , "initStyleOption"
     , "insertAction"
     , "insertActions"
     , "isActiveWindow"
+    , "moveEvent"
     , "paintWindowFrame"
+    , "polishEvent"
+    , "propertyChange"
     , "rect"
     , "releaseShortcut"
     , "removeAction"
     , "resize"
+    , "resizeEvent"
     , "setAttribute"
     , "setContentsMargins"
     , "setGeometry"
@@ -67,12 +78,17 @@ static const char * const qtscript_QGraphicsWidget_function_names[] = {
     , "setShortcutEnabled"
     , "setStyle"
     , "setWindowFrameMargins"
+    , "showEvent"
     , "style"
     , "testAttribute"
+    , "ungrabKeyboardEvent"
+    , "ungrabMouseEvent"
     , "unsetLayoutDirection"
     , "unsetWindowFrameMargins"
+    , "windowFrameEvent"
     , "windowFrameGeometry"
     , "windowFrameRect"
+    , "windowFrameSectionAt"
     , "windowType"
     , "toString"
 };
@@ -86,17 +102,28 @@ static const char * const qtscript_QGraphicsWidget_function_signatures[] = {
     , "QAction action"
     , "List actions"
     , ""
+    , "QEvent event"
+    , "QCloseEvent event"
+    , "bool next"
     , ""
     , "qreal left, qreal top, qreal right, qreal bottom"
+    , "QEvent event"
+    , "QEvent event"
     , "QKeySequence sequence, ShortcutContext context"
+    , "QHideEvent event"
+    , "QStyleOption option"
     , "QAction before, QAction action"
     , "QAction before, List actions"
     , ""
+    , "QGraphicsSceneMoveEvent event"
     , "QPainter painter, QStyleOptionGraphicsItem option, QWidget widget"
+    , ""
+    , "String propertyName, Object value"
     , ""
     , "int id"
     , "QAction action"
     , "qreal w, qreal h"
+    , "QGraphicsSceneResizeEvent event"
     , "WidgetAttribute attribute, bool on"
     , "qreal left, qreal top, qreal right, qreal bottom"
     , "qreal x, qreal y, qreal w, qreal h"
@@ -104,12 +131,17 @@ static const char * const qtscript_QGraphicsWidget_function_signatures[] = {
     , "int id, bool enabled"
     , "QStyle style"
     , "qreal left, qreal top, qreal right, qreal bottom"
+    , "QShowEvent event"
     , ""
     , "WidgetAttribute attribute"
+    , "QEvent event"
+    , "QEvent event"
     , ""
     , ""
+    , "QEvent e"
     , ""
     , ""
+    , "QPointF pos"
     , ""
 ""
 };
@@ -123,17 +155,28 @@ static const int qtscript_QGraphicsWidget_function_lengths[] = {
     , 1
     , 1
     , 0
+    , 1
+    , 1
+    , 1
     , 0
     , 4
+    , 1
+    , 1
     , 2
+    , 1
+    , 1
     , 2
     , 2
     , 0
+    , 1
     , 3
     , 0
+    , 2
+    , 0
     , 1
     , 1
     , 2
+    , 1
     , 2
     , 4
     , 4
@@ -141,14 +184,45 @@ static const int qtscript_QGraphicsWidget_function_lengths[] = {
     , 2
     , 1
     , 4
+    , 1
+    , 0
+    , 1
+    , 1
+    , 1
+    , 0
     , 0
     , 1
     , 0
     , 0
+    , 1
     , 0
     , 0
-    , 0
-    , 0
+};
+
+static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsWidget : public QGraphicsWidget
+{
+    friend QScriptValue qtscript_QGraphicsWidget_changeEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_closeEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_focusNextPrevChild(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_grabKeyboardEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_grabMouseEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_hideEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_initStyleOption(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_moveEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_polishEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_propertyChange(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_resizeEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_showEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_ungrabKeyboardEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_ungrabMouseEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_windowFrameEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QGraphicsWidget_windowFrameSectionAt(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QGraphicsItem::Extension >;
 };
 
 static QScriptValue qtscript_QGraphicsWidget_throw_ambiguity_error_helper(
@@ -166,12 +240,21 @@ Q_DECLARE_METATYPE(QGraphicsWidget*)
 Q_DECLARE_METATYPE(QtScriptShell_QGraphicsWidget*)
 Q_DECLARE_METATYPE(QAction*)
 Q_DECLARE_METATYPE(QList<QAction*>)
+Q_DECLARE_METATYPE(QEvent*)
+Q_DECLARE_METATYPE(QCloseEvent*)
 Q_DECLARE_METATYPE(qreal*)
 Q_DECLARE_METATYPE(Qt::ShortcutContext)
+Q_DECLARE_METATYPE(QHideEvent*)
+Q_DECLARE_METATYPE(QStyleOption*)
+Q_DECLARE_METATYPE(QGraphicsSceneMoveEvent*)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QStyleOptionGraphicsItem*)
+Q_DECLARE_METATYPE(QWidget*)
+Q_DECLARE_METATYPE(QGraphicsSceneResizeEvent*)
 Q_DECLARE_METATYPE(Qt::WidgetAttribute)
 Q_DECLARE_METATYPE(QStyle*)
+Q_DECLARE_METATYPE(QShowEvent*)
+Q_DECLARE_METATYPE(Qt::WindowFrameSection)
 Q_DECLARE_METATYPE(Qt::WindowType)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 Q_DECLARE_METATYPE(QGraphicsObject*)
@@ -191,11 +274,11 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 29;
+        _id = 0xBABE0000 + 45;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsWidget* _q_self = qscriptvalue_cast<QGraphicsWidget*>(context->thisObject());
+    qtscript_QGraphicsWidget* _q_self = reinterpret_cast<qtscript_QGraphicsWidget*>(qscriptvalue_cast<QGraphicsWidget*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsWidget.%0(): this object is not a QGraphicsWidget")
@@ -235,13 +318,37 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     break;
 
     case 4:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->changeEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 5:
+    if (context->argumentCount() == 1) {
+        QCloseEvent* _q_arg0 = qscriptvalue_cast<QCloseEvent*>(context->argument(0));
+        _q_self->closeEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 1) {
+        bool _q_arg0 = context->argument(0).toBoolean();
+        bool _q_result = _q_self->focusNextPrevChild(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 0) {
         QGraphicsWidget* _q_result = _q_self->focusWidget();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 5:
+    case 8:
     if (context->argumentCount() == 4) {
         qreal* _q_arg0 = qscriptvalue_cast<qreal*>(context->argument(0));
         qreal* _q_arg1 = qscriptvalue_cast<qreal*>(context->argument(1));
@@ -252,7 +359,23 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 6:
+    case 9:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->grabKeyboardEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 10:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->grabMouseEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 11:
     if (context->argumentCount() == 1) {
         QKeySequence _q_arg0 = qscriptvalue_cast<QKeySequence>(context->argument(0));
         int _q_result = _q_self->grabShortcut(_q_arg0);
@@ -266,7 +389,23 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 7:
+    case 12:
+    if (context->argumentCount() == 1) {
+        QHideEvent* _q_arg0 = qscriptvalue_cast<QHideEvent*>(context->argument(0));
+        _q_self->hideEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 13:
+    if (context->argumentCount() == 1) {
+        QStyleOption* _q_arg0 = qscriptvalue_cast<QStyleOption*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 14:
     if (context->argumentCount() == 2) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QAction* _q_arg1 = qscriptvalue_cast<QAction*>(context->argument(1));
@@ -275,7 +414,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 8:
+    case 15:
     if (context->argumentCount() == 2) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         QList<QAction*> _q_arg1;
@@ -285,14 +424,22 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 9:
+    case 16:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isActiveWindow();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 17:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneMoveEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneMoveEvent*>(context->argument(0));
+        _q_self->moveEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
     if (context->argumentCount() == 2) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         QStyleOptionGraphicsItem* _q_arg1 = qscriptvalue_cast<QStyleOptionGraphicsItem*>(context->argument(1));
@@ -308,14 +455,30 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 11:
+    case 19:
+    if (context->argumentCount() == 0) {
+        _q_self->polishEvent();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 20:
+    if (context->argumentCount() == 2) {
+        QString _q_arg0 = context->argument(0).toString();
+        QVariant _q_arg1 = context->argument(1).toVariant();
+        QVariant _q_result = _q_self->propertyChange(_q_arg0, _q_arg1);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 0) {
         QRectF _q_result = _q_self->rect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 22:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->releaseShortcut(_q_arg0);
@@ -323,7 +486,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 13:
+    case 23:
     if (context->argumentCount() == 1) {
         QAction* _q_arg0 = qscriptvalue_cast<QAction*>(context->argument(0));
         _q_self->removeAction(_q_arg0);
@@ -331,7 +494,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 14:
+    case 24:
     if (context->argumentCount() == 2) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -340,7 +503,15 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 15:
+    case 25:
+    if (context->argumentCount() == 1) {
+        QGraphicsSceneResizeEvent* _q_arg0 = qscriptvalue_cast<QGraphicsSceneResizeEvent*>(context->argument(0));
+        _q_self->resizeEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 26:
     if (context->argumentCount() == 1) {
         Qt::WidgetAttribute _q_arg0 = qscriptvalue_cast<Qt::WidgetAttribute>(context->argument(0));
         _q_self->setAttribute(_q_arg0);
@@ -354,7 +525,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 16:
+    case 27:
     if (context->argumentCount() == 4) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -365,7 +536,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 17:
+    case 28:
     if (context->argumentCount() == 4) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -376,7 +547,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 18:
+    case 29:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setShortcutAutoRepeat(_q_arg0);
@@ -390,7 +561,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 19:
+    case 30:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setShortcutEnabled(_q_arg0);
@@ -404,7 +575,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 20:
+    case 31:
     if (context->argumentCount() == 1) {
         QStyle* _q_arg0 = qscriptvalue_cast<QStyle*>(context->argument(0));
         _q_self->setStyle(_q_arg0);
@@ -412,7 +583,7 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 21:
+    case 32:
     if (context->argumentCount() == 4) {
         qreal _q_arg0 = qscriptvalue_cast<qreal>(context->argument(0));
         qreal _q_arg1 = qscriptvalue_cast<qreal>(context->argument(1));
@@ -423,14 +594,22 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 22:
+    case 33:
+    if (context->argumentCount() == 1) {
+        QShowEvent* _q_arg0 = qscriptvalue_cast<QShowEvent*>(context->argument(0));
+        _q_self->showEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 34:
     if (context->argumentCount() == 0) {
         QStyle* _q_result = _q_self->style();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
+    case 35:
     if (context->argumentCount() == 1) {
         Qt::WidgetAttribute _q_arg0 = qscriptvalue_cast<Qt::WidgetAttribute>(context->argument(0));
         bool _q_result = _q_self->testAttribute(_q_arg0);
@@ -438,42 +617,74 @@ static QScriptValue qtscript_QGraphicsWidget_prototype_call(QScriptContext *cont
     }
     break;
 
-    case 24:
+    case 36:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->ungrabKeyboardEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 37:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        _q_self->ungrabMouseEvent(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 38:
     if (context->argumentCount() == 0) {
         _q_self->unsetLayoutDirection();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 25:
+    case 39:
     if (context->argumentCount() == 0) {
         _q_self->unsetWindowFrameMargins();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 26:
+    case 40:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        bool _q_result = _q_self->windowFrameEvent(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 41:
     if (context->argumentCount() == 0) {
         QRectF _q_result = _q_self->windowFrameGeometry();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 27:
+    case 42:
     if (context->argumentCount() == 0) {
         QRectF _q_result = _q_self->windowFrameRect();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 28:
+    case 43:
+    if (context->argumentCount() == 1) {
+        QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
+        Qt::WindowFrameSection _q_result = _q_self->windowFrameSectionAt(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 44:
     if (context->argumentCount() == 0) {
         Qt::WindowType _q_result = _q_self->windowType();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 29: {
+    case 45: {
     QString result = QString::fromLatin1("QGraphicsWidget");
     return QScriptValue(context->engine(), result);
     }
@@ -552,7 +763,7 @@ QScriptValue qtscript_create_QGraphicsWidget_class(QScriptEngine *engine)
     proto.setProperty(QString::fromLatin1("__QGraphicsLayoutItem__"),
         engine->defaultPrototype(qMetaTypeId<QGraphicsLayoutItem*>()),
         QScriptValue::SkipInEnumeration);
-    for (int i = 0; i < 30; ++i) {
+    for (int i = 0; i < 46; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGraphicsWidget_prototype_call, qtscript_QGraphicsWidget_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGraphicsWidget_function_names[i+2]),

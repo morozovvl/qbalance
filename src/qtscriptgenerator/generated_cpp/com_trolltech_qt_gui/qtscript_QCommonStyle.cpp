@@ -6,12 +6,12 @@
 #include <qmetaobject.h>
 
 #include <qcommonstyle.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qapplication.h>
 #include <qbytearray.h>
 #include <qcommonstyle.h>
 #include <qcoreevent.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qobject.h>
 #include <qpainter.h>
@@ -47,6 +47,15 @@ static const int qtscript_QCommonStyle_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QCommonStyle_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QCommonStyle : public QCommonStyle
+{
+
+    friend QScriptValue qtscript_QCommonStyle_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QCommonStyle_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -80,7 +89,7 @@ static QScriptValue qtscript_QCommonStyle_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QCommonStyle* _q_self = qscriptvalue_cast<QCommonStyle*>(context->thisObject());
+    qtscript_QCommonStyle* _q_self = reinterpret_cast<qtscript_QCommonStyle*>(qscriptvalue_cast<QCommonStyle*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QCommonStyle.%0(): this object is not a QCommonStyle")

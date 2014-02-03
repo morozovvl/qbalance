@@ -37,6 +37,15 @@ static const int qtscript_QPauseAnimation_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QPauseAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QPauseAnimation : public QPauseAnimation
+{
+
+    friend QScriptValue qtscript_QPauseAnimation_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QPauseAnimation_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -70,7 +79,7 @@ static QScriptValue qtscript_QPauseAnimation_prototype_call(QScriptContext *cont
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QPauseAnimation* _q_self = qscriptvalue_cast<QPauseAnimation*>(context->thisObject());
+    qtscript_QPauseAnimation* _q_self = reinterpret_cast<qtscript_QPauseAnimation*>(qscriptvalue_cast<QPauseAnimation*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QPauseAnimation.%0(): this object is not a QPauseAnimation")

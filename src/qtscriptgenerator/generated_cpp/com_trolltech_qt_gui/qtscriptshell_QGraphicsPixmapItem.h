@@ -8,8 +8,8 @@
 class QtScriptShell_QGraphicsPixmapItem : public QGraphicsPixmapItem
 {
 public:
-    QtScriptShell_QGraphicsPixmapItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsPixmapItem(const QPixmap&  pixmap, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsPixmapItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsPixmapItem(const QPixmap&  pixmap, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsPixmapItem();
 
     void advance(int  phase);

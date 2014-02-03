@@ -22,12 +22,12 @@
 <li><b>ShortDayNames</b></li>
 <li><b>LongDayNames</b></li>
 <li><b>HorizontalHeaderFormat( value )</b></li>
-<li><b>NoVerticalHeader</b></li>
-<li><b>ISOWeekNumbers</b></li>
-<li><b>VerticalHeaderFormat( value )</b></li>
 <li><b>NoSelection</b></li>
 <li><b>SingleSelection</b></li>
 <li><b>SelectionMode( value )</b></li>
+<li><b>NoVerticalHeader</b></li>
+<li><b>ISOWeekNumbers</b></li>
+<li><b>VerticalHeaderFormat( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <p>The QCalendarWidget prototype object inherits properties from the <a href="qwidget.html">QWidget</a> prototype object and also has the following properties.</p>
@@ -35,9 +35,12 @@
 <li><div class="fn"/><b>SortedMap dateTextFormat()</b></li>
 <li><div class="fn"/><b>QTextCharFormat headerTextFormat()</b></li>
 <li><div class="fn"/><b>int monthShown()</b></li>
+<li><div class="fn"/><b>void paintCell(QPainter painter, QRect rect, QDate date)</b></li>
 <li><div class="fn"/><b>void setDateTextFormat(QDate date, QTextCharFormat format)</b></li>
 <li><div class="fn"/><b>void setHeaderTextFormat(QTextCharFormat format)</b></li>
 <li><div class="fn"/><b>void setWeekdayTextFormat(DayOfWeek dayOfWeek, QTextCharFormat format)</b></li>
+<li><div class="fn"/><b>void updateCell(QDate date)</b></li>
+<li><div class="fn"/><b>void updateCells()</b></li>
 <li><div class="fn"/><b>QTextCharFormat weekdayTextFormat(DayOfWeek dayOfWeek)</b></li>
 <li><div class="fn"/><b>int yearShown()</b></li>
 </ul>
@@ -52,7 +55,6 @@
 <li><div class="fn"/><b>selectionMode</b></li>
 <li><div class="fn"/><b>horizontalHeaderFormat</b></li>
 <li><div class="fn"/><b>verticalHeaderFormat</b></li>
-<li><div class="fn"/><b>headerVisible</b></li>
 <li><div class="fn"/><b>navigationBarVisible</b></li>
 <li><div class="fn"/><b>dateEditEnabled</b></li>
 <li><div class="fn"/><b>dateEditAcceptDelay</b></li>

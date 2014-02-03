@@ -18,7 +18,7 @@ static const char * const qtscript_QWindowStateChangeEvent_function_names[] = {
 };
 
 static const char * const qtscript_QWindowStateChangeEvent_function_signatures[] = {
-    "WindowStates aOldState\nWindowStates aOldState, bool isOverride"
+    "WindowStates aOldState, bool isOverride"
     // static
     // prototype
     , ""

@@ -81,6 +81,15 @@ static const int qtscript_QClipboard_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QClipboard_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QClipboard : public QClipboard
+{
+
+    friend QScriptValue qtscript_QClipboard_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QClipboard_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -197,7 +206,7 @@ static QScriptValue qtscript_QClipboard_prototype_call(QScriptContext *context, 
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QClipboard* _q_self = qscriptvalue_cast<QClipboard*>(context->thisObject());
+    qtscript_QClipboard* _q_self = reinterpret_cast<qtscript_QClipboard*>(qscriptvalue_cast<QClipboard*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QClipboard.%0(): this object is not a QClipboard")

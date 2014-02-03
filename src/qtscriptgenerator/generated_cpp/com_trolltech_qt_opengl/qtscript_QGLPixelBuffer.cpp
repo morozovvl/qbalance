@@ -13,9 +13,8 @@
 #include <qimage.h>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
-#include <qpixmap.h>
+#include <qpainter.h>
 #include <qpoint.h>
-#include <qrect.h>
 #include <qsize.h>
 
 #include "qtscriptshell_QGLPixelBuffer.h"
@@ -25,20 +24,15 @@ static const char * const qtscript_QGLPixelBuffer_function_names[] = {
     // static
     , "hasOpenGLPbuffers"
     // prototype
-    , "bindTexture"
-    , "bindToDynamicTexture"
-    , "deleteTexture"
+    , "context"
     , "doneCurrent"
-    , "drawTexture"
     , "format"
-    , "generateDynamicTexture"
     , "handle"
     , "isValid"
     , "makeCurrent"
     , "releaseFromDynamicTexture"
     , "size"
     , "toImage"
-    , "updateDynamicTexture"
     , "toString"
 };
 
@@ -47,11 +41,6 @@ static const char * const qtscript_QGLPixelBuffer_function_signatures[] = {
     // static
     , ""
     // prototype
-    , "QImage image, unsigned int target\nQPixmap pixmap, unsigned int target\nString fileName"
-    , "unsigned int texture"
-    , "unsigned int texture_id"
-    , ""
-    , "QPointF point, unsigned int textureId, unsigned int textureTarget\nQRectF target, unsigned int textureId, unsigned int textureTarget"
     , ""
     , ""
     , ""
@@ -60,7 +49,7 @@ static const char * const qtscript_QGLPixelBuffer_function_signatures[] = {
     , ""
     , ""
     , ""
-    , "unsigned int texture_id"
+    , ""
 ""
 };
 
@@ -69,11 +58,6 @@ static const int qtscript_QGLPixelBuffer_function_lengths[] = {
     // static
     , 0
     // prototype
-    , 2
-    , 1
-    , 1
-    , 0
-    , 3
     , 0
     , 0
     , 0
@@ -82,8 +66,17 @@ static const int qtscript_QGLPixelBuffer_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 1
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QGLPixelBuffer_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGLPixelBuffer : public QGLPixelBuffer
+{
+
+    friend QScriptValue qtscript_QGLPixelBuffer_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGLPixelBuffer_throw_ambiguity_error_helper(
@@ -99,6 +92,7 @@ static QScriptValue qtscript_QGLPixelBuffer_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QGLPixelBuffer*)
 Q_DECLARE_METATYPE(QtScriptShell_QGLPixelBuffer*)
+Q_DECLARE_METATYPE(QGLContext*)
 Q_DECLARE_METATYPE(QGLFormat)
 Q_DECLARE_METATYPE(Qt::HANDLE)
 Q_DECLARE_METATYPE(QGLWidget*)
@@ -118,11 +112,11 @@ static QScriptValue qtscript_QGLPixelBuffer_prototype_call(QScriptContext *conte
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 14;
+        _id = 0xBABE0000 + 9;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGLPixelBuffer* _q_self = qscriptvalue_cast<QGLPixelBuffer*>(context->thisObject());
+    qtscript_QGLPixelBuffer* _q_self = reinterpret_cast<qtscript_QGLPixelBuffer*>(qscriptvalue_cast<QGLPixelBuffer*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGLPixelBuffer.%0(): this object is not a QGLPixelBuffer")
@@ -131,163 +125,69 @@ static QScriptValue qtscript_QGLPixelBuffer_prototype_call(QScriptContext *conte
 
     switch (_id) {
     case 0:
-    if (context->argumentCount() == 1) {
-        if ((qMetaTypeId<QImage>() == context->argument(0).toVariant().userType())) {
-            QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
-            uint _q_result = _q_self->bindTexture(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            uint _q_result = _q_self->bindTexture(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        } else if (context->argument(0).isString()) {
-            QString _q_arg0 = context->argument(0).toString();
-            uint _q_result = _q_self->bindTexture(_q_arg0);
-            return QScriptValue(context->engine(), _q_result);
-        }
-    }
-    if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QImage>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QImage _q_arg0 = qscriptvalue_cast<QImage>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1);
-            return QScriptValue(context->engine(), _q_result);
-        } else if ((qMetaTypeId<QPixmap>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_result = _q_self->bindTexture(_q_arg0, _q_arg1);
-            return QScriptValue(context->engine(), _q_result);
-        }
+    if (context->argumentCount() == 0) {
+        QGLContext* _q_result = _q_self->context();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 1:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        bool _q_result = _q_self->bindToDynamicTexture(_q_arg0);
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 2:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->deleteTexture(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 3:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->doneCurrent();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
-    if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 5:
+    case 2:
     if (context->argumentCount() == 0) {
         QGLFormat _q_result = _q_self->format();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
-    if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->generateDynamicTexture();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 7:
+    case 3:
     if (context->argumentCount() == 0) {
         Qt::HANDLE _q_result = _q_self->handle();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isValid();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->makeCurrent();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 10:
+    case 6:
     if (context->argumentCount() == 0) {
         _q_self->releaseFromDynamicTexture();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 11:
+    case 7:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->size();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 8:
     if (context->argumentCount() == 0) {
         QImage _q_result = _q_self->toImage();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->updateDynamicTexture(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 14: {
+    case 9: {
     QString result = QString::fromLatin1("QGLPixelBuffer");
     return QScriptValue(context->engine(), result);
     }
@@ -388,7 +288,7 @@ QScriptValue qtscript_create_QGLPixelBuffer_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGLPixelBuffer*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLPixelBuffer*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QPaintDevice*>()));
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 10; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLPixelBuffer_prototype_call, qtscript_QGLPixelBuffer_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGLPixelBuffer_function_names[i+2]),

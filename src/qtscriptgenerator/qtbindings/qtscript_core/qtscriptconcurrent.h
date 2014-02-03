@@ -49,11 +49,17 @@
 #include <QtCore/qfuturewatcher.h>
 #include <QtCore/qfuturesynchronizer.h>
 
-typedef QFutureWatcher<void> QtScriptVoidFutureWatcher;
+class QtScriptVoidFutureWatcher : public QFutureWatcher<void> {
+    Q_OBJECT
+};
+
+class QtScriptFutureWatcher : public QFutureWatcher<QScriptValue> {
+    Q_OBJECT
+};
+
 typedef QFuture<void> QtScriptVoidFuture;
 typedef QFutureSynchronizer<void> QtScriptVoidFutureSynchronizer;
 typedef QFuture<QScriptValue> QtScriptFuture;
-typedef QFutureWatcher<QScriptValue> QtScriptFutureWatcher;
 typedef QFutureSynchronizer<QScriptValue> QtScriptFutureSynchronizer;
 typedef QFutureIterator<QScriptValue> QtScriptFutureIterator;
 

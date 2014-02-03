@@ -19,9 +19,11 @@ static const char * const qtscript_QProcessEnvironment_function_names[] = {
     , "contains"
     , "insert"
     , "isEmpty"
+    , "keys"
     , "operator_assign"
     , "equals"
     , "remove"
+    , "swap"
     , "toStringList"
     , "value"
     , "toString"
@@ -34,11 +36,13 @@ static const char * const qtscript_QProcessEnvironment_function_signatures[] = {
     // prototype
     , ""
     , "String name"
-    , "String name, String value"
+    , "QProcessEnvironment e\nString name, String value"
+    , ""
     , ""
     , "QProcessEnvironment other"
     , "QProcessEnvironment other"
     , "String name"
+    , "QProcessEnvironment other"
     , ""
     , "String name, String defaultValue"
 ""
@@ -53,6 +57,8 @@ static const int qtscript_QProcessEnvironment_function_lengths[] = {
     , 1
     , 2
     , 0
+    , 0
+    , 1
     , 1
     , 1
     , 1
@@ -89,7 +95,7 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 9;
+        _id = 0xBABE0000 + 11;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -117,6 +123,11 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     break;
 
     case 2:
+    if (context->argumentCount() == 1) {
+        QProcessEnvironment _q_arg0 = qscriptvalue_cast<QProcessEnvironment>(context->argument(0));
+        _q_self->insert(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
     if (context->argumentCount() == 2) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_arg1 = context->argument(1).toString();
@@ -133,6 +144,13 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     break;
 
     case 4:
+    if (context->argumentCount() == 0) {
+        QStringList _q_result = _q_self->keys();
+        return qScriptValueFromSequence(context->engine(), _q_result);
+    }
+    break;
+
+    case 5:
     if (context->argumentCount() == 1) {
         QProcessEnvironment _q_arg0 = qscriptvalue_cast<QProcessEnvironment>(context->argument(0));
         QProcessEnvironment _q_result = _q_self->operator=(_q_arg0);
@@ -140,7 +158,7 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     }
     break;
 
-    case 5:
+    case 6:
     if (context->argumentCount() == 1) {
         QProcessEnvironment _q_arg0 = qscriptvalue_cast<QProcessEnvironment>(context->argument(0));
         bool _q_result = _q_self->operator==(_q_arg0);
@@ -148,7 +166,7 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     }
     break;
 
-    case 6:
+    case 7:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->remove(_q_arg0);
@@ -156,14 +174,22 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     }
     break;
 
-    case 7:
+    case 8:
+    if (context->argumentCount() == 1) {
+        QProcessEnvironment _q_arg0 = qscriptvalue_cast<QProcessEnvironment>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         QStringList _q_result = _q_self->toStringList();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 10:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QString _q_result = _q_self->value(_q_arg0);
@@ -177,7 +203,7 @@ static QScriptValue qtscript_QProcessEnvironment_prototype_call(QScriptContext *
     }
     break;
 
-    case 9: {
+    case 11: {
     QString result = QString::fromLatin1("QProcessEnvironment");
     return QScriptValue(context->engine(), result);
     }
@@ -231,7 +257,7 @@ QScriptValue qtscript_create_QProcessEnvironment_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QProcessEnvironment*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QProcessEnvironment*)0));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 12; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QProcessEnvironment_prototype_call, qtscript_QProcessEnvironment_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QProcessEnvironment_function_names[i+2]),

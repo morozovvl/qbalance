@@ -39,6 +39,15 @@ static const int qtscript_QTimer_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QTimer_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTimer : public QTimer
+{
+
+    friend QScriptValue qtscript_QTimer_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QTimer_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -71,7 +80,7 @@ static QScriptValue qtscript_QTimer_prototype_call(QScriptContext *context, QScr
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTimer* _q_self = qscriptvalue_cast<QTimer*>(context->thisObject());
+    qtscript_QTimer* _q_self = reinterpret_cast<qtscript_QTimer*>(qscriptvalue_cast<QTimer*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTimer.%0(): this object is not a QTimer")

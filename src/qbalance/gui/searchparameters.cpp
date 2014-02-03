@@ -49,7 +49,12 @@ SearchParameters::~SearchParameters()
 
 
 void SearchParameters::close() {
-//    delete gridLayout;
+}
+
+
+void SearchParameters::searchGridLayout()
+{
+    gridLayout = findChild<QGridLayout*>("gridLayout");
 }
 
 
@@ -63,9 +68,17 @@ void SearchParameters::setApp(TApplication* a)
 void SearchParameters::setFieldsList(QStringList fldList)
 {
     setLineWidth(2);
-    setFrameStyle(QFrame::Panel | QFrame::Raised);
-    gridLayout = new QGridLayout(this);
+//    setFrameStyle(QFrame::Panel | QFrame::Raised);
     int strNum = 0;
+    if (gridLayout == 0)
+    {
+        gridLayout = new QGridLayout(this);
+        setLayout(gridLayout);
+    }
+    else
+    {
+       strNum = gridLayout->rowCount();
+    }
     for (int i = 0; i < fldList.count(); i++)
     {
         QString field = fldList.at(i);
@@ -81,7 +94,6 @@ void SearchParameters::setFieldsList(QStringList fldList)
                 addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
         }
     }
-    setLayout(gridLayout);
     gridLayout->setColumnStretch(1, 1);
 }
 
@@ -223,7 +235,7 @@ void SearchParameters::dictionaryButtonPressed()
                     cmb->insertItem(0, text);
                     cmb->setCurrentIndex(0);
                 }
-                cmb->lineEdit()->selectAll();
+                cmb->lineEdit()->home(true);
                 cmb->setFocus();
             }
         }
@@ -260,10 +272,17 @@ void SearchParameters::setFocus()
         // При активации фокуса подсветим все строчки
         for (int i = 0; i < gridLayout->rowCount(); i++)
         {
-            MyComboBox* widget = (MyComboBox*)(gridLayout->itemAtPosition(i, 1)->widget());
-            widget->lineEdit()->selectAll();
-            if (i == 0)
-                widget->setFocus();
+            QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
+            if (item != 0)
+            {
+                MyComboBox* widget = (MyComboBox*)(item->widget());
+                if (widget != 0 && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
+                {
+                    widget->lineEdit()->selectAll();
+                    if (i == 0)
+                        widget->setFocus();
+                }
+            }
         }
     }
 }

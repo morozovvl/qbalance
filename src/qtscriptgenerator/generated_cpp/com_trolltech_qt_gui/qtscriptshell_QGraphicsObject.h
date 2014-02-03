@@ -23,7 +23,7 @@ public:
     void dragLeaveEvent(QGraphicsSceneDragDropEvent*  event);
     void dragMoveEvent(QGraphicsSceneDragDropEvent*  event);
     void dropEvent(QGraphicsSceneDragDropEvent*  event);
-    bool  event(QEvent*  arg__1);
+    bool  event(QEvent*  ev);
     bool  eventFilter(QObject*  arg__1, QEvent*  arg__2);
     QVariant  extension(const QVariant&  variant) const;
     void focusInEvent(QFocusEvent*  event);

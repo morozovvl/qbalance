@@ -15,15 +15,16 @@
 #include <qimagewriter.h>
 #include <qiodevice.h>
 #include <qmatrix.h>
+#include <qobject.h>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
 #include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
 #include <qsize.h>
 #include <qtransform.h>
-#include <qwidget.h>
 
 #include "qtscriptshell_QBitmap.h"
 
@@ -32,6 +33,7 @@ static const char * const qtscript_QBitmap_function_names[] = {
     // static
     // prototype
     , "clear"
+    , "swap"
     , "transformed"
     , "toString"
 };
@@ -41,6 +43,7 @@ static const char * const qtscript_QBitmap_function_signatures[] = {
     // static
     // prototype
     , ""
+    , "QBitmap other"
     , "QMatrix arg__1\nQTransform matrix"
 ""
 };
@@ -51,7 +54,17 @@ static const int qtscript_QBitmap_function_lengths[] = {
     // prototype
     , 0
     , 1
+    , 1
     , 0
+};
+
+static QScriptValue qtscript_QBitmap_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QBitmap : public QBitmap
+{
+
+    friend QScriptValue qtscript_QBitmap_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QBitmap_throw_ambiguity_error_helper(
@@ -84,11 +97,11 @@ static QScriptValue qtscript_QBitmap_prototype_call(QScriptContext *context, QSc
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 2;
+        _id = 0xBABE0000 + 3;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QBitmap* _q_self = qscriptvalue_cast<QBitmap*>(context->thisObject());
+    qtscript_QBitmap* _q_self = reinterpret_cast<qtscript_QBitmap*>(qscriptvalue_cast<QBitmap*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QBitmap.%0(): this object is not a QBitmap")
@@ -105,6 +118,14 @@ static QScriptValue qtscript_QBitmap_prototype_call(QScriptContext *context, QSc
 
     case 1:
     if (context->argumentCount() == 1) {
+        QBitmap _q_arg0 = qscriptvalue_cast<QBitmap>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QMatrix>() == context->argument(0).toVariant().userType())) {
             QMatrix _q_arg0 = qscriptvalue_cast<QMatrix>(context->argument(0));
             QBitmap _q_result = _q_self->transformed(_q_arg0);
@@ -117,7 +138,7 @@ static QScriptValue qtscript_QBitmap_prototype_call(QScriptContext *context, QSc
     }
     break;
 
-    case 2: {
+    case 3: {
     QString result = QString::fromLatin1("QBitmap");
     return QScriptValue(context->engine(), result);
     }
@@ -197,7 +218,7 @@ QScriptValue qtscript_create_QBitmap_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QBitmap*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QBitmap*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QPixmap*>()));
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QBitmap_prototype_call, qtscript_QBitmap_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QBitmap_function_names[i+1]),

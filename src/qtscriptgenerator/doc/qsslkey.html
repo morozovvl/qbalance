@@ -13,6 +13,7 @@
 <ul>
 <li><div class="fn"/><b>void QSslKey()</b></li>
 <li><div class="fn"/><b>void QSslKey(QIODevice device, KeyAlgorithm algorithm, EncodingFormat format, KeyType type, QByteArray passPhrase)</b></li>
+<li><div class="fn"/><b>void QSslKey(Qt::HANDLE handle, KeyType type)</b></li>
 <li><div class="fn"/><b>void QSslKey(QByteArray encoded, KeyAlgorithm algorithm, EncodingFormat format, KeyType type, QByteArray passPhrase)</b></li>
 <li><div class="fn"/><b>void QSslKey(QSslKey other)</b></li>
 </ul>
@@ -29,6 +30,7 @@
 <li><div class="fn"/><b>int length()</b></li>
 <li><div class="fn"/><b>QSslKey operator_assign(QSslKey other)</b></li>
 <li><div class="fn"/><b>bool operator_equal(QSslKey key)</b></li>
+<li><div class="fn"/><b>void swap(QSslKey other)</b></li>
 <li><div class="fn"/><b>QByteArray toDer(QByteArray passPhrase)</b></li>
 <li><div class="fn"/><b>QByteArray toPem(QByteArray passPhrase)</b></li>
 <li><div class="fn"/><b>KeyType type()</b></li>

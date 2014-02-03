@@ -130,7 +130,7 @@ static const char * const qtscript_QDomNode_function_signatures[] = {
     , "String tagName"
     , "QDomNode oldChild"
     , "QDomNode newChild, QDomNode oldChild"
-    , "QTextStream arg__1, int arg__2\nQTextStream arg__1, int arg__2, EncodingPolicy arg__3"
+    , "QTextStream arg__1, int arg__2, EncodingPolicy arg__3"
     , "String arg__1"
     , "String pre"
     , ""
@@ -455,8 +455,9 @@ static QScriptValue qtscript_QDomNode_prototype_call(QScriptContext *context, QS
     switch (_id) {
     case 0:
     if (context->argumentCount() == 1) {
-        QDomNode _q_arg0 = qscriptvalue_cast<QDomNode>(context->argument(0));
-        QDomNode _q_result = _q_self->appendChild(_q_arg0);
+
+                QDomNode & _q_arg0 = *qscriptvalue_cast<QDomNode*>(context->argument(0));
+                        QDomNode _q_result = _q_self->appendChild(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -529,18 +530,22 @@ static QScriptValue qtscript_QDomNode_prototype_call(QScriptContext *context, QS
 
     case 9:
     if (context->argumentCount() == 2) {
-        QDomNode _q_arg0 = qscriptvalue_cast<QDomNode>(context->argument(0));
-        QDomNode _q_arg1 = qscriptvalue_cast<QDomNode>(context->argument(1));
-        QDomNode _q_result = _q_self->insertAfter(_q_arg0, _q_arg1);
+
+                QDomNode & _q_arg0 = *qscriptvalue_cast<QDomNode*>(context->argument(0));
+                
+                QDomNode & _q_arg1 = *qscriptvalue_cast<QDomNode*>(context->argument(1));
+                        QDomNode _q_result = _q_self->insertAfter(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 10:
     if (context->argumentCount() == 2) {
-        QDomNode _q_arg0 = qscriptvalue_cast<QDomNode>(context->argument(0));
-        QDomNode _q_arg1 = qscriptvalue_cast<QDomNode>(context->argument(1));
-        QDomNode _q_result = _q_self->insertBefore(_q_arg0, _q_arg1);
+
+                QDomNode & _q_arg0 = *qscriptvalue_cast<QDomNode*>(context->argument(0));
+                
+                QDomNode & _q_arg1 = *qscriptvalue_cast<QDomNode*>(context->argument(1));
+                        QDomNode _q_result = _q_self->insertBefore(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
@@ -797,17 +802,20 @@ static QScriptValue qtscript_QDomNode_prototype_call(QScriptContext *context, QS
 
     case 44:
     if (context->argumentCount() == 1) {
-        QDomNode _q_arg0 = qscriptvalue_cast<QDomNode>(context->argument(0));
-        QDomNode _q_result = _q_self->removeChild(_q_arg0);
+
+                QDomNode & _q_arg0 = *qscriptvalue_cast<QDomNode*>(context->argument(0));
+                        QDomNode _q_result = _q_self->removeChild(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 45:
     if (context->argumentCount() == 2) {
-        QDomNode _q_arg0 = qscriptvalue_cast<QDomNode>(context->argument(0));
-        QDomNode _q_arg1 = qscriptvalue_cast<QDomNode>(context->argument(1));
-        QDomNode _q_result = _q_self->replaceChild(_q_arg0, _q_arg1);
+
+                QDomNode & _q_arg0 = *qscriptvalue_cast<QDomNode*>(context->argument(0));
+                
+                QDomNode & _q_arg1 = *qscriptvalue_cast<QDomNode*>(context->argument(1));
+                        QDomNode _q_result = _q_self->replaceChild(_q_arg0, _q_arg1);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;

@@ -117,6 +117,15 @@ static const int qtscript_QGridLayout_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGridLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGridLayout : public QGridLayout
+{
+
+    friend QScriptValue qtscript_QGridLayout_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGridLayout_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -133,6 +142,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QGridLayout*)
 Q_DECLARE_METATYPE(QLayoutItem*)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
 Q_DECLARE_METATYPE(QLayout*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(int*)
 Q_DECLARE_METATYPE(Qt::Corner)
 Q_DECLARE_METATYPE(Qt::Orientation)
@@ -155,7 +165,7 @@ static QScriptValue qtscript_QGridLayout_prototype_call(QScriptContext *context,
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGridLayout* _q_self = qscriptvalue_cast<QGridLayout*>(context->thisObject());
+    qtscript_QGridLayout* _q_self = reinterpret_cast<qtscript_QGridLayout*>(qscriptvalue_cast<QGridLayout*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGridLayout.%0(): this object is not a QGridLayout")

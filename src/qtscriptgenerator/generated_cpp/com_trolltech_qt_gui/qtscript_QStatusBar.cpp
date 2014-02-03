@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qstatusbar.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qstatusbar.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QStatusBar.h"
 
@@ -46,8 +47,10 @@ static const char * const qtscript_QStatusBar_function_names[] = {
     , "addPermanentWidget"
     , "addWidget"
     , "currentMessage"
+    , "hideOrShow"
     , "insertPermanentWidget"
     , "insertWidget"
+    , "reformat"
     , "removeWidget"
     , "toString"
 };
@@ -59,8 +62,10 @@ static const char * const qtscript_QStatusBar_function_signatures[] = {
     , "QWidget widget, int stretch"
     , "QWidget widget, int stretch"
     , ""
+    , ""
     , "int index, QWidget widget, int stretch"
     , "int index, QWidget widget, int stretch"
+    , ""
     , "QWidget widget"
 ""
 };
@@ -72,10 +77,23 @@ static const int qtscript_QStatusBar_function_lengths[] = {
     , 2
     , 2
     , 0
+    , 0
     , 3
     , 3
+    , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStatusBar : public QStatusBar
+{
+    friend QScriptValue qtscript_QStatusBar_hideOrShow(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QStatusBar_reformat(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QStatusBar_throw_ambiguity_error_helper(
@@ -91,6 +109,7 @@ static QScriptValue qtscript_QStatusBar_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QStatusBar*)
 Q_DECLARE_METATYPE(QtScriptShell_QStatusBar*)
+Q_DECLARE_METATYPE(QWidget*)
 
 //
 // QStatusBar
@@ -106,11 +125,11 @@ static QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *context, 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 6;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStatusBar* _q_self = qscriptvalue_cast<QStatusBar*>(context->thisObject());
+    qtscript_QStatusBar* _q_self = reinterpret_cast<qtscript_QStatusBar*>(qscriptvalue_cast<QStatusBar*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStatusBar.%0(): this object is not a QStatusBar")
@@ -154,6 +173,13 @@ static QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *context, 
     break;
 
     case 3:
+    if (context->argumentCount() == 0) {
+        _q_self->hideOrShow();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -169,7 +195,7 @@ static QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 4:
+    case 5:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QWidget* _q_arg1 = qscriptvalue_cast<QWidget*>(context->argument(1));
@@ -185,7 +211,14 @@ static QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 5:
+    case 6:
+    if (context->argumentCount() == 0) {
+        _q_self->reformat();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->removeWidget(_q_arg0);
@@ -193,7 +226,7 @@ static QScriptValue qtscript_QStatusBar_prototype_call(QScriptContext *context, 
     }
     break;
 
-    case 6: {
+    case 8: {
     QString result = QString::fromLatin1("QStatusBar");
     return QScriptValue(context->engine(), result);
     }
@@ -253,7 +286,7 @@ QScriptValue qtscript_create_QStatusBar_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QStatusBar*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QStatusBar*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QStatusBar_prototype_call, qtscript_QStatusBar_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QStatusBar_function_names[i+1]),

@@ -70,7 +70,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
-    if (indexInQuery(index).isValid() || force)
+    if (index.isValid() || force)
     {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать

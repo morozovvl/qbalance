@@ -9,7 +9,6 @@
 <body>
 <h1 align="center">QPrinter Class Reference</h1>
 <h3 align="center">[<a href="com_trolltech_qt_gui.html">com.trolltech.qt.gui</a> package]</h3>
-<p>Inherits <a href="qpaintdevice.html">QPaintDevice</a>.</p>
 <h3>Constructor</h3>
 <ul>
 <li><div class="fn"/><b>void QPrinter(PrinterMode mode)</b></li>
@@ -18,20 +17,9 @@
 <h3>Constructor Properties</h3>
 <ul>
 <li><b>prototype</b>: The QPrinter prototype object</li>
-<li><b>NativeFormat</b></li>
-<li><b>PdfFormat</b></li>
-<li><b>PostScriptFormat</b></li>
-<li><b>OutputFormat( value )</b></li>
-<li><b>DuplexNone = 0</b></li>
-<li><b>DuplexAuto</b></li>
-<li><b>DuplexLongSide</b></li>
-<li><b>DuplexShortSide</b></li>
-<li><b>DuplexMode( value )</b></li>
-<li><b>AllPages</b></li>
-<li><b>Selection</b></li>
-<li><b>PageRange</b></li>
-<li><b>CurrentPage</b></li>
-<li><b>PrintRange( value )</b></li>
+<li><b>FirstPageFirst</b></li>
+<li><b>LastPageFirst</b></li>
+<li><b>PageOrder( value )</b></li>
 <li><b>Millimeter</b></li>
 <li><b>Point</b></li>
 <li><b>Inch</b></li>
@@ -40,21 +28,6 @@
 <li><b>Cicero</b></li>
 <li><b>DevicePixel</b></li>
 <li><b>Unit( value )</b></li>
-<li><b>ScreenResolution</b></li>
-<li><b>PrinterResolution</b></li>
-<li><b>HighResolution</b></li>
-<li><b>PrinterMode( value )</b></li>
-<li><b>Portrait</b></li>
-<li><b>Landscape</b></li>
-<li><b>Orientation( value )</b></li>
-<li><b>Idle</b></li>
-<li><b>Active</b></li>
-<li><b>Aborted</b></li>
-<li><b>Error</b></li>
-<li><b>PrinterState( value )</b></li>
-<li><b>GrayScale</b></li>
-<li><b>Color</b></li>
-<li><b>ColorMode( value )</b></li>
 <li><b>OnlyOne</b></li>
 <li><b>Lower</b></li>
 <li><b>Middle</b></li>
@@ -70,41 +43,34 @@
 <li><b>FormSource</b></li>
 <li><b>MaxPageSource</b></li>
 <li><b>PaperSource( value )</b></li>
-<li><b>FirstPageFirst</b></li>
-<li><b>LastPageFirst</b></li>
-<li><b>PageOrder( value )</b></li>
-<li><b>A4</b></li>
-<li><b>B5</b></li>
-<li><b>Letter</b></li>
-<li><b>Legal</b></li>
-<li><b>Executive</b></li>
-<li><b>A0</b></li>
-<li><b>A1</b></li>
-<li><b>A2</b></li>
-<li><b>A3</b></li>
-<li><b>A5</b></li>
-<li><b>A6</b></li>
-<li><b>A7</b></li>
-<li><b>A8</b></li>
-<li><b>A9</b></li>
-<li><b>B0</b></li>
-<li><b>B1</b></li>
-<li><b>B10</b></li>
-<li><b>B2</b></li>
-<li><b>B3</b></li>
-<li><b>B4</b></li>
-<li><b>B6</b></li>
-<li><b>B7</b></li>
-<li><b>B8</b></li>
-<li><b>B9</b></li>
-<li><b>C5E</b></li>
-<li><b>Comm10E</b></li>
-<li><b>DLE</b></li>
-<li><b>Folio</b></li>
-<li><b>Ledger</b></li>
-<li><b>Tabloid</b></li>
-<li><b>Custom</b></li>
-<li><b>PageSize( value )</b></li>
+<li><b>DuplexNone = 0</b></li>
+<li><b>DuplexAuto</b></li>
+<li><b>DuplexLongSide</b></li>
+<li><b>DuplexShortSide</b></li>
+<li><b>DuplexMode( value )</b></li>
+<li><b>GrayScale</b></li>
+<li><b>Color</b></li>
+<li><b>ColorMode( value )</b></li>
+<li><b>ScreenResolution</b></li>
+<li><b>PrinterResolution</b></li>
+<li><b>HighResolution</b></li>
+<li><b>PrinterMode( value )</b></li>
+<li><b>Portrait</b></li>
+<li><b>Landscape</b></li>
+<li><b>Orientation( value )</b></li>
+<li><b>NativeFormat</b></li>
+<li><b>PdfFormat</b></li>
+<li><b>OutputFormat( value )</b></li>
+<li><b>AllPages</b></li>
+<li><b>Selection</b></li>
+<li><b>PageRange</b></li>
+<li><b>CurrentPage</b></li>
+<li><b>PrintRange( value )</b></li>
+<li><b>Idle</b></li>
+<li><b>Active</b></li>
+<li><b>Aborted</b></li>
+<li><b>Error</b></li>
+<li><b>PrinterState( value )</b></li>
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
@@ -114,6 +80,7 @@
 <li><div class="fn"/><b>ColorMode colorMode()</b></li>
 <li><div class="fn"/><b>int copyCount()</b></li>
 <li><div class="fn"/><b>String creator()</b></li>
+<li><div class="fn"/><b>int devType()</b></li>
 <li><div class="fn"/><b>String docName()</b></li>
 <li><div class="fn"/><b>bool doubleSidedPrinting()</b></li>
 <li><div class="fn"/><b>DuplexMode duplex()</b></li>
@@ -122,6 +89,7 @@
 <li><div class="fn"/><b>bool fullPage()</b></li>
 <li><div class="fn"/><b>void getPageMargins(qreal left, qreal top, qreal right, qreal bottom, Unit unit)</b></li>
 <li><div class="fn"/><b>bool isValid()</b></li>
+<li><div class="fn"/><b>int metric(PaintDeviceMetric arg__1)</b></li>
 <li><div class="fn"/><b>bool newPage()</b></li>
 <li><div class="fn"/><b>int numCopies()</b></li>
 <li><div class="fn"/><b>Orientation orientation()</b></li>
@@ -129,9 +97,10 @@
 <li><div class="fn"/><b>OutputFormat outputFormat()</b></li>
 <li><div class="fn"/><b>PageOrder pageOrder()</b></li>
 <li><div class="fn"/><b>QRect pageRect()</b></li>
-<li><div class="fn"/><b>PageSize pageSize()</b></li>
+<li><div class="fn"/><b>QPaintEngine paintEngine()</b></li>
+<li><div class="fn"/><b>String paperName()</b></li>
 <li><div class="fn"/><b>QRect paperRect()</b></li>
-<li><div class="fn"/><b>PageSize paperSize()</b></li>
+<li><div class="fn"/><b>QSizeF paperSize(Unit unit)</b></li>
 <li><div class="fn"/><b>PaperSource paperSource()</b></li>
 <li><div class="fn"/><b>QPrintEngine printEngine()</b></li>
 <li><div class="fn"/><b>String printProgram()</b></li>
@@ -146,6 +115,7 @@
 <li><div class="fn"/><b>void setDocName(String arg__1)</b></li>
 <li><div class="fn"/><b>void setDoubleSidedPrinting(bool enable)</b></li>
 <li><div class="fn"/><b>void setDuplex(DuplexMode duplex)</b></li>
+<li><div class="fn"/><b>void setEngines(QPrintEngine printEngine, QPaintEngine paintEngine)</b></li>
 <li><div class="fn"/><b>void setFontEmbeddingEnabled(bool enable)</b></li>
 <li><div class="fn"/><b>void setFromTo(int fromPage, int toPage)</b></li>
 <li><div class="fn"/><b>void setFullPage(bool arg__1)</b></li>
@@ -155,8 +125,9 @@
 <li><div class="fn"/><b>void setOutputFormat(OutputFormat format)</b></li>
 <li><div class="fn"/><b>void setPageMargins(qreal left, qreal top, qreal right, qreal bottom, Unit unit)</b></li>
 <li><div class="fn"/><b>void setPageOrder(PageOrder arg__1)</b></li>
-<li><div class="fn"/><b>void setPageSize(PageSize arg__1)</b></li>
-<li><div class="fn"/><b>void setPaperSize(PageSize arg__1)</b></li>
+<li><div class="fn"/><b>void setPageSizeMM(QSizeF size)</b></li>
+<li><div class="fn"/><b>void setPaperName(String paperName)</b></li>
+<li><div class="fn"/><b>void setPaperSize(QSizeF paperSize, Unit unit)</b></li>
 <li><div class="fn"/><b>void setPaperSource(PaperSource arg__1)</b></li>
 <li><div class="fn"/><b>void setPrintProgram(String arg__1)</b></li>
 <li><div class="fn"/><b>void setPrintRange(PrintRange range)</b></li>

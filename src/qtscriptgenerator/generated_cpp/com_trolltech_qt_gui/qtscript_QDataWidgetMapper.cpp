@@ -75,6 +75,15 @@ static const int qtscript_QDataWidgetMapper_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QDataWidgetMapper_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDataWidgetMapper : public QDataWidgetMapper
+{
+
+    friend QScriptValue qtscript_QDataWidgetMapper_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QDataWidgetMapper_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -94,9 +103,9 @@ static const QMetaObject *qtscript_QDataWidgetMapper_metaObject()
 Q_DECLARE_METATYPE(QDataWidgetMapper*)
 Q_DECLARE_METATYPE(QtScriptShell_QDataWidgetMapper*)
 Q_DECLARE_METATYPE(QDataWidgetMapper::SubmitPolicy)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QAbstractItemDelegate*)
 Q_DECLARE_METATYPE(QAbstractItemModel*)
-Q_DECLARE_METATYPE(QModelIndex)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -203,7 +212,7 @@ static QScriptValue qtscript_QDataWidgetMapper_prototype_call(QScriptContext *co
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDataWidgetMapper* _q_self = qscriptvalue_cast<QDataWidgetMapper*>(context->thisObject());
+    qtscript_QDataWidgetMapper* _q_self = reinterpret_cast<qtscript_QDataWidgetMapper*>(qscriptvalue_cast<QDataWidgetMapper*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDataWidgetMapper.%0(): this object is not a QDataWidgetMapper")

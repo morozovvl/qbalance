@@ -20,7 +20,6 @@
 <li><b>prototype</b>: The QDir prototype object</li>
 <li><div class="fn"/><b>void addSearchPath(String prefix, String path)</b></li>
 <li><div class="fn"/><b>String cleanPath(String path)</b></li>
-<li><div class="fn"/><b>String convertSeparators(String pathName)</b></li>
 <li><div class="fn"/><b>QDir current()</b></li>
 <li><div class="fn"/><b>String currentPath()</b></li>
 <li><div class="fn"/><b>List drives()</b></li>
@@ -57,9 +56,9 @@
 <li><b>AccessMask = 0x3F0</b></li>
 <li><b>AllDirs = 0x400</b></li>
 <li><b>CaseSensitive = 0x800</b></li>
-<li><b>NoDotAndDotDot = 0x1000</b></li>
 <li><b>NoDot = 0x2000</b></li>
 <li><b>NoDotDot = 0x4000</b></li>
+<li><b>NoDotAndDotDot = NoDot|NoDotDot</b></li>
 <li><b>Filter( value )</b></li>
 <li><b>Filters( value1, value2, ... )</b></li>
 <li><b>NoSort = -1</b></li>
@@ -104,6 +103,7 @@
 <li><div class="fn"/><b>void refresh()</b></li>
 <li><div class="fn"/><b>String relativeFilePath(String fileName)</b></li>
 <li><div class="fn"/><b>bool remove(String fileName)</b></li>
+<li><div class="fn"/><b>bool removeRecursively()</b></li>
 <li><div class="fn"/><b>bool rename(String oldName, String newName)</b></li>
 <li><div class="fn"/><b>bool rmdir(String dirName)</b></li>
 <li><div class="fn"/><b>bool rmpath(String dirPath)</b></li>
@@ -112,6 +112,7 @@
 <li><div class="fn"/><b>void setPath(String path)</b></li>
 <li><div class="fn"/><b>void setSorting(SortFlags sort)</b></li>
 <li><div class="fn"/><b>SortFlags sorting()</b></li>
+<li><div class="fn"/><b>void swap(QDir other)</b></li>
 </ul>
 <h3>Instance Properties</h3>
 <p>QDir objects have no special properties beyond those inherited from the QDir prototype object.</p>

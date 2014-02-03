@@ -8,9 +8,9 @@
 class QtScriptShell_QGraphicsRectItem : public QGraphicsRectItem
 {
 public:
-    QtScriptShell_QGraphicsRectItem(QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsRectItem(const QRectF&  rect, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
-    QtScriptShell_QGraphicsRectItem(qreal  x, qreal  y, qreal  w, qreal  h, QGraphicsItem*  parent = 0, QGraphicsScene*  scene = 0);
+    QtScriptShell_QGraphicsRectItem(QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsRectItem(const QRectF&  rect, QGraphicsItem*  parent = 0);
+    QtScriptShell_QGraphicsRectItem(qreal  x, qreal  y, qreal  w, qreal  h, QGraphicsItem*  parent = 0);
     ~QtScriptShell_QGraphicsRectItem();
 
     void advance(int  phase);

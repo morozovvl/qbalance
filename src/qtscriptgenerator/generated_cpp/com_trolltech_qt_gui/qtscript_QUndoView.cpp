@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qundoview.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qitemselectionmodel.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
@@ -31,6 +30,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -42,7 +42,9 @@
 #include <qundogroup.h>
 #include <qundostack.h>
 #include <qundoview.h>
+#include <qvector.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QUndoView.h"
 
@@ -73,6 +75,18 @@ static const int qtscript_QUndoView_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QUndoView_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QUndoView : public QUndoView
+{
+
+    friend QScriptValue qtscript_QUndoView_prototype_call(QScriptContext *, QScriptEngine *);
+
+    friend struct QMetaTypeId< QAbstractItemView::DropIndicatorPosition >;
+    friend struct QMetaTypeId< QAbstractItemView::CursorAction >;
+    friend struct QMetaTypeId< QAbstractItemView::State >;
+};
+
 static QScriptValue qtscript_QUndoView_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -88,6 +102,7 @@ Q_DECLARE_METATYPE(QUndoView*)
 Q_DECLARE_METATYPE(QtScriptShell_QUndoView*)
 Q_DECLARE_METATYPE(QUndoGroup*)
 Q_DECLARE_METATYPE(QUndoStack*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QListView*)
 
 //
@@ -108,7 +123,7 @@ static QScriptValue qtscript_QUndoView_prototype_call(QScriptContext *context, Q
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QUndoView* _q_self = qscriptvalue_cast<QUndoView*>(context->thisObject());
+    qtscript_QUndoView* _q_self = reinterpret_cast<qtscript_QUndoView*>(qscriptvalue_cast<QUndoView*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QUndoView.%0(): this object is not a QUndoView")

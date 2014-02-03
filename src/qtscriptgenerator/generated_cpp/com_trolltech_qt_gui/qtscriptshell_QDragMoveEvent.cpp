@@ -3,9 +3,9 @@
 #include <QtScript/QScriptEngine>
 #include <QVariant>
 #include <qmimedata.h>
+#include <qobject.h>
 #include <qpoint.h>
 #include <qrect.h>
-#include <qwidget.h>
 
 #define QTSCRIPT_IS_GENERATED_FUNCTION(fun) ((fun.data().toUInt32() & 0xFFFF0000) == 0xBABE0000)
 

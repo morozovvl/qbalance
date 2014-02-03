@@ -6,11 +6,11 @@
 #include <qmetaobject.h>
 
 #include <qstyle.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qapplication.h>
 #include <qbytearray.h>
 #include <qcoreevent.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qobject.h>
 #include <qpainter.h>
@@ -127,6 +127,15 @@ static const int qtscript_QStyle_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyle_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyle : public QStyle
+{
+
+    friend QScriptValue qtscript_QStyle_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyle_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -140,22 +149,23 @@ static QScriptValue qtscript_QStyle_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QStyle*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyle*)
-Q_DECLARE_METATYPE(QStyle::PixelMetric)
+Q_DECLARE_METATYPE(QStyle::ControlElement)
 Q_DECLARE_METATYPE(QStyle::SubControl)
 Q_DECLARE_METATYPE(QFlags<QStyle::SubControl>)
+Q_DECLARE_METATYPE(QStyle::RequestSoftwareInputPanel)
 Q_DECLARE_METATYPE(QStyle::StandardPixmap)
+Q_DECLARE_METATYPE(QStyle::ComplexControl)
 Q_DECLARE_METATYPE(QStyle::StyleHint)
-Q_DECLARE_METATYPE(QStyle::PrimitiveElement)
-Q_DECLARE_METATYPE(QStyle::ControlElement)
-Q_DECLARE_METATYPE(QStyle::ContentsType)
 Q_DECLARE_METATYPE(QStyle::StateFlag)
 Q_DECLARE_METATYPE(QFlags<QStyle::StateFlag>)
-Q_DECLARE_METATYPE(QStyle::ComplexControl)
-Q_DECLARE_METATYPE(QStyle::RequestSoftwareInputPanel)
+Q_DECLARE_METATYPE(QStyle::ContentsType)
 Q_DECLARE_METATYPE(QStyle::SubElement)
+Q_DECLARE_METATYPE(QStyle::PrimitiveElement)
+Q_DECLARE_METATYPE(QStyle::PixelMetric)
 Q_DECLARE_METATYPE(QFlags<QSizePolicy::ControlType>)
 Q_DECLARE_METATYPE(Qt::Orientation)
 Q_DECLARE_METATYPE(QStyleOption*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QStyleOptionComplex*)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QPalette::ColorRole)
@@ -198,253 +208,163 @@ static QScriptValue qtscript_create_flags_class_helper(
 }
 
 //
-// QStyle::PixelMetric
+// QStyle::ControlElement
 //
 
-static const QStyle::PixelMetric qtscript_QStyle_PixelMetric_values[] = {
-    QStyle::PM_CustomBase
-    , QStyle::PM_ButtonMargin
-    , QStyle::PM_ButtonDefaultIndicator
-    , QStyle::PM_MenuButtonIndicator
-    , QStyle::PM_ButtonShiftHorizontal
-    , QStyle::PM_ButtonShiftVertical
-    , QStyle::PM_DefaultFrameWidth
-    , QStyle::PM_SpinBoxFrameWidth
-    , QStyle::PM_ComboBoxFrameWidth
-    , QStyle::PM_MaximumDragDistance
-    , QStyle::PM_ScrollBarExtent
-    , QStyle::PM_ScrollBarSliderMin
-    , QStyle::PM_SliderThickness
-    , QStyle::PM_SliderControlThickness
-    , QStyle::PM_SliderLength
-    , QStyle::PM_SliderTickmarkOffset
-    , QStyle::PM_SliderSpaceAvailable
-    , QStyle::PM_DockWidgetSeparatorExtent
-    , QStyle::PM_DockWidgetHandleExtent
-    , QStyle::PM_DockWidgetFrameWidth
-    , QStyle::PM_TabBarTabOverlap
-    , QStyle::PM_TabBarTabHSpace
-    , QStyle::PM_TabBarTabVSpace
-    , QStyle::PM_TabBarBaseHeight
-    , QStyle::PM_TabBarBaseOverlap
-    , QStyle::PM_ProgressBarChunkWidth
-    , QStyle::PM_SplitterWidth
-    , QStyle::PM_TitleBarHeight
-    , QStyle::PM_MenuScrollerHeight
-    , QStyle::PM_MenuHMargin
-    , QStyle::PM_MenuVMargin
-    , QStyle::PM_MenuPanelWidth
-    , QStyle::PM_MenuTearoffHeight
-    , QStyle::PM_MenuDesktopFrameWidth
-    , QStyle::PM_MenuBarPanelWidth
-    , QStyle::PM_MenuBarItemSpacing
-    , QStyle::PM_MenuBarVMargin
-    , QStyle::PM_MenuBarHMargin
-    , QStyle::PM_IndicatorWidth
-    , QStyle::PM_IndicatorHeight
-    , QStyle::PM_ExclusiveIndicatorWidth
-    , QStyle::PM_ExclusiveIndicatorHeight
-    , QStyle::PM_CheckListButtonSize
-    , QStyle::PM_CheckListControllerSize
-    , QStyle::PM_DialogButtonsSeparator
-    , QStyle::PM_DialogButtonsButtonWidth
-    , QStyle::PM_DialogButtonsButtonHeight
-    , QStyle::PM_MdiSubWindowFrameWidth
-    , QStyle::PM_MdiSubWindowMinimizedWidth
-    , QStyle::PM_HeaderMargin
-    , QStyle::PM_HeaderMarkSize
-    , QStyle::PM_HeaderGripMargin
-    , QStyle::PM_TabBarTabShiftHorizontal
-    , QStyle::PM_TabBarTabShiftVertical
-    , QStyle::PM_TabBarScrollButtonWidth
-    , QStyle::PM_ToolBarFrameWidth
-    , QStyle::PM_ToolBarHandleExtent
-    , QStyle::PM_ToolBarItemSpacing
-    , QStyle::PM_ToolBarItemMargin
-    , QStyle::PM_ToolBarSeparatorExtent
-    , QStyle::PM_ToolBarExtensionExtent
-    , QStyle::PM_SpinBoxSliderHeight
-    , QStyle::PM_DefaultTopLevelMargin
-    , QStyle::PM_DefaultChildMargin
-    , QStyle::PM_DefaultLayoutSpacing
-    , QStyle::PM_ToolBarIconSize
-    , QStyle::PM_ListViewIconSize
-    , QStyle::PM_IconViewIconSize
-    , QStyle::PM_SmallIconSize
-    , QStyle::PM_LargeIconSize
-    , QStyle::PM_FocusFrameVMargin
-    , QStyle::PM_FocusFrameHMargin
-    , QStyle::PM_ToolTipLabelFrameWidth
-    , QStyle::PM_CheckBoxLabelSpacing
-    , QStyle::PM_TabBarIconSize
-    , QStyle::PM_SizeGripSize
-    , QStyle::PM_DockWidgetTitleMargin
-    , QStyle::PM_MessageBoxIconSize
-    , QStyle::PM_ButtonIconSize
-    , QStyle::PM_DockWidgetTitleBarButtonMargin
-    , QStyle::PM_RadioButtonLabelSpacing
-    , QStyle::PM_LayoutLeftMargin
-    , QStyle::PM_LayoutTopMargin
-    , QStyle::PM_LayoutRightMargin
-    , QStyle::PM_LayoutBottomMargin
-    , QStyle::PM_LayoutHorizontalSpacing
-    , QStyle::PM_LayoutVerticalSpacing
-    , QStyle::PM_TabBar_ScrollButtonOverlap
-    , QStyle::PM_TextCursorWidth
-    , QStyle::PM_TabCloseIndicatorWidth
-    , QStyle::PM_TabCloseIndicatorHeight
-    , QStyle::PM_ScrollView_ScrollBarSpacing
-    , QStyle::PM_SubMenuOverlap
+static const QStyle::ControlElement qtscript_QStyle_ControlElement_values[] = {
+    QStyle::CE_CustomBase
+    , QStyle::CE_PushButton
+    , QStyle::CE_PushButtonBevel
+    , QStyle::CE_PushButtonLabel
+    , QStyle::CE_CheckBox
+    , QStyle::CE_CheckBoxLabel
+    , QStyle::CE_RadioButton
+    , QStyle::CE_RadioButtonLabel
+    , QStyle::CE_TabBarTab
+    , QStyle::CE_TabBarTabShape
+    , QStyle::CE_TabBarTabLabel
+    , QStyle::CE_ProgressBar
+    , QStyle::CE_ProgressBarGroove
+    , QStyle::CE_ProgressBarContents
+    , QStyle::CE_ProgressBarLabel
+    , QStyle::CE_MenuItem
+    , QStyle::CE_MenuScroller
+    , QStyle::CE_MenuVMargin
+    , QStyle::CE_MenuHMargin
+    , QStyle::CE_MenuTearoff
+    , QStyle::CE_MenuEmptyArea
+    , QStyle::CE_MenuBarItem
+    , QStyle::CE_MenuBarEmptyArea
+    , QStyle::CE_ToolButtonLabel
+    , QStyle::CE_Header
+    , QStyle::CE_HeaderSection
+    , QStyle::CE_HeaderLabel
+    , QStyle::CE_ToolBoxTab
+    , QStyle::CE_SizeGrip
+    , QStyle::CE_Splitter
+    , QStyle::CE_RubberBand
+    , QStyle::CE_DockWidgetTitle
+    , QStyle::CE_ScrollBarAddLine
+    , QStyle::CE_ScrollBarSubLine
+    , QStyle::CE_ScrollBarAddPage
+    , QStyle::CE_ScrollBarSubPage
+    , QStyle::CE_ScrollBarSlider
+    , QStyle::CE_ScrollBarFirst
+    , QStyle::CE_ScrollBarLast
+    , QStyle::CE_FocusFrame
+    , QStyle::CE_ComboBoxLabel
+    , QStyle::CE_ToolBar
+    , QStyle::CE_ToolBoxTabShape
+    , QStyle::CE_ToolBoxTabLabel
+    , QStyle::CE_HeaderEmptyArea
+    , QStyle::CE_ColumnViewGrip
+    , QStyle::CE_ItemViewItem
+    , QStyle::CE_ShapedFrame
 };
 
-static const char * const qtscript_QStyle_PixelMetric_keys[] = {
-    "PM_CustomBase"
-    , "PM_ButtonMargin"
-    , "PM_ButtonDefaultIndicator"
-    , "PM_MenuButtonIndicator"
-    , "PM_ButtonShiftHorizontal"
-    , "PM_ButtonShiftVertical"
-    , "PM_DefaultFrameWidth"
-    , "PM_SpinBoxFrameWidth"
-    , "PM_ComboBoxFrameWidth"
-    , "PM_MaximumDragDistance"
-    , "PM_ScrollBarExtent"
-    , "PM_ScrollBarSliderMin"
-    , "PM_SliderThickness"
-    , "PM_SliderControlThickness"
-    , "PM_SliderLength"
-    , "PM_SliderTickmarkOffset"
-    , "PM_SliderSpaceAvailable"
-    , "PM_DockWidgetSeparatorExtent"
-    , "PM_DockWidgetHandleExtent"
-    , "PM_DockWidgetFrameWidth"
-    , "PM_TabBarTabOverlap"
-    , "PM_TabBarTabHSpace"
-    , "PM_TabBarTabVSpace"
-    , "PM_TabBarBaseHeight"
-    , "PM_TabBarBaseOverlap"
-    , "PM_ProgressBarChunkWidth"
-    , "PM_SplitterWidth"
-    , "PM_TitleBarHeight"
-    , "PM_MenuScrollerHeight"
-    , "PM_MenuHMargin"
-    , "PM_MenuVMargin"
-    , "PM_MenuPanelWidth"
-    , "PM_MenuTearoffHeight"
-    , "PM_MenuDesktopFrameWidth"
-    , "PM_MenuBarPanelWidth"
-    , "PM_MenuBarItemSpacing"
-    , "PM_MenuBarVMargin"
-    , "PM_MenuBarHMargin"
-    , "PM_IndicatorWidth"
-    , "PM_IndicatorHeight"
-    , "PM_ExclusiveIndicatorWidth"
-    , "PM_ExclusiveIndicatorHeight"
-    , "PM_CheckListButtonSize"
-    , "PM_CheckListControllerSize"
-    , "PM_DialogButtonsSeparator"
-    , "PM_DialogButtonsButtonWidth"
-    , "PM_DialogButtonsButtonHeight"
-    , "PM_MdiSubWindowFrameWidth"
-    , "PM_MdiSubWindowMinimizedWidth"
-    , "PM_HeaderMargin"
-    , "PM_HeaderMarkSize"
-    , "PM_HeaderGripMargin"
-    , "PM_TabBarTabShiftHorizontal"
-    , "PM_TabBarTabShiftVertical"
-    , "PM_TabBarScrollButtonWidth"
-    , "PM_ToolBarFrameWidth"
-    , "PM_ToolBarHandleExtent"
-    , "PM_ToolBarItemSpacing"
-    , "PM_ToolBarItemMargin"
-    , "PM_ToolBarSeparatorExtent"
-    , "PM_ToolBarExtensionExtent"
-    , "PM_SpinBoxSliderHeight"
-    , "PM_DefaultTopLevelMargin"
-    , "PM_DefaultChildMargin"
-    , "PM_DefaultLayoutSpacing"
-    , "PM_ToolBarIconSize"
-    , "PM_ListViewIconSize"
-    , "PM_IconViewIconSize"
-    , "PM_SmallIconSize"
-    , "PM_LargeIconSize"
-    , "PM_FocusFrameVMargin"
-    , "PM_FocusFrameHMargin"
-    , "PM_ToolTipLabelFrameWidth"
-    , "PM_CheckBoxLabelSpacing"
-    , "PM_TabBarIconSize"
-    , "PM_SizeGripSize"
-    , "PM_DockWidgetTitleMargin"
-    , "PM_MessageBoxIconSize"
-    , "PM_ButtonIconSize"
-    , "PM_DockWidgetTitleBarButtonMargin"
-    , "PM_RadioButtonLabelSpacing"
-    , "PM_LayoutLeftMargin"
-    , "PM_LayoutTopMargin"
-    , "PM_LayoutRightMargin"
-    , "PM_LayoutBottomMargin"
-    , "PM_LayoutHorizontalSpacing"
-    , "PM_LayoutVerticalSpacing"
-    , "PM_TabBar_ScrollButtonOverlap"
-    , "PM_TextCursorWidth"
-    , "PM_TabCloseIndicatorWidth"
-    , "PM_TabCloseIndicatorHeight"
-    , "PM_ScrollView_ScrollBarSpacing"
-    , "PM_SubMenuOverlap"
+static const char * const qtscript_QStyle_ControlElement_keys[] = {
+    "CE_CustomBase"
+    , "CE_PushButton"
+    , "CE_PushButtonBevel"
+    , "CE_PushButtonLabel"
+    , "CE_CheckBox"
+    , "CE_CheckBoxLabel"
+    , "CE_RadioButton"
+    , "CE_RadioButtonLabel"
+    , "CE_TabBarTab"
+    , "CE_TabBarTabShape"
+    , "CE_TabBarTabLabel"
+    , "CE_ProgressBar"
+    , "CE_ProgressBarGroove"
+    , "CE_ProgressBarContents"
+    , "CE_ProgressBarLabel"
+    , "CE_MenuItem"
+    , "CE_MenuScroller"
+    , "CE_MenuVMargin"
+    , "CE_MenuHMargin"
+    , "CE_MenuTearoff"
+    , "CE_MenuEmptyArea"
+    , "CE_MenuBarItem"
+    , "CE_MenuBarEmptyArea"
+    , "CE_ToolButtonLabel"
+    , "CE_Header"
+    , "CE_HeaderSection"
+    , "CE_HeaderLabel"
+    , "CE_ToolBoxTab"
+    , "CE_SizeGrip"
+    , "CE_Splitter"
+    , "CE_RubberBand"
+    , "CE_DockWidgetTitle"
+    , "CE_ScrollBarAddLine"
+    , "CE_ScrollBarSubLine"
+    , "CE_ScrollBarAddPage"
+    , "CE_ScrollBarSubPage"
+    , "CE_ScrollBarSlider"
+    , "CE_ScrollBarFirst"
+    , "CE_ScrollBarLast"
+    , "CE_FocusFrame"
+    , "CE_ComboBoxLabel"
+    , "CE_ToolBar"
+    , "CE_ToolBoxTabShape"
+    , "CE_ToolBoxTabLabel"
+    , "CE_HeaderEmptyArea"
+    , "CE_ColumnViewGrip"
+    , "CE_ItemViewItem"
+    , "CE_ShapedFrame"
 };
 
-static QString qtscript_QStyle_PixelMetric_toStringHelper(QStyle::PixelMetric value)
+static QString qtscript_QStyle_ControlElement_toStringHelper(QStyle::ControlElement value)
 {
-    for (int i = 0; i < 93; ++i) {
-        if (qtscript_QStyle_PixelMetric_values[i] == value)
-            return QString::fromLatin1(qtscript_QStyle_PixelMetric_keys[i]);
+    for (int i = 0; i < 48; ++i) {
+        if (qtscript_QStyle_ControlElement_values[i] == value)
+            return QString::fromLatin1(qtscript_QStyle_ControlElement_keys[i]);
     }
     return QString();
 }
 
-static QScriptValue qtscript_QStyle_PixelMetric_toScriptValue(QScriptEngine *engine, const QStyle::PixelMetric &value)
+static QScriptValue qtscript_QStyle_ControlElement_toScriptValue(QScriptEngine *engine, const QStyle::ControlElement &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
-    return clazz.property(qtscript_QStyle_PixelMetric_toStringHelper(value));
+    return clazz.property(qtscript_QStyle_ControlElement_toStringHelper(value));
 }
 
-static void qtscript_QStyle_PixelMetric_fromScriptValue(const QScriptValue &value, QStyle::PixelMetric &out)
+static void qtscript_QStyle_ControlElement_fromScriptValue(const QScriptValue &value, QStyle::ControlElement &out)
 {
-    out = qvariant_cast<QStyle::PixelMetric>(value.toVariant());
+    out = qvariant_cast<QStyle::ControlElement>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QStyle_PixelMetric(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QStyle_ControlElement(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 93; ++i) {
-        if (qtscript_QStyle_PixelMetric_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QStyle::PixelMetric>(arg));
+    for (int i = 0; i < 48; ++i) {
+        if (qtscript_QStyle_ControlElement_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QStyle::ControlElement>(arg));
     }
-    return context->throwError(QString::fromLatin1("PixelMetric(): invalid enum value (%0)").arg(arg));
+    return context->throwError(QString::fromLatin1("ControlElement(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QStyle_PixelMetric_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyle_ControlElement_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyle::PixelMetric value = qscriptvalue_cast<QStyle::PixelMetric>(context->thisObject());
+    QStyle::ControlElement value = qscriptvalue_cast<QStyle::ControlElement>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QStyle_PixelMetric_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyle_ControlElement_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyle::PixelMetric value = qscriptvalue_cast<QStyle::PixelMetric>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyle_PixelMetric_toStringHelper(value));
+    QStyle::ControlElement value = qscriptvalue_cast<QStyle::ControlElement>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyle_ControlElement_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QStyle_PixelMetric_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QStyle_ControlElement_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyle_PixelMetric,
-        qtscript_QStyle_PixelMetric_valueOf, qtscript_QStyle_PixelMetric_toString);
-    qScriptRegisterMetaType<QStyle::PixelMetric>(engine, qtscript_QStyle_PixelMetric_toScriptValue,
-        qtscript_QStyle_PixelMetric_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 93; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_PixelMetric_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyle_PixelMetric_values[i])),
+        engine, qtscript_construct_QStyle_ControlElement,
+        qtscript_QStyle_ControlElement_valueOf, qtscript_QStyle_ControlElement_toString);
+    qScriptRegisterMetaType<QStyle::ControlElement>(engine, qtscript_QStyle_ControlElement_toScriptValue,
+        qtscript_QStyle_ControlElement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 48; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_ControlElement_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyle_ControlElement_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -618,6 +538,73 @@ static QScriptValue qtscript_create_QStyle_SubControls_class(QScriptEngine *engi
 }
 
 //
+// QStyle::RequestSoftwareInputPanel
+//
+
+static const QStyle::RequestSoftwareInputPanel qtscript_QStyle_RequestSoftwareInputPanel_values[] = {
+    QStyle::RSIP_OnMouseClickAndAlreadyFocused
+    , QStyle::RSIP_OnMouseClick
+};
+
+static const char * const qtscript_QStyle_RequestSoftwareInputPanel_keys[] = {
+    "RSIP_OnMouseClickAndAlreadyFocused"
+    , "RSIP_OnMouseClick"
+};
+
+static QString qtscript_QStyle_RequestSoftwareInputPanel_toStringHelper(QStyle::RequestSoftwareInputPanel value)
+{
+    if ((value >= QStyle::RSIP_OnMouseClickAndAlreadyFocused) && (value <= QStyle::RSIP_OnMouseClick))
+        return qtscript_QStyle_RequestSoftwareInputPanel_keys[static_cast<int>(value)-static_cast<int>(QStyle::RSIP_OnMouseClickAndAlreadyFocused)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyle_RequestSoftwareInputPanel_toScriptValue(QScriptEngine *engine, const QStyle::RequestSoftwareInputPanel &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
+    return clazz.property(qtscript_QStyle_RequestSoftwareInputPanel_toStringHelper(value));
+}
+
+static void qtscript_QStyle_RequestSoftwareInputPanel_fromScriptValue(const QScriptValue &value, QStyle::RequestSoftwareInputPanel &out)
+{
+    out = qvariant_cast<QStyle::RequestSoftwareInputPanel>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyle_RequestSoftwareInputPanel(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyle::RSIP_OnMouseClickAndAlreadyFocused) && (arg <= QStyle::RSIP_OnMouseClick))
+        return qScriptValueFromValue(engine,  static_cast<QStyle::RequestSoftwareInputPanel>(arg));
+    return context->throwError(QString::fromLatin1("RequestSoftwareInputPanel(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyle_RequestSoftwareInputPanel_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::RequestSoftwareInputPanel value = qscriptvalue_cast<QStyle::RequestSoftwareInputPanel>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyle_RequestSoftwareInputPanel_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::RequestSoftwareInputPanel value = qscriptvalue_cast<QStyle::RequestSoftwareInputPanel>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyle_RequestSoftwareInputPanel_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyle_RequestSoftwareInputPanel_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyle_RequestSoftwareInputPanel,
+        qtscript_QStyle_RequestSoftwareInputPanel_valueOf, qtscript_QStyle_RequestSoftwareInputPanel_toString);
+    qScriptRegisterMetaType<QStyle::RequestSoftwareInputPanel>(engine, qtscript_QStyle_RequestSoftwareInputPanel_toScriptValue,
+        qtscript_QStyle_RequestSoftwareInputPanel_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_RequestSoftwareInputPanel_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyle_RequestSoftwareInputPanel_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyle::StandardPixmap
 //
 
@@ -647,6 +634,7 @@ static const QStyle::StandardPixmap qtscript_QStyle_StandardPixmap_values[] = {
     , QStyle::SP_DirOpenIcon
     , QStyle::SP_DirClosedIcon
     , QStyle::SP_DirLinkIcon
+    , QStyle::SP_DirLinkOpenIcon
     , QStyle::SP_FileIcon
     , QStyle::SP_FileLinkIcon
     , QStyle::SP_ToolBarHorizontalExtensionButton
@@ -720,6 +708,7 @@ static const char * const qtscript_QStyle_StandardPixmap_keys[] = {
     , "SP_DirOpenIcon"
     , "SP_DirClosedIcon"
     , "SP_DirLinkIcon"
+    , "SP_DirLinkOpenIcon"
     , "SP_FileIcon"
     , "SP_FileLinkIcon"
     , "SP_ToolBarHorizontalExtensionButton"
@@ -769,7 +758,7 @@ static const char * const qtscript_QStyle_StandardPixmap_keys[] = {
 
 static QString qtscript_QStyle_StandardPixmap_toStringHelper(QStyle::StandardPixmap value)
 {
-    for (int i = 0; i < 70; ++i) {
+    for (int i = 0; i < 71; ++i) {
         if (qtscript_QStyle_StandardPixmap_values[i] == value)
             return QString::fromLatin1(qtscript_QStyle_StandardPixmap_keys[i]);
     }
@@ -790,7 +779,7 @@ static void qtscript_QStyle_StandardPixmap_fromScriptValue(const QScriptValue &v
 static QScriptValue qtscript_construct_QStyle_StandardPixmap(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 70; ++i) {
+    for (int i = 0; i < 71; ++i) {
         if (qtscript_QStyle_StandardPixmap_values[i] == arg)
             return qScriptValueFromValue(engine,  static_cast<QStyle::StandardPixmap>(arg));
     }
@@ -816,9 +805,96 @@ static QScriptValue qtscript_create_QStyle_StandardPixmap_class(QScriptEngine *e
         qtscript_QStyle_StandardPixmap_valueOf, qtscript_QStyle_StandardPixmap_toString);
     qScriptRegisterMetaType<QStyle::StandardPixmap>(engine, qtscript_QStyle_StandardPixmap_toScriptValue,
         qtscript_QStyle_StandardPixmap_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 70; ++i) {
+    for (int i = 0; i < 71; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QStyle_StandardPixmap_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QStyle_StandardPixmap_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyle::ComplexControl
+//
+
+static const QStyle::ComplexControl qtscript_QStyle_ComplexControl_values[] = {
+    QStyle::CC_CustomBase
+    , QStyle::CC_SpinBox
+    , QStyle::CC_ComboBox
+    , QStyle::CC_ScrollBar
+    , QStyle::CC_Slider
+    , QStyle::CC_ToolButton
+    , QStyle::CC_TitleBar
+    , QStyle::CC_Dial
+    , QStyle::CC_GroupBox
+    , QStyle::CC_MdiControls
+};
+
+static const char * const qtscript_QStyle_ComplexControl_keys[] = {
+    "CC_CustomBase"
+    , "CC_SpinBox"
+    , "CC_ComboBox"
+    , "CC_ScrollBar"
+    , "CC_Slider"
+    , "CC_ToolButton"
+    , "CC_TitleBar"
+    , "CC_Dial"
+    , "CC_GroupBox"
+    , "CC_MdiControls"
+};
+
+static QString qtscript_QStyle_ComplexControl_toStringHelper(QStyle::ComplexControl value)
+{
+    for (int i = 0; i < 10; ++i) {
+        if (qtscript_QStyle_ComplexControl_values[i] == value)
+            return QString::fromLatin1(qtscript_QStyle_ComplexControl_keys[i]);
+    }
+    return QString();
+}
+
+static QScriptValue qtscript_QStyle_ComplexControl_toScriptValue(QScriptEngine *engine, const QStyle::ComplexControl &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
+    return clazz.property(qtscript_QStyle_ComplexControl_toStringHelper(value));
+}
+
+static void qtscript_QStyle_ComplexControl_fromScriptValue(const QScriptValue &value, QStyle::ComplexControl &out)
+{
+    out = qvariant_cast<QStyle::ComplexControl>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyle_ComplexControl(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    for (int i = 0; i < 10; ++i) {
+        if (qtscript_QStyle_ComplexControl_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QStyle::ComplexControl>(arg));
+    }
+    return context->throwError(QString::fromLatin1("ComplexControl(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyle_ComplexControl_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::ComplexControl value = qscriptvalue_cast<QStyle::ComplexControl>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyle_ComplexControl_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::ComplexControl value = qscriptvalue_cast<QStyle::ComplexControl>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyle_ComplexControl_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyle_ComplexControl_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyle_ComplexControl,
+        qtscript_QStyle_ComplexControl_valueOf, qtscript_QStyle_ComplexControl_toString);
+    qScriptRegisterMetaType<QStyle::ComplexControl>(engine, qtscript_QStyle_ComplexControl_toScriptValue,
+        qtscript_QStyle_ComplexControl_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 10; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_ComplexControl_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyle_ComplexControl_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -870,7 +946,7 @@ static const QStyle::StyleHint qtscript_QStyle_StyleHint_values[] = {
     , QStyle::SH_ToolBox_SelectedPageTitleBold
     , QStyle::SH_TabBar_PreferNoArrows
     , QStyle::SH_ScrollBar_LeftClickAbsolutePosition
-    , QStyle::SH_Q3ListViewExpand_SelectMouseType
+    , QStyle::SH_ListViewExpand_SelectMouseType
     , QStyle::SH_UnderlineShortcut
     , QStyle::SH_SpinBox_AnimateButton
     , QStyle::SH_SpinBox_KeyPressAutoRepeatRate
@@ -880,7 +956,6 @@ static const QStyle::StyleHint qtscript_QStyle_StyleHint_values[] = {
     , QStyle::SH_DrawMenuBarSeparator
     , QStyle::SH_TitleBar_ModifyNotification
     , QStyle::SH_Button_FocusPolicy
-    , QStyle::SH_MenuBar_DismissOnSecondClick
     , QStyle::SH_MessageBox_UseBorderForButtonSpacing
     , QStyle::SH_TitleBar_AutoRaise
     , QStyle::SH_ToolButton_PopupDelay
@@ -928,6 +1003,8 @@ static const QStyle::StyleHint qtscript_QStyle_StyleHint_values[] = {
     , QStyle::SH_DockWidget_ButtonsHaveFrame
     , QStyle::SH_ToolButtonStyle
     , QStyle::SH_RequestSoftwareInputPanel
+    , QStyle::SH_ScrollBar_Transient
+    , QStyle::SH_Menu_SupportsSections
 };
 
 static const char * const qtscript_QStyle_StyleHint_keys[] = {
@@ -972,7 +1049,7 @@ static const char * const qtscript_QStyle_StyleHint_keys[] = {
     , "SH_ToolBox_SelectedPageTitleBold"
     , "SH_TabBar_PreferNoArrows"
     , "SH_ScrollBar_LeftClickAbsolutePosition"
-    , "SH_Q3ListViewExpand_SelectMouseType"
+    , "SH_ListViewExpand_SelectMouseType"
     , "SH_UnderlineShortcut"
     , "SH_SpinBox_AnimateButton"
     , "SH_SpinBox_KeyPressAutoRepeatRate"
@@ -982,7 +1059,6 @@ static const char * const qtscript_QStyle_StyleHint_keys[] = {
     , "SH_DrawMenuBarSeparator"
     , "SH_TitleBar_ModifyNotification"
     , "SH_Button_FocusPolicy"
-    , "SH_MenuBar_DismissOnSecondClick"
     , "SH_MessageBox_UseBorderForButtonSpacing"
     , "SH_TitleBar_AutoRaise"
     , "SH_ToolButton_PopupDelay"
@@ -1030,11 +1106,13 @@ static const char * const qtscript_QStyle_StyleHint_keys[] = {
     , "SH_DockWidget_ButtonsHaveFrame"
     , "SH_ToolButtonStyle"
     , "SH_RequestSoftwareInputPanel"
+    , "SH_ScrollBar_Transient"
+    , "SH_Menu_SupportsSections"
 };
 
 static QString qtscript_QStyle_StyleHint_toStringHelper(QStyle::StyleHint value)
 {
-    for (int i = 0; i < 99; ++i) {
+    for (int i = 0; i < 100; ++i) {
         if (qtscript_QStyle_StyleHint_values[i] == value)
             return QString::fromLatin1(qtscript_QStyle_StyleHint_keys[i]);
     }
@@ -1055,7 +1133,7 @@ static void qtscript_QStyle_StyleHint_fromScriptValue(const QScriptValue &value,
 static QScriptValue qtscript_construct_QStyle_StyleHint(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 99; ++i) {
+    for (int i = 0; i < 100; ++i) {
         if (qtscript_QStyle_StyleHint_values[i] == arg)
             return qScriptValueFromValue(engine,  static_cast<QStyle::StyleHint>(arg));
     }
@@ -1081,470 +1159,9 @@ static QScriptValue qtscript_create_QStyle_StyleHint_class(QScriptEngine *engine
         qtscript_QStyle_StyleHint_valueOf, qtscript_QStyle_StyleHint_toString);
     qScriptRegisterMetaType<QStyle::StyleHint>(engine, qtscript_QStyle_StyleHint_toScriptValue,
         qtscript_QStyle_StyleHint_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 99; ++i) {
+    for (int i = 0; i < 100; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QStyle_StyleHint_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QStyle_StyleHint_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyle::PrimitiveElement
-//
-
-static const QStyle::PrimitiveElement qtscript_QStyle_PrimitiveElement_values[] = {
-    QStyle::PE_Q3CheckListController
-    , QStyle::PE_Q3CheckListExclusiveIndicator
-    , QStyle::PE_Q3CheckListIndicator
-    , QStyle::PE_Q3DockWindowSeparator
-    , QStyle::PE_Q3Separator
-    , QStyle::PE_Frame
-    , QStyle::PE_FrameDefaultButton
-    , QStyle::PE_FrameDockWidget
-    , QStyle::PE_FrameFocusRect
-    , QStyle::PE_FrameGroupBox
-    , QStyle::PE_FrameLineEdit
-    , QStyle::PE_FrameMenu
-    , QStyle::PE_FrameStatusBar
-    , QStyle::PE_FrameTabWidget
-    , QStyle::PE_FrameWindow
-    , QStyle::PE_FrameButtonBevel
-    , QStyle::PE_FrameButtonTool
-    , QStyle::PE_FrameTabBarBase
-    , QStyle::PE_PanelButtonCommand
-    , QStyle::PE_PanelButtonBevel
-    , QStyle::PE_PanelButtonTool
-    , QStyle::PE_PanelMenuBar
-    , QStyle::PE_PanelToolBar
-    , QStyle::PE_PanelLineEdit
-    , QStyle::PE_IndicatorArrowDown
-    , QStyle::PE_IndicatorArrowLeft
-    , QStyle::PE_IndicatorArrowRight
-    , QStyle::PE_IndicatorArrowUp
-    , QStyle::PE_IndicatorBranch
-    , QStyle::PE_IndicatorButtonDropDown
-    , QStyle::PE_IndicatorViewItemCheck
-    , QStyle::PE_IndicatorCheckBox
-    , QStyle::PE_IndicatorDockWidgetResizeHandle
-    , QStyle::PE_IndicatorHeaderArrow
-    , QStyle::PE_IndicatorMenuCheckMark
-    , QStyle::PE_IndicatorProgressChunk
-    , QStyle::PE_IndicatorRadioButton
-    , QStyle::PE_IndicatorSpinDown
-    , QStyle::PE_IndicatorSpinMinus
-    , QStyle::PE_IndicatorSpinPlus
-    , QStyle::PE_IndicatorSpinUp
-    , QStyle::PE_IndicatorToolBarHandle
-    , QStyle::PE_IndicatorToolBarSeparator
-    , QStyle::PE_PanelTipLabel
-    , QStyle::PE_IndicatorTabTear
-    , QStyle::PE_PanelScrollAreaCorner
-    , QStyle::PE_Widget
-    , QStyle::PE_IndicatorColumnViewArrow
-    , QStyle::PE_IndicatorItemViewItemDrop
-    , QStyle::PE_PanelItemViewItem
-    , QStyle::PE_PanelItemViewRow
-    , QStyle::PE_PanelStatusBar
-    , QStyle::PE_IndicatorTabClose
-    , QStyle::PE_PanelMenu
-    , QStyle::PE_CustomBase
-};
-
-static const char * const qtscript_QStyle_PrimitiveElement_keys[] = {
-    "PE_Q3CheckListController"
-    , "PE_Q3CheckListExclusiveIndicator"
-    , "PE_Q3CheckListIndicator"
-    , "PE_Q3DockWindowSeparator"
-    , "PE_Q3Separator"
-    , "PE_Frame"
-    , "PE_FrameDefaultButton"
-    , "PE_FrameDockWidget"
-    , "PE_FrameFocusRect"
-    , "PE_FrameGroupBox"
-    , "PE_FrameLineEdit"
-    , "PE_FrameMenu"
-    , "PE_FrameStatusBar"
-    , "PE_FrameTabWidget"
-    , "PE_FrameWindow"
-    , "PE_FrameButtonBevel"
-    , "PE_FrameButtonTool"
-    , "PE_FrameTabBarBase"
-    , "PE_PanelButtonCommand"
-    , "PE_PanelButtonBevel"
-    , "PE_PanelButtonTool"
-    , "PE_PanelMenuBar"
-    , "PE_PanelToolBar"
-    , "PE_PanelLineEdit"
-    , "PE_IndicatorArrowDown"
-    , "PE_IndicatorArrowLeft"
-    , "PE_IndicatorArrowRight"
-    , "PE_IndicatorArrowUp"
-    , "PE_IndicatorBranch"
-    , "PE_IndicatorButtonDropDown"
-    , "PE_IndicatorViewItemCheck"
-    , "PE_IndicatorCheckBox"
-    , "PE_IndicatorDockWidgetResizeHandle"
-    , "PE_IndicatorHeaderArrow"
-    , "PE_IndicatorMenuCheckMark"
-    , "PE_IndicatorProgressChunk"
-    , "PE_IndicatorRadioButton"
-    , "PE_IndicatorSpinDown"
-    , "PE_IndicatorSpinMinus"
-    , "PE_IndicatorSpinPlus"
-    , "PE_IndicatorSpinUp"
-    , "PE_IndicatorToolBarHandle"
-    , "PE_IndicatorToolBarSeparator"
-    , "PE_PanelTipLabel"
-    , "PE_IndicatorTabTear"
-    , "PE_PanelScrollAreaCorner"
-    , "PE_Widget"
-    , "PE_IndicatorColumnViewArrow"
-    , "PE_IndicatorItemViewItemDrop"
-    , "PE_PanelItemViewItem"
-    , "PE_PanelItemViewRow"
-    , "PE_PanelStatusBar"
-    , "PE_IndicatorTabClose"
-    , "PE_PanelMenu"
-    , "PE_CustomBase"
-};
-
-static QString qtscript_QStyle_PrimitiveElement_toStringHelper(QStyle::PrimitiveElement value)
-{
-    for (int i = 0; i < 55; ++i) {
-        if (qtscript_QStyle_PrimitiveElement_values[i] == value)
-            return QString::fromLatin1(qtscript_QStyle_PrimitiveElement_keys[i]);
-    }
-    return QString();
-}
-
-static QScriptValue qtscript_QStyle_PrimitiveElement_toScriptValue(QScriptEngine *engine, const QStyle::PrimitiveElement &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
-    return clazz.property(qtscript_QStyle_PrimitiveElement_toStringHelper(value));
-}
-
-static void qtscript_QStyle_PrimitiveElement_fromScriptValue(const QScriptValue &value, QStyle::PrimitiveElement &out)
-{
-    out = qvariant_cast<QStyle::PrimitiveElement>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyle_PrimitiveElement(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 55; ++i) {
-        if (qtscript_QStyle_PrimitiveElement_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QStyle::PrimitiveElement>(arg));
-    }
-    return context->throwError(QString::fromLatin1("PrimitiveElement(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyle_PrimitiveElement_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::PrimitiveElement value = qscriptvalue_cast<QStyle::PrimitiveElement>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyle_PrimitiveElement_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::PrimitiveElement value = qscriptvalue_cast<QStyle::PrimitiveElement>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyle_PrimitiveElement_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyle_PrimitiveElement_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyle_PrimitiveElement,
-        qtscript_QStyle_PrimitiveElement_valueOf, qtscript_QStyle_PrimitiveElement_toString);
-    qScriptRegisterMetaType<QStyle::PrimitiveElement>(engine, qtscript_QStyle_PrimitiveElement_toScriptValue,
-        qtscript_QStyle_PrimitiveElement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 55; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_PrimitiveElement_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyle_PrimitiveElement_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyle::ControlElement
-//
-
-static const QStyle::ControlElement qtscript_QStyle_ControlElement_values[] = {
-    QStyle::CE_CustomBase
-    , QStyle::CE_PushButton
-    , QStyle::CE_PushButtonBevel
-    , QStyle::CE_PushButtonLabel
-    , QStyle::CE_CheckBox
-    , QStyle::CE_CheckBoxLabel
-    , QStyle::CE_RadioButton
-    , QStyle::CE_RadioButtonLabel
-    , QStyle::CE_TabBarTab
-    , QStyle::CE_TabBarTabShape
-    , QStyle::CE_TabBarTabLabel
-    , QStyle::CE_ProgressBar
-    , QStyle::CE_ProgressBarGroove
-    , QStyle::CE_ProgressBarContents
-    , QStyle::CE_ProgressBarLabel
-    , QStyle::CE_MenuItem
-    , QStyle::CE_MenuScroller
-    , QStyle::CE_MenuVMargin
-    , QStyle::CE_MenuHMargin
-    , QStyle::CE_MenuTearoff
-    , QStyle::CE_MenuEmptyArea
-    , QStyle::CE_MenuBarItem
-    , QStyle::CE_MenuBarEmptyArea
-    , QStyle::CE_ToolButtonLabel
-    , QStyle::CE_Header
-    , QStyle::CE_HeaderSection
-    , QStyle::CE_HeaderLabel
-    , QStyle::CE_Q3DockWindowEmptyArea
-    , QStyle::CE_ToolBoxTab
-    , QStyle::CE_SizeGrip
-    , QStyle::CE_Splitter
-    , QStyle::CE_RubberBand
-    , QStyle::CE_DockWidgetTitle
-    , QStyle::CE_ScrollBarAddLine
-    , QStyle::CE_ScrollBarSubLine
-    , QStyle::CE_ScrollBarAddPage
-    , QStyle::CE_ScrollBarSubPage
-    , QStyle::CE_ScrollBarSlider
-    , QStyle::CE_ScrollBarFirst
-    , QStyle::CE_ScrollBarLast
-    , QStyle::CE_FocusFrame
-    , QStyle::CE_ComboBoxLabel
-    , QStyle::CE_ToolBar
-    , QStyle::CE_ToolBoxTabShape
-    , QStyle::CE_ToolBoxTabLabel
-    , QStyle::CE_HeaderEmptyArea
-    , QStyle::CE_ColumnViewGrip
-    , QStyle::CE_ItemViewItem
-    , QStyle::CE_ShapedFrame
-};
-
-static const char * const qtscript_QStyle_ControlElement_keys[] = {
-    "CE_CustomBase"
-    , "CE_PushButton"
-    , "CE_PushButtonBevel"
-    , "CE_PushButtonLabel"
-    , "CE_CheckBox"
-    , "CE_CheckBoxLabel"
-    , "CE_RadioButton"
-    , "CE_RadioButtonLabel"
-    , "CE_TabBarTab"
-    , "CE_TabBarTabShape"
-    , "CE_TabBarTabLabel"
-    , "CE_ProgressBar"
-    , "CE_ProgressBarGroove"
-    , "CE_ProgressBarContents"
-    , "CE_ProgressBarLabel"
-    , "CE_MenuItem"
-    , "CE_MenuScroller"
-    , "CE_MenuVMargin"
-    , "CE_MenuHMargin"
-    , "CE_MenuTearoff"
-    , "CE_MenuEmptyArea"
-    , "CE_MenuBarItem"
-    , "CE_MenuBarEmptyArea"
-    , "CE_ToolButtonLabel"
-    , "CE_Header"
-    , "CE_HeaderSection"
-    , "CE_HeaderLabel"
-    , "CE_Q3DockWindowEmptyArea"
-    , "CE_ToolBoxTab"
-    , "CE_SizeGrip"
-    , "CE_Splitter"
-    , "CE_RubberBand"
-    , "CE_DockWidgetTitle"
-    , "CE_ScrollBarAddLine"
-    , "CE_ScrollBarSubLine"
-    , "CE_ScrollBarAddPage"
-    , "CE_ScrollBarSubPage"
-    , "CE_ScrollBarSlider"
-    , "CE_ScrollBarFirst"
-    , "CE_ScrollBarLast"
-    , "CE_FocusFrame"
-    , "CE_ComboBoxLabel"
-    , "CE_ToolBar"
-    , "CE_ToolBoxTabShape"
-    , "CE_ToolBoxTabLabel"
-    , "CE_HeaderEmptyArea"
-    , "CE_ColumnViewGrip"
-    , "CE_ItemViewItem"
-    , "CE_ShapedFrame"
-};
-
-static QString qtscript_QStyle_ControlElement_toStringHelper(QStyle::ControlElement value)
-{
-    for (int i = 0; i < 49; ++i) {
-        if (qtscript_QStyle_ControlElement_values[i] == value)
-            return QString::fromLatin1(qtscript_QStyle_ControlElement_keys[i]);
-    }
-    return QString();
-}
-
-static QScriptValue qtscript_QStyle_ControlElement_toScriptValue(QScriptEngine *engine, const QStyle::ControlElement &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
-    return clazz.property(qtscript_QStyle_ControlElement_toStringHelper(value));
-}
-
-static void qtscript_QStyle_ControlElement_fromScriptValue(const QScriptValue &value, QStyle::ControlElement &out)
-{
-    out = qvariant_cast<QStyle::ControlElement>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyle_ControlElement(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 49; ++i) {
-        if (qtscript_QStyle_ControlElement_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QStyle::ControlElement>(arg));
-    }
-    return context->throwError(QString::fromLatin1("ControlElement(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyle_ControlElement_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::ControlElement value = qscriptvalue_cast<QStyle::ControlElement>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyle_ControlElement_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::ControlElement value = qscriptvalue_cast<QStyle::ControlElement>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyle_ControlElement_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyle_ControlElement_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyle_ControlElement,
-        qtscript_QStyle_ControlElement_valueOf, qtscript_QStyle_ControlElement_toString);
-    qScriptRegisterMetaType<QStyle::ControlElement>(engine, qtscript_QStyle_ControlElement_toScriptValue,
-        qtscript_QStyle_ControlElement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 49; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_ControlElement_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyle_ControlElement_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyle::ContentsType
-//
-
-static const QStyle::ContentsType qtscript_QStyle_ContentsType_values[] = {
-    QStyle::CT_CustomBase
-    , QStyle::CT_PushButton
-    , QStyle::CT_CheckBox
-    , QStyle::CT_RadioButton
-    , QStyle::CT_ToolButton
-    , QStyle::CT_ComboBox
-    , QStyle::CT_Splitter
-    , QStyle::CT_Q3DockWindow
-    , QStyle::CT_ProgressBar
-    , QStyle::CT_MenuItem
-    , QStyle::CT_MenuBarItem
-    , QStyle::CT_MenuBar
-    , QStyle::CT_Menu
-    , QStyle::CT_TabBarTab
-    , QStyle::CT_Slider
-    , QStyle::CT_ScrollBar
-    , QStyle::CT_Q3Header
-    , QStyle::CT_LineEdit
-    , QStyle::CT_SpinBox
-    , QStyle::CT_SizeGrip
-    , QStyle::CT_TabWidget
-    , QStyle::CT_DialogButtons
-    , QStyle::CT_HeaderSection
-    , QStyle::CT_GroupBox
-    , QStyle::CT_MdiControls
-    , QStyle::CT_ItemViewItem
-};
-
-static const char * const qtscript_QStyle_ContentsType_keys[] = {
-    "CT_CustomBase"
-    , "CT_PushButton"
-    , "CT_CheckBox"
-    , "CT_RadioButton"
-    , "CT_ToolButton"
-    , "CT_ComboBox"
-    , "CT_Splitter"
-    , "CT_Q3DockWindow"
-    , "CT_ProgressBar"
-    , "CT_MenuItem"
-    , "CT_MenuBarItem"
-    , "CT_MenuBar"
-    , "CT_Menu"
-    , "CT_TabBarTab"
-    , "CT_Slider"
-    , "CT_ScrollBar"
-    , "CT_Q3Header"
-    , "CT_LineEdit"
-    , "CT_SpinBox"
-    , "CT_SizeGrip"
-    , "CT_TabWidget"
-    , "CT_DialogButtons"
-    , "CT_HeaderSection"
-    , "CT_GroupBox"
-    , "CT_MdiControls"
-    , "CT_ItemViewItem"
-};
-
-static QString qtscript_QStyle_ContentsType_toStringHelper(QStyle::ContentsType value)
-{
-    for (int i = 0; i < 26; ++i) {
-        if (qtscript_QStyle_ContentsType_values[i] == value)
-            return QString::fromLatin1(qtscript_QStyle_ContentsType_keys[i]);
-    }
-    return QString();
-}
-
-static QScriptValue qtscript_QStyle_ContentsType_toScriptValue(QScriptEngine *engine, const QStyle::ContentsType &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
-    return clazz.property(qtscript_QStyle_ContentsType_toStringHelper(value));
-}
-
-static void qtscript_QStyle_ContentsType_fromScriptValue(const QScriptValue &value, QStyle::ContentsType &out)
-{
-    out = qvariant_cast<QStyle::ContentsType>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyle_ContentsType(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 26; ++i) {
-        if (qtscript_QStyle_ContentsType_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QStyle::ContentsType>(arg));
-    }
-    return context->throwError(QString::fromLatin1("ContentsType(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyle_ContentsType_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::ContentsType value = qscriptvalue_cast<QStyle::ContentsType>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyle_ContentsType_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::ContentsType value = qscriptvalue_cast<QStyle::ContentsType>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyle_ContentsType_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyle_ContentsType_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyle_ContentsType,
-        qtscript_QStyle_ContentsType_valueOf, qtscript_QStyle_ContentsType_toString);
-    qScriptRegisterMetaType<QStyle::ContentsType>(engine, qtscript_QStyle_ContentsType_toScriptValue,
-        qtscript_QStyle_ContentsType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 26; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_ContentsType_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyle_ContentsType_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -1750,156 +1367,115 @@ static QScriptValue qtscript_create_QStyle_State_class(QScriptEngine *engine)
 }
 
 //
-// QStyle::ComplexControl
+// QStyle::ContentsType
 //
 
-static const QStyle::ComplexControl qtscript_QStyle_ComplexControl_values[] = {
-    QStyle::CC_CustomBase
-    , QStyle::CC_SpinBox
-    , QStyle::CC_ComboBox
-    , QStyle::CC_ScrollBar
-    , QStyle::CC_Slider
-    , QStyle::CC_ToolButton
-    , QStyle::CC_TitleBar
-    , QStyle::CC_Q3ListView
-    , QStyle::CC_Dial
-    , QStyle::CC_GroupBox
-    , QStyle::CC_MdiControls
+static const QStyle::ContentsType qtscript_QStyle_ContentsType_values[] = {
+    QStyle::CT_CustomBase
+    , QStyle::CT_PushButton
+    , QStyle::CT_CheckBox
+    , QStyle::CT_RadioButton
+    , QStyle::CT_ToolButton
+    , QStyle::CT_ComboBox
+    , QStyle::CT_Splitter
+    , QStyle::CT_ProgressBar
+    , QStyle::CT_MenuItem
+    , QStyle::CT_MenuBarItem
+    , QStyle::CT_MenuBar
+    , QStyle::CT_Menu
+    , QStyle::CT_TabBarTab
+    , QStyle::CT_Slider
+    , QStyle::CT_ScrollBar
+    , QStyle::CT_LineEdit
+    , QStyle::CT_SpinBox
+    , QStyle::CT_SizeGrip
+    , QStyle::CT_TabWidget
+    , QStyle::CT_DialogButtons
+    , QStyle::CT_HeaderSection
+    , QStyle::CT_GroupBox
+    , QStyle::CT_MdiControls
+    , QStyle::CT_ItemViewItem
 };
 
-static const char * const qtscript_QStyle_ComplexControl_keys[] = {
-    "CC_CustomBase"
-    , "CC_SpinBox"
-    , "CC_ComboBox"
-    , "CC_ScrollBar"
-    , "CC_Slider"
-    , "CC_ToolButton"
-    , "CC_TitleBar"
-    , "CC_Q3ListView"
-    , "CC_Dial"
-    , "CC_GroupBox"
-    , "CC_MdiControls"
+static const char * const qtscript_QStyle_ContentsType_keys[] = {
+    "CT_CustomBase"
+    , "CT_PushButton"
+    , "CT_CheckBox"
+    , "CT_RadioButton"
+    , "CT_ToolButton"
+    , "CT_ComboBox"
+    , "CT_Splitter"
+    , "CT_ProgressBar"
+    , "CT_MenuItem"
+    , "CT_MenuBarItem"
+    , "CT_MenuBar"
+    , "CT_Menu"
+    , "CT_TabBarTab"
+    , "CT_Slider"
+    , "CT_ScrollBar"
+    , "CT_LineEdit"
+    , "CT_SpinBox"
+    , "CT_SizeGrip"
+    , "CT_TabWidget"
+    , "CT_DialogButtons"
+    , "CT_HeaderSection"
+    , "CT_GroupBox"
+    , "CT_MdiControls"
+    , "CT_ItemViewItem"
 };
 
-static QString qtscript_QStyle_ComplexControl_toStringHelper(QStyle::ComplexControl value)
+static QString qtscript_QStyle_ContentsType_toStringHelper(QStyle::ContentsType value)
 {
-    for (int i = 0; i < 11; ++i) {
-        if (qtscript_QStyle_ComplexControl_values[i] == value)
-            return QString::fromLatin1(qtscript_QStyle_ComplexControl_keys[i]);
+    for (int i = 0; i < 24; ++i) {
+        if (qtscript_QStyle_ContentsType_values[i] == value)
+            return QString::fromLatin1(qtscript_QStyle_ContentsType_keys[i]);
     }
     return QString();
 }
 
-static QScriptValue qtscript_QStyle_ComplexControl_toScriptValue(QScriptEngine *engine, const QStyle::ComplexControl &value)
+static QScriptValue qtscript_QStyle_ContentsType_toScriptValue(QScriptEngine *engine, const QStyle::ContentsType &value)
 {
     QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
-    return clazz.property(qtscript_QStyle_ComplexControl_toStringHelper(value));
+    return clazz.property(qtscript_QStyle_ContentsType_toStringHelper(value));
 }
 
-static void qtscript_QStyle_ComplexControl_fromScriptValue(const QScriptValue &value, QStyle::ComplexControl &out)
+static void qtscript_QStyle_ContentsType_fromScriptValue(const QScriptValue &value, QStyle::ContentsType &out)
 {
-    out = qvariant_cast<QStyle::ComplexControl>(value.toVariant());
+    out = qvariant_cast<QStyle::ContentsType>(value.toVariant());
 }
 
-static QScriptValue qtscript_construct_QStyle_ComplexControl(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_construct_QStyle_ContentsType(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 11; ++i) {
-        if (qtscript_QStyle_ComplexControl_values[i] == arg)
-            return qScriptValueFromValue(engine,  static_cast<QStyle::ComplexControl>(arg));
+    for (int i = 0; i < 24; ++i) {
+        if (qtscript_QStyle_ContentsType_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QStyle::ContentsType>(arg));
     }
-    return context->throwError(QString::fromLatin1("ComplexControl(): invalid enum value (%0)").arg(arg));
+    return context->throwError(QString::fromLatin1("ContentsType(): invalid enum value (%0)").arg(arg));
 }
 
-static QScriptValue qtscript_QStyle_ComplexControl_valueOf(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyle_ContentsType_valueOf(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyle::ComplexControl value = qscriptvalue_cast<QStyle::ComplexControl>(context->thisObject());
+    QStyle::ContentsType value = qscriptvalue_cast<QStyle::ContentsType>(context->thisObject());
     return QScriptValue(engine, static_cast<int>(value));
 }
 
-static QScriptValue qtscript_QStyle_ComplexControl_toString(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue qtscript_QStyle_ContentsType_toString(QScriptContext *context, QScriptEngine *engine)
 {
-    QStyle::ComplexControl value = qscriptvalue_cast<QStyle::ComplexControl>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyle_ComplexControl_toStringHelper(value));
+    QStyle::ContentsType value = qscriptvalue_cast<QStyle::ContentsType>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyle_ContentsType_toStringHelper(value));
 }
 
-static QScriptValue qtscript_create_QStyle_ComplexControl_class(QScriptEngine *engine, QScriptValue &clazz)
+static QScriptValue qtscript_create_QStyle_ContentsType_class(QScriptEngine *engine, QScriptValue &clazz)
 {
     QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyle_ComplexControl,
-        qtscript_QStyle_ComplexControl_valueOf, qtscript_QStyle_ComplexControl_toString);
-    qScriptRegisterMetaType<QStyle::ComplexControl>(engine, qtscript_QStyle_ComplexControl_toScriptValue,
-        qtscript_QStyle_ComplexControl_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 11; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_ComplexControl_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyle_ComplexControl_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QStyle::RequestSoftwareInputPanel
-//
-
-static const QStyle::RequestSoftwareInputPanel qtscript_QStyle_RequestSoftwareInputPanel_values[] = {
-    QStyle::RSIP_OnMouseClickAndAlreadyFocused
-    , QStyle::RSIP_OnMouseClick
-};
-
-static const char * const qtscript_QStyle_RequestSoftwareInputPanel_keys[] = {
-    "RSIP_OnMouseClickAndAlreadyFocused"
-    , "RSIP_OnMouseClick"
-};
-
-static QString qtscript_QStyle_RequestSoftwareInputPanel_toStringHelper(QStyle::RequestSoftwareInputPanel value)
-{
-    if ((value >= QStyle::RSIP_OnMouseClickAndAlreadyFocused) && (value <= QStyle::RSIP_OnMouseClick))
-        return qtscript_QStyle_RequestSoftwareInputPanel_keys[static_cast<int>(value)-static_cast<int>(QStyle::RSIP_OnMouseClickAndAlreadyFocused)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyle_RequestSoftwareInputPanel_toScriptValue(QScriptEngine *engine, const QStyle::RequestSoftwareInputPanel &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
-    return clazz.property(qtscript_QStyle_RequestSoftwareInputPanel_toStringHelper(value));
-}
-
-static void qtscript_QStyle_RequestSoftwareInputPanel_fromScriptValue(const QScriptValue &value, QStyle::RequestSoftwareInputPanel &out)
-{
-    out = qvariant_cast<QStyle::RequestSoftwareInputPanel>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyle_RequestSoftwareInputPanel(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyle::RSIP_OnMouseClickAndAlreadyFocused) && (arg <= QStyle::RSIP_OnMouseClick))
-        return qScriptValueFromValue(engine,  static_cast<QStyle::RequestSoftwareInputPanel>(arg));
-    return context->throwError(QString::fromLatin1("RequestSoftwareInputPanel(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyle_RequestSoftwareInputPanel_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::RequestSoftwareInputPanel value = qscriptvalue_cast<QStyle::RequestSoftwareInputPanel>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyle_RequestSoftwareInputPanel_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyle::RequestSoftwareInputPanel value = qscriptvalue_cast<QStyle::RequestSoftwareInputPanel>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyle_RequestSoftwareInputPanel_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyle_RequestSoftwareInputPanel_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyle_RequestSoftwareInputPanel,
-        qtscript_QStyle_RequestSoftwareInputPanel_valueOf, qtscript_QStyle_RequestSoftwareInputPanel_toString);
-    qScriptRegisterMetaType<QStyle::RequestSoftwareInputPanel>(engine, qtscript_QStyle_RequestSoftwareInputPanel_toScriptValue,
-        qtscript_QStyle_RequestSoftwareInputPanel_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_RequestSoftwareInputPanel_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyle_RequestSoftwareInputPanel_values[i])),
+        engine, qtscript_construct_QStyle_ContentsType,
+        qtscript_QStyle_ContentsType_valueOf, qtscript_QStyle_ContentsType_toString);
+    qScriptRegisterMetaType<QStyle::ContentsType>(engine, qtscript_QStyle_ContentsType_toScriptValue,
+        qtscript_QStyle_ContentsType_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 24; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_ContentsType_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyle_ContentsType_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -1923,19 +1499,9 @@ static const QStyle::SubElement qtscript_QStyle_SubElement_values[] = {
     , QStyle::SE_RadioButtonClickRect
     , QStyle::SE_ComboBoxFocusRect
     , QStyle::SE_SliderFocusRect
-    , QStyle::SE_Q3DockWindowHandleRect
     , QStyle::SE_ProgressBarGroove
     , QStyle::SE_ProgressBarContents
     , QStyle::SE_ProgressBarLabel
-    , QStyle::SE_DialogButtonAccept
-    , QStyle::SE_DialogButtonReject
-    , QStyle::SE_DialogButtonApply
-    , QStyle::SE_DialogButtonHelp
-    , QStyle::SE_DialogButtonAll
-    , QStyle::SE_DialogButtonAbort
-    , QStyle::SE_DialogButtonIgnore
-    , QStyle::SE_DialogButtonRetry
-    , QStyle::SE_DialogButtonCustom
     , QStyle::SE_ToolBoxTabContents
     , QStyle::SE_HeaderLabel
     , QStyle::SE_HeaderArrow
@@ -1991,19 +1557,9 @@ static const char * const qtscript_QStyle_SubElement_keys[] = {
     , "SE_RadioButtonClickRect"
     , "SE_ComboBoxFocusRect"
     , "SE_SliderFocusRect"
-    , "SE_Q3DockWindowHandleRect"
     , "SE_ProgressBarGroove"
     , "SE_ProgressBarContents"
     , "SE_ProgressBarLabel"
-    , "SE_DialogButtonAccept"
-    , "SE_DialogButtonReject"
-    , "SE_DialogButtonApply"
-    , "SE_DialogButtonHelp"
-    , "SE_DialogButtonAll"
-    , "SE_DialogButtonAbort"
-    , "SE_DialogButtonIgnore"
-    , "SE_DialogButtonRetry"
-    , "SE_DialogButtonCustom"
     , "SE_ToolBoxTabContents"
     , "SE_HeaderLabel"
     , "SE_HeaderArrow"
@@ -2047,7 +1603,7 @@ static const char * const qtscript_QStyle_SubElement_keys[] = {
 
 static QString qtscript_QStyle_SubElement_toStringHelper(QStyle::SubElement value)
 {
-    for (int i = 0; i < 65; ++i) {
+    for (int i = 0; i < 55; ++i) {
         if (qtscript_QStyle_SubElement_values[i] == value)
             return QString::fromLatin1(qtscript_QStyle_SubElement_keys[i]);
     }
@@ -2068,7 +1624,7 @@ static void qtscript_QStyle_SubElement_fromScriptValue(const QScriptValue &value
 static QScriptValue qtscript_construct_QStyle_SubElement(QScriptContext *context, QScriptEngine *engine)
 {
     int arg = context->argument(0).toInt32();
-    for (int i = 0; i < 65; ++i) {
+    for (int i = 0; i < 55; ++i) {
         if (qtscript_QStyle_SubElement_values[i] == arg)
             return qScriptValueFromValue(engine,  static_cast<QStyle::SubElement>(arg));
     }
@@ -2094,9 +1650,427 @@ static QScriptValue qtscript_create_QStyle_SubElement_class(QScriptEngine *engin
         qtscript_QStyle_SubElement_valueOf, qtscript_QStyle_SubElement_toString);
     qScriptRegisterMetaType<QStyle::SubElement>(engine, qtscript_QStyle_SubElement_toScriptValue,
         qtscript_QStyle_SubElement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 65; ++i) {
+    for (int i = 0; i < 55; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QStyle_SubElement_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QStyle_SubElement_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyle::PrimitiveElement
+//
+
+static const QStyle::PrimitiveElement qtscript_QStyle_PrimitiveElement_values[] = {
+    QStyle::PE_Frame
+    , QStyle::PE_FrameDefaultButton
+    , QStyle::PE_FrameDockWidget
+    , QStyle::PE_FrameFocusRect
+    , QStyle::PE_FrameGroupBox
+    , QStyle::PE_FrameLineEdit
+    , QStyle::PE_FrameMenu
+    , QStyle::PE_FrameStatusBar
+    , QStyle::PE_FrameTabWidget
+    , QStyle::PE_FrameWindow
+    , QStyle::PE_FrameButtonBevel
+    , QStyle::PE_FrameButtonTool
+    , QStyle::PE_FrameTabBarBase
+    , QStyle::PE_PanelButtonCommand
+    , QStyle::PE_PanelButtonBevel
+    , QStyle::PE_PanelButtonTool
+    , QStyle::PE_PanelMenuBar
+    , QStyle::PE_PanelToolBar
+    , QStyle::PE_PanelLineEdit
+    , QStyle::PE_IndicatorArrowDown
+    , QStyle::PE_IndicatorArrowLeft
+    , QStyle::PE_IndicatorArrowRight
+    , QStyle::PE_IndicatorArrowUp
+    , QStyle::PE_IndicatorBranch
+    , QStyle::PE_IndicatorButtonDropDown
+    , QStyle::PE_IndicatorViewItemCheck
+    , QStyle::PE_IndicatorCheckBox
+    , QStyle::PE_IndicatorDockWidgetResizeHandle
+    , QStyle::PE_IndicatorHeaderArrow
+    , QStyle::PE_IndicatorMenuCheckMark
+    , QStyle::PE_IndicatorProgressChunk
+    , QStyle::PE_IndicatorRadioButton
+    , QStyle::PE_IndicatorSpinDown
+    , QStyle::PE_IndicatorSpinMinus
+    , QStyle::PE_IndicatorSpinPlus
+    , QStyle::PE_IndicatorSpinUp
+    , QStyle::PE_IndicatorToolBarHandle
+    , QStyle::PE_IndicatorToolBarSeparator
+    , QStyle::PE_PanelTipLabel
+    , QStyle::PE_IndicatorTabTear
+    , QStyle::PE_PanelScrollAreaCorner
+    , QStyle::PE_Widget
+    , QStyle::PE_IndicatorColumnViewArrow
+    , QStyle::PE_IndicatorItemViewItemDrop
+    , QStyle::PE_PanelItemViewItem
+    , QStyle::PE_PanelItemViewRow
+    , QStyle::PE_PanelStatusBar
+    , QStyle::PE_IndicatorTabClose
+    , QStyle::PE_PanelMenu
+    , QStyle::PE_CustomBase
+};
+
+static const char * const qtscript_QStyle_PrimitiveElement_keys[] = {
+    "PE_Frame"
+    , "PE_FrameDefaultButton"
+    , "PE_FrameDockWidget"
+    , "PE_FrameFocusRect"
+    , "PE_FrameGroupBox"
+    , "PE_FrameLineEdit"
+    , "PE_FrameMenu"
+    , "PE_FrameStatusBar"
+    , "PE_FrameTabWidget"
+    , "PE_FrameWindow"
+    , "PE_FrameButtonBevel"
+    , "PE_FrameButtonTool"
+    , "PE_FrameTabBarBase"
+    , "PE_PanelButtonCommand"
+    , "PE_PanelButtonBevel"
+    , "PE_PanelButtonTool"
+    , "PE_PanelMenuBar"
+    , "PE_PanelToolBar"
+    , "PE_PanelLineEdit"
+    , "PE_IndicatorArrowDown"
+    , "PE_IndicatorArrowLeft"
+    , "PE_IndicatorArrowRight"
+    , "PE_IndicatorArrowUp"
+    , "PE_IndicatorBranch"
+    , "PE_IndicatorButtonDropDown"
+    , "PE_IndicatorViewItemCheck"
+    , "PE_IndicatorCheckBox"
+    , "PE_IndicatorDockWidgetResizeHandle"
+    , "PE_IndicatorHeaderArrow"
+    , "PE_IndicatorMenuCheckMark"
+    , "PE_IndicatorProgressChunk"
+    , "PE_IndicatorRadioButton"
+    , "PE_IndicatorSpinDown"
+    , "PE_IndicatorSpinMinus"
+    , "PE_IndicatorSpinPlus"
+    , "PE_IndicatorSpinUp"
+    , "PE_IndicatorToolBarHandle"
+    , "PE_IndicatorToolBarSeparator"
+    , "PE_PanelTipLabel"
+    , "PE_IndicatorTabTear"
+    , "PE_PanelScrollAreaCorner"
+    , "PE_Widget"
+    , "PE_IndicatorColumnViewArrow"
+    , "PE_IndicatorItemViewItemDrop"
+    , "PE_PanelItemViewItem"
+    , "PE_PanelItemViewRow"
+    , "PE_PanelStatusBar"
+    , "PE_IndicatorTabClose"
+    , "PE_PanelMenu"
+    , "PE_CustomBase"
+};
+
+static QString qtscript_QStyle_PrimitiveElement_toStringHelper(QStyle::PrimitiveElement value)
+{
+    for (int i = 0; i < 50; ++i) {
+        if (qtscript_QStyle_PrimitiveElement_values[i] == value)
+            return QString::fromLatin1(qtscript_QStyle_PrimitiveElement_keys[i]);
+    }
+    return QString();
+}
+
+static QScriptValue qtscript_QStyle_PrimitiveElement_toScriptValue(QScriptEngine *engine, const QStyle::PrimitiveElement &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
+    return clazz.property(qtscript_QStyle_PrimitiveElement_toStringHelper(value));
+}
+
+static void qtscript_QStyle_PrimitiveElement_fromScriptValue(const QScriptValue &value, QStyle::PrimitiveElement &out)
+{
+    out = qvariant_cast<QStyle::PrimitiveElement>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyle_PrimitiveElement(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    for (int i = 0; i < 50; ++i) {
+        if (qtscript_QStyle_PrimitiveElement_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QStyle::PrimitiveElement>(arg));
+    }
+    return context->throwError(QString::fromLatin1("PrimitiveElement(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyle_PrimitiveElement_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::PrimitiveElement value = qscriptvalue_cast<QStyle::PrimitiveElement>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyle_PrimitiveElement_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::PrimitiveElement value = qscriptvalue_cast<QStyle::PrimitiveElement>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyle_PrimitiveElement_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyle_PrimitiveElement_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyle_PrimitiveElement,
+        qtscript_QStyle_PrimitiveElement_valueOf, qtscript_QStyle_PrimitiveElement_toString);
+    qScriptRegisterMetaType<QStyle::PrimitiveElement>(engine, qtscript_QStyle_PrimitiveElement_toScriptValue,
+        qtscript_QStyle_PrimitiveElement_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 50; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_PrimitiveElement_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyle_PrimitiveElement_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QStyle::PixelMetric
+//
+
+static const QStyle::PixelMetric qtscript_QStyle_PixelMetric_values[] = {
+    QStyle::PM_CustomBase
+    , QStyle::PM_ButtonMargin
+    , QStyle::PM_ButtonDefaultIndicator
+    , QStyle::PM_MenuButtonIndicator
+    , QStyle::PM_ButtonShiftHorizontal
+    , QStyle::PM_ButtonShiftVertical
+    , QStyle::PM_DefaultFrameWidth
+    , QStyle::PM_SpinBoxFrameWidth
+    , QStyle::PM_ComboBoxFrameWidth
+    , QStyle::PM_MaximumDragDistance
+    , QStyle::PM_ScrollBarExtent
+    , QStyle::PM_ScrollBarSliderMin
+    , QStyle::PM_SliderThickness
+    , QStyle::PM_SliderControlThickness
+    , QStyle::PM_SliderLength
+    , QStyle::PM_SliderTickmarkOffset
+    , QStyle::PM_SliderSpaceAvailable
+    , QStyle::PM_DockWidgetSeparatorExtent
+    , QStyle::PM_DockWidgetHandleExtent
+    , QStyle::PM_DockWidgetFrameWidth
+    , QStyle::PM_TabBarTabOverlap
+    , QStyle::PM_TabBarTabHSpace
+    , QStyle::PM_TabBarTabVSpace
+    , QStyle::PM_TabBarBaseHeight
+    , QStyle::PM_TabBarBaseOverlap
+    , QStyle::PM_ProgressBarChunkWidth
+    , QStyle::PM_SplitterWidth
+    , QStyle::PM_TitleBarHeight
+    , QStyle::PM_MenuScrollerHeight
+    , QStyle::PM_MenuHMargin
+    , QStyle::PM_MenuVMargin
+    , QStyle::PM_MenuPanelWidth
+    , QStyle::PM_MenuTearoffHeight
+    , QStyle::PM_MenuDesktopFrameWidth
+    , QStyle::PM_MenuBarPanelWidth
+    , QStyle::PM_MenuBarItemSpacing
+    , QStyle::PM_MenuBarVMargin
+    , QStyle::PM_MenuBarHMargin
+    , QStyle::PM_IndicatorWidth
+    , QStyle::PM_IndicatorHeight
+    , QStyle::PM_ExclusiveIndicatorWidth
+    , QStyle::PM_ExclusiveIndicatorHeight
+    , QStyle::PM_DialogButtonsSeparator
+    , QStyle::PM_DialogButtonsButtonWidth
+    , QStyle::PM_DialogButtonsButtonHeight
+    , QStyle::PM_MdiSubWindowFrameWidth
+    , QStyle::PM_MdiSubWindowMinimizedWidth
+    , QStyle::PM_HeaderMargin
+    , QStyle::PM_HeaderMarkSize
+    , QStyle::PM_HeaderGripMargin
+    , QStyle::PM_TabBarTabShiftHorizontal
+    , QStyle::PM_TabBarTabShiftVertical
+    , QStyle::PM_TabBarScrollButtonWidth
+    , QStyle::PM_ToolBarFrameWidth
+    , QStyle::PM_ToolBarHandleExtent
+    , QStyle::PM_ToolBarItemSpacing
+    , QStyle::PM_ToolBarItemMargin
+    , QStyle::PM_ToolBarSeparatorExtent
+    , QStyle::PM_ToolBarExtensionExtent
+    , QStyle::PM_SpinBoxSliderHeight
+    , QStyle::PM_DefaultTopLevelMargin
+    , QStyle::PM_DefaultChildMargin
+    , QStyle::PM_DefaultLayoutSpacing
+    , QStyle::PM_ToolBarIconSize
+    , QStyle::PM_ListViewIconSize
+    , QStyle::PM_IconViewIconSize
+    , QStyle::PM_SmallIconSize
+    , QStyle::PM_LargeIconSize
+    , QStyle::PM_FocusFrameVMargin
+    , QStyle::PM_FocusFrameHMargin
+    , QStyle::PM_ToolTipLabelFrameWidth
+    , QStyle::PM_CheckBoxLabelSpacing
+    , QStyle::PM_TabBarIconSize
+    , QStyle::PM_SizeGripSize
+    , QStyle::PM_DockWidgetTitleMargin
+    , QStyle::PM_MessageBoxIconSize
+    , QStyle::PM_ButtonIconSize
+    , QStyle::PM_DockWidgetTitleBarButtonMargin
+    , QStyle::PM_RadioButtonLabelSpacing
+    , QStyle::PM_LayoutLeftMargin
+    , QStyle::PM_LayoutTopMargin
+    , QStyle::PM_LayoutRightMargin
+    , QStyle::PM_LayoutBottomMargin
+    , QStyle::PM_LayoutHorizontalSpacing
+    , QStyle::PM_LayoutVerticalSpacing
+    , QStyle::PM_TabBar_ScrollButtonOverlap
+    , QStyle::PM_TextCursorWidth
+    , QStyle::PM_TabCloseIndicatorWidth
+    , QStyle::PM_TabCloseIndicatorHeight
+    , QStyle::PM_ScrollView_ScrollBarSpacing
+    , QStyle::PM_ScrollView_ScrollBarOverlap
+    , QStyle::PM_SubMenuOverlap
+};
+
+static const char * const qtscript_QStyle_PixelMetric_keys[] = {
+    "PM_CustomBase"
+    , "PM_ButtonMargin"
+    , "PM_ButtonDefaultIndicator"
+    , "PM_MenuButtonIndicator"
+    , "PM_ButtonShiftHorizontal"
+    , "PM_ButtonShiftVertical"
+    , "PM_DefaultFrameWidth"
+    , "PM_SpinBoxFrameWidth"
+    , "PM_ComboBoxFrameWidth"
+    , "PM_MaximumDragDistance"
+    , "PM_ScrollBarExtent"
+    , "PM_ScrollBarSliderMin"
+    , "PM_SliderThickness"
+    , "PM_SliderControlThickness"
+    , "PM_SliderLength"
+    , "PM_SliderTickmarkOffset"
+    , "PM_SliderSpaceAvailable"
+    , "PM_DockWidgetSeparatorExtent"
+    , "PM_DockWidgetHandleExtent"
+    , "PM_DockWidgetFrameWidth"
+    , "PM_TabBarTabOverlap"
+    , "PM_TabBarTabHSpace"
+    , "PM_TabBarTabVSpace"
+    , "PM_TabBarBaseHeight"
+    , "PM_TabBarBaseOverlap"
+    , "PM_ProgressBarChunkWidth"
+    , "PM_SplitterWidth"
+    , "PM_TitleBarHeight"
+    , "PM_MenuScrollerHeight"
+    , "PM_MenuHMargin"
+    , "PM_MenuVMargin"
+    , "PM_MenuPanelWidth"
+    , "PM_MenuTearoffHeight"
+    , "PM_MenuDesktopFrameWidth"
+    , "PM_MenuBarPanelWidth"
+    , "PM_MenuBarItemSpacing"
+    , "PM_MenuBarVMargin"
+    , "PM_MenuBarHMargin"
+    , "PM_IndicatorWidth"
+    , "PM_IndicatorHeight"
+    , "PM_ExclusiveIndicatorWidth"
+    , "PM_ExclusiveIndicatorHeight"
+    , "PM_DialogButtonsSeparator"
+    , "PM_DialogButtonsButtonWidth"
+    , "PM_DialogButtonsButtonHeight"
+    , "PM_MdiSubWindowFrameWidth"
+    , "PM_MdiSubWindowMinimizedWidth"
+    , "PM_HeaderMargin"
+    , "PM_HeaderMarkSize"
+    , "PM_HeaderGripMargin"
+    , "PM_TabBarTabShiftHorizontal"
+    , "PM_TabBarTabShiftVertical"
+    , "PM_TabBarScrollButtonWidth"
+    , "PM_ToolBarFrameWidth"
+    , "PM_ToolBarHandleExtent"
+    , "PM_ToolBarItemSpacing"
+    , "PM_ToolBarItemMargin"
+    , "PM_ToolBarSeparatorExtent"
+    , "PM_ToolBarExtensionExtent"
+    , "PM_SpinBoxSliderHeight"
+    , "PM_DefaultTopLevelMargin"
+    , "PM_DefaultChildMargin"
+    , "PM_DefaultLayoutSpacing"
+    , "PM_ToolBarIconSize"
+    , "PM_ListViewIconSize"
+    , "PM_IconViewIconSize"
+    , "PM_SmallIconSize"
+    , "PM_LargeIconSize"
+    , "PM_FocusFrameVMargin"
+    , "PM_FocusFrameHMargin"
+    , "PM_ToolTipLabelFrameWidth"
+    , "PM_CheckBoxLabelSpacing"
+    , "PM_TabBarIconSize"
+    , "PM_SizeGripSize"
+    , "PM_DockWidgetTitleMargin"
+    , "PM_MessageBoxIconSize"
+    , "PM_ButtonIconSize"
+    , "PM_DockWidgetTitleBarButtonMargin"
+    , "PM_RadioButtonLabelSpacing"
+    , "PM_LayoutLeftMargin"
+    , "PM_LayoutTopMargin"
+    , "PM_LayoutRightMargin"
+    , "PM_LayoutBottomMargin"
+    , "PM_LayoutHorizontalSpacing"
+    , "PM_LayoutVerticalSpacing"
+    , "PM_TabBar_ScrollButtonOverlap"
+    , "PM_TextCursorWidth"
+    , "PM_TabCloseIndicatorWidth"
+    , "PM_TabCloseIndicatorHeight"
+    , "PM_ScrollView_ScrollBarSpacing"
+    , "PM_ScrollView_ScrollBarOverlap"
+    , "PM_SubMenuOverlap"
+};
+
+static QString qtscript_QStyle_PixelMetric_toStringHelper(QStyle::PixelMetric value)
+{
+    for (int i = 0; i < 92; ++i) {
+        if (qtscript_QStyle_PixelMetric_values[i] == value)
+            return QString::fromLatin1(qtscript_QStyle_PixelMetric_keys[i]);
+    }
+    return QString();
+}
+
+static QScriptValue qtscript_QStyle_PixelMetric_toScriptValue(QScriptEngine *engine, const QStyle::PixelMetric &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyle"));
+    return clazz.property(qtscript_QStyle_PixelMetric_toStringHelper(value));
+}
+
+static void qtscript_QStyle_PixelMetric_fromScriptValue(const QScriptValue &value, QStyle::PixelMetric &out)
+{
+    out = qvariant_cast<QStyle::PixelMetric>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyle_PixelMetric(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    for (int i = 0; i < 92; ++i) {
+        if (qtscript_QStyle_PixelMetric_values[i] == arg)
+            return qScriptValueFromValue(engine,  static_cast<QStyle::PixelMetric>(arg));
+    }
+    return context->throwError(QString::fromLatin1("PixelMetric(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyle_PixelMetric_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::PixelMetric value = qscriptvalue_cast<QStyle::PixelMetric>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyle_PixelMetric_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyle::PixelMetric value = qscriptvalue_cast<QStyle::PixelMetric>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyle_PixelMetric_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyle_PixelMetric_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyle_PixelMetric,
+        qtscript_QStyle_PixelMetric_valueOf, qtscript_QStyle_PixelMetric_toString);
+    qScriptRegisterMetaType<QStyle::PixelMetric>(engine, qtscript_QStyle_PixelMetric_toScriptValue,
+        qtscript_QStyle_PixelMetric_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 92; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyle_PixelMetric_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyle_PixelMetric_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -2120,7 +2094,7 @@ static QScriptValue qtscript_QStyle_prototype_call(QScriptContext *context, QScr
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyle* _q_self = qscriptvalue_cast<QStyle*>(context->thisObject());
+    qtscript_QStyle* _q_self = reinterpret_cast<qtscript_QStyle*>(qscriptvalue_cast<QStyle*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyle.%0(): this object is not a QStyle")
@@ -2653,31 +2627,31 @@ QScriptValue qtscript_create_QStyle_class(QScriptEngine *engine)
             fun, QScriptValue::SkipInEnumeration);
     }
 
-    ctor.setProperty(QString::fromLatin1("PixelMetric"),
-        qtscript_create_QStyle_PixelMetric_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ControlElement"),
+        qtscript_create_QStyle_ControlElement_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SubControl"),
         qtscript_create_QStyle_SubControl_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SubControls"),
         qtscript_create_QStyle_SubControls_class(engine));
+    ctor.setProperty(QString::fromLatin1("RequestSoftwareInputPanel"),
+        qtscript_create_QStyle_RequestSoftwareInputPanel_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StandardPixmap"),
         qtscript_create_QStyle_StandardPixmap_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ComplexControl"),
+        qtscript_create_QStyle_ComplexControl_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleHint"),
         qtscript_create_QStyle_StyleHint_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("PrimitiveElement"),
-        qtscript_create_QStyle_PrimitiveElement_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("ControlElement"),
-        qtscript_create_QStyle_ControlElement_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("ContentsType"),
-        qtscript_create_QStyle_ContentsType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StateFlag"),
         qtscript_create_QStyle_StateFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("State"),
         qtscript_create_QStyle_State_class(engine));
-    ctor.setProperty(QString::fromLatin1("ComplexControl"),
-        qtscript_create_QStyle_ComplexControl_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("RequestSoftwareInputPanel"),
-        qtscript_create_QStyle_RequestSoftwareInputPanel_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ContentsType"),
+        qtscript_create_QStyle_ContentsType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("SubElement"),
         qtscript_create_QStyle_SubElement_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("PrimitiveElement"),
+        qtscript_create_QStyle_PrimitiveElement_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("PixelMetric"),
+        qtscript_create_QStyle_PixelMetric_class(engine, ctor));
     return ctor;
 }

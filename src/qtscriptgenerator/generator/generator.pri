@@ -70,10 +70,3 @@ mac {
     contains(QT_CONFIG, x86):contains(QT_CONFIG, ppc):CONFIG += x86 ppc
     CONFIG -= precompile_header
 }
-
-unix:MOC_DIR = ./../../../.moc/qtscriptgenerator
-win32:MOC_DIR = ../../../.moc/qtscriptgenerator
-
-unix:OBJECTS_DIR = ./../../../.obj/qtscriptgenerator
-win32:OBJECTS_DIR = ../../../.obj/qtscriptgenerator
-

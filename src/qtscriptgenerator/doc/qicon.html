@@ -13,7 +13,6 @@
 <ul>
 <li><div class="fn"/><b>void QIcon()</b></li>
 <li><div class="fn"/><b>void QIcon(QIconEngine engine)</b></li>
-<li><div class="fn"/><b>void QIcon(QIconEngineV2 engine)</b></li>
 <li><div class="fn"/><b>void QIcon(QIcon other)</b></li>
 <li><div class="fn"/><b>void QIcon(QPixmap pixmap)</b></li>
 <li><div class="fn"/><b>void QIcon(String fileName)</b></li>
@@ -38,7 +37,7 @@
 </ul>
 <h3>Prototype Object Properties</h3>
 <ul>
-<li><div class="fn"/><b>QSize actualSize(QSize size, Mode mode, State state)</b></li>
+<li><div class="fn"/><b>QSize actualSize(QWindow window, QSize size, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>void addFile(String fileName, QSize size, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>void addPixmap(QPixmap pixmap, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>List availableSizes(Mode mode, State state)</b></li>
@@ -46,8 +45,9 @@
 <li><div class="fn"/><b>bool isNull()</b></li>
 <li><div class="fn"/><b>String name()</b></li>
 <li><div class="fn"/><b>void paint(QPainter painter, QRect rect, Alignment alignment, Mode mode, State state)</b></li>
-<li><div class="fn"/><b>QPixmap pixmap(QSize size, Mode mode, State state)</b></li>
+<li><div class="fn"/><b>QPixmap pixmap(QWindow window, QSize size, Mode mode, State state)</b></li>
 <li><div class="fn"/><b>void readFrom(QDataStream arg__1)</b></li>
+<li><div class="fn"/><b>void swap(QIcon other)</b></li>
 <li><div class="fn"/><b>void writeTo(QDataStream arg__1)</b></li>
 </ul>
 <h3>Instance Properties</h3>

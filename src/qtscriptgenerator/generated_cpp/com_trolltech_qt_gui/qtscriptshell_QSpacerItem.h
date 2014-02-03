@@ -11,6 +11,7 @@ public:
     QtScriptShell_QSpacerItem(int  w, int  h, QSizePolicy::Policy  hData = QSizePolicy::Minimum, QSizePolicy::Policy  vData = QSizePolicy::Minimum);
     ~QtScriptShell_QSpacerItem();
 
+    QSizePolicy::ControlTypes  controlTypes() const;
     Qt::Orientations  expandingDirections() const;
     QRect  geometry() const;
     bool  hasHeightForWidth() const;

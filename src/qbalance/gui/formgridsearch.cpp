@@ -58,6 +58,8 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     else
     {
         parameters = (SearchParameters*)formWidget->findChild("searchParameters");
+        if (parameters != 0)
+            parameters->searchGridLayout();
     }
     if (parameters != 0)
     {

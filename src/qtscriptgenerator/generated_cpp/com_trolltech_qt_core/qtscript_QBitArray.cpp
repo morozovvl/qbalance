@@ -31,6 +31,7 @@ static const char * const qtscript_QBitArray_function_names[] = {
     , "resize"
     , "setBit"
     , "size"
+    , "swap"
     , "testBit"
     , "toggleBit"
     , "truncate"
@@ -51,7 +52,7 @@ static const char * const qtscript_QBitArray_function_signatures[] = {
     , ""
     , "QBitArray arg__1"
     , "QBitArray other"
-    , "QBitArray a"
+    , "QBitArray other"
     , ""
     , "QBitArray arg__1"
     , "QBitArray arg__1"
@@ -59,6 +60,7 @@ static const char * const qtscript_QBitArray_function_signatures[] = {
     , "int size"
     , "int i\nint i, bool val"
     , ""
+    , "QBitArray other"
     , "int i"
     , "int i"
     , "int pos"
@@ -87,6 +89,7 @@ static const int qtscript_QBitArray_function_lengths[] = {
     , 1
     , 2
     , 0
+    , 1
     , 1
     , 1
     , 1
@@ -122,7 +125,7 @@ static QScriptValue qtscript_QBitArray_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 21;
+        _id = 0xBABE0000 + 22;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -318,6 +321,14 @@ static QScriptValue qtscript_QBitArray_prototype_call(QScriptContext *context, Q
 
     case 17:
     if (context->argumentCount() == 1) {
+        QBitArray _q_arg0 = qscriptvalue_cast<QBitArray>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 1) {
 
         // TEMPLATE - core.convert_int_arg_and_check_range - START
           int _q_arg0 = context->argument(0).toInt32();
@@ -331,7 +342,7 @@ static QScriptValue qtscript_QBitArray_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 1) {
 
         // TEMPLATE - core.convert_int_arg_and_check_range - START
@@ -346,7 +357,7 @@ static QScriptValue qtscript_QBitArray_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->truncate(_q_arg0);
@@ -354,7 +365,7 @@ static QScriptValue qtscript_QBitArray_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -362,8 +373,10 @@ static QScriptValue qtscript_QBitArray_prototype_call(QScriptContext *context, Q
     }
     break;
 
-    case 21: {
-    QString result = QString::fromLatin1("QBitArray");
+    case 22: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -422,7 +435,7 @@ QScriptValue qtscript_create_QBitArray_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QBitArray*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QBitArray*)0));
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 23; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QBitArray_prototype_call, qtscript_QBitArray_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QBitArray_function_names[i+1]),

@@ -9,7 +9,7 @@ class QtScriptShell_QIntValidator : public QIntValidator
 {
 public:
     QtScriptShell_QIntValidator(QObject*  parent = 0);
-    QtScriptShell_QIntValidator(int  bottom, int  top, QObject*  parent);
+    QtScriptShell_QIntValidator(int  bottom, int  top, QObject*  parent = 0);
     ~QtScriptShell_QIntValidator();
 
     void childEvent(QChildEvent*  arg__1);

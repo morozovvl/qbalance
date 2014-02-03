@@ -41,6 +41,15 @@ static const int qtscript_QGraphicsDropShadowEffect_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsDropShadowEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsDropShadowEffect : public QGraphicsDropShadowEffect
+{
+
+    friend QScriptValue qtscript_QGraphicsDropShadowEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGraphicsDropShadowEffect_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -74,7 +83,7 @@ static QScriptValue qtscript_QGraphicsDropShadowEffect_prototype_call(QScriptCon
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsDropShadowEffect* _q_self = qscriptvalue_cast<QGraphicsDropShadowEffect*>(context->thisObject());
+    qtscript_QGraphicsDropShadowEffect* _q_self = reinterpret_cast<qtscript_QGraphicsDropShadowEffect*>(qscriptvalue_cast<QGraphicsDropShadowEffect*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsDropShadowEffect.%0(): this object is not a QGraphicsDropShadowEffect")

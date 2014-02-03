@@ -15,6 +15,7 @@ public:
 
     void addItem(QLayoutItem*  item);
     void childEvent(QChildEvent*  e);
+    QSizePolicy::ControlTypes  controlTypes() const;
     int  count() const;
     void customEvent(QEvent*  arg__1);
     bool  event(QEvent*  arg__1);
@@ -22,7 +23,7 @@ public:
     Qt::Orientations  expandingDirections() const;
     QRect  geometry() const;
     bool  hasHeightForWidth() const;
-    int  heightForWidth(int  arg__1) const;
+    int  heightForWidth(int  width) const;
     int  indexOf(QWidget*  arg__1) const;
     void invalidate();
     bool  isEmpty() const;

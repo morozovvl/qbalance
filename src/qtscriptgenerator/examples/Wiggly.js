@@ -54,13 +54,20 @@ function WigglyWidget(parent)
     this.font = newFont;
 
     this.step = 0;
-    this.timer = new QBasicTimer();
-    this.timer.start(60, this);
+    this.timer = new QTimer();
+    this.timer.timeout.connect(this, this.timeout);
+    this.timer.start(60);
 }
 
 WigglyWidget.sineTable = new Array(0, 38, 71, 92, 100, 92, 71, 38, 0, -38, -71, -92, -100, -92, -71, -38);
 
 WigglyWidget.prototype = new QWidget();
+
+WigglyWidget.prototype.timeout = function()
+{
+    ++this.step;
+    this.update();
+}
 
 WigglyWidget.prototype.paintEvent = function(/* event */)
 {
@@ -82,17 +89,6 @@ WigglyWidget.prototype.paintEvent = function(/* event */)
     painter.end();
 }
 
-WigglyWidget.prototype.timerEvent = function(event)
-{
-    if (event.timerId() == this.timer.timerId()) {
-        ++this.step;
-        this.update();
-    } else {
-//	QWidget::timerEvent(event);
-//      ### this.super_timerEvent(event);
-    }
-}
-
 WigglyWidget.prototype.setText = function(newText)
 {
     this.text = newText;
@@ -108,8 +104,8 @@ function Dialog(parent)
 
     var layout = new QVBoxLayout();
     // ### workaround
-    layout.addWidget(wigglyWidget, 0, Qt.AlignLeft);
-    layout.addWidget(lineEdit, 0, Qt.AlignLeft);
+    layout.addWidget(wigglyWidget, 0, 0);
+    layout.addWidget(lineEdit, 0, 0);
     this.setLayout(layout);
 
     lineEdit.textChanged.connect(

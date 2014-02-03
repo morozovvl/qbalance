@@ -58,8 +58,8 @@ static QScriptValue qtscript_QXmlNodeModelIndex_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QXmlNodeModelIndex)
 Q_DECLARE_METATYPE(QXmlNodeModelIndex*)
-Q_DECLARE_METATYPE(QXmlNodeModelIndex::NodeKind)
 Q_DECLARE_METATYPE(QXmlNodeModelIndex::DocumentOrder)
+Q_DECLARE_METATYPE(QXmlNodeModelIndex::NodeKind)
 Q_DECLARE_METATYPE(QAbstractXmlNodeModel*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -74,6 +74,75 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
+}
+
+//
+// QXmlNodeModelIndex::DocumentOrder
+//
+
+static const QXmlNodeModelIndex::DocumentOrder qtscript_QXmlNodeModelIndex_DocumentOrder_values[] = {
+    QXmlNodeModelIndex::Precedes
+    , QXmlNodeModelIndex::Is
+    , QXmlNodeModelIndex::Follows
+};
+
+static const char * const qtscript_QXmlNodeModelIndex_DocumentOrder_keys[] = {
+    "Precedes"
+    , "Is"
+    , "Follows"
+};
+
+static QString qtscript_QXmlNodeModelIndex_DocumentOrder_toStringHelper(QXmlNodeModelIndex::DocumentOrder value)
+{
+    if ((value >= QXmlNodeModelIndex::Precedes) && (value <= QXmlNodeModelIndex::Follows))
+        return qtscript_QXmlNodeModelIndex_DocumentOrder_keys[static_cast<int>(value)-static_cast<int>(QXmlNodeModelIndex::Precedes)];
+    return QString();
+}
+
+static QScriptValue qtscript_QXmlNodeModelIndex_DocumentOrder_toScriptValue(QScriptEngine *engine, const QXmlNodeModelIndex::DocumentOrder &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QXmlNodeModelIndex"));
+    return clazz.property(qtscript_QXmlNodeModelIndex_DocumentOrder_toStringHelper(value));
+}
+
+static void qtscript_QXmlNodeModelIndex_DocumentOrder_fromScriptValue(const QScriptValue &value, QXmlNodeModelIndex::DocumentOrder &out)
+{
+    out = qvariant_cast<QXmlNodeModelIndex::DocumentOrder>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QXmlNodeModelIndex_DocumentOrder(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QXmlNodeModelIndex::Precedes) && (arg <= QXmlNodeModelIndex::Follows))
+        return qScriptValueFromValue(engine,  static_cast<QXmlNodeModelIndex::DocumentOrder>(arg));
+    return context->throwError(QString::fromLatin1("DocumentOrder(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QXmlNodeModelIndex_DocumentOrder_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QXmlNodeModelIndex::DocumentOrder value = qscriptvalue_cast<QXmlNodeModelIndex::DocumentOrder>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QXmlNodeModelIndex_DocumentOrder_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QXmlNodeModelIndex::DocumentOrder value = qscriptvalue_cast<QXmlNodeModelIndex::DocumentOrder>(context->thisObject());
+    return QScriptValue(engine, qtscript_QXmlNodeModelIndex_DocumentOrder_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QXmlNodeModelIndex_DocumentOrder_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QXmlNodeModelIndex_DocumentOrder,
+        qtscript_QXmlNodeModelIndex_DocumentOrder_valueOf, qtscript_QXmlNodeModelIndex_DocumentOrder_toString);
+    qScriptRegisterMetaType<QXmlNodeModelIndex::DocumentOrder>(engine, qtscript_QXmlNodeModelIndex_DocumentOrder_toScriptValue,
+        qtscript_QXmlNodeModelIndex_DocumentOrder_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QXmlNodeModelIndex_DocumentOrder_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QXmlNodeModelIndex_DocumentOrder_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -152,75 +221,6 @@ static QScriptValue qtscript_create_QXmlNodeModelIndex_NodeKind_class(QScriptEng
     for (int i = 0; i < 7; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QXmlNodeModelIndex_NodeKind_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QXmlNodeModelIndex_NodeKind_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QXmlNodeModelIndex::DocumentOrder
-//
-
-static const QXmlNodeModelIndex::DocumentOrder qtscript_QXmlNodeModelIndex_DocumentOrder_values[] = {
-    QXmlNodeModelIndex::Precedes
-    , QXmlNodeModelIndex::Is
-    , QXmlNodeModelIndex::Follows
-};
-
-static const char * const qtscript_QXmlNodeModelIndex_DocumentOrder_keys[] = {
-    "Precedes"
-    , "Is"
-    , "Follows"
-};
-
-static QString qtscript_QXmlNodeModelIndex_DocumentOrder_toStringHelper(QXmlNodeModelIndex::DocumentOrder value)
-{
-    if ((value >= QXmlNodeModelIndex::Precedes) && (value <= QXmlNodeModelIndex::Follows))
-        return qtscript_QXmlNodeModelIndex_DocumentOrder_keys[static_cast<int>(value)-static_cast<int>(QXmlNodeModelIndex::Precedes)];
-    return QString();
-}
-
-static QScriptValue qtscript_QXmlNodeModelIndex_DocumentOrder_toScriptValue(QScriptEngine *engine, const QXmlNodeModelIndex::DocumentOrder &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QXmlNodeModelIndex"));
-    return clazz.property(qtscript_QXmlNodeModelIndex_DocumentOrder_toStringHelper(value));
-}
-
-static void qtscript_QXmlNodeModelIndex_DocumentOrder_fromScriptValue(const QScriptValue &value, QXmlNodeModelIndex::DocumentOrder &out)
-{
-    out = qvariant_cast<QXmlNodeModelIndex::DocumentOrder>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QXmlNodeModelIndex_DocumentOrder(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QXmlNodeModelIndex::Precedes) && (arg <= QXmlNodeModelIndex::Follows))
-        return qScriptValueFromValue(engine,  static_cast<QXmlNodeModelIndex::DocumentOrder>(arg));
-    return context->throwError(QString::fromLatin1("DocumentOrder(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QXmlNodeModelIndex_DocumentOrder_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QXmlNodeModelIndex::DocumentOrder value = qscriptvalue_cast<QXmlNodeModelIndex::DocumentOrder>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QXmlNodeModelIndex_DocumentOrder_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QXmlNodeModelIndex::DocumentOrder value = qscriptvalue_cast<QXmlNodeModelIndex::DocumentOrder>(context->thisObject());
-    return QScriptValue(engine, qtscript_QXmlNodeModelIndex_DocumentOrder_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QXmlNodeModelIndex_DocumentOrder_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QXmlNodeModelIndex_DocumentOrder,
-        qtscript_QXmlNodeModelIndex_DocumentOrder_valueOf, qtscript_QXmlNodeModelIndex_DocumentOrder_toString);
-    qScriptRegisterMetaType<QXmlNodeModelIndex::DocumentOrder>(engine, qtscript_QXmlNodeModelIndex_DocumentOrder_toScriptValue,
-        qtscript_QXmlNodeModelIndex_DocumentOrder_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QXmlNodeModelIndex_DocumentOrder_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QXmlNodeModelIndex_DocumentOrder_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -348,9 +348,9 @@ QScriptValue qtscript_create_QXmlNodeModelIndex_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QXmlNodeModelIndex_static_call, proto, qtscript_QXmlNodeModelIndex_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("NodeKind"),
-        qtscript_create_QXmlNodeModelIndex_NodeKind_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("DocumentOrder"),
         qtscript_create_QXmlNodeModelIndex_DocumentOrder_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("NodeKind"),
+        qtscript_create_QXmlNodeModelIndex_NodeKind_class(engine, ctor));
     return ctor;
 }

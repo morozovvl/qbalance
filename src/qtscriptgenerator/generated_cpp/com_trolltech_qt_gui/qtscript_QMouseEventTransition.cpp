@@ -47,6 +47,15 @@ static const int qtscript_QMouseEventTransition_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QMouseEventTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QMouseEventTransition : public QMouseEventTransition
+{
+
+    friend QScriptValue qtscript_QMouseEventTransition_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QMouseEventTransition_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -84,7 +93,7 @@ static QScriptValue qtscript_QMouseEventTransition_prototype_call(QScriptContext
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QMouseEventTransition* _q_self = qscriptvalue_cast<QMouseEventTransition*>(context->thisObject());
+    qtscript_QMouseEventTransition* _q_self = reinterpret_cast<qtscript_QMouseEventTransition*>(qscriptvalue_cast<QMouseEventTransition*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QMouseEventTransition.%0(): this object is not a QMouseEventTransition")

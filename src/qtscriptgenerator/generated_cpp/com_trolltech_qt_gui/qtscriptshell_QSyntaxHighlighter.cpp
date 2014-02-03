@@ -10,7 +10,6 @@
 #include <qobject.h>
 #include <qsyntaxhighlighter.h>
 #include <qtextdocument.h>
-#include <qtextedit.h>
 #include <qtextformat.h>
 #include <qtextobject.h>
 
@@ -26,22 +25,22 @@ QtScriptShell_QSyntaxHighlighter::QtScriptShell_QSyntaxHighlighter(QObject*  par
 QtScriptShell_QSyntaxHighlighter::QtScriptShell_QSyntaxHighlighter(QTextDocument*  parent)
     : QSyntaxHighlighter(parent) {}
 
-QtScriptShell_QSyntaxHighlighter::QtScriptShell_QSyntaxHighlighter(QTextEdit*  parent)
-    : QSyntaxHighlighter(parent) {}
-
 QtScriptShell_QSyntaxHighlighter::~QtScriptShell_QSyntaxHighlighter() {}
 
 void QtScriptShell_QSyntaxHighlighter::childEvent(QChildEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("childEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSyntaxHighlighter::childEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -49,13 +48,16 @@ void QtScriptShell_QSyntaxHighlighter::customEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("customEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSyntaxHighlighter::customEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -63,13 +65,17 @@ bool  QtScriptShell_QSyntaxHighlighter::event(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("event");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSyntaxHighlighter::event(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -77,14 +83,18 @@ bool  QtScriptShell_QSyntaxHighlighter::eventFilter(QObject*  arg__1, QEvent*  a
 {
     QScriptValue _q_function = __qtscript_self.property("eventFilter");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSyntaxHighlighter::eventFilter(arg__1, arg__2);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)
             << qScriptValueFromValue(_q_engine, arg__2)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -92,13 +102,16 @@ void QtScriptShell_QSyntaxHighlighter::highlightBlock(const QString&  text)
 {
     QScriptValue _q_function = __qtscript_self.property("highlightBlock");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("highlightBlock") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("highlightBlock") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         qFatal("QSyntaxHighlighter::highlightBlock() is abstract!");
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, text));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -106,13 +119,16 @@ void QtScriptShell_QSyntaxHighlighter::timerEvent(QTimerEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("timerEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSyntaxHighlighter::timerEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QWidget>
 #include <QDateEdit>
+#include <QTextEdit>
 #include "formgrid.h"
 #include "mynumericedit.h"
 #include "docparameters.h"
@@ -39,12 +40,14 @@ public:
     void setNumber(QString number) { numberEdit->setText(number.left(10)); }
     void setDate(QDate date) { dateEdit->setDate(date); }
     void showParameterText(QString dictName) { parameters->showText(dictName); }
+    void showTextEdit(bool show) { textEdit->setVisible(show); }
     DocParameters*  getDocParameters() { return parameters; }
 
     Q_INVOKABLE QPushButton* getButtonQueryAdd() { return buttonQueryAdd; }
     Q_INVOKABLE virtual void setEnabled(bool);
 
 public slots:
+    virtual void cmdAdd();
     virtual void cmdQueryAdd();
     virtual void cmdDelete();
     virtual void cmdOk();
@@ -59,6 +62,7 @@ private:
     DocParameters*  parameters;
     MyNumericEdit*    itogNumeric;
     QMenu*          queriesMenu;
+    QTextEdit*      textEdit;
     virtual void createForm(QString, QWidget* pwgt = 0);
 //    virtual QDomElement createWidgetsStructure();
 };

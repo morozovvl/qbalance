@@ -7,27 +7,38 @@
 
 #include <qtscriptconcurrent.h>
 #include <QVariant>
-
-#include "qtscriptshell_QFutureIterator.h"
+#include <qfuture.h>
 
 static const char * const qtscript_QFutureIterator_function_names[] = {
     "QFutureIterator"
     // static
     // prototype
+    , "hasNext"
+    , "hasPrevious"
+    , "toBack"
+    , "toFront"
     , "toString"
 };
 
 static const char * const qtscript_QFutureIterator_function_signatures[] = {
-    ""
+    "QFuture container"
     // static
     // prototype
+    , ""
+    , ""
+    , ""
+    , ""
 ""
 };
 
 static const int qtscript_QFutureIterator_function_lengths[] = {
-    0
+    1
     // static
     // prototype
+    , 0
+    , 0
+    , 0
+    , 0
     , 0
 };
 
@@ -43,7 +54,7 @@ static QScriptValue qtscript_QFutureIterator_throw_ambiguity_error_helper(
 }
 
 Q_DECLARE_METATYPE(QtScriptFutureIterator*)
-Q_DECLARE_METATYPE(QtScriptShell_QFutureIterator*)
+Q_DECLARE_METATYPE(QtScriptFuture*)
 
 //
 // QFutureIterator
@@ -59,7 +70,7 @@ static QScriptValue qtscript_QFutureIterator_prototype_call(QScriptContext *cont
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 0;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -71,7 +82,35 @@ static QScriptValue qtscript_QFutureIterator_prototype_call(QScriptContext *cont
     }
 
     switch (_id) {
-    case 0: {
+    case 0:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->hasNext();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->hasPrevious();
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 2:
+    if (context->argumentCount() == 0) {
+        _q_self->toBack();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 3:
+    if (context->argumentCount() == 0) {
+        _q_self->toFront();
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 4: {
     QString result = QString::fromLatin1("QFutureIterator");
     return QScriptValue(context->engine(), result);
     }
@@ -94,10 +133,11 @@ static QScriptValue qtscript_QFutureIterator_static_call(QScriptContext *context
     if (context->thisObject().strictlyEquals(context->engine()->globalObject())) {
         return context->throwError(QString::fromLatin1("QFutureIterator(): Did you forget to construct with 'new'?"));
     }
-    if (context->argumentCount() == 0) {
-        QtScriptShell_QFutureIterator* _q_cpp_result = new QtScriptShell_QFutureIterator();
-        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QtScriptFutureIterator*)_q_cpp_result));
-        _q_cpp_result->__qtscript_self = _q_result;
+    if (context->argumentCount() == 1) {
+
+                const QtScriptFuture & _q_arg0 = *qscriptvalue_cast<QtScriptFuture*>(context->argument(0));
+                    QtScriptFutureIterator* _q_cpp_result = new QtScriptFutureIterator(_q_arg0);
+        QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue(_q_cpp_result));
         return _q_result;
     }
     break;
@@ -114,6 +154,12 @@ QScriptValue qtscript_create_QFutureIterator_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QtScriptFutureIterator*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QtScriptFutureIterator*)0));
+    for (int i = 0; i < 5; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QFutureIterator_prototype_call, qtscript_QFutureIterator_function_lengths[i+1]);
+        fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
+        proto.setProperty(QString::fromLatin1(qtscript_QFutureIterator_function_names[i+1]),
+            fun, QScriptValue::SkipInEnumeration);
+    }
 
     engine->setDefaultPrototype(qMetaTypeId<QtScriptFutureIterator*>(), proto);
 

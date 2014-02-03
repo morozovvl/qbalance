@@ -42,6 +42,15 @@ static const int qtscript_QBuffer_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QBuffer_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QBuffer : public QBuffer
+{
+
+    friend QScriptValue qtscript_QBuffer_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QBuffer_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -76,7 +85,7 @@ static QScriptValue qtscript_QBuffer_prototype_call(QScriptContext *context, QSc
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QBuffer* _q_self = qscriptvalue_cast<QBuffer*>(context->thisObject());
+    qtscript_QBuffer* _q_self = reinterpret_cast<qtscript_QBuffer*>(qscriptvalue_cast<QBuffer*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QBuffer.%0(): this object is not a QBuffer")

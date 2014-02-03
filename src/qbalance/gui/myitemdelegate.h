@@ -54,6 +54,7 @@ public:
     bool        isReadOnly() { return readOnly; }
     void        setFieldName(QString name) { fieldName = name; }
     QString     getFieldName() { return fieldName; }
+
 protected:
     FormGrid*               parentForm;
     QString                 columnMask;

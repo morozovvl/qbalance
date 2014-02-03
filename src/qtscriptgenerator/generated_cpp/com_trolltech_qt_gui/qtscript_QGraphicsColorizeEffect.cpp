@@ -41,6 +41,15 @@ static const int qtscript_QGraphicsColorizeEffect_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QGraphicsColorizeEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGraphicsColorizeEffect : public QGraphicsColorizeEffect
+{
+
+    friend QScriptValue qtscript_QGraphicsColorizeEffect_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QGraphicsColorizeEffect_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -74,7 +83,7 @@ static QScriptValue qtscript_QGraphicsColorizeEffect_prototype_call(QScriptConte
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGraphicsColorizeEffect* _q_self = qscriptvalue_cast<QGraphicsColorizeEffect*>(context->thisObject());
+    qtscript_QGraphicsColorizeEffect* _q_self = reinterpret_cast<qtscript_QGraphicsColorizeEffect*>(qscriptvalue_cast<QGraphicsColorizeEffect*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGraphicsColorizeEffect.%0(): this object is not a QGraphicsColorizeEffect")

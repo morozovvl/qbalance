@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qfontcombobox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractitemdelegate.h>
 #include <qabstractitemmodel.h>
@@ -21,8 +22,6 @@
 #include <qfontcombobox.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -34,6 +33,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -44,6 +44,7 @@
 #include <qstyleoption.h>
 #include <qvalidator.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QFontComboBox.h"
 
@@ -68,6 +69,15 @@ static const int qtscript_QFontComboBox_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QFontComboBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QFontComboBox : public QFontComboBox
+{
+
+    friend QScriptValue qtscript_QFontComboBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QFontComboBox_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -83,6 +93,7 @@ Q_DECLARE_METATYPE(QFontComboBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QFontComboBox*)
 Q_DECLARE_METATYPE(QFontComboBox::FontFilter)
 Q_DECLARE_METATYPE(QFlags<QFontComboBox::FontFilter>)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QComboBox*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -287,7 +298,7 @@ static QScriptValue qtscript_QFontComboBox_prototype_call(QScriptContext *contex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QFontComboBox* _q_self = qscriptvalue_cast<QFontComboBox*>(context->thisObject());
+    qtscript_QFontComboBox* _q_self = reinterpret_cast<qtscript_QFontComboBox*>(qscriptvalue_cast<QFontComboBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QFontComboBox.%0(): this object is not a QFontComboBox")

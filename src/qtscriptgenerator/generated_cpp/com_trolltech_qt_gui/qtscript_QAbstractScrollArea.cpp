@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qabstractscrollarea.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractscrollarea.h>
 #include <qaction.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -29,6 +28,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QAbstractScrollArea.h"
 
@@ -50,12 +51,17 @@ static const char * const qtscript_QAbstractScrollArea_function_names[] = {
     , "maximumViewportSize"
     , "minimumSizeHint"
     , "scrollBarWidgets"
+    , "scrollContentsBy"
     , "setCornerWidget"
     , "setHorizontalScrollBar"
     , "setVerticalScrollBar"
     , "setViewport"
+    , "setViewportMargins"
+    , "setupViewport"
     , "verticalScrollBar"
     , "viewport"
+    , "viewportEvent"
+    , "viewportSizeHint"
     , "toString"
 };
 
@@ -69,11 +75,16 @@ static const char * const qtscript_QAbstractScrollArea_function_signatures[] = {
     , ""
     , ""
     , "Alignment alignment"
+    , "int dx, int dy"
     , "QWidget widget"
     , "QScrollBar scrollbar"
     , "QScrollBar scrollbar"
     , "QWidget widget"
+    , "QMargins margins\nint left, int top, int right, int bottom"
+    , "QWidget viewport"
     , ""
+    , ""
+    , "QEvent arg__1"
     , ""
 ""
 };
@@ -88,13 +99,31 @@ static const int qtscript_QAbstractScrollArea_function_lengths[] = {
     , 0
     , 0
     , 1
+    , 2
     , 1
     , 1
     , 1
+    , 1
+    , 4
     , 1
     , 0
     , 0
+    , 1
     , 0
+    , 0
+};
+
+static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractScrollArea : public QAbstractScrollArea
+{
+    friend QScriptValue qtscript_QAbstractScrollArea_scrollContentsBy(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractScrollArea_setViewportMargins(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractScrollArea_viewportEvent(QScriptContext *, QScriptEngine *);
+    friend QScriptValue qtscript_QAbstractScrollArea_viewportSizeHint(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractScrollArea_throw_ambiguity_error_helper(
@@ -110,9 +139,12 @@ static QScriptValue qtscript_QAbstractScrollArea_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QAbstractScrollArea*)
 Q_DECLARE_METATYPE(QtScriptShell_QAbstractScrollArea*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::AlignmentFlag>)
 Q_DECLARE_METATYPE(QScrollBar*)
 Q_DECLARE_METATYPE(QList<QWidget*>)
+Q_DECLARE_METATYPE(QMargins)
+Q_DECLARE_METATYPE(QEvent*)
 Q_DECLARE_METATYPE(QFrame*)
 
 //
@@ -129,11 +161,11 @@ static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 12;
+        _id = 0xBABE0000 + 17;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractScrollArea* _q_self = qscriptvalue_cast<QAbstractScrollArea*>(context->thisObject());
+    qtscript_QAbstractScrollArea* _q_self = reinterpret_cast<qtscript_QAbstractScrollArea*>(qscriptvalue_cast<QAbstractScrollArea*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractScrollArea.%0(): this object is not a QAbstractScrollArea")
@@ -187,6 +219,15 @@ static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *
     break;
 
     case 6:
+    if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        _q_self->scrollContentsBy(_q_arg0, _q_arg1);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 7:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setCornerWidget(_q_arg0);
@@ -194,7 +235,7 @@ static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *
     }
     break;
 
-    case 7:
+    case 8:
     if (context->argumentCount() == 1) {
         QScrollBar* _q_arg0 = qscriptvalue_cast<QScrollBar*>(context->argument(0));
         _q_self->setHorizontalScrollBar(_q_arg0);
@@ -202,7 +243,7 @@ static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *
     }
     break;
 
-    case 8:
+    case 9:
     if (context->argumentCount() == 1) {
         QScrollBar* _q_arg0 = qscriptvalue_cast<QScrollBar*>(context->argument(0));
         _q_self->setVerticalScrollBar(_q_arg0);
@@ -210,7 +251,7 @@ static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->setViewport(_q_arg0);
@@ -218,21 +259,60 @@ static QScriptValue qtscript_QAbstractScrollArea_prototype_call(QScriptContext *
     }
     break;
 
-    case 10:
+    case 11:
+    if (context->argumentCount() == 1) {
+        QMargins _q_arg0 = qscriptvalue_cast<QMargins>(context->argument(0));
+        _q_self->setViewportMargins(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    if (context->argumentCount() == 4) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        int _q_arg2 = context->argument(2).toInt32();
+        int _q_arg3 = context->argument(3).toInt32();
+        _q_self->setViewportMargins(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 12:
+    if (context->argumentCount() == 1) {
+        QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
+        _q_self->setupViewport(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 13:
     if (context->argumentCount() == 0) {
         QScrollBar* _q_result = _q_self->verticalScrollBar();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 14:
     if (context->argumentCount() == 0) {
         QWidget* _q_result = _q_self->viewport();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 12: {
+    case 15:
+    if (context->argumentCount() == 1) {
+        QEvent* _q_arg0 = qscriptvalue_cast<QEvent*>(context->argument(0));
+        bool _q_result = _q_self->viewportEvent(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 16:
+    if (context->argumentCount() == 0) {
+        QSize _q_result = _q_self->viewportSizeHint();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 17: {
     QString result = QString::fromLatin1("QAbstractScrollArea");
     return QScriptValue(context->engine(), result);
     }
@@ -292,7 +372,7 @@ QScriptValue qtscript_create_QAbstractScrollArea_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QAbstractScrollArea*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QAbstractScrollArea*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QFrame*>()));
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 18; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QAbstractScrollArea_prototype_call, qtscript_QAbstractScrollArea_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QAbstractScrollArea_function_names[i+1]),

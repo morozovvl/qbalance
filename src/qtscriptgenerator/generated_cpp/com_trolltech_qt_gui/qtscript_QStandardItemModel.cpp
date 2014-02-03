@@ -19,6 +19,7 @@
 #include <qsize.h>
 #include <qstandarditemmodel.h>
 #include <qstringlist.h>
+#include <qvector.h>
 
 #include "qtscriptshell_QStandardItemModel.h"
 
@@ -43,6 +44,7 @@ static const char * const qtscript_QStandardItemModel_function_names[] = {
     , "setHorizontalHeaderLabels"
     , "setItem"
     , "setItemPrototype"
+    , "setItemRoleNames"
     , "setRowCount"
     , "setVerticalHeaderItem"
     , "setVerticalHeaderLabels"
@@ -76,6 +78,7 @@ static const char * const qtscript_QStandardItemModel_function_signatures[] = {
     , "List labels"
     , "int row, QStandardItem item\nint row, int column, QStandardItem item"
     , "QStandardItem item"
+    , "HashMap roleNames"
     , "int rows"
     , "int row, QStandardItem item"
     , "List labels"
@@ -110,6 +113,7 @@ static const int qtscript_QStandardItemModel_function_lengths[] = {
     , 3
     , 1
     , 1
+    , 1
     , 2
     , 1
     , 1
@@ -119,6 +123,15 @@ static const int qtscript_QStandardItemModel_function_lengths[] = {
     , 1
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStandardItemModel : public QStandardItemModel
+{
+
+    friend QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QStandardItemModel_throw_ambiguity_error_helper(
@@ -137,7 +150,35 @@ Q_DECLARE_METATYPE(QtScriptShell_QStandardItemModel*)
 Q_DECLARE_METATYPE(QStandardItem*)
 Q_DECLARE_METATYPE(QList<QStandardItem*>)
 Q_DECLARE_METATYPE(QFlags<Qt::MatchFlag>)
-Q_DECLARE_METATYPE(QModelIndex)
+#if QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QHash<int,QByteArray> > \
+{ \
+    enum { Defined = 1 }; \
+    static int qt_metatype_id() \
+    { \
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
+        if (!metatype_id) \
+            metatype_id = qRegisterMetaType< QHash<int,QByteArray> >("QHash<int,QByteArray>"); \
+        return metatype_id; \
+    } \
+};
+#else // QT_VERSION < 0x050000
+template <> \
+struct QMetaTypeId< QHash<int,QByteArray> >
+{
+    enum { Defined = 1 };
+    static int qt_metatype_id()
+    {
+        static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+        if (const int id = metatype_id.loadAcquire())
+            return id;
+        const int newId = qRegisterMetaType< QHash<int,QByteArray> >("QHash<int,QByteArray>", reinterpret_cast< QHash<int,QByteArray> *>(quintptr(-1)));
+        metatype_id.storeRelease(newId);
+        return newId;
+    }
+};
+#endif
 Q_DECLARE_METATYPE(QAbstractItemModel*)
 
 //
@@ -154,11 +195,11 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 26;
+        _id = 0xBABE0000 + 27;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStandardItemModel* _q_self = qscriptvalue_cast<QStandardItemModel*>(context->thisObject());
+    qtscript_QStandardItemModel* _q_self = reinterpret_cast<qtscript_QStandardItemModel*>(qscriptvalue_cast<QStandardItemModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStandardItemModel.%0(): this object is not a QStandardItemModel")
@@ -351,13 +392,21 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
 
     case 17:
     if (context->argumentCount() == 1) {
+        QHash<int,QByteArray> _q_arg0 = qscriptvalue_cast<QHash<int,QByteArray> >(context->argument(0));
+        _q_self->setItemRoleNames(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setRowCount(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_arg1 = qscriptvalue_cast<QStandardItem*>(context->argument(1));
@@ -366,7 +415,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 19:
+    case 20:
     if (context->argumentCount() == 1) {
         QStringList _q_arg0;
         qScriptValueToSequence(context->argument(0), _q_arg0);
@@ -375,7 +424,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 20:
+    case 21:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QStandardItem*> _q_result = _q_self->takeColumn(_q_arg0);
@@ -383,7 +432,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 21:
+    case 22:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_result = _q_self->takeHorizontalHeaderItem(_q_arg0);
@@ -391,7 +440,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 22:
+    case 23:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_result = _q_self->takeItem(_q_arg0);
@@ -405,7 +454,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 23:
+    case 24:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QList<QStandardItem*> _q_result = _q_self->takeRow(_q_arg0);
@@ -413,7 +462,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 24:
+    case 25:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_result = _q_self->takeVerticalHeaderItem(_q_arg0);
@@ -421,7 +470,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 25:
+    case 26:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QStandardItem* _q_result = _q_self->verticalHeaderItem(_q_arg0);
@@ -429,7 +478,7 @@ static QScriptValue qtscript_QStandardItemModel_prototype_call(QScriptContext *c
     }
     break;
 
-    case 26: {
+    case 27: {
     QString result = QString::fromLatin1("QStandardItemModel");
     return QScriptValue(context->engine(), result);
     }
@@ -504,7 +553,7 @@ QScriptValue qtscript_create_QStandardItemModel_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QStandardItemModel*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QStandardItemModel*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QAbstractItemModel*>()));
-    for (int i = 0; i < 27; ++i) {
+    for (int i = 0; i < 28; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QStandardItemModel_prototype_call, qtscript_QStandardItemModel_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QStandardItemModel_function_names[i+1]),

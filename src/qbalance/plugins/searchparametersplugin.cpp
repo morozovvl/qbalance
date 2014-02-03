@@ -42,6 +42,7 @@ QString SearchParametersPlugin::codeTemplate() const {
 
 QString SearchParametersPlugin::domXml() const {
     return "<widget class=\"SearchParameters\" name=\"searchParameters\">\n"
+           "<layout class=\"QGridLayout\" name=\"gridLayout\"/>\n"
            "</widget>\n";
 }
 

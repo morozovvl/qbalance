@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qdialogbuttonbox.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qabstractbutton.h>
 #include <qaction.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qpushbutton.h>
 #include <qrect.h>
@@ -38,6 +38,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QDialogButtonBox.h"
 
@@ -83,6 +84,15 @@ static const int qtscript_QDialogButtonBox_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QDialogButtonBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QDialogButtonBox : public QDialogButtonBox
+{
+
+    friend QScriptValue qtscript_QDialogButtonBox_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QDialogButtonBox_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -97,13 +107,14 @@ static QScriptValue qtscript_QDialogButtonBox_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QDialogButtonBox*)
 Q_DECLARE_METATYPE(QtScriptShell_QDialogButtonBox*)
 Q_DECLARE_METATYPE(QDialogButtonBox::ButtonLayout)
-Q_DECLARE_METATYPE(QDialogButtonBox::ButtonRole)
 Q_DECLARE_METATYPE(QDialogButtonBox::StandardButton)
 Q_DECLARE_METATYPE(QFlags<QDialogButtonBox::StandardButton>)
+Q_DECLARE_METATYPE(QDialogButtonBox::ButtonRole)
 Q_DECLARE_METATYPE(QAbstractButton*)
 Q_DECLARE_METATYPE(QPushButton*)
 Q_DECLARE_METATYPE(QList<QAbstractButton*>)
 Q_DECLARE_METATYPE(Qt::Orientation)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -202,91 +213,6 @@ static QScriptValue qtscript_create_QDialogButtonBox_ButtonLayout_class(QScriptE
     for (int i = 0; i < 4; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QDialogButtonBox_ButtonLayout_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QDialogButtonBox_ButtonLayout_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QDialogButtonBox::ButtonRole
-//
-
-static const QDialogButtonBox::ButtonRole qtscript_QDialogButtonBox_ButtonRole_values[] = {
-    QDialogButtonBox::InvalidRole
-    , QDialogButtonBox::AcceptRole
-    , QDialogButtonBox::RejectRole
-    , QDialogButtonBox::DestructiveRole
-    , QDialogButtonBox::ActionRole
-    , QDialogButtonBox::HelpRole
-    , QDialogButtonBox::YesRole
-    , QDialogButtonBox::NoRole
-    , QDialogButtonBox::ResetRole
-    , QDialogButtonBox::ApplyRole
-    , QDialogButtonBox::NRoles
-};
-
-static const char * const qtscript_QDialogButtonBox_ButtonRole_keys[] = {
-    "InvalidRole"
-    , "AcceptRole"
-    , "RejectRole"
-    , "DestructiveRole"
-    , "ActionRole"
-    , "HelpRole"
-    , "YesRole"
-    , "NoRole"
-    , "ResetRole"
-    , "ApplyRole"
-    , "NRoles"
-};
-
-static QString qtscript_QDialogButtonBox_ButtonRole_toStringHelper(QDialogButtonBox::ButtonRole value)
-{
-    if ((value >= QDialogButtonBox::InvalidRole) && (value <= QDialogButtonBox::NRoles))
-        return qtscript_QDialogButtonBox_ButtonRole_keys[static_cast<int>(value)-static_cast<int>(QDialogButtonBox::InvalidRole)];
-    return QString();
-}
-
-static QScriptValue qtscript_QDialogButtonBox_ButtonRole_toScriptValue(QScriptEngine *engine, const QDialogButtonBox::ButtonRole &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QDialogButtonBox"));
-    return clazz.property(qtscript_QDialogButtonBox_ButtonRole_toStringHelper(value));
-}
-
-static void qtscript_QDialogButtonBox_ButtonRole_fromScriptValue(const QScriptValue &value, QDialogButtonBox::ButtonRole &out)
-{
-    out = qvariant_cast<QDialogButtonBox::ButtonRole>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QDialogButtonBox_ButtonRole(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QDialogButtonBox::InvalidRole) && (arg <= QDialogButtonBox::NRoles))
-        return qScriptValueFromValue(engine,  static_cast<QDialogButtonBox::ButtonRole>(arg));
-    return context->throwError(QString::fromLatin1("ButtonRole(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QDialogButtonBox_ButtonRole_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QDialogButtonBox::ButtonRole value = qscriptvalue_cast<QDialogButtonBox::ButtonRole>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QDialogButtonBox_ButtonRole_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QDialogButtonBox::ButtonRole value = qscriptvalue_cast<QDialogButtonBox::ButtonRole>(context->thisObject());
-    return QScriptValue(engine, qtscript_QDialogButtonBox_ButtonRole_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QDialogButtonBox_ButtonRole_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QDialogButtonBox_ButtonRole,
-        qtscript_QDialogButtonBox_ButtonRole_valueOf, qtscript_QDialogButtonBox_ButtonRole_toString);
-    qScriptRegisterMetaType<QDialogButtonBox::ButtonRole>(engine, qtscript_QDialogButtonBox_ButtonRole_toScriptValue,
-        qtscript_QDialogButtonBox_ButtonRole_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 11; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QDialogButtonBox_ButtonRole_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QDialogButtonBox_ButtonRole_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -474,6 +400,91 @@ static QScriptValue qtscript_create_QDialogButtonBox_StandardButtons_class(QScri
 }
 
 //
+// QDialogButtonBox::ButtonRole
+//
+
+static const QDialogButtonBox::ButtonRole qtscript_QDialogButtonBox_ButtonRole_values[] = {
+    QDialogButtonBox::InvalidRole
+    , QDialogButtonBox::AcceptRole
+    , QDialogButtonBox::RejectRole
+    , QDialogButtonBox::DestructiveRole
+    , QDialogButtonBox::ActionRole
+    , QDialogButtonBox::HelpRole
+    , QDialogButtonBox::YesRole
+    , QDialogButtonBox::NoRole
+    , QDialogButtonBox::ResetRole
+    , QDialogButtonBox::ApplyRole
+    , QDialogButtonBox::NRoles
+};
+
+static const char * const qtscript_QDialogButtonBox_ButtonRole_keys[] = {
+    "InvalidRole"
+    , "AcceptRole"
+    , "RejectRole"
+    , "DestructiveRole"
+    , "ActionRole"
+    , "HelpRole"
+    , "YesRole"
+    , "NoRole"
+    , "ResetRole"
+    , "ApplyRole"
+    , "NRoles"
+};
+
+static QString qtscript_QDialogButtonBox_ButtonRole_toStringHelper(QDialogButtonBox::ButtonRole value)
+{
+    if ((value >= QDialogButtonBox::InvalidRole) && (value <= QDialogButtonBox::NRoles))
+        return qtscript_QDialogButtonBox_ButtonRole_keys[static_cast<int>(value)-static_cast<int>(QDialogButtonBox::InvalidRole)];
+    return QString();
+}
+
+static QScriptValue qtscript_QDialogButtonBox_ButtonRole_toScriptValue(QScriptEngine *engine, const QDialogButtonBox::ButtonRole &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QDialogButtonBox"));
+    return clazz.property(qtscript_QDialogButtonBox_ButtonRole_toStringHelper(value));
+}
+
+static void qtscript_QDialogButtonBox_ButtonRole_fromScriptValue(const QScriptValue &value, QDialogButtonBox::ButtonRole &out)
+{
+    out = qvariant_cast<QDialogButtonBox::ButtonRole>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QDialogButtonBox_ButtonRole(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QDialogButtonBox::InvalidRole) && (arg <= QDialogButtonBox::NRoles))
+        return qScriptValueFromValue(engine,  static_cast<QDialogButtonBox::ButtonRole>(arg));
+    return context->throwError(QString::fromLatin1("ButtonRole(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QDialogButtonBox_ButtonRole_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QDialogButtonBox::ButtonRole value = qscriptvalue_cast<QDialogButtonBox::ButtonRole>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QDialogButtonBox_ButtonRole_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QDialogButtonBox::ButtonRole value = qscriptvalue_cast<QDialogButtonBox::ButtonRole>(context->thisObject());
+    return QScriptValue(engine, qtscript_QDialogButtonBox_ButtonRole_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QDialogButtonBox_ButtonRole_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QDialogButtonBox_ButtonRole,
+        qtscript_QDialogButtonBox_ButtonRole_valueOf, qtscript_QDialogButtonBox_ButtonRole_toString);
+    qScriptRegisterMetaType<QDialogButtonBox::ButtonRole>(engine, qtscript_QDialogButtonBox_ButtonRole_toScriptValue,
+        qtscript_QDialogButtonBox_ButtonRole_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 11; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QDialogButtonBox_ButtonRole_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QDialogButtonBox_ButtonRole_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QDialogButtonBox
 //
 
@@ -491,7 +502,7 @@ static QScriptValue qtscript_QDialogButtonBox_prototype_call(QScriptContext *con
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QDialogButtonBox* _q_self = qscriptvalue_cast<QDialogButtonBox*>(context->thisObject());
+    qtscript_QDialogButtonBox* _q_self = reinterpret_cast<qtscript_QDialogButtonBox*>(qscriptvalue_cast<QDialogButtonBox*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QDialogButtonBox.%0(): this object is not a QDialogButtonBox")
@@ -683,11 +694,11 @@ QScriptValue qtscript_create_QDialogButtonBox_class(QScriptEngine *engine)
 
     ctor.setProperty(QString::fromLatin1("ButtonLayout"),
         qtscript_create_QDialogButtonBox_ButtonLayout_class(engine, ctor));
-    ctor.setProperty(QString::fromLatin1("ButtonRole"),
-        qtscript_create_QDialogButtonBox_ButtonRole_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StandardButton"),
         qtscript_create_QDialogButtonBox_StandardButton_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StandardButtons"),
         qtscript_create_QDialogButtonBox_StandardButtons_class(engine));
+    ctor.setProperty(QString::fromLatin1("ButtonRole"),
+        qtscript_create_QDialogButtonBox_ButtonRole_class(engine, ctor));
     return ctor;
 }

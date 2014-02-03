@@ -41,6 +41,7 @@ static const char * const qtscript_QFileInfo_function_names[] = {
     , "isExecutable"
     , "isFile"
     , "isHidden"
+    , "isNativePath"
     , "isReadable"
     , "isRelative"
     , "isRoot"
@@ -49,7 +50,6 @@ static const char * const qtscript_QFileInfo_function_names[] = {
     , "lastModified"
     , "lastRead"
     , "makeAbsolute"
-    , "equals"
     , "owner"
     , "ownerId"
     , "path"
@@ -60,6 +60,7 @@ static const char * const qtscript_QFileInfo_function_names[] = {
     , "setFile"
     , "size"
     , "suffix"
+    , "swap"
     , "symLinkTarget"
     , "toString"
 };
@@ -99,7 +100,7 @@ static const char * const qtscript_QFileInfo_function_signatures[] = {
     , ""
     , ""
     , ""
-    , "QFileInfo fileinfo"
+    , ""
     , ""
     , ""
     , ""
@@ -110,6 +111,7 @@ static const char * const qtscript_QFileInfo_function_signatures[] = {
     , "QDir dir, String file\nQFile file\nString file"
     , ""
     , ""
+    , "QFileInfo other"
     , ""
 ""
 };
@@ -149,7 +151,7 @@ static const int qtscript_QFileInfo_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 1
+    , 0
     , 0
     , 0
     , 0
@@ -160,6 +162,7 @@ static const int qtscript_QFileInfo_function_lengths[] = {
     , 2
     , 0
     , 0
+    , 1
     , 0
     , 0
 };
@@ -175,7 +178,6 @@ static QScriptValue qtscript_QFileInfo_throw_ambiguity_error_helper(
         .arg(functionName).arg(fullSignatures.join(QLatin1String("\n"))));
 }
 
-Q_DECLARE_METATYPE(QFileInfo)
 Q_DECLARE_METATYPE(QFileInfo*)
 Q_DECLARE_METATYPE(QDir)
 Q_DECLARE_METATYPE(QFlags<QFile::Permission>)
@@ -195,7 +197,7 @@ static QScriptValue qtscript_QFileInfo_prototype_call(QScriptContext *context, Q
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 43;
+        _id = 0xBABE0000 + 44;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -370,64 +372,63 @@ static QScriptValue qtscript_QFileInfo_prototype_call(QScriptContext *context, Q
 
     case 23:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isReadable();
+        bool _q_result = _q_self->isNativePath();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 24:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isRelative();
+        bool _q_result = _q_self->isReadable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 25:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isRoot();
+        bool _q_result = _q_self->isRelative();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 26:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isSymLink();
+        bool _q_result = _q_self->isRoot();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 27:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isWritable();
+        bool _q_result = _q_self->isSymLink();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 28:
     if (context->argumentCount() == 0) {
-        QDateTime _q_result = _q_self->lastModified();
-        return qScriptValueFromValue(context->engine(), _q_result);
+        bool _q_result = _q_self->isWritable();
+        return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 29:
     if (context->argumentCount() == 0) {
-        QDateTime _q_result = _q_self->lastRead();
+        QDateTime _q_result = _q_self->lastModified();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 30:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->makeAbsolute();
-        return QScriptValue(context->engine(), _q_result);
+        QDateTime _q_result = _q_self->lastRead();
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 31:
-    if (context->argumentCount() == 1) {
-        QFileInfo _q_arg0 = qscriptvalue_cast<QFileInfo>(context->argument(0));
-        bool _q_result = _q_self->operator==(_q_arg0);
+    if (context->argumentCount() == 0) {
+        bool _q_result = _q_self->makeAbsolute();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
@@ -519,13 +520,21 @@ static QScriptValue qtscript_QFileInfo_prototype_call(QScriptContext *context, Q
     break;
 
     case 42:
+    if (context->argumentCount() == 1) {
+        QFileInfo _q_arg0 = qscriptvalue_cast<QFileInfo>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 43:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->symLinkTarget();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 43: {
+    case 44: {
     QString result = QString::fromLatin1("QFileInfo");
     return QScriptValue(context->engine(), result);
     }
@@ -591,7 +600,7 @@ QScriptValue qtscript_create_QFileInfo_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QFileInfo*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFileInfo*)0));
-    for (int i = 0; i < 44; ++i) {
+    for (int i = 0; i < 45; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFileInfo_prototype_call, qtscript_QFileInfo_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFileInfo_function_names[i+1]),

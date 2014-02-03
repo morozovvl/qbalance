@@ -18,6 +18,7 @@
 #include <qobject.h>
 #include <qsize.h>
 #include <qstringlist.h>
+#include <qvector.h>
 
 #include "qtscriptshell_QAbstractTableModel.h"
 
@@ -40,6 +41,15 @@ static const int qtscript_QAbstractTableModel_function_lengths[] = {
     // static
     // prototype
     , 0
+};
+
+static QScriptValue qtscript_QAbstractTableModel_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QAbstractTableModel : public QAbstractTableModel
+{
+
+    friend QScriptValue qtscript_QAbstractTableModel_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QAbstractTableModel_throw_ambiguity_error_helper(
@@ -75,7 +85,7 @@ static QScriptValue qtscript_QAbstractTableModel_prototype_call(QScriptContext *
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QAbstractTableModel* _q_self = qscriptvalue_cast<QAbstractTableModel*>(context->thisObject());
+    qtscript_QAbstractTableModel* _q_self = reinterpret_cast<qtscript_QAbstractTableModel*>(qscriptvalue_cast<QAbstractTableModel*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QAbstractTableModel.%0(): this object is not a QAbstractTableModel")

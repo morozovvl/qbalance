@@ -38,25 +38,18 @@ static const char * const qtscript_QGLShaderProgram_function_names[] = {
     , "bindAttributeLocation"
     , "disableAttributeArray"
     , "enableAttributeArray"
-    , "geometryInputType"
-    , "geometryOutputType"
     , "geometryOutputVertexCount"
     , "isLinked"
     , "link"
     , "log"
     , "maxGeometryOutputVertices"
-    , "programId"
     , "release"
     , "removeAllShaders"
     , "removeShader"
-    , "setAttributeArray"
     , "setAttributeArray_QVector2D"
     , "setAttributeArray_QVector3D"
     , "setAttributeArray_QVector4D"
-    , "setAttributeBuffer"
     , "setAttributeValue"
-    , "setGeometryInputType"
-    , "setGeometryOutputType"
     , "setGeometryOutputVertexCount"
     , "setUniformValue"
     , "setUniformValueArray"
@@ -88,21 +81,14 @@ static const char * const qtscript_QGLShaderProgram_function_signatures[] = {
     , ""
     , ""
     , ""
-    , ""
-    , ""
-    , ""
     , "QGLShader shader"
-    , "char name, float values, int tupleSize, int stride\nchar name, unsigned int type, void values, int tupleSize, int stride\nint location, float values, int tupleSize, int stride\nint location, unsigned int type, void values, int tupleSize, int stride"
     , "char name, QVector2D values, int stride\nint location, QVector2D values, int stride"
     , "char name, QVector3D values, int stride\nint location, QVector3D values, int stride"
     , "char name, QVector4D values, int stride\nint location, QVector4D values, int stride"
-    , "char name, unsigned int type, int offset, int tupleSize, int stride\nint location, unsigned int type, int offset, int tupleSize, int stride"
-    , "char name, QColor value\nchar name, QVector2D value\nchar name, QVector3D value\nchar name, QVector4D value\nchar name, float values, int columns, int rows\nchar name, float value\nchar name, float x, float y\nchar name, float x, float y, float z\nchar name, float x, float y, float z, float w\nint location, QColor value\nint location, QVector2D value\nint location, QVector3D value\nint location, QVector4D value\nint location, float values, int columns, int rows\nint location, float value\nint location, float x, float y\nint location, float x, float y, float z\nint location, float x, float y, float z, float w"
-    , "unsigned int inputType"
-    , "unsigned int outputType"
+    , "char name, QColor value\nchar name, QVector2D value\nchar name, QVector3D value\nchar name, QVector4D value\nint location, QColor value\nint location, QVector2D value\nint location, QVector3D value\nint location, QVector4D value"
     , "int count"
-    , "char name, QColor color\nchar name, QMatrix3x3 value\nchar name, QMatrix4x4 value\nchar name, QPoint point\nchar name, QPointF point\nchar name, QSize size\nchar name, QSizeF size\nchar name, QTransform value\nchar name, QVector2D value\nchar name, QVector3D value\nchar name, QVector4D value\nchar name, float value\nchar name, float x, float y\nchar name, float x, float y, float z\nchar name, float x, float y, float z, float w\nchar name, int value\nchar name, unsigned int value\nint location, QColor color\nint location, QMatrix3x3 value\nint location, QMatrix4x4 value\nint location, QPoint point\nint location, QPointF point\nint location, QSize size\nint location, QSizeF size\nint location, QTransform value\nint location, QVector2D value\nint location, QVector3D value\nint location, QVector4D value\nint location, float value\nint location, float x, float y\nint location, float x, float y, float z\nint location, float x, float y, float z, float w\nint location, int value\nint location, unsigned int value"
-    , "char name, QMatrix3x3 values, int count\nchar name, QMatrix4x4 values, int count\nchar name, float values, int count, int tupleSize\nchar name, int values, int count\nchar name, unsigned int values, int count\nint location, QMatrix3x3 values, int count\nint location, QMatrix4x4 values, int count\nint location, float values, int count, int tupleSize\nint location, int values, int count\nint location, unsigned int values, int count"
+    , "char name, QColor color\nchar name, QMatrix3x3 value\nchar name, QMatrix4x4 value\nchar name, QPoint point\nchar name, QPointF point\nchar name, QSize size\nchar name, QSizeF size\nchar name, QTransform value\nchar name, QVector2D value\nchar name, QVector3D value\nchar name, QVector4D value\nint location, QColor color\nint location, QMatrix3x3 value\nint location, QMatrix4x4 value\nint location, QPoint point\nint location, QPointF point\nint location, QSize size\nint location, QSizeF size\nint location, QTransform value\nint location, QVector2D value\nint location, QVector3D value\nint location, QVector4D value"
+    , "char name, QMatrix3x3 values, int count\nchar name, QMatrix4x4 values, int count\nint location, QMatrix3x3 values, int count\nint location, QMatrix4x4 values, int count"
     , "char name, QVector2D values, int count\nint location, QVector2D values, int count"
     , "char name, QVector3D values, int count\nint location, QVector3D values, int count"
     , "char name, QVector4D values, int count\nint location, QVector4D values, int count"
@@ -131,27 +117,29 @@ static const int qtscript_QGLShaderProgram_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 0
-    , 0
-    , 0
     , 1
-    , 5
     , 3
     , 3
     , 3
-    , 5
-    , 5
+    , 2
     , 1
-    , 1
-    , 1
-    , 5
-    , 4
+    , 2
+    , 3
     , 3
     , 3
     , 3
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGLShaderProgram : public QGLShaderProgram
+{
+
+    friend QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGLShaderProgram_throw_ambiguity_error_helper(
@@ -170,14 +158,11 @@ Q_DECLARE_METATYPE(QtScriptShell_QGLShaderProgram*)
 Q_DECLARE_METATYPE(QGLShader*)
 Q_DECLARE_METATYPE(QFlags<QGLShader::ShaderTypeBit>)
 Q_DECLARE_METATYPE(char*)
-Q_DECLARE_METATYPE(float*)
 Q_DECLARE_METATYPE(QVector2D*)
 Q_DECLARE_METATYPE(QVector3D*)
 Q_DECLARE_METATYPE(QVector4D*)
 Q_DECLARE_METATYPE(QMatrix3x3*)
 Q_DECLARE_METATYPE(QMatrix4x4*)
-Q_DECLARE_METATYPE(int*)
-Q_DECLARE_METATYPE(uint*)
 Q_DECLARE_METATYPE(QList<QGLShader*>)
 Q_DECLARE_METATYPE(QGLContext*)
 
@@ -195,11 +180,11 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 35;
+        _id = 0xBABE0000 + 28;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGLShaderProgram* _q_self = qscriptvalue_cast<QGLShaderProgram*>(context->thisObject());
+    qtscript_QGLShaderProgram* _q_self = reinterpret_cast<qtscript_QGLShaderProgram*>(qscriptvalue_cast<QGLShaderProgram*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGLShaderProgram.%0(): this object is not a QGLShaderProgram")
@@ -327,75 +312,54 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
 
     case 8:
     if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->geometryInputType();
+        int _q_result = _q_self->geometryOutputVertexCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 9:
     if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->geometryOutputType();
+        bool _q_result = _q_self->isLinked();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 10:
     if (context->argumentCount() == 0) {
-        int _q_result = _q_self->geometryOutputVertexCount();
+        bool _q_result = _q_self->link();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 11:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->isLinked();
+        QString _q_result = _q_self->log();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 12:
     if (context->argumentCount() == 0) {
-        bool _q_result = _q_self->link();
+        int _q_result = _q_self->maxGeometryOutputVertices();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
     case 13:
     if (context->argumentCount() == 0) {
-        QString _q_result = _q_self->log();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 14:
-    if (context->argumentCount() == 0) {
-        int _q_result = _q_self->maxGeometryOutputVertices();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 15:
-    if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->programId();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 16:
-    if (context->argumentCount() == 0) {
         _q_self->release();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 17:
+    case 14:
     if (context->argumentCount() == 0) {
         _q_self->removeAllShaders();
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 18:
+    case 15:
     if (context->argumentCount() == 1) {
         QGLShader* _q_arg0 = qscriptvalue_cast<QGLShader*>(context->argument(0));
         _q_self->removeShader(_q_arg0);
@@ -403,434 +367,172 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     }
     break;
 
-    case 19:
+    case 16:
+    if (context->argumentCount() == 2) {
+        if (qscriptvalue_cast<char*>(context->argument(0))
+            && qscriptvalue_cast<QVector2D*>(context->argument(1))) {
+            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
+            _q_self->setAttributeArray(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && qscriptvalue_cast<QVector2D*>(context->argument(1))) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
+            _q_self->setAttributeArray(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        }
+    }
     if (context->argumentCount() == 3) {
         if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<float*>(context->argument(1))
+            && qscriptvalue_cast<QVector2D*>(context->argument(1))
             && context->argument(2).isNumber()) {
             char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
+            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
             int _q_arg2 = context->argument(2).toInt32();
             _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
             return context->engine()->undefinedValue();
         } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<float*>(context->argument(1))
+            && qscriptvalue_cast<QVector2D*>(context->argument(1))
             && context->argument(2).isNumber()) {
             int _q_arg0 = context->argument(0).toInt32();
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
+            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
             int _q_arg2 = context->argument(2).toInt32();
             _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
             return context->engine()->undefinedValue();
         }
     }
-    if (context->argumentCount() == 4) {
+    break;
+
+    case 17:
+    if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<float*>(context->argument(1))
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
+            && qscriptvalue_cast<QVector3D*>(context->argument(1))) {
             char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
+            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
+            _q_self->setAttributeArray(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && qscriptvalue_cast<QVector3D*>(context->argument(1))) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
+            _q_self->setAttributeArray(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        }
+    }
+    if (context->argumentCount() == 3) {
+        if (qscriptvalue_cast<char*>(context->argument(0))
+            && qscriptvalue_cast<QVector3D*>(context->argument(1))
+            && context->argument(2).isNumber()) {
+            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
             int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && qscriptvalue_cast<QVector3D*>(context->argument(1))
+            && context->argument(2).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
+            int _q_arg2 = context->argument(2).toInt32();
+            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
+            return context->engine()->undefinedValue();
+        }
+    }
+    break;
+
+    case 18:
+    if (context->argumentCount() == 2) {
+        if (qscriptvalue_cast<char*>(context->argument(0))
+            && qscriptvalue_cast<QVector4D*>(context->argument(1))) {
+            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
+            _q_self->setAttributeArray(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && qscriptvalue_cast<QVector4D*>(context->argument(1))) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
+            _q_self->setAttributeArray(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        }
+    }
+    if (context->argumentCount() == 3) {
+        if (qscriptvalue_cast<char*>(context->argument(0))
+            && qscriptvalue_cast<QVector4D*>(context->argument(1))
+            && context->argument(2).isNumber()) {
+            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
+            int _q_arg2 = context->argument(2).toInt32();
+            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && qscriptvalue_cast<QVector4D*>(context->argument(1))
+            && context->argument(2).isNumber()) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
+            int _q_arg2 = context->argument(2).toInt32();
+            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
+            return context->engine()->undefinedValue();
+        }
+    }
+    break;
+
+    case 19:
+    if (context->argumentCount() == 2) {
+        if (qscriptvalue_cast<char*>(context->argument(0))
+            && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
+            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+            QColor _q_arg1 = qscriptvalue_cast<QColor>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
         } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && qscriptvalue_cast<void*>(context->argument(2))
-            && context->argument(3).isNumber()) {
+            && (qMetaTypeId<QVector2D>() == context->argument(1).toVariant().userType())) {
             char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            void* _q_arg2 = qscriptvalue_cast<void*>(context->argument(2));
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
+            QVector2D _q_arg1 = qscriptvalue_cast<QVector2D>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<float*>(context->argument(1))
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && qscriptvalue_cast<void*>(context->argument(2))
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            uint _q_arg1 = context->argument(1).toUInt32();
-            void* _q_arg2 = qscriptvalue_cast<void*>(context->argument(2));
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 5) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && qscriptvalue_cast<void*>(context->argument(2))
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
+        } else if (qscriptvalue_cast<char*>(context->argument(0))
+            && (qMetaTypeId<QVector3D>() == context->argument(1).toVariant().userType())) {
             char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            void* _q_arg2 = qscriptvalue_cast<void*>(context->argument(2));
-            int _q_arg3 = context->argument(3).toInt32();
-            int _q_arg4 = context->argument(4).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
+            QVector3D _q_arg1 = qscriptvalue_cast<QVector3D>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (qscriptvalue_cast<char*>(context->argument(0))
+            && (qMetaTypeId<QVector4D>() == context->argument(1).toVariant().userType())) {
+            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
+            QVector4D _q_arg1 = qscriptvalue_cast<QVector4D>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
         } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && qscriptvalue_cast<void*>(context->argument(2))
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
+            && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
             int _q_arg0 = context->argument(0).toInt32();
-            uint _q_arg1 = context->argument(1).toUInt32();
-            void* _q_arg2 = qscriptvalue_cast<void*>(context->argument(2));
-            int _q_arg3 = context->argument(3).toInt32();
-            int _q_arg4 = context->argument(4).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
+            QColor _q_arg1 = qscriptvalue_cast<QColor>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && (qMetaTypeId<QVector2D>() == context->argument(1).toVariant().userType())) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector2D _q_arg1 = qscriptvalue_cast<QVector2D>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && (qMetaTypeId<QVector3D>() == context->argument(1).toVariant().userType())) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector3D _q_arg1 = qscriptvalue_cast<QVector3D>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
+            return context->engine()->undefinedValue();
+        } else if (context->argument(0).isNumber()
+            && (qMetaTypeId<QVector4D>() == context->argument(1).toVariant().userType())) {
+            int _q_arg0 = context->argument(0).toInt32();
+            QVector4D _q_arg1 = qscriptvalue_cast<QVector4D>(context->argument(1));
+            _q_self->setAttributeValue(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
         }
     }
     break;
 
     case 20:
-    if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<QVector2D*>(context->argument(1))) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
-            _q_self->setAttributeArray(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<QVector2D*>(context->argument(1))) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
-            _q_self->setAttributeArray(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<QVector2D*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<QVector2D*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector2D* _q_arg1 = qscriptvalue_cast<QVector2D*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 21:
-    if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<QVector3D*>(context->argument(1))) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
-            _q_self->setAttributeArray(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<QVector3D*>(context->argument(1))) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
-            _q_self->setAttributeArray(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<QVector3D*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<QVector3D*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector3D* _q_arg1 = qscriptvalue_cast<QVector3D*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 22:
-    if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<QVector4D*>(context->argument(1))) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
-            _q_self->setAttributeArray(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<QVector4D*>(context->argument(1))) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
-            _q_self->setAttributeArray(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<QVector4D*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<QVector4D*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector4D* _q_arg1 = qscriptvalue_cast<QVector4D*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setAttributeArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 23:
-    if (context->argumentCount() == 4) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeBuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeBuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 5) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            int _q_arg4 = context->argument(4).toInt32();
-            _q_self->setAttributeBuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            uint _q_arg1 = context->argument(1).toUInt32();
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            int _q_arg4 = context->argument(4).toInt32();
-            _q_self->setAttributeBuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 24:
-    if (context->argumentCount() == 2) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QColor _q_arg1 = qscriptvalue_cast<QColor>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && (qMetaTypeId<QVector2D>() == context->argument(1).toVariant().userType())) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector2D _q_arg1 = qscriptvalue_cast<QVector2D>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && (qMetaTypeId<QVector3D>() == context->argument(1).toVariant().userType())) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector3D _q_arg1 = qscriptvalue_cast<QVector3D>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && (qMetaTypeId<QVector4D>() == context->argument(1).toVariant().userType())) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            QVector4D _q_arg1 = qscriptvalue_cast<QVector4D>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QColor _q_arg1 = qscriptvalue_cast<QColor>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && (qMetaTypeId<QVector2D>() == context->argument(1).toVariant().userType())) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector2D _q_arg1 = qscriptvalue_cast<QVector2D>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && (qMetaTypeId<QVector3D>() == context->argument(1).toVariant().userType())) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector3D _q_arg1 = qscriptvalue_cast<QVector3D>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && (qMetaTypeId<QVector4D>() == context->argument(1).toVariant().userType())) {
-            int _q_arg0 = context->argument(0).toInt32();
-            QVector4D _q_arg1 = qscriptvalue_cast<QVector4D>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 4) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<float*>(context->argument(1))
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<float*>(context->argument(1))
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 5) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
-            _q_self->setAttributeValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 25:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->setGeometryInputType(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 26:
-    if (context->argumentCount() == 1) {
-        uint _q_arg0 = context->argument(0).toUInt32();
-        _q_self->setGeometryOutputType(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 27:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         _q_self->setGeometryOutputVertexCount(_q_arg0);
@@ -838,7 +540,7 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     }
     break;
 
-    case 28:
+    case 21:
     if (context->argumentCount() == 2) {
         if (qscriptvalue_cast<char*>(context->argument(0))
             && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
@@ -906,24 +608,6 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
             QVector4D _q_arg1 = qscriptvalue_cast<QVector4D>(context->argument(1));
             _q_self->setUniformValue(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            _q_self->setUniformValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            int _q_arg1 = context->argument(1).toInt32();
-            _q_self->setUniformValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->setUniformValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
         } else if (context->argument(0).isNumber()
             && (qMetaTypeId<QColor>() == context->argument(1).toVariant().userType())) {
             int _q_arg0 = context->argument(0).toInt32();
@@ -990,98 +674,11 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
             QVector4D _q_arg1 = qscriptvalue_cast<QVector4D>(context->argument(1));
             _q_self->setUniformValue(_q_arg0, _q_arg1);
             return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            _q_self->setUniformValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            _q_self->setUniformValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->setUniformValue(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            _q_self->setUniformValue(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            _q_self->setUniformValue(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 4) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            _q_self->setUniformValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            _q_self->setUniformValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 5) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
-            _q_self->setUniformValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()
-            && context->argument(4).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float _q_arg1 = qscriptvalue_cast<float>(context->argument(1));
-            float _q_arg2 = qscriptvalue_cast<float>(context->argument(2));
-            float _q_arg3 = qscriptvalue_cast<float>(context->argument(3));
-            float _q_arg4 = qscriptvalue_cast<float>(context->argument(4));
-            _q_self->setUniformValue(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-            return context->engine()->undefinedValue();
         }
     }
     break;
 
-    case 29:
+    case 22:
     if (context->argumentCount() == 3) {
         if (qscriptvalue_cast<char*>(context->argument(0))
             && qscriptvalue_cast<QMatrix3x3*>(context->argument(1))
@@ -1096,22 +693,6 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
             && context->argument(2).isNumber()) {
             char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
             QMatrix4x4* _q_arg1 = qscriptvalue_cast<QMatrix4x4*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<int*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            int* _q_arg1 = qscriptvalue_cast<int*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<uint*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            uint* _q_arg1 = qscriptvalue_cast<uint*>(context->argument(1));
             int _q_arg2 = context->argument(2).toInt32();
             _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2);
             return context->engine()->undefinedValue();
@@ -1131,50 +712,11 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
             int _q_arg2 = context->argument(2).toInt32();
             _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2);
             return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<int*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int* _q_arg1 = qscriptvalue_cast<int*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<uint*>(context->argument(1))
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            uint* _q_arg1 = qscriptvalue_cast<uint*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 4) {
-        if (qscriptvalue_cast<char*>(context->argument(0))
-            && qscriptvalue_cast<float*>(context->argument(1))
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            char* _q_arg0 = qscriptvalue_cast<char*>(context->argument(0));
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
-        } else if (context->argument(0).isNumber()
-            && qscriptvalue_cast<float*>(context->argument(1))
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            float* _q_arg1 = qscriptvalue_cast<float*>(context->argument(1));
-            int _q_arg2 = context->argument(2).toInt32();
-            int _q_arg3 = context->argument(3).toInt32();
-            _q_self->setUniformValueArray(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            return context->engine()->undefinedValue();
         }
     }
     break;
 
-    case 30:
+    case 23:
     if (context->argumentCount() == 3) {
         if (qscriptvalue_cast<char*>(context->argument(0))
             && qscriptvalue_cast<QVector2D*>(context->argument(1))
@@ -1196,7 +738,7 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     }
     break;
 
-    case 31:
+    case 24:
     if (context->argumentCount() == 3) {
         if (qscriptvalue_cast<char*>(context->argument(0))
             && qscriptvalue_cast<QVector3D*>(context->argument(1))
@@ -1218,7 +760,7 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     }
     break;
 
-    case 32:
+    case 25:
     if (context->argumentCount() == 3) {
         if (qscriptvalue_cast<char*>(context->argument(0))
             && qscriptvalue_cast<QVector4D*>(context->argument(1))
@@ -1240,14 +782,14 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     }
     break;
 
-    case 33:
+    case 26:
     if (context->argumentCount() == 0) {
         QList<QGLShader*> _q_result = _q_self->shaders();
         return qScriptValueFromSequence(context->engine(), _q_result);
     }
     break;
 
-    case 34:
+    case 27:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QByteArray>() == context->argument(0).toVariant().userType())) {
             QByteArray _q_arg0 = qscriptvalue_cast<QByteArray>(context->argument(0));
@@ -1265,7 +807,7 @@ static QScriptValue qtscript_QGLShaderProgram_prototype_call(QScriptContext *con
     }
     break;
 
-    case 35: {
+    case 28: {
     QString result = QString::fromLatin1("QGLShaderProgram");
     return QScriptValue(context->engine(), result);
     }
@@ -1352,7 +894,7 @@ QScriptValue qtscript_create_QGLShaderProgram_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGLShaderProgram*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLShaderProgram*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 36; ++i) {
+    for (int i = 0; i < 29; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLShaderProgram_prototype_call, qtscript_QGLShaderProgram_function_lengths[i+2]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QGLShaderProgram_function_names[i+2]),

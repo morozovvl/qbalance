@@ -11,8 +11,8 @@
 #include <qimage.h>
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
 #include <qpoint.h>
-#include <qrect.h>
 #include <qsize.h>
 
 #include "qtscriptshell_QGLFramebufferObject.h"
@@ -21,35 +21,27 @@ static const char * const qtscript_QGLFramebufferObject_function_names[] = {
     "QGLFramebufferObject"
     // static
     , "bindDefault"
-    , "blitFramebuffer"
     , "hasOpenGLFramebufferBlit"
     , "hasOpenGLFramebufferObjects"
     // prototype
     , "attachment"
     , "bind"
-    , "drawTexture"
     , "format"
-    , "handle"
     , "isBound"
     , "isValid"
     , "release"
     , "size"
-    , "texture"
     , "toImage"
     , "toString"
 };
 
 static const char * const qtscript_QGLFramebufferObject_function_signatures[] = {
-    "QSize size, Attachment attachment, unsigned int target, unsigned int internal_format\nQSize size, QGLFramebufferObjectFormat format\nQSize size, unsigned int target\nint width, int height, Attachment attachment, unsigned int target, unsigned int internal_format\nint width, int height, QGLFramebufferObjectFormat format\nint width, int height, unsigned int target"
+    "QSize size, QGLFramebufferObjectFormat format\nint width, int height, QGLFramebufferObjectFormat format"
     // static
     , ""
-    , "QGLFramebufferObject target, QRect targetRect, QGLFramebufferObject source, QRect sourceRect, unsigned int buffers, unsigned int filter"
     , ""
     , ""
     // prototype
-    , ""
-    , ""
-    , "QPointF point, unsigned int textureId, unsigned int textureTarget\nQRectF target, unsigned int textureId, unsigned int textureTarget"
     , ""
     , ""
     , ""
@@ -62,16 +54,14 @@ static const char * const qtscript_QGLFramebufferObject_function_signatures[] = 
 };
 
 static const int qtscript_QGLFramebufferObject_function_lengths[] = {
-    5
+    3
     // static
     , 0
-    , 6
     , 0
     , 0
     // prototype
     , 0
     , 0
-    , 3
     , 0
     , 0
     , 0
@@ -79,8 +69,15 @@ static const int qtscript_QGLFramebufferObject_function_lengths[] = {
     , 0
     , 0
     , 0
-    , 0
-    , 0
+};
+
+static QScriptValue qtscript_QGLFramebufferObject_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QGLFramebufferObject : public QGLFramebufferObject
+{
+
+    friend QScriptValue qtscript_QGLFramebufferObject_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QGLFramebufferObject_throw_ambiguity_error_helper(
@@ -197,15 +194,15 @@ static QScriptValue qtscript_QGLFramebufferObject_prototype_call(QScriptContext 
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 11;
+        _id = 0xBABE0000 + 8;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QGLFramebufferObject* _q_self = qscriptvalue_cast<QGLFramebufferObject*>(context->thisObject());
+    qtscript_QGLFramebufferObject* _q_self = reinterpret_cast<qtscript_QGLFramebufferObject*>(qscriptvalue_cast<QGLFramebufferObject*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QGLFramebufferObject.%0(): this object is not a QGLFramebufferObject")
-            .arg(qtscript_QGLFramebufferObject_function_names[_id+5]));
+            .arg(qtscript_QGLFramebufferObject_function_names[_id+4]));
     }
 
     switch (_id) {
@@ -224,99 +221,48 @@ static QScriptValue qtscript_QGLFramebufferObject_prototype_call(QScriptContext 
     break;
 
     case 2:
-    if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1);
-            return context->engine()->undefinedValue();
-        }
-    }
-    if (context->argumentCount() == 3) {
-        if ((qMetaTypeId<QPointF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QPointF _q_arg0 = qscriptvalue_cast<QPointF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        } else if ((qMetaTypeId<QRectF>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            QRectF _q_arg0 = qscriptvalue_cast<QRectF>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            _q_self->drawTexture(_q_arg0, _q_arg1, _q_arg2);
-            return context->engine()->undefinedValue();
-        }
-    }
-    break;
-
-    case 3:
     if (context->argumentCount() == 0) {
         QGLFramebufferObjectFormat _q_result = _q_self->format();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
-    if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->handle();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 5:
+    case 3:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isBound();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 6:
+    case 4:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isValid();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 7:
+    case 5:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->release();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 8:
+    case 6:
     if (context->argumentCount() == 0) {
         QSize _q_result = _q_self->size();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
-    if (context->argumentCount() == 0) {
-        uint _q_result = _q_self->texture();
-        return QScriptValue(context->engine(), _q_result);
-    }
-    break;
-
-    case 10:
+    case 7:
     if (context->argumentCount() == 0) {
         QImage _q_result = _q_self->toImage();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 11: {
+    case 8: {
     QString result = QString::fromLatin1("QGLFramebufferObject");
     return QScriptValue(context->engine(), result);
     }
@@ -325,8 +271,8 @@ static QScriptValue qtscript_QGLFramebufferObject_prototype_call(QScriptContext 
     Q_ASSERT(false);
     }
     return qtscript_QGLFramebufferObject_throw_ambiguity_error_helper(context,
-        qtscript_QGLFramebufferObject_function_names[_id+5],
-        qtscript_QGLFramebufferObject_function_signatures[_id+5]);
+        qtscript_QGLFramebufferObject_function_names[_id+4],
+        qtscript_QGLFramebufferObject_function_signatures[_id+4]);
 }
 
 static QScriptValue qtscript_QGLFramebufferObject_static_call(QScriptContext *context, QScriptEngine *)
@@ -339,121 +285,18 @@ static QScriptValue qtscript_QGLFramebufferObject_static_call(QScriptContext *co
     if (context->thisObject().strictlyEquals(context->engine()->globalObject())) {
         return context->throwError(QString::fromLatin1("QGLFramebufferObject(): Did you forget to construct with 'new'?"));
     }
-    if (context->argumentCount() == 1) {
+    if (context->argumentCount() == 2) {
         QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-        QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0);
+        QGLFramebufferObjectFormat _q_arg1 = qscriptvalue_cast<QGLFramebufferObjectFormat>(context->argument(1));
+        QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
-    } else if (context->argumentCount() == 2) {
-        if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<QGLFramebufferObject::Attachment>() == context->argument(1).toVariant().userType())) {
-            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-            QGLFramebufferObject::Attachment _q_arg1 = qscriptvalue_cast<QGLFramebufferObject::Attachment>(context->argument(1));
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<QGLFramebufferObjectFormat>() == context->argument(1).toVariant().userType())) {
-            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-            QGLFramebufferObjectFormat _q_arg1 = qscriptvalue_cast<QGLFramebufferObjectFormat>(context->argument(1));
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
-            && context->argument(1).isNumber()) {
-            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-            uint _q_arg1 = context->argument(1).toUInt32();
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
     } else if (context->argumentCount() == 3) {
-        if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<QGLFramebufferObject::Attachment>() == context->argument(1).toVariant().userType())
-            && context->argument(2).isNumber()) {
-            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-            QGLFramebufferObject::Attachment _q_arg1 = qscriptvalue_cast<QGLFramebufferObject::Attachment>(context->argument(1));
-            uint _q_arg2 = context->argument(2).toUInt32();
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && (qMetaTypeId<QGLFramebufferObject::Attachment>() == context->argument(2).toVariant().userType())) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            QGLFramebufferObject::Attachment _q_arg2 = qscriptvalue_cast<QGLFramebufferObject::Attachment>(context->argument(2));
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && (qMetaTypeId<QGLFramebufferObjectFormat>() == context->argument(2).toVariant().userType())) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            QGLFramebufferObjectFormat _q_arg2 = qscriptvalue_cast<QGLFramebufferObjectFormat>(context->argument(2));
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && context->argument(2).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            uint _q_arg2 = context->argument(2).toUInt32();
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 4) {
-        if ((qMetaTypeId<QSize>() == context->argument(0).toVariant().userType())
-            && (qMetaTypeId<QGLFramebufferObject::Attachment>() == context->argument(1).toVariant().userType())
-            && context->argument(2).isNumber()
-            && context->argument(3).isNumber()) {
-            QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
-            QGLFramebufferObject::Attachment _q_arg1 = qscriptvalue_cast<QGLFramebufferObject::Attachment>(context->argument(1));
-            uint _q_arg2 = context->argument(2).toUInt32();
-            uint _q_arg3 = context->argument(3).toUInt32();
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        } else if (context->argument(0).isNumber()
-            && context->argument(1).isNumber()
-            && (qMetaTypeId<QGLFramebufferObject::Attachment>() == context->argument(2).toVariant().userType())
-            && context->argument(3).isNumber()) {
-            int _q_arg0 = context->argument(0).toInt32();
-            int _q_arg1 = context->argument(1).toInt32();
-            QGLFramebufferObject::Attachment _q_arg2 = qscriptvalue_cast<QGLFramebufferObject::Attachment>(context->argument(2));
-            uint _q_arg3 = context->argument(3).toUInt32();
-            QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-            QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
-            _q_cpp_result->__qtscript_self = _q_result;
-            return _q_result;
-        }
-    } else if (context->argumentCount() == 5) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
-        QGLFramebufferObject::Attachment _q_arg2 = qscriptvalue_cast<QGLFramebufferObject::Attachment>(context->argument(2));
-        uint _q_arg3 = context->argument(3).toUInt32();
-        uint _q_arg4 = context->argument(4).toUInt32();
-        QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
+        QGLFramebufferObjectFormat _q_arg2 = qscriptvalue_cast<QGLFramebufferObjectFormat>(context->argument(2));
+        QtScriptShell_QGLFramebufferObject* _q_cpp_result = new QtScriptShell_QGLFramebufferObject(_q_arg0, _q_arg1, _q_arg2);
         QScriptValue _q_result = context->engine()->newVariant(context->thisObject(), qVariantFromValue((QGLFramebufferObject*)_q_cpp_result));
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;
@@ -468,43 +311,13 @@ static QScriptValue qtscript_QGLFramebufferObject_static_call(QScriptContext *co
     break;
 
     case 2:
-    if (context->argumentCount() == 4) {
-        QGLFramebufferObject* _q_arg0 = qscriptvalue_cast<QGLFramebufferObject*>(context->argument(0));
-        QRect _q_arg1 = qscriptvalue_cast<QRect>(context->argument(1));
-        QGLFramebufferObject* _q_arg2 = qscriptvalue_cast<QGLFramebufferObject*>(context->argument(2));
-        QRect _q_arg3 = qscriptvalue_cast<QRect>(context->argument(3));
-        QGLFramebufferObject::blitFramebuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3);
-        return context->engine()->undefinedValue();
-    }
-    if (context->argumentCount() == 5) {
-        QGLFramebufferObject* _q_arg0 = qscriptvalue_cast<QGLFramebufferObject*>(context->argument(0));
-        QRect _q_arg1 = qscriptvalue_cast<QRect>(context->argument(1));
-        QGLFramebufferObject* _q_arg2 = qscriptvalue_cast<QGLFramebufferObject*>(context->argument(2));
-        QRect _q_arg3 = qscriptvalue_cast<QRect>(context->argument(3));
-        uint _q_arg4 = context->argument(4).toUInt32();
-        QGLFramebufferObject::blitFramebuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4);
-        return context->engine()->undefinedValue();
-    }
-    if (context->argumentCount() == 6) {
-        QGLFramebufferObject* _q_arg0 = qscriptvalue_cast<QGLFramebufferObject*>(context->argument(0));
-        QRect _q_arg1 = qscriptvalue_cast<QRect>(context->argument(1));
-        QGLFramebufferObject* _q_arg2 = qscriptvalue_cast<QGLFramebufferObject*>(context->argument(2));
-        QRect _q_arg3 = qscriptvalue_cast<QRect>(context->argument(3));
-        uint _q_arg4 = context->argument(4).toUInt32();
-        uint _q_arg5 = context->argument(5).toUInt32();
-        QGLFramebufferObject::blitFramebuffer(_q_arg0, _q_arg1, _q_arg2, _q_arg3, _q_arg4, _q_arg5);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 3:
     if (context->argumentCount() == 0) {
         bool _q_result = QGLFramebufferObject::hasOpenGLFramebufferBlit();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 4:
+    case 3:
     if (context->argumentCount() == 0) {
         bool _q_result = QGLFramebufferObject::hasOpenGLFramebufferObjects();
         return QScriptValue(context->engine(), _q_result);
@@ -524,10 +337,10 @@ QScriptValue qtscript_create_QGLFramebufferObject_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QGLFramebufferObject*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QGLFramebufferObject*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QPaintDevice*>()));
-    for (int i = 0; i < 12; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QGLFramebufferObject_prototype_call, qtscript_QGLFramebufferObject_function_lengths[i+5]);
+    for (int i = 0; i < 9; ++i) {
+        QScriptValue fun = engine->newFunction(qtscript_QGLFramebufferObject_prototype_call, qtscript_QGLFramebufferObject_function_lengths[i+4]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QGLFramebufferObject_function_names[i+5]),
+        proto.setProperty(QString::fromLatin1(qtscript_QGLFramebufferObject_function_names[i+4]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -535,7 +348,7 @@ QScriptValue qtscript_create_QGLFramebufferObject_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QGLFramebufferObject_static_call, proto, qtscript_QGLFramebufferObject_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QGLFramebufferObject_static_call,
             qtscript_QGLFramebufferObject_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

@@ -136,7 +136,8 @@ void DocParameters::showText(QString dictName)
     if (dictionaries != 0)
     {
         QLineEdit* lineEdit = this->findChild<QLineEdit*>(dictName);
-        lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString());
+        lineEdit->setText(dictionaries->value(dictName)->getValue(programNameFieldName).toString().trimmed());
+        lineEdit->home(false);
     }
 }
 

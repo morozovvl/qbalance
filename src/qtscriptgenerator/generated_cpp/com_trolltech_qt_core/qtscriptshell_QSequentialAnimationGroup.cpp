@@ -28,13 +28,16 @@ void QtScriptShell_QSequentialAnimationGroup::childEvent(QChildEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("childEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("childEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSequentialAnimationGroup::childEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -42,13 +45,16 @@ void QtScriptShell_QSequentialAnimationGroup::customEvent(QEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("customEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("customEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSequentialAnimationGroup::customEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -56,10 +62,14 @@ int  QtScriptShell_QSequentialAnimationGroup::duration() const
 {
     QScriptValue _q_function = __qtscript_self.property("_qs_duration");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("_qs_duration") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("_qs_duration") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSequentialAnimationGroup::duration();
     } else {
-        return qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(true));
+        int _q_retval = qscriptvalue_cast<int >(_q_function.call(__qtscript_self));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -67,13 +77,17 @@ bool  QtScriptShell_QSequentialAnimationGroup::event(QEvent*  event)
 {
     QScriptValue _q_function = __qtscript_self.property("event");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("event") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSequentialAnimationGroup::event(event);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, event)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -81,14 +95,18 @@ bool  QtScriptShell_QSequentialAnimationGroup::eventFilter(QObject*  arg__1, QEv
 {
     QScriptValue _q_function = __qtscript_self.property("eventFilter");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("eventFilter") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         return QSequentialAnimationGroup::eventFilter(arg__1, arg__2);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
-        return qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
+        bool _q_retval = qscriptvalue_cast<bool >(_q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1)
             << qScriptValueFromValue(_q_engine, arg__2)));
+        _q_function.setData(QScriptValue(false));
+        return _q_retval;
     }
 }
 
@@ -96,13 +114,16 @@ void QtScriptShell_QSequentialAnimationGroup::timerEvent(QTimerEvent*  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("timerEvent");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("timerEvent") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSequentialAnimationGroup::timerEvent(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -110,13 +131,16 @@ void QtScriptShell_QSequentialAnimationGroup::updateCurrentTime(int  arg__1)
 {
     QScriptValue _q_function = __qtscript_self.property("updateCurrentTime");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("updateCurrentTime") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("updateCurrentTime") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSequentialAnimationGroup::updateCurrentTime(arg__1);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, arg__1));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -124,13 +148,16 @@ void QtScriptShell_QSequentialAnimationGroup::updateDirection(QAbstractAnimation
 {
     QScriptValue _q_function = __qtscript_self.property("updateDirection");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("updateDirection") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("updateDirection") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSequentialAnimationGroup::updateDirection(direction);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, direction));
+        _q_function.setData(QScriptValue(false));
     }
 }
 
@@ -138,14 +165,17 @@ void QtScriptShell_QSequentialAnimationGroup::updateState(QAbstractAnimation::St
 {
     QScriptValue _q_function = __qtscript_self.property("updateState");
     if (!_q_function.isFunction() || QTSCRIPT_IS_GENERATED_FUNCTION(_q_function)
-        || (__qtscript_self.propertyFlags("updateState") & QScriptValue::QObjectMember)) {
+        || (__qtscript_self.propertyFlags("updateState") & QScriptValue::QObjectMember)
+        || (_q_function.data().toBool() == true)) {
         QSequentialAnimationGroup::updateState(newState, oldState);
     } else {
+        _q_function.setData(QScriptValue(true));
         QScriptEngine *_q_engine = __qtscript_self.engine();
         _q_function.call(__qtscript_self,
             QScriptValueList()
             << qScriptValueFromValue(_q_engine, newState)
             << qScriptValueFromValue(_q_engine, oldState));
+        _q_function.setData(QScriptValue(false));
     }
 }
 

@@ -33,6 +33,15 @@ static const int qtscript_QStyleOptionFocusRect_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QStyleOptionFocusRect_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QStyleOptionFocusRect : public QStyleOptionFocusRect
+{
+
+    friend QScriptValue qtscript_QStyleOptionFocusRect_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QStyleOptionFocusRect_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -48,8 +57,8 @@ Q_DECLARE_METATYPE(QStyleOptionFocusRect)
 Q_DECLARE_METATYPE(QStyleOptionFocusRect*)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionFocusRect)
 Q_DECLARE_METATYPE(QtScriptShell_QStyleOptionFocusRect*)
-Q_DECLARE_METATYPE(QStyleOptionFocusRect::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOptionFocusRect::StyleOptionType)
+Q_DECLARE_METATYPE(QStyleOptionFocusRect::StyleOptionVersion)
 Q_DECLARE_METATYPE(QStyleOption*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -64,71 +73,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QStyleOptionFocusRect::StyleOptionVersion
-//
-
-static const QStyleOptionFocusRect::StyleOptionVersion qtscript_QStyleOptionFocusRect_StyleOptionVersion_values[] = {
-    QStyleOptionFocusRect::Version
-};
-
-static const char * const qtscript_QStyleOptionFocusRect_StyleOptionVersion_keys[] = {
-    "Version"
-};
-
-static QString qtscript_QStyleOptionFocusRect_StyleOptionVersion_toStringHelper(QStyleOptionFocusRect::StyleOptionVersion value)
-{
-    if ((value >= QStyleOptionFocusRect::Version) && (value <= QStyleOptionFocusRect::Version))
-        return qtscript_QStyleOptionFocusRect_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionFocusRect::Version)];
-    return QString();
-}
-
-static QScriptValue qtscript_QStyleOptionFocusRect_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionFocusRect::StyleOptionVersion &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionFocusRect"));
-    return clazz.property(qtscript_QStyleOptionFocusRect_StyleOptionVersion_toStringHelper(value));
-}
-
-static void qtscript_QStyleOptionFocusRect_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionFocusRect::StyleOptionVersion &out)
-{
-    out = qvariant_cast<QStyleOptionFocusRect::StyleOptionVersion>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QStyleOptionFocusRect_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QStyleOptionFocusRect::Version) && (arg <= QStyleOptionFocusRect::Version))
-        return qScriptValueFromValue(engine,  static_cast<QStyleOptionFocusRect::StyleOptionVersion>(arg));
-    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QStyleOptionFocusRect_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionFocusRect::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionFocusRect::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QStyleOptionFocusRect_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QStyleOptionFocusRect::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionFocusRect::StyleOptionVersion>(context->thisObject());
-    return QScriptValue(engine, qtscript_QStyleOptionFocusRect_StyleOptionVersion_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QStyleOptionFocusRect_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QStyleOptionFocusRect_StyleOptionVersion,
-        qtscript_QStyleOptionFocusRect_StyleOptionVersion_valueOf, qtscript_QStyleOptionFocusRect_StyleOptionVersion_toString);
-    qScriptRegisterMetaType<QStyleOptionFocusRect::StyleOptionVersion>(engine, qtscript_QStyleOptionFocusRect_StyleOptionVersion_toScriptValue,
-        qtscript_QStyleOptionFocusRect_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 1; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionFocusRect_StyleOptionVersion_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionFocusRect_StyleOptionVersion_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -197,6 +141,71 @@ static QScriptValue qtscript_create_QStyleOptionFocusRect_StyleOptionType_class(
 }
 
 //
+// QStyleOptionFocusRect::StyleOptionVersion
+//
+
+static const QStyleOptionFocusRect::StyleOptionVersion qtscript_QStyleOptionFocusRect_StyleOptionVersion_values[] = {
+    QStyleOptionFocusRect::Version
+};
+
+static const char * const qtscript_QStyleOptionFocusRect_StyleOptionVersion_keys[] = {
+    "Version"
+};
+
+static QString qtscript_QStyleOptionFocusRect_StyleOptionVersion_toStringHelper(QStyleOptionFocusRect::StyleOptionVersion value)
+{
+    if ((value >= QStyleOptionFocusRect::Version) && (value <= QStyleOptionFocusRect::Version))
+        return qtscript_QStyleOptionFocusRect_StyleOptionVersion_keys[static_cast<int>(value)-static_cast<int>(QStyleOptionFocusRect::Version)];
+    return QString();
+}
+
+static QScriptValue qtscript_QStyleOptionFocusRect_StyleOptionVersion_toScriptValue(QScriptEngine *engine, const QStyleOptionFocusRect::StyleOptionVersion &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QStyleOptionFocusRect"));
+    return clazz.property(qtscript_QStyleOptionFocusRect_StyleOptionVersion_toStringHelper(value));
+}
+
+static void qtscript_QStyleOptionFocusRect_StyleOptionVersion_fromScriptValue(const QScriptValue &value, QStyleOptionFocusRect::StyleOptionVersion &out)
+{
+    out = qvariant_cast<QStyleOptionFocusRect::StyleOptionVersion>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QStyleOptionFocusRect_StyleOptionVersion(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QStyleOptionFocusRect::Version) && (arg <= QStyleOptionFocusRect::Version))
+        return qScriptValueFromValue(engine,  static_cast<QStyleOptionFocusRect::StyleOptionVersion>(arg));
+    return context->throwError(QString::fromLatin1("StyleOptionVersion(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QStyleOptionFocusRect_StyleOptionVersion_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionFocusRect::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionFocusRect::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QStyleOptionFocusRect_StyleOptionVersion_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QStyleOptionFocusRect::StyleOptionVersion value = qscriptvalue_cast<QStyleOptionFocusRect::StyleOptionVersion>(context->thisObject());
+    return QScriptValue(engine, qtscript_QStyleOptionFocusRect_StyleOptionVersion_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QStyleOptionFocusRect_StyleOptionVersion_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QStyleOptionFocusRect_StyleOptionVersion,
+        qtscript_QStyleOptionFocusRect_StyleOptionVersion_valueOf, qtscript_QStyleOptionFocusRect_StyleOptionVersion_toString);
+    qScriptRegisterMetaType<QStyleOptionFocusRect::StyleOptionVersion>(engine, qtscript_QStyleOptionFocusRect_StyleOptionVersion_toScriptValue,
+        qtscript_QStyleOptionFocusRect_StyleOptionVersion_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 1; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QStyleOptionFocusRect_StyleOptionVersion_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QStyleOptionFocusRect_StyleOptionVersion_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QStyleOptionFocusRect
 //
 
@@ -214,7 +223,7 @@ static QScriptValue qtscript_QStyleOptionFocusRect_prototype_call(QScriptContext
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QStyleOptionFocusRect* _q_self = qscriptvalue_cast<QStyleOptionFocusRect*>(context->thisObject());
+    qtscript_QStyleOptionFocusRect* _q_self = reinterpret_cast<qtscript_QStyleOptionFocusRect*>(qscriptvalue_cast<QStyleOptionFocusRect*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QStyleOptionFocusRect.%0(): this object is not a QStyleOptionFocusRect")
@@ -279,9 +288,9 @@ QScriptValue qtscript_create_QStyleOptionFocusRect_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QStyleOptionFocusRect_static_call, proto, qtscript_QStyleOptionFocusRect_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
-        qtscript_create_QStyleOptionFocusRect_StyleOptionVersion_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("StyleOptionType"),
         qtscript_create_QStyleOptionFocusRect_StyleOptionType_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("StyleOptionVersion"),
+        qtscript_create_QStyleOptionFocusRect_StyleOptionVersion_class(engine, ctor));
     return ctor;
 }

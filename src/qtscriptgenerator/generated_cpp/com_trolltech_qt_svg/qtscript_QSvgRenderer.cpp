@@ -71,6 +71,15 @@ static const int qtscript_QSvgRenderer_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QSvgRenderer_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSvgRenderer : public QSvgRenderer
+{
+
+    friend QScriptValue qtscript_QSvgRenderer_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QSvgRenderer_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -104,7 +113,7 @@ static QScriptValue qtscript_QSvgRenderer_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSvgRenderer* _q_self = qscriptvalue_cast<QSvgRenderer*>(context->thisObject());
+    qtscript_QSvgRenderer* _q_self = reinterpret_cast<qtscript_QSvgRenderer*>(qscriptvalue_cast<QSvgRenderer*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSvgRenderer.%0(): this object is not a QSvgRenderer")

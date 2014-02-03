@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qrubberband.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -16,8 +17,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -28,6 +27,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -36,6 +36,7 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QRubberBand.h"
 
@@ -43,6 +44,7 @@ static const char * const qtscript_QRubberBand_function_names[] = {
     "QRubberBand"
     // static
     // prototype
+    , "initStyleOption"
     , "moveRubberBand"
     , "resizeRubberBand"
     , "setRubberBandGeometry"
@@ -54,6 +56,7 @@ static const char * const qtscript_QRubberBand_function_signatures[] = {
     "Shape arg__1, QWidget arg__2"
     // static
     // prototype
+    , "QStyleOptionRubberBand option"
     , "QPoint p\nint x, int y"
     , "QSize s\nint w, int h"
     , "QRect r\nint x, int y, int w, int h"
@@ -65,11 +68,22 @@ static const int qtscript_QRubberBand_function_lengths[] = {
     2
     // static
     // prototype
+    , 1
     , 2
     , 2
     , 4
     , 0
     , 0
+};
+
+static QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QRubberBand : public QRubberBand
+{
+    friend QScriptValue qtscript_QRubberBand_initStyleOption(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QRubberBand_throw_ambiguity_error_helper(
@@ -86,6 +100,8 @@ static QScriptValue qtscript_QRubberBand_throw_ambiguity_error_helper(
 Q_DECLARE_METATYPE(QRubberBand*)
 Q_DECLARE_METATYPE(QtScriptShell_QRubberBand*)
 Q_DECLARE_METATYPE(QRubberBand::Shape)
+Q_DECLARE_METATYPE(QStyleOptionRubberBand*)
+Q_DECLARE_METATYPE(QWidget*)
 
 static QScriptValue qtscript_create_enum_class_helper(
     QScriptEngine *engine,
@@ -182,11 +198,11 @@ static QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *context,
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 4;
+        _id = 0xBABE0000 + 5;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QRubberBand* _q_self = qscriptvalue_cast<QRubberBand*>(context->thisObject());
+    qtscript_QRubberBand* _q_self = reinterpret_cast<qtscript_QRubberBand*>(qscriptvalue_cast<QRubberBand*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QRubberBand.%0(): this object is not a QRubberBand")
@@ -195,6 +211,14 @@ static QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *context,
 
     switch (_id) {
     case 0:
+    if (context->argumentCount() == 1) {
+        QStyleOptionRubberBand* _q_arg0 = qscriptvalue_cast<QStyleOptionRubberBand*>(context->argument(0));
+        _q_self->initStyleOption(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
     if (context->argumentCount() == 1) {
         QPoint _q_arg0 = qscriptvalue_cast<QPoint>(context->argument(0));
         _q_self->move(_q_arg0);
@@ -208,7 +232,7 @@ static QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 1) {
         QSize _q_arg0 = qscriptvalue_cast<QSize>(context->argument(0));
         _q_self->resize(_q_arg0);
@@ -222,7 +246,7 @@ static QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QRect _q_arg0 = qscriptvalue_cast<QRect>(context->argument(0));
         _q_self->setGeometry(_q_arg0);
@@ -238,14 +262,14 @@ static QScriptValue qtscript_QRubberBand_prototype_call(QScriptContext *context,
     }
     break;
 
-    case 3:
+    case 4:
     if (context->argumentCount() == 0) {
         QRubberBand::Shape _q_result = _q_self->shape();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 4: {
+    case 5: {
     QString result = QString::fromLatin1("QRubberBand");
     return QScriptValue(context->engine(), result);
     }
@@ -307,7 +331,7 @@ QScriptValue qtscript_create_QRubberBand_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QRubberBand*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QRubberBand*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 6; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QRubberBand_prototype_call, qtscript_QRubberBand_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QRubberBand_function_names[i+1]),

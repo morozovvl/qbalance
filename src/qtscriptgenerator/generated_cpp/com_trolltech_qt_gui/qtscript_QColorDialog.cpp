@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qcolordialog.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -18,8 +19,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -30,6 +29,7 @@
 #include <qpaintengine.h>
 #include <qpainter.h>
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qpoint.h>
 #include <qrect.h>
 #include <qregion.h>
@@ -37,6 +37,7 @@
 #include <qsizepolicy.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QColorDialog.h"
 
@@ -48,6 +49,7 @@ static const char * const qtscript_QColorDialog_function_names[] = {
     , "getColor"
     , "setCustomColor"
     , "setStandardColor"
+    , "standardColor"
     // prototype
     , "open"
     , "selectedColor"
@@ -62,9 +64,10 @@ static const char * const qtscript_QColorDialog_function_signatures[] = {
     // static
     , "int index"
     , ""
-    , "QColor initial, QWidget parent\nQColor initial, QWidget parent, String title, ColorDialogOptions options"
-    , "int index, unsigned int color"
-    , "int index, unsigned int color"
+    , "QColor initial, QWidget parent, String title, ColorDialogOptions options"
+    , "int index, QColor color"
+    , "int index, QColor color"
+    , "int index"
     // prototype
     , "QObject receiver, char member"
     , ""
@@ -82,6 +85,7 @@ static const int qtscript_QColorDialog_function_lengths[] = {
     , 4
     , 2
     , 2
+    , 1
     // prototype
     , 2
     , 0
@@ -89,6 +93,15 @@ static const int qtscript_QColorDialog_function_lengths[] = {
     , 2
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QColorDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QColorDialog : public QColorDialog
+{
+
+    friend QScriptValue qtscript_QColorDialog_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QColorDialog_throw_ambiguity_error_helper(
@@ -112,6 +125,7 @@ Q_DECLARE_METATYPE(QtScriptShell_QColorDialog*)
 Q_DECLARE_METATYPE(QColorDialog::ColorDialogOption)
 Q_DECLARE_METATYPE(QFlags<QColorDialog::ColorDialogOption>)
 Q_DECLARE_METATYPE(char*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QDialog*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -314,11 +328,11 @@ static QScriptValue qtscript_QColorDialog_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QColorDialog* _q_self = qscriptvalue_cast<QColorDialog*>(context->thisObject());
+    qtscript_QColorDialog* _q_self = reinterpret_cast<qtscript_QColorDialog*>(qscriptvalue_cast<QColorDialog*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QColorDialog.%0(): this object is not a QColorDialog")
-            .arg(qtscript_QColorDialog_function_names[_id+6]));
+            .arg(qtscript_QColorDialog_function_names[_id+7]));
     }
 
     switch (_id) {
@@ -377,8 +391,8 @@ static QScriptValue qtscript_QColorDialog_prototype_call(QScriptContext *context
     Q_ASSERT(false);
     }
     return qtscript_QColorDialog_throw_ambiguity_error_helper(context,
-        qtscript_QColorDialog_function_names[_id+6],
-        qtscript_QColorDialog_function_signatures[_id+6]);
+        qtscript_QColorDialog_function_names[_id+7],
+        qtscript_QColorDialog_function_signatures[_id+7]);
 }
 
 static QScriptValue qtscript_QColorDialog_static_call(QScriptContext *context, QScriptEngine *)
@@ -423,8 +437,8 @@ static QScriptValue qtscript_QColorDialog_static_call(QScriptContext *context, Q
     case 1:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
-        uint _q_result = QColorDialog::customColor(_q_arg0);
-        return QScriptValue(context->engine(), _q_result);
+        QColor _q_result = QColorDialog::customColor(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -471,7 +485,7 @@ static QScriptValue qtscript_QColorDialog_static_call(QScriptContext *context, Q
     case 4:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
-        uint _q_arg1 = context->argument(1).toUInt32();
+        QColor _q_arg1 = qscriptvalue_cast<QColor>(context->argument(1));
         QColorDialog::setCustomColor(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
     }
@@ -480,9 +494,17 @@ static QScriptValue qtscript_QColorDialog_static_call(QScriptContext *context, Q
     case 5:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
-        uint _q_arg1 = context->argument(1).toUInt32();
+        QColor _q_arg1 = qscriptvalue_cast<QColor>(context->argument(1));
         QColorDialog::setStandardColor(_q_arg0, _q_arg1);
         return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 6:
+    if (context->argumentCount() == 1) {
+        int _q_arg0 = context->argument(0).toInt32();
+        QColor _q_result = QColorDialog::standardColor(_q_arg0);
+        return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
@@ -510,9 +532,9 @@ QScriptValue qtscript_create_QColorDialog_class(QScriptEngine *engine)
     QScriptValue proto = engine->newVariant(qVariantFromValue((QColorDialog*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QDialog*>()));
     for (int i = 0; i < 6; ++i) {
-        QScriptValue fun = engine->newFunction(qtscript_QColorDialog_prototype_call, qtscript_QColorDialog_function_lengths[i+6]);
+        QScriptValue fun = engine->newFunction(qtscript_QColorDialog_prototype_call, qtscript_QColorDialog_function_lengths[i+7]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
-        proto.setProperty(QString::fromLatin1(qtscript_QColorDialog_function_names[i+6]),
+        proto.setProperty(QString::fromLatin1(qtscript_QColorDialog_function_names[i+7]),
             fun, QScriptValue::SkipInEnumeration);
     }
 
@@ -521,7 +543,7 @@ QScriptValue qtscript_create_QColorDialog_class(QScriptEngine *engine)
 
     QScriptValue ctor = engine->newFunction(qtscript_QColorDialog_static_call, proto, qtscript_QColorDialog_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 6; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QColorDialog_static_call,
             qtscript_QColorDialog_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i+1)));

@@ -40,6 +40,15 @@ static const int qtscript_QIntValidator_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QIntValidator_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QIntValidator : public QIntValidator
+{
+
+    friend QScriptValue qtscript_QIntValidator_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QIntValidator_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -73,7 +82,7 @@ static QScriptValue qtscript_QIntValidator_prototype_call(QScriptContext *contex
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QIntValidator* _q_self = qscriptvalue_cast<QIntValidator*>(context->thisObject());
+    qtscript_QIntValidator* _q_self = reinterpret_cast<qtscript_QIntValidator*>(qscriptvalue_cast<QIntValidator*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QIntValidator.%0(): this object is not a QIntValidator")
@@ -121,6 +130,13 @@ static QScriptValue qtscript_QIntValidator_static_call(QScriptContext *context, 
     } else if (context->argumentCount() == 1) {
         QObject* _q_arg0 = context->argument(0).toQObject();
         QtScriptShell_QIntValidator* _q_cpp_result = new QtScriptShell_QIntValidator(_q_arg0);
+        QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QIntValidator*)_q_cpp_result, QScriptEngine::AutoOwnership);
+        _q_cpp_result->__qtscript_self = _q_result;
+        return _q_result;
+    } else if (context->argumentCount() == 2) {
+        int _q_arg0 = context->argument(0).toInt32();
+        int _q_arg1 = context->argument(1).toInt32();
+        QtScriptShell_QIntValidator* _q_cpp_result = new QtScriptShell_QIntValidator(_q_arg0, _q_arg1);
         QScriptValue _q_result = context->engine()->newQObject(context->thisObject(), (QIntValidator*)_q_cpp_result, QScriptEngine::AutoOwnership);
         _q_cpp_result->__qtscript_self = _q_result;
         return _q_result;

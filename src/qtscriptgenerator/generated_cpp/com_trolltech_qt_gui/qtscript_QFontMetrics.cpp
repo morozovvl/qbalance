@@ -7,7 +7,9 @@
 
 #include <qfontmetrics.h>
 #include <QVariant>
+#include "fontprivate.h"
 #include <qfont.h>
+#include <qfontmetrics.h>
 #include <qpaintdevice.h>
 #include <qrect.h>
 #include <qsize.h>
@@ -24,6 +26,7 @@ static const char * const qtscript_QFontMetrics_function_names[] = {
     , "elidedText"
     , "height"
     , "inFont"
+    , "inFontUcs4"
     , "leading"
     , "leftBearing"
     , "lineSpacing"
@@ -35,6 +38,7 @@ static const char * const qtscript_QFontMetrics_function_names[] = {
     , "rightBearing"
     , "size"
     , "strikeOutPos"
+    , "swap"
     , "tightBoundingRect"
     , "underlinePos"
     , "width"
@@ -54,6 +58,7 @@ static const char * const qtscript_QFontMetrics_function_signatures[] = {
     , "String text, TextElideMode mode, int width, int flags"
     , ""
     , "char arg__1"
+    , "uint ucs4"
     , ""
     , "char arg__1"
     , ""
@@ -65,6 +70,7 @@ static const char * const qtscript_QFontMetrics_function_signatures[] = {
     , "char arg__1"
     , "int flags, String str, int tabstops, int tabarray"
     , ""
+    , "QFontMetrics other"
     , "String text"
     , ""
     , "char arg__1\nString arg__1, int len\nString arg__1, int len, int flags"
@@ -84,6 +90,7 @@ static const int qtscript_QFontMetrics_function_lengths[] = {
     , 4
     , 0
     , 1
+    , 1
     , 0
     , 1
     , 0
@@ -95,6 +102,7 @@ static const int qtscript_QFontMetrics_function_lengths[] = {
     , 1
     , 4
     , 0
+    , 1
     , 1
     , 0
     , 3
@@ -132,7 +140,7 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 23;
+        _id = 0xBABE0000 + 25;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -243,13 +251,21 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     break;
 
     case 8:
+    if (context->argumentCount() == 1) {
+        uint _q_arg0 = context->argument(0).toUInt32();
+        bool _q_result = _q_self->inFontUcs4(_q_arg0);
+        return QScriptValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 9:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->leading();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 9:
+    case 10:
     if (context->argumentCount() == 1) {
         QChar _q_arg0 = qscriptvalue_cast<QChar>(context->argument(0));
         int _q_result = _q_self->leftBearing(_q_arg0);
@@ -257,49 +273,49 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     }
     break;
 
-    case 10:
+    case 11:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->lineSpacing();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 11:
+    case 12:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->lineWidth();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 12:
+    case 13:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->maxWidth();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 13:
+    case 14:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->minLeftBearing();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 14:
+    case 15:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->minRightBearing();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 16:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->overlinePos();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 16:
+    case 17:
     if (context->argumentCount() == 1) {
         QChar _q_arg0 = qscriptvalue_cast<QChar>(context->argument(0));
         int _q_result = _q_self->rightBearing(_q_arg0);
@@ -307,7 +323,7 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     }
     break;
 
-    case 17:
+    case 18:
     if (context->argumentCount() == 4) {
         int _q_arg0 = context->argument(0).toInt32();
         QString _q_arg1 = context->argument(1).toString();
@@ -318,14 +334,22 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     }
     break;
 
-    case 18:
+    case 19:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->strikeOutPos();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 19:
+    case 20:
+    if (context->argumentCount() == 1) {
+        QFontMetrics _q_arg0 = qscriptvalue_cast<QFontMetrics>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 21:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         QRect _q_result = _q_self->tightBoundingRect(_q_arg0);
@@ -333,14 +357,14 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->underlinePos();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 1) {
         if ((qMetaTypeId<QChar>() == context->argument(0).toVariant().userType())) {
             QChar _q_arg0 = qscriptvalue_cast<QChar>(context->argument(0));
@@ -367,14 +391,14 @@ static QScriptValue qtscript_QFontMetrics_prototype_call(QScriptContext *context
     }
     break;
 
-    case 22:
+    case 24:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->xHeight();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 23: {
+    case 25: {
     QString result = QString::fromLatin1("QFontMetrics");
     return QScriptValue(context->engine(), result);
     }
@@ -423,7 +447,7 @@ QScriptValue qtscript_create_QFontMetrics_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QFontMetrics*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QFontMetrics*)0));
-    for (int i = 0; i < 24; ++i) {
+    for (int i = 0; i < 26; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QFontMetrics_prototype_call, qtscript_QFontMetrics_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QFontMetrics_function_names[i+1]),

@@ -6,12 +6,12 @@
 #include <qmetaobject.h>
 
 #include <qactiongroup.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qactiongroup.h>
 #include <qbytearray.h>
 #include <qcoreevent.h>
-#include <qicon.h>
 #include <qlist.h>
 #include <qobject.h>
 
@@ -50,6 +50,15 @@ static const int qtscript_QActionGroup_function_lengths[] = {
     , 0
 };
 
+static QScriptValue qtscript_QActionGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QActionGroup : public QActionGroup
+{
+
+    friend QScriptValue qtscript_QActionGroup_prototype_call(QScriptContext *, QScriptEngine *);
+
+};
+
 static QScriptValue qtscript_QActionGroup_throw_ambiguity_error_helper(
     QScriptContext *context, const char *functionName, const char *signatures)
 {
@@ -84,7 +93,7 @@ static QScriptValue qtscript_QActionGroup_prototype_call(QScriptContext *context
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QActionGroup* _q_self = qscriptvalue_cast<QActionGroup*>(context->thisObject());
+    qtscript_QActionGroup* _q_self = reinterpret_cast<qtscript_QActionGroup*>(qscriptvalue_cast<QActionGroup*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QActionGroup.%0(): this object is not a QActionGroup")

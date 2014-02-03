@@ -44,6 +44,7 @@ static const char * const qtscript_QPalette_function_names[] = {
     , "setColorGroup"
     , "setCurrentColorGroup"
     , "shadow"
+    , "swap"
     , "text"
     , "toolTipBase"
     , "toolTipText"
@@ -85,6 +86,7 @@ static const char * const qtscript_QPalette_function_signatures[] = {
     , "ColorGroup cr, QBrush windowText, QBrush button, QBrush light, QBrush dark, QBrush mid, QBrush text, QBrush bright_text, QBrush base, QBrush window"
     , "ColorGroup cg"
     , ""
+    , "QPalette other"
     , ""
     , ""
     , ""
@@ -126,6 +128,7 @@ static const int qtscript_QPalette_function_lengths[] = {
     , 10
     , 1
     , 0
+    , 1
     , 0
     , 0
     , 0
@@ -152,8 +155,8 @@ static const QMetaObject *qtscript_QPalette_metaObject()
 }
 
 Q_DECLARE_METATYPE(QPalette*)
-Q_DECLARE_METATYPE(QPalette::ColorGroup)
 Q_DECLARE_METATYPE(QPalette::ColorRole)
+Q_DECLARE_METATYPE(QPalette::ColorGroup)
 Q_DECLARE_METATYPE(QDataStream*)
 Q_DECLARE_METATYPE(Qt::GlobalColor)
 
@@ -169,87 +172,6 @@ static QScriptValue qtscript_create_enum_class_helper(
     proto.setProperty(QString::fromLatin1("toString"),
         engine->newFunction(toString), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto, 1);
-}
-
-//
-// QPalette::ColorGroup
-//
-
-static const QPalette::ColorGroup qtscript_QPalette_ColorGroup_values[] = {
-    QPalette::Active
-    , QPalette::Disabled
-    , QPalette::Inactive
-    , QPalette::NColorGroups
-    , QPalette::Current
-    , QPalette::All
-};
-
-static const char * const qtscript_QPalette_ColorGroup_keys[] = {
-    "Active"
-    , "Disabled"
-    , "Inactive"
-    , "NColorGroups"
-    , "Current"
-    , "All"
-};
-
-static QString qtscript_QPalette_ColorGroup_toStringHelper(QPalette::ColorGroup value)
-{
-    const QMetaObject *meta = qtscript_QPalette_metaObject();
-    int idx = meta->indexOfEnumerator("ColorGroup");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    return QString::fromLatin1(menum.valueToKey(value));
-}
-
-static QScriptValue qtscript_QPalette_ColorGroup_toScriptValue(QScriptEngine *engine, const QPalette::ColorGroup &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QPalette"));
-    return clazz.property(qtscript_QPalette_ColorGroup_toStringHelper(value));
-}
-
-static void qtscript_QPalette_ColorGroup_fromScriptValue(const QScriptValue &value, QPalette::ColorGroup &out)
-{
-    out = qvariant_cast<QPalette::ColorGroup>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QPalette_ColorGroup(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    const QMetaObject *meta = qtscript_QPalette_metaObject();
-    int idx = meta->indexOfEnumerator("ColorGroup");
-    Q_ASSERT(idx != -1);
-    QMetaEnum menum = meta->enumerator(idx);
-    if (menum.valueToKey(arg) != 0)
-        return qScriptValueFromValue(engine,  static_cast<QPalette::ColorGroup>(arg));
-    return context->throwError(QString::fromLatin1("ColorGroup(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QPalette_ColorGroup_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QPalette::ColorGroup value = qscriptvalue_cast<QPalette::ColorGroup>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QPalette_ColorGroup_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QPalette::ColorGroup value = qscriptvalue_cast<QPalette::ColorGroup>(context->thisObject());
-    return QScriptValue(engine, qtscript_QPalette_ColorGroup_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QPalette_ColorGroup_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QPalette_ColorGroup,
-        qtscript_QPalette_ColorGroup_valueOf, qtscript_QPalette_ColorGroup_toString);
-    qScriptRegisterMetaType<QPalette::ColorGroup>(engine, qtscript_QPalette_ColorGroup_toScriptValue,
-        qtscript_QPalette_ColorGroup_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 6; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QPalette_ColorGroup_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QPalette_ColorGroup_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
 }
 
 //
@@ -364,6 +286,87 @@ static QScriptValue qtscript_create_QPalette_ColorRole_class(QScriptEngine *engi
 }
 
 //
+// QPalette::ColorGroup
+//
+
+static const QPalette::ColorGroup qtscript_QPalette_ColorGroup_values[] = {
+    QPalette::Active
+    , QPalette::Disabled
+    , QPalette::Inactive
+    , QPalette::NColorGroups
+    , QPalette::Current
+    , QPalette::All
+};
+
+static const char * const qtscript_QPalette_ColorGroup_keys[] = {
+    "Active"
+    , "Disabled"
+    , "Inactive"
+    , "NColorGroups"
+    , "Current"
+    , "All"
+};
+
+static QString qtscript_QPalette_ColorGroup_toStringHelper(QPalette::ColorGroup value)
+{
+    const QMetaObject *meta = qtscript_QPalette_metaObject();
+    int idx = meta->indexOfEnumerator("ColorGroup");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    return QString::fromLatin1(menum.valueToKey(value));
+}
+
+static QScriptValue qtscript_QPalette_ColorGroup_toScriptValue(QScriptEngine *engine, const QPalette::ColorGroup &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QPalette"));
+    return clazz.property(qtscript_QPalette_ColorGroup_toStringHelper(value));
+}
+
+static void qtscript_QPalette_ColorGroup_fromScriptValue(const QScriptValue &value, QPalette::ColorGroup &out)
+{
+    out = qvariant_cast<QPalette::ColorGroup>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QPalette_ColorGroup(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    const QMetaObject *meta = qtscript_QPalette_metaObject();
+    int idx = meta->indexOfEnumerator("ColorGroup");
+    Q_ASSERT(idx != -1);
+    QMetaEnum menum = meta->enumerator(idx);
+    if (menum.valueToKey(arg) != 0)
+        return qScriptValueFromValue(engine,  static_cast<QPalette::ColorGroup>(arg));
+    return context->throwError(QString::fromLatin1("ColorGroup(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QPalette_ColorGroup_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QPalette::ColorGroup value = qscriptvalue_cast<QPalette::ColorGroup>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QPalette_ColorGroup_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QPalette::ColorGroup value = qscriptvalue_cast<QPalette::ColorGroup>(context->thisObject());
+    return QScriptValue(engine, qtscript_QPalette_ColorGroup_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QPalette_ColorGroup_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QPalette_ColorGroup,
+        qtscript_QPalette_ColorGroup_valueOf, qtscript_QPalette_ColorGroup_toString);
+    qScriptRegisterMetaType<QPalette::ColorGroup>(engine, qtscript_QPalette_ColorGroup_toScriptValue,
+        qtscript_QPalette_ColorGroup_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 6; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QPalette_ColorGroup_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QPalette_ColorGroup_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
 // QPalette
 //
 
@@ -377,7 +380,7 @@ static QScriptValue qtscript_QPalette_prototype_call(QScriptContext *context, QS
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 34;
+        _id = 0xBABE0000 + 35;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
@@ -647,41 +650,49 @@ static QScriptValue qtscript_QPalette_prototype_call(QScriptContext *context, QS
     break;
 
     case 28:
+    if (context->argumentCount() == 1) {
+        QPalette _q_arg0 = qscriptvalue_cast<QPalette>(context->argument(0));
+        _q_self->swap(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 29:
     if (context->argumentCount() == 0) {
         QBrush _q_result = _q_self->text();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 29:
+    case 30:
     if (context->argumentCount() == 0) {
         QBrush _q_result = _q_self->toolTipBase();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 30:
+    case 31:
     if (context->argumentCount() == 0) {
         QBrush _q_result = _q_self->toolTipText();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 31:
+    case 32:
     if (context->argumentCount() == 0) {
         QBrush _q_result = _q_self->window();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 32:
+    case 33:
     if (context->argumentCount() == 0) {
         QBrush _q_result = _q_self->windowText();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 33:
+    case 34:
     if (context->argumentCount() == 1) {
         QDataStream* _q_arg0 = qscriptvalue_cast<QDataStream*>(context->argument(0));
         operator<<(*_q_arg0, *_q_self);
@@ -689,8 +700,10 @@ static QScriptValue qtscript_QPalette_prototype_call(QScriptContext *context, QS
     }
     break;
 
-    case 34: {
-    QString result = QString::fromLatin1("QPalette");
+    case 35: {
+    QString result;
+    QDebug d(&result);
+    d << *_q_self;
     return QScriptValue(context->engine(), result);
     }
 
@@ -767,7 +780,7 @@ QScriptValue qtscript_create_QPalette_class(QScriptEngine *engine)
 {
     engine->setDefaultPrototype(qMetaTypeId<QPalette*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QPalette*)0));
-    for (int i = 0; i < 35; ++i) {
+    for (int i = 0; i < 36; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QPalette_prototype_call, qtscript_QPalette_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QPalette_function_names[i+1]),
@@ -780,9 +793,9 @@ QScriptValue qtscript_create_QPalette_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QPalette_static_call, proto, qtscript_QPalette_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("ColorGroup"),
-        qtscript_create_QPalette_ColorGroup_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("ColorRole"),
         qtscript_create_QPalette_ColorRole_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ColorGroup"),
+        qtscript_create_QPalette_ColorGroup_class(engine, ctor));
     return ctor;
 }

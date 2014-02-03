@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qtextdocument.h>
+#include <QAbstractTextDocumentLayout>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextFormat>
@@ -16,7 +17,6 @@
 #include <qlist.h>
 #include <qobject.h>
 #include <qpainter.h>
-#include <qprinter.h>
 #include <qrect.h>
 #include <qregexp.h>
 #include <qsize.h>
@@ -44,6 +44,8 @@ static const char * const qtscript_QTextDocument_function_names[] = {
     , "clear"
     , "clearUndoRedoStacks"
     , "clone"
+    , "createObject"
+    , "defaultCursorMoveStyle"
     , "defaultTextOption"
     , "documentLayout"
     , "drawContents"
@@ -65,11 +67,11 @@ static const char * const qtscript_QTextDocument_function_names[] = {
     , "object"
     , "objectForFormat"
     , "pageCount"
-    , "print"
     , "redo"
     , "resource"
     , "revision"
     , "rootFrame"
+    , "setDefaultCursorMoveStyle"
     , "setDefaultTextOption"
     , "setDocumentLayout"
     , "setHtml"
@@ -96,6 +98,8 @@ static const char * const qtscript_QTextDocument_function_signatures[] = {
     , ""
     , "Stacks historyToClear"
     , "QObject parent"
+    , "QTextFormat f"
+    , ""
     , ""
     , ""
     , "QPainter painter, QRectF rect"
@@ -117,11 +121,11 @@ static const char * const qtscript_QTextDocument_function_signatures[] = {
     , "int objectIndex"
     , "QTextFormat arg__1"
     , ""
-    , "QPrinter printer"
     , "QTextCursor cursor"
     , "int type, QUrl name"
     , ""
     , ""
+    , "CursorMoveStyle style"
     , "QTextOption option"
     , "QAbstractTextDocumentLayout layout"
     , "String html"
@@ -148,6 +152,8 @@ static const int qtscript_QTextDocument_function_lengths[] = {
     , 0
     , 1
     , 1
+    , 1
+    , 0
     , 0
     , 0
     , 2
@@ -170,19 +176,29 @@ static const int qtscript_QTextDocument_function_lengths[] = {
     , 1
     , 0
     , 1
-    , 1
     , 2
     , 0
     , 0
     , 1
     , 1
     , 1
+    , 1
     , 2
     , 1
     , 1
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QTextDocument : public QTextDocument
+{
+    friend QScriptValue qtscript_QTextDocument_createObject(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QTextDocument_throw_ambiguity_error_helper(
@@ -198,20 +214,20 @@ static QScriptValue qtscript_QTextDocument_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QtScriptShell_QTextDocument*)
-Q_DECLARE_METATYPE(QTextDocument::ResourceType)
 Q_DECLARE_METATYPE(QTextDocument::Stacks)
+Q_DECLARE_METATYPE(QTextDocument::MetaInformation)
+Q_DECLARE_METATYPE(QTextDocument::ResourceType)
 Q_DECLARE_METATYPE(QTextDocument::FindFlag)
 Q_DECLARE_METATYPE(QFlags<QTextDocument::FindFlag>)
-Q_DECLARE_METATYPE(QTextDocument::MetaInformation)
 Q_DECLARE_METATYPE(QVector<QTextFormat>)
 Q_DECLARE_METATYPE(QTextBlock)
+Q_DECLARE_METATYPE(QTextObject*)
+Q_DECLARE_METATYPE(Qt::CursorMoveStyle)
 Q_DECLARE_METATYPE(QTextOption)
 Q_DECLARE_METATYPE(QAbstractTextDocumentLayout*)
 Q_DECLARE_METATYPE(QPainter*)
 Q_DECLARE_METATYPE(QTextCursor)
 Q_DECLARE_METATYPE(QTextFrame*)
-Q_DECLARE_METATYPE(QTextObject*)
-Q_DECLARE_METATYPE(QPrinter*)
 Q_DECLARE_METATYPE(QTextCursor*)
 
 static QScriptValue qtscript_create_enum_class_helper(
@@ -243,6 +259,142 @@ static QScriptValue qtscript_create_flags_class_helper(
     proto.setProperty(QString::fromLatin1("equals"),
         engine->newFunction(equals), QScriptValue::SkipInEnumeration);
     return engine->newFunction(construct, proto);
+}
+
+//
+// QTextDocument::Stacks
+//
+
+static const QTextDocument::Stacks qtscript_QTextDocument_Stacks_values[] = {
+    QTextDocument::UndoStack
+    , QTextDocument::RedoStack
+    , QTextDocument::UndoAndRedoStacks
+};
+
+static const char * const qtscript_QTextDocument_Stacks_keys[] = {
+    "UndoStack"
+    , "RedoStack"
+    , "UndoAndRedoStacks"
+};
+
+static QString qtscript_QTextDocument_Stacks_toStringHelper(QTextDocument::Stacks value)
+{
+    if ((value >= QTextDocument::UndoStack) && (value <= QTextDocument::UndoAndRedoStacks))
+        return qtscript_QTextDocument_Stacks_keys[static_cast<int>(value)-static_cast<int>(QTextDocument::UndoStack)];
+    return QString();
+}
+
+static QScriptValue qtscript_QTextDocument_Stacks_toScriptValue(QScriptEngine *engine, const QTextDocument::Stacks &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextDocument"));
+    return clazz.property(qtscript_QTextDocument_Stacks_toStringHelper(value));
+}
+
+static void qtscript_QTextDocument_Stacks_fromScriptValue(const QScriptValue &value, QTextDocument::Stacks &out)
+{
+    out = qvariant_cast<QTextDocument::Stacks>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QTextDocument_Stacks(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QTextDocument::UndoStack) && (arg <= QTextDocument::UndoAndRedoStacks))
+        return qScriptValueFromValue(engine,  static_cast<QTextDocument::Stacks>(arg));
+    return context->throwError(QString::fromLatin1("Stacks(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QTextDocument_Stacks_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextDocument::Stacks value = qscriptvalue_cast<QTextDocument::Stacks>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QTextDocument_Stacks_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextDocument::Stacks value = qscriptvalue_cast<QTextDocument::Stacks>(context->thisObject());
+    return QScriptValue(engine, qtscript_QTextDocument_Stacks_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QTextDocument_Stacks_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QTextDocument_Stacks,
+        qtscript_QTextDocument_Stacks_valueOf, qtscript_QTextDocument_Stacks_toString);
+    qScriptRegisterMetaType<QTextDocument::Stacks>(engine, qtscript_QTextDocument_Stacks_toScriptValue,
+        qtscript_QTextDocument_Stacks_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 3; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QTextDocument_Stacks_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QTextDocument_Stacks_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
+}
+
+//
+// QTextDocument::MetaInformation
+//
+
+static const QTextDocument::MetaInformation qtscript_QTextDocument_MetaInformation_values[] = {
+    QTextDocument::DocumentTitle
+    , QTextDocument::DocumentUrl
+};
+
+static const char * const qtscript_QTextDocument_MetaInformation_keys[] = {
+    "DocumentTitle"
+    , "DocumentUrl"
+};
+
+static QString qtscript_QTextDocument_MetaInformation_toStringHelper(QTextDocument::MetaInformation value)
+{
+    if ((value >= QTextDocument::DocumentTitle) && (value <= QTextDocument::DocumentUrl))
+        return qtscript_QTextDocument_MetaInformation_keys[static_cast<int>(value)-static_cast<int>(QTextDocument::DocumentTitle)];
+    return QString();
+}
+
+static QScriptValue qtscript_QTextDocument_MetaInformation_toScriptValue(QScriptEngine *engine, const QTextDocument::MetaInformation &value)
+{
+    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextDocument"));
+    return clazz.property(qtscript_QTextDocument_MetaInformation_toStringHelper(value));
+}
+
+static void qtscript_QTextDocument_MetaInformation_fromScriptValue(const QScriptValue &value, QTextDocument::MetaInformation &out)
+{
+    out = qvariant_cast<QTextDocument::MetaInformation>(value.toVariant());
+}
+
+static QScriptValue qtscript_construct_QTextDocument_MetaInformation(QScriptContext *context, QScriptEngine *engine)
+{
+    int arg = context->argument(0).toInt32();
+    if ((arg >= QTextDocument::DocumentTitle) && (arg <= QTextDocument::DocumentUrl))
+        return qScriptValueFromValue(engine,  static_cast<QTextDocument::MetaInformation>(arg));
+    return context->throwError(QString::fromLatin1("MetaInformation(): invalid enum value (%0)").arg(arg));
+}
+
+static QScriptValue qtscript_QTextDocument_MetaInformation_valueOf(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextDocument::MetaInformation value = qscriptvalue_cast<QTextDocument::MetaInformation>(context->thisObject());
+    return QScriptValue(engine, static_cast<int>(value));
+}
+
+static QScriptValue qtscript_QTextDocument_MetaInformation_toString(QScriptContext *context, QScriptEngine *engine)
+{
+    QTextDocument::MetaInformation value = qscriptvalue_cast<QTextDocument::MetaInformation>(context->thisObject());
+    return QScriptValue(engine, qtscript_QTextDocument_MetaInformation_toStringHelper(value));
+}
+
+static QScriptValue qtscript_create_QTextDocument_MetaInformation_class(QScriptEngine *engine, QScriptValue &clazz)
+{
+    QScriptValue ctor = qtscript_create_enum_class_helper(
+        engine, qtscript_construct_QTextDocument_MetaInformation,
+        qtscript_QTextDocument_MetaInformation_valueOf, qtscript_QTextDocument_MetaInformation_toString);
+    qScriptRegisterMetaType<QTextDocument::MetaInformation>(engine, qtscript_QTextDocument_MetaInformation_toScriptValue,
+        qtscript_QTextDocument_MetaInformation_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
+    for (int i = 0; i < 2; ++i) {
+        clazz.setProperty(QString::fromLatin1(qtscript_QTextDocument_MetaInformation_keys[i]),
+            engine->newVariant(qVariantFromValue(qtscript_QTextDocument_MetaInformation_values[i])),
+            QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    }
+    return ctor;
 }
 
 //
@@ -315,75 +467,6 @@ static QScriptValue qtscript_create_QTextDocument_ResourceType_class(QScriptEngi
     for (int i = 0; i < 4; ++i) {
         clazz.setProperty(QString::fromLatin1(qtscript_QTextDocument_ResourceType_keys[i]),
             engine->newVariant(qVariantFromValue(qtscript_QTextDocument_ResourceType_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
-// QTextDocument::Stacks
-//
-
-static const QTextDocument::Stacks qtscript_QTextDocument_Stacks_values[] = {
-    QTextDocument::UndoStack
-    , QTextDocument::RedoStack
-    , QTextDocument::UndoAndRedoStacks
-};
-
-static const char * const qtscript_QTextDocument_Stacks_keys[] = {
-    "UndoStack"
-    , "RedoStack"
-    , "UndoAndRedoStacks"
-};
-
-static QString qtscript_QTextDocument_Stacks_toStringHelper(QTextDocument::Stacks value)
-{
-    if ((value >= QTextDocument::UndoStack) && (value <= QTextDocument::UndoAndRedoStacks))
-        return qtscript_QTextDocument_Stacks_keys[static_cast<int>(value)-static_cast<int>(QTextDocument::UndoStack)];
-    return QString();
-}
-
-static QScriptValue qtscript_QTextDocument_Stacks_toScriptValue(QScriptEngine *engine, const QTextDocument::Stacks &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextDocument"));
-    return clazz.property(qtscript_QTextDocument_Stacks_toStringHelper(value));
-}
-
-static void qtscript_QTextDocument_Stacks_fromScriptValue(const QScriptValue &value, QTextDocument::Stacks &out)
-{
-    out = qvariant_cast<QTextDocument::Stacks>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTextDocument_Stacks(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QTextDocument::UndoStack) && (arg <= QTextDocument::UndoAndRedoStacks))
-        return qScriptValueFromValue(engine,  static_cast<QTextDocument::Stacks>(arg));
-    return context->throwError(QString::fromLatin1("Stacks(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTextDocument_Stacks_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextDocument::Stacks value = qscriptvalue_cast<QTextDocument::Stacks>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTextDocument_Stacks_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextDocument::Stacks value = qscriptvalue_cast<QTextDocument::Stacks>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTextDocument_Stacks_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTextDocument_Stacks_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTextDocument_Stacks,
-        qtscript_QTextDocument_Stacks_valueOf, qtscript_QTextDocument_Stacks_toString);
-    qScriptRegisterMetaType<QTextDocument::Stacks>(engine, qtscript_QTextDocument_Stacks_toScriptValue,
-        qtscript_QTextDocument_Stacks_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 3; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTextDocument_Stacks_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTextDocument_Stacks_values[i])),
             QScriptValue::ReadOnly | QScriptValue::Undeletable);
     }
     return ctor;
@@ -539,73 +622,6 @@ static QScriptValue qtscript_create_QTextDocument_FindFlags_class(QScriptEngine 
 }
 
 //
-// QTextDocument::MetaInformation
-//
-
-static const QTextDocument::MetaInformation qtscript_QTextDocument_MetaInformation_values[] = {
-    QTextDocument::DocumentTitle
-    , QTextDocument::DocumentUrl
-};
-
-static const char * const qtscript_QTextDocument_MetaInformation_keys[] = {
-    "DocumentTitle"
-    , "DocumentUrl"
-};
-
-static QString qtscript_QTextDocument_MetaInformation_toStringHelper(QTextDocument::MetaInformation value)
-{
-    if ((value >= QTextDocument::DocumentTitle) && (value <= QTextDocument::DocumentUrl))
-        return qtscript_QTextDocument_MetaInformation_keys[static_cast<int>(value)-static_cast<int>(QTextDocument::DocumentTitle)];
-    return QString();
-}
-
-static QScriptValue qtscript_QTextDocument_MetaInformation_toScriptValue(QScriptEngine *engine, const QTextDocument::MetaInformation &value)
-{
-    QScriptValue clazz = engine->globalObject().property(QString::fromLatin1("QTextDocument"));
-    return clazz.property(qtscript_QTextDocument_MetaInformation_toStringHelper(value));
-}
-
-static void qtscript_QTextDocument_MetaInformation_fromScriptValue(const QScriptValue &value, QTextDocument::MetaInformation &out)
-{
-    out = qvariant_cast<QTextDocument::MetaInformation>(value.toVariant());
-}
-
-static QScriptValue qtscript_construct_QTextDocument_MetaInformation(QScriptContext *context, QScriptEngine *engine)
-{
-    int arg = context->argument(0).toInt32();
-    if ((arg >= QTextDocument::DocumentTitle) && (arg <= QTextDocument::DocumentUrl))
-        return qScriptValueFromValue(engine,  static_cast<QTextDocument::MetaInformation>(arg));
-    return context->throwError(QString::fromLatin1("MetaInformation(): invalid enum value (%0)").arg(arg));
-}
-
-static QScriptValue qtscript_QTextDocument_MetaInformation_valueOf(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextDocument::MetaInformation value = qscriptvalue_cast<QTextDocument::MetaInformation>(context->thisObject());
-    return QScriptValue(engine, static_cast<int>(value));
-}
-
-static QScriptValue qtscript_QTextDocument_MetaInformation_toString(QScriptContext *context, QScriptEngine *engine)
-{
-    QTextDocument::MetaInformation value = qscriptvalue_cast<QTextDocument::MetaInformation>(context->thisObject());
-    return QScriptValue(engine, qtscript_QTextDocument_MetaInformation_toStringHelper(value));
-}
-
-static QScriptValue qtscript_create_QTextDocument_MetaInformation_class(QScriptEngine *engine, QScriptValue &clazz)
-{
-    QScriptValue ctor = qtscript_create_enum_class_helper(
-        engine, qtscript_construct_QTextDocument_MetaInformation,
-        qtscript_QTextDocument_MetaInformation_valueOf, qtscript_QTextDocument_MetaInformation_toString);
-    qScriptRegisterMetaType<QTextDocument::MetaInformation>(engine, qtscript_QTextDocument_MetaInformation_toScriptValue,
-        qtscript_QTextDocument_MetaInformation_fromScriptValue, ctor.property(QString::fromLatin1("prototype")));
-    for (int i = 0; i < 2; ++i) {
-        clazz.setProperty(QString::fromLatin1(qtscript_QTextDocument_MetaInformation_keys[i]),
-            engine->newVariant(qVariantFromValue(qtscript_QTextDocument_MetaInformation_values[i])),
-            QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    }
-    return ctor;
-}
-
-//
 // QTextDocument
 //
 
@@ -619,11 +635,11 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 45;
+        _id = 0xBABE0000 + 47;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QTextDocument* _q_self = qscriptvalue_cast<QTextDocument*>(context->thisObject());
+    qtscript_QTextDocument* _q_self = reinterpret_cast<qtscript_QTextDocument*>(qscriptvalue_cast<QTextDocument*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QTextDocument.%0(): this object is not a QTextDocument")
@@ -723,20 +739,35 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     break;
 
     case 11:
-    if (context->argumentCount() == 0) {
-        QTextOption _q_result = _q_self->defaultTextOption();
+    if (context->argumentCount() == 1) {
+        QTextFormat _q_arg0 = qscriptvalue_cast<QTextFormat>(context->argument(0));
+        QTextObject* _q_result = _q_self->createObject(_q_arg0);
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 12:
     if (context->argumentCount() == 0) {
-        QAbstractTextDocumentLayout* _q_result = _q_self->documentLayout();
+        Qt::CursorMoveStyle _q_result = _q_self->defaultCursorMoveStyle();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
     case 13:
+    if (context->argumentCount() == 0) {
+        QTextOption _q_result = _q_self->defaultTextOption();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 14:
+    if (context->argumentCount() == 0) {
+        QAbstractTextDocumentLayout* _q_result = _q_self->documentLayout();
+        return qScriptValueFromValue(context->engine(), _q_result);
+    }
+    break;
+
+    case 15:
     if (context->argumentCount() == 1) {
         QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
         _q_self->drawContents(_q_arg0);
@@ -750,14 +781,14 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 14:
+    case 16:
     if (context->argumentCount() == 0) {
         QTextBlock _q_result = _q_self->end();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 15:
+    case 17:
     if (context->argumentCount() == 1) {
         if (context->argument(0).isRegExp()) {
             QRegExp _q_arg0 = context->argument(0).toRegExp();
@@ -833,7 +864,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 16:
+    case 18:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTextBlock _q_result = _q_self->findBlock(_q_arg0);
@@ -841,7 +872,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 17:
+    case 19:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTextBlock _q_result = _q_self->findBlockByLineNumber(_q_arg0);
@@ -849,7 +880,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 18:
+    case 20:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTextBlock _q_result = _q_self->findBlockByNumber(_q_arg0);
@@ -857,14 +888,14 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 19:
+    case 21:
     if (context->argumentCount() == 0) {
         QTextBlock _q_result = _q_self->firstBlock();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 20:
+    case 22:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTextFrame* _q_result = _q_self->frameAt(_q_arg0);
@@ -872,49 +903,49 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 21:
+    case 23:
     if (context->argumentCount() == 0) {
         qreal _q_result = _q_self->idealWidth();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 22:
+    case 24:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isEmpty();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 23:
+    case 25:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isRedoAvailable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 24:
+    case 26:
     if (context->argumentCount() == 0) {
         bool _q_result = _q_self->isUndoAvailable();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 25:
+    case 27:
     if (context->argumentCount() == 0) {
         QTextBlock _q_result = _q_self->lastBlock();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 26:
+    case 28:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->lineCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 27:
+    case 29:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         int _q_arg1 = context->argument(1).toInt32();
@@ -923,7 +954,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 28:
+    case 30:
     if (context->argumentCount() == 1) {
         QTextDocument::MetaInformation _q_arg0 = qscriptvalue_cast<QTextDocument::MetaInformation>(context->argument(0));
         QString _q_result = _q_self->metaInformation(_q_arg0);
@@ -931,7 +962,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 29:
+    case 31:
     if (context->argumentCount() == 1) {
         int _q_arg0 = context->argument(0).toInt32();
         QTextObject* _q_result = _q_self->object(_q_arg0);
@@ -939,7 +970,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 30:
+    case 32:
     if (context->argumentCount() == 1) {
         QTextFormat _q_arg0 = qscriptvalue_cast<QTextFormat>(context->argument(0));
         QTextObject* _q_result = _q_self->objectForFormat(_q_arg0);
@@ -947,22 +978,14 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 31:
+    case 33:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->pageCount();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 32:
-    if (context->argumentCount() == 1) {
-        QPrinter* _q_arg0 = qscriptvalue_cast<QPrinter*>(context->argument(0));
-        _q_self->print(_q_arg0);
-        return context->engine()->undefinedValue();
-    }
-    break;
-
-    case 33:
+    case 34:
     if (context->argumentCount() == 1) {
         QTextCursor* _q_arg0 = qscriptvalue_cast<QTextCursor*>(context->argument(0));
         _q_self->redo(_q_arg0);
@@ -970,7 +993,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 34:
+    case 35:
     if (context->argumentCount() == 2) {
         int _q_arg0 = context->argument(0).toInt32();
         QUrl _q_arg1 = qscriptvalue_cast<QUrl>(context->argument(1));
@@ -979,21 +1002,29 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 35:
+    case 36:
     if (context->argumentCount() == 0) {
         int _q_result = _q_self->revision();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 36:
+    case 37:
     if (context->argumentCount() == 0) {
         QTextFrame* _q_result = _q_self->rootFrame();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 37:
+    case 38:
+    if (context->argumentCount() == 1) {
+        Qt::CursorMoveStyle _q_arg0 = qscriptvalue_cast<Qt::CursorMoveStyle>(context->argument(0));
+        _q_self->setDefaultCursorMoveStyle(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 39:
     if (context->argumentCount() == 1) {
         QTextOption _q_arg0 = qscriptvalue_cast<QTextOption>(context->argument(0));
         _q_self->setDefaultTextOption(_q_arg0);
@@ -1001,7 +1032,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 38:
+    case 40:
     if (context->argumentCount() == 1) {
         QAbstractTextDocumentLayout* _q_arg0 = qscriptvalue_cast<QAbstractTextDocumentLayout*>(context->argument(0));
         _q_self->setDocumentLayout(_q_arg0);
@@ -1009,7 +1040,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 39:
+    case 41:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setHtml(_q_arg0);
@@ -1017,7 +1048,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 40:
+    case 42:
     if (context->argumentCount() == 2) {
         QTextDocument::MetaInformation _q_arg0 = qscriptvalue_cast<QTextDocument::MetaInformation>(context->argument(0));
         QString _q_arg1 = context->argument(1).toString();
@@ -1026,7 +1057,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 41:
+    case 43:
     if (context->argumentCount() == 1) {
         QString _q_arg0 = context->argument(0).toString();
         _q_self->setPlainText(_q_arg0);
@@ -1034,7 +1065,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 42:
+    case 44:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->toHtml();
         return QScriptValue(context->engine(), _q_result);
@@ -1046,14 +1077,14 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 43:
+    case 45:
     if (context->argumentCount() == 0) {
         QString _q_result = _q_self->toPlainText();
         return QScriptValue(context->engine(), _q_result);
     }
     break;
 
-    case 44:
+    case 46:
     if (context->argumentCount() == 1) {
         QTextCursor* _q_arg0 = qscriptvalue_cast<QTextCursor*>(context->argument(0));
         _q_self->undo(_q_arg0);
@@ -1061,7 +1092,7 @@ static QScriptValue qtscript_QTextDocument_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 45: {
+    case 47: {
     QString result = QString::fromLatin1("QTextDocument");
     return QScriptValue(context->engine(), result);
     }
@@ -1136,7 +1167,7 @@ QScriptValue qtscript_create_QTextDocument_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QTextDocument*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QTextDocument*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QObject*>()));
-    for (int i = 0; i < 46; ++i) {
+    for (int i = 0; i < 48; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QTextDocument_prototype_call, qtscript_QTextDocument_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QTextDocument_function_names[i+1]),
@@ -1149,15 +1180,15 @@ QScriptValue qtscript_create_QTextDocument_class(QScriptEngine *engine)
     QScriptValue ctor = engine->newFunction(qtscript_QTextDocument_static_call, proto, qtscript_QTextDocument_function_lengths[0]);
     ctor.setData(QScriptValue(engine, uint(0xBABE0000 + 0)));
 
-    ctor.setProperty(QString::fromLatin1("ResourceType"),
-        qtscript_create_QTextDocument_ResourceType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("Stacks"),
         qtscript_create_QTextDocument_Stacks_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("MetaInformation"),
+        qtscript_create_QTextDocument_MetaInformation_class(engine, ctor));
+    ctor.setProperty(QString::fromLatin1("ResourceType"),
+        qtscript_create_QTextDocument_ResourceType_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("FindFlag"),
         qtscript_create_QTextDocument_FindFlag_class(engine, ctor));
     ctor.setProperty(QString::fromLatin1("FindFlags"),
         qtscript_create_QTextDocument_FindFlags_class(engine));
-    ctor.setProperty(QString::fromLatin1("MetaInformation"),
-        qtscript_create_QTextDocument_MetaInformation_class(engine, ctor));
     return ctor;
 }

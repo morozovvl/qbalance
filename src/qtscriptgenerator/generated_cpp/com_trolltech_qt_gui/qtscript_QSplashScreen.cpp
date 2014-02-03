@@ -6,6 +6,7 @@
 #include <qmetaobject.h>
 
 #include <qsplashscreen.h>
+#include <QIconEngine>
 #include <QVariant>
 #include <qaction.h>
 #include <qbitmap.h>
@@ -17,8 +18,6 @@
 #include <qfont.h>
 #include <qgraphicseffect.h>
 #include <qgraphicsproxywidget.h>
-#include <qicon.h>
-#include <qinputcontext.h>
 #include <qkeysequence.h>
 #include <qlayout.h>
 #include <qlist.h>
@@ -38,6 +37,7 @@
 #include <qsplashscreen.h>
 #include <qstyle.h>
 #include <qwidget.h>
+#include <qwindow.h>
 
 #include "qtscriptshell_QSplashScreen.h"
 
@@ -45,6 +45,7 @@ static const char * const qtscript_QSplashScreen_function_names[] = {
     "QSplashScreen"
     // static
     // prototype
+    , "drawContents"
     , "finish"
     , "pixmap"
     , "setPixmap"
@@ -55,6 +56,7 @@ static const char * const qtscript_QSplashScreen_function_signatures[] = {
     "QWidget parent, QPixmap pixmap, WindowFlags f\nQPixmap pixmap, WindowFlags f"
     // static
     // prototype
+    , "QPainter painter"
     , "QWidget w"
     , ""
     , "QPixmap pixmap"
@@ -66,9 +68,20 @@ static const int qtscript_QSplashScreen_function_lengths[] = {
     // static
     // prototype
     , 1
+    , 1
     , 0
     , 1
     , 0
+};
+
+static QScriptValue qtscript_QSplashScreen_prototype_call(QScriptContext *, QScriptEngine *);
+
+class qtscript_QSplashScreen : public QSplashScreen
+{
+    friend QScriptValue qtscript_QSplashScreen_drawContents(QScriptContext *, QScriptEngine *);
+
+    friend QScriptValue qtscript_QSplashScreen_prototype_call(QScriptContext *, QScriptEngine *);
+
 };
 
 static QScriptValue qtscript_QSplashScreen_throw_ambiguity_error_helper(
@@ -84,6 +97,8 @@ static QScriptValue qtscript_QSplashScreen_throw_ambiguity_error_helper(
 
 Q_DECLARE_METATYPE(QSplashScreen*)
 Q_DECLARE_METATYPE(QtScriptShell_QSplashScreen*)
+Q_DECLARE_METATYPE(QPainter*)
+Q_DECLARE_METATYPE(QWidget*)
 Q_DECLARE_METATYPE(QFlags<Qt::WindowType>)
 
 //
@@ -100,11 +115,11 @@ static QScriptValue qtscript_QSplashScreen_prototype_call(QScriptContext *contex
     if (context->callee().isFunction())
         _id = context->callee().data().toUInt32();
     else
-        _id = 0xBABE0000 + 3;
+        _id = 0xBABE0000 + 4;
 #endif
     Q_ASSERT((_id & 0xFFFF0000) == 0xBABE0000);
     _id &= 0x0000FFFF;
-    QSplashScreen* _q_self = qscriptvalue_cast<QSplashScreen*>(context->thisObject());
+    qtscript_QSplashScreen* _q_self = reinterpret_cast<qtscript_QSplashScreen*>(qscriptvalue_cast<QSplashScreen*>(context->thisObject()));
     if (!_q_self) {
         return context->throwError(QScriptContext::TypeError,
             QString::fromLatin1("QSplashScreen.%0(): this object is not a QSplashScreen")
@@ -114,20 +129,28 @@ static QScriptValue qtscript_QSplashScreen_prototype_call(QScriptContext *contex
     switch (_id) {
     case 0:
     if (context->argumentCount() == 1) {
+        QPainter* _q_arg0 = qscriptvalue_cast<QPainter*>(context->argument(0));
+        _q_self->drawContents(_q_arg0);
+        return context->engine()->undefinedValue();
+    }
+    break;
+
+    case 1:
+    if (context->argumentCount() == 1) {
         QWidget* _q_arg0 = qscriptvalue_cast<QWidget*>(context->argument(0));
         _q_self->finish(_q_arg0);
         return context->engine()->undefinedValue();
     }
     break;
 
-    case 1:
+    case 2:
     if (context->argumentCount() == 0) {
         QPixmap _q_result = _q_self->pixmap();
         return qScriptValueFromValue(context->engine(), _q_result);
     }
     break;
 
-    case 2:
+    case 3:
     if (context->argumentCount() == 1) {
         QPixmap _q_arg0 = qscriptvalue_cast<QPixmap>(context->argument(0));
         _q_self->setPixmap(_q_arg0);
@@ -135,7 +158,7 @@ static QScriptValue qtscript_QSplashScreen_prototype_call(QScriptContext *contex
     }
     break;
 
-    case 3: {
+    case 4: {
     QString result = QString::fromLatin1("QSplashScreen");
     return QScriptValue(context->engine(), result);
     }
@@ -229,7 +252,7 @@ QScriptValue qtscript_create_QSplashScreen_class(QScriptEngine *engine)
     engine->setDefaultPrototype(qMetaTypeId<QSplashScreen*>(), QScriptValue());
     QScriptValue proto = engine->newVariant(qVariantFromValue((QSplashScreen*)0));
     proto.setPrototype(engine->defaultPrototype(qMetaTypeId<QWidget*>()));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QScriptValue fun = engine->newFunction(qtscript_QSplashScreen_prototype_call, qtscript_QSplashScreen_function_lengths[i+1]);
         fun.setData(QScriptValue(engine, uint(0xBABE0000 + i)));
         proto.setProperty(QString::fromLatin1(qtscript_QSplashScreen_function_names[i+1]),
