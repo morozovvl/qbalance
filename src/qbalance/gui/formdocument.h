@@ -47,9 +47,7 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool);
 
 public slots:
-    virtual void cmdAdd();
     virtual void cmdQueryAdd();
-    virtual void cmdDelete();
     virtual void cmdOk();
     virtual void cmdCancel();
     Q_INVOKABLE virtual void show();

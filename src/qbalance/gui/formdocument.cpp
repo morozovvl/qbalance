@@ -237,24 +237,6 @@ void FormDocument::hide()
 }
 
 
-void FormDocument::cmdAdd()
-{
-    FormGrid::cmdAdd();
-    if (grdTable->currentIndex().row() + 2 > tableModel->rowCount())
-    {
-        selectRow(tableModel->rowCount() - 1);
-    }
-    if (grdTable->columnIsReadOnly())
-        grdTable->selectNextColumn();
-}
-
-
-void FormDocument::cmdDelete()
-{
-    FormGrid::cmdDelete();
-}
-
-
 void FormDocument::cmdOk()
 {
     FormGrid::cmdOk();

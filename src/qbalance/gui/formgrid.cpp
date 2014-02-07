@@ -399,7 +399,12 @@ void FormGrid::cmdAdd()
         if (parent != 0 && parent->add())
         {
             int rowCount = parent->getTableModel()->rowCount();
-            setCurrentIndex(index.sibling(rowCount - 1, index.column()));    // Если была удалена последняя строка
+            int column = index.column();
+            if (column == -1)
+                grdTable->selectNextColumn();
+            else
+                setCurrentIndex(index.sibling(index.row() + 1, column));
+
             if (rowCount > 0)
             {   // Если записей стало больше 0, то активируем кнопку "Удалить"
                 if (buttonDelete != 0)
