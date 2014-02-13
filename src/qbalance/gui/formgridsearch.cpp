@@ -50,9 +50,9 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             parameters = new SearchParameters();
             parameters->setObjectName("searchParameters");
             hbxLayout->insertWidget(0, parameters);
-            QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
-            hbxLayout->insertWidget(0, label);
-            vbxLayout->insertLayout(0, hbxLayout);
+//            QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
+//            hbxLayout->insertWidget(0, label);
+//            vbxLayout->insertLayout(0, hbxLayout);
         }
     }
     else

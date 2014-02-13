@@ -42,7 +42,7 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
     QString tmpDir = fileName + ".tmp";
     if (QDir().mkdir(tmpDir))
     {
-        // Распакуем файл OpenOffice
+        // Распакуем файл шаблона документа OpenOffice
         QProcess* unzip = new QProcess();
         unzip->setWorkingDirectory(tmpDir);
 #ifdef Q_OS_WIN32
@@ -50,6 +50,8 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
 #else
         unzip->start("unzip", QStringList() << fileName);
 #endif
+
+        // Если удалось распаковать, то продолжим
         if (waitProcessEnd(unzip)) {
 
             // Запишем контент в файл
@@ -60,7 +62,7 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
                 {
                     file.close();
 
-                    writeVariables();
+                    writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
 
                     if (file.open(QIODevice::WriteOnly))
                     {
@@ -79,13 +81,17 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
 #else
             zip->start("zip", QStringList() << "-r" << fileName << ".");
 #endif
+
+            // Если удалось запаковать, то продолжим
             if (waitProcessEnd(zip)) {
 
                 // удалим временный каталог
                 removeDir(tmpDir);
 
+                // Запустим OpenOffice
                 QProcess* ooProcess = new QProcess();
                 ooProcess->start("soffice", QStringList() << "--invisible" << "--quickstart" << fileName);
+
                 if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))    // Подождем 1 секунду и если процесс не запустился
                     app->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                  // выдадим сообщение об ошибке
                 else
@@ -146,7 +152,8 @@ bool OOXMLReportEngine::removeDir(QString dirName)
 }
 
 
-void OOXMLReportEngine::writeVariables() {
+void OOXMLReportEngine::writeVariables()
+{
     QDomNodeList cells = doc.elementsByTagName("text:p");
     QRegExp rx("\\[.+\\]");
     QString type;
@@ -345,7 +352,7 @@ void OOXMLReportEngine::writeVariables() {
     } while (counter > 0);
 
 
-    // Теперь пропустим результат через скрипты
+    // Теперь пропустим документ через скрипты, чтобы вычислить выражения
     cells =  doc.elementsByTagName("text:p");
     for (int i = 0; i < cells.count(); i++)
     {
@@ -374,7 +381,8 @@ void OOXMLReportEngine::writeVariables() {
 }
 
 
-void OOXMLReportEngine::writeCell(QDomElement node, QString value, QString type) {
+void OOXMLReportEngine::writeCell(QDomElement node, QString value, QString type)
+{
     // Заполним ячейку
     if (node.tagName() != "table:table-cell")                  // Установим тег ячейки
         node.setTagName("table:table-cell");

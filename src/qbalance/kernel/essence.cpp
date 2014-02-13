@@ -693,11 +693,13 @@ void Essence::updateCurrentRow()
 
 
 void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
-{   // Зарядим константы в контекст печати
+{
+    // Зарядим константы в контекст печати
     QString constDictionaryName = db->getObjectName("константы");
     QString constNameField = db->getObjectName(constDictionaryName + ".имя");
     QString constValueField = db->getObjectName(constDictionaryName + ".значение");
-    // Откроем справочник констант
+
+    // Откроем справочник констант и загрузим константы в контекст печати
     app->getDictionaries()->addDictionary(db->getObjectName(constDictionaryName));
     if (app->getDictionaries()->isMember(constDictionaryName))
     {
@@ -712,17 +714,7 @@ void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
     }
     // Отсортируем таблицу
     QStringList sortColumns;
-/*
-    foreach(QString field, getFieldsList())
-    {
-        if (field.right(5).toUpper() == "__ИМЯ")
-        {
-            // Найдем первую колонку, в которой хранится имя позиции
-            sortColumns << field;
-            break;
-        }
-    }
-*/
+
     // Заполним список сортирования данными
     QMap<QString, int>  sortedStrings;
     int rowCountWidth = QString("%1").arg(getTableModel()->rowCount()).length();
@@ -737,14 +729,12 @@ void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
         sortedStrings.insert(fields + QString("%1").arg(i, rowCountWidth), i);
     }
 
-    //    for (int i = 0; i < getTableModel()->rowCount(); i++)
     int i = 0;
     foreach (QString name, sortedStrings.keys())
     {
         QSqlRecord rec = getTableModel()->record(sortedStrings.value(name));
         foreach(QString field, getFieldsList())
         {
-//            if (enabledFields.count() == 0 || enabledFields.contains(field))
                 reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i+1).arg(field).toLower(), rec.value(field));
         }
         reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i+1).arg("номерстроки"), QVariant(i+1));
@@ -859,14 +849,18 @@ void Essence::keyboardReaded(QString barCode)
 
 
 void Essence::print(QString fileName)
+// fileName - файл с шаблоном документа
 {
-    bool defaultFile = false;
-    // Подготовим данные для печати
+    // Подготовим контекст для печати
     QMap<QString, QVariant> printValues;
+
+    // Создадим скриптовый обработчик контекста печати
     ReportScriptEngine scriptEngine(&printValues);
+
+    // Заполним контекст данными
     preparePrintValues(&scriptEngine);
 
-
+    // Найдем полный путь к файлам с шаблонами
     QString fullFileName = app->getReportsPath();
 
     // Если нет каталога с отчетами, то создадим его
@@ -874,31 +868,30 @@ void Essence::print(QString fileName)
         QDir().mkpath(fullFileName);
 
     fullFileName += fileName;
+
     // Если такого шаблона нет, попробуем получить его с сервера
     if (getFile(app->getReportsPath(), fileName, ReportTemplateFileType))
     {
+        // Если имеются соответствующие шаблону скрипты, то запустим их
         if (scriptEngine.open(fullFileName + ".qs") && scriptEngine.evaluate())
         {
             QString tmpFileName;
             QString ext = QFileInfo(fileName).suffix();
-            if (!defaultFile)
-            {
-                // Скопируем файл отчета (шаблон) во временный файл
-                QTemporaryFile templateFile("qt_temp_XXXXXX." + ext);
-//                if (templateFile.open())
-//                {
-//                    templateFile.close();
-                    tmpFileName = templateFile.fileName();
-                    QFile().copy(fullFileName, tmpFileName);
-//                }
-            }
-            else
-                tmpFileName = fullFileName;
+
+            // Скопируем файл отчета (шаблон) во временный файл
+            QTemporaryFile templateFile("qt_temp_XXXXXX." + ext);
+            tmpFileName = templateFile.fileName();
+            QFile().copy(fullFileName, tmpFileName);
+
+            // На 3 секунды выведем сообщение об открытии документа
             app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
+
+            // Из пользовательских настроек выберем обработчик шаблона
             switch (app->getReportTemplateType())
             {
+                // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
                 case OOreportTemplate:
-                    {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                    {
                         OOReportEngine* report = new OOReportEngine(&scriptEngine);
                         if (report->open())
                         {
@@ -909,6 +902,7 @@ void Essence::print(QString fileName)
                     }
                     break;
 /*
+                // Обработчик шаблона с использованием OpenOffice UNO. С UNO работает медленно, поэтому не вижу смысла разрабатывать
                 case OOUNOreportTemplate:
                     {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                         OOUNOReportEngine* report = new OOUNOReportEngine(&scriptEngine);
@@ -921,6 +915,7 @@ void Essence::print(QString fileName)
                     }
                     break;
 */
+                // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
                 case OOXMLreportTemplate:
                     {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
                         OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
@@ -932,6 +927,7 @@ void Essence::print(QString fileName)
                         delete report;
                     }
                     break;
+                // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
                 case OpenRPTreportTemplate:
                     {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
 //                        OpenRPTreportEngine report(&printValues, file, ext);

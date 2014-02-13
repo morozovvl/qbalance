@@ -30,7 +30,7 @@ class QDESIGNER_WIDGET_EXPORT MyLineItemDelegate : public MyItemDelegate {
 public:
     MyLineItemDelegate(QObject*, FormGrid*);
     ~MyLineItemDelegate();
-    void    setMaxLength(int l) { length = l; }
+    virtual void    setMaxLength(int l) { length = l; }
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
 private:
     int length;

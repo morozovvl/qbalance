@@ -45,22 +45,22 @@ public:
     TableView(QWidget* = 0, FormGrid* = 0);
     ~TableView();
 
-    void                        setFormGrid(FormGrid* par) { parent = par; }
-    void                        setApp(TApplication*);
-    void                        setTableModel(MySqlRelationalTableModel*);
-    void                        setTagName(QString tag) { tagName = tag; }
-    bool                        columnIsReadOnly();
-    void                        selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
-    void                        selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
-    void                        setReadOnly(bool);
-    bool                        setColumnsHeaders();
-    void                        hideAllGridSections();
-    void                        hideGridSection(QString);
-    void                        showGridSection(QString);
-    void                        showAllGridSections();
+    virtual void                setFormGrid(FormGrid* par) { parent = par; }
+    virtual void                setApp(TApplication*);
+    virtual void                setTableModel(MySqlRelationalTableModel*);
+    virtual void                setTagName(QString tag) { tagName = tag; }
+    virtual bool                columnIsReadOnly();
+    virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
+    virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
+    virtual void                setReadOnly(bool);
+    virtual bool                setColumnsHeaders();
+    virtual void                hideAllGridSections();
+    virtual void                hideGridSection(QString);
+    virtual void                showGridSection(QString);
+    virtual void                showAllGridSections();
 
 public slots:
-    void                        selectRow(int = 0);
+    virtual void                selectRow(int = 0);
 
 protected:
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш

@@ -29,10 +29,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class QDESIGNER_WIDGET_EXPORT MyNumericEdit : public QLineEdit {
     Q_OBJECT
 public:
-    explicit MyNumericEdit(QWidget *parent = 0);
+    MyNumericEdit(QWidget *parent = 0);
 //    MyNumericEdit(QWidget *parent = 0);
-    Q_INVOKABLE void setValue(QVariant);
-    Q_INVOKABLE QVariant getValue() { return value; }
+    Q_INVOKABLE virtual void setValue(QVariant);
+    Q_INVOKABLE virtual QVariant getValue() { return value; }
 private:
     QVariant value;
 };

@@ -43,18 +43,18 @@ public:
     DocParameters(QWidget* pwgt = 0);
     ~DocParameters();
 
-    void addString(QString);
+    virtual void addString(QString);
     virtual void removeString(int);
-    void setFocus();
-    void showText(QString);
-    QStringList getKeys() { return dictList; }
-    Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
-    void setDictionaries(QMap<QString, Dictionary*>* dicts) { dictionaries = dicts; }
-    void setFormDocument(FormDocument* doc) { parentForm = doc; }
-    void setApp(TApplication*);
+    virtual void setFocus();
+    virtual void showText(QString);
+    virtual QStringList getKeys() { return dictList; }
+    virtual Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
+    virtual void setDictionaries(QMap<QString, Dictionary*>* dicts) { dictionaries = dicts; }
+    virtual void setFormDocument(FormDocument* doc) { parentForm = doc; }
+    virtual void setApp(TApplication*);
 
 public slots:
-    void dictionaryButtonPressed();
+    virtual void dictionaryButtonPressed();
 
 private:
     TApplication*                   app;

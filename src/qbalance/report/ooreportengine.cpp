@@ -50,7 +50,7 @@ bool OOReportEngine::open(QMap<QString, QVariant>* context, QString name, QStrin
                     if (reportContext->value(key).type() == QVariant::Double)
                     {
                         value = QString("%1").arg(reportContext->value(key).toDouble());
-                        value.replace(".", ",");        // В числовых значениях заменим точку на запятую, т.к. OpenOffice не правильно воспринимает точку
+                        value.replace(".", ",");        // В числовых значениях заменим точку на запятую, т.к. OpenOffice не правильно воспринимает точку (а может я чего не понимаю)
                     }
                     else
                         value = reportContext->value(key).toString();

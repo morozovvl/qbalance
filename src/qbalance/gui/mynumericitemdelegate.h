@@ -36,10 +36,10 @@ public:
     MyNumericItemDelegate(QObject*, FormGrid*, int len = 10, int prec = 0);
     ~MyNumericItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
-    void setLength(int);
-    int getLength() { return length; }
-    void setPrecision(int);
-    int getPrecision() { return precision; }
+    virtual void setLength(int);
+    virtual int getLength() { return length; }
+    virtual void setPrecision(int);
+    virtual int getPrecision() { return precision; }
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     virtual void setColumnMask(const QString mask = "");
 private:
