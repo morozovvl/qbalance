@@ -76,13 +76,16 @@ DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
 void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
-    globalObject().setProperty("getDictionary", newFunction(getDictionary));
-    globalObject().setProperty("getSaldo", newFunction(getSaldo));
-    globalObject().setProperty("getSumValue", newFunction(getSumValue));
-    globalObject().setProperty("saveVariable", newFunction(saveVariable));
-    globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
-    globalObject().setProperty("document", newQObject(document));
-    globalObject().setProperty("documents", newQObject(documents));
+    if (script != 0)
+    {
+        globalObject().setProperty("getDictionary", newFunction(getDictionary));
+        globalObject().setProperty("getSaldo", newFunction(getSaldo));
+        globalObject().setProperty("getSumValue", newFunction(getSumValue));
+        globalObject().setProperty("saveVariable", newFunction(saveVariable));
+        globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
+        globalObject().setProperty("document", newQObject(document));
+        globalObject().setProperty("documents", newQObject(documents));
+    }
 }
 
 

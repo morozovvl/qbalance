@@ -42,18 +42,17 @@ class QDESIGNER_WIDGET_EXPORT SearchParameters : public QFrame {
 public:
     SearchParameters(QWidget* parentWidget = 0);
     ~SearchParameters();
-    virtual void close();
-    virtual QVector<sParam> getParameters();              // Возвращает информацию о заданных параметрах поиска
-    virtual void setFieldsList(QStringList);
-    virtual void setFocus();
-    virtual void setFormGrid(FormGridSearch* par) { parentForm = par; }
-    virtual void setApp(TApplication* a);
-    virtual void setProgramIdFieldName(QString s) { programIdFieldName = s; }
-    virtual void setProgramNameFieldName(QString s) { programNameFieldName = s; }
-    virtual void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
-    virtual QString getFilter();
+    void close();
+    QVector<sParam> getParameters();              // Возвращает информацию о заданных параметрах поиска
+    void setFieldsList(QStringList);
+    void setFocus();
+    void setFormGrid(FormGridSearch* par) { parentForm = par; }
+    void setApp(TApplication* a);
+    void setProgramIdFieldName(QString s) { programIdFieldName = s; }
+    void setProgramNameFieldName(QString s) { programNameFieldName = s; }
+    void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
+    QString getFilter();
     virtual void keyPressEvent(QKeyEvent*);
-    virtual void searchGridLayout();
 
 signals:
     void requery();
@@ -71,7 +70,7 @@ private:
     QStringList         parameters;
     FormGridSearch*     parentForm;
     void addString(QString, int);
-    void removeString(int);
+//    void removeString(int);
 };
 
 #endif // SEARCHPARAMETERS_H

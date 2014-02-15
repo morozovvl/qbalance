@@ -855,7 +855,7 @@ void Essence::print(QString fileName)
     QMap<QString, QVariant> printValues;
 
     // Создадим скриптовый обработчик контекста печати
-    ReportScriptEngine scriptEngine(&printValues);
+    ReportScriptEngine scriptEngine(&printValues, form);
 
     // Заполним контекст данными
     preparePrintValues(&scriptEngine);
@@ -872,68 +872,74 @@ void Essence::print(QString fileName)
     // Если такого шаблона нет, попробуем получить его с сервера
     if (getFile(app->getReportsPath(), fileName, ReportTemplateFileType))
     {
-        // Если имеются соответствующие шаблону скрипты, то запустим их
-        if (scriptEngine.open(fullFileName + ".qs") && scriptEngine.evaluate())
+        QString ext = QFileInfo(fileName).suffix();
+        QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
+
+        QTemporaryFile templateFile(tmpFileName);
+        if (templateFile.open())
         {
-            QString tmpFileName;
-            QString ext = QFileInfo(fileName).suffix();
+            tmpFileName = templateFile.fileName();
+            templateFile.close();
+            templateFile.remove();
+            // Если имеются соответствующие шаблону скрипты, то запустим их
+            if (scriptEngine.open(fullFileName + ".qs"))
+                scriptEngine.evaluate();
 
             // Скопируем файл отчета (шаблон) во временный файл
-            QTemporaryFile templateFile("qt_temp_XXXXXX." + ext);
-            tmpFileName = templateFile.fileName();
-            QFile().copy(fullFileName, tmpFileName);
-
-            // На 3 секунды выведем сообщение об открытии документа
-            app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
-
-            // Из пользовательских настроек выберем обработчик шаблона
-            switch (app->getReportTemplateType())
+            if (QFile().copy(fullFileName, tmpFileName))
             {
-                // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
-                case OOreportTemplate:
-                    {
-                        OOReportEngine* report = new OOReportEngine(&scriptEngine);
-                        if (report->open())
+                // На 3 секунды выведем сообщение об открытии документа
+                app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
+
+                // Из пользовательских настроек выберем обработчик шаблона
+                switch (app->getReportTemplateType())
+                {
+                    // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
+                    case OOreportTemplate:
                         {
-                            report->open(&printValues, fileName, ext);
-                            report->close();
+                            OOReportEngine* report = new OOReportEngine(&scriptEngine);
+                            if (report->open())
+                            {
+                                report->open(&printValues, fileName, ext);
+                                report->close();
+                            }
+                            delete report;
                         }
-                        delete report;
-                    }
-                    break;
+                        break;
 /*
-                // Обработчик шаблона с использованием OpenOffice UNO. С UNO работает медленно, поэтому не вижу смысла разрабатывать
-                case OOUNOreportTemplate:
-                    {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                        OOUNOReportEngine* report = new OOUNOReportEngine(&scriptEngine);
-                        if (report->open())
-                        {
-                            report->open(tmpFileName, &printValues);
-                            report->close();
+                    // Обработчик шаблона с использованием OpenOffice UNO. С UNO работает медленно, поэтому не вижу смысла разрабатывать
+                    case OOUNOreportTemplate:
+                        {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                            OOUNOReportEngine* report = new OOUNOReportEngine(&scriptEngine);
+                            if (report->open())
+                            {
+                               report->open(tmpFileName, &printValues);
+                                report->close();
+                            }
+                            delete report;
                         }
-                        delete report;
-                    }
-                    break;
+                        break;
 */
-                // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
-                case OOXMLreportTemplate:
-                    {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                        OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
-                        if (report->open())
-                        {
-                            report->open(tmpFileName, &printValues);
-                            report->close();
+                   // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
+                    case OOXMLreportTemplate:
+                        {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                            OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
+                            if (report->open())
+                            {
+                                report->open(tmpFileName, &printValues);
+                                report->close();
+                            }
+                            delete report;
                         }
-                        delete report;
-                    }
-                    break;
-                // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
-                case OpenRPTreportTemplate:
-                    {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-//                        OpenRPTreportEngine report(&printValues, file, ext);
-//                        report.open();
-                    }
-                    break;
+                        break;
+                 // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
+                    case OpenRPTreportTemplate:
+                        {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+//                           OpenRPTreportEngine report(&printValues, file, ext);
+//                       report.open();
+                        }
+                        break;
+                }
             }
         }
     }

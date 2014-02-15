@@ -42,8 +42,8 @@ class ScriptEngine : public QScriptEngine {
 public:
     ScriptEngine(QObject *parent = 0);
     ~ScriptEngine();
-    virtual bool open(QString fileName = "");
-    virtual void close() { ; }
+    bool open(QString fileName = "");
+    void close() { ; }
     bool evaluate();
     QScriptValue evaluate (const QString &, const QString & = QString(), int = 1);
     QString getErrorMessage() { return errorMessage; }
@@ -71,16 +71,16 @@ public:
     void eventSetEnabled(bool);
     void eventAfterRowChanged();
     void eventPhotoLoaded();
-    virtual QString preparePictureUrl(Essence*);
-    virtual QString getFilter();
+    QString preparePictureUrl(Essence*);
+    QString getFilter();
     void eventBarCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
     QMap<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
+    QString             script;
     virtual void loadScriptObjects();
 private:
     bool                scriptResult;
-    QString             script;
     QString             errorMessage;
     QString             scriptFileName;
     SqlQueryClass*      sqlQueryClass;

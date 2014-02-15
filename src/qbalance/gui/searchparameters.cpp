@@ -37,9 +37,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
-    gridLayout = 0;
     dictionaries = 0;
     app = 0;
+    gridLayout = new QGridLayout(this);
+    setLayout(gridLayout);
 }
 
 
@@ -52,12 +53,6 @@ void SearchParameters::close() {
 }
 
 
-void SearchParameters::searchGridLayout()
-{
-    gridLayout = findChild<QGridLayout*>("gridLayout");
-}
-
-
 void SearchParameters::setApp(TApplication* a)
 {
     app = a;
@@ -67,8 +62,8 @@ void SearchParameters::setApp(TApplication* a)
 
 void SearchParameters::setFieldsList(QStringList fldList)
 {
-    setLineWidth(2);
-//    setFrameStyle(QFrame::Panel | QFrame::Raised);
+    setLineWidth(1);
+    setFrameStyle(QFrame::Panel | QFrame::Raised);
     int strNum = 0;
     if (gridLayout == 0)
     {
@@ -267,7 +262,7 @@ void SearchParameters::comboBoxEnterPressed(QWidget* wdgt)
 
 void SearchParameters::setFocus()
 {
-    if (gridLayout != 0 && gridLayout->rowCount() > 0)
+    if (gridLayout->rowCount() > 0)
     {
         // При активации фокуса подсветим все строчки
         for (int i = 0; i < gridLayout->rowCount(); i++)

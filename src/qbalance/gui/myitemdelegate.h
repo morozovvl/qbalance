@@ -47,13 +47,12 @@ public:
     MyItemDelegate(QObject*, FormGrid*);
     ~MyItemDelegate();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-    virtual void setColumnMask(const QString mask = "") { columnMask = mask; }
-    virtual QString getColumnMask() { return columnMask; }
-    virtual QVariant convertType(QVariant var) { return var; }
-    virtual void        setReadOnly(bool val);
-    virtual bool        isReadOnly() { return readOnly; }
-    virtual void        setFieldName(QString name) { fieldName = name; }
-    virtual QString     getFieldName() { return fieldName; }
+    void setColumnMask(const QString mask = "") { columnMask = mask; }
+    QString getColumnMask() { return columnMask; }
+    void        setReadOnly(bool val);
+    bool        isReadOnly() { return readOnly; }
+    void        setFieldName(QString name) { fieldName = name; }
+    QString     getFieldName() { return fieldName; }
 
 protected:
     FormGrid*               parentForm;

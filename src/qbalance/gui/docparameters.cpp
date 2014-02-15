@@ -51,8 +51,8 @@ DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
 
 DocParameters::~DocParameters()
 {
-    for(int i = 0; i < strNum; i++)
-        removeString(i);
+//    for(int i = 0; i < strNum; i++)
+//        removeString(i);
 }
 
 
@@ -82,7 +82,7 @@ void DocParameters::addString(QString name)
     }
 }
 
-
+/*
 void DocParameters::removeString(int strNum)
 {
     QLabel* label = (QLabel*)gridLayout->itemAtPosition(strNum, 0)->widget();                   // удалим Label
@@ -101,7 +101,7 @@ void DocParameters::removeString(int strNum)
         gridLayout->removeWidget(button);
     }
 }
-
+*/
 
 void DocParameters::setApp(TApplication* a)
 {
