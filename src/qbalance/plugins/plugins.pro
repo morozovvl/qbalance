@@ -7,6 +7,8 @@ QT += sql \
       designer \
       uitools
 
+DEFINES += CORE_LIBRARY
+
 CONFIG += plugin
 #CONFIG += release
 

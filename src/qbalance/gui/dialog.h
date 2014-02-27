@@ -39,14 +39,14 @@ public:
 
     Dialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~Dialog();
-    Q_INVOKABLE QObject* findChild(QString);
+    Q_INVOKABLE virtual QObject* findChild(QString);
     Q_INVOKABLE QString test() { return "test"; }
     Q_INVOKABLE bool isFormSelected();
 
-    void setApp(TApplication*);
-    Q_INVOKABLE void setForm(Form* f) { form = f; }
+    virtual void setApp(TApplication*);
+    Q_INVOKABLE virtual void setForm(Form* f) { form = f; }
     Q_INVOKABLE Form* getForm() { return form; }
-    void    findCmdOk();
+    virtual void    findCmdOk();
     virtual void keyPressEvent(QKeyEvent*);
 
 protected:

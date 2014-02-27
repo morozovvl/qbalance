@@ -46,7 +46,7 @@ Document::Document(int oper, Documents* par): Essence()
     freePrv = 0;
     localDictsOpened = false;
     docModified = false;
-    setDoSubmit(false);                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
+    doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = new Dictionaries();
@@ -92,23 +92,17 @@ bool Document::calculate(const QModelIndex& index)
     {
         isCurrentCalculate = true;
 
-        parent->setDoSubmit(false);
-
         if (Essence::calculate(index))
         {   // Если в вычислениях не было ошибки
 
-            ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
             calcItog();
             saveChanges();
             docModified = true;
         }
         else
         {
-            ((DocumentScriptEngine*)scriptEngine)->eventAfterCalculate();
             restoreOldValues();
         }
-
-        parent->setDoSubmit(true);
 
         isCurrentCalculate = false;
     }
@@ -406,10 +400,9 @@ bool Document::remove()
             if (db->removeDocStr(docId, strNum))
             {
                 query();
-                scriptEngine->eventAfterCalculate();
                 calcItog();
-                saveChanges();     // Принудительно обновим итог при удалении строки
                 scriptEngine->eventAfterDeleteString();
+                saveChanges();     // Принудительно обновим итог при удалении строки
                 return true;
             }
             app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
@@ -712,8 +705,8 @@ void Document::setConstDictId(QString dName, QVariant id)
     if (tableModel->rowCount() > 0)
     {
         int currentRow = form->getGridTable()->currentIndex().row();
-        bool submit = getDoSubmit();
-        setDoSubmit(true);
+        bool submit = doSubmit;
+        doSubmit = true;
         Dictionary* dict;
         QString dictName;
         for (int i = 0; i < topersList->count(); i++)
@@ -792,7 +785,7 @@ void Document::setConstDictId(QString dName, QVariant id)
             }
         }
         db->execCommands();
-        setDoSubmit(submit);
+        doSubmit = submit;
         query();
         form->selectRow(currentRow);
         form->getGridTable()->setFocus();

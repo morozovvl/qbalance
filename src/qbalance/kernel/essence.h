@@ -70,7 +70,6 @@ public:
     Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     Q_INVOKABLE void                    setDoSubmit(bool submit) { doSubmit = submit; }
-    bool                                getDoSubmit() { return doSubmit; }
     Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
     virtual void query(QString = "");
     virtual void                        setOrderClause() { ; }
@@ -168,6 +167,7 @@ protected:
     bool                lPrintable;
     bool                isDictionary;
     bool                enabled;
+    bool                doSubmit;
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
@@ -178,7 +178,6 @@ private:
     QString             photoIdField;
     QString             photoNameField;
     bool                photoEnabled;
-    bool                doSubmit;
     QWidget*            activeWidget;
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы

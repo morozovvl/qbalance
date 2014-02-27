@@ -38,26 +38,14 @@ private:
     QString                     templateFileName;
     QMap<QString, QVariant>*    context;
     QDomDocument                doc;
-/*
-    QList<QString> columns;
-    QDomElement rootElement;
-    QDomElement tableElement;               // Первая таблица в файле
-    Essence* parent;
-    ReportEngine* engine;
-    bool doOpen();
-    QString prepareDefaultDocument(QString fileName);   // Готовит документ по умолчанию: берет пустую копию, разархивирует ее, заполняет данными (через метод writeDefaultDocument()), архивирует, передает в каталог с документами
-    bool writeDefaultDocument(QString);                                  // Заполняет распакованный документ в XML формате содержимым отчета
-    void writeTableHeader(QDomNode);
-    void writeTableBody(QDomNode, int);
-    void writeTableEnd(QDomNode);
-    void writeCellAnnotation(QDomElement, QString);
-    QDomNode findAnnotation(QString);
-    void readAvailableColumns();                                        // Читает из шаблона отчета, какие колонки присутствуют в отчете
-*/
+    QStringList                 expressionsForEvaluation;
+    QDomNodeList                cells;
+
     bool removeDir(QString);
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
-    void writeCell(QDomElement, QString, QString = "string");
-//    void writeTableBody(QDomNode, int);
+    bool readExpression(int, int);
+    QString getTableVariable(QDomElement);
+    void writeCell(QDomNode, QString, QVariant);
     bool waitProcessEnd(QProcess *);
 
 };

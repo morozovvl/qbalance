@@ -271,7 +271,12 @@ QScriptValue SumToString(QScriptContext* context, QScriptEngine* engine) {
             strHun = strHun.trimmed();
             if (sNum.size() > 0) {
                 if (sNum.right(1) == "1")
-                    strHun = (strHun.size() > 0 ? strHun + " ": "") + unit1;
+                {
+                    if (!((sNum.right(2).toInt() > 10) && (sNum.right(2).toInt() < 15)))
+                        strHun = (strHun.size() > 0 ? strHun + " ": "") + unit1;
+                    else
+                        strHun = (strHun.size() > 0 ? strHun + " ": "") + unit3;
+                }
                 else if (QString("234").contains(sNum.right(1))) {
                     if ((sNum.right(2).toInt() > 10) && (sNum.right(2).toInt() < 15))
                         strHun = (strHun.size() > 0 ? strHun + " ": "") + unit3;
