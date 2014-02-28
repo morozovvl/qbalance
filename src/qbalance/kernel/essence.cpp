@@ -712,35 +712,15 @@ void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
             reportEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
         }
     }
-    // Отсортируем таблицу
-    QStringList sortColumns;
-
-    // Заполним список сортирования данными
-    QMap<QString, int>  sortedStrings;
-    int rowCountWidth = QString("%1").arg(getTableModel()->rowCount()).length();
-    for (int i = 0; i < getTableModel()->rowCount(); i++)
-    {
-        QSqlRecord rec = getTableModel()->record(i);
-        QString fields;
-        foreach(QString field, sortColumns)
-        {
-            fields.append(rec.value(field).toString().trimmed() + " ");
-        }
-        sortedStrings.insert(fields + QString("%1").arg(i, rowCountWidth), i);
-    }
-
-    int i = 0;
-    foreach (QString name, sortedStrings.keys())
-    {
-        QSqlRecord rec = getTableModel()->record(sortedStrings.value(name));
+   for (int i = 1; i <= getTableModel()->rowCount(); i++)
+   {
+        QSqlRecord rec = getTableModel()->record(i-1);
         foreach(QString field, getFieldsList())
         {
-                reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i+1).arg(field).toLower(), rec.value(field));
+                reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg(field).toLower(), rec.value(field));
         }
-        reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i+1).arg("номерстроки"), QVariant(i+1));
-        i++;
+        reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg("номерстроки"), QVariant(i));
     }
-
 }
 
 
