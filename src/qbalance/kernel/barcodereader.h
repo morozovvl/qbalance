@@ -17,35 +17,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef MYPLUGINS_H
-#define MYPLUGINS_H
+#ifndef BARCODEREADER_H
+#define BARCODEREADER_H
 
-#include "dialogplugin.h"
-#include "pictureplugin.h"
-#include "tableviewplugin.h"
-#include "searchparametersplugin.h"
-#include "docparametersplugin.h"
-#include "mynumericeditplugin.h"
+#include <QObject>
+#include "../../qextserialport/src/qextserialport.h"
+//#include "../../qextserialport/src/qextserialport_p.h"
 
-#include <QtDesigner/QtDesigner>
-#include <QtCore/qplugin.h>
 
-class MyPlugins: public QObject, public QDesignerCustomWidgetCollectionInterface {
+class QextSerialPort;
+
+class BarCodeReader : public QObject
+{
     Q_OBJECT
-
-#if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QBalance.MyPlugins")
-#endif
-
-    Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
-
 public:
-    MyPlugins(QObject *parent = 0);
-
-    virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const;
+    explicit BarCodeReader(QObject *parent = 0);
+    
+signals:
+    
+public slots:
+    void                    barCodeReadyRead();
 
 private:
-    QList<QDesignerCustomWidgetInterface*> widgets;
+    QextSerialPort*         barCodeReaderComPort;
+    QString                 barCodeString;
 };
 
-#endif // MYPLUGINS_H
+#endif // BARCODEREADER_H

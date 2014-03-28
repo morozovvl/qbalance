@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/document.h"
 #include "../kernel/documents.h"
 
-
+/*
 QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue dictName = context->argument(0);
     if (dictName.isString() && engine->evaluate("document").isValid())
@@ -32,7 +32,7 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
     }
     return QScriptValue();
 }
-
+*/
 
 QScriptValue getSaldo(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue acc = context->argument(0);
@@ -78,7 +78,8 @@ void DocumentScriptEngine::loadScriptObjects()
     ScriptEngine::loadScriptObjects();
     if (script != 0)
     {
-        globalObject().setProperty("getDictionary", newFunction(getDictionary));
+        globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в документе
+//        globalObject().setProperty("getDictionary", newFunction(getDictionary));
         globalObject().setProperty("getSaldo", newFunction(getSaldo));
         globalObject().setProperty("getSumValue", newFunction(getSumValue));
         globalObject().setProperty("saveVariable", newFunction(saveVariable));

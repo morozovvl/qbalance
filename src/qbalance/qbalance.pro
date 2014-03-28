@@ -6,17 +6,24 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-#//456 include(../qextserialport/src/qextserialport.pri)
+include(../qextserialport/src/qextserialport.pri)
 
 QT += sql \
       xml \
       core \
       script \
       gui \
-      network \
-      widgets \
-      designer \
-      uitools
+      network
+#      widgets \
+#      designer
+
+
+CONFIG += uitools
+CONFIG += qextserialport
+#QT += uitools
+#QT += widgets
+#QT += designer
+
 
 CONFIG(debug) {
     DESTDIR = ./
@@ -27,8 +34,6 @@ TARGET = ../../qbalance
 CONFIG -= app_bundle
 
 TEMPLATE = app
-
-#CONFIG += release
 
 SOURCES += main.cpp \
     kernel/app.cpp \
@@ -88,7 +93,8 @@ SOURCES += main.cpp \
     driverfr/driverfr.cpp \
     gui/mydateitemdelegate.cpp \
     report/ooxmlreportengine.cpp \
-    gui/mymdisubwindow.cpp
+    gui/mymdisubwindow.cpp \
+    kernel/barcodereader.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -148,7 +154,8 @@ HEADERS += kernel/app.h \
     driverfr/driverfr.h \
     gui/mydateitemdelegate.h \
     report/ooxmlreportengine.h \
-    gui/mymdisubwindow.h
+    gui/mymdisubwindow.h \
+    kernel/barcodereader.h
 RESOURCES += ../../resources.qrc
 
 unix:MOC_DIR = ../../.moc
@@ -186,7 +193,8 @@ OTHER_FILES += \
     ../qtbindingsbase.pri \
     ../qtscriptgenerator.bat \
     license.txt \
-    ../../README
+    ../../README \
+    CMakeLists.txt
 
 
 

@@ -38,11 +38,12 @@ public:
     Picture(QWidget* parent = 0);
     ~Picture();
     Q_INVOKABLE void show(QString);
+    void showBigPicture();
     Q_INVOKABLE void setApp(TApplication*);
     Q_INVOKABLE void setVisibility(bool);
     Q_INVOKABLE void setPhotoFileName(QString);
     Q_INVOKABLE QString getPhotoFileName() { return photoFileName; }
-    Q_INVOKABLE void setPhotoWindowTitle(QString title) { photoWindowTitle = title; }
+    Q_INVOKABLE void setPhotoWindowTitle(QString);
     void        setIsBig(bool big) { isBigPicture = big; }
     void        setForm(FormGrid* f) { form = f; }
 
@@ -59,8 +60,6 @@ private:
     bool                        isBigPicture;
     QString                     photoFileName;
     QString                     photoWindowTitle;
-
-    void    showBigPicture();
 };
 
 #endif // PICTURE_H

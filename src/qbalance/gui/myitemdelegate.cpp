@@ -62,7 +62,7 @@ QStyleOptionViewItemV2 MyItemDelegate::setElementColor(QStyleOptionViewItem opti
             {
                 QPalette p = opt.palette;
                 p.setColor(QPalette::Active, QPalette::Highlight, Qt::lightGray);        // То установим палитру белые буквы на сером фоне
-                p.setColor(QPalette::Active, QPalette::HighlightedText, Qt::white);;
+                p.setColor(QPalette::Active, QPalette::HighlightedText, Qt::black);;
                 opt.palette = p;
                 opt.showDecorationSelected = true;
             }

@@ -3,17 +3,17 @@ QT += sql \
       script \
       gui \
       xml \
-      network \
-      designer \
-      uitools
+      network
+#      designer \
+#      uitools
+CONFIG += uitools
 
 DEFINES += CORE_LIBRARY
 
 CONFIG += plugin
-#CONFIG += release
 
-unix:TARGET = ../../../plugins/designer/plugins
-win32:TARGET = ../../../../plugins/designer/plugins
+unix:TARGET = ../../../designer/plugins
+win32:TARGET = ../../../../designer/plugins
 
 TEMPLATE = lib
 

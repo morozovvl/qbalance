@@ -36,12 +36,16 @@ MyDateItemDelegate::~MyDateItemDelegate()
 
 QWidget* MyDateItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex &) const
 {
+    QLineEdit* editor = new QLineEdit(parent);
     if (!readOnly)
     {
-        parentForm->getParent()->saveOldValues();
-        return new QLineEdit(parent);
+        if (parentForm != 0)
+            parentForm->getParent()->saveOldValues();
+        editor->setReadOnly(false);
     }
-    return 0;
+    else
+        editor->setReadOnly(true);
+    return editor;
 }
 
 

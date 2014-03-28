@@ -25,11 +25,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDate>
 #include <QtCore/QString>
 #include <QtCore/QDir>
-#include <QtUiTools/QUiLoader>
 #include <QtCore/QPluginLoader>
+#include <QtUiTools/QtUiTools>
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
+#include "barcodereader.h"
 #include "../gui/guifactory.h"
 #include "../gui/mainwindow.h"
 #include "../gui/dialog.h"
@@ -42,7 +43,6 @@ class GUIFactory;
 class Documents;
 class MainWindow;
 class Dialog;
-//456 class QextSerialPort;
 
 
 enum  ReportTemplateTypes
@@ -101,7 +101,6 @@ public:
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
     static bool debugMode()        { return DebugMode;}
-    static QTextStream& debugStream(){ return *DebugStream;}
     static QString debugFileName() { return "debug.log";}
     static QString errorFileName() { return "error.log";}
     static QFile&  debugFile()     { return *DebugFile;}
@@ -127,7 +126,7 @@ public:
     void virtual showCriticalError(QString);
 
     Q_INVOKABLE bool runProcess(QString, QString = "");
-    QObject* getPlugins() { return plugins; }
+    void                    barCodeReadyRead(QString);
 
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников
@@ -140,20 +139,15 @@ private:
     bool                    driverFRisValid;
     static QFile*           DebugFile;
     static bool             DebugMode;
-    static QTextStream*     DebugStream;
     static TApplication*    Exemplar;
-//456     QextSerialPort*         barCodeReaderComPort;
-    QString                 barCodeString;
     QUiLoader*              formLoader;
-    QObject*                plugins;
+    BarCodeReader*          barCodeReader;
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
 
     void loadConsts();
 
-private slots:
-    void                    barCodeReadyRead();
 };
 
 #endif

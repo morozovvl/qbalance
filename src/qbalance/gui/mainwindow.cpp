@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mainwindow.h"
 #include "dialog.h"
 #include "mymdisubwindow.h"
+#include "formgrid.h"
 
 
 MainWindow::MainWindow(GUIFactory* par) {
@@ -237,3 +238,5 @@ void MainWindow::removeMdiWindow(MyMdiSubWindow* subWindow)
     }
 
 }
+
+

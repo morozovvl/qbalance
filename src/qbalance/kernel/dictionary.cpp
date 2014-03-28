@@ -374,6 +374,13 @@ bool Dictionary::open(int)
 }
 
 
+void Dictionary::view()
+{
+    getForm()->showBigPhoto();
+    Essence::view();
+}
+
+
 void Dictionary::setConst(bool isConst)
 {
     lIsConst = isConst;
@@ -550,11 +557,17 @@ void Dictionary::prepareSelectCurrentRowCommand()
     // Подготовим приготовленный (PREPARE) запрос для обновления текущей строки при вычислениях
     QString command = tableModel->selectStatement();
 
-    command.replace(command.indexOf("WHERE"), command.indexOf(" ORDER") - command.indexOf("WHERE"), "");
-    command.replace(" ORDER BY", QString(" WHERE \"%1\".\"%2\"=:value ORDER BY").arg(getTableName())
+    command.replace(" ORDER BY", QString(" %1 \"%2\".\"%3\"=:value ORDER BY").arg(command.contains("WHERE") ? "AND" : "WHERE")
+                                                                                .arg(getTableName())
                                                                                 .arg(db->getObjectName(getTableName() + "." + idFieldName)));
 
     preparedSelectCurrentRow.prepare(command);
 }
 
+
+void Dictionary::setMustShow(bool must)
+{
+    lMustShow = must;
+    photoEnabled = must;
+}
 

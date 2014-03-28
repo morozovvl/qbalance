@@ -32,6 +32,6 @@ QList<QDesignerCustomWidgetInterface*> MyPlugins::customWidgets() const {
     return widgets;
 }
 
-#ifndef HAVE_QT5
-//Q_EXPORT_PLUGIN2(myplugins, MyPlugins)
+#if QT_VERSION < 0x050000
+    Q_EXPORT_PLUGIN2(myplugins, MyPlugins)
 #endif

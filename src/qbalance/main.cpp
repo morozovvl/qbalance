@@ -98,21 +98,22 @@ int main(int argc, char *argv[])
 
     // Инициируем переменные, которые нуждаются в этом
 
-
-//    QTextCodec::setCodecForTr(TApplication::codec());
+#if QT_VERSION < 0x050000
+    QTextCodec::setCodecForTr(TApplication::codec());
+    QTextCodec::setCodecForCStrings(TApplication::codec());
+#endif
     QTextCodec::setCodecForLocale(TApplication::codec());
-//    QTextCodec::setCodecForCStrings(TApplication::codec());
+
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
         lStart = readParameters(argc, argv);    // прочитаем их
     if (lStart) {
         TApplication application(argc, argv);
-        QDir dir(QApplication::applicationDirPath());
+//        QDir dir(QApplication::applicationDirPath());
         QStringList paths = application.libraryPaths();
-        paths << dir.absolutePath();
         application.setLibraryPaths(paths);
-        QCoreApplication::addLibraryPath(dir.absolutePath() + "/plugins");
+//        QCoreApplication::addLibraryPath(dir.absolutePath() + "/plugins");
         if (application.open()) {       // Если приложение удалось создать
             application.show();         // Откроем приложение
             lResult = application.exec();

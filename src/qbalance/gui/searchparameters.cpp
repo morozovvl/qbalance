@@ -39,8 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     dictionaries = 0;
     app = 0;
-    gridLayout = new QGridLayout(this);
-    setLayout(gridLayout);
+    gridLayout = 0;
 }
 
 
@@ -79,7 +78,8 @@ void SearchParameters::setFieldsList(QStringList fldList)
         QString field = fldList.at(i);
         if (field.toLower() == programNameFieldName)
         {
-            addString(field, strNum++);
+            addString(field, strNum);
+            strNum++;
         }
         else if (field.left(4).toLower() == (programIdFieldName + "_"))                          // Если это поле - столбец ИМЯ, то это справочник
         {
@@ -198,11 +198,22 @@ QString SearchParameters::getFilter()
             {
                 if (param.size() > 0)
                 {
+                    if (parentForm != 0)
+                    {
+                        Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
+                        if (dict != 0)
+                        {
+                            param = !dict->getForm()->isExactSearch() ? "%" + param + "%" : param;
+                        }
+                    }
+                    else
+                        param = "%" + param + "%";
+
                     if (filter.size() > 0)
                         filter.append(" AND ");
                     filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
                                                              .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
-                                                             .arg("%" + param + "%"));
+                                                             .arg(param));
                 }
             }
         }
@@ -289,3 +300,9 @@ void SearchParameters::keyPressEvent(QKeyEvent *event)
 }
 
 
+void SearchParameters::setParent(QWidget* parent)
+{
+    QFrame::setParent(parent);
+    if (gridLayout != 0)
+        gridLayout->setParent(parent);
+}

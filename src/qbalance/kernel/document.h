@@ -82,7 +82,7 @@ public:
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
     Q_INVOKABLE virtual void setEnabled(bool);
-    virtual FormDocument* getForm() { return (FormDocument*)Essence::getForm(); }
+    Q_INVOKABLE FormDocument* getForm() { return (FormDocument*)Essence::getForm(); }
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать

@@ -48,13 +48,6 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
 }
 
 
-bool Saldo::open()
-{
-    lIsSet = false;                              // Сальдо не может быть набором
-    return Dictionary::open();
-}
-
-
 bool Saldo::setTableModel(int)
 {
     if (Dictionary::setTableModel(0))
@@ -100,7 +93,30 @@ bool Saldo::setTableModel(int)
 
 void Saldo::setOrderClause()
 {
-    Table::setOrderClause("");
+    if (isSet())
+    {
+        QString sortOrder;
+        QStringList tablesList;
+        QString tName = db->getObjectName("сальдо");
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            FieldType fld = columnsProperties.at(i);
+            if (fld.table != tName && fld.table != tableName && !tablesList.contains(fld.table))
+            {
+                tablesList.append(fld.table);
+                if (sortOrder.size() > 0)
+                    sortOrder.append(",");
+                sortOrder.append(QString("\"%1\".%2").arg(fld.table)
+                                                     .arg(db->getObjectNameCom(fld.table + ".имя")));
+            }
+        }
+        Table::setOrderClause(sortOrder);
+    }
+    else
+    {
+        Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
+                                                 .arg(db->getObjectNameCom(tableName + ".имя")));
+    }
 }
 
 

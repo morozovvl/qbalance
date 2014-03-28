@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
 #include <QPushButton>
-#include <QDebug>
+#include <QPaintEngine>
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -31,12 +31,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
-#include "../../qextserialport/src/qextserialport.h"
 #include "../engine/documentscriptengine.h"
 
 
 QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
-QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
+//QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
 bool    TApplication::DebugMode        = false;
 TApplication* TApplication::Exemplar   = 0;
 
@@ -59,23 +58,11 @@ TApplication::TApplication(int & argc, char** argv)
 
     dictionaryList = 0;
     topersList = 0;
-    plugins = 0;
     driverFR = new DriverFR(this);
+    barCodeReader = new BarCodeReader(this);
 
-//456
-/*
-#ifdef Q_OS_WIN32
-    barCodeReaderComPort = new QextSerialPort("COM3", QextSerialPort::EventDriven);
-#else
-    barCodeReaderComPort = new QextSerialPort("/dev/ttyUSB0", QextSerialPort::EventDriven);
-#endif
-*/
-
-    barCodeString = "";
     driverFRisValid = false;
 
-//    reportTemplateType = OOreportTemplate;   // модуль печати по умолчанию пока будет OOReportEngine, пока нет других
-//    reportTemplateType = OpenRPTreportTemplate;
     reportTemplateType = OOXMLreportTemplate;
 
     if (!Exemplar)
@@ -88,7 +75,6 @@ TApplication::TApplication(int & argc, char** argv)
 TApplication::~TApplication()
 {
     delete formLoader;
-//456     delete barCodeReaderComPort;
     delete driverFR;
     delete gui;
     delete db;
@@ -144,10 +130,12 @@ QString TApplication::getReportTemplateExt()
 
 bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
+/*
     if (debugMode())
     {
         TApplication::debug("Program startup.\n");
     }
+*/
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
     if (gui->open()) {  // Попытаемся открыть графический интерфейс
@@ -164,20 +152,6 @@ bool TApplication::open() {
                     gui->getMainWindow()->showPeriod();
                     if (driverFR->open())
                         driverFRisValid = true;
-//456
-/*
-                    if (barCodeReaderComPort != 0)
-                    {
-                        barCodeReaderComPort->setBaudRate(BAUD9600);
-                        barCodeReaderComPort->setFlowControl(FLOW_OFF);
-                        barCodeReaderComPort->setParity(PAR_NONE);
-                        barCodeReaderComPort->setDataBits(DATA_8);
-                        barCodeReaderComPort->setStopBits(STOP_2);
-                        if (barCodeReaderComPort->open(QIODevice::ReadWrite))
-                            connect(barCodeReaderComPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
-
-                    }
-*/
 
                     // Загрузим константы
                     Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
@@ -186,9 +160,6 @@ bool TApplication::open() {
                         constDict->setPhotoEnabled(false);
                         constDict->query();
                     }
-
-                    QPluginLoader pluginLoader;
-                    plugins = pluginLoader.instance();
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -234,11 +205,13 @@ void TApplication::close() {
         gui->close();
     if (db != 0)
         db->close();
+/*
     if (debugMode())
     {
         TApplication::debug("Program shutdown.\n\n");
         TApplication::DebugFile->close();
     }
+*/
 }
 
 
@@ -351,17 +324,7 @@ QTextCodec* TApplication::codec()
 bool TApplication::setDebugMode(const bool& value)
 {
     bool result = true;
-    if (value && !debugMode())
-    {
-        result = debugFile().open(QFile::WriteOnly | QFile::Append);
-    }
-    else if (!value && debugMode())
-    {
-        debugFile().close();
-    }
-
     DebugMode = value;
-
     return result;
 }
 
@@ -370,7 +333,15 @@ void TApplication::debug(const QString& value)
 {
     if (debugMode())
     {
-        TApplication::debugStream() << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value;
+        QFile file(debugFileName());
+        if (file.open(QFile::WriteOnly | QFile::Append))
+        {
+            QTextStream out(&file);
+            if (file.size() == 0)
+                out << QDateTime::currentDateTime().toString(logTimeFormat()) << " Program startup.\n";
+            out << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value;
+        }
+        file.close();
     }
 }
 
@@ -441,36 +412,6 @@ bool TApplication::runProcess(QString command, QString progName)
 }
 
 
-void TApplication::barCodeReadyRead()
-{
-//456
-//456     if (barCodeReaderComPort->bytesAvailable())
-//456     {
-//456         QString readedPart = QString::fromLatin1(barCodeReaderComPort->readAll());
-//456         if (readedPart.right(1) == QString('\n'))
-//456         {
-//456             barCodeString.append(readedPart);
-
-            if (getActiveSubWindow() != 0 && getMainWindow() != 0)
-            {
-                MyMdiSubWindow* mdiSubWindow = getMainWindow()->findMdiWindow(getActiveSubWindow()->widget());
-                if (mdiSubWindow != 0)
-                {
-                    if (mdiSubWindow->isVisible())
-                    {
-                        Dialog* widget = qobject_cast<Dialog*>(mdiSubWindow->widget());
-                        widget->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
-                    }
-                }
-            }
-//456             barCodeString = "";
-//456         }
-//456         else
-//456             barCodeString.append(readedPart);
-//456     }
-}
-
-
 void TApplication::showProcesses()
 {
     ScriptEngine* scriptEngine;
@@ -486,4 +427,29 @@ void TApplication::showProcesses()
     }
     delete scriptEngine;
 }
+
+
+void TApplication::barCodeReadyRead(QString barCodeString)
+{
+    Dialog* dialog = 0;
+    QWidget* widget = activeWindow();
+    if (QString(widget->metaObject()->className()).trimmed().compare("Dialog", Qt::CaseInsensitive) == 0)
+    {
+        dialog = qobject_cast<Dialog*>(widget);
+    }
+    else
+    {
+        if (getActiveSubWindow() != 0 && getMainWindow() != 0)
+        {
+            MyMdiSubWindow* mdiSubWindow = getMainWindow()->findMdiWindow(getActiveSubWindow()->widget());
+            if (mdiSubWindow != 0)
+            {
+                dialog = qobject_cast<Dialog*>(mdiSubWindow->widget());
+            }
+        }
+    }
+    if (dialog != 0)
+        dialog->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
+}
+
 

@@ -68,12 +68,6 @@ Document::Document(int oper, Documents* par): Essence()
             break;
         }
 
-/*
-    QSqlRecord docProperties = db->getDictionariesProperties(tableName);    // просмотрим свойства таблицы "проводки"
-    lInsertable = docProperties.value("insertable").toBool();               // можно ли вставлять новые проводки
-    lDeleteable = docProperties.value("deleteable").toBool();               // можно ли удалять проводки
-    lUpdateable = docProperties.value("updateable").toBool();               // можно ли изменять проводки
-*/
     lInsertable = true;
     lDeleteable = true;
     lUpdateable = true;
@@ -88,7 +82,7 @@ Document::~Document()
 
 bool Document::calculate(const QModelIndex& index)
 {
-    if (!isCurrentCalculate)
+    if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
         isCurrentCalculate = true;
 
@@ -231,7 +225,7 @@ void Document::openLocalDictionaries()
                 sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
                 sal->setQuan(true);
                 sal->setConst(dictsList.at(i).isConst);
-                if (sal->isConst() || sal->isSet())
+                if (sal->isConst())
                     sal->setMustShow(false); // Если справочник документа является постоянным или это набор
                                               // то не показывать его при добавлении новой записи в документ
                 else
@@ -279,6 +273,8 @@ void Document::openLocalDictionaries()
 
 bool Document::add()
 {
+    bool result = false;
+
     prvValues.clear();
 
     if (!getIsSingleString())
@@ -347,6 +343,7 @@ bool Document::add()
                 tableModel->insertRow(newRow);
                 form->getGridTable()->reset();
                 form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+
                 updateCurrentRow(strNum);
             }
 
@@ -357,10 +354,16 @@ bool Document::add()
                 saveChanges();
             }
 
-            return true;
+            form->setButtons();
+            form->showPhoto();
+
+            result = true;
         }
     }
-    return false;
+
+    form->setGridFocus();
+
+    return result;
 }
 
 
@@ -668,7 +671,7 @@ void Document::loadDocument()
                 foreach (QString dictName, dict->getChildDicts())
                 {
                     Dictionary* childDict = getDictionaries()->value(dictName);
-                    if (childDict->isConst())
+                    if (childDict != 0 && childDict->isConst())
                     {
                         // Установим сначала значение основного справочника
                         qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();

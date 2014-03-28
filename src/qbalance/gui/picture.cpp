@@ -96,17 +96,13 @@ void Picture::setVisibility(bool vis)
 
 void Picture::mouseDoubleClickEvent(QMouseEvent*)
 {
-    if (!isBigPicture)
-    {
-        showBigPicture();
-        form->setGridFocus();
-    }
+    showBigPicture();
 }
 
 
 void Picture::showBigPicture()
 {
-    if (photoFileName.size() > 0)
+    if (!isBigPicture && photoFileName.size() > 0)
     {
         QDialog bigPicture(QApplication::activeWindow());
         bigPicture.resize(bigPictRect.size());
@@ -120,7 +116,13 @@ void Picture::showBigPicture()
 
         bigPicture.exec();
         bigPictRect = bigPicture.rect();
+        form->setGridFocus();
     }
 }
 
+
+void Picture::setPhotoWindowTitle(QString title)
+{
+    photoWindowTitle = title;
+}
 

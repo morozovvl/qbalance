@@ -37,6 +37,7 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
     document = 0;
     lIsSaldoExist = false;
     formTitle = QObject::trUtf8("Справочники");
+    scriptEngineEnabled = false;
 }
 
 

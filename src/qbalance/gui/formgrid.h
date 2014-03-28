@@ -45,9 +45,11 @@ public:
     void restoreCurrentIndex(QModelIndex);
     void setCalculateColumn(int column) { calculateColumn = column; }
     void selectRow(int = 0);
-    Q_INVOKABLE virtual void setGridFocus();
+    Q_INVOKABLE void setGridFocus();
     TableView* getGridTable() { return grdTable; }
     MySqlRelationalTableModel* getTableModel() { return tableModel; }
+    Q_INVOKABLE void    setExactSearch(bool exact) { exactSearch = exact; }
+    Q_INVOKABLE bool    isExactSearch() { return exactSearch; }
 
     Q_INVOKABLE QPushButton* getButtonAdd() { return buttonAdd; }
     Q_INVOKABLE QPushButton* getButtonDelete() { return buttonDelete; }
@@ -65,6 +67,7 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual void readColumnsSettings();
     virtual void activateWidget();
+    void showBigPhoto() { picture->showBigPicture(); }
 
 public slots:
     virtual void calculate();
@@ -100,6 +103,7 @@ protected:
 private:
     int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки
     bool    columnsSettingsReaded;
+    bool                exactSearch;
 
 };
 

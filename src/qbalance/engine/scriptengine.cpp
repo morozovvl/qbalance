@@ -121,6 +121,33 @@ QScriptValue getOldValue(QScriptContext*, QScriptEngine* engine) {
 }
 
 
+QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
+    QScriptValue dictName = context->argument(0);
+    if (dictName.isString())
+    {
+        if (engine->evaluate("isDocumentScript").toBool())
+        {
+            if (engine->evaluate("document").isValid())
+            {
+                QScriptValue value = engine->evaluate(QString("document.getDictionary('%1')").arg(dictName.toString()));
+                if (value.isValid())
+                    return value;
+            }
+        }
+        else
+        {
+            if (engine->evaluate("app").isValid())
+            {
+                QScriptValue value = engine->evaluate(QString("app.getDictionaries().getDictionary('%1')").arg(dictName.toString()));
+                if (value.isValid())
+                    return value;
+            }
+        }
+    }
+    return QScriptValue();
+}
+
+
 QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 {   // Просто заворачивает аргумент в кавычки
     return QScriptValue('"' + context->argument(0).toString() + '"');
@@ -477,6 +504,7 @@ void ScriptEngine::loadScriptObjects()
             globalObject().setProperty("form", newQObject(((Essence*)parent())->getForm()));
             globalObject().setProperty("table", newQObject(parent()));
         }
+        globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении
         globalObject().setProperty("scriptResult", true);   // результат работы скрипта
         globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
         globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
@@ -484,6 +512,7 @@ void ScriptEngine::loadScriptObjects()
         globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
 //    globalObject().setProperty("getId", newFunction(getId));
 //    globalObject().setProperty("getName", newFunction(getName));
+        globalObject().setProperty("getDictionary", newFunction(getDictionary));
         globalObject().setProperty("getValue", newFunction(getValue));
         globalObject().setProperty("setValue", newFunction(setValue));
         globalObject().setProperty("getOldValue", newFunction(getOldValue));

@@ -438,7 +438,8 @@ void Essence::hide()
     if (opened && form != 0)
     {
 
-        beforeHideFormEvent(form);
+        if (form->getFormWidget()->isVisible())
+            beforeHideFormEvent(form);
         form->hide();
         afterHideFormEvent(form);
 

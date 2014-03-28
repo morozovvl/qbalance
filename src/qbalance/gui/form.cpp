@@ -202,17 +202,21 @@ int Form::exec()
 
             formWidget->setParent(app->getMainWindow(), Qt::Dialog);
             if (!autoSelect)
+            {
                 formWidget->exec();
+            }
             else
                 cmdOk();
             autoSelect = false;
 
             subWindow->setGeometry(formWidget->x(), formWidget->y(), formWidget->width(), formWidget->height());
-            subWindow->setWidget(formWidget);
+            if (subWindow->widget() == 0)
+                subWindow->setWidget(formWidget);
         }
         else
         {
-            if (!autoSelect)
+
+        if (!autoSelect)
                 formWidget->exec();
             else
                 cmdOk();
@@ -353,16 +357,16 @@ void Form::keyPressEvent(QKeyEvent *event)
     {
         if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
         {
-                cmdOk();
-                event->accept();
+            event->accept();
+            cmdOk();
         }
     }
     else
     {
         if (event->key() == Qt::Key_Escape)
         {
-            cmdCancel();
             event->accept();
+            cmdCancel();
         }
     }
 }

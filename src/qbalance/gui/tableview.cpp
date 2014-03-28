@@ -42,6 +42,7 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
     db = 0;
     tableModel = 0;
     columnsHeadersSeted = false;
+    columns.clear();
     if (verticalHeader()->minimumSectionSize() > 0)
         verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
 }
@@ -69,7 +70,8 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     {
         if ((current.row() != previous.row()) && tableModel->rowCount() > 0)
         {
-            parent->showPhoto();
+            if (parent->getParent()->isPhotoEnabled())
+                parent->showPhoto();
             parent->getParent()->afterRowChanged();
         }
     }
@@ -104,7 +106,12 @@ bool TableView::setColumnsHeaders()
     if (!columnsHeadersSeted)
     {   // Если заголовки столбцов еще не установлены
         QHeaderView* header = horizontalHeader();
+
+#if QT_VERSION >= 0x050000
         header->setSectionsMovable(true);
+#else
+        header->setMovable(true);
+#endif
         header->setSortIndicatorShown(true);
         QList<FieldType>* fields = parent->getParent()->getColumnsProperties();
         db->getColumnsHeaders(tagName, fields);

@@ -150,10 +150,13 @@ void DBFactory::setError(QString errText)
 {
     wasError = true;
     errorText = errText;
+    TApplication::debug(" Error: " + errorText + "\n");
+/*
     if (TApplication::debugMode())
     {
         TApplication::debugStream() << QDateTime().currentDateTime().toString(TApplication::logTimeFormat()) << " Error: " << errorText << "\n";
     }
+*/
     TApplication::exemplar()->showError(errText);
 }
 

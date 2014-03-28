@@ -101,8 +101,7 @@ private:
     bool    autoSelect;
 
     void                    checkVisibility();
-    MyMdiSubWindow*         getSubWindow();
-
+    MyMdiSubWindow*     getSubWindow();
 };
 
 #endif

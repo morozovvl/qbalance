@@ -1,8 +1,5 @@
-#project ( ${PROJECT_NAME} )
+set ( CMAKE_BUILD_TYPE "Release" )
 
-cmake_minimum_required ( VERSION 2.8 )
-
-#find_package ( Qt4 COMPONENTS QtCore QtGui QtXml QtSql QtScript, QtNetwork, QtUiTools REQUIRED )
 find_package ( Qt4 REQUIRED )
 
 set ( QT_USE_QTXML TRUE )
@@ -13,14 +10,8 @@ set ( QT_USE_QTUITOOLS TRUE )
 
 include ( ${QT_USE_FILE} )
 
-set ( OO_SDK_HOME /usr/lib64/libreoffice/sdk )
-include ( ${OO_SDK_HOME}/include )
-include ( ${OO_SDK_HOME}/includecpp )
-
-include_directories( ${CMAKE_BINARY_DIR} )
-
 set ( PROJECT_NAME_SRCS
-    main.cpp
+    ./main.cpp
     
     ./kernel/app.cpp
     ./kernel/essence.cpp
@@ -31,6 +22,7 @@ set ( PROJECT_NAME_SRCS
     ./kernel/document.cpp
     ./kernel/table.cpp
     ./kernel/saldo.cpp
+    ./kernel/barcodereader.cpp
 
     ./gui/passwordform.cpp
     ./gui/form.cpp
@@ -62,11 +54,11 @@ set ( PROJECT_NAME_SRCS
     ./gui/dialog.cpp
     ./gui/progressbar.cpp
     ./gui/mydateitemdelegate.cpp
+    ./gui/mymdisubwindow.cpp
 
     ./engine/scriptengine.cpp
     ./engine/reportscriptengine.cpp
     ./engine/reportcontext.cpp
-    ./engine/formscriptengine.cpp
     ./engine/sqlqueryclass.cpp
     ./engine/sqlqueryprototype.cpp
     ./engine/sqlrecordclass.cpp
@@ -79,6 +71,7 @@ set ( PROJECT_NAME_SRCS
     ./report/reportengine.cpp
     ./report/reports.cpp
     ./report/ooreportengine.cpp
+    ./report/ooxmlreportengine.cpp
 
     ./storage/dbfactory.cpp
     ./storage/mysqlrelationaltablemodel.cpp
@@ -96,6 +89,7 @@ set ( PROJECT_NAME_HDRS
     ./kernel/document.h
     ./kernel/table.h
     ./kernel/saldo.h
+    ./kernel/barcodereader.h
 
     ./gui/guifactory.h
     ./gui/passwordform.h
@@ -126,21 +120,28 @@ set ( PROJECT_NAME_HDRS
     ./gui/dialog.h
     ./gui/progressbar.h
     ./gui/mydateitemdelegate.h
+    ./gui/mymdisubwindow.h
 
     ./engine/scriptengine.h
+    ./engine/reportscriptengine.h
     ./engine/reportcontext.h
+    ./engine/sqlqueryclass.h
     ./engine/sqlqueryprototype.h
+    ./engine/sqlrecordclass.h
     ./engine/sqlrecordprototype.h
+    ./engine/sqlfieldclass.h
     ./engine/sqlfieldprototype.h
     ./engine/eventloop.h
 
     ./report/reportengine.h
     ./report/ooreportengine.h
+    ./report/ooxmlreportengine.h
 
     ./storage/dbfactory.h
     ./storage/mysqlrelationaltablemodel.h
 
     ./driverfr/driverfr.h
+
     )
     
 set ( PROJECT_NAME_RCS
@@ -164,11 +165,8 @@ endif ()
 
 qt4_wrap_cpp ( PROJECT_NAME_MOC_HDRS ${PROJECT_NAME_HDRS} )
 
-qt4_add_resources ( PROJECT_NAME_RCS_SRCS ${PROJECT_NAME_RCS} )        
+qt4_add_resources ( PROJECT_NAME_RCS_SRCS ${PROJECT_NAME_RCS} )     
 
 add_executable ( ${PROJECT_NAME} WIN32 ${PROJECT_NAME_MOC_HDRS} ${PROJECT_NAME_SRCS} ${PROJECT_NAME_RCS_SRCS} ${PROJECT_NAME_SOURCES} )
-
 target_link_libraries ( ${PROJECT_NAME} ${QT_LIBRARIES} )
-
-
 

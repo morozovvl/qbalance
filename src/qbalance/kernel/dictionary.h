@@ -36,6 +36,7 @@ public:
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
     Q_INVOKABLE virtual bool open(int i = 1);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
+    Q_INVOKABLE virtual void view();                          // Просмотр записи
 
 // Функции для работы с моделью данных
     virtual bool add();
@@ -53,7 +54,7 @@ public:
     void setCanShow(bool can) { lCanShow = can; }
 
     Q_INVOKABLE bool isMustShow() { return lMustShow; }
-    Q_INVOKABLE virtual void setMustShow(bool must) { lMustShow = must; }
+    Q_INVOKABLE virtual void setMustShow(bool);
     bool isConst() { return lIsConst; }
     bool isSet() { return lIsSet; }
     bool isSaldo() { return lIsSaldo; }

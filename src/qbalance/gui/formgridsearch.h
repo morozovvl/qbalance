@@ -43,6 +43,7 @@ public:
     QString getFilter();    // Возвращает фильтр для поиска в справочнике
     virtual void activateWidget();
 
+
 private:
     SearchParameters*   parameters;
     virtual void        createForm(QString, QWidget* pwgt = 0);

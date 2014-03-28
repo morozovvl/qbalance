@@ -37,13 +37,17 @@ MyLineItemDelegate::~MyLineItemDelegate()
 
 QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex&) const
 {
-    if (!readOnly) {
-        parentForm->getParent()->saveOldValues();
-        QLineEdit* editor = new QLineEdit(parent);
-        editor->setMaxLength(length);
-        return editor;
+    QLineEdit* editor = new QLineEdit(parent);
+    editor->setMaxLength(length);
+    if (!readOnly)
+    {
+        if (parentForm != 0)
+            parentForm->getParent()->saveOldValues();
+        editor->setReadOnly(false);
     }
-    return 0;
+    else
+        editor->setReadOnly(true);
+    return editor;
 }
 
 

@@ -33,6 +33,7 @@ Topers::Topers(QObject *parent): Dictionary("доступ_к_топер", parent
     lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства операции
     lDeleteable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно попытаться удалить операцию
     formTitle = QObject::trUtf8("Операции");
+    scriptEngineEnabled = false;
 }
 
 

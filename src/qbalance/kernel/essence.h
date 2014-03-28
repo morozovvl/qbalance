@@ -43,7 +43,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 class TApplication;
-//class FormGrid;
 
 class Essence : public Table {
     Q_OBJECT
@@ -77,7 +76,7 @@ public:
 
 
 // Функции для работы с модулем GUI
-    Q_INVOKABLE virtual FormGrid* getForm();
+    Q_INVOKABLE FormGrid* getForm();
     virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();
@@ -88,6 +87,7 @@ public:
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
     Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
+    Q_INVOKABLE bool isPhotoEnabled() { return photoEnabled; }
     Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
     Q_INVOKABLE QString getPhotoPath();
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
@@ -169,6 +169,7 @@ protected:
     bool                enabled;
     bool                doSubmit;
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
+    bool                photoEnabled;
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -177,7 +178,6 @@ private:
     QString             photoPath;
     QString             photoIdField;
     QString             photoNameField;
-    bool                photoEnabled;
     QWidget*            activeWidget;
 
     QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы

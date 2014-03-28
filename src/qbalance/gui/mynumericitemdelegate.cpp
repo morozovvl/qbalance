@@ -75,13 +75,17 @@ void MyNumericItemDelegate::setColumnMask(QString mask/* = ""*/)
 
 QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex &) const
 {
-    if (!readOnly) {
-        parentForm->getParent()->saveOldValues();
-        QLineEdit* editor = new QLineEdit(parent);
-        editor->setAlignment(Qt::AlignRight);
-        return editor;
+    QLineEdit* editor = new QLineEdit(parent);
+    editor->setAlignment(Qt::AlignRight);
+    if (!readOnly)
+    {
+        if (parentForm != 0)
+            parentForm->getParent()->saveOldValues();
+        editor->setReadOnly(false);
     }
-    return 0;
+    else
+        editor->setReadOnly(true);
+    return editor;
 }
 
 

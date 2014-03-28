@@ -58,6 +58,7 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
     buttonLoad = 0;
     buttonSave = 0;
     columnsSettingsReaded = false;
+    exactSearch = false;
 }
 
 
@@ -69,13 +70,6 @@ FormGrid::~FormGrid()
 void FormGrid::close()
 {
     writeSettings();
-    if (defaultForm)
-    {
-        if (grdTable != 0)
-        {
-            delete grdTable;
-        }
-    }
     Form::close();
 }
 
@@ -95,7 +89,11 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable->setTagName(getParent()->getTagName());
         grdTable->setObjectName("tableView");
         grdTable->setTableModel(tableModel);
+#if QT_VERSION >= 0x050000
         grdTable->horizontalHeader()->setSectionsClickable(false);
+#else
+        grdTable->horizontalHeader()->setClickable(false);
+#endif
         grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
@@ -116,7 +114,11 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->setParent(formWidget);
             grdTable->setFormGrid(this);
             grdTable->setTableModel(tableModel);
+#if QT_VERSION >= 0x050000
             grdTable->horizontalHeader()->setSectionsClickable(false);
+#else
+            grdTable->horizontalHeader()->setClickable(false);
+#endif
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         }
     }
@@ -399,21 +401,21 @@ void FormGrid::cmdAdd()
         if (parent != 0 && parent->add())
         {
             int rowCount = parent->getTableModel()->rowCount();
-            int column = index.column();
-            if (column == -1)
+            if (rowCount == 1)
+            {
+                grdTable->setCurrentIndex(grdTable->currentIndex().sibling(0, 0));
                 grdTable->selectNextColumn();
-            else
-                setCurrentIndex(index.sibling(index.row() + 1, column));
-
-            if (rowCount > 0)
-            {   // Если записей стало больше 0, то активируем кнопку "Удалить"
-                if (buttonDelete != 0)
-                    buttonDelete->setDisabled(false);
             }
+            else
+            {
+                index = index.sibling(grdTable->currentIndex().row(), index.column());
+                setCurrentIndex(index);
+            }
+/*
             setButtons();
-            setGridFocus();
-
             showPhoto();
+            setGridFocus();
+*/
         }
     }
 }
@@ -433,12 +435,6 @@ void FormGrid::cmdDelete()
                     setCurrentIndex(index);
                 else
                     setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
-            }
-            else
-            {
-                if (buttonDelete != 0)
-                    buttonDelete->setDisabled(true);
-                picture->setVisibility(false);             // Строк в документе (справочнике) больше нет, выключим просмотр фотографий
             }
         }
         setButtons();
@@ -592,7 +588,7 @@ void FormGrid::showPhoto()
         {
             QString photoFileName = parent->getPhotoFile(); // Получим имя фотографии
             if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
-            {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
+            {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нуеПкшвно скачать в локальный файл)
                 if (QDir().exists(photoFileName))
                     picture->setVisibility(true);              // то включим просмотр фотографий
                 else
@@ -649,10 +645,12 @@ void FormGrid::setCurrentIndex(QModelIndex index)
 
 void FormGrid::setGridFocus()
 {
-    activateSubWindow();
     if (grdTable != 0)
     {
         grdTable->setFocus();
+        QModelIndex index = grdTable->currentIndex();
+        if (index.row() >= 0 && index.column() >= 0)
+            grdTable->setCurrentIndex(index);
     }
 }
 
@@ -801,7 +799,6 @@ void FormGrid::writeSettings()
         if (grdTable != 0)
         {
             QSettings settings;
-//            int columnCount = grdTable->model()->columnCount();
             int columnCount = tableModel->columnCount();
             if (columnCount > 0)
             {
