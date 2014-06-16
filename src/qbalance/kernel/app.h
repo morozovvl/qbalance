@@ -20,12 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef APP_H
 #define APP_H
 
-#include <QApplication>
+#include <QtGui/QApplication>
 #include <QtCore/QMap>
 #include <QtCore/QDate>
 #include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
+#include <QtCore/QPointer>
 #include <QtUiTools/QtUiTools>
 #include "dictionaries.h"
 #include "documents.h"
@@ -93,23 +94,23 @@ public:
     void setEndDate(QDate date) { endDate = date; }
 
     Q_INVOKABLE Dialog* createForm(QString);           // Открыть форму с заданным именем
-    Q_INVOKABLE Form* createForm1(QString);
+    Q_INVOKABLE Form* createNewForm(QString);
     Q_INVOKABLE virtual void setIcons(QWidget*);         // Устанавливает иконки на кнопки указанной формы
 
     static QString encoding();
     static QTextCodec* codec();
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
-    static bool debugMode()        { return DebugMode;}
-    static QString debugFileName() { return "debug.log";}
+    static int debugMode()        { return DebugMode;}
+    static QString debugFileName() { return QString("debug%1.log").arg(DebugMode);}
     static QString errorFileName() { return "error.log";}
     static QFile&  debugFile()     { return *DebugFile;}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
-    static bool setDebugMode(const bool& value);
+    static bool setDebugMode(const int& value);
 
-    static void debug(const QString& value);
+    Q_INVOKABLE static void debug(int, const QString& value);
 
     static TApplication* exemplar();
 
@@ -125,8 +126,16 @@ public:
     void virtual showError(QString);
     void virtual showCriticalError(QString);
 
-    Q_INVOKABLE bool runProcess(QString, QString = "");
-    void                    barCodeReadyRead(QString);
+    Q_INVOKABLE QProcess* runProcess(QString, QString = "");
+    Q_INVOKABLE bool waitProcessEnd(QProcess *);
+    void         barCodeReadyRead(QString);
+    bool         readCardReader(QKeyEvent*);
+
+    Q_INVOKABLE QString capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
+    Q_INVOKABLE QString savePhotoToServer(QString, QString);
+
+signals:
+    void cardCodeReaded(QString);
 
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников
@@ -138,10 +147,11 @@ private:
     DriverFR*               driverFR;
     bool                    driverFRisValid;
     static QFile*           DebugFile;
-    static bool             DebugMode;
+    static int              DebugMode;
     static TApplication*    Exemplar;
-    QUiLoader*              formLoader;
     BarCodeReader*          barCodeReader;
+    QString                 cardReaderPrefix;
+    QString                 cardReaderCode;
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати

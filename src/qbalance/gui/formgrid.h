@@ -20,12 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMGRID_H
 #define FORMGRID_H
 
-#include <QTableView>
+#include <QtGui/QTableView>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlIndex>
 #include <QtCore/QVariant>
-#include <QItemDelegate>
+#include <QtCore/QPointer>
+#include <QtGui/QItemDelegate>
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "form.h"
 #include "picture.h"
@@ -38,18 +39,11 @@ class FormGrid : public Form {
 public:
     FormGrid(QObject* parent = 0);
     ~FormGrid();
-    Q_INVOKABLE virtual void close();
-    QVariant getValue(QString);
-    QModelIndex getCurrentIndex();
-    void setCurrentIndex(QModelIndex index);
-    void restoreCurrentIndex(QModelIndex);
-    void setCalculateColumn(int column) { calculateColumn = column; }
-    void selectRow(int = 0);
-    Q_INVOKABLE void setGridFocus();
-    TableView* getGridTable() { return grdTable; }
-    MySqlRelationalTableModel* getTableModel() { return tableModel; }
-    Q_INVOKABLE void    setExactSearch(bool exact) { exactSearch = exact; }
-    Q_INVOKABLE bool    isExactSearch() { return exactSearch; }
+    virtual void close();
+    Q_INVOKABLE void    setLeftPercent(bool percent) { leftPercent = percent; }
+    Q_INVOKABLE bool    isLeftPercent() { return leftPercent; }
+    Q_INVOKABLE void    setRightPercent(bool percent) { rightPercent = percent; }
+    Q_INVOKABLE bool    isRightPercent() { return rightPercent; }
 
     Q_INVOKABLE QPushButton* getButtonAdd() { return buttonAdd; }
     Q_INVOKABLE QPushButton* getButtonDelete() { return buttonDelete; }
@@ -63,14 +57,11 @@ public:
     void setButtonDelete(bool);
     void setButtons();
 
-    virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE virtual void setEnabled(bool);
-    virtual void readColumnsSettings();
     virtual void activateWidget();
-    void showBigPhoto() { picture->showBigPicture(); }
+    virtual void keyPressEvent(QKeyEvent*);
 
 public slots:
-    virtual void calculate();
     virtual void cmdAdd();
     virtual void cmdDelete();
     virtual void cmdView();
@@ -78,14 +69,14 @@ public slots:
     virtual void cmdPrint();
     virtual void cmdLoad();
     virtual void cmdSave();
-    Q_INVOKABLE virtual void showPhoto();
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();
+    Q_INVOKABLE virtual void showPhoto();
 
 
 protected:
     TableView*                  grdTable;
-    MySqlRelationalTableModel*  tableModel;
+    QList<TableView*>           grdTables;
     QVBoxLayout*                tableLayout;
     QHBoxLayout*                imageLayout;
     Picture*                    picture;
@@ -98,12 +89,10 @@ protected:
     QPushButton*                buttonSave;
 
     virtual void createForm(QString, QWidget* pwgt = 0);
-    void writeSettings();
 
 private:
-    int     calculateColumn;                    // Колонка, в которой был вызван редактор ячейки
-    bool    columnsSettingsReaded;
-    bool                exactSearch;
+    bool    leftPercent;                        //
+    bool    rightPercent;
 
 };
 

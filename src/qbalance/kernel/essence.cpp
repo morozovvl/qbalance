@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
+#include <QtNetwork/QNetworkConfigurationManager>
 #include <QMessageBox>
 #include <QMenu>
 #include <QtCore/QFile>
@@ -59,20 +60,21 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     isCurrentCalculate = false;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
-    scriptEngine = 0;
     scriptFileName =  tagName + ".qs";
     scriptEngineEnabled = true;                 // По умолчанию разрешена загрузка скриптового движка
     photoPath = "";
     photoIdField = "";
     photoEnabled = false;
     m_networkAccessManager = 0;
-    m_request = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
     defaultFilter = "";
+    grdTable = 0;
 }
 
 
 Essence::~Essence() {
+    if (m_networkAccessManager != 0)
+        delete m_networkAccessManager;
     this->disconnect();
 }
 
@@ -82,7 +84,7 @@ Dialog* Essence::getFormWidget() {
     {
         open();
     }
-    return form->getFormWidget();
+    return (form != 0 ? form->getFormWidget() : 0);
 }
 
 
@@ -122,7 +124,10 @@ QVariant Essence::getValue(QString n, int row)
             }
             else
             {
-                int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+                int r = 0;
+                if (form != 0 && grdTable->currentIndex().isValid())
+                    r = grdTable->currentIndex().row();
+
                 result = tableModel->record(r).value(name);
             }
             QVariant::Type type = record.field(name).type();
@@ -152,10 +157,10 @@ void Essence::setValue(QString n, QVariant value, int row)
     {
         QModelIndex index, oldIndex;
 
-        if (row >= 0)
-            oldIndex = form->getCurrentIndex();
+        if (row >= 0 && form != 0)
+            oldIndex = grdTable->currentIndex();
 
-        index = tableModel->index((row >= 0 ? row : form->getCurrentIndex().row()), fieldColumn);
+        index = tableModel->index((row >= 0 ? row : grdTable->currentIndex().row()), fieldColumn);
         tableModel->setData(index, value);
 
         if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
@@ -164,8 +169,8 @@ void Essence::setValue(QString n, QVariant value, int row)
         if (doSubmit)
             db->execCommands();
 
-        if (row >= 0)
-            form->setCurrentIndex(oldIndex);
+        if (row >= 0 && form != 0)
+            grdTable->setCurrentIndex(oldIndex);
     }
     else
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
@@ -176,7 +181,7 @@ qulonglong Essence::getId(int row)
 {
     if (row >= 0)
         return getValue(idFieldName, row).toULongLong();
-    int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+    int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
     return getValue(idFieldName, r).toULongLong();
 }
 
@@ -185,20 +190,26 @@ QString Essence::getName(int row)
 {
     if (row >= 0)
         return getValue(nameFieldName, row).toString();
-    int r = form->getCurrentIndex().isValid() ? form->getCurrentIndex().row() : 0;
+    int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
     return getValue(nameFieldName, r).toString();
 }
 
 
 void Essence::setId(qulonglong id)
 {
-    query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(db->getObjectName("код")).arg(id));
+    if (getValue(idFieldName) != id)
+        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id));
+    grdTable->selectRow(0);
 }
 
 
 void Essence::query(QString filter)
 {
-    QModelIndex index = form->getCurrentIndex();
+    QModelIndex index;
+
+    if (grdTable != 0)
+        index = grdTable->currentIndex();
+
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
         Table::query(filter + " AND " + defaultFilter);
@@ -210,11 +221,8 @@ void Essence::query(QString filter)
     else
         Table::query(filter);
 
-    if (tableModel->rowCount() == 0)
-    {
-        form->showPhoto();
-    }
-    form->setCurrentIndex(index);
+    if (grdTable != 0)
+        grdTable->setCurrentIndex(index);
  }
 
 
@@ -255,19 +263,17 @@ QString Essence::getPhotoFile()
         if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
         {
             pictureUrl = preparePictureUrl();
-
             int id = getValue(photoIdField).toInt();
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
                 QString phPath = getPhotoPath();
                 file = app->getPhotosPath(phPath) + "/" + idValue + ".jpg";
-
                 localFile = phPath + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
                 if (!QFile(file).exists())
                 {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                     // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                    if (getPhotoCheckSum(localFile) != 0)
+                    if (db->getFileCheckSum(localFile, PictureFileType, true)!= 0)
                     {
                         app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                         QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
@@ -285,16 +291,37 @@ QString Essence::getPhotoFile()
                             QUrl url(file);
                             if (url.isValid())
                             {
-                                if (m_networkAccessManager == 0)
+                                if (urls.count() <= 1000)
                                 {
-                                    m_networkAccessManager = new QNetworkAccessManager(this);
-                                    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                                    // Если сетевой менеджер еще не подключен, то подключим его
+                                    if (m_networkAccessManager == 0)
+                                    {   // Вызывается только один раз, по необходимости загрузить фотографию
+                                        QNetworkConfigurationManager manager(this);
+                                        m_networkAccessManager = new QNetworkAccessManager(this);
+                                        m_networkAccessManager->setConfiguration(manager.defaultConfiguration());
+                                        connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                                    }
+                                    if (m_networkAccessManager != 0)
+                                    {
+                                        if (m_networkAccessManager->networkAccessible() == QNetworkAccessManager::Accessible)
+                                        {
+                                            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+                                            QNetworkRequest m_request(url);
+                                            QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
+                                            if (reply->error() == QNetworkReply::NoError)
+                                                app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                            else
+                                                app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                        }
+                                        else
+                                        {
+                                            app->showMessageOnStatusBar(tr("Нет доступа к сети для загрузки фотографий."), 3000);
+                                            m_networkAccessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
+                                        }
+                                    }
                                 }
-                                urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
-                                m_request = new QNetworkRequest(url);
-                                m_networkAccessManager->get(*m_request);   // Запустим скачивание картинки
-                                delete m_request;
-                                app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                else
+                                    app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
                             }
                             else
                                 file = "";
@@ -303,7 +330,8 @@ QString Essence::getPhotoFile()
                 }
                 else
                 {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                    savePhotoToServer(file, localFile);
+                    if (isDictionary && app->isSA())
+                        app->savePhotoToServer(file, localFile);
                 }
 
             }
@@ -313,31 +341,11 @@ QString Essence::getPhotoFile()
 }
 
 
-void Essence::savePhotoToServer(QString file, QString localFile)
-{
-    if (app->isSA())
-    {
-        QFile file1(file);
-        if (file1.exists() && file1.open(QIODevice::ReadOnly))
-        {
-            QByteArray array = file1.readAll();
-            qulonglong localFileCheckSum = calculateCRC32(&array);
-            qulonglong removeFileCheckSum = getPhotoCheckSum(localFile);
-            if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
-                                                            // предполагается, что локальный файл свежее того, который в базе
-            {
-                db->setFile(localFile, PictureFileType, array, localFileCheckSum, true);      // Сохранить картинку в расширенную базу
-            }
-            file1.close();
-        }
-    }
-}
-
-
 void Essence::replyFinished(QNetworkReply* reply)
 {
     QString url = QString("%1:%2%3").arg(reply->url().host()).arg(reply->url().port(80)).arg(reply->url().path());
     QString idValue = urls.value(url);
+    urls.remove(url);
     if (reply->error() == QNetworkReply::NoError)
     {
         // Данные с фотографией получены, запишем их в файл
@@ -346,26 +354,23 @@ void Essence::replyFinished(QNetworkReply* reply)
             QString file = app->getPhotosPath(getPhotoPath());
             QByteArray array = reply->readAll();
             saveFile(file + "/" + idValue + ".jpg", &array);
-            urls.remove(url);
             app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
             // Проверим, не нужно ли обновить фотографию
             if (idValue == getValue(photoIdField).toString().trimmed())
             {
-                emit photoLoaded();
+                emit photoLoaded();                 // Выведем фотографию на экран
                 scriptEngine->eventPhotoLoaded();
             }
         }
     }
     else
-    {
-        urls.remove(url);
         app->showMessageOnStatusBar(QString(tr("Не удалось загрузить фотографию с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
-    }
+
     if (urls.size() == 0)
-    {
         app->showMessageOnStatusBar(tr("Список заданий на загрузку фотографий пуст"));
-    }
+
+    reply->close();
     reply->deleteLater();
 }
 
@@ -405,7 +410,7 @@ int Essence::exec()
     }
     if (opened && form != 0)
     {
-        activeWidget = app->activeWindow();
+        activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
 
         beforeShowFormEvent(form);
         result = form->exec();
@@ -422,7 +427,7 @@ void Essence::show()
     if (!opened) open();
     if (opened && form != 0)
     {
-        activeWidget = app->activeWindow();
+        activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
 
         beforeShowFormEvent(form);
         form->show();
@@ -462,7 +467,12 @@ bool Essence::open()
     if (Table::open())
     {
         setOrderClause();
-        setScriptEngine();
+        initForm();
+        if (scriptEngineEnabled)
+        {
+            setScriptEngine();
+            evaluateEngine();
+        }
         prepareSelectCurrentRowCommand();
         return true;
     }
@@ -472,6 +482,8 @@ bool Essence::open()
 
 void Essence::close()
 {
+    if (m_networkAccessManager != 0)
+        delete m_networkAccessManager;
     if (form != 0)
     {
         closeFormEvent(form);
@@ -479,20 +491,6 @@ void Essence::close()
         delete form;
     }
     Table::close();
-}
-
-
-void Essence::setForm(QString formName)
-{
-    if (form != 0)
-    {
-        form->close();
-        delete form;
-    }
-
-    form = new FormGrid();
-    form->open(parentForm, this, formName);
-    form->setButtonsSignals();
 }
 
 
@@ -574,18 +572,11 @@ bool Essence::isFormSelected()
 
 void Essence::cmdOk()
 {
-
 }
 
 
 void Essence::cmdCancel()
 {
-}
-
-
-FormGrid* Essence::getForm()
-{
-    return form;
 }
 
 
@@ -670,24 +661,24 @@ void Essence::updateCurrentRow()
     {
         if (preparedSelectCurrentRow.exec())
         {
-            TApplication::debug(QString("PreparedQuery: %1\n").arg(command));
             if (preparedSelectCurrentRow.first())
             {
-                int row = form->getCurrentIndex().row();
+                QModelIndex index = grdTable->currentIndex();
                 for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
                 {
                     QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
                     QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-                    if (value != tableModel->record(row).value(fieldName))
-                        tableModel->setData(tableModel->index(row, i), value, true);
+                    if (value != tableModel->record(index.row()).value(fieldName))
+                        tableModel->setData(tableModel->index(index.row(), i), value, true);
                 }
+                grdTable->setCurrentIndex(index);
             }
         }
         else
             if (!preparedSelectCurrentRow.isValid())
             {
-                TApplication::debug(QString("PreparedQuery Error: %1\n").arg(preparedSelectCurrentRow.lastError().text()));
-                TApplication::debug(QString("PreparedQuery Expression: %1\n").arg(command));
+                TApplication::debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
+                TApplication::debug(1, QString("PreparedQuery Expression: %1").arg(command));
             }
     }
 }
@@ -701,22 +692,20 @@ void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
     QString constValueField = db->getObjectName(constDictionaryName + ".значение");
 
     // Откроем справочник констант и загрузим константы в контекст печати
-    app->getDictionaries()->addDictionary(db->getObjectName(constDictionaryName));
-    if (app->getDictionaries()->isMember(constDictionaryName))
+    Dictionary* dict = app->getDictionaries()->getDictionary(constDictionaryName);
+    dict->query();    // Прочитаем содержимое справочника констант
+    MySqlRelationalTableModel* model = dict->getTableModel();
+    for (int i = 0; i < model->rowCount(); i++)
     {
-        Dictionary* dict = app->getDictionaries()->getDictionary(constDictionaryName);
-        dict->query();    // Прочитаем содержимое справочника констант
-        MySqlRelationalTableModel* model = dict->getTableModel();
-        for (int i = 0; i < model->rowCount(); i++)
-        {
-            QSqlRecord rec = model->record(i);
-            reportEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
-        }
+        QSqlRecord rec = model->record(i);
+        reportEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
     }
-   for (int i = 1; i <= getTableModel()->rowCount(); i++)
-   {
+
+    QStringList fieldsList = getFieldsList();
+    for (int i = 1; i <= getTableModel()->rowCount(); i++)
+    {
         QSqlRecord rec = getTableModel()->record(i-1);
-        foreach(QString field, getFieldsList())
+        foreach(QString field, fieldsList)
         {
                 reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg(field).toLower(), rec.value(field));
         }
@@ -748,8 +737,8 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
         {
             QByteArray array = file.readAll();
             file.close();
-            qulonglong localFileCheckSum = calculateCRC32(&array);
-            if (db->getFileCheckSum(fullFileName, type) != localFileCheckSum)
+            qulonglong localFileCheckSum = db->calculateCRC32(&array);
+            if (db->getFileCheckSum(fileName, type, true) != localFileCheckSum)
             {   // контрольные суммы файлов не совпадают
                 if (app->isSA())
                     db->setFile(fileName, type, array, localFileCheckSum);      // Сохранить копию файла на сервере, если мы работаем как SA
@@ -766,39 +755,6 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
         }
     }
     return result;
-}
-
-
-qulonglong Essence::calculateCRC32(QByteArray* array)
-{
-/*
-    boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true>  crc_ccitt2;
-    for(int index = 0; index < array->length(); index++)
-    {
-      crc_ccitt2((*array)[index]);
-    }
-    return crc_ccitt2();
-*/
-
-//    unsigned int CRC32_function(unsigned char *buf, unsigned long len)
-
-    unsigned long crc_table[256];
-    unsigned long crc;
-    char *buf = array->data();
-    unsigned long len = array->count();
-
-    for (int i = 0; i < 256; i++)
-    {
-        crc = i;
-        for (int j = 0; j < 8; j++)
-            crc = crc & 1 ? (crc >> 1) ^ 0xEDB88320UL : crc >> 1;
-        crc_table[i] = crc;
-    }
-
-    crc = 0xFFFFFFFFUL;
-    while (len--)
-        crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
-    return crc ^ 0xFFFFFFFFUL;
 }
 
 
@@ -826,6 +782,13 @@ void Essence::keyboardReaded(QString barCode)
 {
     if (scriptEngine != 0)
         scriptEngine->eventBarCodeReaded(barCode);
+}
+
+
+void Essence::cardCodeReaded(QString cardCode)
+{
+    if (scriptEngine != 0)
+        scriptEngine->eventCardCodeReaded(cardCode);
 }
 
 

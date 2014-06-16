@@ -31,30 +31,30 @@ class Document;
 class Dictionaries : public Dictionary {
     Q_OBJECT
 public:
-    QMap<QString, Dictionary*> dictionaries;                    // Объекты справочников
+    QMap<QString, Dictionary*> dictionariesList;                    // Объекты справочников
     Dictionaries(QObject *parent = 0);
-    Q_INVOKABLE virtual Dictionary* getDictionary(QString, int = 0, bool add = true);   // По умолчанию добавлять справочник
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc);
-    Q_INVOKABLE virtual bool addDictionary(QString, int = 0);
+    Q_INVOKABLE virtual bool addDictionary(QString, bool = false);
     Q_INVOKABLE virtual bool addSaldo(QString acc);
     Q_INVOKABLE virtual void removeDictionary(QString);
     QString getDictionaryTitle(QString);
-    bool isMember(QString dictName) { return dictionaries.contains(dictName); }
+    bool isMember(QString dictName) { return dictionariesList.contains(dictName); }
     virtual void            query(QString filter = "");
-    QMap<QString, Dictionary*>* getDictionaries() { return &dictionaries; }
+    QMap<QString, Dictionary*>* getDictionaries() { return &dictionariesList; }
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
     Q_INVOKABLE virtual bool remove();     // Удаление справочника
     Q_INVOKABLE virtual void view();       // Исправление свойств справочника
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
-    virtual void setScriptEngine() { scriptEngine = 0; scriptEngineEnabled = false; }
     void    setDocument(Document* doc) { document = doc; }
     Document* getDocument() { return document; }
     bool        isSaldoExist() { return lIsSaldoExist; }
     virtual void            setOrderClause();
     virtual void            prepareSelectCurrentRowCommand() { ; }
     Q_INVOKABLE virtual void setForm(QString = "");
+    void    unlock();
 
 private:
     Document*   document;

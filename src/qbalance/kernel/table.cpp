@@ -47,17 +47,11 @@ QList<FieldType>* Table::getColumnsProperties()
 
 void Table::query(QString filter)
 {
-    if (tableModel->rowCount() > 0 && filter.size() > 0)
+    if (filter.size() > 0)
         tableModel->setFilter(filter);
-    else
-    {
-        tableModel->setFilter(filter);
-        if (!tableModel->select())
-        {
-            app->showError(tableModel->lastError().text());
-        }
-    }
-    app->debug("Query: " + tableModel->selectStatement() + "\n");
+    if (!tableModel->select())
+        app->showError(tableModel->lastError().text());
+    app->debug(1, "Query: " + tableModel->selectStatement() + "\n");
  }
 
 
@@ -100,7 +94,6 @@ void Table::setOrderClause(QString sort)
 
 QStringList Table::getFieldsList()
 {
-//    return tableModel->getFieldsList();
     QStringList fields;
     for (int i = 0; i < columnsProperties.count(); i++)
     {

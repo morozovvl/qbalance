@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYBOOLEANITEMDELEGATE_H
 #define MYBOOLEANITEMDELEGATE_H
 
+#include <QtCore/QPointer>
 #include <QItemDelegate>
 #include <QCheckBox>
 #include "myitemdelegate.h"
@@ -31,6 +32,8 @@ public:
     ~MyBooleanItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
+private:
+    mutable QPointer<QCheckBox>  editorWidget;
 };
 
 #endif // MYBOOLEANITEMDELEGATE_H

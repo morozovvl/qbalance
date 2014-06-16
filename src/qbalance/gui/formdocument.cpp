@@ -221,9 +221,9 @@ void FormDocument::show()
         textEdit->setText(getParent()->getParent()->getValue("описание").toString());
     FormGrid::show();
 
-    if (grdTable->currentIndex().row() + 1 > tableModel->rowCount())
+    if (grdTable->currentIndex().row() + 1 > parent->getTableModel()->rowCount())
     {
-        selectRow(tableModel->rowCount() - 1);
+        grdTable->selectRow(parent->getTableModel()->rowCount() - 1);
         if (grdTable->columnIsReadOnly())
             grdTable->selectNextColumn();
     }
@@ -246,7 +246,7 @@ void FormDocument::cmdOk()
             getParent()->getParent()->setValue("дата", QVariant(dateEdit->date()));
         if (numberEdit != 0)
             getParent()->getParent()->setValue("номер", QVariant(numberEdit->text()));
-        getParent()->getParent()->getForm()->setGridFocus();
+        getParent()->getParent()->getGridTable()->setFocus();
     }
 }
 
@@ -256,7 +256,7 @@ void FormDocument::cmdCancel()
     FormGrid::cmdCancel();
     if (getParent() != 0)
     {
-        getParent()->getParent()->getForm()->setGridFocus();
+        getParent()->getParent()->getGridTable()->setFocus();
     }
 }
 

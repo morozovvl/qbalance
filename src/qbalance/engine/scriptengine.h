@@ -22,14 +22,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
-#include <QKeyEvent>
+#include <QtGui/QKeyEvent>
 #include "sqlqueryclass.h"
 #include "sqlrecordclass.h"
 #include "sqlfieldclass.h"
 
+
 class Form;
 class Essence;
 class TApplication;
+class Document;
+
 
 struct EventFunction {
     QString     comment;
@@ -40,7 +43,7 @@ struct EventFunction {
 class ScriptEngine : public QScriptEngine {
     Q_OBJECT
 public:
-    ScriptEngine(QObject *parent = 0);
+    ScriptEngine(QObject* parent = 0);
     ~ScriptEngine();
     bool open(QString fileName = "");
     void close() { ; }
@@ -49,13 +52,14 @@ public:
     QString getErrorMessage() { return errorMessage; }
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     bool getScriptResult() { return scriptResult; }
+    void setIsDocumentScript(bool docScr) { globalObject().setProperty("isDocumentScript", docScr); }
 // События
     virtual QMap<QString, EventFunction>* getEventsList();
     void    appendEvent(QString, EventFunction);
     QString getBlankScripts();
     void eventAfterCalculate();
     void eventParametersChanged();
-    void eventBeforeAddString();
+    bool eventBeforeAddString();
     void eventAfterAddString();
     void eventBeforeDeleteString();
     void eventAfterDeleteString();
@@ -74,11 +78,13 @@ public:
     QString preparePictureUrl(Essence*);
     QString getFilter();
     void eventBarCodeReaded(QString);
+    void eventCardCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
     QMap<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
-    QString             script;
-    virtual void loadScriptObjects();
+    QString         script;
+    Document*       document;
+    virtual void    loadScriptObjects();
 private:
     bool                scriptResult;
     QString             errorMessage;
@@ -88,7 +94,7 @@ private:
     SqlFieldClass*      sqlFieldClass;
     TApplication*       app;
 
-    void                showScriptError(QString, QString);
+    void                showScriptError(QString);
 };
 
 

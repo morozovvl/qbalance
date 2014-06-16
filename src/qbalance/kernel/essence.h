@@ -28,11 +28,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QStringList>
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QProcess>
+#include <QtCore/QPointer>
 
 #include <QtXml/QDomNode>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlRecord>
-#include <QDialog>
+#include <QtGui/QDialog>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include "../kernel/table.h"
@@ -76,7 +77,9 @@ public:
 
 
 // Функции для работы с модулем GUI
-    Q_INVOKABLE FormGrid* getForm();
+    Q_INVOKABLE FormGrid* getForm() { return form; }
+    TableView* getGridTable() { return grdTable; }
+    void setGridTable(TableView* gt) { grdTable = gt; }
     virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();
@@ -93,8 +96,6 @@ public:
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
     Q_INVOKABLE QString getPhotoNameField() { return photoNameField; }
-    Q_INVOKABLE void savePhotoToServer(QString, QString);
-    Q_INVOKABLE qulonglong getPhotoCheckSum(QString file) { return db->getFileCheckSum(file, PictureFileType, true); }
     Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
     Q_INVOKABLE bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     Q_INVOKABLE bool isViewable() { return lViewable; }             // ... кнопок на форме
@@ -107,11 +108,11 @@ public:
     Q_INVOKABLE void setPrintable(bool b) { lPrintable = b; }
     Q_INVOKABLE virtual void setEnabled(bool);
     Q_INVOKABLE bool isEnabled() { return enabled; }
-    Q_INVOKABLE void hideAllGridSections() { form->getGridTable()->hideAllGridSections(); }
-    Q_INVOKABLE void hideGridSection(QString columnName)  { form->getGridTable()->hideGridSection(columnName); }
-    Q_INVOKABLE void showGridSection(QString columnName) { form->getGridTable()->showGridSection(columnName); }
-    Q_INVOKABLE void showAllGridSections() { form->getGridTable()->showAllGridSections(); }
-    Q_INVOKABLE virtual void setForm(QString = "");
+    Q_INVOKABLE void hideAllGridSections() { grdTable->hideAllGridSections(); }
+    Q_INVOKABLE void hideGridSection(QString columnName)  { grdTable->hideGridSection(columnName); }
+    Q_INVOKABLE void showGridSection(QString columnName) { grdTable->showGridSection(columnName); }
+    Q_INVOKABLE void showAllGridSections() { grdTable->showAllGridSections(); }
+    Q_INVOKABLE virtual void setForm(QString = "") { ; }
     Q_INVOKABLE bool isDefaultForm() { return form->isDefaultForm(); }
 
 
@@ -121,7 +122,6 @@ public:
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
     void                evaluateEngine();
     virtual bool        calculate(const QModelIndex &);
-    Q_INVOKABLE void    calculate() { form->calculate(); }
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
 
@@ -142,11 +142,13 @@ public:
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
-    Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(form->getCurrentIndex().column()).toUpper(); }
+    Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(grdTable->currentIndex().column()).toUpper(); }
 
 signals:
     void                photoLoaded();
 
+public slots:
+    void                cardCodeReaded(QString);
 
 
 protected:
@@ -155,6 +157,7 @@ protected:
     QString             idFieldName;
     QString             nameFieldName;
     FormGrid*           form;
+    QPointer<TableView> grdTable;
     QWidget*            parentForm;
     ScriptEngine*       scriptEngine;
     QString             scriptFileName;                     // Имя файла со скриптами
@@ -180,10 +183,8 @@ private:
     QString             photoNameField;
     QWidget*            activeWidget;
 
-    QMap<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
-    QNetworkAccessManager*  m_networkAccessManager;
-    QNetworkRequest*        m_request;
-    static qulonglong       calculateCRC32(QByteArray*);
+    QHash<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
+    QPointer<QNetworkAccessManager>  m_networkAccessManager;
 
 
 private slots:

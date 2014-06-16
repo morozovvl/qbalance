@@ -83,10 +83,7 @@ void SearchParameters::setFieldsList(QStringList fldList)
         }
         else if (field.left(4).toLower() == (programIdFieldName + "_"))                          // Если это поле - столбец ИМЯ, то это справочник
         {
-            QString tableName = field;
-            tableName = tableName.remove(programIdFieldName + "_", Qt::CaseInsensitive).toLower();
-            if (app->getDictionaries()->getDictionary(tableName) != 0)
-                addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
+            addString(field, strNum++);                 // следовательно должна быть строка для поиска по наименованию
         }
     }
     gridLayout->setColumnStretch(1, 1);
@@ -97,6 +94,7 @@ void SearchParameters::addString(QString name, int strNum)
 {
     QString labelName;
     MyComboBox* comboBox = new MyComboBox(parentWidget());
+    comboBox->setSearchParameters(this);
     comboBox->setEditable(true);
     comboBox->setInsertPolicy(MyComboBox::InsertAtTop);
     comboBox->setFocusPolicy(Qt::StrongFocus);
@@ -137,6 +135,7 @@ void SearchParameters::addString(QString name, int strNum)
             checkBox->setToolTip(QObject::trUtf8("Использовать ПолноТекстовый Поиск"));
             checkBox->setTristate(false);
             checkBox->setObjectName(parentForm->getParent()->getTableName());                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
+            checkBox->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
             gridLayout->addWidget(checkBox, strNum, 2, 1, 1);
         }
     }
@@ -203,7 +202,10 @@ QString SearchParameters::getFilter()
                         Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
                         if (dict != 0)
                         {
-                            param = !dict->getForm()->isExactSearch() ? "%" + param + "%" : param;
+                            if (dict->getForm()->isLeftPercent())
+                                param = "%" + param;
+                            if (dict->getForm()->isRightPercent())
+                                param = param + "%";
                         }
                     }
                     else
@@ -226,7 +228,7 @@ void SearchParameters::dictionaryButtonPressed()
 {
     if (dictionaries != 0)
     {
-        Dictionary* dict = dictionaries->getDictionary(sender()->objectName(), 0);    // Поместим связанный справочник в список справочников приложения
+        Dictionary* dict = dictionaries->getDictionary(sender()->objectName());    // Поместим связанный справочник в список справочников приложения
         if (dict != 0) {
             dict->exec();
             if (dict->isFormSelected())
@@ -305,4 +307,22 @@ void SearchParameters::setParent(QWidget* parent)
     QFrame::setParent(parent);
     if (gridLayout != 0)
         gridLayout->setParent(parent);
+}
+
+
+void SearchParameters::clearAllComboBoxes()
+{
+    // При активации фокуса подсветим все строчки
+    for (int i = 0; i < gridLayout->rowCount(); i++)
+    {
+        QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
+        if (item != 0)
+        {
+            MyComboBox* widget = (MyComboBox*)(item->widget());
+            if (widget != 0 && QString::compare(widget->metaObject()->className(), "MyComboBox") == 0)
+            {
+                widget->lineEdit()->clear();
+            }
+        }
+    }
 }

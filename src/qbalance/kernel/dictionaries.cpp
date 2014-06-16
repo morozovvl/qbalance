@@ -37,25 +37,22 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
     document = 0;
     lIsSaldoExist = false;
     formTitle = QObject::trUtf8("Справочники");
+    scriptEngine = 0;
     scriptEngineEnabled = false;
 }
 
 
-Dictionary* Dictionaries::getDictionary(QString dictName, int deep, bool add)
+Dictionary* Dictionaries::getDictionary(QString dictName)
 {
+    dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return 0;
-    if (!dictionaries.contains(dictName))
+    if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (add)
-        {
-            if (!addDictionary(dictName, deep))
-                return 0;
-        }
-        else
+        if (!addDictionary(dictName))
             return 0;
     }
-    return dictionaries[dictName];
+    return dictionariesList[dictName];
 }
 
 
@@ -64,30 +61,36 @@ Saldo* Dictionaries::getSaldo(QString acc)
     if (acc.size() == 0)
         return 0;
     QString alias = "saldo" + acc;
-    if (!dictionaries.contains(alias))
+    if (!dictionariesList.contains(alias))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         if (!addSaldo(acc))
             return 0;
     }
     lIsSaldoExist = true;
-    return (Saldo*)dictionaries[alias];
+    return (Saldo*)dictionariesList[alias];
 }
 
 
-bool Dictionaries::addDictionary(QString dictName, int deep)
+bool Dictionaries::addDictionary(QString dictName, bool scriptDisabled)
 {
+    dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return false;
-    if (!dictionaries.contains(dictName))
+    if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict;
         dict = new Dictionary(dictName, this);
         dict->setDictionaries(this);
         dict->setPhotoEnabled(true);
-        if (dict->open(deep)) {
-            dictionaries.insert(dictName, dict);
+
+        if (scriptDisabled)                         // Была команда выключить скрипты
+            dict->setScriptEngineEnabled(false);
+
+        if (dict->open()) {
+            dictionariesList.insert(dictName, dict);
             dict->setDictionaries(this);
 
+            // Установим прототипы справочников
             QSqlQuery* dicts = db->getDictionaries();
             if (dicts->first())
             {
@@ -105,31 +108,50 @@ bool Dictionaries::addDictionary(QString dictName, int deep)
                     }
                 } while (dicts->next());
             }
+
+            // Установим "родителей" локальных справочников
+            foreach(QString dictName, dictionariesList.keys())
+            {
+                Dictionary* dict = getDictionary(dictName);
+                if (dict->isSet() && !dict->isSaldo())
+                {
+                    foreach (QString dictName, dict->getChildDicts())
+                    {
+                        Dictionary* childDict = getDictionary(dictName);
+                        if (childDict != 0)
+                            childDict->setParentDict(dict);
+                    }
+                }
+            }
             return true;
         }
     }
     return false;
 }
 
+
 bool Dictionaries::addSaldo(QString acc)
 {
     if (acc.size() == 0)
         return false;
     QString alias = "saldo" + acc;
-    if (!dictionaries.contains(alias))
+    if (!dictionariesList.contains(alias))
     {
         // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
         Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
         accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));
-        QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString();
+        QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString().trimmed().toLower();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
-        saldo->setPhotoEnabled(true);
         if (saldo->open()) {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
-            dictionaries.insert(alias, saldo);
-            saldo->setDictionaries(this);
+            dictionariesList.insert(alias, saldo);
+            saldo->setPhotoEnabled(true);
             saldo->setQuan(true);
+            if (document != 0)
+            {                       // Если список справочников работает внутри документа
+                addDictionary(dictName, true);       // то откроем справочник, к которому относится сальдо и запретим ему загружать скрипты
+            }
             return true;
         }
     }
@@ -141,11 +163,11 @@ void Dictionaries::removeDictionary(QString dictName)
 {
     if (dictName.size() == 0)
         return;
-    if (dictionaries.contains(dictName))
+    if (dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
         Dictionary* dict = getDictionary(dictName);
         dict->close();
-        dictionaries.remove(dictName);
+        dictionariesList.remove(dictName);
     }
 }
 
@@ -158,17 +180,16 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
 bool Dictionaries::add()
 {
     bool result = false;
-    WizardDictionary* wizard = new WizardDictionary(true);
-    wizard->open(app->getMainWindow());
-    wizard->getFormWidget()->setWindowTitle(QObject::trUtf8("Новый справочник"));
-    wizard->exec();
-    wizard->close();
-    if (wizard->getResult())
+    WizardDictionary wizard;
+    wizard.open(app->getMainWindow());
+    wizard.getFormWidget()->setWindowTitle(QObject::trUtf8("Новый справочник"));
+    wizard.exec();
+    wizard.close();
+    if (wizard.getResult())
     {   // Если удалось создать справочник, то обновим список справочников
         query();
         result = true;
     }
-    delete wizard;
     return result;
 }
 
@@ -214,10 +235,9 @@ bool Dictionaries::open()
 
 void Dictionaries::close()
 {
-    foreach(Dictionary* dict, dictionaries)
+    foreach(QString dictName, dictionariesList.keys())
     {
-        dict->close();
-        delete dict;
+        removeDictionary(dictName);
     }
     Dictionary::close();
 }
@@ -229,12 +249,22 @@ void Dictionaries::query(QString)
 }
 
 
+void Dictionaries::unlock()
+{
+    foreach(QString dictName, dictionariesList.keys())
+    {
+        Dictionary* dict = getDictionary(dictName);
+        dict->lock(false);
+    }
+}
+
+
 void Dictionaries::cmdOk() {
     Dictionary::cmdOk();
     QString dictName = getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed();
     if (dictName.size() > 0) {
         Dictionaries* dicts = app->getDictionaries();
-        Dictionary* dict = dicts->getDictionary(dictName, 1);         // Откроем справочник и подсправочники 1-го уровня
+        Dictionary* dict = dicts->getDictionary(dictName);         // Откроем справочник и подсправочники 1-го уровня
         if (dict != 0)
         {
             dict->show();

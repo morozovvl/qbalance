@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef PICTURE_H
 #define PICTURE_H
 
-#include <QFrame>
+#include <QtGui/QFrame>
 #include <QtCore/QString>
-#include <QImage>
-#include <QPaintEvent>
+#include <QtGui/QImage>
+#include <QtGui/QPaintEvent>
 #include <QtDesigner/QDesignerExportWidget>
 
 
@@ -45,7 +45,7 @@ public:
     Q_INVOKABLE QString getPhotoFileName() { return photoFileName; }
     Q_INVOKABLE void setPhotoWindowTitle(QString);
     void        setIsBig(bool big) { isBigPicture = big; }
-    void        setForm(FormGrid* f) { form = f; }
+    void        setForm(FormGrid* f = 0) { form = f; }
 
 protected:
     QString pictureDrawn;

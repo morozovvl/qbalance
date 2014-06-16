@@ -29,11 +29,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
 {
     delegateType = Boolean;
+    editorWidget = 0;
 }
 
 
 MyBooleanItemDelegate::~MyBooleanItemDelegate()
 {
+    if (editorWidget != 0)
+        delete editorWidget;
 }
 
 
@@ -43,7 +46,8 @@ QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
     {
         if (parentForm != 0)
             parentForm->getParent()->saveOldValues();
-        return new QCheckBox(parent);
+        editorWidget = new QCheckBox(parent);
+        return editorWidget;
     }
     return 0;
 }

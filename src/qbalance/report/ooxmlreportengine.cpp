@@ -52,7 +52,7 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
 #endif
 
         // Если удалось распаковать, то продолжим
-        if (waitProcessEnd(unzip)) {
+        if (app->waitProcessEnd(unzip)) {
 
             // Запишем контент в файл
             QFile file(tmpDir + "/content.xml");
@@ -83,7 +83,7 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
 #endif
 
             // Если удалось запаковать, то продолжим
-            if (waitProcessEnd(zip)) {
+            if (app->waitProcessEnd(zip)) {
 
                 // удалим временный каталог
                 removeDir(tmpDir);
@@ -104,22 +104,6 @@ bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
             app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
     }
     return false;
-}
-
-
-bool OOXMLReportEngine::waitProcessEnd(QProcess* proc)
-{   // Процедура ждет окончания процесса или истечения 30 секунд
-    bool result = true;
-    QTimer t;
-    t.start(30000);
-    QEventLoop loop;
-    connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
-    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), &loop, SLOT(quit()));
-    loop.exec();
-    if (proc->exitStatus() != QProcess::NormalExit)
-        result = false;
-    delete proc;
-    return result;
 }
 
 
@@ -149,6 +133,36 @@ bool OOXMLReportEngine::removeDir(QString dirName)
         result = dir.rmdir(dirName);
     }
     return result;
+}
+
+
+QDomNode OOXMLReportEngine::getCell(int row, int column)
+{
+    QDomNode rowNode;
+    cells = doc.elementsByTagName("table:table-row");   // будем просматривать все строки
+    if (row <= cells.count())
+    {
+        for (int i = 0; i < cells.count(); i++)
+        {
+            if (i == row)
+            {
+                rowNode = cells.at(i).parentNode().parentNode();
+                break;
+            }
+        }
+        cells = rowNode.cloneNode().childNodes();       // Теперь будем просматривать ячейки в строке
+        if (column <= cells.count())
+        {
+            for (int i = 0; i < cells.count(); i++)
+            {
+                if (i == column)
+                {
+                    return cells.at(i);                 // Искомая ячейка найдена, вернем ее
+                }
+            }
+        }
+    }
+    return rowNode;     // Ячейка не найдена, вернем пустую
 }
 
 

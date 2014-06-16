@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtXml/QDomDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QUuid>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QVBoxLayout>
 #include <QtScript/QScriptValue>
 #include "mainwindow.h"
 
@@ -43,6 +43,7 @@ public:
     Q_INVOKABLE Dialog* getFormWidget() { return formWidget; }
     Q_INVOKABLE Essence* getParent() { return parent; }
     Q_INVOKABLE bool isFormSelected() { return lSelected; }
+    QString getConfigName() { return configName; }
     void appendToolTip(QString name, QString value);
     virtual void keyPressEvent(QKeyEvent*);
 
@@ -55,6 +56,8 @@ public:
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
     void setAutoSelect(bool select) { autoSelect = select; }
+    void    readSettings();
+    MyMdiSubWindow*     getSubWindow();
 
 public slots:
     Q_INVOKABLE virtual int exec();
@@ -91,17 +94,15 @@ protected:
     QPushButton*    buttonCancel;
 
     virtual void    createForm(QString, QWidget* pwgt = 0);
-    virtual void    readSettings();
     void            writeSettings();
 
 private:
     bool                    uiCreated;
     QMap<QString, QString>  toolTips;
     bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
-    bool    autoSelect;
+    bool                    autoSelect;
 
     void                    checkVisibility();
-    MyMdiSubWindow*     getSubWindow();
 };
 
 #endif

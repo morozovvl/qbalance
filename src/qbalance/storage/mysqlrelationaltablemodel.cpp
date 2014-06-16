@@ -237,4 +237,3 @@ QVariant MySqlRelationalTableModel::headerData (int section, Qt::Orientation ori
     }
     return QSqlRelationalTableModel::headerData(section, orientation, role);
 }
-

@@ -54,6 +54,7 @@ public:
     QString getFilter();
     virtual void keyPressEvent(QKeyEvent*);
     void setParent(QWidget *);
+    void clearAllComboBoxes();
 
 signals:
     void requery();
@@ -71,7 +72,6 @@ private:
     QStringList         parameters;
     FormGridSearch*     parentForm;
     void addString(QString, int);
-//    void removeString(int);
 };
 
 #endif // SEARCHPARAMETERS_H

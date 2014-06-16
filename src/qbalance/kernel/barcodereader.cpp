@@ -46,6 +46,13 @@ BarCodeReader::BarCodeReader(QObject *parent) :
 }
 
 
+BarCodeReader::~BarCodeReader()
+{
+    if (barCodeReaderComPort != 0)
+        delete barCodeReaderComPort;
+}
+
+
 void BarCodeReader::barCodeReadyRead()
 {
      if (barCodeReaderComPort->bytesAvailable())

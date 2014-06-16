@@ -21,15 +21,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYDATEITEMDELEGATE_H
 #define MYDATEITEMDELEGATE_H
 #include <QtDesigner/QDesignerExportWidget>
+#include <QtCore/QPointer>
 #include "myitemdelegate.h"
 
 class QDESIGNER_WIDGET_EXPORT MyDateItemDelegate : public MyItemDelegate
 {
     Q_OBJECT
 public:
-    MyDateItemDelegate(QObject*, FormGrid*);
+    MyDateItemDelegate(QObject*, FormGrid* = 0);
     ~MyDateItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
+private:
+    mutable QPointer<QLineEdit>  editorWidget;
 };
 
 #endif // MYDATEITEMDELEGATE_H

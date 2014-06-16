@@ -28,10 +28,11 @@ class OOXMLReportEngine : public ReportEngine
 {
     Q_OBJECT
 public:
-    OOXMLReportEngine(ReportScriptEngine*);
+    OOXMLReportEngine(ReportScriptEngine* = 0);
     ~OOXMLReportEngine();
     virtual bool open() { return ReportEngine::open(); }
     virtual bool open(QString name, QMap<QString, QVariant>* context);
+    QDomNode getCell(int, int);
 
 private:
     TApplication*               app;
@@ -46,8 +47,6 @@ private:
     bool readExpression(int, int);
     QString getTableVariable(QDomElement);
     void writeCell(QDomNode, QString, QVariant);
-    bool waitProcessEnd(QProcess *);
-
 };
 
 #endif // OOXMLREPORTENGINE_H

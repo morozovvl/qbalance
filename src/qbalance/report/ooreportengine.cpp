@@ -68,7 +68,8 @@ bool OOReportEngine::open(QMap<QString, QVariant>* context, QString name, QStrin
                 QFile().copy(QDir::currentPath() + "/reports/default_report." + reportExt, destFile);
             if (QFile().copy(destFile, tmpFileName))
             {
-                result = TApplication::exemplar()->runProcess(QString("soffice -invisible -quickstart %1 ""macro://./Standard.Main.Main(%2)""").arg(tmpFileName).arg(file.fileName()), "OpenOffice");
+                if (TApplication::exemplar()->runProcess(QString("soffice -invisible -quickstart %1 ""macro://./Standard.Main.Main(%2)""").arg(tmpFileName).arg(file.fileName()), "OpenOffice") != 0)
+                    result = true;
             }
             else
             {

@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "scriptengine.h"
 
 
-class Document;
 class Documents;
 
 
@@ -38,7 +37,6 @@ public:
 protected:
     virtual void loadScriptObjects();
 private:
-    Document*       document;
     Documents*      documents;
 };
 

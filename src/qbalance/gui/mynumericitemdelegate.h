@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QStyleOptionViewItem>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
+#include <QtCore/QPointer>
 #include <QtDesigner/QDesignerExportWidget>
 #include "myitemdelegate.h"
 
@@ -45,6 +46,7 @@ public:
 private:
     int length;
     int precision;
+    mutable QPointer<QLineEdit>  editorWidget;
 };
 
 #endif // MYNUMERICITEMDELEGATE_H

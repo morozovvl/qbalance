@@ -35,8 +35,7 @@ public:
     Dictionary(QObject *parent = 0) { Dictionary("", parent); }
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
-    Q_INVOKABLE virtual bool open(int i = 1);                 // Открыть справочник. i - глубина вложения подсправочников (те, на которые может ссылаться этот справочник)
-    Q_INVOKABLE virtual void view();                          // Просмотр записи
+    Q_INVOKABLE virtual bool open();
 
 // Функции для работы с моделью данных
     virtual bool add();
@@ -50,6 +49,8 @@ public:
 // Функции для работы справочника в составе документа
 // Используются в момент добавления новых записей в документ
 // блокируют открытие связанных справочников и др.подобные функции
+    void setAutoLoaded(bool al) { lIsAutoLoaded = al; }
+    bool isAutoLoaded() { return lIsAutoLoaded; }
     bool canShow() { return lCanShow; }
     void setCanShow(bool can) { lCanShow = can; }
 
@@ -80,6 +81,11 @@ public:
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
 
+    Q_INVOKABLE virtual void        lock(bool = true);
+    virtual bool isLocked() { return locked; }
+    Q_INVOKABLE FormGridSearch* getForm() { return (FormGridSearch*)form; }
+
+
 protected:
     Dictionaries*   dictionaries;
     QString         prototypeName;          // Имя справочника - прототипа
@@ -91,9 +97,12 @@ protected:
     bool            lIsConst;
     bool            lAutoSelect;
     bool            lIsSaldo;
+    bool            lIsAutoLoaded;
     QStringList     fieldList;
     virtual void    prepareSelectCurrentRowCommand();
     virtual bool    setTableModel(int = 0);
+    bool            locked;
+
 
 private:
     bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QDebug>
 #include "dictionary.h"
+#include "dictionaries.h"
 #include "../kernel/app.h"
 #include "../kernel/document.h"
 #include "../gui/mainwindow.h"
@@ -41,9 +42,21 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     isDepend = false;
     ftsEnabled = false;
     lIsSaldo = false;
+    lIsAutoLoaded = false;
     lsetIdEnabled = true;
     parentDict = 0;
-    dictionaries = app->getDictionaries();
+    locked = false;
+
+    if (parent != 0)
+    {
+        if (((Dictionaries*)parent)->getDocument() != 0)
+            dictionaries = ((Dictionaries*)parent)->getDocument()->getDocDictionaries();
+        else
+            dictionaries = (Dictionaries*)parent;
+    }
+    else
+        dictionaries = app->getDictionaries();
+
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
     {
@@ -147,15 +160,19 @@ bool Dictionary::add()
             if (newRow == 0)
             {
                 query();
-                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             }
             else
             {
+                int column = grdTable->currentIndex().column();
                 tableModel->insertRow(newRow);
-                form->getGridTable()->reset();
-                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                grdTable->reset();
+                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 updateCurrentRow(strNum);
+                grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             }
+            form->setButtons();
+            grdTable->setFocus();
             return true;
         }
     }
@@ -184,10 +201,6 @@ bool Dictionary::remove()
 void Dictionary::setValue(QString name, QVariant value, int row)
 {
     Essence::setValue(name, value, row);
-/*
-    if (dictionaries->getDocument() == 0)
-        calculate(tableModel->index(row, tableModel->fieldIndex(name)));
-*/
 }
 
 
@@ -199,7 +212,7 @@ bool Dictionary::calculate(const QModelIndex& index) {
         {   // Если в вычислениях не было ошибки
 
             // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-            int row = form->getCurrentIndex().row();
+            int row = grdTable->currentIndex().row();
 
             for (int i = 0; i < tableModel->record().count(); i++)
             {
@@ -231,9 +244,7 @@ bool Dictionary::calculate(const QModelIndex& index) {
 
 qulonglong Dictionary::getId(int row)
 {
-    if (tableModel->rowCount() > row)
-        return Essence::getId(row);
-    if (isSet())
+    if (isSet() && !isSaldo())
     {
         // Если это набор, то продолжаем
         QString filter;
@@ -267,7 +278,7 @@ qulonglong Dictionary::getId(int row)
                     }
                     else
                     {
-                        app->showError(QString(QObject::trUtf8("Не опредено значение справочника \"%1\"")).arg(name));
+                        app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
                         return 0;
                     }
                 }
@@ -280,25 +291,29 @@ qulonglong Dictionary::getId(int row)
             query(filter);
             if (tableModel->rowCount() == 0)
             {
-                QString command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(db->getObjectNameCom(tableName)).arg(variables).arg(values);
-                db->exec(command);
+
+                QString command;
+                command = QString("SELECT setval('%1', (SELECT MAX(%2) FROM %3), true);").arg(tableName + "_" + idFieldName + "_seq").arg(idFieldName).arg(db->getObjectNameCom(tableName));
+                db->appendCommand(command);
+                command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(db->getObjectNameCom(tableName)).arg(variables).arg(values);
+                db->appendCommand(command);
+                db->execCommands();
                 query(filter);
             }
             return Essence::getId(0);
         }
     }
-    return 0;
+    return Essence::getId(row);
 }
 
 
 void Dictionary::setId(qulonglong id)
 {
-    if (lsetIdEnabled)
+    if (lsetIdEnabled && getValue(idFieldName) != id)
     {
         Essence::setId(id);
         if (isSet())            // Если это набор, то переустановим связанные справочники
         {
-            QString idFieldName = db->getObjectName("код");
             foreach (QString dictName, getChildDicts())
             {
                 Dictionary* dict = dictionaries->getDictionary(dictName);
@@ -335,7 +350,7 @@ void Dictionary::setForm(QString formName)
 }
 
 
-bool Dictionary::open(int)
+bool Dictionary::open()
 {
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
@@ -356,8 +371,8 @@ bool Dictionary::open(int)
             }
         }
 
-        initForm();
-        evaluateEngine();
+        if (dictionaries != 0 && dictionaries->getDocument() != 0 && scriptEngine != 0)          // Если этот справочник является частью документа
+            scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
 
         initFormEvent(form);
 
@@ -368,16 +383,24 @@ bool Dictionary::open(int)
         if (isFieldExists(nameFieldName))
             setPhotoNameField(nameFieldName);
 
+        FieldType fld;
+        int keyColumn   = 0;
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            fld = columnsProperties.at(i);
+
+            // Для основной таблицы сохраним информацию для обновления
+            if (fld.table == columnsProperties.at(0).table)
+            {
+                if (fld.name == idFieldName)
+                    keyColumn = i;
+                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, i, keyColumn);
+            }
+        }
+
         return true;
     }
     return false;
-}
-
-
-void Dictionary::view()
-{
-    getForm()->showBigPhoto();
-    Essence::view();
 }
 
 
@@ -425,35 +448,6 @@ bool Dictionary::setTableModel(int)
     {
         tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
         db->getColumnsRestrictions(tableName, &columnsProperties);
-
-        QStringList tables;
-        tables.append(columnsProperties.at(0).table);
-
-        FieldType fld;
-        int keyColumn   = 0;
-        for (int i = 0; i < columnsProperties.count(); i++)
-        {
-            fld = columnsProperties.at(i);
-
-            // Для основной таблицы сохраним информацию для обновления
-            if (fld.table == columnsProperties.at(0).table)
-            {
-                if (fld.name == idFieldName)
-                    keyColumn = i;
-                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, i, keyColumn);
-            }
-
-            if (!tables.contains(fld.table) && dictionaries != 0 && dictionaries->getDocument() == 0)
-            {
-                Dictionary* dict = dictionaries->getDictionary(fld.table);
-                if (dict != 0)
-                {                                       // Если удалось открыть справочник
-                    if (!lIsSet)
-                        dict->setDependent(true);       // Справочник может считаться зависимым, если основной не является набором справочников
-                }
-                tables.append(fld.table);
-            }
-        }
         return true;
     }
     return false;
@@ -462,23 +456,17 @@ bool Dictionary::setTableModel(int)
 
 void Dictionary::query(QString defaultFilter)
 {
-    QModelIndex index = form->getCurrentIndex();
-    QString oldFilter = tableModel->filter();
+    QModelIndex index;
+
+    if (grdTable != 0)
+        index = grdTable->currentIndex();
 
     QString resFilter = defaultFilter;
-    if (form != 0)
+    if (resFilter.size() == 0)
     {
-        QString filter = ((FormGridSearch*)form)->getFilter();
-        if (filter.size() > 0)
+        if (form != 0)
         {
-            if (resFilter.size() > 0)
-                resFilter.append(" AND " + filter);
-            else
-                resFilter = filter;
-        }
-        if (scriptEngine != 0)
-        {
-            filter = scriptEngine->getFilter();
+            QString filter = ((FormGridSearch*)form)->getFilter();
             if (filter.size() > 0)
             {
                 if (resFilter.size() > 0)
@@ -486,21 +474,27 @@ void Dictionary::query(QString defaultFilter)
                 else
                     resFilter = filter;
             }
+            if (scriptEngine != 0)
+            {
+                filter = scriptEngine->getFilter();
+                if (filter.size() > 0)
+                {
+                    if (resFilter.size() > 0)
+                        resFilter.append(" AND " + filter);
+                    else
+                        resFilter = filter;
+                }
+            }
         }
     }
     Essence::query(resFilter);
 
-    if (tableModel->rowCount() > 0)
+    if (tableModel->rowCount() > 0 && grdTable != 0)
     {
-        if (resFilter == oldFilter)                         // Параметры запроса совпадают
-        {
-            if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
-                form->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
-            else
-                form->restoreCurrentIndex(index);               // Установим указатель на тот же адрес
-        }
+        if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
+            grdTable->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
         else
-            form->selectRow(0);                         // параметры запроса изменились, перейдем на первую запись
+            grdTable->restoreCurrentIndex(index);               // Установим указатель на тот же адрес
     }
 
     if (lAutoSelect && tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
@@ -571,3 +565,23 @@ void Dictionary::setMustShow(bool must)
     photoEnabled = must;
 }
 
+
+void Dictionary::lock(bool toLock)
+// Заблокировать все связанные справочники
+{
+    if (toLock)
+    {
+        if (isSet())
+        {
+            foreach (QString dictName, getChildDicts())
+            {
+                Dictionary* dict = dictionaries->getDictionary(dictName);
+                dict->setId(getValue(idFieldName + "_" + dictName).toLongLong());
+                dict->lock();
+            }
+        }
+        locked = true;
+    }
+    else
+        locked = false;
+}

@@ -32,12 +32,14 @@ MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, FormGrid* form, in
     precision = prec;
     delegateType = Numeric;
     setColumnMask();
-//    setAlignment(Qt::AlignRight);
+    editorWidget = 0;
 }
 
 
 MyNumericItemDelegate::~MyNumericItemDelegate()
 {
+    if (editorWidget != 0)
+        delete editorWidget;
 }
 
 
@@ -75,17 +77,17 @@ void MyNumericItemDelegate::setColumnMask(QString mask/* = ""*/)
 
 QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex &) const
 {
-    QLineEdit* editor = new QLineEdit(parent);
-    editor->setAlignment(Qt::AlignRight);
+    editorWidget = new QLineEdit(parent);
+    editorWidget->setAlignment(Qt::AlignRight);
     if (!readOnly)
     {
         if (parentForm != 0)
             parentForm->getParent()->saveOldValues();
-        editor->setReadOnly(false);
+        editorWidget->setReadOnly(false);
     }
     else
-        editor->setReadOnly(true);
-    return editor;
+        editorWidget->setReadOnly(true);
+    return editorWidget;
 }
 
 

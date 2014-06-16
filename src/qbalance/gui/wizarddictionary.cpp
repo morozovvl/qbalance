@@ -405,8 +405,9 @@ bool WizardDictionary::setData()
                 }
                 if (fields.value(i).number > 0)
                 {
+                    int tableId = tableName->text() == fields.value(i).table ?  mainTableId : db->getDictionaryId(fields.value(i).table);
                     if (!db->appendColumnHeader(mainTableId,
-                                                tableName->text() == fields.value(i).table ?  mainTableId : db->getDictionaryId(fields.value(i).table),
+                                                tableId,
                                                 fields.value(i).column,
                                                 sHeader,
                                                 fields.value(i).number,
@@ -439,7 +440,7 @@ bool WizardDictionary::setData()
         }
     }
     // Сохраним скрипты
-    db->setFile(table + ".qs", ScriptFileType, QByteArray().append(textEditor->toPlainText()), 0);
+    db->setFile(table + ".qs", ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
 
     // Перезагрузим список столбцов

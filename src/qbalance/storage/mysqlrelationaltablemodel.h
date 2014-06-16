@@ -65,7 +65,6 @@ public:
     void setOrderClause(QString);
     Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
     Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
-    Q_INVOKABLE int rowCount() { return QSqlRelationalTableModel::rowCount(); }
 
 // Функции для сохранения данных
     void setReadOnly(bool ro) { readOnly = ro; }

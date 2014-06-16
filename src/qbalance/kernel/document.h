@@ -49,13 +49,12 @@ public:
     Q_INVOKABLE int getOperNumber() { return operNumber; }
     Documents* getParent() { return parent; }
     QMap<QString, Dictionary*>* getDictionaries() { return dictionaries->getDictionaries(); }
-    Q_INVOKABLE Dictionary* getDictionary(QString dictName, int deep = 0, bool add = true) { return dictionaries->getDictionary(dictName, deep, add); }
+    Dictionaries* getDocDictionaries() { return dictionaries; }
+    Q_INVOKABLE Dictionary* getDictionary(QString dictName) { return dictionaries->getDictionary(dictName); }
     Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void show();
-    virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
-    virtual void cmdCancel();                   // и "Cancel"
     virtual QString transformSelectStatement(QString string);
     void setDocId(int doc) { docId = doc; }
     virtual bool calculate(const QModelIndex &);
@@ -115,7 +114,6 @@ private:
     bool showNextDict();
     void showItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
-    bool    compareSumValues();     // Сравнивает новые значения полей СУММА проводок со старыми. Если значения различаются, то дается добро на сохранение данных проводки на сервере
     void    openLocalDictionaries();
 };
 

@@ -17,7 +17,7 @@ QT += sql \
 #      widgets \
 #      designer
 
-
+CONFIG += rtti
 CONFIG += uitools
 CONFIG += qextserialport
 #QT += uitools

@@ -46,7 +46,7 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
 : Form(parent)
 {
     grdTable = 0;
-    tableModel = 0;
+    grdTables.clear();
     tableLayout = 0;
     imageLayout = 0;
     picture = 0;
@@ -57,8 +57,8 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
     buttonPrint = 0;
     buttonLoad = 0;
     buttonSave = 0;
-    columnsSettingsReaded = false;
-    exactSearch = false;
+    leftPercent = true;
+    rightPercent = true;
 }
 
 
@@ -69,7 +69,7 @@ FormGrid::~FormGrid()
 
 void FormGrid::close()
 {
-    writeSettings();
+    grdTable->close();
     Form::close();
 }
 
@@ -77,24 +77,11 @@ void FormGrid::close()
 void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 {
     Form::createForm(fileName, pwgt);
-    if (parent != 0)
-    {
-       tableModel = parent->getTableModel();
-    }
-
-     if (defaultForm)
-     {   // Если форма создана автоматически
+    if (defaultForm)
+    {   // Если форма создана автоматически
         grdTable = new TableView(formWidget, this);
-        grdTable->setApp(app);
-        grdTable->setTagName(getParent()->getTagName());
+        grdTable->setEssence(parent);
         grdTable->setObjectName("tableView");
-        grdTable->setTableModel(tableModel);
-#if QT_VERSION >= 0x050000
-        grdTable->horizontalHeader()->setSectionsClickable(false);
-#else
-        grdTable->horizontalHeader()->setClickable(false);
-#endif
-        grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
         tableLayout->addWidget(grdTable);
@@ -102,28 +89,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             vbxLayout->insertLayout(0, tableLayout);
         }
-    }
-    else
-    {   // Была загружена пользовательская форма
-        tableLayout = (QVBoxLayout*)formWidget->findChild("tableLayout");
-        grdTable = (TableView*)formWidget->findChild("tableView");
-        if (grdTable != 0)
-        {
-            grdTable->setApp(app);
-            grdTable->setTagName(getParent()->getTagName());
-            grdTable->setParent(formWidget);
-            grdTable->setFormGrid(this);
-            grdTable->setTableModel(tableModel);
-#if QT_VERSION >= 0x050000
-            grdTable->horizontalHeader()->setSectionsClickable(false);
-#else
-            grdTable->horizontalHeader()->setClickable(false);
-#endif
-            grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-        }
-    }
-    if (defaultForm)
-    {
         imageLayout = new QHBoxLayout();
         imageLayout->setObjectName("imageLayout");
         picture = new Picture(formWidget);
@@ -136,9 +101,28 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
     }
     else
-    {
+    {   // Была загружена пользовательская форма
+        tableLayout = (QVBoxLayout*)formWidget->findChild("tableLayout");
+        grdTable = (TableView*)formWidget->findChild("tableView");
+        if (grdTable != 0)
+        {
+            grdTable->setParent(formWidget);
+            grdTable->setFormGrid(this);
+            grdTable->setEssence(parent);
+        }
         picture = (Picture*)formWidget->findChild("picture");
     }
+
+    if (grdTable != 0)
+    {
+#if QT_VERSION >= 0x050000
+            grdTable->horizontalHeader()->setSectionsClickable(false);
+#else
+            grdTable->horizontalHeader()->setClickable(false);
+#endif
+            grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    }
+
     if (picture != 0)
     {
         picture->setForm(this);
@@ -146,7 +130,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         picture->hide();
         if (grdTable != 0)
         {
-            connect(parent, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
+            grdTable->setPicture(picture);
         }
     }
 
@@ -262,8 +246,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     setButtonDelete(true);
     // Подключим кнопку "Добавить"
     setButtonAdd(true);
-    if (parent != 0 && grdTable != 0)
-        grdTable->setReadOnly(parent->isReadOnly());
+
+    grdTables.append(grdTable);
 }
 
 
@@ -366,20 +350,21 @@ int FormGrid::exec()
         grdTable->setColumnsHeaders();
     }
     setButtons();
+    showPhoto();
     return Form::exec();
 }
 
 
 void FormGrid::show()
 {
-    QModelIndex index = getCurrentIndex();
-    restoreCurrentIndex(index);
     if (grdTable != 0)
     {
+        QModelIndex index = grdTable->currentIndex();
+        grdTable->restoreCurrentIndex(index);
         grdTable->setColumnsHeaders();
-        showPhoto();
     }
     setButtons();
+    showPhoto();
     Form::show();
 }
 
@@ -397,26 +382,8 @@ void FormGrid::cmdAdd()
 {
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
-        QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
-        if (parent != 0 && parent->add())
-        {
-            int rowCount = parent->getTableModel()->rowCount();
-            if (rowCount == 1)
-            {
-                grdTable->setCurrentIndex(grdTable->currentIndex().sibling(0, 0));
-                grdTable->selectNextColumn();
-            }
-            else
-            {
-                index = index.sibling(grdTable->currentIndex().row(), index.column());
-                setCurrentIndex(index);
-            }
-/*
-            setButtons();
-            showPhoto();
-            setGridFocus();
-*/
-        }
+        parent->add();
+        showPhoto();
     }
 }
 
@@ -425,20 +392,7 @@ void FormGrid::cmdDelete()
 {
     if (buttonDelete != 0 && buttonDelete->isVisible() && buttonDelete->isEnabled())
     {
-        QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор перед удалением записи
-        if (parent != 0 && parent->remove())
-        {
-            int rowCount = parent->getTableModel()->rowCount();
-            if (rowCount > 0)
-            {   // Если после удаления строки в таблице остались еще записи
-                if (index.row() < rowCount)
-                    setCurrentIndex(index);
-                else
-                    setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
-            }
-        }
-        setButtons();
-        setGridFocus();
+        grdTable->cmdDelete();
     }
 }
 
@@ -447,20 +401,14 @@ void FormGrid::cmdView()
 {
     if (buttonView != 0 && buttonView->isVisible() && buttonView->isEnabled())
     {
-        picture->hide();
-        if (parent != 0)
-            parent->view();
+        grdTable->cmdView();
     }
 }
 
 
 void FormGrid::cmdRequery()
 {
-    app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + parent->getTagName() + "...");
-    parent->query();
-    app->showMessageOnStatusBar("");
-    setButtons();
-    setGridFocus();
+    grdTable->cmdRequery();
 }
 
 
@@ -527,7 +475,7 @@ void FormGrid::cmdPrint()
                     parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
             }
         }
-        setGridFocus();
+        grdTable->setFocus();
     }
 }
 
@@ -547,6 +495,12 @@ void FormGrid::cmdSave()
     {
         parent->getScriptEngine()->eventExport(this);
     }
+}
+
+
+void FormGrid::showPhoto()
+{
+    grdTable->showPhoto();
 }
 
 
@@ -580,271 +534,6 @@ void FormGrid::setButtons()
 }
 
 
-void FormGrid::showPhoto()
-{
-    if (picture != 0 && parent != 0)
-    {
-        if (parent->getTableModel()->rowCount() > 0)
-        {
-            QString photoFileName = parent->getPhotoFile(); // Получим имя фотографии
-            if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
-            {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нуеПкшвно скачать в локальный файл)
-                if (QDir().exists(photoFileName))
-                    picture->setVisibility(true);              // то включим просмотр фотографий
-                else
-                    photoFileName = "";
-            }
-            if (parent->getPhotoNameField().size() > 0)
-                picture->setPhotoWindowTitle(parent->getValue(parent->getPhotoNameField()).toString().trimmed());
-            picture->show(photoFileName);
-        }
-        else
-            picture->setVisibility(false);
-    }
-}
-
-
-void FormGrid::calculate()
-{
-    grdTable->setUpdatesEnabled(false);
-    QModelIndex index = getCurrentIndex();
-    if (!parent->calculate(index))
-        grdTable->reset();
-    else
-        grdTable->repaint();
-    grdTable->selectNextColumn();       // Передвинуть курсор на следующую колонку
-    grdTable->setUpdatesEnabled(true);
-}
-
-
-QVariant FormGrid::getValue(QString fieldName)
-{
-    if (lSelected && parent != 0)
-        return parent->getValue(fieldName);
-    return QVariant();
-}
-
-
-QModelIndex FormGrid::getCurrentIndex()
-{
-    QModelIndex index;
-    if (grdTable != 0)
-    {
-        index = grdTable->currentIndex();
-    }
-    return index;
-}
-
-
-void FormGrid::setCurrentIndex(QModelIndex index)
-{
-    if (grdTable != 0)
-        grdTable->setCurrentIndex(index);
-}
-
-
-void FormGrid::setGridFocus()
-{
-    if (grdTable != 0)
-    {
-        grdTable->setFocus();
-        QModelIndex index = grdTable->currentIndex();
-        if (index.row() >= 0 && index.column() >= 0)
-            grdTable->setCurrentIndex(index);
-    }
-}
-
-
-void FormGrid::selectRow(int row)
-{
-    grdTable->selectRow(row);
-}
-
-
-void FormGrid::keyPressEvent(QKeyEvent *event)
-{
-    Form::keyPressEvent(event);
-    if (event->modifiers() == Qt::ControlModifier)
-    {
-        switch (event->key())
-        {
-            case Qt::Key_Insert:
-                {
-                    cmdAdd();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Delete:
-                {
-                    cmdDelete();
-                    event->accept();
-                }
-                break;
-        }
-    }
-    else
-    {
-        switch (event->key())
-        {
-            case Qt::Key_Return:
-                {
-                    grdTable->selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Enter:
-                {
-                    grdTable->selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Right:
-                {
-                    grdTable->selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Tab:
-                {
-                    grdTable->selectNextColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_Left:
-                {
-                    grdTable->selectPreviousColumn();
-                    event->accept();
-                }
-                break;
-            case Qt::Key_F2:
-                {
-                    cmdView();
-                    event->accept();
-                }
-                break;
-        }
-    }
-}
-
-
-void FormGrid::readColumnsSettings()
-// Считывает сохраненную информацию о ширине столбцов при открытии формы с таблицей
-{
-    bool readedFromEnv = true;  // Предположим, что удастся прочитать конфигурацию из окружения
-    Form::readSettings();
-    if (grdTable != 0)
-    {
-        QSettings settings;
-        if (settings.status() == QSettings::NoError)
-        {
-            settings.beginGroup(configName);
-            int columnCount = settings.beginReadArray("grid");
-            if (columnCount > 0)
-            {
-                for (int i = 0; i < columnCount; i++)
-                {
-                    settings.setArrayIndex(i);
-                    int width = settings.value("width", 100).toInt();
-                    if (width == 0)
-                        width = 100;
-                    grdTable->setColumnWidth(i, width);
-                }
-            }
-            else
-                readedFromEnv = false;
-            settings.endArray();
-            settings.endGroup();
-        }
-        if (!readedFromEnv)
-        {
-            // Если информация о ширине столбца отстутствует в окружении программы, попытаемся прочитать ее из базы
-            QSqlQuery config;
-            QMap<QString, int> values;
-
-            app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + configName + "...");
-            config = db->getConfig();
-            config.first();
-            while (config.isValid())
-            {
-                if (config.record().value("group").toString() == configName)
-                {
-                    values.insert(config.value(0).toString(), config.value(1).toInt());
-                }
-                config.next();
-            }
-            int i = 0;
-            while (true)
-            {
-                QString name = QString("grid/%1/width").arg(i);
-                if (values.contains(name))
-                {
-                    int width = values.value(name, 100);
-                    grdTable->setColumnWidth(i, width);
-                }
-                else
-                    break;
-                i++;
-            }
-            app->showMessageOnStatusBar("");
-        }
-        columnsSettingsReaded = true;
-    }
-}
-
-
-void FormGrid::writeSettings()
-{
-    if (columnsSettingsReaded)
-    {
-        if (grdTable != 0)
-        {
-            QSettings settings;
-            int columnCount = tableModel->columnCount();
-            if (columnCount > 0)
-            {
-                settings.beginGroup(configName);
-                settings.beginWriteArray("grid", columnCount);
-                for (int i = 0; i < columnCount; i++)
-                {
-                    int width = grdTable->columnWidth(i);
-                    settings.setArrayIndex(i);
-                    settings.setValue("width", width);
-
-                }
-                settings.endArray();
-                settings.endGroup();
-
-                // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
-                if (app->getSaveFormConfigToDb())
-                {
-                    app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + configName + "...");
-                    for (int i = 0; i < columnCount; i++)
-                    {
-                        int width = grdTable->columnWidth(i);
-                        db->setConfig(configName, QString("grid/%1/width").arg(i), QString("%1").arg(width));
-                    }
-                    app->showMessageOnStatusBar("");
-                }
-            }
-        }
-    }
-}
-
-
-void FormGrid::restoreCurrentIndex(QModelIndex index)
-{
-    if (index.row() == -1 && index.column() == -1)
-    {
-        index = getParent()->getTableModel()->index(0, 0);
-        setCurrentIndex(index);
-        if (grdTable != 0)
-            grdTable->selectNextColumn();
-    }
-    else
-        setCurrentIndex(index);
-}
-
-
 void FormGrid::setEnabled(bool enabled)
 {
     buttonAdd->setEnabled(enabled);
@@ -852,5 +541,45 @@ void FormGrid::setEnabled(bool enabled)
     if (grdTable != 0)
         grdTable->setReadOnly(!enabled);
 }
+
+
+void FormGrid::keyPressEvent(QKeyEvent *event)
+{
+    Form::keyPressEvent(event);
+    if (!event->isAccepted())
+    {
+        if (event->modifiers() == Qt::ControlModifier)
+        {
+            switch (event->key())
+            {
+                case Qt::Key_Insert:
+                    {
+                        cmdAdd();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_Delete:
+                    {
+                        cmdDelete();
+                        event->setAccepted(true);
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            switch (event->key())
+            {
+                case Qt::Key_F2:
+                    {
+                        cmdView();
+                        event->setAccepted(true);
+                    }
+                    break;
+            }
+        }
+    }
+}
+
 
 

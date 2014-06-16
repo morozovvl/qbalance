@@ -40,6 +40,8 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
     lInsertable = operProperties.value("insertable").toBool();
     lDeleteable = operProperties.value("deleteable").toBool();
     lUpdateable = operProperties.value("updateable").toBool();
+    scriptEngine = 0;
+    scriptEngineEnabled = false;
 }
 
 
@@ -70,13 +72,17 @@ bool Documents::add()
         }
         else
         {
+            int column = grdTable->currentIndex().column();
             tableModel->insertRow(newRow);
-            form->getGridTable()->reset();
-            form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            grdTable->reset();
+            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             updateCurrentRow(strNum);
+            grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
         }
         setCurrentDocument(strNum);
         Essence::saveOldValues();
+        form->setButtons();
+        grdTable->setFocus();
         return true;
     }
     return false;
@@ -129,8 +135,6 @@ bool Documents::open()
     if (operNumber > 0 && Essence::open())
     {     // Откроем этот справочник
 
-        initForm();
-
         tableModel->setTestSelect(true);
         query();
         tableModel->setTestSelect(false);
@@ -151,8 +155,8 @@ bool Documents::open()
 void Documents::close()
 {
     currentDocument->close();
-    Essence::close();
     delete currentDocument;
+    Essence::close();
 }
 
 

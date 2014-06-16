@@ -12,7 +12,7 @@ SUBDIRS = src/qextserialport \
 CONFIG += release
 #SUBDIRS += build
 
-windows {
-    CONFIG += rtti
-}
+#windows {
+#    CONFIG += rtti
+#}
 

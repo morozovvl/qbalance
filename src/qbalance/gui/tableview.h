@@ -20,9 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef TABLEVIEW_H
 #define TABLEVIEW_H
 
-#include <QTableView>
-#include <QWidget>
-#include <QAbstractItemDelegate>
+#include <QtGui/QTableView>
+#include <QtGui/QWidget>
+#include <QtGui/QAbstractItemDelegate>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
@@ -32,23 +32,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 
+
 class TApplication;
 class DBFactory;
 class FormGrid;
+class Essence;
+class Picture;
 class MyItemDelegate;
 struct FieldType;
+
 
 class QDESIGNER_WIDGET_EXPORT TableView : public QTableView {
     Q_OBJECT
 
 public:
-    TableView(QWidget* = 0, FormGrid* = 0);
+    TableView(QWidget*, FormGrid* = 0);
     ~TableView();
+    void                close();
 
     void                setFormGrid(FormGrid* par) { parent = par; }
-    void                setApp(TApplication*);
-    void                setTableModel(MySqlRelationalTableModel*);
-    void                setTagName(QString tag) { tagName = tag; }
+    void                setEssence(Essence*);
+    void                setPicture(Picture* pic) { picture = pic; }
     bool                columnIsReadOnly();
     void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
@@ -58,9 +62,15 @@ public:
     void                hideGridSection(QString);
     void                showGridSection(QString);
     void                showAllGridSections();
+    void                restoreCurrentIndex(QModelIndex);
 
 public slots:
-    void                selectRow(int = 0);
+    void                cmdDelete();
+    void                cmdView();
+    void                cmdRequery();
+
+    void                calculate();
+    void                showPhoto();
 
 protected:
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
@@ -71,15 +81,20 @@ private:
     bool                        columnsHeadersSeted;
     int                         maxColumn;
     QString                     name;
-    QString                     tagName;
     FormGrid*                   parent;
     QWidget*                    parentWidget;
     TApplication*               app;
     DBFactory*                  db;
+    Essence*                    essence;
+    Picture*                    picture;
     MySqlRelationalTableModel*  tableModel;
-    QMap<int, QString>          columns;            // Список видимых столбцов и их порядок
+    QHash<int, QString>         columns;            // Список видимых столбцов и их порядок
+    QList<FieldType>*           fields;
+    bool                        columnsSettingsReaded;
 
     MyItemDelegate*             getColumnDelegate(FieldType);
+    void                        readSettings();
+    void                        writeSettings();
 };
 
 #endif // TABLEVIEW_H

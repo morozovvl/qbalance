@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
 #include "../gui/tableview.h"
+#include "../gui/searchparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 
@@ -67,6 +68,8 @@ Document::Document(int oper, Documents* par): Essence()
             freePrv = topersList->at(i).number;
             break;
         }
+
+    openLocalDictionaries();
 
     lInsertable = true;
     lDeleteable = true;
@@ -106,7 +109,7 @@ bool Document::calculate(const QModelIndex& index)
 
 void Document::saveChanges()
 {
-    int row = form->getCurrentIndex().row();
+    int row = grdTable->currentIndex().row();
 
     // Начнем транзакцию
     // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
@@ -134,7 +137,7 @@ void Document::saveChanges()
         }
     }
 
-    row = parent->getForm()->getCurrentIndex().row();
+    row = parent->getGridTable()->currentIndex().row();
     for (int i = 0; i < parent->getTableModel()->record().count(); i++)
     {
         QString fieldName = parent->getTableModel()->record().fieldName(i);
@@ -151,11 +154,9 @@ void Document::saveChanges()
         // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
         if (dictionaries->isSaldoExist())
         {
-            if (compareSumValues())
-                updateCurrentRow();
+            updateCurrentRow();
+            parent->updateCurrentRow();
         }
-        saveOldValues();
-        parent->saveOldValues();
     }
     else
     {   // Во время сохранения результатов произошла ошибка
@@ -209,7 +210,6 @@ void Document::showItog()
 
 void Document::openLocalDictionaries()
 {
-    Dictionary* dict;
     QList<DictType> dictsList;
     db->getToperDictAliases(operNumber, topersList, &dictsList);
     // Определим, какие справочники показывать при добавлении новой строки в документ, а какие не показывать
@@ -217,55 +217,49 @@ void Document::openLocalDictionaries()
     {
         if (dictsList.at(i).isSaldo)
         {
-            Saldo* sal;
-            sal = dictionaries->getSaldo(dictsList.at(i).acc);
-            if (sal != 0)
+            Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
+            saldo->getForm()->getSearchParameters()->setDictionaries(dictionaries);
+        }
+        else
+        {
+            Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
+            dict->getForm()->getSearchParameters()->setDictionaries(dictionaries);
+        }
+    }
+
+    foreach(Dictionary* dict, dictionaries->dictionariesList.values())
+    {
+        if (dict->isSaldo())
+        {
+            Saldo* sal = (Saldo*)dict;
+            sal->setAutoLoaded(true);
+            sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
+            sal->setQuan(true);
+            if (sal->isConst())
+                sal->setMustShow(false); // Если справочник документа является постоянным или это набор
+                                         // то не показывать его при добавлении новой записи в документ
+            else
             {
-                sal->setPrototypeName(dictsList.at(i).prototype);
-                sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
-                sal->setQuan(true);
-                sal->setConst(dictsList.at(i).isConst);
-                if (sal->isConst())
-                    sal->setMustShow(false); // Если справочник документа является постоянным или это набор
-                                              // то не показывать его при добавлении новой записи в документ
-                else
-                    sal->setMustShow(true);
+                sal->setMustShow(true);
+                sal->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
             }
         }
         else
         {
-            dict = dictionaries->getDictionary(dictsList.at(i).name, 1);
-            if (dict != 0)
+            dict->setAutoLoaded(true);
+            if (!dict->isConst())
             {
-                if (!dict->isConst())
-                {
-                   dict->setPrototypeName(dictsList.at(i).name);
-                   if (dict->isSet())
-                       dict->setMustShow(false); // Если справочник документа является набором
-                                                // то не показывать его при добавлении новой записи в документ
-                   else
-                       dict->setMustShow(true);
-                }
+                if (dict->isSet())
+                    dict->setMustShow(false); // Если справочник документа является набором
+                                              // то не показывать его при добавлении новой записи в документ
                 else
-                    dict->setMustShow(false);                   // Сначала сделаем невидимым при добавлении проводки сам справочник
-            }
-        }
-    }
-    // Установим "родителей" локальных справочников
-    for (int i = 0; i < dictsList.count(); i++)
-    {
-        if (!dictsList.at(i).isSaldo)
-        {
-            dict = dictionaries->getDictionary(dictsList.at(i).name);
-            if (dict->isSet())
-            {
-                foreach (QString dictName, dict->getChildDicts())
                 {
-                    Dictionary* childDict = dictionaries->getDictionary(dictName);
-                    if (childDict != 0)
-                        childDict->setParentDict(dict);
+                    dict->setMustShow(true);
+                    dict->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
                 }
             }
+            else
+                dict->setMustShow(false);                   // Сначала сделаем невидимым при добавлении проводки сам справочник
         }
     }
 }
@@ -274,7 +268,6 @@ void Document::openLocalDictionaries()
 bool Document::add()
 {
     bool result = false;
-
     prvValues.clear();
 
     if (!getIsSingleString())
@@ -290,9 +283,10 @@ bool Document::add()
         }
     }
 
-    if (showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
+    dictionaries->unlock();
+
+    if (scriptEngine->eventBeforeAddString() && showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
-        scriptEngine->eventBeforeAddString();
         if (topersList->at(0).attributes && topersList->at(0).number == 0)
         {
             QString attrName = QString("%1%2").arg(db->getObjectName("атрибуты")).arg(operNumber);
@@ -309,59 +303,40 @@ bool Document::add()
             }
         }
 
-        for (int i = 0; i < topersList->count(); i++)
+        int strNum = appendDocString();     // Открываем нужные справочники перед добавлением строки и добавляем строку в документ
+                                            // Возвращаем номер строки в документе
+        if (strNum > 0)                         // Если строка была добавлена
         {
-            QString dictName = topersList->at(i).dbDictAlias;
-            if (dictName.size() > 0 && getDictionaries()->contains(dictName))
-            {
-                prepareValue(dictName, dictionaries->getDictionary(dictName));
-                dictName = dictionaries->getDictionary(dictName)->getPrototypeName();
-                prepareValue(dictName, dictionaries->getDictionary(dictName));
-            }
-            dictName = topersList->at(i).crDictAlias;
-            if (dictName.size() > 0 && getDictionaries()->contains(dictName))
-            {
-                prepareValue(dictName, dictionaries->getDictionary(dictName));
-                dictName = dictionaries->getDictionary(dictName)->getPrototypeName();
-                prepareValue(dictName, dictionaries->getDictionary(dictName));
-            }
-         }
-
-       int strNum = appendDocString();
-
-        if (strNum > 0)
-        {
-
             int newRow = tableModel->rowCount();
-            if (newRow == 0)
+            int column = grdTable->currentIndex().column();
+            if (newRow == 0)                    // Если это первая строка в документе
             {
                 query();
-                form->selectRow(0);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                grdTable->selectRow(newRow);
+                grdTable->selectNextColumn();
+                column = grdTable->currentIndex().column();
             }
             else
             {
                 tableModel->insertRow(newRow);
-                form->getGridTable()->reset();
-                form->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-
+                grdTable->reset();
+                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 updateCurrentRow(strNum);
             }
-
-
             if (getScriptEngine() != 0)
             {
                 getScriptEngine()->eventAfterAddString();
                 saveChanges();
+                saveOldValues();
             }
-
+            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             form->setButtons();
-            form->showPhoto();
-
             result = true;
         }
     }
 
-    form->setGridFocus();
+    grdTable->setFocus();
 
     return result;
 }
@@ -562,21 +537,6 @@ void Document::restoreOldValues()
 }
 
 
-bool Document::compareSumValues()
-{
-    for (int i = 0; i < topersList->count(); i++)
-    {
-        QString field = QString("P%1__%2").arg(topersList->at(i).number)
-                                          .arg(db->getObjectName("документы.сумма"));
-        QVariant oldValue = oldValues.value(field);
-        QVariant newValue = getValue(field);
-        if (newValue != oldValue)
-            return true;
-    }
-    return false;
-}
-
-
 QVariant Document::getSumValue(QString name)
 {   // Возвращает сумму полей <name> всех строк документа
     double sum = 0;
@@ -600,7 +560,6 @@ void Document::loadDocument()
 {   // Перед открытием документа запрашивается его содержимое, а для постоянных справочников в документе устанавливаются их значения
     if (!localDictsOpened)
     {
-        openLocalDictionaries();
         localDictsOpened = true;
     }
     query();
@@ -707,7 +666,7 @@ void Document::setConstDictId(QString dName, QVariant id)
 {
     if (tableModel->rowCount() > 0)
     {
-        int currentRow = form->getGridTable()->currentIndex().row();
+        int currentRow = grdTable->currentIndex().row();
         bool submit = doSubmit;
         doSubmit = true;
         Dictionary* dict;
@@ -790,8 +749,8 @@ void Document::setConstDictId(QString dName, QVariant id)
         db->execCommands();
         doSubmit = submit;
         query();
-        form->selectRow(currentRow);
-        form->getGridTable()->setFocus();
+        grdTable->selectRow(currentRow);
+        grdTable->setFocus();
         saveOldValues();
     }
 }
@@ -819,10 +778,7 @@ bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
     {
-        initForm();
-        evaluateEngine();
         initFormEvent(form);
-
         return true;
     }
     return false;
@@ -919,7 +875,7 @@ bool Document::setTableModel(int)
         {
             if (dictsList.at(i).isConst)
             {
-                dict = dictionaries->getDictionary(dictsList.at(i).name, 0);
+                dict = dictionaries->getDictionary(dictsList.at(i).name);
                 if (dict != 0)
                 {
                     dict->setConst(true);
@@ -967,27 +923,45 @@ bool Document::showNextDict()
 {  // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документ
     bool anyShown = true;
     Dictionary* dict;
+
     foreach (QString dictName, getDictionaries()->keys())
     {
         dict = getDictionaries()->value(dictName);
-        if (dict->isMustShow())
+        if (dict->isMustShow() && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
             dict->exec();
             if (dict->isFormSelected())
             {               // Если в справочнике была нажата кнопка "Ок"
+                dict->lock();
                 anyShown = true;
                 if (dict->getTableModel()->rowCount() == 0)
                 {       // Если в выбранном справочнике нет записей
                     break;
                 }
-                prepareValue(dictName, dict);
-                prepareValue(dict->getPrototypeName(), dict);
             }
             else
             {
                 anyShown = false;
                 break;      // Пользователь отказался от дальнейшей работы со справочниками
             }
+        }
+    }
+
+    if (anyShown)
+    {
+        // Запомним значения сначала зависимых справочников
+        foreach (QString dictName, getDictionaries()->keys())
+        {
+            dict = getDictionaries()->value(dictName);
+            if (!dict->isSet())
+                prepareValue(dictName, dict);
+        }
+        // Затем запомним значения наборов, чтобы наборы освежили свои значения (вдруг связанный справочник поменялся)
+        foreach (QString dictName, getDictionaries()->keys())
+        {
+            dict = getDictionaries()->value(dictName);
+            if (dict->isSet() && dict->isAutoLoaded())
+                prepareValue(dictName, dict);
         }
     }
     return anyShown;
@@ -1063,6 +1037,7 @@ void Document::updateCurrentRow(int strNum)
         preparedSelectCurrentRow.bindValue(":str", str);
     }
 
+    TApplication::debug(1, QString("UpdateCurrentRow: %1").arg(strNum));
     Essence::updateCurrentRow();
 }
 
@@ -1101,19 +1076,6 @@ void Document::preparePrintValues(ReportScriptEngine* reportEngine)
     }
 
     Essence::preparePrintValues(reportEngine);
-}
-
-
-void Document::cmdOk()
-{
-    saveChanges();
-}
-
-
-void Document::cmdCancel()
-{
-    db->clearCommands();        // Отменим все изменения
-    restoreOldValues();         // Восстановим старые значения
 }
 
 

@@ -23,17 +23,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QComboBox>
 #include <QtDesigner/QDesignerExportWidget>
 
+class SearchParameters;
+
 class QDESIGNER_WIDGET_EXPORT MyComboBox : public QComboBox {
    Q_OBJECT
 public:
     MyComboBox(QWidget* parent = 0);
     ~MyComboBox();
-private:
-    void keyPressEvent(QKeyEvent*);     // Перехват нажатия клавиши Enter - для перехода с одного ComboBox на другой
+    void setSearchParameters(SearchParameters* sp) { searchParameters = sp; }
 
 signals:
     void enterPressed(QWidget*);
 
+private:
+    void keyPressEvent(QKeyEvent*);     // Перехват нажатия клавиши Enter - для перехода с одного ComboBox на другой
+
+    SearchParameters*   searchParameters;
 };
 
 #endif // MYCOMBOBOX_H

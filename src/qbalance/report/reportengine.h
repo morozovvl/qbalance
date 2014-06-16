@@ -32,7 +32,7 @@ class Essence;
 class ReportEngine : public QObject {
     Q_OBJECT
 public:
-    ReportEngine(ReportScriptEngine*);
+    ReportEngine(ReportScriptEngine* = 0);
     ~ReportEngine();
     virtual bool open() { return true; }
     virtual void close() { return; }

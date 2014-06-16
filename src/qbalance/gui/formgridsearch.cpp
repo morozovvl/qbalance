@@ -62,8 +62,8 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     if (parameters != 0)
     {
         parameters->setDictionaries(((Dictionary*)parent)->getDictionaries());
-        parameters->setApp(app);
         parameters->setParent(formWidget);
+        parameters->setApp(app);
         parameters->setFormGrid(this);
         parameters->setProgramIdFieldName(db->getObjectName("код").toLower());
         parameters->setProgramNameFieldName(db->getObjectName("имя").toLower());
@@ -101,4 +101,11 @@ void FormGridSearch::activateWidget()
     if (parameters != 0)
         parameters->setFocus();
 }
+
+
+void FormGridSearch::clearAllComboBoxes()
+{
+    parameters->clearAllComboBoxes();
+}
+
 

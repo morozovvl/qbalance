@@ -21,12 +21,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MYITEMDELEGATE_H
 
 #include <QtCore/QObject>
-#include <QItemDelegate>
-#include <QPainter>
-#include <QStyleOptionViewItem>
-#include <QStyleOptionViewItemV2>
+#include <QtGui/QItemDelegate>
+#include <QtGui/QPainter>
+#include <QtGui/QStyleOptionViewItem>
+#include <QtGui/QStyleOptionViewItemV2>
 #include <QtCore/QModelIndex>
-#include <QPalette>
+#include <QtGui/QPalette>
 #include <QtCore/QVariant>
 #include <QtDesigner/QDesignerExportWidget>
 
@@ -44,7 +44,7 @@ class QDESIGNER_WIDGET_EXPORT MyItemDelegate : public QItemDelegate {
     Q_OBJECT
 
 public:
-    MyItemDelegate(QObject*, FormGrid*);
+    MyItemDelegate(QObject*, FormGrid* = 0);
     ~MyItemDelegate();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     void setColumnMask(const QString mask = "") { columnMask = mask; }

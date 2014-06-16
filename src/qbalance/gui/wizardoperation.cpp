@@ -350,7 +350,7 @@ bool WizardOperation::setData()
     }
 
     // Сохраним скрипты
-    db->setFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()), 0);
+    db->setFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
 
     // Перезагрузим список столбцов

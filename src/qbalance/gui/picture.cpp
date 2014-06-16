@@ -53,7 +53,6 @@ void Picture::setApp(TApplication* a)
     // Установим высоту и ширину картинки как 20% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
     pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.2 / 2;
     setFixedSize(pictSize, pictSize);
-//    bigPictRect.setRect(0, 0, app->getMainWindow()->centralWidget()->width(), app->getMainWindow()->centralWidget()->height());
 }
 
 
@@ -116,7 +115,6 @@ void Picture::showBigPicture()
 
         bigPicture.exec();
         bigPictRect = bigPicture.rect();
-        form->setGridFocus();
     }
 }
 

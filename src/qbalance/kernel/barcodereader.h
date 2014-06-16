@@ -32,6 +32,7 @@ class BarCodeReader : public QObject
     Q_OBJECT
 public:
     explicit BarCodeReader(QObject *parent = 0);
+    ~BarCodeReader();
     
 signals:
     

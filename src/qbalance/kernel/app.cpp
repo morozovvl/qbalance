@@ -31,12 +31,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
+#include "../gui/tableview.h"
 #include "../engine/documentscriptengine.h"
 
 
 QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
 //QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
-bool    TApplication::DebugMode        = false;
+int    TApplication::DebugMode         = 0;
 TApplication* TApplication::Exemplar   = 0;
 
 
@@ -52,10 +53,6 @@ TApplication::TApplication(int & argc, char** argv)
     db  = new DBFactory();
     gui = new GUIFactory(db);
 
-    formLoader = new QUiLoader(this);
-    formLoader->addPluginPath(applicationDirPath() + "/plugins");
-    formLoader->setWorkingDirectory(getFormsPath());
-
     dictionaryList = 0;
     topersList = 0;
     driverFR = new DriverFR(this);
@@ -64,6 +61,9 @@ TApplication::TApplication(int & argc, char** argv)
     driverFRisValid = false;
 
     reportTemplateType = OOXMLreportTemplate;
+
+    cardReaderPrefix = ";8336322632=";
+    cardReaderCode = "";
 
     if (!Exemplar)
     {
@@ -74,7 +74,6 @@ TApplication::TApplication(int & argc, char** argv)
 
 TApplication::~TApplication()
 {
-    delete formLoader;
     delete driverFR;
     delete gui;
     delete db;
@@ -88,7 +87,7 @@ Documents* TApplication::getDocuments(int opNumber) {
         if (!doc->open())
             return 0;
         doc->query();
-        doc->getForm()->selectRow(doc->getTableModel()->rowCount() - 1);
+        doc->getGridTable()->selectRow(doc->getTableModel()->rowCount() - 1);
         documents.insert(operName, doc);
     }
     return documents[operName];
@@ -130,12 +129,6 @@ QString TApplication::getReportTemplateExt()
 
 bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
-/*
-    if (debugMode())
-    {
-        TApplication::debug("Program startup.\n");
-    }
-*/
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
     if (gui->open()) {  // Попытаемся открыть графический интерфейс
@@ -159,6 +152,13 @@ bool TApplication::open() {
                     {
                         constDict->setPhotoEnabled(false);
                         constDict->query();
+                    }
+
+                    // Загрузим счета
+                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
+                    if (accDict != 0)
+                    {
+                        accDict->setPhotoEnabled(false);
                     }
 
                     lResult = true;     // Приложение удалось открыть
@@ -205,13 +205,6 @@ void TApplication::close() {
         gui->close();
     if (db != 0)
         db->close();
-/*
-    if (debugMode())
-    {
-        TApplication::debug("Program shutdown.\n\n");
-        TApplication::DebugFile->close();
-    }
-*/
 }
 
 
@@ -269,7 +262,7 @@ QString TApplication::getPhotosPath(QString photoName) {
 
 Dialog* TApplication::createForm(QString fileName)
 {
-    Dialog* formWidget = 0;
+    QPointer<Dialog> formWidget = 0;
     QString path = getFormsPath();
     QString fName = fileName + ".ui";
     if (!Essence::getFile(path, fName, FormFileType))
@@ -283,22 +276,30 @@ Dialog* TApplication::createForm(QString fileName)
         QFile file(path + fName);
         if (file.open(QIODevice::ReadOnly))
         {
-            formWidget = (Dialog*)formLoader->load(&file);
+            QUiLoader formLoader(gui);
+            formLoader.addPluginPath(applicationDirPath() + "/plugins");
+            formLoader.setWorkingDirectory(getFormsPath());
+
+
+            formWidget = qobject_cast<Dialog*>(formLoader.load(&file));
             file.close();
-            if (QString::compare(formWidget->metaObject()->className(), "Dialog",  Qt::CaseSensitive) != 0)
+            if (formWidget != 0)
             {
-                showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
-                return 0;
+                if (QString::compare(formWidget->metaObject()->className(), "Dialog",  Qt::CaseSensitive) != 0)
+                {
+                    showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
+                    return 0;
+                }
+                formWidget->setApp(this);
+                formWidget->findCmdOk();
             }
-            formWidget->setApp(this);
-            formWidget->findCmdOk();
         }
     }
     return formWidget;
 }
 
 
-Form* TApplication::createForm1(QString fileName)
+Form* TApplication::createNewForm(QString fileName)
 {
     Form* form = new Form();
     if (form->open(getMainWindow()->centralWidget(), 0, fileName))
@@ -321,7 +322,7 @@ QTextCodec* TApplication::codec()
 }
 
 
-bool TApplication::setDebugMode(const bool& value)
+bool TApplication::setDebugMode(const int& value)
 {
     bool result = true;
     DebugMode = value;
@@ -329,9 +330,9 @@ bool TApplication::setDebugMode(const bool& value)
 }
 
 
-void TApplication::debug(const QString& value)
+void TApplication::debug(int mode, const QString& value)
 {
-    if (debugMode())
+    if (debugMode() == mode || mode == 0)
     {
         QFile file(debugFileName());
         if (file.open(QFile::WriteOnly | QFile::Append))
@@ -339,7 +340,7 @@ void TApplication::debug(const QString& value)
             QTextStream out(&file);
             if (file.size() == 0)
                 out << QDateTime::currentDateTime().toString(logTimeFormat()) << " Program startup.\n";
-            out << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value;
+            out << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value << "\n";
         }
         file.close();
     }
@@ -365,14 +366,14 @@ void TApplication::setIcons(QWidget* formWidget)
 void TApplication::showError(QString error)
 {
     gui->showError(error);
-    debug("Error: " + error + "\n");
+    debug(0, "Error: " + error + "\n");
 }
 
 
 void TApplication::showCriticalError(QString error)
 {
     gui->showCriticalError(error);
-    debug("Error: " + error + "\n");
+    debug(0, "Error: " + error + "\n");
 }
 
 
@@ -399,23 +400,41 @@ QVariant TApplication::getConst(QString valueName)
 }
 
 
-bool TApplication::runProcess(QString command, QString progName)
+QProcess* TApplication::runProcess(QString command, QString progName)
 {
     QProcess* ooProcess = new QProcess();
     ooProcess->start(command);
     if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))
     {   // Подождем 1 секунду и если процесс не запустился
         showError(QString(QObject::trUtf8("Не удалось запустить %1 ")).arg(progName.size() > 0 ? progName : QObject::trUtf8("программу")));                   // выдадим сообщение об ошибке
-        return false;
+        return 0;
     }
-    return true;
+    return ooProcess;
 }
+
+
+bool TApplication::waitProcessEnd(QProcess* proc)
+{   // Процедура ждет окончания процесса или истечения 30 секунд
+    bool result = true;
+    QTimer t;
+    t.start(30000);
+    QEventLoop loop;
+    connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
+    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), &loop, SLOT(quit()));
+    loop.exec();
+    if (proc->exitStatus() != QProcess::NormalExit)
+        result = false;
+    delete proc;
+    return result;
+}
+
+
 
 
 void TApplication::showProcesses()
 {
     ScriptEngine* scriptEngine;
-    scriptEngine = new ScriptEngine(this);
+    scriptEngine = new ScriptEngine();
     if (scriptEngine != 0)
     {
         if (scriptEngine->open("/home/vladimir/work/qbalance1/test.qs"))
@@ -450,6 +469,70 @@ void TApplication::barCodeReadyRead(QString barCodeString)
     }
     if (dialog != 0)
         dialog->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
+}
+
+
+bool TApplication::readCardReader(QKeyEvent* keyEvent)
+{
+    // Обработаем поступление с клавиатуры кодов кард-ридера
+    QString text;
+
+    if (keyEvent->key() == 59 || keyEvent->key() == 1046)   // Если это клавиша ";" в английской или русской раскладке
+        text = ";";
+    else
+        text = keyEvent->text();
+
+    cardReaderCode.append(text);
+    int leftSize = cardReaderCode.size() <= cardReaderPrefix.size() ? cardReaderCode.size() : cardReaderPrefix.size();
+    if (leftSize > 0 && (cardReaderPrefix.left(leftSize) == cardReaderCode.left(leftSize)))   // Если начальные введенные символы начинают совпадать с префиксом
+    {                                                                // считывателя магнитных карт
+        if (cardReaderPrefix == cardReaderCode.left(leftSize))       // Если префикс полностью совпал
+        {
+            if (keyEvent->key() == 44 || keyEvent->key() == 63)     // Последовательность заканчивается клавишей "?"
+            {
+                QString cardCode = cardReaderCode;
+                cardCode.replace(cardReaderPrefix, "");
+                cardCode.chop(1);
+                emit cardCodeReaded(cardCode.trimmed());
+                cardReaderCode = "";
+            }
+        }
+        return true;                // Строка, вводимая с клавиатуры (кард-ридера) начинает походить на префикс карты
+    }
+    else
+        cardReaderCode = "";
+    return false;                   // Строка не похожа на префикс карты
+}
+
+
+QString TApplication::capturePhoto(QString fileName, QString deviceName)
+{
+    QString localFile = applicationDirPath() + "/shot.jpg";
+    QProcess* proc = runProcess(QString("fswebcam %1 -r 640x480 --jpeg 85 %2").arg(deviceName.size() != 0 ? "-d " + deviceName : "").arg(localFile), "fswebcam");
+    if (proc != 0 && waitProcessEnd(proc))
+        return savePhotoToServer(localFile, fileName);
+    return "";
+}
+
+
+QString TApplication::savePhotoToServer(QString file, QString localFile)
+{
+    QString resultFileName;
+    QFile file1(file);
+    if (file1.exists() && file1.open(QIODevice::ReadOnly))
+    {
+        QByteArray array = file1.readAll();
+        qulonglong localFileCheckSum = db->calculateCRC32(&array);
+        qulonglong removeFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, PictureFileType, true) : 0;
+        resultFileName = removeFileCheckSum == 0 ? QString("photo%1").arg(localFileCheckSum) : localFile;
+        if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
+                                                        // предполагается, что локальный файл свежее того, который в базе
+        {
+            db->setFile(resultFileName, PictureFileType, array, true);      // Сохранить картинку в расширенную базу
+        }
+        file1.close();
+    }
+    return resultFileName;
 }
 
 

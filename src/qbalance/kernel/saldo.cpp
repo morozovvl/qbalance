@@ -91,6 +91,21 @@ bool Saldo::setTableModel(int)
 }
 
 
+void Saldo::lock(bool toLock)
+// Заблокировать все связанные справочники
+{
+    if (toLock)
+    {
+        Dictionary* dict = dictionaries->getDictionary(dictionaryName);
+        dict->setId(getValue(idFieldName).toLongLong());
+        dict->lock();
+        locked = true;
+    }
+    else
+        locked = false;
+}
+
+
 void Saldo::setOrderClause()
 {
     if (isSet())

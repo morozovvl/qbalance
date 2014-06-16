@@ -149,7 +149,8 @@ public:
     qulonglong getFileCheckSum(QString, FileType, bool = false);
     QStringList getFilesList(QString, FileType, bool = false);
     virtual bool isFileExist(QString, FileType, bool = false);
-    void setFile(QString, FileType, QByteArray, qulonglong, bool = false);
+    void setFile(QString, FileType, QByteArray, bool = false);
+    static qulonglong calculateCRC32(QByteArray*);
 
     // Работа с соединением
     int getPort() { return port; }

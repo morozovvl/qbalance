@@ -52,7 +52,9 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
 
 Form::~Form()
 {
-        toolTips.clear();
+    if (formWidget != 0)
+        delete formWidget;
+    toolTips.clear();
 }
 
 
@@ -74,6 +76,11 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
         if (button != 0 && button->toolTip().isEmpty())
             button->setToolTip(toolTips.value(key, ""));
     }
+
+    // Подключим обработчик кард-ридера
+    if (parent != 0)
+        connect(app, SIGNAL(cardCodeReaded(QString)), parent, SLOT(cardCodeReaded(QString)));
+
     return true;
 }
 
@@ -81,11 +88,6 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 void Form::close()
 {
     writeSettings();
-    if (subWindow != 0)
-    {
-        subWindow->setWidget(0);
-        app->getMainWindow()->removeMdiWindow(subWindow);
-    }
 }
 
 
@@ -190,39 +192,22 @@ int Form::exec()
     if (formWidget != 0)
     {
         lSelected = false;
-
         checkVisibility();
-
-        getSubWindow();
-
-        if (subWindow != 0)
+        if (!autoSelect)
         {
-            subWindow->setWidget(0);
-            formWidget->setGeometry(subWindow->x(), subWindow->y(), subWindow->width(), subWindow->height());
-
-            formWidget->setParent(app->getMainWindow(), Qt::Dialog);
-            if (!autoSelect)
+            if (subWindow != 0)
             {
-                formWidget->exec();
+                app->getMainWindow()->removeMdiWindow(subWindow);
+                subWindow = 0;
+                formWidget->setParent(app->getMainWindow());
+                formWidget->setWindowFlags(Qt::Dialog);
             }
-            else
-                cmdOk();
-            autoSelect = false;
-
-            subWindow->setGeometry(formWidget->x(), formWidget->y(), formWidget->width(), formWidget->height());
-            if (subWindow->widget() == 0)
-                subWindow->setWidget(formWidget);
+            formWidget->exec();
+            formWidget->done(0);
         }
         else
-        {
-
-        if (!autoSelect)
-                formWidget->exec();
-            else
-                cmdOk();
-            autoSelect = false;
-        }
-
+            cmdOk();
+        autoSelect = false;
         return lSelected;
     }
     return 0;
@@ -234,9 +219,7 @@ void Form::show()
     if (formWidget != 0)
     {
         lSelected = false;
-
         checkVisibility();
-
         if (getSubWindow() != 0)
         {
             if (!autoSelect)
@@ -245,7 +228,6 @@ void Form::show()
                 cmdOk();
             autoSelect = false;
         }
-
         formWidget->show();
     }
 }
@@ -308,6 +290,7 @@ void Form::hide()
             if (subWindow != 0)
             {
                 subWindow->hide();
+                subWindow = 0;
             }
         }
         formWidget->hide();
@@ -353,20 +336,21 @@ void Form::setButtonsSignals()
 
 void Form::keyPressEvent(QKeyEvent *event)
 {
+    event->setAccepted(false);
     if (event->modifiers() == Qt::ControlModifier)
     {
         if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
         {
-            event->accept();
             cmdOk();
+            event->setAccepted(true);
         }
     }
     else
     {
         if (event->key() == Qt::Key_Escape)
         {
-            event->accept();
             cmdCancel();
+            event->setAccepted(true);
         }
     }
 }

@@ -34,6 +34,7 @@ MainWindow::MainWindow(GUIFactory* par) {
     createStatusBar();
     workSpace = new QMdiArea(this);
     workSpace->setActivationOrder(QMdiArea::ActivationHistoryOrder);
+    workSpace->setAttribute(Qt::WA_DeleteOnClose);
 }
 
 MainWindow::~MainWindow() {

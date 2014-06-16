@@ -30,31 +30,40 @@ bool readParameters(int argc, char *argv[]) {
     out.setCodec(TApplication::codec());
     for (int i = 1; i < argc; i++) {
         if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
-            QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0) {
+            QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0)
+        {
             out << QObject::trUtf8("Использование программы: qbalance [Параметр]\n");
             out << QObject::trUtf8("Параметры:\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
-            out << QObject::trUtf8("  -d | --debug      - Запустить программу в режиме отладки комманд запросов (файл debug.log)\n");
+            out << QObject::trUtf8("  -d1| --debug1     - Запустить программу в режиме отладки комманд запросов (файл debug1.log)\n");
+            out << QObject::trUtf8("  -d2| --debug2     - Запустить программу в режиме отладки алгоритмов ядра (файл debug2.log)\n");
+            out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
             out << QObject::trUtf8("  -h | --help       - Вывести список параметров запуска программы\n");
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
-                QString(argv[i]).compare("--version", Qt::CaseInsensitive) == 0) {
+                QString(argv[i]).compare("--version", Qt::CaseInsensitive) == 0)
+        {
             out << QString(QObject::trUtf8("Название программы: %1\n")).arg(TApplication::exemplar()->applicationName());
             out << QString(QObject::trUtf8("Версия: %1\n")).arg(TApplication::exemplar()->applicationVersion());
             out << QString(QObject::trUtf8("Авторы: %1\n")).arg(TApplication::authors());
             lContinue = false;
         }
-        else if (QString(argv[i]).compare("-d", Qt::CaseInsensitive) == 0 ||
-                QString(argv[i]).compare("--debug", Qt::CaseInsensitive) == 0) {
-
-            if (!TApplication::setDebugMode(true))
+        else if (QString(argv[i]).compare("-d1", Qt::CaseInsensitive) == 0 ||
+                QString(argv[i]).compare("--debug1", Qt::CaseInsensitive) == 0)
             {
-                out << QObject::trUtf8("Не могу открыть файл журнала отладки.\n");
-                lContinue = false;
+                TApplication::setDebugMode(1);
             }
-
-        }
+        else if (QString(argv[i]).compare("-d2", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug2", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::setDebugMode(2);
+            }
+        else if (QString(argv[i]).compare("-d3", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug3", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::setDebugMode(3);
+            }
     }
     return lContinue;
 }
@@ -70,32 +79,12 @@ void test() {
         if (dict != 0) {
             dicts->removeDictionary(dictName);
         }
-//        qDebug() << i;
     }
 }
 
 
 int main(int argc, char *argv[])
 {
-/*
-    qDebug() << "QLibraryInfo::PrefixPath" << QLibraryInfo::location(QLibraryInfo::PrefixPath);
-    qDebug() << "QLibraryInfo::DocumentationPath" << QLibraryInfo::location(QLibraryInfo::DocumentationPath);
-    qDebug() << "QLibraryInfo::HeadersPath" << QLibraryInfo::location(QLibraryInfo::HeadersPath);
-    qDebug() << "QLibraryInfo::LibrariesPath" << QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    qDebug() << "QLibraryInfo::BinariesPath" << QLibraryInfo::location(QLibraryInfo::BinariesPath);
-    qDebug() << "QLibraryInfo::PluginsPath" << QLibraryInfo::location(QLibraryInfo::PluginsPath);
-    qDebug() << "QLibraryInfo::ImportsPath" << QLibraryInfo::location(QLibraryInfo::ImportsPath);
-    qDebug() << "QLibraryInfo::DataPath" << QLibraryInfo::location(QLibraryInfo::DataPath);
-    qDebug() << "QLibraryInfo::TranslationsPath" << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-    qDebug() << "QLibraryInfo::SettingsPath" << QLibraryInfo::location(QLibraryInfo::SettingsPath);
-    qDebug() << "QLibraryInfo::ExamplesPath" << QLibraryInfo::location(QLibraryInfo::ExamplesPath);
-    qDebug() << "QLibraryInfo::DemosPath" << QLibraryInfo::location(QLibraryInfo::DemosPath);
-    qDebug() << "QCoreApplication.applicationDirPath()" << QCoreApplication::applicationDirPath();
-    qDebug() << "QCoreApplication.applicationFilePath()" << QCoreApplication::applicationFilePath();
-    qDebug() << "QApplication::libraryPaths()" << QApplication::libraryPaths();
-*/
-
-
     // Инициируем переменные, которые нуждаются в этом
 
 #if QT_VERSION < 0x050000
@@ -110,10 +99,8 @@ int main(int argc, char *argv[])
         lStart = readParameters(argc, argv);    // прочитаем их
     if (lStart) {
         TApplication application(argc, argv);
-//        QDir dir(QApplication::applicationDirPath());
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
-//        QCoreApplication::addLibraryPath(dir.absolutePath() + "/plugins");
         if (application.open()) {       // Если приложение удалось создать
             application.show();         // Откроем приложение
             lResult = application.exec();
@@ -122,7 +109,7 @@ int main(int argc, char *argv[])
         application.quit();
     }
 
-    TApplication::debug(" Program shutdown.\n\n");
+    TApplication::debug(0, "Program shutdown.\n");
     return lResult;
 
 }

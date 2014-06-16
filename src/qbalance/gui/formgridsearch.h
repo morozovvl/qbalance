@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef FORMGRIDSEARCH_H
 #define FORMGRIDSEARCH_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 #include <QtSql/QSqlTableModel>
 #include "formgrid.h"
 
@@ -35,13 +35,15 @@ struct sParam {
 };
 
 class FormGridSearch : public FormGrid {
-
+    Q_OBJECT
 public:
     FormGridSearch(QObject* parent = 0);
     ~FormGridSearch();
     Q_INVOKABLE virtual void close();
     QString getFilter();    // Возвращает фильтр для поиска в справочнике
     virtual void activateWidget();
+    SearchParameters* getSearchParameters() { return parameters; }
+    Q_INVOKABLE void clearAllComboBoxes();
 
 
 private:

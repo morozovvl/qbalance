@@ -89,7 +89,7 @@ void Topers::view()
         removeDocument(operNumber);
     }
     delete wizard;
-    form->getGridTable()->setFocus();
+    grdTable->setFocus();
 }
 
 
