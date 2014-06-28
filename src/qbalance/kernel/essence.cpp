@@ -273,7 +273,7 @@ QString Essence::getPhotoFile()
                 if (!QFile(file).exists())
                 {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                     // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                    if (db->getFileCheckSum(localFile, PictureFileType, true)!= 0)
+                    if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
                     {
                         app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                         QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы

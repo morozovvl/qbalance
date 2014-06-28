@@ -372,6 +372,7 @@ void OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
     if (node.tagName() != "table:table-cell")                  // Установим тег ячейки
         node.setTagName("table:table-cell");
     node.setAttribute("office:value-type", type);               // Установим атрибут с типом значения ячейки
+    node.setAttribute("calcext:value-type", type);              // Установим атрибут с типом значения ячейки
     node.setAttribute("office:value", cellText);
     QDomElement textElement = node.firstChildElement("text:p");
     if (!textElement.isNull())

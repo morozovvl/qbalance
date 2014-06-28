@@ -31,7 +31,8 @@ class Document;
 class Dictionaries : public Dictionary {
     Q_OBJECT
 public:
-    QMap<QString, Dictionary*> dictionariesList;                    // Объекты справочников
+    QHash<QString, Dictionary*> dictionariesList;                    // Объекты справочников
+    QList<QString>              dictionariesNamesList;                    // Список справочников в порядке создания
     Dictionaries(QObject *parent = 0);
     Q_INVOKABLE virtual Dictionary* getDictionary(QString);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc);
@@ -39,9 +40,8 @@ public:
     Q_INVOKABLE virtual bool addSaldo(QString acc);
     Q_INVOKABLE virtual void removeDictionary(QString);
     QString getDictionaryTitle(QString);
-    bool isMember(QString dictName) { return dictionariesList.contains(dictName); }
     virtual void            query(QString filter = "");
-    QMap<QString, Dictionary*>* getDictionaries() { return &dictionariesList; }
+    QHash<QString, Dictionary*>* getDictionaries() { return &dictionariesList; }
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
     Q_INVOKABLE virtual bool remove();     // Удаление справочника

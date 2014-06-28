@@ -350,7 +350,8 @@ int FormGrid::exec()
         grdTable->setColumnsHeaders();
     }
     setButtons();
-    showPhoto();
+    if (parent->getTableModel()->rowCount() == 0)
+        showPhoto();
     return Form::exec();
 }
 
@@ -364,7 +365,8 @@ void FormGrid::show()
         grdTable->setColumnsHeaders();
     }
     setButtons();
-    showPhoto();
+    if (parent->getTableModel()->rowCount() == 0)
+        showPhoto();
     Form::show();
 }
 
@@ -383,7 +385,6 @@ void FormGrid::cmdAdd()
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
         parent->add();
-        showPhoto();
     }
 }
 
@@ -409,10 +410,12 @@ void FormGrid::cmdView()
 void FormGrid::cmdRequery()
 {
     grdTable->cmdRequery();
+    if (parent->getTableModel()->rowCount() == 0)
+        showPhoto();
 }
 
 
-void FormGrid::cmdPrint()
+void FormGrid::cmdPrint(bool autoPrint)
 {
     if (buttonPrint != 0 && buttonPrint->isVisible() && buttonPrint->isEnabled())
     {
@@ -421,7 +424,7 @@ void FormGrid::cmdPrint()
         // Получим список локальных шаблонов отчетов
         QStringList files = dir.entryList(QStringList(getParent()->getTagName() + ".*" + ext), QDir::Files, QDir::Name);
         // И шаблоны с сервера
-        QStringList fs = db->getFilesList(getParent()->getTagName(), ReportTemplateFileType);
+        QStringList fs = db->getFilesList(getParent()->getTagName(), ReportTemplateFileType, true);
         foreach (QString f, fs)
         {
             if (!files.contains(f))
@@ -453,26 +456,33 @@ void FormGrid::cmdPrint()
         QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
         if (cmdButtonLayout != 0)
         {
-            QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));
-            if (action != 0)
+            if (autoPrint && files.size() == 1)
             {
-                if (action == newReportAct)
+                parent->print(files.at(0));
+            }
+            else
+            {
+                QAction* action = menu->exec(formWidget->mapToGlobal(QPoint(cmdButtonLayout->contentsRect().x() + 100, cmdButtonLayout->contentsRect().y()-menu->height())));
+                if (action != 0)
                 {
-                    QString reportName;                         // Создадим имя отчета по умолчанию
-                    int i = 1;
-                    do
+                    if (action == newReportAct)
                     {
-                        reportName = QString("Отчет%1").arg(i++);
-                    } while (reports.contains(reportName));
-                    bool ok;
-                    reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый отчет"),
-                                                  QObject::trUtf8("Наименование отчета:"), QLineEdit::Normal,
-                                                  reportName, &ok);
-                    if (ok && !reportName.isEmpty())
-                        parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt());
+                        QString reportName;                         // Создадим имя отчета по умолчанию
+                        int i = 1;
+                        do
+                        {
+                            reportName = QString("Отчет%1").arg(i++);
+                        } while (reports.contains(reportName));
+                        bool ok;
+                        reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый отчет"),
+                                                      QObject::trUtf8("Наименование отчета:"), QLineEdit::Normal,
+                                                      reportName, &ok);
+                        if (ok && !reportName.isEmpty())
+                            parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt());
+                    }
+                    else
+                        parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
                 }
-                else
-                    parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());
             }
         }
         grdTable->setFocus();
@@ -573,6 +583,18 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
                 case Qt::Key_F2:
                     {
                         cmdView();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_F3:
+                    {
+                        cmdRequery();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_F4:
+                    {
+                        cmdPrint(true);
                         event->setAccepted(true);
                     }
                     break;

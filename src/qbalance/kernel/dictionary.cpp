@@ -340,11 +340,11 @@ void Dictionary::setForm(QString formName)
     form = new FormGridSearch();
 
     form->appendToolTip("buttonOk",         trUtf8("Закрыть справочник"));
-    form->appendToolTip("buttonAdd",        trUtf8("Создать новую запись в справочнике"));
-    form->appendToolTip("buttonDelete",     trUtf8("Удалить запись из справочника"));
+    form->appendToolTip("buttonAdd",        trUtf8("Создать новую запись в справочнике (Ctrl+Ins)"));
+    form->appendToolTip("buttonDelete",     trUtf8("Удалить запись из справочника (Ctrl+Del)"));
     if (isPrintable())
-        form->appendToolTip("buttonPrint",      trUtf8("Распечатать выбранные записи из справочника"));
-    form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера)"));
+        form->appendToolTip("buttonPrint",      trUtf8("Распечатать выбранные записи из справочника (F4)"));
+    form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
 }
@@ -487,6 +487,7 @@ void Dictionary::query(QString defaultFilter)
             }
         }
     }
+
     Essence::query(resFilter);
 
     if (tableModel->rowCount() > 0 && grdTable != 0)

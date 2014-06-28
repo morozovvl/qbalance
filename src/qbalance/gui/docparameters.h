@@ -47,7 +47,7 @@ public:
     void showText(QString);
     QStringList getKeys() { return dictList; }
     Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
-    void setDictionaries(QMap<QString, Dictionary*>* dicts) { dictionaries = dicts; }
+    void setDictionaries(QHash<QString, Dictionary*>* dicts) { dictionaries = dicts; }
     void setFormDocument(FormDocument* doc) { parentForm = doc; }
     void setApp(TApplication*);
 
@@ -56,7 +56,7 @@ public slots:
 
 private:
     TApplication*                   app;
-    QMap<QString, Dictionary*>*     dictionaries;
+    QHash<QString, Dictionary*>*    dictionaries;
     QGridLayout*                    gridLayout;
     FormDocument*                   parentForm;
     QString                         programIdFieldName;

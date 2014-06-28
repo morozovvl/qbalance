@@ -188,6 +188,30 @@ bool DBFactory::open(QString login, QString password)
 }
 
 
+void DBFactory::beginTransaction()
+{
+    QString command = "BEGIN;";
+//    TApplication::exemplar()->debug(1, command);
+    exec(command);
+}
+
+
+void DBFactory::commitTransaction()
+{
+    QString command = "COMMIT;";
+//    TApplication::exemplar()->debug(1, command);
+    exec(command);
+}
+
+
+void DBFactory::rollbackTransaction()
+{
+    QString command = "ROLLBACK;";
+//    TApplication::exemplar()->debug(1, command);
+    exec(command);
+}
+
+
 void DBFactory::initDBFactory()
 {
     initObjectNames();                  // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
@@ -298,6 +322,7 @@ void DBFactory::close()
 bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 {
     TApplication::debug(1, "Exec: " + str);
+
     clearError();
     QSqlQuery* query;
     if (db != 0 && db->isValid())
@@ -1393,7 +1418,9 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
         query.first();
         if (query.isValid())
         {
-            filesList << query.record().value(getObjectName("файлы.имя")).toString();
+            QString fileName = query.record().value(getObjectName("файлы.имя")).toString();
+            if (!filesList.contains(fileName))
+                filesList << fileName;
         }
         return filesList;
     }
@@ -1403,7 +1430,9 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
         if (files.record().value(getObjectName("файлы.имя")).toString().trimmed().startsWith(fileName) &&
             files.record().value(getObjectName("файлы.тип")).toInt() == type)
         {   // Если найден файл нужного типа и с нужным именем, то вернем его контрольную сумму
-            filesList << files.record().value(getObjectName("файлы.имя")).toString();
+            QString fileName = files.record().value(getObjectName("файлы.имя")).toString();
+            if (!filesList.contains(fileName))
+                filesList << fileName;
         }
         files.next();
     }
@@ -1509,13 +1538,11 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.dbQuan = toper.record().value("дбкол").toBool();
         toperT.dbConst = toper.record().value("дбпост").toBool();
         toperT.dbSaldoVisible = toper.record().value("дбсалвидим").toBool();
-        toperT.dbDictVisible = toper.record().value("дбвидим").toBool();
         toperT.crAcc = toper.record().value("крсчет").toString().trimmed();
         toperT.crDict = toper.record().value("крсправ").toString().trimmed();
         toperT.crQuan = toper.record().value("кркол").toBool();
         toperT.crConst = toper.record().value("крпост").toBool();
         toperT.crSaldoVisible = toper.record().value("крсалвидим").toBool();
-        toperT.crDictVisible = toper.record().value("крвидим").toBool();
         toperT.isSingleString = toper.record().value("однаоперация").toBool();
         toperT.itog = toper.record().value("итоги").toString();
         toperT.freePrv = toper.record().value("независим").toBool();

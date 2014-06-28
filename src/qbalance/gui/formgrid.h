@@ -66,7 +66,7 @@ public slots:
     virtual void cmdDelete();
     virtual void cmdView();
     virtual void cmdRequery();
-    virtual void cmdPrint();
+    virtual void cmdPrint(bool = false);
     virtual void cmdLoad();
     virtual void cmdSave();
     Q_INVOKABLE virtual int exec();

@@ -59,6 +59,7 @@ TApplication::TApplication(int & argc, char** argv)
     barCodeReader = new BarCodeReader(this);
 
     driverFRisValid = false;
+    fsWebCamIsValid = true;                     // Поначалу будем считать, что утилита fsWebCam установлена
 
     reportTemplateType = OOXMLreportTemplate;
 
@@ -400,11 +401,11 @@ QVariant TApplication::getConst(QString valueName)
 }
 
 
-QProcess* TApplication::runProcess(QString command, QString progName)
+QProcess* TApplication::runProcess(QString command, QString progName, bool show_Error)
 {
     QProcess* ooProcess = new QProcess();
     ooProcess->start(command);
-    if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))
+    if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning) && show_Error)
     {   // Подождем 1 секунду и если процесс не запустился
         showError(QString(QObject::trUtf8("Не удалось запустить %1 ")).arg(progName.size() > 0 ? progName : QObject::trUtf8("программу")));                   // выдадим сообщение об ошибке
         return 0;
@@ -414,10 +415,10 @@ QProcess* TApplication::runProcess(QString command, QString progName)
 
 
 bool TApplication::waitProcessEnd(QProcess* proc)
-{   // Процедура ждет окончания процесса или истечения 30 секунд
+{   // Процедура ждет окончания процесса или истечения 10 секунд
     bool result = true;
     QTimer t;
-    t.start(30000);
+    t.start(10000);
     QEventLoop loop;
     connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
     connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), &loop, SLOT(quit()));
@@ -507,10 +508,14 @@ bool TApplication::readCardReader(QKeyEvent* keyEvent)
 
 QString TApplication::capturePhoto(QString fileName, QString deviceName)
 {
-    QString localFile = applicationDirPath() + "/shot.jpg";
-    QProcess* proc = runProcess(QString("fswebcam %1 -r 640x480 --jpeg 85 %2").arg(deviceName.size() != 0 ? "-d " + deviceName : "").arg(localFile), "fswebcam");
-    if (proc != 0 && waitProcessEnd(proc))
-        return savePhotoToServer(localFile, fileName);
+    if (fsWebCamIsValid)
+    {
+        QString localFile = applicationDirPath() + "/shot.jpg";
+        QProcess* proc = runProcess(QString("fswebcam %1 -r 640x480 --jpeg 85 %2").arg(deviceName.size() != 0 ? "-d " + deviceName : "").arg(localFile), "fswebcam", false);
+        if (proc != 0 && waitProcessEnd(proc))
+            return savePhotoToServer(localFile, fileName);
+        fsWebCamIsValid = false;        // Утилита fsWebCam не установлена, не будем больше пытаться ее запускать
+    }
     return "";
 }
 

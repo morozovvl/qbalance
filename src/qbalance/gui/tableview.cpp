@@ -133,7 +133,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     QTableView::currentChanged(current, previous);
     if (parent != 0)
     {
-        if (current.row() != previous.row() && tableModel->rowCount() > 0)
+        if (current.row() >= 0 &&current.row() != previous.row() && tableModel->rowCount() > 0)
         {
             showPhoto();
             if (essence != 0)

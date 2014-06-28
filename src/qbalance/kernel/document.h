@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE int getDocId() { return docId; }
     Q_INVOKABLE int getOperNumber() { return operNumber; }
     Documents* getParent() { return parent; }
-    QMap<QString, Dictionary*>* getDictionaries() { return dictionaries->getDictionaries(); }
+    QHash<QString, Dictionary*>* getDictionaries() { return dictionaries->getDictionaries(); }
     Dictionaries* getDocDictionaries() { return dictionaries; }
     Q_INVOKABLE Dictionary* getDictionary(QString dictName) { return dictionaries->getDictionary(dictName); }
     Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }

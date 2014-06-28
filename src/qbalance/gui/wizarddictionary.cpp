@@ -36,7 +36,8 @@ enum dictFieldsEnums {tableField = 0,
                       lengthField = 3,
                       precisionField = 4,
                       headerField = 5,
-                      visibleField = 6};
+                      visibleField = 6,
+                      editableField = 7};
 
 
 WizardDictionary* WizardDictionary::Exemplar   = 0;
@@ -254,7 +255,7 @@ void WizardDictionary::getData()
         columnsOrder.insert(fields.at(i).table + "__" + fields.at(i).name, fields.at(i).number);
 
     fieldsTable.setRowCount(fields.count());
-    fieldsTable.setColumnCount(7);
+    fieldsTable.setColumnCount(8);
     if (fieldsTable.verticalHeader()->minimumSectionSize() > 0)
         fieldsTable.verticalHeader()->setDefaultSectionSize(fieldsTable.verticalHeader()->minimumSectionSize());
 
@@ -267,7 +268,8 @@ void WizardDictionary::getData()
                                                          << QObject::trUtf8("Длина")
                                                          << QObject::trUtf8("Точность")
                                                          << QObject::trUtf8("Заголовок")
-                                                         << QObject::trUtf8("Видимость"));
+                                                         << QObject::trUtf8("Видимость")
+                                                         << QObject::trUtf8("Не изменять"));
     QString idField = "__" + db->getObjectName("код");
     for (int i = 0; i < fields.count(); i++)
     {
@@ -278,6 +280,7 @@ void WizardDictionary::getData()
         QTableWidgetItem* precisionItem = new QTableWidgetItem(QString("%1").arg(fields.value(i).precision));
         QTableWidgetItem* headerItem = new QTableWidgetItem(fields.value(i).header);
         QTableWidgetItem* visibleItem = new QTableWidgetItem(fields.value(i).number > 0 ? "true" : "false");
+        QTableWidgetItem* editableItem = new QTableWidgetItem(fields.value(i).readOnly ? "true" : "false");
 
         tableItem->setFlags(tableItem->flags() & ~Qt::ItemIsEditable);
         if (QString::compare(fields.value(i).table, tableName->text()) != 0)
@@ -297,6 +300,8 @@ void WizardDictionary::getData()
             headerItem->setFlags(headerItem->flags() & ~Qt::ItemIsEditable);
             visibleItem->setFlags(visibleItem->flags() & ~Qt::ItemIsEditable);
             visibleItem->setText("false");
+            editableItem->setFlags(editableItem->flags() & ~Qt::ItemIsEditable);
+//            editableItem->setText("false");
         }
         fieldsTable.setItem(i, tableField, tableItem);
         fieldsTable.setItem(i, columnField, columnItem);
@@ -305,6 +310,7 @@ void WizardDictionary::getData()
         fieldsTable.setItem(i, precisionField, precisionItem);
         fieldsTable.setItem(i, headerField, headerItem);
         fieldsTable.setItem(i, visibleField, visibleItem);
+        fieldsTable.setItem(i, editableField, editableItem);
     }
 
     MyButtonLineEditItemDelegate* buttonEditDelegate = new MyButtonLineEditItemDelegate(getFormWidget());
@@ -312,6 +318,8 @@ void WizardDictionary::getData()
     buttonEditDelegate->setFormOnPushButton(&showTypesForm);
     MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(getFormWidget());
     fieldsTable.setItemDelegateForColumn(visibleField, booleanDelegate);
+    MyBooleanItemDelegate* booleanDelegate1 = new MyBooleanItemDelegate(getFormWidget());
+    fieldsTable.setItemDelegateForColumn(editableField, booleanDelegate1);
 
     // Инициализируем текстовый редактор
     textEditor = new QTextEdit(formWidget);
@@ -633,7 +641,7 @@ void WizardDictionary::saveFields()
         field.precision = fieldsTable.item(i, precisionField)->text().toInt();
         field.header = fieldsTable.item(i, headerField)->text();
         field.number = columnsOrder.value(field.table + "__" + field.name);
-        field.readOnly = true;
+        field.readOnly = fieldsTable.item(i, editableField)->text() == "true" ? true : false;
         fields.append(field);
     }
 }

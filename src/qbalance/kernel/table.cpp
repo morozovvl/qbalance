@@ -47,8 +47,7 @@ QList<FieldType>* Table::getColumnsProperties()
 
 void Table::query(QString filter)
 {
-    if (filter.size() > 0)
-        tableModel->setFilter(filter);
+    tableModel->setFilter(filter);
     if (!tableModel->select())
         app->showError(tableModel->lastError().text());
     app->debug(1, "Query: " + tableModel->selectStatement() + "\n");

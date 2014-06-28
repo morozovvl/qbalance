@@ -126,7 +126,7 @@ public:
     void virtual showError(QString);
     void virtual showCriticalError(QString);
 
-    Q_INVOKABLE QProcess* runProcess(QString, QString = "");
+    Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);
     void         barCodeReadyRead(QString);
     bool         readCardReader(QKeyEvent*);
@@ -146,6 +146,7 @@ private:
     QDate                   endDate;
     DriverFR*               driverFR;
     bool                    driverFRisValid;
+    bool                    fsWebCamIsValid;
     static QFile*           DebugFile;
     static int              DebugMode;
     static TApplication*    Exemplar;

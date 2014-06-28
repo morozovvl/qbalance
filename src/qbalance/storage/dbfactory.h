@@ -89,14 +89,12 @@ struct ToperType
     bool        dbQuan;         // По дебетовому счету ведется количественный учет
     bool        dbConst;        // Дебетовый справочник является постоянным
     bool        dbSaldoVisible; // Сальдо по дебетовому справочнику видно
-    bool        dbDictVisible;  // Дебетовый справочник видим
     QString     crAcc;          // Кредитовый счет
     QString     crDict;         // Имя кредитового справочника
     QString     crDictAlias;    // Псевдоним кредитового справочника в списке справочников
     bool        crQuan;         // По кредитовому счету ведется количественный учет
     bool        crConst;        // Кредитовый справочник является постоянным
     bool        crSaldoVisible; // Сальдо по кредитовому справочнику видно
-    bool        crDictVisible;  // Кредитовый справочник видим
     bool        isSingleString; // В документе должна быть только одна строка
     QString     itog;           //
     bool        freePrv;        // Свободная проводка
@@ -193,9 +191,9 @@ public:
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
-    void beginTransaction()     { exec("BEGIN;"); }
-    void commitTransaction()    { exec("COMMIT;"); }
-    void rollbackTransaction()  { exec("ROLLBACK;"); }
+    void beginTransaction();
+    void commitTransaction();
+    void rollbackTransaction();
 
     void loadSystemTables();
 

@@ -154,9 +154,9 @@ bool Documents::open()
 
 void Documents::close()
 {
+    Essence::close();
     currentDocument->close();
     delete currentDocument;
-    Essence::close();
 }
 
 
@@ -222,10 +222,10 @@ void Documents::setForm(QString formName)
     form = new FormGrid();
 
     form->appendToolTip("buttonOk",         trUtf8("Закрыть список документов"));
-    form->appendToolTip("buttonAdd",        trUtf8("Создать новый документ"));
-    form->appendToolTip("buttonDelete",     trUtf8("Удалить документ"));
-    form->appendToolTip("buttonView",       trUtf8("Просмотреть документ"));
-    form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера)"));
+    form->appendToolTip("buttonAdd",        trUtf8("Создать новый документ (Ctrl+Ins)"));
+    form->appendToolTip("buttonDelete",     trUtf8("Удалить документ (Ctrl+Del)"));
+    form->appendToolTip("buttonView",       trUtf8("Просмотреть документ (F2)"));
+    form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName);
 }

@@ -377,7 +377,21 @@ bool Document::remove()
         {
             if (db->removeDocStr(docId, strNum))
             {
-                query();
+/*
+                qDebug() << tableModel->rowCount();
+                if (tableModel->rowCount() > 1)
+                {
+                    tableModel->removeRow(strNum - 1);
+                    grdTable->repaint();
+                    qDebug() << tableModel->rowCount();
+                    if (strNum - 1 < tableModel->rowCount())
+                        grdTable->selectRow(strNum - 1);
+                    else
+                        grdTable->selectRow(tableModel->rowCount() - 1);
+                }
+                else
+*/
+                    query();
                 calcItog();
                 scriptEngine->eventAfterDeleteString();
                 saveChanges();     // Принудительно обновим итог при удалении строки
@@ -805,12 +819,12 @@ void Document::setForm(QString formName)
 
     // Установим тултипы (подписи к кнопкам)
     form->appendToolTip("buttonOk",     trUtf8("Закрыть документ"));
-    form->appendToolTip("buttonAdd",    trUtf8("Добавить строку в документ"));
+    form->appendToolTip("buttonAdd",    trUtf8("Добавить строку в документ (Ctrl+Ins)"));
     form->appendToolTip("buttonQueryAdd", trUtf8("Добавить строки в документ из запроса"));
-    form->appendToolTip("buttonDelete", trUtf8("Удалить строку из документа"));
-    form->appendToolTip("buttonRequery", trUtf8("Обновить документ (загрузить повторно с сервера)"));
+    form->appendToolTip("buttonDelete", trUtf8("Удалить строку из документа (Ctrl+Del)"));
+    form->appendToolTip("buttonRequery", trUtf8("Обновить документ (загрузить повторно с сервера) (F3)"));
     if (isPrintable())
-        form->appendToolTip("buttonPrint", trUtf8("Распечатать документ"));
+        form->appendToolTip("buttonPrint", trUtf8("Распечатать документ (F4)"));
     form->appendToolTip("buttonSave", trUtf8("Экспорт документа"));
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
@@ -924,8 +938,9 @@ bool Document::showNextDict()
     bool anyShown = true;
     Dictionary* dict;
 
-    foreach (QString dictName, getDictionaries()->keys())
+    for (int i = 0; i < dictionaries->dictionariesNamesList.count(); i++)
     {
+        QString dictName = dictionaries->dictionariesNamesList.at(i);
         dict = getDictionaries()->value(dictName);
         if (dict->isMustShow() && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
@@ -1036,8 +1051,6 @@ void Document::updateCurrentRow(int strNum)
         int str = strNum == 0 ? getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt() : strNum;
         preparedSelectCurrentRow.bindValue(":str", str);
     }
-
-    TApplication::debug(1, QString("UpdateCurrentRow: %1").arg(strNum));
     Essence::updateCurrentRow();
 }
 
