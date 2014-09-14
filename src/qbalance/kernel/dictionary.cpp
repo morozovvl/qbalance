@@ -446,7 +446,10 @@ bool Dictionary::setTableModel(int)
 void Dictionary::query(QString defaultFilter)
 {
     QModelIndex index;
-    qulonglong id = getId();
+    qulonglong id = 0;
+
+    if (tableModel->rowCount() > 0)
+        id = getValue(idFieldName).toLongLong();
 
     if (grdTable != 0)
         index = grdTable->currentIndex();
@@ -495,7 +498,7 @@ void Dictionary::query(QString defaultFilter)
                     for (int i = 0; i < tableModel->rowCount(); i++)
                     {
                         grdTable->selectRow(i);
-                        if (getId() == id)
+                        if (getValue(idFieldName) == id)
                             break;
                     }
                 }
