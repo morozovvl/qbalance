@@ -134,13 +134,13 @@ bool Documents::open()
 {
     if (operNumber > 0 && Essence::open())
     {     // Откроем этот справочник
+        prepareSelectCurrentRowCommand();
 
         tableModel->setTestSelect(true);
         query();
         tableModel->setTestSelect(false);
 
         currentDocument = new Document(operNumber, this);
-        currentDocument->setPhotoEnabled(true);
         if (currentDocument->open())
         {
             currentDocument->setFormTitle(subFormTitle);

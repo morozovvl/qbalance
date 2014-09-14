@@ -121,7 +121,7 @@ public:
     ScriptEngine*       getScriptEngine();
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
     void                evaluateEngine();
-    virtual bool        calculate(const QModelIndex &);
+    virtual bool        calculate();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
 
@@ -173,6 +173,7 @@ protected:
     bool                doSubmit;
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     bool                photoEnabled;
+    QStringList         filesSumChecked;                        // Список файлов, контрольная сумма которых уже проверена при просмотре, чтобы повторно ее не проверять
     QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();

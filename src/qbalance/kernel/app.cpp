@@ -237,6 +237,11 @@ QString TApplication::getFormsPath(QString formName) {
 }
 
 
+QString TApplication::getScriptsPath() {
+    return applicationDirPath() + "/scripts/";
+}
+
+
 QString TApplication::getReportsPath(QString reportName) {
     QString dir = applicationDirPath() + "/reports/";
     if (!QDir().exists(dir))
@@ -265,10 +270,10 @@ Dialog* TApplication::createForm(QString fileName)
 {
     QPointer<Dialog> formWidget = 0;
     QString path = getFormsPath();
-    QString fName = fileName + ".ui";
+    QString fName = getLogin() + "/" + fileName + ".ui";
     if (!Essence::getFile(path, fName, FormFileType))
     {
-        fName = getLogin() + "/" + fName;
+        fName = fileName + ".ui";
         if (!Essence::getFile(path, fName, FormFileType))
             fName = "";
     }

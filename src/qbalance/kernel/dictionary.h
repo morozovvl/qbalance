@@ -41,7 +41,7 @@ public:
     virtual bool add();
     virtual bool remove();
     Q_INVOKABLE virtual void            query(QString filter = "");
-    virtual bool                        calculate(const QModelIndex &);
+    virtual bool                        calculate();
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     virtual void                        setOrderClause();
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
@@ -71,7 +71,6 @@ public:
     QString getPrototypeName() { return prototypeName; }
     void setPrototypeName(QString prototype) { prototypeName = prototype; }
     bool isFtsEnabled() { return ftsEnabled; }
-    Q_INVOKABLE QString getTest() { return "Test Ok"; }
     QString     getDictTitle() { return dictTitle; }
     QStringList getChildDicts();
     Dictionary* getParentDict() { return parentDict; }

@@ -76,6 +76,7 @@ public:
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
     QString getFormsPath(QString = "");
+    QString getScriptsPath();
     QString getReportsPath(QString = "");
     Q_INVOKABLE QString getPhotosPath(QString = "");
     QString getConfigPrefix() { return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName()); }

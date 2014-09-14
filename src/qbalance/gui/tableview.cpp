@@ -500,8 +500,7 @@ void TableView::showPhoto()
 void TableView::calculate()
 {
     setUpdatesEnabled(false);
-    QModelIndex index = currentIndex();
-    if (!essence->calculate(index))
+    if (!essence->calculate())
         reset();
     else
         repaint();

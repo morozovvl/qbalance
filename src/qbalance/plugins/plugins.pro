@@ -4,6 +4,7 @@ QT += sql \
       gui \
       xml \
       network
+#      plugin \
 #      designer \
 #      uitools
 CONFIG += uitools

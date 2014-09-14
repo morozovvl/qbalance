@@ -48,7 +48,8 @@ public:
     bool open(QString fileName = "");
     void close() { ; }
     bool evaluate();
-    QScriptValue evaluate (const QString &, const QString & = QString(), int = 1);
+    QScriptValue evaluate(const QString &, const QString & = QString(), int = 1);
+    QScriptValue evaluate(const QScriptProgram &);
     QString getErrorMessage() { return errorMessage; }
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     bool getScriptResult() { return scriptResult; }

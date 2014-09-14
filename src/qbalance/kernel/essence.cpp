@@ -73,8 +73,6 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
 
 
 Essence::~Essence() {
-    if (m_networkAccessManager != 0)
-        delete m_networkAccessManager;
     this->disconnect();
 }
 
@@ -88,7 +86,7 @@ Dialog* Essence::getFormWidget() {
 }
 
 
-bool Essence::calculate(const QModelIndex &)
+bool Essence::calculate()
 {
     if (scriptEngine != 0)
     {
@@ -198,7 +196,13 @@ QString Essence::getName(int row)
 void Essence::setId(qulonglong id)
 {
     if (getValue(idFieldName) != id)
+    {
+        // На время отключим обновление(показ) фотографии
+        bool enabled = photoEnabled;
+        photoEnabled = false;
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id));
+        photoEnabled = enabled;
+    }
     grdTable->selectRow(0);
 }
 
@@ -230,10 +234,12 @@ QString Essence::getPhotoPath()
 {
     QString path;
     // Попробуем получить локальный путь к фотографии
-    if (photoPath.size() == 0)
+    if (isDictionary && photoPath.size() == 0)
     {
         // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
         path = db->getDictionaryPhotoPath(tableName);
+        if (path.size() == 0)
+            photoEnabled = false;
     }
     else
     {
@@ -267,73 +273,76 @@ QString Essence::getPhotoFile()
             if (id != 0)
             {
                 idValue = QString("%1").arg(id).trimmed();
-                QString phPath = getPhotoPath();
-                file = app->getPhotosPath(phPath) + "/" + idValue + ".jpg";
-                localFile = phPath + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
-                if (!QFile(file).exists())
-                {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
-                    // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                    if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
-                    {
-                        app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                        QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                        if (picture.size() > 0)
-                        {   // Если удалось получить какую-то фотографию
-                            saveFile(file, &picture);
-                        }
-                    }
+                file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
+                localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+                if (isDictionary && !filesSumChecked.contains(localFile))
+                {
+                    filesSumChecked.append(localFile);      // контрольная сумма файла проверена, больше проверять не будем
                     if (!QFile(file).exists())
-                    {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
-                        file = pictureUrl;
-                        // Если в скриптах указано, откуда брать фотографию
-                        if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                    {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
+                        // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                        if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
                         {
-                            QUrl url(file);
-                            if (url.isValid())
+                            app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                            QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                            if (picture.size() > 0)
+                            {   // Если удалось получить какую-то фотографию
+                                saveFile(file, &picture);
+                            }
+                        }
+                        if (!QFile(file).exists())
+                        {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                            file = pictureUrl;
+                            // Если в скриптах указано, откуда брать фотографию
+                            if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
                             {
-                                if (urls.count() <= 1000)
+                                QUrl url(file);
+                                if (url.isValid())
                                 {
-                                    // Если сетевой менеджер еще не подключен, то подключим его
-                                    if (m_networkAccessManager == 0)
-                                    {   // Вызывается только один раз, по необходимости загрузить фотографию
-                                        QNetworkConfigurationManager manager(this);
-                                        m_networkAccessManager = new QNetworkAccessManager(this);
-                                        m_networkAccessManager->setConfiguration(manager.defaultConfiguration());
-                                        connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-                                    }
-                                    if (m_networkAccessManager != 0)
+                                    if (urls.count() <= 1000)
                                     {
-                                        if (m_networkAccessManager->networkAccessible() == QNetworkAccessManager::Accessible)
-                                        {
-                                            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
-                                            QNetworkRequest m_request(url);
-                                            QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
-                                            if (reply->error() == QNetworkReply::NoError)
-                                                app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                                            else
-                                                app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                        // Если сетевой менеджер еще не подключен, то подключим его
+                                        if (m_networkAccessManager == 0)
+                                        {   // Вызывается только один раз, по необходимости загрузить фотографию
+                                            QNetworkConfigurationManager manager(this);
+                                            m_networkAccessManager = new QNetworkAccessManager(this);
+                                            m_networkAccessManager->setConfiguration(manager.defaultConfiguration());
+                                            connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
                                         }
-                                        else
+                                        if (m_networkAccessManager != 0)
                                         {
-                                            app->showMessageOnStatusBar(tr("Нет доступа к сети для загрузки фотографий."), 3000);
-                                            m_networkAccessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
+                                            if (m_networkAccessManager->networkAccessible() == QNetworkAccessManager::Accessible)
+                                            {
+                                                urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+                                                QNetworkRequest m_request(url);
+                                                QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
+                                                if (reply->error() == QNetworkReply::NoError)
+                                                    app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                                else
+                                                    app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                            }
+                                            else
+                                            {
+                                                app->showMessageOnStatusBar(tr("Нет доступа к сети для загрузки фотографий."), 3000);
+                                                delete m_networkAccessManager;
+                                                m_networkAccessManager = 0;
+                                            }
                                         }
                                     }
+                                    else
+                                        app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
                                 }
                                 else
-                                    app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
+                                    file = "";
                             }
-                            else
-                                file = "";
                         }
                     }
+                    else
+                    {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
+                        if (app->isSA())
+                            app->savePhotoToServer(file, localFile);
+                    }
                 }
-                else
-                {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                    if (isDictionary && app->isSA())
-                        app->savePhotoToServer(file, localFile);
-                }
-
             }
         }
     }
@@ -404,10 +413,9 @@ bool Essence::remove()
 int Essence::exec()
 {
     bool result;
+    filesSumChecked.clear();
     if (!opened)
-    {
         open();
-    }
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
@@ -424,7 +432,9 @@ int Essence::exec()
 
 void Essence::show()
 {
-    if (!opened) open();
+    filesSumChecked.clear();
+    if (!opened)
+        open();
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
@@ -432,8 +442,6 @@ void Essence::show()
         beforeShowFormEvent(form);
         form->show();
         afterShowFormEvent(form);
-
-        prepareSelectCurrentRowCommand();
     }
 }
 
@@ -473,7 +481,6 @@ bool Essence::open()
             setScriptEngine();
             evaluateEngine();
         }
-        prepareSelectCurrentRowCommand();
         return true;
     }
     return false;
@@ -738,13 +745,13 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             QByteArray array = file.readAll();
             file.close();
             qulonglong localFileCheckSum = db->calculateCRC32(&array);
-            if (db->getFileCheckSum(fileName, type, true) != localFileCheckSum)
+            if (db->getFileCheckSum(fileName, type) != localFileCheckSum)
             {   // контрольные суммы файлов не совпадают
                 if (app->isSA())
-                    db->setFile(fileName, type, array, localFileCheckSum);      // Сохранить копию файла на сервере, если мы работаем как SA
+                    db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
                 else
                 {
-                    QByteArray templateFile = db->getFile(fileName, type);
+                    QByteArray templateFile = db->getFile(fileName, type, true);
                     if (templateFile.size() > 0)
                     {   // Если удалось получить шаблон отчета, то сохраним его локально
                         saveFile(fullFileName, &templateFile);
@@ -799,7 +806,7 @@ void Essence::print(QString fileName)
     QMap<QString, QVariant> printValues;
 
     // Создадим скриптовый обработчик контекста печати
-    ReportScriptEngine scriptEngine(&printValues, form);
+    ReportScriptEngine scriptEngine(&printValues, this);
 
     // Заполним контекст данными
     preparePrintValues(&scriptEngine);

@@ -48,6 +48,9 @@ Document::Document(int oper, Documents* par): Essence()
     localDictsOpened = false;
     docModified = false;
     doSubmit = false;                 // По умолчанию не будем обновлять записи в БД сразу, чтобы собрать обновления в транзакцию
+    photoEnabled = false;
+    quanAccount = false;
+    singlePrv = false;
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = new Dictionaries();
@@ -83,13 +86,13 @@ Document::~Document()
 }
 
 
-bool Document::calculate(const QModelIndex& index)
+bool Document::calculate()
 {
     if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
         isCurrentCalculate = true;
 
-        if (Essence::calculate(index))
+        if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
 
             calcItog();
@@ -152,11 +155,8 @@ void Document::saveChanges()
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
         // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-        if (dictionaries->isSaldoExist())
-        {
-            updateCurrentRow();
-            parent->updateCurrentRow();
-        }
+        updateCurrentRow();
+        parent->updateCurrentRow();
     }
     else
     {   // Во время сохранения результатов произошла ошибка
@@ -268,24 +268,7 @@ void Document::openLocalDictionaries()
 bool Document::add()
 {
     bool result = false;
-    prvValues.clear();
-
-    if (!getIsSingleString())
-    {
-        foreach (QString dictName, dictionaries->getDictionaries()->keys())
-        {
-            Dictionary* dict = dictionaries->getDictionary(dictName);
-            if (dict->isConst() && dict->getId() == 0)
-            {
-                app->showError(QString(QObject::trUtf8("Не определено значение постоянного справочника \"%1\"")).arg(dictName));
-                return false;
-            }
-        }
-    }
-
-    dictionaries->unlock();
-
-    if (scriptEngine->eventBeforeAddString() && showNextDict())     // Показать все справочники, которые должны быть показаны перед добавлением новой записи
+    if ((scriptEngine->eventBeforeAddString() && showNextDict()) || getIsSingleString())    // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         if (topersList->at(0).attributes && topersList->at(0).number == 0)
         {
@@ -325,6 +308,7 @@ bool Document::add()
             }
             if (getScriptEngine() != 0)
             {
+                saveOldValues();
                 getScriptEngine()->eventAfterAddString();
                 saveChanges();
                 saveOldValues();
@@ -335,6 +319,8 @@ bool Document::add()
             result = true;
         }
     }
+
+    dictionaries->unlock();
 
     grdTable->setFocus();
 
@@ -377,21 +363,7 @@ bool Document::remove()
         {
             if (db->removeDocStr(docId, strNum))
             {
-/*
-                qDebug() << tableModel->rowCount();
-                if (tableModel->rowCount() > 1)
-                {
-                    tableModel->removeRow(strNum - 1);
-                    grdTable->repaint();
-                    qDebug() << tableModel->rowCount();
-                    if (strNum - 1 < tableModel->rowCount())
-                        grdTable->selectRow(strNum - 1);
-                    else
-                        grdTable->selectRow(tableModel->rowCount() - 1);
-                }
-                else
-*/
-                    query();
+                query();
                 calcItog();
                 scriptEngine->eventAfterDeleteString();
                 saveChanges();     // Принудительно обновим итог при удалении строки
@@ -564,9 +536,18 @@ QVariant Document::getSumValue(QString name)
 
 void Document::show()
 {
+    app->debug(1, "");
+    app->debug(1, QString("Opened document %1").arg(getDocId()));
     docModified = false;
     loadDocument();
     Essence::show();
+}
+
+
+void Document::hide()
+{
+    Essence::hide();
+    app->debug(1, QString("Closed document %1").arg(getDocId()));
 }
 
 
@@ -582,8 +563,13 @@ void Document::loadDocument()
         QString dictName;
         QString idFieldName = db->getObjectName("код");
         // Установим значения постоянных справочников, участвующих в проводках
+        if (topersList->count() == 1)
+            singlePrv = true;                           // В операции используется простая проводка
+
         for (int i = 0; i < topersList->count(); i++)
         {
+            if (topersList->at(i).dbQuan || topersList->at(i).crQuan)
+                quanAccount = true;                     // Используется количественный учет
             int prvNumber = topersList->at(i).number;
             dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
             if (getDictionaries()->contains(dictName))
@@ -998,32 +984,82 @@ bool Document::prepareValue(QString name, Dictionary* dict)
 }
 
 
+bool Document::prepareValue(QString name, QVariant val)
+{
+    if (!prvValues.contains(name))
+    {
+        prvValues.insert(name, val);
+        return true;
+    }
+    return false;
+}
+
+
 int Document::appendDocString()
 {
     int result = 0;
     QString dictName, parameter;
     qulonglong dbId, crId;
+    float quan = 0, price = 0, sum = 0;
+
+    foreach (QString dictName, dictionaries->getDictionaries()->keys())
+    {
+        Dictionary* dict = dictionaries->getDictionary(dictName);
+        if (dict->isConst())
+        {
+            if (dict->getId() != 0)
+            {
+                prepareValue(dictName, dict);
+            }
+            else
+            {
+                if (!getIsSingleString())
+                {
+                    app->showError(QString(QObject::trUtf8("Не определено значение постоянного справочника \"%1\"")).arg(dictName));
+                    return 0;
+                }
+            }
+        }
+    }
+
     // Просмотрим все проводки типовой операции
     for (int i = 0; i < topersList->count(); i++)
     {
-        dbId = 0;
-        crId = 0;
+        QString prefix = QString("P%1__").arg(i + 1);
+        QString fldName;
+        dbId = 0;                                   // эти параметры могут быть заданы заранее в скриптах
+        crId = 0;                                   // если скрипты решают, какие коды позиций справочников задавать
+        fldName = prefix + "ДБКОД";
+        if (prvValues.keys().contains(fldName))
+            dbId = prvValues.value(fldName).toInt();
         dictName = topersList->at(i).dbDictAlias;
-        if (dictName.size() > 0)
+        if (dbId == 0 && dictName.size() > 0)           // если скриптами не задан код и есть справочник
         {
             dbId = prvValues.value(dictName).toInt();
             if (dbId == 0 && !getIsSingleString())
                 return result;
         }
+        fldName = prefix + "КРКОД";
+        if (prvValues.keys().contains(fldName))
+            crId = prvValues.value(fldName).toInt();
         dictName = topersList->at(i).crDictAlias;
-        if (dictName.size() > 0)
+        if (crId == 0 && dictName.size() > 0)
         {
             crId = prvValues.value(dictName).toInt();
             if (crId == 0 && !getIsSingleString())
                 return result;
         }
+        fldName = prefix + "КОЛ";
+        if (prvValues.keys().contains(fldName))
+            quan = prvValues.value(fldName).toFloat();
+        fldName = prefix + "ЦЕНА";
+        if (prvValues.keys().contains(fldName))
+            price = prvValues.value(fldName).toFloat();
+        fldName = prefix + "СУММА";
+        if (prvValues.keys().contains(fldName))
+            sum = prvValues.value(fldName).toFloat();
         // Добавим параметры проводки <ДбКод, КрКод, Кол, Цена, Сумма> в список параметров
-        parameter.append(QString("%1,%2,0,0,0,").arg(dbId).arg(crId));
+        parameter.append(QString("%1,%2,%3,%4,%5,").arg(dbId).arg(crId).arg(quan).arg(price).arg(sum));
      }
     // Добавим строку в документ с параметрами всех проводок операции
     result = db->addDocStr(operNumber, docId, parameter);
@@ -1034,6 +1070,8 @@ int Document::appendDocString()
             db->saveDocAttribute(operNumber, docId, attr, prvValues.value(attr));
         }
     }
+    prvValues.clear();
+
     return result;
 }
 
@@ -1096,4 +1134,29 @@ void Document::setEnabled(bool en)
 {
     Essence::setEnabled(en);
     form->setEnabled(en);
+}
+
+
+void Document::setDate(QString date)
+{
+    QString field = "дата";
+    parent->setValue(field, QVariant(date));
+    getForm()->getDateEdit()->setDate(parent->getValue(field).toDate());
+    getForm()->getDateEdit()->repaint();
+}
+
+
+void Document::setNumber(QString number)
+{
+    QString field = "номер";
+    parent->setValue(field, QVariant(number));
+    getForm()->getNumberEdit()->repaint();
+    getForm()->getNumberEdit()->setText(getParent()->getValue(field).toString());
+
+}
+
+
+void Document::showParameterText(QString dictName)
+{
+    getForm()->showParameterText(dictName);
 }

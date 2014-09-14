@@ -204,11 +204,11 @@ void Dictionary::setValue(QString name, QVariant value, int row)
 }
 
 
-bool Dictionary::calculate(const QModelIndex& index) {
+bool Dictionary::calculate() {
     if (!isCurrentCalculate)
     {
         isCurrentCalculate = true;
-        if (Essence::calculate(index))
+        if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
 
             // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
@@ -248,7 +248,7 @@ qulonglong Dictionary::getId(int row)
     {
         // Если это набор, то продолжаем
         QString filter;
-        QString variables, values;
+        QMap<QString, QVariant> values;
         for (int i = 0; i < fieldList.count(); i++)
         {       // Просмотрим список полей
             QString name = fieldList.at(i);
@@ -259,10 +259,6 @@ qulonglong Dictionary::getId(int row)
                     filter.append(" AND ");
                 filter.append(field + "=");
 
-                if (variables.size() > 0)
-                    variables.append(",");
-                variables.append(field);
-
                 name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                 name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                 Dictionary* dict = dictionaries->getDictionary(name);
@@ -272,9 +268,7 @@ qulonglong Dictionary::getId(int row)
                     if (id != 0)
                     {
                         filter.append(QString("%1").arg(id));
-                        if (values.size() > 0)
-                            values.append(",");
-                        values.append(QString("%1").arg(id));
+                        values.insert(field, QVariant(id));
                     }
                     else
                     {
@@ -291,13 +285,7 @@ qulonglong Dictionary::getId(int row)
             query(filter);
             if (tableModel->rowCount() == 0)
             {
-
-                QString command;
-                command = QString("SELECT setval('%1', (SELECT MAX(%2) FROM %3), true);").arg(tableName + "_" + idFieldName + "_seq").arg(idFieldName).arg(db->getObjectNameCom(tableName));
-                db->appendCommand(command);
-                command = QString("INSERT INTO %1 (%2) VALUES (%3);").arg(db->getObjectNameCom(tableName)).arg(variables).arg(values);
-                db->appendCommand(command);
-                db->execCommands();
+                db->insertDictDefault(tableName, &values);
                 query(filter);
             }
             return Essence::getId(0);
@@ -358,6 +346,7 @@ bool Dictionary::open()
 
     if (Essence::open())
     {
+        prepareSelectCurrentRowCommand();
         // Откроем этот справочник
         fieldList = getFieldsList();
 
@@ -457,6 +446,7 @@ bool Dictionary::setTableModel(int)
 void Dictionary::query(QString defaultFilter)
 {
     QModelIndex index;
+    qulonglong id = getId();
 
     if (grdTable != 0)
         index = grdTable->currentIndex();
@@ -495,7 +485,24 @@ void Dictionary::query(QString defaultFilter)
         if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
             grdTable->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
         else
-            grdTable->restoreCurrentIndex(index);               // Установим указатель на тот же адрес
+        {
+            if (index.row() < 0)
+                grdTable->selectRow(0);
+            else
+            {
+                if (id > 0)
+                {
+                    for (int i = 0; i < tableModel->rowCount(); i++)
+                    {
+                        grdTable->selectRow(i);
+                        if (getId() == id)
+                            break;
+                    }
+                }
+                else
+                    grdTable->selectRow(index.row());
+            }
+        }
     }
 
     if (lAutoSelect && tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)

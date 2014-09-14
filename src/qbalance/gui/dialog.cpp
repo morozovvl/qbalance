@@ -90,24 +90,9 @@ QObject* Dialog::findChild(QString name)
 
 void Dialog::keyPressEvent(QKeyEvent *event)
 {
-//    event->setAccepted(false);                  // Будем считать, что событие не обработано
 
     if (form != 0)                              // Если у формы есть владелец, то запустим его обработчик
         form->keyPressEvent(event);
-/*
-    if (!event->isAccepted())                   // Если событие не обработано, то попытаемся обработать нажатие клавиш Ctrl+Enter
-    {
-        if (event->modifiers() == Qt::ControlModifier)
-        {
-            if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-            {
-                cmdOk();
-            }
-        }
-    }
-*/
-//    if (!event->isAccepted())                   // Если события до сих пор не обработаны, то запустим базовый обработчик
-        QDialog::keyPressEvent(event);
 }
 
 

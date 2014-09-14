@@ -209,7 +209,7 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             {
                 value = QString("%1").arg(recValue.toString());
             }
-            if (value.size() > 0)
+            if (recValue.toString().size() > 0)
             {
                 // Сгенерируем для сервера команду сохранения значения из модели
                 int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();

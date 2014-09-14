@@ -25,144 +25,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 OOXMLReportEngine::OOXMLReportEngine(ReportScriptEngine* engine) : ReportEngine(engine)
 {
-    app = TApplication::exemplar();
+    ooxmlEngine = new OOXMLEngine();
 }
 
 
 OOXMLReportEngine::~OOXMLReportEngine()
 {
+    delete ooxmlEngine;
 }
 
 
 bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
 {
-    templateFileName = fileName;
-    context = cont;
-    // Создадим временный каталог
-    QString tmpDir = fileName + ".tmp";
-    if (QDir().mkdir(tmpDir))
+    if (ooxmlEngine->open(fileName))
     {
-        // Распакуем файл шаблона документа OpenOffice
-        QProcess* unzip = new QProcess();
-        unzip->setWorkingDirectory(tmpDir);
-#ifdef Q_OS_WIN32
-        unzip->start(app->applicationDirPath() + "/unzip", QStringList() << fileName);
-#else
-        unzip->start("unzip", QStringList() << fileName);
-#endif
+        context = cont;
+        writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
+        ooxmlEngine->close();
 
-        // Если удалось распаковать, то продолжим
-        if (app->waitProcessEnd(unzip)) {
+        // Запустим OpenOffice
+        QProcess* ooProcess = new QProcess();
+        ooProcess->start("soffice", QStringList() << "--invisible" << "--quickstart" << fileName);
 
-            // Запишем контент в файл
-            QFile file(tmpDir + "/content.xml");
-            if (file.open(QIODevice::ReadOnly))
-            {
-                if (doc.setContent(&file))
-                {
-                    file.close();
-
-                    writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
-
-                    if (file.open(QIODevice::WriteOnly))
-                    {
-                        QTextStream stream(&file);
-                        doc.save(stream, 5);
-                    }
-                }
-                file.close();
-            }
-
-            // Запакуем файл OpenOffice обратно
-            QProcess* zip = new QProcess();
-            zip->setWorkingDirectory(tmpDir);
-#ifdef Q_OS_WIN32
-            zip->start(app->applicationDirPath() + "/zip", QStringList() << "-r" << fileName << ".");
-#else
-            zip->start("zip", QStringList() << "-r" << fileName << ".");
-#endif
-
-            // Если удалось запаковать, то продолжим
-            if (app->waitProcessEnd(zip)) {
-
-                // удалим временный каталог
-                removeDir(tmpDir);
-
-                // Запустим OpenOffice
-                QProcess* ooProcess = new QProcess();
-                ooProcess->start("soffice", QStringList() << "--invisible" << "--quickstart" << fileName);
-
-                if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))    // Подождем 1 секунду и если процесс не запустился
-                    app->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                  // выдадим сообщение об ошибке
-                else
-                    return true;
-            }
-            else
-                app->showError(QObject::trUtf8("Не удалось запустить программу") + " zip");
-        }
+        if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))    // Подождем 1 секунду и если процесс не запустился
+            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                  // выдадим сообщение об ошибке
         else
-            app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
+            return true;
     }
     return false;
-}
-
-
-bool OOXMLReportEngine::removeDir(QString dirName)
-// удаляет времменный каталог, в котором разворачивался архив файла OpenOffice
-{
-    bool result = false;
-    QDir dir(dirName);
-
-    if (dir.exists(dirName))
-    {
-        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot |
-                                                    QDir::System |
-                                                    QDir::Hidden  |
-                                                    QDir::AllDirs |
-                                                    QDir::Files,
-                                                    QDir::DirsFirst))
-        {
-            if (info.isDir())
-                result = removeDir(info.absoluteFilePath());
-            else
-                result = QFile::remove(info.absoluteFilePath());
-
-            if (!result)
-                return result;
-        }
-        result = dir.rmdir(dirName);
-    }
-    return result;
-}
-
-
-QDomNode OOXMLReportEngine::getCell(int row, int column)
-{
-    QDomNode rowNode;
-    cells = doc.elementsByTagName("table:table-row");   // будем просматривать все строки
-    if (row <= cells.count())
-    {
-        for (int i = 0; i < cells.count(); i++)
-        {
-            if (i == row)
-            {
-                rowNode = cells.at(i).parentNode().parentNode();
-                break;
-            }
-        }
-        cells = rowNode.cloneNode().childNodes();       // Теперь будем просматривать ячейки в строке
-        if (column <= cells.count())
-        {
-            for (int i = 0; i < cells.count(); i++)
-            {
-                if (i == column)
-                {
-                    return cells.at(i);                 // Искомая ячейка найдена, вернем ее
-                }
-            }
-        }
-    }
-    return rowNode;     // Ячейка не найдена, вернем пустую
 }
 
 
@@ -179,12 +69,14 @@ void OOXMLReportEngine::writeVariables()
 3.  Подготовленный список выражений пропускается через скриптовый движок и результаты записываются в соответствующие ячейки документа
 */
 {
+    QDomDocument* doc = ooxmlEngine->getDomDocument();
+
     expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
 
 
 // Пункт 1 (см. комментарий выше)
 
-    cells = doc.elementsByTagName("text:p");   // будем выбирать только те ячейки, которые содержат текст
+    cells = doc->elementsByTagName("text:p");   // будем выбирать только те ячейки, которые содержат текст
     // Найдем первую ячейку тела таблицы
     QDomNode firstRowNode;      //  в этой переменной будет ссылка на первую ячейку таблицы
 
@@ -225,7 +117,7 @@ void OOXMLReportEngine::writeVariables()
 // Пункт 2 (см. комментарий выше)
 
     // Теперь вставим все оставшиеся переменные
-    cells =  doc.elementsByTagName("text:p");  // будем выбирать только те ячейки, которые содержат текст
+    cells =  doc->elementsByTagName("text:p");  // будем выбирать только те ячейки, которые содержат текст
     for (int i = 0; i < cells.count(); i++)
     {
         readExpression(i, 1);             // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
@@ -236,7 +128,7 @@ void OOXMLReportEngine::writeVariables()
 // Пункт 3 (см. комментарий выше)
 
     // Теперь пропустим документ через скрипты, чтобы вычислить выражения
-    cells =  doc.elementsByTagName("text:p");    // будем выбирать только те ячейки, которые содержат текст
+    cells =  doc->elementsByTagName("text:p");    // будем выбирать только те ячейки, которые содержат текст
     for (int i = 0; i < cells.count(); i++)      // просмотрим все ячейки
     {
         QString cellText = cells.at(i).toElement().text().trimmed();        // Получим текст текущей ячейки
@@ -290,7 +182,7 @@ strNum - номер текущей строки тела таблицы
             {
                 // данных для выражения нет
                 if (strNum == 1)                    // выведем сообщение об ошибке (для таблицы это будет только для первой строки)
-                    app->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
+                    TApplication::exemplar()->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
                 result = false;
                 break;                      // выйдем из бесконечного цикла
             }
@@ -366,21 +258,7 @@ void OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
             type = "string";                                        // и запишем его в модель XML как текстровое выражение
         }
     }
-
-    // Запишем в узел n XML модели документа строковый аналог значения var
-    QDomElement node = n.parentNode().toElement();
-    if (node.tagName() != "table:table-cell")                  // Установим тег ячейки
-        node.setTagName("table:table-cell");
-    node.setAttribute("office:value-type", type);               // Установим атрибут с типом значения ячейки
-    node.setAttribute("calcext:value-type", type);              // Установим атрибут с типом значения ячейки
-    node.setAttribute("office:value", cellText);
-    QDomElement textElement = node.firstChildElement("text:p");
-    if (!textElement.isNull())
-        node.removeChild(textElement);
-    QDomElement element = doc.createElement("text:p");
-    QDomText text = doc.createTextNode(cellText);
-    element.appendChild(text);
-    node.appendChild(element);
+    ooxmlEngine->writeCell(n, cellText, type);
 }
 
 

@@ -54,10 +54,11 @@ public:
     Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
-    Q_INVOKABLE virtual void show();
+    Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
+    Q_INVOKABLE virtual void hide();                // Скрыть форму
     virtual QString transformSelectStatement(QString string);
-    void setDocId(int doc) { docId = doc; }
-    virtual bool calculate(const QModelIndex &);
+    void setDocId(int doc) { docId = doc; prepareSelectCurrentRowCommand(); }
+    Q_INVOKABLE virtual bool calculate();
     virtual void setConstDictId(QString, QVariant);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
@@ -65,11 +66,12 @@ public:
     int    addFromQuery(int);
     DocumentScriptEngine* getScriptEngine();
     bool getIsSingleString() { return isSingleString; }
-    Q_INVOKABLE void setDate(QString date, Qt::DateFormat format = Qt::TextDate) { getForm()->setDate(QDate::fromString(date, format)); }
-    Q_INVOKABLE void setNumber(QString number) { getForm()->setNumber(number); }
-    Q_INVOKABLE void showParameterText(QString dictName) { getForm()->showParameterText(dictName);}
-    int appendDocString();
+    Q_INVOKABLE void setDate(QString);
+    Q_INVOKABLE void setNumber(QString);
+    Q_INVOKABLE void showParameterText(QString);
+    Q_INVOKABLE int appendDocString();
     bool prepareValue(QString, Dictionary*);
+    Q_INVOKABLE bool prepareValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE QVariant getSumValue(QString name);
@@ -87,6 +89,8 @@ public:
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать
     Q_INVOKABLE bool isModified() { return docModified; }
     Q_INVOKABLE void calcItog();
+    bool isSinglePrv() { return singlePrv; }
+    bool isQuanAccount() { return quanAccount; }
 
 
 protected:
@@ -110,6 +114,8 @@ private:
     QList<ToperType>*               topersList;
     bool                            localDictsOpened;
     bool                            docModified;
+    bool                            quanAccount;        // В проводках есть количественный учет
+    bool                            singlePrv;          // Проводка простая (одиночная)
 
     bool showNextDict();
     void showItog();

@@ -1110,6 +1110,10 @@ int DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* val
     int result = -1;
     QString command;
     clearError();
+    if (values->size() == 0)
+    {
+        values->insert(getObjectNameCom(tableName + ".ИМЯ"), QVariant(""));
+    }
     if (values->size() > 0)
     {
         QString fieldsList;
@@ -1126,15 +1130,10 @@ int DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* val
         }
         fieldsList.chop(1);
         valuesList.chop(1);
-        command = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;").arg(getObjectNameCom(tableName))
+        command = QString("INSERT INTO %1 (%4, %2) VALUES ((SELECT MAX(%4)+1 FROM %1), %3) RETURNING %4;").arg(getObjectNameCom(tableName))
                                                                           .arg(fieldsList)
                                                                           .arg(valuesList)
                                                                           .arg(getObjectNameCom(tableName + ".КОД"));
-    }
-    else
-    {
-        command = QString("INSERT INTO %1 DEFAULT VALUES RETURNING %2;").arg(getObjectNameCom(tableName))
-                                                                        .arg(getObjectNameCom(tableName + ".КОД"));
     }
     QSqlQuery query = execQuery(command);
     if (query.first())
@@ -2028,9 +2027,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         if (retPrv1 != 0)
             *retPrv1 = prv1;
         if (topersList->at(0).attributes && topersList->at(0).number == 0)
-            selectStatement = selectClause + fromClause + QString(" ORDER BY %1 ASC").arg(getObjectNameCom("атрибуты.стр"));
+            selectStatement = selectClause + fromClause + QString(" ORDER BY %1 ASC;").arg(getObjectNameCom("атрибуты.стр"));
         else
-            selectStatement = selectClause + fromClause + QString(" ORDER BY \"P1__%1\" ASC").arg(getObjectName("проводки.стр").toUpper());
+            selectStatement = selectClause + fromClause + QString(" ORDER BY \"P1__%1\" ASC;").arg(getObjectName("проводки.стр").toUpper());
 
         // Получим заголовки столбцов
         getColumnsHeaders(QString("Документ%1").arg(oper), columnsProperties);
@@ -2327,7 +2326,7 @@ bool DBFactory::execCommands()
             }
             if (table.size() > 0)
             {
-                command = QString("UPDATE \"%1\" SET %2 WHERE %3=%4").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
+                command = QString("UPDATE \"%1\" SET %2 WHERE %3=%4;").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
                 appendCommand(command);     // Добавим команду к списку готовых команд
             }
         }

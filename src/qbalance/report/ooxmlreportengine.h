@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QMap>
 #include "../kernel/essence.h"
 #include "../kernel/app.h"
+#include "../openoffice/ooxmlengine.h"
 #include "reportengine.h"
 
 class OOXMLReportEngine : public ReportEngine
@@ -32,17 +33,13 @@ public:
     ~OOXMLReportEngine();
     virtual bool open() { return ReportEngine::open(); }
     virtual bool open(QString name, QMap<QString, QVariant>* context);
-    QDomNode getCell(int, int);
 
 private:
-    TApplication*               app;
-    QString                     templateFileName;
+    OOXMLEngine*                ooxmlEngine;
     QMap<QString, QVariant>*    context;
-    QDomDocument                doc;
     QStringList                 expressionsForEvaluation;
     QDomNodeList                cells;
 
-    bool removeDir(QString);
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
     bool readExpression(int, int);
     QString getTableVariable(QDomElement);

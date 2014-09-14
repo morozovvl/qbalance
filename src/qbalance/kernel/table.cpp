@@ -50,7 +50,7 @@ void Table::query(QString filter)
     tableModel->setFilter(filter);
     if (!tableModel->select())
         app->showError(tableModel->lastError().text());
-    app->debug(1, "Query: " + tableModel->selectStatement() + "\n");
+//    app->debug(1, "Query: " + tableModel->selectStatement());
  }
 
 

@@ -38,6 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/dialog.h"
 #include "../gui/picture.h"
 #include "../driverfr/driverfr.h"
+#include "../openoffice/ooxmlengine.h"
 
 #include "eventloop.h"
 
@@ -152,6 +153,33 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
 QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 {   // Просто заворачивает аргумент в кавычки
     return QScriptValue('"' + context->argument(0).toString() + '"');
+}
+
+
+QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
+    bool result = false;
+    if (context->argument(0).isString())
+    {
+        QString scriptFile = context->argument(0).toString();
+        if (!QFile(scriptFile).exists())
+            scriptFile = TApplication::exemplar()->getScriptsPath() + scriptFile;
+        if (scriptFile.size() > 0 && QFile(scriptFile).exists())
+        {
+            QFile file(scriptFile);
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                QString script(file.readAll());
+                ((ScriptEngine*)engine)->evaluate(script);
+                file.close();
+                if (!engine->hasUncaughtException())
+                    return QScriptValue(result);
+                // Если в скриптах произошла ошибка
+                QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
+                TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
+            }
+        }
+    }
+    return QScriptValue(result);
 }
 
 
@@ -422,6 +450,23 @@ void QFileDialogFromScriptValue(const QScriptValue &object, QFileDialog* &out) {
 }
 
 
+// класс OOXMLEngine
+Q_DECLARE_METATYPE(OOXMLEngine*)
+
+QScriptValue OOXMLEngineConstructor(QScriptContext *, QScriptEngine *engine) {
+     OOXMLEngine *object = new OOXMLEngine();
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue OOXMLEngineToScriptValue(QScriptEngine *engine, OOXMLEngine* const &in) {
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+}
+
+void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
+    out = qobject_cast<OOXMLEngine*>(object.toQObject());
+}
+
+
 //================================================================================================
 // Реализация класса
 
@@ -515,6 +560,10 @@ void ScriptEngine::loadScriptObjects()
         // Объявим класс QLineEdit
         qScriptRegisterMetaType(this, qLineEditToScriptValue, qLineEditFromScriptValue);
 
+        // Объявим класс OOXMLEngine
+        qScriptRegisterMetaType(this, OOXMLEngineToScriptValue, OOXMLEngineFromScriptValue);
+        globalObject().setProperty("OOXMLEngine", newQMetaObject(&QObject::staticMetaObject, newFunction(OOXMLEngineConstructor)));
+
         // Объявим глобальные переменные и объекты
         if (parent() != 0)
         {
@@ -533,6 +582,7 @@ void ScriptEngine::loadScriptObjects()
         globalObject().setProperty("getOldValue", newFunction(getOldValue));
         globalObject().setProperty("quotes", newFunction(quotes));
         globalObject().setProperty("document", newQObject(document));
+        globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
 
         QStringList extensions;
         extensions << "qt.core"
@@ -593,6 +643,12 @@ bool ScriptEngine::evaluate()
 QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fileName, int lineNumber)
 {
     return QScriptEngine::evaluate(program, fileName, lineNumber);
+}
+
+
+QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
+{
+    return QScriptEngine::evaluate(program);
 }
 
 
@@ -1011,6 +1067,19 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
     appendEvent("GetFilter()", func);
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
+    if (document != 0 && document->isSinglePrv() && document->isQuanAccount())
+    {
+        func.body = "var кол = getValue(\"P1__КОЛ\");\n"
+                    "var цена = getValue(\"P1__ЦЕНА\");\n"
+                    "var сумма = getValue(\"P1__СУММА\");\n"
+                    "if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0)\n"
+                    "  цена = сумма / кол;\n"
+                    "else\n"
+                    "   сумма = кол * цена;\n"
+                    "setValue(\"P1__КОЛ\", кол);\n"
+                    "setValue(\"P1__ЦЕНА\", цена);\n"
+                    "setValue(\"P1__СУММА\", сумма); dsfsdfsdf \n";
+    }
     appendEvent("EventCalcTable()", func);
 
     func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
@@ -1033,12 +1102,15 @@ QMap<QString, EventFunction>* ScriptEngine::getEventsList()
     appendEvent("EventBeforeAddString()", func);
 
     func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
+    func.body = "return true;";
     appendEvent("EventAfterAddString()", func);
 
     func.comment = QObject::trUtf8("Событие происходит перед удалением строки из документа");
+    func.body = "return true;";
     appendEvent("EventBeforeDeleteString()", func);
 
     func.comment = QObject::trUtf8("Событие происходит после удаления строки из документа");
+    func.body = "return true;";
     appendEvent("EventAfterDeleteString()", func);
 
     return &eventsList;

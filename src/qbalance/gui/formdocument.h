@@ -37,8 +37,8 @@ public:
     ~FormDocument();
     Document* getParent() { return (Document*)parent; }
     virtual void parametersChangedEvent();
-    void setNumber(QString number) { numberEdit->setText(number.left(10)); }
-    void setDate(QDate date) { dateEdit->setDate(date); }
+    QDateEdit* getDateEdit() { return dateEdit; }
+    QLineEdit* getNumberEdit() { return numberEdit; }
     void showParameterText(QString dictName) { parameters->showText(dictName); }
     void showTextEdit(bool show) { textEdit->setVisible(show); }
     DocParameters*  getDocParameters() { return parameters; }

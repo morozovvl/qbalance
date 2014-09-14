@@ -94,7 +94,8 @@ SOURCES += main.cpp \
     gui/mydateitemdelegate.cpp \
     report/ooxmlreportengine.cpp \
     gui/mymdisubwindow.cpp \
-    kernel/barcodereader.cpp
+    kernel/barcodereader.cpp \
+    openoffice/ooxmlengine.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -155,7 +156,8 @@ HEADERS += kernel/app.h \
     gui/mydateitemdelegate.h \
     report/ooxmlreportengine.h \
     gui/mymdisubwindow.h \
-    kernel/barcodereader.h
+    kernel/barcodereader.h \
+    openoffice/ooxmlengine.h
 RESOURCES += ../../resources.qrc
 
 unix:MOC_DIR = ../../.moc
