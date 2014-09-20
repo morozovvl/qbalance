@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlTableModel>
 #include "formgrid.h"
 
+
 class Dictionary;
 class SearchParameters;
 
@@ -44,6 +45,7 @@ public:
     virtual void activateWidget();
     SearchParameters* getSearchParameters() { return parameters; }
     Q_INVOKABLE void clearAllComboBoxes();
+    Q_INVOKABLE void setParameter(QString, QString);
 
 
 private:

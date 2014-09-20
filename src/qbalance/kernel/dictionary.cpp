@@ -497,9 +497,11 @@ void Dictionary::query(QString defaultFilter)
                 {
                     for (int i = 0; i < tableModel->rowCount(); i++)
                     {
-                        grdTable->selectRow(i);
-                        if (getValue(idFieldName) == id)
+                        if (getValue(idFieldName, i) == id)
+                        {
+                            grdTable->selectRow(i);
                             break;
+                        }
                     }
                 }
                 else

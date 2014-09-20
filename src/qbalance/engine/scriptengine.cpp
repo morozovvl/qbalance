@@ -921,11 +921,10 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
         QScriptValueList args;
         args << newQObject(essence);
         result = globalObject().property(eventName).call(QScriptValue(), args).toString();
-        if (result == "undefined")
-            result = "";
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
+            result = "";
         }
     }
     return result;
@@ -939,11 +938,10 @@ QString ScriptEngine::getFilter()
     if (globalObject().property(eventName).isFunction())
     {
         result = globalObject().property(eventName).call().toString();
-        if (result == "undefined")
-            result = "";
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
+            result = "";
         }
     }
     return result;

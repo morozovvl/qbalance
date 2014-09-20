@@ -88,6 +88,12 @@ void FormGridSearch::close()
 }
 
 
+void FormGridSearch::setParameter(QString tableName, QString parameter)
+{
+    parameters->setParameter(tableName, parameter);
+}
+
+
 QString FormGridSearch::getFilter()
 {
     if (parameters != 0)

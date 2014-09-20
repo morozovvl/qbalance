@@ -93,6 +93,8 @@ void Dialog::keyPressEvent(QKeyEvent *event)
 
     if (form != 0)                              // Если у формы есть владелец, то запустим его обработчик
         form->keyPressEvent(event);
+    else
+        QDialog::keyPressEvent(event);
 }
 
 

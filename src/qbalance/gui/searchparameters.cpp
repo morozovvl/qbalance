@@ -169,6 +169,21 @@ QVector<sParam> SearchParameters::getParameters()
 }
 
 
+void SearchParameters::setParameter(QString tableName, QString parameter)
+{
+    for (int i = 0; i < parameters.size(); i++)
+    {
+        QString table = parameters.at(i);
+        if (table == tableName)
+        {
+            MyComboBox* cmb = this->findChild<MyComboBox*>(table);
+            cmb->setEditText(parameter);
+            return;
+        }
+    }
+}
+
+
 QString SearchParameters::getFilter()
 {
     QString filter;

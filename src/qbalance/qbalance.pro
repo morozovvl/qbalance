@@ -6,6 +6,7 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
+
 include(../qextserialport/src/qextserialport.pri)
 
 QT += sql \
@@ -14,26 +15,19 @@ QT += sql \
       script \
       gui \
       network
-#      widgets \
-#      designer
-
-CONFIG += rtti
-CONFIG += uitools
-CONFIG += qextserialport
-#QT += uitools
-#QT += widgets
-#QT += designer
-
 
 CONFIG(debug) {
     DESTDIR = ./
 }
 
 TARGET = ../../qbalance
-
+CONFIG += designer \
+    plugin \
+    uitools
 CONFIG -= app_bundle
-
 TEMPLATE = app
+CONFIG += debug
+
 
 SOURCES += main.cpp \
     kernel/app.cpp \
@@ -160,6 +154,7 @@ HEADERS += kernel/app.h \
     openoffice/ooxmlengine.h
 RESOURCES += ../../resources.qrc
 
+
 unix:MOC_DIR = ../../.moc
 win32:MOC_DIR = ../../.moc
 
@@ -183,10 +178,12 @@ unix {
  icons.path =  $$PIXMAPSDIR
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
+
 }
 
 windows {
     RC_FILE+=resources.rc
+    LIBS += ../qextserialport/release/qextserialport1.dll
 }
 
 OTHER_FILES += \
@@ -195,8 +192,7 @@ OTHER_FILES += \
     ../qtbindingsbase.pri \
     ../qtscriptgenerator.bat \
     license.txt \
-    ../../README \
-    CMakeLists.txt
+    ../../README
 
 
 

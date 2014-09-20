@@ -44,6 +44,7 @@ public:
     ~SearchParameters();
     void close();
     QVector<sParam> getParameters();              // Возвращает информацию о заданных параметрах поиска
+    void setParameter(QString, QString);
     void setFieldsList(QStringList);
     void setFocus();
     void setFormGrid(FormGridSearch* par) { parentForm = par; }

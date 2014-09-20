@@ -162,7 +162,7 @@ QDomElement OOXMLEngine::getCell(int row, int column, QDomDocument* document)
             if (nodeList.at(i).toElement().hasAttribute("table:number-columns-repeated"))
             {
                 int repeated = QString(nodeList.at(i).toElement().attribute("table:number-columns-repeated")).toInt();
-                if (column >= counter && column <= counter + repeated)
+                if (column >= counter && column < counter + repeated)
                     return nodeList.at(i).toElement();
                 counter = counter + repeated;
             }
@@ -180,13 +180,13 @@ QDomElement OOXMLEngine::getCell(int row, int column, QDomDocument* document)
 
 QString OOXMLEngine::getCellText(QDomElement element)
 {
-    return getCell(row(element), column(element)).firstChildElement("text:p").text();
+    return getCell(row(element), column(element)).firstChildElement("text:p").text().trimmed();
 }
 
 
 QString OOXMLEngine::getCellText(int row, int column)
 {
-    return getCell(row, column).firstChildElement("text:p").text();
+    return getCell(row, column).firstChildElement("text:p").text().trimmed();
 }
 
 
@@ -226,7 +226,7 @@ int OOXMLEngine::column(QDomElement cell)
     for (int i = 0; i < nodeList.count(); i++)
     {
         if (nodeList.at(i).toElement().hasAttribute("table:number-columns-repeated"))
-            counter = counter + QString(nodeList.at(i).toElement().attribute("table:number-columns-repeated")).toInt() - 1;
+            counter = counter + QString(nodeList.at(i).toElement().attribute("table:number-columns-repeated")).toInt();
         else
         {
             if (nodeList.at(i).toElement() == cell)
@@ -236,32 +236,6 @@ int OOXMLEngine::column(QDomElement cell)
     }
     return -1;
 }
-
-
-/*
-int OOXMLEngine::rowCount(QDomElement cell)
-{
-    cells = doc.elementsByTagName("table:table-row");   // будем просматривать все строки
-    for (int i = 0; i < cells.count(); i++)
-    {
-        if (cells.at(i) == cell.parentNode())
-            return i;
-    }
-    return -1;
-}
-
-
-int OOXMLEngine::column(QDomElement cell)
-{
-    cells = cell.parentNode().toElement().elementsByTagName("table:table-cell");   // будем просматривать все строки
-    for (int i = 0; i < cells.count(); i++)
-    {
-        if (cells.at(i) == cell)
-            return i;
-    }
-    return -1;
-}
-*/
 
 
 void OOXMLEngine::writeCell(QDomNode n, QString cellText, QString type)

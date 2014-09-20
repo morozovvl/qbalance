@@ -1,20 +1,16 @@
-QT += sql \
-      core \
-      script \
-      gui \
-      xml \
-      network
-#      plugin \
-#      designer \
-#      uitools
-CONFIG += uitools
+QT += sql
+QT += core
+QT += script
+QT += gui
+QT += xml
+QT += network
+CONFIG += designer \
+    plugin \
+    uitools
+#CONFIG += debug
 
-DEFINES += CORE_LIBRARY
-
-CONFIG += plugin
-
-unix:TARGET = ../../../designer/plugins
-win32:TARGET = ../../../../designer/plugins
+unix:TARGET = ../../../plugins/designer/plugins
+win32:TARGET = ../../../../plugins/designer/plugins
 
 TEMPLATE = lib
 
@@ -78,7 +74,7 @@ unix {
   DATAROOT =   $$PREFIX/share
   DESKTOPDIR =   $$DATAROOT/applications
   PIXMAPSDIR =   $$DATAROOT/pixmaps
- target.path =  $$[QT_INSTALL_PLUGINS]/designer
+ target.path =  $$BINDIR
  desktop.path =  $$DESKTOPDIR
  desktop.files =  qbalance.desktop
  icons.path =  $$PIXMAPSDIR

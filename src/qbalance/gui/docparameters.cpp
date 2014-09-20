@@ -82,26 +82,6 @@ void DocParameters::addString(QString name)
     }
 }
 
-/*
-void DocParameters::removeString(int strNum)
-{
-    QLabel* label = (QLabel*)gridLayout->itemAtPosition(strNum, 0)->widget();                   // удалим Label
-    if (label != 0)
-        gridLayout->removeWidget(label);
-    QLineEdit* lineEdit = (QLineEdit*)gridLayout->itemAtPosition(strNum, 1)->widget();       // удалим ComboBox
-    if (lineEdit != 0)
-    {
-        lineEdit->disconnect();
-        gridLayout->removeWidget(lineEdit);
-    }
-    QPushButton* button = (QPushButton*)gridLayout->itemAtPosition(strNum, 2)->widget();       // удалим PushButton
-    if (button != 0)
-    {
-        button->disconnect();
-        gridLayout->removeWidget(button);
-    }
-}
-*/
 
 void DocParameters::setApp(TApplication* a)
 {
