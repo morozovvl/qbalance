@@ -1122,15 +1122,17 @@ int DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* val
         {
             QString field = getObjectName(tableName + "." + key);
             field = field.size() > 0 ? field : key;
-            fieldsList.append('"' + field + '"').append(',');
+            if (fieldsList.size() > 0)
+                fieldsList.append(',');
+            fieldsList.append(field);
             QString str = values->value(key).toString();
             str.replace("'", "''");                         // Если в строке встречается апостроф, то заменим его двойным апострофом, иначе сервер не поймет
             str = "'" + str + "'";
-            valuesList.append(str).append(',');
+            if (valuesList.size() > 0)
+                valuesList.append(',');
+            valuesList.append(str);
         }
-        fieldsList.chop(1);
-        valuesList.chop(1);
-        command = QString("INSERT INTO %1 (%4, %2) VALUES ((SELECT MAX(%4)+1 FROM %1), %3) RETURNING %4;").arg(getObjectNameCom(tableName))
+        command = QString("INSERT INTO %1 (%4, %2) VALUES ((SELECT MAX(%4)+1 FROM %1),%3) RETURNING %4;").arg(getObjectNameCom(tableName))
                                                                           .arg(fieldsList)
                                                                           .arg(valuesList)
                                                                           .arg(getObjectNameCom(tableName + ".КОД"));
@@ -1299,11 +1301,8 @@ QString DBFactory::getObjectName(const QString& n)
 {
     QString name = n.toLower();
     QString result;
-    QMap<QString, QString>::const_iterator i = ObjectNames.find(name);
-    if (i != ObjectNames.end())
-    {
-        result = i.value();
-    }
+    if (ObjectNames.contains(name))
+        result = ObjectNames.value(name);
     else
     {
         // Присвоим результату значение по умолчанию

@@ -270,7 +270,8 @@ Dialog* TApplication::createForm(QString fileName)
 {
     QPointer<Dialog> formWidget = 0;
     QString path = getFormsPath();
-    QString fName = getLogin() + "/" + fileName + ".ui";
+//    QString fName = getLogin() + "/" + fileName + ".ui";
+    QString fName = fileName + ".ui";
     if (!Essence::getFile(path, fName, FormFileType))
     {
         fName = fileName + ".ui";

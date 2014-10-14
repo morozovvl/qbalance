@@ -751,7 +751,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
                     db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
                 else
                 {
-                    QByteArray templateFile = db->getFile(fileName, type, true);
+                    QByteArray templateFile = db->getFile(fileName, type);
                     if (templateFile.size() > 0)
                     {   // Если удалось получить шаблон отчета, то сохраним его локально
                         saveFile(fullFileName, &templateFile);

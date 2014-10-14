@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QList>
 #include <QtCore/QTextStream>
 #include <QtCore/QDateTime>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 
 #include "mysqlrelationaltablemodel.h"
 
@@ -279,7 +279,7 @@ private:
     QString                 dbName;             // наименование базы, с которой работает пользователь
     bool                    wasError;           // во время обращения к БД произошла ошибка
     QString                 errorText;          // текст последней ошибки
-    QMap<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
+    QHash<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
     QStringList             commands;
     QList<UpdateValues>     updateValues;
 

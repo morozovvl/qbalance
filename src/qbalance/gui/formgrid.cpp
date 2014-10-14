@@ -495,6 +495,7 @@ void FormGrid::cmdLoad()
     if (buttonLoad != 0 && buttonLoad->isVisible() && buttonLoad->isEnabled())
     {
         parent->getScriptEngine()->eventImport(this);
+        setButtons();
     }
 }
 

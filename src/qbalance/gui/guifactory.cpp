@@ -127,12 +127,12 @@ int GUIFactory::showError(QString errorText) {
     msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
-    mainWindow->setUpdatesEnabled(false);
+//    mainWindow->setUpdatesEnabled(false);
     msgBox.show();
     msgBox.activateWindow();
     msgBox.raise();
     msgBox.exec();
-    mainWindow->setUpdatesEnabled(true);
+//    mainWindow->setUpdatesEnabled(true);
     if (window != 0)
         mainWindow->getWorkSpace()->setActiveSubWindow(window);
     return 0;
@@ -147,12 +147,12 @@ int GUIFactory::showCriticalError(QString errorText) {
     msgBox.setWindowTitle(QObject::trUtf8("Критическая ошибка!"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText(errorText);
-    mainWindow->setUpdatesEnabled(false);
+//    mainWindow->setUpdatesEnabled(false);
     msgBox.show();
     msgBox.activateWindow();
     msgBox.raise();
     msgBox.exec();
-    mainWindow->setUpdatesEnabled(true);
+//    mainWindow->setUpdatesEnabled(true);
     if (window != 0)
         mainWindow->getWorkSpace()->setActiveSubWindow(window);
     return 0;

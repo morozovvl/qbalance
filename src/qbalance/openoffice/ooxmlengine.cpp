@@ -140,37 +140,36 @@ bool OOXMLEngine::removeDir(QString dirName)
 QDomElement OOXMLEngine::getCell(int row, int column, QDomDocument* document)
 {
     QDomNode rowNode;
-    QDomNodeList cells;
-    QDomDocument* docum = (document == 0) ? &doc : document;   // Если задан документ, в котором искать
-    cells = docum->elementsByTagName("table:table-row");   // будем просматривать все строки
-    if (row <= cells.count())
+    if (row >= 0 && column >= 0)
     {
-        for (int i = 0; i < cells.count(); i++)
+        QDomNodeList cells;
+        QDomDocument* docum = (document == 0) ? &doc : document;   // Если задан документ, в котором искать
+        cells = docum->elementsByTagName("table:table-row");   // будем просматривать все строки
+        if (row <= cells.count())
         {
-            if (i == row)
-            {
-                    rowNode = cells.at(i);
-                    break;
-            }
-        }
+            rowNode = cells.at(row);
 
-        // Теперь будем просматривать ячейки в строке
-        int counter = 0;
-        QDomNodeList nodeList = rowNode.childNodes();
-        for (int i = 0; i < nodeList.count(); i++)
-        {
-            if (nodeList.at(i).toElement().hasAttribute("table:number-columns-repeated"))
+            // Теперь будем просматривать ячейки в строке
+            QDomNodeList nodeList = rowNode.childNodes();
+
+            int counter = 0;
+            int nodeListQuan = nodeList.count();
+            for (int i = 0; i < nodeListQuan; i++)
             {
-                int repeated = QString(nodeList.at(i).toElement().attribute("table:number-columns-repeated")).toInt();
-                if (column >= counter && column < counter + repeated)
-                    return nodeList.at(i).toElement();
-                counter = counter + repeated;
-            }
-            else
-            {
-                if (counter == column)
-                    return nodeList.at(i).toElement();
-                counter++;
+                QDomElement element = nodeList.at(i).toElement();
+                if (element.hasAttribute("table:number-columns-repeated"))
+                {
+                    int repeated = QString(element.attribute("table:number-columns-repeated")).toInt();
+                    if (column >= counter && column < counter + repeated)
+                        return element;
+                    counter = counter + repeated;
+                }
+                else
+                {
+                    if (counter == column)
+                        return element;
+                    counter++;
+                }
             }
         }
     }
@@ -195,7 +194,8 @@ QDomElement OOXMLEngine::getCellWithAnnotation(QString annotation)
     QDomNode rowNode;
     QDomNodeList cells;
     cells = doc.elementsByTagName("office:annotation");   // будем просматривать аннотации
-    for (int i = 0; i < cells.count(); i++)
+    int cellsQuan = cells.count();
+    for (int i = 0; i < cellsQuan; i++)
     {
         if (cells.at(i).toElement().elementsByTagName("text:p").at(0).toElement().text() == annotation)
         {
@@ -210,7 +210,8 @@ int OOXMLEngine::row(QDomElement cell)
 {
     QDomNodeList cells;
     cells = cell.ownerDocument().elementsByTagName("table:table-row");   // будем просматривать все строки
-    for (int i = 0; i < cells.count(); i++)
+    int cellsQuan = cells.count();
+    for (int i = 0; i < cellsQuan; i++)
     {
         if (cells.at(i) == cell.parentNode())
             return i;
@@ -225,11 +226,12 @@ int OOXMLEngine::column(QDomElement cell)
     QDomNodeList nodeList = cell.parentNode().childNodes();
     for (int i = 0; i < nodeList.count(); i++)
     {
-        if (nodeList.at(i).toElement().hasAttribute("table:number-columns-repeated"))
-            counter = counter + QString(nodeList.at(i).toElement().attribute("table:number-columns-repeated")).toInt();
+        QDomElement element = nodeList.at(i).toElement();
+        if (element.hasAttribute("table:number-columns-repeated"))
+            counter = counter + QString(element.attribute("table:number-columns-repeated")).toInt();
         else
         {
-            if (nodeList.at(i).toElement() == cell)
+            if (element == cell)
                 return counter;
             counter++;
         }

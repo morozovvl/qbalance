@@ -284,3 +284,9 @@ bool Documents::setTableModel(int)
     return false;
 }
 
+
+void Documents::updateCurrentRow(int strNum)
+{
+    Dictionary::updateCurrentRow(strNum);
+}
+

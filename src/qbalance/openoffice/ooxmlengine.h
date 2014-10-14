@@ -40,12 +40,7 @@ public:
     Q_INVOKABLE QDomElement getCellWithAnnotation(QString);
     Q_INVOKABLE int row(QDomElement);
     Q_INVOKABLE int column(QDomElement);
-//    Q_INVOKABLE int rowCount();
-//    Q_INVOKABLE int columnCount();
-//    Q_INVOKABLE QDomNode getCell(QString);
     Q_INVOKABLE void writeCell(QDomNode, QString, QString);
-//    bool readExpression(int, int);
-//    QString getTableVariable(QDomElement);
 
 private:
     TApplication*               app;
