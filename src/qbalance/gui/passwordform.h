@@ -39,6 +39,7 @@ public:
         QString getPassword() { return password; }
 public slots:
         int exec();
+        void cmdOk();
 
 protected:
         virtual void readSettings();
@@ -48,8 +49,6 @@ private:
         QString password;
         QComboBox* LoginSelector;
         QLineEdit* PasswordEditor;
-private slots:
-        void cmdOk();
 };
 
 #endif

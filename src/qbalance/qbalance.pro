@@ -89,7 +89,8 @@ SOURCES += main.cpp \
     report/ooxmlreportengine.cpp \
     gui/mymdisubwindow.cpp \
     kernel/barcodereader.cpp \
-    openoffice/ooxmlengine.cpp
+    openoffice/ooxmlengine.cpp \
+    gui/messagewindow.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -151,7 +152,8 @@ HEADERS += kernel/app.h \
     report/ooxmlreportengine.h \
     gui/mymdisubwindow.h \
     kernel/barcodereader.h \
-    openoffice/ooxmlengine.h
+    openoffice/ooxmlengine.h \
+    gui/messagewindow.h
 RESOURCES += ../../resources.qrc
 
 

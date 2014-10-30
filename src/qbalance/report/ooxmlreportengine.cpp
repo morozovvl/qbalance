@@ -35,7 +35,7 @@ OOXMLReportEngine::~OOXMLReportEngine()
 }
 
 
-bool OOXMLReportEngine::open(QString fileName, QMap<QString, QVariant>* cont)
+bool OOXMLReportEngine::open(QString fileName, QHash<QString, QVariant>* cont)
 {
     if (ooxmlEngine->open(fileName))
     {

@@ -132,9 +132,11 @@ bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
-    if (gui->open()) {  // Попытаемся открыть графический интерфейс
+    if (gui->open())
+    {  // Попытаемся открыть графический интерфейс
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
+            messagesWindow = new MessageWindow();
             int result = gui->openDB(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
@@ -162,6 +164,8 @@ bool TApplication::open() {
                         accDict->setPhotoEnabled(false);
                     }
 
+                    secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
                 }
@@ -181,7 +185,10 @@ bool TApplication::open() {
 }
 
 
-void TApplication::close() {
+void TApplication::close()
+{
+    delete messagesWindow;
+
     if (documents.count() > 0)
     {
         foreach(QString operName, documents.keys())
@@ -288,7 +295,7 @@ Dialog* TApplication::createForm(QString fileName)
             formLoader.setWorkingDirectory(getFormsPath());
 
 
-            formWidget = qobject_cast<Dialog*>(formLoader.load(&file));
+            formWidget = (Dialog*)formLoader.load(&file);
             file.close();
             if (formWidget != 0)
             {
@@ -546,4 +553,9 @@ QString TApplication::savePhotoToServer(QString file, QString localFile)
     return resultFileName;
 }
 
+
+void TApplication::print(QString str)
+{
+    messagesWindow->print(str);
+}
 

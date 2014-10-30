@@ -17,32 +17,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtCore/QFile>
-#include <QtCore/QIODevice>
-#include <QtCore/QTextStream>
-#include <QtCore/QString>
-#include "../kernel/app.h"
-#include "../kernel/essence.h"
-#include "../engine/reportscriptengine.h"
-#include "reportengine.h"
+#ifndef MESSAGEWINDOW_H
+#define MESSAGEWINDOW_H
+
+#include <QtGui/QTextEdit>
+#include "mainwindow.h"
 
 
-ReportEngine::ReportEngine(ReportScriptEngine* engine) :QObject()
+class MessageWindow : public QObject
 {
-    scriptEngine = engine;
-}
+    Q_OBJECT
+public:
+    explicit MessageWindow();
+    ~MessageWindow();
+    void print(QString);
+    
+private:
+    QTextEdit*      textEditor;
+    MyMdiSubWindow* subWindow;
+};
 
 
-ReportEngine::~ReportEngine()
-{
-
-}
-
-
-bool ReportEngine::open(QHash<QString, QVariant>* context, QString name, QString ext)
-{
-    reportContext = context;
-    reportName = name;
-    reportExt = ext;
-    return true;
-}
+#endif // MESSAGEWINDOW_H

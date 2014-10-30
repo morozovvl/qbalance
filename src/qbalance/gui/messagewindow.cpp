@@ -17,32 +17,37 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QtCore/QFile>
-#include <QtCore/QIODevice>
-#include <QtCore/QTextStream>
-#include <QtCore/QString>
+#include <QtGui/QTextEdit>
+#include "messagewindow.h"
 #include "../kernel/app.h"
-#include "../kernel/essence.h"
-#include "../engine/reportscriptengine.h"
-#include "reportengine.h"
 
-
-ReportEngine::ReportEngine(ReportScriptEngine* engine) :QObject()
+MessageWindow::MessageWindow() :
+    QObject()
 {
-    scriptEngine = engine;
+    subWindow = 0;
+    textEditor = new QTextEdit();
+    textEditor->setParent(subWindow);
+    textEditor->setWindowTitle(QObject::trUtf8("Сообщения"));
 }
 
 
-ReportEngine::~ReportEngine()
+MessageWindow::~MessageWindow()
 {
-
+    TApplication::exemplar()->getMainWindow()->removeMdiWindow(subWindow);
+    subWindow = 0;
+    delete textEditor;
 }
 
 
-bool ReportEngine::open(QHash<QString, QVariant>* context, QString name, QString ext)
+void MessageWindow::print(QString str)
 {
-    reportContext = context;
-    reportName = name;
-    reportExt = ext;
-    return true;
+    if (subWindow == 0)
+        subWindow = TApplication::exemplar()->getMainWindow()->appendMdiWindow(textEditor);
+
+    if (subWindow != 0)
+    {
+        textEditor->append(str);
+        textEditor->show();
+        subWindow->show();
+    }
 }

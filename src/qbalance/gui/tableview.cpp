@@ -73,7 +73,7 @@ void TableView::close()
 void TableView::setEssence(Essence* ess)
 {
     essence = ess;
-    app = TApplication::exemplar();
+    app = essence->getApp();
     db = app->getDBFactory();
     if (parent != 0)
     {
@@ -570,7 +570,7 @@ void TableView::readSettings()
     {
         // Если информация о ширине столбца отстутствует в окружении программы, попытаемся прочитать ее из базы
         QSqlQuery config;
-        QMap<QString, int> values;
+        QHash<QString, int> values;
 
         app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + parent->getConfigName() + "...");
         config = db->getConfig();

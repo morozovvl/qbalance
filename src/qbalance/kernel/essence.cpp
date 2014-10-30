@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QVariant>
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlError>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
@@ -240,6 +240,7 @@ QString Essence::getPhotoPath()
         path = db->getDictionaryPhotoPath(tableName);
         if (path.size() == 0)
             photoEnabled = false;
+        photoPath = path;
     }
     else
     {
@@ -249,14 +250,14 @@ QString Essence::getPhotoPath()
 }
 
 
-QString Essence::getPhotoFile()
+QString Essence::getPhotoFile(QString copyTo)
 {
     QString idValue;    // Значение идентификатора фотографии
     QString file;       // Полное имя файла с фотографией
     QString localFile;  // Локальный путь к фотографии
     QString pictureUrl;
 
-    if (photoEnabled)
+    if (photoEnabled || copyTo.size() > 0)
     {
         // Сначала получим имя поля из которого будем брать значение идентификатора
         if (photoIdField.size() == 0 && isDictionary)
@@ -269,10 +270,9 @@ QString Essence::getPhotoFile()
         if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
         {
             pictureUrl = preparePictureUrl();
-            int id = getValue(photoIdField).toInt();
-            if (id != 0)
+            idValue = getValue(photoIdField).toString().trimmed();
+            if (idValue.size() > 0)
             {
-                idValue = QString("%1").arg(id).trimmed();
                 file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
                 localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
                 if (isDictionary && !filesSumChecked.contains(localFile))
@@ -283,11 +283,13 @@ QString Essence::getPhotoFile()
                         // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
                         if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
                         {
-                            app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+//                            app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
                             QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
                             if (picture.size() > 0)
                             {   // Если удалось получить какую-то фотографию
                                 saveFile(file, &picture);
+                                if (copyTo.size() > 0)
+                                    app->savePhotoToServer(copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                             }
                         }
                         if (!QFile(file).exists())
@@ -313,13 +315,18 @@ QString Essence::getPhotoFile()
                                         {
                                             if (m_networkAccessManager->networkAccessible() == QNetworkAccessManager::Accessible)
                                             {
-                                                urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), idValue);             // Запомним URL картинки и его локальный код
+                                                urlId v = {idValue, copyTo};
+                                                urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
                                                 QNetworkRequest m_request(url);
                                                 QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
                                                 if (reply->error() == QNetworkReply::NoError)
-                                                    app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                                {
+//                                                    app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                                                }
                                                 else
+                                                {
                                                     app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                                }
                                             }
                                             else
                                             {
@@ -353,7 +360,8 @@ QString Essence::getPhotoFile()
 void Essence::replyFinished(QNetworkReply* reply)
 {
     QString url = QString("%1:%2%3").arg(reply->url().host()).arg(reply->url().port(80)).arg(reply->url().path());
-    QString idValue = urls.value(url);
+    QString idValue = urls.value(url).id;
+    QString copyTo = urls.value(url).copyTo;
     urls.remove(url);
     if (reply->error() == QNetworkReply::NoError)
     {
@@ -364,6 +372,9 @@ void Essence::replyFinished(QNetworkReply* reply)
             QByteArray array = reply->readAll();
             saveFile(file + "/" + idValue + ".jpg", &array);
             app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
+
+            if (copyTo.size() > 0)
+                app->savePhotoToServer(copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
 
             // Проверим, не нужно ли обновить фотографию
             if (idValue == getValue(photoIdField).toString().trimmed())
@@ -376,8 +387,8 @@ void Essence::replyFinished(QNetworkReply* reply)
     else
         app->showMessageOnStatusBar(QString(tr("Не удалось загрузить фотографию с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
-    if (urls.size() == 0)
-        app->showMessageOnStatusBar(tr("Список заданий на загрузку фотографий пуст"));
+//    if (urls.size() == 0)
+//        app->showMessageOnStatusBar(tr("Список заданий на загрузку фотографий пуст"));
 
     reply->close();
     reply->deleteLater();
@@ -740,14 +751,18 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
     else
     {   // файл существует локально
         QFile file(fullFileName);
+        // Проверим, какой файл свежее, локальный или на сервере
+        QDateTime locFileTime = QFileInfo(file).lastModified().addSecs(app->getSecDiff());  // Время модификации локального файла, приведенное к серверному времени
+        QDateTime servFileTime = db->getFileDateTime(fileName, type);
         if (file.open(QIODevice::ReadOnly))
         {
             QByteArray array = file.readAll();
             file.close();
             qulonglong localFileCheckSum = db->calculateCRC32(&array);
             if (db->getFileCheckSum(fileName, type) != localFileCheckSum)
-            {   // контрольные суммы файлов не совпадают
-                if (app->isSA())
+            {   // контрольные суммы файлов не совпадают или нужно сохранить принудительно
+                if (app->isSA() && (!servFileTime.isValid() || servFileTime.secsTo(locFileTime) > 5))   // Если не указано время сохранения файла на сервере
+                                                                                                        // или локальный файл свежее серверного более чем на 5 секунд
                     db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
                 else
                 {
@@ -803,7 +818,7 @@ void Essence::print(QString fileName)
 // fileName - файл с шаблоном документа
 {
     // Подготовим контекст для печати
-    QMap<QString, QVariant> printValues;
+    QHash<QString, QVariant> printValues;
 
     // Создадим скриптовый обработчик контекста печати
     ReportScriptEngine scriptEngine(&printValues, this);

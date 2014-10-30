@@ -56,7 +56,7 @@ public:
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
     void setAutoSelect(bool select) { autoSelect = select; }
-    void    readSettings();
+    virtual void readSettings();
     MyMdiSubWindow*     getSubWindow();
 
 public slots:
@@ -98,7 +98,7 @@ protected:
 
 private:
     bool                    uiCreated;
-    QMap<QString, QString>  toolTips;
+    QHash<QString, QString>  toolTips;
     bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
     bool                    autoSelect;
 

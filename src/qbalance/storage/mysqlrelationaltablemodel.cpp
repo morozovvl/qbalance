@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlRelation>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QUuid>
 #include <QtCore/QLocale>
 #include <QDebug>

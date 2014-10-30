@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef OOXMLREPORTENGINE_H
 #define OOXMLREPORTENGINE_H
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "../kernel/essence.h"
 #include "../kernel/app.h"
 #include "../openoffice/ooxmlengine.h"
@@ -32,11 +32,11 @@ public:
     OOXMLReportEngine(ReportScriptEngine* = 0);
     ~OOXMLReportEngine();
     virtual bool open() { return ReportEngine::open(); }
-    virtual bool open(QString name, QMap<QString, QVariant>* context);
+    virtual bool open(QString name, QHash<QString, QVariant>* context);
 
 private:
     OOXMLEngine*                ooxmlEngine;
-    QMap<QString, QVariant>*    context;
+    QHash<QString, QVariant>*    context;
     QStringList                 expressionsForEvaluation;
     QDomNodeList                cells;
 

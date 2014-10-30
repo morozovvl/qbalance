@@ -145,6 +145,7 @@ public:
     // Работа с файлами
     QByteArray getFile(QString, FileType, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
     qulonglong getFileCheckSum(QString, FileType, bool = false);
+    QDateTime getFileDateTime(QString, FileType, bool = false);
     QStringList getFilesList(QString, FileType, bool = false);
     virtual bool isFileExist(QString, FileType, bool = false);
     void setFile(QString, FileType, QByteArray, bool = false);
@@ -170,13 +171,13 @@ public:
     QSqlQuery getToper(int operNumber);
     int getDictionaryId(QString dictName);
     bool removeDictionary(QString);
-    QStringList getFieldsList(QMap<int, FieldType>*);
+    QStringList getFieldsList(QHash<int, FieldType>*);
     QStringList getFieldsList(QString tableName, int = -1);
     bool isSet(QString tableName);
     void getColumnsProperties(QList<FieldType>*, QString = "", QString = "", int = 0);
     void getColumnsRestrictions(QString, QList<FieldType>*);                    // Устанавливает ограничение на просматриваемые поля исходя из разграничений доступа
     QString getPhotoDatabase();
-    int insertDictDefault(QString tableName, QMap<QString, QVariant>* values);                 // Вставляет в справочник новую строку
+    int insertDictDefault(QString tableName, QHash<QString, QVariant>* values);                 // Вставляет в справочник новую строку
     bool removeDictValue(QString, qulonglong);                                          // Удаляет строку в указанном справочнике с заданным кодом
     void setPeriod(QDate, QDate);
     void getPeriod(QDate&, QDate&);
@@ -208,7 +209,7 @@ public:
     QSqlQuery getAccounts() { return accounts; }
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
-    void setConfig(QString, QString, QString);
+    virtual void setConfig(QString, QString, QString);
     QSqlQuery getConfig() { return config; }
 
     // Функции для мастера создания новых (свойств старых) справочников
@@ -257,6 +258,7 @@ public:
     bool    isExistsCommands();
     void    appendCommand(QString);
     void    appendCommand(UpdateValues);
+    QVariant getValue(QString command, int row, int column);
 
 
 private:

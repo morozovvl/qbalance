@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef REPORTSCRIPENGINE_H
 #define REPORTSCRIPENGINE_H
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "scriptengine.h"
 #include "reportcontext.h"
 
@@ -28,7 +28,7 @@ class ReportScriptEngine : public ScriptEngine
 {
     Q_OBJECT
 public:
-    ReportScriptEngine(QMap<QString, QVariant>*, QObject *parent = 0);
+    ReportScriptEngine(QHash<QString, QVariant>*, QObject *parent = 0);
     ~ReportScriptEngine();
     ReportContext* getReportContext() { return reportContext; }
 protected:

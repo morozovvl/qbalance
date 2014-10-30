@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QString>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "essence.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -99,8 +99,8 @@ protected:
     virtual bool        setTableModel(int = 0);
 
 private:
-    QMap<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
-    QMap<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
+    QHash<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
+    QHash<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
     Dictionaries*                   dictionaries;       // Объекты справочников
     Documents*                      parent;
     int                             operNumber;
@@ -110,7 +110,7 @@ private:
     bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
     QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
-    QMap<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
+    QHash<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
     bool                            localDictsOpened;
     bool                            docModified;

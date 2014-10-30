@@ -70,11 +70,11 @@ private slots:
     void            docListHeaderUp();
     void            docListHeaderDown();
     void            showAccountForm();
+    void            sortHeadersList(QTableWidget*, QListWidget*);
+    void            sortHeaders(QListWidget*, QList<FieldType>*);
     void            toperTableChanged();
     void            fieldsTableChanged();
     void            docListFieldsTableChanged();
-    void            sortHeadersList(QTableWidget*, QListWidget*);
-    void            sortHeaders(QListWidget*, QList<FieldType>*);
 
 };
 

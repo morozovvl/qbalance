@@ -85,7 +85,7 @@ public slots:
     QVariant	value(int index) const          { return thisSqlQuery()->value(index); }
 
 /* Осталось определить:
-    QMap<QString, QVariant>	boundValues () const
+    QHash<QString, QVariant>	boundValues () const
     const QSqlDriver *	driver () const
     QSqlError	lastError () const
     const QSqlResult *	result () const

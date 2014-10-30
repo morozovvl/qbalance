@@ -55,7 +55,7 @@ public:
     bool getScriptResult() { return scriptResult; }
     void setIsDocumentScript(bool docScr) { globalObject().setProperty("isDocumentScript", docScr); }
 // События
-    virtual QMap<QString, EventFunction>* getEventsList();
+    virtual QHash<QString, EventFunction>* getEventsList();
     void    appendEvent(QString, EventFunction);
     QString getBlankScripts();
     void eventAfterCalculate();
@@ -82,7 +82,7 @@ public:
     void eventCardCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
 protected:
-    QMap<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
+    QHash<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     QString         script;
     Document*       document;
     virtual void    loadScriptObjects();

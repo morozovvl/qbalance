@@ -36,10 +36,10 @@ public:
     ~ReportEngine();
     virtual bool open() { return true; }
     virtual void close() { return; }
-    virtual bool open(QMap<QString, QVariant>* context, QString name, QString ext);
+    virtual bool open(QHash<QString, QVariant>* context, QString name, QString ext);
 
 protected:
-    QMap<QString, QVariant>*            reportContext;
+    QHash<QString, QVariant>*            reportContext;
     QString                             reportName;
     QString                             reportExt;
     ReportScriptEngine*                 scriptEngine;

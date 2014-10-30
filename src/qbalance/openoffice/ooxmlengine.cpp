@@ -61,6 +61,8 @@ bool OOXMLEngine::open(QString fName, bool ro)
             {
                 if (doc.setContent(&file))
                 {
+                    rowCells = doc.elementsByTagName("table:table-row");
+                    rowQuan = rowCells.count();
                     file.close();
                     return true;
                 }
@@ -137,17 +139,14 @@ bool OOXMLEngine::removeDir(QString dirName)
 }
 
 
-QDomElement OOXMLEngine::getCell(int row, int column, QDomDocument* document)
+QDomElement OOXMLEngine::getCell(int row, int column)
 {
     QDomNode rowNode;
     if (row >= 0 && column >= 0)
     {
-        QDomNodeList cells;
-        QDomDocument* docum = (document == 0) ? &doc : document;   // Если задан документ, в котором искать
-        cells = docum->elementsByTagName("table:table-row");   // будем просматривать все строки
-        if (row <= cells.count())
+        if (row <= rowQuan)
         {
-            rowNode = cells.at(row);
+            rowNode = rowCells.at(row);
 
             // Теперь будем просматривать ячейки в строке
             QDomNodeList nodeList = rowNode.childNodes();
@@ -208,12 +207,9 @@ QDomElement OOXMLEngine::getCellWithAnnotation(QString annotation)
 
 int OOXMLEngine::row(QDomElement cell)
 {
-    QDomNodeList cells;
-    cells = cell.ownerDocument().elementsByTagName("table:table-row");   // будем просматривать все строки
-    int cellsQuan = cells.count();
-    for (int i = 0; i < cellsQuan; i++)
+    for (int i = 0; i < rowQuan; i++)
     {
-        if (cells.at(i) == cell.parentNode())
+        if (rowCells.at(i) == cell.parentNode())
             return i;
     }
     return -1;

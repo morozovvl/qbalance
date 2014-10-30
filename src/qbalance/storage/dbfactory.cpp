@@ -217,10 +217,11 @@ void DBFactory::initDBFactory()
     initObjectNames();                  // Инициируем переводчик имен объектов из внутренних наименований в наименования БД
     loadSystemTables();
 
-    files = execQuery(QString("SELECT %1, %2, %3, %4 FROM %5;").arg(getObjectNameCom("файлы.код"))
+    files = execQuery(QString("SELECT %1, %2, %3, %4, %5 FROM %6;").arg(getObjectNameCom("файлы.код"))
                                                                .arg(getObjectNameCom("файлы.имя"))
                                                                .arg(getObjectNameCom("файлы.тип"))
                                                                .arg(getObjectNameCom("файлы.контрсумма"))
+                                                               .arg(getObjectNameCom("файлы.датавремя"))
                                                                .arg(getObjectNameCom("файлы")));
 
    // Откроем базу с картинками
@@ -409,7 +410,7 @@ QSqlRecord DBFactory::getDictionariesProperties(QString tName)
 }
 
 
-QStringList DBFactory::getFieldsList(QMap<int, FieldType>* columnsProperties)
+QStringList DBFactory::getFieldsList(QHash<int, FieldType>* columnsProperties)
 {
     QStringList result;
     foreach (int i, columnsProperties->keys())
@@ -1105,7 +1106,7 @@ bool DBFactory::appendColumnHeader(int mainTableId, int tableId, QString column,
 }
 
 
-int DBFactory::insertDictDefault(QString tableName, QMap<QString, QVariant>* values)
+int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* values)
 {
     int result = -1;
     QString command;
@@ -1402,6 +1403,41 @@ qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
 }
 
 
+QDateTime DBFactory::getFileDateTime(QString file, FileType type, bool extend)
+{
+    QDateTime result;
+    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
+    if (extend && extDbExist)
+    {
+        QString text = QString("SELECT %6 FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+                                                                              .arg(getObjectNameCom("файлы.имя"))
+                                                                              .arg(fileName)
+                                                                              .arg(getObjectNameCom("файлы.тип"))
+                                                                              .arg(type)
+                                                                              .arg(getObjectNameCom("файлы.датавремя"));
+        QSqlQuery query = execQuery(text, true, dbExtend);
+        query.first();
+        if (query.isValid())
+        {
+            result = query.record().value(0).toDateTime();
+        }
+        return result;
+    }
+    files.first();
+    while (files.isValid())
+    {
+        if (files.record().value(getObjectName("файлы.имя")).toString().trimmed() == fileName &&
+            files.record().value(getObjectName("файлы.тип")).toInt() == type)
+        {   // Если найден файл нужного типа и с нужным именем, то вернем его контрольную сумму
+            return files.record().value(getObjectName("файлы.датавремя")).toDateTime();
+        }
+        files.next();
+    }
+    return result;
+}
+
+
+
 QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend)
 {
     QStringList filesList;
@@ -1481,14 +1517,15 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
-        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4 WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4, %9 = now() WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
                                                                                   .arg(getObjectNameCom("файлы.имя"))
                                                                                   .arg(fileName)
                                                                                   .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(type);
+                                                                                  .arg(type)
+                                                                                  .arg(getObjectNameCom("файлы.датавремя"));
     }
     else
     {
@@ -2377,5 +2414,16 @@ qulonglong DBFactory::calculateCRC32(QByteArray* array)
     return crc ^ 0xFFFFFFFFUL;
 }
 
+
+QVariant DBFactory::getValue(QString command, int row, int column)
+{
+    QVariant result;
+    QSqlQuery data = execQuery(command);
+    if (data.seek(row))
+    {
+        result = data.record().value(column);
+    }
+    return result;
+}
 
 

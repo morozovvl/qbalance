@@ -247,7 +247,6 @@ void FormDocument::cmdOk()
         if (numberEdit != 0)
             getParent()->getParent()->setValue("НОМЕР", QVariant(numberEdit->text()));
         getParent()->getParent()->getGridTable()->setFocus();
-        qDebug() << dateEdit->date() << app->getBeginDate() << app->getEndDate();
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));

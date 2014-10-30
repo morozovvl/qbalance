@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "reportcontextfunctions.h"
 
 
-ReportScriptEngine::ReportScriptEngine(QMap<QString, QVariant>* context, QObject *parent/* = 0*/)
+ReportScriptEngine::ReportScriptEngine(QHash<QString, QVariant>* context, QObject *parent/* = 0*/)
 :ScriptEngine(parent)
 {
     reportContext = new ReportContext(context);

@@ -33,7 +33,7 @@ public:
     DocumentScriptEngine(QObject *parent = 0);
 // События
     void eventAppendFromQuery(int, QSqlRecord*);
-    virtual QMap<QString, EventFunction>* getEventsList();
+    virtual QHash<QString, EventFunction>* getEventsList();
 protected:
     virtual void loadScriptObjects();
 private:

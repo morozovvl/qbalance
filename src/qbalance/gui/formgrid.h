@@ -55,7 +55,7 @@ public:
 
     void setButtonAdd(bool);
     void setButtonDelete(bool);
-    void setButtons();
+    virtual void setButtons();
 
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual void activateWidget();

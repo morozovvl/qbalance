@@ -938,11 +938,6 @@ QString ScriptEngine::getFilter()
     if (globalObject().property(eventName).isFunction())
     {
         result = globalObject().property(eventName).call().toString();
-        if (hasUncaughtException())
-        {   // Если в скриптах произошла ошибка
-            showScriptError(eventName);
-            result = "";
-        }
     }
     return result;
 }
@@ -1009,7 +1004,7 @@ QString ScriptEngine::getBlankScripts()
     // создадим пустой скрипт с событиями
     QString scripts;
     QTextStream stream(&scripts, QIODevice::Text);
-    QMap<QString, EventFunction>* events = getEventsList();
+    QHash<QString, EventFunction>* events = getEventsList();
     foreach (QString funcName, events->keys())
     {
         stream << "function " << funcName << endl;
@@ -1027,7 +1022,7 @@ QString ScriptEngine::getBlankScripts()
 }
 
 
-QMap<QString, EventFunction>* ScriptEngine::getEventsList()
+QHash<QString, EventFunction>* ScriptEngine::getEventsList()
 {
     EventFunction func;
 

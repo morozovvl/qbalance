@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlQuery>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "../storage/dbfactory.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 
@@ -53,7 +53,8 @@ public:
     QString                             getTagName() { return tagName; }
     Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
-    Q_INVOKABLE bool                    isReadOnly();
+    Q_INVOKABLE virtual bool            isReadOnly();
+    TApplication*                       getApp() { return app; }
 
 protected:
     DBFactory*                          db;

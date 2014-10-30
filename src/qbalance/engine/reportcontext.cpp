@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "reportcontext.h"
 
 
-ReportContext::ReportContext(QMap<QString, QVariant>* d, QObject *parent/* = 0*/) :
+ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*/) :
     QObject(parent)
 {
     data = d;

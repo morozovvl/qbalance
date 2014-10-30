@@ -21,20 +21,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define REPORTCONTEXT_H
 
 #include <QtCore/QObject>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QVariant>
 
 class ReportContext : public QObject
 {
     Q_OBJECT
 public:
-    explicit ReportContext(QMap<QString, QVariant>*, QObject *parent = 0);
+    explicit ReportContext(QHash<QString, QVariant>*, QObject *parent = 0);
     Q_INVOKABLE int count() { return data->count(); }
     Q_INVOKABLE QVariant getValue(QString);
     Q_INVOKABLE void setValue(QString, QVariant);
 //    Q_INVOKABLE void sortTable(QString);    // сортировка контекста печати в разделе таблица по заданному полю
 private:
-    QMap<QString, QVariant>*    data;
+    QHash<QString, QVariant>*    data;
 };
 
 #endif // REPORTCONTEXT_H

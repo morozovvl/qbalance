@@ -105,7 +105,7 @@ void DocumentScriptEngine::eventAppendFromQuery(int number, QSqlRecord* values)
 }
 
 
-QMap<QString, EventFunction>* DocumentScriptEngine::getEventsList()
+QHash<QString, EventFunction>* DocumentScriptEngine::getEventsList()
 {
     ScriptEngine::getEventsList();
     EventFunction func;

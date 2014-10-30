@@ -20,14 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef REPORTS_H
 #define REPORTS_H
 
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "../kernel/dictionaries.h"
 #include "report.h"
 
 class Reports : public Dictionaries
 {
 public:
-    QMap<QString, Report*> reports;                    // Объекты отчетов
+    QHash<QString, Report*> reports;                    // Объекты отчетов
     Reports();
 };
 

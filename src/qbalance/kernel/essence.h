@@ -45,6 +45,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 
+struct urlId {
+    QString     id;                 // скачать файл с таким ID
+    QString     copyTo;             // скопировать его в файл
+};
+
+
 class Essence : public Table {
     Q_OBJECT
 
@@ -137,7 +143,7 @@ public:
     virtual void        afterRowChanged();
 
 // Прочие функции
-    Q_INVOKABLE QString getPhotoFile();
+    Q_INVOKABLE virtual QString getPhotoFile(QString copyTo = "");
     static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
@@ -174,7 +180,7 @@ protected:
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     bool                photoEnabled;
     QStringList         filesSumChecked;                        // Список файлов, контрольная сумма которых уже проверена при просмотре, чтобы повторно ее не проверять
-    QMap<QString, QVariant>             oldValues;              // Старые значения для текущей строки
+    QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
 
@@ -184,7 +190,7 @@ private:
     QString             photoNameField;
     QWidget*            activeWidget;
 
-    QHash<QString, QString>  urls;                               // URL картинок в интернете и их локальные идентификаторы
+    QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QPointer<QNetworkAccessManager>  m_networkAccessManager;
 
 

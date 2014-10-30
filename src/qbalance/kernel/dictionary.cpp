@@ -94,7 +94,7 @@ bool Dictionary::add()
                       app->getLogin()));
         return false;
     }
-    QMap<QString, QVariant> values;
+    QHash<QString, QVariant> values;
     bool lAddDict = true;
     if (!isSet())
     {
@@ -248,7 +248,7 @@ qulonglong Dictionary::getId(int row)
     {
         // Если это набор, то продолжаем
         QString filter;
-        QMap<QString, QVariant> values;
+        QHash<QString, QVariant> values;
         for (int i = 0; i < fieldList.count(); i++)
         {       // Просмотрим список полей
             QString name = fieldList.at(i);

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QDebug>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <QtSql/QSqlRelationalTableModel>
@@ -84,13 +84,13 @@ protected:
     Table*                  parent;
 private:
 // Свойства для механизма реляционных отношений
-    QMap<int, int>          keyColumns;
-    QMap<int, QString>      tablesAliases;
+    QHash<int, int>          keyColumns;
+    QHash<int, QString>      tablesAliases;
 
 // Свойства для обслуживания SQL запросов
     QString                 selectCommand;
     QString                 sortClause;
-    QMap<int, UpdateInfoStruct>     updateInfo;
+    QHash<int, UpdateInfoStruct>     updateInfo;
 
 // Прочие свойства
     QString                 tableAlias;

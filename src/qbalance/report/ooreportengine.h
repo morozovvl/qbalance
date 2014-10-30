@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef OOREPORTENGINE_H
 #define OOREPORTENGINE_H
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "../kernel/essence.h"
 #include "reportengine.h"
 
@@ -32,7 +32,7 @@ public:
     OOReportEngine(ReportScriptEngine*);
     ~OOReportEngine();
     virtual bool open() { return ReportEngine::open(); }
-    virtual bool open(QMap<QString, QVariant>* context, QString name, QString ext);
+    virtual bool open(QHash<QString, QVariant>* context, QString name, QString ext);
 };
 
 #endif // OOREPORTENGINE_H

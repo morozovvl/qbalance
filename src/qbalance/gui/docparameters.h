@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DOCPARAMETERS_H
 #define DOCPARAMETERS_H
 
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QList>
 #include <QFrame>
 #include <QtCore/QString>

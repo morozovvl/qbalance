@@ -364,7 +364,7 @@ void Form::readSettings()
     if (widget == 0)
         widget = formWidget;
 
-    QMap<QString, int> settingValues;
+    QHash<QString, int> settingValues;
     // Попытаемся сначала прочитать локальные значения координат окна и размеров на компьютере пользователя
     QSettings settings;
     if (settings.status() == QSettings::NoError)

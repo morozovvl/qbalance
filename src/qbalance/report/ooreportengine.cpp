@@ -31,7 +31,7 @@ OOReportEngine::~OOReportEngine()
 }
 
 
-bool OOReportEngine::open(QMap<QString, QVariant>* context, QString name, QString ext)
+bool OOReportEngine::open(QHash<QString, QVariant>* context, QString name, QString ext)
 {
     bool result = false;
     if (ReportEngine::open(context, name, ext))

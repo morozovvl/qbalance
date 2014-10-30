@@ -34,13 +34,14 @@ public:
     Q_INVOKABLE void close();
     Q_INVOKABLE void setApp(TApplication* a) { app = a; }
     Q_INVOKABLE QDomDocument* getDomDocument() { return & doc; }
-    Q_INVOKABLE QDomElement getCell(int, int, QDomDocument* = 0);
+    Q_INVOKABLE QDomElement getCell(int, int);
     Q_INVOKABLE QString getCellText(QDomElement);
     Q_INVOKABLE QString getCellText(int, int);
     Q_INVOKABLE QDomElement getCellWithAnnotation(QString);
     Q_INVOKABLE int row(QDomElement);
     Q_INVOKABLE int column(QDomElement);
     Q_INVOKABLE void writeCell(QDomNode, QString, QString);
+    Q_INVOKABLE int rowCount() { return rowQuan; }
 
 private:
     TApplication*               app;
@@ -49,6 +50,8 @@ private:
     QString                     tmpDir;
     QDomDocument                doc;
     QDomNodeList                cells;
+    QDomNodeList                rowCells;
+    int                         rowQuan;
     bool                        readOnly;
 
     bool removeDir(QString);

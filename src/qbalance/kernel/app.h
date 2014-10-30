@@ -21,13 +21,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define APP_H
 
 #include <QtGui/QApplication>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QDate>
 #include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QPointer>
 #include <QtUiTools/QtUiTools>
+#include <QtGui/QTextEdit>
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
@@ -35,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/guifactory.h"
 #include "../gui/mainwindow.h"
 #include "../gui/dialog.h"
+#include "../gui/messagewindow.h"
 #include "../driverfr/driverfr.h"
 
 class Dictionaries;
@@ -59,7 +61,7 @@ class TApplication : public QApplication {
     Q_OBJECT
 
 public:
-    QMap<QString, Documents*> documents;                        // Объекты списков документов
+    QHash<QString, Documents*> documents;                        // Объекты списков документов
 
     TApplication(int& argc, char** argv);
     ~TApplication();
@@ -68,7 +70,7 @@ public:
     void removeDocuments(int opNumber);
     Q_INVOKABLE DBFactory* getDBFactory() { return db; }
     Q_INVOKABLE void clearMessageOnStatusBar() { gui->getMainWindow()->getStatusBar()->clearMessage(); }
-    Q_INVOKABLE void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
+    Q_INVOKABLE virtual void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
     Q_INVOKABLE QVariant getConst(QString);
     GUIFactory* getGUIFactory() { return gui; }
     Q_INVOKABLE QString getLogin() { return db->getLogin(); }
@@ -130,10 +132,13 @@ public:
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);
     void         barCodeReadyRead(QString);
-    bool         readCardReader(QKeyEvent*);
+    virtual bool readCardReader(QKeyEvent*);
 
     Q_INVOKABLE QString capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
     Q_INVOKABLE QString savePhotoToServer(QString, QString);
+    Q_INVOKABLE void print(QString);
+    MessageWindow* getMessageWindow() { return messagesWindow; }
+    int getSecDiff() { return secDiff; }
 
 signals:
     void cardCodeReaded(QString);
@@ -154,6 +159,12 @@ private:
     BarCodeReader*          barCodeReader;
     QString                 cardReaderPrefix;
     QString                 cardReaderCode;
+    MessageWindow*          messagesWindow;
+    int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
+                                                                    // Если число положительное, то время на этих часах отстает
+                                                                    // Чтобы получить приблизительное время на сервере
+                                                                    // нужно к текущему времени прибавить эту разницу
+
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати

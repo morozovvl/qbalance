@@ -46,7 +46,7 @@ private:
     bool                addDictionary;
     bool                columnsRecordsExists;
     QList<FieldType>    fields;                // Первоначальный список полей
-    QMap<QString, int>  columnsOrder;           // Порядок вывода столбцов
+    QHash<QString, int>  columnsOrder;           // Порядок вывода столбцов
     QStringList         oldColumnsList;         // Список старых полей
     QString             table;
     QLineEdit*          tableName;              // Как таблица будет называться в БД
