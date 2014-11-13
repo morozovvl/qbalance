@@ -718,7 +718,23 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                                     .arg(tName);
                     if (exec(command))
                     {
-                        return true;
+                        command = QString("CREATE TRIGGER \"testinserting_%1\" "  \
+                                          "BEFORE INSERT ON \"%1\" " \
+                                          "FOR EACH ROW " \
+                                          "EXECUTE PROCEDURE testinsertingid();")
+                                        .arg(tName);
+                        if (exec(command))
+                        {
+                            command = QString("CREATE TRIGGER \"testupdating_%1\" "  \
+                                              "BEFORE UPDATE ON \"%1\" " \
+                                              "FOR EACH ROW " \
+                                              "EXECUTE PROCEDURE testupdatingid();")
+                                            .arg(tName);
+                            if (exec(command))
+                            {
+                                return true;
+                            }
+                        }
                     }
                 }
 
@@ -2426,4 +2442,27 @@ QVariant DBFactory::getValue(QString command, int row, int column)
     return result;
 }
 
+
+QVariant DBFactory::getValue(QString command, int row, QString column)
+{
+    QVariant result;
+    QSqlQuery data = execQuery(command);
+    if (data.seek(row))
+    {
+        result = data.record().value(column);
+    }
+    return result;
+}
+
+
+QVariant DBFactory::getOstSum(QString acc, int id)
+{
+    return getValue(QString("SELECT %1 FROM %2 WHERE %3 = '%4' AND %5 = %6;").arg(getObjectNameCom("сальдо.консальдо"))
+                                                                             .arg(getObjectNameCom("сальдо"))
+                                                                             .arg(getObjectNameCom("сальдо.счет"))
+                                                                             .arg(acc)
+                                                                             .arg(getObjectNameCom("сальдо.код"))
+                                                                             .arg(id),
+                                                                              0, 0);
+}
 

@@ -58,6 +58,7 @@ public:
     void setAutoSelect(bool select) { autoSelect = select; }
     virtual void readSettings();
     MyMdiSubWindow*     getSubWindow();
+    virtual TApplication*      getApp() { return app; }
 
 public slots:
     Q_INVOKABLE virtual int exec();

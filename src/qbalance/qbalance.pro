@@ -26,7 +26,6 @@ CONFIG += designer \
     uitools
 CONFIG -= app_bundle
 TEMPLATE = app
-CONFIG += debug
 
 
 SOURCES += main.cpp \
@@ -180,7 +179,7 @@ unix {
  icons.path =  $$PIXMAPSDIR
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
-
+# LIBS += -L../../plugins/drvfr -ldrvfr
 }
 
 windows {

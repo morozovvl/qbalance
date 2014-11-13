@@ -39,6 +39,7 @@ private:
     QHash<QString, QVariant>*    context;
     QStringList                 expressionsForEvaluation;
     QDomNodeList                cells;
+    QString                     ooPath;
 
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
     bool readExpression(int, int);

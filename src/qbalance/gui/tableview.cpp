@@ -73,7 +73,7 @@ void TableView::close()
 void TableView::setEssence(Essence* ess)
 {
     essence = ess;
-    app = essence->getApp();
+    app = parent->getApp();
     db = app->getDBFactory();
     if (parent != 0)
     {
@@ -81,7 +81,9 @@ void TableView::setEssence(Essence* ess)
         connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
         tableModel = essence->getTableModel();
+
         QTableView::setModel(tableModel);
+
         connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
 
         essence->setGridTable(this);
@@ -476,7 +478,7 @@ void TableView::showPhoto()
 {
     if (picture != 0 && essence != 0)
     {
-        if (essence->getTableModel()->rowCount() > 0)
+        if (tableModel->rowCount() > 0)
         {
 
             QString photoFileName = essence->getPhotoFile(); // Получим имя фотографии

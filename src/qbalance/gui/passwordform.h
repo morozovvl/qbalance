@@ -42,8 +42,8 @@ public slots:
         void cmdOk();
 
 protected:
-        virtual void readSettings();
-        virtual void writeSettings();
+        void readSettings();
+        void writeSettings();
 private:
         QString login;
         QString password;

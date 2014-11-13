@@ -50,6 +50,7 @@ private slots:
       void showProcesses();
       void showReports();
       void showConfigs();
+      void showMessagesWindow();
       void newRecord();
       void deleteRecord();
       void about();
@@ -89,6 +90,7 @@ private:
       QAction* aboutAct;
       QAction* aboutQtAct;
       QAction* periodAct;
+      QAction* showMessageWindow;
       QAction* exitAct;
       QMdiArea* workSpace;
 

@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QObject>
 #include "../../qextserialport/src/qextserialport.h"
-//#include "../../qextserialport/src/qextserialport_p.h"
 
 
 class QextSerialPort;
@@ -31,7 +30,7 @@ class BarCodeReader : public QObject
 {
     Q_OBJECT
 public:
-    explicit BarCodeReader(QObject *parent = 0);
+    explicit BarCodeReader(QObject *parent = 0, QString = "");
     ~BarCodeReader();
     
 signals:

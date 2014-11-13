@@ -41,12 +41,18 @@ MessageWindow::~MessageWindow()
 
 void MessageWindow::print(QString str)
 {
+    textEditor->append(str);
+    show();
+}
+
+
+void MessageWindow::show()
+{
     if (subWindow == 0)
         subWindow = TApplication::exemplar()->getMainWindow()->appendMdiWindow(textEditor);
 
     if (subWindow != 0)
     {
-        textEditor->append(str);
         textEditor->show();
         subWindow->show();
     }

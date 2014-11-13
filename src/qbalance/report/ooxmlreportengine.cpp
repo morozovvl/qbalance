@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 OOXMLReportEngine::OOXMLReportEngine(ReportScriptEngine* engine) : ReportEngine(engine)
 {
     ooxmlEngine = new OOXMLEngine();
+    ooPath = "";
 }
 
 
@@ -44,11 +45,19 @@ bool OOXMLReportEngine::open(QString fileName, QHash<QString, QVariant>* cont)
         ooxmlEngine->close();
 
         // Запустим OpenOffice
+        if (ooPath.size() == 0)
+        {
+#ifdef Q_OS_WIN32
+            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
+#else
+            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
+#endif
+        }
         QProcess* ooProcess = new QProcess();
-        ooProcess->start("soffice", QStringList() << "--invisible" << "--quickstart" << fileName);
+        ooProcess->start(ooPath, QStringList() << "--calc" << "--invisible" << "--quickstart" << fileName);
 
-        if ((!ooProcess->waitForStarted(1000)) && (ooProcess->state() == QProcess::NotRunning))    // Подождем 1 секунду и если процесс не запустился
-            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office");                  // выдадим сообщение об ошибке
+        if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
+            TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
         else
             return true;
     }

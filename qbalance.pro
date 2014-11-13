@@ -9,7 +9,6 @@ SUBDIRS = src/qextserialport \
           
 
 # build must be last:
-CONFIG += release
 #SUBDIRS += build
 
 #windows {

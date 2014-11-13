@@ -143,7 +143,7 @@ public:
     virtual void        afterRowChanged();
 
 // Прочие функции
-    Q_INVOKABLE virtual QString getPhotoFile(QString copyTo = "");
+    Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
     static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода

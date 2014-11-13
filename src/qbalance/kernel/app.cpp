@@ -56,20 +56,20 @@ TApplication::TApplication(int & argc, char** argv)
     dictionaryList = 0;
     topersList = 0;
     driverFR = new DriverFR(this);
-    barCodeReader = new BarCodeReader(this);
+    barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
 
     driverFRisValid = false;
     fsWebCamIsValid = true;                     // Поначалу будем считать, что утилита fsWebCam установлена
 
     reportTemplateType = OOXMLreportTemplate;
 
-    cardReaderPrefix = ";8336322632=";
-    cardReaderCode = "";
+    cardReaderCode = "";                        // Прочитанный код на магнитной карте
 
     if (!Exemplar)
     {
         Exemplar = this;
     }
+    initConfig();
 }
 
 
@@ -78,6 +78,18 @@ TApplication::~TApplication()
     delete driverFR;
     delete gui;
     delete db;
+}
+
+
+void TApplication::initConfig()
+{
+#ifdef Q_OS_WIN32
+    config.barCodeReaderPort = "COM3";                  // COM-порт сканера штрих кодов в Windows
+#else
+    config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
+#endif
+    config.frDriverPort = 1;                            // COM-порт фискального регистратора
+    config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
 }
 
 
@@ -146,7 +158,7 @@ bool TApplication::open() {
                 {   // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();
-                    if (driverFR->open())
+                    if (driverFR->open(config.frDriverPort))
                         driverFRisValid = true;
 
                     // Загрузим константы
@@ -277,7 +289,6 @@ Dialog* TApplication::createForm(QString fileName)
 {
     QPointer<Dialog> formWidget = 0;
     QString path = getFormsPath();
-//    QString fName = getLogin() + "/" + fileName + ".ui";
     QString fName = fileName + ".ui";
     if (!Essence::getFile(path, fName, FormFileType))
     {
@@ -294,8 +305,8 @@ Dialog* TApplication::createForm(QString fileName)
             formLoader.addPluginPath(applicationDirPath() + "/plugins");
             formLoader.setWorkingDirectory(getFormsPath());
 
-
-            formWidget = (Dialog*)formLoader.load(&file);
+//          formWidget = qobject_cast<Dialog*>(formLoader.load(&file));
+            formWidget = (Dialog*)(formLoader.load(&file));
             file.close();
             if (formWidget != 0)
             {
@@ -304,7 +315,7 @@ Dialog* TApplication::createForm(QString fileName)
                     showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                     return 0;
                 }
-                formWidget->setApp(this);
+//              formWidget->setApp(this);
                 formWidget->findCmdOk();
             }
         }
@@ -449,14 +460,10 @@ void TApplication::showProcesses()
 {
     ScriptEngine* scriptEngine;
     scriptEngine = new ScriptEngine();
-    if (scriptEngine != 0)
+    if (scriptEngine->open())
     {
-        if (scriptEngine->open("/home/vladimir/work/qbalance1/test.qs"))
-        {
-            if (scriptEngine->evaluate())
-            {
-            }
-        }
+        scriptEngine->evaluate("evaluateScript(\"analizeBankAccount.qs\")");
+        scriptEngine->close();
     }
     delete scriptEngine;
 }
@@ -497,15 +504,15 @@ bool TApplication::readCardReader(QKeyEvent* keyEvent)
         text = keyEvent->text();
 
     cardReaderCode.append(text);
-    int leftSize = cardReaderCode.size() <= cardReaderPrefix.size() ? cardReaderCode.size() : cardReaderPrefix.size();
-    if (leftSize > 0 && (cardReaderPrefix.left(leftSize) == cardReaderCode.left(leftSize)))   // Если начальные введенные символы начинают совпадать с префиксом
+    int leftSize = cardReaderCode.size() <= config.cardReaderPrefix.size() ? cardReaderCode.size() : config.cardReaderPrefix.size();
+    if (leftSize > 0 && (config.cardReaderPrefix.left(leftSize) == cardReaderCode.left(leftSize)))   // Если начальные введенные символы начинают совпадать с префиксом
     {                                                                // считывателя магнитных карт
-        if (cardReaderPrefix == cardReaderCode.left(leftSize))       // Если префикс полностью совпал
+        if (config.cardReaderPrefix == cardReaderCode.left(leftSize))       // Если префикс полностью совпал
         {
             if (keyEvent->key() == 44 || keyEvent->key() == 63)     // Последовательность заканчивается клавишей "?"
             {
                 QString cardCode = cardReaderCode;
-                cardCode.replace(cardReaderPrefix, "");
+                cardCode.replace(config.cardReaderPrefix, "");
                 cardCode.chop(1);
                 emit cardCodeReaded(cardCode.trimmed());
                 cardReaderCode = "";
@@ -557,5 +564,30 @@ QString TApplication::savePhotoToServer(QString file, QString localFile)
 void TApplication::print(QString str)
 {
     messagesWindow->print(str);
+}
+
+
+QString TApplication::findFileFromEnv(QString file)
+{
+    QString result;
+    QStringList sl(QProcessEnvironment::systemEnvironment().toStringList());
+    int idx = sl.indexOf(QRegExp("^PATH=.*", Qt::CaseInsensitive));
+    QString path = sl.value(idx).remove("PATH=", Qt::CaseInsensitive);
+#ifdef Q_OS_WIN32
+    QStringList sl1(path.split(";"));
+#else
+    QStringList sl1(path.split(":"));
+#endif
+    foreach (QString path, sl1)
+    {
+#ifdef Q_OS_WIN32
+        result = path + "\\" + file;
+#else
+        result = path + "/" + file;
+#endif
+        if (QFile::exists(result))
+            break;
+    }
+    return result;
 }
 

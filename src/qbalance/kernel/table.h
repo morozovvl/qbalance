@@ -54,7 +54,6 @@ public:
     Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE virtual bool            isReadOnly();
-    TApplication*                       getApp() { return app; }
 
 protected:
     DBFactory*                          db;

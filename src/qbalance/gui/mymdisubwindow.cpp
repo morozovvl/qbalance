@@ -17,28 +17,24 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef MESSAGEWINDOW_H
-#define MESSAGEWINDOW_H
+#include "mymdisubwindow.h"
+#include "dialog.h"
 
-#include <QtGui/QTextEdit>
-#include "mainwindow.h"
-
-
-class MessageWindow : public QObject
+MyMdiSubWindow::MyMdiSubWindow(QWidget *parent) :
+    QMdiSubWindow(parent)
 {
-    Q_OBJECT
-public:
-    explicit MessageWindow();
-    ~MessageWindow();
-
-public slots:
-    void print(QString = "");
-    void show();
-
-private:
-    QTextEdit*      textEditor;
-    MyMdiSubWindow* subWindow;
-};
+}
 
 
-#endif // MESSAGEWINDOW_H
+void MyMdiSubWindow::closeEvent (QCloseEvent* event)
+{
+    if (QString::compare(widget()->metaObject()->className(), "Dialog", Qt::CaseSensitive) == 0)
+    {
+        Dialog* dialog = (Dialog*)widget();
+
+        if (dialog->getForm() != 0)
+            dialog->getForm()->cmdCancel();
+    }
+    QMdiSubWindow::closeEvent(event);
+}
+

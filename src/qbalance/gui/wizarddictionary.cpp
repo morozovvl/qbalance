@@ -476,12 +476,12 @@ void WizardDictionary::addColumn()
 
 void WizardDictionary::deleteColumn()
 {
-    if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить столбец? Вы уверены?")) == QMessageBox::Yes)
+    QString tableName = fieldsTable.item(fieldsTable.currentRow(), tableField)->text().trimmed();
+    QString fieldName = fieldsTable.item(fieldsTable.currentRow(), columnField)->text().trimmed();
+    if (fieldName != "КОД")
     {
-        if (fieldsTable.rowCount() > 1)
-        {   // Можно удалять все столбцы, кроме первого (КОД)
-            QString tableName = fieldsTable.item(fieldsTable.currentRow(), tableField)->text().trimmed();
-            QString fieldName = fieldsTable.item(fieldsTable.currentRow(), columnField)->text().trimmed();
+        if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить столбец? Вы уверены?")) == QMessageBox::Yes)
+        {
             fieldsTable.removeRow(fieldsTable.currentRow());
             for (int i = 0; i < fields.count(); i++)
             {
@@ -516,9 +516,9 @@ void WizardDictionary::deleteColumn()
                     }
                 }
             }
+            fieldsTable.setFocus(Qt::OtherFocusReason);
+            saveOrder();
         }
-        fieldsTable.setFocus(Qt::OtherFocusReason);
-        saveOrder();
     }
 }
 

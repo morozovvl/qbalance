@@ -57,6 +57,13 @@ enum  ReportTemplateTypes
 };
 
 
+struct ConfigVars {
+    QString         barCodeReaderPort;          // COM-порт сканера штрих кодов
+    int             frDriverPort;               // COM-порт фискального регистратора
+    QString         cardReaderPrefix;           // Префикс магнитной карты
+};
+
+
 class TApplication : public QApplication {
     Q_OBJECT
 
@@ -139,6 +146,8 @@ public:
     Q_INVOKABLE void print(QString);
     MessageWindow* getMessageWindow() { return messagesWindow; }
     int getSecDiff() { return secDiff; }
+    void    initConfig();
+    QString     findFileFromEnv(QString);
 
 signals:
     void cardCodeReaded(QString);
@@ -157,7 +166,6 @@ private:
     static int              DebugMode;
     static TApplication*    Exemplar;
     BarCodeReader*          barCodeReader;
-    QString                 cardReaderPrefix;
     QString                 cardReaderCode;
     MessageWindow*          messagesWindow;
     int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
@@ -168,6 +176,7 @@ private:
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
+    ConfigVars              config;
 
     void loadConsts();
 

@@ -98,14 +98,14 @@ class DriverFR : public QObject
     Q_OBJECT
 public:
     DriverFR(QObject *parent = 0);
-    bool open();
+    bool open(int = 1);
+    void close();
 
 // Функции для работы с драйвером
-    Q_INVOKABLE int Connect();
-    Q_INVOKABLE int DisConnect();
     Q_INVOKABLE int Beep();
 
     static DriverFR* exemplar() { return Exemplar; }
+
 signals:
 
 public slots:
@@ -113,7 +113,6 @@ private:
     static DriverFR*   Exemplar;
     fr_func*        fr;     // Функции фискального регистратора
     fr_prop*        prop;   // Свойства фискального регистратора
-
 };
 
 #endif // DRIVERFR_H

@@ -288,10 +288,7 @@ void Form::hide()
         if (!freeWindow)
         {
             if (subWindow != 0)
-            {
                 subWindow->hide();
-                subWindow = 0;
-            }
         }
         formWidget->hide();
     }

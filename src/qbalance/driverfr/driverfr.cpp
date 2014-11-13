@@ -15,35 +15,38 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
 }
 
 
-bool DriverFR::open()
+bool DriverFR::open(int port)
 {
     // Инициализация драйвера
-//    fr = drvfrInitialize();
-//    prop = fr->prop;
+/*
+    fr = drvfrInitialize();
+    if (fr != NULL)
+    {
+        prop = fr->prop;
 
-    // Установление связи с ккм
-//    prop->ComPortNumber = 1;            // COM1
-//    prop->BaudRate      = 6;            // 115200
-//    prop->Timeout       = 50;
+        // Установление связи с ккм
+        prop->ComPortNumber = port;         // COM1
+        prop->BaudRate      = 6;            // 115200
+        prop->Timeout       = 50;
 
-    return true;
+        if (fr->Connect() != -1)
+        {
+            return true;
+        }
+    }
+*/
+    return false;
 }
 
 
-int DriverFR::Connect()
+void DriverFR::close()
 {
-    return fr->Connect();
-}
-
-
-int DriverFR::DisConnect()
-{
-    return 0;
+    fr->DisConnect();
 }
 
 
 int DriverFR::Beep()
 {
-    return 0;
+    return fr->Beep();
 }
 

@@ -21,15 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "app.h"
 
 
-BarCodeReader::BarCodeReader(QObject *parent) :
+BarCodeReader::BarCodeReader(QObject *parent, QString port) :
     QObject(parent)
 {
 
-#ifdef Q_OS_WIN32
-    barCodeReaderComPort = new QextSerialPort("COM3", QextSerialPort::EventDriven);
-#else
-    barCodeReaderComPort = new QextSerialPort("/dev/ttyUSB0", QextSerialPort::EventDriven);
-#endif
+    barCodeReaderComPort = new QextSerialPort(port, QextSerialPort::EventDriven);
     barCodeString = "";
 
     if (barCodeReaderComPort != 0)

@@ -46,6 +46,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Q_DECLARE_METATYPE(Dialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
 
+QStringList ScriptEngine::loadedScripts;
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
 
@@ -161,21 +162,24 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
     if (context->argument(0).isString())
     {
         QString scriptFile = context->argument(0).toString();
-        if (!QFile(scriptFile).exists())
-            scriptFile = TApplication::exemplar()->getScriptsPath() + scriptFile;
-        if (scriptFile.size() > 0 && QFile(scriptFile).exists())
+        if (ScriptEngine::loadScript(scriptFile))
         {
-            QFile file(scriptFile);
-            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            QString scriptPath = TApplication::exemplar()->getScriptsPath();
+            scriptFile = scriptPath + scriptFile;
+            if (QFile(scriptFile).exists())
             {
-                QString script(file.readAll());
-                ((ScriptEngine*)engine)->evaluate(script);
-                file.close();
-                if (!engine->hasUncaughtException())
-                    return QScriptValue(result);
-                // Если в скриптах произошла ошибка
-                QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
-                TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
+                QFile file(scriptFile);
+                if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+                {
+                    QString script(file.readAll());
+                    ((ScriptEngine*)engine)->evaluate(script);
+                    file.close();
+                    if (!engine->hasUncaughtException())
+                        return QScriptValue(result);
+                    // Если в скриптах произошла ошибка
+                    QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
+                    TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
+                }
             }
         }
     }
@@ -518,90 +522,87 @@ bool ScriptEngine::open(QString scriptFile)
 
 void ScriptEngine::loadScriptObjects()
 {
-    if (script != 0)
+    installTranslatorFunctions(QScriptValue());
+
+    // Объявим классы для работы с БД
+    globalObject().setProperty(sqlRecordClass->name(), sqlRecordClass->constructor());
+    globalObject().setProperty(sqlFieldClass->name(), sqlFieldClass->constructor());
+    globalObject().setProperty(sqlQueryClass->name(), sqlQueryClass->constructor());
+
+    // Объявим классы для работы с пользовательскими формами
+    qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
+    qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
+    globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
+    qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
+    globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
+    qScriptRegisterMetaType(this, FormGridToScriptValue, FormGridFromScriptValue);
+    globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
+    qScriptRegisterMetaType(this, FormGridSearchToScriptValue, FormGridSearchFromScriptValue);
+    globalObject().setProperty("FormGridSearch", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridSearchConstructor)));
+    qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
+    globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
+    qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
+    globalObject().setProperty("Picture", newQMetaObject(&QObject::staticMetaObject, newFunction(PictureConstructor)));
+    qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
+    globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
+    qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
+    globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
+    qScriptRegisterMetaType(this, DocumentsToScriptValue, DocumentsFromScriptValue);
+    globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
+    qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
+    globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
+
+    globalObject().setProperty("QPushButton", newQMetaObject(&QObject::staticMetaObject, newFunction(QPushButtonConstructor)));
+    qScriptRegisterMetaType(this, QPushButtonToScriptValue, QPushButtonFromScriptValue);
+
+    // Объявим класс Dialog
+    qScriptRegisterMetaType(this, qDialogToScriptValue, qDialogFromScriptValue);
+    globalObject().setProperty("Dialog", newQMetaObject(&QObject::staticMetaObject, newFunction(qDialogConstructor)));
+
+    // Объявим класс QLineEdit
+    qScriptRegisterMetaType(this, qLineEditToScriptValue, qLineEditFromScriptValue);
+
+    // Объявим класс OOXMLEngine
+    qScriptRegisterMetaType(this, OOXMLEngineToScriptValue, OOXMLEngineFromScriptValue);
+    globalObject().setProperty("OOXMLEngine", newQMetaObject(&QObject::staticMetaObject, newFunction(OOXMLEngineConstructor)));
+
+    // Объявим глобальные переменные и объекты
+    if (parent() != 0)
     {
-        installTranslatorFunctions(QScriptValue());
+        globalObject().setProperty("form", newQObject(((Document*)parent())->getForm()));
+        globalObject().setProperty("table", newQObject(parent()));
+    }
+    globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении
+    globalObject().setProperty("scriptResult", true);   // результат работы скрипта
+    globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
+    globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
+    globalObject().setProperty("app", newQObject(TApplication::exemplar()));
+    globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
+    globalObject().setProperty("getDictionary", newFunction(getDictionary));
+    globalObject().setProperty("getValue", newFunction(getValue));
+    globalObject().setProperty("setValue", newFunction(setValue));
+    globalObject().setProperty("getOldValue", newFunction(getOldValue));
+    globalObject().setProperty("quotes", newFunction(quotes));
+    globalObject().setProperty("document", newQObject(document));
+    globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
 
-        // Объявим классы для работы с БД
-        globalObject().setProperty(sqlRecordClass->name(), sqlRecordClass->constructor());
-        globalObject().setProperty(sqlFieldClass->name(), sqlFieldClass->constructor());
-        globalObject().setProperty(sqlQueryClass->name(), sqlQueryClass->constructor());
-
-        // Объявим классы для работы с пользовательскими формами
-        qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
-        qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
-        globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
-        qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);
-        globalObject().setProperty("Form", newQMetaObject(&QObject::staticMetaObject, newFunction(FormConstructor)));
-        qScriptRegisterMetaType(this, FormGridToScriptValue, FormGridFromScriptValue);
-        globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
-        qScriptRegisterMetaType(this, FormGridSearchToScriptValue, FormGridSearchFromScriptValue);
-        globalObject().setProperty("FormGridSearch", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridSearchConstructor)));
-        qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
-        globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
-        qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
-        globalObject().setProperty("Picture", newQMetaObject(&QObject::staticMetaObject, newFunction(PictureConstructor)));
-        qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
-        globalObject().setProperty("Saldo", newQMetaObject(&QObject::staticMetaObject, newFunction(SaldoConstructor)));
-        qScriptRegisterMetaType(this, DictionariesToScriptValue, DictionariesFromScriptValue);
-        globalObject().setProperty("Dictionaries", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionariesConstructor)));
-        qScriptRegisterMetaType(this, DocumentsToScriptValue, DocumentsFromScriptValue);
-        globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
-        qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
-        globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
-
-        globalObject().setProperty("QPushButton", newQMetaObject(&QObject::staticMetaObject, newFunction(QPushButtonConstructor)));
-        qScriptRegisterMetaType(this, QPushButtonToScriptValue, QPushButtonFromScriptValue);
-
-        // Объявим класс Dialog
-        qScriptRegisterMetaType(this, qDialogToScriptValue, qDialogFromScriptValue);
-        globalObject().setProperty("Dialog", newQMetaObject(&QObject::staticMetaObject, newFunction(qDialogConstructor)));
-
-        // Объявим класс QLineEdit
-        qScriptRegisterMetaType(this, qLineEditToScriptValue, qLineEditFromScriptValue);
-
-        // Объявим класс OOXMLEngine
-        qScriptRegisterMetaType(this, OOXMLEngineToScriptValue, OOXMLEngineFromScriptValue);
-        globalObject().setProperty("OOXMLEngine", newQMetaObject(&QObject::staticMetaObject, newFunction(OOXMLEngineConstructor)));
-
-        // Объявим глобальные переменные и объекты
-        if (parent() != 0)
-        {
-            globalObject().setProperty("form", newQObject(((Document*)parent())->getForm()));
-            globalObject().setProperty("table", newQObject(parent()));
-        }
-        globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении
-        globalObject().setProperty("scriptResult", true);   // результат работы скрипта
-        globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
-        globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
-        globalObject().setProperty("app", newQObject(TApplication::exemplar()));
-        globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
-        globalObject().setProperty("getDictionary", newFunction(getDictionary));
-        globalObject().setProperty("getValue", newFunction(getValue));
-        globalObject().setProperty("setValue", newFunction(setValue));
-        globalObject().setProperty("getOldValue", newFunction(getOldValue));
-        globalObject().setProperty("quotes", newFunction(quotes));
-        globalObject().setProperty("document", newQObject(document));
-        globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
-
-        QStringList extensions;
-        extensions << "qt.core"
-                   << "qt.gui"
-                   << "qt.xml"
-                   << "qt.svg"
-                   << "qt.network"
-                   << "qt.sql"
-                   << "qt.opengl"
-                   << "qt.webkit"
-                   << "qt.xmlpatterns"
-                   << "qt.uitools";
-        QStringList failExtensions;
-        QScriptValue ret;
-        foreach (const QString &ext, extensions) {
-            ret = importExtension(ext);
-            if (ret.isError())
-                failExtensions.append(ext);
-        }
+    QStringList extensions;
+    extensions << "qt.core"
+               << "qt.gui"
+               << "qt.xml"
+               << "qt.svg"
+               << "qt.network"
+               << "qt.sql"
+               << "qt.opengl"
+               << "qt.webkit"
+               << "qt.xmlpatterns"
+               << "qt.uitools";
+    QStringList failExtensions;
+    QScriptValue ret;
+    foreach (const QString &ext, extensions) {
+        ret = importExtension(ext);
+        if (ret.isError())
+            failExtensions.append(ext);
     }
 }
 
@@ -1127,3 +1128,22 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
     eventsList.insert(funcName, f);
 }
 
+
+bool ScriptEngine::loadScript(QString scriptFile)
+{
+    if (!loadedScripts.contains(scriptFile))
+    {
+        QString scriptPath = TApplication::exemplar()->getScriptsPath();
+        if (!QFile(scriptFile).exists())
+        {
+            if (!Essence::getFile(scriptPath, scriptFile, ScriptFileType))
+            {
+                scriptFile = scriptFile + ".js";
+                if (!Essence::getFile(scriptPath, scriptFile, ScriptFileType))
+                    return false;
+            }
+        }
+        loadedScripts.append(scriptFile);
+    }
+    return true;
+}

@@ -103,7 +103,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     else
     {   // Была загружена пользовательская форма
         tableLayout = (QVBoxLayout*)formWidget->findChild("tableLayout");
-        grdTable = (TableView*)formWidget->findChild("tableView");
+        grdTable = (TableView*)formWidget->findChild("tableView");;
         if (grdTable != 0)
         {
             grdTable->setParent(formWidget);

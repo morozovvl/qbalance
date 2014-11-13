@@ -183,7 +183,7 @@ QString Dictionaries::getDictionaryTitle(QString dictName) {
 bool Dictionaries::add()
 {
     bool result = false;
-    WizardDictionary wizard;
+    WizardDictionary wizard(true);
     wizard.open(app->getMainWindow());
     wizard.getFormWidget()->setWindowTitle(QObject::trUtf8("Новый справочник"));
     wizard.exec();

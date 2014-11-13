@@ -209,7 +209,7 @@ public:
     QSqlQuery getAccounts() { return accounts; }
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
-    virtual void setConfig(QString, QString, QString);
+    void setConfig(QString, QString, QString);
     QSqlQuery getConfig() { return config; }
 
     // Функции для мастера создания новых (свойств старых) справочников
@@ -258,7 +258,9 @@ public:
     bool    isExistsCommands();
     void    appendCommand(QString);
     void    appendCommand(UpdateValues);
-    QVariant getValue(QString command, int row, int column);
+    Q_INVOKABLE QVariant getValue(QString command, int row, int column);
+    Q_INVOKABLE QVariant getValue(QString command, int row, QString column);
+    Q_INVOKABLE QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
 
 
 private:

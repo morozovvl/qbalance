@@ -139,6 +139,9 @@ void MainWindow::createMenus()
     aboutQtAct = infoMenu->addAction(QObject::trUtf8("О &библиотеке Qt..."));
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
+    showMessageWindow = infoMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
+    connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
+
     exitAct = menuBar()->addAction(QObject::trUtf8("&Выход"));
     connect(exitAct, SIGNAL(triggered()), this, SLOT(closeEvent()));
 }
@@ -167,6 +170,12 @@ void MainWindow::showPeriod() {
     QString period;
     period = TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy") + " - " + TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy");
     periodAct->setIconText(period);
+}
+
+
+void MainWindow::showMessagesWindow()
+{
+    TApplication::exemplar()->getMessageWindow()->show();
 }
 
 

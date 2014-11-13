@@ -17,27 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef OPENRPTPORTENGINE_H
-#define OPENRPTPORTENGINE_H
-#include <QMap>
-#include <QStandardItemModel>
-#include "../kernel/essence.h"
-#include "reportengine.h"
-#include "../../openrpt/openrpt/report/report.h"
-#include "../../openrpt/openrpt/report/wrapper.h"
-#include "../../openrpt/openrpt/report/templategenerator.h"
+#ifndef MYMDISUBWINDOW_H
+#define MYMDISUBWINDOW_H
 
+#include <QtGui/QMdiSubWindow>
+#include <QtGui/QHideEvent>
 
-class OpenRPTreportEngine : public ReportEngine
+class FormGrid;
+
+class MyMdiSubWindow : public QMdiSubWindow
 {
     Q_OBJECT
 public:
-    OpenRPTreportEngine(QMap<QString, QVariant>* context, QString name, QString ext);
-    virtual bool open();
-private:
-    QAbstractItemModel*     model;
-    IDataSource*            source;
-    void prepareData(TReport*);
+    MyMdiSubWindow(QWidget* parent = 0);
+    virtual void closeEvent (QCloseEvent* event);
 };
 
-#endif // OPENRPTPORTENGINE_H
+#endif // MYMDISUBWINDOW_H
