@@ -549,21 +549,38 @@ QString TApplication::savePhotoToServer(QString file, QString localFile)
         QByteArray array = file1.readAll();
         qulonglong localFileCheckSum = db->calculateCRC32(&array);
         qulonglong removeFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, PictureFileType, true) : 0;
-        resultFileName = removeFileCheckSum == 0 ? QString("photo%1").arg(localFileCheckSum) : localFile;
+//        resultFileName = removeFileCheckSum == 0 ? QString("photo%1").arg(localFileCheckSum) : localFile;
         if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
                                                         // предполагается, что локальный файл свежее того, который в базе
         {
-            db->setFile(resultFileName, PictureFileType, array, true);      // Сохранить картинку в расширенную базу
+//            db->setFile(resultFileName, PictureFileType, array, true);      // Сохранить картинку в расширенную базу
+            db->setFile(localFile, PictureFileType, array, true);      // Сохранить картинку в расширенную базу
         }
         file1.close();
     }
-    return resultFileName;
+//    return resultFileName;
+    return localFile;
 }
 
 
 void TApplication::print(QString str)
 {
     messagesWindow->print(str);
+}
+
+
+void TApplication::printToArray(QString array, QString value)
+{
+    if (!arraysForPrint.contains(array))
+        arraysForPrint.insert(array, QStringList());
+    arraysForPrint[array].append(value);
+}
+
+
+void TApplication::printArray(QString array)
+{
+    foreach (QString val, arraysForPrint.value(array))
+        messagesWindow->print(val);
 }
 
 

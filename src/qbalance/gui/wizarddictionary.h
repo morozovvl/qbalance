@@ -70,6 +70,7 @@ private slots:
     void                deleteColumn();
     void                headerUp();
     void                headerDown();
+    void                fieldNameChanged();
 };
 
 #endif // WIZARDDICTIONARY_H

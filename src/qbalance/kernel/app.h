@@ -143,7 +143,9 @@ public:
 
     Q_INVOKABLE QString capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
     Q_INVOKABLE QString savePhotoToServer(QString, QString);
-    Q_INVOKABLE void print(QString);
+    Q_INVOKABLE void print(QString = "");
+    Q_INVOKABLE void printToArray(QString, QString);
+    Q_INVOKABLE void printArray(QString);
     MessageWindow* getMessageWindow() { return messagesWindow; }
     int getSecDiff() { return secDiff; }
     void    initConfig();
@@ -177,6 +179,7 @@ private:
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
     ConfigVars              config;
+    QHash<QString, QStringList>     arraysForPrint;
 
     void loadConsts();
 

@@ -236,11 +236,15 @@ void Document::openLocalDictionaries()
             sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
             sal->setQuan(true);
             if (sal->isConst())
-                sal->setMustShow(false); // Если справочник документа является постоянным или это набор
-                                         // то не показывать его при добавлении новой записи в документ
+            {
+//123                sal->setMustShow(false); // Если справочник документа является постоянным или это набор
+//123                                         // то не показывать его при добавлении новой записи в документ
+                mustShow.insert(sal->getTagName(), false);
+            }
             else
             {
-                sal->setMustShow(true);
+//123                sal->setMustShow(true);
+                mustShow.insert(sal->getTagName(), true);
                 sal->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
             }
         }
@@ -250,16 +254,23 @@ void Document::openLocalDictionaries()
             if (!dict->isConst())
             {
                 if (dict->isSet())
-                    dict->setMustShow(false); // Если справочник документа является набором
-                                              // то не показывать его при добавлении новой записи в документ
+                {
+//123                    dict->setMustShow(false); // Если справочник документа является набором
+//123                                              // то не показывать его при добавлении новой записи в документ
+                    mustShow.insert(dict->getTagName(), false);
+                }
                 else
                 {
-                    dict->setMustShow(true);
+//123                    dict->setMustShow(true);
+                    mustShow.insert(dict->getTagName(), true);
                     dict->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
                 }
             }
             else
-                dict->setMustShow(false);                   // Сначала сделаем невидимым при добавлении проводки сам справочник
+            {
+//123                dict->setMustShow(false);                   // Сначала сделаем невидимым при добавлении проводки сам справочник
+                mustShow.insert(dict->getTagName(), false);
+            }
         }
     }
 }
@@ -879,7 +890,8 @@ bool Document::setTableModel(int)
                 if (dict != 0)
                 {
                     dict->setConst(true);
-                    dict->setMustShow(false); // Если справочник документа является постоянным или это набор
+//123                    dict->setMustShow(false); // Если справочник документа является постоянным или это набор
+                    mustShow.insert(dict->getTagName(), false);
                 }
             }
         }
@@ -928,7 +940,8 @@ bool Document::showNextDict()
     {
         QString dictName = dictionaries->dictionariesNamesList.at(i);
         dict = getDictionaries()->value(dictName);
-        if (dict->isMustShow() && !dict->isLocked())
+//123        if (dict->isMustShow() && !dict->isLocked())
+        if (mustShow.value(dict->getTagName()) && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
             dict->exec();
             if (dict->isFormSelected())

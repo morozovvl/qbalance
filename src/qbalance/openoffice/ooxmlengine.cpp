@@ -142,32 +142,46 @@ bool OOXMLEngine::removeDir(QString dirName)
 QDomElement OOXMLEngine::getCell(int row, int column)
 {
     QDomNode rowNode;
-    if (row >= 0 && column >= 0)
+    if (row >= 0 && row < rowCells.count() && column >= 0)
     {
-        if (row <= rowQuan)
+        rowNode = rowCells.at(row);
+        if (!rowNode.isNull())
         {
-            rowNode = rowCells.at(row);
 
             // Теперь будем просматривать ячейки в строке
             QDomNodeList nodeList = rowNode.childNodes();
 
-            int counter = 0;
-            int nodeListQuan = nodeList.count();
-            for (int i = 0; i < nodeListQuan; i++)
+            if (!nodeList.isEmpty())
             {
-                QDomElement element = nodeList.at(i).toElement();
-                if (element.hasAttribute("table:number-columns-repeated"))
+                int counter = 0;
+                int nodeListQuan = nodeList.count();
+                QDomElement element;
+                int repeated;
+
+                for (int i = 0; i < nodeListQuan; i++)
                 {
-                    int repeated = QString(element.attribute("table:number-columns-repeated")).toInt();
-                    if (column >= counter && column < counter + repeated)
-                        return element;
-                    counter = counter + repeated;
-                }
-                else
-                {
-                    if (counter == column)
-                        return element;
-                    counter++;
+                    element = nodeList.at(i).toElement();
+                    if (!element.isNull())
+                    {
+                        if (element.hasAttribute("table:number-columns-repeated"))
+                        {
+                            repeated = QString(element.attribute("table:number-columns-repeated")).toInt();
+                            if (column >= counter && column < counter + repeated)
+                            {
+                                return element;
+                            }
+                            counter = counter + repeated;
+                        }
+                        else
+                        {
+                            if (counter == column)
+                                if (!element.isNull())
+                                {
+                                    return element;
+                                }
+                            counter++;
+                        }
+                    }
                 }
             }
         }
@@ -184,7 +198,20 @@ QString OOXMLEngine::getCellText(QDomElement element)
 
 QString OOXMLEngine::getCellText(int row, int column)
 {
-    return getCell(row, column).firstChildElement("text:p").text().trimmed();
+    QString result;
+    QDomElement element = getCell(row, column);
+    if (!element.isNull())
+    {
+        if (element.attribute("office:value-type") == "float")
+            result = element.attribute("office:value");
+        else
+        {
+            element = element.firstChildElement("text:p");
+            if (!element.isNull())
+                result = element.text().trimmed();
+        }
+    }
+    return result;
 }
 
 

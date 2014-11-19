@@ -549,6 +549,12 @@ void WizardDictionary::headerDown()
 }
 
 
+void WizardDictionary::fieldNameChanged()
+{
+
+}
+
+
 void WizardDictionary::frameActivated(int frameNumber)
 {
     if (frameNumber == 1)

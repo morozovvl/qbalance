@@ -264,7 +264,7 @@ void DBFactory::loadSystemTables()
                                                                .arg(getObjectNameCom("доступ.имя"))
                                                                .arg(getObjectNameCom("доступ"))
                                                                .arg(getObjectNameCom("доступ.код_типыобъектов"))
-                                                               .arg(getObjectNameCom("доступ.пользователь")));
+                                                               .arg(getObjectNameCom("доступ.имя_пользователи")));
 
 
     dictionaries.clear();
@@ -677,7 +677,7 @@ bool DBFactory::isTableExists(QString tName)
 bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool menu)
 {
     if (!isTableExists(tName))
-    {   // Если такой таблицы вует, то добавим ее
+    {   // Если такой таблицы нет, то добавим ее
         QString command = QString("CREATE TABLE \"%1\" ("    \
                                   "%2 SERIAL NOT NULL," \
                                   "%3 CHARACTER VARYING(100) DEFAULT ''::CHARACTER VARYING)" \
@@ -695,7 +695,7 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                         .arg(getObjectNameCom("доступ"))
                         .arg(getObjectNameCom("доступ.меню"))
                         .arg(getObjectNameCom("доступ.код_типыобъектов"))
-                        .arg(getObjectNameCom("доступ.пользователь"))
+                        .arg(getObjectNameCom("доступ.имя_пользователи"))
                         .arg(getObjectNameCom("доступ.имя"))
                         .arg(menu ? "true" : "false")
                         .arg(getTypeId(getObjectName("типыобъектов.справочник")))
@@ -703,10 +703,11 @@ bool DBFactory::createNewDictionary(QString tName, QString tTitle/* = ""*/, bool
                         .arg(tName);
             if (exec(command))
             {
-                command = QString("INSERT INTO %1 (%2, %3) VALUES ('%4', '%5');")
+                command = QString("INSERT INTO %1 (%2, %3, %4) VALUES ('%5', '%6', '%6');")
                             .arg(getObjectNameCom("справочники"))
                             .arg(getObjectNameCom("справочники.имя"))
                             .arg(getObjectNameCom("справочники.имя_в_списке"))
+                            .arg(getObjectNameCom("справочники.комментарий"))
                             .arg(tName)
                             .arg(tTitle);
                 if (exec(command))
@@ -759,7 +760,7 @@ bool DBFactory::removeDictionary(QString tName)
                         .arg(getObjectNameCom("доступ"))
                         .arg(getObjectNameCom("доступ.код_типыобъектов"))
                         .arg(getTypeId(getObjectName("типыобъектов.справочник")))
-                        .arg(getObjectNameCom("доступ.пользователь"))
+                        .arg(getObjectNameCom("доступ.имя_пользователи"))
                         .arg(getLogin())
                         .arg(getObjectNameCom("доступ.имя"))
                         .arg(tName);
@@ -1346,7 +1347,8 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
     QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
     if (extend && extDbExist)
     {   // Если будем смотреть файлы в расширенной базе данных
-        QString text = QString("SELECT * FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+        QString text = QString("SELECT encode(%1, 'hex') FROM %2 WHERE trim(%3) = '%4' AND %5 = %6;").arg(getObjectNameCom("файлы.значение"))
+                                                                              .arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
@@ -1355,7 +1357,7 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
         query.first();
         if (query.isValid())
         {
-            return query.record().value(getObjectName("файлы.значение")).toByteArray();
+            return QByteArray::fromHex(query.record().value(0).toByteArray());
         }
         return QByteArray();
     }
@@ -1366,7 +1368,7 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
             files.record().value(getObjectName("файлы.тип")).toInt() == type)
         {   // Если найден файл нужного типа и с нужным именем, то запросим его содержимое в БД
             int id = files.record().value(getObjectName("файлы.код")).toInt();
-            QString text = QString("SELECT %1 FROM %2 WHERE %3 = %4;").arg(getObjectNameCom("файлы.значение"))
+            QString text = QString("SELECT encode(%1, 'hex') FROM %2 WHERE %3 = %4;").arg(getObjectNameCom("файлы.значение"))
                                                                       .arg(getObjectNameCom("файлы"))
                                                                       .arg(getObjectNameCom("файлы.код"))
                                                                       .arg(id);
@@ -1374,7 +1376,7 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
             query.first();
             if (query.isValid())
             {
-                return query.record().value(0).toByteArray();
+                return QByteArray::fromHex(query.record().value(0).toByteArray());
             }
         }
         files.next();
@@ -1533,6 +1535,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
+/*
         text = QString("UPDATE %1 SET %2 = (:value), %3 = %4, %9 = now() WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
@@ -1542,9 +1545,32 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(getObjectNameCom("файлы.тип"))
                                                                                   .arg(type)
                                                                                   .arg(getObjectNameCom("файлы.датавремя"));
+*/
+        if (!extend)
+            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(getObjectNameCom("файлы.датавремя"))
+                                                                                  .arg(QString(fileData.toHex()));
+        else
+            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(size)
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type)
+                                                                                  .arg(QString(fileData.toHex()));
     }
     else
     {
+/*
         text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, (:value));").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.имя"))
                                                                                   .arg(getObjectNameCom("файлы.тип"))
@@ -1553,14 +1579,28 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(fileName)
                                                                                   .arg(type)
                                                                                   .arg(size);
+*/
+        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, decode('%10', 'hex'));").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(fileName)
+                                                                                  .arg(type)
+                                                                                  .arg(size)
+                                                                                  .arg(QString(fileData.toHex()));
     }
+/*
     QSqlQuery query(extend && extDbExist ? *dbExtend : *db);
     query.prepare(text);
-    query.bindValue(":value", fileData, QSql::In & QSql::Binary);
+    query.bindValue(":value", QVariant(fileData), QSql::In & QSql::Binary);
     if (!query.exec())
     {
+        qDebug() << query.lastError().text();
         setError(query.lastError().text());
     }
+*/
+    exec(text, true, (extend && extDbExist) ? dbExtend : db);
 }
 
 
@@ -2217,7 +2257,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
             .arg(getTypeId("топер"))
             .arg(getObjectNameCom("доступ.имя"))
             .arg(operNumber)
-            .arg(getObjectNameCom("доступ.пользователь"))
+            .arg(getObjectNameCom("доступ.имя_пользователи"))
             .arg(user);
     QSqlQuery query = execQuery(command);
     if (query.first())
@@ -2229,7 +2269,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
                                                                                              .arg(getTypeId("топер"))
                                                                                              .arg(getObjectNameCom("доступ.имя"))
                                                                                              .arg(operNumber)
-                                                                                             .arg(getObjectNameCom("доступ.пользователь"))
+                                                                                             .arg(getObjectNameCom("доступ.имя_пользователи"))
                                                                                              .arg(user);
         exec(command);
     }
@@ -2238,7 +2278,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
         command = QString("INSERT INTO %1 (%2, %3, %4, %5) VALUES ('%6', '%7', '%8', %9);").arg(getObjectNameCom("доступ"))
                                                                                          .arg(getObjectNameCom("доступ.код_типыобъектов"))
                                                                                          .arg(getObjectNameCom("доступ.имя"))
-                                                                                         .arg(getObjectNameCom("доступ.пользователь"))
+                                                                                         .arg(getObjectNameCom("доступ.имя_пользователи"))
                                                                                          .arg(getObjectNameCom("доступ.меню"))
                                                                                          .arg(getTypeId("топер"))
                                                                                          .arg(operNumber)

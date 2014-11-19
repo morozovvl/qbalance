@@ -162,24 +162,24 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
     if (context->argument(0).isString())
     {
         QString scriptFile = context->argument(0).toString();
-        if (ScriptEngine::loadScript(scriptFile))
+        if (!QFile(scriptFile).exists())
         {
             QString scriptPath = TApplication::exemplar()->getScriptsPath();
             scriptFile = scriptPath + scriptFile;
-            if (QFile(scriptFile).exists())
+        }
+        if (ScriptEngine::loadScript(scriptFile))
+        {
+            QFile file(scriptFile);
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
             {
-                QFile file(scriptFile);
-                if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-                {
-                    QString script(file.readAll());
-                    ((ScriptEngine*)engine)->evaluate(script);
-                    file.close();
-                    if (!engine->hasUncaughtException())
-                        return QScriptValue(result);
-                    // Если в скриптах произошла ошибка
-                    QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
-                    TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
-                }
+                QString script(file.readAll());
+                ((ScriptEngine*)engine)->evaluate(script);
+                file.close();
+                if (!engine->hasUncaughtException())
+                    return QScriptValue(result);
+                // Если в скриптах произошла ошибка
+                QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
+                TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
             }
         }
     }

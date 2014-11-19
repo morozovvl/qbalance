@@ -101,6 +101,7 @@ protected:
 private:
     QHash<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
     QHash<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
+    QHash<QString, bool>             mustShow;           // Список справочников, которые нужно показывать при добавлении строки в документ
     Dictionaries*                   dictionaries;       // Объекты справочников
     Documents*                      parent;
     int                             operNumber;
