@@ -544,9 +544,11 @@ void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString
     {
         for (int i = 0; i < columnsProperties->count(); i++)
         {
-            if (columnsProperties->at(i).table == table &&
-                columnsProperties->at(i).column.toUpper() == name.toUpper() &&
-                columnsProperties->at(i).type == type)
+//            if (columnsProperties->at(i).table == table &&
+//                columnsProperties->at(i).column.toUpper() == name.toUpper() &&
+//                columnsProperties->at(i).type == type)
+              if (columnsProperties->at(i).column.toUpper() == name.toUpper() &&
+                  columnsProperties->at(i).type == type)
                 return;                 // такое поле уже существует, не будем ничего добавлять
             if (i > maxKey)
                 maxKey = i;
@@ -1382,6 +1384,26 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
         files.next();
     }
     return QByteArray();
+}
+
+
+void DBFactory::copyFile(QString fileFrom, FileType type, QString fileTo, bool extend)
+{
+    if (isFileExist(fileFrom, type, extend))
+    {
+        QString text;
+        if (!isFileExist(fileTo, type, extend))
+        {
+            text = QString("INSERT INTO %1 (%2, %3, %4, %5) SELECT '%6', %3, %4, %5 FROM %1 WHERE %2 = '%7';").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(getObjectNameCom("файлы.значение"))
+                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
+                                                                                  .arg(fileTo)
+                                                                                  .arg(fileFrom);
+            exec(text, true, (extend && extDbExist) ? dbExtend : db);
+        }
+    }
 }
 
 

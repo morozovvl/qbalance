@@ -61,9 +61,7 @@ public:
     bool isSaldo() { return lIsSaldo; }
     Q_INVOKABLE void setConst(bool);
     Q_INVOKABLE void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
-    void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
                                                                             // которые будут блокироваться при добавлении записи в документ
-    Dictionaries* getDictionaries() { return dictionaries; }
 
     virtual QString objectName() { return "Dictionary"; }
     bool isDependent() { return isDepend; }
@@ -86,7 +84,6 @@ public:
 
 
 protected:
-    Dictionaries*   dictionaries;
     QString         prototypeName;          // Имя справочника - прототипа
     Dictionary*     parentDict;
     bool            lSelectable;

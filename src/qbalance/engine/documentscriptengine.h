@@ -30,7 +30,7 @@ class Documents;
 class DocumentScriptEngine : public ScriptEngine
 {
 public:
-    DocumentScriptEngine(QObject *parent = 0);
+    DocumentScriptEngine(Essence *parent = 0);
 // События
     void eventAppendFromQuery(int, QSqlRecord*);
     virtual QHash<QString, EventFunction>* getEventsList();

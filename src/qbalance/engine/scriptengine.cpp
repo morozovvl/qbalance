@@ -474,17 +474,19 @@ void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
 //================================================================================================
 // Реализация класса
 
-ScriptEngine::ScriptEngine(QObject *parent) : QScriptEngine(parent)
+ScriptEngine::ScriptEngine(Essence *parent) : QScriptEngine(parent)
 {
     sqlFieldClass = new SqlFieldClass(this);
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
     errorMessage = "";
     app = TApplication::exemplar();
-    if (parent != 0 && ((Dictionary*)parent)->getDictionaries() != 0)
-        document = ((Dictionary*)parent)->getDictionaries()->getDocument();
-    else
-        document = 0;
+    document = 0;
+    if (parent != 0 && parent->getDictionaries() != 0)
+    {
+        Dictionaries* dicts = parent->getDictionaries();
+        document = dicts->getDocument();
+    }
 }
 
 
@@ -939,6 +941,8 @@ QString ScriptEngine::getFilter()
     if (globalObject().property(eventName).isFunction())
     {
         result = globalObject().property(eventName).call().toString();
+        if (result == "undefined")
+            result = "";
     }
     return result;
 }
@@ -1011,11 +1015,12 @@ QString ScriptEngine::getBlankScripts()
         stream << "function " << funcName << endl;
         stream << "{";
         if (events->value(funcName).comment.size() > 0)
+        {
             stream << " // " << events->value(funcName).comment << endl;
+            stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
+        }
         if (events->value(funcName).body.size() > 0)
             stream << events->value(funcName).body << endl;
-        else
-            stream << QObject::trUtf8("// Здесь Вы можете вставить свой код") << endl;
         stream << "}" << endl;
         stream << endl << endl;
     }
@@ -1058,6 +1063,7 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     appendEvent("PreparePictureUrl(object)", func);
 
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
+    func.body = "return \"\";";
     appendEvent("GetFilter()", func);
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
@@ -1072,7 +1078,7 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
                     "   сумма = кол * цена;\n"
                     "setValue(\"P1__КОЛ\", кол);\n"
                     "setValue(\"P1__ЦЕНА\", цена);\n"
-                    "setValue(\"P1__СУММА\", сумма); dsfsdfsdf \n";
+                    "setValue(\"P1__СУММА\", сумма);\n";
     }
     appendEvent("EventCalcTable()", func);
 

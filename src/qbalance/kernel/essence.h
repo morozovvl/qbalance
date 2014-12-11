@@ -149,6 +149,8 @@ public:
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
     Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(grdTable->currentIndex().column()).toUpper(); }
+    Dictionaries* getDictionaries() { return dictionaries; }
+    void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
 
 signals:
     void                photoLoaded();
@@ -163,6 +165,7 @@ protected:
     QString             idFieldName;
     QString             nameFieldName;
     FormGrid*           form;
+    Dictionaries*   dictionaries;
     QPointer<TableView> grdTable;
     QWidget*            parentForm;
     ScriptEngine*       scriptEngine;

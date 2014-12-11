@@ -64,7 +64,7 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-DocumentScriptEngine::DocumentScriptEngine(QObject* parent/* = 0*/)
+DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
 :ScriptEngine(parent)
 {
     document = (Document*)parent;

@@ -184,7 +184,7 @@ unix {
 
 windows {
     RC_FILE+=resources.rc
-    LIBS += ../qextserialport/release/qextserialport1.dll
+    LIBS += ../../qextserialport1.dll
 }
 
 OTHER_FILES += \

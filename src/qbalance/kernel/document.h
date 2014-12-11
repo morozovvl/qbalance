@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE int getDocId() { return docId; }
     Q_INVOKABLE int getOperNumber() { return operNumber; }
     Documents* getParent() { return parent; }
-    QHash<QString, Dictionary*>* getDictionaries() { return dictionaries->getDictionaries(); }
+    QHash<QString, Dictionary*>* getDictionariesList() { return dictionaries->getDictionariesList(); }
     Dictionaries* getDocDictionaries() { return dictionaries; }
     Q_INVOKABLE Dictionary* getDictionary(QString dictName) { return dictionaries->getDictionary(dictName); }
     Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
@@ -102,7 +102,6 @@ private:
     QHash<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
     QHash<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
     QHash<QString, bool>             mustShow;           // Список справочников, которые нужно показывать при добавлении строки в документ
-    Dictionaries*                   dictionaries;       // Объекты справочников
     Documents*                      parent;
     int                             operNumber;
     int                             docId;
@@ -122,6 +121,7 @@ private:
     void showItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
     void    openLocalDictionaries();
+    bool                            checkConstDicts();
 };
 
 #endif // DOCUMENT_H

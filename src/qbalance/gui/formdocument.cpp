@@ -94,9 +94,9 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
     bool docParams = false;
     formWidget->resize(600, formWidget->height());
-    foreach (QString dictName, getParent()->getDictionaries()->keys())
+    foreach (QString dictName, getParent()->getDictionariesList()->keys())
     {   // Просмотрим список справочников, с которыми работает форма документа
-        if (getParent()->getDictionaries()->value(dictName)->isConst())
+        if (getParent()->getDictionariesList()->value(dictName)->isConst())
         {   // Если есть хоть один справочник текущее значение которого одинаково для всех строк табличной части
             docParams = true;   // то создадим виджет с параметрами документа
             break;
@@ -180,12 +180,12 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
     if (parameters != 0)
     {
-        parameters->setDictionaries(getParent()->getDictionaries());
+        parameters->setDictionaries(getParent()->getDictionariesList());
         parameters->setFormDocument(this);
         parameters->setApp(app);
-        foreach (QString dictName, getParent()->getDictionaries()->keys())
+        foreach (QString dictName, getParent()->getDictionariesList()->keys())
         {
-            if (getParent()->getDictionaries()->value(dictName)->isConst())
+            if (getParent()->getDictionariesList()->value(dictName)->isConst())
             {
                 parameters->addString(dictName);
             }
@@ -251,6 +251,7 @@ void FormDocument::cmdOk()
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
+        getParent()->saveChanges();
     }
 }
 

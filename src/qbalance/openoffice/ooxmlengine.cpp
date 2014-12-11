@@ -219,11 +219,12 @@ QDomElement OOXMLEngine::getCellWithAnnotation(QString annotation)
 {
     QDomNode rowNode;
     QDomNodeList cells;
+    annotation = annotation.toUpper();
     cells = doc.elementsByTagName("office:annotation");   // будем просматривать аннотации
     int cellsQuan = cells.count();
     for (int i = 0; i < cellsQuan; i++)
     {
-        if (cells.at(i).toElement().elementsByTagName("text:p").at(0).toElement().text() == annotation)
+        if (cells.at(i).toElement().elementsByTagName("text:p").at(0).toElement().text().toUpper() == annotation)
         {
             return cells.at(i).parentNode().toElement();
         }

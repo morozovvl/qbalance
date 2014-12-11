@@ -42,7 +42,8 @@ MessageWindow::~MessageWindow()
 void MessageWindow::print(QString str)
 {
     textEditor->append(str);
-    show();
+    if (str.size() > 0)
+        show();
 }
 
 

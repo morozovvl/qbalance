@@ -146,9 +146,13 @@ bool TApplication::open() {
     beginDate = endDate.addDays(-31);
     if (gui->open())
     {  // Попытаемся открыть графический интерфейс
+//        formLoader = new QUiLoader(gui);
+//        formLoader->addPluginPath(applicationDirPath() + "/plugins");
+//        formLoader->setWorkingDirectory(getFormsPath());
+
+        messagesWindow = new MessageWindow();
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
-            messagesWindow = new MessageWindow();
             int result = gui->openDB(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
@@ -199,6 +203,7 @@ bool TApplication::open() {
 
 void TApplication::close()
 {
+//    delete formLoader;
     delete messagesWindow;
 
     if (documents.count() > 0)
@@ -542,7 +547,7 @@ QString TApplication::capturePhoto(QString fileName, QString deviceName)
 
 QString TApplication::savePhotoToServer(QString file, QString localFile)
 {
-    QString resultFileName;
+//    QString resultFileName;
     QFile file1(file);
     if (file1.exists() && file1.open(QIODevice::ReadOnly))
     {
@@ -583,6 +588,13 @@ void TApplication::printArray(QString array)
         messagesWindow->print(val);
 }
 
+
+void TApplication::clearPrintArrays()
+{
+    foreach (QString array, arraysForPrint.keys())
+        arraysForPrint[array].clear();
+
+}
 
 QString TApplication::findFileFromEnv(QString file)
 {

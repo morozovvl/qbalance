@@ -43,7 +43,7 @@ struct EventFunction {
 class ScriptEngine : public QScriptEngine {
     Q_OBJECT
 public:
-    ScriptEngine(QObject* parent = 0);
+    ScriptEngine(Essence* parent = 0);
     ~ScriptEngine();
     bool open(QString fileName = "");
     void close() { ; }

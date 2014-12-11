@@ -146,6 +146,7 @@ public:
     Q_INVOKABLE void print(QString = "");
     Q_INVOKABLE void printToArray(QString, QString);
     Q_INVOKABLE void printArray(QString);
+    Q_INVOKABLE void clearPrintArrays();
     MessageWindow* getMessageWindow() { return messagesWindow; }
     int getSecDiff() { return secDiff; }
     void    initConfig();
@@ -179,6 +180,8 @@ private:
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
     ConfigVars              config;
+//    QUiLoader               *formLoader;
+
     QHash<QString, QStringList>     arraysForPrint;
 
     void loadConsts();

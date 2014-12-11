@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE virtual void removeDictionary(QString);
     QString getDictionaryTitle(QString);
     virtual void            query(QString filter = "");
-    QHash<QString, Dictionary*>* getDictionaries() { return &dictionariesList; }
+    QHash<QString, Dictionary*>* getDictionariesList() { return &dictionariesList; }
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
     Q_INVOKABLE virtual bool remove();     // Удаление справочника

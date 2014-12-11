@@ -69,6 +69,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
     defaultFilter = "";
     grdTable = 0;
+    dictionaries = 0;
 }
 
 
@@ -123,7 +124,7 @@ QVariant Essence::getValue(QString n, int row)
             else
             {
                 int r = 0;
-                if (form != 0 && grdTable->currentIndex().isValid())
+                if (grdTable != 0 && grdTable->currentIndex().isValid())
                     r = grdTable->currentIndex().row();
 
                 result = tableModel->record(r).value(name);
@@ -161,8 +162,7 @@ void Essence::setValue(QString n, QVariant value, int row)
         index = tableModel->index((row >= 0 ? row : grdTable->currentIndex().row()), fieldColumn);
         tableModel->setData(index, value);
 
-        if (getValue(name) != getOldValue(name))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-            tableModel->submit(index);
+        tableModel->submit(index);
 
         if (doSubmit)
             db->execCommands();
@@ -275,7 +275,7 @@ QString Essence::getPhotoFile(QString copyTo)
             {
                 file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
                 localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
-                if (isDictionary && !filesSumChecked.contains(localFile))
+                if (!filesSumChecked.contains(localFile))
                 {
                     filesSumChecked.append(localFile);      // контрольная сумма файла проверена, больше проверять не будем
                     if (!QFile(file).exists())
@@ -289,7 +289,7 @@ QString Essence::getPhotoFile(QString copyTo)
                             {   // Если удалось получить какую-то фотографию
                                 saveFile(file, &picture);
                                 if (copyTo.size() > 0)
-                                    app->savePhotoToServer(copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                                    app->savePhotoToServer(app->getPhotosPath() + "/" + copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                             }
                         }
                         if (!QFile(file).exists())
@@ -348,6 +348,8 @@ QString Essence::getPhotoFile(QString copyTo)
                     {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
                         if (app->isSA())
                             app->savePhotoToServer(file, localFile);
+                        if (copyTo.size() > 0)
+                            db->copyFile(localFile, PictureFileType, copyTo, true);
                     }
                 }
             }
@@ -368,13 +370,13 @@ void Essence::replyFinished(QNetworkReply* reply)
         // Данные с фотографией получены, запишем их в файл
         if (idValue.size() > 0)
         {
-            QString file = app->getPhotosPath(getPhotoPath());
+            QString file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
             QByteArray array = reply->readAll();
-            saveFile(file + "/" + idValue + ".jpg", &array);
+            saveFile(file, &array);
             app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
             if (copyTo.size() > 0)
-                app->savePhotoToServer(copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                app->savePhotoToServer(app->getPhotosPath() + "/" + copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
 
             // Проверим, не нужно ли обновить фотографию
             if (idValue == getValue(photoIdField).toString().trimmed())

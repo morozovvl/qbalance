@@ -23,12 +23,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "scriptengine.h"
 #include "reportcontext.h"
 
+class Essence;
 
 class ReportScriptEngine : public ScriptEngine
 {
     Q_OBJECT
 public:
-    ReportScriptEngine(QHash<QString, QVariant>*, QObject *parent = 0);
+    ReportScriptEngine(QHash<QString, QVariant>*, Essence *parent = 0);
     ~ReportScriptEngine();
     ReportContext* getReportContext() { return reportContext; }
 protected:

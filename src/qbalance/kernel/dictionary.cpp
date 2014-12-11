@@ -185,7 +185,7 @@ bool Dictionary::remove()
     if (lDeleteable)
     {
         if (Essence::remove()) {
-            db->removeDictValue(tableName, getId());
+            db->removeDictValue(tableName, getValue("КОД").toULongLong());
             query();
             return true;
         }

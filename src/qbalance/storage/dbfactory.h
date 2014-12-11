@@ -149,6 +149,7 @@ public:
     QStringList getFilesList(QString, FileType, bool = false);
     virtual bool isFileExist(QString, FileType, bool = false);
     void setFile(QString, FileType, QByteArray, bool = false);
+    void copyFile(QString, FileType, QString, bool = false);
     static qulonglong calculateCRC32(QByteArray*);
 
     // Работа с соединением

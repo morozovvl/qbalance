@@ -112,6 +112,8 @@ bool Document::calculate()
 
 void Document::saveChanges()
 {
+    QModelIndex index = grdTable->currentIndex();
+
     int row = grdTable->currentIndex().row();
 
     // Начнем транзакцию
@@ -163,6 +165,7 @@ void Document::saveChanges()
         restoreOldValues();
         parent->restoreOldValues();
     }
+    grdTable->setCurrentIndex(index);
 }
 
 
@@ -233,7 +236,7 @@ void Document::openLocalDictionaries()
         {
             Saldo* sal = (Saldo*)dict;
             sal->setAutoLoaded(true);
-            sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
+//            sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
             sal->setQuan(true);
             if (sal->isConst())
             {
@@ -279,7 +282,9 @@ void Document::openLocalDictionaries()
 bool Document::add()
 {
     bool result = false;
-    if ((scriptEngine->eventBeforeAddString() && showNextDict()) || getIsSingleString())    // Показать все справочники, которые должны быть показаны перед добавлением новой записи
+
+
+    if ((checkConstDicts() && scriptEngine->eventBeforeAddString() && showNextDict()) || getIsSingleString())    // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         if (topersList->at(0).attributes && topersList->at(0).number == 0)
         {
@@ -301,31 +306,14 @@ bool Document::add()
                                             // Возвращаем номер строки в документе
         if (strNum > 0)                         // Если строка была добавлена
         {
-            int newRow = tableModel->rowCount();
-            int column = grdTable->currentIndex().column();
-            if (newRow == 0)                    // Если это первая строка в документе
-            {
-                query();
-                grdTable->selectRow(newRow);
-                grdTable->selectNextColumn();
-                column = grdTable->currentIndex().column();
-            }
-            else
-            {
-                tableModel->insertRow(newRow);
-                grdTable->reset();
-                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                updateCurrentRow(strNum);
-            }
             if (getScriptEngine() != 0)
             {
+
                 saveOldValues();
                 getScriptEngine()->eventAfterAddString();
                 saveChanges();
                 saveOldValues();
             }
-            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             form->setButtons();
             result = true;
         }
@@ -341,26 +329,50 @@ bool Document::add()
 
 int Document::addFromQuery(int id)
 {
-    QSqlRecord data = db->getDocumentAddQuery(id);
-    if (!data.isEmpty())
+    if (checkConstDicts())
     {
-        QSqlQuery queryData = db->execQuery(data.value(1).toString());
-        QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
-        progressBar.setMaximum(queryData.size());
-        progressBar.show();
-        int i = 0;
-        while (queryData.next())
+        QSqlRecord data = db->getDocumentAddQuery(id);
+        if (!data.isEmpty())
         {
-            QSqlRecord record = queryData.record();
-            ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(data.value(0).toInt(), &record);
-            i++;
-            progressBar.setValue(i);
+            QSqlQuery queryData = db->execQuery(data.value(1).toString());
+            QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
+            progressBar.setMaximum(queryData.size());
+            progressBar.show();
+            int i = 0;
+            while (queryData.next())
+            {
+                QSqlRecord record = queryData.record();
+                ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(data.value(0).toInt(), &record);
+                i++;
+                progressBar.setValue(i);
+            }
+            query();
+            calcItog();
+            return queryData.size();
         }
-        query();
-        calcItog();
-        return queryData.size();
     }
     return 0;
+}
+
+
+bool Document::checkConstDicts()
+{
+    foreach (QString dictName, getDictionariesList()->keys())
+    {
+        Dictionary* dict = getDictionary(dictName);
+        if (dict->isConst())
+        {
+            if (dict->getId() == 0)
+            {
+                if (!getIsSingleString())
+                {
+                    app->showError(QString(QObject::trUtf8("Не определено значение постоянного справочника \"%1\"")).arg(dictName));
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }
 
 
@@ -507,6 +519,7 @@ int Document::findFreePrv()
 
 void Document::saveOldValues()
 {
+    QModelIndex index = grdTable->currentIndex();      // Запомним, где стоял курсор
     Essence::saveOldValues();
     if (freePrv > 0)
     {  // Если есть "свободная" проводка
@@ -519,6 +532,7 @@ void Document::saveOldValues()
         }
     }
     parent->saveOldValues();
+    grdTable->setCurrentIndex(index);
 }
 
 
@@ -583,9 +597,9 @@ void Document::loadDocument()
                 quanAccount = true;                     // Используется количественный учет
             int prvNumber = topersList->at(i).number;
             dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
-            if (getDictionaries()->contains(dictName))
+            if (getDictionariesList()->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
-                dict = getDictionaries()->value(dictName);
+                dict = getDictionariesList()->value(dictName);
                 dict->setScriptEngineEnabled(false);
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
@@ -600,7 +614,7 @@ void Document::loadDocument()
                 // Проверим связанные справочники этого справочника, если он набор
                 foreach (QString dictName, dict->getChildDicts())
                 {
-                    Dictionary* childDict = getDictionaries()->value(dictName);
+                    Dictionary* childDict = getDictionariesList()->value(dictName);
                     if (childDict != 0)
                     {
                         if (childDict->isConst())
@@ -623,9 +637,9 @@ void Document::loadDocument()
                 }
             }
             dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
-            if (getDictionaries()->contains(dictName))
+            if (getDictionariesList()->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
-                dict = getDictionaries()->value(dictName);
+                dict = getDictionariesList()->value(dictName);
                 dict->setScriptEngineEnabled(false);
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
@@ -640,7 +654,7 @@ void Document::loadDocument()
                 // Проверим связанные справочники этого справочника, если он набор
                 foreach (QString dictName, dict->getChildDicts())
                 {
-                    Dictionary* childDict = getDictionaries()->value(dictName);
+                    Dictionary* childDict = getDictionariesList()->value(dictName);
                     if (childDict != 0 && childDict->isConst())
                     {
                         // Установим сначала значение основного справочника
@@ -687,7 +701,7 @@ void Document::setConstDictId(QString dName, QVariant id)
             dictName = topersList->at(i).dbDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0)
             {
-                dict = getDictionaries()->value(dictName);
+                dict = getDictionariesList()->value(dictName);
                 if (dict->isConst())
                 {
                     db->setConstDictId(db->getObjectName("проводки.дбкод"), id, docId, operNumber, topersList->at(i).number);
@@ -701,14 +715,14 @@ void Document::setConstDictId(QString dName, QVariant id)
             {
                 // Если справочник, в котором мы устанавливаем идентификатор, является постоянным
                 // и у него имеется "родитель"-набор, который задействован в проводке
-                Dictionary* constDict = getDictionaries()->value(dName);
+                Dictionary* constDict = getDictionariesList()->value(dName);
                 if (constDict->isConst())
                 {
                     Dictionary* parentDict = constDict->getParentDict();
                     if (parentDict != 0 && parentDict->getPrototypeName() == dictName)
                     {
                         constDict->setIdEnabled(false);
-                        dict = getDictionaries()->value(dictName);
+                        dict = getDictionariesList()->value(dictName);
                         for (int r = 0; r < tableModel->rowCount(); r++)
                         {
                             qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.дбкод")), r).toULongLong();
@@ -723,7 +737,7 @@ void Document::setConstDictId(QString dName, QVariant id)
             dictName = topersList->at(i).crDictAlias;
             if (dictName.compare(dName, Qt::CaseSensitive) == 0)
             {
-                dict = getDictionaries()->value(dictName);
+                dict = getDictionariesList()->value(dictName);
                 if (dict->isConst())
                 {
                     db->setConstDictId(db->getObjectName("проводки.кркод"), id, docId, operNumber, topersList->at(i).number);
@@ -737,14 +751,14 @@ void Document::setConstDictId(QString dName, QVariant id)
             {
                 // Если справочник, в котором мы устанавливаем идентификатор, является постоянным
                 // и у него имеется "родитель"-набор, который задействован в проводке
-                Dictionary* constDict = getDictionaries()->value(dName);
+                Dictionary* constDict = getDictionariesList()->value(dName);
                 if (constDict->isConst())
                 {
                     Dictionary* parentDict = constDict->getParentDict();
                     if (parentDict != 0 && parentDict->getPrototypeName() == dictName)
                     {
                         constDict->setIdEnabled(false);
-                        dict = getDictionaries()->value(dictName);
+                        dict = getDictionariesList()->value(dictName);
                         for (int r = 0; r < tableModel->rowCount(); r++)
                         {
                             qulonglong id = getValue(QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("проводки.кркод")), r).toULongLong();
@@ -939,7 +953,7 @@ bool Document::showNextDict()
     for (int i = 0; i < dictionaries->dictionariesNamesList.count(); i++)
     {
         QString dictName = dictionaries->dictionariesNamesList.at(i);
-        dict = getDictionaries()->value(dictName);
+        dict = getDictionariesList()->value(dictName);
 //123        if (dict->isMustShow() && !dict->isLocked())
         if (mustShow.value(dict->getTagName()) && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
@@ -961,23 +975,6 @@ bool Document::showNextDict()
         }
     }
 
-    if (anyShown)
-    {
-        // Запомним значения сначала зависимых справочников
-        foreach (QString dictName, getDictionaries()->keys())
-        {
-            dict = getDictionaries()->value(dictName);
-            if (!dict->isSet())
-                prepareValue(dictName, dict);
-        }
-        // Затем запомним значения наборов, чтобы наборы освежили свои значения (вдруг связанный справочник поменялся)
-        foreach (QString dictName, getDictionaries()->keys())
-        {
-            dict = getDictionaries()->value(dictName);
-            if (dict->isSet() && dict->isAutoLoaded())
-                prepareValue(dictName, dict);
-        }
-    }
     return anyShown;
 }
 
@@ -1011,28 +1008,24 @@ bool Document::prepareValue(QString name, QVariant val)
 int Document::appendDocString()
 {
     int result = 0;
+    QModelIndex index = grdTable->currentIndex();
     QString dictName, parameter;
     qulonglong dbId, crId;
     float quan = 0, price = 0, sum = 0;
 
-    foreach (QString dictName, dictionaries->getDictionaries()->keys())
+    // Запомним значения сначала зависимых справочников
+    foreach (QString dictName, getDictionariesList()->keys())
     {
-        Dictionary* dict = dictionaries->getDictionary(dictName);
-        if (dict->isConst())
-        {
-            if (dict->getId() != 0)
-            {
-                prepareValue(dictName, dict);
-            }
-            else
-            {
-                if (!getIsSingleString())
-                {
-                    app->showError(QString(QObject::trUtf8("Не определено значение постоянного справочника \"%1\"")).arg(dictName));
-                    return 0;
-                }
-            }
-        }
+        Dictionary* dict = getDictionariesList()->value(dictName);
+        if (!dict->isSet())
+            prepareValue(dictName, dict);
+    }
+    // Затем запомним значения наборов, чтобы наборы освежили свои значения (вдруг связанный справочник поменялся)
+    foreach (QString dictName, getDictionariesList()->keys())
+    {
+        Dictionary* dict = getDictionariesList()->value(dictName);
+        if (dict->isSet() && dict->isAutoLoaded())
+            prepareValue(dictName, dict);
     }
 
     // Просмотрим все проводки типовой операции
@@ -1085,6 +1078,29 @@ int Document::appendDocString()
     }
     prvValues.clear();
 
+    if (result > 0)                         // Если строка была добавлена
+    {
+        int column = grdTable->currentIndex().column();
+        int newRow = tableModel->rowCount();
+        if (newRow == 0)                    // Если это первая строка в документе
+        {
+            query();
+            grdTable->selectRow(newRow);
+            column = grdTable->currentIndex().column();
+        }
+        else
+        {
+            tableModel->insertRow(newRow);
+            grdTable->reset();
+            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            updateCurrentRow(result);
+        }
+        grdTable->selectNextColumn();
+//        grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+    }
+
+    grdTable->setCurrentIndex(index);
     return result;
 }
 
@@ -1109,9 +1125,9 @@ void Document::updateCurrentRow(int strNum)
 void Document::preparePrintValues(ReportScriptEngine* reportEngine)
 {
     // Зарядим постоянные справочники
-    foreach (QString dictName, getDictionaries()->keys())
+    foreach (QString dictName, getDictionariesList()->keys())
     {
-        Dictionary* dict = getDictionaries()->value(dictName);
+        Dictionary* dict = getDictionariesList()->value(dictName);
         if (dict->isConst())
         {   // Нам нужны только постоянные справочники
             QString idFieldName = db->getObjectName("код") + "_";

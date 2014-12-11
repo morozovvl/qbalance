@@ -21,10 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextStream>
 #include "reportscriptengine.h"
 #include "../kernel/app.h"
+#include "../kernel/dictionary.h"
 #include "reportcontextfunctions.h"
 
 
-ReportScriptEngine::ReportScriptEngine(QHash<QString, QVariant>* context, QObject *parent/* = 0*/)
+ReportScriptEngine::ReportScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = 0*/)
 :ScriptEngine(parent)
 {
     reportContext = new ReportContext(context);
