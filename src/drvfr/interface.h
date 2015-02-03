@@ -19,8 +19,6 @@
 #define _INTERFACE_H
 
 #include <time.h>
-#include "mysharedlib_global.h"
-
 #define false			0
 #define true			1
 

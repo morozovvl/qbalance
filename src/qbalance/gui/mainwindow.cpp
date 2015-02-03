@@ -142,6 +142,9 @@ void MainWindow::createMenus()
     showMessageWindow = infoMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
     connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
 
+    saveCustomAct = infoMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
+    connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
+
     exitAct = menuBar()->addAction(QObject::trUtf8("&Выход"));
     connect(exitAct, SIGNAL(triggered()), this, SLOT(closeEvent()));
 }
@@ -176,6 +179,12 @@ void MainWindow::showPeriod() {
 void MainWindow::showMessagesWindow()
 {
     TApplication::exemplar()->getMessageWindow()->show();
+}
+
+
+void MainWindow::saveCustomization()
+{
+     TApplication::exemplar()->saveCustomization();
 }
 
 

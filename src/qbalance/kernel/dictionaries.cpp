@@ -42,14 +42,14 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
 }
 
 
-Dictionary* Dictionaries::getDictionary(QString dictName)
+Dictionary* Dictionaries::getDictionary(QString dictName, bool scriptDisabled)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return 0;
     if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addDictionary(dictName))
+        if (!addDictionary(dictName, scriptDisabled))
             return 0;
     }
     return dictionariesList[dictName];

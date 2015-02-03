@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlRecord>
 #include <QtGui/QDialog>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkReply>
 #include "../kernel/table.h"
 #include "../engine/scriptengine.h"
@@ -102,6 +103,7 @@ public:
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
     Q_INVOKABLE QString getPhotoNameField() { return photoNameField; }
+    Q_INVOKABLE virtual void removePhoto();
     Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
     Q_INVOKABLE bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     Q_INVOKABLE bool isViewable() { return lViewable; }             // ... кнопок на форме
@@ -194,7 +196,7 @@ private:
     QWidget*            activeWidget;
 
     QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
-    QPointer<QNetworkAccessManager>  m_networkAccessManager;
+    QNetworkAccessManager*  m_networkAccessManager;
 
 
 private slots:

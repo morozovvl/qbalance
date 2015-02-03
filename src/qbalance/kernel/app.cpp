@@ -85,10 +85,14 @@ void TApplication::initConfig()
 {
 #ifdef Q_OS_WIN32
     config.barCodeReaderPort = "COM3";                  // COM-порт сканера штрих кодов в Windows
+    config.frDriverPort = 7;                            // COM-порт фискального регистратора
+    config.frDriverBaudRate = 3;
 #else
     config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
-#endif
     config.frDriverPort = 1;                            // COM-порт фискального регистратора
+    config.frDriverBaudRate = 3;
+#endif
+    config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
 }
 
@@ -151,6 +155,17 @@ bool TApplication::open() {
 //        formLoader->setWorkingDirectory(getFormsPath());
 
         messagesWindow = new MessageWindow();
+
+        tcpServer = new TcpServer(this);
+        tcpClient = new TcpClient(this);
+        tcpClient->sendRequest();
+
+        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverPassword))
+        {
+            driverFRisValid = true;
+//            qDebug() << driverFR->getProperty("Password");
+        }
+
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
             int result = gui->openDB(); // Попытаемся открыть базу данных
@@ -162,11 +177,9 @@ bool TApplication::open() {
                 {   // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();
-                    if (driverFR->open(config.frDriverPort))
-                        driverFRisValid = true;
 
                     // Загрузим константы
-                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
+                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"), true);
                     if (constDict != 0)
                     {
                         constDict->setPhotoEnabled(false);
@@ -174,13 +187,16 @@ bool TApplication::open() {
                     }
 
                     // Загрузим счета
-                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
+                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"), true);
                     if (accDict != 0)
                     {
                         accDict->setPhotoEnabled(false);
                     }
 
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+
+                    if (!driverFRisValid)
+                        showMessageOnStatusBar("Фискальный регистратор не найден.");
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -204,6 +220,14 @@ bool TApplication::open() {
 void TApplication::close()
 {
 //    delete formLoader;
+    if (driverFR)
+    {
+        driverFR->close();
+    }
+
+    delete tcpClient;
+    delete tcpServer;
+
     delete messagesWindow;
 
     if (documents.count() > 0)
@@ -250,43 +274,36 @@ void TApplication::showConfigs() {
 
 
 QString TApplication::getFormsPath(QString formName) {
-    QString dir = applicationDirPath() + "/forms/";
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-    dir += getConfigPrefix() + "/";
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-    QString fileName = dir + formName;
-    return fileName;
+    return getAnyPath("forms", formName);
 }
 
 
 QString TApplication::getScriptsPath() {
-    return applicationDirPath() + "/scripts/";
+    return getAnyPath("scripts");
 }
 
 
 QString TApplication::getReportsPath(QString reportName) {
-    QString dir = applicationDirPath() + "/reports/";
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-    dir += getConfigPrefix() + "/";
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-    QString fileName = dir + reportName;
-    return fileName;
+    return getAnyPath("reports", reportName);
 }
 
 
 QString TApplication::getPhotosPath(QString photoName) {
-    QString dir = applicationDirPath() + "/photos/";
+    return getAnyPath("photos", photoName);
+}
+
+
+QString TApplication::getAnyPath(QString subPath, QString fName)
+{
+    QString dir = applicationDirPath() + "/" + subPath + "/";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
     dir += getConfigPrefix() + "/";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    QString fileName = dir + photoName;
+    QString fileName = dir + fName;
     return fileName;
+
 }
 
 
@@ -459,10 +476,43 @@ bool TApplication::waitProcessEnd(QProcess* proc)
 }
 
 
+void TApplication::timeOut(int ms)
+{
+    QTimer t;
+    t.start(ms);
+    QEventLoop loop;
+    connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
+    loop.exec();
+}
 
 
 void TApplication::showProcesses()
 {
+/*
+    QDir dir = QDir(getScriptsPath());
+    QString ext = ".qs";
+    QStringList files;
+    // Получим шаблоны с сервера
+    QStringList fs = db->getFilesList("", ScriptFileType, true);
+    foreach (QString f, fs)
+    {
+        if (!files.contains(f))
+            files << f;
+    }
+
+    // Получим список локальных шаблонов отчетов
+    fs = dir.entryList(QStringList("*" + ext), QDir::Files, QDir::Name);
+    foreach (QString f, fs)
+    {
+        if (!files.contains(f))
+        {
+            files << f;
+            Essence::getFile(getScriptsPath(), f, ScriptFileType);
+        }
+    }
+*/
+
+
     ScriptEngine* scriptEngine;
     scriptEngine = new ScriptEngine();
     if (scriptEngine->open())
@@ -619,4 +669,16 @@ QString TApplication::findFileFromEnv(QString file)
     }
     return result;
 }
+
+
+void TApplication::saveCustomization()
+{
+    // Получим шаблоны с сервера
+    QStringList fs = db->getFilesList("", ScriptFileType, false);
+    foreach (QString f, fs)
+    {
+        qDebug() << f;
+    }
+}
+
 

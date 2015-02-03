@@ -147,7 +147,8 @@ public:
     qulonglong getFileCheckSum(QString, FileType, bool = false);
     QDateTime getFileDateTime(QString, FileType, bool = false);
     QStringList getFilesList(QString, FileType, bool = false);
-    virtual bool isFileExist(QString, FileType, bool = false);
+    bool isFileExist(QString, FileType, bool = false);
+    void removeFile(QString, FileType, bool = false);
     void setFile(QString, FileType, QByteArray, bool = false);
     void copyFile(QString, FileType, QString, bool = false);
     static qulonglong calculateCRC32(QByteArray*);
@@ -254,14 +255,15 @@ public:
     QString getToperNumerator(int);                             // Получает значение свойства "нумератор" типовой операции
     bool setToperNumerator(int, QString);                       // Устанавливает значение свойства "нумератор" типовой операции
     void setToperPermition(int operNumber, QString user, bool menu);
-    bool    execCommands();
-    void    clearCommands();
+    Q_INVOKABLE bool    execCommands();
+    Q_INVOKABLE void    clearCommands();
     bool    isExistsCommands();
-    void    appendCommand(QString);
+    Q_INVOKABLE void    appendCommand(QString);
     void    appendCommand(UpdateValues);
-    Q_INVOKABLE QVariant getValue(QString command, int row, int column);
-    Q_INVOKABLE QVariant getValue(QString command, int row, QString column);
-    Q_INVOKABLE QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
+    Q_INVOKABLE virtual QVariant getValue(QString command, int row, int column);
+    Q_INVOKABLE virtual QVariant getValue(QString command, int row, QString column);
+    Q_INVOKABLE virtual QVariant getValue(QString command) { return getValue(command, 0, 0); }
+    Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
 
 
 private:
@@ -271,6 +273,7 @@ private:
     QSqlQuery               objectTypes;
     QSqlQuery               dictionariesPermitions;     // Таблица доступа к справочникам
     QSqlQuery               columnsProperties;
+//1234    QHash<QString, QHash<QString, FieldType> > columnsProperties;
     QSqlQuery               columnsHeaders;
     QSqlQuery               config;
     QSqlQuery               accounts;

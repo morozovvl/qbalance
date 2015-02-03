@@ -89,7 +89,10 @@ SOURCES += main.cpp \
     gui/mymdisubwindow.cpp \
     kernel/barcodereader.cpp \
     openoffice/ooxmlengine.cpp \
-    gui/messagewindow.cpp
+    gui/messagewindow.cpp \
+    serialport/qmyextserialport.cpp \
+    kernel/tcpserver.cpp \
+    kernel/tcpclient.cpp
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -152,7 +155,10 @@ HEADERS += kernel/app.h \
     gui/mymdisubwindow.h \
     kernel/barcodereader.h \
     openoffice/ooxmlengine.h \
-    gui/messagewindow.h
+    gui/messagewindow.h \
+    serialport/qmyextserialport.h \
+    kernel/tcpserver.h \
+    kernel/tcpclient.h
 RESOURCES += ../../resources.qrc
 
 

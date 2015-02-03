@@ -44,6 +44,7 @@ BarCodeReader::BarCodeReader(QObject *parent, QString port) :
 
 BarCodeReader::~BarCodeReader()
 {
+    barCodeReaderComPort->close();
     if (barCodeReaderComPort != 0)
         delete barCodeReaderComPort;
 }

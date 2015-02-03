@@ -51,6 +51,7 @@ protected:
     QString pictureDrawn;
     virtual void paintEvent(QPaintEvent*);
     virtual void mouseDoubleClickEvent(QMouseEvent*);
+    virtual void mousePressEvent(QMouseEvent*);
 
 private:
     TApplication*               app;

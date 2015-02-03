@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mynumericitemdelegate.h"
 #include "mybooleanitemdelegate.h"
 #include "mydateitemdelegate.h"
+#include "../storage/dbfactory.h"
 
 
 TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
@@ -480,7 +481,6 @@ void TableView::showPhoto()
     {
         if (tableModel->rowCount() > 0)
         {
-
             QString photoFileName = essence->getPhotoFile(); // Получим имя фотографии
             if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
             {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)

@@ -191,6 +191,7 @@ QString SearchParameters::getFilter()
     for (int i = 0; i < searchParameters.size(); i++)
     {
         QString text = searchParameters[i].value.toString();
+        text.replace("'", "''");
         QStringList paramList = text.split(QRegExp("\\s+"));
         if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
         {

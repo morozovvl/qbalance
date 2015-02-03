@@ -34,7 +34,7 @@ public:
     QHash<QString, Dictionary*> dictionariesList;                    // Объекты справочников
     QList<QString>              dictionariesNamesList;                    // Список справочников в порядке создания
     Dictionaries(QObject *parent = 0);
-    Q_INVOKABLE virtual Dictionary* getDictionary(QString);   // По умолчанию добавлять справочник
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString, bool = false);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc);
     Q_INVOKABLE virtual bool addDictionary(QString, bool = false);
     Q_INVOKABLE virtual bool addSaldo(QString acc);

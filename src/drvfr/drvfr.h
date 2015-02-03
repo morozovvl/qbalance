@@ -19,7 +19,6 @@
 #define _DRVFR_H
 
 #include <time.h>
-#include "mysharedlib_global.h"
 
 /****************************************************
  * FR connamds                                      *

@@ -17,7 +17,6 @@
 #ifndef _CONN_H
 #define _CONN_H
 #include <termios.h>
-#include "mysharedlib_global.h"
 #include "drvfr.h"
 
 #define MAX_TRIES	10

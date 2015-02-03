@@ -178,6 +178,7 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
 
 bool MySqlRelationalTableModel::submit(const QModelIndex& index)
 {
+    bool write = true;
     if (editStrategy() == QSqlTableModel::OnManualSubmit)
     {
         if (updateInfo.contains(index.column()))
@@ -199,19 +200,27 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             }
             else if (type == "DATE")
             {
-                value = QString("'%1'").arg(recValue.toString());
+                value = recValue.toString();
+                if (value.size() == 0)
+                    write = false;
+                else
+                    value = QString("'%1'").arg(value);
             }
             else if (type == "DATETIME")
             {
-                value = QString("'%1'").arg(recValue.toString());
+                value = recValue.toString();
+                if (value.size() == 0)
+                    write = false;
+                else
+                    value = QString("'%1'").arg(value);
             }
             else
             {
                 value = QString("%1").arg(recValue.toString());
             }
-            if (recValue.toString().size() > 0)
+            // Сгенерируем для сервера команду сохранения значения из модели
+            if (write)
             {
-                // Сгенерируем для сервера команду сохранения значения из модели
                 int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();
                 if (id > 0)
                 {

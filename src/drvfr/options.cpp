@@ -121,17 +121,11 @@ int readoptions (void)
   char *homedir;
   int  etc_res;
   int  home_res;
-  char buffer[1000];
-  fr = drvfrInitialize();
 
+  fr = drvfrInitialize();
   homedir  = getenv("HOME");
   etc_res  = readrcfile("/etc/drvfrrc");
-//  home_res = readrcfile(QString().append(homedir).append("/.drvfrrc").toAscii().data());
-  strcat(buffer, homedir);
-  strcat(buffer, "/.drvfrrc");
-//  home_res = readrcfile(strcat(homedir, "/.drvfrrc"));
-  home_res = readrcfile(buffer);
-
+  home_res = readrcfile(strcat(homedir,"/.drvfrrc"));
   if(etc_res == -1 && home_res == -1) return -1;
   fr->prop->ComPortNumber = t_devnum;
   fr->prop->Password = t_passwd;

@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-#include <QtNetwork/QNetworkConfigurationManager>
 #include <QMessageBox>
 #include <QMenu>
 #include <QtCore/QFile>
@@ -150,7 +149,6 @@ QVariant Essence::getValue(QString n, int row)
 
 void Essence::setValue(QString n, QVariant value, int row)
 {
-    QString name = n.toUpper();
     int fieldColumn = tableModel->fieldIndex(n);
     if (fieldColumn >= 0)
     {
@@ -210,10 +208,8 @@ void Essence::setId(qulonglong id)
 void Essence::query(QString filter)
 {
     QModelIndex index;
-
     if (grdTable != 0)
         index = grdTable->currentIndex();
-
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
         Table::query(filter + " AND " + defaultFilter);
@@ -224,7 +220,6 @@ void Essence::query(QString filter)
     }
     else
         Table::query(filter);
-
     if (grdTable != 0)
         grdTable->setCurrentIndex(index);
  }
@@ -306,33 +301,19 @@ QString Essence::getPhotoFile(QString copyTo)
                                         // Если сетевой менеджер еще не подключен, то подключим его
                                         if (m_networkAccessManager == 0)
                                         {   // Вызывается только один раз, по необходимости загрузить фотографию
-                                            QNetworkConfigurationManager manager(this);
                                             m_networkAccessManager = new QNetworkAccessManager(this);
-                                            m_networkAccessManager->setConfiguration(manager.defaultConfiguration());
                                             connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+
                                         }
                                         if (m_networkAccessManager != 0)
                                         {
-                                            if (m_networkAccessManager->networkAccessible() == QNetworkAccessManager::Accessible)
+                                            urlId v = {idValue, copyTo};
+                                            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
+                                            QNetworkRequest m_request(url);
+                                            QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
+                                            if (reply->error() != QNetworkReply::NoError)
                                             {
-                                                urlId v = {idValue, copyTo};
-                                                urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
-                                                QNetworkRequest m_request(url);
-                                                QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
-                                                if (reply->error() == QNetworkReply::NoError)
-                                                {
-//                                                    app->showMessageOnStatusBar(tr("Запущена загрузка из Интернета фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                                                }
-                                                else
-                                                {
-                                                    app->showMessageOnStatusBar(reply->errorString(), 3000);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                app->showMessageOnStatusBar(tr("Нет доступа к сети для загрузки фотографий."), 3000);
-                                                delete m_networkAccessManager;
-                                                m_networkAccessManager = 0;
+                                               app->showMessageOnStatusBar(reply->errorString(), 3000);
                                             }
                                         }
                                     }
@@ -356,6 +337,24 @@ QString Essence::getPhotoFile(QString copyTo)
         }
     }
     return file;
+}
+
+
+void Essence::removePhoto()
+{
+    QString idValue = getValue(photoIdField).toString().trimmed();
+    if (idValue.size() > 0)
+    {
+        QString photoFile = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
+        QString localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+
+        QFile file(photoFile);
+        if (file.remove())
+        {
+            db->removeFile(localFile, PictureFileType, true);
+            filesSumChecked.removeAt(filesSumChecked.indexOf(localFile));
+        }
+    }
 }
 
 
@@ -388,9 +387,6 @@ void Essence::replyFinished(QNetworkReply* reply)
     }
     else
         app->showMessageOnStatusBar(QString(tr("Не удалось загрузить фотографию с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
-
-//    if (urls.size() == 0)
-//        app->showMessageOnStatusBar(tr("Список заданий на загрузку фотографий пуст"));
 
     reply->close();
     reply->deleteLater();
@@ -489,7 +485,7 @@ bool Essence::open()
     {
         setOrderClause();
         initForm();
-        if (scriptEngineEnabled)
+        if (scriptEngineEnabled && db->isFileExist(scriptFileName, ScriptFileType))
         {
             setScriptEngine();
             evaluateEngine();
@@ -602,46 +598,42 @@ void Essence::cmdCancel()
 
 void Essence::initFormEvent(Form* form)
 {
-    if (scriptEngineEnabled)
-    {
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventInitForm(form);
-    }
 }
 
 
 void Essence::beforeShowFormEvent(Form* form)
 {
-    if (scriptEngineEnabled)
-    {
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventBeforeShowForm(form);
-    }
 }
 
 
 void Essence::afterShowFormEvent(Form* form)
 {
-    if (scriptEngineEnabled)
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventAfterShowForm(form);
 }
 
 
 void Essence::beforeHideFormEvent(Form* form)
 {
-    if (scriptEngineEnabled)
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventBeforeHideForm(form);
 }
 
 
 void Essence::afterHideFormEvent(Form* form)
 {
-    if (scriptEngineEnabled)
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventAfterHideForm(form);
 }
 
 
 void Essence::closeFormEvent(Form* form)
 {
-    if (scriptEngineEnabled)
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventCloseForm(form);
 }
 
@@ -649,17 +641,15 @@ void Essence::closeFormEvent(Form* form)
 QString Essence::preparePictureUrl()
 {
     QString result;
-    if (scriptEngineEnabled)
-    {
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         result = getScriptEngine()->preparePictureUrl(this);
-    }
     return result;
 }
 
 
 void Essence::afterRowChanged()
 {
-    if (scriptEngineEnabled)
+    if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventAfterRowChanged();
 }
 

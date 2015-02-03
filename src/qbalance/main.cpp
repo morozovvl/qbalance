@@ -38,6 +38,7 @@ bool readParameters(int argc, char *argv[]) {
             out << QObject::trUtf8("  -d1| --debug1     - Запустить программу в режиме отладки комманд запросов (файл debug1.log)\n");
             out << QObject::trUtf8("  -d2| --debug2     - Запустить программу в режиме отладки алгоритмов ядра (файл debug2.log)\n");
             out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
+            out << QObject::trUtf8("  -d4| --debug4     - Запустить программу в режиме отладки устройства COM-порта (файл debug4.log)\n");
             out << QObject::trUtf8("  -h | --help       - Вывести список параметров запуска программы\n");
             lContinue = false;
         }
@@ -63,6 +64,11 @@ bool readParameters(int argc, char *argv[]) {
                  QString(argv[i]).compare("--debug3", Qt::CaseInsensitive) == 0)
             {
                 TApplication::setDebugMode(3);
+            }
+        else if (QString(argv[i]).compare("-d4", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug4", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::setDebugMode(4);
             }
     }
     return lContinue;

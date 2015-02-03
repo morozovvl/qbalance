@@ -72,8 +72,6 @@ Document::Document(int oper, Documents* par): Essence()
             break;
         }
 
-    openLocalDictionaries();
-
     lInsertable = true;
     lDeleteable = true;
     lUpdateable = true;
@@ -213,40 +211,19 @@ void Document::showItog()
 
 void Document::openLocalDictionaries()
 {
-    QList<DictType> dictsList;
-    db->getToperDictAliases(operNumber, topersList, &dictsList);
-    // Определим, какие справочники показывать при добавлении новой строки в документ, а какие не показывать
-    for (int i = 0; i < dictsList.count(); i++)
-    {
-        if (dictsList.at(i).isSaldo)
-        {
-            Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
-            saldo->getForm()->getSearchParameters()->setDictionaries(dictionaries);
-        }
-        else
-        {
-            Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
-            dict->getForm()->getSearchParameters()->setDictionaries(dictionaries);
-        }
-    }
-
     foreach(Dictionary* dict, dictionaries->dictionariesList.values())
     {
         if (dict->isSaldo())
         {
             Saldo* sal = (Saldo*)dict;
             sal->setAutoLoaded(true);
-//            sal->setAutoSelect(true);               // автоматически нажимать кнопку Ok, если выбрана одна позиция
             sal->setQuan(true);
             if (sal->isConst())
             {
-//123                sal->setMustShow(false); // Если справочник документа является постоянным или это набор
-//123                                         // то не показывать его при добавлении новой записи в документ
                 mustShow.insert(sal->getTagName(), false);
             }
             else
             {
-//123                sal->setMustShow(true);
                 mustShow.insert(sal->getTagName(), true);
                 sal->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
             }
@@ -258,20 +235,16 @@ void Document::openLocalDictionaries()
             {
                 if (dict->isSet())
                 {
-//123                    dict->setMustShow(false); // Если справочник документа является набором
-//123                                              // то не показывать его при добавлении новой записи в документ
                     mustShow.insert(dict->getTagName(), false);
                 }
                 else
                 {
-//123                    dict->setMustShow(true);
                     mustShow.insert(dict->getTagName(), true);
                     dict->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
                 }
             }
             else
             {
-//123                dict->setMustShow(false);                   // Сначала сделаем невидимым при добавлении проводки сам справочник
                 mustShow.insert(dict->getTagName(), false);
             }
         }
@@ -803,6 +776,7 @@ bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
     {
+        openLocalDictionaries();
         initFormEvent(form);
         return true;
     }
@@ -904,9 +878,18 @@ bool Document::setTableModel(int)
                 if (dict != 0)
                 {
                     dict->setConst(true);
-//123                    dict->setMustShow(false); // Если справочник документа является постоянным или это набор
                     mustShow.insert(dict->getTagName(), false);
                 }
+            }
+            if (dictsList.at(i).isSaldo)
+            {
+                Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
+                saldo->getForm()->getSearchParameters()->setDictionaries(dictionaries);
+            }
+            else
+            {
+                Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
+                dict->getForm()->getSearchParameters()->setDictionaries(dictionaries);
             }
         }
 
@@ -954,7 +937,6 @@ bool Document::showNextDict()
     {
         QString dictName = dictionaries->dictionariesNamesList.at(i);
         dict = getDictionariesList()->value(dictName);
-//123        if (dict->isMustShow() && !dict->isLocked())
         if (mustShow.value(dict->getTagName()) && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
             dict->exec();
@@ -1091,7 +1073,7 @@ int Document::appendDocString()
         else
         {
             tableModel->insertRow(newRow);
-            grdTable->reset();
+            grdTable->setModel(tableModel);
             grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             updateCurrentRow(result);
         }

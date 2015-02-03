@@ -27,7 +27,6 @@
 #include "options.h"
 #include "conn.h"
 #include "errdefs.h"
-#include <QDebug>
 
 /**********************************************************
  * Local functions & procedures                           *

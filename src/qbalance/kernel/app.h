@@ -33,6 +33,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "documents.h"
 #include "topers.h"
 #include "barcodereader.h"
+#include "tcpclient.h"
+#include "tcpserver.h"
 #include "../gui/guifactory.h"
 #include "../gui/mainwindow.h"
 #include "../gui/dialog.h"
@@ -60,6 +62,8 @@ enum  ReportTemplateTypes
 struct ConfigVars {
     QString         barCodeReaderPort;          // COM-порт сканера штрих кодов
     int             frDriverPort;               // COM-порт фискального регистратора
+    int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
+    int             frDriverPassword;
     QString         cardReaderPrefix;           // Префикс магнитной карты
 };
 
@@ -120,7 +124,7 @@ public:
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
     static bool setDebugMode(const int& value);
 
-    Q_INVOKABLE static void debug(int, const QString& value);
+    Q_INVOKABLE static void debug(int, const QString&);
 
     static TApplication* exemplar();
 
@@ -151,6 +155,9 @@ public:
     int getSecDiff() { return secDiff; }
     void    initConfig();
     QString     findFileFromEnv(QString);
+    void timeOut(int);
+
+    void saveCustomization();
 
 signals:
     void cardCodeReaded(QString);
@@ -183,8 +190,11 @@ private:
 //    QUiLoader               *formLoader;
 
     QHash<QString, QStringList>     arraysForPrint;
+    TcpServer*               tcpServer;
+    TcpClient*               tcpClient;
 
     void loadConsts();
+    QString getAnyPath(QString, QString = "");
 
 };
 

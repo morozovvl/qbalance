@@ -421,14 +421,24 @@ void FormGrid::cmdPrint(bool autoPrint)
     {
         QDir dir = QDir(app->getReportsPath());
         QString ext = "." + app->getReportTemplateExt();
-        // Получим список локальных шаблонов отчетов
-        QStringList files = dir.entryList(QStringList(getParent()->getTagName() + ".*" + ext), QDir::Files, QDir::Name);
-        // И шаблоны с сервера
+        QStringList files;
+        // Получим шаблоны с сервера
         QStringList fs = db->getFilesList(getParent()->getTagName(), ReportTemplateFileType, true);
         foreach (QString f, fs)
         {
             if (!files.contains(f))
                 files << f;
+        }
+
+        // Получим список локальных шаблонов отчетов
+        fs = dir.entryList(QStringList(getParent()->getTagName() + ".*" + ext), QDir::Files, QDir::Name);
+        foreach (QString f, fs)
+        {
+            if (!files.contains(f))
+            {
+                files << f;
+                Essence::getFile(app->getReportsPath(), f, ReportTemplateFileType);
+            }
         }
 
         QStringList reports;

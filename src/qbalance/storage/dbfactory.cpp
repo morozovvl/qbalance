@@ -180,6 +180,24 @@ bool DBFactory::open(QString login, QString password)
         currentLogin = login;
         currentPassword = password;
 
+        // Запомним для этой сессии сетевое имя компьютера, с которого произошло соединение
+#ifdef Q_OS_WIN32
+        QStringList env = QProcess::systemEnvironment();
+        QString host_name = env.filter("COMPUTERNAME=").at(0);
+        host_name.replace("\"", "").replace("COMPUTERNAME=", "");
+        QString user_name = env.filter("USERNAME=").at(0);
+        user_name.replace("\"", "").replace("USERNAME=", "");
+#else
+        QStringList env = QProcess::systemEnvironment();
+        QString host_name = env.filter("HOST=").at(0);
+        host_name.replace("\"", "").replace("HOST=", "");
+        QString user_name = env.filter("USER=").at(0);
+        user_name.replace("\"", "").replace("USER=", "");
+#endif
+
+        exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_host_name").arg(host_name));
+        exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_name").arg(user_name));
+
         return true;
     }
     else
@@ -283,11 +301,38 @@ void DBFactory::reloadDictionariesPermitions()
 
 void DBFactory::reloadColumnProperties()
 {
+
     columnsProperties.clear();
     columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
                                   "WHERE ins.table_schema = 'public' " \
                                   "ORDER BY table_name;");
+
+/*1234
+    QSqlQuery columnsProps;
+    columnsProps = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
+                                  "FROM information_schema.columns ins " \
+                                  "WHERE ins.table_schema = 'public' " \
+                                  "ORDER BY table_name;");
+    for (columnsProps.first(); columnsProps.isValid(); columnsProps.next())
+    {
+        QSqlRecord record = columnsProps.record();
+        FieldType fld;
+        fld.table  = record.value("table_name").toString().trimmed();
+        fld.name      = record.value("column_name").toString().trimmed();
+        fld.type      = record.value("type").toString().trimmed();
+        fld.length    = record.value("length").toInt();
+        fld.precision = record.value("precision").toInt();
+        fld.constReadOnly = false;
+        if (fld.name == getObjectName("код"))
+            fld.readOnly = true;
+        else
+        {
+            fld.readOnly  = record.value("updateable").toString().trimmed().toUpper() == "YES" ? false : true;
+        }
+        columnsProperties[fld.table][fld.name] = fld;
+    }
+*/
 }
 
 
@@ -460,6 +505,7 @@ bool DBFactory::isSet(QString tableName)
 
 void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QString originTable, int level)
 {
+
     for (columnsProperties.first(); columnsProperties.isValid(); columnsProperties.next())
     {
         QSqlRecord record = columnsProperties.record();
@@ -533,6 +579,61 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
             }
         }
     }
+
+/*1234
+    foreach (FieldType fld, columnsProperties.value(table).values())
+    {
+        // Если это столбец из связанной таблицы, то наименование столбца приведем к виду "таблица__столбец"
+        if (originTable.size() > 0 && originTable != table)
+            fld.column = table.toUpper() + "__" + fld.name;
+        else
+            fld.column = fld.name;
+        fld.header = fld.column;
+        fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
+
+        fld.number    = 0;
+        if (table == getObjectName("документы"))
+        {
+            if (fld.column == getObjectName("документы.комментарий"))
+            {
+                fld.readOnly = false;
+                fld.constReadOnly = false;
+            }
+            else
+            {
+                fld.readOnly = true;
+                fld.constReadOnly = true;
+            }
+        }
+        if (table == getObjectName("проводки"))
+        {
+            if ((fld.column == getObjectName("проводки.дбкод")) ||
+                (fld.column == getObjectName("проводки.кркод")) ||
+                (fld.column == getObjectName("проводки.кол")) ||
+                (fld.column == getObjectName("проводки.цена")) ||
+                (fld.column == getObjectName("проводки.сумма")))
+            {
+                fld.readOnly = false;
+                fld.constReadOnly = false;
+            }
+            else
+            {
+                fld.readOnly = true;
+                fld.constReadOnly = true;
+            }
+        }
+        result->append(fld);
+        if (fld.name.left(4) == getObjectName("код") + "_" && level == 0)   // обработаем ссылку на связанную таблицу
+        {
+            QString dictName = fld.name;
+            dictName.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+            dictName = dictName.toLower();                  // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+//            int currentRecord = columnsProperties.at();
+            getColumnsProperties(result, dictName, table, level + 1);
+//            columnsProperties.seek(currentRecord);
+        }
+    }
+*/
 }
 
 
@@ -1490,11 +1591,12 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
                                                                               .arg(type);
         QSqlQuery query = execQuery(text, dbExtend);
         query.first();
-        if (query.isValid())
+        while (query.isValid())
         {
             QString fileName = query.record().value(getObjectName("файлы.имя")).toString();
             if (!filesList.contains(fileName))
                 filesList << fileName;
+            query.next();
         }
         return filesList;
     }
@@ -1545,6 +1647,18 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
         files.next();
     }
     return false;
+}
+
+
+void DBFactory::removeFile(QString fileName, FileType type, bool extend)
+{
+    QString text;
+    text = QString("DELETE FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+                                                                             .arg(getObjectNameCom("файлы.имя"))
+                                                                             .arg(fileName)
+                                                                             .arg(getObjectNameCom("файлы.тип"))
+                                                                             .arg(type);
+    exec(text, true, (extend && extDbExist) ? dbExtend : db);
 }
 
 
@@ -2158,22 +2272,17 @@ QString DBFactory::getDictionarySqlSelectStatement(QString tableName, QString pr
     QString selectList;
     QString fromList;
     QString selectStatement;
-    QList<FieldType>    columnsProperties;
+    QList<FieldType> columnsProperties;
     QStringList tables;
-
     getColumnsProperties(&columnsProperties, tableName, tableName, 0);
-
     if (columnsProperties.size() > 0)
     {
         tables.append(columnsProperties.at(0).table);
-
         fromList = getObjectNameCom(tableName);
-
         FieldType fld, oldFld;
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             fld = columnsProperties.at(i);
-
             if (!tables.contains(fld.table))
             {
                 fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(fld.table)
@@ -2182,21 +2291,69 @@ QString DBFactory::getDictionarySqlSelectStatement(QString tableName, QString pr
                                                                                                  .arg(fld.name));
                 tables.append(fld.table);
             }
-
             if (selectList.size() > 0)
-                selectList.append(", ");
+            selectList.append(", ");
             selectList.append(QString("\"%1\".\"%2\" AS \"%3%4\"").arg(fld.table)
-                                                                .arg(fld.name)
-                                                                .arg(prefix.toUpper())
-                                                                .arg(fld.column.toUpper()));
+                                                                  .arg(fld.name)
+                                                                  .arg(prefix.toUpper())
+                                                                  .arg(fld.column.toUpper()));
             oldFld = fld;
+        }
+        selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
+        selectStatement.append(QLatin1String(" FROM ")).append(fromList);
+    }
+    return selectStatement;
+
+/*1234
+    QString selectList;
+    QString fromList;
+    QString selectStatement;
+    QList<FieldType>    columnsProperties;
+
+    getColumnsProperties(&columnsProperties, tableName, tableName, 0);
+
+    if (columnsProperties.size() > 0)
+    {
+        fromList = getObjectNameCom(tableName);
+
+        FieldType fld;
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            fld = columnsProperties.at(i);
+            if (fld.table == tableName)
+            {
+                if (selectList.size() > 0)
+                    selectList.append(", ");
+                selectList.append(QString("\"%1\".\"%2\" AS \"%3%4\"").arg(fld.table)
+                                                                    .arg(fld.name)
+                                                                    .arg(prefix.toUpper())
+                                                                    .arg(fld.column.toUpper()));
+            }
+        }
+
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            fld = columnsProperties.at(i);
+            QString field = fld.name;
+            if (fld.table == tableName && field.left(4).toUpper() == QString("%1_").arg(getObjectName("код")).toUpper())
+            {
+                QString table = field;
+                table.replace(0, 4, "");
+                table = table.toLower();
+                fromList.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".\"%4\"").arg(table)
+                                                                                                 .arg(tableName)
+                                                                                                 .arg(fld.name)
+                                                                                                 .arg(getObjectName("код")));
+            }
         }
 
         selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
         selectStatement.append(QLatin1String(" FROM ")).append(fromList);
     }
     return selectStatement;
+*/
 }
+
 
 
 bool DBFactory::getToperSingleString(int operNumber)

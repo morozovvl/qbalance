@@ -1,118 +1,747 @@
 #ifndef DRIVERFR_H
 #define DRIVERFR_H
 
-#include <QtCore/QObject>
-#include "../../drvfr/drvfr.h"
+#include <QObject>
+#include <QMetaObject>
+#include <QMetaProperty>
+#include <QDebug>
+#include <sys/time.h>
+#include "../serialport/qmyextserialport.h"
 
-/*
-int Connect (void);
-int DisConnect (void);
-int Beep (void);
-int Buy (void);
-int CancelCheck (void);
-int CashIncome (void);
-int CashOutcome (void);
-int Charge (void);
-int CheckSubTotal (void);
-int CloseCheck (void);
-int ConfirmDate (void);
-int ContinuePrinting (void);
-int Correction (void);
-int CutCheck (void);
-int DampRequest (void);
-int Discount (void);
-int DozeOilCheck (void);
-int Draw (void);
-int EjectSlipDocument (void);
-int EKLZDepartmentReportInDatesRange (void);
-int EKLZDepartmentReportInSessionsRange (void);
-int EKLZJournalOnSessionNumber (void);
-int EKLZSessionReportInDatesRange (void);
-int EKLZSessionReportInSessionRange (void);
-int FeedDocument (void);
-int Fiscalization (void);
-int FiscalReportForDatesRange (void);
-int FiscalReportForSessionRange (void);
-int GetData (void);
-int GetDeviceMetrics(void);
-int GetExchangeParam (void);
-int GetFieldStruct (void);
-int GetFiscalizationParameters (void);
-int GetFMRecordsSum (void);
-int GetECRStatus (void);
-int GetLastFMRecordDate (void);
-int GetLiterSumCounter (void);
-int GetCashReg (void);
-int GetOperationReg (void);
-int GetRangeDatesAndSessions (void);
-int GetRKStatus (void);
-int GetTableStruct (void);
-int InitFM (void);
-int InitTable (void);
-int InterruptDataStream (void);
-int InterruptFullReport (void);
-int InterruptTest (void);
-int LaunchRK (void);
-int LoadLineData(void);
-int OilSale (void);
-int OpenDrawer (void);
-int PrintBarCode(void);
-int PrintDocumentTitle (void);
-int PrintOperationReg (void);
-int PrintReportWithCleaning (void);
-int PrintReportWithoutCleaning (void);
-int PrintString (void);
-int PrintWideString (void);
-int ReadEKLZDocumentOnKPK (void);
-int ReadEKLZSessionTotal (void);
-int ReadLicense (void);
-int ReadTable (void);
-int ResetAllTRK (void);
-int ResetRK (void);
-int ResetSettings (void);
-int ResetSummary (void);
-int ReturnBuy (void);
-int ReturnSale (void);
-int Sale (void);
-int SetDate (void);
-int SetDozeInMilliliters (void);
-int SetDozeInMoney (void);
-int SetExchangeParam (void);
-int SetPointPosition (void);
-int SetRKParameters (void);
-int SetSerialNumber (void);
-int SetTime (void);
-int StopEKLZDocumentPrinting (void);
-int StopRK (void);
-int Storno (void);
-int StornoCharge (void);
-int StornoDiscount (void);
-int SummOilCheck (void);
-int Test (void);
-int WriteLicense (void);
-int WriteTable (void);
-*/
+
+#define MAX_TRIES	10
+
+#define ENQ 			0x05
+#define STX 			0x02
+#define ACK 			0x06
+#define NAK 			0x15
+
+
+#define DUMP_REQUEST			0x01
+#define GET_DATA			0x02
+#define INTERRUPT_DATA_STREAM		0x03
+#define GET_ECR_STATUS			0x11
+#define PRINT_WIDE_STRING		0x12
+#define BEEP				0x13
+#define SET_EXCHANGE_PARAM		0x14
+#define GET_EXCHANGE_PARAM		0x15
+#define RESET_SETTINGS			0x16
+#define PRINT_STRING			0x17
+#define PRINT_DOCUMENT_TITLE		0x18
+#define TEST				0x19
+#define GET_CASH_REG			0x1a
+#define GET_OPERATION_REG		0x1b
+#define WRITE_LICENSE			0x1c
+#define READ_LICENSE			0x1d
+#define WRITE_TABLE			0x1e
+#define READ_TABLE			0x1f
+#define SET_POINT_POSITION		0x20
+#define SET_TIME			0x21
+#define SET_DATE			0x22
+#define CONFIRM_DATE			0x23
+#define INIT_TABLE			0x24
+#define CUT_CHECK			0x25
+#define RESET_SUMMARY			0x27
+#define OPEN_DRAWER			0x28
+#define FEED_DOCUMENT			0x29
+#define EJECT_SLIP_DOC			0x2a
+#define INTERRUPT_TEST			0x2b
+#define PRINT_OPERATION_REG		0x2c
+#define GET_TABLE_STRUCT		0x2d
+#define GET_FIELD_STRUCT		0x2e
+#define PRINT_REPORT_WITHOUT_CLEANING	0x40
+#define PRINT_REPORT_WITH_CLEANING	0x41
+#define CASH_INCOME			0x50
+#define CASH_OUTCOME			0x51
+#define SET_SERIAL_NUMBER		0x60
+#define INIT_FM				0x61
+#define GET_FM_RECORDS_SUM		0x62
+#define GET_LAST_FM_RECORD_DATE		0x63
+#define GET_RANGE_DATES_AND_SESSIONS	0x64
+#define FISCALIZATION			0x65
+#define FISCAL_REPORT_FOR_DATES_RANGE	0x66
+#define FISCAL_REPORT_FOR_SESSION_RANGE	0x67
+#define INTERRUPT_FULL_REPORT		0x68
+#define GET_FISCALIZATION_PARAMETERS	0x69
+#define FISCAL_PRINT_SLIP_DOC		0x70
+#define PRINT_SLIP_DOC			0x71
+#define SALE				0x80
+#define BUY				0x81
+#define RETURN_SALE			0x82
+#define RETURN_BUY			0x83
+#define STORNO				0x84
+#define CLOSE_CHECK			0x85
+#define DISCOUNT			0x86
+#define CHARGE				0x87
+#define CANCEL_CHECK			0x88
+#define CHECK_SUBTOTAL			0x89
+#define STORNO_DISCOUNT			0x8a
+#define STORNO_CHARGE			0x8b
+#define DOZE_OIL_CHECK			0x90
+#define SUMM_OIL_CHECK			0x91
+#define CORRECTION			0x92
+#define SET_DOZE_IN_MILLILITERS		0x93
+#define SET_DOZE_IN_MONEY		0x94
+#define OIL_SALE			0x95
+#define STOP_RK				0x96
+#define LAUNCH_RK			0x97
+#define RESET_RK			0x98
+#define RESET_ALL_TRK			0x99
+#define SET_RK_PARAMETERS		0x9a
+#define GET_LITER_SUM_COUNTER		0x9b
+#define GET_CURRENT_DOZE		0x9e
+#define GET_RK_STATUS			0x9f
+#define ECT_DEP_DATE_REP		0xa0
+#define ECT_DEP_SHIFT_REP		0xa1
+#define ECT_SHIFT_DATE_REP		0xa2
+#define ECT_SHIFT_SHIFT_REP		0xa3
+#define ECT_SHIFT_TOTAL			0xa4
+#define ECT_PAY_DOC_BY_NUMBER		0xa5
+#define ECT_BY_SHIFT_NUMBER		0xa6
+#define ECT_REPORT_INTR			0xa7
+#define CONTINUE_PRINTING		0xb0
+#define LOAD_LINE_DATA			0xc0
+#define DRAW				0xc1
+#define PRINT_BARCODE			0xc2
+#define GET_DEVICE_METRICS		0xfc
+#define CTRL_ADD_DEVICE			0xfd
+
+
+typedef struct
+{
+  int len;
+  unsigned char buff[260];
+} command;
+
+
+typedef struct
+{
+  int len;
+  unsigned char buff[260];
+} answer;
+
+
+typedef struct
+{
+    int len;
+    unsigned char buff[260];
+} parameter;
+
+
+class frProp : public QObject
+{
+    Q_OBJECT
+public:
+
+    int    BatteryCondition;
+    int    BaudRate;
+    char   BarCode[14];
+    double Change;
+    int    CheckIsClosed;
+    int    CheckIsMadeOut;
+    int    ComPortNumber;
+    double ContentsOfCashRegister;
+    int    ContentsOfOperationRegister;
+    int    CurrentDozeInMilliliters;
+    double CurrentDozeInMoney;
+    int    CutType;
+    unsigned char DataBlock[32];
+    int    DataBlockNumber;
+    struct tm Date;
+    int    Department;
+    int    DeviceCode;
+    char*  DeviceCodeDescription;
+    double DiscountOnCheck;
+    char   DocumentName[31];
+    int    DocumentNumber;
+    int    OpenDocumentNumber;
+    int    DozeInMilliliters;
+    double DozeInMoney;
+    int    DrawerNumber;
+    int    ECRAdvancedMode;
+    char*  ECRAdvancedModeDescription;
+    int    ECRBuild;
+    int    ECRMode;
+    int    ECRMode8Status;
+    char*  ECRModeDescription;
+    struct tm ECRSoftDate;
+    char   ECRSoftVersion[4];
+    int    EKLZIsPresent;
+    int    EmergencyStopCode;
+    char*  EmergencyStopCodeDescription;
+    char   FieldName[41];
+    int    FieldNumber;
+    int    FieldSize;
+    int    FieldType;
+    int    FirstLineNumber;
+    struct tm FirstSessionDate;
+    int    FirstSessionNumber;
+    int    FM1IsPresent;
+    int    FM2IsPresent;
+    int    FMBuild;
+    int    FMOverflow;
+    struct tm FMSoftDate;
+    char   FMSoftVersion[4];
+    int    FreeRecordInFM;
+    int    FreeRegistration;
+    char   INN[13];
+    int    JournalRibbonIsPresent;
+    int    JournalRibbonOpticalSensor;
+    int    JournalRibbonLever;
+    int    KPKNumber;
+    int    LastFMRecordType;
+    int    LastLineNumber;
+    struct tm LastSessionDate;
+    int    LastSessionNumber;
+    char   License[13];
+    int    LicenseIsPresent;
+    int    LidPositionSensor;
+    int    LogicalNumber;
+    int    LineNumber;
+    unsigned char LineData[41];
+    int    MAXValueOfField;
+    int    MINValueOfField;
+    int    Motor;
+    char*  NameCashReg;
+    char*  NameOperationReg;
+    int    NewPasswordTI;
+    int    OperatorNumber;
+    int    Password;
+    int    Pistol;
+    int    PointPosition;
+    int    PortNumber;
+    double Price;
+    double Quantity;
+    int    ReceiptRibbonIsPresent;
+    int    ReceiptRibbonOpticalSensor;
+    int    ReceiptRibbonLever;
+    int    Timeout;
+    int    RegisterNumber;
+    int    ReportType;
+    int    RegistrationNumber;
+    int    ResultCode;
+    char*  ResultCodeDescription;
+    int    RKNumber;
+    char   RNM[15];
+    int    RoughValve;
+    int    RowNumber;
+    int    RunningPeriod;
+    char   SerialNumber[13];
+    int    SessionNumber;
+    int    SlipDocumentIsMoving;
+    int    SlipDocumentIsPresent;
+    int    SlowingInMilliliters;
+    int    SlowingValve;
+    int    StatusRK;
+    char*  StatusRKDescription;
+    char  StringForPrinting[250];
+    int    StringQuantity;
+    double Summ1;
+    double Summ2;
+    double Summ3;
+    double Summ4;
+    char*  TableName;
+    int    TableNumber;
+    int    Tax1;
+    int    Tax2;
+    int    Tax3;
+    int    Tax4;
+    struct tm Time;
+    int    TRKNumber;
+    int    TypeOfSumOfEntriesFM;
+    int    UseJournalRibbon;
+    int    UseReceiptRibbon;
+    int    UseSlipDocument;
+    int    UModel;
+    int    UMajorType;
+    int    UMinorType;
+    int    UMajorProtocolVersion;
+    int    UMinorProtocolVersion;
+    int    UCodePage;
+    char*  UDescription;
+    int    ValueOfFieldInteger;
+    char   ValueOfFieldString[41];
+
+    Q_PROPERTY(int    BatteryCondition READ getBatteryCondition)
+    Q_PROPERTY(int    BaudRate READ getBaudRate WRITE setBaudRate)
+    Q_PROPERTY(QString  BarCode READ getBarCode WRITE setBarCode)
+    Q_PROPERTY(double Change READ getChange)
+    Q_PROPERTY(int    CheckIsClosed READ getCheckIsClosed WRITE setCheckIsClosed)
+    Q_PROPERTY(int    CheckIsMadeOut READ getCheckIsMadeOut WRITE setCheckIsMadeOut)
+    Q_PROPERTY(int    ComPortNumber READ getComPortNumber WRITE setComPortNumber)
+    Q_PROPERTY(double ContentsOfCashRegister READ getContentsOfCashRegister)
+    Q_PROPERTY(int    ContentsOfOperationRegister READ getContentsOfOperationRegister)
+    Q_PROPERTY(int    CurrentDozeInMilliliters READ getCurrentDozeInMilliliters WRITE setCurrentDozeInMilliliters)
+    Q_PROPERTY(double CurrentDozeInMoney READ getCurrentDozeInMoney WRITE setCurrentDozeInMoney)
+    Q_PROPERTY(int    CutType READ getCutType WRITE setCutType)
+    Q_PROPERTY(unsigned char* DataBlock READ getDataBlock)
+    Q_PROPERTY(int    DataBlockNumber READ getDataBlockNumber)
+    Q_PROPERTY(struct tm Date READ getDate WRITE setDate)
+    Q_PROPERTY(int    Department READ getDepartment WRITE setDepartment)
+    Q_PROPERTY(int    DeviceCode READ getDeviceCode WRITE setDeviceCode)
+    Q_PROPERTY(QString  DeviceCodeDescription READ getDeviceCodeDescription)
+    Q_PROPERTY(double DiscountOnCheck READ getDiscountOnCheck WRITE setDiscountOnCheck)
+    Q_PROPERTY(QString  DocumentName READ getDocumentName WRITE setDocumentName)
+    Q_PROPERTY(int    DocumentNumber READ getDocumentNumber WRITE setDocumentNumber)
+    Q_PROPERTY(int    OpenDocumentNumber READ getOpenDocumentNumber WRITE setOpenDocumentNumber)
+    Q_PROPERTY(int    DozeInMilliliters READ getDozeInMilliliters WRITE setDozeInMilliliters)
+    Q_PROPERTY(double DozeInMoney READ getDozeInMoney WRITE setDozeInMoney)
+    Q_PROPERTY(int    DrawerNumber READ getDrawerNumber WRITE setDrawerNumber)
+    Q_PROPERTY(int    ECRAdvancedMode READ getECRAdvancedMode)
+    Q_PROPERTY(QString  ECRAdvancedModeDescription READ getECRAdvancedModeDescription)
+    Q_PROPERTY(int    ECRBuild READ getECRBuild)
+    Q_PROPERTY(int    ECRMode READ getECRMode)
+    Q_PROPERTY(int    ECRMode8Status READ getECRMode8Status)
+    Q_PROPERTY(QString  ECRModeDescription READ getECRModeDescription)
+    Q_PROPERTY(struct tm ECRSoftDate READ getECRSoftDate)
+    Q_PROPERTY(QString  ECRSoftVersion READ getECRSoftVersion)
+    Q_PROPERTY(int    EKLZIsPresent READ getEKLZIsPresent WRITE setEKLZIsPresent)
+    Q_PROPERTY(int    EmergencyStopCode READ getEmergencyStopCode)
+    Q_PROPERTY(QString  EmergencyStopCodeDescription READ getEmergencyStopCodeDescription)
+    Q_PROPERTY(QString  FieldName READ getFieldName)
+    Q_PROPERTY(int    FieldNumber READ getFieldNumber WRITE setFieldNumber)
+    Q_PROPERTY(int    FieldSize READ getFieldSize)
+    Q_PROPERTY(int    FieldType READ getFieldType)
+    Q_PROPERTY(int    FirstLineNumber READ getFirstLineNumber WRITE setFirstLineNumber)
+    Q_PROPERTY(struct tm FirstSessionDate READ getFirstSessionDate WRITE setFirstSessionDate)
+    Q_PROPERTY(int    FirstSessionNumber READ getFirstSessionNumber WRITE setFirstSessionNumber)
+    Q_PROPERTY(int    FM1IsPresent READ getFM1IsPresent)
+    Q_PROPERTY(int    FM2IsPresent READ getFM2IsPresent)
+    Q_PROPERTY(int    FMBuild READ getFMBuild)
+    Q_PROPERTY(int    FMOverflow READ getFMOverflow)
+    Q_PROPERTY(struct tm FMSoftDate READ getFMSoftDate)
+    Q_PROPERTY(QString  FMSoftVersion READ getFMSoftVersion)
+    Q_PROPERTY(int    FreeRecordInFM READ getFreeRecordInFM)
+    Q_PROPERTY(int    FreeRegistration READ getFreeRegistration)
+    Q_PROPERTY(QString  INN READ getINN WRITE setINN)
+    Q_PROPERTY(int    JournalRibbonIsPresent READ getJournalRibbonIsPresent WRITE setJournalRibbonIsPresent)
+    Q_PROPERTY(int    JournalRibbonOpticalSensor READ getJournalRibbonOpticalSensor WRITE setJournalRibbonOpticalSensor)
+    Q_PROPERTY(int    JournalRibbonLever READ getJournalRibbonLever WRITE setJournalRibbonLever)
+    Q_PROPERTY(int    KPKNumber READ getKPKNumber WRITE setKPKNumber)
+    Q_PROPERTY(int    LastFMRecordType READ getLastFMRecordType WRITE setLastFMRecordType)
+    Q_PROPERTY(int    LastLineNumber READ getLastLineNumber WRITE setLastLineNumber)
+    Q_PROPERTY(struct tm LastSessionDate READ getLastSessionDate WRITE setLastSessionDate)
+    Q_PROPERTY(int    LastSessionNumber READ getLastSessionNumber WRITE setLastSessionNumber)
+    Q_PROPERTY(QString  License READ getLicense WRITE setLicense)
+    Q_PROPERTY(int    LicenseIsPresent READ getLicenseIsPresent)
+    Q_PROPERTY(int    LidPositionSensor READ getLidPositionSensor)
+    Q_PROPERTY(int    LogicalNumber READ getLogicalNumber WRITE setLogicalNumber)
+    Q_PROPERTY(int    LineNumber READ getLineNumber WRITE setLineNumber)
+    Q_PROPERTY(unsigned char* LineData READ getLineData WRITE setLineData)
+    Q_PROPERTY(int    MAXValueOfField READ getMAXValueOfField)
+    Q_PROPERTY(int    MINValueOfField READ getMINValueOfField)
+    Q_PROPERTY(int    Motor READ getMotor WRITE setMotor)
+    Q_PROPERTY(QString  NameCashReg READ getNameCashReg)
+    Q_PROPERTY(QString  NameOperationReg READ getNameOperationReg)
+    Q_PROPERTY(int    NewPasswordTI READ getNewPasswordTI WRITE setNewPasswordTI)
+    Q_PROPERTY(int    OperatorNumber READ getOperatorNumber)
+    Q_PROPERTY(int    Password READ getPassword WRITE setPassword)
+    Q_PROPERTY(int    Pistol READ getPistol WRITE setPistol)
+    Q_PROPERTY(int    PointPosition READ getPointPosition WRITE setPointPosition)
+    Q_PROPERTY(int    PortNumber READ getPortNumber WRITE setPortNumber)
+    Q_PROPERTY(double Price READ getPrice WRITE setPrice)
+    Q_PROPERTY(double Quantity READ getQuantity WRITE setQuantity)
+    Q_PROPERTY(int    ReceiptRibbonIsPresent READ getReceiptRibbonIsPresent)
+    Q_PROPERTY(int    ReceiptRibbonOpticalSensor READ getReceiptRibbonOpticalSensor)
+    Q_PROPERTY(int    ReceiptRibbonLever READ getReceiptRibbonLever)
+    Q_PROPERTY(int    Timeout READ getTimeout WRITE setTimeout)
+    Q_PROPERTY(int    RegisterNumber READ getRegisterNumber WRITE setRegisterNumber)
+    Q_PROPERTY(int    ReportType READ getReportType WRITE setReportType)
+    Q_PROPERTY(int    RegistrationNumber READ getRegistrationNumber WRITE setRegistrationNumber)
+    Q_PROPERTY(int    ResultCode READ getResultCode)
+    Q_PROPERTY(QString  ResultCodeDescription READ getResultCodeDescription)
+    Q_PROPERTY(int    RKNumber READ getRKNumber WRITE setRKNumber)
+    Q_PROPERTY(QString  RNM READ getRNM WRITE setRNM)
+    Q_PROPERTY(int    RoughValve READ getRoughValve WRITE setRoughValve)
+    Q_PROPERTY(int    RowNumber READ getRowNumber WRITE setRowNumber)
+    Q_PROPERTY(int    RunningPeriod READ getRunningPeriod WRITE setRunningPeriod)
+    Q_PROPERTY(QString  SerialNumber READ getSerialNumber WRITE setSerialNumber)
+    Q_PROPERTY(int    SessionNumber READ getSessionNumber WRITE setSessionNumber)
+    Q_PROPERTY(int    SlipDocumentIsMoving READ getSlipDocumentIsMoving)
+    Q_PROPERTY(int    SlipDocumentIsPresent READ getSlipDocumentIsPresent)
+    Q_PROPERTY(int    SlowingInMilliliters READ getSlowingInMilliliters WRITE setSlowingInMilliliters)
+    Q_PROPERTY(int    SlowingValve READ getSlowingValve WRITE setSlowingValve)
+    Q_PROPERTY(int    StatusRK READ getStatusRK)
+    Q_PROPERTY(QString  StatusRKDescription READ getStatusRKDescription)
+    Q_PROPERTY(QString StringForPrinting READ getStringForPrinting WRITE setStringForPrinting)
+    Q_PROPERTY(int    StringQuantity READ getStringQuantity WRITE setStringQuantity)
+    Q_PROPERTY(double Summ1 READ getSumm1 WRITE setSumm1)
+    Q_PROPERTY(double Summ2 READ getSumm2 WRITE setSumm2)
+    Q_PROPERTY(double Summ3 READ getSumm3 WRITE setSumm3)
+    Q_PROPERTY(double Summ4 READ getSumm4 WRITE setSumm4)
+    Q_PROPERTY(QString  TableName READ getTableName)
+    Q_PROPERTY(int    TableNumber READ getTableNumber WRITE setTableNumber)
+    Q_PROPERTY(int    Tax1 READ getTax1 WRITE setTax1)
+    Q_PROPERTY(int    Tax2 READ getTax2 WRITE setTax2)
+    Q_PROPERTY(int    Tax3 READ getTax3 WRITE setTax3)
+    Q_PROPERTY(int    Tax4 READ getTax4 WRITE setTax4)
+    Q_PROPERTY(struct tm Time READ getTime WRITE setTime)
+    Q_PROPERTY(int    TRKNumber READ getTRKNumber WRITE setTRKNumber)
+    Q_PROPERTY(int    TypeOfSumOfEntriesFM READ getTypeOfSumOfEntriesFM WRITE setTypeOfSumOfEntriesFM)
+    Q_PROPERTY(int    UseJournalRibbon READ getUseJournalRibbon WRITE setUseJournalRibbon)
+    Q_PROPERTY(int    UseReceiptRibbon READ getUseReceiptRibbon WRITE setUseReceiptRibbon)
+    Q_PROPERTY(int    UseSlipDocument READ getUseSlipDocument WRITE setUseSlipDocument)
+    Q_PROPERTY(int    UModel READ getUModel)
+    Q_PROPERTY(int    UMajorType READ getUMajorType)
+    Q_PROPERTY(int    UMinorType READ getUMinorType)
+    Q_PROPERTY(int    UMajorProtocolVersion READ getUMajorProtocolVersion)
+    Q_PROPERTY(int    UMinorProtocolVersion READ getUMinorProtocolVersion)
+    Q_PROPERTY(int    UCodePage READ getUCodePage)
+    Q_PROPERTY(QString  UDescription READ getUDescription)
+    Q_PROPERTY(int    ValueOfFieldInteger READ getValueOfFieldInteger WRITE setValueOfFieldInteger)
+    Q_PROPERTY(char*  ValueOfFieldString READ getValueOfFieldString WRITE setValueOfFieldString)
+
+
+    frProp() { ; }
+    ~frProp() { ; }
+
+    int    getBatteryCondition() { return BatteryCondition; }
+    int    getBaudRate() { return BaudRate; }
+    QString  getBarCode() { return QString().append(BarCode); }
+    double getChange() { return Change; }
+    int    getCheckIsClosed() { return CheckIsClosed; }
+    int    getCheckIsMadeOut() { return CheckIsMadeOut; }
+    int    getComPortNumber() { return ComPortNumber; }
+    double getContentsOfCashRegister() { return ContentsOfCashRegister; }
+    int    getContentsOfOperationRegister() { return ContentsOfOperationRegister; }
+    int    getCurrentDozeInMilliliters() { return CurrentDozeInMilliliters; }
+    double getCurrentDozeInMoney() { return CurrentDozeInMoney; }
+    int    getCutType() { return CutType; }
+    unsigned char* getDataBlock() { return DataBlock; }
+    int    getDataBlockNumber() { return DataBlockNumber; }
+    struct tm getDate() { return Date; }
+    int    getDepartment() { return Department; }
+    int    getDeviceCode() { return DeviceCode; }
+    QString  getDeviceCodeDescription() { return QString().append(DeviceCodeDescription); }
+    double getDiscountOnCheck() { return DiscountOnCheck; }
+    QString  getDocumentName() { return QString().append(DocumentName); }
+    int    getDocumentNumber() { return DocumentNumber; }
+    int    getOpenDocumentNumber() { return OpenDocumentNumber; }
+    int    getDozeInMilliliters() { return DozeInMilliliters; }
+    double getDozeInMoney() { return DozeInMoney; }
+    int    getDrawerNumber() { return DrawerNumber; }
+    int    getECRAdvancedMode() { return ECRAdvancedMode; }
+    QString  getECRAdvancedModeDescription() { return QString().append(ECRAdvancedModeDescription); }
+    int    getECRBuild() { return ECRBuild; }
+    int    getECRMode() { return ECRMode; }
+    int    getECRMode8Status() { return ECRMode8Status; }
+    QString  getECRModeDescription() { return QString().append(ECRModeDescription); }
+    struct tm getECRSoftDate() { return ECRSoftDate; }
+    QString  getECRSoftVersion() { return QString().append(ECRSoftVersion); }
+    int    getEKLZIsPresent() { return EKLZIsPresent; }
+    int    getEmergencyStopCode() { return EmergencyStopCode; }
+    QString  getEmergencyStopCodeDescription() { return QString().append(EmergencyStopCodeDescription); }
+    QString  getFieldName() { return QString().append(FieldName); }
+    int    getFieldNumber() { return FieldNumber; }
+    int    getFieldSize() { return FieldSize; }
+    int    getFieldType() { return FieldType; }
+    int    getFirstLineNumber() { return FirstLineNumber; }
+    struct tm getFirstSessionDate() { return FirstSessionDate; }
+    int    getFirstSessionNumber() { return FirstSessionNumber; }
+    int    getFM1IsPresent() { return FM1IsPresent; }
+    int    getFM2IsPresent() { return FM2IsPresent; }
+    int    getFMBuild() { return FMBuild; }
+    int    getFMOverflow() { return FMOverflow; }
+    struct tm getFMSoftDate() { return FMSoftDate; }
+    QString  getFMSoftVersion() { return QString().append(FMSoftVersion); }
+    int    getFreeRecordInFM() { return FreeRecordInFM; }
+    int    getFreeRegistration() { return FreeRegistration; }
+    QString  getINN() { return QString().append(INN); }
+    int    getJournalRibbonIsPresent() { return JournalRibbonIsPresent; }
+    int    getJournalRibbonOpticalSensor() { return JournalRibbonOpticalSensor; }
+    int    getJournalRibbonLever() { return JournalRibbonLever; }
+    int    getKPKNumber() { return KPKNumber; }
+    int    getLastFMRecordType() { return LastFMRecordType; }
+    int    getLastLineNumber() { return LastLineNumber; }
+    struct tm getLastSessionDate() { return LastSessionDate; }
+    int    getLastSessionNumber() { return LastSessionNumber; }
+    QString  getLicense() { return QString().append(License); }
+    int    getLicenseIsPresent() { return LicenseIsPresent; }
+    int    getLidPositionSensor() { return LidPositionSensor; }
+    int    getLogicalNumber() { return LogicalNumber; }
+    int    getLineNumber() { return LineNumber; }
+    unsigned char* getLineData() { return LineData; }
+    int    getMAXValueOfField() { return MAXValueOfField; }
+    int    getMINValueOfField() { return MINValueOfField; }
+    int    getMotor() { return MINValueOfField; }
+    QString  getNameCashReg() { return QString().append(NameCashReg); }
+    QString  getNameOperationReg() { return QString().append(NameOperationReg); }
+    int    getNewPasswordTI() { return NewPasswordTI; }
+    int    getOperatorNumber() { return OperatorNumber; }
+    int    getPassword() { return Password; }
+    int    getPistol() { return Pistol; }
+    int    getPointPosition() { return PointPosition; }
+    int    getPortNumber() { return PortNumber; }
+    double getPrice() { return Price; }
+    double getQuantity() { return Quantity; }
+    int    getReceiptRibbonIsPresent() { return ReceiptRibbonIsPresent; }
+    int    getReceiptRibbonOpticalSensor() { return ReceiptRibbonOpticalSensor; }
+    int    getReceiptRibbonLever() { return ReceiptRibbonLever; }
+    int    getTimeout() { return Timeout; }
+    int    getRegisterNumber() { return RegisterNumber; }
+    int    getReportType() { return ReportType; }
+    int    getRegistrationNumber() { return RegistrationNumber; }
+    int    getResultCode() { return ResultCode; }
+    QString  getResultCodeDescription() { return QString().append(ResultCodeDescription); }
+    int    getRKNumber() { return RKNumber; }
+    QString  getRNM() { return QString().append(RNM); }
+    int    getRoughValve() { return RoughValve; }
+    int    getRowNumber() { return RowNumber; }
+    int    getRunningPeriod() { return RunningPeriod; }
+    QString  getSerialNumber() { return QString().append(SerialNumber); }
+    int    getSessionNumber() { return SessionNumber; }
+    int    getSlipDocumentIsMoving() { return SlipDocumentIsMoving; }
+    int    getSlipDocumentIsPresent() { return SlipDocumentIsPresent; }
+    int    getSlowingInMilliliters() { return SlowingInMilliliters; }
+    int    getSlowingValve() { return SlowingValve; }
+    int    getStatusRK() { return StatusRK; }
+    QString  getStatusRKDescription() { return QString().append(StatusRKDescription); }
+    QString getStringForPrinting() { return QString().append(StringForPrinting); }
+    int    getStringQuantity() { return StringQuantity; }
+    double getSumm1() { return Summ1; }
+    double getSumm2() { return Summ2; }
+    double getSumm3() { return Summ3; }
+    double getSumm4() { return Summ4; }
+    QString  getTableName() { return QString().append(TableName); }
+    int    getTableNumber() { return TableNumber; }
+    int    getTax1() { return Tax1; }
+    int    getTax2() { return Tax2; }
+    int    getTax3() { return Tax3; }
+    int    getTax4() { return Tax4; }
+    struct tm getTime() { return Time; }
+    int    getTRKNumber() { return TRKNumber; }
+    int    getTypeOfSumOfEntriesFM() { return TypeOfSumOfEntriesFM; }
+    int    getUseJournalRibbon() { return UseJournalRibbon; }
+    int    getUseReceiptRibbon() { return UseReceiptRibbon; }
+    int    getUseSlipDocument() { return UseSlipDocument; }
+    int    getUModel() { return UModel; }
+    int    getUMajorType() { return UMajorType; }
+    int    getUMinorType() { return UMinorType; }
+    int    getUMajorProtocolVersion() { return UMajorProtocolVersion; }
+    int    getUMinorProtocolVersion() { return UMinorProtocolVersion; }
+    int    getUCodePage() { return UCodePage; }
+    QString  getUDescription() { return QString().append(UDescription); }
+    int    getValueOfFieldInteger() { return ValueOfFieldInteger; }
+    char*  getValueOfFieldString() { return ValueOfFieldString; }
+
+    void setBaudRate(int a) { BaudRate = a; }
+    void setBarCode(QString a) { qstrncpy(BarCode, a.toLocal8Bit().data(), 13); }
+    void setCheckIsClosed(int a) { CheckIsClosed = a; }
+    void setCheckIsMadeOut(int a) { CheckIsMadeOut = a; }
+    void setComPortNumber(int a) { ComPortNumber = a; }
+    void setCurrentDozeInMilliliters(int a) { CurrentDozeInMilliliters = a; }
+    void setCurrentDozeInMoney(double a) { CurrentDozeInMoney = a; }
+    void setCutType(int a) { CutType = a; }
+    void setDate(struct tm a) { Date = a; }
+    void setDepartment(int a) { Department = a; }
+    void setDeviceCode(int a) { DeviceCode = a; }
+    void setDiscountOnCheck(double a) { DiscountOnCheck = a; }
+    void setDocumentName(QString a) { qstrncpy(DocumentName, a.toLocal8Bit().data(), 30); }
+    void setDocumentNumber(int a) { DocumentNumber = a; }
+    void setOpenDocumentNumber(int a) { OpenDocumentNumber = a; }
+    void setDozeInMilliliters(int a) { DozeInMilliliters = a; }
+    void setDozeInMoney(double a) { DozeInMoney = a; }
+    void setDrawerNumber(int a) { DrawerNumber = a; }
+    void setEKLZIsPresent(int a) { EKLZIsPresent = a; }
+    void setFieldNumber(int a) { FieldNumber = a; }
+    void setFirstLineNumber(int a) { FirstLineNumber = a; }
+    void setFirstSessionDate(struct tm a) { FirstSessionDate = a; }
+    void setFirstSessionNumber(int a) { FirstSessionNumber = a; }
+    void setINN(QString a) { qstrncpy(INN, a.toLocal8Bit().data(), 12); }
+    void setJournalRibbonIsPresent(int a) { JournalRibbonIsPresent = a; }
+    void setJournalRibbonOpticalSensor(int a) { JournalRibbonOpticalSensor = a; }
+    void setJournalRibbonLever(int a) { JournalRibbonLever = a; }
+    void setKPKNumber(int a) { KPKNumber = a; }
+    void setLastFMRecordType(int a) { LastFMRecordType = a; }
+    void setLastLineNumber(int a) { LastLineNumber = a; }
+    void setLastSessionDate(struct tm a) { LastSessionDate = a; }
+    void setLastSessionNumber(int a) { LastSessionNumber = a; }
+    void setLicense(QString a) { qstrncpy(License, a.toLocal8Bit().data(), 5); }
+    void setLogicalNumber(int a) { LogicalNumber = a; }
+    void setLineNumber(int a) { LineNumber = a; }
+    void setLineData(unsigned char* a) { strncpy((char*)LineData, (char*)a, 41); }
+    void setMotor(int a) { Motor = a; }
+    void setNewPasswordTI(int a) { NewPasswordTI = a; }
+    void setPassword(int a) { Password = a; }
+    void setPistol(int a) { Pistol = a; }
+    void setPointPosition(int a) { PointPosition = a; }
+    void setPortNumber(int a) { PortNumber = a; }
+    void setPrice(double a) { Price = a; }
+    void setQuantity(double a) { Quantity = a; }
+    void setTimeout(int a) { Timeout = a; }
+    void setRegisterNumber(int a) { RegisterNumber = a; }
+    void setReportType(int a) { ReportType = a; }
+    void setRegistrationNumber(int a) { RegistrationNumber = a; }
+    void setRKNumber(int a) { RKNumber = a; }
+    void setRNM(QString a) { qstrncpy(RNM, a.toLocal8Bit().data(), 14); }
+    void setRoughValve(int a) { RoughValve = a; }
+    void setRowNumber(int a) { RowNumber = a; }
+    void setRunningPeriod(int a) { RunningPeriod = a; }
+    void setSerialNumber(QString a) { qstrncpy(SerialNumber, a.toLocal8Bit().data(), 7); }
+    void setSessionNumber(int a) { SessionNumber = a; }
+    void setSlowingInMilliliters(int a) { SlowingInMilliliters = a; }
+    void setSlowingValve(int a) { SlowingValve = a; }
+    void setStringForPrinting(QString a)
+    {
+        if (a.size() > 0)
+            qstrncpy(StringForPrinting, a.toLocal8Bit().data(), 250);
+        else
+            StringForPrinting[0] = 0;
+    }
+    void setStringQuantity(int a) { StringQuantity = a; }
+    void setSumm1(double a) { Summ1 = a; }
+    void setSumm2(double a) { Summ2 = a; }
+    void setSumm3(double a) { Summ3 = a; }
+    void setSumm4(double a) { Summ4 = a; }
+    void setTableNumber(int a) { TableNumber = a; }
+    void setTax1(int a) { Tax1 = a; }
+    void setTax2(int a) { Tax2 = a; }
+    void setTax3(int a) { Tax3 = a; }
+    void setTax4(int a) { Tax4 = a; }
+    void setTime(struct tm a) { Time = a; }
+    void setTRKNumber(int a) { TRKNumber = a; }
+    void setTypeOfSumOfEntriesFM(int a) { TypeOfSumOfEntriesFM = a; }
+    void setUseJournalRibbon(int a) { UseJournalRibbon = a; }
+    void setUseReceiptRibbon(int a) { UseReceiptRibbon = a; }
+    void setUseSlipDocument(int a) { UseSlipDocument = a; }
+    void setValueOfFieldInteger(int a) { ValueOfFieldInteger = a; }
+    void setValueOfFieldString(char* a) { strncpy((char*)ValueOfFieldString, (char*)a, 41); }
+
+};
+
 
 class DriverFR : public QObject
 {
     Q_OBJECT
 public:
     DriverFR(QObject *parent = 0);
-    bool open(int = 1);
+    bool open(int, int, int);
     void close();
+    Q_INVOKABLE QVariant getProperty(QString name);
+    Q_INVOKABLE bool setProperty(QString name, QVariant value);
 
-// Функции для работы с драйвером
+// Функции для работы с фискальным регистратором
+    Q_INVOKABLE bool Connect();
+    Q_INVOKABLE void DisConnect();
     Q_INVOKABLE int Beep();
+    Q_INVOKABLE int Buy();
+    Q_INVOKABLE int CancelCheck();
+    Q_INVOKABLE int CashIncome();
+    Q_INVOKABLE int CashOutcome();
+    Q_INVOKABLE int Charge();
+    Q_INVOKABLE int CheckSubTotal();
+    Q_INVOKABLE int CloseCheck();
+    Q_INVOKABLE int ConfirmDate();
+    Q_INVOKABLE int ContinuePrinting();
+    Q_INVOKABLE int Correction();
+    Q_INVOKABLE int CutCheck();
+    Q_INVOKABLE int DampRequest();
+    Q_INVOKABLE int Discount();
+    Q_INVOKABLE int DozeOilCheck();
+    Q_INVOKABLE int Draw();
+    Q_INVOKABLE int EjectSlipDocument();
+    Q_INVOKABLE int EKLZDepartmentReportInDatesRange();
+    Q_INVOKABLE int EKLZDepartmentReportInSessionsRange();
+    Q_INVOKABLE int EKLZJournalOnSessionNumber();
+    Q_INVOKABLE int EKLZSessionReportInDatesRange();
+    Q_INVOKABLE int EKLZSessionReportInSessionRange();
+    Q_INVOKABLE int FeedDocument();
+    Q_INVOKABLE int Fiscalization();
+    Q_INVOKABLE int FiscalReportForDatesRange();
+    Q_INVOKABLE int FiscalReportForSessionRange();
+    Q_INVOKABLE int GetData();
+    Q_INVOKABLE int GetDeviceMetrics();
+    Q_INVOKABLE int GetExchangeParam();
+    Q_INVOKABLE int GetFieldStruct();
+    Q_INVOKABLE int GetFiscalizationParameters();
+    Q_INVOKABLE int GetFMRecordsSum();
+    Q_INVOKABLE int GetECRStatus();
+    Q_INVOKABLE int GetLastFMRecordDate();
+    Q_INVOKABLE int GetLiterSumCounter();
+    Q_INVOKABLE int GetCashReg();
+    Q_INVOKABLE int GetOperationReg();
+    Q_INVOKABLE int GetRangeDatesAndSessions();
+    Q_INVOKABLE int GetRKStatus();
+    Q_INVOKABLE int GetTableStruct();
+    Q_INVOKABLE int InitFM();
+    Q_INVOKABLE int InitTable();
+    Q_INVOKABLE int InterruptDataStream();
+    Q_INVOKABLE int InterruptFullReport();
+    Q_INVOKABLE int InterruptTest();
+    Q_INVOKABLE int LaunchRK();
+    Q_INVOKABLE int LoadLineData();
+    Q_INVOKABLE int OilSale();
+    Q_INVOKABLE int OpenDrawer();
+    Q_INVOKABLE int PrintBarCode();
+    Q_INVOKABLE int PrintDocumentTitle();
+    Q_INVOKABLE int PrintOperationReg();
+    Q_INVOKABLE int PrintReportWithCleaning();
+    Q_INVOKABLE int PrintReportWithoutCleaning();
+    Q_INVOKABLE int PrintString();
+    Q_INVOKABLE int PrintWideString();
+    Q_INVOKABLE int ReadEKLZDocumentOnKPK();
+    Q_INVOKABLE int ReadEKLZSessionTotal();
+    Q_INVOKABLE int ReadLicense();
+    Q_INVOKABLE int ReadTable();
+    Q_INVOKABLE int ResetAllTRK();
+    Q_INVOKABLE int ResetRK();
+    Q_INVOKABLE int ResetSettings();
+    Q_INVOKABLE int ResetSummary();
+    Q_INVOKABLE int ReturnBuy();
+    Q_INVOKABLE int ReturnSale();
+    Q_INVOKABLE int Sale();
+    Q_INVOKABLE int SetDate();
+    Q_INVOKABLE int SetDozeInMilliliters();
+    Q_INVOKABLE int SetDozeInMoney();
+    Q_INVOKABLE int SetExchangeParam();
+    Q_INVOKABLE int SetPointPosition();
+    Q_INVOKABLE int SetRKParameters();
+    Q_INVOKABLE int SetSerialNumber();
+    Q_INVOKABLE int SetTime();
+    Q_INVOKABLE int StopEKLZDocumentPrinting();
+    Q_INVOKABLE int StopRK();
+    Q_INVOKABLE int Storno();
+    Q_INVOKABLE int StornoCharge();
+    Q_INVOKABLE int StornoDiscount();
+    Q_INVOKABLE int SummOilCheck();
+    Q_INVOKABLE int Test();
+    Q_INVOKABLE int WriteLicense();
+    Q_INVOKABLE int WriteTable();
 
-    static DriverFR* exemplar() { return Exemplar; }
-
-signals:
-
-public slots:
 private:
-    static DriverFR*   Exemplar;
-    fr_func*        fr;     // Функции фискального регистратора
-    fr_prop*        prop;   // Свойства фискального регистратора
+    QString devName(int);
+    int checkState();
+    unsigned short int readByte(int = 0);
+    int readBytes(unsigned char *, int);
+    int sendENQ();
+    int sendNAK();
+    int sendACK();
+    unsigned short int LRC(unsigned char *, int, int = 0);
+    int readAnswer(answer*);
+    int composeComm(command*, int, int, parameter*);
+    int sendCommand(int, int, parameter*);
+    int errHand(answer*);
+    int evalint(unsigned char*, int);
+    int64_t evalint64(unsigned char*, int);
+    void evaldate(unsigned char*, struct tm*);
+    void evaltime(unsigned char *, struct tm *);
+    void DefineECRModeDescription();
+
+
+    QMyExtSerialPort*         serialPort;
+
+    frProp         fr;     // Функции фискального регистратора
+    bool            connected;
+    struct timeval  timeout;
+    static BaudRateType LineSpeedVal[7];
+    static unsigned commlen[0x100];
+    static const char* errmsg[];
+    static const char* ecrmodedesc[];
+    static const char* ecrmode8desc[];
+    static const char* ecrsubmodedesc[];
+    static const char* devcodedesc[];
+
+
 };
 
 #endif // DRIVERFR_H

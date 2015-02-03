@@ -16,7 +16,6 @@
  ***************************************************************************/
 #ifndef ERRDEFS_H
 #define ERRDEFS_H
-#include "mysharedlib_global.h"
 
 static char *errmsg[] =
 {

@@ -189,6 +189,12 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
 
 // класс DriverFR
 Q_DECLARE_METATYPE(DriverFR*)
+
+QScriptValue DriverFRConstructor(QScriptContext *, QScriptEngine *engine) {
+    DriverFR *object = new DriverFR(TApplication::exemplar());
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
 QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
     return engine->newQObject(in);
 }
@@ -196,7 +202,6 @@ QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
 void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
     out = qobject_cast<DriverFR*>(object.toQObject());
 }
-
 
 // класс EventLoop
 Q_DECLARE_METATYPE(EventLoop*)
@@ -533,6 +538,7 @@ void ScriptEngine::loadScriptObjects()
 
     // Объявим классы для работы с пользовательскими формами
     qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
+    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);

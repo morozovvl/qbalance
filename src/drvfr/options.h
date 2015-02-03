@@ -20,8 +20,6 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include "mysharedlib_global.h"
-
 
 #define MAX_LEN 1024
 

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QUrl>
 #include "picture.h"
 #include "../kernel/app.h"
+#include "../kernel/essence.h"
 #include "formgrid.h"
 
 
@@ -96,6 +97,29 @@ void Picture::setVisibility(bool vis)
 void Picture::mouseDoubleClickEvent(QMouseEvent*)
 {
     showBigPicture();
+}
+
+
+void Picture::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+//        if (app->isSA())
+//        {
+        if (photoFileName.size() > 0)
+        {
+            QMenu* menu = new QMenu(this);
+            QAction* delPicture = menu->addAction(QObject::trUtf8("Удалить фотографию"));
+            QAction* action = menu->exec(mapToGlobal(QPoint(contentsRect().x(), contentsRect().y())));
+            if (action == delPicture)
+            {
+                form->getParent()->removePhoto();
+                setPhotoFileName("");
+                update();
+            }
+        }
+//        }
+    }
 }
 
 
