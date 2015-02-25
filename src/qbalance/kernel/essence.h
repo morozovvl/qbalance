@@ -63,7 +63,7 @@ public:
     Q_INVOKABLE virtual void            close();
     void                                initForm();
     Q_INVOKABLE virtual bool            add() = 0;                      // Добавление записи
-    Q_INVOKABLE virtual bool            remove();                       // Удаление записи
+    Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     virtual void                        print(QString);                 // Печать
 
@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
     Q_INVOKABLE virtual void            setId(qulonglong);
+    Q_INVOKABLE virtual int             locateId(qulonglong);            // Возвращает номер строки справочника, с заданным полем КОД
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual QVariant        getOldValue(QString field);
@@ -146,7 +147,6 @@ public:
 
 // Прочие функции
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
-    static void         saveFile(QString, QByteArray*);
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();

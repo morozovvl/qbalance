@@ -100,6 +100,8 @@
 #define ECT_BY_SHIFT_NUMBER		0xa6
 #define ECT_REPORT_INTR			0xa7
 #define CONTINUE_PRINTING		0xb0
+#define GET_EKLZ_DATA           0xb3
+#define GET_EKLZ_JOURNAL        0xb4
 #define LOAD_LINE_DATA			0xc0
 #define DRAW				0xc1
 #define PRINT_BARCODE			0xc2
@@ -166,6 +168,7 @@ public:
     char*  ECRModeDescription;
     struct tm ECRSoftDate;
     char   ECRSoftVersion[4];
+    QString   EKLZData;
     int    EKLZIsPresent;
     int    EmergencyStopCode;
     char*  EmergencyStopCodeDescription;
@@ -234,7 +237,7 @@ public:
     int    SlowingValve;
     int    StatusRK;
     char*  StatusRKDescription;
-    char  StringForPrinting[250];
+    char   StringForPrinting[250];
     int    StringQuantity;
     double Summ1;
     double Summ2;
@@ -258,7 +261,7 @@ public:
     int    UMajorProtocolVersion;
     int    UMinorProtocolVersion;
     int    UCodePage;
-    char*  UDescription;
+    QString   UDescription;
     int    ValueOfFieldInteger;
     char   ValueOfFieldString[41];
 
@@ -295,6 +298,7 @@ public:
     Q_PROPERTY(QString  ECRModeDescription READ getECRModeDescription)
     Q_PROPERTY(struct tm ECRSoftDate READ getECRSoftDate)
     Q_PROPERTY(QString  ECRSoftVersion READ getECRSoftVersion)
+    Q_PROPERTY(QString  EKLZData READ getEKLZData)
     Q_PROPERTY(int    EKLZIsPresent READ getEKLZIsPresent WRITE setEKLZIsPresent)
     Q_PROPERTY(int    EmergencyStopCode READ getEmergencyStopCode)
     Q_PROPERTY(QString  EmergencyStopCodeDescription READ getEmergencyStopCodeDescription)
@@ -428,6 +432,7 @@ public:
     QString  getECRModeDescription() { return QString().append(ECRModeDescription); }
     struct tm getECRSoftDate() { return ECRSoftDate; }
     QString  getECRSoftVersion() { return QString().append(ECRSoftVersion); }
+    QString  getEKLZData() { return EKLZData; }
     int    getEKLZIsPresent() { return EKLZIsPresent; }
     int    getEmergencyStopCode() { return EmergencyStopCode; }
     QString  getEmergencyStopCodeDescription() { return QString().append(EmergencyStopCodeDescription); }
@@ -520,7 +525,7 @@ public:
     int    getUMajorProtocolVersion() { return UMajorProtocolVersion; }
     int    getUMinorProtocolVersion() { return UMinorProtocolVersion; }
     int    getUCodePage() { return UCodePage; }
-    QString  getUDescription() { return QString().append(UDescription); }
+    QString  getUDescription() { return UDescription; }
     int    getValueOfFieldInteger() { return ValueOfFieldInteger; }
     char*  getValueOfFieldString() { return ValueOfFieldString; }
 
@@ -615,10 +620,14 @@ class DriverFR : public QObject
     Q_OBJECT
 public:
     DriverFR(QObject *parent = 0);
-    bool open(int, int, int);
+    bool open(int, int, int, QString, int);
     void close();
     Q_INVOKABLE QVariant getProperty(QString name);
     Q_INVOKABLE bool setProperty(QString name, QVariant value);
+    QMyExtSerialPort* getSerialPort() { return serialPort; }
+    bool isRemote() { return remote; }
+    Q_INVOKABLE bool isLocked();
+
 
 // Функции для работы с фискальным регистратором
     Q_INVOKABLE bool Connect();
@@ -656,6 +665,8 @@ public:
     Q_INVOKABLE int GetFiscalizationParameters();
     Q_INVOKABLE int GetFMRecordsSum();
     Q_INVOKABLE int GetECRStatus();
+    Q_INVOKABLE int GetEKLZData();
+    Q_INVOKABLE int GetEKLZJournal();
     Q_INVOKABLE int GetLastFMRecordDate();
     Q_INVOKABLE int GetLiterSumCounter();
     Q_INVOKABLE int GetCashReg();
@@ -709,6 +720,7 @@ public:
     Q_INVOKABLE int WriteTable();
 
 private:
+
     QString devName(int);
     int checkState();
     unsigned short int readByte(int = 0);
@@ -729,9 +741,11 @@ private:
 
 
     QMyExtSerialPort*         serialPort;
+    bool            remote;
 
     frProp         fr;     // Функции фискального регистратора
     bool            connected;
+    bool            locked;     // Фискальный регистратор заблокирован на период работы с клиентом
     struct timeval  timeout;
     static BaudRateType LineSpeedVal[7];
     static unsigned commlen[0x100];
@@ -741,6 +755,7 @@ private:
     static const char* ecrsubmodedesc[];
     static const char* devcodedesc[];
 
+    QTextCodec *codec;
 
 };
 

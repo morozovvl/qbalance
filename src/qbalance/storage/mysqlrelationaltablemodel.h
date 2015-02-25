@@ -42,6 +42,7 @@ struct UpdateInfoStruct {
     QString     field;              // Наименование обновляемого поля в таблице
     QString     type;
     int         length;
+    int         precision;
 };
 
 class MySqlRelationalTableModel : public QSqlRelationalTableModel {
@@ -72,7 +73,7 @@ public:
     bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
     virtual bool submit(const QModelIndex&);
     virtual bool updateRowInTable(int, const QSqlRecord&);
-    virtual void setUpdateInfo(QString originField, QString table, QString field, QString type, int length, int fieldColumn, int keyFieldColumn);
+    virtual void setUpdateInfo(QString originField, QString table, QString field, QString type, int length, int prec, int fieldColumn, int keyFieldColumn);
 
 // Прочие функции
     QStringList getFieldsList() const;

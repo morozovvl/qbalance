@@ -281,9 +281,10 @@ bool Document::add()
         {
             if (getScriptEngine() != 0)
             {
-
                 saveOldValues();
+                QModelIndex index = grdTable->currentIndex();
                 getScriptEngine()->eventAfterAddString();
+                grdTable->setCurrentIndex(index);
                 saveChanges();
                 saveOldValues();
             }
@@ -291,11 +292,8 @@ bool Document::add()
             result = true;
         }
     }
-
     dictionaries->unlock();
-
     grdTable->setFocus();
-
     return result;
 }
 
@@ -349,13 +347,13 @@ bool Document::checkConstDicts()
 }
 
 
-bool Document::remove()
+bool Document::remove(bool noAsk)
 {
     if (lDeleteable)
     {
         scriptEngine->eventBeforeDeleteString();
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
-        if (Essence::remove())
+        if (Essence::remove(noAsk))
         {
             if (db->removeDocStr(docId, strNum))
             {
@@ -915,7 +913,7 @@ bool Document::setTableModel(int)
             }
             if (!columnsProperties.value(i).constReadOnly)
                 // Если поле входит в список сохраняемых полей
-                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnCount, keyColumn);
+                tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
             // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
             if (columnsProperties.value(i).table == attrName)
                 attrFields.append(columnsProperties.value(i).column);
@@ -937,7 +935,7 @@ bool Document::showNextDict()
     {
         QString dictName = dictionaries->dictionariesNamesList.at(i);
         dict = getDictionariesList()->value(dictName);
-        if (mustShow.value(dict->getTagName()) && !dict->isLocked())
+        if (mustShow.value(dict->getTagName()) && dict->isMustShow() && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
             dict->exec();
             if (dict->isFormSelected())
@@ -1068,21 +1066,21 @@ int Document::appendDocString()
         {
             query();
             grdTable->selectRow(newRow);
+            grdTable->selectNextColumn();
             column = grdTable->currentIndex().column();
         }
         else
         {
             tableModel->insertRow(newRow);
-            grdTable->setModel(tableModel);
+            grdTable->reset();
             grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             updateCurrentRow(result);
         }
-        grdTable->selectNextColumn();
-//        grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-        grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+        index = grdTable->currentIndex().sibling(newRow, column);
+        grdTable->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
     }
-
-    grdTable->setCurrentIndex(index);
+    else
+        grdTable->setCurrentIndex(index);
     return result;
 }
 

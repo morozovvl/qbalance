@@ -89,11 +89,11 @@ bool Documents::add()
 }
 
 
-bool Documents::remove()
+bool Documents::remove(bool noAsk)
 {
     if (lDeleteable)
     {
-        if (Essence::remove())
+        if (Essence::remove(noAsk))
         {
             db->removeDoc(getValue("код").toInt());
             query();
@@ -242,7 +242,7 @@ bool Documents::setTableModel(int)
             if (name == idFieldName)
                 keyColumn = i;
 
-            tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, i, keyColumn);
+            tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, columnsProperties.at(i).precision, i, keyColumn);
         }
 
         QString selectStatement = db->getDictionarySqlSelectStatement(tableName);
@@ -269,7 +269,7 @@ bool Documents::setTableModel(int)
                     {
                         if (fld.name == db->getObjectName(attrName + ".код"))
                             keyColumn = columnCount;
-                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.type, fld.length, columnCount, keyColumn);
+                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, columnCount, keyColumn);
                     }
                     fld.column = prefix + fld.column;
                     columnsProperties.append(fld);

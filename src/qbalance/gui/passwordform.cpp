@@ -43,12 +43,13 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 // Создает форму ввода пароля на основе формы с кнопками "Ок" и "Cancel"
 {
     LoginSelector = new QComboBox();
+//    LoginSelector->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
     PasswordEditor = new QLineEdit();
     PasswordEditor->setEchoMode(QLineEdit::Password);
 
     QFormLayout* layout = new QFormLayout();
 
-    layout->addRow(QObject::trUtf8("Логин:"), LoginSelector);
+    layout->addRow(QObject::trUtf8("Пользователь:"), LoginSelector);
     layout->addRow(QObject::trUtf8("Пароль:"), PasswordEditor);
 
     if (Form::open(pwgt))
@@ -58,9 +59,9 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, layout);
         formWidget->setMinimumHeight(100);
-        formWidget->setMinimumWidth(200);
+        formWidget->setMinimumWidth(400);
         formWidget->setMaximumHeight(100);
-        formWidget->setMaximumWidth(200);
+        formWidget->setMaximumWidth(400);
         gotoCenter();
         return true;
     }
@@ -90,6 +91,7 @@ void PassWordForm::addLogin(QStringList list)
     LoginSelector->setCurrentIndex(0);
     LoginSelector->repaint();
 }
+
 
 void PassWordForm::cmdOk()
 {

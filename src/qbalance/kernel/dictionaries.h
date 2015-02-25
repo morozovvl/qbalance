@@ -44,8 +44,8 @@ public:
     QHash<QString, Dictionary*>* getDictionariesList() { return &dictionariesList; }
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
-    Q_INVOKABLE virtual bool remove();     // Удаление справочника
-    Q_INVOKABLE virtual void view();       // Исправление свойств справочника
+    Q_INVOKABLE virtual bool remove(bool = false);     // Удаление справочника
+    Q_INVOKABLE virtual void view();                    // Исправление свойств справочника
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     void    setDocument(Document* doc) { document = doc; }

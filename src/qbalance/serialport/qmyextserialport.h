@@ -22,22 +22,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QByteArray>
 #include "../../qextserialport/src/qextserialport.h"
+#include "../kernel/tcpclient.h"
 
 class QMyExtSerialPort : public QextSerialPort
 {
     Q_OBJECT
 public:
+    QMyExtSerialPort();
     QMyExtSerialPort(QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(mode, parent) { ; }
     QMyExtSerialPort(const QString & name, QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(name, mode, parent) { ; }
     QMyExtSerialPort(const PortSettings & settings, QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(settings, mode, parent) { ; }
     QMyExtSerialPort(const QString & name, const PortSettings & settings, QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(name, settings, mode, parent) { ; }
+    ~QMyExtSerialPort();
 
-    qint64 writeData(const char *, qint64);
-    qint64 readData(char *, qint64);
+    qint64 writeData(const char *, qint64, bool = false);
+    qint64 readData(char *, qint64, bool = false);
+
+    bool    isLockedDriverFR();
+    bool    isReadyDriverFR();
+    bool    isLocked() { return locked; }
+    bool    setLock(bool lock);
+
+    // Работа с TCP соединением
+    void setTcpClient(QString, int);
+    TcpClient* getTcpClient() { return tcpClient; }
+    void closeTcpClient();
+
+    // Работа с журналом
+    QString     getLog() { return log; }
     void writeLog(QString = "");
 private:
-    static bool logWrite;
-    static QString log;
+    static bool locked;
+    bool outLog;
+    QString log;
+    static TcpClient* tcpClient;
+
+    void appendLog(bool, QString);
 };
 
 #endif // QMYEXTSERIALPORT_H

@@ -36,7 +36,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     formTitle = "";
     lPrintable = true;
     lCanShow = true;
-    lMustShow = false;
+    lMustShow = true;
     lIsConst = false;
     lAutoSelect = false;
     isDepend = false;
@@ -181,11 +181,11 @@ bool Dictionary::add()
 }
 
 
-bool Dictionary::remove()
+bool Dictionary::remove(bool noAsk)
 {
     if (lDeleteable)
     {
-        if (Essence::remove()) {
+        if (Essence::remove(noAsk)) {
             db->removeDictValue(tableName, getValue("КОД").toULongLong());
             query();
             return true;
@@ -384,7 +384,7 @@ bool Dictionary::open()
             {
                 if (fld.name == idFieldName)
                     keyColumn = i;
-                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, i, keyColumn);
+                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
             }
         }
 
@@ -456,28 +456,25 @@ void Dictionary::query(QString defaultFilter)
         index = grdTable->currentIndex();
 
     QString resFilter = defaultFilter;
-    if (resFilter.size() == 0)
+    if (form != 0)
     {
-        if (form != 0)
+        QString filter = ((FormGridSearch*)form)->getFilter();
+        if (filter.size() > 0)
         {
-            QString filter = ((FormGridSearch*)form)->getFilter();
+            if (resFilter.size() > 0)
+                resFilter.append(" AND " + filter);
+            else
+                resFilter = filter;
+        }
+        if (scriptEngine != 0)
+        {
+            filter = scriptEngine->getFilter();
             if (filter.size() > 0)
             {
                 if (resFilter.size() > 0)
                     resFilter.append(" AND " + filter);
                 else
                     resFilter = filter;
-            }
-            if (scriptEngine != 0)
-            {
-                filter = scriptEngine->getFilter();
-                if (filter.size() > 0)
-                {
-                    if (resFilter.size() > 0)
-                        resFilter.append(" AND " + filter);
-                    else
-                        resFilter = filter;
-                }
             }
         }
     }

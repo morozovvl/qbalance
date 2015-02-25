@@ -21,41 +21,148 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "qmyextserialport.h"
 
 
-bool QMyExtSerialPort::logWrite = true;
-QString QMyExtSerialPort::log = "";
+TcpClient* QMyExtSerialPort::tcpClient = 0;
+bool QMyExtSerialPort::locked = false;
 
 
-qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize)
+QMyExtSerialPort::QMyExtSerialPort()
 {
-    if (isOpen())
-    {
-        if (!logWrite)          // Журнал был для входящих команд
-        {
-            writeLog();         // Запишем предыдущий журнал
-            logWrite = true;    // Теперь будем писать журнал для исходящих команд
-        }
-        log.append(QByteArray(data).toHex().data());
-        qint64 result = QextSerialPort::writeData(data, maxSize);
-        return result;
-    }
-    return -1;
+    outLog = false;
+    log = "";
 }
 
 
-qint64 QMyExtSerialPort::readData(char * data, qint64 maxSize)
+QMyExtSerialPort::~QMyExtSerialPort()
 {
+    if (tcpClient != 0)
+        delete tcpClient;
+}
+
+
+qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromServer)
+{
+    qint64 result = -1;
     if (isOpen())
     {
-        if (logWrite)           // Журнал был для исходящих команд
-        {
-            writeLog();         // Запишем предыдущий журнал
-            logWrite = false;   // Далее будем писать журнал для входящих команд
-        }
-        qint64 result = QextSerialPort::readData(data, maxSize);
-        log.append(QByteArray(data).toHex().data());
-        return result;
+        result = QextSerialPort::writeData(data, maxSize);
+        appendLog(true, QByteArray(data, maxSize).toHex().data());
     }
-    return -1;
+    else if (tcpClient != 0 && tcpClient->isValid() && !fromServer)
+    {
+        result = tcpClient->sendToServer("=fr=>>" + QString(QByteArray(data, maxSize).toHex().data())).toLongLong();
+        if (tcpClient->waitResult())
+        {
+            QString res = tcpClient->getResult();
+            result = res.toLongLong();
+            appendLog(true, QByteArray(data, maxSize).toHex().data());
+        }
+    }
+    return result;
+}
+
+
+qint64 QMyExtSerialPort::readData(char * data, qint64 maxSize, bool fromServer)
+{
+    qint64 result = -1;
+    if (isOpen())
+    {
+        result = QextSerialPort::readData(data, maxSize);
+        appendLog(false, QByteArray(data, maxSize).toHex().data());
+    }
+    else if (tcpClient != 0 && tcpClient->isValid() && !fromServer)
+    {
+        QByteArray arr;
+        arr.fill(' ', maxSize);
+        tcpClient->sendToServer("=fr=<<" + QString(arr.toHex().data())).toLongLong();
+        if (tcpClient->waitResult())
+        {
+            QString res = tcpClient->getResult();
+            int pos = res.indexOf("<<");
+            result = res.left(pos).toLongLong();
+            res.remove(0, pos + 2);
+            arr = QByteArray::fromHex(QByteArray().append(res));
+            strncpy(data, arr.data(), maxSize);
+            appendLog(false, QByteArray(data, maxSize).toHex().data());
+        }
+    }
+    return result;
+}
+
+
+bool QMyExtSerialPort::isReadyDriverFR()
+{
+    bool result = false;
+    if (tcpClient != 0 && tcpClient->isValid())
+    {
+        tcpClient->sendToServer("driverFRisReady");
+        if (tcpClient->waitResult())
+        {
+            QString res = tcpClient->getResult();
+            result = (res == "true" ? true : false);
+        }
+    }
+    return result;
+}
+
+
+
+bool QMyExtSerialPort::isLockedDriverFR()
+{
+    bool result = false;
+    if (tcpClient != 0 && tcpClient->isValid())
+    {
+        tcpClient->sendToServer("isLockedDriverFR");
+        if (tcpClient->waitResult())
+        {
+            QString res = tcpClient->getResult();
+            result = (res == "true" ? true : false);
+        }
+    }
+    return result;
+}
+
+
+bool QMyExtSerialPort::setLock(bool lock)
+{
+    if (!locked)
+    {
+        if (!isOpen() && tcpClient != 0 && tcpClient->isValid())
+        {
+            if (lock)
+                tcpClient->sendToServer("setLockDriverFR(true)");
+            else
+                tcpClient->sendToServer("setLockDriverFR(false)");
+            if (tcpClient->waitResult())
+            {
+                QString res = tcpClient->getResult();
+                locked = (res == "true" ? true : false);
+                return true;
+            }
+        }
+        else
+        {
+            locked = lock;
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void QMyExtSerialPort::setTcpClient(QString host, int port)
+{
+    tcpClient = new TcpClient(host, port);
+}
+
+
+void QMyExtSerialPort::appendLog(bool out, QString str)
+{
+    if (out != outLog)           // Журнал был для исходящих команд
+    {
+        writeLog();         // Запишем предыдущий журнал
+        outLog = out;
+    }
+    log.append(str);
 }
 
 
@@ -66,11 +173,18 @@ void QMyExtSerialPort::writeLog(QString str)
         TApplication::debug(4, str);
     else
     {
-        if (!logWrite)
+        if (!outLog)
             TApplication::debug(4, " <-- " + log);
         else
             TApplication::debug(4, " --> " + log);
         // Очистим журнал
         log = "";
     }
+}
+
+
+void QMyExtSerialPort::closeTcpClient()
+{
+    delete tcpClient;
+    tcpClient = 0;
 }

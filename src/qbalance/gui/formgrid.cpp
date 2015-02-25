@@ -121,6 +121,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->horizontalHeader()->setClickable(false);
 #endif
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+            parent->setGridTable(grdTable);
     }
 
     if (picture != 0)
@@ -248,6 +249,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     setButtonAdd(true);
 
     grdTables.append(grdTable);
+
+//    grdTable->setColumnsDelegates();
 }
 
 
@@ -411,7 +414,10 @@ void FormGrid::cmdRequery()
 {
     grdTable->cmdRequery();
     if (parent->getTableModel()->rowCount() == 0)
+    {
         showPhoto();
+        app->showMessageOnStatusBar(trUtf8("Ничего не найдено."));
+    }
 }
 
 
@@ -505,7 +511,7 @@ void FormGrid::cmdLoad()
     if (buttonLoad != 0 && buttonLoad->isVisible() && buttonLoad->isEnabled())
     {
         parent->getScriptEngine()->eventImport(this);
-        setButtons();
+//        setButtons();
     }
 }
 

@@ -307,7 +307,14 @@ QScriptValue SumToString(QScriptContext* context, QScriptEngine* engine) {
 
 //---------------------------------------------------------------------------------------------------------------------
 
-
+/*
+QString InitialsOfFullName(QString fio)
+{
+    int pos;
+    QString famil;
+    pos = fio.
+}
+*/
 #endif // REPORTFUNCTIONS_CPP
 
 

@@ -160,7 +160,7 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
 }
 
 
-void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, QString type, int len, int fieldColumn, int keyFieldColumn)
+void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, QString type, int len, int prec, int fieldColumn, int keyFieldColumn)
 {
     if (!updateInfo.contains(fieldColumn))
     {
@@ -171,6 +171,7 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
         info.field = field;
         info.type = type;
         info.length = len;
+        info.precision = prec;
         updateInfo.insert(fieldColumn, info);
     }
 }
@@ -192,11 +193,11 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             QString type = updateInfo.value(index.column()).type.toUpper();
             if (type == "CHARACTER" || type == "CHARACTER VARYING")
             {
-                value = QString("'%1'").arg(recValue.toString().left(length).trimmed());
+                value = QString("'%1'").arg(recValue.toString().left(length));
             }
             else if (type == "TEXT")
             {
-                value = QString("'%1'").arg(recValue.toString().trimmed());
+                value = QString("'%1'").arg(recValue.toString());
             }
             else if (type == "DATE")
             {
@@ -213,6 +214,25 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
                     write = false;
                 else
                     value = QString("'%1'").arg(value);
+            }
+            else if (type == "BYTEA")
+            {
+                value = recValue.toByteArray().toHex();
+                if (value.size() == 0)
+                    write = false;
+                else
+                    value = QString("'%1'").arg(value);
+            }
+            else if (type == "NUMERIC")
+            {
+                value = recValue.toString();
+                if (value.size() == 0)
+                    write = false;
+                else
+                {
+                    int prec = updateInfo.value(index.column()).precision;
+                    value = QString("%1").arg(value.toDouble(), 0, 'f', prec);
+                }
             }
             else
             {

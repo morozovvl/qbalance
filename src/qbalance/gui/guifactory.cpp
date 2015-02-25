@@ -63,19 +63,34 @@ int GUIFactory::openDB()
         if (db->open("test", "*"))
         {
             PassWordForm* frm = new PassWordForm();
+            QHash<int, UserInfo> users = db->getUserList();
             frm->open();
-            frm->addLogin(db->getUserList());
+            foreach (int key, users.keys())
+                frm->addLogin(users.value(key).loginName + " " + users.value(key).userName);
             db->close();
             frm->exec();
             if (frm->isFormSelected())
             {   // Пользователь нажал кнопку "Ok"
-                QString login = frm->getLogin();
+                QString login;
+                QString userName;
+                int key = 0;
+                foreach (key, users.keys())
+                {
+                    if (users.value(key).loginName + " " + users.value(key).userName == frm->getLogin())
+                    {
+                        login = users.value(key).loginName.trimmed();
+                        userName = users.value(key).userName.trimmed();
+                        TApplication::exemplar()->userName = userName;
+                        break;
+                    }
+                }
                 QString password = frm->getPassword();
                 if (db->open(login, password))
                 {
                     db->initDBFactory();
+                    db->exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_id").arg(QString("%1").arg(key)));
                     if (connForm->connectionName().size() > 0)
-                        mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + login);
+                        mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + login + " " + userName);
                 }
                 else
                 {

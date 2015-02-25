@@ -93,6 +93,7 @@ private:
     bool                        columnsSettingsReaded;
 
     MyItemDelegate*             getColumnDelegate(FieldType);
+    void                setColumnsDelegates();
     void                        readSettings();
     void                        writeSettings();
 };

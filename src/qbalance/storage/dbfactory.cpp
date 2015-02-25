@@ -181,20 +181,18 @@ bool DBFactory::open(QString login, QString password)
         currentPassword = password;
 
         // Запомним для этой сессии сетевое имя компьютера, с которого произошло соединение
-#ifdef Q_OS_WIN32
         QStringList env = QProcess::systemEnvironment();
+#ifdef Q_OS_WIN32
         QString host_name = env.filter("COMPUTERNAME=").at(0);
         host_name.replace("\"", "").replace("COMPUTERNAME=", "");
         QString user_name = env.filter("USERNAME=").at(0);
         user_name.replace("\"", "").replace("USERNAME=", "");
 #else
-        QStringList env = QProcess::systemEnvironment();
         QString host_name = env.filter("HOST=").at(0);
         host_name.replace("\"", "").replace("HOST=", "");
         QString user_name = env.filter("USER=").at(0);
         user_name.replace("\"", "").replace("USER=", "");
 #endif
-
         exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_host_name").arg(host_name));
         exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_name").arg(user_name));
 
@@ -409,23 +407,22 @@ QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
 }
 
 
-QStringList DBFactory::getUserList()
+QHash<int, UserInfo> DBFactory::getUserList()
 {
-    static const QString clause = QString("SELECT %1 FROM %2 ORDER BY %1;").arg(getObjectNameCom("имя"))
-                                                                          .arg(getObjectNameCom("vw_пользователи"));
-    static short index          = 0;
-
+    QHash<int, UserInfo> result;
     clearError();
-    QStringList result;
-    QSqlQuery query = execQuery(clause);
-
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_пользователи")));
     while (query.next())
     {
-        result << query.value(index).toString();
+        UserInfo u;
+        u.loginName = query.value(1).toString();
+        u.userName = query.value(2).toString();
+        result.insert(query.value(0).toInt(), u);
     }
-
     return result;
 }
+
+
 
 
 QSqlQuery DBFactory::getDictionariesProperties()
@@ -1586,7 +1583,7 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
     {
         QString text = QString("SELECT * FROM %1 WHERE %2 ILIKE '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
-                                                                              .arg(fileName + "%")
+                                                                              .arg(fileName + ".%")
                                                                               .arg(getObjectNameCom("файлы.тип"))
                                                                               .arg(type);
         QSqlQuery query = execQuery(text, dbExtend);
@@ -1726,16 +1723,6 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(size)
                                                                                   .arg(QString(fileData.toHex()));
     }
-/*
-    QSqlQuery query(extend && extDbExist ? *dbExtend : *db);
-    query.prepare(text);
-    query.bindValue(":value", QVariant(fileData), QSql::In & QSql::Binary);
-    if (!query.exec())
-    {
-        qDebug() << query.lastError().text();
-        setError(query.lastError().text());
-    }
-*/
     exec(text, true, (extend && extDbExist) ? dbExtend : db);
 }
 

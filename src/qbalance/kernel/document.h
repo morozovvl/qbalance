@@ -53,7 +53,7 @@ public:
     Q_INVOKABLE Dictionary* getDictionary(QString dictName) { return dictionaries->getDictionary(dictName); }
     Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
     Q_INVOKABLE virtual bool add();
-    Q_INVOKABLE virtual bool remove();
+    Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void hide();                // Скрыть форму
     virtual QString transformSelectStatement(QString string);

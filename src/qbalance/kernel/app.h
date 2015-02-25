@@ -65,6 +65,9 @@ struct ConfigVars {
     int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
     int             frDriverPassword;
     QString         cardReaderPrefix;           // Префикс магнитной карты
+    int             localPort;                  // Порт, по которому программа принимает соединения
+    QString         remoteHost;                 // Адрес удаленного хоста, к которому будет пытаться соединиться программа
+    int             remotePort;                 // Порт удаленного хоста, к которому будет пытаться соединиться программа
 };
 
 
@@ -73,6 +76,7 @@ class TApplication : public QApplication {
 
 public:
     QHash<QString, Documents*> documents;                        // Объекты списков документов
+    static QString userName;
 
     TApplication(int& argc, char** argv);
     ~TApplication();
@@ -145,8 +149,10 @@ public:
     void         barCodeReadyRead(QString);
     virtual bool readCardReader(QKeyEvent*);
 
-    Q_INVOKABLE QString capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
-    Q_INVOKABLE QString savePhotoToServer(QString, QString);
+    Q_INVOKABLE void capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
+    Q_INVOKABLE void saveFileToServer(QString, QString, FileType, bool = false);
+    Q_INVOKABLE void savePhotoToServer(QString file, QString localFile) { saveFileToServer(file, localFile, PictureFileType, true); }
+    Q_INVOKABLE void saveFile(QString, QByteArray*);
     Q_INVOKABLE void print(QString = "");
     Q_INVOKABLE void printToArray(QString, QString);
     Q_INVOKABLE void printArray(QString);
@@ -158,6 +164,9 @@ public:
     void timeOut(int);
 
     void saveCustomization();
+    void printReportWithoutCleaning();
+    void runScript(QString);
+    qint64  getApplicationPID() { return pid; }
 
 signals:
     void cardCodeReaded(QString);
@@ -171,6 +180,7 @@ private:
     QDate                   endDate;
     DriverFR*               driverFR;
     bool                    driverFRisValid;
+    bool                    driverFRlocked;
     bool                    fsWebCamIsValid;
     static QFile*           DebugFile;
     static int              DebugMode;
@@ -190,8 +200,8 @@ private:
 //    QUiLoader               *formLoader;
 
     QHash<QString, QStringList>     arraysForPrint;
-    TcpServer*               tcpServer;
-    TcpClient*               tcpClient;
+    TcpServer*              tcpServer;
+    qint64                  pid;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");

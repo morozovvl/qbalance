@@ -1,4 +1,5 @@
 #include "../kernel/app.h"
+#include "../kernel/tcpserver.h"
 
 
 unsigned DriverFR::commlen[0x100] =
@@ -14,7 +15,7 @@ unsigned DriverFR::commlen[0x100] =
   60, 60, 60, 60, 60, 71, 54, 54,  5,  5, 54, 54,  0,  0,  0,  0, // 0x80 - 0x8f
   61, 57, 52, 11, 12, 52,  7,  7,  7,  5, 13,  7,  0,  0,  7,  7, // 0x90 - 0x9f
   13, 11, 12, 10, 10,  8,  7,  5,  0,  0,  0,  0,  0,  0,  0,  0, // 0xa0 - 0xaf
-   5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xb0 - 0xbf
+   5,  0,  0,  5,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xb0 - 0xbf
   46,  7, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xc0 - 0xcf
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xd0 - 0xdf
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xe0 - 0xef
@@ -94,7 +95,7 @@ const char* DriverFR::errmsg[] =
   "",															//42
   "",															//43
   "",															//44
-  "",															//45
+  "Сумма всех типов оплаты меньше итога чека",					//45
   "",															//46
   "",															//47
   "Subtotal overflow",													//48
@@ -141,7 +142,153 @@ const char* DriverFR::errmsg[] =
   "Knife error",													//71
   "Invalid command in this submode",											//72
   "Invalid command in this mode",											//73
-  "Base memory error"													//74
+  "Base memory error",                                          //74
+  "",           // 75
+    "",         // 76
+    "",         // 77
+    "",         // 78
+    "",         // 79
+    "",         // 7a
+    "",         // 7b
+    "",         // 7c
+    "",         // 7d
+    "",         // 7e
+    "",         // 7f
+    "",         // 80
+    "",         // 81
+    "",         // 82
+    "",         // 83
+    "",         // 84
+    "",         // 85
+    "",         // 86
+    "",         // 87
+    "",         // 88
+    "",         // 89
+    "",         // 8a
+    "",         // 8b
+    "",         // 8c
+    "",         // 8d
+    "",         // 8e
+    "",         // 8f
+
+    "",         // 90
+    "",         // 91
+    "",         // 92
+    "",         // 93
+    "",         // 94
+    "",         // 95
+    "",         // 96
+    "",         // 97
+    "",         // 98
+    "",         // 99
+    "",         // 9a
+    "",         // 9b
+    "",         // 9c
+    "",         // 9d
+    "",         // 9e
+    "",         // 9f
+
+    "",         // a0
+    "",         // a1
+    "",         // a2
+    "Некорректное состояние ЭКЛЗ",         // a3
+    "",         // a4
+    "",         // a5
+    "",         // a6
+    "",         // a7
+    "",         // a8
+    "ЭКЛЗ: Нет запрошенных данных",         // a9
+    "",         // aa
+    "",         // ab
+    "",         // ac
+    "",         // ad
+    "",         // ae
+    "",         // af
+
+    "",         // b0
+    "",         // b1
+    "",         // b2
+    "",         // b3
+    "",         // b4
+    "",         // b5
+    "",         // b6
+    "",         // b7
+    "",         // b8
+    "",         // b9
+    "",         // ba
+    "",         // bb
+    "",         // bc
+    "",         // bd
+    "",         // be
+    "",         // bf
+
+    "",         // c0
+    "",         // c1
+    "",         // c2
+    "",         // c3
+    "",         // c4
+    "",         // c5
+    "",         // c6
+    "",         // c7
+    "",         // c8
+    "",         // c9
+    "",         // ca
+    "",         // cb
+    "",         // cc
+    "",         // cd
+    "",         // ce
+    "",         // cf
+
+    "",         // d0
+    "",         // d1
+    "",         // d2
+    "",         // d3
+    "",         // d4
+    "",         // d5
+    "",         // d6
+    "",         // d7
+    "",         // d8
+    "",         // d9
+    "",         // da
+    "",         // db
+    "",         // dc
+    "",         // dd
+    "",         // de
+    "",         // df
+
+    "",         // e0
+    "",         // e1
+    "",         // e2
+    "",         // e3
+    "",         // e4
+    "",         // e5
+    "",         // e6
+    "",         // e7
+    "",         // e8
+    "",         // e9
+    "",         // ea
+    "",         // eb
+    "",         // ec
+    "",         // ed
+    "",         // ee
+    "",         // ef
+
+    "",         // f0
+    "",         // f1
+    "",         // f2
+    "",         // f3
+    "",         // f4
+    "",         // f5
+    "",         // f6
+    "",         // f7
+    "",         // f8
+    "",         // f9
+    "",         // fa
+    "",         // fb
+    "",         // fc
+    "",         // fd
+    "",         // fe
+    ""         // ff
 };
 
 const char* DriverFR::ecrmodedesc[] =
@@ -194,20 +341,25 @@ const char* DriverFR::devcodedesc[] =
 DriverFR::DriverFR(QObject *parent) : QObject(parent)
 {
     connected = false;
+    remote = false;
+    locked = false;
+    codec = QTextCodec::codecForName("Windows-1251");
 }
 
 
-bool DriverFR::open(int port, int rate, int password)
+bool DriverFR::open(int port, int rate, int password, QString ipAddress, int ipPort)
 {
     // Установление связи с ккм
     fr.ComPortNumber = port;
     fr.BaudRate      = rate;
-    fr.Timeout       = 100;
+    fr.Timeout       = 50;
     fr.Password      = password;
 
     serialPort = new QMyExtSerialPort(devName(fr.ComPortNumber), QextSerialPort::Polling);
     if (serialPort != 0)
     {
+        // Сначала поищем фискальник на этом компьютере
+
         serialPort->setBaudRate(LineSpeedVal[fr.BaudRate]);
         serialPort->setFlowControl(FLOW_OFF);
         serialPort->setParity(PAR_NONE);
@@ -218,6 +370,21 @@ bool DriverFR::open(int port, int rate, int password)
             serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
             serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
             return true;
+        }
+
+        // а теперь поищем на удаленном, если указан его IP
+        if (ipAddress.size() > 0)
+        {
+            serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
+            TApplication::exemplar()->timeOut(1000);
+            if (serialPort->getTcpClient()->isValid())
+            {
+                remote = true;
+                return true;                                            // тогда все нормально
+            }
+            serialPort->closeTcpClient();                               // иначе закроем TCP клиент
+                                                                        // и все плохо
+                                                                        // к фискальнику не удалось подсоединиться
         }
     }
     return false;
@@ -266,39 +433,53 @@ int DriverFR::checkState()
 
 int DriverFR::sendENQ()
 {
+    qint64 result;
     char buff[2];
     buff[0] = ENQ;
-    return serialPort->writeData(buff,1);
+    result = serialPort->writeData(buff,1);
+    serialPort->writeLog();
+    return result;
 }
 
 
 int DriverFR::sendNAK()
 {
+    qint64 result;
     char buff[2];
     buff[0] = NAK;
-    return serialPort->writeData(buff, 1);
+    result = serialPort->writeData(buff, 1);
+    serialPort->writeLog();
+    return result;
 }
 
 
 int DriverFR::sendACK()
 {
+    qint64 result;
     char buff[2];
     buff[0] = ACK;
-    return serialPort->writeData(buff,1);
+    result = serialPort->writeData(buff,1);
+    serialPort->writeLog();
+    return result;
 }
 
 
 unsigned short int DriverFR::readByte(int msec)
 {
-    if (msec > 0)
-        TApplication::exemplar()->timeOut(msec);
-    unsigned char readbuff[2] = "";
-    if (readBytes(readbuff, 1) > 0)
+    for (int tries = 0; tries < MAX_TRIES; tries++)
     {
-        return (unsigned int) readbuff[0];
+        if (msec > 0)
+            TApplication::exemplar()->timeOut(msec);
+        unsigned char readbuff[2] = "";
+        int result = readBytes(readbuff, 1);
+        if (result > 0)
+        {
+            return (unsigned int) readbuff[0];
+        }
+        else
+            break;
     }
-    else
-        return 0;
+    return 0;
 }
 
 
@@ -322,7 +503,7 @@ int DriverFR::readAnswer(answer *ans)
         short int  len, crc, tries, repl;
         for (tries = 0; tries < MAX_TRIES; tries++)
         {
-            repl = readByte(fr.Timeout);
+            repl = readByte(fr.Timeout*2);
             if (repl == STX)
             {
                 len = readByte(fr.Timeout);
@@ -384,30 +565,13 @@ int DriverFR::composeComm(command *cmd, int comm, int pass, parameter *param)
     cmd->buff[len + 2] = LRC(cmd->buff, len + 1, 1);
     cmd->len = len + 3;
     return 1;
-/*
-    int len;
-    for (unsigned int i = 0; i < sizeof(cmd->buff); i++)
-        cmd->buff[i] = 0;
-
-    len = param->len + 5;
-    cmd->buff[0] = STX;
-    cmd->buff[1] = len;
-    cmd->buff[2] = comm;
-
-    memcpy(cmd->buff + 3, &pass, sizeof(int));
-    if (param->len > 0)
-       memcpy(cmd->buff + 7, param->buff, param->len);
-
-    cmd->buff[len + 2] = LRC(cmd->buff, len + 1, 1);
-    cmd->len = len + 3;
-    return 1;
-*/
 }
 
 
 int DriverFR::sendCommand(int comm, int pass, parameter *param)
 {
     command cmd;
+    int result = -1;
     composeComm(&cmd, comm, pass, param);
     if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
     {
@@ -415,18 +579,24 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
         {
             short int repl = readByte(fr.Timeout*2);
             if (repl == ACK)
-                return 1;
+            {
+                serialPort->writeLog();
+                result = 1;
+                break;
+            }
         }
     }
-    return -1;
+    return result;
 }
 
 
 QVariant DriverFR::getProperty(QString name)
 {
     QVariant result;
-    const char* propName = name.toLatin1().data();
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
+    const char* propName = name.toAscii().data();
     result = fr.property(propName);
+    QTextCodec::setCodecForLocale(TApplication::codec());
     return result;
 }
 
@@ -506,39 +676,51 @@ void DriverFR::DefineECRModeDescription(void)
 
 bool DriverFR::Connect()
 {
-    int tries = 0;
     int state = 0;
     connected = false;
     bool result = false;
-//    answer      a;
 
-    while (tries < MAX_TRIES && !result)
+    if (remote)
     {
-      state = checkState();
-      switch (state)
-      {
-        case NAK:
-            {
-                connected = true;
-                result = true;
-            }
-            break;
-        case ACK:
-//                  errHand(&a);
-            {
-                connected = true;
-                result = true;
-            }
-            break;
-        case -1:
-          tries++;
-        }
+        if (serialPort->isReadyDriverFR())
+            locked = serialPort->setLock(true);
     }
-    if (TApplication::debugMode() == 4 && result)
+    else
+        locked = true;
+
+    if (locked)
     {
-        GetECRStatus();
-        serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
-        serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
+        state = checkState();
+        switch (state)
+        {
+            case NAK:
+                {
+                    connected = true;
+                    result = true;
+                }
+                break;
+            case ACK:
+                {
+                    connected = true;
+                    result = true;
+                }
+                break;
+            case -1:
+                {
+                    locked = false;
+                }
+                break;
+        }
+        if (result)
+        {
+            if (GetECRStatus() != 0)
+                result = false;
+            else if (TApplication::debugMode() == 4)
+            {
+                serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
+                serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
+            }
+        }
     }
     return result;
 }
@@ -548,33 +730,51 @@ void DriverFR::DisConnect()
 {
     serialPort->writeLog();
     connected = false;
+    locked = false;
+    if (remote)
+        locked = serialPort->setLock(false);
+    else
+        locked = false;
+}
+
+
+bool DriverFR::isLocked()
+{
+    if (remote)
+        return serialPort->isLockedDriverFR();
+    return locked;
 }
 
 
 int DriverFR::Beep()
 {
+    TApplication::debug(4, "<Beep>");
+
     parameter  p;
     answer     a;
-
-    if (!connected) return -1;
-
-    if (sendCommand(BEEP, fr.Password, &p) < 0)
+    int result = -1;
+    if (connected)
     {
-        return -1;
+
+        if (sendCommand(BEEP, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == BEEP)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        fr.OperatorNumber = a.buff[2];
+                        result = 0;
+                    }
+                }
+            }
+        }
     }
-    if (readAnswer(&a) < 0)
-    {
-        return -1;
-    }
-    if (a.buff[0] != BEEP)
-        return -1;
-
-    if (errHand(&a) != 0)
-        return fr.ResultCode;
-
-    fr.OperatorNumber = a.buff[2];
-
-    return 0;
+    TApplication::debug(4, "</Beep>");
+    return result;
 }
 
 
@@ -638,6 +838,9 @@ int DriverFR::CutCheck()
 
   return 0;
 }
+
+
+
 
 
 //-----------------------------------------------------------------------------
@@ -840,8 +1043,10 @@ int DriverFR::GetDeviceMetrics()
   fr.UMinorProtocolVersion = evalint((unsigned char*)&a.buff + 5, 1);
   fr.UModel                = evalint((unsigned char*)&a.buff + 6, 1);
   fr.UCodePage             = evalint((unsigned char*)&a.buff + 7, 1);
-  fr.UDescription          = (char*)malloc(len + 1);
-  strncpy(fr.UDescription, (char*)a.buff + 8, len);
+
+  QByteArray data;
+  data.append((char*)&a.buff+8);
+  fr.UDescription = codec->toUnicode(data);
 
   return 0;
 }
@@ -970,6 +1175,7 @@ int DriverFR::ResetSummary()
 
   return errHand(&a);
 }
+
 //-----------------------------------------------------------------------------
 int DriverFR::ReturnBuy()
 {
@@ -1003,90 +1209,206 @@ int DriverFR::ReturnBuy()
 
   return 0;
 }
+
 //-----------------------------------------------------------------------------
 int DriverFR::Sale()
 {
+  TApplication::debug(4, "<Sale>");
+
   parameter  p;
   answer     a;
+  int result = -1;
+
   p.len   = 55;
 
-  if (!connected) return -1;
+  if (connected)
+  {
+    int64_t quant = llround(fr.Quantity * 1000);
+    int64_t price = llround(fr.Price * 100);
 
-  int64_t quant = llround(fr.Quantity * 1000);
-  int64_t price = llround(fr.Price * 100);
+    memcpy(p.buff,    &quant, 5);
+    memcpy(p.buff+5,  &price, 5);
+    p.buff[10] = fr.Department;
 
-  memcpy(p.buff,    &quant, 5);
-  memcpy(p.buff+5,  &price, 5);
-  p.buff[10] = fr.Department;
+    p.buff[11] = fr.Tax1;
+    p.buff[12] = fr.Tax2;
+    p.buff[13] = fr.Tax3;
+    p.buff[14] = fr.Tax4;
 
-  p.buff[11] = fr.Tax1;
-  p.buff[12] = fr.Tax2;
-  p.buff[13] = fr.Tax3;
-  p.buff[14] = fr.Tax4;
+    strncpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
-  strncpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
+    if (sendCommand(SALE, fr.Password, &p) >= 0)
+    {
+        if (readAnswer(&a) >= 0)
+        {
+            if (a.buff[0] == SALE)
+            {
+                if (errHand(&a) != 0)
+                    result = fr.ResultCode;
+                else
+                {
+                  fr.OperatorNumber = a.buff[2];
+                  result = 0;
+                }
+            }
+        }
+    }
+  }
 
-  if (sendCommand(SALE, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != SALE) return -1;
+  TApplication::debug(4, "</Sale>");
 
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+  return result;
 }
+
 //-----------------------------------------------------------------------------
 int DriverFR::ReturnSale()
 {
+  TApplication::debug(4, "<ReturnSale>");
   parameter  p;
   answer     a;
+  int result = -1;
+
   p.len   = 55;
 
-  if (!connected) return -1;
+  if (connected)
+  {
 
-  int64_t quant = llround(fr.Quantity * 1000);
-  int64_t price = llround(fr.Price * 100);
+    int64_t quant = llround(fr.Quantity * 1000);
+    int64_t price = llround(fr.Price * 100);
 
-  memcpy(p.buff,    &quant, 5);
-  memcpy(p.buff+5,  &price, 5);
-  p.buff[10] = fr.Department;
+    memcpy(p.buff,    &quant, 5);
+    memcpy(p.buff+5,  &price, 5);
+    p.buff[10] = fr.Department;
 
-  p.buff[11] = fr.Tax1;
-  p.buff[12] = fr.Tax2;
-  p.buff[13] = fr.Tax3;
-  p.buff[14] = fr.Tax4;
+    p.buff[11] = fr.Tax1;
+    p.buff[12] = fr.Tax2;
+    p.buff[13] = fr.Tax3;
+    p.buff[14] = fr.Tax4;
 
-  strncpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
+    strncpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
-  if (sendCommand(RETURN_SALE, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != RETURN_SALE) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+    if (sendCommand(RETURN_SALE, fr.Password, &p) >= 0)
+    {
+        if (readAnswer(&a) >= 0)
+        {
+            if (a.buff[0] == RETURN_SALE)
+            {
+                if (errHand(&a) != 0)
+                    result = fr.ResultCode;
+                else
+                {
+                    fr.OperatorNumber = a.buff[2];
+                    result = 0;
+                }
+            }
+        }
+    }
+  }
+  TApplication::debug(4, "</ReturnSale>");
+  return result;
 }
+
 //-----------------------------------------------------------------------------
 int DriverFR::CancelCheck()
 {
+  TApplication::debug(4, "<CancelCheck>");
   parameter  p;
   answer     a;
+  int result = -1;
 
-  if (!connected) return -1;
-
-  if (sendCommand(CANCEL_CHECK, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != CANCEL_CHECK) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+  if (connected)
+  {
+        if (sendCommand(CANCEL_CHECK, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == CANCEL_CHECK)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        fr.OperatorNumber = a.buff[2];
+                        result = 0;
+                    }
+                }
+            }
+        }
+    }
+  TApplication::debug(4, "</CancelCheck>");
+  return result;
 }
+
+
+//-----------------------------------------------------------------------------
+int DriverFR::GetEKLZJournal()
+{
+  TApplication::debug(4, "<GetEKLZJournal>");
+  parameter  p;
+  answer     a;
+  int result = -1;
+
+  if (connected)
+  {
+        memcpy(&p.buff, &fr.SessionNumber, 2);
+        if (sendCommand(GET_EKLZ_JOURNAL, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == GET_EKLZ_JOURNAL)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        QByteArray data;
+                        data.append((char*)&a.buff+2);
+                        fr.UDescription = codec->toUnicode(data);
+                        result = 0;
+                    }
+                }
+            }
+        }
+    }
+  TApplication::debug(4, "</GetEKLZJournal>");
+  return result;
+}
+
+
+//-----------------------------------------------------------------------------
+int DriverFR::GetEKLZData()
+{
+  TApplication::debug(4, "<GetEKLZData>");
+  parameter  p;
+  answer     a;
+  int result = -1;
+
+  if (connected)
+  {
+        if (sendCommand(GET_EKLZ_DATA, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == GET_EKLZ_DATA)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        QByteArray data;
+                        data.append((char*)&a.buff+2);
+                        fr.EKLZData = codec->toUnicode(data);
+                        result = 0;
+                    }
+                }
+            }
+        }
+    }
+  TApplication::debug(4, "</GetEKLZData>");
+  return result;
+}
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::CashIncome()
 {
@@ -1278,43 +1600,58 @@ int DriverFR::CheckSubTotal()
 //-----------------------------------------------------------------------------
 int DriverFR::CloseCheck()
 {
+
+  TApplication::debug(4, "<CloseCheck>");
+
   parameter  p;
   answer     a;
+  int result = -1;
 
-  if (!connected) return -1;
+  if (connected)
+  {
+    int64_t  sum;
+    p.len   = 67;
 
-  int64_t  sum;
-  p.len   = 67;
+    sum = llround(fr.Summ1 * 100);
+    memcpy(p.buff,    &sum, 5);			// 0-4
+    sum = llround(fr.Summ2 * 100);
+    memcpy(p.buff+ 5, &sum, 5);			// 5-9
+    sum = llround(fr.Summ3 * 100);
+    memcpy(p.buff+10, &sum, 5);			//10-14
+    sum = llround(fr.Summ4 * 100);
+    memcpy(p.buff+15, &sum, 5);			//15-19
 
-  sum = llround(fr.Summ1 * 100);
-  memcpy(p.buff,    &sum, 5);			// 0-4
-  sum = llround(fr.Summ2 * 100);
-  memcpy(p.buff+ 5, &sum, 5);			// 5-9
-  sum = llround(fr.Summ3 * 100);
-  memcpy(p.buff+10, &sum, 5);			//10-14
-  sum = llround(fr.Summ4 * 100);
-  memcpy(p.buff+15, &sum, 5);			//15-19
+    sum = llround(fr.DiscountOnCheck * 100);
+    memcpy(p.buff+20, &sum, 3);			//20-22
 
-  sum = llround(fr.DiscountOnCheck * 100);
-  memcpy(p.buff+20, &sum, 3);			//20-22
+    p.buff[23] = fr.Tax1;				//23
+    p.buff[24] = fr.Tax2;				//24
+    p.buff[25] = fr.Tax3;				//25
+    p.buff[26] = fr.Tax4;				//26
 
-  p.buff[23] = fr.Tax1;				//23
-  p.buff[24] = fr.Tax2;				//24
-  p.buff[25] = fr.Tax3;				//25
-  p.buff[26] = fr.Tax4;				//26
+    strncpy((char*)p.buff+27, (char*)fr.StringForPrinting, 40);
+    if (sendCommand(CLOSE_CHECK, fr.Password, &p) >= 0)
+    {
+        if (readAnswer(&a) >= 0)
+        {
+            if (a.buff[0] == CLOSE_CHECK)
+            {
+                if (errHand(&a) != 0)
+                    result = fr.ResultCode;
+                else
+                {
+                    fr.OperatorNumber = a.buff[2];
+                    fr.Change = evalint64((unsigned char*)&a.buff+3, 5);
+                    fr.Change /= 100;
+                    result = 0;
+                }
+            }
+        }
+    }
+  }
 
-  strncpy((char*)p.buff+27, (char*)fr.StringForPrinting, 40);
-  if (sendCommand(CLOSE_CHECK, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != CLOSE_CHECK) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-  fr.Change = evalint64((unsigned char*)&a.buff+3, 5);
-  fr.Change /= 100;
-
-  return 0;
+  TApplication::debug(4, "</CloseCheck>");
+  return result;
 }
 //-----------------------------------------------------------------------------
 int DriverFR::Storno()

@@ -191,6 +191,9 @@ int Form::exec()
 {
     if (formWidget != 0)
     {
+        if (parent != 0)
+            parent->beforeShowFormEvent(parent->getForm());
+
         lSelected = false;
         checkVisibility();
         if (!autoSelect)
@@ -208,6 +211,10 @@ int Form::exec()
         else
             cmdOk();
         autoSelect = false;
+
+        if (parent != 0)
+            parent->afterShowFormEvent(parent->getForm());
+
         return lSelected;
     }
     return 0;
@@ -218,6 +225,9 @@ void Form::show()
 {
     if (formWidget != 0)
     {
+        if (parent != 0)
+            parent->beforeShowFormEvent(parent->getForm());
+
         lSelected = false;
         checkVisibility();
         if (getSubWindow() != 0)
@@ -229,6 +239,9 @@ void Form::show()
             autoSelect = false;
         }
         formWidget->show();
+
+        if (parent != 0)
+            parent->afterShowFormEvent(parent->getForm());
     }
 }
 

@@ -41,6 +41,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../openoffice/ooxmlengine.h"
 
 #include "eventloop.h"
+#include "reportcontextfunctions.h"
+
 
 
 Q_DECLARE_METATYPE(Dialog*)
@@ -81,11 +83,13 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
     if (context->argument(0).isString() && engine->evaluate("table").isValid())
     {
         QString fieldName = context->argument(0).toString();
-        QScriptValue value;
-        if (isNumeric((ScriptEngine*)engine, fieldName))
-            value = engine->evaluate(QString("parseFloat(table.getValue('%1'))").arg(fieldName));
+        int row = (context->argument(1).isNumber() ? context->argument(1).toInteger() : -1);
+        QScriptValue value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
+
+        if (value.isNumber())
+            value = engine->evaluate(QString("parseFloat(%1)").arg(value.toNumber()));
         else
-            value = engine->evaluate(QString("table.getValue('%1')").arg(fieldName));
+            value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
         if (value.isValid())
         {
             return value;
@@ -97,9 +101,12 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
 
 QScriptValue setValue(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue fieldName = context->argument(0);
+    int row = (context->argument(2).isNumber() ? context->argument(2).toInteger() : -1);
     if (fieldName.isString() && engine->evaluate("table").isValid())
     {
-        QScriptValue value = engine->evaluate(QString("table.setValue('%1', %2)").arg(fieldName.toString()).arg(context->argument(1).toString()));
+        QScriptValue value = engine->evaluate(QString("table.setValue('%1', %2, %3)").arg(fieldName.toString())
+                                                                                .arg(context->argument(1).toString())
+                                                                                .arg(row));
         if (value.isValid())
             return value;
     }
@@ -162,14 +169,20 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
     if (context->argument(0).isString())
     {
         QString scriptFile = context->argument(0).toString();
-        if (!QFile(scriptFile).exists())
+        QString localScript = TApplication::exemplar()->getScriptsPath() + scriptFile;
+        if (!QFile(localScript).exists())
         {
-            QString scriptPath = TApplication::exemplar()->getScriptsPath();
-            scriptFile = scriptPath + scriptFile;
+            QByteArray script = TApplication::exemplar()->getDBFactory()->getFile(scriptFile, ScriptFileType);
+            if (script.size() > 0)
+            {   // Если удалось получить какую-то фотографию
+                TApplication::exemplar()->saveFile(localScript, &script);
+            }
         }
+        else if (TApplication::exemplar()->isSA())
+            TApplication::exemplar()->saveFileToServer(localScript, scriptFile, ScriptFileType);
         if (ScriptEngine::loadScript(scriptFile))
         {
-            QFile file(scriptFile);
+            QFile file(localScript);
             if (file.open(QIODevice::ReadOnly | QIODevice::Text))
             {
                 QString script(file.readAll());
@@ -593,6 +606,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("quotes", newFunction(quotes));
     globalObject().setProperty("document", newQObject(document));
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
+    globalObject().setProperty("SumToString", newFunction(SumToString));
 
     QStringList extensions;
     extensions << "qt.core"
@@ -947,7 +961,12 @@ QString ScriptEngine::getFilter()
     if (globalObject().property(eventName).isFunction())
     {
         result = globalObject().property(eventName).call().toString();
-        if (result == "undefined")
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName);
+            result = "";
+        }
+        else if (result == "undefined")
             result = "";
     }
     return result;
@@ -1146,15 +1165,7 @@ bool ScriptEngine::loadScript(QString scriptFile)
     if (!loadedScripts.contains(scriptFile))
     {
         QString scriptPath = TApplication::exemplar()->getScriptsPath();
-        if (!QFile(scriptFile).exists())
-        {
-            if (!Essence::getFile(scriptPath, scriptFile, ScriptFileType))
-            {
-                scriptFile = scriptFile + ".js";
-                if (!Essence::getFile(scriptPath, scriptFile, ScriptFileType))
-                    return false;
-            }
-        }
+        Essence::getFile(scriptPath, scriptFile + ".js", ScriptFileType);
         loadedScripts.append(scriptFile);
     }
     return true;

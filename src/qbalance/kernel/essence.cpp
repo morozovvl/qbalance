@@ -182,6 +182,17 @@ qulonglong Essence::getId(int row)
 }
 
 
+int Essence::locateId(qulonglong id)
+{
+    for (int i = 0; i < tableModel->rowCount(); i++)
+    {
+        if (getId(i) == id)
+            return i;
+    }
+    return -1;
+}
+
+
 QString Essence::getName(int row)
 {
     if (row >= 0)
@@ -209,7 +220,9 @@ void Essence::query(QString filter)
 {
     QModelIndex index;
     if (grdTable != 0)
+    {
         index = grdTable->currentIndex();
+    }
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
         Table::query(filter + " AND " + defaultFilter);
@@ -221,7 +234,9 @@ void Essence::query(QString filter)
     else
         Table::query(filter);
     if (grdTable != 0)
+    {
         grdTable->setCurrentIndex(index);
+    }
  }
 
 
@@ -282,9 +297,9 @@ QString Essence::getPhotoFile(QString copyTo)
                             QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
                             if (picture.size() > 0)
                             {   // Если удалось получить какую-то фотографию
-                                saveFile(file, &picture);
+                                app->saveFile(file, &picture);
                                 if (copyTo.size() > 0)
-                                    app->savePhotoToServer(app->getPhotosPath() + "/" + copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                                    app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                             }
                         }
                         if (!QFile(file).exists())
@@ -328,7 +343,7 @@ QString Essence::getPhotoFile(QString copyTo)
                     else
                     {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
                         if (app->isSA())
-                            app->savePhotoToServer(file, localFile);
+                            app->saveFileToServer(file, localFile, PictureFileType, true);
                         if (copyTo.size() > 0)
                             db->copyFile(localFile, PictureFileType, copyTo, true);
                     }
@@ -371,11 +386,11 @@ void Essence::replyFinished(QNetworkReply* reply)
         {
             QString file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
             QByteArray array = reply->readAll();
-            saveFile(file, &array);
+            app->saveFile(file, &array);
             app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
             if (copyTo.size() > 0)
-                app->savePhotoToServer(app->getPhotosPath() + "/" + copyTo, file);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
 
             // Проверим, не нужно ли обновить фотографию
             if (idValue == getValue(photoIdField).toString().trimmed())
@@ -393,29 +408,18 @@ void Essence::replyFinished(QNetworkReply* reply)
 }
 
 
-void Essence::saveFile(QString file, QByteArray* array)
+bool Essence::remove(bool noAsk)
 {
-    QString dir = QFileInfo(file).absolutePath();
-
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-
-    QFile pictFile(file);
-    if (pictFile.open(QIODevice::WriteOnly))
+    if (!noAsk)
     {
-        pictFile.write(*array);
-        pictFile.close();
+        if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить запись? Вы уверены?")) == QMessageBox::Yes)
+        {
+            return true;
+        }
+        return false;
     }
-}
-
-
-bool Essence::remove()
-{
-    if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить запись? Вы уверены?")) == QMessageBox::Yes)
-    {
+    else
         return true;
-    }
-    return false;
 }
 
 
@@ -429,9 +433,9 @@ int Essence::exec()
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
 
-        beforeShowFormEvent(form);
+//        beforeShowFormEvent(form);
         result = form->exec();
-        afterShowFormEvent(form);
+//        afterShowFormEvent(form);
 
         return result;
     }
@@ -448,9 +452,9 @@ void Essence::show()
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
 
-        beforeShowFormEvent(form);
+//        beforeShowFormEvent(form);
         form->show();
-        afterShowFormEvent(form);
+//        afterShowFormEvent(form);
     }
 }
 
@@ -696,6 +700,8 @@ void Essence::updateCurrentRow()
 
 void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
 {
+    // Зарядим имя пользователя
+    reportEngine->getReportContext()->setValue("пользователь", app->userName);
     // Зарядим константы в контекст печати
     QString constDictionaryName = db->getObjectName("константы");
     QString constNameField = db->getObjectName(constDictionaryName + ".имя");
@@ -736,7 +742,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
         QByteArray templateFile = db->getFile(fileName, type);
         if (templateFile.size() > 0)
         {   // Если удалось получить шаблон отчета, то сохраним его локально
-            saveFile(fullFileName, &templateFile);
+            app->saveFile(fullFileName, &templateFile);
             result = true;
         }
     }
@@ -761,7 +767,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
                     QByteArray templateFile = db->getFile(fileName, type);
                     if (templateFile.size() > 0)
                     {   // Если удалось получить шаблон отчета, то сохраним его локально
-                        saveFile(fullFileName, &templateFile);
+                        app->saveFile(fullFileName, &templateFile);
                     }
                 }
             }
@@ -794,14 +800,14 @@ void Essence::restoreOldValues()
 
 void Essence::keyboardReaded(QString barCode)
 {
-    if (scriptEngine != 0)
+    if (scriptEngine != 0 && enabled)
         scriptEngine->eventBarCodeReaded(barCode);
 }
 
 
 void Essence::cardCodeReaded(QString cardCode)
 {
-    if (scriptEngine != 0)
+    if (scriptEngine != 0 && enabled)
         scriptEngine->eventCardCodeReaded(cardCode);
 }
 

@@ -41,13 +41,14 @@ enum fieldsEnums {debetField = 0,
              attrField = 10};
 
 
-enum dictFieldsEnums {columnField = 0,
-                      typeField = 1,
-                      lengthField = 2,
-                      precisionField = 3,
-                      headerField = 4,
-                      visibleField = 5,
-                      editableField = 6};
+enum dictFieldsEnums {tableField = 0,
+                      columnField = 1,
+                      typeField = 2,
+                      lengthField = 3,
+                      precisionField = 4,
+                      headerField = 5,
+                      visibleField = 6,
+                      editableField = 7};
 
 
 QString showAccounts()
@@ -338,6 +339,13 @@ bool WizardOperation::setData()
             db->removeColumnHeaders(tableId);
             for (int i = 0; i < docListFields.count(); i++)
             {
+/*
+                int tabId;
+                if (docListFields.value(0).table != docListFields.value(i).table)
+                    tabId = db->getDictionaryId(docListFields.value(i).table);
+                else
+                    tabId = tableId;
+*/
                if (!db->appendColumnHeader(tableId, tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
                {
                    db->rollbackTransaction();
@@ -457,6 +465,7 @@ void WizardOperation::getData()
      // Получим список полей и заголовков формы списка документов
      docListFields.clear();
      db->getColumnsProperties(&docListFields, db->getObjectName("документы"));
+     db->getColumnsProperties(&docListFields, QString("%1%2").arg(db->getObjectName("докатрибуты")).arg(oper));
      db->getColumnsHeaders(QString("СписокДокументов%1").arg(oper), &docListFields);
      getFieldsTable(&docListFields, docListFieldsTable);
      sortHeadersList(docListFieldsTable, &docListHeaders);
@@ -665,43 +674,57 @@ void WizardOperation::sortHeaders(QListWidget* headers, QList<FieldType>* fields
 
 void WizardOperation::getFieldsTable(QList<FieldType>* flds,  QTableWidget* fieldsTable)
 {
+    QStringList columnHeaders;
+    columnHeaders << QObject::trUtf8("Таблица")
+                  << QObject::trUtf8("Столбец")
+                  << QObject::trUtf8("Тип")
+                  << QObject::trUtf8("Длина")
+                  << QObject::trUtf8("Точность")
+                  << QObject::trUtf8("Заголовок")
+                  << QObject::trUtf8("Видимость")
+                  << QObject::trUtf8("Не изменять");
+
     // Создадим таблицу столбцов
     fieldsTable->setRowCount(flds->count());
-    fieldsTable->setColumnCount(7);
+    fieldsTable->setColumnCount(columnHeaders.count());
+    fieldsTable->setHorizontalHeaderLabels(columnHeaders);
 
-    fieldsTable->setHorizontalHeaderLabels(QStringList() << QObject::trUtf8("Столбец")
-                                                         << QObject::trUtf8("Тип")
-                                                         << QObject::trUtf8("Длина")
-                                                         << QObject::trUtf8("Точность")
-                                                         << QObject::trUtf8("Заголовок")
-                                                         << QObject::trUtf8("Видимость")
-                                                         << QObject::trUtf8("Не изменять"));
     for (int i = 0; i < flds->count(); i++)
     {
         QTableWidgetItem* item;
+
+        item = new QTableWidgetItem(flds->at(i).table);
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setData(Qt::UserRole, flds->at(i).table);
+        fieldsTable->setItem(i, tableField, item);
+
         item = new QTableWidgetItem(flds->at(i).name);
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         item->setData(Qt::UserRole, flds->at(i).name);
         fieldsTable->setItem(i, columnField, item);
+
         item = new QTableWidgetItem(flds->at(i).type);
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, typeField, item);
+
         item = new QTableWidgetItem(QString("%1").arg(flds->at(i).length));
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, lengthField, item);
+
         item = new QTableWidgetItem(QString("%1").arg(flds->at(i).precision));
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         fieldsTable->setItem(i, precisionField, item);
+
         item = new QTableWidgetItem(flds->at(i).header);
         fieldsTable->setItem(i, headerField, item);
+
         item = new QTableWidgetItem(flds->at(i).number > 0 ? "true" : "false");
         item->setData(Qt::UserRole, flds->at(i).number);
         fieldsTable->setItem(i, visibleField, item);
+
         item = new QTableWidgetItem(flds->at(i).readOnly ? "true" : "false");
         if (flds->at(i).constReadOnly)
-        {
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-        }
         fieldsTable->setItem(i, editableField, item);
     }
 
@@ -718,11 +741,6 @@ void WizardOperation::frameActivated(int frameNumber)
     if (frameNumber == 4)
     {
         generateScripts();
-    }
-    if (frameNumber == 6 && docListFldsTableChanged)
-    {
-        sortHeadersList(docListFieldsTable, &docListHeaders);
-        docListFldsTableChanged = false;
     }
 }
 
@@ -786,6 +804,27 @@ void WizardOperation::frameDeactivated(int frameNumber)
         }
         sortHeadersList(fieldsTable, &headers);
         fldsTableChanged = false;
+    }
+    if (frameNumber == 5 && docListFldsTableChanged)
+    {
+        for (int i = 0; i < docListFieldsTable->rowCount(); i++)
+        {
+            for (int j = 0; j < docListFields.count(); j++)
+            {
+                QString table = docListFieldsTable->item(i, tableField)->data(Qt::UserRole).toString();
+                QString column = docListFieldsTable->item(i, columnField)->data(Qt::UserRole).toString();
+                if (docListFields.at(j).table == table && docListFields.at(j).column == column)
+                {
+                    FieldType field = docListFields.at(j);
+                    field.header = docListFieldsTable->item(i, headerField)->text();
+                    field.readOnly = docListFieldsTable->item(i, editableField)->text() == "true" ? true : false;
+                    docListFields.removeAt(j);
+                    docListFields.insert(j, field);
+                }
+            }
+        }
+        sortHeadersList(docListFieldsTable, &docListHeaders);
+        docListFldsTableChanged = false;
     }
 }
 

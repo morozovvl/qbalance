@@ -212,9 +212,9 @@ void Dictionaries::view()
 }
 
 
-bool Dictionaries::remove()
+bool Dictionaries::remove(bool noAsk)
 {
-    if (Essence::remove())
+    if (Essence::remove(noAsk))
     {
         if (db->removeDictionary(getValue(db->getObjectName("доступ_к_справочникам.справочник")).toString().trimmed()))
         {   // если удалось удалить справочник, то обновим список справочников

@@ -245,14 +245,16 @@ void OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
         valueString = QString("%1").arg(var.toDouble());        // это числовое значение
         type = "float";                                         // в OpenOffice оно имеет тип "float"
     }
-    else
+    else if (var.type() == QVariant::DateTime)
     {
-        // все остальные значения в OpenOffice будут иметь значение "string"
-        if (var.type() == QVariant::DateTime)
-            valueString = var.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
-        else
-            valueString = var.toString().trimmed();
+        valueString = var.toDateTime().toString("dd.MM.yyyy hh:mm:ss");
     }
+    else if (var.type() == QVariant::Date)
+    {
+        valueString = var.toDate().toString("dd.MM.yyyy");
+    }
+    else
+        valueString = var.toString().trimmed();
 
     // Заменим в ячейке выражение svar на строковый аналог значения var
     if (svar.size() > 0)

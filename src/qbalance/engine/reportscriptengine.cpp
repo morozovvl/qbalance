@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "reportscriptengine.h"
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
-#include "reportcontextfunctions.h"
 
 
 ReportScriptEngine::ReportScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = 0*/)
@@ -43,5 +42,4 @@ void ReportScriptEngine::loadScriptObjects()
     ScriptEngine::loadScriptObjects();
     // инициализируем глобальные объекты скрипта печати
     globalObject().setProperty("reportContext", newQObject(reportContext));
-    globalObject().setProperty("SumToString", newFunction(SumToString));
 }

@@ -28,6 +28,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     app = 0;
     form = 0;
     buttonOk = 0;
+//    buttonCancel = 0;
     isSelected = false;
 }
 
@@ -63,6 +64,26 @@ void Dialog::cmdOk()
         accept();
 }
 
+/*
+void Dialog::findCmdCancel()
+{
+    buttonCancel = (QPushButton*)this->findChild("buttonCancel");
+    if (buttonCancel != 0)
+    {
+        connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
+    }
+}
+
+
+void Dialog::cmdCancel()
+{
+    isSelected = true;
+    if (form != 0)
+        form->cmdCancel();
+    else
+        accept();
+}
+*/
 
 bool Dialog::isFormSelected()
 {
@@ -90,7 +111,16 @@ QObject* Dialog::findChild(QString name)
 
 void Dialog::keyPressEvent(QKeyEvent *event)
 {
-
+    event->setAccepted(false);
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+        {
+            buttonOk->click();
+            event->setAccepted(true);
+            return;
+        }
+    }
     if (form != 0)                              // Если у формы есть владелец, то запустим его обработчик
         form->keyPressEvent(event);
     else

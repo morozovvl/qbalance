@@ -33,7 +33,7 @@ public:
     Documents(int, QObject *parent = 0);
     ~Documents();
     Q_INVOKABLE virtual bool add();
-    Q_INVOKABLE virtual bool remove();
+    Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void view();
     Q_INVOKABLE virtual void query(QString filter = "");
     Q_INVOKABLE virtual bool open();

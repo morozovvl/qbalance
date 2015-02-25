@@ -39,6 +39,7 @@ QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + T
 //QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
 int    TApplication::DebugMode         = 0;
 TApplication* TApplication::Exemplar   = 0;
+QString TApplication::userName         = "";
 
 
 
@@ -59,6 +60,7 @@ TApplication::TApplication(int & argc, char** argv)
     barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
 
     driverFRisValid = false;
+    driverFRlocked = false;
     fsWebCamIsValid = true;                     // Поначалу будем считать, что утилита fsWebCam установлена
 
     reportTemplateType = OOXMLreportTemplate;
@@ -85,15 +87,18 @@ void TApplication::initConfig()
 {
 #ifdef Q_OS_WIN32
     config.barCodeReaderPort = "COM3";                  // COM-порт сканера штрих кодов в Windows
-    config.frDriverPort = 7;                            // COM-порт фискального регистратора
-    config.frDriverBaudRate = 3;
+    config.frDriverPort = 3;                            // COM-порт фискального регистратора
+    config.frDriverBaudRate = 6;
 #else
     config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
     config.frDriverPort = 1;                            // COM-порт фискального регистратора
-    config.frDriverBaudRate = 3;
+    config.frDriverBaudRate = 6;
 #endif
     config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
+    config.localPort = 44444;
+    config.remoteHost = "192.168.0.1";
+    config.remotePort = 44444;
 }
 
 
@@ -154,16 +159,15 @@ bool TApplication::open() {
 //        formLoader->addPluginPath(applicationDirPath() + "/plugins");
 //        formLoader->setWorkingDirectory(getFormsPath());
 
+        pid = QCoreApplication::applicationPid();
+
         messagesWindow = new MessageWindow();
 
-        tcpServer = new TcpServer(this);
-        tcpClient = new TcpClient(this);
-        tcpClient->sendRequest();
+        tcpServer = new TcpServer(config.localPort, this);
 
-        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverPassword))
+        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverPassword, config.remoteHost, config.remotePort))
         {
             driverFRisValid = true;
-//            qDebug() << driverFR->getProperty("Password");
         }
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
@@ -195,8 +199,18 @@ bool TApplication::open() {
 
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
-                    if (!driverFRisValid)
+                    if (driverFRisValid && driverFR->Connect())
+                    {
+                        showMessageOnStatusBar("Найден фискальный регистратор.");
+                        if (!driverFR->isRemote())  // Если фискальник подсоединен к этому компьютеру
+                            driverFR->Beep();       // То выдадим сигнал о подключении компьютера к фискальнику
+                        driverFR->DisConnect();
+                    }
+                    else
+                    {
+                        driverFRisValid = false;
                         showMessageOnStatusBar("Фискальный регистратор не найден.");
+                    }
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -225,7 +239,6 @@ void TApplication::close()
         driverFR->close();
     }
 
-    delete tcpClient;
     delete tcpServer;
 
     delete messagesWindow;
@@ -337,8 +350,9 @@ Dialog* TApplication::createForm(QString fileName)
                     showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                     return 0;
                 }
-//              formWidget->setApp(this);
+//                formWidget->setApp(this);
                 formWidget->findCmdOk();
+//                formWidget->findCmdCancel();
             }
         }
     }
@@ -511,13 +525,17 @@ void TApplication::showProcesses()
         }
     }
 */
+    runScript("analizeBankAccount");
+}
 
 
+void TApplication::runScript(QString scriptName)
+{
     ScriptEngine* scriptEngine;
     scriptEngine = new ScriptEngine();
     if (scriptEngine->open())
     {
-        scriptEngine->evaluate("evaluateScript(\"analizeBankAccount.qs\")");
+        scriptEngine->evaluate(QString("evaluateScript(\"%1.js\")").arg(scriptName));
         scriptEngine->close();
     }
     delete scriptEngine;
@@ -581,21 +599,20 @@ bool TApplication::readCardReader(QKeyEvent* keyEvent)
 }
 
 
-QString TApplication::capturePhoto(QString fileName, QString deviceName)
+void TApplication::capturePhoto(QString fileName, QString deviceName)
 {
     if (fsWebCamIsValid)
     {
         QString localFile = applicationDirPath() + "/shot.jpg";
         QProcess* proc = runProcess(QString("fswebcam %1 -r 640x480 --jpeg 85 %2").arg(deviceName.size() != 0 ? "-d " + deviceName : "").arg(localFile), "fswebcam", false);
         if (proc != 0 && waitProcessEnd(proc))
-            return savePhotoToServer(localFile, fileName);
+            saveFileToServer(localFile, fileName, PictureFileType, true);
         fsWebCamIsValid = false;        // Утилита fsWebCam не установлена, не будем больше пытаться ее запускать
     }
-    return "";
 }
 
 
-QString TApplication::savePhotoToServer(QString file, QString localFile)
+void TApplication::saveFileToServer(QString file, QString localFile, FileType type, bool extend)
 {
 //    QString resultFileName;
     QFile file1(file);
@@ -603,18 +620,30 @@ QString TApplication::savePhotoToServer(QString file, QString localFile)
     {
         QByteArray array = file1.readAll();
         qulonglong localFileCheckSum = db->calculateCRC32(&array);
-        qulonglong removeFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, PictureFileType, true) : 0;
-//        resultFileName = removeFileCheckSum == 0 ? QString("photo%1").arg(localFileCheckSum) : localFile;
+        qulonglong removeFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, type, extend) : 0;
         if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
                                                         // предполагается, что локальный файл свежее того, который в базе
         {
-//            db->setFile(resultFileName, PictureFileType, array, true);      // Сохранить картинку в расширенную базу
-            db->setFile(localFile, PictureFileType, array, true);      // Сохранить картинку в расширенную базу
+            db->setFile(localFile, type, array, extend);      // Сохранить картинку в расширенную базу
         }
         file1.close();
     }
-//    return resultFileName;
-    return localFile;
+}
+
+
+void TApplication::saveFile(QString file, QByteArray* array)
+{
+    QString dir = QFileInfo(file).absolutePath();
+
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+
+    QFile pictFile(file);
+    if (pictFile.open(QIODevice::WriteOnly))
+    {
+        pictFile.write(*array);
+        pictFile.close();
+    }
 }
 
 

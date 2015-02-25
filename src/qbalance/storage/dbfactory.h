@@ -52,6 +52,13 @@ struct FileInfo
 };
 
 
+struct UserInfo
+{
+    QString     userName;
+    QString     loginName;
+};
+
+
 struct FieldType
 {
     QString table;          // Наименование таблицы
@@ -117,6 +124,7 @@ struct UpdateIds
     int         id;
     QString     table;
 };
+
 
 class DBFactory : public QObject {
     Q_OBJECT
@@ -184,7 +192,7 @@ public:
     void setPeriod(QDate, QDate);
     void getPeriod(QDate&, QDate&);
     void setConstDictId(QString, QVariant, int, int, int);
-    QStringList getUserList();
+    QHash<int, UserInfo> getUserList();
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
 
     // Работа с ошибками

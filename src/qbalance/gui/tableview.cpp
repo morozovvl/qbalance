@@ -123,9 +123,9 @@ void TableView::cmdView()
 
 void TableView::cmdRequery()
 {
-    app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + essence->getTagName() + "...");
+//    app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + essence->getTagName() + "...");
     essence->query();
-    app->showMessageOnStatusBar("");
+//    app->showMessageOnStatusBar("");
     parent->setButtons();
     setFocus();
 }
@@ -241,27 +241,8 @@ bool TableView::setColumnsHeaders()
                 for (int i = 0; i < header->count(); i++)
                     header->hideSection(i);
 
-                // Теперь покажем только те столбцы, у которых поле number в списке fields больше 0
-                for (int i = 0; i < fields->count(); i++)
-                {
-                    if (fields->at(i).number > 0)
-                    {
-                        MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
-                        if (delegate != 0)
-                        {
-                            delegate->setFieldName(fields->at(i).column);
-                            if (!fields->at(i).readOnly)
-                            {
-                                connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-                            }
-                            delegate->setReadOnly(fields->at(i).readOnly);
-                            setItemDelegateForColumn(i, delegate);
-                        }
-                        tableModel->setHeaderData(i, Qt::Horizontal, fields->at(i).header);
-                        columns.insert(fields->at(i).number - 1, fields->at(i).column);
-                        header->showSection(i);
-                    }
-                }
+                setColumnsDelegates();
+
                 // Установим столбцы в соотвествующем порядке
                 foreach (int i, columns.keys())
                 {
@@ -277,6 +258,33 @@ bool TableView::setColumnsHeaders()
         return true;
     }
     return false;
+}
+
+
+void    TableView::setColumnsDelegates()
+{
+    QHeaderView* header = horizontalHeader();
+    // Теперь покажем только те столбцы, у которых поле number в списке fields больше 0
+    for (int i = 0; i < fields->count(); i++)
+    {
+        if (fields->at(i).number > 0)
+        {
+            MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
+            if (delegate != 0)
+            {
+                delegate->setFieldName(fields->at(i).column);
+                if (!fields->at(i).readOnly)
+                {
+                    connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+                }
+                delegate->setReadOnly(fields->at(i).readOnly);
+                setItemDelegateForColumn(i, delegate);
+            }
+            tableModel->setHeaderData(i, Qt::Horizontal, fields->at(i).header);
+            columns.insert(fields->at(i).number - 1, fields->at(i).column);
+            header->showSection(i);
+        }
+    }
 }
 
 
@@ -396,7 +404,7 @@ void TableView::selectNextColumn()
     if (tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
-        if (index.row() == -1 && index.column() == -1)
+        if (!index.isValid())
             return;
         int column = horizontalHeader()->visualIndex(index.column());
         int oldColumn = column > 0 ? column : 0;
@@ -407,10 +415,10 @@ void TableView::selectNextColumn()
             column++;                       // Перейдем в следующий столбец
             logicalIndex = horizontalHeader()->logicalIndex(column);
             newIndex = index.sibling(index.row(), logicalIndex);
-            if (newIndex.row() == -1 && newIndex.column() == -1)
+            if (!newIndex.isValid())
             {
                 newIndex = index.sibling(index.row(), 0);
-                if (newIndex.row() == -1 && newIndex.column() == -1)
+                if (!newIndex.isValid())
                 {
                     setCurrentIndex(index);
                     break;
@@ -516,20 +524,18 @@ void TableView::setReadOnly(bool ro)
     if (parent != 0 && fields != 0)
     {
         db->getColumnsHeaders(essence->getTagName(), fields);
-        if (fields->count() > 0)
+        for (int i = 0; i < fields->count(); i++)
         {
-            for (int i = 0; i < fields->count(); i++)
+            MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(i);
+            if (delegate != 0)
             {
-                if (fields->at(i).number > 0)
-                {
-                    MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(tableModel->fieldIndex(fields->at(i).column));
-                    if (delegate != 0)
-                    {
-                        delegate->setReadOnly(fields->at(i).readOnly || ro);
-                    }
-                }
+                if (ro)
+                    delegate->setReadOnly(ro);
+                else
+                    delegate->setReadOnly(fields->at(i).readOnly);
             }
         }
+        repaint();
     }
 }
 
