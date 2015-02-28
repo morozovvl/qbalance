@@ -2519,10 +2519,12 @@ void DBFactory::appendCommand(QString command)
 
 void DBFactory::appendCommand(UpdateValues value)
 {
-    for (int i = 0; i < updateValues.count(); i++)
+    for (int i = updateValues.count() - 1; i >= 0; i--)
     {
         if (value.recId == updateValues.at(i).recId && value.field == updateValues.at(i).field)
-            return;
+        {
+            updateValues.removeAt(i);
+        }
     }
     updateValues.append(value);
 }

@@ -22,8 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 TcpClient* QMyExtSerialPort::tcpClient = 0;
-bool QMyExtSerialPort::locked = false;
-
 
 QMyExtSerialPort::QMyExtSerialPort()
 {
@@ -109,7 +107,7 @@ bool QMyExtSerialPort::isReadyDriverFR()
 bool QMyExtSerialPort::isLockedDriverFR()
 {
     bool result = false;
-    if (tcpClient != 0 && tcpClient->isValid())
+    if (!isOpen() && tcpClient != 0 && tcpClient->isValid())
     {
         tcpClient->sendToServer("isLockedDriverFR");
         if (tcpClient->waitResult())
@@ -124,28 +122,20 @@ bool QMyExtSerialPort::isLockedDriverFR()
 
 bool QMyExtSerialPort::setLock(bool lock)
 {
-    if (!locked)
+    bool locked = false;
+    if (!isOpen() && tcpClient != 0 && tcpClient->isValid())
     {
-        if (!isOpen() && tcpClient != 0 && tcpClient->isValid())
-        {
-            if (lock)
-                tcpClient->sendToServer("setLockDriverFR(true)");
-            else
-                tcpClient->sendToServer("setLockDriverFR(false)");
-            if (tcpClient->waitResult())
-            {
-                QString res = tcpClient->getResult();
-                locked = (res == "true" ? true : false);
-                return true;
-            }
-        }
+        if (lock)
+            tcpClient->sendToServer("setLockDriverFR(true)");
         else
+            tcpClient->sendToServer("setLockDriverFR(false)");
+        if (tcpClient->waitResult())
         {
-            locked = lock;
-            return true;
+            QString res = tcpClient->getResult();
+            locked = (res == "true" ? true : false);
         }
     }
-    return false;
+    return locked;
 }
 
 

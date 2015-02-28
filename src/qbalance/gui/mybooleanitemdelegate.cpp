@@ -42,14 +42,14 @@ MyBooleanItemDelegate::~MyBooleanItemDelegate()
 
 QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex &) const
 {
+    if (parentForm != 0)
+        parentForm->getParent()->saveOldValues();
+    editorWidget = new QCheckBox(parent);
     if (!readOnly)
-    {
-        if (parentForm != 0)
-            parentForm->getParent()->saveOldValues();
-        editorWidget = new QCheckBox(parent);
-        return editorWidget;
-    }
-    return 0;
+        editorWidget->setDisabled(false);
+    else
+        editorWidget->setDisabled(true);
+    return editorWidget;
 }
 
 

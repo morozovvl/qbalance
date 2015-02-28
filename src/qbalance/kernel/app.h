@@ -161,7 +161,7 @@ public:
     int getSecDiff() { return secDiff; }
     void    initConfig();
     QString     findFileFromEnv(QString);
-    void timeOut(int);
+    Q_INVOKABLE void timeOut(int);
 
     void saveCustomization();
     void printReportWithoutCleaning();

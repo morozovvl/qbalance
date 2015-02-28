@@ -627,6 +627,7 @@ public:
     QMyExtSerialPort* getSerialPort() { return serialPort; }
     bool isRemote() { return remote; }
     Q_INVOKABLE bool isLocked();
+    void        setLock(bool lock);
 
 
 // Функции для работы с фискальным регистратором
@@ -641,7 +642,7 @@ public:
     Q_INVOKABLE int CheckSubTotal();
     Q_INVOKABLE int CloseCheck();
     Q_INVOKABLE int ConfirmDate();
-    Q_INVOKABLE int ContinuePrinting();
+    Q_INVOKABLE int ContinuePrint();
     Q_INVOKABLE int Correction();
     Q_INVOKABLE int CutCheck();
     Q_INVOKABLE int DampRequest();

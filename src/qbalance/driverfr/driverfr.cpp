@@ -680,48 +680,49 @@ bool DriverFR::Connect()
     connected = false;
     bool result = false;
 
-    if (remote)
+    if (!locked)
     {
-        if (serialPort->isReadyDriverFR())
-            locked = serialPort->setLock(true);
-    }
-    else
-        locked = true;
-
-    if (locked)
-    {
-        state = checkState();
-        switch (state)
+        if (remote)
         {
-            case NAK:
-                {
-                    connected = true;
-                    result = true;
-                }
-                break;
-            case ACK:
-                {
-                    connected = true;
-                    result = true;
-                }
-                break;
-            case -1:
-                {
-                    locked = false;
-                }
-                break;
+            if (serialPort->isReadyDriverFR())
+                locked = serialPort->setLock(true);
         }
-        if (result)
+        else
+            locked = true;
+
+        if (locked)
         {
-            if (GetECRStatus() != 0)
-                result = false;
-            else if (TApplication::debugMode() == 4)
+            state = checkState();
+            switch (state)
             {
-                serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
-                serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
+                case NAK:
+                    {
+                        connected = true;
+                        result = true;
+                    }
+                    break;
+                case ACK:
+                    {
+                        connected = true;
+                        result = true;
+                    }
+                    break;
+                case -1:
+                    break;
+            }
+            if (result)
+            {
+                if (GetECRStatus() != 0)
+                    result = false;
+                else if (TApplication::debugMode() == 4)
+                {
+                    serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
+                    serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
+                }
             }
         }
     }
+    TApplication::debug(4, QString("locked=%1").arg(locked));
     return result;
 }
 
@@ -730,11 +731,11 @@ void DriverFR::DisConnect()
 {
     serialPort->writeLog();
     connected = false;
-    locked = false;
-    if (remote)
-        locked = serialPort->setLock(false);
+    if (remote && serialPort->setLock(false))
+        locked = false;
     else
         locked = false;
+    TApplication::debug(4, QString("locked=%1").arg(locked));
 }
 
 
@@ -743,6 +744,12 @@ bool DriverFR::isLocked()
     if (remote)
         return serialPort->isLockedDriverFR();
     return locked;
+}
+
+
+void DriverFR::setLock(bool lock)
+{
+    locked = lock;
 }
 
 
@@ -846,27 +853,40 @@ int DriverFR::CutCheck()
 //-----------------------------------------------------------------------------
 int DriverFR::PrintString()
 {
-  parameter  p;
-  answer     a;
-  p.len	  = 41;
+    TApplication::debug(4, "<PrintString>");
+    parameter  p;
+    answer     a;
+    p.len	  = 41;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
+        p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
+        strncpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 40);
 
-  p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
-  p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
-
-  strncpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 40);
-
-  if (sendCommand(PRINT_STRING, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != PRINT_STRING) return -1;
-
-  if (errHand(&a) != 0) return  fr.ResultCode;;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+        if (sendCommand(PRINT_STRING, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == PRINT_STRING)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        fr.OperatorNumber = a.buff[2];
+                        result = 0;
+                    }
+                }
+            }
+        }
+    }
+    TApplication::debug(4, "</PrintString>");
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::PrintWideString()
 {
@@ -1090,22 +1110,34 @@ int DriverFR::InterruptTest()
   return 0;
 }
 //-----------------------------------------------------------------------------
-int DriverFR::ContinuePrinting()
+int DriverFR::ContinuePrint()
 {
-  parameter  p;
-  answer     a;
+    TApplication::debug(4, "<ContinuePrint>");
+    parameter  p;
+    answer     a;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  if (sendCommand(CONTINUE_PRINTING, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != CONTINUE_PRINTING) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+    if (connected)
+    {
+        if (sendCommand(CONTINUE_PRINTING, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == CONTINUE_PRINTING)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        fr.OperatorNumber = a.buff[2];
+                        result = 0;
+                    }
+                }
+            }
+        }
+    }
+    TApplication::debug(4, "</ContinuePrint>");
+    return result;
 }
 //-----------------------------------------------------------------------------
 int DriverFR::OpenDrawer()

@@ -40,7 +40,6 @@ public:
 
     bool    isLockedDriverFR();
     bool    isReadyDriverFR();
-    bool    isLocked() { return locked; }
     bool    setLock(bool lock);
 
     // Работа с TCP соединением
@@ -52,7 +51,6 @@ public:
     QString     getLog() { return log; }
     void writeLog(QString = "");
 private:
-    static bool locked;
     bool outLog;
     QString log;
     static TcpClient* tcpClient;

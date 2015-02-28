@@ -97,7 +97,7 @@ void TApplication::initConfig()
     config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
     config.localPort = 44444;
-    config.remoteHost = "192.168.0.1";
+    config.remoteHost = "192.168.0.0";
     config.remotePort = 44444;
 }
 
@@ -203,7 +203,13 @@ bool TApplication::open() {
                     {
                         showMessageOnStatusBar("Найден фискальный регистратор.");
                         if (!driverFR->isRemote())  // Если фискальник подсоединен к этому компьютеру
+                        {
                             driverFR->Beep();       // То выдадим сигнал о подключении компьютера к фискальнику
+                            if (driverFR->getProperty("ECRMode") == 8)
+                            {
+                                driverFR->ContinuePrint();
+                            }
+                        }
                         driverFR->DisConnect();
                     }
                     else
