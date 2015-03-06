@@ -16,10 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
+/* За основу взят исходный код отсюда: http://codeprogress.com/cpp/libraries/qt/QProgressDialogNoButton.php#.VPRf2R3V7eQ */
 
+#ifndef MYPROGRESSDIALOG_H
+#define MYPROGRESSDIALOG_H
 
-#include "progressbar.h"
+#include <QProgressDialog>
 
-ProgressBar::ProgressBar(QWidget *parent): QDialog(parent)
+class MyProgressDialog : public QProgressDialog
 {
-}
+    Q_OBJECT
+public:
+    MyProgressDialog(QString = "", QWidget* = 0);
+
+public slots:
+      //Slot that is called when cancel Button is Clicked
+    void cancel() {;}
+
+protected:
+    void keyPressEvent(QKeyEvent*);
+};
+
+#endif // MYPROGRESSDIALOG_H

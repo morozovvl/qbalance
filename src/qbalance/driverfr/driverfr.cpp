@@ -1,5 +1,42 @@
-#include "../kernel/app.h"
+/***************************************************************************
+                          drvfr.h  -  description
+                             -------------------
+    begin                : Sun Jan 20 2002
+    copyright            : (C) 2002 by Igor V. Youdytsky
+    email                : Pitcher@gw.tander.ru
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
 #include "../kernel/tcpserver.h"
+#include "../kernel/app.h"
+
 
 
 unsigned DriverFR::commlen[0x100] =
@@ -344,6 +381,16 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
     remote = false;
     locked = false;
     codec = QTextCodec::codecForName("Windows-1251");
+    app = TApplication::exemplar();
+    progressDialog = new MyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."), app->getMainWindow());
+    progressDialog->resize(600, progressDialog->height());
+    showProgressBar = false;
+}
+
+
+DriverFR::~DriverFR()
+{
+    delete progressDialog;
 }
 
 
@@ -376,7 +423,7 @@ bool DriverFR::open(int port, int rate, int password, QString ipAddress, int ipP
         if (ipAddress.size() > 0)
         {
             serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
-            TApplication::exemplar()->timeOut(1000);
+            app->timeOut(1000);
             if (serialPort->getTcpClient()->isValid())
             {
                 remote = true;
@@ -469,7 +516,7 @@ unsigned short int DriverFR::readByte(int msec)
     for (int tries = 0; tries < MAX_TRIES; tries++)
     {
         if (msec > 0)
-            TApplication::exemplar()->timeOut(msec);
+            app->timeOut(msec);
         unsigned char readbuff[2] = "";
         int result = readBytes(readbuff, 1);
         if (result > 0)
@@ -512,7 +559,7 @@ int DriverFR::readAnswer(answer *ans)
                     crc = readByte(fr.Timeout);
                     if (crc == (LRC(ans->buff, len, 0) ^ len))
                     {
-                        TApplication::exemplar()->timeOut(fr.Timeout*2);
+                        app->timeOut(fr.Timeout*2);
                         sendACK();
                         ans->len = len;
                         return len;
@@ -662,6 +709,12 @@ void DriverFR::evaltime(unsigned char *str, struct tm *time)
 }
 
 
+void DriverFR::logCommand(int comNum, QString comStr)
+{
+    TApplication::debug(4, QString("Команда %1 %2").arg(QString::number(comNum, 16).toUpper()).arg(comStr));
+}
+
+
 void DriverFR::DefineECRModeDescription(void)
 {
   fr.ECRMode8Status = fr.ECRMode >> 4;
@@ -719,6 +772,10 @@ bool DriverFR::Connect()
                     serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
                     serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
                 }
+                if (showProgressBar)
+                {
+                    progressDialog->show();
+                }
             }
         }
     }
@@ -729,6 +786,10 @@ bool DriverFR::Connect()
 
 void DriverFR::DisConnect()
 {
+    if (showProgressBar)
+    {
+        progressDialog->hide();
+    }
     serialPort->writeLog();
     connected = false;
     if (remote && serialPort->setLock(false))
@@ -755,8 +816,7 @@ void DriverFR::setLock(bool lock)
 
 int DriverFR::Beep()
 {
-    TApplication::debug(4, "<Beep>");
-
+    logCommand(BEEP, "Гудок");
     parameter  p;
     answer     a;
     int result = -1;
@@ -780,7 +840,6 @@ int DriverFR::Beep()
             }
         }
     }
-    TApplication::debug(4, "</Beep>");
     return result;
 }
 
@@ -853,7 +912,7 @@ int DriverFR::CutCheck()
 //-----------------------------------------------------------------------------
 int DriverFR::PrintString()
 {
-    TApplication::debug(4, "<PrintString>");
+    logCommand(PRINT_STRING, "Печать строки");
     parameter  p;
     answer     a;
     p.len	  = 41;
@@ -882,7 +941,28 @@ int DriverFR::PrintString()
             }
         }
     }
-    TApplication::debug(4, "</PrintString>");
+    return result;
+}
+
+
+//-----------------------------------------------------------------------------
+int DriverFR::PrintString(QString str, int count)
+{
+    int result = -1;
+    setProperty("StringForPrinting", str);
+    for (int i = 1; i <= count; i++)
+    {
+        for(int tries = 1; tries <= MAX_TRIES; tries++)
+        {
+            result = PrintString();
+            if (result == 0x50)
+                app->timeOut(100);
+            else
+                break;
+        }
+        if (result == -1)
+            return result;
+    }
     return result;
 }
 
@@ -979,6 +1059,7 @@ int DriverFR::GetExchangeParam()
 //-----------------------------------------------------------------------------
 int DriverFR::GetECRStatus()
 {
+  logCommand(GET_ECR_STATUS, "Запрос состояния ФР");
   parameter  p;
   answer     a;
 
@@ -1109,10 +1190,12 @@ int DriverFR::InterruptTest()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::ContinuePrint()
 {
-    TApplication::debug(4, "<ContinuePrint>");
+    logCommand(CONTINUE_PRINTING, "Продолжение печати");
     parameter  p;
     answer     a;
     int result = -1;
@@ -1136,9 +1219,10 @@ int DriverFR::ContinuePrint()
             }
         }
     }
-    TApplication::debug(4, "</ContinuePrint>");
     return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::OpenDrawer()
 {
@@ -1160,6 +1244,8 @@ int DriverFR::OpenDrawer()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::PrintDocumentTitle()
 {
@@ -1245,8 +1331,7 @@ int DriverFR::ReturnBuy()
 //-----------------------------------------------------------------------------
 int DriverFR::Sale()
 {
-  TApplication::debug(4, "<Sale>");
-
+  logCommand(SALE, "Продажа");
   parameter  p;
   answer     a;
   int result = -1;
@@ -1286,16 +1371,13 @@ int DriverFR::Sale()
         }
     }
   }
-
-  TApplication::debug(4, "</Sale>");
-
   return result;
 }
 
 //-----------------------------------------------------------------------------
 int DriverFR::ReturnSale()
 {
-  TApplication::debug(4, "<ReturnSale>");
+  logCommand(RETURN_SALE, "Возврат продажи");
   parameter  p;
   answer     a;
   int result = -1;
@@ -1336,14 +1418,13 @@ int DriverFR::ReturnSale()
         }
     }
   }
-  TApplication::debug(4, "</ReturnSale>");
   return result;
 }
 
 //-----------------------------------------------------------------------------
 int DriverFR::CancelCheck()
 {
-  TApplication::debug(4, "<CancelCheck>");
+  logCommand(CANCEL_CHECK, "Аннулирование чека");
   parameter  p;
   answer     a;
   int result = -1;
@@ -1367,7 +1448,6 @@ int DriverFR::CancelCheck()
             }
         }
     }
-  TApplication::debug(4, "</CancelCheck>");
   return result;
 }
 
@@ -1375,7 +1455,7 @@ int DriverFR::CancelCheck()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZJournal()
 {
-  TApplication::debug(4, "<GetEKLZJournal>");
+  logCommand(GET_EKLZ_JOURNAL, "Запрос контрольной ленты ЭКЛЗ");
   parameter  p;
   answer     a;
   int result = -1;
@@ -1402,7 +1482,6 @@ int DriverFR::GetEKLZJournal()
             }
         }
     }
-  TApplication::debug(4, "</GetEKLZJournal>");
   return result;
 }
 
@@ -1410,7 +1489,7 @@ int DriverFR::GetEKLZJournal()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZData()
 {
-  TApplication::debug(4, "<GetEKLZData>");
+  logCommand(GET_EKLZ_DATA, "Запрос данных отчета ЭКЛЗ");
   parameter  p;
   answer     a;
   int result = -1;
@@ -1436,7 +1515,6 @@ int DriverFR::GetEKLZData()
             }
         }
     }
-  TApplication::debug(4, "</GetEKLZData>");
   return result;
 }
 
@@ -1549,35 +1627,41 @@ int DriverFR::StornoCharge()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::Discount()
 {
-  parameter  p;
-  answer     a;
-  p.len   = 49;
+    logCommand(DISCOUNT, "Скидка");
+    parameter  p;
+    answer     a;
+    p.len   = 49;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  int64_t  sum = llround(fr.Summ1 * 100);
-
-  memcpy(p.buff, &sum, 5);
-
-  p.buff[5] = fr.Tax1;
-  p.buff[6] = fr.Tax2;
-  p.buff[7] = fr.Tax3;
-  p.buff[8] = fr.Tax4;
-
-  strncpy((char*)p.buff+9, (char*)fr.StringForPrinting, 40);
-
-  if (sendCommand(DISCOUNT, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != DISCOUNT) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+    if (connected)
+    {
+        int64_t  sum = llround(fr.Summ1 * 100);
+        memcpy(p.buff, &sum, 5);
+        p.buff[5] = fr.Tax1;
+        p.buff[6] = fr.Tax2;
+        p.buff[7] = fr.Tax3;
+        p.buff[8] = fr.Tax4;
+        strncpy((char*)p.buff+9, (char*)fr.StringForPrinting, 40);
+        if (sendCommand(DISCOUNT, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == DISCOUNT)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                        fr.OperatorNumber = a.buff[2];
+                }
+            }
+        }
+    }
+    return result;
 }
 //-----------------------------------------------------------------------------
 int DriverFR::StornoDiscount()
@@ -1629,11 +1713,11 @@ int DriverFR::CheckSubTotal()
 
   return 0;
 }
+
 //-----------------------------------------------------------------------------
 int DriverFR::CloseCheck()
 {
-
-  TApplication::debug(4, "<CloseCheck>");
+  logCommand(CLOSE_CHECK, "Закрытие чека");
 
   parameter  p;
   answer     a;
@@ -1681,8 +1765,6 @@ int DriverFR::CloseCheck()
         }
     }
   }
-
-  TApplication::debug(4, "</CloseCheck>");
   return result;
 }
 //-----------------------------------------------------------------------------

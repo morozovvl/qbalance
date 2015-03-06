@@ -56,7 +56,7 @@ TApplication::TApplication(int & argc, char** argv)
 
     dictionaryList = 0;
     topersList = 0;
-    driverFR = new DriverFR(this);
+    driverFR = 0;
     barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
 
     driverFRisValid = false;
@@ -77,7 +77,6 @@ TApplication::TApplication(int & argc, char** argv)
 
 TApplication::~TApplication()
 {
-    delete driverFR;
     delete gui;
     delete db;
 }
@@ -97,7 +96,7 @@ void TApplication::initConfig()
     config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
     config.localPort = 44444;
-    config.remoteHost = "192.168.0.0";
+    config.remoteHost = "192.168.0.1";
     config.remotePort = 44444;
 }
 
@@ -164,6 +163,7 @@ bool TApplication::open() {
         messagesWindow = new MessageWindow();
 
         tcpServer = new TcpServer(config.localPort, this);
+        driverFR = new DriverFR(this);
 
         if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverPassword, config.remoteHost, config.remotePort))
         {
@@ -205,10 +205,13 @@ bool TApplication::open() {
                         if (!driverFR->isRemote())  // Если фискальник подсоединен к этому компьютеру
                         {
                             driverFR->Beep();       // То выдадим сигнал о подключении компьютера к фискальнику
+
+                            // При необходимости допечатаем чек
                             if (driverFR->getProperty("ECRMode") == 8)
                             {
                                 driverFR->ContinuePrint();
                             }
+                            driverFR->setShowProgressBar(true);     // Будем показывать прогресс при печати чека
                         }
                         driverFR->DisConnect();
                     }
@@ -243,6 +246,7 @@ void TApplication::close()
     if (driverFR)
     {
         driverFR->close();
+        delete driverFR;
     }
 
     delete tcpServer;
@@ -545,6 +549,7 @@ void TApplication::runScript(QString scriptName)
         scriptEngine->close();
     }
     delete scriptEngine;
+    showMessageOnStatusBar(QString(trUtf8("Скрипт %1 выполнен")).arg(scriptName));
 }
 
 

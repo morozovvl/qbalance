@@ -1,3 +1,40 @@
+/***************************************************************************
+                          drvfr.h  -  description
+                             -------------------
+    begin                : Sun Jan 20 2002
+    copyright            : (C) 2002 by Igor V. Youdytsky
+    email                : Pitcher@gw.tander.ru
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+/************************************************************************************************************
+Copyright (C) Morozov Vladimir Aleksandrovich
+MorozovVladimir@mail.ru
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*************************************************************************************************************/
+
+
 #ifndef DRIVERFR_H
 #define DRIVERFR_H
 
@@ -7,7 +44,9 @@
 #include <QDebug>
 #include <sys/time.h>
 #include "../serialport/qmyextserialport.h"
+#include "../gui/myprogressdialog.h"
 
+class TApplication;
 
 #define MAX_TRIES	10
 
@@ -620,6 +659,7 @@ class DriverFR : public QObject
     Q_OBJECT
 public:
     DriverFR(QObject *parent = 0);
+    ~DriverFR();
     bool open(int, int, int, QString, int);
     void close();
     Q_INVOKABLE QVariant getProperty(QString name);
@@ -628,6 +668,12 @@ public:
     bool isRemote() { return remote; }
     Q_INVOKABLE bool isLocked();
     void        setLock(bool lock);
+    Q_INVOKABLE void setProgressDialogValue(int value)
+    {
+        if (progressDialog != 0)
+            progressDialog->setValue(value);
+    }
+    Q_INVOKABLE void setShowProgressBar(bool show) { showProgressBar = show; }
 
 
 // Функции для работы с фискальным регистратором
@@ -690,6 +736,7 @@ public:
     Q_INVOKABLE int PrintReportWithCleaning();
     Q_INVOKABLE int PrintReportWithoutCleaning();
     Q_INVOKABLE int PrintString();
+    Q_INVOKABLE int PrintString(QString, int = 1);
     Q_INVOKABLE int PrintWideString();
     Q_INVOKABLE int ReadEKLZDocumentOnKPK();
     Q_INVOKABLE int ReadEKLZSessionTotal();
@@ -739,6 +786,7 @@ private:
     void evaldate(unsigned char*, struct tm*);
     void evaltime(unsigned char *, struct tm *);
     void DefineECRModeDescription();
+    void logCommand(int, QString);
 
 
     QMyExtSerialPort*         serialPort;
@@ -757,6 +805,9 @@ private:
     static const char* devcodedesc[];
 
     QTextCodec *codec;
+    TApplication* app;
+    MyProgressDialog* progressDialog;
+    bool    showProgressBar;
 
 };
 

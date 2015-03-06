@@ -212,6 +212,12 @@ void Dictionaries::view()
 }
 
 
+void Dictionaries::show()
+{
+    Dictionary::show();
+}
+
+
 bool Dictionaries::remove(bool noAsk)
 {
     if (Essence::remove(noAsk))

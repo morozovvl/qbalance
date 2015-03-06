@@ -1165,7 +1165,7 @@ bool ScriptEngine::loadScript(QString scriptFile)
     if (!loadedScripts.contains(scriptFile))
     {
         QString scriptPath = TApplication::exemplar()->getScriptsPath();
-        Essence::getFile(scriptPath, scriptFile + ".js", ScriptFileType);
+        Essence::getFile(scriptPath, scriptFile, ScriptFileType);
         loadedScripts.append(scriptFile);
     }
     return true;

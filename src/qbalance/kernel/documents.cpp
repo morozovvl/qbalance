@@ -53,38 +53,41 @@ Documents::~Documents()
 bool Documents::add()
 {
     QDate date = QDate().currentDate();
-    if (!(date >= TApplication::exemplar()->getBeginDate() && date <= TApplication::exemplar()->getEndDate()))
+    if ((date >= TApplication::exemplar()->getBeginDate() && date <= TApplication::exemplar()->getEndDate()))
     {
+/*
         if (date < TApplication::exemplar()->getBeginDate())
             date = TApplication::exemplar()->getBeginDate();
         else if (date > TApplication::exemplar()->getEndDate())
             date = TApplication::exemplar()->getEndDate();
-    }
-
-    int strNum = db->addDoc(operNumber, date);
-    if (strNum > 0)
-    {
-        int newRow = tableModel->rowCount();
-        if (newRow == 0)
+*/
+        int strNum = db->addDoc(operNumber, date);
+        if (strNum > 0)
         {
-            query();
-            setId(strNum);
+            int newRow = tableModel->rowCount();
+            if (newRow == 0)
+            {
+                query();
+                setId(strNum);
+            }
+            else
+            {
+                int column = grdTable->currentIndex().column();
+                tableModel->insertRow(newRow);
+                grdTable->reset();
+                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                updateCurrentRow(strNum);
+                grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+            }
+            setCurrentDocument(strNum);
+            Essence::saveOldValues();
+            form->setButtons();
+            grdTable->setFocus();
+            return true;
         }
-        else
-        {
-            int column = grdTable->currentIndex().column();
-            tableModel->insertRow(newRow);
-            grdTable->reset();
-            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            updateCurrentRow(strNum);
-            grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
-        }
-        setCurrentDocument(strNum);
-        Essence::saveOldValues();
-        form->setButtons();
-        grdTable->setFocus();
-        return true;
+        return false;
     }
+    QMessageBox::warning(app->getMainWindow(), "Внимание!", "Не могу создать документ, т.к. сегодняшняя дата находится вне рабочего периода. Установите правильный рабочий период.");
     return false;
 }
 

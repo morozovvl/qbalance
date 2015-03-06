@@ -1162,13 +1162,10 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                         // Заголовок для столбца найден
                         counter++;
                         FieldType field = fields->at(i);
-                        field.table = table;
                         field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
                         field.number = number;
                         field.headerExist = true;   // Для столбца найден заголовок
                         field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
-//                        if (tableName.left(16) != "СписокДокументов" && !field.constReadOnly)
-//                            field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
                         fields->removeAt(i);
                         fields->insert(i, field);
                         break;
@@ -1740,6 +1737,7 @@ QString DBFactory::storageEncoding()
 void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 {
     clearError();
+    bool docAttr = isTableExists(QString("докатрибуты%1").arg(oper));
     QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4;").arg(getObjectNameCom("vw_топер")).arg(getObjectNameCom("vw_топер.опер")).arg(oper).arg(getObjectNameCom("vw_топер.номер")));
     toper.first();
     // Сначала составим список справочников и проверим на предмет присутствия одного и того же справочника и по дебету и по кредиту
@@ -1761,7 +1759,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.itog = toper.record().value("итоги").toString();
         toperT.freePrv = toper.record().value("независим").toBool();
         toperT.attributes = toper.record().value("атрибуты").toBool();
-        toperT.docattributes = toper.record().value("докатрибуты").toBool();
+        toperT.docattributes = docAttr;
         topersList->append(toperT);
         toper.next();
     }
@@ -2611,7 +2609,8 @@ bool DBFactory::execCommands()
 
     if (commands.count() > 1)
         commitTransaction();
-    commands.clear();
+
+    clearCommands();
 
     return true;
 }

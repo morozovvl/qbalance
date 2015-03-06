@@ -17,17 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QKeyEvent>
+#include "myprogressdialog.h"
 
-#ifndef PROGRESSBAR_H
-#define PROGRESSBAR_H
 
-#include <QDialog>
-
-class ProgressBar : public QDialog
+MyProgressDialog::MyProgressDialog(QString title, QWidget *parent): QProgressDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit ProgressBar(QWidget *parent = 0);
-};
+    setWindowTitle(title);
+    setModal(true);
+    setFixedWidth(600);
+    setCancelButton(NULL);
+    connect(this , SIGNAL(canceled()),this,SLOT(cancel()));
+}
 
-#endif // PROGRESSBAR_H
+
+void MyProgressDialog::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Escape)
+    {
+        event->ignore();
+    }
+    else
+        QProgressDialog::keyPressEvent(event);
+}

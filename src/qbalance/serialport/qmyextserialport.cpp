@@ -152,7 +152,14 @@ void QMyExtSerialPort::appendLog(bool out, QString str)
         writeLog();         // Запишем предыдущий журнал
         outLog = out;
     }
-    log.append(str);
+    while (str.length() > 0)
+    {
+        QString s = str.left(40) + " ";
+        str.remove(0, 40);
+        for (int i = s.length() / 2 - 1; i > 0; i--)
+            s.insert(i*2, " ");
+        log.append(s);
+    }
 }
 
 
@@ -163,10 +170,13 @@ void QMyExtSerialPort::writeLog(QString str)
         TApplication::debug(4, str);
     else
     {
-        if (!outLog)
-            TApplication::debug(4, " <-- " + log);
-        else
-            TApplication::debug(4, " --> " + log);
+        if (log.length() > 0)
+        {
+            if (!outLog)
+                TApplication::debug(4, "<- " + log);
+            else
+                TApplication::debug(4, "-> " + log);
+        }
         // Очистим журнал
         log = "";
     }
