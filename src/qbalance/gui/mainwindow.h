@@ -54,6 +54,7 @@ private slots:
       void saveCustomization();
       void printReportWithoutCleaning();
       void printReportWithCleaning();
+      void continuePrint();
       void cancelCheck();
       void printEKLZReport();
       void newRecord();
@@ -80,6 +81,8 @@ private:
       QMenu* dictMenu;
       QMenu* operMenu;
       QMenu* reportMenu;
+      QMenu* serviceMenu;
+      QMenu* frMenu;
       QMenu* infoMenu;
 
       QToolBar* editToolBar;
@@ -99,6 +102,7 @@ private:
       QAction* saveCustomAct;
       QAction* printReportWithoutCleaningAct;
       QAction* printReportWithCleaningAct;
+      QAction* continuePrintAct;
       QAction* cancelCheckAct;
       QAction* printEKLZReportAct;
       QAction* exitAct;

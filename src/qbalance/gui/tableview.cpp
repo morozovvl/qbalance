@@ -554,6 +554,7 @@ void TableView::readSettings()
     QSettings settings;
     bool readedFromEnv = true;  // Предположим, что удастся прочитать конфигурацию из окружения
     parent->readSettings();
+
     if (settings.status() == QSettings::NoError)
     {
         settings.beginGroup(parent->getConfigName());
@@ -574,6 +575,7 @@ void TableView::readSettings()
         settings.endArray();
         settings.endGroup();
     }
+
     if (!readedFromEnv)
     {
         // Если информация о ширине столбца отстутствует в окружении программы, попытаемся прочитать ее из базы
@@ -587,7 +589,7 @@ void TableView::readSettings()
         {
             if (config.record().value("group").toString() == parent->getConfigName())
             {
-                values.insert(config.value(0).toString(), config.value(1).toInt());
+                values.insert(config.record().value("name").toString(), config.record().value("value").toInt());
             }
             config.next();
         }
@@ -597,7 +599,7 @@ void TableView::readSettings()
             QString name = QString("grid/%1/width").arg(i);
             if (values.contains(name))
             {
-                int width = values.value(name, 100);
+                int width = values.value(name);
                 setColumnWidth(i, width);
             }
             else
@@ -630,13 +632,14 @@ void TableView::writeSettings()
             settings.endGroup();
 
             // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
-            if (app->getSaveFormConfigToDb())
+            if (app->isSA() && app->getSaveFormConfigToDb())
             {
                 app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + parent->getConfigName() + "...");
                 for (int i = 0; i < columnCount; i++)
                 {
                     int width = columnWidth(i);
-                    db->setConfig(parent->getConfigName(), QString("grid/%1/width").arg(i), QString("%1").arg(width));
+                    if (width > 0)
+                        db->setConfig(parent->getConfigName(), QString("grid/%1/width").arg(i), QString("%1").arg(width));
                 }
                 app->showMessageOnStatusBar("");
             }

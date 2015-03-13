@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QTextEdit>
 #include "mainwindow.h"
 
+class TApplication;
 
 class MessageWindow : public QObject
 {
@@ -38,6 +39,10 @@ public slots:
 private:
     QTextEdit*      textEditor;
     MyMdiSubWindow* subWindow;
+    TApplication*    app;
+
+    void readSettings();
+    void writeSettings();
 };
 
 

@@ -394,15 +394,14 @@ DriverFR::~DriverFR()
 }
 
 
-bool DriverFR::open(int port, int rate, int password, QString ipAddress, int ipPort)
+bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int ipPort)
 {
     // Установление связи с ккм
-    fr.ComPortNumber = port;
     fr.BaudRate      = rate;
     fr.Timeout       = 50;
     fr.Password      = password;
 
-    serialPort = new QMyExtSerialPort(devName(fr.ComPortNumber), QextSerialPort::Polling);
+    serialPort = new QMyExtSerialPort(port, QextSerialPort::Polling);
     if (serialPort != 0)
     {
         // Сначала поищем фискальник на этом компьютере
@@ -443,20 +442,6 @@ void DriverFR::close()
     connected = false;
     serialPort->close();
     delete serialPort;
-}
-
-
-QString DriverFR::devName(int number)
-{
-    if (number > 0 && number < 10)
-    {
-#ifdef Q_OS_WIN32
-        return QString("COM%1").arg(number);
-#else
-        return QString("/dev/ttyUSB%1").arg(number - 1);
-#endif
-    }
-    return "";
 }
 
 

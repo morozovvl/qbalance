@@ -61,13 +61,14 @@ enum  ReportTemplateTypes
 
 struct ConfigVars {
     QString         barCodeReaderPort;          // COM-порт сканера штрих кодов
-    int             frDriverPort;               // COM-порт фискального регистратора
+    QString         frDriverPort;               // COM-порт фискального регистратора
     int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
     int             frDriverPassword;
     QString         cardReaderPrefix;           // Префикс магнитной карты
     int             localPort;                  // Порт, по которому программа принимает соединения
     QString         remoteHost;                 // Адрес удаленного хоста, к которому будет пытаться соединиться программа
     int             remotePort;                 // Порт удаленного хоста, к которому будет пытаться соединиться программа
+    bool            saveFormConfigToDB;
 };
 
 
@@ -136,7 +137,7 @@ public:
     virtual void close();
 
     int getReportTemplateType() { return reportTemplateType; }
-    bool getSaveFormConfigToDb() { return false; }
+    bool getSaveFormConfigToDb() { return config.saveFormConfigToDB; }
     QString getReportTemplateExt();
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
@@ -167,6 +168,8 @@ public:
     void printReportWithoutCleaning();
     void runScript(QString);
     qint64  getApplicationPID() { return pid; }
+
+    ConfigVars* getConfig() { return &config; }
 
 signals:
     void cardCodeReaded(QString);
@@ -205,7 +208,6 @@ private:
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");
-
 };
 
 #endif

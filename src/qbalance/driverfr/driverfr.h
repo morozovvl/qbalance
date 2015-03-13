@@ -180,7 +180,6 @@ public:
     double Change;
     int    CheckIsClosed;
     int    CheckIsMadeOut;
-    int    ComPortNumber;
     double ContentsOfCashRegister;
     int    ContentsOfOperationRegister;
     int    CurrentDozeInMilliliters;
@@ -310,7 +309,6 @@ public:
     Q_PROPERTY(double Change READ getChange)
     Q_PROPERTY(int    CheckIsClosed READ getCheckIsClosed WRITE setCheckIsClosed)
     Q_PROPERTY(int    CheckIsMadeOut READ getCheckIsMadeOut WRITE setCheckIsMadeOut)
-    Q_PROPERTY(int    ComPortNumber READ getComPortNumber WRITE setComPortNumber)
     Q_PROPERTY(double ContentsOfCashRegister READ getContentsOfCashRegister)
     Q_PROPERTY(int    ContentsOfOperationRegister READ getContentsOfOperationRegister)
     Q_PROPERTY(int    CurrentDozeInMilliliters READ getCurrentDozeInMilliliters WRITE setCurrentDozeInMilliliters)
@@ -444,7 +442,6 @@ public:
     double getChange() { return Change; }
     int    getCheckIsClosed() { return CheckIsClosed; }
     int    getCheckIsMadeOut() { return CheckIsMadeOut; }
-    int    getComPortNumber() { return ComPortNumber; }
     double getContentsOfCashRegister() { return ContentsOfCashRegister; }
     int    getContentsOfOperationRegister() { return ContentsOfOperationRegister; }
     int    getCurrentDozeInMilliliters() { return CurrentDozeInMilliliters; }
@@ -572,7 +569,6 @@ public:
     void setBarCode(QString a) { qstrncpy(BarCode, a.toLocal8Bit().data(), 13); }
     void setCheckIsClosed(int a) { CheckIsClosed = a; }
     void setCheckIsMadeOut(int a) { CheckIsMadeOut = a; }
-    void setComPortNumber(int a) { ComPortNumber = a; }
     void setCurrentDozeInMilliliters(int a) { CurrentDozeInMilliliters = a; }
     void setCurrentDozeInMoney(double a) { CurrentDozeInMoney = a; }
     void setCutType(int a) { CutType = a; }
@@ -660,7 +656,7 @@ class DriverFR : public QObject
 public:
     DriverFR(QObject *parent = 0);
     ~DriverFR();
-    bool open(int, int, int, QString, int);
+    bool open(QString, int, int, QString, int);
     void close();
     Q_INVOKABLE QVariant getProperty(QString name);
     Q_INVOKABLE bool setProperty(QString name, QVariant value);
@@ -769,7 +765,6 @@ public:
 
 private:
 
-    QString devName(int);
     int checkState();
     unsigned short int readByte(int = 0);
     int readBytes(unsigned char *, int);

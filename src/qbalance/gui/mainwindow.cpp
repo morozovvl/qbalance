@@ -130,20 +130,32 @@ void MainWindow::createMenus()
     reportAct = reportMenu->addAction(QObject::trUtf8("&Отчеты"));
     connect(reportAct, SIGNAL(triggered()), this, SLOT(showReports()));
 
-    printReportWithoutCleaningAct = reportMenu->addAction(QObject::trUtf8("Снять отчет без гашения"));
+    serviceMenu = menuBar()->addMenu(QObject::trUtf8("&Сервис"));
+    frMenu = serviceMenu->addMenu(QObject::trUtf8("&Фискальный регистратор"));
+
+    printReportWithoutCleaningAct = frMenu->addAction(QObject::trUtf8("Снять отчет без гашения"));
     connect(printReportWithoutCleaningAct, SIGNAL(triggered()), this, SLOT(printReportWithoutCleaning()));
 
-    printReportWithCleaningAct = reportMenu->addAction(QObject::trUtf8("Снять отчет с гашением"));
+    printReportWithCleaningAct = frMenu->addAction(QObject::trUtf8("Снять отчет с гашением"));
     connect(printReportWithCleaningAct, SIGNAL(triggered()), this, SLOT(printReportWithCleaning()));
 
-    cancelCheckAct = reportMenu->addAction(QObject::trUtf8("Отмена чека"));
+    continuePrintAct = frMenu->addAction(QObject::trUtf8("Продолжить печать"));
+    connect(continuePrintAct, SIGNAL(triggered()), this, SLOT(continuePrint()));
+
+    cancelCheckAct = frMenu->addAction(QObject::trUtf8("Отмена чека"));
     connect(cancelCheckAct, SIGNAL(triggered()), this, SLOT(cancelCheck()));
 
-    printEKLZReportAct = reportMenu->addAction(QObject::trUtf8("Снять отчет ЭКЛЗ за последнюю не закрытую смену"));
+    printEKLZReportAct = frMenu->addAction(QObject::trUtf8("Снять отчет ЭКЛЗ за последнюю не закрытую смену"));
     connect(printEKLZReportAct, SIGNAL(triggered()), this, SLOT(printEKLZReport()));
 
-//    configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
-//    connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
+    showMessageWindow = serviceMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
+    connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
+
+    saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
+    connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
+
+    configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
+    connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
 
     infoMenu = menuBar()->addMenu(QObject::trUtf8("&Помощь"));
 
@@ -152,12 +164,6 @@ void MainWindow::createMenus()
 
     aboutQtAct = infoMenu->addAction(QObject::trUtf8("О &библиотеке Qt..."));
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-
-    showMessageWindow = infoMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
-    connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
-
-    saveCustomAct = infoMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
-    connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
 
     exitAct = menuBar()->addAction(QObject::trUtf8("&Выход"));
     connect(exitAct, SIGNAL(triggered()), this, SLOT(closeEvent()));
@@ -211,6 +217,12 @@ void MainWindow::printReportWithoutCleaning()
 void MainWindow::printReportWithCleaning()
 {
     TApplication::exemplar()->runScript("printReportWithCleaning");
+}
+
+
+void MainWindow::continuePrint()
+{
+    TApplication::exemplar()->runScript("continuePrint");
 }
 
 

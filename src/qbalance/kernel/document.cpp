@@ -196,7 +196,7 @@ void Document::calcItog()
         }
     }
 
-    parent->setValue("сумма", itog);    // итог может быть не корректным
+    parent->setValue("СУММА", itog);    // итог может быть не корректным
     showItog();
 }
 
@@ -255,8 +255,6 @@ void Document::openLocalDictionaries()
 bool Document::add()
 {
     bool result = false;
-
-
     if ((checkConstDicts() && scriptEngine->eventBeforeAddString() && showNextDict()) || getIsSingleString())    // Показать все справочники, которые должны быть показаны перед добавлением новой записи
     {
         if (topersList->at(0).attributes && topersList->at(0).number == 0)

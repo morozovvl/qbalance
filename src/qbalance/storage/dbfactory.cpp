@@ -199,7 +199,9 @@ bool DBFactory::open(QString login, QString password)
         return true;
     }
     else
+    {
         setError(db->lastError().text());
+    }
     return false;
 }
 
@@ -270,7 +272,7 @@ void DBFactory::loadSystemTables()
     reloadColumnProperties();
 
     config.clear();
-    config = execQuery("SELECT name, value FROM configs;");
+    config = execQuery("SELECT \"group\", \"name\", \"value\" FROM configs;");
 
     accounts.clear();
     accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
@@ -411,7 +413,7 @@ QHash<int, UserInfo> DBFactory::getUserList()
 {
     QHash<int, UserInfo> result;
     clearError();
-    QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_пользователи")));
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("пр_пользователи")));
     while (query.next())
     {
         UserInfo u;
@@ -1738,6 +1740,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
 {
     clearError();
     bool docAttr = isTableExists(QString("докатрибуты%1").arg(oper));
+    bool attr = isTableExists(QString("атрибуты%1").arg(oper));
     QSqlQuery toper = execQuery(QString("SELECT * FROM %1 WHERE %2=%3 ORDER BY %4;").arg(getObjectNameCom("vw_топер")).arg(getObjectNameCom("vw_топер.опер")).arg(oper).arg(getObjectNameCom("vw_топер.номер")));
     toper.first();
     // Сначала составим список справочников и проверим на предмет присутствия одного и того же справочника и по дебету и по кредиту
@@ -1758,7 +1761,7 @@ void DBFactory::getToperData(int oper, QList<ToperType>* topersList)
         toperT.isSingleString = toper.record().value("однаоперация").toBool();
         toperT.itog = toper.record().value("итоги").toString();
         toperT.freePrv = toper.record().value("независим").toBool();
-        toperT.attributes = toper.record().value("атрибуты").toBool();
+        toperT.attributes = attr;
         toperT.docattributes = docAttr;
         topersList->append(toperT);
         toper.next();

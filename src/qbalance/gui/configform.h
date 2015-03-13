@@ -20,8 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef CONFIGFORM_H
 #define CONFIGFORM_H
 #include <QFrame>
+#include <QComboBox>
 #include <QTreeWidgetItem>
 #include "form.h"
+
+class TApplication;
 
 class ConfigForm : public Form
 {
@@ -30,15 +33,26 @@ public:
     ConfigForm(QObject* parent = 0);
     ~ConfigForm();
     virtual bool open(QWidget* pwgt = 0);
+
 public slots:
-    void dispatch(QTreeWidgetItem*, int);
+    virtual void cmdOk();
+
 private:
+    TApplication* app;
     QFrame* frame;
+
+    QLineEdit* lnPortName;
+    QComboBox* lnBoud;
+    QLineEdit* lnPort;
+    QLineEdit* lnAddress;
+
+    void dispatch(QTreeWidgetItem*, int);
     void dictAdd();
     void dictProperties();
     void dictColumns();
     void dictPermissions();
     void pictures();
+    void fr();
 };
 
 #endif // CONFIGFORM_H

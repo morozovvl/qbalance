@@ -29,11 +29,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {
+    app->TApplication::exemplar();
+
+    lnPortName = new QLineEdit();
+    lnBoud = new QComboBox();
+    lnPort = new QLineEdit();
+    lnAddress = new QLineEdit();
 }
 
 
 ConfigForm::~ConfigForm()
 {
+    delete lnPortName;
+    delete lnBoud;
+    delete lnPort;
+    delete lnAddress;
 }
 
 
@@ -60,6 +70,7 @@ bool ConfigForm::open(QWidget* pwgt) {
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "32"));
 
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Картинки") << "40");
+        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Фискальный регистратор") << "50");
 
         connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(dispatch(QTreeWidgetItem*, int)));
         treeWidget->setHeaderHidden(true);
@@ -92,6 +103,8 @@ void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
     case 12: dictPermissions();
                 break;
     case 40: pictures();
+                break;
+    case 50: fr();
                 break;
     }
 }
@@ -139,4 +152,59 @@ void ConfigForm::dictPermissions() {
 
 void ConfigForm::pictures()
 {
+}
+
+
+void ConfigForm::fr()
+{
+    QLayout* layout = frame->layout();
+    if (layout != 0)
+    {
+        delete layout;
+    }
+    QGridLayout* vLayout = new QGridLayout();
+
+    QLabel* lblPortName = new QLabel(QObject::trUtf8("COM порт:"));
+    lblPortName->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lnPortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblPortName, 0, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnPortName, 0, 1, Qt::AlignLeft);
+
+    QLabel* lblBoud = new QLabel(QObject::trUtf8("Скорость:"));
+    lblBoud->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lnBoud->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    lnBoud->addItem("2400");
+    lnBoud->addItem("4800");
+    lnBoud->addItem("9600");
+    lnBoud->addItem("19200");
+    lnBoud->addItem("38400");
+    lnBoud->addItem("57600");
+    lnBoud->addItem("115200");
+    vLayout->addWidget(lblBoud, 1, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnBoud, 1, 1, Qt::AlignLeft);
+
+    QLabel* lblPort = new QLabel(QObject::trUtf8("Порт сервера ФР:"));
+    lblPort->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lnPort->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblPort, 2, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnPort, 2, 1, Qt::AlignLeft);
+
+    QLabel* lblAddress = new QLabel(QObject::trUtf8("IP адрес сервера ФР:"));
+    lblAddress->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblAddress, 3, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnAddress, 3, 1, Qt::AlignLeft);
+
+    frame->setLayout(vLayout);
+
+    lnPortName->setText(app->getConfig()->frDriverPort);
+    lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
+    lnPort->setText(QString(app->getConfig()->localPort));
+    lnAddress->setText(app->getConfig()->remoteHost);
+}
+
+
+void ConfigForm::cmdOk()
+{
+    qDebug() << frame;
 }

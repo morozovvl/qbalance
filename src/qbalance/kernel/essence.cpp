@@ -149,6 +149,7 @@ QVariant Essence::getValue(QString n, int row)
 
 void Essence::setValue(QString n, QVariant value, int row)
 {
+    n = n.toUpper();
     int fieldColumn = tableModel->fieldIndex(n);
     if (fieldColumn >= 0)
     {
@@ -158,7 +159,23 @@ void Essence::setValue(QString n, QVariant value, int row)
             oldIndex = grdTable->currentIndex();
 
         index = tableModel->index((row >= 0 ? row : grdTable->currentIndex().row()), fieldColumn);
-        tableModel->setData(index, value);
+
+        for (int i = 0; i < columnsProperties.count(); i++)
+        {
+            if (columnsProperties.at(i).column == n)
+            {
+                if (columnsProperties.at(i).type.toUpper() == "NUMERIC" && (value.toDouble() - value.toInt()) != 0)
+                {
+                    double val = value.toDouble();
+                    int precision = columnsProperties.at(i).precision;
+                    QString str = QString().setNum(val, 'f', precision);
+                    tableModel->setData(index, str.toDouble());
+                }
+                else
+                    tableModel->setData(index, value);
+                break;
+            }
+        }
 
         tableModel->submit(index);
 
@@ -386,17 +403,20 @@ void Essence::replyFinished(QNetworkReply* reply)
         {
             QString file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
             QByteArray array = reply->readAll();
-            app->saveFile(file, &array);
-            app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
-
-            if (copyTo.size() > 0)
-                app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
-
-            // Проверим, не нужно ли обновить фотографию
-            if (idValue == getValue(photoIdField).toString().trimmed())
+            if (array.size() > 0)
             {
-                emit photoLoaded();                 // Выведем фотографию на экран
-                scriptEngine->eventPhotoLoaded();
+                app->saveFile(file, &array);
+                app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
+
+                if (copyTo.size() > 0)
+                    app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+
+                // Проверим, не нужно ли обновить фотографию
+                if (idValue == getValue(photoIdField).toString().trimmed())
+                {
+                    emit photoLoaded();                 // Выведем фотографию на экран
+                    scriptEngine->eventPhotoLoaded();
+                }
             }
         }
     }
@@ -469,7 +489,7 @@ void Essence::hide()
         form->hide();
         afterHideFormEvent(form);
 
-        app->setActiveWindow(activeWidget);
+//        app->setActiveWindow(activeWidget);
     }
 }
 

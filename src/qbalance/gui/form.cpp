@@ -195,18 +195,27 @@ int Form::exec()
             parent->beforeShowFormEvent(parent->getForm());
 
         lSelected = false;
-        checkVisibility();
+//        checkVisibility();
         if (!autoSelect)
         {
+            QRect oldRect = formWidget->rect();
             if (subWindow != 0)
             {
+                int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
+                int y = (app->getMainWindow()->height() - subWindow->height()) / 2;
+                int w = subWindow->width();
+                int h = subWindow->height();
                 app->getMainWindow()->removeMdiWindow(subWindow);
                 subWindow = 0;
+                formWidget->setGeometry(x, y, w, h);
                 formWidget->setParent(app->getMainWindow());
                 formWidget->setWindowFlags(Qt::Dialog);
             }
             formWidget->exec();
             formWidget->done(0);
+            getSubWindow();
+//            if (subWindow != 0)
+//                subWindow->setGeometry(oldRect);
         }
         else
             cmdOk();
@@ -251,7 +260,10 @@ MyMdiSubWindow* Form::getSubWindow()
     if (app != 0 && !freeWindow)
     {
         if (subWindow == 0)
+        {
             subWindow = app->getMainWindow()->appendMdiWindow(formWidget);
+            subWindow->setGeometry(formWidget->rect());
+        }
         return subWindow;
     }
     return 0;
@@ -402,8 +414,8 @@ void Form::readSettings()
             {
                 if (config.record().value("group").toString() == configName)
                 {
-                    settingValues.remove(config.value(0).toString());
-                    settingValues.insert(config.value(0).toString(), config.value(1).toInt());
+                    settingValues.remove(config.record().value("name").toString());
+                    settingValues.insert(config.record().value("name").toString(), config.record().value("value").toInt());
                 }
                 config.next();
             }
@@ -439,13 +451,13 @@ void Form::writeSettings()
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
-    if (app->getSaveFormConfigToDb())
+    if (app->isSA() && app->getSaveFormConfigToDb())
     {
         app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
-        db->setConfig(configName, "x", QString("%1").arg(formWidget->geometry().x()));
-        db->setConfig(configName, "y", QString("%1").arg(formWidget->geometry().y()));
-        db->setConfig(configName, "width", QString("%1").arg(formWidget->geometry().width()));
-        db->setConfig(configName, "height", QString("%1").arg(formWidget->geometry().height()));
+        db->setConfig(configName, "x", QString("%1").arg(widget->geometry().x()));
+        db->setConfig(configName, "y", QString("%1").arg(widget->geometry().y()));
+        db->setConfig(configName, "width", QString("%1").arg(widget->geometry().width()));
+        db->setConfig(configName, "height", QString("%1").arg(widget->geometry().height()));
         app->showMessageOnStatusBar("");
     }
 }

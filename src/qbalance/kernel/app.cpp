@@ -86,11 +86,11 @@ void TApplication::initConfig()
 {
 #ifdef Q_OS_WIN32
     config.barCodeReaderPort = "COM3";                  // COM-порт сканера штрих кодов в Windows
-    config.frDriverPort = 3;                            // COM-порт фискального регистратора
-    config.frDriverBaudRate = 6;
+    config.frDriverPort = "COM1";                            // COM-порт фискального регистратора
+    config.frDriverBaudRate = 3;
 #else
     config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
-    config.frDriverPort = 1;                            // COM-порт фискального регистратора
+    config.frDriverPort = "/dev/ttyUSB0";                            // COM-порт фискального регистратора
     config.frDriverBaudRate = 6;
 #endif
     config.frDriverPassword = 30;
@@ -98,6 +98,7 @@ void TApplication::initConfig()
     config.localPort = 44444;
     config.remoteHost = "192.168.0.1";
     config.remotePort = 44444;
+    config.saveFormConfigToDB = true;
 }
 
 
@@ -206,11 +207,6 @@ bool TApplication::open() {
                         {
                             driverFR->Beep();       // То выдадим сигнал о подключении компьютера к фискальнику
 
-                            // При необходимости допечатаем чек
-                            if (driverFR->getProperty("ECRMode") == 8)
-                            {
-                                driverFR->ContinuePrint();
-                            }
                             driverFR->setShowProgressBar(true);     // Будем показывать прогресс при печати чека
                         }
                         driverFR->DisConnect();
@@ -225,6 +221,7 @@ bool TApplication::open() {
                     break;  // Выйдем из бесконечного цикла открытия БД
                 }
             }
+/*
             else if (result == -2)
                 {   // Произошла ошибка соединения с сервером
                 if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
@@ -232,6 +229,7 @@ bool TApplication::open() {
                     // Попытаемся создать новую БД
                     db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
             }
+*/
             else if (result == -1)      // Пользователь нажал кнопку Отмена
                 break;  // Выйдем из бесконечного цикла открытия БД
         }
@@ -720,5 +718,6 @@ void TApplication::saveCustomization()
         qDebug() << f;
     }
 }
+
 
 
