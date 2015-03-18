@@ -53,7 +53,10 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
 Form::~Form()
 {
     if (formWidget != 0)
-        delete formWidget;
+    {
+        if (defaultForm)
+            delete formWidget;
+    }
     toolTips.clear();
 }
 
@@ -198,7 +201,6 @@ int Form::exec()
 //        checkVisibility();
         if (!autoSelect)
         {
-            QRect oldRect = formWidget->rect();
             if (subWindow != 0)
             {
                 int x = (app->getMainWindow()->width() - subWindow->width()) / 2;

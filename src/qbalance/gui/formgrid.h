@@ -60,6 +60,7 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual void activateWidget();
     virtual void keyPressEvent(QKeyEvent*);
+    Q_INVOKABLE Picture* getPicture() { return picture; }
 
 public slots:
     virtual void cmdAdd();

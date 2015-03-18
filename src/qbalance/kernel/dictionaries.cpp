@@ -289,6 +289,7 @@ void Dictionaries::setForm(QString formName)
         form->close();
         delete form;
     }
+    closeScriptEngine();
 
     form = new FormGridSearch();
 
@@ -300,6 +301,7 @@ void Dictionaries::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список справочников (загрузить повторно с сервера)"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
+    openScriptEngine();
 }
 
 

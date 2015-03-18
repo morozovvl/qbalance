@@ -95,6 +95,7 @@ void Topers::view()
 
 void Topers::setForm()
 {
+    closeScriptEngine();
     form = new FormGridSearch();
 
     form->appendToolTip("buttonOk",         trUtf8("Открыть список документов"));
@@ -105,6 +106,7 @@ void Topers::setForm()
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список типовых операций (загрузить повторно с сервера)"));
 
     form->open(parentForm, this, getTagName());
+    openScriptEngine();
 }
 
 

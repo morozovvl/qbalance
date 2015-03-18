@@ -221,6 +221,7 @@ void Documents::setForm(QString formName)
         form->close();
         delete form;
     }
+    closeScriptEngine();
 
     form = new FormGrid();
 
@@ -231,6 +232,7 @@ void Documents::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName);
+    openScriptEngine();
 }
 
 

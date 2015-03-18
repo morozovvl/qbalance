@@ -167,7 +167,6 @@ public:
     void saveCustomization();
     void printReportWithoutCleaning();
     void runScript(QString);
-    qint64  getApplicationPID() { return pid; }
 
     ConfigVars* getConfig() { return &config; }
 
@@ -204,7 +203,6 @@ private:
 
     QHash<QString, QStringList>     arraysForPrint;
     TcpServer*              tcpServer;
-    qint64                  pid;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");

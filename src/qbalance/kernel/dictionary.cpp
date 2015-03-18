@@ -325,6 +325,7 @@ void Dictionary::setForm(QString formName)
         form->close();
         delete form;
     }
+    closeScriptEngine();
 
     form = new FormGridSearch();
 
@@ -336,6 +337,7 @@ void Dictionary::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
+    openScriptEngine();
 }
 
 
@@ -360,11 +362,6 @@ bool Dictionary::open()
                 break;
             }
         }
-
-        if (dictionaries != 0 && dictionaries->getDocument() != 0 && scriptEngine != 0)          // Если этот справочник является частью документа
-            scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
-
-        initFormEvent(form);
 
         tableModel->setTestSelect(true);
         query();

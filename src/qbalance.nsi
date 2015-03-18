@@ -23,7 +23,7 @@ ShowUninstDetails show
   InstallDir "$LOCALAPPDATA\QBalance"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\QBalance" ""
+;  InstallDirRegKey HKCU "Software\QBalance" ""
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel user
@@ -111,18 +111,28 @@ Section "QBalance" SecQBalance
   File ..\msjava.dll
   File ..\qt.conf
   File ..\initdb*.sql
+  File ..\qextserialport1.dll
 
-  SetOutPath "$INSTDIR\plugins"
-  File /r ..\plugins\*.dll
-  
-  SetOutPath "$INSTDIR\imageformats"
-  File /r ..\imageformats\*.dll
+  SetOutPath "$INSTDIR\plugins\platforms"
+  File /r ..\plugins\platforms\qminimal.dll
+  File /r ..\plugins\platforms\qoffscreen.dll
+  File /r ..\plugins\platforms\qwindows.dll
 
-  SetOutPath "$INSTDIR\doc"
-  File /r ..\doc\*.*
-  
-  SetOutPath "$INSTDIR\examples"
-  File /r ..\examples\*.*
+  SetOutPath "$INSTDIR\plugins\imageformats"
+  File /r ..\plugins\imageformats\qjpeg4.dll
+
+  SetOutPath "$INSTDIR\plugins\sqldrivers"
+  File /r ..\plugins\sqldrivers\qsqlpsql4.dll
+
+  SetOutPath "$INSTDIR\plugins\designer"
+  File /r ..\plugins\designer\plugins.dll
+  File /r ..\plugins\designer\plugins.dll
+
+  SetOutPath "$INSTDIR\plugins\script"
+  File /r ..\plugins\script\*.dll
+ 
+ ; SetOutPath "$INSTDIR\examples"
+ ; File /r ..\examples\*.*
 
   SetOutPath "$INSTDIR\resources"
   File /r ..\resources\*.*
@@ -136,7 +146,7 @@ Section "QBalance" SecQBalance
 SectionEnd
 
 
-Section "source" SecSource
+Section /o "source" SecSource
 
   SetOutPath "$INSTDIR\src"
   
@@ -146,6 +156,15 @@ Section "source" SecSource
   File /r *.*
 
 SectionEnd
+
+
+Section /o "doc" SecDoc
+
+  SetOutPath "$INSTDIR\doc"
+  File /r ..\doc\*.*
+
+SectionEnd
+
 
 
 ;--------------------------------
@@ -163,12 +182,14 @@ FunctionEnd
   ;Language strings
   LangString DESC_QBalance ${LANG_RUSSIAN} "Основная программа."
   LangString DESC_Source ${LANG_RUSSIAN} "Исходные тексты программы."
+  LangString DESC_Doc ${LANG_RUSSIAN} "Документация к программе."
   LangString DESC_RunProgram ${LANG_RUSSIAN} "Запустить программу"
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecQBalance} $(DESC_QBalance)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecSource} $(DESC_Source)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecDoc} $(DESC_Doc)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------

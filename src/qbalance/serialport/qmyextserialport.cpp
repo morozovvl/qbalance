@@ -23,8 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 TcpClient* QMyExtSerialPort::tcpClient = 0;
 
+
 QMyExtSerialPort::QMyExtSerialPort()
 {
+    remote = false;
     outLog = false;
     log = "";
 }
@@ -40,7 +42,7 @@ QMyExtSerialPort::~QMyExtSerialPort()
 qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromServer)
 {
     qint64 result = -1;
-    if (isOpen())
+    if (!remote)
     {
         result = QextSerialPort::writeData(data, maxSize);
         appendLog(true, QByteArray(data, maxSize).toHex().data());
@@ -62,7 +64,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromS
 qint64 QMyExtSerialPort::readData(char * data, qint64 maxSize, bool fromServer)
 {
     qint64 result = -1;
-    if (isOpen())
+    if (!remote)
     {
         result = QextSerialPort::readData(data, maxSize);
         appendLog(false, QByteArray(data, maxSize).toHex().data());
@@ -107,7 +109,7 @@ bool QMyExtSerialPort::isReadyDriverFR()
 bool QMyExtSerialPort::isLockedDriverFR()
 {
     bool result = false;
-    if (!isOpen() && tcpClient != 0 && tcpClient->isValid())
+    if (remote && tcpClient != 0 && tcpClient->isValid())
     {
         tcpClient->sendToServer("isLockedDriverFR");
         if (tcpClient->waitResult())
@@ -123,7 +125,7 @@ bool QMyExtSerialPort::isLockedDriverFR()
 bool QMyExtSerialPort::setLock(bool lock)
 {
     bool locked = false;
-    if (!isOpen() && tcpClient != 0 && tcpClient->isValid())
+    if (remote && tcpClient != 0 && tcpClient->isValid())
     {
         if (lock)
             tcpClient->sendToServer("setLockDriverFR(true)");
@@ -152,6 +154,15 @@ void QMyExtSerialPort::appendLog(bool out, QString str)
         writeLog();         // Запишем предыдущий журнал
         outLog = out;
     }
+    // Удалим лидирующие нули
+    while (str.length() > 0)
+    {
+        if (str.left(2) == "00")
+            str.remove(0, 2);
+        else
+            break;
+    }
+    // Оставшуюся значимую часть запишем в журнал
     while (str.length() > 0)
     {
         QString s = str.left(40) + " ";

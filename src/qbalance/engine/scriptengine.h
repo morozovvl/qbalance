@@ -82,6 +82,8 @@ public:
     void eventCardCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
     static bool loadScript(QString);
+    void   showScriptError(QString);
+
 
 protected:
     QHash<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
@@ -98,7 +100,6 @@ private:
     TApplication*       app;
     static QStringList  loadedScripts;                  // Список загруженных с сервера скриптов
 
-    void                showScriptError(QString);
 };
 
 

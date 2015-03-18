@@ -46,6 +46,7 @@ public:
     Q_INVOKABLE void setPhotoWindowTitle(QString);
     void        setIsBig(bool big) { isBigPicture = big; }
     void        setForm(FormGrid* f = 0) { form = f; }
+    bool        isPictureExist() { return pictureExist; }
 
 protected:
     QString pictureDrawn;
@@ -59,6 +60,7 @@ private:
     int                         pictSize;
     QRect                       bigPictRect;
     bool                        isBigPicture;
+    bool                        pictureExist;       // Картинка существует и отображается
     QString                     photoFileName;
     QString                     photoWindowTitle;
 };

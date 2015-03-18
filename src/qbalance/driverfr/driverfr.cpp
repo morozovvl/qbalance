@@ -396,6 +396,7 @@ DriverFR::~DriverFR()
 
 bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int ipPort)
 {
+    bool result = false;
     // Установление связи с ккм
     fr.BaudRate      = rate;
     fr.Timeout       = 50;
@@ -411,29 +412,35 @@ bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int
         serialPort->setParity(PAR_NONE);
         serialPort->setDataBits(DATA_8);
         serialPort->setStopBits(STOP_2);
-        if (serialPort->open(QIODevice::ReadWrite))
+        if (serialPort->open(QIODevice::ReadWrite) && Connect())
         {
+            Beep();
             serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
             serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
-            return true;
+            DisConnect();
+            result = true;
         }
-
-        // а теперь поищем на удаленном, если указан его IP
-        if (ipAddress.size() > 0)
+        else
         {
-            serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
-            app->timeOut(1000);
-            if (serialPort->getTcpClient()->isValid())
+            // а теперь поищем на удаленном, если указан его IP
+            if (ipAddress.size() > 0)
             {
-                remote = true;
-                return true;                                            // тогда все нормально
-            }
-            serialPort->closeTcpClient();                               // иначе закроем TCP клиент
+                serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
+                app->timeOut(1000);
+                if (serialPort->getTcpClient()->isValid())
+                {
+                    remote = true;
+                    result = true;                                            // тогда все нормально
+                }
+                else
+                    serialPort->closeTcpClient();                               // иначе закроем TCP клиент
                                                                         // и все плохо
-                                                                        // к фискальнику не удалось подсоединиться
+            }                                                        // к фискальнику не удалось подсоединиться
         }
+        if (result)
+            serialPort->setRemote(remote);
     }
-    return false;
+    return result;
 }
 
 
@@ -750,6 +757,7 @@ bool DriverFR::Connect()
             }
             if (result)
             {
+                serialPort->writeLog();
                 if (GetECRStatus() != 0)
                     result = false;
                 else if (TApplication::debugMode() == 4)
@@ -764,7 +772,9 @@ bool DriverFR::Connect()
             }
         }
     }
-    TApplication::debug(4, QString("locked=%1").arg(locked));
+    if (!result)
+        DisConnect();
+//    TApplication::debug(4, QString("locked=%1").arg(locked));
     return result;
 }
 
@@ -781,7 +791,7 @@ void DriverFR::DisConnect()
         locked = false;
     else
         locked = false;
-    TApplication::debug(4, QString("locked=%1").arg(locked));
+//    TApplication::debug(4, QString("locked=%1").arg(locked));
 }
 
 
@@ -1111,7 +1121,6 @@ int DriverFR::GetECRStatus()
 //-----------------------------------------------------------------------------
 int DriverFR::GetDeviceMetrics()
 {
-  int len  = 0;
   parameter  p;
   answer     a;
   p.len    = 1;
@@ -1122,7 +1131,6 @@ int DriverFR::GetDeviceMetrics()
   if (readAnswer(&a) < 0) return -1;
   if (a.buff[0] != GET_DEVICE_METRICS) return -1;
   if (errHand(&a)) return  fr.ResultCode;
-  len = a.len - 7;
   fr.UMajorType            = evalint((unsigned char*)&a.buff + 2, 1);
   fr.UMinorType            = evalint((unsigned char*)&a.buff + 3, 1);
   fr.UMajorProtocolVersion = evalint((unsigned char*)&a.buff + 4, 1);

@@ -111,6 +111,13 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->setEssence(parent);
         }
         picture = (Picture*)formWidget->findChild("picture");
+
+        // Для всех картинок установим указатель на приложение
+        foreach(QWidget* wid, formWidget->findChildren<QWidget*>())
+        {
+            if (wid->metaObject()->className() == "Picture")
+                ((Picture*)wid)->setApp(app);
+        }
     }
 
     if (grdTable != 0)

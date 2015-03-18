@@ -40,6 +40,7 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
     photoWindowTitle = "";
     app = 0;
     form = 0;
+    pictureExist = false;
 }
 
 
@@ -72,9 +73,15 @@ void Picture::show(QString fileName) {
 void Picture::paintEvent(QPaintEvent*) {
     QImage image(size(), QImage::Format_ARGB32_Premultiplied);
     if (photoFileName.size() > 0)
+    {
         image.load(photoFileName);
+        pictureExist = true;
+    }
     else
+    {
         image.load(":noimage");
+        pictureExist = false;
+    }
     image = image.scaled(size(), Qt::KeepAspectRatio);
     QPainter painter(this);
     painter.setClipping(false);

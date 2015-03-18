@@ -118,11 +118,6 @@ void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
         bool result = TApplication::exemplar()->getDrvFR()->getSerialPort()->isOpen();
         sendToClient(pClientSocket, (result ? "true" : "false"));
     }
-    else if (str.indexOf("getApplicationPID") == 0)
-    {
-        qint64 pid = TApplication::exemplar()->getApplicationPID();
-        sendToClient(pClientSocket, QString("%1").arg(pid));
-    }
     else if (str.indexOf("isLockedDriverFR") == 0)
     {
         bool result = TApplication::exemplar()->getDrvFR()->isLocked();

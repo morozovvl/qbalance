@@ -81,6 +81,7 @@ public:
     Q_INVOKABLE virtual void        lock(bool = true);
     virtual bool isLocked() { return locked; }
     Q_INVOKABLE FormGridSearch* getForm() { return (FormGridSearch*)form; }
+    Q_INVOKABLE bool isPictureExist() { return form->getPicture()->isPictureExist(); }
 
 
 protected:

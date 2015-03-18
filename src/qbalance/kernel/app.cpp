@@ -86,11 +86,11 @@ void TApplication::initConfig()
 {
 #ifdef Q_OS_WIN32
     config.barCodeReaderPort = "COM3";                  // COM-порт сканера штрих кодов в Windows
-    config.frDriverPort = "COM1";                            // COM-порт фискального регистратора
+    config.frDriverPort = "COM1";                       // COM-порт фискального регистратора
     config.frDriverBaudRate = 3;
 #else
     config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
-    config.frDriverPort = "/dev/ttyUSB0";                            // COM-порт фискального регистратора
+    config.frDriverPort = "/dev/ttyS0";                 // COM-порт фискального регистратора
     config.frDriverBaudRate = 6;
 #endif
     config.frDriverPassword = 30;
@@ -159,10 +159,7 @@ bool TApplication::open() {
 //        formLoader->addPluginPath(applicationDirPath() + "/plugins");
 //        formLoader->setWorkingDirectory(getFormsPath());
 
-        pid = QCoreApplication::applicationPid();
-
         messagesWindow = new MessageWindow();
-
         tcpServer = new TcpServer(config.localPort, this);
         driverFR = new DriverFR(this);
 
@@ -179,7 +176,8 @@ bool TApplication::open() {
                 dictionaryList = new Dictionaries();
                 topersList = new Topers();
                 if (dictionaryList->open() && topersList->open())
-                {   // Удалось открыть спосок справочников и типовых операций
+                {
+                    // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();
 
@@ -200,22 +198,10 @@ bool TApplication::open() {
 
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
-                    if (driverFRisValid && driverFR->Connect())
-                    {
+                    if (driverFRisValid)
                         showMessageOnStatusBar("Найден фискальный регистратор.");
-                        if (!driverFR->isRemote())  // Если фискальник подсоединен к этому компьютеру
-                        {
-                            driverFR->Beep();       // То выдадим сигнал о подключении компьютера к фискальнику
-
-                            driverFR->setShowProgressBar(true);     // Будем показывать прогресс при печати чека
-                        }
-                        driverFR->DisConnect();
-                    }
                     else
-                    {
-                        driverFRisValid = false;
                         showMessageOnStatusBar("Фискальный регистратор не найден.");
-                    }
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -246,6 +232,7 @@ void TApplication::close()
         driverFR->close();
         delete driverFR;
     }
+
 
     delete tcpServer;
 
@@ -629,8 +616,8 @@ void TApplication::saveFileToServer(QString file, QString localFile, FileType ty
     {
         QByteArray array = file1.readAll();
         qulonglong localFileCheckSum = db->calculateCRC32(&array);
-        qulonglong removeFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, type, extend) : 0;
-        if (removeFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
+        qulonglong remoteFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, type, extend) : 0;
+        if (remoteFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
                                                         // предполагается, что локальный файл свежее того, который в базе
         {
             db->setFile(localFile, type, array, extend);      // Сохранить картинку в расширенную базу

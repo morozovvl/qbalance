@@ -773,7 +773,6 @@ bool Document::open()
     if (operNumber > 0 && Essence::open())
     {
         openLocalDictionaries();
-        initFormEvent(form);
         return true;
     }
     return false;
@@ -795,6 +794,7 @@ void Document::setForm(QString formName)
         form->close();
         delete form;
     }
+    closeScriptEngine();
 
     form = new FormDocument();
 
@@ -810,6 +810,7 @@ void Document::setForm(QString formName)
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
     form->open(parentForm, (Document*)this, formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
+    openScriptEngine();
 }
 
 

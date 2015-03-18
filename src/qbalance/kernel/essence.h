@@ -133,6 +133,7 @@ public:
     virtual bool        calculate();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
+    Q_INVOKABLE QScriptValue evaluateScript(QString);
 
 
 // Скриптовые события
@@ -167,7 +168,7 @@ protected:
     QString             idFieldName;
     QString             nameFieldName;
     FormGrid*           form;
-    Dictionaries*   dictionaries;
+    Dictionaries*       dictionaries;
     QPointer<TableView> grdTable;
     QWidget*            parentForm;
     ScriptEngine*       scriptEngine;
@@ -184,10 +185,11 @@ protected:
     bool                doSubmit;
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     bool                photoEnabled;
-    QStringList         filesSumChecked;                        // Список файлов, контрольная сумма которых уже проверена при просмотре, чтобы повторно ее не проверять
     QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
+    void                openScriptEngine();
+    void                closeScriptEngine();
 
 private:
     QString             photoPath;

@@ -219,7 +219,7 @@ public:
     QSqlQuery getAccounts() { return accounts; }
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
-    void setConfig(QString, QString, QString);
+    virtual void setConfig(QString, QString, QString);
     QSqlQuery getConfig() { return config; }
 
     // Функции для мастера создания новых (свойств старых) справочников

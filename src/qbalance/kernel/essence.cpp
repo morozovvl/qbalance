@@ -107,6 +107,35 @@ bool Essence::calculate()
 }
 
 
+QScriptValue Essence::evaluateScript(QString script)
+{
+    QScriptValue result;
+    if (scriptEngine != 0)
+    {
+        QRegExp rx("^\\D+.*\\(.*\\)$");
+        QRegExp argrx("\\(.*\\)$");
+
+        if (script.contains(rx))
+        {
+            QString sargs = script.mid(script.indexOf(argrx));
+            script = script.remove(argrx);
+            sargs = sargs.remove("(").remove(")");
+
+            QScriptValueList args;
+            args << QScriptValue(sargs);
+            result = scriptEngine->globalObject().property(script).call(QScriptValue(), args);
+        }
+        else
+            result = scriptEngine->globalObject().property(script);
+        if (scriptEngine->hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            scriptEngine->showScriptError(script);
+        }
+    }
+    return result;
+}
+
+
 QVariant Essence::getValue(QString n, int row)
 {
     QVariant result;
@@ -166,9 +195,17 @@ void Essence::setValue(QString n, QVariant value, int row)
             {
                 if (columnsProperties.at(i).type.toUpper() == "NUMERIC" && (value.toDouble() - value.toInt()) != 0)
                 {
-                    double val = value.toDouble();
+
+                    // Вся эта фигня ...
                     int precision = columnsProperties.at(i).precision;
+                    double val = value.toDouble();
+                    if (val > 0)
+                        val += 0.01/qPow(10, precision);
+                    else if (val < 0)
+                        val -= 0.01/qPow(10, precision);
                     QString str = QString().setNum(val, 'f', precision);
+                    // это бл... округление до заданного знака после запятой
+
                     tableModel->setData(index, str.toDouble());
                 }
                 else
@@ -302,68 +339,61 @@ QString Essence::getPhotoFile(QString copyTo)
             {
                 file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
                 localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
-                if (!filesSumChecked.contains(localFile))
-                {
-                    filesSumChecked.append(localFile);      // контрольная сумма файла проверена, больше проверять не будем
-                    if (!QFile(file).exists())
-                    {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
-                        // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                        if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
-                        {
-//                            app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                            QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                            if (picture.size() > 0)
-                            {   // Если удалось получить какую-то фотографию
-                                app->saveFile(file, &picture);
-                                if (copyTo.size() > 0)
-                                    app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
-                            }
+                if (!QFile(file).exists())
+                {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
+                    // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                    if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
+                    {
+//                        app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                        QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                        if (picture.size() > 0)
+                        {   // Если удалось получить какую-то фотографию
+                            app->saveFile(file, &picture);
+                            if (copyTo.size() > 0)
+                                app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                         }
-                        if (!QFile(file).exists())
-                        {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
-                            file = pictureUrl;
-                            // Если в скриптах указано, откуда брать фотографию
-                            if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                    }
+                    if (!QFile(file).exists())
+                    {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                        file = pictureUrl;
+                        // Если в скриптах указано, откуда брать фотографию
+                        if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                        {
+                            QUrl url(file);
+                            if (url.isValid())
                             {
-                                QUrl url(file);
-                                if (url.isValid())
+                                if (urls.count() <= 1000)
                                 {
-                                    if (urls.count() <= 1000)
-                                    {
-                                        // Если сетевой менеджер еще не подключен, то подключим его
-                                        if (m_networkAccessManager == 0)
-                                        {   // Вызывается только один раз, по необходимости загрузить фотографию
-                                            m_networkAccessManager = new QNetworkAccessManager(this);
-                                            connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-
-                                        }
-                                        if (m_networkAccessManager != 0)
-                                        {
-                                            urlId v = {idValue, copyTo};
-                                            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
-                                            QNetworkRequest m_request(url);
-                                            QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
-                                            if (reply->error() != QNetworkReply::NoError)
-                                            {
-                                               app->showMessageOnStatusBar(reply->errorString(), 3000);
-                                            }
-                                        }
+                                    // Если сетевой менеджер еще не подключен, то подключим его
+                                    if (m_networkAccessManager == 0)
+                                    {   // Вызывается только один раз, по необходимости загрузить фотографию
+                                        m_networkAccessManager = new QNetworkAccessManager(this);
+                                        connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
                                     }
-                                    else
-                                        app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
+                                    if (m_networkAccessManager != 0)
+                                    {
+                                        urlId v = {idValue, copyTo};
+                                        urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
+                                        QNetworkRequest m_request(url);
+                                        QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
+                                        if (reply->error() != QNetworkReply::NoError)
+                                           app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                    }
                                 }
                                 else
-                                    file = "";
+                                    app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
                             }
+                            else
+                                file = "";
                         }
                     }
-                    else
-                    {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        if (app->isSA())
-                            app->saveFileToServer(file, localFile, PictureFileType, true);
-                        if (copyTo.size() > 0)
-                            db->copyFile(localFile, PictureFileType, copyTo, true);
-                    }
+                }
+                else
+                {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
+                    if (app->isSA())
+                        app->saveFileToServer(file, localFile, PictureFileType, true);
+                    if (copyTo.size() > 0)
+                        db->copyFile(localFile, PictureFileType, copyTo, true);
                 }
             }
         }
@@ -384,7 +414,6 @@ void Essence::removePhoto()
         if (file.remove())
         {
             db->removeFile(localFile, PictureFileType, true);
-            filesSumChecked.removeAt(filesSumChecked.indexOf(localFile));
         }
     }
 }
@@ -446,7 +475,6 @@ bool Essence::remove(bool noAsk)
 int Essence::exec()
 {
     bool result;
-    filesSumChecked.clear();
     if (!opened)
         open();
     if (opened && form != 0)
@@ -465,7 +493,6 @@ int Essence::exec()
 
 void Essence::show()
 {
-    filesSumChecked.clear();
     if (!opened)
         open();
     if (opened && form != 0)
@@ -509,11 +536,6 @@ bool Essence::open()
     {
         setOrderClause();
         initForm();
-        if (scriptEngineEnabled && db->isFileExist(scriptFileName, ScriptFileType))
-        {
-            setScriptEngine();
-            evaluateEngine();
-        }
         return true;
     }
     return false;
@@ -555,6 +577,27 @@ void Essence::evaluateEngine()
 ScriptEngine* Essence::getScriptEngine()
 {
     return scriptEngine;
+}
+
+
+void Essence::openScriptEngine()
+{
+    if (scriptEngineEnabled && db->isFileExist(scriptFileName, ScriptFileType))
+    {
+        setScriptEngine();
+        evaluateEngine();
+        if (dictionaries != 0 && dictionaries->getDocument() != 0 && scriptEngine != 0)          // Если этот справочник является частью документа
+            scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
+
+        initFormEvent(form);
+    }
+}
+
+
+void Essence::closeScriptEngine()
+{
+    if (scriptEngine != 0)
+        delete scriptEngine;
 }
 
 
