@@ -76,6 +76,7 @@ Document::Document(int oper, Documents* par): Essence()
     lDeleteable = true;
     lUpdateable = true;
     isDictionary = false;
+    loading = false;
 }
 
 
@@ -224,6 +225,7 @@ void Document::openLocalDictionaries()
             }
             else
             {
+                sal->setMustShow(true);
                 mustShow.insert(sal->getTagName(), true);
                 sal->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
             }
@@ -239,6 +241,7 @@ void Document::openLocalDictionaries()
                 }
                 else
                 {
+                    dict->setMustShow(true);
                     mustShow.insert(dict->getTagName(), true);
                     dict->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
                 }
@@ -367,6 +370,18 @@ bool Document::remove(bool noAsk)
     else
         app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(app->getLogin()));
     return false;
+}
+
+
+void Document::load()
+{
+    loading = true;
+    // На время загрузки запретим просмотр и загрузку фотографий
+    bool photoEnabled = isPhotoEnabled();
+    setPhotoEnabled(false);
+    getScriptEngine()->eventImport(form);
+    setPhotoEnabled(photoEnabled);
+    loading = false;
 }
 
 

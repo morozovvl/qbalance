@@ -109,12 +109,14 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
         {
             if (dir.exists(*script))
             {
+                QString command;
                 QProcess proc;
                 QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
                 env.insert("PGPASSWORD", password);
                 env.insert("PGCLIENTENCODING", TApplication::encoding());
                 proc.setProcessEnvironment(env);
-                proc.start(QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName));
+                command = QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName);
+                proc.start(command);
 
                 lResult = proc.waitForStarted();
 
@@ -193,9 +195,6 @@ bool DBFactory::open(QString login, QString password)
         QString user_name = env.filter("USER=").at(0);
         user_name.replace("\"", "").replace("USER=", "");
 #endif
-        exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_host_name").arg(host_name));
-        exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_name").arg(user_name));
-
         return true;
     }
     else
@@ -2676,3 +2675,9 @@ QVariant DBFactory::getOstSum(QString acc, int id)
                                                                               0, 0);
 }
 
+
+void DBFactory::setSessionVariables()
+{
+    exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_host_name").arg(hostName));
+    exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_name").arg(currentLogin));
+}

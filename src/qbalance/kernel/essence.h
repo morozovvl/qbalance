@@ -66,6 +66,7 @@ public:
     Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     virtual void                        print(QString);                 // Печать
+    virtual void                        load() { ; }
 
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
@@ -148,6 +149,7 @@ public:
 
 // Прочие функции
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
+    Q_INVOKABLE         QString getLocalPhotoFile();
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
@@ -190,6 +192,8 @@ protected:
     virtual void        prepareSelectCurrentRowCommand();
     void                openScriptEngine();
     void                closeScriptEngine();
+    bool                isDocumentLoading();
+
 
 private:
     QString             photoPath;

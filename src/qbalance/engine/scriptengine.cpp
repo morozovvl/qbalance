@@ -44,11 +44,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "reportcontextfunctions.h"
 
 
-
 Q_DECLARE_METATYPE(Dialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
 
-QStringList ScriptEngine::loadedScripts;
+QHash<QString, QString>  ScriptEngine::loadedScripts;
+QString ScriptEngine::scriptFileName = "";
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
 
@@ -72,6 +72,17 @@ QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine) {
     if (engine->evaluate("table").isValid())
     {
         QScriptValue value = engine->evaluate(QString("table.getCurrentFieldName()"));
+        if (value.isValid())
+            return value;
+    }
+    return QScriptValue();
+}
+
+
+QScriptValue getRowCount(QScriptContext *, QScriptEngine* engine) {
+    if (engine->evaluate("table").isValid())
+    {
+        QScriptValue value = engine->evaluate(QString("table.getRowCount()"));
         if (value.isValid())
             return value;
     }
@@ -165,38 +176,26 @@ QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 
 
 QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
-    bool result = false;
+    QScriptValue result(false);
     if (context->argument(0).isString())
     {
         QString scriptFile = context->argument(0).toString();
-        QString localScript = TApplication::exemplar()->getScriptsPath() + scriptFile;
-        if (!QFile(localScript).exists())
+        QString script = ScriptEngine::loadScript(scriptFile);
+        if (script.size() > 0)
         {
-            QByteArray script = TApplication::exemplar()->getDBFactory()->getFile(scriptFile, ScriptFileType);
-            if (script.size() > 0)
-            {   // Если удалось получить какую-то фотографию
-                TApplication::exemplar()->saveFile(localScript, &script);
-            }
-        }
-        else if (TApplication::exemplar()->isSA())
-            TApplication::exemplar()->saveFileToServer(localScript, scriptFile, ScriptFileType);
-        if (ScriptEngine::loadScript(scriptFile))
-        {
-            QFile file(localScript);
-            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            QScriptContext *pc = context->parentContext();
+            context->setActivationObject(pc->activationObject());
+            context->setThisObject(pc->thisObject());
+            result = engine->evaluate(script);
+            if (engine->hasUncaughtException())
             {
-                QString script(file.readAll());
-                ((ScriptEngine*)engine)->evaluate(script);
-                file.close();
-                if (!engine->hasUncaughtException())
-                    return QScriptValue(result);
                 // Если в скриптах произошла ошибка
                 QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
                 TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
             }
         }
     }
-    return QScriptValue(result);
+    return result;
 }
 
 
@@ -518,23 +517,7 @@ ScriptEngine::~ScriptEngine()
 
 bool ScriptEngine::open(QString scriptFile)
 {
-    if (scriptFile.size() > 0)
-    {   // Если в параметрах дано имя файла
-        scriptFileName = scriptFile;
-        // Попытаемся сначала получить скрипты на сервере
-        script = QString(TApplication::exemplar()->getDBFactory()->getFile(scriptFileName, ScriptFileType));
-        if (script.size() == 0)
-        {   // Скрипты на сервере отсутствуют. Попытаемся загрузить локальные скрипты
-            QFile file(scriptFileName);
-            if (file.open(QIODevice::ReadOnly))
-            {   // Если существуют скрипты
-                // прочитаем и запустим их
-                QTextStream in(&file);
-                script = in.readAll();
-                file.close();
-            }
-        }
-    }
+    script = loadScript(scriptFile);
     loadScriptObjects();
     return true;
 }
@@ -599,6 +582,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
     globalObject().setProperty("app", newQObject(TApplication::exemplar()));
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
+    globalObject().setProperty("getRowCount", newFunction(getRowCount));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("setValue", newFunction(setValue));
@@ -641,6 +625,9 @@ bool ScriptEngine::evaluate()
         {   // Если в скриптах произошла ошибка
             errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
             app->getGUIFactory()->showError(errorMessage);
+            // Если произошла ошибка, то удалим ошибочные скрипты
+            loadedScripts.remove(scriptFileName);
+            script = "";
             return false;
         }
         else
@@ -943,11 +930,18 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
     {
         QScriptValueList args;
         args << newQObject(essence);
-        result = globalObject().property(eventName).call(QScriptValue(), args).toString();
+        QScriptValue res = globalObject().property(eventName).call(QScriptValue(), args);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
             result = "";
+        }
+        else
+        {
+            if (!res.isValid() || res.isUndefined())
+                result = "";
+            else
+                result = res.toString();
         }
     }
     return result;
@@ -1160,13 +1154,27 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 }
 
 
-bool ScriptEngine::loadScript(QString scriptFile)
+QString ScriptEngine::loadScript(QString scriptFile)
 {
+    QString result;
     if (!loadedScripts.contains(scriptFile))
     {
         QString scriptPath = TApplication::exemplar()->getScriptsPath();
-        Essence::getFile(scriptPath, scriptFile, ScriptFileType);
-        loadedScripts.append(scriptFile);
+        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+
+        QFile file(scriptPath + scriptFile);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QString script(file.readAll());
+            file.close();
+            loadedScripts.insert(scriptFile, script);
+            result = script;
+        }
     }
-    return true;
+    else
+        result = loadedScripts.value(scriptFile);
+    scriptFileName = scriptFile;
+    return result;
 }
+
+

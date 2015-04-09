@@ -81,7 +81,7 @@ public:
     void eventBarCodeReaded(QString);
     void eventCardCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
-    static bool loadScript(QString);
+    static QString loadScript(QString);
     void   showScriptError(QString);
 
 
@@ -93,13 +93,12 @@ protected:
 private:
     bool                scriptResult;
     QString             errorMessage;
-    QString             scriptFileName;
+    static QString      scriptFileName;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;
     TApplication*       app;
-    static QStringList  loadedScripts;                  // Список загруженных с сервера скриптов
-
+    static QHash<QString, QString>  loadedScripts;                  // Список и содержимое загруженных с сервера скриптов
 };
 
 

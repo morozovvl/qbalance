@@ -87,7 +87,7 @@ bool ConfigForm::open(QWidget* pwgt) {
         if (vbxLayout != 0) {
             vbxLayout->insertLayout(0, hLayout);
         }
-        app->setIcons(formWidget);
+//        app->setIcons(formWidget);
         return true;
     }
     return false;

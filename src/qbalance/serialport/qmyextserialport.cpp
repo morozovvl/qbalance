@@ -29,6 +29,7 @@ QMyExtSerialPort::QMyExtSerialPort()
     remote = false;
     outLog = false;
     log = "";
+    app = TApplication::exemplar();
 }
 
 
@@ -154,14 +155,16 @@ void QMyExtSerialPort::appendLog(bool out, QString str)
         writeLog();         // Запишем предыдущий журнал
         outLog = out;
     }
+
     // Удалим лидирующие нули
     while (str.length() > 0)
     {
-        if (str.left(2) == "00")
+        if (str.left(2) == "00" && log.size() == 0)
             str.remove(0, 2);
         else
             break;
     }
+
     // Оставшуюся значимую часть запишем в журнал
     while (str.length() > 0)
     {
@@ -176,17 +179,17 @@ void QMyExtSerialPort::appendLog(bool out, QString str)
 
 void QMyExtSerialPort::writeLog(QString str)
 {
-    // Запишем журнал
+    // Если задана строка, то запишем ее в журнал
     if (str.size() > 0)
-        TApplication::debug(4, str);
+        app->debug(4, str);
     else
     {
         if (log.length() > 0)
         {
             if (!outLog)
-                TApplication::debug(4, "<- " + log);
+                app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + " <- " + log, true);
             else
-                TApplication::debug(4, "-> " + log);
+                app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + " -> " + log, true);
         }
         // Очистим журнал
         log = "";

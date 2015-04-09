@@ -62,6 +62,7 @@ int GUIFactory::openDB()
         lastPort = db->getPort();
         if (db->open("test", "*"))
         {
+            db->setSessionVariables();
             PassWordForm* frm = new PassWordForm();
             QHash<int, UserInfo> users = db->getUserList();
             frm->open();

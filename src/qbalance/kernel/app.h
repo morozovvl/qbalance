@@ -63,6 +63,7 @@ struct ConfigVars {
     QString         barCodeReaderPort;          // COM-порт сканера штрих кодов
     QString         frDriverPort;               // COM-порт фискального регистратора
     int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
+    int             frDriverTimeOut;
     int             frDriverPassword;
     QString         cardReaderPrefix;           // Префикс магнитной карты
     int             localPort;                  // Порт, по которому программа принимает соединения
@@ -124,12 +125,12 @@ public:
     static QString debugFileName() { return QString("debug%1.log").arg(DebugMode);}
     static QString errorFileName() { return "error.log";}
     static QFile&  debugFile()     { return *DebugFile;}
-    static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss";}
+    static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
     static bool setDebugMode(const int& value);
 
-    Q_INVOKABLE static void debug(int, const QString&);
+    Q_INVOKABLE static void debug(int, const QString&, bool = false);
 
     static TApplication* exemplar();
 
@@ -163,6 +164,8 @@ public:
     void    initConfig();
     QString     findFileFromEnv(QString);
     Q_INVOKABLE void timeOut(int);
+    Q_INVOKABLE void startTimeOut(int);
+    Q_INVOKABLE bool isTimeOut() { return timeIsOut; }
 
     void saveCustomization();
     void printReportWithoutCleaning();
@@ -203,9 +206,14 @@ private:
 
     QHash<QString, QStringList>     arraysForPrint;
     TcpServer*              tcpServer;
+    QTimer                  timer;
+    bool                    timeIsOut;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");
+
+private slots:
+    void                    setTimeIsOut() { timeIsOut = true; }
 };
 
 #endif

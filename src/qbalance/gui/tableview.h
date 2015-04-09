@@ -51,6 +51,7 @@ public:
     void                close();
 
     void                setFormGrid(FormGrid* par) { parent = par; }
+    void                setParentWidget(QWidget* widget) { parentWidget = widget; }
     void                setEssence(Essence*);
     void                setPicture(Picture* pic) { picture = pic; }
     bool                columnIsReadOnly();

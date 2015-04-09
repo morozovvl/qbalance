@@ -32,7 +32,9 @@ public:
     Q_INVOKABLE int count() { return data->count(); }
     Q_INVOKABLE QVariant getValue(QString);
     Q_INVOKABLE void setValue(QString, QVariant);
-//    Q_INVOKABLE void sortTable(QString);    // сортировка контекста печати в разделе таблица по заданному полю
+    Q_INVOKABLE QHash<QString, QVariant>* getData() { return data; }
+    Q_INVOKABLE void removeValue(QString key);    // Удалить значение, ключ которого начинается с key
+//    Q_INVOKABLE void sortTable(QString);        // сортировка контекста печати в разделе таблица по заданному полю
 private:
     QHash<QString, QVariant>*    data;
 };

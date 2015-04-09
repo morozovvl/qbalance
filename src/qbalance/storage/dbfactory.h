@@ -272,6 +272,7 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, QString column);
     Q_INVOKABLE virtual QVariant getValue(QString command) { return getValue(command, 0, 0); }
     Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
+    void setSessionVariables();
 
 
 private:

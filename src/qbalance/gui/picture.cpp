@@ -52,15 +52,15 @@ Picture::~Picture()
 void Picture::setApp(TApplication* a)
 {
     app = a;
-    // Установим высоту и ширину картинки как 20% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
-    pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.2 / 2;
+    // Установим высоту и ширину картинки как 15% от среднего высоты и ширины экрана, чтобы картинка "адаптировалась" к размерам экрана
+    pictSize = (app->desktop()->width() + app->desktop()->height()) * 0.15 / 2;
     setFixedSize(pictSize, pictSize);
 }
 
 
 void Picture::setPhotoFileName(QString fileName)
 {
-    photoFileName = fileName.size() > 0 && QDir().exists(fileName) ? fileName : "";
+    photoFileName = fileName;
 }
 
 
@@ -71,23 +71,26 @@ void Picture::show(QString fileName) {
 
 
 void Picture::paintEvent(QPaintEvent*) {
-    QImage image(size(), QImage::Format_ARGB32_Premultiplied);
-    if (photoFileName.size() > 0)
-    {
-        image.load(photoFileName);
-        pictureExist = true;
-    }
-    else
-    {
-        image.load(":noimage");
-        pictureExist = false;
-    }
-    image = image.scaled(size(), Qt::KeepAspectRatio);
-    QPainter painter(this);
-    painter.setClipping(false);
-    painter.drawImage((this->width() - image.width()) / 2, (this->height() - image.height()) / 2, image);
-    painter.end();
-    pictureDrawn = photoFileName;
+//    if (pictureDrawn != photoFileName)
+//    {
+        QImage image(size(), QImage::Format_ARGB32_Premultiplied);
+        if (photoFileName.size() > 0 && QDir().exists(photoFileName))
+        {
+            image.load(photoFileName);
+            pictureExist = true;
+        }
+        else
+        {
+            image.load(":noimage");
+            pictureExist = false;
+        }
+        image = image.scaled(size(), Qt::KeepAspectRatio);
+        QPainter painter(this);
+        painter.setClipping(false);
+        painter.drawImage((this->width() - image.width()) / 2, (this->height() - image.height()) / 2, image);
+        painter.end();
+        pictureDrawn = photoFileName;
+//    }
 }
 
 

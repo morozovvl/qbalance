@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QRegExp>
+#include <QDebug>
 #include "reportcontext.h"
 
 
@@ -29,15 +31,31 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*
 
 QVariant ReportContext::getValue(QString tag)
 {
+    tag = tag.toLower();
     return data->value(tag);
 }
 
 
 void ReportContext::setValue(QString tag, QVariant val)
 {
+    tag = tag.toLower();
     if (data->contains(tag))
     {
         data->remove(tag);
     }
     data->insert(tag, val);
+}
+
+
+void ReportContext::removeValue(QString tag)
+{
+    tag = tag.toLower();
+    foreach (QString key, data->keys())
+    {
+        QRegExp rx("^" + tag + ".*$");
+        if (rx.exactMatch(key))
+        {
+            data->remove(key);
+        }
+    }
 }

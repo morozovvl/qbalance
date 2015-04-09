@@ -51,7 +51,7 @@ unsigned DriverFR::commlen[0x100] =
  255,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0x70 - 0x7f
   60, 60, 60, 60, 60, 71, 54, 54,  5,  5, 54, 54,  0,  0,  0,  0, // 0x80 - 0x8f
   61, 57, 52, 11, 12, 52,  7,  7,  7,  5, 13,  7,  0,  0,  7,  7, // 0x90 - 0x9f
-  13, 11, 12, 10, 10,  8,  7,  5,  0,  0,  0,  0,  0,  0,  0,  0, // 0xa0 - 0xaf
+  13, 11, 12, 10, 10,  8,  7,  5,  0,  0,  0,  0,  0,  5,  0,  0, // 0xa0 - 0xaf
    5,  0,  0,  5,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xb0 - 0xbf
   46,  7, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xc0 - 0xcf
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xd0 - 0xdf
@@ -394,12 +394,12 @@ DriverFR::~DriverFR()
 }
 
 
-bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int ipPort)
+bool DriverFR::open(QString port, int rate, int timeout, int password, QString ipAddress, int ipPort)
 {
     bool result = false;
     // Установление связи с ккм
     fr.BaudRate      = rate;
-    fr.Timeout       = 50;
+    fr.Timeout       = timeout;
     fr.Password      = password;
 
     serialPort = new QMyExtSerialPort(port, QextSerialPort::Polling);
@@ -408,19 +408,23 @@ bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int
         // Сначала поищем фискальник на этом компьютере
 
         serialPort->setBaudRate(LineSpeedVal[fr.BaudRate]);
+        serialPort->setTimeout(timeout);
         serialPort->setFlowControl(FLOW_OFF);
         serialPort->setParity(PAR_NONE);
         serialPort->setDataBits(DATA_8);
         serialPort->setStopBits(STOP_2);
-        if (serialPort->open(QIODevice::ReadWrite) && Connect())
+        if (serialPort->open(QIODevice::ReadWrite) && serialPort->lineStatus() != 0)
         {
-            Beep();
-            serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
-            serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
+            if (Connect())
+            {
+                Beep();
+                result = true;
+            }
+            else
+                result = false;
             DisConnect();
-            result = true;
         }
-        else
+        if (!result)
         {
             // а теперь поищем на удаленном, если указан его IP
             if (ipAddress.size() > 0)
@@ -430,7 +434,13 @@ bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int
                 if (serialPort->getTcpClient()->isValid())
                 {
                     remote = true;
-                    result = true;                                            // тогда все нормально
+                    serialPort->setRemote(remote);
+                    if (Connect())
+                    {
+                        result = true;
+                    }
+                    else
+                        DisConnect();
                 }
                 else
                     serialPort->closeTcpClient();                               // иначе закроем TCP клиент
@@ -438,7 +448,11 @@ bool DriverFR::open(QString port, int rate, int password, QString ipAddress, int
             }                                                        // к фискальнику не удалось подсоединиться
         }
         if (result)
+        {
             serialPort->setRemote(remote);
+            serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
+            serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
+        }
     }
     return result;
 }
@@ -455,9 +469,9 @@ void DriverFR::close()
 int DriverFR::checkState()
 {
   short int repl;
-
   sendENQ();
-  repl = readByte(fr.Timeout * 2);
+  repl = readByte(0, true);
+  serialPort->writeLog();
   switch(repl)
     {
       case NAK:
@@ -503,7 +517,7 @@ int DriverFR::sendACK()
 }
 
 
-unsigned short int DriverFR::readByte(int msec)
+unsigned short int DriverFR::readByte(int msec, bool notNull)
 {
     for (int tries = 0; tries < MAX_TRIES; tries++)
     {
@@ -513,7 +527,10 @@ unsigned short int DriverFR::readByte(int msec)
         int result = readBytes(readbuff, 1);
         if (result > 0)
         {
-            return (unsigned int) readbuff[0];
+            unsigned short int result = (unsigned int) readbuff[0];
+            if (!(notNull && result == 0))
+                return result;
+            app->timeOut(fr.Timeout);
         }
         else
             break;
@@ -537,36 +554,40 @@ int DriverFR::readBytes(unsigned char *buff, int len)
 
 int DriverFR::readAnswer(answer *ans)
 {
+    int result = -1;
     if (connected)
     {
+        int state = 0;
         short int  len, crc, tries, repl;
-        for (tries = 0; tries < MAX_TRIES; tries++)
+        for (int tries1 = 0; tries1 < MAX_TRIES && state != NAK; tries1++)
         {
-            repl = readByte(fr.Timeout*2);
-            if (repl == STX)
+            for (tries = 0; tries < MAX_TRIES; tries++)
             {
-                len = readByte(fr.Timeout);
-                if (readBytes(ans->buff, len) == len)
+                repl = readByte();
+                if (repl == STX)
                 {
-                    crc = readByte(fr.Timeout);
-                    if (crc == (LRC(ans->buff, len, 0) ^ len))
+                    len = readByte();
+                    if (readBytes(ans->buff, len) == len)
                     {
-                        app->timeOut(fr.Timeout*2);
-                        sendACK();
-                        ans->len = len;
-                        return len;
+                        crc = readByte();
+                        if (crc == (LRC(ans->buff, len, 0) ^ len))
+                        {
+                            app->timeOut(fr.Timeout);
+                            sendACK();
+                            ans->len = len;
+                            result = len;
+                            break;
+                        }
+                        else
+                            sendNAK();
                     }
-                    else
-                        sendNAK();
                 }
+                app->timeOut(fr.Timeout);
             }
+            state = checkState();
         }
-        sendENQ();
-        repl = readByte(fr.Timeout*2);
-        if (connected != 1 || repl != ACK)
-            tries++;
     }
-    return -1;
+    return result;
 }
 
 
@@ -610,18 +631,35 @@ int DriverFR::composeComm(command *cmd, int comm, int pass, parameter *param)
 int DriverFR::sendCommand(int comm, int pass, parameter *param)
 {
     command cmd;
+    answer a;
     int result = -1;
-    composeComm(&cmd, comm, pass, param);
-    if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
+    int tries = 0;
+    // Если по какой-либо причине не обработан ответ от предыдущей команды
+    int state = checkState();
+    for (; tries < MAX_TRIES && state != NAK; tries++)
     {
-        for(int tries = 1; tries <= MAX_TRIES; tries++)
+        readAnswer(&a);
+        state = checkState();
+        if (state == -1)
+            break;
+    }
+
+    // Теперь уже отдадим команду при условии, что предыдущая проверка статуса была успешной
+    if (tries < MAX_TRIES)
+    {
+        composeComm(&cmd, comm, pass, param);
+        if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
         {
-            short int repl = readByte(fr.Timeout*2);
-            if (repl == ACK)
+            serialPort->writeLog();
+            for(int tries = 1; tries <= MAX_TRIES; tries++)
             {
-                serialPort->writeLog();
-                result = 1;
-                break;
+                short int repl = readByte(fr.Timeout);
+                if (repl == ACK)
+                {
+                    serialPort->writeLog();
+                    result = 1;
+                    break;
+                }
             }
         }
     }
@@ -655,6 +693,8 @@ int DriverFR::errHand(answer *a)
 {
   fr.ResultCode = a->buff[1];
   fr.ResultCodeDescription = (char*)errmsg[fr.ResultCode];
+  if (fr.ResultCode != 0)
+    app->showError(fr.ResultCodeDescription);
   return fr.ResultCode;
 }
 
@@ -662,6 +702,18 @@ int DriverFR::errHand(answer *a)
 int DriverFR::evalint(unsigned char *str, int len)
 {
     int result = 0;
+    while(len--)
+    {
+        result <<= 8;
+        result += str[len];
+    }
+    return result;
+}
+
+
+int32_t DriverFR::evalint32(unsigned char *str, int len)
+{
+    int32_t result = 0;
     while(len--)
     {
         result <<= 8;
@@ -721,7 +773,6 @@ void DriverFR::DefineECRModeDescription(void)
 
 bool DriverFR::Connect()
 {
-    int state = 0;
     connected = false;
     bool result = false;
 
@@ -730,45 +781,28 @@ bool DriverFR::Connect()
         if (remote)
         {
             if (serialPort->isReadyDriverFR())
+            {
                 locked = serialPort->setLock(true);
+            }
         }
         else
             locked = true;
 
         if (locked)
         {
-            state = checkState();
-            switch (state)
+            connected = true;
+            if (GetECRStatus() != 0)
+                result = false;
+            else
             {
-                case NAK:
-                    {
-                        connected = true;
-                        result = true;
-                    }
-                    break;
-                case ACK:
-                    {
-                        connected = true;
-                        result = true;
-                    }
-                    break;
-                case -1:
-                    break;
-            }
-            if (result)
-            {
-                serialPort->writeLog();
-                if (GetECRStatus() != 0)
-                    result = false;
-                else if (TApplication::debugMode() == 4)
+                result = true;
+                if (TApplication::debugMode() == 4)
                 {
                     serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
                     serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
                 }
                 if (showProgressBar)
-                {
                     progressDialog->show();
-                }
             }
         }
     }
@@ -817,7 +851,6 @@ int DriverFR::Beep()
     int result = -1;
     if (connected)
     {
-
         if (sendCommand(BEEP, fr.Password, &p) >= 0)
         {
             if (readAnswer(&a) >= 0)
@@ -902,8 +935,6 @@ int DriverFR::CutCheck()
 
 
 
-
-
 //-----------------------------------------------------------------------------
 int DriverFR::PrintString()
 {
@@ -947,14 +978,7 @@ int DriverFR::PrintString(QString str, int count)
     setProperty("StringForPrinting", str);
     for (int i = 1; i <= count; i++)
     {
-        for(int tries = 1; tries <= MAX_TRIES; tries++)
-        {
-            result = PrintString();
-            if (result == 0x50)
-                app->timeOut(100);
-            else
-                break;
-        }
+        result = PrintString();
         if (result == -1)
             return result;
     }
@@ -1051,6 +1075,7 @@ int DriverFR::GetExchangeParam()
   fr.Timeout  = a.buff[3];
   return 0;
 }
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetECRStatus()
 {
@@ -1249,7 +1274,7 @@ int DriverFR::PrintDocumentTitle()
   if (!connected) return -1;
 
   strncpy((char*)p.buff, (char*)fr.DocumentName, 30);
-  memcpy(&p.buff+30, &fr.DocumentNumber, 2);
+  memcpy((char*)p.buff+30, &fr.DocumentNumber, 2);
 
   if (sendCommand(PRINT_DOCUMENT_TITLE, fr.Password, &p) < 0) return -1;
   if (readAnswer(&a) < 0) return -1;
@@ -1455,6 +1480,7 @@ int DriverFR::GetEKLZJournal()
 
   if (connected)
   {
+        p.len = 2;
         memcpy(&p.buff, &fr.SessionNumber, 2);
         if (sendCommand(GET_EKLZ_JOURNAL, fr.Password, &p) >= 0)
         {
@@ -1511,6 +1537,54 @@ int DriverFR::GetEKLZData()
   return result;
 }
 
+
+int DriverFR::GetEKLZCode1Report()
+{
+    logCommand(GET_EKLZ_CODE1_REPORT, "Запрос состояния по коду 1 ЭКЛЗ");
+    parameter  p;
+    answer     a;
+    int result = -1;
+
+    if (connected)
+    {
+          if (sendCommand(GET_EKLZ_CODE1_REPORT, fr.Password, &p) >= 0)
+          {
+              if (readAnswer(&a) >= 0)
+              {
+                  if (a.buff[0] == GET_EKLZ_CODE1_REPORT)
+                  {
+                      if (errHand(&a) != 0)
+                          result = fr.ResultCode;
+                      else
+                      {
+                          QByteArray data;
+                          fr.OperatorNumber = a.buff[2];
+                          fr.LastKPKDocumentResult = evalint64((unsigned char*)&a.buff+2, 5);
+                          fr.LastKPKDocumentResult /= 100;
+                          // Прочитаем дату
+                          data.clear();
+                          data.append((const char*)&a.buff+7, 3);
+                          fr.LastKPKDate.fromString(codec->toUnicode(data), "dd.mm.yy");
+                          // Прочитаем время
+                          data.clear();
+                          data.append((const char*)&a.buff+10, 2);
+                          fr.LastKPKTime.fromString(codec->toUnicode(data), "hh:mm");
+                          // Прочитаем номер КПК
+                          fr.LastKPKNumber = evalint32((unsigned char*)&a.buff+12, 4);
+                          // Прочитаем номер ЭКЛЗ
+                          data.clear();
+                          data.append((char*)&a.buff+16, 5);
+                          fr.EKLZNumber = codec->toUnicode(data);
+                          // Прочитаем флаги
+                          fr.EKLZFlags = a.buff[21];
+                          result = 0;
+                      }
+                  }
+              }
+          }
+    }
+    return result;
+}
 
 //-----------------------------------------------------------------------------
 int DriverFR::CashIncome()
@@ -1927,25 +2001,34 @@ int DriverFR::GetCashReg()
 //-----------------------------------------------------------------------------
 int DriverFR::GetOperationReg()
 {
-  parameter  p;
-  answer     a;
+    logCommand(GET_OPERATION_REG, "Получить операционный регистр");
+    parameter  p;
+    answer     a;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        p.len    = 1;
+        p.buff[0] = fr.RegisterNumber;
 
-  p.len    = 1;
-
-  p.buff[0] = fr.RegisterNumber;
-
-  if (sendCommand(GET_OPERATION_REG, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != GET_OPERATION_REG) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-  fr.ContentsOfOperationRegister = evalint((unsigned char*)&a.buff+3, 2);
-
-  return 0;
+        if (sendCommand(GET_OPERATION_REG, fr.Password, &p) >= 0)
+        {
+            if (readAnswer(&a) >= 0)
+            {
+                if (a.buff[0] == GET_OPERATION_REG)
+                {
+                    if (errHand(&a) != 0)
+                        result = fr.ResultCode;
+                    else
+                    {
+                        fr.OperatorNumber = a.buff[2];
+                        fr.ContentsOfOperationRegister = evalint((unsigned char*)&a.buff+3, 2);
+                    }
+                }
+            }
+        }
+    }
+    return result;
 }
 //-----------------------------------------------------------------------------
 int DriverFR::SetSerialNumber()

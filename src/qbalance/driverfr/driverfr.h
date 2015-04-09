@@ -41,6 +41,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QObject>
 #include <QMetaObject>
 #include <QMetaProperty>
+#include <QDate>
+#include <QTime>
 #include <QDebug>
 #include <sys/time.h>
 #include "../serialport/qmyextserialport.h"
@@ -59,6 +61,7 @@ class TApplication;
 #define DUMP_REQUEST			0x01
 #define GET_DATA			0x02
 #define INTERRUPT_DATA_STREAM		0x03
+#define GET_SHORT_ECR_STATUS	0x10
 #define GET_ECR_STATUS			0x11
 #define PRINT_WIDE_STRING		0x12
 #define BEEP				0x13
@@ -138,6 +141,7 @@ class TApplication;
 #define ECT_PAY_DOC_BY_NUMBER		0xa5
 #define ECT_BY_SHIFT_NUMBER		0xa6
 #define ECT_REPORT_INTR			0xa7
+#define GET_EKLZ_CODE1_REPORT	0xad
 #define CONTINUE_PRINTING		0xb0
 #define GET_EKLZ_DATA           0xb3
 #define GET_EKLZ_JOURNAL        0xb4
@@ -208,6 +212,8 @@ public:
     char   ECRSoftVersion[4];
     QString   EKLZData;
     int    EKLZIsPresent;
+    QString EKLZNumber;
+    char   EKLZFlags;
     int    EmergencyStopCode;
     char*  EmergencyStopCodeDescription;
     char   FieldName[41];
@@ -230,6 +236,10 @@ public:
     int    JournalRibbonOpticalSensor;
     int    JournalRibbonLever;
     int    KPKNumber;
+    unsigned long int    LastKPKNumber;
+    double  LastKPKDocumentResult;
+    QDate LastKPKDate;
+    QTime LastKPKTime;
     int    LastFMRecordType;
     int    LastLineNumber;
     struct tm LastSessionDate;
@@ -337,6 +347,8 @@ public:
     Q_PROPERTY(QString  ECRSoftVersion READ getECRSoftVersion)
     Q_PROPERTY(QString  EKLZData READ getEKLZData)
     Q_PROPERTY(int    EKLZIsPresent READ getEKLZIsPresent WRITE setEKLZIsPresent)
+    Q_PROPERTY(QString  EKLZNumber READ getEKLZNumber)
+    Q_PROPERTY(char  EKLZFlags READ getEKLZFlags)
     Q_PROPERTY(int    EmergencyStopCode READ getEmergencyStopCode)
     Q_PROPERTY(QString  EmergencyStopCodeDescription READ getEmergencyStopCodeDescription)
     Q_PROPERTY(QString  FieldName READ getFieldName)
@@ -358,7 +370,11 @@ public:
     Q_PROPERTY(int    JournalRibbonIsPresent READ getJournalRibbonIsPresent WRITE setJournalRibbonIsPresent)
     Q_PROPERTY(int    JournalRibbonOpticalSensor READ getJournalRibbonOpticalSensor WRITE setJournalRibbonOpticalSensor)
     Q_PROPERTY(int    JournalRibbonLever READ getJournalRibbonLever WRITE setJournalRibbonLever)
-    Q_PROPERTY(int    KPKNumber READ getKPKNumber WRITE setKPKNumber)
+    Q_PROPERTY(int    KPKNumber READ getKPKNumber)
+    Q_PROPERTY(QVariant LastKPKNumber READ getLastKPKNumber)
+    Q_PROPERTY(double    LastKPKDocumentResult READ getLastKPKDocumentResult)
+    Q_PROPERTY(QDate LastKPKDate READ getLastKPKDate)
+    Q_PROPERTY(QTime LastKPKTime READ getLastKPKTime)
     Q_PROPERTY(int    LastFMRecordType READ getLastFMRecordType WRITE setLastFMRecordType)
     Q_PROPERTY(int    LastLineNumber READ getLastLineNumber WRITE setLastLineNumber)
     Q_PROPERTY(struct tm LastSessionDate READ getLastSessionDate WRITE setLastSessionDate)
@@ -470,6 +486,8 @@ public:
     QString  getECRSoftVersion() { return QString().append(ECRSoftVersion); }
     QString  getEKLZData() { return EKLZData; }
     int    getEKLZIsPresent() { return EKLZIsPresent; }
+    QString  getEKLZNumber() { return EKLZNumber; }
+    char  getEKLZFlags() { return EKLZFlags; }
     int    getEmergencyStopCode() { return EmergencyStopCode; }
     QString  getEmergencyStopCodeDescription() { return QString().append(EmergencyStopCodeDescription); }
     QString  getFieldName() { return QString().append(FieldName); }
@@ -492,6 +510,10 @@ public:
     int    getJournalRibbonOpticalSensor() { return JournalRibbonOpticalSensor; }
     int    getJournalRibbonLever() { return JournalRibbonLever; }
     int    getKPKNumber() { return KPKNumber; }
+    QVariant   getLastKPKNumber() { return QVariant(qulonglong(LastKPKNumber)); }
+    double getLastKPKDocumentResult() { return LastKPKDocumentResult; }
+    QDate    getLastKPKDate() { return LastKPKDate; }
+    QTime    getLastKPKTime() { return LastKPKTime; }
     int    getLastFMRecordType() { return LastFMRecordType; }
     int    getLastLineNumber() { return LastLineNumber; }
     struct tm getLastSessionDate() { return LastSessionDate; }
@@ -591,7 +613,6 @@ public:
     void setJournalRibbonIsPresent(int a) { JournalRibbonIsPresent = a; }
     void setJournalRibbonOpticalSensor(int a) { JournalRibbonOpticalSensor = a; }
     void setJournalRibbonLever(int a) { JournalRibbonLever = a; }
-    void setKPKNumber(int a) { KPKNumber = a; }
     void setLastFMRecordType(int a) { LastFMRecordType = a; }
     void setLastLineNumber(int a) { LastLineNumber = a; }
     void setLastSessionDate(struct tm a) { LastSessionDate = a; }
@@ -656,7 +677,7 @@ class DriverFR : public QObject
 public:
     DriverFR(QObject *parent = 0);
     ~DriverFR();
-    bool open(QString, int, int, QString, int);
+    bool open(QString, int, int, int, QString, int);
     void close();
     Q_INVOKABLE QVariant getProperty(QString name);
     Q_INVOKABLE bool setProperty(QString name, QVariant value);
@@ -710,6 +731,7 @@ public:
     Q_INVOKABLE int GetECRStatus();
     Q_INVOKABLE int GetEKLZData();
     Q_INVOKABLE int GetEKLZJournal();
+    Q_INVOKABLE int GetEKLZCode1Report();
     Q_INVOKABLE int GetLastFMRecordDate();
     Q_INVOKABLE int GetLiterSumCounter();
     Q_INVOKABLE int GetCashReg();
@@ -766,7 +788,7 @@ public:
 private:
 
     int checkState();
-    unsigned short int readByte(int = 0);
+    unsigned short int readByte(int = 0, bool = false);
     int readBytes(unsigned char *, int);
     int sendENQ();
     int sendNAK();
@@ -777,6 +799,7 @@ private:
     int sendCommand(int, int, parameter*);
     int errHand(answer*);
     int evalint(unsigned char*, int);
+    int32_t evalint32(unsigned char*, int);
     int64_t evalint64(unsigned char*, int);
     void evaldate(unsigned char*, struct tm*);
     void evaltime(unsigned char *, struct tm *);

@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../../qextserialport/src/qextserialport.h"
 #include "../kernel/tcpclient.h"
 
+class TApplication;
+
 class QMyExtSerialPort : public QextSerialPort
 {
     Q_OBJECT
@@ -56,6 +58,7 @@ private:
     bool outLog;
     QString log;
     static TcpClient* tcpClient;
+    TApplication* app;
 
     void appendLog(bool, QString);
 };

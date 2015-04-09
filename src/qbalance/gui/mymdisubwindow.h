@@ -29,7 +29,7 @@ class MyMdiSubWindow : public QMdiSubWindow
 {
     Q_OBJECT
 public:
-    MyMdiSubWindow(QWidget* parent = 0);
+//    MyMdiSubWindow(QWidget* parent = 0);
     virtual void closeEvent (QCloseEvent* event);
 };
 

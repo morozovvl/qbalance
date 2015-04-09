@@ -453,6 +453,7 @@ void Dictionary::query(QString defaultFilter)
         index = grdTable->currentIndex();
 
     QString resFilter = defaultFilter;
+
     if (form != 0)
     {
         QString filter = ((FormGridSearch*)form)->getFilter();
@@ -463,15 +464,19 @@ void Dictionary::query(QString defaultFilter)
             else
                 resFilter = filter;
         }
-        if (scriptEngine != 0)
+
+        if (!isDocumentLoading())
         {
-            filter = scriptEngine->getFilter();
-            if (filter.size() > 0)
+            if (scriptEngine != 0)
             {
-                if (resFilter.size() > 0)
-                    resFilter.append(" AND " + filter);
-                else
-                    resFilter = filter;
+                filter = scriptEngine->getFilter();
+                if (filter.size() > 0)
+                {
+                    if (resFilter.size() > 0)
+                        resFilter.append(" AND " + filter);
+                    else
+                        resFilter = filter;
+                }
             }
         }
     }
@@ -570,7 +575,6 @@ void Dictionary::prepareSelectCurrentRowCommand()
 void Dictionary::setMustShow(bool must)
 {
     lMustShow = must;
-    photoEnabled = must;
 }
 
 

@@ -72,6 +72,10 @@ TApplication::TApplication(int & argc, char** argv)
         Exemplar = this;
     }
     initConfig();
+
+    connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
+    timeIsOut = false;
+
 }
 
 
@@ -93,6 +97,7 @@ void TApplication::initConfig()
     config.frDriverPort = "/dev/ttyS0";                 // COM-порт фискального регистратора
     config.frDriverBaudRate = 6;
 #endif
+    config.frDriverTimeOut = 50;
     config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
     config.localPort = 44444;
@@ -163,7 +168,7 @@ bool TApplication::open() {
         tcpServer = new TcpServer(config.localPort, this);
         driverFR = new DriverFR(this);
 
-        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverPassword, config.remoteHost, config.remotePort))
+        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
         {
             driverFRisValid = true;
         }
@@ -207,7 +212,6 @@ bool TApplication::open() {
                     break;  // Выйдем из бесконечного цикла открытия БД
                 }
             }
-/*
             else if (result == -2)
                 {   // Произошла ошибка соединения с сервером
                 if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
@@ -215,7 +219,6 @@ bool TApplication::open() {
                     // Попытаемся создать новую БД
                     db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
             }
-*/
             else if (result == -1)      // Пользователь нажал кнопку Отмена
                 break;  // Выйдем из бесконечного цикла открытия БД
         }
@@ -386,7 +389,7 @@ bool TApplication::setDebugMode(const int& value)
 }
 
 
-void TApplication::debug(int mode, const QString& value)
+void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {
     if (debugMode() == mode || mode == 0)
     {
@@ -394,9 +397,9 @@ void TApplication::debug(int mode, const QString& value)
         if (file.open(QFile::WriteOnly | QFile::Append))
         {
             QTextStream out(&file);
-            if (file.size() == 0)
-                out << QDateTime::currentDateTime().toString(logTimeFormat()) << " Program startup.\n";
-            out << QDateTime::currentDateTime().toString(logTimeFormat()) << " " << value << "\n";
+            if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
+                out << QDateTime::currentDateTime().toString(logTimeFormat()) << " ";
+            out << value << "\n";
         }
         file.close();
     }
@@ -487,11 +490,17 @@ bool TApplication::waitProcessEnd(QProcess* proc)
 
 void TApplication::timeOut(int ms)
 {
-    QTimer t;
-    t.start(ms);
+    timer.start(ms);
     QEventLoop loop;
-    connect(&t, SIGNAL(timeout()), &loop, SLOT(quit()));
+    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
     loop.exec();
+}
+
+
+void TApplication::startTimeOut(int ms)
+{
+    timeIsOut = false;
+    timer.start(ms);
 }
 
 

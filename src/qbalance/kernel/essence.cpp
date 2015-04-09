@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //#include <boost/crc.hpp>
 #include "essence.h"
 #include "../kernel/app.h"
+#include "../kernel/document.h"
 #include "../gui/form.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/mainwindow.h"
@@ -219,7 +220,7 @@ void Essence::setValue(QString n, QVariant value, int row)
         if (doSubmit)
             db->execCommands();
 
-        if (row >= 0 && form != 0)
+        if (row >= 0 && form != 0 && oldIndex.isValid())
             grdTable->setCurrentIndex(oldIndex);
     }
     else
@@ -287,7 +288,7 @@ void Essence::query(QString filter)
     }
     else
         Table::query(filter);
-    if (grdTable != 0)
+    if (grdTable != 0 && index.isValid())
     {
         grdTable->setCurrentIndex(index);
     }
@@ -314,14 +315,35 @@ QString Essence::getPhotoPath()
 }
 
 
+
+QString Essence::getLocalPhotoFile()
+{
+    QString result;
+    QString idValue = getValue(photoIdField).toString().trimmed();
+    if (idValue.size() > 0)
+    {
+        result = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
+    }
+    return result;
+}
+
+
 QString Essence::getPhotoFile(QString copyTo)
 {
     QString idValue;    // Значение идентификатора фотографии
     QString file;       // Полное имя файла с фотографией
     QString localFile;  // Локальный путь к фотографии
     QString pictureUrl;
+    bool phEnabled = photoEnabled;
 
-    if (photoEnabled || copyTo.size() > 0)
+    // Если справочник является частью документа
+    if (isDocumentLoading())
+    {
+        phEnabled = false;          // То загрузка фотографий запрещена
+        copyTo = "";                // И копирование тоже
+    }
+
+    if (phEnabled || copyTo.size() > 0)
     {
         // Сначала получим имя поля из которого будем брать значение идентификатора
         if (photoIdField.size() == 0 && isDictionary)
@@ -337,8 +359,8 @@ QString Essence::getPhotoFile(QString copyTo)
             idValue = getValue(photoIdField).toString().trimmed();
             if (idValue.size() > 0)
             {
-                file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
                 localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+                file = getLocalPhotoFile();
                 if (!QFile(file).exists())
                 {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                     // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
@@ -780,6 +802,7 @@ void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
         reportEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
     }
 
+    // Загрузим основную таблицу в контекст печати
     QStringList fieldsList = getFieldsList();
     for (int i = 1; i <= getTableModel()->rowCount(); i++)
     {
@@ -881,12 +904,6 @@ void Essence::print(QString fileName)
     // Подготовим контекст для печати
     QHash<QString, QVariant> printValues;
 
-    // Создадим скриптовый обработчик контекста печати
-    ReportScriptEngine scriptEngine(&printValues, this);
-
-    // Заполним контекст данными
-    preparePrintValues(&scriptEngine);
-
     // Найдем полный путь к файлам с шаблонами
     QString fullFileName = app->getReportsPath();
 
@@ -899,40 +916,53 @@ void Essence::print(QString fileName)
     // Если такого шаблона нет, попробуем получить его с сервера
     if (getFile(app->getReportsPath(), fileName, ReportTemplateFileType))
     {
-        QString ext = QFileInfo(fileName).suffix();
-        QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
+        bool result = true;                         // По умолчанию документ будет печататься
+        // Создадим скриптовый обработчик контекста печати
+        ReportScriptEngine scriptEngine(&printValues, this);
 
-        QTemporaryFile templateFile(tmpFileName);
-        if (templateFile.open())
+        // Заполним контекст данными
+        preparePrintValues(&scriptEngine);
+
+        if (scriptEngine.open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
         {
-            tmpFileName = templateFile.fileName();
-            templateFile.close();
-            templateFile.remove();
-            // Если имеются соответствующие шаблону скрипты, то запустим их
-            if (scriptEngine.open(fullFileName + ".qs"))
-                scriptEngine.evaluate();
+            result = scriptEngine.evaluate();       // Если скрипты вернут отрицательный результат, то документ не напечатается
+            scriptEngine.close();
+        }
 
-            // Скопируем файл отчета (шаблон) во временный файл
-            if (QFile().copy(fullFileName, tmpFileName))
+        if (result)
+        {
+            // Скопируем шаблон во временный файл
+            QString ext = QFileInfo(fileName).suffix();
+            QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
+
+            QTemporaryFile templateFile(tmpFileName);
+            if (templateFile.open())
             {
-                // На 3 секунды выведем сообщение об открытии документа
-                app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
+                tmpFileName = templateFile.fileName();
+                templateFile.close();
+                templateFile.remove();
 
-                // Из пользовательских настроек выберем обработчик шаблона
-                switch (app->getReportTemplateType())
+                // Скопируем файл отчета (шаблон) во временный файл
+                if (QFile().copy(fullFileName, tmpFileName))
                 {
-                    // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
-                    case OOreportTemplate:
-                        {
-                            OOReportEngine* report = new OOReportEngine(&scriptEngine);
-                            if (report->open())
+                    // На 3 секунды выведем сообщение об открытии документа
+                    app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
+
+                    // Из пользовательских настроек выберем обработчик шаблона
+                    switch (app->getReportTemplateType())
+                    {
+                        // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
+                        case OOreportTemplate:
                             {
-                                report->open(&printValues, fileName, ext);
-                                report->close();
+                                OOReportEngine* report = new OOReportEngine(&scriptEngine);
+                                if (report->open())
+                                {
+                                    report->open(&printValues, fileName, ext);
+                                    report->close();
+                                }
+                                delete report;
                             }
-                            delete report;
-                        }
-                        break;
+                            break;
 /*
                     // Обработчик шаблона с использованием OpenOffice UNO. С UNO работает медленно, поэтому не вижу смысла разрабатывать
                     case OOUNOreportTemplate:
@@ -947,28 +977,40 @@ void Essence::print(QString fileName)
                         }
                         break;
 */
-                   // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
-                    case OOXMLreportTemplate:
-                        {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                            OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
-                            if (report->open())
-                            {
-                                report->open(tmpFileName, &printValues);
-                                report->close();
+                        // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
+                        case OOXMLreportTemplate:
+                            {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                                OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
+                                if (report->open())
+                                {
+                                    report->open(tmpFileName, &printValues);
+                                    report->close();
+                                }
+                                delete report;
                             }
-                            delete report;
-                        }
-                        break;
-                 // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
-                    case OpenRPTreportTemplate:
-                        {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-//                           OpenRPTreportEngine report(&printValues, file, ext);
-//                       report.open();
-                        }
-                        break;
+                            break;
+                        // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
+                        case OpenRPTreportTemplate:
+                            {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+//                               OpenRPTreportEngine report(&printValues, file, ext);
+//                           report.open();
+                            }
+                            break;
+                    }
                 }
             }
         }
     }
 }
 
+
+bool Essence::isDocumentLoading()
+{
+    if (dictionaries != 0 && dictionaries->getDocument() != 0)
+    {
+        // И в данный момент происходит загрузка документа из файла (или другого источника)
+        if (dictionaries->getDocument()->isLoading())
+            return true;
+    }
+    return false;
+}

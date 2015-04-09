@@ -91,8 +91,6 @@ void test() {
 
 int main(int argc, char *argv[])
 {
-    // Инициируем переменные, которые нуждаются в этом
-
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(TApplication::codec());
     QTextCodec::setCodecForCStrings(TApplication::codec());
@@ -107,15 +105,16 @@ int main(int argc, char *argv[])
         TApplication application(argc, argv);
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
+        application.debug(application.debugMode(), "\n");
+        application.debug(application.debugMode(), "Program startup.");
         if (application.open()) {       // Если приложение удалось создать
             application.show();         // Откроем приложение
             lResult = application.exec();
         }
+        application.debug(application.debugMode(), "Program shutdown.\n");
         application.close();            // Закроем приложение
         application.quit();
     }
-
-    TApplication::debug(0, "Program shutdown.\n");
     return lResult;
 
 }

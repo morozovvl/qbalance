@@ -142,6 +142,7 @@ bool OOXMLEngine::removeDir(QString dirName)
 QDomElement OOXMLEngine::getCell(int row, int column)
 {
     QDomNode rowNode;
+    QDomElement element;
     if (row >= 0 && row < rowCells.count()-1 && column >= 0)
     {
         rowNode = rowCells.at(row);
@@ -154,11 +155,8 @@ QDomElement OOXMLEngine::getCell(int row, int column)
             if (!nodeList.isEmpty())
             {
                 int counter = 0;
-                int nodeListQuan = nodeList.count();
-                QDomElement element;
                 int repeated;
-
-                for (int i = 0; i < nodeListQuan; i++)
+                for (int i = 0; i < nodeList.count(); i++)
                 {
                     element = nodeList.at(i).toElement();
                     if (!element.isNull())
@@ -175,10 +173,12 @@ QDomElement OOXMLEngine::getCell(int row, int column)
                         else
                         {
                             if (counter == column)
+                            {
                                 if (!element.isNull())
                                 {
                                     return element;
                                 }
+                            }
                             counter++;
                         }
                     }
@@ -186,8 +186,7 @@ QDomElement OOXMLEngine::getCell(int row, int column)
             }
         }
     }
-    rowNode.clear();
-    return rowNode.toElement();     // Ячейка не найдена, вернем пустую
+    return element;     // Ячейка не найдена, вернем пустую
 }
 
 

@@ -82,6 +82,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable = new TableView(formWidget, this);
         grdTable->setEssence(parent);
         grdTable->setObjectName("tableView");
+        grdTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
         tableLayout->addWidget(grdTable);
@@ -93,6 +94,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         imageLayout->setObjectName("imageLayout");
         picture = new Picture(formWidget);
         picture->setObjectName("picture");
+        picture->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
         imageLayout->addWidget(picture);
         imageLayout->addStretch(1);
         if (vbxLayout != 0)
@@ -106,7 +108,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable = (TableView*)formWidget->findChild("tableView");;
         if (grdTable != 0)
         {
-            grdTable->setParent(formWidget);
+//            grdTable->setParent(this);
+            grdTable->setParentWidget(formWidget);
             grdTable->setFormGrid(this);
             grdTable->setEssence(parent);
         }
@@ -517,8 +520,7 @@ void FormGrid::cmdLoad()
 {
     if (buttonLoad != 0 && buttonLoad->isVisible() && buttonLoad->isEnabled())
     {
-        parent->getScriptEngine()->eventImport(this);
-//        setButtons();
+        parent->load();
     }
 }
 

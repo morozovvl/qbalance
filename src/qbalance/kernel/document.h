@@ -56,6 +56,8 @@ public:
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void hide();                // Скрыть форму
+    virtual void                        load();
+
     virtual QString transformSelectStatement(QString string);
     void setDocId(int doc) { docId = doc; prepareSelectCurrentRowCommand(); }
     Q_INVOKABLE virtual bool calculate();
@@ -91,6 +93,7 @@ public:
     Q_INVOKABLE void calcItog();
     bool isSinglePrv() { return singlePrv; }
     bool isQuanAccount() { return quanAccount; }
+    bool    isLoading() { return loading; }
 
 
 protected:
@@ -116,6 +119,7 @@ private:
     bool                            docModified;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
+    bool                            loading;            // Сейчас идет заполнение документа из файла
 
     bool showNextDict();
     void showItog();

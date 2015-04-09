@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.0)
 set ( CMAKE_BUILD_TYPE "Release" )
 
 find_package ( Qt4 REQUIRED )
@@ -23,6 +24,8 @@ set ( PROJECT_NAME_SRCS
     ./kernel/table.cpp
     ./kernel/saldo.cpp
     ./kernel/barcodereader.cpp
+    ./kernel/tcpserver.cpp
+    ./kernel/tcpclient.cpp
 
     ./gui/passwordform.cpp
     ./gui/form.cpp
@@ -55,6 +58,8 @@ set ( PROJECT_NAME_SRCS
     ./gui/progressbar.cpp
     ./gui/mydateitemdelegate.cpp
     ./gui/mymdisubwindow.cpp
+    ./gui/myprogressdialog.cpp
+    ./gui/messagewindow.cpp
 
     ./engine/scriptengine.cpp
     ./engine/reportscriptengine.cpp
@@ -73,10 +78,15 @@ set ( PROJECT_NAME_SRCS
     ./report/ooreportengine.cpp
     ./report/ooxmlreportengine.cpp
 
+    ./openoffice/ooxmlengine.cpp
+
     ./storage/dbfactory.cpp
     ./storage/mysqlrelationaltablemodel.cpp
 
     ./driverfr/driverfr.cpp
+
+    ./serialport/qmyextserialport.cpp
+    ./../qextserialport/src/qextserialport.cpp
     )
 
 set ( PROJECT_NAME_HDRS
@@ -90,6 +100,8 @@ set ( PROJECT_NAME_HDRS
     ./kernel/table.h
     ./kernel/saldo.h
     ./kernel/barcodereader.h
+    ./kernel/tcpserver.h
+    ./kernel/tcpclient.h
 
     ./gui/guifactory.h
     ./gui/passwordform.h
@@ -121,6 +133,8 @@ set ( PROJECT_NAME_HDRS
     ./gui/progressbar.h
     ./gui/mydateitemdelegate.h
     ./gui/mymdisubwindow.h
+    ./gui/myprogressdialog.h
+    ./gui/messagewindow.h
 
     ./engine/scriptengine.h
     ./engine/reportscriptengine.h
@@ -137,11 +151,15 @@ set ( PROJECT_NAME_HDRS
     ./report/ooreportengine.h
     ./report/ooxmlreportengine.h
 
+    ./openoffice/ooxmlengine.h
+
     ./storage/dbfactory.h
     ./storage/mysqlrelationaltablemodel.h
 
     ./driverfr/driverfr.h
 
+    ./serialport/qmyextserialport.h
+    ./../qextserialport/src/qextserialport_p.h
     )
     
 set ( PROJECT_NAME_RCS

@@ -496,13 +496,11 @@ void TableView::showPhoto()
                     picture->setVisibility(true);              // то включим просмотр фотографий
                 else
                     photoFileName = "";
+                if (essence->getPhotoNameField().size() > 0)
+                    picture->setPhotoWindowTitle(essence->getValue(essence->getPhotoNameField()).toString().trimmed());
             }
-            if (essence->getPhotoNameField().size() > 0)
-                picture->setPhotoWindowTitle(essence->getValue(essence->getPhotoNameField()).toString().trimmed());
             picture->show(photoFileName);
         }
-        else
-            picture->setVisibility(false);
     }
 }
 
