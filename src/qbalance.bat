@@ -1,11 +1,18 @@
 set PATH=%PATH%;%CD%\..
 
-cd qbalance\plugins
+cd qextserialport
 del makefile
 qmake
 mingw32-make clean
 mingw32-make %1
-cd ..\
+
+cd ../qbalance/plugins
+del makefile
+qmake
+mingw32-make clean
+mingw32-make %1
+
+cd ../../qbalance
 del makefile
 qmake
 mingw32-make clean
