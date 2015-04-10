@@ -1,21 +1,31 @@
 /**
  * @file main.cpp
  * @brief Main file.
- * @author Michał Policht
+ * @author Micha? Policht
  */
-
-#include <qextserialenumerator.h>
-
-int main(int argc, char *argv[])
+//! [0]
+#include "qextserialenumerator.h"
+//! [0]
+#include <QtCore/QList>
+#include <QtCore/QDebug>
+int main()
 {
-	QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
-	printf("List of ports:\n");
-	for (int i = 0; i < ports.size(); i++) {
-		printf("port name: %s\n", ports.at(i).portName.toLocal8Bit().constData());
-		printf("friendly name: %s\n", ports.at(i).friendName.toLocal8Bit().constData());
-		printf("physical name: %s\n", ports.at(i).physName.toLocal8Bit().constData());
-		printf("enumerator name: %s\n", ports.at(i).enumName.toLocal8Bit().constData());
-		printf("===================================\n\n");
-	}
-	return EXIT_SUCCESS;
+    //! [1]
+    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    //! [1]
+    qDebug() << "List of ports:";
+    //! [2]
+    foreach (QextPortInfo info, ports) {
+        qDebug() << "port name:"       << info.portName;
+        qDebug() << "friendly name:"   << info.friendName;
+        qDebug() << "physical name:"   << info.physName;
+        qDebug() << "enumerator name:" << info.enumName;
+        qDebug() << "vendor ID:"       << info.vendorID;
+        qDebug() << "product ID:"      << info.productID;
+
+        qDebug() << "===================================";
+    }
+    //! [2]
+    return 0;
 }
+
