@@ -1,72 +1,75 @@
-/****************************************************************************
-** Copyright (c) 2000-2003 Wayne Roth
-** Copyright (c) 2004-2007 Stefan Sander
-** Copyright (c) 2007 Michal Policht
-** Copyright (c) 2008 Brandon Fosdick
-** Copyright (c) 2009-2010 Liam Staskawicz
-** Copyright (c) 2011 Debao Zhang
-** All right reserved.
-** Web: http://code.google.com/p/qextserialport/
-**
-** Permission is hereby granted, free of charge, to any person obtaining
-** a copy of this software and associated documentation files (the
-** "Software"), to deal in the Software without restriction, including
-** without limitation the rights to use, copy, modify, merge, publish,
-** distribute, sublicense, and/or sell copies of the Software, and to
-** permit persons to whom the Software is furnished to do so, subject to
-** the following conditions:
-**
-** The above copyright notice and this permission notice shall be
-** included in all copies or substantial portions of the Software.
-**
-** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-** NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-** LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-** OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-** WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-**
-****************************************************************************/
-
+/*!
+ * \file qextserialenumerator.h
+ * \author Michal Policht
+ * \see QextSerialEnumerator
+ */
+ 
 #ifndef _QEXTSERIALENUMERATOR_H_
 #define _QEXTSERIALENUMERATOR_H_
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include "qextserialport_global.h"
 
+#include <QString>
+#include <QList>
+
+#ifdef _TTY_WIN_
+	#include <windows.h>
+	#include <setupapi.h>
+#endif /*_TTY_WIN_*/
+
+
+/*!
+ * Structure containing port information.
+ */
 struct QextPortInfo {
-    QString portName;   ///< Port name.
-    QString physName;   ///< Physical name.
-    QString friendName; ///< Friendly name.
-    QString enumName;   ///< Enumerator name.
-    int vendorID;       ///< Vendor ID.
-    int productID;      ///< Product ID
+	QString portName;		///< Port name.
+	QString physName;		///< Physical name.
+	QString friendName;		///< Friendly name.
+	QString enumName;		///< Enumerator name.
 };
 
-class QextSerialEnumeratorPrivate;
-class QEXTSERIALPORT_EXPORT QextSerialEnumerator : public QObject
+
+/*!
+ * Serial port enumerator. This class provides list of ports available in the system.
+ * 
+ * Windows implementation is based on Zach Gorman's work from 
+ * <a href="http://www.codeproject.com">The Code Project</a> (http://www.codeproject.com/system/setupdi.asp).
+ */
+class QextSerialEnumerator
 {
-    Q_OBJECT
-    Q_DECLARE_PRIVATE(QextSerialEnumerator)
-public:
-    QextSerialEnumerator(QObject *parent=0);
-    ~QextSerialEnumerator();
+	private:
+		#ifdef _TTY_WIN_
+			/*!
+			 * Get value of specified property from the registry.
+			 * 	\param key handle to an open key.
+			 * 	\param property property name.
+			 * 	\return property value.
+			 */
+			static QString getRegKeyValue(HKEY key, LPCTSTR property);
 
-    static QList<QextPortInfo> getPorts();
-    void setUpNotifications();
+			/*!
+			 * Get specific property from registry.
+			 * 	\param devInfo pointer to the device information set that contains the interface 
+			 * 		and its underlying device. Returned by SetupDiGetClassDevs() function.
+			 * 	\param devData pointer to an SP_DEVINFO_DATA structure that defines the device instance.
+			 * 		this is returned by SetupDiGetDeviceInterfaceDetail() function. 
+			 * 	\param property registry property. One of defined SPDRP_* constants. 
+			 * 	\return property string.
+			 */
+			static QString getDeviceProperty(HDEVINFO devInfo, PSP_DEVINFO_DATA devData, DWORD property);
 
-Q_SIGNALS:
-    void deviceDiscovered(const QextPortInfo &info);
-    void deviceRemoved(const QextPortInfo &info);
+			/*!
+			 * Search for serial ports using setupapi.
+			 * 	\param infoList list with result.
+			 */
+			static void setupAPIScan(QList<QextPortInfo> & infoList);
+		#endif /*_TTY_WIN_*/
 
-private:
-    Q_DISABLE_COPY(QextSerialEnumerator)
-#if defined(Q_OS_LINUX) && !defined(QESP_NO_UDEV)
-    Q_PRIVATE_SLOT(d_func(), void _q_deviceEvent())
-#endif
-    QextSerialEnumeratorPrivate *d_ptr;
+	public:
+		/*!
+		 * Get list of ports.
+		 * 	\return list of ports currently available in the system.
+		 */
+		static QList<QextPortInfo> getPorts();
 };
 
 #endif /*_QEXTSERIALENUMERATOR_H_*/

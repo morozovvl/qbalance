@@ -1,7 +1,29 @@
+######################################################################
+# Enumerator
+######################################################################
+
+
+PROJECT = event
 TEMPLATE = app
 DEPENDPATH += .
-CONFIG += console
-include(../../src/qextserialport.pri)
+INCLUDEPATH += ../..
+QMAKE_LIBDIR += ../../build
 
-SOURCES += main.cpp PortListener.cpp
+
+OBJECTS_DIR    = obj
+MOC_DIR        = moc
+UI_DIR         = uic
+CONFIG      += qt thread warn_on console
+
+
+SOURCES += main.cpp \
+			PortListener.cpp
+
 HEADERS += PortListener.h
+
+
+CONFIG(debug, debug|release):LIBS  += -lqextserialportd
+else:LIBS  += -lqextserialport
+
+unix:DEFINES   = _TTY_POSIX_
+win32:DEFINES  = _TTY_WIN_

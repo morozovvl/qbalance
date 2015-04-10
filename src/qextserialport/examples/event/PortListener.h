@@ -1,24 +1,56 @@
-
-
+/**
+ * @file PortListener.h
+ * @brief Port Listener.
+ * @see PortListener
+ */
 
 #ifndef PORTLISTENER_H_
 #define PORTLISTENER_H_
 
 #include <QObject>
-#include "qextserialport.h"
 
+class QextSerialPort;
+
+
+/**
+ * Port Listener.
+ */
 class PortListener : public QObject
 {
-Q_OBJECT
-public:
-    PortListener(const QString &portName);
+	Q_OBJECT
+	
+	QextSerialPort * port;
 
-private:
-    QextSerialPort *port;
 
-private slots:
-    void onReadyRead();
-    void onDsrChanged(bool status);
+	public:
+		/**
+		 * Constructor.
+		 *  @param parent parent object.
+		 */
+		PortListener(QextSerialPort * port, QObject * parent = 0);
+	
+	public slots:
+		/**
+		 * Receive data from serial port.
+		 */
+		void receive();
+		
+		/**
+		 * Report written bytes.
+		 * 	@param bytes number of written bytes.
+		 */
+		void reportWritten(qint64 bytes);
+		
+		/**
+		 * Report port closing.
+		 */
+		void reportClose();
+		
+		/**
+		 * Report DSR line.
+		 * 	@param status line status.
+		 */
+		void reportDsr(bool status);
 
 };
 
