@@ -119,15 +119,14 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
                 proc.start(command);
 
                 lResult = proc.waitForStarted();
-
                 if (!lResult)
                 {// выдадим сообщение об ошибке и выйдем из цикла
                     TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить psql"));
                 }
                 else
                 {
-                    lResult = proc.waitForFinished();
-                    if (!lResult)
+                    proc.waitForFinished();
+                    if (proc.exitStatus() == QProcess::CrashExit)
                     {
                         TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
                     }
