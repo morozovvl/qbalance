@@ -33,44 +33,49 @@ OOXMLEngine::~OOXMLEngine()
 
 bool OOXMLEngine::open(QString fName, bool ro)
 {
-    fileName = fName;
-    readOnly = ro;
-    templateFileName = fileName;
-    // Создадим временный каталог
-    QTemporaryFile templateFile;
-    templateFile.setFileTemplate(QDir().tempPath() + "/tmp_XXXXXX");
-    templateFile.open();
-    tmpDir = templateFile.fileName() + ".tmp";
-    templateFile.close();
-    if (QDir().mkdir(tmpDir))
+    if (QDir().exists(fName))
     {
-        // Распакуем файл шаблона документа OpenOffice
-        QProcess* unzip = new QProcess();
-        unzip->setWorkingDirectory(tmpDir);
+        fileName = fName;
+        readOnly = ro;
+        templateFileName = fileName;
+        // Создадим временный каталог
+        QTemporaryFile templateFile;
+        templateFile.setFileTemplate(QDir().tempPath() + "/tmp_XXXXXX");
+        templateFile.open();
+        tmpDir = templateFile.fileName() + ".tmp";
+        templateFile.close();
+        if (QDir().mkdir(tmpDir))
+        {
+            // Распакуем файл шаблона документа OpenOffice
+            QProcess* unzip = new QProcess();
+            unzip->setWorkingDirectory(tmpDir);
 #ifdef Q_OS_WIN32
-        unzip->start(app->applicationDirPath() + "/unzip", QStringList() << fileName);
+            unzip->start(app->applicationDirPath() + "/unzip", QStringList() << fileName);
 #else
-        unzip->start("unzip", QStringList() << fileName);
+            unzip->start("unzip", QStringList() << fileName);
 #endif
 
-        // Если удалось распаковать, то продолжим
-        if (app->waitProcessEnd(unzip))
-        {
-            QFile file(tmpDir + "/content.xml");
-            if (file.open(QIODevice::ReadOnly))
+            // Если удалось распаковать, то продолжим
+            if (app->waitProcessEnd(unzip))
             {
-                if (doc.setContent(&file))
+                QFile file(tmpDir + "/content.xml");
+                if (file.open(QIODevice::ReadOnly))
                 {
-                    rowCells = doc.elementsByTagName("table:table-row");
-                    rowQuan = rowCells.count();
-                    file.close();
-                    return true;
+                    if (doc.setContent(&file))
+                    {
+                        rowCells = doc.elementsByTagName("table:table-row");
+                        rowQuan = rowCells.count();
+                        file.close();
+                        return true;
+                    }
                 }
             }
+            else
+                app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
         }
-        else
-            app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
     }
+    else
+        app->showError(QObject::trUtf8("Не удалось открыть файл ") + fName);
     return false;
 }
 
