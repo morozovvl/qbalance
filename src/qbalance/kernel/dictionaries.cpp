@@ -125,8 +125,6 @@ bool Dictionaries::addDictionary(QString dictName, bool scriptDisabled)
                 }
             }
 
-            dict->setMustShow(false);
-
             return true;
         }
     }

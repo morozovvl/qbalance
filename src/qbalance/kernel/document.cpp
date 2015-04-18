@@ -76,7 +76,6 @@ Document::Document(int oper, Documents* par): Essence()
     lDeleteable = true;
     lUpdateable = true;
     isDictionary = false;
-    loading = false;
 }
 
 
@@ -210,45 +209,32 @@ void Document::showItog()
 }
 
 
-void Document::openLocalDictionaries()
+
+void Document::resolveMustShownDicts()
 {
-    foreach(Dictionary* dict, dictionaries->dictionariesList.values())
+    Dictionary* dict;
+    QString dictName;
+    for (int i = 0; i < topersList->count(); i++)
     {
-        if (dict->isSaldo())
-        {
-            Saldo* sal = (Saldo*)dict;
-            sal->setAutoLoaded(true);
-            sal->setQuan(true);
-            if (sal->isConst())
+        dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+        if (getDictionariesList()->contains(dictName))
+        {   // если этот справочник открыт в локальных справочниках документа...
+            dict = getDictionariesList()->value(dictName);
+            if (!dict->isConst() && !dict->isSet())
             {
-                mustShow.insert(sal->getTagName(), false);
-            }
-            else
-            {
-                sal->setMustShow(true);
-                mustShow.insert(sal->getTagName(), true);
-                sal->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
+                dict->setMustShow(true);
             }
         }
-        else
-        {
-            dict->setAutoLoaded(true);
+        dictName = topersList->at(i).crDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
+        if (getDictionariesList()->contains(dictName))
+        {   // если этот справочник открыт в локальных справочниках документа...
+            dict = getDictionariesList()->value(dictName);
             if (!dict->isConst())
             {
-                if (dict->isSet())
+                if(dict->isSaldo())
                 {
-                    mustShow.insert(dict->getTagName(), false);
+                    dictionaries->getSaldo(topersList->at(i).crAcc)->setMustShow(true);
                 }
-                else
-                {
-                    dict->setMustShow(true);
-                    mustShow.insert(dict->getTagName(), true);
-                    dict->getFormWidget()->setParent(app->getMainWindow(), Qt::Dialog);
-                }
-            }
-            else
-            {
-                mustShow.insert(dict->getTagName(), false);
             }
         }
     }
@@ -370,18 +356,6 @@ bool Document::remove(bool noAsk)
     else
         app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(app->getLogin()));
     return false;
-}
-
-
-void Document::load()
-{
-    loading = true;
-    // На время загрузки запретим просмотр и загрузку фотографий
-    bool photoEnabled = isPhotoEnabled();
-    setPhotoEnabled(false);
-    getScriptEngine()->eventImport(form);
-    setPhotoEnabled(photoEnabled);
-    loading = false;
 }
 
 
@@ -787,7 +761,7 @@ bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
     {
-        openLocalDictionaries();
+        resolveMustShownDicts();
         return true;
     }
     return false;
@@ -890,7 +864,6 @@ bool Document::setTableModel(int)
                 if (dict != 0)
                 {
                     dict->setConst(true);
-                    mustShow.insert(dict->getTagName(), false);
                 }
             }
             if (dictsList.at(i).isSaldo)
@@ -949,7 +922,7 @@ bool Document::showNextDict()
     {
         QString dictName = dictionaries->dictionariesNamesList.at(i);
         dict = getDictionariesList()->value(dictName);
-        if (mustShow.value(dict->getTagName()) && dict->isMustShow() && !dict->isLocked())
+        if (dict->isMustShow() && !dict->isLocked())
         {                       // покажем те справочники, которые можно показывать
             dict->exec();
             if (dict->isFormSelected())
@@ -1116,40 +1089,43 @@ void Document::updateCurrentRow(int strNum)
 }
 
 
-void Document::preparePrintValues(ReportScriptEngine* reportEngine)
+void Document::preparePrintValues()
 {
-    // Зарядим постоянные справочники
-    foreach (QString dictName, getDictionariesList()->keys())
+    if (reportScriptEngine != 0)
     {
-        Dictionary* dict = getDictionariesList()->value(dictName);
-        if (dict->isConst())
-        {   // Нам нужны только постоянные справочники
-            QString idFieldName = db->getObjectName("код") + "_";
-            foreach(QString field, dict->getFieldsList())
-            {
-                if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
+        // Зарядим постоянные справочники
+        foreach (QString dictName, getDictionariesList()->keys())
+        {
+            Dictionary* dict = getDictionariesList()->value(dictName);
+            if (dict->isConst())
+            {   // Нам нужны только постоянные справочники
+                QString idFieldName = db->getObjectName("код") + "_";
+                foreach(QString field, dict->getFieldsList())
                 {
-                    reportEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
+                    if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
+                    {
+                        reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
+                    }
                 }
             }
         }
-    }
-    // Зарядим реквизиты документа
-    foreach(QString field, getParent()->getFieldsList())
-    {
-        QVariant value = getParent()->getValue(field);
-        QString fieldName = field;
-        if (fieldName.contains(getParent()->getAttrPrefix()))
-            fieldName.remove(getParent()->getAttrPrefix());
-        reportEngine->getReportContext()->setValue(QString("документ.%1").arg(fieldName).toLower(), value);
-    }
+        // Зарядим реквизиты документа
+        foreach(QString field, getParent()->getFieldsList())
+        {
+            QVariant value = getParent()->getValue(field);
+            QString fieldName = field;
+            if (fieldName.contains(getParent()->getAttrPrefix()))
+                fieldName.remove(getParent()->getAttrPrefix());
+            reportScriptEngine->getReportContext()->setValue(QString("документ.%1").arg(fieldName).toLower(), value);
+        }
 
-    foreach(QString varName, variables.keys())
-    {
-        reportEngine->getReportContext()->setValue(QString("документ.%1").arg(varName).toLower(), variables.value(varName));
-    }
+        foreach(QString varName, variables.keys())
+        {
+            reportScriptEngine->getReportContext()->setValue(QString("документ.%1").arg(varName).toLower(), variables.value(varName));
+        }
 
-    Essence::preparePrintValues(reportEngine);
+        Essence::preparePrintValues();
+    }
 }
 
 

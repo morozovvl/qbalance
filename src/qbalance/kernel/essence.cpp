@@ -70,6 +70,8 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     defaultFilter = "";
     grdTable = 0;
     dictionaries = 0;
+    loading = false;
+    reportScriptEngine = 0;
 }
 
 
@@ -685,6 +687,18 @@ void Essence::cmdCancel()
 }
 
 
+void Essence::load()
+{
+    loading = true;
+    // На время загрузки запретим просмотр и загрузку фотографий
+    bool photoEnabled = isPhotoEnabled();
+    setPhotoEnabled(false);
+    getScriptEngine()->eventImport(form);
+    setPhotoEnabled(photoEnabled);
+    loading = false;
+}
+
+
 void Essence::initFormEvent(Form* form)
 {
     if (scriptEngineEnabled && getScriptEngine() != 0)
@@ -783,35 +797,68 @@ void Essence::updateCurrentRow()
 }
 
 
-void Essence::preparePrintValues(ReportScriptEngine* reportEngine)
+void Essence::preparePrintValues()
 {
-    // Зарядим имя пользователя
-    reportEngine->getReportContext()->setValue("пользователь", app->userName);
-    // Зарядим константы в контекст печати
-    QString constDictionaryName = db->getObjectName("константы");
-    QString constNameField = db->getObjectName(constDictionaryName + ".имя");
-    QString constValueField = db->getObjectName(constDictionaryName + ".значение");
-
-    // Откроем справочник констант и загрузим константы в контекст печати
-    Dictionary* dict = app->getDictionaries()->getDictionary(constDictionaryName);
-    dict->query();    // Прочитаем содержимое справочника констант
-    MySqlRelationalTableModel* model = dict->getTableModel();
-    for (int i = 0; i < model->rowCount(); i++)
+    if (reportScriptEngine != 0)
     {
-        QSqlRecord rec = model->record(i);
-        reportEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
-    }
+        // Зарядим имя пользователя
+        reportScriptEngine->getReportContext()->setValue("пользователь", app->userName);
+        // Зарядим константы в контекст печати
+        QString constDictionaryName = db->getObjectName("константы");
+        QString constNameField = db->getObjectName(constDictionaryName + ".имя");
+        QString constValueField = db->getObjectName(constDictionaryName + ".значение");
 
-    // Загрузим основную таблицу в контекст печати
-    QStringList fieldsList = getFieldsList();
-    for (int i = 1; i <= getTableModel()->rowCount(); i++)
-    {
-        QSqlRecord rec = getTableModel()->record(i-1);
-        foreach(QString field, fieldsList)
+        // Откроем справочник констант и загрузим константы в контекст печати
+        Dictionary* dict = app->getDictionaries()->getDictionary(constDictionaryName);
+        dict->query();    // Прочитаем содержимое справочника констант
+        MySqlRelationalTableModel* model = dict->getTableModel();
+        for (int i = 0; i < model->rowCount(); i++)
         {
-                reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg(field).toLower(), rec.value(field));
+            QSqlRecord rec = model->record(i);
+            reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
         }
-        reportEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg("номерстроки"), QVariant(i));
+
+        // Загрузим основную таблицу в контекст печати
+        QStringList fieldsList = getFieldsList();
+        for (int i = 1; i <= getTableModel()->rowCount(); i++)
+        {
+            QSqlRecord rec = getTableModel()->record(i-1);
+            foreach(QString field, fieldsList)
+            {
+                reportScriptEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg(field).toLower(), rec.value(field));
+            }
+            reportScriptEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg("номерстроки"), QVariant(i));
+        }
+    }
+}
+
+
+void Essence::appendPrintValues(QString prefix, QSqlQuery* query)
+{
+    if (reportScriptEngine != 0)
+    {
+        int i = 1;
+        query->first();
+        while (query->isValid())
+        {
+            QSqlRecord rec = query->record();
+            for (int j = 0; j < query->record().count(); j++)
+            {
+                reportScriptEngine->getReportContext()->setValue(QString("%1%2.%3").arg(prefix).arg(i).arg(query->record().fieldName(j)).toLower(), rec.value(j));
+            }
+            reportScriptEngine->getReportContext()->setValue(QString("%1%2.%3").arg(prefix).arg(i).arg("номерстроки"), QVariant(i));
+            query->next();
+            i++;
+        }
+    }
+}
+
+
+void Essence::clearPrintValues()
+{
+    if (reportScriptEngine != 0)
+    {
+        reportScriptEngine->getReportContext()->getData()->clear();
     }
 }
 
@@ -914,19 +961,20 @@ void Essence::print(QString fileName)
     fullFileName += fileName;
 
     // Если такого шаблона нет, попробуем получить его с сервера
-    if (getFile(app->getReportsPath(), fileName, ReportTemplateFileType))
+    getFile(app->getReportsPath(), fileName, ReportTemplateFileType);
+    if (QDir().exists(fullFileName))
     {
         bool result = true;                         // По умолчанию документ будет печататься
         // Создадим скриптовый обработчик контекста печати
         ReportScriptEngine scriptEngine(&printValues, this);
+        reportScriptEngine = &scriptEngine;
 
         // Заполним контекст данными
-        preparePrintValues(&scriptEngine);
+        preparePrintValues();
 
         if (scriptEngine.open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
         {
             result = scriptEngine.evaluate();       // Если скрипты вернут отрицательный результат, то документ не напечатается
-            scriptEngine.close();
         }
 
         if (result)
@@ -1000,6 +1048,7 @@ void Essence::print(QString fileName)
                 }
             }
         }
+        reportScriptEngine = 0;
     }
 }
 

@@ -38,13 +38,16 @@ private:
     OOXMLEngine*                ooxmlEngine;
     QHash<QString, QVariant>*    context;
     QStringList                 expressionsForEvaluation;
+    QStringList                 tablesForPrinting;
     QDomNodeList                cells;
     QString                     ooPath;
+    QString                     tableNameForPrinting;
 
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
     bool readExpression(int, int);
     QString getTableVariable(QDomElement);
     void writeCell(QDomNode, QString, QVariant);
+    void findTables();
 };
 
 #endif // OOXMLREPORTENGINE_H

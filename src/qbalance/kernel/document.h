@@ -56,7 +56,6 @@ public:
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void hide();                // Скрыть форму
-    virtual void                        load();
 
     virtual QString transformSelectStatement(QString string);
     void setDocId(int doc) { docId = doc; prepareSelectCurrentRowCommand(); }
@@ -93,18 +92,16 @@ public:
     Q_INVOKABLE void calcItog();
     bool isSinglePrv() { return singlePrv; }
     bool isQuanAccount() { return quanAccount; }
-    bool    isLoading() { return loading; }
 
 
 protected:
-    virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
+    virtual void        preparePrintValues();           // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     virtual bool        setTableModel(int = 0);
 
 private:
     QHash<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
     QHash<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
-    QHash<QString, bool>             mustShow;           // Список справочников, которые нужно показывать при добавлении строки в документ
     Documents*                      parent;
     int                             operNumber;
     int                             docId;
@@ -119,13 +116,12 @@ private:
     bool                            docModified;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
-    bool                            loading;            // Сейчас идет заполнение документа из файла
 
     bool showNextDict();
     void showItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
-    void    openLocalDictionaries();
     bool                            checkConstDicts();
+    void                            resolveMustShownDicts();    // Решить, которые справочники отображать при добавлении новой строки в документе
 };
 
 #endif // DOCUMENT_H

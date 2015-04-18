@@ -143,8 +143,8 @@ public:
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
 
-    void virtual showError(QString);
-    void virtual showCriticalError(QString);
+    Q_INVOKABLE void virtual showError(QString);
+    Q_INVOKABLE void virtual showCriticalError(QString);
 
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);

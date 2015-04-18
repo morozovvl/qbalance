@@ -66,7 +66,7 @@ public:
     Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
     virtual void                        print(QString);                 // Печать
-    virtual void                        load() { ; }
+    virtual void                        load();
 
 // Функции для получения, сохранения данных модели
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
@@ -156,6 +156,10 @@ public:
     Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(grdTable->currentIndex().column()).toUpper(); }
     Dictionaries* getDictionaries() { return dictionaries; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
+    bool    isLoading() { return loading; }
+    Q_INVOKABLE void    clearPrintValues();
+    Q_INVOKABLE void    appendPrintValues(QString, QSqlQuery*);
+    Q_INVOKABLE void    appendPrintValue(QString name, QVariant value) { reportScriptEngine->getReportContext()->setValue(name, value); }
 
 signals:
     void                photoLoaded();
@@ -188,7 +192,8 @@ protected:
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     bool                photoEnabled;
     QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
-    virtual void        preparePrintValues(ReportScriptEngine*);     // Готовит значения для печати
+    ReportScriptEngine* reportScriptEngine;
+    virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     void                openScriptEngine();
     void                closeScriptEngine();
@@ -200,6 +205,8 @@ private:
     QString             photoIdField;
     QString             photoNameField;
     QWidget*            activeWidget;
+    bool                loading;            // Сейчас идет заполнение документа (справочника) из файла
+
 
     QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QNetworkAccessManager*  m_networkAccessManager;

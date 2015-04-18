@@ -52,7 +52,7 @@ public:
     void setApp(TApplication*);
 
 public slots:
-    void dictionaryButtonPressed();
+    virtual void dictionaryButtonPressed();
 
 private:
     TApplication*                   app;

@@ -36,13 +36,13 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     formTitle = "";
     lPrintable = true;
     lCanShow = true;
-    lMustShow = true;
+    lMustShow = false;
     lIsConst = false;
     lAutoSelect = false;
     isDepend = false;
     ftsEnabled = false;
     lIsSaldo = false;
-    lIsAutoLoaded = false;
+    lIsAutoLoaded = true;
     lsetIdEnabled = true;
     parentDict = 0;
     locked = false;
@@ -178,6 +178,32 @@ bool Dictionary::add()
         }
     }
     return false;
+}
+
+
+QString Dictionary::getSearchExpression(QString tName)
+{
+    QString result;
+    QString tableName = tName;
+    if (tableName.size() == 0)
+        tableName = getTableName();
+    SearchParameters* parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
+    if (parameters != 0)
+    {
+        QVector<sParam> searchParameters = parameters->getParameters();
+        if (searchParameters.size() > 0)
+        {
+            for (int i = 0; i < searchParameters.size(); i++)
+            {
+                if (searchParameters[i].table == tableName)
+                {
+                    result = searchParameters[i].value.toString();
+                    break;
+                }
+            }
+        }
+    }
+    return result;
 }
 
 

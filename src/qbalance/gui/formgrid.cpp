@@ -459,9 +459,9 @@ void FormGrid::cmdPrint(bool autoPrint)
 
         QStringList reports;
         QMenu* menu = new QMenu(formWidget);
-        QAction* newReportAct = new QAction(this);
+        QAction* newReportAct = new QAction(QObject::trUtf8("Создать новый отчет..."), this);
         if (app->isSA())
-            menu->addAction(QObject::trUtf8("Создать новый отчет..."));
+            menu->addAction(newReportAct);
         if (files.count() > 0)
         {
             if (app->isSA())
@@ -500,8 +500,8 @@ void FormGrid::cmdPrint(bool autoPrint)
                             reportName = QString("Отчет%1").arg(i++);
                         } while (reports.contains(reportName));
                         bool ok;
-                        reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый отчет"),
-                                                      QObject::trUtf8("Наименование отчета:"), QLineEdit::Normal,
+                        reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый документ"),
+                                                      QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
                                                       reportName, &ok);
                         if (ok && !reportName.isEmpty())
                             parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt());

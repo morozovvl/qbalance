@@ -42,10 +42,10 @@ QString TableViewPlugin::codeTemplate() const {
 
 QString TableViewPlugin::domXml() const {
     return  "<ui language=\"c++\"> displayname=\"TableView\">\n"
-            "   <widget class=\"widgets::TableView\" name=\"tableView\"/>\n"
+            "   <widget class=\"TableView\" name=\"tableView\"/>\n"
             "   <customwidgets>\n"
             "       <customwidget>\n"
-            "           <class>widgets::TableView</class>\n"
+            "           <class>TableView</class>\n"
             "           <addpagemethod>addPage</addpagemethod>\n"
 //            "           <propertyspecifications>\n"
 //            "               <stringpropertyspecification name=\"fileName\" notr=\"true\" type=\"singleline\"\n"

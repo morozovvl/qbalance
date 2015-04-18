@@ -61,8 +61,8 @@ signals:
     void requery();
 
 public slots:
-    void dictionaryButtonPressed();
-    void comboBoxEnterPressed(QWidget*);
+    virtual void dictionaryButtonPressed();
+    virtual void comboBoxEnterPressed(QWidget*);
 
 private:
     TApplication*       app;

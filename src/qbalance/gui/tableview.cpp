@@ -487,9 +487,10 @@ void TableView::showPhoto()
 {
     if (picture != 0 && essence != 0)
     {
+        QString photoFileName;
         if (tableModel->rowCount() > 0)
         {
-            QString photoFileName = essence->getPhotoFile(); // Получим имя фотографии
+            photoFileName = essence->getPhotoFile(); // Получим имя фотографии
             if (photoFileName.size() > 0 && photoFileName.left(4) != "http")
             {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
                 if (QDir().exists(photoFileName))
@@ -499,8 +500,10 @@ void TableView::showPhoto()
                 if (essence->getPhotoNameField().size() > 0)
                     picture->setPhotoWindowTitle(essence->getValue(essence->getPhotoNameField()).toString().trimmed());
             }
-            picture->show(photoFileName);
         }
+        else
+            photoFileName = "";
+        picture->show(photoFileName);
     }
 }
 

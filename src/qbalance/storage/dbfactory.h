@@ -282,7 +282,6 @@ private:
     QSqlQuery               objectTypes;
     QSqlQuery               dictionariesPermitions;     // Таблица доступа к справочникам
     QSqlQuery               columnsProperties;
-//1234    QHash<QString, QHash<QString, FieldType> > columnsProperties;
     QSqlQuery               columnsHeaders;
     QSqlQuery               config;
     QSqlQuery               accounts;

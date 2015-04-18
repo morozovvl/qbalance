@@ -27,6 +27,7 @@ OOXMLReportEngine::OOXMLReportEngine(ReportScriptEngine* engine) : ReportEngine(
 {
     ooxmlEngine = new OOXMLEngine();
     ooPath = "";
+    tableNameForPrinting = "";
 }
 
 
@@ -41,7 +42,12 @@ bool OOXMLReportEngine::open(QString fileName, QHash<QString, QVariant>* cont)
     if (ooxmlEngine->open(fileName))
     {
         context = cont;
-        writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
+        findTables();
+        foreach (QString table, tablesForPrinting)
+        {
+            tableNameForPrinting = table;
+            writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
+        }
         ooxmlEngine->close();
 
         // Запустим OpenOffice
@@ -175,7 +181,7 @@ strNum - номер текущей строки тела таблицы
             if (value.size() > 0)           // если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]"
             {
                 QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
-                var = context->value(sval.replace("таблица", QString("таблица%1").arg(strNum)).toLower());  // в контексте печати наименования данных хранятся в нижнем регистре
+                var = context->value(sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower());  // в контексте печати наименования данных хранятся в нижнем регистре
             }
             else
             {
@@ -185,13 +191,17 @@ strNum - номер текущей строки тела таблицы
                 value = value.remove("[").remove("]");      // освободим его от квадратных скобок
                 var = context->value(value.toLower());      // и получим данные для него из контекста печати
             }
-            if (!var.isNull())                                      // если данные имеются
+            if (var.isValid())                                      // если данные имеются
                 writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
             else
             {
                 // данных для выражения нет
                 if (strNum == 1)                    // выведем сообщение об ошибке (для таблицы это будет только для первой строки)
-                    TApplication::exemplar()->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
+                {
+                    QString tableName = value.mid(0, value.indexOf(".", 0));
+                    if (!tablesForPrinting.contains(tableName))
+                        TApplication::exemplar()->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
+                }
                 result = false;
                 break;                      // выйдем из бесконечного цикла
             }
@@ -221,7 +231,7 @@ QString OOXMLReportEngine::getTableVariable(QDomElement cell)
         lpos = cellText.indexOf("]", fpos) + 1;             // в позиции lpos оно заканчивается
         QString svar = cellText.mid(fpos, lpos - fpos);             // svar содержит выражение вместе с квадратными скобками
         QString dvar = QString(svar).remove("[").remove("]");       //dvar содержит выражение без квадратных скобок, в чистом виде
-        if (dvar.left(7).toLower() == "таблица")                    // Если выражение начинается со слова "таблица" (т.е. "[таблица<...>]")
+        if (dvar.left(tableNameForPrinting.size()).toLower() == tableNameForPrinting)                    // Если выражение начинается со слова "таблица" (т.е. "[таблица<...>]")
         {
             return dvar;   // то значит в этой ячейке начинается табличная часть документа (тело таблицы, не шапка)
         }
@@ -273,3 +283,18 @@ void OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
 }
 
 
+void OOXMLReportEngine::findTables()
+{
+    QRegExp rx("^\\D+\\d+\\..+$");
+    QRegExp rm("\\d+\\..+$");
+    tablesForPrinting.clear();
+    foreach (QString key, context->keys())
+    {
+        if (key.contains(rx))
+        {
+            QString table = key.remove(rm);
+            if (!tablesForPrinting.contains(table))
+                tablesForPrinting.append(table);
+        }
+    }
+}
