@@ -39,7 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QNetworkReply>
 #include "../kernel/table.h"
 #include "../engine/scriptengine.h"
-#include "../engine/reportscriptengine.h"
+#include "../engine/documentscriptengine.h"
 #include "../gui/formgrid.h"
 #include "../gui/tableview.h"
 
@@ -160,6 +160,7 @@ public:
     Q_INVOKABLE void    clearPrintValues();
     Q_INVOKABLE void    appendPrintValues(QString, QSqlQuery*);
     Q_INVOKABLE void    appendPrintValue(QString name, QVariant value) { reportScriptEngine->getReportContext()->setValue(name, value); }
+    bool                isDocument() { return lIsDocument; }
 
 signals:
     void                photoLoaded();
@@ -192,7 +193,9 @@ protected:
     bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     bool                photoEnabled;
     QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
-    ReportScriptEngine* reportScriptEngine;
+    DocumentScriptEngine* reportScriptEngine;
+    bool                lIsDocument;
+
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
     void                openScriptEngine();

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "ooreportengine.h"
 
-OOReportEngine::OOReportEngine(ReportScriptEngine* engine) : ReportEngine(engine)
+OOReportEngine::OOReportEngine(DocumentScriptEngine* engine) : ReportEngine(engine)
 {
 }
 

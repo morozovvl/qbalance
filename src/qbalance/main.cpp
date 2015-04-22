@@ -29,17 +29,24 @@ bool readParameters(int argc, char *argv[]) {
     QTextStream out(stdout);
     out.setCodec(TApplication::codec());
     for (int i = 1; i < argc; i++) {
-        if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
+        if (QString(argv[i]).compare("-?", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0)
         {
             out << QObject::trUtf8("Использование программы: qbalance [Параметр]\n");
             out << QObject::trUtf8("Параметры:\n");
+            out << QObject::trUtf8("  -? | --help       - Вывести список параметров запуска программы\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
             out << QObject::trUtf8("  -d1| --debug1     - Запустить программу в режиме отладки комманд запросов (файл debug1.log)\n");
             out << QObject::trUtf8("  -d2| --debug2     - Запустить программу в режиме отладки алгоритмов ядра (файл debug2.log)\n");
             out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
             out << QObject::trUtf8("  -d4| --debug4     - Запустить программу в режиме отладки устройства COM-порта (файл debug4.log)\n");
-            out << QObject::trUtf8("  -h | --help       - Вывести список параметров запуска программы\n");
+            out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
+            out << QObject::trUtf8("  -p | --port       - Порт на хосте\n");
+            out << QObject::trUtf8("  -db| --database   - Наименование базы данных\n");
+            out << QObject::trUtf8("  -l | --login      - Логин\n");
+            out << QObject::trUtf8("  -pw| --password   - Пароль\n");
+            out << QObject::trUtf8("  -s | --script     - Выполнить скрипт с заданным именем и выйти\n");
+            out << QObject::trUtf8("  -sp| --scriptparameter - Параметр для скрипта (имя файла или строка, которую скрипт должен сам разобрать)\n");
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
@@ -70,6 +77,41 @@ bool readParameters(int argc, char *argv[]) {
             {
                 TApplication::setDebugMode(4);
             }
+        else if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--host", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::host = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-p", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--port", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::port = QString(argv[++i]).toInt();
+            }
+        else if (QString(argv[i]).compare("-db", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--database", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::database = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-l", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--login", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::username = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-pw", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--password", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::password = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-s", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--script", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::script = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-sp", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--scriptparameter", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::scriptParameter = argv[++i];
+            }
     }
     return lContinue;
 }
@@ -97,19 +139,26 @@ int main(int argc, char *argv[])
 #endif
     QTextCodec::setCodecForLocale(TApplication::codec());
 
+    TApplication application(argc, argv);
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
         lStart = readParameters(argc, argv);    // прочитаем их
     if (lStart) {
-        TApplication application(argc, argv);
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
         application.debug(application.debugMode(), "\n");
         application.debug(application.debugMode(), "Program startup.");
         if (application.open()) {       // Если приложение удалось создать
-            application.show();         // Откроем приложение
-            lResult = application.exec();
+            if (application.getScript().size() > 0)
+            {
+                lResult = application.runScript(application.getScript());
+            }
+            else
+            {
+                application.show();         // Откроем приложение
+                lResult = application.exec();
+            }
         }
         application.debug(application.debugMode(), "Program shutdown.\n");
         application.close();            // Закроем приложение

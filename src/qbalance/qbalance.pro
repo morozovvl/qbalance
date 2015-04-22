@@ -62,7 +62,6 @@ SOURCES += main.cpp \
     engine/scriptengine.cpp \
     gui/mynumericedit.cpp \
     report/reports.cpp \
-    engine/reportscriptengine.cpp \
     report/ooreportengine.cpp \
     engine/reportcontext.cpp \
     engine/sqlqueryclass.cpp \
@@ -127,7 +126,6 @@ HEADERS += kernel/app.h \
     engine/scriptengine.h \
     gui/mynumericedit.h \
     report/reports.h \
-    engine/reportscriptengine.h \
     report/ooreportengine.h \
     engine/reportcontext.h \
     engine/sqlqueryclass.h \

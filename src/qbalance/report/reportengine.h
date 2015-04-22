@@ -32,7 +32,7 @@ class Essence;
 class ReportEngine : public QObject {
     Q_OBJECT
 public:
-    ReportEngine(ReportScriptEngine* = 0);
+    ReportEngine(DocumentScriptEngine* = 0);
     ~ReportEngine();
     virtual bool open() { return true; }
     virtual void close() { return; }
@@ -42,7 +42,7 @@ protected:
     QHash<QString, QVariant>*            reportContext;
     QString                             reportName;
     QString                             reportExt;
-    ReportScriptEngine*                 scriptEngine;
+    DocumentScriptEngine*                 scriptEngine;
 };
 
 #endif // REPORTENGINE_H

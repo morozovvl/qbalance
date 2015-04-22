@@ -40,7 +40,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../report/ooreportengine.h"
 //#include "../report/oounoreportengine.h"
 #include "../report/ooxmlreportengine.h"
-#include "../engine/reportscriptengine.h"
 #include "../engine/reportcontext.h"
 
 
@@ -72,6 +71,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     dictionaries = 0;
     loading = false;
     reportScriptEngine = 0;
+    lIsDocument = false;
 }
 
 
@@ -802,7 +802,7 @@ void Essence::preparePrintValues()
     if (reportScriptEngine != 0)
     {
         // Зарядим имя пользователя
-        reportScriptEngine->getReportContext()->setValue("пользователь", app->userName);
+        reportScriptEngine->getReportContext()->setValue("пользователь", app->username);
         // Зарядим константы в контекст печати
         QString constDictionaryName = db->getObjectName("константы");
         QString constNameField = db->getObjectName(constDictionaryName + ".имя");
@@ -869,7 +869,6 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
     TApplication* app = TApplication::exemplar();
     DBFactory* db = app->getDBFactory();
     QString fullFileName = path + fileName;
-
     if (!QDir().exists(fullFileName))
     {   // Если файл не существует, то попытаемся получить его с сервера
         QByteArray templateFile = db->getFile(fileName, type);
@@ -966,7 +965,7 @@ void Essence::print(QString fileName)
     {
         bool result = true;                         // По умолчанию документ будет печататься
         // Создадим скриптовый обработчик контекста печати
-        ReportScriptEngine scriptEngine(&printValues, this);
+        DocumentScriptEngine scriptEngine(&printValues, this);
         reportScriptEngine = &scriptEngine;
 
         // Заполним контекст данными

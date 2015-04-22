@@ -39,8 +39,13 @@ QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + T
 //QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
 int    TApplication::DebugMode         = 0;
 TApplication* TApplication::Exemplar   = 0;
-QString TApplication::userName         = "";
-
+QString TApplication::username         = "";
+QString TApplication::password         = "";
+QString TApplication::host             = "";
+int TApplication::port                 = 0;
+QString TApplication::database         = "";
+QString TApplication::script           = "";
+QString TApplication::scriptParameter  = "";
 
 
 TApplication::TApplication(int & argc, char** argv)
@@ -75,6 +80,7 @@ TApplication::TApplication(int & argc, char** argv)
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
     timeIsOut = false;
+    tcpServer = 0;
 
 }
 
@@ -160,11 +166,9 @@ bool TApplication::open() {
     beginDate = endDate.addDays(-31);
     if (gui->open())
     {  // Попытаемся открыть графический интерфейс
-//        formLoader = new QUiLoader(gui);
-//        formLoader->addPluginPath(applicationDirPath() + "/plugins");
-//        formLoader->setWorkingDirectory(getFormsPath());
 
         messagesWindow = new MessageWindow();
+/*
         tcpServer = new TcpServer(config.localPort, this);
         driverFR = new DriverFR(this);
 
@@ -172,7 +176,7 @@ bool TApplication::open() {
         {
             driverFRisValid = true;
         }
-
+*/
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
             int result = gui->openDB(); // Попытаемся открыть базу данных
@@ -236,8 +240,8 @@ void TApplication::close()
         delete driverFR;
     }
 
-
-    delete tcpServer;
+    if (tcpServer != 0)
+        delete tcpServer;
 
     delete messagesWindow;
 
@@ -324,21 +328,17 @@ Dialog* TApplication::createForm(QString fileName)
     QString path = getFormsPath();
     QString fName = fileName + ".ui";
     if (!Essence::getFile(path, fName, FormFileType))
-    {
-        fName = fileName + ".ui";
-        if (!Essence::getFile(path, fName, FormFileType))
-            fName = "";
-    }
+        fName = "";
     if (fName.size() > 0)
     {
         QFile file(path + fName);
         if (file.open(QIODevice::ReadOnly))
         {
             QUiLoader formLoader(gui);
-            formLoader.addPluginPath(applicationDirPath() + "/plugins");
+            formLoader.addPluginPath(applicationDirPath() + "/plugins/designer");
             formLoader.setWorkingDirectory(getFormsPath());
 
-//          formWidget = qobject_cast<Dialog*>(formLoader.load(&file));
+//            formWidget = qobject_cast<Dialog*>(formLoader.load(&file));
             formWidget = (Dialog*)(formLoader.load(&file));
             file.close();
             if (formWidget != 0)
@@ -529,21 +529,23 @@ void TApplication::showProcesses()
         }
     }
 */
-    runScript("analizeBankAccount");
+    runScript("analizeBankAccount.js");
 }
 
 
-void TApplication::runScript(QString scriptName)
+int TApplication::runScript(QString scriptName)
 {
+    int result = 0;
     ScriptEngine* scriptEngine;
     scriptEngine = new ScriptEngine();
     if (scriptEngine->open())
     {
-        scriptEngine->evaluate(QString("evaluateScript(\"%1.js\")").arg(scriptName));
+        result = scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
         scriptEngine->close();
     }
     delete scriptEngine;
     showMessageOnStatusBar(QString(trUtf8("Скрипт %1 выполнен")).arg(scriptName));
+    return result;
 }
 
 

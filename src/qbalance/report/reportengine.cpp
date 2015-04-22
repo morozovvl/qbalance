@@ -23,11 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QString>
 #include "../kernel/app.h"
 #include "../kernel/essence.h"
-#include "../engine/reportscriptengine.h"
 #include "reportengine.h"
 
 
-ReportEngine::ReportEngine(ReportScriptEngine* engine) :QObject()
+ReportEngine::ReportEngine(DocumentScriptEngine* engine) :QObject()
 {
     scriptEngine = engine;
 }

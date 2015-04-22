@@ -47,7 +47,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Q_DECLARE_METATYPE(Dialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
 
-QHash<QString, QString>  ScriptEngine::loadedScripts;
 QString ScriptEngine::scriptFileName = "";
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
@@ -626,7 +625,6 @@ bool ScriptEngine::evaluate()
             errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
             app->getGUIFactory()->showError(errorMessage);
             // Если произошла ошибка, то удалим ошибочные скрипты
-            loadedScripts.remove(scriptFileName);
             script = "";
             return false;
         }
@@ -652,13 +650,15 @@ bool ScriptEngine::evaluate()
 
 QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fileName, int lineNumber)
 {
-    return QScriptEngine::evaluate(program, fileName, lineNumber);
+    QScriptEngine::evaluate(program, fileName, lineNumber);
+    return globalObject().property("scriptResult");
 }
 
 
 QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
-    return QScriptEngine::evaluate(program);
+    QScriptEngine::evaluate(program);
+    return globalObject().property("scriptResult");
 }
 
 
@@ -1157,8 +1157,6 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    if (!loadedScripts.contains(scriptFile))
-    {
         QString scriptPath = TApplication::exemplar()->getScriptsPath();
         Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
 
@@ -1167,12 +1165,8 @@ QString ScriptEngine::loadScript(QString scriptFile)
         {
             QString script(file.readAll());
             file.close();
-            loadedScripts.insert(scriptFile, script);
             result = script;
         }
-    }
-    else
-        result = loadedScripts.value(scriptFile);
     scriptFileName = scriptFile;
     return result;
 }

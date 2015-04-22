@@ -165,7 +165,7 @@ public:
     int getPort() { return port; }
     QString getHostName() { return hostName; }
     QString getLogin() { return currentLogin; }
-    void setHostName(QString name) { hostName = name; }
+    void setHostName(QString name) { hostName = (name == "127.0.0.1" ? "localhost" : name); }
     void setPort(int portNum) { port = portNum; }
 
     // Работа с базой

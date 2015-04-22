@@ -55,9 +55,24 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
 :ScriptEngine(parent)
 {
+    document = 0;
+    documents = 0;
     document = (Document*)parent;
-    if (document != 0)
+    if (document != 0 && document->isDocument())
         documents = document->getParent();
+    reportContext = 0;
+}
+
+
+DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = 0*/)
+:ScriptEngine(parent)
+{
+    document = 0;
+    documents = 0;
+    document = (Document*)parent;
+    if (document != 0 && document->isDocument())
+        documents = document->getParent();
+    reportContext = new ReportContext(context);
 }
 
 
@@ -66,12 +81,21 @@ void DocumentScriptEngine::loadScriptObjects()
     ScriptEngine::loadScriptObjects();
     if (script != 0)
     {
-        globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
         globalObject().setProperty("getSaldo", newFunction(getSaldo));
         globalObject().setProperty("getSumValue", newFunction(getSumValue));
         globalObject().setProperty("saveVariable", newFunction(saveVariable));
         globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
-        globalObject().setProperty("documents", newQObject(documents));
+        if (documents != 0)
+        {
+            globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
+            globalObject().setProperty("documents", newQObject(documents));
+        }
+        else
+            globalObject().setProperty("isDocumentScript", false);
+
+        // инициализируем глобальные объекты скрипта печати
+        if (reportContext != 0)
+            globalObject().setProperty("reportContext", newQObject(reportContext));
     }
 }
 
@@ -92,6 +116,22 @@ void DocumentScriptEngine::eventAppendFromQuery(int number, QSqlRecord* values)
 }
 
 
+void DocumentScriptEngine::eventBeforeLinePrint(int strNum)
+{
+    QScriptValueList args;
+    args << newVariant(QVariant(strNum));
+    globalObject().property("EventBeforeLinePrint").call(QScriptValue(), args);
+}
+
+
+void DocumentScriptEngine::eventAfterLinePrint(int strNum)
+{
+    QScriptValueList args;
+    args << newVariant(QVariant(strNum));
+    globalObject().property("EventAfterLinePrint").call(QScriptValue(), args);
+}
+
+
 QHash<QString, EventFunction>* DocumentScriptEngine::getEventsList()
 {
     ScriptEngine::getEventsList();
@@ -102,6 +142,10 @@ QHash<QString, EventFunction>* DocumentScriptEngine::getEventsList()
     appendEvent("EventAfterCalculate()", func);
     func.comment = QObject::trUtf8("Вызывается при добавлении новой записи из запроса");
     appendEvent("EventAppendFromQuery(id, record)", func);
+    func.comment = QObject::trUtf8("Вызывается до печати очередной строки в документе");
+    appendEvent("EventBeforeLinePrint(strNum)", func);
+    func.comment = QObject::trUtf8("Вызывается после печати очередной строки в документе");
+    appendEvent("EventAfterLinePrint(strNum)", func);
     return &eventsList;
 }
 

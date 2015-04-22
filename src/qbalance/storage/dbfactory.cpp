@@ -416,7 +416,7 @@ QHash<int, UserInfo> DBFactory::getUserList()
     {
         UserInfo u;
         u.loginName = query.value(1).toString();
-        u.userName = query.value(2).toString();
+        u.userName = query.value(2).toString().trimmed();
         result.insert(query.value(0).toInt(), u);
     }
     return result;

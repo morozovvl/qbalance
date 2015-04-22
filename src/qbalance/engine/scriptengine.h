@@ -52,7 +52,7 @@ public:
     QScriptValue evaluate(const QScriptProgram &);
     QString getErrorMessage() { return errorMessage; }
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
-    bool getScriptResult() { return scriptResult; }
+    int getScriptResult() { return scriptResult; }
     void setIsDocumentScript(bool docScr) { globalObject().setProperty("isDocumentScript", docScr); }
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
@@ -91,14 +91,13 @@ protected:
     Document*       document;
     virtual void    loadScriptObjects();
 private:
-    bool                scriptResult;
+    int                 scriptResult;
     QString             errorMessage;
     static QString      scriptFileName;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;
     TApplication*       app;
-    static QHash<QString, QString>  loadedScripts;                  // Список и содержимое загруженных с сервера скриптов
 };
 
 

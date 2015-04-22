@@ -29,7 +29,7 @@ class OOXMLReportEngine : public ReportEngine
 {
     Q_OBJECT
 public:
-    OOXMLReportEngine(ReportScriptEngine* = 0);
+    OOXMLReportEngine(DocumentScriptEngine* = 0);
     ~OOXMLReportEngine();
     virtual bool open() { return ReportEngine::open(); }
     virtual bool open(QString name, QHash<QString, QVariant>* context);

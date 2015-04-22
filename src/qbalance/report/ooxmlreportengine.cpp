@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "ooxmlreportengine.h"
 
 
-OOXMLReportEngine::OOXMLReportEngine(ReportScriptEngine* engine) : ReportEngine(engine)
+OOXMLReportEngine::OOXMLReportEngine(DocumentScriptEngine* engine) : ReportEngine(engine)
 {
     ooxmlEngine = new OOXMLEngine();
     ooPath = "";
@@ -111,6 +111,10 @@ void OOXMLReportEngine::writeVariables()
         bool valFound = true;                   // флаг, указывающий, что заполнение таблицы нужно закончить
         for (int strNum = 1; valFound; strNum++)    // по порядку строк документа
         {
+            if (scriptEngine != 0)
+            {
+                scriptEngine->eventBeforeLinePrint(strNum);
+            }
             QDomNode clone = firstRowNode.cloneNode();              // склонируем первую строку тела таблицы, будем читать из и писать в клон строки
             cells = clone.toElement().elementsByTagName("text:p");  // создадим список ячеек первой строки тела таблицы (узлов XML)
             for (int i = 0; i < cells.count() && valFound; i++)     // будем по порядку просматривать этот список, пока есть что смотреть
@@ -123,6 +127,10 @@ void OOXMLReportEngine::writeVariables()
             }
             if (valFound)                                                           // если для строки найдены все данные
                 lastNode = firstRowNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
+            if (scriptEngine != 0)
+            {
+                scriptEngine->eventAfterLinePrint(strNum);
+            }
         }
         firstRowNode.parentNode().removeChild(firstRowNode);                        // удалим первую строку тела документа, т.к. в ней содержатся только шаблоны (без данных)
                                                                                     // он не заполнялся данными, т.к. был нужен для клонирования следующих строк

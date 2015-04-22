@@ -52,64 +52,101 @@ int GUIFactory::openDB()
 //      -4: Пользователь отказался от ввода пароля
 
     int returnCode = 0;     // По умолчанию будем считать, что удалось открыть БД
-    ConnectionForm* connForm = new ConnectionForm();
-    connForm->open();
-    connForm->initForm(db->getHostName(), db->getDatabaseName(), db->getPort());
-    if (connForm->exec(db))
+    QHash<int, UserInfo> users;
+    int key = 0;
+
+    if (TApplication::host.size() > 0 &&
+        TApplication::port != 0 &&
+        TApplication::database.size() > 0 &&
+        TApplication::username.size() > 0 &&
+        TApplication::password.size() > 0)
     {
-        lastHostName = db->getHostName();
-        lastDbName = db->getDatabaseName();
-        lastPort = db->getPort();
+        returnCode = -1;
+        db->setHostName(TApplication::host);
+        db->setPort(TApplication::port);
+        db->setDatabaseName(TApplication::database);
         if (db->open("test", "*"))
         {
             db->setSessionVariables();
-            PassWordForm* frm = new PassWordForm();
-            QHash<int, UserInfo> users = db->getUserList();
-            frm->open();
-            foreach (int key, users.keys())
-                frm->addLogin(users.value(key).loginName + " " + users.value(key).userName);
-            db->close();
-            frm->exec();
-            if (frm->isFormSelected())
-            {   // Пользователь нажал кнопку "Ok"
-                QString login;
-                QString userName;
-                int key = 0;
-                foreach (key, users.keys())
+            users = db->getUserList();
+            foreach (key, users.keys())
+            {
+                if (users.value(key).loginName == TApplication::username ||
+                    users.value(key).loginName + " " + users.value(key).userName == TApplication::username)
                 {
-                    if (users.value(key).loginName + " " + users.value(key).userName == frm->getLogin())
+                    if (db->open(users.value(key).loginName, TApplication::password))
                     {
-                        login = users.value(key).loginName.trimmed();
-                        userName = users.value(key).userName.trimmed();
-                        TApplication::exemplar()->userName = userName;
+                        mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + users.value(key).loginName + " " + users.value(key).userName);
+                        returnCode = 0;
                         break;
                     }
                 }
-                QString password = frm->getPassword();
-                if (db->open(login, password))
-                {
-                    db->initDBFactory();
-                    db->exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_id").arg(QString("%1").arg(key)));
-                    if (connForm->connectionName().size() > 0)
-                        mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + login + " " + userName);
-                }
-                else
-                {
-                    showCriticalError(QObject::trUtf8("Неверно введен пароль."));
-                    returnCode = -3;
-                }
             }
-            else
-                returnCode = -4;  //  Пользователь нажал кнопку "Отмена"
-            delete frm;
         }
-        else
-            returnCode = -2; // Ошибка соединения с сервером
     }
     else
-        returnCode = -1;  //  Пользователь нажал кнопку "Отмена"
-    connForm->close();
-    delete connForm;
+    {
+        ConnectionForm* connForm = new ConnectionForm();
+        connForm->open();
+        connForm->initForm(db->getHostName(), db->getDatabaseName(), db->getPort());
+        if (connForm->exec(db))
+        {
+            lastHostName = db->getHostName();
+            lastDbName = db->getDatabaseName();
+            lastPort = db->getPort();
+            if (db->open("test", "*"))
+            {
+                db->setSessionVariables();
+                PassWordForm* frm = new PassWordForm();
+                users = db->getUserList();
+                frm->open();
+                foreach (int key, users.keys())
+                    frm->addLogin(users.value(key).loginName + " " + users.value(key).userName);
+                db->close();
+                frm->exec();
+                if (frm->isFormSelected())
+                {   // Пользователь нажал кнопку "Ok"
+                    QString login;
+                    QString userName;
+                    foreach (key, users.keys())
+                    {
+                        if (users.value(key).loginName + " " + users.value(key).userName == frm->getLogin())
+                        {
+                            login = users.value(key).loginName.trimmed();
+                            userName = users.value(key).userName.trimmed();
+                            TApplication::exemplar()->username = userName;
+                            break;
+                        }
+                    }
+                    QString password = frm->getPassword();
+                    if (db->open(login, password))
+                    {
+                        if (connForm->connectionName().size() > 0)
+                            mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + login + " " + userName);
+                    }
+                    else
+                    {
+                        showCriticalError(QObject::trUtf8("Неверно введен пароль."));
+                        returnCode = -3;
+                    }
+                }
+                else
+                    returnCode = -4;  //  Пользователь нажал кнопку "Отмена"
+                delete frm;
+            }
+            else
+                returnCode = -2; // Ошибка соединения с сервером
+        }
+        else
+            returnCode = -1;  //  Пользователь нажал кнопку "Отмена"
+        connForm->close();
+        delete connForm;
+    }
+    if (returnCode == 0)
+    {
+        db->initDBFactory();
+        db->exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_id").arg(QString("%1").arg(key)));
+    }
     return returnCode;
 }
 

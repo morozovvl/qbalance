@@ -31,6 +31,7 @@ public:
     explicit ReportContext(QHash<QString, QVariant>*, QObject *parent = 0);
     Q_INVOKABLE int count() { return data->count(); }
     Q_INVOKABLE QVariant getValue(QString);
+    Q_INVOKABLE QVariant getValue(QString, int);
     Q_INVOKABLE void setValue(QString, QVariant);
     Q_INVOKABLE QHash<QString, QVariant>* getData() { return data; }
     Q_INVOKABLE void removeValue(QString key);    // Удалить значение, ключ которого начинается с key

@@ -76,6 +76,7 @@ Document::Document(int oper, Documents* par): Essence()
     lDeleteable = true;
     lUpdateable = true;
     isDictionary = false;
+    lIsDocument = true;
 }
 
 
@@ -761,7 +762,7 @@ bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
     {
-        resolveMustShownDicts();
+        resolveMustShownDicts();                // Решить, какие справочники показывать при добавлении новой строки
         return true;
     }
     return false;

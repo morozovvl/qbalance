@@ -78,7 +78,13 @@ class TApplication : public QApplication {
 
 public:
     QHash<QString, Documents*> documents;                        // Объекты списков документов
-    static QString userName;
+    static QString username;
+    static QString password;
+    static QString host;
+    static int port;
+    static QString database;
+    static QString script;
+    static QString scriptParameter;
 
     TApplication(int& argc, char** argv);
     ~TApplication();
@@ -169,7 +175,9 @@ public:
 
     void saveCustomization();
     void printReportWithoutCleaning();
-    void runScript(QString);
+    int runScript(QString);
+    Q_INVOKABLE QString getScript() { return script; }                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
+    Q_INVOKABLE QString getScriptParameter() { return scriptParameter; }
 
     ConfigVars* getConfig() { return &config; }
 

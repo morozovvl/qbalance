@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtScript/QScriptValue>
 #include "scriptengine.h"
+#include "reportcontext.h"
 
 
 class Documents;
@@ -31,13 +32,19 @@ class DocumentScriptEngine : public ScriptEngine
 {
 public:
     DocumentScriptEngine(Essence *parent = 0);
-// События
+    DocumentScriptEngine(QHash<QString, QVariant>*, Essence *parent = 0);
     void eventAppendFromQuery(int, QSqlRecord*);
+    void eventBeforeLinePrint(int);
+    void eventAfterLinePrint(int);
     virtual QHash<QString, EventFunction>* getEventsList();
+    ReportContext* getReportContext() { return reportContext; }
+
 protected:
     virtual void loadScriptObjects();
+
 private:
     Documents*      documents;
+    ReportContext*  reportContext;
 };
 
 #endif // DOCUMENTSCRIPTENGINE_H
