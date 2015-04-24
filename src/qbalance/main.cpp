@@ -149,11 +149,14 @@ int main(int argc, char *argv[])
         application.setLibraryPaths(paths);
         application.debug(application.debugMode(), "\n");
         application.debug(application.debugMode(), "Program startup.");
+
+        // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
+        if (application.getScript().size() > 0)
+            application.setScriptMode(true);
+
         if (application.open()) {       // Если приложение удалось создать
-            if (application.getScript().size() > 0)
-            {
+            if (application.isScriptMode())
                 lResult = application.runScript(application.getScript());
-            }
             else
             {
                 application.show();         // Откроем приложение

@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextCodec>
 #include <QPushButton>
 #include <QPaintEngine>
+#include <QHttp>
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -81,7 +82,7 @@ TApplication::TApplication(int & argc, char** argv)
     connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
     timeIsOut = false;
     tcpServer = 0;
-
+    scriptMode = false;
 }
 
 
@@ -274,7 +275,12 @@ void TApplication::close()
 
 void TApplication::showMessageOnStatusBar(const QString &message, int timeout)
 {
-    gui->getMainWindow()->getStatusBar()->showMessage(message, timeout);
+    if (scriptMode)
+    {
+        QTextStream(stdout) << message << "\r";
+    }
+    else
+        gui->getMainWindow()->getStatusBar()->showMessage(message, timeout);
 }
 
 
@@ -545,6 +551,8 @@ int TApplication::runScript(QString scriptName)
     }
     delete scriptEngine;
     showMessageOnStatusBar(QString(trUtf8("Скрипт %1 выполнен")).arg(scriptName));
+    if (isScriptMode())
+        QTextStream(stdout) << "" << endl;
     return result;
 }
 
@@ -718,4 +726,16 @@ void TApplication::saveCustomization()
 }
 
 
+void TApplication::sendSMS(QString message)
+{
+    QEventLoop loop;
+    QNetworkReply* reply;
+    QNetworkAccessManager manager;
+    QByteArray data;
+    QString sms(message);
+    reply = manager.get(QNetworkRequest(QUrl(sms)));
+    connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
+    loop.exec();
+    qDebug() << sms << reply->error() << reply->errorString() << QString(data);
+}
 

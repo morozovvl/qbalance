@@ -181,6 +181,10 @@ public:
 
     ConfigVars* getConfig() { return &config; }
 
+    Q_INVOKABLE void sendSMS(QString);                     // Посылка СМС через сервис SMS.RU
+
+    void    setScriptMode(bool mode) { scriptMode = mode; }
+    bool    isScriptMode() { return scriptMode; }
 signals:
     void cardCodeReaded(QString);
 
@@ -216,6 +220,7 @@ private:
     TcpServer*              tcpServer;
     QTimer                  timer;
     bool                    timeIsOut;
+    bool                    scriptMode;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");

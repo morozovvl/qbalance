@@ -180,6 +180,7 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
     {
         QString scriptFile = context->argument(0).toString();
         QString script = ScriptEngine::loadScript(scriptFile);
+
         if (script.size() > 0)
         {
             QScriptContext *pc = context->parentContext();
@@ -516,8 +517,9 @@ ScriptEngine::~ScriptEngine()
 
 bool ScriptEngine::open(QString scriptFile)
 {
-    script = loadScript(scriptFile);
     loadScriptObjects();
+    if (scriptFile.size() > 0)
+        script = loadScript(scriptFile);
     return true;
 }
 
@@ -1157,16 +1159,19 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-        QString scriptPath = TApplication::exemplar()->getScriptsPath();
+    QString scriptPath;
+    if (!QDir().exists(scriptFile))     // Если файл не существует в указанном месте (не указан путь)
+    {                                   // то будем искать его там, где находятся все скрипты
+        scriptPath = TApplication::exemplar()->getScriptsPath();
         Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-
-        QFile file(scriptPath + scriptFile);
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QString script(file.readAll());
-            file.close();
-            result = script;
-        }
+    }
+    QFile file(scriptPath + scriptFile);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QString script(file.readAll());
+        file.close();
+        result = script;
+    }
     scriptFileName = scriptFile;
     return result;
 }

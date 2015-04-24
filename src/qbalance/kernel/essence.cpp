@@ -559,7 +559,8 @@ bool Essence::open()
     if (Table::open())
     {
         setOrderClause();
-        initForm();
+        if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
+            initForm();
         return true;
     }
     return false;

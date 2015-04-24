@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
+#include <QProcess>
 #include <QDebug>
 #include "ooxmlengine.h"
 
@@ -35,7 +36,7 @@ bool OOXMLEngine::open(QString fName, bool ro)
 {
     if (QDir().exists(fName))
     {
-        fileName = fName;
+        fileName = QFileInfo(fName).absoluteFilePath();
         readOnly = ro;
         templateFileName = fileName;
         // Создадим временный каталог
@@ -55,6 +56,7 @@ bool OOXMLEngine::open(QString fName, bool ro)
             unzip->start("unzip", QStringList() << fileName);
 #endif
 
+            app->print(QString(unzip->readAllStandardOutput()));
             // Если удалось распаковать, то продолжим
             if (app->waitProcessEnd(unzip))
             {
@@ -153,7 +155,6 @@ QDomElement OOXMLEngine::getCell(int row, int column)
         rowNode = rowCells.at(row);
         if (!rowNode.isNull())
         {
-
             // Теперь будем просматривать ячейки в строке
             QDomNodeList nodeList = rowNode.childNodes();
 
