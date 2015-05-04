@@ -202,7 +202,7 @@ public:
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
-    void beginTransaction();
+    bool beginTransaction();
     void commitTransaction();
     void rollbackTransaction();
 

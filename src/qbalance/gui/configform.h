@@ -37,22 +37,28 @@ public:
 public slots:
     virtual void cmdOk();
 
+private slots:
+    void dispatch(QTreeWidgetItem*, int);
+
 private:
     TApplication* app;
     QFrame* frame;
+    int currentItem;
 
-    QLineEdit* lnPortName;
+    QLineEdit* lnFrPortName;
+    QLineEdit* barCodePortName;
     QComboBox* lnBoud;
     QLineEdit* lnPort;
     QLineEdit* lnAddress;
 
-    void dispatch(QTreeWidgetItem*, int);
     void dictAdd();
     void dictProperties();
     void dictColumns();
     void dictPermissions();
     void pictures();
     void fr();
+    void barCode();
+    void cardReader();
 };
 
 #endif // CONFIGFORM_H

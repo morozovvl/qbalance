@@ -79,24 +79,21 @@ DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Es
 void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
-    if (script != 0)
+    globalObject().setProperty("getSaldo", newFunction(getSaldo));
+    globalObject().setProperty("getSumValue", newFunction(getSumValue));
+    globalObject().setProperty("saveVariable", newFunction(saveVariable));
+    globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
+    if (documents != 0)
     {
-        globalObject().setProperty("getSaldo", newFunction(getSaldo));
-        globalObject().setProperty("getSumValue", newFunction(getSumValue));
-        globalObject().setProperty("saveVariable", newFunction(saveVariable));
-        globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
-        if (documents != 0)
-        {
-            globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
-            globalObject().setProperty("documents", newQObject(documents));
-        }
-        else
-            globalObject().setProperty("isDocumentScript", false);
-
-        // инициализируем глобальные объекты скрипта печати
-        if (reportContext != 0)
-            globalObject().setProperty("reportContext", newQObject(reportContext));
+        globalObject().setProperty("isDocumentScript", true);   // скрипт выполняется в контексте документа
+        globalObject().setProperty("documents", newQObject(documents));
     }
+    else
+        globalObject().setProperty("isDocumentScript", false);
+
+    // инициализируем глобальные объекты скрипта печати
+    if (reportContext != 0)
+        globalObject().setProperty("reportContext", newQObject(reportContext));
 }
 
 

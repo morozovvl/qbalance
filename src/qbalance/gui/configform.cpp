@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QSizePolicy>
 #include <QLabel>
 #include <QLineEdit>
+#include <QGridLayout>
 #include "configform.h"
 #include "../kernel/app.h"
 #include "guifactory.h"
@@ -29,18 +30,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {
-    app->TApplication::exemplar();
+    app = TApplication::exemplar();
 
-    lnPortName = new QLineEdit();
+    lnFrPortName = new QLineEdit();
     lnBoud = new QComboBox();
     lnPort = new QLineEdit();
     lnAddress = new QLineEdit();
+    barCodePortName = new QLineEdit();
 }
 
 
 ConfigForm::~ConfigForm()
 {
-    delete lnPortName;
+    delete lnFrPortName;
     delete lnBoud;
     delete lnPort;
     delete lnAddress;
@@ -71,8 +73,11 @@ bool ConfigForm::open(QWidget* pwgt) {
 
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Картинки") << "40");
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Фискальный регистратор") << "50");
+        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Сканер штрих-кодов") << "60");
+        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Считыватель магнитных карт") << "70");
 
         connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(dispatch(QTreeWidgetItem*, int)));
+
         treeWidget->setHeaderHidden(true);
         treeWidget->setSortingEnabled(false);
         treeWidget->setFixedWidth(200);
@@ -95,7 +100,8 @@ bool ConfigForm::open(QWidget* pwgt) {
 
 
 void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
-    switch(item->text(1).toInt()) {
+    currentItem = item->text(1).toInt();
+    switch(currentItem) {
     case 10: dictAdd();
                 break;
     case 11: dictProperties();
@@ -105,6 +111,10 @@ void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
     case 40: pictures();
                 break;
     case 50: fr();
+                break;
+    case 60: barCode();
+                break;
+    case 70: cardReader();
                 break;
     }
 }
@@ -161,17 +171,18 @@ void ConfigForm::fr()
     if (layout != 0)
     {
         delete layout;
+        frame->setLayout(0);
     }
     QGridLayout* vLayout = new QGridLayout();
 
     QLabel* lblPortName = new QLabel(QObject::trUtf8("COM порт:"));
-    lblPortName->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    lnPortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    lblPortName->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    lnFrPortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vLayout->addWidget(lblPortName, 0, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnPortName, 0, 1, Qt::AlignLeft);
+    vLayout->addWidget(lnFrPortName, 0, 1, Qt::AlignLeft);
 
     QLabel* lblBoud = new QLabel(QObject::trUtf8("Скорость:"));
-    lblBoud->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lblBoud->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     lnBoud->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     lnBoud->addItem("2400");
     lnBoud->addItem("4800");
@@ -180,31 +191,80 @@ void ConfigForm::fr()
     lnBoud->addItem("38400");
     lnBoud->addItem("57600");
     lnBoud->addItem("115200");
+    lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
+
     vLayout->addWidget(lblBoud, 1, 0, Qt::AlignLeft);
     vLayout->addWidget(lnBoud, 1, 1, Qt::AlignLeft);
 
     QLabel* lblPort = new QLabel(QObject::trUtf8("Порт сервера ФР:"));
-    lblPort->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lblPort->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     lnPort->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vLayout->addWidget(lblPort, 2, 0, Qt::AlignLeft);
     vLayout->addWidget(lnPort, 2, 1, Qt::AlignLeft);
 
     QLabel* lblAddress = new QLabel(QObject::trUtf8("IP адрес сервера ФР:"));
-    lblAddress->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    lblAddress->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vLayout->addWidget(lblAddress, 3, 0, Qt::AlignLeft);
     vLayout->addWidget(lnAddress, 3, 1, Qt::AlignLeft);
+    vLayout->setRowStretch(4, 1);
 
     frame->setLayout(vLayout);
 
-    lnPortName->setText(app->getConfig()->frDriverPort);
+    lnFrPortName->setText(app->getConfig()->frDriverPort);
     lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
-    lnPort->setText(QString(app->getConfig()->localPort));
+    lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
     lnAddress->setText(app->getConfig()->remoteHost);
+}
+
+
+void ConfigForm::barCode()
+{
+    QLayout* layout = frame->layout();
+    if (layout != 0)
+    {
+        delete layout;
+        frame->setLayout(0);
+    }
+    QGridLayout* vLayout = new QGridLayout();
+
+    QLabel* lblPortName = new QLabel(QObject::trUtf8("COM порт:"));
+    lblPortName->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    barCodePortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblPortName, 0, 0, Qt::AlignLeft);
+    vLayout->addWidget(barCodePortName, 0, 1, Qt::AlignLeft);
+    vLayout->setRowStretch(1, 1);
+
+    frame->setLayout(vLayout);
+
+    barCodePortName->setText(app->getConfig()->barCodeReaderPort);
+}
+
+
+void ConfigForm::cardReader()
+{
+
 }
 
 
 void ConfigForm::cmdOk()
 {
-    qDebug() << frame;
+    switch(currentItem) {
+    case 10: dictAdd();
+                break;
+    case 11: dictProperties();
+                break;
+    case 12: dictPermissions();
+                break;
+    case 40: pictures();
+                break;
+    case 50: app->getConfig()->frDriverPort = lnFrPortName->text();
+             app->getConfig()->frDriverBaudRate = lnBoud->currentIndex();
+             app->getConfig()->localPort = lnPort->text().toInt();
+             app->getConfig()->remoteHost = lnAddress->text();
+             break;
+    case 60: app->getConfig()->barCodeReaderPort = barCodePortName->text();
+             break;
+    }
+    Form::cmdOk();
 }

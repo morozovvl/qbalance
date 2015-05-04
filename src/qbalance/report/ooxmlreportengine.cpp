@@ -189,7 +189,8 @@ strNum - номер текущей строки тела таблицы
             if (value.size() > 0)           // если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]"
             {
                 QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
-                var = context->value(sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower());  // в контексте печати наименования данных хранятся в нижнем регистре
+                QString key = sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower();
+                var = context->value(key);  // в контексте печати наименования данных хранятся в нижнем регистре
             }
             else
             {
@@ -206,9 +207,8 @@ strNum - номер текущей строки тела таблицы
                 // данных для выражения нет
                 if (strNum == 1)                    // выведем сообщение об ошибке (для таблицы это будет только для первой строки)
                 {
-                    QString tableName = value.mid(0, value.indexOf(".", 0));
-                    if (!tablesForPrinting.contains(tableName))
-                        TApplication::exemplar()->showError(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
+//                    QString tableName = value.mid(0, value.indexOf(".", 0));
+                    TApplication::exemplar()->print(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
                 }
                 result = false;
                 break;                      // выйдем из бесконечного цикла

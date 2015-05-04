@@ -180,7 +180,6 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
     {
         QString scriptFile = context->argument(0).toString();
         QString script = ScriptEngine::loadScript(scriptFile);
-
         if (script.size() > 0)
         {
             QScriptContext *pc = context->parentContext();
@@ -1021,7 +1020,7 @@ void ScriptEngine::eventCardCodeReaded(QString cardCode)
 void ScriptEngine::showScriptError(QString eventName)
 {
     errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 события %2 скрипта %3: [%4]")).arg(uncaughtExceptionLineNumber()).arg(eventName).arg(scriptFileName).arg(uncaughtException().toString());
-    app->getGUIFactory()->showError(errorMessage);
+    app->showError(errorMessage);
 }
 
 
@@ -1172,6 +1171,8 @@ QString ScriptEngine::loadScript(QString scriptFile)
         file.close();
         result = script;
     }
+//    else
+//        app->showError(QString("Не удалось найти скрипт %1").arg(scriptFile));
     scriptFileName = scriptFile;
     return result;
 }

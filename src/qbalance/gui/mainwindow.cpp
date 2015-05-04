@@ -210,31 +210,31 @@ void MainWindow::saveCustomization()
 
 void MainWindow::printReportWithoutCleaning()
 {
-    TApplication::exemplar()->runScript("printReportWithoutCleaning");
+    TApplication::exemplar()->runScript("printReportWithoutCleaning.js");
 }
 
 
 void MainWindow::printReportWithCleaning()
 {
-    TApplication::exemplar()->runScript("printReportWithCleaning");
+    TApplication::exemplar()->runScript("printReportWithCleaning.js");
 }
 
 
 void MainWindow::continuePrint()
 {
-    TApplication::exemplar()->runScript("continuePrint");
+    TApplication::exemplar()->runScript("continuePrint.js");
 }
 
 
 void MainWindow::cancelCheck()
 {
-    TApplication::exemplar()->runScript("cancelCheck");
+    TApplication::exemplar()->runScript("cancelCheck.js");
 }
 
 
 void MainWindow::printEKLZReport()
 {
-    TApplication::exemplar()->runScript("printEKLZReport");
+    TApplication::exemplar()->runScript("printEKLZReport.js");
 }
 
 

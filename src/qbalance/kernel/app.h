@@ -224,6 +224,8 @@ private:
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");
+    void                    readSettings();
+    void                    writeSettings();
 
 private slots:
     void                    setTimeIsOut() { timeIsOut = true; }

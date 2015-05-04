@@ -101,7 +101,7 @@ void TApplication::initConfig()
     config.frDriverBaudRate = 3;
 #else
     config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
-    config.frDriverPort = "/dev/ttyS0";                 // COM-порт фискального регистратора
+    config.frDriverPort = "/dev/ttyUSB0";                 // COM-порт фискального регистратора
     config.frDriverBaudRate = 6;
 #endif
     config.frDriverTimeOut = 50;
@@ -163,21 +163,24 @@ QString TApplication::getReportTemplateExt()
 
 bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
+
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
+
+    readSettings();
+
     if (gui->open())
     {  // Попытаемся открыть графический интерфейс
 
         messagesWindow = new MessageWindow();
-/*
         tcpServer = new TcpServer(config.localPort, this);
-        driverFR = new DriverFR(this);
 
+        driverFR = new DriverFR(this);
         if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
         {
             driverFRisValid = true;
         }
-*/
+
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
             int result = gui->openDB(); // Попытаемся открыть базу данных
@@ -234,6 +237,8 @@ bool TApplication::open() {
 
 void TApplication::close()
 {
+    writeSettings();
+
 //    delete formLoader;
     if (driverFR)
     {
@@ -259,12 +264,14 @@ void TApplication::close()
     if (dictionaryList != 0)
     {
         dictionaryList->close();
-        delete dictionaryList;
+//      delete dictionaryList;
+        dictionaryList->deleteLater();
     }
     if (topersList != 0)
     {
         topersList->close();
-        delete topersList;
+//        delete topersList;
+        topersList->deleteLater();
     }
     if (gui != 0)
         gui->close();
@@ -430,14 +437,20 @@ void TApplication::setIcons(QWidget* formWidget)
 
 void TApplication::showError(QString error)
 {
-    gui->showError(error);
+    if (!isScriptMode())
+        gui->showError(error);
+    else
+        showMessageOnStatusBar(error);      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error + "\n");
 }
 
 
 void TApplication::showCriticalError(QString error)
 {
-    gui->showCriticalError(error);
+    if (!isScriptMode())
+        gui->showCriticalError(error);
+    else
+        showMessageOnStatusBar(error);      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error + "\n");
 }
 
@@ -546,11 +559,12 @@ int TApplication::runScript(QString scriptName)
     scriptEngine = new ScriptEngine();
     if (scriptEngine->open())
     {
-        result = scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
+        scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
+        result = scriptEngine->evaluate("scriptResult").toInteger();
         scriptEngine->close();
     }
     delete scriptEngine;
-    showMessageOnStatusBar(QString(trUtf8("Скрипт %1 выполнен")).arg(scriptName));
+    showMessageOnStatusBar(QString(trUtf8("Скрипт %1 %2")).arg(scriptName).arg(result ? "выполнен" : "не выполнен"));
     if (isScriptMode())
         QTextStream(stdout) << "" << endl;
     return result;
@@ -737,5 +751,42 @@ void TApplication::sendSMS(QString message)
     connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
     qDebug() << sms << reply->error() << reply->errorString() << QString(data);
+}
+
+
+void TApplication::readSettings()
+{
+    QSettings settings;
+    settings.beginGroup("app");
+    config.barCodeReaderPort = settings.value("barCodeReaderPort", config.barCodeReaderPort).toString();
+    config.frDriverPort = settings.value("frDriverPort", config.frDriverPort).toString();
+    config.frDriverBaudRate = settings.value("frDriverBaudRate", config.frDriverBaudRate).toInt();
+    config.frDriverTimeOut = settings.value("frDriverTimeOut", config.frDriverTimeOut).toInt();
+    config.frDriverPassword = settings.value("frDriverPassword", config.frDriverPassword).toInt();
+    config.cardReaderPrefix = settings.value("cardReaderPrefix", config.cardReaderPrefix).toString();
+    config.localPort = settings.value("localPort", config.localPort).toInt();
+    config.remoteHost = settings.value("remoteHost", config.remoteHost).toString();
+    config.remotePort = settings.value("remotePort", config.remotePort).toInt();
+    config.saveFormConfigToDB = settings.value("saveFormConfigToDB", config.saveFormConfigToDB).toBool();
+    settings.endGroup();
+}
+
+
+void TApplication::writeSettings()
+{
+    // Сохраним данные локально, на компьютере пользователя
+    QSettings settings;
+    settings.beginGroup("app");
+    settings.setValue("barCodeReaderPort", config.barCodeReaderPort);
+    settings.setValue("frDriverPort", config.frDriverPort);
+    settings.setValue("frDriverBaudRate", config.frDriverBaudRate);
+    settings.setValue("frDriverTimeOut", config.frDriverTimeOut);
+    settings.setValue("frDriverPassword", config.frDriverPassword);
+    settings.setValue("cardReaderPrefix", config.cardReaderPrefix);
+    settings.setValue("localPort", config.localPort);
+    settings.setValue("remoteHost", config.remoteHost);
+    settings.setValue("remotePort", config.remotePort);
+    settings.setValue("saveFormConfigToDB", config.saveFormConfigToDB);
+    settings.endGroup();
 }
 

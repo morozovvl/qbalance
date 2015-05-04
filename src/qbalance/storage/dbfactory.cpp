@@ -204,11 +204,11 @@ bool DBFactory::open(QString login, QString password)
 }
 
 
-void DBFactory::beginTransaction()
+bool DBFactory::beginTransaction()
 {
     QString command = "BEGIN;";
 //    TApplication::exemplar()->debug(1, command);
-    exec(command);
+    return exec(command);
 }
 
 
@@ -377,7 +377,9 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
     bool lResult = query->exec(str);
     if (!lResult && showError)
     {
-        setError(query->lastError().text());
+        QString errorText = query->lastError().text().trimmed();
+        if (errorText.size() > 0)
+            setError(errorText);
     }
     query->clear();
     delete query;
@@ -2594,25 +2596,30 @@ bool DBFactory::execCommands()
     updateValues.clear();
 
     // Выполним все команды
-    if (commands.count() > 1)
-        beginTransaction();
-
-    for (int i = 0; i < commands.count(); i++)
+    if (commands.count() > 1)                           // Если команд больше одной
     {
-        if (!exec(commands.at(i)))
+        if (beginTransaction())                         // То пачку команд снабдим транзакциями
         {
-            if (commands.count() > 1)
-                rollbackTransaction();
-            commands.clear();
+            for (int i = 0; i < commands.count(); i++)
+            {
+                if (!exec(commands.at(i)))
+                {
+                    rollbackTransaction();
+                    clearCommands();
+                    return false;
+                }
+            }
+            commitTransaction();
+        }
+        else
+        {
+            clearCommands();
             return false;
         }
     }
-
-    if (commands.count() > 1)
-        commitTransaction();
-
+    else if (commands.count() == 1)
+        exec(commands.at(0));
     clearCommands();
-
     return true;
 }
 
