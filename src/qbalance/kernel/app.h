@@ -103,6 +103,7 @@ public:
     QString getFormsPath(QString = "");
     QString getScriptsPath();
     QString getReportsPath(QString = "");
+    QString getLogPath() { return getAnyPath("log"); }
     Q_INVOKABLE QString getPhotosPath(QString = "");
     QString getConfigPrefix() { return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName()); }
     virtual MainWindow* getMainWindow() { return gui->getMainWindow(); }
@@ -226,6 +227,7 @@ private:
     QString getAnyPath(QString, QString = "");
     void                    readSettings();
     void                    writeSettings();
+    void                    saveMessages();
 
 private slots:
     void                    setTimeIsOut() { timeIsOut = true; }

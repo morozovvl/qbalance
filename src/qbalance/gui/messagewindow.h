@@ -31,6 +31,7 @@ class MessageWindow : public QObject
 public:
     explicit MessageWindow();
     ~MessageWindow();
+    QTextEdit* getTextEditor() { return textEditor; }
 
 public slots:
     void print(QString = "");

@@ -237,6 +237,7 @@ bool TApplication::open() {
 
 void TApplication::close()
 {
+    saveMessages();
     writeSettings();
 
 //    delete formLoader;
@@ -323,13 +324,16 @@ QString TApplication::getPhotosPath(QString photoName) {
 
 QString TApplication::getAnyPath(QString subPath, QString fName)
 {
-    QString dir = applicationDirPath() + "/" + subPath + "/";
+    QString dir = applicationDirPath() + "/data";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    dir += getConfigPrefix() + "/";
+    dir += "/" + getConfigPrefix();
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    QString fileName = dir + fName;
+    dir += "/" + subPath;
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+    QString fileName = dir + "/" + fName;
     return fileName;
 
 }
@@ -790,3 +794,31 @@ void TApplication::writeSettings()
     settings.endGroup();
 }
 
+
+void TApplication::saveMessages()
+{
+    QString text = messagesWindow->getTextEditor()->toPlainText();
+    if (text.size() > 0)
+    {
+        QString fileName = getLogPath() + "/messages_" + QDate::currentDate().toString("dd_MM_yyyy");
+        if (QDir().exists(fileName + ".log"))
+        {
+            for (int i = 1; true; i++)
+            {
+                QString fileName1 = QString("%1_%2").arg(fileName).arg(i);
+                if (!QDir().exists(fileName1 + ".log"))
+                {
+                    fileName = fileName1;
+                    break;
+                }
+            }
+        }
+        QFile file(fileName + ".log");
+        if (file.open(QFile::WriteOnly | QFile::Append))
+        {
+            QTextStream out(&file);
+            out << text << "\n";
+        }
+        file.close();
+    }
+}
