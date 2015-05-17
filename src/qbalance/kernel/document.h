@@ -68,7 +68,9 @@ public:
     DocumentScriptEngine* getScriptEngine();
     bool getIsSingleString() { return isSingleString; }
     Q_INVOKABLE void setDate(QString);
+    Q_INVOKABLE QString getDate();
     Q_INVOKABLE void setNumber(QString);
+    Q_INVOKABLE QString getNumber();
     Q_INVOKABLE void showParameterText(QString);
     Q_INVOKABLE int appendDocString();
     bool prepareValue(QString, Dictionary*);

@@ -3,7 +3,8 @@
 # -------------------------------------------------
 
 TEMPLATE = subdirs
-SUBDIRS = src/qbalance/plugins \
+SUBDIRS = src/qextserialport \
+	  src/qbalance/plugins \
           src/qbalance
           
 

@@ -1139,20 +1139,34 @@ void Document::setEnabled(bool en)
 
 void Document::setDate(QString date)
 {
-    QString field = "дата";
+    QString field = db->getObjectName("документы.дата");
     parent->setValue(field, QVariant(date));
     getForm()->getDateEdit()->setDate(parent->getValue(field).toDate());
     getForm()->getDateEdit()->repaint();
 }
 
 
+QString Document::getDate()
+{
+    QString field = db->getObjectName("документы.дата");
+    return parent->getValue(field).toString();
+}
+
+
 void Document::setNumber(QString number)
 {
-    QString field = "номер";
+    QString field = db->getObjectName("документы.номер");
     parent->setValue(field, QVariant(number));
     getForm()->getNumberEdit()->repaint();
     getForm()->getNumberEdit()->setText(getParent()->getValue(field).toString());
 
+}
+
+
+QString Document::getNumber()
+{
+    QString field = db->getObjectName("документы.номер");
+    return parent->getValue(field).toString();
 }
 
 

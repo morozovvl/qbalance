@@ -69,7 +69,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 } else {
     QESP_LIB_BASENAME = qextserialport
 }
-TARGET = ../../../$$qextLibraryName($$QESP_LIB_BASENAME)
+TARGET = ../../lib/$$qextLibraryName($$QESP_LIB_BASENAME)
 VERSION = 1.2.0
 
 # generate feature file by qmake based on this *.in file.

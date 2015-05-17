@@ -62,7 +62,6 @@ set ( PROJECT_NAME_SRCS
     ./gui/messagewindow.cpp
 
     ./engine/scriptengine.cpp
-    ./engine/reportscriptengine.cpp
     ./engine/reportcontext.cpp
     ./engine/sqlqueryclass.cpp
     ./engine/sqlqueryprototype.cpp
@@ -137,7 +136,6 @@ set ( PROJECT_NAME_HDRS
     ./gui/messagewindow.h
 
     ./engine/scriptengine.h
-    ./engine/reportscriptengine.h
     ./engine/reportcontext.h
     ./engine/sqlqueryclass.h
     ./engine/sqlqueryprototype.h
