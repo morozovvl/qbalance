@@ -34,6 +34,7 @@ OOXMLEngine::~OOXMLEngine()
 
 bool OOXMLEngine::open(QString fName, bool ro)
 {
+    bool result = false;
     if (QDir().exists(fName))
     {
         fileName = QFileInfo(fName).absoluteFilePath();
@@ -41,7 +42,7 @@ bool OOXMLEngine::open(QString fName, bool ro)
         templateFileName = fileName;
         // Создадим временный каталог
         QTemporaryFile templateFile;
-        templateFile.setFileTemplate(QDir().tempPath() + "/tmp_XXXXXX");
+        templateFile.setFileTemplate(QDir().tempPath() + "/tmp_" + QFileInfo(fileName).fileName() + "_XXXXXX");
         templateFile.open();
         tmpDir = templateFile.fileName() + ".tmp";
         templateFile.close();
@@ -55,7 +56,6 @@ bool OOXMLEngine::open(QString fName, bool ro)
 #else
             unzip->start("unzip", QStringList() << fileName);
 #endif
-
             app->print(QString(unzip->readAllStandardOutput()));
             // Если удалось распаковать, то продолжим
             if (app->waitProcessEnd(unzip))
@@ -68,17 +68,18 @@ bool OOXMLEngine::open(QString fName, bool ro)
                         rowCells = doc.elementsByTagName("table:table-row");
                         rowQuan = rowCells.count();
                         file.close();
-                        return true;
+                        result = true;
                     }
                 }
             }
             else
                 app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
+            QDir().rmdir(tmpDir);
         }
     }
     else
         app->showError(QObject::trUtf8("Не удалось открыть файл ") + fName);
-    return false;
+    return result;
 }
 
 
@@ -150,7 +151,7 @@ QDomElement OOXMLEngine::getCell(int row, int column)
 {
     QDomNode rowNode;
     QDomElement element;
-    if (row >= 0 && row < rowCells.count()-1 && column >= 0)
+    if (row >= 0 && row < rowQuan-1 && column >= 0)
     {
         rowNode = rowCells.at(row);
         if (!rowNode.isNull())

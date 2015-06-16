@@ -498,11 +498,16 @@ ScriptEngine::ScriptEngine(Essence *parent) : QScriptEngine(parent)
     errorMessage = "";
     app = TApplication::exemplar();
     document = 0;
+    documents = 0;
     if (parent != 0 && parent->getDictionaries() != 0)
     {
         Dictionaries* dicts = parent->getDictionaries();
         document = dicts->getDocument();
+        if (document != 0)
+            documents = document->getParent();
+
     }
+    loadScriptObjects();
 }
 
 
@@ -516,10 +521,16 @@ ScriptEngine::~ScriptEngine()
 
 bool ScriptEngine::open(QString scriptFile)
 {
-    loadScriptObjects();
+//    loadScriptObjects();
     if (scriptFile.size() > 0)
         script = loadScript(scriptFile);
     return true;
+}
+
+
+void ScriptEngine::close()
+{
+    script = "";
 }
 
 
@@ -589,6 +600,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("getOldValue", newFunction(getOldValue));
     globalObject().setProperty("quotes", newFunction(quotes));
     globalObject().setProperty("document", newQObject(document));
+    globalObject().setProperty("documents", newQObject(documents));
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
     globalObject().setProperty("SumToString", newFunction(SumToString));
 
@@ -848,6 +860,22 @@ void ScriptEngine::eventAfterAddString()
             showScriptError(eventName);
         }
     }
+}
+
+
+bool ScriptEngine::eventAfterShowNextDicts()
+{
+    bool result = true;
+    QString eventName = "EventAfterShowNextDicts";
+    if (globalObject().property(eventName).isFunction())
+    {
+        result = globalObject().property(eventName).call().toBool();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName);
+        }
+    }
+    return result;
 }
 
 
@@ -1132,6 +1160,10 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после удаления строки из документа");
     func.body = "return true;";
     appendEvent("EventAfterDeleteString()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит после показа всех необходимых справочников при добавлении строки в документ");
+    func.body = "return true;";
+    appendEvent("EventAfterShowNextDicts()", func);
 
     return &eventsList;
 }

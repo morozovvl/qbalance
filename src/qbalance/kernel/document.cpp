@@ -213,29 +213,18 @@ void Document::showItog()
 
 void Document::resolveMustShownDicts()
 {
-    Dictionary* dict;
-    QString dictName;
-    for (int i = 0; i < topersList->count(); i++)
+    foreach (QString dictName, getDictionariesList()->keys())
     {
-        dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
-        if (getDictionariesList()->contains(dictName))
-        {   // если этот справочник открыт в локальных справочниках документа...
-            dict = getDictionariesList()->value(dictName);
-            if (!dict->isConst() && !dict->isSet())
+        Dictionary* dict = getDictionariesList()->value(dictName);
+        if (!dict->isConst())
+        {
+            if (!dict->isSet())
             {
                 dict->setMustShow(true);
             }
-        }
-        dictName = topersList->at(i).crDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
-        if (getDictionariesList()->contains(dictName))
-        {   // если этот справочник открыт в локальных справочниках документа...
-            dict = getDictionariesList()->value(dictName);
-            if (!dict->isConst())
+            if(dict->isSaldo())
             {
-                if(dict->isSaldo())
-                {
-                    dictionaries->getSaldo(topersList->at(i).crAcc)->setMustShow(true);
-                }
+                dict->setMustShow(true);
             }
         }
     }
@@ -314,6 +303,13 @@ int Document::addFromQuery(int id)
 }
 
 
+void Document::load()
+{
+    if (checkConstDicts())
+        Essence::load();
+}
+
+
 bool Document::checkConstDicts()
 {
     foreach (QString dictName, getDictionariesList()->keys())
@@ -321,6 +317,8 @@ bool Document::checkConstDicts()
         Dictionary* dict = getDictionary(dictName);
         if (dict->isConst())
         {
+            if (dictName.left(9) == "документы" && dictName.size() > 9)
+                dict->setId(getParent()->getId());
             if (dict->getId() == 0)
             {
                 if (!getIsSingleString())
@@ -567,7 +565,8 @@ void Document::loadDocument()
                     if (val > 0)
                     {
                         dict->setId(val);
-                        showParameterText(dictName);
+                        if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                            showParameterText(dictName);
                     }
                 }
                 // Проверим связанные справочники этого справочника, если он набор
@@ -588,7 +587,8 @@ void Document::loadDocument()
                                 if (val > 0)
                                 {
                                     childDict->setId(val);
-                                    showParameterText(dictName);
+                                    if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                                        showParameterText(dictName);
                                 }
                             }
                         }
@@ -607,7 +607,8 @@ void Document::loadDocument()
                     if (val > 0)
                     {
                         dict->setId(val);
-                        showParameterText(dictName);
+                        if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                            showParameterText(dictName);
                     }
                 }
                 // Проверим связанные справочники этого справочника, если он набор
@@ -626,7 +627,8 @@ void Document::loadDocument()
                             if (val > 0)
                             {
                                 childDict->setId(val);
-                                showParameterText(dictName);
+                                if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                                    showParameterText(dictName);
                             }
                         }
                     }
@@ -942,6 +944,8 @@ bool Document::showNextDict()
             }
         }
     }
+    if (anyShown)
+        anyShown = scriptEngine->eventAfterShowNextDicts();
 
     return anyShown;
 }
@@ -1097,15 +1101,16 @@ void Document::preparePrintValues()
         // Зарядим постоянные справочники
         foreach (QString dictName, getDictionariesList()->keys())
         {
-            Dictionary* dict = getDictionariesList()->value(dictName);
-            if (dict->isConst())
-            {   // Нам нужны только постоянные справочники
-                QString idFieldName = db->getObjectName("код") + "_";
-                foreach(QString field, dict->getFieldsList())
-                {
-                    if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
+            if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+            {
+                Dictionary* dict = getDictionariesList()->value(dictName);
+                if (dict->isConst())
+                {   // Нам нужны только постоянные справочники
+                    QString idFieldName = db->getObjectName("код") + "_";
+                    foreach(QString field, dict->getFieldsList())
                     {
-                        reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
+                        if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
+                            reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
                     }
                 }
             }
@@ -1149,7 +1154,7 @@ void Document::setDate(QString date)
 QString Document::getDate()
 {
     QString field = db->getObjectName("документы.дата");
-    return parent->getValue(field).toString();
+    return parent->getValue(field).toDate().toString("dd.MM.yyyy");
 }
 
 

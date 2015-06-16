@@ -78,6 +78,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     }
     lIsSet = db->isSet(tableName);
     doSubmit = true;
+    sqlCommand = "";
 //    scriptEngineEnabled = false;
 }
 
@@ -367,8 +368,9 @@ void Dictionary::setForm(QString formName)
 }
 
 
-bool Dictionary::open()
+bool Dictionary::open(QString command)
 {
+    sqlCommand = command;
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
         dictTitle = tableName;
@@ -457,9 +459,29 @@ QStringList Dictionary::getChildDicts()
 
 bool Dictionary::setTableModel(int)
 {
-    if (Essence::setTableModel(0))
+    QString prefix = "документы";
+    if (tableName.left(9) == prefix)
     {
-        tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+        int oper = QString(tableName).replace(prefix, "").toInt();
+        sqlCommand = QString("SELECT * FROM (SELECT * FROM %1 WHERE %2 = %3) %4").arg(db->getObjectNameCom("vw_спрдокументы"))
+                                                                             .arg(db->getObjectNameCom("vw_спрдокументы.ОПЕР"))
+                                                                             .arg(oper)
+                                                                             .arg(tableName);
+    }
+    if (sqlCommand.size() == 0)
+    {
+        if (Essence::setTableModel(0))
+        {
+            tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+            db->getColumnsRestrictions(tableName, &columnsProperties);
+            return true;
+        }
+    }
+    else
+    {
+        tableModel = new MySqlRelationalTableModel("", this);
+        tableModel->setSelectStatement(sqlCommand);
+        db->getColumnsProperties(&columnsProperties, tableName, tableName);
         db->getColumnsRestrictions(tableName, &columnsProperties);
         return true;
     }
@@ -565,8 +587,9 @@ void Dictionary::setOrderClause()
     }
     else
     {
-        Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
-                                                 .arg(db->getObjectNameCom(tableName + ".имя")));
+        if (tableName.left(9) != "документы")
+            Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
+                                                     .arg(db->getObjectNameCom(tableName + ".имя")));
     }
 }
 

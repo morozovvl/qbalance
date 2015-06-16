@@ -362,6 +362,9 @@ bool WizardOperation::setData()
     db->setFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
 
+    if (app->getDocuments(oper) != 0)
+        app->removeDocuments(oper);
+
     // Перезагрузим список столбцов
     db->loadSystemTables();
 

@@ -66,7 +66,7 @@ void TcpClient::slotReadyRead()
 
 void TcpClient::slotError()
 {
-    TApplication::exemplar()->showMessageOnStatusBar(tr("Ошибка соединения: %1.").arg(m_pTcpSocket->errorString()));
+    TApplication::exemplar()->showMessageOnStatusBar(tr("Ошибка соединения: %1.\n").arg(m_pTcpSocket->errorString()));
 }
 
 

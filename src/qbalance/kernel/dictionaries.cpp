@@ -172,6 +172,7 @@ void Dictionaries::removeDictionary(QString dictName)
         dict->close();
         dictionariesList.remove(dictName);
         dictionariesNamesList.removeAt(dictionariesNamesList.indexOf(dictName));
+        delete dict;
     }
 }
 

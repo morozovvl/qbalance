@@ -253,9 +253,9 @@ int Essence::locateId(qulonglong id)
 QString Essence::getName(int row)
 {
     if (row >= 0)
-        return getValue(nameFieldName, row).toString();
+        return getValue(nameFieldName, row).toString().trimmed();
     int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
-    return getValue(nameFieldName, r).toString();
+    return getValue(nameFieldName, r).toString().trimmed();
 }
 
 
@@ -577,12 +577,15 @@ void Essence::close()
         form->close();
         delete form;
     }
+    closeScriptEngine();
     Table::close();
 }
 
 
 void Essence::setScriptEngine()
 {
+//    if (scriptEngine != 0)
+//        delete scriptEngine;
     scriptEngine = new ScriptEngine(this);
 }
 
@@ -622,7 +625,11 @@ void Essence::openScriptEngine()
 void Essence::closeScriptEngine()
 {
     if (scriptEngine != 0)
+    {
+        scriptEngine->close();
         delete scriptEngine;
+        scriptEngine = 0;
+    }
 }
 
 
@@ -802,6 +809,8 @@ void Essence::preparePrintValues()
 {
     if (reportScriptEngine != 0)
     {
+        // Зарядим текущую дату
+        reportScriptEngine->getReportContext()->setValue("сегодня", QDate().currentDate().toString("dd.MM.yyyy"));
         // Зарядим имя пользователя
         reportScriptEngine->getReportContext()->setValue("пользователь", app->username);
         // Зарядим константы в контекст печати

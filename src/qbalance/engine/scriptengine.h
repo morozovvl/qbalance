@@ -32,6 +32,7 @@ class Form;
 class Essence;
 class TApplication;
 class Document;
+class Documents;
 
 
 struct EventFunction {
@@ -46,7 +47,7 @@ public:
     ScriptEngine(Essence* parent = 0);
     ~ScriptEngine();
     bool open(QString fileName = "");
-    void close() { ; }
+    void close();
     bool evaluate();
     QScriptValue evaluate(const QString &, const QString & = QString(), int = 1);
     QScriptValue evaluate(const QScriptProgram &);
@@ -62,6 +63,7 @@ public:
     void eventParametersChanged();
     bool eventBeforeAddString();
     void eventAfterAddString();
+    bool eventAfterShowNextDicts();
     void eventBeforeDeleteString();
     void eventAfterDeleteString();
     void eventInitForm(Form*);
@@ -89,6 +91,7 @@ protected:
     QHash<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     QString         script;
     Document*       document;
+    Documents*      documents;
     virtual void    loadScriptObjects();
 private:
     int                 scriptResult;

@@ -187,7 +187,8 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         {
             if (getParent()->getDictionariesList()->value(dictName)->isConst())
             {
-                parameters->addString(dictName);
+                if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                    parameters->addString(dictName);
             }
         }
     }

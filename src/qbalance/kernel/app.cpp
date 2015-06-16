@@ -212,9 +212,9 @@ bool TApplication::open() {
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
                     if (driverFRisValid)
-                        showMessageOnStatusBar("Найден фискальный регистратор.");
+                        showMessageOnStatusBar("Найден фискальный регистратор.\n");
                     else
-                        showMessageOnStatusBar("Фискальный регистратор не найден.");
+                        showMessageOnStatusBar("Фискальный регистратор не найден.\n");
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -568,7 +568,7 @@ int TApplication::runScript(QString scriptName)
         scriptEngine->close();
     }
     delete scriptEngine;
-    showMessageOnStatusBar(QString(trUtf8("Скрипт %1 %2")).arg(scriptName).arg(result ? "выполнен" : "не выполнен"));
+    showMessageOnStatusBar(QString(trUtf8("Скрипт %1 %2\n")).arg(scriptName).arg(result ? "выполнен" : "не выполнен"));
     if (isScriptMode())
         QTextStream(stdout) << "" << endl;
     return result;

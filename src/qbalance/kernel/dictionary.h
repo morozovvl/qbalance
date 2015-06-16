@@ -35,7 +35,7 @@ public:
     Dictionary(QObject *parent = 0) { Dictionary("", parent); }
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
-    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual bool open(QString = "");
 
 // Функции для работы с моделью данных
     virtual bool add();
@@ -46,6 +46,8 @@ public:
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     virtual void                        setOrderClause();
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
+    Q_INVOKABLE virtual void setSqlCommand(QString command) { sqlCommand = command; }
+
 
 // Функции для работы справочника в составе документа
 // Используются в момент добавления новых записей в документ
@@ -108,6 +110,7 @@ private:
     bool            lsetIdEnabled;
     bool            isDepend;
     QString         dictTitle;
+    QString         sqlCommand;
 };
 
 #endif // DICTIONARY_H

@@ -28,7 +28,7 @@ TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
     m_ptcpServer = new QTcpServer(this);
     if (!m_ptcpServer->listen(QHostAddress::Any, nPort))
     {
-        TApplication::exemplar()->showMessageOnStatusBar(tr("Не запускается TcpServer: %1.").arg(m_ptcpServer->errorString()));
+        TApplication::exemplar()->showMessageOnStatusBar(tr("Не запускается TcpServer: %1.\n").arg(m_ptcpServer->errorString()));
         m_ptcpServer->close();
         return;
     }

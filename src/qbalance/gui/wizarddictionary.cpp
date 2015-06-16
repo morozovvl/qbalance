@@ -451,6 +451,9 @@ bool WizardDictionary::setData()
     db->setFile(table + ".qs", ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
 
+    if (app->getDictionaries()->getDictionariesList()->contains(table))
+        app->getDictionaries()->removeDictionary(table);
+
     // Перезагрузим список столбцов
     db->reloadDictionariesPermitions();
     db->reloadColumnProperties();
