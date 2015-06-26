@@ -266,14 +266,14 @@ void Essence::setId(qulonglong id)
         // На время отключим обновление(показ) фотографии
         bool enabled = photoEnabled;
         photoEnabled = false;
-        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id));
+        query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id), true);
         photoEnabled = enabled;
     }
     grdTable->selectRow(0);
 }
 
 
-void Essence::query(QString filter)
+void Essence::query(QString filter, bool)
 {
     QModelIndex index;
     if (grdTable != 0)

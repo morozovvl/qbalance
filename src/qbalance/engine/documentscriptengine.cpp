@@ -55,11 +55,6 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
 :ScriptEngine(parent)
 {
-    document = 0;
-    documents = 0;
-    document = (Document*)parent;
-    if (document != 0 && document->isDocument())
-        documents = document->getParent();
     reportContext = 0;
 }
 
@@ -67,11 +62,6 @@ DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
 DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = 0*/)
 :ScriptEngine(parent)
 {
-    document = 0;
-    documents = 0;
-    document = (Document*)parent;
-    if (document != 0 && document->isDocument())
-        documents = document->getParent();
     reportContext = new ReportContext(context);
 }
 
@@ -98,7 +88,7 @@ void DocumentScriptEngine::loadScriptObjects()
 
 
 // События
-void DocumentScriptEngine::eventAppendFromQuery(int number, QSqlRecord* values)
+void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* values)
 {
     // Сначала преобразуем данные в записи к виду, пригодному для передачи в скрипты
     QScriptValue row = newObject();
@@ -107,7 +97,7 @@ void DocumentScriptEngine::eventAppendFromQuery(int number, QSqlRecord* values)
 
     // Подготовим номер запроса и запись с данными запроса для передачи в скрипт через параметры функции
     QScriptValueList args;
-    args << newVariant(QVariant(number));
+    args << newVariant(QVariant(queryName));
     args << row;
     globalObject().property("EventAppendFromQuery").call(QScriptValue(), args);
 }
@@ -138,7 +128,7 @@ QHash<QString, EventFunction>* DocumentScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
     appendEvent("EventAfterCalculate()", func);
     func.comment = QObject::trUtf8("Вызывается при добавлении новой записи из запроса");
-    appendEvent("EventAppendFromQuery(id, record)", func);
+    appendEvent("EventAppendFromQuery(queryName, record)", func);
     func.comment = QObject::trUtf8("Вызывается до печати очередной строки в документе");
     appendEvent("EventBeforeLinePrint(strNum)", func);
     func.comment = QObject::trUtf8("Вызывается после печати очередной строки в документе");

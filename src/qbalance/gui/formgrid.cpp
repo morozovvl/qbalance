@@ -118,7 +118,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         // Для всех картинок установим указатель на приложение
         foreach(QWidget* wid, formWidget->findChildren<QWidget*>())
         {
-            if (wid->metaObject()->className() == "Picture")
+            if (QString(wid->metaObject()->className()).compare("Picture", Qt::CaseInsensitive) == 0)
                 ((Picture*)wid)->setApp(app);
         }
     }

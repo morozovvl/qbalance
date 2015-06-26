@@ -275,29 +275,26 @@ bool Document::add()
 }
 
 
-int Document::addFromQuery(int id)
+int Document::addFromQuery(QString queryName)
 {
-    if (checkConstDicts())
+    if (queryName.size() > 0 && checkConstDicts())
     {
-        QSqlRecord data = db->getDocumentAddQuery(id);
-        if (!data.isEmpty())
+        QSqlQuery queryData = db->execQuery(QString("SELECT * FROM %1;").arg(queryName));
+        QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
+        progressBar.setMaximum(queryData.size());
+        progressBar.show();
+        int i = 0;
+        while (queryData.next())
         {
-            QSqlQuery queryData = db->execQuery(data.value(1).toString());
-            QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
-            progressBar.setMaximum(queryData.size());
-            progressBar.show();
-            int i = 0;
-            while (queryData.next())
-            {
-                QSqlRecord record = queryData.record();
-                ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(data.value(0).toInt(), &record);
-                i++;
-                progressBar.setValue(i);
-            }
-            query();
-            calcItog();
-            return queryData.size();
+            QSqlRecord record = queryData.record();
+            ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+            i++;
+            progressBar.setValue(i);
         }
+        calcItog();
+        db->execCommands();
+        query();
+        return queryData.size();
     }
     return 0;
 }
@@ -556,8 +553,7 @@ void Document::loadDocument()
             dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
             if (getDictionariesList()->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
-                dict = getDictionariesList()->value(dictName);
-                dict->setScriptEngineEnabled(false);
+                dict = getDictionaries()->getDictionary(dictName);
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
                     // то установим его значение, которое актуально для всего документа

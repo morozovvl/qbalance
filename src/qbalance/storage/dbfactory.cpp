@@ -1815,32 +1815,15 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
 QSqlQuery DBFactory::getDocumentAddQueriesList(int oper)
 // Возвращает список наименований запросов, доступных для заполнения документа по данной типовой операции
 {
-    QString command = QString("SELECT %1, %2 FROM %3 WHERE %4=%5 ORDER BY %1;").arg(getObjectNameCom("запросы.имя"))
-                                                                               .arg(getObjectNameCom("запросы.код"))
-                                                                               .arg(getObjectNameCom("запросы"))
-                                                                               .arg(getObjectNameCom("запросы.опер"))
+    QString command = QString("SELECT %1, %2, %3 FROM %4 WHERE %5=%6 ORDER BY %1;").arg(getObjectNameCom("vw_запросы.имя"))
+                                                                               .arg(getObjectNameCom("vw_запросы.код"))
+                                                                               .arg(getObjectNameCom("vw_запросы.комментарий"))
+                                                                               .arg(getObjectNameCom("vw_запросы"))
+                                                                               .arg(getObjectNameCom("vw_запросы.опер"))
                                                                                .arg(oper);
     clearError();
     return execQuery(command);
 }
-
-
-QSqlRecord DBFactory::getDocumentAddQuery(int id)
-// Возвращает локальный номер и текст запроса с заданным кодом
-{
-    QString command = QString("SELECT %1, %2 FROM %3 WHERE %4=%5;").arg(getObjectNameCom("запросы.номер"))
-                                                                   .arg(getObjectNameCom("запросы.текст"))
-                                                                   .arg(getObjectNameCom("запросы"))
-                                                                   .arg(getObjectNameCom("запросы.код"))
-                                                                   .arg(id);
-    QSqlRecord record;
-    clearError();
-    QSqlQuery query = execQuery(command);
-    if (query.next())
-        record = query.record();
-    return record;
-}
-
 
 
 QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* topersList, QList<FieldType>* columnsProperties, int* retPrv1)

@@ -80,7 +80,7 @@ public:
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     Q_INVOKABLE void                    setDoSubmit(bool submit) { doSubmit = submit; }
     Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
-    virtual void query(QString = "");
+    virtual void query(QString = "", bool = false);
     virtual void                        setOrderClause() { ; }
     Q_INVOKABLE int                     getRowCount() { return tableModel->rowCount(); }
 

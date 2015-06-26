@@ -148,7 +148,6 @@ public:
     void saveDocumentVariables(int docId, QString xml);
     QString restoreDocumentVariables(int docId);
     QSqlQuery getDocumentAddQueriesList(int);
-    QSqlRecord getDocumentAddQuery(int);
 
     // Работа с файлами
     QByteArray getFile(QString, FileType, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы

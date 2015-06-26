@@ -65,7 +65,7 @@ public:
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     virtual void setScriptEngine();
-    int    addFromQuery(int);
+    int    addFromQuery(QString);
     DocumentScriptEngine* getScriptEngine();
     bool getIsSingleString() { return isSingleString; }
     Q_INVOKABLE void setDate(QString);

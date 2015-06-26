@@ -42,14 +42,14 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
 }
 
 
-Dictionary* Dictionaries::getDictionary(QString dictName, bool scriptDisabled)
+Dictionary* Dictionaries::getDictionary(QString dictName)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
         return 0;
     if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-        if (!addDictionary(dictName, scriptDisabled))
+        if (!addDictionary(dictName))
             return 0;
     }
     return dictionariesList[dictName];
@@ -71,7 +71,7 @@ Saldo* Dictionaries::getSaldo(QString acc)
 }
 
 
-bool Dictionaries::addDictionary(QString dictName, bool scriptDisabled)
+bool Dictionaries::addDictionary(QString dictName)
 {
     dictName = dictName.trimmed().toLower();
     if (dictName.size() == 0)
@@ -83,7 +83,7 @@ bool Dictionaries::addDictionary(QString dictName, bool scriptDisabled)
         dict->setDictionaries(this);
         dict->setPhotoEnabled(true);
 
-        if (scriptDisabled)                         // Была команда выключить скрипты
+        if (document != 0)                         // Была команда выключить скрипты
             dict->setScriptEngineEnabled(false);
 
         if (dict->open()) {
@@ -146,15 +146,14 @@ bool Dictionaries::addSaldo(QString acc)
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString().trimmed().toLower();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
+        if (document != 0)                         // Была команда выключить скрипты
+            saldo->setScriptEngineEnabled(false);
         if (saldo->open()) {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionariesList.insert(alias, saldo);
             saldo->setPhotoEnabled(true);
             saldo->setQuan(true);
-            if (document != 0)
-            {                       // Если список справочников работает внутри документа
-                addDictionary(dictName, true);       // то откроем справочник, к которому относится сальдо и запретим ему загружать скрипты
-            }
+            addDictionary(dictName);
             return true;
         }
     }

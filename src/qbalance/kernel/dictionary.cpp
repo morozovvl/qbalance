@@ -272,7 +272,8 @@ bool Dictionary::calculate() {
 
 qulonglong Dictionary::getId(int row)
 {
-    if (isSet() && !isSaldo())
+    QVariant result = Essence::getId(row);
+    if (result.isNull() && isSet() && !isSaldo())
     {
         // Если это набор, то продолжаем
         QString filter;
@@ -301,11 +302,11 @@ qulonglong Dictionary::getId(int row)
                     else
                     {
                         app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
-                        return 0;
+                        return result.toLongLong();
                     }
                 }
                 else
-                    return 0;
+                    return result.toLongLong();
             }
         }
         if (filter.size() > 0)
@@ -319,7 +320,7 @@ qulonglong Dictionary::getId(int row)
             return Essence::getId(0);
         }
     }
-    return Essence::getId(row);
+    return result.toLongLong();
 }
 
 
@@ -489,7 +490,7 @@ bool Dictionary::setTableModel(int)
 }
 
 
-void Dictionary::query(QString defaultFilter)
+void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 {
     QModelIndex index;
     qulonglong id = 0;
@@ -502,7 +503,7 @@ void Dictionary::query(QString defaultFilter)
 
     QString resFilter = defaultFilter;
 
-    if (form != 0)
+    if (form != 0 && !exactlyDefaultFilter)
     {
         QString filter = ((FormGridSearch*)form)->getFilter();
         if (filter.size() > 0)

@@ -195,7 +195,7 @@ bool TApplication::open() {
                     gui->getMainWindow()->showPeriod();
 
                     // Загрузим константы
-                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"), true);
+                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
                     if (constDict != 0)
                     {
                         constDict->setPhotoEnabled(false);
@@ -203,7 +203,7 @@ bool TApplication::open() {
                     }
 
                     // Загрузим счета
-                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"), true);
+                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
                     if (accDict != 0)
                     {
                         accDict->setPhotoEnabled(false);

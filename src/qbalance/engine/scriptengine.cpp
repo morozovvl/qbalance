@@ -124,14 +124,15 @@ QScriptValue setValue(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-QScriptValue getOldValue(QScriptContext*, QScriptEngine* engine) {
+QScriptValue getOldValue(QScriptContext* context, QScriptEngine* engine) {
+    QScriptValue fieldName = context->argument(0);
     if (engine->evaluate("table").isValid())
     {
         QScriptValue value;
         if (isNumeric((ScriptEngine*)engine))
-            value = engine->evaluate(QString("parseFloat(table.getOldValue())"));
+            value = engine->evaluate(QString("parseFloat(table.getOldValue('%1'))").arg(fieldName.toString()));
         else
-            value = engine->evaluate(QString("table.getOldValue()"));
+            value = engine->evaluate(QString("table.getOldValue('%1')").arg(fieldName.toString()));
         if (value.isValid())
         {
             return value;
@@ -145,7 +146,7 @@ QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
     QScriptValue dictName = context->argument(0);
     if (dictName.isString())
     {
-        if (engine->evaluate("isDocumentScript").toBool())
+        if (((ScriptEngine*)engine)->getDocument() != 0)
         {
             if (engine->evaluate("document").isValid())
             {
@@ -505,9 +506,7 @@ ScriptEngine::ScriptEngine(Essence *parent) : QScriptEngine(parent)
         document = dicts->getDocument();
         if (document != 0)
             documents = document->getParent();
-
     }
-    loadScriptObjects();
 }
 
 
@@ -521,7 +520,7 @@ ScriptEngine::~ScriptEngine()
 
 bool ScriptEngine::open(QString scriptFile)
 {
-//    loadScriptObjects();
+    loadScriptObjects();
     if (scriptFile.size() > 0)
         script = loadScript(scriptFile);
     return true;

@@ -55,6 +55,7 @@ public:
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     int getScriptResult() { return scriptResult; }
     void setIsDocumentScript(bool docScr) { globalObject().setProperty("isDocumentScript", docScr); }
+    Document* getDocument() { return document; }
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
     void    appendEvent(QString, EventFunction);

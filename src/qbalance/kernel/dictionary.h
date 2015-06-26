@@ -40,7 +40,7 @@ public:
 // Функции для работы с моделью данных
     virtual bool add();
     Q_INVOKABLE virtual bool remove(bool = false);
-    Q_INVOKABLE virtual void            query(QString filter = "");
+    Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
     Q_INVOKABLE virtual void            queryName(QString filter = "") { query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName)); }
     virtual bool                        calculate();
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
