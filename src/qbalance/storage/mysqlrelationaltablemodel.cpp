@@ -82,6 +82,8 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
             lResult = true;
         }
     }
+    else if (!index.isValid())
+        app->showError(QString("Не определена позиция в таблице \"%1\" для присвоения значения [%2].").arg(parent->getTableName()).arg(value.toString()));
     return lResult;
 }
 

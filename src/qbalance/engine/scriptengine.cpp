@@ -129,10 +129,13 @@ QScriptValue getOldValue(QScriptContext* context, QScriptEngine* engine) {
     if (engine->evaluate("table").isValid())
     {
         QScriptValue value;
+        QString command;
         if (isNumeric((ScriptEngine*)engine))
-            value = engine->evaluate(QString("parseFloat(table.getOldValue('%1'))").arg(fieldName.toString()));
+            command = QString("parseFloat(table.getOldValue(%1))").arg(fieldName.toString() != "undefined" ? "'" + fieldName.toString() + "'" : "");
         else
-            value = engine->evaluate(QString("table.getOldValue('%1')").arg(fieldName.toString()));
+            command = QString("table.getOldValue('%1')").arg(fieldName.toString());
+
+        value = engine->evaluate(command);
         if (value.isValid())
         {
             return value;

@@ -90,16 +90,48 @@ bool Document::calculate()
     if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
         isCurrentCalculate = true;
-
         if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
 
+            int row = grdTable->currentIndex().row();
+            // Начнем транзакцию
+            // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+            for (int i = 0; i < tableModel->record().count(); i++)
+            {
+                QString fieldName = tableModel->record().fieldName(i);
+                QVariant oldValue = getOldValue(fieldName);
+                QVariant newValue = getValue(fieldName);
+                if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                    tableModel->submit(tableModel->index(row, i));
+            }
+
+            if (freePrv > 0)
+            {   // Если существует "свободная" проводка, то сохраним изменения и в ней
+                int freePrvRow = findFreePrv();
+                for (int i = 0; i < tableModel->record().count(); i++)
+                {
+                    QString fieldName = tableModel->record().fieldName(i);
+                    if (getValue(fieldName, freePrvRow) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                        tableModel->submit(tableModel->index(freePrvRow, i));
+                }
+            }
+
+            row = parent->getGridTable()->currentIndex().row();
+            for (int i = 0; i < parent->getTableModel()->record().count(); i++)
+            {
+                QString fieldName = parent->getTableModel()->record().fieldName(i);
+                QVariant oldValue = parent->getOldValue(fieldName);
+                QVariant newValue = parent->getValue(fieldName, row);
+                if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                    parent->getTableModel()->submit(parent->getTableModel()->index(row, i));
+            }
             calcItog();
             saveChanges();
             docModified = true;
         }
         else
         {
+            db->clearCommands();
             restoreOldValues();
         }
 
@@ -112,47 +144,6 @@ bool Document::calculate()
 void Document::saveChanges()
 {
     QModelIndex index = grdTable->currentIndex();
-
-    int row = grdTable->currentIndex().row();
-
-    // Начнем транзакцию
-    // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-    for (int i = 0; i < tableModel->record().count(); i++)
-    {
-        QString fieldName = tableModel->record().fieldName(i);
-        QVariant oldValue = getOldValue(fieldName);
-        QVariant newValue = getValue(fieldName);
-        if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-        {
-            tableModel->submit(tableModel->index(row, i));
-        }
-    }
-
-    if (freePrv > 0)
-    {   // Если существует "свободная" проводка, то сохраним изменения и в ней
-        int freePrvRow = findFreePrv();
-        for (int i = 0; i < tableModel->record().count(); i++)
-        {
-            QString fieldName = tableModel->record().fieldName(i);
-            if (getValue(fieldName, freePrvRow) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-            {
-                tableModel->submit(tableModel->index(freePrvRow, i));
-            }
-        }
-    }
-
-    row = parent->getGridTable()->currentIndex().row();
-    for (int i = 0; i < parent->getTableModel()->record().count(); i++)
-    {
-        QString fieldName = parent->getTableModel()->record().fieldName(i);
-        QVariant oldValue = parent->getOldValue(fieldName);
-        QVariant newValue = parent->getValue(fieldName, row);
-        if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-        {
-            parent->getTableModel()->submit(parent->getTableModel()->index(row, i));
-        }
-    }
-
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
         // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
@@ -251,23 +242,7 @@ bool Document::add()
                 }
             }
         }
-
-        int strNum = appendDocString();     // Открываем нужные справочники перед добавлением строки и добавляем строку в документ
-                                            // Возвращаем номер строки в документе
-        if (strNum > 0)                         // Если строка была добавлена
-        {
-            if (getScriptEngine() != 0)
-            {
-                saveOldValues();
-                QModelIndex index = grdTable->currentIndex();
-                getScriptEngine()->eventAfterAddString();
-                grdTable->setCurrentIndex(index);
-                saveChanges();
-                saveOldValues();
-            }
-            form->setButtons();
-            result = true;
-        }
+        appendDocString();
     }
     dictionaries->unlock();
     grdTable->setFocus();
@@ -284,6 +259,7 @@ int Document::addFromQuery(QString queryName)
         progressBar.setMaximum(queryData.size());
         progressBar.show();
         int i = 0;
+        db->beginTransaction();
         while (queryData.next())
         {
             QSqlRecord record = queryData.record();
@@ -292,7 +268,8 @@ int Document::addFromQuery(QString queryName)
             progressBar.setValue(i);
         }
         calcItog();
-        db->execCommands();
+        saveChanges();
+        db->commitTransaction();
         query();
         return queryData.size();
     }
@@ -951,7 +928,7 @@ bool Document::prepareValue(QString name, Dictionary* dict)
 {
     if (!prvValues.contains(name))
     {
-        qulonglong id = dict->getId();
+        qulonglong id = dict->getId(-1, true);
         if (id != 0)
         {
             prvValues.insert(name, QVariant(id));
@@ -1066,6 +1043,14 @@ int Document::appendDocString()
         }
         index = grdTable->currentIndex().sibling(newRow, column);
         grdTable->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+        if (getScriptEngine() != 0)
+        {
+            saveOldValues();
+            getScriptEngine()->eventAfterAddString();
+            saveChanges();
+            saveOldValues();
+        }
+        form->setButtons();
     }
     else
         grdTable->setCurrentIndex(index);

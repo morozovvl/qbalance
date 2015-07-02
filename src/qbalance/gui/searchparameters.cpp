@@ -249,7 +249,7 @@ void SearchParameters::dictionaryButtonPressed()
             dict->exec();
             if (dict->isFormSelected())
             {
-                MyComboBox* cmb = this->findChild<MyComboBox*>(sender()->objectName() + "." + programNameFieldName);
+                MyComboBox* cmb = (MyComboBox*)this->findChild<QObject*>(sender()->objectName() + "." + programNameFieldName);
                 QString text = dict->getValue(programNameFieldName).toString().trimmed();
                 int index = cmb->findText(text);
                 if (index > 0)

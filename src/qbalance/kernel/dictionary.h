@@ -43,9 +43,10 @@ public:
     Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
     Q_INVOKABLE virtual void            queryName(QString filter = "") { query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName)); }
     virtual bool                        calculate();
-    Q_INVOKABLE virtual qulonglong      getId(int row = -1);
+    Q_INVOKABLE virtual qulonglong      getId(int row = -1, bool = false);
     virtual void                        setOrderClause();
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
+    Q_INVOKABLE virtual void setValue(qulonglong, QString, QVariant);
     Q_INVOKABLE virtual void setSqlCommand(QString command) { sqlCommand = command; }
 
 

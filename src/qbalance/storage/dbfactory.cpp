@@ -569,7 +569,8 @@ void DBFactory::addColumnProperties(QList<FieldType>* columnsProperties, QString
     {
         for (int i = 0; i < columnsProperties->count(); i++)
         {
-              if (columnsProperties->at(i).column.toUpper() == name.toUpper() &&
+              if (columnsProperties->at(i).table == table &&
+                  columnsProperties->at(i).column.toUpper() == name.toUpper() &&
                   columnsProperties->at(i).type == type)
                 return;                 // такое поле уже существует, не будем ничего добавлять
             if (i > maxKey)
@@ -1892,46 +1893,40 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
             bool fieldReadOnly;
             foreach (QString fieldName, getFieldsList(attrName, 0))
             {
-                if (fieldName == getObjectName("атрибуты.код") ||
-                    fieldName == getObjectName("атрибуты.доккод") ||
-                    fieldName == getObjectName("атрибуты.стр"))
+                if (fieldName == getObjectName(attrName + ".код") ||
+                    fieldName == getObjectName(attrName + ".доккод") ||
+                    fieldName == getObjectName(attrName + ".стр"))
                     fieldReadOnly = true;
                 else
                     fieldReadOnly = false;
-                if (!(topersList->at(0).number != 0 && fieldName == getObjectName("атрибуты.код")))
-                {
-                    if (fieldName.left(4) == idFieldName + "_")
-                    {        // Если поле ссылается на другую таблицу
-                        QString dictName = fieldName.toLower();
-                        dictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
-                        selectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName.toUpper()).arg(fieldName.toUpper()));
-                        attrSelectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName).arg(fieldName.toUpper()));
-                        for (int i = 0; i < fields.count(); i++)
-                            if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
-                                addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly, fieldReadOnly);
-                        getColumnsProperties(&fields, dictName);
-                        foreach (QString dictFieldName, getFieldsList(dictName, 0))
-                        {
-                            if (dictFieldName != idFieldName)
-                            {  // покажем все поля, кроме поля "код"
-                                selectClause.append(QString("a.%1__%2,").arg(dictName.toUpper()).arg(dictFieldName.toUpper()));
-                                attrSelectClause.append(QString("\"%1\".\"%3\" AS %2__%4,").arg(dictName).arg(dictName.toUpper()).arg(dictFieldName).arg(dictFieldName.toUpper()));
-                                for (int i = 0; i < fields.count(); i++)
-                                    if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != 0)
-                                        addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
-                            }
-                        }
-                        attrFromClause.append(QString(" LEFT OUTER JOIN %1 ON a.%2=%1.%3").arg(dictName.toLower()).arg(fieldName).arg(getObjectName(dictName.toLower() + ".код")));
-                    }
-                    else
+                if (fieldName.left(4) == idFieldName + "_")
+                {        // Если поле ссылается на другую таблицу
+                    QString dictName = fieldName.toLower();
+                    dictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
+                    selectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName.toUpper()).arg(fieldName.toUpper()));
+                    attrSelectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName).arg(fieldName.toUpper()));
+                    for (int i = 0; i < fields.count(); i++)
+                        if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly, fieldReadOnly);
+                    getColumnsProperties(&fields, dictName);
+                    foreach (QString dictFieldName, getFieldsList(dictName, 0))
                     {
-                        selectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName.toUpper()).arg(fieldName.toUpper()));
-                        attrSelectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName).arg(fieldName.toUpper()));
-                        for (int i = 0; i < fields.count(); i++)
-                            if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
-                                addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly, fieldReadOnly);
+                            selectClause.append(QString("a.%1__%2,").arg(dictName.toUpper()).arg(dictFieldName.toUpper()));
+                            attrSelectClause.append(QString("\"%1\".\"%3\" AS %2__%4,").arg(dictName).arg(dictName.toUpper()).arg(dictFieldName).arg(dictFieldName.toUpper()));
+                            for (int i = 0; i < fields.count(); i++)
+                                if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != 0)
+                                    addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
                     }
-               }
+                    attrFromClause.append(QString(" LEFT OUTER JOIN %1 ON a.%2=%1.%3").arg(dictName.toLower()).arg(fieldName).arg(getObjectName(dictName.toLower() + ".код")));
+                }
+                else
+                {
+                    selectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName.toUpper()).arg(fieldName.toUpper()));
+                    attrSelectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName).arg(fieldName.toUpper()));
+                    for (int i = 0; i < fields.count(); i++)
+                        if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
+                            addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, fieldReadOnly, fieldReadOnly);
+                }
             }
             selectClause.chop(1);
             attrSelectClause.chop(1);

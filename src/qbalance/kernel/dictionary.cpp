@@ -232,6 +232,13 @@ void Dictionary::setValue(QString name, QVariant value, int row)
 }
 
 
+void Dictionary::setValue(qulonglong id, QString name, QVariant value)
+{
+    setId(id);
+    Essence::setValue(name, value);
+}
+
+
 bool Dictionary::calculate() {
     if (!isCurrentCalculate)
     {
@@ -270,10 +277,10 @@ bool Dictionary::calculate() {
 }
 
 
-qulonglong Dictionary::getId(int row)
+qulonglong Dictionary::getId(int row, bool forceToRefresh)
 {
     QVariant result = Essence::getId(row);
-    if (result.isNull() && isSet() && !isSaldo())
+    if ((result.isNull() || forceToRefresh) && isSet() && !isSaldo())
     {
         // Если это набор, то продолжаем
         QString filter;

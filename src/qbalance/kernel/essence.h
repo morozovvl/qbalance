@@ -154,6 +154,8 @@ public:
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
     Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(grdTable->currentIndex().column()).toUpper(); }
+    Q_INVOKABLE int             getCurrentRow() { return grdTable->currentIndex().row(); }
+    Q_INVOKABLE void            setCurrentRow(int row) { grdTable->selectRow(row); }
     Dictionaries* getDictionaries() { return dictionaries; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
     bool    isLoading() { return loading; }
