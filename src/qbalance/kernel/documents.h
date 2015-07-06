@@ -35,7 +35,7 @@ public:
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void view();
-    Q_INVOKABLE virtual void query(QString filter = "");
+    Q_INVOKABLE virtual void query(QString filter = "", bool = false);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
     QList<ToperType>*   getTopersList() { return &topersList; }

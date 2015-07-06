@@ -46,6 +46,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     lsetIdEnabled = true;
     parentDict = 0;
     locked = false;
+    getIdRefresh = true;
 
     if (parent != 0)
     {
@@ -280,7 +281,7 @@ bool Dictionary::calculate() {
 qulonglong Dictionary::getId(int row, bool forceToRefresh)
 {
     QVariant result = Essence::getId(row);
-    if ((result.isNull() || forceToRefresh) && isSet() && !isSaldo())
+    if ((result.isNull() || forceToRefresh || getIdRefresh) && isSet() && !isSaldo())
     {
         // Если это набор, то продолжаем
         QString filter;
@@ -512,7 +513,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
     if (form != 0 && !exactlyDefaultFilter)
     {
-        QString filter = ((FormGridSearch*)form)->getFilter();
+        QString filter = form->getFilter();
         if (filter.size() > 0)
         {
             if (resFilter.size() > 0)

@@ -61,6 +61,8 @@ public:
     virtual void activateWidget();
     virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE Picture* getPicture() { return picture; }
+    virtual QString getFilter() { return ""; }    // Возвращает фильтр для поиска в справочнике
+
 
 public slots:
     virtual void cmdAdd();

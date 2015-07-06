@@ -928,7 +928,11 @@ bool Document::prepareValue(QString name, Dictionary* dict)
 {
     if (!prvValues.contains(name))
     {
-        qulonglong id = dict->getId(-1, true);
+        qulonglong id;
+        if (dict->isSaldo())
+            id = ((Saldo*)dict)->getId();
+        else
+            id = dict->getId();
         if (id != 0)
         {
             prvValues.insert(name, QVariant(id));
@@ -958,6 +962,13 @@ int Document::appendDocString()
     qulonglong dbId, crId;
     float quan = 0, price = 0, sum = 0;
 
+    foreach (QString dictName, getDictionariesList()->keys())
+    {
+        Dictionary* dict = getDictionariesList()->value(dictName);
+        prepareValue(dictName, dict);
+    }
+
+/*
     // Запомним значения сначала зависимых справочников
     foreach (QString dictName, getDictionariesList()->keys())
     {
@@ -972,6 +983,7 @@ int Document::appendDocString()
         if (dict->isSet() && dict->isAutoLoaded())
             prepareValue(dictName, dict);
     }
+*/
 
     // Просмотрим все проводки типовой операции
     for (int i = 0; i < topersList->count(); i++)

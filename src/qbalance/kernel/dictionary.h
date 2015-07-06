@@ -87,6 +87,7 @@ public:
     Q_INVOKABLE FormGridSearch* getForm() { return (FormGridSearch*)form; }
     Q_INVOKABLE bool isPictureExist() { return form->getPicture()->isPictureExist(); }
     Q_INVOKABLE QString getSearchExpression(QString = "");
+    Q_INVOKABLE void setGetIdRefresh(bool val) { getIdRefresh = val; }
 
 
 protected:
@@ -104,6 +105,7 @@ protected:
     virtual void    prepareSelectCurrentRowCommand();
     virtual bool    setTableModel(int = 0);
     bool            locked;
+    bool            getIdRefresh;
 
 
 private:

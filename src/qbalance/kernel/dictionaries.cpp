@@ -253,7 +253,7 @@ void Dictionaries::close()
 }
 
 
-void Dictionaries::query(QString)
+void Dictionaries::query(QString, bool)
 {
     Dictionary::query(QString("%1=true").arg(db->getObjectNameCom("доступ_к_справочникам.меню")));
 }

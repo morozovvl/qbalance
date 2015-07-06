@@ -41,7 +41,7 @@ public:
     FormGridSearch(QObject* parent = 0);
     ~FormGridSearch();
     Q_INVOKABLE virtual void close();
-    QString getFilter();    // Возвращает фильтр для поиска в справочнике
+    virtual QString getFilter();    // Возвращает фильтр для поиска в справочнике
     virtual void activateWidget();
     SearchParameters* getSearchParameters() { return parameters; }
     Q_INVOKABLE void clearAllComboBoxes();

@@ -122,7 +122,7 @@ void Documents::setCurrentDocument(int strNum)
 }
 
 
-void Documents::query(QString)
+void Documents::query(QString, bool)
 {
     Essence::query(QString("%1 BETWEEN cast('%2' as date) AND cast('%3' as date) AND %4=0 AND %5='%6'").arg(db->getObjectNameCom("документы.дата"))
                                                                                                        .arg(TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy"))
