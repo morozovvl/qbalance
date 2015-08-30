@@ -46,7 +46,7 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
     essence = 0;
     picture = 0;
     tableModel = 0;
-    fields = 0;
+//    fields = 0;
     columnsHeadersSeted = false;
     columns.clear();
     columnsSettingsReaded = false;
@@ -78,7 +78,7 @@ void TableView::setEssence(Essence* ess)
     db = app->getDBFactory();
     if (parent != 0)
     {
-        fields = essence->getColumnsProperties();
+        fields = essence->returnColumnsProperties();
         connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
         tableModel = essence->getTableModel();
@@ -90,6 +90,16 @@ void TableView::setEssence(Essence* ess)
         essence->setGridTable(this);
         setReadOnly(essence->isReadOnly());
     }
+}
+
+
+void TableView::cmdAdd()
+{
+    if (essence->add())
+    {
+        parent->setButtons();
+    }
+    setFocus();
 }
 
 
@@ -201,7 +211,6 @@ void TableView::keyPressEvent(QKeyEvent* event)
     }
     else
         QTableView::keyPressEvent(event);
-
 }
 
 
@@ -233,24 +242,10 @@ bool TableView::setColumnsHeaders()
             header->setMovable(true);
 #endif
             header->setSortIndicatorShown(true);
-            db->getColumnsHeaders(essence->getTagName(), fields);
-            if (fields->count() > 0)
+            db->getColumnsHeaders(essence->getTagName(), &fields);
+            if (fields.count() > 0)
             {
-
-                // Сначала скроем все столбцы
-                for (int i = 0; i < header->count(); i++)
-                    header->hideSection(i);
-
                 setColumnsDelegates();
-
-                // Установим столбцы в соотвествующем порядке
-                foreach (int i, columns.keys())
-                {
-                    int fldIndex = tableModel->fieldIndex(columns.value(i));
-                    int visualIndex = header->visualIndex(fldIndex);
-                    header->moveSection(visualIndex, i);
-                    maxColumn = i;
-                }
             }
             readSettings();
             columnsHeadersSeted = true;
@@ -264,26 +259,58 @@ bool TableView::setColumnsHeaders()
 void    TableView::setColumnsDelegates()
 {
     QHeaderView* header = horizontalHeader();
-    // Теперь покажем только те столбцы, у которых поле number в списке fields больше 0
-    for (int i = 0; i < fields->count(); i++)
+#if QT_VERSION >= 0x050000
+    header->setSectionsMovable(true);
+#else
+    header->setMovable(true);
+#endif
+    header->setSortIndicatorShown(true);
+
+    // Составим список столбцов, у которых поле number в списке fields больше 0
+    for (int i = 0; i < fields.count(); i++)
     {
-        if (fields->at(i).number > 0)
+        if (fields.at(i).number > 0)
         {
-            MyItemDelegate* delegate = getColumnDelegate(fields->at(i));
+            MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
             if (delegate != 0)
             {
-                delegate->setFieldName(fields->at(i).column);
-                if (!fields->at(i).readOnly)
+                delegate->setFieldName(fields.at(i).column);
+                if (!fields.at(i).readOnly)
                 {
                     connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
                 }
-                delegate->setReadOnly(fields->at(i).readOnly);
+                delegate->setReadOnly(fields.at(i).readOnly);
                 setItemDelegateForColumn(i, delegate);
             }
-            tableModel->setHeaderData(i, Qt::Horizontal, fields->at(i).header);
-            columns.insert(fields->at(i).number - 1, fields->at(i).column);
-            header->showSection(i);
+            columns.insert(fields.at(i).number - 1, i);
         }
+    }
+    // Сделаем столбцы из этого списка первыми
+    int i;
+    for (i = 0;; i++)
+    {
+        if (columns.contains(i))
+        {
+            int fldIndex = tableModel->fieldIndex(fields.at(columns.value(i)).column);
+            int visualIndex = header->visualIndex(fldIndex);
+            header->moveSection(visualIndex, i);
+            header->showSection(visualIndex);
+            tableModel->setHeaderData(fldIndex, Qt::Horizontal, fields.at(columns.value(i)).header);
+        }
+        else
+            break;
+    }
+    // Остальные столбцы скроем
+    for (; i < header->count(); i++)
+    {
+        header->hideSection(header->logicalIndex(i));
+    }
+    // Найдем индекс крайнего справа столбца
+    for (i = 0;; i++)
+    {
+        if (horizontalHeader()->logicalIndex(i) < 0)
+            break;
+        maxColumn = i;
     }
 }
 
@@ -305,7 +332,7 @@ void TableView::hideGridSection(QString columnName)
 
     foreach (int i, columns.keys())
     {
-        if (columns.value(i) == columnName)
+        if (fields.at(columns.value(i)).column == columnName)
         {
             horizontalHeader()->hideSection(horizontalHeader()->logicalIndex(i));
             return;
@@ -318,10 +345,9 @@ void TableView::showGridSection(QString columnName)
 {
     setColumnsHeaders();
 
-
     foreach (int i, columns.keys())
     {
-        if (columns.value(i) == columnName)
+        if (fields.at(columns.value(i)).column == columnName)
         {
             horizontalHeader()->showSection(horizontalHeader()->logicalIndex(i));
             return;
@@ -381,7 +407,7 @@ bool TableView::columnIsReadOnly()
     if (tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
-        if (index.row() == -1 && index.column() == -1)
+        if (!index.isValid())
             return true;
         int column = horizontalHeader()->visualIndex(index.column());
         int logicalIndex = horizontalHeader()->logicalIndex(column);
@@ -449,26 +475,28 @@ void TableView::selectPreviousColumn()
 // Ищет предыдущую колонку для редактирования
 {
     QModelIndex index = currentIndex();
-    if (index.row() == -1 && index.column() == -1)
+    if (!index.isValid())
         return;
     int column = horizontalHeader()->visualIndex(index.column());
     int oldColumn = column > 0 ? column : 0;
     int logicalIndex;
     while (true)
     {
-        column--;   // Перейдем в предыдущий столбец
+        if (column > 0)
+            column--;   // Перейдем в предыдущий столбец
+        else
+            column = maxColumn;
         logicalIndex = horizontalHeader()->logicalIndex(column);
         QModelIndex newIndex = index.sibling(index.row(), logicalIndex);
-        if (newIndex.row() == -1 && newIndex.column() == -1)
+        if (!newIndex.isValid())
         {
-            column = maxColumn;
-            logicalIndex = horizontalHeader()->logicalIndex(column);
-            newIndex = index.sibling(index.row(), logicalIndex);
-            if (newIndex.row() == -1 && newIndex.column() == -1)
+            newIndex = index.sibling(index.row(), column);
+            if (!newIndex.isValid())
             {
                 setCurrentIndex(index);
                 break;
             }
+            logicalIndex = horizontalHeader()->logicalIndex(column);
         }
         if (!horizontalHeader()->isSectionHidden(logicalIndex))
         {
@@ -522,10 +550,10 @@ void TableView::calculate()
 
 void TableView::setReadOnly(bool ro)
 {
-    if (parent != 0 && fields != 0)
+    if (parent != 0)
     {
-        db->getColumnsHeaders(essence->getTagName(), fields);
-        for (int i = 0; i < fields->count(); i++)
+        db->getColumnsHeaders(essence->getTagName(), &fields);
+        for (int i = 0; i < fields.count(); i++)
         {
             MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(i);
             if (delegate != 0)
@@ -533,7 +561,7 @@ void TableView::setReadOnly(bool ro)
                 if (ro)
                     delegate->setReadOnly(ro);
                 else
-                    delegate->setReadOnly(fields->at(i).readOnly);
+                    delegate->setReadOnly(fields.at(i).readOnly);
             }
         }
         repaint();
@@ -647,4 +675,24 @@ void TableView::writeSettings()
         }
     }
 }
+
+
+void TableView::appendColumnDefinition(int number, QString column, QString header, bool readOnly)
+{
+    for (int i = 0; i < fields.count(); i++)
+    {
+        if (fields.at(i).table.toUpper() == parent->getParent()->getQueryTableName().toUpper() &&
+            fields.at(i).column.toUpper() == column.toUpper()    )
+        {
+            FieldType field = fields.at(i);
+            field.number = number;
+            field.header = header;
+            field.readOnly = readOnly;
+            fields.removeAt(i);
+            fields.insert(i, field);
+            return;
+        }
+    }
+}
+
 

@@ -29,7 +29,7 @@ public:
     virtual QString transformSelectStatement(QString);
     Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
     void setQuan(bool q) { quan = q; }
-    virtual void        setOrderClause();
+    Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void        lock(bool = true);
 
 protected:

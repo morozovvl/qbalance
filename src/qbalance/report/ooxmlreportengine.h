@@ -39,6 +39,7 @@ private:
     QHash<QString, QVariant>*    context;
     QStringList                 expressionsForEvaluation;
     QStringList                 tablesForPrinting;
+    QStringList                 invalidExpressions;
     QDomNodeList                cells;
     QString                     ooPath;
     QString                     tableNameForPrinting;

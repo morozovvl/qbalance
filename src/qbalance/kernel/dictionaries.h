@@ -52,7 +52,7 @@ public:
     void    setDocument(Document* doc) { document = doc; }
     Document* getDocument() { return document; }
     bool        isSaldoExist() { return lIsSaldoExist; }
-    virtual void            setOrderClause();
+    Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void            prepareSelectCurrentRowCommand() { ; }
     Q_INVOKABLE virtual void setForm(QString = "");
     void    unlock();

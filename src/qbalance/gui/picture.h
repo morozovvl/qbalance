@@ -37,16 +37,16 @@ class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
 public:
     Picture(QWidget* parent = 0);
     ~Picture();
-    Q_INVOKABLE void show(QString);
-    void showBigPicture();
-    Q_INVOKABLE void setApp(TApplication*);
-    Q_INVOKABLE void setVisibility(bool);
-    Q_INVOKABLE void setPhotoFileName(QString);
-    Q_INVOKABLE QString getPhotoFileName() { return photoFileName; }
-    Q_INVOKABLE void setPhotoWindowTitle(QString);
-    void        setIsBig(bool big) { isBigPicture = big; }
-    void        setForm(FormGrid* f = 0) { form = f; }
-    bool        isPictureExist() { return pictureExist; }
+    Q_INVOKABLE virtual void show(QString);
+    virtual void showBigPicture();
+    Q_INVOKABLE virtual void setApp(TApplication*);
+    Q_INVOKABLE virtual void setVisibility(bool);
+    Q_INVOKABLE virtual void setPhotoFileName(QString);
+    Q_INVOKABLE virtual QString getPhotoFileName() { return photoFileName; }
+    Q_INVOKABLE virtual void setPhotoWindowTitle(QString);
+    virtual void        setIsBig(bool big) { isBigPicture = big; }
+    virtual void        setForm(FormGrid* f = 0) { form = f; }
+    virtual bool        isPictureExist() { return pictureExist; }
 
 protected:
     QString pictureDrawn;

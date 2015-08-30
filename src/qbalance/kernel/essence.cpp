@@ -142,7 +142,7 @@ QScriptValue Essence::evaluateScript(QString script)
 QVariant Essence::getValue(QString n, int row)
 {
     QVariant result;
-    if (n.size() > 0)
+    if (n.size() > 0 && tableModel->rowCount() > 0)
     {
         QString name = n.toUpper();
         QSqlRecord record = tableModel->record();
@@ -166,8 +166,10 @@ QVariant Essence::getValue(QString n, int row)
             {
                 if (!result.isValid())
                     result = QVariant(0);
-                result.convert(type);
-                result = QString::number(result.toDouble(), 'f', record.field(name).precision()).toDouble();
+                if (result.type() == QVariant::String)
+                {
+                    result = result.toString().replace(".", ",").toDouble();
+                }
             }
 
             // Округлим значение числового поля до точности как и в БД
@@ -189,9 +191,7 @@ void Essence::setValue(QString n, QVariant value, int row)
 
         if (row >= 0 && form != 0)
             oldIndex = grdTable->currentIndex();
-
         index = tableModel->index((row >= 0 ? row : grdTable->currentIndex().row()), fieldColumn);
-
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             if (columnsProperties.at(i).column == n)
@@ -232,10 +232,15 @@ void Essence::setValue(QString n, QVariant value, int row)
 
 qulonglong Essence::getId(int row)
 {
+    qulonglong result;
     if (row >= 0)
-        return getValue(idFieldName, row).toULongLong();
-    int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
-    return getValue(idFieldName, r).toULongLong();
+        result = getValue(idFieldName, row).toULongLong();
+    else
+    {
+        int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
+        result = getValue(idFieldName, r).toULongLong();
+    }
+    return result;
 }
 
 
@@ -270,6 +275,7 @@ void Essence::setId(qulonglong id)
         photoEnabled = enabled;
     }
     grdTable->selectRow(0);
+
 }
 
 
@@ -318,13 +324,17 @@ QString Essence::getPhotoPath()
 
 
 
-QString Essence::getLocalPhotoFile()
+QString Essence::getLocalPhotoFile(QString path)
 {
     QString result;
     QString idValue = getValue(photoIdField).toString().trimmed();
-    if (idValue.size() > 0)
+    if (idValue.size() > 0 && idValue != "0")
     {
-        result = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
+        if (path.size() == 0)
+            result = app->getPhotosPath(getPhotoPath());
+        else
+            result = path;
+        result += "/" + idValue + ".jpg";
     }
     return result;
 }
@@ -337,14 +347,6 @@ QString Essence::getPhotoFile(QString copyTo)
     QString localFile;  // Локальный путь к фотографии
     QString pictureUrl;
     bool phEnabled = photoEnabled;
-
-    // Если справочник является частью документа
-    if (isDocumentLoading())
-    {
-        phEnabled = false;          // То загрузка фотографий запрещена
-        copyTo = "";                // И копирование тоже
-    }
-
     if (phEnabled || copyTo.size() > 0)
     {
         // Сначала получим имя поля из которого будем брать значение идентификатора
@@ -358,10 +360,10 @@ QString Essence::getPhotoFile(QString copyTo)
         if (tableModel->rowCount() > 0 && photoIdField.size() > 0)
         {
             pictureUrl = preparePictureUrl();
+            localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
             idValue = getValue(photoIdField).toString().trimmed();
-            if (idValue.size() > 0)
+            if (localFile.size() > 0)
             {
-                localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
                 file = getLocalPhotoFile();
                 if (!QFile(file).exists())
                 {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
@@ -417,7 +419,9 @@ QString Essence::getPhotoFile(QString copyTo)
                     if (app->isSA())
                         app->saveFileToServer(file, localFile, PictureFileType, true);
                     if (copyTo.size() > 0)
+                    {
                         db->copyFile(localFile, PictureFileType, copyTo, true);
+                    }
                 }
             }
         }
@@ -428,11 +432,10 @@ QString Essence::getPhotoFile(QString copyTo)
 
 void Essence::removePhoto()
 {
-    QString idValue = getValue(photoIdField).toString().trimmed();
-    if (idValue.size() > 0)
+    QString photoFile = getLocalPhotoFile();
+    if (photoFile.size() > 0)
     {
-        QString photoFile = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
-        QString localFile = getPhotoPath() + "/" + idValue + ".jpg";       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
+        QString localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
 
         QFile file(photoFile);
         if (file.remove())
@@ -452,8 +455,9 @@ void Essence::replyFinished(QNetworkReply* reply)
     if (reply->error() == QNetworkReply::NoError)
     {
         // Данные с фотографией получены, запишем их в файл
-        if (idValue.size() > 0)
+        if (idValue.size())
         {
+            QString localFile = getPhotoPath() + "/" + idValue + ".jpg";
             QString file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
             QByteArray array = reply->readAll();
             if (array.size() > 0)
@@ -462,7 +466,9 @@ void Essence::replyFinished(QNetworkReply* reply)
                 app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
                 if (copyTo.size() > 0)
-                    app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                {
+                    db->copyFile(localFile, PictureFileType, copyTo, true);
+                }
 
                 // Проверим, не нужно ли обновить фотографию
                 if (idValue == getValue(photoIdField).toString().trimmed())
@@ -574,8 +580,11 @@ void Essence::close()
     if (form != 0)
     {
         closeFormEvent(form);
-        form->close();
-        delete form;
+        if (form->isDefaultForm())
+        {
+            form->close();
+            delete form;
+        }
     }
     closeScriptEngine();
     Table::close();
@@ -669,7 +678,8 @@ void Essence::initForm() {
 
 void Essence::setFormTitle(QString title) {
     formTitle = title;
-    form->getFormWidget()->setWindowTitle(title);
+    if (form != 0)
+        form->getFormWidget()->setWindowTitle(title);
 }
 
 
@@ -777,30 +787,27 @@ void Essence::prepareSelectCurrentRowCommand()
 
 void Essence::updateCurrentRow()
 {
-    QString command = preparedSelectCurrentRow.executedQuery();
-    if (command.size() > 0)
+    if (preparedSelectCurrentRow.exec())
     {
-        if (preparedSelectCurrentRow.exec())
+        if (preparedSelectCurrentRow.first())
         {
-            if (preparedSelectCurrentRow.first())
+            QModelIndex index = grdTable->currentIndex();
+            for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
             {
-                QModelIndex index = grdTable->currentIndex();
-                for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
-                {
-                    QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
-                    QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-                    if (value != tableModel->record(index.row()).value(fieldName))
-                        tableModel->setData(tableModel->index(index.row(), i), value, true);
-                }
-                grdTable->setCurrentIndex(index);
+                QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
+                QVariant value = preparedSelectCurrentRow.record().value(fieldName);
+                if (value != tableModel->record(index.row()).value(fieldName))
+                    tableModel->setData(tableModel->index(index.row(), i), value, true);
             }
+            grdTable->setCurrentIndex(index);
         }
-        else
-            if (!preparedSelectCurrentRow.isValid())
-            {
-                TApplication::debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
-                TApplication::debug(1, QString("PreparedQuery Expression: %1").arg(command));
-            }
+    }
+    else
+        if (!preparedSelectCurrentRow.isValid())
+        {
+            QString command = preparedSelectCurrentRow.executedQuery();
+            TApplication::debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
+            TApplication::debug(1, QString("PreparedQuery Expression: %1").arg(command));
     }
 }
 
@@ -827,7 +834,6 @@ void Essence::preparePrintValues()
             QSqlRecord rec = model->record(i);
             reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(constDictionaryName).arg(rec.value(constNameField).toString().trimmed()).toLower(), rec.value(constValueField));
         }
-
         // Загрузим основную таблицу в контекст печати
         QStringList fieldsList = getFieldsList();
         for (int i = 1; i <= getTableModel()->rowCount(); i++)
@@ -839,6 +845,7 @@ void Essence::preparePrintValues()
             }
             reportScriptEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg("номерстроки"), QVariant(i));
         }
+        scriptEngine->eventPreparePrintValues();
     }
 }
 

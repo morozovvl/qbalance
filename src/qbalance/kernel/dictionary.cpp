@@ -47,6 +47,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     parentDict = 0;
     locked = false;
     getIdRefresh = true;
+    parameters = 0;
 
     if (parent != 0)
     {
@@ -80,7 +81,6 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     lIsSet = db->isSet(tableName);
     doSubmit = true;
     sqlCommand = "";
-//    scriptEngineEnabled = false;
 }
 
 
@@ -101,7 +101,6 @@ bool Dictionary::add()
     bool lAddDict = true;
     if (!isSet())
     {
-        SearchParameters* parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
         if (parameters != 0)
         {
             QVector<sParam> searchParameters = parameters->getParameters();
@@ -189,7 +188,6 @@ QString Dictionary::getSearchExpression(QString tName)
     QString tableName = tName;
     if (tableName.size() == 0)
         tableName = getTableName();
-    SearchParameters* parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
     if (parameters != 0)
     {
         QVector<sParam> searchParameters = parameters->getParameters();
@@ -325,7 +323,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
                 db->insertDictDefault(tableName, &values);
                 query(filter);
             }
-            return Essence::getId(0);
+            result = Essence::getId(0);
         }
     }
     return result.toLongLong();
@@ -350,16 +348,18 @@ void Dictionary::setId(qulonglong id)
                 }
             }
         }
+        lock(true);
     }
 }
 
 
 void Dictionary::setForm(QString formName)
 {
-    if (form != 0)
+    if (form != 0 && form->isDefaultForm())
     {
         form->close();
         delete form;
+        form = 0;
     }
     closeScriptEngine();
 
@@ -373,13 +373,18 @@ void Dictionary::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
+    parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
     openScriptEngine();
 }
 
 
-bool Dictionary::open(QString command)
+bool Dictionary::open(QString command, QString tName)
 {
     sqlCommand = command;
+    if (tName == "undefined")
+        tName = "";
+    if (tName.size() > 0)
+        queryTableName = tName;
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
         dictTitle = tableName;
@@ -425,6 +430,18 @@ bool Dictionary::open(QString command)
         return true;
     }
     return false;
+}
+
+
+void Dictionary::close()
+{
+    if (form != 0 && form->isDefaultForm())
+    {
+        form->close();
+        delete form;
+        form = 0;
+    }
+    Essence::close();
 }
 
 
@@ -479,11 +496,14 @@ bool Dictionary::setTableModel(int)
     }
     if (sqlCommand.size() == 0)
     {
-        if (Essence::setTableModel(0))
+        if (tableName.size() > 0)
         {
-            tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
-            db->getColumnsRestrictions(tableName, &columnsProperties);
-            return true;
+            if (Essence::setTableModel(0))
+            {
+                tableModel->setSelectStatement(db->getDictionarySqlSelectStatement(tableName));
+                db->getColumnsRestrictions(tableName, &columnsProperties);
+                return true;
+            }
         }
     }
     else
@@ -567,15 +587,25 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
         }
     }
 
-    if (lAutoSelect && tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
+    if (tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
     {
-        form->setAutoSelect(true);
+        if (lAutoSelect)
+            form->setAutoSelect(true);
+    }
+    else
+    {
+        lock(false);
     }
 }
 
 
-void Dictionary::setOrderClause()
+void Dictionary::setOrderClause(QString sOrder)
 {
+    if (sOrder.size() > 0)
+    {
+        Table::setOrderClause(sOrder);
+        return;
+    }
     if (isSet())
     {
         QString sortOrder;
@@ -583,20 +613,20 @@ void Dictionary::setOrderClause()
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             FieldType fld = columnsProperties.at(i);
-            if (fld.table != tableName && !tablesList.contains(fld.table))
+            if (fld.table != tableName && !tablesList.contains(fld.table) && fld.table.left(9) != "документы" && fld.table.left(11) != "докатрибуты")
             {
-                tablesList.append(fld.table);
-                if (sortOrder.size() > 0)
-                    sortOrder.append(",");
-                sortOrder.append(QString("\"%1\".%2").arg(fld.table)
-                                                     .arg(db->getObjectNameCom(fld.table + ".имя")));
-            }
-        }
+                 tablesList.append(fld.table);
+                 if (sortOrder.size() > 0)
+                     sortOrder.append(",");
+                 sortOrder.append(QString("\"%1\".%2").arg(fld.table)
+                                                  .arg(db->getObjectNameCom(fld.table + ".имя")));
+             }
+         }
         Table::setOrderClause(sortOrder);
     }
     else
     {
-        if (tableName.left(9) != "документы")
+        if (tableName.left(9) != "документы" && tableName.size() > 0)
             Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
                                                      .arg(db->getObjectNameCom(tableName + ".имя")));
     }
@@ -625,8 +655,25 @@ void Dictionary::prepareSelectCurrentRowCommand()
     command.replace(" ORDER BY", QString(" %1 \"%2\".\"%3\"=:value ORDER BY").arg(command.contains("WHERE") ? "AND" : "WHERE")
                                                                                 .arg(getTableName())
                                                                                 .arg(db->getObjectName(getTableName() + "." + idFieldName)));
-
     preparedSelectCurrentRow.prepare(command);
+}
+
+
+void Dictionary::preparePrintValues()
+{
+    if (reportScriptEngine != 0)
+    {
+        QVector<sParam> searchParameters = parameters->getParameters();
+        if (searchParameters.size() > 0)
+        {
+            for (int i = 0; i < searchParameters.size(); i++)
+            {
+                if (searchParameters[i].value.toString().size() > 0)
+                    reportScriptEngine->getReportContext()->setValue(searchParameters[i].table, searchParameters[i].value);
+            }
+        }
+        Essence::preparePrintValues();
+    }
 }
 
 
@@ -646,7 +693,8 @@ void Dictionary::lock(bool toLock)
             foreach (QString dictName, getChildDicts())
             {
                 Dictionary* dict = dictionaries->getDictionary(dictName);
-                dict->setId(getValue(idFieldName + "_" + dictName).toLongLong());
+                qlonglong id = getValue(idFieldName + "_" + dictName).toLongLong();
+                dict->setId(id);
                 dict->lock();
             }
         }
@@ -655,3 +703,16 @@ void Dictionary::lock(bool toLock)
     else
         locked = false;
 }
+
+
+void Dictionary::setSqlCommand(QString command)
+{
+    if (!opened)
+        open(command);
+    else
+    {
+        tableModel->setSelectStatement(command);
+        sqlCommand = command;
+    }
+}
+

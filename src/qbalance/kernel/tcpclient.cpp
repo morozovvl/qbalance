@@ -94,7 +94,7 @@ void TcpClient::slotConnected()
 
 bool    TcpClient::waitResult()
 {
-    for (int i = 0; i < 200; i++)           // Будем проверять ответ от сервера не дольше 10 сек
+    for (int i = 0; i < 10; i++)
     {
         if (resultReady)
             return true;                    // Результат от сервера готов

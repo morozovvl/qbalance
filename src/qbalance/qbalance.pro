@@ -183,12 +183,12 @@ unix {
  icons.path =  $$PIXMAPSDIR
  icons.files =  qbalance.png
  INSTALLS +=  target  desktop  icons
- LIBS += ../../lib/libqextserialport.so
+# LIBS += ../../lib/libqextserialport.so
 }
 
 windows {
     RC_FILE+=resources.rc
-    LIBS += ../../../lib/qextserialport1.dll
+    LIBS += ../../qextserialport1.dll
 }
 
 OTHER_FILES += \

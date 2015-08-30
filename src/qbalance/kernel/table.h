@@ -44,6 +44,7 @@ public:
     Q_INVOKABLE virtual void            query(QString filter = "");
 
     virtual QList<FieldType>*           getColumnsProperties();
+    virtual QList<FieldType>            returnColumnsProperties();
     MySqlRelationalTableModel*          getTableModel() { return tableModel; }
     virtual QString                     transformSelectStatement(QString string) { return string; }
 
@@ -51,6 +52,7 @@ public:
     Q_INVOKABLE virtual QString         getFieldName(int);
     Q_INVOKABLE QString                 getTableName() { return tableName; }
     QString                             getTagName() { return tagName; }
+    QString                             getQueryTableName() { return queryTableName; }
     Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE virtual bool            isReadOnly();
@@ -61,9 +63,13 @@ protected:
     bool                                opened;
     QString                             tableName;
     QString                             tagName;            // Тэг, на основе которого будут создаваться имена конфигураций форм и создаваться список полей табличной части
+    QString                             queryTableName;
     MySqlRelationalTableModel*          tableModel;
     QList<FieldType>                    columnsProperties;
     virtual bool                        setTableModel(int = 0);
+
+private:
+    QString                             defineFieldType(QVariant::Type);
 
 };
 

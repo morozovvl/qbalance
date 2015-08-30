@@ -62,7 +62,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromS
 }
 
 
-qint64 QMyExtSerialPort::readData(char * data, qint64 maxSize, bool fromServer)
+qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromServer)
 {
     qint64 result = -1;
     if (!remote)
@@ -73,8 +73,9 @@ qint64 QMyExtSerialPort::readData(char * data, qint64 maxSize, bool fromServer)
     else if (tcpClient != 0 && tcpClient->isValid() && !fromServer)
     {
         QByteArray arr;
-        arr.fill(' ', maxSize);
-        tcpClient->sendToServer("=fr=<<" + QString(arr.toHex().data())).toLongLong();
+        arr.append(data, maxSize);
+        QString command = "=fr=<<" + QString(arr.toHex().data());
+        tcpClient->sendToServer(command).toLongLong();
         if (tcpClient->waitResult())
         {
             QString res = tcpClient->getResult();

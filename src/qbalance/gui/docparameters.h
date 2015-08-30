@@ -42,14 +42,14 @@ class QDESIGNER_WIDGET_EXPORT DocParameters : public QFrame {
 public:
     DocParameters(QWidget* pwgt = 0);
     ~DocParameters();
-    void addString(QString);
-    void setFocus();
-    void showText(QString);
-    QStringList getKeys() { return dictList; }
-    Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
-    void setDictionaries(QHash<QString, Dictionary*>* dicts) { dictionaries = dicts; }
-    void setFormDocument(FormDocument* doc) { parentForm = doc; }
-    void setApp(TApplication*);
+    virtual void addString(QString);
+    virtual void setFocus();
+    virtual void showText(QString);
+    virtual QStringList getKeys() { return dictList; }
+    virtual Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
+    virtual void setDictionaries(QHash<QString, Dictionary*>* dicts) { dictionaries = dicts; }
+    virtual void setFormDocument(FormDocument* doc) { parentForm = doc; }
+    virtual void setApp(TApplication*);
 
 public slots:
     virtual void dictionaryButtonPressed();

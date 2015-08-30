@@ -52,7 +52,7 @@ public:
 
     // Работа с журналом
     QString     getLog() { return log; }
-    void writeLog(QString = "");
+    void        writeLog(QString = "");
 private:
     bool remote;
     bool outLog;

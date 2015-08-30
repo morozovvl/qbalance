@@ -51,7 +51,7 @@ unsigned DriverFR::commlen[0x100] =
  255,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0x70 - 0x7f
   60, 60, 60, 60, 60, 71, 54, 54,  5,  5, 54, 54,  0,  0,  0,  0, // 0x80 - 0x8f
   61, 57, 52, 11, 12, 52,  7,  7,  7,  5, 13,  7,  0,  0,  7,  7, // 0x90 - 0x9f
-  13, 11, 12, 10, 10,  8,  7,  5,  0,  0,  0,  0,  0,  5,  0,  0, // 0xa0 - 0xaf
+  13, 11, 12, 10, 10,  8,  7,  5,  0,  0,  0,  0,  5,  5,  0,  0, // 0xa0 - 0xaf
    5,  0,  0,  5,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xb0 - 0xbf
   46,  7, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xc0 - 0xcf
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xd0 - 0xdf
@@ -328,6 +328,20 @@ const char* DriverFR::errmsg[] =
     ""         // ff
 };
 
+
+const char* DriverFR::errrecomendations[] =
+{
+    "Выполните \"Прекращение ЭКЛЗ\" в меню ФР",        // 1
+};
+
+
+recomendations DriverFR::referrrecomendations[] =
+{
+    {163, 1},
+    {0, 0}              // Признак конца массива
+};
+
+
 const char* DriverFR::ecrmodedesc[] =
 {
   "",
@@ -405,6 +419,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
     serialPort = new QMyExtSerialPort(port, QextSerialPort::Polling);
     if (serialPort != 0)
     {
+        serialPort->setRemote(false);
         // Сначала поищем фискальник на этом компьютере
 
         serialPort->setBaudRate(LineSpeedVal[fr.BaudRate]);
@@ -413,15 +428,14 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
         serialPort->setParity(PAR_NONE);
         serialPort->setDataBits(DATA_8);
         serialPort->setStopBits(STOP_2);
-        if (serialPort->open(QIODevice::ReadWrite) && serialPort->lineStatus() != 0)
+//        if (serialPort->open(QIODevice::ReadWrite) && serialPort->lineStatus() != 0)
+        if (serialPort->open(QIODevice::ReadWrite))
         {
             if (Connect())
             {
                 Beep();
                 result = true;
             }
-            else
-                result = false;
             DisConnect();
         }
         if (!result)
@@ -430,7 +444,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
             if (ipAddress.size() > 0)
             {
                 serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
-                app->timeOut(1000);
+                app->timeOut(100);
                 if (serialPort->getTcpClient()->isValid())
                 {
                     remote = true;
@@ -471,7 +485,6 @@ int DriverFR::checkState()
   short int repl;
   sendENQ();
   repl = readByte(0, true);
-  serialPort->writeLog();
   switch(repl)
     {
       case NAK:
@@ -522,7 +535,9 @@ unsigned short int DriverFR::readByte(int msec, bool notNull)
     for (int tries = 0; tries < MAX_TRIES; tries++)
     {
         if (msec > 0)
+        {
             app->timeOut(msec);
+        }
         unsigned char readbuff[2] = "";
         int result = readBytes(readbuff, 1);
         if (result > 0)
@@ -541,14 +556,16 @@ unsigned short int DriverFR::readByte(int msec, bool notNull)
 
 int DriverFR::readBytes(unsigned char *buff, int len)
 {
-    for(int i = 0; i < len; i++)
+    int result = len;
+    for (int i = 0; i < len; i++)
     {
            if (serialPort->readData((char*)(buff+i), 1) == -1)
            {
-               return -1;
+               result = -1;
+               break;
            }
     }
-    return len;
+    return result;
 }
 
 
@@ -557,35 +574,29 @@ int DriverFR::readAnswer(answer *ans)
     int result = -1;
     if (connected)
     {
-        int state = 0;
-        short int  len, crc, tries, repl;
-        for (int tries1 = 0; tries1 < MAX_TRIES && state != NAK; tries1++)
-        {
-            for (tries = 0; tries < MAX_TRIES; tries++)
-            {
-                repl = readByte();
-                if (repl == STX)
-                {
-                    len = readByte();
-                    if (readBytes(ans->buff, len) == len)
-                    {
-                        crc = readByte();
-                        if (crc == (LRC(ans->buff, len, 0) ^ len))
-                        {
-                            app->timeOut(fr.Timeout);
-                            sendACK();
-                            ans->len = len;
-                            result = len;
-                            break;
-                        }
-                        else
-                            sendNAK();
-                    }
-                }
-                app->timeOut(fr.Timeout);
-            }
-            state = checkState();
-        }
+          short int  len, crc, tries, repl;
+          for (tries = 0; tries < MAX_TRIES * 10; tries++)
+          {
+              repl = readByte();
+              if (repl == STX)
+              {
+                  len = readByte();
+                  if (readBytes(ans->buff, len) == len)
+                  {
+                      crc = readByte();
+                      if (crc == (LRC(ans->buff, len, 0) ^ len))
+                      {
+                          sendACK();
+                          ans->len = len;
+                          result = len;
+                          break;
+                      }
+                      else
+                          sendNAK();
+                  }
+              }
+              app->timeOut(fr.Timeout);
+          }
     }
     return result;
 }
@@ -631,35 +642,19 @@ int DriverFR::composeComm(command *cmd, int comm, int pass, parameter *param)
 int DriverFR::sendCommand(int comm, int pass, parameter *param)
 {
     command cmd;
-    answer a;
     int result = -1;
-    int tries = 0;
-    // Если по какой-либо причине не обработан ответ от предыдущей команды
-    int state = checkState();
-    for (; tries < MAX_TRIES && state != NAK; tries++)
+    composeComm(&cmd, comm, pass, param);
+    if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
     {
-        readAnswer(&a);
-        state = checkState();
-        if (state == -1)
-            break;
-    }
-
-    // Теперь уже отдадим команду при условии, что предыдущая проверка статуса была успешной
-    if (tries < MAX_TRIES)
-    {
-        composeComm(&cmd, comm, pass, param);
-        if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
+        serialPort->writeLog();
+        for(int tries = 1; tries <= MAX_TRIES; tries++)
         {
-            serialPort->writeLog();
-            for(int tries = 1; tries <= MAX_TRIES; tries++)
+            short int repl = readByte(fr.Timeout);
+            if (repl == ACK)
             {
-                short int repl = readByte(fr.Timeout);
-                if (repl == ACK)
-                {
-                    serialPort->writeLog();
-                    result = 1;
-                    break;
-                }
+                serialPort->writeLog();
+                result = 1;
+                break;
             }
         }
     }
@@ -693,8 +688,6 @@ int DriverFR::errHand(answer *a)
 {
   fr.ResultCode = a->buff[1];
   fr.ResultCodeDescription = (char*)errmsg[fr.ResultCode];
-  if (fr.ResultCode != 0)
-    app->showError(fr.ResultCodeDescription);
   return fr.ResultCode;
 }
 
@@ -776,13 +769,16 @@ bool DriverFR::Connect()
     connected = false;
     bool result = false;
 
+    TApplication::debug(4, QString("Connect::locked=%1").arg(locked));
+    TApplication::debug(4, QString("Connect::remote=%1").arg(remote));
+
     if (!locked)
     {
         if (remote)
         {
             if (serialPort->isReadyDriverFR())
             {
-                locked = serialPort->setLock(true);
+                locked = isLocked();
             }
         }
         else
@@ -791,9 +787,7 @@ bool DriverFR::Connect()
         if (locked)
         {
             connected = true;
-            if (GetECRStatus() != 0)
-                result = false;
-            else
+            if (GetECRStatus() == 0)
             {
                 result = true;
                 if (TApplication::debugMode() == 4)
@@ -804,11 +798,10 @@ bool DriverFR::Connect()
                 if (showProgressBar)
                     progressDialog->show();
             }
+            else
+                connected = false;
         }
     }
-    if (!result)
-        DisConnect();
-//    TApplication::debug(4, QString("locked=%1").arg(locked));
     return result;
 }
 
@@ -821,24 +814,24 @@ void DriverFR::DisConnect()
     }
     serialPort->writeLog();
     connected = false;
-    if (remote && serialPort->setLock(false))
-        locked = false;
-    else
-        locked = false;
-//    TApplication::debug(4, QString("locked=%1").arg(locked));
+    setLock(false);
+
+    TApplication::debug(4, QString("DisConnect::locked=%1").arg(locked));
 }
 
 
 bool DriverFR::isLocked()
 {
     if (remote)
-        return serialPort->isLockedDriverFR();
+        locked = serialPort->isLockedDriverFR();
     return locked;
 }
 
 
 void DriverFR::setLock(bool lock)
 {
+    if (remote)
+        serialPort->setLock(lock);
     locked = lock;
 }
 
@@ -934,6 +927,49 @@ int DriverFR::CutCheck()
 }
 
 
+int DriverFR::processCommand(int command, parameter* p, answer* a)
+{
+    int result;
+    do
+    {
+        result = sendCommand(command, fr.Password, p);
+        if (result >= 0)
+        {
+            result = readAnswer(a);
+            if (result >= 0)
+            {
+                if (a->buff[0] == command)
+                {
+                    if (errHand(a) != 0)
+                    {
+                        result = fr.ResultCode;
+                        app->timeOut(fr.Timeout);
+                    }
+                    else
+                        result = 0;
+                }
+                else
+                    result = -1;
+            }
+        }
+    } while (result == 0x50);
+    if (result > 0)
+    {
+        QString error(fr.ResultCodeDescription);
+        for (int i = 0;referrrecomendations[i].error != 0; i++)
+        {
+            if (referrrecomendations[i].error == result)
+            {
+                error.append(". ");
+                error.append(errrecomendations[referrrecomendations[i].recomendation - 1]);
+                break;
+            }
+        }
+        app->showError(error);
+    }
+    return result;
+}
+
 
 //-----------------------------------------------------------------------------
 int DriverFR::PrintString()
@@ -949,22 +985,10 @@ int DriverFR::PrintString()
         p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
         p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
         strncpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 40);
-
-        if (sendCommand(PRINT_STRING, fr.Password, &p) >= 0)
+        result = processCommand(PRINT_STRING, &p, &a);
+        if (result == 0)
         {
-            if (readAnswer(&a) >= 0)
-            {
-                if (a.buff[0] == PRINT_STRING)
-                {
-                    if (errHand(&a) != 0)
-                        result = fr.ResultCode;
-                    else
-                    {
-                        fr.OperatorNumber = a.buff[2];
-                        result = 0;
-                    }
-                }
-            }
+            fr.OperatorNumber = a.buff[2];
         }
     }
     return result;
@@ -1082,66 +1106,66 @@ int DriverFR::GetECRStatus()
   logCommand(GET_ECR_STATUS, "Запрос состояния ФР");
   parameter  p;
   answer     a;
+  int result = -1;
 
-  if (!connected) return -1;
+  if (connected)
+  {
+    result = processCommand(GET_ECR_STATUS, &p, &a);
+    if (result == 0)
+    {
+        fr.OperatorNumber = a.buff[2];
 
-  if (sendCommand(GET_ECR_STATUS, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != GET_ECR_STATUS) return -1;
-  if (errHand(&a))	return  fr.ResultCode;
+        fr.ECRSoftVersion[0] = a.buff[3];
+        fr.ECRSoftVersion[1] = 0x2e;
+        fr.ECRSoftVersion[2] = a.buff[4];
+        fr.ECRSoftVersion[3] = 0;
 
-  fr.OperatorNumber = a.buff[2];
+        fr.ECRBuild = evalint((unsigned char*)&a.buff + 5, 2);
+        evaldate((unsigned char*)&a.buff + 7, &fr.ECRSoftDate);
+        fr.LogicalNumber = evalint((unsigned char*)&a.buff + 10, 1);
+        fr.OpenDocumentNumber = evalint((unsigned char*)&a.buff + 11, 2);
+        fr.ReceiptRibbonIsPresent     = (a.buff[13] &   1)  ==   1; //0
+        fr.JournalRibbonIsPresent     = (a.buff[13] &   2)  ==   2; //1
+        fr.SlipDocumentIsPresent      = (a.buff[13] &   4)  ==   4; //2
+        fr.SlipDocumentIsMoving       = (a.buff[13] &   8)  ==   8; //3
+        fr.PointPosition              = (a.buff[13] &  16)  ==  16; //4
+        fr.EKLZIsPresent              = (a.buff[13] &  32)  ==  32; //5
+        fr.JournalRibbonOpticalSensor = (a.buff[13] &  64)  ==  64; //6
+        fr.ReceiptRibbonOpticalSensor = (a.buff[13] & 128)  == 128; //6
 
-  fr.ECRSoftVersion[0] = a.buff[3];
-  fr.ECRSoftVersion[1] = 0x2e;
-  fr.ECRSoftVersion[2] = a.buff[4];
-  fr.ECRSoftVersion[3] = 0;
+        fr.JournalRibbonLever         = (a.buff[14] &   1)  ==   1; //0
+        fr.ReceiptRibbonLever         = (a.buff[14] &   2)  ==   2; //1
+        fr.LidPositionSensor          = (a.buff[14] &   4)  ==   4; //2
 
-  fr.ECRBuild = evalint((unsigned char*)&a.buff + 5, 2);
-  evaldate((unsigned char*)&a.buff + 7, &fr.ECRSoftDate);
-  fr.LogicalNumber = evalint((unsigned char*)&a.buff + 10, 1);
-  fr.OpenDocumentNumber = evalint((unsigned char*)&a.buff + 11, 2);
-  fr.ReceiptRibbonIsPresent     = (a.buff[13] &   1)  ==   1; //0
-  fr.JournalRibbonIsPresent     = (a.buff[13] &   2)  ==   2; //1
-  fr.SlipDocumentIsPresent      = (a.buff[13] &   4)  ==   4; //2
-  fr.SlipDocumentIsMoving       = (a.buff[13] &   8)  ==   8; //3
-  fr.PointPosition              = (a.buff[13] &  16)  ==  16; //4
-  fr.EKLZIsPresent              = (a.buff[13] &  32)  ==  32; //5
-  fr.JournalRibbonOpticalSensor = (a.buff[13] &  64)  ==  64; //6
-  fr.ReceiptRibbonOpticalSensor = (a.buff[13] & 128)  == 128; //6
+        fr.ECRMode  = evalint((unsigned char*)&a.buff + 15, 1);
+        DefineECRModeDescription();
 
-  fr.JournalRibbonLever         = (a.buff[14] &   1)  ==   1; //0
-  fr.ReceiptRibbonLever         = (a.buff[14] &   2)  ==   2; //1
-  fr.LidPositionSensor          = (a.buff[14] &   4)  ==   4; //2
+        fr.ECRAdvancedMode = evalint((unsigned char*)&a.buff + 16, 1);
+        fr.ECRAdvancedModeDescription = (char*)ecrsubmodedesc[fr.ECRAdvancedMode];
 
-  fr.ECRMode  = evalint((unsigned char*)&a.buff + 15, 1);
-  DefineECRModeDescription();
-
-  fr.ECRAdvancedMode = evalint((unsigned char*)&a.buff + 16, 1);
-  fr.ECRAdvancedModeDescription = (char*)ecrsubmodedesc[fr.ECRAdvancedMode];
-
-  fr.PortNumber  = evalint((unsigned char*)&a.buff + 17, 1);
-  fr.FMSoftVersion[0] = a.buff[18];
-  fr.FMSoftVersion[1] = 0x2e;
-  fr.FMSoftVersion[2] = a.buff[19];
-  fr.FMSoftVersion[3] = 0;
-  fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
-  evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
-  evaldate((unsigned char*)&a.buff + 25, &fr.Date);
-  evaltime((unsigned char*)&a.buff + 28, &fr.Time);
-  fr.FM1IsPresent = (a.buff[31] & 1) == 1;
-  fr.FM2IsPresent = (a.buff[31] & 2) == 2;
-  fr.LicenseIsPresent = (a.buff[31] & 4) == 4;
-  fr.FMOverflow = (a.buff[31] & 8) == 8;
-  fr.BatteryCondition = (a.buff[31] & 16) == 16;
-  sprintf(fr.SerialNumber, "%d", evalint((unsigned char*)&a.buff + 32, 4));
-  fr.SessionNumber = evalint((unsigned char*)&a.buff + 36, 2);
-  fr.FreeRecordInFM = evalint((unsigned char*)&a.buff + 38, 2);
-  fr.RegistrationNumber = evalint((unsigned char*)&a.buff + 40, 1);
-  fr.FreeRegistration = evalint((unsigned char*)&a.buff + 41, 1);
-  sprintf(fr.INN, "%.0lg", (double)evalint64((unsigned char*)&a.buff + 42, 6));
-
-  return 0;
+        fr.PortNumber  = evalint((unsigned char*)&a.buff + 17, 1);
+        fr.FMSoftVersion[0] = a.buff[18];
+        fr.FMSoftVersion[1] = 0x2e;
+        fr.FMSoftVersion[2] = a.buff[19];
+        fr.FMSoftVersion[3] = 0;
+        fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
+        evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
+        evaldate((unsigned char*)&a.buff + 25, &fr.Date);
+        evaltime((unsigned char*)&a.buff + 28, &fr.Time);
+        fr.FM1IsPresent = (a.buff[31] & 1) == 1;
+        fr.FM2IsPresent = (a.buff[31] & 2) == 2;
+        fr.LicenseIsPresent = (a.buff[31] & 4) == 4;
+        fr.FMOverflow = (a.buff[31] & 8) == 8;
+        fr.BatteryCondition = (a.buff[31] & 16) == 16;
+        sprintf(fr.SerialNumber, "%d", evalint((unsigned char*)&a.buff + 32, 4));
+        fr.SessionNumber = evalint((unsigned char*)&a.buff + 36, 2);
+        fr.FreeRecordInFM = evalint((unsigned char*)&a.buff + 38, 2);
+        fr.RegistrationNumber = evalint((unsigned char*)&a.buff + 40, 1);
+        fr.FreeRegistration = evalint((unsigned char*)&a.buff + 41, 1);
+        sprintf(fr.INN, "%.0lg", (double)evalint64((unsigned char*)&a.buff + 42, 6));
+    }
+  }
+  return result;
 }
 //-----------------------------------------------------------------------------
 int DriverFR::GetDeviceMetrics()
@@ -1372,21 +1396,10 @@ int DriverFR::Sale()
 
     strncpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
-    if (sendCommand(SALE, fr.Password, &p) >= 0)
+    result = processCommand(SALE, &p, &a);
+    if (result == 0)
     {
-        if (readAnswer(&a) >= 0)
-        {
-            if (a.buff[0] == SALE)
-            {
-                if (errHand(&a) != 0)
-                    result = fr.ResultCode;
-                else
-                {
-                  fr.OperatorNumber = a.buff[2];
-                  result = 0;
-                }
-            }
-        }
+        fr.OperatorNumber = a.buff[2];
     }
   }
   return result;
@@ -1419,21 +1432,10 @@ int DriverFR::ReturnSale()
 
     strncpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
-    if (sendCommand(RETURN_SALE, fr.Password, &p) >= 0)
+    result = processCommand(RETURN_SALE, &p, &a);
+    if (result == 0)
     {
-        if (readAnswer(&a) >= 0)
-        {
-            if (a.buff[0] == RETURN_SALE)
-            {
-                if (errHand(&a) != 0)
-                    result = fr.ResultCode;
-                else
-                {
-                    fr.OperatorNumber = a.buff[2];
-                    result = 0;
-                }
-            }
-        }
+        fr.OperatorNumber = a.buff[2];
     }
   }
   return result;
@@ -1482,23 +1484,12 @@ int DriverFR::GetEKLZJournal()
   {
         p.len = 2;
         memcpy(&p.buff, &fr.SessionNumber, 2);
-        if (sendCommand(GET_EKLZ_JOURNAL, fr.Password, &p) >= 0)
+        result = processCommand(GET_EKLZ_JOURNAL, &p, &a);
+        if (result == 0)
         {
-            if (readAnswer(&a) >= 0)
-            {
-                if (a.buff[0] == GET_EKLZ_JOURNAL)
-                {
-                    if (errHand(&a) != 0)
-                        result = fr.ResultCode;
-                    else
-                    {
-                        QByteArray data;
-                        data.append((char*)&a.buff+2);
-                        fr.UDescription = codec->toUnicode(data);
-                        result = 0;
-                    }
-                }
-            }
+            QByteArray data;
+            data.append((char*)&a.buff+2);
+            fr.UDescription = codec->toUnicode(data);
         }
     }
   return result;
@@ -1585,6 +1576,22 @@ int DriverFR::GetEKLZCode1Report()
     }
     return result;
 }
+
+
+int DriverFR::EKLZInterrupt()
+{
+    logCommand(EKLZ_INTERRUPT, "Прекращение ЭКЛЗ");
+    parameter  p;
+    answer     a;
+    int result = -1;
+
+    if (connected)
+    {
+        result = processCommand(EKLZ_INTERRUPT, &p, &a);
+    }
+    return result;
+}
+
 
 //-----------------------------------------------------------------------------
 int DriverFR::CashIncome()

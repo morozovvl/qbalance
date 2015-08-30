@@ -149,7 +149,7 @@ public:
     QString restoreDocumentVariables(int docId);
     QSqlQuery getDocumentAddQueriesList(int);
 
-    // Работа с файлами
+    // Работа с файлами (скриптами, формами, картинками и т.п.)
     QByteArray getFile(QString, FileType, bool = false);        // Получить файл из базы. Если последний параметр Истина, то получить из расширенной базы
     qulonglong getFileCheckSum(QString, FileType, bool = false);
     QDateTime getFileDateTime(QString, FileType, bool = false);
@@ -236,7 +236,7 @@ public:
 
     // Функции для мастера работы со справочниками
     bool createNewDictionary(QString, QString = "", bool = true);
-    bool isTableExists(QString);
+    Q_INVOKABLE bool isTableExists(QString);
 
 
     // Функции для мастера создания новый (редактирования старых) типовых операций

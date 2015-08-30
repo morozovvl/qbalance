@@ -42,7 +42,7 @@ public:
     Q_INVOKABLE virtual void setValue(QString, QVariant);
     Q_INVOKABLE virtual QVariant getValue(QString, int = -1);
     QString getAttrPrefix() { return prefix; }
-    Q_INVOKABLE virtual void            setOrderClause();
+    Q_INVOKABLE virtual void  setOrderClause(QString = "");
     Q_INVOKABLE virtual void  setForm(QString = "");
     Q_INVOKABLE Document* getDocument() { return currentDocument; }
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);

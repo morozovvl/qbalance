@@ -148,11 +148,20 @@ void MainWindow::createMenus()
     printEKLZReportAct = frMenu->addAction(QObject::trUtf8("Снять отчет ЭКЛЗ за последнюю не закрытую смену"));
     connect(printEKLZReportAct, SIGNAL(triggered()), this, SLOT(printEKLZReport()));
 
+    printProcessedEKLZReportAct = frMenu->addAction(QObject::trUtf8("Снять обработанный отчет ЭКЛЗ за последнюю не закрытую смену"));
+    connect(printProcessedEKLZReportAct, SIGNAL(triggered()), this, SLOT(printProcessedEKLZReport()));
+
+    EKLZinterruptAct = frMenu->addAction(QObject::trUtf8("Прекращение ЭКЛЗ"));
+    connect(EKLZinterruptAct, SIGNAL(triggered()), this, SLOT(EKLZinterrupt()));
+
     showMessageWindow = serviceMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
     connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
 
     saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
     connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
+
+    loadFileAct = serviceMenu->addAction(QObject::trUtf8("Загрузить файл"));
+    connect(loadFileAct, SIGNAL(triggered()), this, SLOT(loadFile()));
 
     configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
     connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
@@ -208,6 +217,12 @@ void MainWindow::saveCustomization()
 }
 
 
+void MainWindow::loadFile()
+{
+    TApplication::exemplar()->loadFile();
+}
+
+
 void MainWindow::printReportWithoutCleaning()
 {
     TApplication::exemplar()->runScript("printReportWithoutCleaning.js");
@@ -235,6 +250,18 @@ void MainWindow::cancelCheck()
 void MainWindow::printEKLZReport()
 {
     TApplication::exemplar()->runScript("printEKLZReport.js");
+}
+
+
+void MainWindow::printProcessedEKLZReport()
+{
+    TApplication::exemplar()->runScript("printEKLZReport1.js");
+}
+
+
+void MainWindow::EKLZinterrupt()
+{
+    TApplication::exemplar()->runScript("EKLZinterrupt.js");
 }
 
 

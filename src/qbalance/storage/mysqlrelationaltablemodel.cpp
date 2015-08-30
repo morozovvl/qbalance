@@ -70,7 +70,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
-    if (index.isValid() || force)
+    if ((index.isValid() || force) && rowCount() > 0)
     {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
@@ -82,8 +82,6 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
             lResult = true;
         }
     }
-    else if (!index.isValid())
-        app->showError(QString("Не определена позиция в таблице \"%1\" для присвоения значения [%2].").arg(parent->getTableName()).arg(value.toString()));
     return lResult;
 }
 
@@ -141,14 +139,26 @@ QString MySqlRelationalTableModel::selectStatement() const
 {
     QString query;
     query = selectCommand;
-    if (!filter().isEmpty())
-        query.append(" WHERE ").append(filter());
     if (!orderByClause().isEmpty())
-        query.append(" " + orderByClause());
+    {
+        int lastIndex = query.lastIndexOf("LIMIT");
+        if (lastIndex == -1)
+            query.append(" " + orderByClause());
+        else
+            query.replace(lastIndex, 5, orderByClause() + " LIMIT");
+    }
+    if (!filter().isEmpty())
+    {
+        int lastIndex = query.lastIndexOf("ORDER BY");
+        if (lastIndex == -1)
+            query.append(" WHERE ").append(filter());
+        else
+            query.replace(lastIndex, 8, "WHERE " + filter() + " ORDER BY");
+    }
     if (parent != 0)
         query = parent->transformSelectStatement(query);
     if (testSelect)
-        query += " LIMIT 0";
+        query = "SELECT * FROM (" + query + ")s LIMIT 0";
     return query;
 }
 

@@ -47,6 +47,7 @@ bool readParameters(int argc, char *argv[]) {
             out << QObject::trUtf8("  -pw| --password   - Пароль\n");
             out << QObject::trUtf8("  -s | --script     - Выполнить скрипт с заданным именем и выйти\n");
             out << QObject::trUtf8("  -sp| --scriptparameter - Параметр для скрипта (имя файла или строка, которую скрипт должен сам разобрать)\n");
+            out << QObject::trUtf8("  -sr| --server     - Запустить программу в режиме сервера\n");
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
@@ -112,6 +113,11 @@ bool readParameters(int argc, char *argv[]) {
             {
                 TApplication::scriptParameter = argv[++i];
             }
+        else if (QString(argv[i]).compare("-sr", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--server", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::serverMode = true;
+            }
     }
     return lContinue;
 }
@@ -154,9 +160,12 @@ int main(int argc, char *argv[])
         if (application.getScript().size() > 0)
             application.setScriptMode(true);
 
-        if (application.open()) {       // Если приложение удалось создать
+        if (application.open())
+        {       // Если приложение удалось создать
             if (application.isScriptMode())
                 lResult = application.runScript(application.getScript());
+            else if (application.isServerMode())
+                lResult = application.exec();
             else
             {
                 application.show();         // Откроем приложение

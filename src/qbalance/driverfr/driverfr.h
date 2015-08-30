@@ -141,6 +141,7 @@ class TApplication;
 #define ECT_PAY_DOC_BY_NUMBER		0xa5
 #define ECT_BY_SHIFT_NUMBER		0xa6
 #define ECT_REPORT_INTR			0xa7
+#define EKLZ_INTERRUPT      	0xac
 #define GET_EKLZ_CODE1_REPORT	0xad
 #define CONTINUE_PRINTING		0xb0
 #define GET_EKLZ_DATA           0xb3
@@ -171,6 +172,13 @@ typedef struct
     int len;
     unsigned char buff[260];
 } parameter;
+
+
+typedef struct
+{
+    int error;
+    int recomendation;
+} recomendations;
 
 
 class frProp : public QObject
@@ -732,6 +740,7 @@ public:
     Q_INVOKABLE int GetEKLZData();
     Q_INVOKABLE int GetEKLZJournal();
     Q_INVOKABLE int GetEKLZCode1Report();
+    Q_INVOKABLE int EKLZInterrupt();
     Q_INVOKABLE int GetLastFMRecordDate();
     Q_INVOKABLE int GetLiterSumCounter();
     Q_INVOKABLE int GetCashReg();
@@ -805,7 +814,7 @@ private:
     void evaltime(unsigned char *, struct tm *);
     void DefineECRModeDescription();
     void logCommand(int, QString);
-
+    int processCommand(int, parameter*, answer*);
 
     QMyExtSerialPort*         serialPort;
     bool            remote;
@@ -817,6 +826,8 @@ private:
     static BaudRateType LineSpeedVal[7];
     static unsigned commlen[0x100];
     static const char* errmsg[];
+    static const char* errrecomendations[];
+    static recomendations referrrecomendations[];
     static const char* ecrmodedesc[];
     static const char* ecrmode8desc[];
     static const char* ecrsubmodedesc[];

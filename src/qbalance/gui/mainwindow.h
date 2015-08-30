@@ -52,11 +52,14 @@ private slots:
       void showConfigs();
       void showMessagesWindow();
       void saveCustomization();
+      void loadFile();
       void printReportWithoutCleaning();
       void printReportWithCleaning();
       void continuePrint();
       void cancelCheck();
       void printEKLZReport();
+      void printProcessedEKLZReport();
+      void EKLZinterrupt();
       void newRecord();
       void deleteRecord();
       void about();
@@ -100,11 +103,14 @@ private:
       QAction* periodAct;
       QAction* showMessageWindow;
       QAction* saveCustomAct;
+      QAction* loadFileAct;
       QAction* printReportWithoutCleaningAct;
       QAction* printReportWithCleaningAct;
       QAction* continuePrintAct;
       QAction* cancelCheckAct;
       QAction* printEKLZReportAct;
+      QAction* printProcessedEKLZReportAct;
+      QAction* EKLZinterruptAct;
       QAction* exitAct;
       QMdiArea* workSpace;
 

@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QMessageBox>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
+#include <QtGui/QFileDialog>
 #include <QPushButton>
 #include <QPaintEngine>
 #include <QHttp>
@@ -47,6 +48,7 @@ int TApplication::port                 = 0;
 QString TApplication::database         = "";
 QString TApplication::script           = "";
 QString TApplication::scriptParameter  = "";
+bool TApplication::serverMode = false;
 
 
 TApplication::TApplication(int & argc, char** argv)
@@ -564,7 +566,7 @@ int TApplication::runScript(QString scriptName)
     if (scriptEngine->open())
     {
         scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
-        result = scriptEngine->evaluate("scriptResult").toInteger();
+        result = scriptEngine->evaluate(QString("scriptResult")).toInteger();
         scriptEngine->close();
     }
     delete scriptEngine;
@@ -740,6 +742,21 @@ void TApplication::saveCustomization()
     foreach (QString f, fs)
     {
         qDebug() << f;
+    }
+}
+
+
+void TApplication::loadFile()
+{
+    if (isSA())
+    {
+        QFileDialog dlg;
+        QString fileName = dlg.getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", QDir::currentPath(), tr("Scripts (*.js *.qs)"));
+        if (fileName.size() > 0)
+        {
+            QFileInfo fi(fileName);
+            saveFileToServer(fileName, fi.fileName(), ScriptFileType);
+        }
     }
 }
 

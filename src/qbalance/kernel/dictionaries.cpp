@@ -83,8 +83,8 @@ bool Dictionaries::addDictionary(QString dictName)
         dict->setDictionaries(this);
         dict->setPhotoEnabled(true);
 
-        if (document != 0)                         // Была команда выключить скрипты
-            dict->setScriptEngineEnabled(false);
+//        if (document != 0)                         // Была команда выключить скрипты
+//            dict->setScriptEngineEnabled(false);
 
         if (dict->open()) {
             dictionariesList.insert(dictName, dict);
@@ -146,14 +146,14 @@ bool Dictionaries::addSaldo(QString acc)
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString().trimmed().toLower();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
-        if (document != 0)                         // Была команда выключить скрипты
-            saldo->setScriptEngineEnabled(false);
+//        if (document != 0)                         // Была команда выключить скрипты
+//            saldo->setScriptEngineEnabled(false);
         if (saldo->open()) {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionariesList.insert(alias, saldo);
             saldo->setPhotoEnabled(true);
             saldo->setQuan(true);
-            addDictionary(dictName);
+//            addDictionary(dictName);
             return true;
         }
     }
@@ -304,7 +304,7 @@ void Dictionaries::setForm(QString formName)
 }
 
 
-void Dictionaries::setOrderClause()
+void Dictionaries::setOrderClause(QString)
 {
     Table::setOrderClause(db->getObjectNameCom("доступ_к_справочникам.имя"));
 }

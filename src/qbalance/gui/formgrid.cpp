@@ -105,7 +105,8 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     else
     {   // Была загружена пользовательская форма
         tableLayout = (QVBoxLayout*)formWidget->findChild("tableLayout");
-        grdTable = (TableView*)formWidget->findChild("tableView");;
+        TableView * grid = (TableView *)formWidget->findChild("tableView");
+        grdTable = grid;
         if (grdTable != 0)
         {
 //            grdTable->setParent(this);
@@ -131,7 +132,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             grdTable->horizontalHeader()->setClickable(false);
 #endif
             grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-            parent->setGridTable(grdTable);
     }
 
     if (picture != 0)
@@ -259,8 +259,6 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     setButtonAdd(true);
 
     grdTables.append(grdTable);
-
-//    grdTable->setColumnsDelegates();
 }
 
 
@@ -397,7 +395,7 @@ void FormGrid::cmdAdd()
 {
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
-        parent->add();
+        grdTable->cmdAdd();
     }
 }
 
@@ -628,6 +626,4 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
         }
     }
 }
-
-
 

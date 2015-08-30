@@ -30,8 +30,8 @@ class QDESIGNER_WIDGET_EXPORT MyNumericEdit : public QLineEdit {
     Q_OBJECT
 public:
     MyNumericEdit(QWidget *parent = 0);
-    Q_INVOKABLE void setValue(QVariant);
-    Q_INVOKABLE QVariant getValue() { return value; }
+    Q_INVOKABLE virtual void setValue(QVariant);
+    Q_INVOKABLE virtual QVariant getValue() { return value; }
 private:
     QVariant value;
 };

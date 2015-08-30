@@ -33,6 +33,7 @@ class Essence;
 class TApplication;
 class Document;
 class Documents;
+class ReportContext;
 
 
 struct EventFunction {
@@ -49,7 +50,8 @@ public:
     bool open(QString fileName = "");
     void close();
     bool evaluate();
-    QScriptValue evaluate(const QString &, const QString & = QString(), int = 1);
+//    QScriptValue evaluate(const QString &, const QString & = QString(), int = 1);
+    QScriptValue evaluate(const QString &, const QString &, int);
     QScriptValue evaluate(const QScriptProgram &);
     QString getErrorMessage() { return errorMessage; }
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
@@ -79,6 +81,7 @@ public:
     void eventSetEnabled(bool);
     void eventAfterRowChanged();
     void eventPhotoLoaded();
+    void eventPreparePrintValues();
     QString preparePictureUrl(Essence*);
     QString getFilter();
     void eventBarCodeReaded(QString);

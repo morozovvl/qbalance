@@ -80,6 +80,7 @@ public:
     QString getFieldName(int i) { return record().fieldName(i); }
     void    setTestSelect(bool test) { testSelect = test; }
 
+    QVariant headerData (int, Qt::Orientation, int) const;
 
 protected:
     Table*                  parent;
@@ -99,8 +100,6 @@ private:
     TApplication*           app;
     DBFactory*              db;
     bool                    testSelect;
-
-    QVariant headerData (int, Qt::Orientation, int) const;
 };
 
 #endif // MYSQLRELATIONALTABLEMODEL_H

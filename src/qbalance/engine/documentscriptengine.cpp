@@ -127,7 +127,7 @@ QHash<QString, EventFunction>* DocumentScriptEngine::getEventsList()
     appendEvent("EventParametersChanged()", func);
     func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
     appendEvent("EventAfterCalculate()", func);
-    func.comment = QObject::trUtf8("Вызывается при добавлении новой записи из запроса");
+    func.comment = QObject::trUtf8("Вызывается при добавлении каждой новой записи из запроса. Если готового запроса на сервере нет, то тогда вызывается один раз и скрипт сам должен создать и обработать запрос.");
     appendEvent("EventAppendFromQuery(queryName, record)", func);
     func.comment = QObject::trUtf8("Вызывается до печати очередной строки в документе");
     appendEvent("EventBeforeLinePrint(strNum)", func);

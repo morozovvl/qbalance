@@ -35,7 +35,8 @@ public:
     Dictionary(QObject *parent = 0) { Dictionary("", parent); }
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
-    Q_INVOKABLE virtual bool open(QString = "");
+    Q_INVOKABLE virtual bool open(QString = "", QString = "");
+    void close();
 
 // Функции для работы с моделью данных
     virtual bool add();
@@ -44,10 +45,10 @@ public:
     Q_INVOKABLE virtual void            queryName(QString filter = "") { query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName)); }
     virtual bool                        calculate();
     Q_INVOKABLE virtual qulonglong      getId(int row = -1, bool = false);
-    virtual void                        setOrderClause();
+    Q_INVOKABLE virtual void setOrderClause(QString = "");
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual void setValue(qulonglong, QString, QVariant);
-    Q_INVOKABLE virtual void setSqlCommand(QString command) { sqlCommand = command; }
+    Q_INVOKABLE virtual void setSqlCommand(QString);
 
 
 // Функции для работы справочника в составе документа
@@ -89,6 +90,7 @@ public:
     Q_INVOKABLE QString getSearchExpression(QString = "");
     Q_INVOKABLE void setGetIdRefresh(bool val) { getIdRefresh = val; }
 
+    virtual void        preparePrintValues();                   // Готовит значения для печати
 
 protected:
     QString         prototypeName;          // Имя справочника - прототипа
@@ -114,6 +116,7 @@ private:
     bool            isDepend;
     QString         dictTitle;
     QString         sqlCommand;
+    SearchParameters* parameters;
 };
 
 #endif // DICTIONARY_H

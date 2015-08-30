@@ -42,6 +42,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "eventloop.h"
 #include "reportcontextfunctions.h"
+#include "reportcontext.h"
 
 
 Q_DECLARE_METATYPE(Dialog*)
@@ -95,11 +96,32 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
         QString fieldName = context->argument(0).toString();
         int row = (context->argument(1).isNumber() ? context->argument(1).toInteger() : -1);
         QScriptValue value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
-
-        if (value.isNumber())
-            value = engine->evaluate(QString("parseFloat(%1)").arg(value.toNumber()));
+        if (value.toVariant().type() == QVariant::Double)
+            value = engine->evaluate(QString("parseFloat(%1)").arg(value.toVariant().toFloat()));
         else
             value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
+
+        if (value.isValid())
+        {
+            return value;
+        }
+    }
+    return QScriptValue();
+}
+
+
+QScriptValue getId(QScriptContext* context, QScriptEngine* engine) {
+    if (engine->evaluate("table").isValid())
+    {
+        QScriptValue value;
+        if (context->argumentCount() > 0)
+        {
+            int row = (context->argument(0).isNumber() ? context->argument(1).toInteger() : -1);
+            value = engine->evaluate(QString("table.getId(%1)").arg(row));
+        }
+        else
+            value = engine->evaluate(QString("table.getId()"));
+
         if (value.isValid())
         {
             return value;
@@ -256,8 +278,11 @@ void PictureFromScriptValue(const QScriptValue &object, Picture* &out) {
 Q_DECLARE_METATYPE(Dictionary*)
 
 QScriptValue DictionaryConstructor(QScriptContext *context, QScriptEngine *engine) {
-     Dictionary* object = new Dictionary(context->argument(0).toString());
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+    QString tableName;
+    if (context->argumentCount() > 0)
+        tableName = context->argument(0).toString();
+    Dictionary* object = new Dictionary(tableName);
+    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue DictionaryToScriptValue(QScriptEngine *engine, Dictionary* const &in) {
@@ -597,6 +622,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
     globalObject().setProperty("getRowCount", newFunction(getRowCount));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
+    globalObject().setProperty("getId", newFunction(getId));
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("setValue", newFunction(setValue));
     globalObject().setProperty("getOldValue", newFunction(getOldValue));
@@ -672,8 +698,7 @@ QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fi
 
 QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
-    QScriptEngine::evaluate(program);
-    return globalObject().property("scriptResult");
+    return QScriptEngine::evaluate(program);
 }
 
 
@@ -1045,6 +1070,21 @@ void ScriptEngine::eventCardCodeReaded(QString cardCode)
     }
 }
 
+
+void ScriptEngine::eventPreparePrintValues()
+{
+    QString eventName = "EventPreparePrintValues";
+    if (globalObject().property(eventName).isFunction())
+    {
+        globalObject().property(eventName).call();
+        if (hasUncaughtException())
+        {   // Если в скриптах произошла ошибка
+            showScriptError(eventName);
+        }
+    }
+}
+
+
 // Конец списка событий
 
 void ScriptEngine::showScriptError(QString eventName)
@@ -1166,6 +1206,9 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после показа всех необходимых справочников при добавлении строки в документ");
     func.body = "return true;";
     appendEvent("EventAfterShowNextDicts()", func);
+
+    func.comment = QObject::trUtf8("Событие происходит перед созданием документа печати и предназначено для создания новых данных для документа");
+    appendEvent("EventPreparePrintValues()", func);
 
     return &eventsList;
 }

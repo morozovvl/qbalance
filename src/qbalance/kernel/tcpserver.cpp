@@ -89,12 +89,12 @@ void TcpServer::sendToClient(QTcpSocket* pSocket, QString str)
 void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
     if (str.left(4) == "=fr=" && TApplication::exemplar()->drvFRisValid())
-    {
+    {   // Если это запрос работы с фискальным регистратором и фискальный регистратор работает
         int length = str.length() - 4;
         QString lStr = str.right(length);
         QByteArray data;
         QMyExtSerialPort* serialPort = TApplication::exemplar()->getDrvFR()->getSerialPort();
-        if (lStr.left(2) == ">>")
+        if (lStr.left(2) == ">>")   // Если получен запрос на запись данных в ФР
         {
             length -= 2;
             lStr = lStr.right(length);
@@ -103,7 +103,7 @@ void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
             qint64 result = serialPort->writeData(data.data(), data.count(), true);
             sendToClient(pClientSocket, QString("%1").arg(result));
         }
-        else if (lStr.left(2) == "<<")
+        else if (lStr.left(2) == "<<")  // Если получен запрос на чтение данных из ФР
         {
             length -= 2;
             lStr = lStr.right(length);
@@ -136,6 +136,11 @@ void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
         bool result = true;
         TApplication::exemplar()->getDrvFR()->setLock(false);
         sendToClient(pClientSocket, (result ? "true" : "false"));
+    }
+    else if (str.indexOf("app.exit") == 0)
+    {
+        sendToClient(pClientSocket, "Ok");
+        TApplication::exemplar()->quit();
     }
 }
 

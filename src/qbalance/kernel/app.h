@@ -85,6 +85,7 @@ public:
     static QString database;
     static QString script;
     static QString scriptParameter;
+    static bool    serverMode;
 
     TApplication(int& argc, char** argv);
     ~TApplication();
@@ -175,6 +176,7 @@ public:
     Q_INVOKABLE bool isTimeOut() { return timeIsOut; }
 
     void saveCustomization();
+    void loadFile();
     void printReportWithoutCleaning();
     int runScript(QString);
     Q_INVOKABLE QString getScript() { return script; }                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
@@ -186,6 +188,9 @@ public:
 
     void    setScriptMode(bool mode) { scriptMode = mode; }
     bool    isScriptMode() { return scriptMode; }
+
+    void    setServerMode(bool mode) { serverMode = mode; }
+    bool    isServerMode() { return serverMode; }
 signals:
     void cardCodeReaded(QString);
 

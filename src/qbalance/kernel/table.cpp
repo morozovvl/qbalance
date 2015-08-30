@@ -34,6 +34,7 @@ Table::Table(QString name, QObject *parent)
     opened = false;
     tableName = name.trimmed().toLower();
     tagName = tableName;
+    queryTableName = "";
     app = TApplication::exemplar();
     db = app->getDBFactory();
 }
@@ -41,7 +42,38 @@ Table::Table(QString name, QObject *parent)
 
 QList<FieldType>* Table::getColumnsProperties()
 {
+    if (columnsProperties.count() > 0)
+        return &columnsProperties;
+    tableModel->setTestSelect(true);
+    query();
+    tableModel->setTestSelect(false);
+    for (int i = 0; i < tableModel->record().count(); i++)
+    {
+        FieldType fld;
+        fld.table  = queryTableName;
+        fld.name      = tableModel->record().field(i).name();
+        fld.type      = defineFieldType(tableModel->record().field(i).type());
+        fld.length    = tableModel->record().field(i).length();
+        fld.precision = tableModel->record().field(i).precision();
+        fld.precision = fld.precision == -1 ? 0 : fld.precision;
+        fld.constReadOnly = true;
+        fld.readOnly = true;
+        fld.level = 0;
+        fld.column = fld.name;
+        fld.header = "";
+        fld.headerExist = false;
+        fld.number    = 0;
+        fld.constReadOnly = true;
+        columnsProperties.append(fld);
+    }
     return &columnsProperties;
+}
+
+
+QList<FieldType> Table::returnColumnsProperties()
+{
+    getColumnsProperties();
+    return columnsProperties;
 }
 
 
@@ -117,4 +149,34 @@ void Table::setReadOnly(bool ro)
 bool Table::isReadOnly()
 {
     return tableModel->isReadOnly();
+}
+
+
+QString Table::defineFieldType(QVariant::Type type)
+{
+    QString result;
+    switch (type)
+    {
+        case QVariant::String:
+            result = "CHARACTER VARYING";
+            break;
+        case QVariant::LongLong:
+            result = "INTEGER";
+            break;
+        case QVariant::Int:
+            result = "INTEGER";
+            break;
+        case QVariant::Double:
+            result = "NUMERIC";
+            break;
+        case QVariant::Date:
+            result = "DATE";
+            break;
+        case QVariant::DateTime:
+            result = "DATETIME";
+            break;
+        default:
+            app->showError(QString("Не найден тип %1 в методе <QString Table::defineFieldType(QVariant::Type type)>. Необходимо поправить исходный код.").arg(type));
+    }
+    return result;
 }

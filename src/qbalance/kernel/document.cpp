@@ -254,24 +254,30 @@ int Document::addFromQuery(QString queryName)
 {
     if (queryName.size() > 0 && checkConstDicts())
     {
-        QSqlQuery queryData = db->execQuery(QString("SELECT * FROM %1;").arg(queryName));
-        QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
-        progressBar.setMaximum(queryData.size());
-        progressBar.show();
-        int i = 0;
-        db->beginTransaction();
-        while (queryData.next())
+        QSqlRecord record;
+        if (db->isTableExists(queryName))
         {
-            QSqlRecord record = queryData.record();
-            ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
-            i++;
-            progressBar.setValue(i);
+            QSqlQuery queryData = db->execQuery(QString("SELECT * FROM %1;").arg(queryName));
+            QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
+            progressBar.setMaximum(queryData.size());
+            progressBar.show();
+            int i = 0;
+            db->beginTransaction();
+            while (queryData.next())
+            {
+                record = queryData.record();
+                ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+                i++;
+                progressBar.setValue(i);
+            }
+            calcItog();
+            saveChanges();
+            db->commitTransaction();
+            query();
+            return queryData.size();
         }
-        calcItog();
-        saveChanges();
-        db->commitTransaction();
-        query();
-        return queryData.size();
+        else
+            ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
     }
     return 0;
 }
@@ -572,7 +578,7 @@ void Document::loadDocument()
             if (getDictionariesList()->contains(dictName))
             {   // если этот справочник открыт в локальных справочниках документа...
                 dict = getDictionariesList()->value(dictName);
-                dict->setScriptEngineEnabled(false);
+//                dict->setScriptEngineEnabled(false);
                 if (dict->isConst())
                 {   // ... и помечен как "постоянный"
                     // то установим его значение, которое актуально для всего документа
@@ -845,12 +851,16 @@ bool Document::setTableModel(int)
             if (dictsList.at(i).isSaldo)
             {
                 Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
-                saldo->getForm()->getSearchParameters()->setDictionaries(dictionaries);
+                SearchParameters* searchParameters = saldo->getForm()->getSearchParameters();
+                if (searchParameters != 0)
+                    searchParameters->setDictionaries(dictionaries);
             }
             else
             {
                 Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
-                dict->getForm()->getSearchParameters()->setDictionaries(dictionaries);
+                SearchParameters* searchParameters = dict->getForm()->getSearchParameters();
+                if (searchParameters != 0)
+                    searchParameters->setDictionaries(dictionaries);
             }
         }
 
@@ -968,23 +978,6 @@ int Document::appendDocString()
         prepareValue(dictName, dict);
     }
 
-/*
-    // Запомним значения сначала зависимых справочников
-    foreach (QString dictName, getDictionariesList()->keys())
-    {
-        Dictionary* dict = getDictionariesList()->value(dictName);
-        if (!dict->isSet())
-            prepareValue(dictName, dict);
-    }
-    // Затем запомним значения наборов, чтобы наборы освежили свои значения (вдруг связанный справочник поменялся)
-    foreach (QString dictName, getDictionariesList()->keys())
-    {
-        Dictionary* dict = getDictionariesList()->value(dictName);
-        if (dict->isSet() && dict->isAutoLoaded())
-            prepareValue(dictName, dict);
-    }
-*/
-
     // Просмотрим все проводки типовой операции
     for (int i = 0; i < topersList->count(); i++)
     {
@@ -1043,7 +1036,6 @@ int Document::appendDocString()
         {
             query();
             grdTable->selectRow(newRow);
-            grdTable->selectNextColumn();
             column = grdTable->currentIndex().column();
         }
         else
@@ -1097,14 +1089,11 @@ void Document::preparePrintValues()
             if (!(dictName.left(9) == "документы" && dictName.size() > 9))
             {
                 Dictionary* dict = getDictionariesList()->value(dictName);
-                if (dict->isConst())
-                {   // Нам нужны только постоянные справочники
-                    QString idFieldName = db->getObjectName("код") + "_";
-                    foreach(QString field, dict->getFieldsList())
-                    {
-                        if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
-                            reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
-                    }
+                QString idFieldName = db->getObjectName("код") + "_";
+                foreach(QString field, dict->getFieldsList())
+                {
+                    if (field.left(4) != idFieldName)       // Если поле не является ссылкой на другой справочник
+                        reportScriptEngine->getReportContext()->setValue(QString("%1.%2").arg(dictName).arg(field).toLower(), dict->getValue(field));
                 }
             }
         }

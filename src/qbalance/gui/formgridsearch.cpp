@@ -46,13 +46,8 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     {
         if (vbxLayout != 0)
         {
-            QHBoxLayout* hbxLayout = new QHBoxLayout();
             parameters = new SearchParameters();
             parameters->setObjectName("searchParameters");
-            hbxLayout->insertWidget(0, parameters);
-            QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
-            hbxLayout->insertWidget(0, label);
-            vbxLayout->insertLayout(0, hbxLayout);
         }
     }
     else
@@ -68,7 +63,21 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         parameters->setProgramIdFieldName(db->getObjectName("код").toLower());
         parameters->setProgramNameFieldName(db->getObjectName("имя").toLower());
         parameters->setFieldsList(parent->getFieldsList());
-        connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
+        if (parameters->getParametersCount() > 0)
+        {
+            connect(parameters, SIGNAL(requery()), this, SLOT(cmdRequery()));
+            QHBoxLayout* hbxLayout = new QHBoxLayout();
+            hbxLayout->insertWidget(0, parameters);
+            QLabel* label = new QLabel(LABEL_SEARCH_PARAMETERS, formWidget);
+            hbxLayout->insertWidget(0, label);
+            vbxLayout->insertLayout(0, hbxLayout);
+        }
+        else
+        {
+            if (defaultForm)
+                delete parameters;
+            parameters = 0;
+        }
     }
 }
 

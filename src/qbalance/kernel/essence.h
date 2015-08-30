@@ -81,7 +81,7 @@ public:
     Q_INVOKABLE void                    setDoSubmit(bool submit) { doSubmit = submit; }
     Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
     virtual void query(QString = "", bool = false);
-    virtual void                        setOrderClause() { ; }
+    Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
     Q_INVOKABLE int                     getRowCount() { return tableModel->rowCount(); }
 
 
@@ -149,7 +149,7 @@ public:
 
 // Прочие функции
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
-    Q_INVOKABLE         QString getLocalPhotoFile();
+    Q_INVOKABLE         QString getLocalPhotoFile(QString = "");
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
@@ -162,7 +162,9 @@ public:
     Q_INVOKABLE void    clearPrintValues();
     Q_INVOKABLE void    appendPrintValues(QString, QSqlQuery*);
     Q_INVOKABLE void    appendPrintValue(QString name, QVariant value) { reportScriptEngine->getReportContext()->setValue(name, value); }
+    Q_INVOKABLE QVariant getPrintValue(QString name) { return reportScriptEngine->getReportContext()->getValue(name); }
     bool                isDocument() { return lIsDocument; }
+    Q_INVOKABLE void    showPhoto() { form->showPhoto(); }
 
 signals:
     void                photoLoaded();
@@ -178,7 +180,7 @@ protected:
     QString             nameFieldName;
     FormGrid*           form;
     Dictionaries*       dictionaries;
-    QPointer<TableView> grdTable;
+    TableView*          grdTable;
     QWidget*            parentForm;
     ScriptEngine*       scriptEngine;
     QString             scriptFileName;                     // Имя файла со скриптами

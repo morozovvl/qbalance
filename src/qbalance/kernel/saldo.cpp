@@ -106,17 +106,17 @@ void Saldo::lock(bool toLock)
 }
 
 
-void Saldo::setOrderClause()
+void Saldo::setOrderClause(QString sOrder)
 {
+    QString sortOrder = sOrder;
     if (isSet())
     {
-        QString sortOrder;
         QStringList tablesList;
         QString tName = db->getObjectName("сальдо");
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             FieldType fld = columnsProperties.at(i);
-            if (fld.table != tName && fld.table != tableName && !tablesList.contains(fld.table))
+            if (fld.table != tName && fld.table != tableName && !tablesList.contains(fld.table) && fld.table.left(9) != "документы" && fld.table.left(11) != "докатрибуты")
             {
                 tablesList.append(fld.table);
                 if (sortOrder.size() > 0)
@@ -125,13 +125,15 @@ void Saldo::setOrderClause()
                                                      .arg(db->getObjectNameCom(fld.table + ".имя")));
             }
         }
-        Table::setOrderClause(sortOrder);
     }
     else
     {
-        Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
-                                                 .arg(db->getObjectNameCom(tableName + ".имя")));
+        if (sortOrder.size() > 0)
+            sortOrder.append(",");
+        sortOrder.append(QString("\"%1\".%2").arg(tableName)
+                                             .arg(db->getObjectNameCom(tableName + ".имя")));
     }
+    Table::setOrderClause(sortOrder);
 }
 
 

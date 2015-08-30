@@ -48,30 +48,34 @@ class QDESIGNER_WIDGET_EXPORT TableView : public QTableView {
 public:
     TableView(QWidget*, FormGrid* = 0);
     ~TableView();
-    void                close();
+    virtual void                close();
 
-    void                setFormGrid(FormGrid* par) { parent = par; }
-    void                setParentWidget(QWidget* widget) { parentWidget = widget; }
-    void                setEssence(Essence*);
-    void                setPicture(Picture* pic) { picture = pic; }
-    bool                columnIsReadOnly();
-    void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
-    void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
-    void                setReadOnly(bool);
-    bool                setColumnsHeaders();
-    void                hideAllGridSections();
-    void                hideGridSection(QString);
-    void                showGridSection(QString);
-    void                showAllGridSections();
-    void                restoreCurrentIndex(QModelIndex);
+    virtual void                setFormGrid(FormGrid* par) { parent = par; }
+    virtual void                setParentWidget(QWidget* widget) { parentWidget = widget; }
+    virtual void                setEssence(Essence*);
+    virtual void                setPicture(Picture* pic) { picture = pic; }
+    virtual bool                columnIsReadOnly();
+    virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
+    virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
+    virtual void                setReadOnly(bool);
+    virtual bool                setColumnsHeaders();
+    virtual void                hideAllGridSections();
+    virtual void                hideGridSection(QString);
+    virtual void                showGridSection(QString);
+    virtual void                showAllGridSections();
+    virtual void                restoreCurrentIndex(QModelIndex);
+    virtual QList<FieldType>*   getFields() { return &fields; }
+    Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
+
 
 public slots:
-    void                cmdDelete();
-    void                cmdView();
-    void                cmdRequery();
+    virtual void                cmdAdd();
+    virtual void                cmdDelete();
+    virtual void                cmdView();
+    virtual void                cmdRequery();
 
-    void                calculate();
-    void                showPhoto();
+    virtual void                calculate();
+    virtual void                showPhoto();
 
 protected:
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
@@ -89,12 +93,12 @@ private:
     Essence*                    essence;
     Picture*                    picture;
     MySqlRelationalTableModel*  tableModel;
-    QHash<int, QString>         columns;            // Список видимых столбцов и их порядок
-    QList<FieldType>*           fields;
+    QHash<int, int>             columns;            // Список видимых столбцов и их порядок
+    QList<FieldType>            fields;
     bool                        columnsSettingsReaded;
 
     MyItemDelegate*             getColumnDelegate(FieldType);
-    void                setColumnsDelegates();
+    void                        setColumnsDelegates();
     void                        readSettings();
     void                        writeSettings();
 };
