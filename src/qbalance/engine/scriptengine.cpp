@@ -1235,10 +1235,9 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    QString scriptPath;
-    if (!QDir().exists(scriptFile))     // Если файл не существует в указанном месте (не указан путь)
+    QString scriptPath = TApplication::exemplar()->getScriptsPath();
+    if (!QDir().exists(scriptPath + scriptFile))     // Если файл не существует в указанном месте (не указан путь)
     {                                   // то будем искать его там, где находятся все скрипты
-        scriptPath = TApplication::exemplar()->getScriptsPath();
         Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
     }
     QFile file(scriptPath + scriptFile);

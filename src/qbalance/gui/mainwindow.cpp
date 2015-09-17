@@ -255,7 +255,7 @@ void MainWindow::printEKLZReport()
 
 void MainWindow::printProcessedEKLZReport()
 {
-    TApplication::exemplar()->runScript("printEKLZReport1.js");
+    TApplication::exemplar()->runScript("printEKLZReportProcessed.js");
 }
 
 

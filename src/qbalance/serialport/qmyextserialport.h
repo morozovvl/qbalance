@@ -52,7 +52,7 @@ public:
 
     // Работа с журналом
     QString     getLog() { return log; }
-    void        writeLog(QString = "");
+    void        writeLog(QString = "", bool = false);
 private:
     bool remote;
     bool outLog;
@@ -60,7 +60,7 @@ private:
     static TcpClient* tcpClient;
     TApplication* app;
 
-    void appendLog(bool, QString);
+    void appendLog(bool, QString, bool = false);
 };
 
 #endif // QMYEXTSERIALPORT_H

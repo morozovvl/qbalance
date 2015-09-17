@@ -112,10 +112,17 @@ void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
             qint64 result = serialPort->readData(data.data(), data.count(), true);
             sendToClient(pClientSocket, QString("%1<<%2").arg(result).arg(data.toHex().data()));
         }
+        else if (lStr.left(9) == "writeLog=")  // Если получен запрос на запись журнала
+        {
+            length -= 9;
+            lStr = lStr.right(length);
+            serialPort->writeLog(lStr, true);
+            sendToClient(pClientSocket, "Ok");
+        }
     }
     else if (str.indexOf("driverFRisReady") == 0)
     {
-        bool result = TApplication::exemplar()->getDrvFR()->getSerialPort()->isOpen();
+        bool result = TApplication::exemplar()->getDrvFR()->deviceIsReady();
         sendToClient(pClientSocket, (result ? "true" : "false"));
     }
     else if (str.indexOf("isLockedDriverFR") == 0)

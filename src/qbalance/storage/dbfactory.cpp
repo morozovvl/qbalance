@@ -1398,7 +1398,7 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
     QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
     if (extend && extDbExist)
     {   // Если будем смотреть файлы в расширенной базе данных
-        QString text = QString("SELECT encode(%1, 'hex') FROM %2 WHERE trim(%3) = '%4' AND %5 = %6;").arg(getObjectNameCom("файлы.значение"))
+        QString text = QString("SELECT encode(%1, 'hex') FROM %2 WHERE %3 = '%4' AND %5 = %6;").arg(getObjectNameCom("файлы.значение"))
                                                                               .arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
@@ -1459,7 +1459,7 @@ void DBFactory::copyFile(QString fileFrom, FileType type, QString fileTo, bool e
 qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
 {
     QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
-    QString text = QString("SELECT %6 FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+    QString text = QString("SELECT %6 FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                            .arg(getObjectNameCom("файлы.имя"))
                                                                            .arg(fileName)
                                                                            .arg(getObjectNameCom("файлы.тип"))
@@ -1482,7 +1482,7 @@ QDateTime DBFactory::getFileDateTime(QString file, FileType type, bool extend)
 {
     QDateTime result;
     QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
-    QString text = QString("SELECT %6 FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+    QString text = QString("SELECT %6 FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                           .arg(getObjectNameCom("файлы.имя"))
                                                                           .arg(fileName)
                                                                           .arg(getObjectNameCom("файлы.тип"))
@@ -1541,7 +1541,7 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
 {
     if (extend && extDbExist)
     {
-        QString text = QString("SELECT count(*) FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+        QString text = QString("SELECT count(*) FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                               .arg(getObjectNameCom("файлы.имя"))
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
@@ -1573,7 +1573,7 @@ bool DBFactory::isFileExist(QString fileName, FileType type, bool extend)
 void DBFactory::removeFile(QString fileName, FileType type, bool extend)
 {
     QString text;
-    text = QString("DELETE FROM %1 WHERE trim(%2) = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+    text = QString("DELETE FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                              .arg(getObjectNameCom("файлы.имя"))
                                                                              .arg(fileName)
                                                                              .arg(getObjectNameCom("файлы.тип"))
@@ -1592,7 +1592,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     {
         // Если в базе уже есть такой файл
 /*
-        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4, %9 = now() WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1603,7 +1603,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(getObjectNameCom("файлы.датавремя"));
 */
         if (!extend)
-            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1614,7 +1614,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(getObjectNameCom("файлы.датавремя"))
                                                                                   .arg(QString(fileData.toHex()));
         else
-            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE trim(%5) = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)

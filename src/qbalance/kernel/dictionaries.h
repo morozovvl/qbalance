@@ -55,7 +55,6 @@ public:
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void            prepareSelectCurrentRowCommand() { ; }
     Q_INVOKABLE virtual void setForm(QString = "");
-    void    unlock();
 
 private:
     Document*   document;

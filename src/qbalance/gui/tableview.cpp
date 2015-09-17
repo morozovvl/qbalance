@@ -95,8 +95,14 @@ void TableView::setEssence(Essence* ess)
 
 void TableView::cmdAdd()
 {
+    QModelIndex index = currentIndex();      // Запомним, где стоял курсор перед удалением записи
     if (essence->add())
     {
+        if (index.isValid())
+        {
+            int rowCount = tableModel->rowCount();
+            setCurrentIndex(index.sibling(rowCount - 1, index.column()));
+        }
         parent->setButtons();
     }
     setFocus();
@@ -118,8 +124,8 @@ void TableView::cmdDelete()
         }
         else
             showPhoto();
+        parent->setButtons();
     }
-    parent->setButtons();
     setFocus();
 }
 
@@ -438,7 +444,10 @@ void TableView::selectNextColumn()
         QModelIndex newIndex;
         while (true)
         {
-            column++;                       // Перейдем в следующий столбец
+            if (column < 0)
+                column = 0;
+            else
+                column++;                       // Перейдем в следующий столбец
             logicalIndex = horizontalHeader()->logicalIndex(column);
             newIndex = index.sibling(index.row(), logicalIndex);
             if (!newIndex.isValid())
@@ -447,10 +456,8 @@ void TableView::selectNextColumn()
                 if (!newIndex.isValid())
                 {
                     setCurrentIndex(index);
-                    break;
                 }
-                column = 0;
-                logicalIndex = horizontalHeader()->logicalIndex(column);
+                column = -1;
             }
 
             if (!horizontalHeader()->isSectionHidden(logicalIndex))

@@ -167,11 +167,11 @@ void Dictionaries::removeDictionary(QString dictName)
         return;
     if (dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-        Dictionary* dict = getDictionary(dictName);
-        dict->close();
+//        Dictionary* dict = getDictionary(dictName);
+//        dict->close();
         dictionariesList.remove(dictName);
         dictionariesNamesList.removeAt(dictionariesNamesList.indexOf(dictName));
-        delete dict;
+//        delete dict;
     }
 }
 
@@ -256,16 +256,6 @@ void Dictionaries::close()
 void Dictionaries::query(QString, bool)
 {
     Dictionary::query(QString("%1=true").arg(db->getObjectNameCom("доступ_к_справочникам.меню")));
-}
-
-
-void Dictionaries::unlock()
-{
-    foreach(QString dictName, dictionariesList.keys())
-    {
-        Dictionary* dict = getDictionary(dictName);
-        dict->lock(false);
-    }
 }
 
 

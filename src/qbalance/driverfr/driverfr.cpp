@@ -451,6 +451,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
                     serialPort->setRemote(remote);
                     if (Connect())
                     {
+                        Beep();
                         result = true;
                     }
                     else
@@ -643,22 +644,47 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
 {
     command cmd;
     int result = -1;
-    composeComm(&cmd, comm, pass, param);
-    if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
+    if (deviceIsReady())
     {
-        serialPort->writeLog();
-        for(int tries = 1; tries <= MAX_TRIES; tries++)
+        composeComm(&cmd, comm, pass, param);
+        if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
         {
-            short int repl = readByte(fr.Timeout);
-            if (repl == ACK)
+            serialPort->writeLog();
+            for(int tries = 1; tries <= MAX_TRIES; tries++)
             {
-                serialPort->writeLog();
-                result = 1;
-                break;
+                short int repl = readByte(fr.Timeout);
+                if (repl == ACK)
+                {
+                    serialPort->writeLog();
+                    result = 1;
+                    break;
+                }
             }
         }
     }
     return result;
+}
+
+
+bool DriverFR::deviceIsReady()
+{
+    sendENQ();
+    for(int tries = 1; tries <= MAX_TRIES; tries++)
+    {
+        short int repl = readByte(fr.Timeout);
+        if (repl == NAK)
+        {
+            return true;
+        }
+        else if (repl == ACK)
+        {
+            app->timeOut(fr.Timeout);
+            answer     a;
+            readAnswer(&a);
+            sendENQ();
+        }
+    }
+    return false;
 }
 
 
@@ -748,7 +774,13 @@ void DriverFR::evaltime(unsigned char *str, struct tm *time)
 
 void DriverFR::logCommand(int comNum, QString comStr)
 {
-    TApplication::debug(4, QString("Команда %1 %2").arg(QString::number(comNum, 16).toUpper()).arg(comStr));
+    serialPort->writeLog(QString("Команда %1 %2").arg(QString::number(comNum, 16).toUpper()).arg(comStr));
+}
+
+
+void DriverFR::writeLog(QString str)
+{
+    serialPort->writeLog(str);
 }
 
 
@@ -778,6 +810,10 @@ bool DriverFR::Connect()
         {
             if (serialPort->isReadyDriverFR())
             {
+                result = true;
+                locked = isLocked();
+                if (!locked)
+                    setLock(true);
                 locked = isLocked();
             }
         }
@@ -943,7 +979,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                     if (errHand(a) != 0)
                     {
                         result = fr.ResultCode;
-                        app->timeOut(fr.Timeout);
+//                        app->timeOut(fr.Timeout);
                     }
                     else
                         result = 0;
@@ -1485,6 +1521,7 @@ int DriverFR::GetEKLZJournal()
         p.len = 2;
         memcpy(&p.buff, &fr.SessionNumber, 2);
         result = processCommand(GET_EKLZ_JOURNAL, &p, &a);
+        qDebug() << "GetEKLZ" << result;
         if (result == 0)
         {
             QByteArray data;

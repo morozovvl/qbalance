@@ -158,21 +158,23 @@ bool Dictionary::add()
         int strNum = db->insertDictDefault(getTableName(), &values);
         if (strNum >= 0)
         {
+            int column = grdTable->currentIndex().column();
             int newRow = tableModel->rowCount();
             if (newRow == 0)
             {
                 query();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                column = grdTable->currentIndex().column();
             }
             else
             {
-                int column = grdTable->currentIndex().column();
                 tableModel->insertRow(newRow);
                 grdTable->reset();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 updateCurrentRow(strNum);
-                grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             }
+            grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             form->setButtons();
             grdTable->setFocus();
             return true;
@@ -594,7 +596,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
     }
     else
     {
-        lock(false);
+//        lock(false);
     }
 }
 
@@ -688,8 +690,8 @@ void Dictionary::lock(bool toLock)
 {
     if (toLock)
     {
-        if (isSet())
-        {
+//        if (isSet())
+//        {
             foreach (QString dictName, getChildDicts())
             {
                 Dictionary* dict = dictionaries->getDictionary(dictName);
@@ -697,7 +699,7 @@ void Dictionary::lock(bool toLock)
                 dict->setId(id);
                 dict->lock();
             }
-        }
+//        }
         locked = true;
     }
     else

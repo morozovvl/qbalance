@@ -416,11 +416,15 @@ QString Essence::getPhotoFile(QString copyTo)
                 }
                 else
                 {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
+/*
                     if (app->isSA())
                         app->saveFileToServer(file, localFile, PictureFileType, true);
+*/
                     if (copyTo.size() > 0)
                     {
-                        db->copyFile(localFile, PictureFileType, copyTo, true);
+                        QString file = app->getPhotosPath() + copyTo;
+                        if (!QFile(file).exists())
+                            db->copyFile(localFile, PictureFileType, copyTo, true);
                     }
                 }
             }

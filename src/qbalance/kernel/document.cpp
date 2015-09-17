@@ -243,8 +243,8 @@ bool Document::add()
             }
         }
         appendDocString();
+        result = true;
     }
-    dictionaries->unlock();
     grdTable->setFocus();
     return result;
 }
@@ -544,6 +544,7 @@ void Document::loadDocument()
                     if (val > 0)
                     {
                         dict->setId(val);
+                        dict->setMustShow(false);
                         if (!(dictName.left(9) == "документы" && dictName.size() > 9))
                             showParameterText(dictName);
                     }
@@ -561,11 +562,13 @@ void Document::loadDocument()
                             if (val > 0)
                             {
                                 dict->setId(val);
+                                dict->setMustShow(false);
                                 // А затем установим значение связанного справочника
                                 val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
                                 if (val > 0)
                                 {
                                     childDict->setId(val);
+                                    childDict->setMustShow(false);
                                     if (!(dictName.left(9) == "документы" && dictName.size() > 9))
                                         showParameterText(dictName);
                                 }
@@ -586,6 +589,7 @@ void Document::loadDocument()
                     if (val > 0)
                     {
                         dict->setId(val);
+                        dict->setMustShow(false);
                         if (!(dictName.left(9) == "документы" && dictName.size() > 9))
                             showParameterText(dictName);
                     }
@@ -601,11 +605,13 @@ void Document::loadDocument()
                         if (val > 0)
                         {
                             dict->setId(val);
+                            dict->setMustShow(false);
                             // А затем установим значение связанного справочника
                             val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
                             if (val > 0)
                             {
                                 childDict->setId(val);
+                                childDict->setMustShow(false);
                                 if (!(dictName.left(9) == "документы" && dictName.size() > 9))
                                     showParameterText(dictName);
                             }
@@ -903,7 +909,7 @@ bool Document::showNextDict()
 {  // функция решает, по каким справочникам нужно пробежаться при добавлении новой строки в документ
     bool anyShown = true;
     Dictionary* dict;
-
+    QStringList lockedDicts;
     for (int i = 0; i < dictionaries->dictionariesNamesList.count(); i++)
     {
         QString dictName = dictionaries->dictionariesNamesList.at(i);
@@ -914,6 +920,7 @@ bool Document::showNextDict()
             if (dict->isFormSelected())
             {               // Если в справочнике была нажата кнопка "Ок"
                 dict->lock();
+                lockedDicts.append(dictName);
                 anyShown = true;
                 if (dict->getTableModel()->rowCount() == 0)
                 {       // Если в выбранном справочнике нет записей
@@ -929,6 +936,9 @@ bool Document::showNextDict()
     }
     if (anyShown)
         anyShown = scriptEngine->eventAfterShowNextDicts();
+
+    foreach(QString dictName, lockedDicts)
+        dictionaries->getDictionary(dictName)->lock(false);
 
     return anyShown;
 }
@@ -1030,23 +1040,20 @@ int Document::appendDocString()
 
     if (result > 0)                         // Если строка была добавлена
     {
-        int column = grdTable->currentIndex().column();
+        grdTable->setFocus();
         int newRow = tableModel->rowCount();
         if (newRow == 0)                    // Если это первая строка в документе
         {
             query();
-            grdTable->selectRow(newRow);
-            column = grdTable->currentIndex().column();
         }
         else
         {
             tableModel->insertRow(newRow);
             grdTable->reset();
-            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            updateCurrentRow(result);
         }
-        index = grdTable->currentIndex().sibling(newRow, column);
-        grdTable->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+        grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        updateCurrentRow(result);
+        grdTable->selectRow(newRow);
         if (getScriptEngine() != 0)
         {
             saveOldValues();

@@ -675,7 +675,6 @@ public:
     void setUseSlipDocument(int a) { UseSlipDocument = a; }
     void setValueOfFieldInteger(int a) { ValueOfFieldInteger = a; }
     void setValueOfFieldString(char* a) { strncpy((char*)ValueOfFieldString, (char*)a, 41); }
-
 };
 
 
@@ -699,6 +698,8 @@ public:
             progressDialog->setValue(value);
     }
     Q_INVOKABLE void setShowProgressBar(bool show) { showProgressBar = show; }
+    void writeLog(QString);
+    bool deviceIsReady();
 
 
 // Функции для работы с фискальным регистратором

@@ -46,7 +46,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromS
     if (!remote)
     {
         result = QextSerialPort::writeData(data, maxSize);
-        appendLog(true, QByteArray(data, maxSize).toHex().data());
+        appendLog(true, QByteArray(data, maxSize).toHex().data(), fromServer);
     }
     else if (tcpClient != 0 && tcpClient->isValid() && !fromServer)
     {
@@ -55,7 +55,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromS
         {
             QString res = tcpClient->getResult();
             result = res.toLongLong();
-            appendLog(true, QByteArray(data, maxSize).toHex().data());
+            appendLog(true, QByteArray(data, maxSize).toHex().data(), fromServer);
         }
     }
     return result;
@@ -68,7 +68,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromServer)
     if (!remote)
     {
         result = QextSerialPort::readData(data, maxSize);
-        appendLog(false, QByteArray(data, maxSize).toHex().data());
+        appendLog(false, QByteArray(data, maxSize).toHex().data(), fromServer);
     }
     else if (tcpClient != 0 && tcpClient->isValid() && !fromServer)
     {
@@ -84,7 +84,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromServer)
             res.remove(0, pos + 2);
             arr = QByteArray::fromHex(QByteArray().append(res));
             strncpy(data, arr.data(), maxSize);
-            appendLog(false, QByteArray(data, maxSize).toHex().data());
+            appendLog(false, QByteArray(data, maxSize).toHex().data(), fromServer);
         }
     }
     return result;
@@ -149,11 +149,11 @@ void QMyExtSerialPort::setTcpClient(QString host, int port)
 }
 
 
-void QMyExtSerialPort::appendLog(bool out, QString str)
+void QMyExtSerialPort::appendLog(bool out, QString str, bool fromServer)
 {
     if (out != outLog)           // Журнал был для исходящих команд
     {
-        writeLog();         // Запишем предыдущий журнал
+        writeLog("", fromServer);         // Запишем предыдущий журнал
         outLog = out;
     }
 
@@ -178,22 +178,30 @@ void QMyExtSerialPort::appendLog(bool out, QString str)
 }
 
 
-void QMyExtSerialPort::writeLog(QString str)
+void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
 {
-    // Если задана строка, то запишем ее в журнал
-    if (str.size() > 0)
-        app->debug(4, str);
-    else
+    if (!remote)
     {
-        if (log.length() > 0)
+        // Если задана строка, то запишем ее в журнал
+        if (str.size() > 0)
+            app->debug(4, (fromRemote ? "remote " : "") + str);
+        else
         {
-            if (!outLog)
-                app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + " <- " + log, true);
-            else
-                app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + " -> " + log, true);
+            if (log.length() > 0)
+            {
+                if (!outLog)
+                    app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + (fromRemote ? " remote" : "") + " <- " + log, true);
+                else
+                    app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + (fromRemote ? " remote" : "") + " -> " + log, true);
+            }
+            // Очистим журнал
+            log = "";
         }
-        // Очистим журнал
-        log = "";
+    }
+    else if (tcpClient != 0 && tcpClient->isValid())
+    {
+        tcpClient->sendToServer("=fr=writeLog=" + str);
+        tcpClient->waitResult();
     }
 }
 

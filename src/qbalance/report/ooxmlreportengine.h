@@ -46,7 +46,7 @@ private:
 
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
     bool readExpression(int, int);
-    QString getTableVariable(QDomElement);
+    QString getTableVariable(QDomElement, QString);
     void writeCell(QDomNode, QString, QVariant);
     void findTables();
 };

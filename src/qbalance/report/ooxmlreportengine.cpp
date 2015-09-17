@@ -98,7 +98,7 @@ void OOXMLReportEngine::writeVariables()
     // просмотрим все текстовые ячейки, найдем ту, в которой начинается "тело" таблицы
     for (int i = 0; i < cells.count() && firstRowNode.isNull(); i++)
     {
-        if (getTableVariable(cells.at(i).toElement()).size() > 0)   // если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]"
+        if (getTableVariable(cells.at(i).toElement(), tableNameForPrinting).size() > 0)   // если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]"
         {
             firstRowNode = cells.at(i).parentNode().parentNode();   // то значит в этой ячейке начинается табличная часть документа ("тело" таблицы, не шапка)
             break;                                                  // закончим поиск
@@ -185,7 +185,7 @@ strNum - номер текущей строки тела таблицы
         if (fpos >= 0)                          // если шаблон найден
         {
             QVariant var;
-            QString value = getTableVariable(cells.at(i).toElement());  // проверим, не ячейка ли это тела таблицы
+            QString value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
             if (value.size() > 0)           // если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]"
             {
                 QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
@@ -222,7 +222,7 @@ strNum - номер текущей строки тела таблицы
 }
 
 
-QString OOXMLReportEngine::getTableVariable(QDomElement cell)
+QString OOXMLReportEngine::getTableVariable(QDomElement cell, QString tableName)
 // Если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]", то возвращает это выражение.
 // Иначе возвращается пустая строка
 {
@@ -240,7 +240,7 @@ QString OOXMLReportEngine::getTableVariable(QDomElement cell)
         lpos = cellText.indexOf("]", fpos) + 1;             // в позиции lpos оно заканчивается
         QString svar = cellText.mid(fpos, lpos - fpos);             // svar содержит выражение вместе с квадратными скобками
         QString dvar = QString(svar).remove("[").remove("]");       //dvar содержит выражение без квадратных скобок, в чистом виде
-        if (dvar.left(tableNameForPrinting.size()).toLower() == tableNameForPrinting)                    // Если выражение начинается со слова "таблица" (т.е. "[таблица<...>]")
+        if (dvar.left(tableNameForPrinting.size()).toLower() == tableName)                    // Если выражение начинается со слова "таблица" (т.е. "[таблица<...>]")
         {
             return dvar;   // то значит в этой ячейке начинается табличная часть документа (тело таблицы, не шапка)
         }
@@ -306,4 +306,5 @@ void OOXMLReportEngine::findTables()
                 tablesForPrinting.append(table);
         }
     }
+    qDebug() << tablesForPrinting;
 }
