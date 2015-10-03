@@ -90,6 +90,8 @@ public:
     static QString loadScript(QString);
     void   showScriptError(QString);
 
+protected:
+    QScriptValue      scriptCall(QString, const QScriptValue & thisObject = QScriptValue(), const QScriptValueList & args = QScriptValueList());
 
 protected:
     QHash<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
@@ -101,6 +103,7 @@ private:
     int                 scriptResult;
     QString             errorMessage;
     static QString      scriptFileName;
+    QString             p_scriptFileName;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;

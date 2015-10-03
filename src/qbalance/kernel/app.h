@@ -129,14 +129,13 @@ public:
     static QTextCodec* codec();
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
-    static int debugMode()        { return DebugMode;}
-    static QString debugFileName() { return QString("debug%1.log").arg(DebugMode);}
+    static bool isDebugMode(int mode)        { return DebugModes.contains(mode);}
+    static QString debugFileName(int debugMode) { return QString("debug%1.log").arg(debugMode);}
     static QString errorFileName() { return "error.log";}
-    static QFile&  debugFile()     { return *DebugFile;}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
-    static bool setDebugMode(const int& value);
+    static void setDebugMode(const int& value);
 
     Q_INVOKABLE static void debug(int, const QString&, bool = false);
 
@@ -191,6 +190,11 @@ public:
 
     void    setServerMode(bool mode) { serverMode = mode; }
     bool    isServerMode() { return serverMode; }
+
+    QStringList     getScriptStack() { return scriptStack; }
+    void            appendScriptStack(QString scriptName) { scriptStack.append(scriptName); }
+    void            removeLastScriptStack() { scriptStack.removeLast(); }
+
 signals:
     void cardCodeReaded(QString);
 
@@ -205,8 +209,7 @@ private:
     bool                    driverFRisValid;
     bool                    driverFRlocked;
     bool                    fsWebCamIsValid;
-    static QFile*           DebugFile;
-    static int              DebugMode;
+    static QList<int>       DebugModes;
     static TApplication*    Exemplar;
     BarCodeReader*          barCodeReader;
     QString                 cardReaderCode;
@@ -233,6 +236,7 @@ private:
     void                    readSettings();
     void                    writeSettings();
     void                    saveMessages();
+    QStringList             scriptStack;
 
 private slots:
     void                    setTimeIsOut() { timeIsOut = true; }

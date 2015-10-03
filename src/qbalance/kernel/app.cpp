@@ -37,9 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/documentscriptengine.h"
 
 
-QFile*  TApplication::DebugFile        = new QFile(QDir::currentPath() + "/" + TApplication::debugFileName());
-//QTextStream* TApplication::DebugStream = new QTextStream(TApplication::DebugFile);
-int    TApplication::DebugMode         = 0;
+QList<int>    TApplication::DebugModes;
 TApplication* TApplication::Exemplar   = 0;
 QString TApplication::username         = "";
 QString TApplication::password         = "";
@@ -400,27 +398,30 @@ QTextCodec* TApplication::codec()
 }
 
 
-bool TApplication::setDebugMode(const int& value)
+void TApplication::setDebugMode(const int& value)
 {
-    bool result = true;
-    DebugMode = value;
-    return result;
+    DebugModes.append(value);
 }
 
 
 void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {
-    if (debugMode() == mode || mode == 0)
+    for (int i = 0; i < DebugModes.count(); i++)
     {
-        QFile file(debugFileName());
-        if (file.open(QFile::WriteOnly | QFile::Append))
+        if (DebugModes.at(i) == mode || mode == 0)
         {
-            QTextStream out(&file);
-            if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
-                out << QDateTime::currentDateTime().toString(logTimeFormat()) << " ";
-            out << value << "\n";
+            QFile file(debugFileName(mode));
+            if (file.open(QFile::WriteOnly | QFile::Append))
+            {
+                QTextStream out(&file);
+                if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
+                    out << QDateTime::currentDateTime().toString(logTimeFormat()) << " ";
+                out << value << "\n";
+            }
+            file.close();
+            if (mode > 0)
+                return;
         }
-        file.close();
     }
 }
 

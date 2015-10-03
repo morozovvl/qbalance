@@ -153,8 +153,8 @@ int main(int argc, char *argv[])
     if (lStart) {
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
-        application.debug(application.debugMode(), "\n");
-        application.debug(application.debugMode(), "Program startup.");
+        application.debug(0, "\n");
+        application.debug(0, "Program startup.");
 
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
         if (application.getScript().size() > 0)
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
                 lResult = application.exec();
             }
         }
-        application.debug(application.debugMode(), "Program shutdown.\n");
+        application.debug(0, "Program shutdown.\n");
         application.close();            // Закроем приложение
         application.quit();
     }

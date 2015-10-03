@@ -448,6 +448,8 @@ QStringList DBFactory::getFieldsList(QString tableName, int level)
         if (level == -1 || fields.value(i).level <= level)
             result << fields.value(i).column;
     }
+    if (result.count() == 0)
+        TApplication::exemplar()->showError(QString("Список полей таблицы <%1> пустой. Возможно, таблица недоступна.").arg(tableName));
     return result;
 }
 
@@ -2476,7 +2478,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         {   // Если имеются атрибуты для документа в данной операции
             QString attrName = QString("%1%2").arg(getObjectName("атрибуты")).arg(oper).toLower();
             getColumnsProperties(&fields, attrName);
-            selectClause += ", ";
+            selectClause += ",";
             QString attrSelectClause = "";
             QString attrFromClause = "";
             foreach (QString fieldName, getFieldsList(attrName, 0))
@@ -2500,18 +2502,13 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     {
                         QString alias = QString("%1__%2").arg(dictName.toUpper()).arg(dictFieldName.toUpper());
                         attrSelectClause.append(QString("\"%1\".\"%3\" AS \"%2__%4\",").arg(dictName).arg(dictName.toUpper()).arg(dictFieldName).arg(dictFieldName.toUpper()));
-                        if (!(fieldName == getObjectName(attrName + ".код") ||
-                            fieldName == getObjectName(attrName + ".доккод") ||
-                            fieldName == getObjectName(attrName + ".стр")))
+                        if (!columns.contains(alias))
                         {
-                            if (!columns.contains(alias))
-                            {
-                                selectClause.append(QString("a.\"%1\",").arg(alias));
-                                for (int i = 0; i < fields.count(); i++)
-                                    if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != 0)
-                                        addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
-                                columns.append(alias);
-                            }
+                            selectClause.append(QString("a.\"%1\",").arg(alias));
+                            for (int i = 0; i < fields.count(); i++)
+                                if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != 0)
+                                    addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
+                            columns.append(alias);
                         }
                     }
                     attrFromClause.append(QString(" LEFT OUTER JOIN %1 ON a.%2=%1.%3").arg(dictName.toLower()).arg(fieldName).arg(getObjectName(dictName.toLower() + ".код")));
@@ -2520,18 +2517,13 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                 {
                     QString alias = fieldName.toUpper();
                     attrSelectClause.append(QString("a.\"%1\" AS \"%2\",").arg(fieldName).arg(fieldName.toUpper()));
-                    if (!(fieldName == getObjectName(attrName + ".код") ||
-                        fieldName == getObjectName(attrName + ".доккод") ||
-                        fieldName == getObjectName(attrName + ".стр")))
+                    if (!columns.contains(alias))
                     {
-                        if (!columns.contains(alias))
-                        {
-                            selectClause.append(QString("a.\"%1\" AS \"%2\",").arg(fieldName.toUpper()).arg(alias));
-                            for (int i = 0; i < fields.count(); i++)
-                                if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
-                                    addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, false, false);
-                            columns.append(alias);
-                        }
+                        selectClause.append(QString("a.\"%1\" AS \"%2\",").arg(fieldName.toUpper()).arg(alias));
+                        for (int i = 0; i < fields.count(); i++)
+                            if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
+                                addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, false, false);
+                        columns.append(alias);
                     }
                 }
             }

@@ -826,7 +826,7 @@ bool DriverFR::Connect()
             if (GetECRStatus() == 0)
             {
                 result = true;
-                if (TApplication::debugMode() == 4)
+                if (TApplication::isDebugMode(4))
                 {
                     serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
                     serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
@@ -1521,7 +1521,6 @@ int DriverFR::GetEKLZJournal()
         p.len = 2;
         memcpy(&p.buff, &fr.SessionNumber, 2);
         result = processCommand(GET_EKLZ_JOURNAL, &p, &a);
-        qDebug() << "GetEKLZ" << result;
         if (result == 0)
         {
             QByteArray data;

@@ -32,11 +32,11 @@ public:
     OOXMLReportEngine(DocumentScriptEngine* = 0);
     ~OOXMLReportEngine();
     virtual bool open() { return ReportEngine::open(); }
-    virtual bool open(QString name, QHash<QString, QVariant>* context);
+    virtual bool open(QString name, ReportContext* context);
 
 private:
     OOXMLEngine*                ooxmlEngine;
-    QHash<QString, QVariant>*    context;
+    ReportContext*              context;
     QStringList                 expressionsForEvaluation;
     QStringList                 tablesForPrinting;
     QStringList                 invalidExpressions;

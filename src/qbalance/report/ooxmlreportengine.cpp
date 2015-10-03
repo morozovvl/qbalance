@@ -37,7 +37,7 @@ OOXMLReportEngine::~OOXMLReportEngine()
 }
 
 
-bool OOXMLReportEngine::open(QString fileName, QHash<QString, QVariant>* cont)
+bool OOXMLReportEngine::open(QString fileName, ReportContext* cont)
 {
     if (ooxmlEngine->open(fileName))
     {
@@ -190,7 +190,7 @@ strNum - номер текущей строки тела таблицы
             {
                 QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
                 QString key = sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower();
-                var = context->value(key);  // в контексте печати наименования данных хранятся в нижнем регистре
+                var = context->getValue(key);  // в контексте печати наименования данных хранятся в нижнем регистре
             }
             else
             {
@@ -198,7 +198,7 @@ strNum - номер текущей строки тела таблицы
                 int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
                 value = cellText.mid(fpos, lpos - fpos);
                 value = value.remove("[").remove("]");      // освободим его от квадратных скобок
-                var = context->value(value.toLower());      // и получим данные для него из контекста печати
+                var = context->getValue(value);      // и получим данные для него из контекста печати
             }
             if (var.isValid())                                      // если данные имеются
                 writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
@@ -297,7 +297,7 @@ void OOXMLReportEngine::findTables()
     QRegExp rx("^\\D+\\d+\\..+$");
     QRegExp rm("\\d+\\..+$");
     tablesForPrinting.clear();
-    foreach (QString key, context->keys())
+    foreach (QString key, context->getData()->keys())
     {
         if (key.contains(rx))
         {
@@ -306,5 +306,4 @@ void OOXMLReportEngine::findTables()
                 tablesForPrinting.append(table);
         }
     }
-    qDebug() << tablesForPrinting;
 }

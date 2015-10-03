@@ -35,7 +35,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     prototypeName = name;
     formTitle = "";
     lPrintable = true;
-    lCanShow = true;
+    lCanShow = false;
     lMustShow = false;
     lIsConst = false;
     lAutoSelect = false;

@@ -698,7 +698,7 @@ public:
             progressDialog->setValue(value);
     }
     Q_INVOKABLE void setShowProgressBar(bool show) { showProgressBar = show; }
-    void writeLog(QString);
+    Q_INVOKABLE void writeLog(QString = "");
     bool deviceIsReady();
 
 

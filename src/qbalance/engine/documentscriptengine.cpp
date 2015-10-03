@@ -90,6 +90,7 @@ void DocumentScriptEngine::loadScriptObjects()
 // События
 void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* values)
 {
+    QString eventName = "EventAppendFromQuery";
     // Сначала преобразуем данные в записи к виду, пригодному для передачи в скрипты
     QScriptValue row = newObject();
     for (int i = 0; i < values->count(); i++)
@@ -99,23 +100,25 @@ void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* v
     QScriptValueList args;
     args << newVariant(QVariant(queryName));
     args << row;
-    globalObject().property("EventAppendFromQuery").call(QScriptValue(), args);
+    scriptCall(eventName, QScriptValue(), args);
 }
 
 
 void DocumentScriptEngine::eventBeforeLinePrint(int strNum)
 {
+    QString eventName = "EventBeforeLinePrint";
     QScriptValueList args;
     args << newVariant(QVariant(strNum));
-    globalObject().property("EventBeforeLinePrint").call(QScriptValue(), args);
+    scriptCall(eventName, QScriptValue(), args);
 }
 
 
 void DocumentScriptEngine::eventAfterLinePrint(int strNum)
 {
+    QString eventName = "EventAfterLinePrint";
     QScriptValueList args;
     args << newVariant(QVariant(strNum));
-    globalObject().property("EventAfterLinePrint").call(QScriptValue(), args);
+    scriptCall(eventName, QScriptValue(), args);
 }
 
 

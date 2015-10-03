@@ -607,9 +607,15 @@ void Essence::evaluateEngine()
 {
     if (scriptEngineEnabled && scriptEngine != 0)
     {
-        if (!scriptEngine->open(scriptFileName) || !scriptEngine->evaluate())
+        scriptEngineEnabled = false;
+        if (scriptEngine->open(scriptFileName))
         {
-            scriptEngineEnabled = false;
+            app->appendScriptStack(scriptFileName);
+            if (scriptEngine->evaluate())
+            {
+                scriptEngineEnabled = true;
+            }
+            app->removeLastScriptStack();
         }
     }
 }
@@ -1051,7 +1057,7 @@ void Essence::print(QString fileName)
                                 OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
                                 if (report->open())
                                 {
-                                    report->open(tmpFileName, &printValues);
+                                    report->open(tmpFileName, reportScriptEngine->getReportContext());
                                     report->close();
                                 }
                                 delete report;
