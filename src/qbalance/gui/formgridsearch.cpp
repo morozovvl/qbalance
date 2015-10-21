@@ -111,6 +111,22 @@ QString FormGridSearch::getFilter()
 }
 
 
+QString FormGridSearch::getFilter(QString dictName, QString filter)
+{
+    if (parameters != 0)
+        return parameters->getFilter(dictName, filter);
+    return QString();
+}
+
+
+QString FormGridSearch::getSearchValue(QString dictName)
+{
+    if (parameters != 0)
+        return parameters->getSearchValue(dictName);
+    return QString();
+}
+
+
 void FormGridSearch::activateWidget()
 {
     if (parameters != 0)

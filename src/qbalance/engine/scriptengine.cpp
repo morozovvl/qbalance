@@ -883,13 +883,15 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
 }
 
 
-QString ScriptEngine::getFilter()
+QString ScriptEngine::getFilter(QString filter)
 {
     QString result;
     QString eventName = "GetFilter";
-    result = scriptCall(eventName).toString();
-    if (result == "undefined")
-        result = "";
+    QScriptValueList args;
+    args << QScriptValue(filter);
+    result = scriptCall(eventName, QScriptValue(), args).toString();
+    if (result.size() == 0 || result == "undefined")
+        result = filter;
     return result;
 }
 
@@ -1000,8 +1002,8 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     appendEvent("PreparePictureUrl(object)", func);
 
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
-    func.body = "return \"\";";
-    appendEvent("GetFilter()", func);
+    func.body = "return filter;";
+    appendEvent("GetFilter(filter)", func);
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
     if (document != 0 && document->isQuanAccount())

@@ -36,6 +36,8 @@ ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
     lnBoud = new QComboBox();
     lnPort = new QLineEdit();
     lnAddress = new QLineEdit();
+    lnTimeOut = new QLineEdit();
+    lnConnectSignal = new QCheckBox();
     barCodePortName = new QLineEdit();
 }
 
@@ -46,6 +48,9 @@ ConfigForm::~ConfigForm()
     delete lnBoud;
     delete lnPort;
     delete lnAddress;
+    delete lnTimeOut;
+    delete lnConnectSignal;
+    delete barCodePortName;
 }
 
 
@@ -207,7 +212,20 @@ void ConfigForm::fr()
     lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vLayout->addWidget(lblAddress, 3, 0, Qt::AlignLeft);
     vLayout->addWidget(lnAddress, 3, 1, Qt::AlignLeft);
-    vLayout->setRowStretch(4, 1);
+
+    QLabel* lblTimeOut = new QLabel(QObject::trUtf8("Таймаут:"));
+    lblTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblTimeOut, 4, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnTimeOut, 4, 1, Qt::AlignLeft);
+
+    QLabel* lblSignal = new QLabel(QObject::trUtf8("Подавать сигнал на ФР при подключении:"));
+    lblSignal->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnConnectSignal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblSignal, 5, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnConnectSignal, 5, 1, Qt::AlignLeft);
+
+    vLayout->setRowStretch(6, 1);
 
     frame->setLayout(vLayout);
 
@@ -215,6 +233,8 @@ void ConfigForm::fr()
     lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
     lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
     lnAddress->setText(app->getConfig()->remoteHost);
+    lnTimeOut->setText(QString("%1").arg(app->getConfig()->frDriverTimeOut));
+    lnConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
 }
 
 
@@ -262,6 +282,8 @@ void ConfigForm::cmdOk()
              app->getConfig()->frDriverBaudRate = lnBoud->currentIndex();
              app->getConfig()->localPort = lnPort->text().toInt();
              app->getConfig()->remoteHost = lnAddress->text();
+             app->getConfig()->frDriverTimeOut = lnTimeOut->text().toInt();
+             app->getConfig()->frConnectSignal = (lnConnectSignal->checkState() == Qt::Checked ? true : false);
              break;
     case 60: app->getConfig()->barCodeReaderPort = barCodePortName->text();
              break;

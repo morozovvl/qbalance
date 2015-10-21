@@ -548,14 +548,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
         {
             if (scriptEngine != 0)
             {
-                filter = scriptEngine->getFilter();
-                if (filter.size() > 0)
-                {
-                    if (resFilter.size() > 0)
-                        resFilter.append(" AND " + filter);
-                    else
-                        resFilter = filter;
-                }
+                resFilter = scriptEngine->getFilter(resFilter);
             }
         }
     }

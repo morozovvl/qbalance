@@ -111,6 +111,7 @@ void TApplication::initConfig()
     config.remoteHost = "192.168.0.1";
     config.remotePort = 44444;
     config.saveFormConfigToDB = true;
+    config.frConnectSignal = true;
 }
 
 
@@ -785,6 +786,7 @@ void TApplication::readSettings()
     config.frDriverBaudRate = settings.value("frDriverBaudRate", config.frDriverBaudRate).toInt();
     config.frDriverTimeOut = settings.value("frDriverTimeOut", config.frDriverTimeOut).toInt();
     config.frDriverPassword = settings.value("frDriverPassword", config.frDriverPassword).toInt();
+    config.frConnectSignal = settings.value("frConnectSignal", config.frConnectSignal).toBool();
     config.cardReaderPrefix = settings.value("cardReaderPrefix", config.cardReaderPrefix).toString();
     config.localPort = settings.value("localPort", config.localPort).toInt();
     config.remoteHost = settings.value("remoteHost", config.remoteHost).toString();
@@ -804,6 +806,7 @@ void TApplication::writeSettings()
     settings.setValue("frDriverBaudRate", config.frDriverBaudRate);
     settings.setValue("frDriverTimeOut", config.frDriverTimeOut);
     settings.setValue("frDriverPassword", config.frDriverPassword);
+    settings.setValue("frConnectSignal", config.frConnectSignal);
     settings.setValue("cardReaderPrefix", config.cardReaderPrefix);
     settings.setValue("localPort", config.localPort);
     settings.setValue("remoteHost", config.remoteHost);

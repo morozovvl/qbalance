@@ -119,6 +119,7 @@ private:
     bool                            docModified;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
+    bool                            locked;
 
     bool showNextDict();
     void showItog();

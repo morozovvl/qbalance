@@ -67,7 +67,6 @@ int GUIFactory::openDB()
         db->setDatabaseName(TApplication::database);
         if (db->open("test", "*"))
         {
-            db->setSessionVariables();
             users = db->getUserList();
             foreach (key, users.keys())
             {
@@ -96,7 +95,6 @@ int GUIFactory::openDB()
             lastPort = db->getPort();
             if (db->open("test", "*"))
             {
-                db->setSessionVariables();
                 PassWordForm* frm = new PassWordForm();
                 users = db->getUserList();
                 frm->open();

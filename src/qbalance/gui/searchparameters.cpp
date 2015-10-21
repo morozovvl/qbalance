@@ -184,59 +184,102 @@ void SearchParameters::setParameter(QString tableName, QString parameter)
 }
 
 
+QString SearchParameters::getFilter(QString dictName, QString defFilter)
+{
+    QString filter = defFilter;
+    QVector<sParam> searchParameters = getParameters();
+    for (int i = 0; i < searchParameters.size(); i++)
+    {
+        if (searchParameters[i].table == dictName)
+        {
+            QString text = searchParameters[i].value.toString();
+            bool isInt;
+            int id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
+            text.replace("'", "''");
+            QStringList paramList = text.split(QRegExp("\\s+"));
+            if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
+            {
+                if (filter.size() > 0)
+                    filter.append(" AND ");
+                filter.append(QString("%1.fts @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
+                QString f = "";
+                foreach (QString param, paramList)
+                {
+                    if (f.size() > 0)
+                        f.append("&");
+                    f.append(param);
+                }
+                filter.append(f + "')");
+            }
+            else
+            { // Если полнотекстовый поиск отключен
+                foreach (QString param, paramList)
+                {
+                    if (param.size() > 0)
+                    {
+                        if (parentForm != 0)
+                        {
+                            Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
+                            if (dict != 0)
+                            {
+                                if (dict->getForm()->isLeftPercent())
+                                    param = "%" + param;
+                                if (dict->getForm()->isRightPercent())
+                                    param = param + "%";
+                            }
+                        }
+                        else
+                            param = "%" + param + "%";
+
+                        if (filter.size() > 0)
+                            filter.append(" AND ");
+                        filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+                                                                 .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
+                                                                 .arg(param));
+                    }
+                }
+            }
+            if (isInt)
+            {
+                if (filter.size() > 0)
+                    filter.append(" OR ");
+                filter.append(QString("%1.%2 = %3").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+                                                       .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".КОД"))
+                                                       .arg(id));
+            }
+            break;
+        }
+    }
+    return filter;
+}
+
+
 QString SearchParameters::getFilter()
 {
     QString filter;
     QVector<sParam> searchParameters = getParameters();
     for (int i = 0; i < searchParameters.size(); i++)
     {
-        QString text = searchParameters[i].value.toString();
-        text.replace("'", "''");
-        QStringList paramList = text.split(QRegExp("\\s+"));
-        if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
-        {
-            if (filter.size() > 0)
-                filter.append(" AND ");
-            filter.append(QString("%1.fts @@ to_tsquery('").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table)));
-            QString f = "";
-            foreach (QString param, paramList)
-            {
-                if (f.size() > 0)
-                    f.append("&");
-                f.append(param);
-            }
-            filter.append(f + "')");
-        }
-        else
-        { // Если полнотекстовый поиск отключен
-            foreach (QString param, paramList)
-            {
-                if (param.size() > 0)
-                {
-                    if (parentForm != 0)
-                    {
-                        Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
-                        if (dict != 0)
-                        {
-                            if (dict->getForm()->isLeftPercent())
-                                param = "%" + param;
-                            if (dict->getForm()->isRightPercent())
-                                param = param + "%";
-                        }
-                    }
-                    else
-                        param = "%" + param + "%";
-
-                    if (filter.size() > 0)
-                        filter.append(" AND ");
-                    filter.append(QString("%1.%2 ILIKE '%3'").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
-                                                             .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + "." + searchParameters[i].field))
-                                                             .arg(param));
-                }
-            }
-        }
+        filter = getFilter(searchParameters[i].table, filter);
     }
     return filter;
+}
+
+
+QString SearchParameters::getSearchValue(QString dictName)
+{
+    QString result;
+    QVector<sParam> searchParameters = getParameters();
+    for (int i = 0; i < searchParameters.size(); i++)
+    {
+        if (searchParameters[i].table == dictName)
+        {
+            result = searchParameters[i].value.toString();
+            result.replace("'", "''");
+            break;
+        }
+    }
+    return result;
 }
 
 

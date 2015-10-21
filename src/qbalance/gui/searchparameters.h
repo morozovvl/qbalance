@@ -53,6 +53,8 @@ public:
     virtual void setProgramNameFieldName(QString s) { programNameFieldName = s; }
     virtual void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
     virtual QString getFilter();
+    virtual QString getFilter(QString, QString = "");
+    virtual QString getSearchValue(QString);
     virtual void keyPressEvent(QKeyEvent*);
     virtual void setParent(QWidget *);
     virtual void clearAllComboBoxes();

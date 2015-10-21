@@ -271,12 +271,14 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, QString column);
     Q_INVOKABLE virtual QVariant getValue(QString command) { return getValue(command, 0, 0); }
     Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
-    void setSessionVariables();
 
+    bool    lockDocument(int);
+    void    unlockDocument(int);
 
 private:
     QSqlDatabase*           db;
     QSqlDatabase*           dbExtend;
+    int                     pid;
     bool                    extDbExist;         // Расширенная ДБ существует
     QSqlQuery               objectTypes;
     QSqlQuery               dictionariesPermitions;     // Таблица доступа к справочникам
@@ -306,6 +308,7 @@ private:
     int getTypeId(QString);
     void clearError();
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
+    void clearLockedDocuementList();
 };
 
 #endif

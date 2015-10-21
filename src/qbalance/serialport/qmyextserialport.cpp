@@ -180,25 +180,22 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromServer)
 
 void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
 {
-    if (!remote)
+    // Если задана строка, то запишем ее в журнал
+    if (str.size() > 0)
+        app->debug(4, (fromRemote ? "remote " : "") + str);
+    else
     {
-        // Если задана строка, то запишем ее в журнал
-        if (str.size() > 0)
-            app->debug(4, (fromRemote ? "remote " : "") + str);
-        else
+        if (log.length() > 0)
         {
-            if (log.length() > 0)
-            {
-                if (!outLog)
-                    app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + (fromRemote ? " remote" : "") + " <- " + log, true);
-                else
-                    app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + (fromRemote ? " remote" : "") + " -> " + log, true);
-            }
-            // Очистим журнал
-            log = "";
+            if (!outLog)
+                app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + (fromRemote ? " remote" : "") + " <- " + log, true);
+            else
+                app->debug(4, QDateTime::currentDateTime().toString(app->logTimeFormat()) + (fromRemote ? " remote" : "") + " -> " + log, true);
         }
+        // Очистим журнал
+        log = "";
     }
-    else if (tcpClient != 0 && tcpClient->isValid())
+    if (remote && tcpClient != 0 && tcpClient->isValid())
     {
         tcpClient->sendToServer("=fr=writeLog=" + str);
         tcpClient->waitResult();

@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define CONFIGFORM_H
 #include <QFrame>
 #include <QComboBox>
+#include <QCheckBox>
 #include <QTreeWidgetItem>
 #include "form.h"
 
@@ -50,6 +51,8 @@ private:
     QComboBox* lnBoud;
     QLineEdit* lnPort;
     QLineEdit* lnAddress;
+    QLineEdit* lnTimeOut;
+    QCheckBox* lnConnectSignal;
 
     void dictAdd();
     void dictProperties();

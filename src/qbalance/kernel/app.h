@@ -65,6 +65,7 @@ struct ConfigVars {
     int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
     int             frDriverTimeOut;
     int             frDriverPassword;
+    bool            frConnectSignal;            // Подавать сигнал при соединении с ФР
     QString         cardReaderPrefix;           // Префикс магнитной карты
     int             localPort;                  // Порт, по которому программа принимает соединения
     QString         remoteHost;                 // Адрес удаленного хоста, к которому будет пытаться соединиться программа

@@ -132,17 +132,13 @@ void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     }
     else if (str.indexOf("setLockDriverFR(true)") == 0)
     {
-        bool result = false;
-        if (!TApplication::exemplar()->getDrvFR()->isLocked())
-            result = true;
         TApplication::exemplar()->getDrvFR()->setLock(true);
-        sendToClient(pClientSocket, (result ? "true" : "false"));
+        sendToClient(pClientSocket, "Ok");
     }
     else if (str.indexOf("setLockDriverFR(false)") == 0)
     {
-        bool result = true;
         TApplication::exemplar()->getDrvFR()->setLock(false);
-        sendToClient(pClientSocket, (result ? "true" : "false"));
+        sendToClient(pClientSocket, "Ok");
     }
     else if (str.indexOf("app.exit") == 0)
     {

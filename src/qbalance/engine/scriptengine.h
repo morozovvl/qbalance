@@ -83,7 +83,7 @@ public:
     void eventPhotoLoaded();
     void eventPreparePrintValues();
     QString preparePictureUrl(Essence*);
-    QString getFilter();
+    QString getFilter(QString = "");
     void eventBarCodeReaded(QString);
     void eventCardCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);

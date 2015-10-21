@@ -411,18 +411,18 @@ DriverFR::~DriverFR()
 bool DriverFR::open(QString port, int rate, int timeout, int password, QString ipAddress, int ipPort)
 {
     bool result = false;
+    locked = false;
     // Установление связи с ккм
     fr.BaudRate      = rate;
     fr.Timeout       = timeout;
     fr.Password      = password;
-
     serialPort = new QMyExtSerialPort(port, QextSerialPort::Polling);
     if (serialPort != 0)
     {
         serialPort->setRemote(false);
         // Сначала поищем фискальник на этом компьютере
 
-        serialPort->setBaudRate(LineSpeedVal[fr.BaudRate]);
+        serialPort->setBaudRate(LineSpeedVal[rate]);
         serialPort->setTimeout(timeout);
         serialPort->setFlowControl(FLOW_OFF);
         serialPort->setParity(PAR_NONE);
@@ -433,7 +433,10 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
         {
             if (Connect())
             {
-                Beep();
+//                GetExchangeParam();
+//                qDebug() << fr.Timeout;
+                if (!remote || app->getConfig()->frConnectSignal)
+                    Beep();
                 result = true;
             }
             DisConnect();
@@ -593,7 +596,11 @@ int DriverFR::readAnswer(answer *ans)
                           break;
                       }
                       else
+                      {
                           sendNAK();
+                          app->timeOut(fr.Timeout);
+                          sendENQ();
+                      }
                   }
               }
               app->timeOut(fr.Timeout);
@@ -644,9 +651,9 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
 {
     command cmd;
     int result = -1;
+    composeComm(&cmd, comm, pass, param);
     if (deviceIsReady())
     {
-        composeComm(&cmd, comm, pass, param);
         if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
         {
             serialPort->writeLog();
@@ -676,9 +683,9 @@ bool DriverFR::deviceIsReady()
         {
             return true;
         }
-        else if (repl == ACK)
-        {
-            app->timeOut(fr.Timeout);
+        else if (repl == ACK)                   // В случае, если устройство все еще пытается передать ответ
+        {                                       // от предыдущей команды
+            app->timeOut(fr.Timeout);           // то прочитаем его
             answer     a;
             readAnswer(&a);
             sendENQ();
@@ -823,6 +830,12 @@ bool DriverFR::Connect()
         if (locked)
         {
             connected = true;
+/*
+            fr.PortNumber = 0;
+            fr.BaudRate = app->getConfig()->frDriverBaudRate;
+            fr.Timeout = app->getConfig()->frDriverTimeOut;
+            SetExchangeParam();
+*/
             if (GetECRStatus() == 0)
             {
                 result = true;
@@ -835,7 +848,7 @@ bool DriverFR::Connect()
                     progressDialog->show();
             }
             else
-                connected = false;
+                    connected = false;
         }
     }
     return result;
@@ -867,7 +880,7 @@ bool DriverFR::isLocked()
 void DriverFR::setLock(bool lock)
 {
     if (remote)
-        serialPort->setLock(lock);
+        locked = serialPort->setLock(lock);
     locked = lock;
 }
 
@@ -979,7 +992,11 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                     if (errHand(a) != 0)
                     {
                         result = fr.ResultCode;
-//                        app->timeOut(fr.Timeout);
+                        if (result == 0x50)
+                        {
+                            app->timeOut(fr.Timeout*4);
+                            serialPort->writeLog("Повтор команды");
+                        }
                     }
                     else
                         result = 0;
@@ -1073,67 +1090,74 @@ int DriverFR::PrintWideString()
 //-----------------------------------------------------------------------------
 int DriverFR::FeedDocument()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 2;
+    logCommand(FEED_DOCUMENT, "Протяжка");
+    parameter  p;
+    answer     a;
+    p.len    = 2;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
-  p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
-  p.buff[0] |= (fr.UseSlipDocument  == true) ? 4 : 0;
-
-  p.buff[1] = fr.StringQuantity;
-
-  if (sendCommand(FEED_DOCUMENT, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != FEED_DOCUMENT) return -1;
-
-  if (errHand(&a) != 0) return  fr.ResultCode;;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+    if (connected)
+    {
+        p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
+        p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
+        p.buff[0] |= (fr.UseSlipDocument  == true) ? 4 : 0;
+        p.buff[1] = fr.StringQuantity;
+        result = processCommand(FEED_DOCUMENT, &p, &a);
+        if (result == 0)
+        {
+            fr.OperatorNumber = a.buff[2];
+        }
+    }
+    return result;
 }
 //-----------------------------------------------------------------------------
 int DriverFR::SetExchangeParam()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 3;
+    logCommand(SET_EXCHANGE_PARAM, "Установка параметров обмена");
+    parameter  p;
+    answer     a;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  p.buff[0] = fr.PortNumber;
-  p.buff[1] = fr.BaudRate;
-  p.buff[2] = fr.Timeout;
-
-  if (sendCommand(SET_EXCHANGE_PARAM, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != SET_EXCHANGE_PARAM) return -1;
-
-  return errHand(&a);
+    if (connected)
+    {
+        p.buff[0] = fr.PortNumber;
+        p.buff[1] = fr.BaudRate;
+        p.buff[2] = fr.Timeout;
+        result = processCommand(SET_EXCHANGE_PARAM, &p, &a);
+        if (result == 0)
+        {
+            result = fr.ResultCode;
+        }
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetExchangeParam()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 1;
+    logCommand(GET_EXCHANGE_PARAM, "Чтение параметров обмена");
+    parameter  p;
+    answer     a;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  p.buff[0] = fr.PortNumber;
-
-  if (sendCommand(GET_EXCHANGE_PARAM, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != GET_EXCHANGE_PARAM) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.BaudRate = a.buff[2];
-  fr.Timeout  = a.buff[3];
-  return 0;
+    if (connected)
+    {
+        p.buff[0] = fr.PortNumber;
+        result = processCommand(GET_EXCHANGE_PARAM, &p, &a);
+        if (result == 0)
+        {
+            result = fr.ResultCode;
+            if (errHand(&a) != 0)
+                result = fr.ResultCode;
+            else
+            {
+                fr.BaudRate = a.buff[2];
+                fr.Timeout  = a.buff[3];
+            }
+        }
+    }
+    return result;
 }
 
 //-----------------------------------------------------------------------------

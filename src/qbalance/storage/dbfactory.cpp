@@ -194,6 +194,8 @@ bool DBFactory::open(QString login, QString password)
         QString user_name = env.filter("USER=").at(0);
         user_name.replace("\"", "").replace("USER=", "");
 #endif
+        pid = getValue("SELECT pg_backend_pid();").toInt();
+        clearLockedDocuementList();
         return true;
     }
     else
@@ -2954,8 +2956,23 @@ QVariant DBFactory::getOstSum(QString acc, int id)
 }
 
 
-void DBFactory::setSessionVariables()
+bool DBFactory::lockDocument(int docId)
 {
-    exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_host_name").arg(hostName));
-    exec(QString("SELECT session_variables.set_value('%1', '%2');").arg("client_user_name").arg(currentLogin));
+    int id = getValue(QString("SELECT \"PID\" FROM \"блокдокументов\" WHERE \"КОД_ДОКУМЕНТЫ\" = %1;").arg(docId)).toInt();
+    if (id > 0)
+        return false;
+    exec(QString("INSERT INTO \"блокдокументов\" (\"PID\", \"КОД_ДОКУМЕНТЫ\") VALUES (%1, %2);").arg(pid).arg(docId));
+    return true;
+}
+
+
+void DBFactory::unlockDocument(int docId)
+{
+    exec(QString("DELETE FROM \"блокдокументов\" WHERE \"PID\" = %1 AND \"КОД_ДОКУМЕНТЫ\" = %2;").arg(pid).arg(docId));
+}
+
+
+void DBFactory::clearLockedDocuementList()
+{
+    exec(QString("DELETE FROM %1 WHERE %2 IN (SELECT %2 FROM %1 WHERE %2 NOT IN (SELECT pid FROM pg_stat_activity WHERE datname = '%3'))").arg("блокдокументов").arg("\"PID\"").arg(dbName));
 }

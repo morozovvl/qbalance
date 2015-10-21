@@ -416,10 +416,7 @@ QString Essence::getPhotoFile(QString copyTo)
                 }
                 else
                 {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-/*
-                    if (app->isSA())
-                        app->saveFileToServer(file, localFile, PictureFileType, true);
-*/
+                    app->saveFileToServer(file, localFile, PictureFileType, true);
                     if (copyTo.size() > 0)
                     {
                         QString file = app->getPhotosPath() + copyTo;
@@ -584,9 +581,9 @@ void Essence::close()
     if (form != 0)
     {
         closeFormEvent(form);
+        form->close();
         if (form->isDefaultForm())
         {
-            form->close();
             delete form;
         }
     }

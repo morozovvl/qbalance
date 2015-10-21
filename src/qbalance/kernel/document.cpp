@@ -51,6 +51,7 @@ Document::Document(int oper, Documents* par): Essence()
     photoEnabled = false;
     quanAccount = false;
     singlePrv = false;
+    locked = false;
 
     // Подготовим структуру для хранения локальных справочников
     dictionaries = new Dictionaries();
@@ -498,18 +499,32 @@ QVariant Document::getSumValue(QString name)
 
 void Document::show()
 {
+    int docId = getDocId();
     app->debug(1, "");
-    app->debug(1, QString("Opened document %1").arg(getDocId()));
+    app->debug(1, QString("Opened document %1").arg(docId));
     docModified = false;
     loadDocument();
     Essence::show();
+    if (locked || !db->lockDocument(docId))
+    {
+        setEnabled(false);
+    }
+    else
+        locked = true;
 }
 
 
 void Document::hide()
 {
+    int docId = getDocId();
     Essence::hide();
-    app->debug(1, QString("Closed document %1").arg(getDocId()));
+    app->debug(1, QString("Closed document %1").arg(docId));
+    if (locked)
+    {
+        db->unlockDocument(docId);
+        setEnabled(true);
+        locked = false;
+    }
 }
 
 
