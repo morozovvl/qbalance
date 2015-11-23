@@ -95,6 +95,7 @@ public:
     Q_INVOKABLE void calcItog();
     bool isSinglePrv() { return singlePrv; }
     bool isQuanAccount() { return quanAccount; }
+    Q_INVOKABLE virtual void    setCurrentRow(int row);
 
 
 protected:

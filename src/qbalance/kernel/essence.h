@@ -72,7 +72,8 @@ public:
     Q_INVOKABLE virtual qulonglong      getId(int row = -1);
     Q_INVOKABLE virtual QString         getName(int row = -1);
     Q_INVOKABLE virtual void            setId(qulonglong);
-    Q_INVOKABLE virtual int             locateId(qulonglong);            // Возвращает номер строки справочника, с заданным полем КОД
+    Q_INVOKABLE virtual int             locateId(qulonglong);            // Возвращает номер строки с заданным полем КОД
+    Q_INVOKABLE virtual int             locateValue(QString, QVariant);  // Возвращает номер строки с заданным значение поля
     Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual QVariant        getOldValue(QString field);
@@ -83,6 +84,7 @@ public:
     virtual void query(QString = "", bool = false);
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
     Q_INVOKABLE int                     getRowCount() { return tableModel->rowCount(); }
+    Q_INVOKABLE int                     rowCount() { return getRowCount(); }
 
 
 // Функции для работы с модулем GUI
@@ -100,7 +102,7 @@ public:
     Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
     Q_INVOKABLE bool isPhotoEnabled() { return photoEnabled; }
-    Q_INVOKABLE void setPhotoPath(QString path) { photoPath = path; }
+    Q_INVOKABLE virtual void setPhotoPath(QString path) { photoPath = path; }
     Q_INVOKABLE QString getPhotoPath();
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
@@ -146,6 +148,7 @@ public:
     void                closeFormEvent(Form *);
     QString             preparePictureUrl();
     virtual void        afterRowChanged();
+    virtual void        beforeRowChanged();
 
 // Прочие функции
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
@@ -155,7 +158,7 @@ public:
     Q_INVOKABLE virtual void        updateCurrentRow();
     Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(grdTable->currentIndex().column()).toUpper(); }
     Q_INVOKABLE int             getCurrentRow() { return grdTable->currentIndex().row(); }
-    Q_INVOKABLE void            setCurrentRow(int row) { grdTable->selectRow(row); }
+    Q_INVOKABLE virtual void    setCurrentRow(int row) { grdTable->selectRow(row); }
     Dictionaries* getDictionaries() { return dictionaries; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
     bool    isLoading() { return loading; }
@@ -208,6 +211,7 @@ protected:
 
 
 private:
+    bool                photoPathVerified;
     QString             photoPath;
     QString             photoIdField;
     QString             photoNameField;

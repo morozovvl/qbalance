@@ -53,6 +53,7 @@ private slots:
       void showMessagesWindow();
       void saveCustomization();
       void loadFile();
+      void beep();
       void printReportWithoutCleaning();
       void printReportWithCleaning();
       void continuePrint();
@@ -60,6 +61,7 @@ private slots:
       void printEKLZReport();
       void printProcessedEKLZReport();
       void EKLZinterrupt();
+      void printReturnSaleCheck();
       void newRecord();
       void deleteRecord();
       void about();
@@ -104,6 +106,7 @@ private:
       QAction* showMessageWindow;
       QAction* saveCustomAct;
       QAction* loadFileAct;
+      QAction* beepAct;
       QAction* printReportWithoutCleaningAct;
       QAction* printReportWithCleaningAct;
       QAction* continuePrintAct;
@@ -111,6 +114,7 @@ private:
       QAction* printEKLZReportAct;
       QAction* printProcessedEKLZReportAct;
       QAction* EKLZinterruptAct;
+      QAction* printReturnSaleCheckAct;
       QAction* exitAct;
       QMdiArea* workSpace;
 

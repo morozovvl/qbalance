@@ -34,10 +34,17 @@ OOXMLEngine::~OOXMLEngine()
 
 bool OOXMLEngine::open(QString fName, bool ro)
 {
+    return open(fName, "", ro);
+}
+
+
+bool OOXMLEngine::open(QString fName, QString sheet, bool ro)
+{
     bool result = false;
     if (QDir().exists(fName))
     {
         fileName = QFileInfo(fName).absoluteFilePath();
+        sheetName = sheet;
         readOnly = ro;
         templateFileName = fileName;
         // Создадим временный каталог
@@ -65,7 +72,26 @@ bool OOXMLEngine::open(QString fName, bool ro)
                 {
                     if (doc.setContent(&file))
                     {
-                        rowCells = doc.elementsByTagName("table:table-row");
+                        if (sheetName.size() == 0)
+                        {
+                            sheetNode = doc;
+                            rowCells = doc.elementsByTagName("table:table-row");
+                        }
+                        else
+                        {
+                            QDomNodeList cells;
+                            cells = doc.elementsByTagName("table:table");
+                            int cellsQuan = cells.count();
+                            for (int i = 0; i < cellsQuan; i++)
+                            {
+                                if (cells.at(i).toElement().attribute("table:name") == sheetName)
+                                {
+                                    sheetNode = cells.at(i);
+                                    rowCells = cells.at(i).toElement().elementsByTagName("table:table-row");
+                                    break;
+                                }
+                            }
+                        }
                         rowQuan = rowCells.count();
                         file.close();
                         result = true;
@@ -227,7 +253,7 @@ QDomElement OOXMLEngine::getCellWithAnnotation(QString annotation)
     QDomNode rowNode;
     QDomNodeList cells;
     annotation = annotation.toUpper();
-    cells = doc.elementsByTagName("office:annotation");   // будем просматривать аннотации
+    cells = sheetNode.toDocument().elementsByTagName("office:annotation");   // будем просматривать аннотации
     int cellsQuan = cells.count();
     for (int i = 0; i < cellsQuan; i++)
     {

@@ -45,9 +45,12 @@ DBFactory::~DBFactory()
     delete db;
 
     QStringList list = QSqlDatabase::connectionNames();
-    for(int i = 0; i < list.count(); ++i)
-        QSqlDatabase::removeDatabase(list[i]);
 
+    for(int i = 0; i < list.count(); ++i)
+    {
+        QSqlDatabase::database(list[i]).close();
+        QSqlDatabase::removeDatabase(list[i]);
+    }
 }
 
 
@@ -149,10 +152,18 @@ void DBFactory::clearError()
 
 void DBFactory::setError(QString errText)
 {
+    bool emergencyExit = false;
     wasError = true;
-    errorText = errText;
+    errorText = errText.trimmed();
+    if (errorText.size() == 0)
+    {
+        errorText = "Ошибка соединения";
+        emergencyExit = true;
+    }
     TApplication::debug(1, " Error: " + errorText);
     TApplication::exemplar()->showError(errText);
+    if (emergencyExit)
+        TApplication::exemplar()->exit();
 }
 
 
@@ -357,7 +368,7 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
         if (errorText.size() > 0)
             setError(errorText);
     }
-    query->clear();
+//    query->clear();
     delete query;
     return lResult;
 }
@@ -379,7 +390,7 @@ QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
         setError(query->lastError().text());
     }
     result = *query;
-    query->clear();
+//    query->clear();
     delete query;
     return result;
 }

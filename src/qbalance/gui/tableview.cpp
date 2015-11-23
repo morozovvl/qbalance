@@ -149,16 +149,16 @@ void TableView::cmdRequery()
 
 void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
+    if (essence != 0)
+        essence->beforeRowChanged();
+
+    if (isVisible())
+        showPhoto();
+
+    if (essence != 0)
+        essence->afterRowChanged();
+
     QTableView::currentChanged(current, previous);
-    if (parent != 0)
-    {
-        if (current.row() >= 0 &&current.row() != previous.row() && tableModel->rowCount() > 0)
-        {
-            showPhoto();
-            if (essence != 0)
-                essence->afterRowChanged();
-        }
-    }
 }
 
 

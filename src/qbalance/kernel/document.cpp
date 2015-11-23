@@ -144,6 +144,11 @@ bool Document::calculate()
 
 void Document::saveChanges()
 {
+    if (form->getSubWindow()->widget()->isActiveWindow())
+    {
+        getParent()->setValue("ДАТА", QVariant(((FormDocument*)form)->getDateEdit()->date()));
+        getParent()->setValue("НОМЕР", QVariant(((FormDocument*)form)->getNumberEdit()->text()));
+    }
     QModelIndex index = grdTable->currentIndex();
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
@@ -474,6 +479,13 @@ void Document::saveOldValues()
 }
 
 
+void Document::setCurrentRow(int row)
+{
+    Essence::setCurrentRow(row);
+    saveOldValues();
+}
+
+
 void Document::restoreOldValues()
 {
     Essence::restoreOldValues();
@@ -635,7 +647,7 @@ void Document::loadDocument()
             }
         }
     }
-    if (getIsSingleString())
+    if (getIsSingleString() && getRowCount() == 0)
     {   // Если в документе должна быть только одна строка, но нет ни одной, то добавим пустую строку
         add();
     }
@@ -770,9 +782,9 @@ bool Document::open()
 
 void Document::close()
 {
+    Essence::close();
     dictionaries->close();
     delete dictionaries;
-    Essence::close();
 }
 
 
@@ -1070,7 +1082,6 @@ int Document::appendDocString()
         {
             saveOldValues();
             getScriptEngine()->eventAfterAddString();
-            saveChanges();
             saveOldValues();
         }
         form->setButtons();

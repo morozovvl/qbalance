@@ -31,6 +31,7 @@ public:
     void setQuan(bool q) { quan = q; }
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void        lock(bool = true);
+    Q_INVOKABLE virtual void setPhotoPath(QString path);
 
 protected:
     virtual bool    setTableModel(int = 0);

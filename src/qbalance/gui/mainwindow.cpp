@@ -133,6 +133,9 @@ void MainWindow::createMenus()
     serviceMenu = menuBar()->addMenu(QObject::trUtf8("&Сервис"));
     frMenu = serviceMenu->addMenu(QObject::trUtf8("&Фискальный регистратор"));
 
+    beepAct = frMenu->addAction(QObject::trUtf8("Сигнал"));
+    connect(beepAct, SIGNAL(triggered()), this, SLOT(beep()));
+
     printReportWithoutCleaningAct = frMenu->addAction(QObject::trUtf8("Снять отчет без гашения"));
     connect(printReportWithoutCleaningAct, SIGNAL(triggered()), this, SLOT(printReportWithoutCleaning()));
 
@@ -153,6 +156,9 @@ void MainWindow::createMenus()
 
     EKLZinterruptAct = frMenu->addAction(QObject::trUtf8("Прекращение ЭКЛЗ"));
     connect(EKLZinterruptAct, SIGNAL(triggered()), this, SLOT(EKLZinterrupt()));
+
+    printReturnSaleCheckAct = frMenu->addAction(QObject::trUtf8("Возврат продажи"));
+    connect(printReturnSaleCheckAct, SIGNAL(triggered()), this, SLOT(printReturnSaleCheck()));
 
     showMessageWindow = serviceMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
     connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
@@ -223,6 +229,12 @@ void MainWindow::loadFile()
 }
 
 
+void MainWindow::beep()
+{
+    TApplication::exemplar()->runScript("beep.js");
+}
+
+
 void MainWindow::printReportWithoutCleaning()
 {
     TApplication::exemplar()->runScript("printReportWithoutCleaning.js");
@@ -262,6 +274,12 @@ void MainWindow::printProcessedEKLZReport()
 void MainWindow::EKLZinterrupt()
 {
     TApplication::exemplar()->runScript("EKLZinterrupt.js");
+}
+
+
+void MainWindow::printReturnSaleCheck()
+{
+    TApplication::exemplar()->runScript("printReturnSaleCheck.js");
 }
 
 

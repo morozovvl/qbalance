@@ -224,6 +224,17 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
+QScriptValue debug(QScriptContext* context, QScriptEngine*) {
+    QScriptValue result(true);
+    if (context->argument(0).isString())
+    {
+        QString message = context->argument(0).toString();
+        TApplication::exemplar()->debug(3, message);
+    }
+    return result;
+}
+
+
 // класс DriverFR
 Q_DECLARE_METATYPE(DriverFR*)
 
@@ -618,6 +629,11 @@ void ScriptEngine::loadScriptObjects()
         globalObject().setProperty("form", newQObject(((Document*)parent())->getForm()));
         globalObject().setProperty("table", newQObject(parent()));
     }
+    else
+    {
+        globalObject().setProperty("form", 0);
+        globalObject().setProperty("table", 0);
+    }
     globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
@@ -635,6 +651,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("documents", newQObject(documents));
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
     globalObject().setProperty("SumToString", newFunction(SumToString));
+    globalObject().setProperty("debug", newFunction(debug));
 
     QStringList extensions;
     extensions << "qt.core"
@@ -854,6 +871,13 @@ void ScriptEngine::eventSetEnabled(bool enabled)
 }
 
 
+void ScriptEngine::eventBeforeRowChanged()
+{
+    QString eventName = "EventBeforeRowChanged";
+    scriptCall(eventName);
+}
+
+
 void ScriptEngine::eventAfterRowChanged()
 {
     QString eventName = "EventAfterRowChanged";
@@ -1027,6 +1051,9 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после перемещения на другую строку");
     appendEvent("EventAfterRowChanged()", func);
 
+    func.comment = QObject::trUtf8("Событие происходит до перемещения на другую строку");
+    appendEvent("EventBeforeRowChanged()", func);
+
     func.comment = QObject::trUtf8("Событие происходит после загрузки фотографии из Интернета");
     appendEvent("EventPhotoLoaded()", func);
 
@@ -1084,17 +1111,25 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    QString scriptPath = TApplication::exemplar()->getScriptsPath();
-    Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-    QFile file(scriptPath + scriptFile);
+    QFile file(scriptFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QString script(file.readAll());
         file.close();
         result = script;
     }
-//    else
-//        app->showError(QString("Не удалось найти скрипт %1").arg(scriptFile));
+    else
+    {
+        QString scriptPath = TApplication::exemplar()->getScriptsPath();
+        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+        QFile file(scriptPath + scriptFile);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QString script(file.readAll());
+            file.close();
+            result = script;
+        }
+    }
     scriptFileName = scriptFile;
     return result;
 }

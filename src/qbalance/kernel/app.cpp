@@ -63,7 +63,7 @@ TApplication::TApplication(int & argc, char** argv)
     dictionaryList = 0;
     topersList = 0;
     driverFR = 0;
-    barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
+    barCodeReader = 0;
 
     driverFRisValid = false;
     driverFRlocked = false;
@@ -101,10 +101,14 @@ void TApplication::initConfig()
     config.frDriverBaudRate = 3;
 #else
     config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
-    config.frDriverPort = "/dev/ttyUSB0";                 // COM-порт фискального регистратора
+    config.frDriverPort = "/dev/ttyUSB0";               // COM-порт фискального регистратора
     config.frDriverBaudRate = 6;
 #endif
+    config.frNeeded = false;
     config.frDriverTimeOut = 50;
+    config.frLocalDriverTimeOut = 50;
+    config.frRemoteDriverTimeOut = 150;
+    config.frNetDriverTimeOut = 200;
     config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
     config.localPort = 44444;
@@ -170,16 +174,18 @@ bool TApplication::open() {
 
     readSettings();
 
+    tcpServer = new TcpServer(config.localPort, this);
+    barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
+    messagesWindow = new MessageWindow();
+
     if (gui->open())
     {  // Попытаемся открыть графический интерфейс
 
-        messagesWindow = new MessageWindow();
-        tcpServer = new TcpServer(config.localPort, this);
-
-        driverFR = new DriverFR(this);
-        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
+        if (config.frNeeded)
         {
-            driverFRisValid = true;
+            driverFR = new DriverFR(this);
+            if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
+                driverFRisValid = true;
         }
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
@@ -187,6 +193,7 @@ bool TApplication::open() {
             int result = gui->openDB(); // Попытаемся открыть базу данных
             if (result == 0)
             {   // БД открыть удалось
+
                 dictionaryList = new Dictionaries();
                 topersList = new Topers();
                 if (dictionaryList->open() && topersList->open())
@@ -212,10 +219,13 @@ bool TApplication::open() {
 
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
-                    if (driverFRisValid)
-                        showMessageOnStatusBar("Найден фискальный регистратор.\n");
-                    else
-                        showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                    if (config.frNeeded)
+                    {
+                        if (driverFRisValid)
+                            showMessageOnStatusBar("Найден фискальный регистратор.\n");
+                        else
+                            showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                    }
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -279,6 +289,18 @@ void TApplication::close()
         gui->close();
     if (db != 0)
         db->close();
+}
+
+
+void TApplication::setFR()
+{
+/*
+    driverFR = new DriverFR(this);
+    if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
+    {
+        driverFRisValid = true;
+    }
+*/
 }
 
 
@@ -411,7 +433,7 @@ void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
     {
         if (DebugModes.at(i) == mode || mode == 0)
         {
-            QFile file(debugFileName(mode));
+            QFile file(debugFileName(DebugModes.at(i)));
             if (file.open(QFile::WriteOnly | QFile::Append))
             {
                 QTextStream out(&file);
@@ -448,7 +470,7 @@ void TApplication::showError(QString error)
     if (!isScriptMode())
         gui->showError(error);
     else
-        showMessageOnStatusBar(error);      // В скриптовом режиме сообщение будет выведено в консоль
+        showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error + "\n");
 }
 
@@ -458,7 +480,7 @@ void TApplication::showCriticalError(QString error)
     if (!isScriptMode())
         gui->showCriticalError(error);
     else
-        showMessageOnStatusBar(error);      // В скриптовом режиме сообщение будет выведено в консоль
+        showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error + "\n");
 }
 
@@ -517,6 +539,7 @@ bool TApplication::waitProcessEnd(QProcess* proc)
 
 void TApplication::timeOut(int ms)
 {
+    QTimer timer;
     timer.start(ms);
     QEventLoop loop;
     connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
@@ -582,22 +605,8 @@ int TApplication::runScript(QString scriptName)
 void TApplication::barCodeReadyRead(QString barCodeString)
 {
     Dialog* dialog = 0;
-    QWidget* widget = activeWindow();
-    if (QString(widget->metaObject()->className()).trimmed().compare("Dialog", Qt::CaseInsensitive) == 0)
-    {
-        dialog = qobject_cast<Dialog*>(widget);
-    }
-    else
-    {
-        if (getActiveSubWindow() != 0 && getMainWindow() != 0)
-        {
-            MyMdiSubWindow* mdiSubWindow = getMainWindow()->findMdiWindow(getActiveSubWindow()->widget());
-            if (mdiSubWindow != 0)
-            {
-                dialog = qobject_cast<Dialog*>(mdiSubWindow->widget());
-            }
-        }
-    }
+    if (getActiveSubWindow() != 0)
+        dialog = (Dialog*)(getActiveSubWindow()->widget());
     if (dialog != 0)
         dialog->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
 }
@@ -712,6 +721,13 @@ void TApplication::clearPrintArrays()
 
 }
 
+
+int TApplication::printArrayCount(QString array)
+{
+    return arraysForPrint.value(array).count();
+}
+
+
 QString TApplication::findFileFromEnv(QString file)
 {
     QString result;
@@ -763,17 +779,16 @@ void TApplication::loadFile()
 }
 
 
-void TApplication::sendSMS(QString message)
+void TApplication::sendSMS(QString url, QString number, QString message, QString from)
 {
     QEventLoop loop;
+    QNetworkAccessManager manager(this);
     QNetworkReply* reply;
-    QNetworkAccessManager manager;
-    QByteArray data;
-    QString sms(message);
-    reply = manager.get(QNetworkRequest(QUrl(sms)));
+    QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);
+    reply = manager.get(QNetworkRequest(QUrl(command)));
     connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
-    qDebug() << sms << reply->error() << reply->errorString() << QString(data);
+//    qDebug() << reply->error() << reply->errorString();
 }
 
 
@@ -781,10 +796,14 @@ void TApplication::readSettings()
 {
     QSettings settings;
     settings.beginGroup("app");
+    config.frNeeded = settings.value("frNeeded", config.frNeeded).toBool();
     config.barCodeReaderPort = settings.value("barCodeReaderPort", config.barCodeReaderPort).toString();
     config.frDriverPort = settings.value("frDriverPort", config.frDriverPort).toString();
     config.frDriverBaudRate = settings.value("frDriverBaudRate", config.frDriverBaudRate).toInt();
     config.frDriverTimeOut = settings.value("frDriverTimeOut", config.frDriverTimeOut).toInt();
+    config.frLocalDriverTimeOut = settings.value("frLocalDriverTimeOut", config.frLocalDriverTimeOut).toInt();
+    config.frRemoteDriverTimeOut = settings.value("frRemoteDriverTimeOut", config.frRemoteDriverTimeOut).toInt();
+    config.frNetDriverTimeOut = settings.value("frNetDriverTimeOut", config.frNetDriverTimeOut).toInt();
     config.frDriverPassword = settings.value("frDriverPassword", config.frDriverPassword).toInt();
     config.frConnectSignal = settings.value("frConnectSignal", config.frConnectSignal).toBool();
     config.cardReaderPrefix = settings.value("cardReaderPrefix", config.cardReaderPrefix).toString();
@@ -801,10 +820,14 @@ void TApplication::writeSettings()
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings;
     settings.beginGroup("app");
+    settings.setValue("frNeeded", config.frNeeded);
     settings.setValue("barCodeReaderPort", config.barCodeReaderPort);
     settings.setValue("frDriverPort", config.frDriverPort);
     settings.setValue("frDriverBaudRate", config.frDriverBaudRate);
     settings.setValue("frDriverTimeOut", config.frDriverTimeOut);
+    settings.setValue("frLocalDriverTimeOut", config.frLocalDriverTimeOut);
+    settings.setValue("frRemoteDriverTimeOut", config.frRemoteDriverTimeOut);
+    settings.setValue("frNetDriverTimeOut", config.frNetDriverTimeOut);
     settings.setValue("frDriverPassword", config.frDriverPassword);
     settings.setValue("frConnectSignal", config.frConnectSignal);
     settings.setValue("cardReaderPrefix", config.cardReaderPrefix);

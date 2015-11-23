@@ -24,12 +24,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QTcpServer>
 #include <QNetworkSession>
 
+
+class TApplication;
+
 class TcpServer : public QObject
 {
     Q_OBJECT
 
 public:
     TcpServer(int nPort, QObject *parent = 0);
+    void    pingClient(QString);
+    bool    getPingOk() { return pingOk; }
+
+public slots:
+    void    sendToClient(QString, QString);
 
 private:
     QTcpServer* m_ptcpServer;
@@ -38,8 +46,12 @@ private:
 private slots:
     void    slotNewConnection();
     void    slotReadClient();
+    void    slotDisconnected(QTcpSocket*);
 
 private:
+    TApplication*   app;
+    bool            pingOk;
+    QHash<QString, QTcpSocket*>      clients;           // Список обслуживаемых клиентов
     void    sendToClient(QTcpSocket*, QString);
     void    processRequest(QTcpSocket*, QString);
 

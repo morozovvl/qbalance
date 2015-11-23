@@ -57,7 +57,7 @@ public:
     virtual void activateSubWindow();
     void setAutoSelect(bool select) { autoSelect = select; }
     virtual void readSettings();
-    MyMdiSubWindow*     getSubWindow();
+    virtual MyMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp() { return app; }
 
 public slots:

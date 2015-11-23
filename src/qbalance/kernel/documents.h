@@ -53,6 +53,7 @@ protected:
 
 private:
     int                 operNumber;
+    int                 currentRow;
     Document*           currentDocument;
     QString             subFormTitle;
     QString             prefix;

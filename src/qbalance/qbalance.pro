@@ -157,6 +157,7 @@ HEADERS += kernel/app.h \
     kernel/tcpserver.h \
     kernel/tcpclient.h \
     gui/myprogressdialog.h
+
 RESOURCES += ../../resources.qrc
 
 
@@ -170,6 +171,10 @@ unix:RCC_DIR = ../qbalance
 win32:RCC_DIR = ../qbalance
 
 unix {
+#INCLUDEPATH = ./others/google-breakpad/src
+#HEADERS += crashhandler/crashhandler.h
+#SOURCES += crashhandler/crashhandler.cpp
+# LIBS += others/google-breakpad/src/client/linux/libbreakpad_client.a
  isEmpty(PREFIX) {
   PREFIX =   /usr
   }
@@ -198,46 +203,3 @@ OTHER_FILES += \
     ../qtscriptgenerator.bat \
     license.txt \
     ../../README
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

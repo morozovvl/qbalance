@@ -17,18 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include "tcpserver.h"
 #include <QNetworkConfigurationManager>
+#include "tcpserver.h"
 #include "app.h"
 
 
 TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
 {
+    app = (TApplication*)parent;
     m_nNextBlockSize = 0;
+    pingOk = false;
     m_ptcpServer = new QTcpServer(this);
     if (!m_ptcpServer->listen(QHostAddress::Any, nPort))
     {
-        TApplication::exemplar()->showMessageOnStatusBar(tr("Не запускается TcpServer: %1.\n").arg(m_ptcpServer->errorString()));
+        app->debug(5, QString(tr("Не запускается TcpServer: %1.\n")).arg(m_ptcpServer->errorString()));
         m_ptcpServer->close();
         return;
     }
@@ -36,11 +38,37 @@ TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
 }
 
 
+void TcpServer::pingClient(QString host)
+{
+    pingOk = false;
+    sendToClient(host, "*ping*");
+}
+
+
+void TcpServer::sendToClient(QString host, QString str)
+{
+    if (clients.contains(host))                     // Если клиент находится в списке обслуживаемых
+    {
+        if (clients.value(host)->isValid())         // и слот рабочий
+            sendToClient(clients.value(host), str);
+        else
+            slotDisconnected(clients.value(host));   // Слот нерабочий удалим его
+    }
+}
+
+
 void TcpServer::slotNewConnection()
 {
     QTcpSocket* pClientSocket = m_ptcpServer->nextPendingConnection();
-    connect(pClientSocket, SIGNAL(disconnected()), pClientSocket, SLOT(deleteLater()));
+    connect(pClientSocket, SIGNAL(disconnected()), pClientSocket, SLOT(slotDisconnected(pClientSocket)));
     connect(pClientSocket, SIGNAL(readyRead()), this, SLOT(slotReadClient()));
+}
+
+
+void TcpServer::slotDisconnected(QTcpSocket* clientSocket)
+{
+    clients.remove(clientSocket->peerAddress().toString());         // Удалим клиента из списка обслуживаемых
+    clientSocket->deleteLater();
 }
 
 
@@ -49,6 +77,7 @@ void TcpServer::slotReadClient()
     QTcpSocket* pClientSocket = (QTcpSocket*)sender();
     QDataStream in(pClientSocket);
     in.setVersion(QDataStream::Qt_4_0);
+    clients.insert(pClientSocket->peerAddress().toString(), pClientSocket);       // Добавим клиента в список обслуживаемых
     for (;;)
     {
         if (!m_nNextBlockSize)
@@ -83,17 +112,20 @@ void TcpServer::sendToClient(QTcpSocket* pSocket, QString str)
     out.device()->seek(0);
     out << quint16(arrBlock.size() - sizeof(quint16));
     pSocket->write(arrBlock);
+    app->debug(5, QString("To %1: %2").arg(pSocket->peerAddress().toString()).arg(str));
 }
 
 
-void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
+void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
-    if (str.left(4) == "=fr=" && TApplication::exemplar()->drvFRisValid())
+    QString resStr;
+    app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
+    if (str.left(4) == "=fr=" && app->drvFRisValid())
     {   // Если это запрос работы с фискальным регистратором и фискальный регистратор работает
         int length = str.length() - 4;
         QString lStr = str.right(length);
         QByteArray data;
-        QMyExtSerialPort* serialPort = TApplication::exemplar()->getDrvFR()->getSerialPort();
+        QMyExtSerialPort* serialPort = app->getDrvFR()->getSerialPort();
         if (lStr.left(2) == ">>")   // Если получен запрос на запись данных в ФР
         {
             length -= 2;
@@ -101,49 +133,61 @@ void    TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
             data.append(lStr);
             data = data.fromHex(data);
             qint64 result = serialPort->writeData(data.data(), data.count(), true);
-            sendToClient(pClientSocket, QString("%1").arg(result));
+            resStr = QString("%1").arg(result);
+            sendToClient(pClientSocket, resStr);
         }
         else if (lStr.left(2) == "<<")  // Если получен запрос на чтение данных из ФР
         {
             length -= 2;
             lStr = lStr.right(length);
-            data.append(lStr);
-            data = data.fromHex(data);
-            qint64 result = serialPort->readData(data.data(), data.count(), true);
-            sendToClient(pClientSocket, QString("%1<<%2").arg(result).arg(data.toHex().data()));
+            int count = lStr.toInt();
+            data.append(QByteArray(count, ' '));
+            qint64 result = serialPort->readData(data.data(), count, true);
+            if (result == 0)
+                data.clear();
+            resStr = QString("%1<<%2").arg(result).arg(data.toHex().data());
+            sendToClient(pClientSocket, resStr);
         }
         else if (lStr.left(9) == "writeLog=")  // Если получен запрос на запись журнала
         {
             length -= 9;
             lStr = lStr.right(length);
             serialPort->writeLog(lStr, true);
-            sendToClient(pClientSocket, "Ok");
+            resStr = "Ok";
+            sendToClient(pClientSocket, resStr);
         }
     }
     else if (str.indexOf("driverFRisReady") == 0)
     {
-        bool result = TApplication::exemplar()->getDrvFR()->deviceIsReady();
-        sendToClient(pClientSocket, (result ? "true" : "false"));
+        bool result = app->getDrvFR()->deviceIsReady();
+        resStr = (result ? "true" : "false");
+        sendToClient(pClientSocket, resStr);
     }
     else if (str.indexOf("isLockedDriverFR") == 0)
     {
-        bool result = TApplication::exemplar()->getDrvFR()->isLocked();
-        sendToClient(pClientSocket, (result ? "true" : "false"));
+        bool result = app->getDrvFR()->isLocked();
     }
     else if (str.indexOf("setLockDriverFR(true)") == 0)
     {
-        TApplication::exemplar()->getDrvFR()->setLock(true);
-        sendToClient(pClientSocket, "Ok");
+        app->getDrvFR()->setLock(true, pClientSocket->peerAddress().toString());
+        resStr = "Ok";
+        sendToClient(pClientSocket, resStr);
     }
     else if (str.indexOf("setLockDriverFR(false)") == 0)
     {
-        TApplication::exemplar()->getDrvFR()->setLock(false);
-        sendToClient(pClientSocket, "Ok");
+        app->getDrvFR()->setLock(false);
+        resStr = "Ok";
+        sendToClient(pClientSocket, resStr);
     }
     else if (str.indexOf("app.exit") == 0)
     {
-        sendToClient(pClientSocket, "Ok");
-        TApplication::exemplar()->quit();
+        resStr = "Ok";
+        sendToClient(pClientSocket, resStr);
+        app->quit();
+    }
+    else if (str.indexOf("*ping*Ok*") == 0)
+    {
+        pingOk = true;
     }
 }
 

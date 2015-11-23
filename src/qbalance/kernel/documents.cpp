@@ -82,6 +82,7 @@ bool Documents::add()
                 grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             }
             setCurrentDocument(strNum);
+            currentRow = tableModel->rowCount() - 1;
             Essence::saveOldValues();
             form->setButtons();
             grdTable->setFocus();
@@ -112,6 +113,7 @@ bool Documents::remove(bool noAsk)
 void Documents::view()
 {
     setCurrentDocument(getValue("код").toInt());
+    currentRow = grdTable->currentIndex().row();
     currentDocument->show();
 }
 
@@ -181,7 +183,7 @@ void Documents::setValue(QString n, QVariant value)
     {
         if (n.toUpper() == columnsProperties.at(i).column)
         {
-            Essence::setValue(n, value);
+            Essence::setValue(n, value, currentRow);
             return;
         }
     }
@@ -189,7 +191,7 @@ void Documents::setValue(QString n, QVariant value)
     {
         if ((n.toUpper() == attrFields.at(i).column) || (n.toUpper() == prefix + attrFields.at(i).column))
         {
-            Essence::setValue(prefix + n, value);
+            Essence::setValue(prefix + n, value, currentRow);
             return;
         }
     }

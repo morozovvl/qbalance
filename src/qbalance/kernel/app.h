@@ -60,10 +60,14 @@ enum  ReportTemplateTypes
 
 
 struct ConfigVars {
+    bool            frNeeded;
     QString         barCodeReaderPort;          // COM-порт сканера штрих кодов
     QString         frDriverPort;               // COM-порт фискального регистратора
     int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
     int             frDriverTimeOut;
+    int             frLocalDriverTimeOut;
+    int             frRemoteDriverTimeOut;
+    int             frNetDriverTimeOut;
     int             frDriverPassword;
     bool            frConnectSignal;            // Подавать сигнал при соединении с ФР
     QString         cardReaderPrefix;           // Префикс магнитной карты
@@ -150,6 +154,8 @@ public:
     QString getReportTemplateExt();
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
+    void setFR();
+    TcpServer* getTcpServer() { return tcpServer; }
 
     Q_INVOKABLE void virtual showError(QString);
     Q_INVOKABLE void virtual showCriticalError(QString);
@@ -167,6 +173,7 @@ public:
     Q_INVOKABLE void printToArray(QString, QString);
     Q_INVOKABLE void printArray(QString);
     Q_INVOKABLE void clearPrintArrays();
+    Q_INVOKABLE int printArrayCount(QString);
     MessageWindow* getMessageWindow() { return messagesWindow; }
     int getSecDiff() { return secDiff; }
     void    initConfig();
@@ -184,7 +191,7 @@ public:
 
     ConfigVars* getConfig() { return &config; }
 
-    Q_INVOKABLE void sendSMS(QString);                     // Посылка СМС через сервис SMS.RU
+    Q_INVOKABLE void sendSMS(QString url, QString number, QString message, QString from = "");                     // Посылка СМС через сервис SMS.RU
 
     void    setScriptMode(bool mode) { scriptMode = mode; }
     bool    isScriptMode() { return scriptMode; }

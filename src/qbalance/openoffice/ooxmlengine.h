@@ -31,6 +31,7 @@ public:
     OOXMLEngine();
     ~OOXMLEngine();
     Q_INVOKABLE bool open(QString, bool = false);
+    Q_INVOKABLE bool open(QString, QString, bool = false);
     Q_INVOKABLE void close();
     Q_INVOKABLE void setApp(TApplication* a) { app = a; }
     Q_INVOKABLE QDomDocument* getDomDocument() { return & doc; }
@@ -46,6 +47,8 @@ public:
 private:
     TApplication*               app;
     QString                     fileName;
+    QString                     sheetName;
+    QDomNode                    sheetNode;
     QString                     templateFileName;
     QString                     tmpDir;
     QDomDocument                doc;

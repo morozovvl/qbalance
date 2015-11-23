@@ -80,6 +80,7 @@ public:
     void eventCalcTable();
     void eventSetEnabled(bool);
     void eventAfterRowChanged();
+    void eventBeforeRowChanged();
     void eventPhotoLoaded();
     void eventPreparePrintValues();
     QString preparePictureUrl(Essence*);

@@ -156,3 +156,11 @@ QString Saldo::transformSelectStatement(QString statement) {
 }
 
 
+void Saldo::setPhotoPath(QString path)
+{
+    Essence::setPhotoPath(path);
+    dictionaries->getDictionary(dictionaryName)->setPhotoPath(path);
+}
+
+
+

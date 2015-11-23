@@ -91,6 +91,7 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 void Form::close()
 {
     writeSettings();
+    hide();
 }
 
 

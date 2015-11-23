@@ -437,12 +437,6 @@ bool Dictionary::open(QString command, QString tName)
 
 void Dictionary::close()
 {
-    if (form != 0 && form->isDefaultForm())
-    {
-        form->close();
-        delete form;
-        form = 0;
-    }
     Essence::close();
 }
 

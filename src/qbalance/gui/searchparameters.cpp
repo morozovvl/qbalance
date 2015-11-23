@@ -186,7 +186,7 @@ void SearchParameters::setParameter(QString tableName, QString parameter)
 
 QString SearchParameters::getFilter(QString dictName, QString defFilter)
 {
-    QString filter = defFilter;
+    QString filter;
     QVector<sParam> searchParameters = getParameters();
     for (int i = 0; i < searchParameters.size(); i++)
     {
@@ -246,11 +246,14 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                 filter.append(QString("%1.%2 = %3").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
                                                        .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".КОД"))
                                                        .arg(id));
+                filter = "(" + filter + ")";
             }
             break;
         }
     }
-    return filter;
+    if (defFilter.size() > 0 && filter.size() > 0)
+        filter = " AND " + filter;
+    return defFilter + filter;
 }
 
 

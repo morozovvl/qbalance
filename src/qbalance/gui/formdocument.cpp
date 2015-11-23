@@ -208,11 +208,11 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 void FormDocument::show()
 {
     if (dateEdit != 0)
-        dateEdit->setDate(getParent()->getParent()->getValue("дата").toDate());
+        dateEdit->setDate(getParent()->getParent()->getValue("ДАТА").toDate());
     if (numberEdit != 0)
-        numberEdit->setText(getParent()->getParent()->getValue("номер").toString());
+        numberEdit->setText(getParent()->getParent()->getValue("НОМЕР").toString());
     if (itogNumeric != 0)
-        itogNumeric->setValue(getParent()->getParent()->getValue("сумма"));
+        itogNumeric->setValue(getParent()->getParent()->getValue("СУММА"));
     if (parameters != 0)
     {
         foreach (QString dictName, parameters->getKeys())
@@ -242,15 +242,12 @@ void FormDocument::cmdOk()
     FormGrid::cmdOk();
     if (getParent() != 0)
     {
-        if (dateEdit != 0)
-            getParent()->getParent()->setValue("ДАТА", QVariant(dateEdit->date()));
-        if (numberEdit != 0)
-            getParent()->getParent()->setValue("НОМЕР", QVariant(numberEdit->text()));
         getParent()->getParent()->getGridTable()->setFocus();
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
+
         getParent()->saveChanges();
     }
 }

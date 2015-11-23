@@ -62,6 +62,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     scriptFileName =  tagName + ".qs";
     scriptEngineEnabled = true;                 // По умолчанию разрешена загрузка скриптового движка
     photoPath = "";
+    photoPathVerified = false;
     photoIdField = "";
     photoEnabled = false;
     m_networkAccessManager = 0;
@@ -155,9 +156,12 @@ QVariant Essence::getValue(QString n, int row)
             else
             {
                 int r = 0;
-                if (grdTable != 0 && grdTable->currentIndex().isValid())
-                    r = grdTable->currentIndex().row();
-
+                if (grdTable != 0)
+                {
+                    QModelIndex index = grdTable->currentIndex();
+                    if (index.isValid())
+                        r = grdTable->currentIndex().row();
+                }
                 result = tableModel->record(r).value(name);
             }
             QVariant::Type type = record.field(name).type();
@@ -255,6 +259,17 @@ int Essence::locateId(qulonglong id)
 }
 
 
+int Essence::locateValue(QString fieldName, QVariant value)
+{
+    for (int i = 0; i < tableModel->rowCount(); i++)
+    {
+        if (getValue(fieldName, i) == value)
+            return i;
+    }
+    return -1;
+}
+
+
 QString Essence::getName(int row)
 {
     if (row >= 0)
@@ -307,13 +322,14 @@ QString Essence::getPhotoPath()
 {
     QString path;
     // Попробуем получить локальный путь к фотографии
-    if (isDictionary && photoPath.size() == 0)
+    if (isDictionary && photoPath.size() == 0 && !photoPathVerified)
     {
         // Если путь, откуда нужно брать фотографии не установлен, то установим его по умолчанию для данного справочника
         path = db->getDictionaryPhotoPath(tableName);
         if (path.size() == 0)
             photoEnabled = false;
         photoPath = path;
+        photoPathVerified = true;           // Чтоб больше не спрашивала
     }
     else
     {
@@ -321,7 +337,6 @@ QString Essence::getPhotoPath()
     }
     return path;
 }
-
 
 
 QString Essence::getLocalPhotoFile(QString path)
@@ -555,9 +570,7 @@ void Essence::hide()
 void Essence::view()
 {
     if (form != 0)
-    {
         form->getFormWidget()->setFocus(Qt::OtherFocusReason);
-    }
 }
 
 
@@ -576,26 +589,24 @@ bool Essence::open()
 
 void Essence::close()
 {
+    if (scriptEngine != 0)
+        scriptEngine->deleteLater();
+
     if (m_networkAccessManager != 0)
         delete m_networkAccessManager;
     if (form != 0)
     {
-        closeFormEvent(form);
         form->close();
         if (form->isDefaultForm())
-        {
             delete form;
-        }
+        form = 0;
     }
-    closeScriptEngine();
     Table::close();
 }
 
 
 void Essence::setScriptEngine()
 {
-//    if (scriptEngine != 0)
-//        delete scriptEngine;
     scriptEngine = new ScriptEngine(this);
 }
 
@@ -656,11 +667,11 @@ void Essence::setEnabled(bool en)
     if (scriptEngine != 0)
         scriptEngine->eventSetEnabled(en);
     if (enabled)
-        form->getFormWidget()->setWindowTitle(form->getFormWidget()->windowTitle().remove(disabledMessage));
+        setFormTitle(getFormTitle().remove(disabledMessage));
     else
     {
-        if (!form->getFormWidget()->windowTitle().contains(disabledMessage))
-            form->getFormWidget()->setWindowTitle(form->getFormWidget()->windowTitle().append(disabledMessage));
+        if (!getFormTitle().contains(disabledMessage))
+            setFormTitle(form->getFormWidget()->windowTitle().append(disabledMessage));
     }
 }
 
@@ -692,13 +703,17 @@ void Essence::setFormTitle(QString title) {
 
 QString Essence::getFormTitle()
 {
-    return form->getFormWidget()->windowTitle();
+    if (form != 0)
+        return form->getFormWidget()->windowTitle();
+    return QString();
 }
 
 
 bool Essence::isFormSelected()
 {
-    return form->isFormSelected();
+    if (form != 0)
+        return form->isFormSelected();
+    return false;
 }
 
 
@@ -779,6 +794,13 @@ void Essence::afterRowChanged()
 {
     if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventAfterRowChanged();
+}
+
+
+void Essence::beforeRowChanged()
+{
+    if (scriptEngineEnabled && getScriptEngine() != 0)
+        getScriptEngine()->eventBeforeRowChanged();
 }
 
 

@@ -46,13 +46,17 @@ private:
     QFrame* frame;
     int currentItem;
 
+    QCheckBox* cbFrNeeded;
     QLineEdit* lnFrPortName;
     QLineEdit* barCodePortName;
     QComboBox* lnBoud;
     QLineEdit* lnPort;
     QLineEdit* lnAddress;
     QLineEdit* lnTimeOut;
-    QCheckBox* lnConnectSignal;
+    QLineEdit* lnLocalTimeOut;
+    QLineEdit* lnRemoteTimeOut;
+    QLineEdit* lnNetTimeOut;
+    QCheckBox* cbConnectSignal;
 
     void dictAdd();
     void dictProperties();

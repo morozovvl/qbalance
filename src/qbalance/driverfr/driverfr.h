@@ -596,7 +596,7 @@ public:
     char*  getValueOfFieldString() { return ValueOfFieldString; }
 
     void setBaudRate(int a) { BaudRate = a; }
-    void setBarCode(QString a) { qstrncpy(BarCode, a.toLocal8Bit().data(), 13); }
+    void setBarCode(QString a) { memcpy(BarCode, a.toLocal8Bit().data(), 13); }
     void setCheckIsClosed(int a) { CheckIsClosed = a; }
     void setCheckIsMadeOut(int a) { CheckIsMadeOut = a; }
     void setCurrentDozeInMilliliters(int a) { CurrentDozeInMilliliters = a; }
@@ -606,7 +606,7 @@ public:
     void setDepartment(int a) { Department = a; }
     void setDeviceCode(int a) { DeviceCode = a; }
     void setDiscountOnCheck(double a) { DiscountOnCheck = a; }
-    void setDocumentName(QString a) { qstrncpy(DocumentName, a.toLocal8Bit().data(), 30); }
+    void setDocumentName(QString a) { memcpy(DocumentName, a.toLocal8Bit().data(), 30); }
     void setDocumentNumber(int a) { DocumentNumber = a; }
     void setOpenDocumentNumber(int a) { OpenDocumentNumber = a; }
     void setDozeInMilliliters(int a) { DozeInMilliliters = a; }
@@ -617,7 +617,7 @@ public:
     void setFirstLineNumber(int a) { FirstLineNumber = a; }
     void setFirstSessionDate(struct tm a) { FirstSessionDate = a; }
     void setFirstSessionNumber(int a) { FirstSessionNumber = a; }
-    void setINN(QString a) { qstrncpy(INN, a.toLocal8Bit().data(), 12); }
+    void setINN(QString a) { memcpy(INN, a.toLocal8Bit().data(), 12); }
     void setJournalRibbonIsPresent(int a) { JournalRibbonIsPresent = a; }
     void setJournalRibbonOpticalSensor(int a) { JournalRibbonOpticalSensor = a; }
     void setJournalRibbonLever(int a) { JournalRibbonLever = a; }
@@ -625,7 +625,7 @@ public:
     void setLastLineNumber(int a) { LastLineNumber = a; }
     void setLastSessionDate(struct tm a) { LastSessionDate = a; }
     void setLastSessionNumber(int a) { LastSessionNumber = a; }
-    void setLicense(QString a) { qstrncpy(License, a.toLocal8Bit().data(), 5); }
+    void setLicense(QString a) { memcpy(License, a.toLocal8Bit().data(), 5); }
     void setLogicalNumber(int a) { LogicalNumber = a; }
     void setLineNumber(int a) { LineNumber = a; }
     void setLineData(unsigned char* a) { strncpy((char*)LineData, (char*)a, 41); }
@@ -642,18 +642,18 @@ public:
     void setReportType(int a) { ReportType = a; }
     void setRegistrationNumber(int a) { RegistrationNumber = a; }
     void setRKNumber(int a) { RKNumber = a; }
-    void setRNM(QString a) { qstrncpy(RNM, a.toLocal8Bit().data(), 14); }
+    void setRNM(QString a) { memcpy(RNM, a.toLocal8Bit().data(), 14); }
     void setRoughValve(int a) { RoughValve = a; }
     void setRowNumber(int a) { RowNumber = a; }
     void setRunningPeriod(int a) { RunningPeriod = a; }
-    void setSerialNumber(QString a) { qstrncpy(SerialNumber, a.toLocal8Bit().data(), 7); }
+    void setSerialNumber(QString a) { memcpy(SerialNumber, a.toLocal8Bit().data(), 7); }
     void setSessionNumber(int a) { SessionNumber = a; }
     void setSlowingInMilliliters(int a) { SlowingInMilliliters = a; }
     void setSlowingValve(int a) { SlowingValve = a; }
     void setStringForPrinting(QString a)
     {
         if (a.size() > 0)
-            qstrncpy(StringForPrinting, a.toLocal8Bit().data(), 250);
+            memcpy(StringForPrinting, a.toLocal8Bit().data(), 250);
         else
             StringForPrinting[0] = 0;
     }
@@ -691,7 +691,8 @@ public:
     QMyExtSerialPort* getSerialPort() { return serialPort; }
     bool isRemote() { return remote; }
     Q_INVOKABLE bool isLocked();
-    void        setLock(bool lock);
+    void        setLock(bool lock, QString lockedByHost = "");
+    QString     getLockedByHost() { return lockedByHost; }          // Вернуть кем заблокирован фискальник
     Q_INVOKABLE void setProgressDialogValue(int value)
     {
         if (progressDialog != 0)
@@ -700,10 +701,12 @@ public:
     Q_INVOKABLE void setShowProgressBar(bool show) { showProgressBar = show; }
     Q_INVOKABLE void writeLog(QString = "");
     bool deviceIsReady();
+    int decodeTimeOut(int);
+    int codeTimeOut(int);
 
 
 // Функции для работы с фискальным регистратором
-    Q_INVOKABLE bool Connect();
+    Q_INVOKABLE bool Connect(bool showError = true);
     Q_INVOKABLE void DisConnect();
     Q_INVOKABLE int Beep();
     Q_INVOKABLE int Buy();
@@ -798,7 +801,7 @@ public:
 private:
 
     int checkState();
-    unsigned short int readByte(int = 0, bool = false);
+    unsigned short int readByte();
     int readBytes(unsigned char *, int);
     int sendENQ();
     int sendNAK();
@@ -823,6 +826,7 @@ private:
     frProp         fr;     // Функции фискального регистратора
     bool            connected;
     bool            locked;     // Фискальный регистратор заблокирован на период работы с клиентом
+    QString         lockedByHost;   // IP адрес хоста, который заблокировал фискальник. Если заблокирован локальным хостом, то пустая строка
     struct timeval  timeout;
     static BaudRateType LineSpeedVal[7];
     static unsigned commlen[0x100];
@@ -833,6 +837,7 @@ private:
     static const char* ecrmode8desc[];
     static const char* ecrsubmodedesc[];
     static const char* devcodedesc[];
+    static const char* failConnectErrorMessage;
 
     QTextCodec *codec;
     TApplication* app;

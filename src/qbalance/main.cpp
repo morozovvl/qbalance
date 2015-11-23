@@ -16,12 +16,28 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
+//-h 192.168.0.1 -p 5432 -l "sa Морозов Владимир Александрович" -db enterprise -pw kfz192vbe -d1 -d4 -d5
+
+//#ifdef Q_OS_LINUX
+//#define CRASHHANDLER
+//#endif
+
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 #include <QtCore/QResource>
 #include <QtPlugin>
 #include "kernel/app.h"
+
+#ifdef CRASHHANDLER
+#include "crashhandler/crashhandler.h"
+
+
+int buggyFunc() {
+    delete reinterpret_cast<QString*>(0xFEE1DEAD);
+    return 0;
+}
+#endif
 
 
 bool readParameters(int argc, char *argv[]) {
@@ -40,6 +56,7 @@ bool readParameters(int argc, char *argv[]) {
             out << QObject::trUtf8("  -d2| --debug2     - Запустить программу в режиме отладки алгоритмов ядра (файл debug2.log)\n");
             out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
             out << QObject::trUtf8("  -d4| --debug4     - Запустить программу в режиме отладки устройства COM-порта (файл debug4.log)\n");
+            out << QObject::trUtf8("  -d5| --debug5     - Запустить программу в режиме отладки обмена между экземплярами приложения (файл debug5.log)\n");
             out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
             out << QObject::trUtf8("  -p | --port       - Порт на хосте\n");
             out << QObject::trUtf8("  -db| --database   - Наименование базы данных\n");
@@ -77,6 +94,11 @@ bool readParameters(int argc, char *argv[]) {
                  QString(argv[i]).compare("--debug4", Qt::CaseInsensitive) == 0)
             {
                 TApplication::setDebugMode(4);
+            }
+        else if (QString(argv[i]).compare("-d5", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug5", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::setDebugMode(5);
             }
         else if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--host", Qt::CaseInsensitive) == 0)
@@ -146,6 +168,11 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForLocale(TApplication::codec());
 
     TApplication application(argc, argv);
+
+#ifdef CRASHHANDLER
+    Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->applicationDirPath() + "/crashdumps");
+#endif
+
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
@@ -153,7 +180,6 @@ int main(int argc, char *argv[])
     if (lStart) {
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
-        application.debug(0, "\n");
         application.debug(0, "Program startup.");
 
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме

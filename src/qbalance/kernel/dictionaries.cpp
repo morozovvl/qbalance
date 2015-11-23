@@ -52,7 +52,7 @@ Dictionary* Dictionaries::getDictionary(QString dictName)
         if (!addDictionary(dictName))
             return 0;
     }
-    return dictionariesList[dictName];
+    return dictionariesList.value(dictName);
 }
 
 
@@ -82,9 +82,6 @@ bool Dictionaries::addDictionary(QString dictName)
         dict = new Dictionary(dictName, this);
         dict->setDictionaries(this);
         dict->setPhotoEnabled(true);
-
-//        if (document != 0)                         // Была команда выключить скрипты
-//            dict->setScriptEngineEnabled(false);
 
         if (dict->open()) {
             dictionariesList.insert(dictName, dict);
@@ -167,11 +164,19 @@ void Dictionaries::removeDictionary(QString dictName)
         return;
     if (dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-//        Dictionary* dict = getDictionary(dictName);
-//        dict->close();
+        Dictionary* dict = getDictionary(dictName);
+        if (!dict->isSaldo())
+        {
+            dict->close();
+            delete dict;
+        }
+        else
+        {
+            Saldo* sal = (Saldo*)dict;
+            sal->close();
+        }
         dictionariesList.remove(dictName);
         dictionariesNamesList.removeAt(dictionariesNamesList.indexOf(dictName));
-//        delete dict;
     }
 }
 

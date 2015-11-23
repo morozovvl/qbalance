@@ -32,12 +32,16 @@ ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {
     app = TApplication::exemplar();
 
+    cbFrNeeded = new QCheckBox();
     lnFrPortName = new QLineEdit();
     lnBoud = new QComboBox();
     lnPort = new QLineEdit();
     lnAddress = new QLineEdit();
     lnTimeOut = new QLineEdit();
-    lnConnectSignal = new QCheckBox();
+    lnLocalTimeOut = new QLineEdit();
+    lnRemoteTimeOut = new QLineEdit();
+    lnNetTimeOut = new QLineEdit();
+    cbConnectSignal = new QCheckBox();
     barCodePortName = new QLineEdit();
 }
 
@@ -49,7 +53,11 @@ ConfigForm::~ConfigForm()
     delete lnPort;
     delete lnAddress;
     delete lnTimeOut;
-    delete lnConnectSignal;
+    delete lnLocalTimeOut;
+    delete lnRemoteTimeOut;
+    delete lnNetTimeOut;
+    delete cbConnectSignal;
+    delete cbFrNeeded;
     delete barCodePortName;
 }
 
@@ -180,11 +188,18 @@ void ConfigForm::fr()
     }
     QGridLayout* vLayout = new QGridLayout();
 
+    QLabel* lblFrNeeded = new QLabel(QObject::trUtf8("Использовать ФР:"));
+    lblFrNeeded->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    cbFrNeeded->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblFrNeeded, 0, 0, Qt::AlignLeft);
+    vLayout->addWidget(cbFrNeeded, 0, 1, Qt::AlignLeft);
+
+
     QLabel* lblPortName = new QLabel(QObject::trUtf8("COM порт:"));
     lblPortName->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     lnFrPortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblPortName, 0, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnFrPortName, 0, 1, Qt::AlignLeft);
+    vLayout->addWidget(lblPortName, 1, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnFrPortName, 1, 1, Qt::AlignLeft);
 
     QLabel* lblBoud = new QLabel(QObject::trUtf8("Скорость:"));
     lblBoud->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
@@ -198,43 +213,66 @@ void ConfigForm::fr()
     lnBoud->addItem("115200");
     lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
 
-    vLayout->addWidget(lblBoud, 1, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnBoud, 1, 1, Qt::AlignLeft);
+    vLayout->addWidget(lblBoud, 2, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnBoud, 2, 1, Qt::AlignLeft);
 
     QLabel* lblPort = new QLabel(QObject::trUtf8("Порт сервера ФР:"));
     lblPort->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     lnPort->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblPort, 2, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnPort, 2, 1, Qt::AlignLeft);
+    vLayout->addWidget(lblPort, 3, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnPort, 3, 1, Qt::AlignLeft);
 
     QLabel* lblAddress = new QLabel(QObject::trUtf8("IP адрес сервера ФР:"));
     lblAddress->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblAddress, 3, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnAddress, 3, 1, Qt::AlignLeft);
+    vLayout->addWidget(lblAddress, 4, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnAddress, 4, 1, Qt::AlignLeft);
 
     QLabel* lblTimeOut = new QLabel(QObject::trUtf8("Таймаут:"));
     lblTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     lnTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblTimeOut, 4, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnTimeOut, 4, 1, Qt::AlignLeft);
+    vLayout->addWidget(lblTimeOut, 5, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnTimeOut, 5, 1, Qt::AlignLeft);
+
+    QLabel* lblLocalTimeOut = new QLabel(QObject::trUtf8("Таймаут для локального ФР, мс:"));
+    lblLocalTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnLocalTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblLocalTimeOut, 6, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnLocalTimeOut, 6, 1, Qt::AlignLeft);
+
+    QLabel* lblRemoteTimeOut = new QLabel(QObject::trUtf8("Таймаут для сетевого ФР, мс:"));
+    lblRemoteTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnRemoteTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblRemoteTimeOut, 7, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnRemoteTimeOut, 7, 1, Qt::AlignLeft);
+
+    QLabel* lblNetTimeOut = new QLabel(QObject::trUtf8("Таймаут для обмена по сети, мс:"));
+    lblNetTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnNetTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblNetTimeOut, 8, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnNetTimeOut, 8, 1, Qt::AlignLeft);
 
     QLabel* lblSignal = new QLabel(QObject::trUtf8("Подавать сигнал на ФР при подключении:"));
     lblSignal->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnConnectSignal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblSignal, 5, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnConnectSignal, 5, 1, Qt::AlignLeft);
+    cbConnectSignal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    vLayout->setRowStretch(6, 1);
+    vLayout->addWidget(lblSignal, 9, 0, Qt::AlignLeft);
+    vLayout->addWidget(cbConnectSignal, 9, 1, Qt::AlignLeft);
+
+    vLayout->setRowStretch(10, 1);
 
     frame->setLayout(vLayout);
 
+    cbFrNeeded->setCheckState(app->getConfig()->frNeeded ? Qt::Checked : Qt::Unchecked);
     lnFrPortName->setText(app->getConfig()->frDriverPort);
     lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
     lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
     lnAddress->setText(app->getConfig()->remoteHost);
     lnTimeOut->setText(QString("%1").arg(app->getConfig()->frDriverTimeOut));
-    lnConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
+    lnLocalTimeOut->setText(QString("%1").arg(app->getDrvFR()->decodeTimeOut(app->getConfig()->frLocalDriverTimeOut)));
+    lnRemoteTimeOut->setText(QString("%1").arg(app->getDrvFR()->decodeTimeOut(app->getConfig()->frRemoteDriverTimeOut)));
+    lnNetTimeOut->setText(QString("%1").arg(app->getConfig()->frNetDriverTimeOut));
+    cbConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
 }
 
 
@@ -278,12 +316,16 @@ void ConfigForm::cmdOk()
                 break;
     case 40: pictures();
                 break;
-    case 50: app->getConfig()->frDriverPort = lnFrPortName->text();
+    case 50: app->getConfig()->frNeeded = (cbFrNeeded->checkState() == Qt::Checked ? true : false);
+             app->getConfig()->frDriverPort = lnFrPortName->text();
              app->getConfig()->frDriverBaudRate = lnBoud->currentIndex();
              app->getConfig()->localPort = lnPort->text().toInt();
              app->getConfig()->remoteHost = lnAddress->text();
              app->getConfig()->frDriverTimeOut = lnTimeOut->text().toInt();
-             app->getConfig()->frConnectSignal = (lnConnectSignal->checkState() == Qt::Checked ? true : false);
+             app->getConfig()->frLocalDriverTimeOut = app->getDrvFR()->codeTimeOut(lnLocalTimeOut->text().toInt());
+             app->getConfig()->frRemoteDriverTimeOut = app->getDrvFR()->codeTimeOut(lnRemoteTimeOut->text().toInt());
+             app->getConfig()->frNetDriverTimeOut = lnNetTimeOut->text().toInt();
+             app->getConfig()->frConnectSignal = (cbConnectSignal->checkState() == Qt::Checked ? true : false);
              break;
     case 60: app->getConfig()->barCodeReaderPort = barCodePortName->text();
              break;

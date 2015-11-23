@@ -26,12 +26,16 @@ TcpClient::TcpClient(const QString& strHost, int nPort, QObject *parent /* = 0*/
 {
     m_nNextBlockSize = 0;
     connected = false;
+    hostName = strHost;
+    port = nPort;
     m_pTcpSocket = new QTcpSocket(this);
-    m_pTcpSocket->connectToHost(strHost, nPort);
+    resultReady = false;
+    m_pTcpSocket->connectToHost(hostName, port);
     connect(m_pTcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
     connect(m_pTcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
-    connect(m_pTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError()));
-    resultReady = false;
+    connect(m_pTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
+    TApplication::exemplar()->debug(5, QString("Устанавливаем соединение с хостом %1 и портом %2.").arg(hostName).arg(port));
+    TApplication::exemplar()->debug(5, QString("Статус сокета: %1.").arg(m_pTcpSocket->state()));
 }
 
 
@@ -60,35 +64,71 @@ void TcpClient::slotReadyRead()
 
         result = str;
     }
+    TApplication::exemplar()->debug(5, QString("From %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(result));
+
+    if (result == "*ping*")
+    {
+        sendToServer("*ping*Ok*");
+        result = "";
+    }
+
     resultReady = true;
 }
 
 
-void TcpClient::slotError()
+void TcpClient::slotError(QAbstractSocket::SocketError error)
 {
-    TApplication::exemplar()->showMessageOnStatusBar(tr("Ошибка соединения: %1.\n").arg(m_pTcpSocket->errorString()));
+    TApplication::exemplar()->debug(5, QString("Ошибка: %1: %2").arg(error).arg(m_pTcpSocket->errorString()));
+    TApplication::exemplar()->debug(5, QString("Соединение разорвано"));
+    connected = false;
 }
 
 
-QString TcpClient::sendToServer(QString str)
+bool TcpClient::isValid()
 {
-    resultReady = false;                    // Результат запроса еще не готов
-    result = "";
-    QByteArray arrBlock;
-    QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << quint16(0) << str;
-    out.device()->seek(0);
-    out << quint16(arrBlock.size() - sizeof(quint16));
-    m_pTcpSocket->write(arrBlock);
-    m_pTcpSocket->waitForReadyRead(1000);
-    return result;
+    return connected;
+}
+
+
+void TcpClient::logError()
+{
+    TApplication::exemplar()->debug(5, QString("Cоединение с хостом %1 и портом %2 не установлено.").arg(hostName).arg(port));
+    TApplication::exemplar()->debug(5, QString("Ошибка: %1").arg(m_pTcpSocket->errorString()));
+    TApplication::exemplar()->debug(5, QString("Статус сокета: %1.").arg(m_pTcpSocket->state()));
+}
+
+bool TcpClient::sendToServer(QString str)
+{
+    if (connected)
+    {
+        resultReady = false;                    // Результат запроса еще не готов
+        QByteArray arrBlock;
+        QDataStream out(&arrBlock, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_0);
+        out << quint16(0) << str;
+        out.device()->seek(0);
+        out << quint16(arrBlock.size() - sizeof(quint16));
+        m_pTcpSocket->write(arrBlock);
+        TApplication::exemplar()->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
+        return m_pTcpSocket->waitForReadyRead(1000);
+    }
+    return false;
 }
 
 
 void TcpClient::slotConnected()
 {
-    connected = true;
+    if (m_pTcpSocket->localAddress() != m_pTcpSocket->peerAddress())
+    {
+        connected = true;
+        TApplication::exemplar()->debug(5, "Соединение установлено.");
+        TApplication::exemplar()->debug(5, QString("Статус сокета: %1.").arg(m_pTcpSocket->state()));
+    }
+    else
+    {
+        connected = false;
+        TApplication::exemplar()->debug(5, "Не будем создавать TCP клиент, т.к. TCP сервер находится на этом же хосте");
+    }
 }
 
 
