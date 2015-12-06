@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 #include <QDebug>
+#include <QImage>
 //#include <boost/crc.hpp>
 #include "essence.h"
 #include "../kernel/app.h"
@@ -391,7 +392,7 @@ QString Essence::getPhotoFile(QString copyTo)
                         {   // Если удалось получить какую-то фотографию
                             app->saveFile(file, &picture);
                             if (copyTo.size() > 0)
-                                app->saveFileToServer(app->getPhotosPath() + "/" + copyTo, file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                                app->saveFileToServer(app->getPhotosPath(copyTo), file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                         }
                     }
                     if (!QFile(file).exists())
@@ -434,7 +435,7 @@ QString Essence::getPhotoFile(QString copyTo)
                     app->saveFileToServer(file, localFile, PictureFileType, true);
                     if (copyTo.size() > 0)
                     {
-                        QString file = app->getPhotosPath() + copyTo;
+                        QString file = app->getPhotosPath(copyTo);
                         if (!QFile(file).exists())
                             db->copyFile(localFile, PictureFileType, copyTo, true);
                     }
@@ -446,9 +447,9 @@ QString Essence::getPhotoFile(QString copyTo)
 }
 
 
-void Essence::removePhoto()
+void Essence::removePhoto(QString photo)
 {
-    QString photoFile = getLocalPhotoFile();
+    QString photoFile = (photo.size() == 0 ? getLocalPhotoFile() : photo);
     if (photoFile.size() > 0)
     {
         QString localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
@@ -471,14 +472,15 @@ void Essence::replyFinished(QNetworkReply* reply)
     if (reply->error() == QNetworkReply::NoError)
     {
         // Данные с фотографией получены, запишем их в файл
-        if (idValue.size())
+        QString localFile = getPhotoPath() + "/" + idValue + ".jpg";
+        QString file = app->getPhotosPath(localFile);
+        QByteArray array = reply->readAll();
+        if (array.size() > 0)
         {
-            QString localFile = getPhotoPath() + "/" + idValue + ".jpg";
-            QString file = app->getPhotosPath(getPhotoPath()) + "/" + idValue + ".jpg";
-            QByteArray array = reply->readAll();
-            if (array.size() > 0)
+            QImage picture;
+            app->saveFile(file, &array);
+            if (picture.load(file))
             {
-                app->saveFile(file, &array);
                 app->showMessageOnStatusBar(QString(tr("Загружена фотография с кодом %1. Осталось загрузить %2")).arg(idValue).arg(urls.size()), 3000);
 
                 if (copyTo.size() > 0)
@@ -492,6 +494,10 @@ void Essence::replyFinished(QNetworkReply* reply)
                     emit photoLoaded();                 // Выведем фотографию на экран
                     scriptEngine->eventPhotoLoaded();
                 }
+            }
+            else
+            {
+                removePhoto(file);
             }
         }
     }
@@ -589,19 +595,45 @@ bool Essence::open()
 
 void Essence::close()
 {
-    if (scriptEngine != 0)
-        scriptEngine->deleteLater();
+    if (form != 0)
+    {
+        if (form->isDefaultForm())
+        {
+            if (grdTable != 0)
+            {
+                grdTable->close();
+                delete grdTable;
+                grdTable = 0;
+            }
+            form->close();
+            delete form;
+            form = 0;
+        }
+        else
+        {
+            if (grdTable != 0)
+            {
+                grdTable->close();
+                grdTable->deleteLater();
+            }
+            form->close();
+            form->deleteLater();
+        }
+    }
 
     if (m_networkAccessManager != 0)
         delete m_networkAccessManager;
-    if (form != 0)
-    {
-        form->close();
-        if (form->isDefaultForm())
-            delete form;
-        form = 0;
-    }
+
+    closeScriptEngine();
+
     Table::close();
+}
+
+
+void Essence::setGrdTable(TableView* gt)
+{
+    grdTable = gt;
+    grdTable->setEssence(this);
 }
 
 
@@ -651,12 +683,9 @@ void Essence::openScriptEngine()
 
 void Essence::closeScriptEngine()
 {
+    closeFormEvent(form);
     if (scriptEngine != 0)
-    {
-        scriptEngine->close();
-        delete scriptEngine;
-        scriptEngine = 0;
-    }
+        scriptEngine->deleteLater();
 }
 
 
@@ -835,8 +864,8 @@ void Essence::updateCurrentRow()
         if (!preparedSelectCurrentRow.isValid())
         {
             QString command = preparedSelectCurrentRow.executedQuery();
-            TApplication::debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
-            TApplication::debug(1, QString("PreparedQuery Expression: %1").arg(command));
+            TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
+            TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
     }
 }
 
@@ -1076,6 +1105,7 @@ void Essence::print(QString fileName)
                                 OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
                                 if (report->open())
                                 {
+                                    report->setFileName(fileName);
                                     report->open(tmpFileName, reportScriptEngine->getReportContext());
                                     report->close();
                                 }

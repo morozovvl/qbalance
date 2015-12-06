@@ -29,7 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
-#include "../gui/tableview.h"
 #include "../gui/searchparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
@@ -117,7 +116,7 @@ bool Document::calculate()
                 }
             }
 
-            row = parent->getGridTable()->currentIndex().row();
+            row = parent->getGrdTable()->currentIndex().row();
             for (int i = 0; i < parent->getTableModel()->record().count(); i++)
             {
                 QString fieldName = parent->getTableModel()->record().fieldName(i);
@@ -782,9 +781,9 @@ bool Document::open()
 
 void Document::close()
 {
-    Essence::close();
     dictionaries->close();
     delete dictionaries;
+    Essence::close();
 }
 
 
@@ -795,7 +794,6 @@ void Document::setForm(QString formName)
         form->close();
         delete form;
     }
-    closeScriptEngine();
 
     form = new FormDocument();
 

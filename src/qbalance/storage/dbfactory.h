@@ -136,6 +136,7 @@ public:
     virtual bool open();
     virtual bool open(QString, QString);
     virtual void close();
+    bool isOpened() { return dbIsOpened; }
     void initDBFactory();
     bool createNewDBs(QString, QString, int);
 
@@ -299,6 +300,7 @@ private:
     QHash<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
     QStringList             commands;
     QList<UpdateValues>     updateValues;
+    bool                    dbIsOpened;
 
     void setError(QString);
     void initObjectNames();

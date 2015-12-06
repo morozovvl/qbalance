@@ -18,9 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 //-h 192.168.0.1 -p 5432 -l "sa Морозов Владимир Александрович" -db enterprise -pw kfz192vbe -d1 -d4 -d5
 
-//#ifdef Q_OS_LINUX
-//#define CRASHHANDLER
-//#endif
+#ifdef Q_OS_LINUX
+#define CRASHHANDLER
+#endif
 
 
 #include <QtCore/QTextCodec>
@@ -28,17 +28,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QResource>
 #include <QtPlugin>
 #include "kernel/app.h"
-
-#ifdef CRASHHANDLER
 #include "crashhandler/crashhandler.h"
 
 
+// Процедура для создания ошибки сегментирования
 int buggyFunc() {
     delete reinterpret_cast<QString*>(0xFEE1DEAD);
     return 0;
 }
-#endif
-
 
 bool readParameters(int argc, char *argv[]) {
     bool lContinue = true;
@@ -65,6 +62,7 @@ bool readParameters(int argc, char *argv[]) {
             out << QObject::trUtf8("  -s | --script     - Выполнить скрипт с заданным именем и выйти\n");
             out << QObject::trUtf8("  -sp| --scriptparameter - Параметр для скрипта (имя файла или строка, которую скрипт должен сам разобрать)\n");
             out << QObject::trUtf8("  -sr| --server     - Запустить программу в режиме сервера\n");
+            out << QObject::trUtf8("  -c | --command    - Послать команду хосту (адрес и порт д.б. заданы параметрами -h и -p, команда в параметре -s)\n");
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
@@ -140,6 +138,11 @@ bool readParameters(int argc, char *argv[]) {
             {
                 TApplication::serverMode = true;
             }
+        else if (QString(argv[i]).compare("-c", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--command", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::setSendCommandMode(true);
+            }
     }
     return lContinue;
 }
@@ -169,9 +172,9 @@ int main(int argc, char *argv[])
 
     TApplication application(argc, argv);
 
-#ifdef CRASHHANDLER
-    Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->applicationDirPath() + "/crashdumps");
-#endif
+    Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->getCrashDumpsPath());
+
+//    buggyFunc();
 
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
@@ -180,6 +183,7 @@ int main(int argc, char *argv[])
     if (lStart) {
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
+        application.setDebugMode(0);
         application.debug(0, "Program startup.");
 
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
@@ -203,5 +207,4 @@ int main(int argc, char *argv[])
         application.quit();
     }
     return lResult;
-
 }

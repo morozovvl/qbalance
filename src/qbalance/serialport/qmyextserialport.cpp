@@ -70,17 +70,8 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
     qint64 result = -1;
     if (!remote)
     {
-        // Сначала пропустим нули, если они есть
-        result = QextSerialPort::readData(data, 1);
-        while ((char*)(data) == 0 && result >= 0)
-        {
-            result = QextSerialPort::readData(data, 1);
-        }
-        // Теперь прочитаем данные
-        if (result >= 0 && maxSize > 1)
-            result += QextSerialPort::readData(data + result, maxSize - 1);
-        if (result > 0)
-            appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
+      result = QextSerialPort::readData(data, maxSize);
+      appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
     }
     else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)
     {
@@ -172,6 +163,7 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
         outLog = out;
     }
 
+/*
     // Удалим лидирующие нули
     while (str.length() > 0)
     {
@@ -180,6 +172,7 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
         else
             break;
     }
+*/
 
     while (str.length() > 0)
     {

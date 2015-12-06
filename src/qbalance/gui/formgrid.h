@@ -61,12 +61,8 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual void activateWidget();
     virtual void keyPressEvent(QKeyEvent*);
-    Q_INVOKABLE Picture* getPicture() { return picture; }
+    Q_INVOKABLE virtual Picture* getPicture() { return picture; }
     virtual QString getFilter() { return ""; }    // Возвращает фильтр для поиска в справочнике
-    Q_INVOKABLE void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false)
-    {
-        grdTable->appendColumnDefinition(number, column, header, readOnly);
-    }
 
 public slots:
     virtual void cmdAdd();

@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QImage>
 #include <QtGui/QPaintEvent>
 #include <QtDesigner/QDesignerExportWidget>
+//#include "../kernel/app.h"
 
 
 class TApplication;

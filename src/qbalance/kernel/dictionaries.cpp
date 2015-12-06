@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/wizarddictionary.h"
-#include "../gui/tableview.h"
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_справочникам", parent)
@@ -143,14 +142,12 @@ bool Dictionaries::addSaldo(QString acc)
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString().trimmed().toLower();
         Saldo* saldo = new Saldo(acc, dictName);
         saldo->setDictionaries(this);
-//        if (document != 0)                         // Была команда выключить скрипты
-//            saldo->setScriptEngineEnabled(false);
-        if (saldo->open()) {
+        if (saldo->open())
+        {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionariesList.insert(alias, saldo);
             saldo->setPhotoEnabled(true);
             saldo->setQuan(true);
-//            addDictionary(dictName);
             return true;
         }
     }
@@ -168,7 +165,6 @@ void Dictionaries::removeDictionary(QString dictName)
         if (!dict->isSaldo())
         {
             dict->close();
-            delete dict;
         }
         else
         {
@@ -303,3 +299,4 @@ void Dictionaries::setOrderClause(QString)
 {
     Table::setOrderClause(db->getObjectNameCom("доступ_к_справочникам.имя"));
 }
+

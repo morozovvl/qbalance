@@ -90,7 +90,8 @@ void FormGridSearch::close()
         if (parameters != 0)
         {
             parameters->close();
-//            delete parameters;
+            delete parameters;
+            parameters = 0;
         }
     }
     FormGrid::close();

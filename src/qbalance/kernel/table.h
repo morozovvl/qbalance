@@ -45,7 +45,7 @@ public:
 
     virtual QList<FieldType>*           getColumnsProperties();
     virtual QList<FieldType>            returnColumnsProperties();
-    MySqlRelationalTableModel*          getTableModel() { return tableModel; }
+    virtual MySqlRelationalTableModel*  getTableModel() { return tableModel; }
     virtual QString                     transformSelectStatement(QString string) { return string; }
 
     Q_INVOKABLE virtual QStringList     getFieldsList();

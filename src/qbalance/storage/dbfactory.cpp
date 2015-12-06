@@ -36,6 +36,7 @@ DBFactory::DBFactory()
     dbExtend = new QSqlDatabase(QSqlDatabase::addDatabase("QPSQL", "qt_sql_pictures_connection"));
     extDbExist = true;
     commands.clear();
+    dbIsOpened = false;
 }
 
 
@@ -44,6 +45,7 @@ DBFactory::~DBFactory()
     delete dbExtend;
     delete db;
 
+/*
     QStringList list = QSqlDatabase::connectionNames();
 
     for(int i = 0; i < list.count(); ++i)
@@ -51,6 +53,7 @@ DBFactory::~DBFactory()
         QSqlDatabase::database(list[i]).close();
         QSqlDatabase::removeDatabase(list[i]);
     }
+*/
 }
 
 
@@ -160,7 +163,7 @@ void DBFactory::setError(QString errText)
         errorText = "Ошибка соединения";
         emergencyExit = true;
     }
-    TApplication::debug(1, " Error: " + errorText);
+    TApplication::exemplar()->debug(1, " Error: " + errorText);
     TApplication::exemplar()->showError(errText);
     if (emergencyExit)
         TApplication::exemplar()->exit();
@@ -181,32 +184,15 @@ bool DBFactory::open(QString login, QString password)
     db->setPort(port);
     db->setUserName(login);
     db->setPassword(password);
-//  Владимир.
-//  У меня этот вариант не работает ...
-//    db->setConnectOptions("client_encoding=" + TApplication::encoding());
-//    if (db->open(login, password)) {
-//  поэтому пришлось сделать так:
     if (db->open()) {
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         exec("set standard_conforming_strings=on;");
         currentLogin = login;
         currentPassword = password;
 
-        // Запомним для этой сессии сетевое имя компьютера, с которого произошло соединение
-        QStringList env = QProcess::systemEnvironment();
-#ifdef Q_OS_WIN32
-        QString host_name = env.filter("COMPUTERNAME=").at(0);
-        host_name.replace("\"", "").replace("COMPUTERNAME=", "");
-        QString user_name = env.filter("USERNAME=").at(0);
-        user_name.replace("\"", "").replace("USERNAME=", "");
-#else
-        QString host_name = env.filter("HOST=").at(0);
-        host_name.replace("\"", "").replace("HOST=", "");
-        QString user_name = env.filter("USER=").at(0);
-        user_name.replace("\"", "").replace("USER=", "");
-#endif
         pid = getValue("SELECT pg_backend_pid();").toInt();
         clearLockedDocuementList();
+        dbIsOpened = true;
         return true;
     }
     else
@@ -352,7 +338,7 @@ void DBFactory::close()
 
 bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 {
-    TApplication::debug(1, "Exec: " + str);
+    TApplication::exemplar()->debug(1, "Exec: " + str);
 
     clearError();
     QSqlQuery* query;
@@ -376,7 +362,7 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 
 QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
 {
-    TApplication::debug(1, QString("Query: %1").arg(str));
+    TApplication::exemplar()->debug(1, QString("Query: %1").arg(str));
     clearError();
     QSqlQuery result;
     QSqlQuery* query;

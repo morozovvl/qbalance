@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QPushButton>
 #include <QPaintEngine>
 #include <QHttp>
+#include <QFormBuilder>
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -33,8 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
-#include "../gui/tableview.h"
 #include "../engine/documentscriptengine.h"
+#include "../storage/dbfactory.h"
 
 
 QList<int>    TApplication::DebugModes;
@@ -47,6 +48,10 @@ QString TApplication::database         = "";
 QString TApplication::script           = "";
 QString TApplication::scriptParameter  = "";
 bool TApplication::serverMode = false;
+bool TApplication::sendCommandMode = false;
+//DBFactory* TApplication::db            = 0;
+GUIFactory* TApplication::gui          = 0;
+
 
 
 TApplication::TApplication(int & argc, char** argv)
@@ -83,6 +88,7 @@ TApplication::TApplication(int & argc, char** argv)
     timeIsOut = false;
     tcpServer = 0;
     scriptMode = false;
+    DebugModes.clear();
 }
 
 
@@ -126,7 +132,7 @@ Documents* TApplication::getDocuments(int opNumber) {
         if (!doc->open())
             return 0;
         doc->query();
-        doc->getGridTable()->selectRow(doc->getTableModel()->rowCount() - 1);
+        doc->getGrdTable()->selectRow(doc->getTableModel()->rowCount() - 1);
         documents.insert(operName, doc);
     }
     return documents[operName];
@@ -325,23 +331,39 @@ void TApplication::showConfigs() {
 }
 
 
-QString TApplication::getFormsPath(QString formName) {
-    return getAnyPath("forms", formName);
+QString TApplication::getLogsPath() {
+    return applicationDirPath() + "/data/logs/";
 }
 
 
-QString TApplication::getScriptsPath() {
-    return getAnyPath("scripts");
+QString TApplication::getMessagesLogsPath(QString fileName)
+{
+    return getAnyPath("/logs", fileName);
 }
 
 
-QString TApplication::getReportsPath(QString reportName) {
-    return getAnyPath("reports", reportName);
+QString TApplication::getFormsPath(QString fileName) {
+    return getAnyPath("/forms", fileName);
 }
 
 
-QString TApplication::getPhotosPath(QString photoName) {
-    return getAnyPath("photos", photoName);
+QString TApplication::getScriptsPath(QString fileName) {
+    return getAnyPath("/scripts", fileName);
+}
+
+
+QString TApplication::getReportsPath(QString fileName) {
+    return getAnyPath("/reports", fileName);
+}
+
+
+QString TApplication::getPhotosPath(QString fileName) {
+    return getAnyPath("/photos", fileName);
+}
+
+
+QString TApplication::getCrashDumpsPath() {
+    return applicationDirPath() + "/data/crashdumps/";
 }
 
 
@@ -350,15 +372,24 @@ QString TApplication::getAnyPath(QString subPath, QString fName)
     QString dir = applicationDirPath() + "/data";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    dir += "/" + getConfigPrefix();
+    dir += getConfigPrefix();
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    dir += "/" + subPath;
+    dir += subPath;
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    QString fileName = dir + "/" + fName;
+    QString fileName = dir;
+    fileName += "/" + fName;
     return fileName;
 
+}
+
+
+QString TApplication::getConfigPrefix()
+{
+    if (db != 0 && db->isOpened())
+        return QString("/%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName());
+    return QString();
 }
 
 
@@ -372,13 +403,12 @@ Dialog* TApplication::createForm(QString fileName)
     if (fName.size() > 0)
     {
         QFile file(path + fName);
-        if (file.open(QIODevice::ReadOnly))
+        if (file.exists() && file.open(QIODevice::ReadOnly))
         {
             QUiLoader formLoader(gui);
-            formLoader.addPluginPath(applicationDirPath() + "/plugins/designer");
             formLoader.setWorkingDirectory(getFormsPath());
+            formLoader.addPluginPath(applicationDirPath() + "/plugins");
 
-//            formWidget = qobject_cast<Dialog*>(formLoader.load(&file));
             formWidget = (Dialog*)(formLoader.load(&file));
             file.close();
             if (formWidget != 0)
@@ -388,9 +418,7 @@ Dialog* TApplication::createForm(QString fileName)
                     showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                     return 0;
                 }
-//                formWidget->setApp(this);
                 formWidget->findCmdOk();
-//                formWidget->findCmdCancel();
             }
         }
     }
@@ -431,7 +459,7 @@ void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {
     for (int i = 0; i < DebugModes.count(); i++)
     {
-        if (DebugModes.at(i) == mode || mode == 0)
+        if (DebugModes.at(i) == mode)
         {
             QFile file(debugFileName(DebugModes.at(i)));
             if (file.open(QFile::WriteOnly | QFile::Append))
@@ -442,8 +470,6 @@ void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
                 out << value << "\n";
             }
             file.close();
-            if (mode > 0)
-                return;
         }
     }
 }
@@ -471,7 +497,9 @@ void TApplication::showError(QString error)
         gui->showError(error);
     else
         showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
-    debug(0, "Error: " + error + "\n");
+    debug(0, "Error: " + error);
+    for (int i = scriptStack.count(); i > 0; i--)
+        debug(0, QString("Script: %1").arg(scriptStack.at(i - 1)));
 }
 
 
@@ -481,7 +509,7 @@ void TApplication::showCriticalError(QString error)
         gui->showCriticalError(error);
     else
         showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
-    debug(0, "Error: " + error + "\n");
+    debug(0, "Error: " + error);
 }
 
 
@@ -586,19 +614,43 @@ void TApplication::showProcesses()
 int TApplication::runScript(QString scriptName)
 {
     int result = 0;
-    ScriptEngine* scriptEngine;
-    scriptEngine = new ScriptEngine();
-    if (scriptEngine->open())
+    if (!sendCommandMode)
     {
-        scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
-        result = scriptEngine->evaluate(QString("scriptResult")).toInteger();
-        scriptEngine->close();
+        ScriptEngine* scriptEngine;
+        scriptEngine = new ScriptEngine();
+        if (scriptEngine->open())
+        {
+            scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
+            result = scriptEngine->evaluate(QString("scriptResult")).toInteger();
+            scriptEngine->close();
+        }
+        delete scriptEngine;
+        showMessageOnStatusBar(QString(trUtf8("Скрипт %1 %2\n")).arg(scriptName).arg(result ? "выполнен" : "не выполнен"));
+        if (isScriptMode())
+            QTextStream(stdout) << "" << endl;
+        return result;
     }
-    delete scriptEngine;
-    showMessageOnStatusBar(QString(trUtf8("Скрипт %1 %2\n")).arg(scriptName).arg(result ? "выполнен" : "не выполнен"));
-    if (isScriptMode())
-        QTextStream(stdout) << "" << endl;
-    return result;
+    else
+    {
+        TcpClient tcpcl(host, port);
+        if (tcpcl.isValid())
+        {
+            if (tcpcl.sendToServer(script))
+            {
+                if (tcpcl.waitResult())
+                {
+                    QString res = tcpcl.getResult();
+                    showMessageOnStatusBar(res);
+                }
+                else
+                    showError(QString("Нет ответа от хоста %1").arg(host));
+            }
+            else
+                showError(QString("Не удалось послать команду хосту %1").arg(host));
+        }
+        else
+            showError(QString("Не удалось подключиться к хосту %1").arg(host));
+    }
 }
 
 
@@ -844,7 +896,7 @@ void TApplication::saveMessages()
     QString text = messagesWindow->getTextEditor()->toPlainText();
     if (text.size() > 0)
     {
-        QString fileName = getLogPath() + "/messages_" + QDate::currentDate().toString("dd_MM_yyyy");
+        QString fileName = getMessagesLogsPath("messages_" + QDate::currentDate().toString("yyyy_MM_dd"));
         if (QDir().exists(fileName + ".log"))
         {
             for (int i = 1; true; i++)

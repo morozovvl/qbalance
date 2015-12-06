@@ -33,6 +33,7 @@ public:
     ~OOXMLReportEngine();
     virtual bool open() { return ReportEngine::open(); }
     virtual bool open(QString name, ReportContext* context);
+    void         setFileName(QString fName) { fileName = fName; }
 
 private:
     OOXMLEngine*                ooxmlEngine;
@@ -43,6 +44,7 @@ private:
     QDomNodeList                cells;
     QString                     ooPath;
     QString                     tableNameForPrinting;
+    QString                     fileName;
 
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
     bool readExpression(int, int);

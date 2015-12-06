@@ -36,17 +36,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
+TableView::TableView(): QTableView()
 {
-    parent = par;
-    parentWidget = pwgt;
-    name = "TableView";
+}
+
+
+TableView::~TableView()
+{
+    QItemSelectionModel *oldModel = selectionModel();
+    delete oldModel;
+}
+
+
+void TableView::open()
+{
+    parentWidget = 0;
+    name = "tableView";
     app = 0;
     db = 0;
     essence = 0;
     picture = 0;
     tableModel = 0;
-//    fields = 0;
     columnsHeadersSeted = false;
     columns.clear();
     columnsSettingsReaded = false;
@@ -55,13 +65,8 @@ TableView::TableView(QWidget* pwgt, FormGrid* par): QTableView(pwgt)
         verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
 
     setFocusPolicy(Qt::StrongFocus);
-}
-
-
-TableView::~TableView()
-{
-    QItemSelectionModel *oldModel = selectionModel();
-    delete oldModel;
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setObjectName(name);
 }
 
 
@@ -74,10 +79,10 @@ void TableView::close()
 void TableView::setEssence(Essence* ess)
 {
     essence = ess;
-    app = parent->getApp();
-    db = app->getDBFactory();
     if (parent != 0)
     {
+        app = parent->getApp();
+        db = app->getDBFactory();
         fields = essence->returnColumnsProperties();
         connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
@@ -87,7 +92,6 @@ void TableView::setEssence(Essence* ess)
 
         connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
 
-        essence->setGridTable(this);
         setReadOnly(essence->isReadOnly());
     }
 }

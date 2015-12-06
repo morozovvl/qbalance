@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
-#include "../gui/tableview.h"
 
 
 Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
@@ -159,9 +158,9 @@ bool Documents::open()
 
 void Documents::close()
 {
-    Essence::close();
     currentDocument->close();
     delete currentDocument;
+    Essence::close();
 }
 
 

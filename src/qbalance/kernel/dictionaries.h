@@ -59,6 +59,7 @@ public:
 private:
     Document*   document;
     bool        lIsSaldoExist;
+
 };
 
 //Q_DECLARE_METATYPE(Dictionaries)

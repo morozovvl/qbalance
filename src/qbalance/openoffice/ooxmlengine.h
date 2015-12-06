@@ -43,12 +43,14 @@ public:
     Q_INVOKABLE int column(QDomElement);
     Q_INVOKABLE void writeCell(QDomNode, QString, QString);
     Q_INVOKABLE int rowCount() { return rowQuan; }
+    Q_INVOKABLE void setShowError(bool show) { showError = show; }
+
 
 private:
     TApplication*               app;
     QString                     fileName;
     QString                     sheetName;
-    QDomNode                    sheetNode;
+    QDomDocument                sheetNode;
     QString                     templateFileName;
     QString                     tmpDir;
     QDomDocument                doc;
@@ -56,6 +58,7 @@ private:
     QDomNodeList                rowCells;
     int                         rowQuan;
     bool                        readOnly;
+    bool                        showError;
 
     bool removeDir(QString);
 };

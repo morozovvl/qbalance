@@ -36,7 +36,7 @@ public:
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
     Q_INVOKABLE virtual bool open(QString = "", QString = "");
-    void close();
+    Q_INVOKABLE virtual void close();
 
 // Функции для работы с моделью данных
     virtual bool add();

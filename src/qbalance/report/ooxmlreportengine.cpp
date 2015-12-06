@@ -28,6 +28,7 @@ OOXMLReportEngine::OOXMLReportEngine(DocumentScriptEngine* engine) : ReportEngin
     ooxmlEngine = new OOXMLEngine();
     ooPath = "";
     tableNameForPrinting = "";
+    fileName = "";
 }
 
 
@@ -208,7 +209,7 @@ strNum - номер текущей строки тела таблицы
                 if (strNum == 1 && !invalidExpressions.contains(value))                    // выведем сообщение об ошибке (для таблицы это будет только для первой строки)
                 {
 //                    QString tableName = value.mid(0, value.indexOf(".", 0));
-                    TApplication::exemplar()->print(QString(QObject::trUtf8("Неизвестное выражение %1")).arg(value));
+                    TApplication::exemplar()->print(QString(QObject::trUtf8("Неизвестное выражение %1 в шаблоне %2")).arg(value).arg(fileName));
                     invalidExpressions.append(value);
                 }
                 result = false;

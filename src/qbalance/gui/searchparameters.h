@@ -75,7 +75,7 @@ private:
     QGridLayout*        gridLayout;
     QStringList         parameters;
     FormGridSearch*     parentForm;
-    void addString(QString, int);
+    virtual void addString(QString, int);
 };
 
 #endif // SEARCHPARAMETERS_H

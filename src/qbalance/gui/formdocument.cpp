@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QFont>
 #include <QPushButton>
 #include <QLabel>
-#include "tableview.h"
 #include "formgrid.h"
 #include "formdocument.h"
 #include "docparameters.h"
@@ -242,7 +241,7 @@ void FormDocument::cmdOk()
     FormGrid::cmdOk();
     if (getParent() != 0)
     {
-        getParent()->getParent()->getGridTable()->setFocus();
+        getParent()->getParent()->getGrdTable()->setFocus();
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
@@ -258,7 +257,7 @@ void FormDocument::cmdCancel()
     FormGrid::cmdCancel();
     if (getParent() != 0)
     {
-        getParent()->getParent()->getGridTable()->setFocus();
+        getParent()->getParent()->getGrdTable()->setFocus();
     }
 }
 

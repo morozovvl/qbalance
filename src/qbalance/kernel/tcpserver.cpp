@@ -189,5 +189,13 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     {
         pingOk = true;
     }
+    else if (str.indexOf("setDebugMode(") == 0)
+    {
+        str.replace("setDebugMode(", "");
+        str.replace(")", "");
+        app->setDebugMode(str.toInt());
+        resStr = "Ok";
+        sendToClient(pClientSocket, resStr);
+    }
 }
 

@@ -52,6 +52,7 @@ QScriptValue restoreVariable(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
+
 DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
 :ScriptEngine(parent)
 {
@@ -83,7 +84,9 @@ void DocumentScriptEngine::loadScriptObjects()
 
     // инициализируем глобальные объекты скрипта печати
     if (reportContext != 0)
+    {
         globalObject().setProperty("reportContext", newQObject(reportContext));
+    }
 }
 
 

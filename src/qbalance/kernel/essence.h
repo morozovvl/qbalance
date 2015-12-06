@@ -89,8 +89,8 @@ public:
 
 // Функции для работы с модулем GUI
     Q_INVOKABLE FormGrid* getForm() { return form; }
-    TableView* getGridTable() { return grdTable; }
-    void setGridTable(TableView* gt) { grdTable = gt; }
+    Q_INVOKABLE TableView* getGrdTable() { return grdTable; }
+    void setGrdTable(TableView* gt);
     virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();
@@ -107,7 +107,7 @@ public:
     Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
     Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
     Q_INVOKABLE QString getPhotoNameField() { return photoNameField; }
-    Q_INVOKABLE virtual void removePhoto();
+    Q_INVOKABLE virtual void removePhoto(QString = "");
     Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
     Q_INVOKABLE bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
     Q_INVOKABLE bool isViewable() { return lViewable; }             // ... кнопок на форме

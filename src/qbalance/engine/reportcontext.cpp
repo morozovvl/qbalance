@@ -31,19 +31,23 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*
 
 QVariant ReportContext::getValue(QString tag)
 {
+    QVariant result;
     tag = tag.toLower();
-    return data->value(tag);
+    result = data->value(tag);
+    return result;
 }
 
 
 QVariant ReportContext::getValue(QString tag, int strNum)
 {
 //    QRegExp rm("^\\D+\\.");
+    QVariant result;
     QString pref = tag.left(tag.indexOf("."));
     tag = tag.toLower();
     tag.remove(pref);
     tag = QString("%1%2%3").arg(pref).arg(strNum).arg(tag);
-    return data->value(tag);
+    result = data->value(tag);
+    return result;
 }
 
 

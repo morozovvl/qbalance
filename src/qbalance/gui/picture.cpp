@@ -73,17 +73,24 @@ void Picture::show(QString fileName) {
 void Picture::paintEvent(QPaintEvent*) {
 //    if (pictureDrawn != photoFileName)
 //    {
+        pictureExist = false;
         QImage image(size(), QImage::Format_ARGB32_Premultiplied);
         if (photoFileName.size() > 0 && QDir().exists(photoFileName))
         {
-            image.load(photoFileName);
-            pictureExist = true;
+            if (image.load(photoFileName))
+                pictureExist = true;
+            else
+            {
+                form->getParent()->removePhoto(photoFileName);
+                setPhotoFileName("");
+            }
         }
-        else
+
+        if (!pictureExist)
         {
             image.load(":noimage");
-            pictureExist = false;
         }
+
         image = image.scaled(size(), Qt::KeepAspectRatio);
         QPainter painter(this);
         painter.setClipping(false);

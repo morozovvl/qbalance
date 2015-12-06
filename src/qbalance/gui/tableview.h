@@ -46,8 +46,9 @@ class QDESIGNER_WIDGET_EXPORT TableView : public QTableView {
     Q_OBJECT
 
 public:
-    TableView(QWidget*, FormGrid* = 0);
+    TableView();
     ~TableView();
+    virtual void                open();
     virtual void                close();
 
     virtual void                setFormGrid(FormGrid* par) { parent = par; }
@@ -97,10 +98,10 @@ private:
     QList<FieldType>            fields;
     bool                        columnsSettingsReaded;
 
-    MyItemDelegate*             getColumnDelegate(FieldType);
-    void                        setColumnsDelegates();
-    void                        readSettings();
-    void                        writeSettings();
+    virtual MyItemDelegate*     getColumnDelegate(FieldType);
+    virtual void                setColumnsDelegates();
+    virtual void                readSettings();
+    virtual void                writeSettings();
 };
 
 #endif // TABLEVIEW_H

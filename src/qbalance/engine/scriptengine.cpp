@@ -208,6 +208,7 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
         QString script = ScriptEngine::loadScript(scriptFile);
         if (script.size() > 0)
         {
+            TApplication::exemplar()->appendScriptStack(scriptFile);
             QScriptContext *pc = context->parentContext();
             context->setActivationObject(pc->activationObject());
             context->setThisObject(pc->thisObject());
@@ -218,6 +219,7 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
                 QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
                 TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
             }
+            TApplication::exemplar()->removeLastScriptStack();
         }
     }
     return result;
@@ -455,6 +457,19 @@ void FormGridSearchFromScriptValue(const QScriptValue &object, FormGridSearch* &
 }
 
 
+// класс TableView
+Q_DECLARE_METATYPE(TableView*)
+
+
+QScriptValue TableViewToScriptValue(QScriptEngine *engine, TableView* const &in) {
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+}
+
+void TableViewFromScriptValue(const QScriptValue &object, TableView* &out) {
+    out = qobject_cast<TableView*>(object.toQObject());
+}
+
+
 // класс QPushButton
 Q_DECLARE_METATYPE(QPushButton*)
 
@@ -596,6 +611,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("FormGrid", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridConstructor)));
     qScriptRegisterMetaType(this, FormGridSearchToScriptValue, FormGridSearchFromScriptValue);
     globalObject().setProperty("FormGridSearch", newQMetaObject(&QObject::staticMetaObject, newFunction(FormGridSearchConstructor)));
+    qScriptRegisterMetaType(this, TableViewToScriptValue, TableViewFromScriptValue);
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
     qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
@@ -637,8 +653,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении
     globalObject().setProperty("scriptResult", true);   // результат работы скрипта
     globalObject().setProperty("errorMessage", errorMessage);   // текст с описанием ошибки работы скрипта
-    globalObject().setProperty("db", newQObject(TApplication::exemplar()->getDBFactory()));
-    globalObject().setProperty("app", newQObject(TApplication::exemplar()));
+    globalObject().setProperty("db", newQObject(app->getDBFactory()));
+    globalObject().setProperty("app", newQObject(app));
     globalObject().setProperty("getCurrentFieldName", newFunction(getCurrentFieldName));
     globalObject().setProperty("getRowCount", newFunction(getRowCount));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));

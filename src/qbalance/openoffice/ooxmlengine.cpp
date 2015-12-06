@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 OOXMLEngine::OOXMLEngine(): QObject()
 {
     app = TApplication::exemplar();
+    showError = true;
 }
 
 
@@ -86,7 +87,7 @@ bool OOXMLEngine::open(QString fName, QString sheet, bool ro)
                             {
                                 if (cells.at(i).toElement().attribute("table:name") == sheetName)
                                 {
-                                    sheetNode = cells.at(i);
+                                    sheetNode = cells.at(i).toDocument();
                                     rowCells = cells.at(i).toElement().elementsByTagName("table:table-row");
                                     break;
                                 }
@@ -98,12 +99,12 @@ bool OOXMLEngine::open(QString fName, QString sheet, bool ro)
                     }
                 }
             }
-            else
+            else if (showError)
                 app->showError(QObject::trUtf8("Не удалось запустить программу") + " unzip");
             QDir().rmdir(tmpDir);
         }
     }
-    else
+    else if (showError)
         app->showError(QObject::trUtf8("Не удалось открыть файл ") + fName);
     return result;
 }
@@ -135,7 +136,7 @@ void OOXMLEngine::close()
                 // удалим временный каталог
                 removeDir(tmpDir);
             }
-            else
+            else if (showError)
                 app->showError(QObject::trUtf8("Не удалось запустить программу") + " zip");
         }
     }
@@ -253,7 +254,7 @@ QDomElement OOXMLEngine::getCellWithAnnotation(QString annotation)
     QDomNode rowNode;
     QDomNodeList cells;
     annotation = annotation.toUpper();
-    cells = sheetNode.toDocument().elementsByTagName("office:annotation");   // будем просматривать аннотации
+    cells = sheetNode.elementsByTagName("office:annotation");   // будем просматривать аннотации
     int cellsQuan = cells.count();
     for (int i = 0; i < cellsQuan; i++)
     {

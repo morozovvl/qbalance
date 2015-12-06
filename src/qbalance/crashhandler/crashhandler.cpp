@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QString>
 
 #if defined(Q_OS_LINUX)
-#include "../others/google-breakpad/src/client/linux/handler/exception_handler.h"
+#include "../../google-breakpad/src/client/linux/handler/exception_handler.h"
 #elif defined(Q_OS_WIN32)
-#include "../others/google-breakpad/src/client/windows/handler/exception_handler.h"
+#include "../../google-breakpad/src/client/windows/handler/exception_handler.h"
 #endif
 
 namespace Breakpad {

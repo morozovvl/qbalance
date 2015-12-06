@@ -69,7 +69,6 @@ FormGrid::~FormGrid()
 
 void FormGrid::close()
 {
-    grdTable->close();
     Form::close();
 }
 
@@ -79,10 +78,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     Form::createForm(fileName, pwgt);
     if (defaultForm)
     {   // Если форма создана автоматически
-        grdTable = new TableView(formWidget, this);
-        grdTable->setEssence(parent);
-        grdTable->setObjectName("tableView");
-        grdTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        grdTable = new TableView();
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
         tableLayout->addWidget(grdTable);
@@ -105,15 +101,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     else
     {   // Была загружена пользовательская форма
         tableLayout = (QVBoxLayout*)formWidget->findChild("tableLayout");
-        TableView * grid = (TableView *)formWidget->findChild("tableView");
-        grdTable = grid;
-        if (grdTable != 0)
-        {
-//            grdTable->setParent(this);
-            grdTable->setParentWidget(formWidget);
-            grdTable->setFormGrid(this);
-            grdTable->setEssence(parent);
-        }
+        grdTable = (TableView *)formWidget->findChild("tableView");
         picture = (Picture*)formWidget->findChild("picture");
 
         // Для всех картинок установим указатель на приложение
@@ -126,6 +114,14 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
     if (grdTable != 0)
     {
+        grdTable->open();
+        grdTable->setFormGrid(this);
+        grdTable->setParentWidget(formWidget);
+        if (parent != 0)
+        {
+            parent->setGrdTable(grdTable);
+        }
+
 #if QT_VERSION >= 0x050000
             grdTable->horizontalHeader()->setSectionsClickable(false);
 #else
@@ -361,8 +357,7 @@ int FormGrid::exec()
         grdTable->setColumnsHeaders();
     }
     setButtons();
-    if (parent->getTableModel()->rowCount() == 0)
-        showPhoto();
+    showPhoto();
     return Form::exec();
 }
 
@@ -376,8 +371,7 @@ void FormGrid::show()
         grdTable->setColumnsHeaders();
     }
     setButtons();
-    if (parent->getTableModel()->rowCount() == 0)
-        showPhoto();
+    showPhoto();
     Form::show();
 }
 
@@ -534,7 +528,8 @@ void FormGrid::cmdSave()
 
 void FormGrid::showPhoto()
 {
-    grdTable->showPhoto();
+    if (grdTable != 0)
+        grdTable->showPhoto();
 }
 
 

@@ -79,7 +79,7 @@ QString TableViewPlugin::whatsThis() const {
 }
 
 QWidget *TableViewPlugin::createWidget(QWidget *parent) {
-    return new TableView(parent);
+    return new TableView();
 }
 
 void TableViewPlugin::initialize( QDesignerFormEditorInterface *core ) {

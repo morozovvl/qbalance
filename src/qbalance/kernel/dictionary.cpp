@@ -363,7 +363,6 @@ void Dictionary::setForm(QString formName)
         delete form;
         form = 0;
     }
-    closeScriptEngine();
 
     form = new FormGridSearch();
 

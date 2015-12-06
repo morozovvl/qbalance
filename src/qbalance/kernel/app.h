@@ -97,7 +97,7 @@ public:
     Q_INVOKABLE virtual Dictionaries* getDictionaries();
     Q_INVOKABLE Documents* getDocuments(int);
     void removeDocuments(int opNumber);
-    Q_INVOKABLE DBFactory* getDBFactory() { return db; }
+    Q_INVOKABLE virtual DBFactory* getDBFactory() { return db; }
     Q_INVOKABLE void clearMessageOnStatusBar() { gui->getMainWindow()->getStatusBar()->clearMessage(); }
     Q_INVOKABLE virtual void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
     Q_INVOKABLE QVariant getConst(QString);
@@ -106,12 +106,14 @@ public:
     Q_INVOKABLE bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
     QDate getBeginDate() { return beginDate; }
     QDate getEndDate() { return endDate; }
+    QString getLogsPath();
+    QString getMessagesLogsPath(QString = "");
     QString getFormsPath(QString = "");
-    QString getScriptsPath();
+    QString getScriptsPath(QString = "");
     QString getReportsPath(QString = "");
-    QString getLogPath() { return getAnyPath("log"); }
+    QString getCrashDumpsPath();
     Q_INVOKABLE QString getPhotosPath(QString = "");
-    QString getConfigPrefix() { return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName()); }
+    QString getConfigPrefix();
     virtual MainWindow* getMainWindow() { return gui->getMainWindow(); }
     QMdiSubWindow* getActiveSubWindow() { return gui->getMainWindow()->getWorkSpace()->activeSubWindow(); }
 
@@ -135,14 +137,14 @@ public:
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
     static bool isDebugMode(int mode)        { return DebugModes.contains(mode);}
-    static QString debugFileName(int debugMode) { return QString("debug%1.log").arg(debugMode);}
+    QString debugFileName(int debugMode) { return getLogsPath().append(QString("debug%1.log").arg(debugMode));}
     static QString errorFileName() { return "error.log";}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
     static void setDebugMode(const int& value);
 
-    Q_INVOKABLE static void debug(int, const QString&, bool = false);
+    Q_INVOKABLE void debug(int, const QString&, bool = false);
 
     static TApplication* exemplar();
 
@@ -199,6 +201,8 @@ public:
     void    setServerMode(bool mode) { serverMode = mode; }
     bool    isServerMode() { return serverMode; }
 
+    static void    setSendCommandMode(bool mode) {sendCommandMode = mode; }
+
     QStringList     getScriptStack() { return scriptStack; }
     void            appendScriptStack(QString scriptName) { scriptStack.append(scriptName); }
     void            removeLastScriptStack() { scriptStack.removeLast(); }
@@ -210,7 +214,7 @@ private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников
     Topers*                 topersList;                                   // Форма со списком операций
     DBFactory*              db;
-    GUIFactory*             gui;
+    static GUIFactory*      gui;
     QDate                   beginDate;
     QDate                   endDate;
     DriverFR*               driverFR;
@@ -238,6 +242,7 @@ private:
     QTimer                  timer;
     bool                    timeIsOut;
     bool                    scriptMode;
+    static bool             sendCommandMode;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");
