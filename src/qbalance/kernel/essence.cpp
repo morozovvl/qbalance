@@ -381,63 +381,66 @@ QString Essence::getPhotoFile(QString copyTo)
             if (localFile.size() > 0)
             {
                 file = getLocalPhotoFile();
-                if (!QFile(file).exists())
-                {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
-                    // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
-                    if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
-                    {
-//                        app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
-                        QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
-                        if (picture.size() > 0)
-                        {   // Если удалось получить какую-то фотографию
-                            app->saveFile(file, &picture);
-                            if (copyTo.size() > 0)
-                                app->saveFileToServer(app->getPhotosPath(copyTo), file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
-                        }
-                    }
+                if (isDictionary)
+                {
                     if (!QFile(file).exists())
-                    {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
-                        file = pictureUrl;
-                        // Если в скриптах указано, откуда брать фотографию
-                        if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
+                    {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
+                        // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
+                        if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
                         {
-                            QUrl url(file);
-                            if (url.isValid())
+//                        app->showMessageOnStatusBar(tr("Запущена загрузка с сервера фотографии с кодом ") + QString("%1").arg(idValue), 3000);
+                            QByteArray picture = db->getFile(localFile, PictureFileType, true); // Получить файл с картинкой из расширенной базы
+                            if (picture.size() > 0)
+                            {   // Если удалось получить какую-то фотографию
+                                app->saveFile(file, &picture);
+                                if (copyTo.size() > 0)
+                                    app->saveFileToServer(app->getPhotosPath(copyTo), file, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                            }
+                        }
+                        if (!QFile(file).exists())
+                        {   // Фотография не найдена на сервере, попробуем получить фотографию из Интернета
+                            file = pictureUrl;
+                            // Если в скриптах указано, откуда брать фотографию
+                            if (file.left(4) == "http" && photoPath.size() > 0)  // Имя файла - это адрес в интернете, и указано, куда этот файл будет сохраняться
                             {
-                                if (urls.count() <= 1000)
+                                QUrl url(file);
+                                if (url.isValid())
                                 {
-                                    // Если сетевой менеджер еще не подключен, то подключим его
-                                    if (m_networkAccessManager == 0)
-                                    {   // Вызывается только один раз, по необходимости загрузить фотографию
-                                        m_networkAccessManager = new QNetworkAccessManager(this);
-                                        connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-                                    }
-                                    if (m_networkAccessManager != 0)
+                                    if (urls.count() <= 1000)
                                     {
-                                        urlId v = {idValue, copyTo};
-                                        urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
-                                        QNetworkRequest m_request(url);
-                                        QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
-                                        if (reply->error() != QNetworkReply::NoError)
-                                           app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                        // Если сетевой менеджер еще не подключен, то подключим его
+                                        if (m_networkAccessManager == 0)
+                                        {   // Вызывается только один раз, по необходимости загрузить фотографию
+                                            m_networkAccessManager = new QNetworkAccessManager(this);
+                                            connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+                                        }
+                                        if (m_networkAccessManager != 0)
+                                        {
+                                            urlId v = {idValue, copyTo};
+                                            urls.insert(QString("%1:%2%3").arg(url.host()).arg(url.port(80)).arg(url.path()), v);             // Запомним URL картинки и его локальный код
+                                            QNetworkRequest m_request(url);
+                                            QNetworkReply* reply = m_networkAccessManager->get(m_request);   // Запустим скачивание картинки
+                                            if (reply->error() != QNetworkReply::NoError)
+                                               app->showMessageOnStatusBar(reply->errorString(), 3000);
+                                        }
                                     }
+                                    else
+                                        app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
                                 }
                                 else
-                                    app->showMessageOnStatusBar(tr("Очередь на загрузку фотографий из Интернета превысила 1000 наименований."), 3000);
+                                    file = "";
                             }
-                            else
-                                file = "";
                         }
                     }
-                }
-                else
-                {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                    app->saveFileToServer(file, localFile, PictureFileType, true);
-                    if (copyTo.size() > 0)
-                    {
-                        QString file = app->getPhotosPath(copyTo);
-                        if (!QFile(file).exists())
-                            db->copyFile(localFile, PictureFileType, copyTo, true);
+                    else
+                    {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
+                        app->saveFileToServer(file, localFile, PictureFileType, true);
+                        if (copyTo.size() > 0)
+                        {
+                            QString file = app->getPhotosPath(copyTo);
+                            if (!QFile(file).exists())
+                                db->copyFile(localFile, PictureFileType, copyTo, true);
+                        }
                     }
                 }
             }

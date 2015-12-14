@@ -30,11 +30,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "myitemdelegate.h"
 #include "../storage/mysqlrelationaltablemodel.h"
-#include "../storage/dbfactory.h"
 
 
 class TApplication;
-class DBFactory;
 class FormGrid;
 class Essence;
 class Picture;
@@ -90,7 +88,6 @@ private:
     FormGrid*                   parent;
     QWidget*                    parentWidget;
     TApplication*               app;
-    DBFactory*                  db;
     Essence*                    essence;
     Picture*                    picture;
     MySqlRelationalTableModel*  tableModel;

@@ -35,9 +35,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 
 
-GUIFactory::GUIFactory(DBFactory *d)
+GUIFactory::GUIFactory()
 {
-    db = d;
+    db = 0;
     mainWindow = 0;
 }
 
@@ -55,6 +55,7 @@ int GUIFactory::openDB()
     QHash<int, UserInfo> users;
     int key = 0;
 
+    db = TApplication::exemplar()->getDBFactory();
     if (TApplication::host.size() > 0 &&
         TApplication::port != 0 &&
         TApplication::database.size() > 0 &&
@@ -173,8 +174,10 @@ void GUIFactory::show() {
 
 
 int GUIFactory::showError(QString errorText) {
-    QMdiSubWindow* window = mainWindow->getWorkSpace()->activeSubWindow();
-    QErrorMessage msgBox;
+    QMdiSubWindow* window = 0;
+    if (mainWindow != 0)
+        window = mainWindow->getWorkSpace()->activeSubWindow();
+    QErrorMessage msgBox(window);
     msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);

@@ -158,9 +158,9 @@ bool Documents::open()
 
 void Documents::close()
 {
+    Essence::close();
     currentDocument->close();
     delete currentDocument;
-    Essence::close();
 }
 
 

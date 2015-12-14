@@ -143,7 +143,7 @@ const char* DriverFR::errmsg[] =
   "Non cash summ is greater of bill summ",										//4d
   "Shift is active more then 24 hours",											//4e
   "Invalid password",													//4f
-  "Printing the previous command",											//50
+  "Обработка предыдущей команды",								//50
   "",															//51
   "",															//52
   "",															//53
@@ -170,15 +170,15 @@ const char* DriverFR::errmsg[] =
   "",															//68
   "",															//69
   "",															//6a
-  "Bill tape is out",													//6b
+  "Закончилась чековая лента",									//6b
   "Controll tape is out",												//6c
   "",															//6d
   "",															//6e
   "",															//6f
   "Fiscal memory overflow",												//70
   "Knife error",													//71
-  "Invalid command in this submode",											//72
-  "Invalid command in this mode",											//73
+  "Команда не поддерживается в данном подрежиме",				//72
+  "Команда не поддерживается в данном режиме",					//73
   "Base memory error",                                          //74
   "",           // 75
     "",         // 76
@@ -399,9 +399,14 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
     locked = false;
     codec = QTextCodec::codecForName("Windows-1251");
     app = TApplication::exemplar();
-    progressDialog = new MyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."), app->getMainWindow());
-    progressDialog->resize(600, progressDialog->height());
+    progressDialog = 0;
+    if (app->getGUIFactory() != 0)
+    {
+        progressDialog = new MyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."), app->getMainWindow());
+        progressDialog->resize(600, progressDialog->height());
+    }
     showProgressBar = false;
+    maxTries = MAX_TRIES;
 }
 
 
@@ -431,7 +436,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
         serialPort->setParity(PAR_NONE);
         serialPort->setDataBits(DATA_8);
         serialPort->setStopBits(STOP_2);
-        if (serialPort->open(QIODevice::ReadWrite))
+        if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
         {
             if (Connect(false))
             {
@@ -506,8 +511,12 @@ bool DriverFR::Connect(bool showError)
                 fr.Timeout = app->getConfig()->frLocalDriverTimeOut;
             serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
             serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
+//            maxTries = 10;
+            serialPort->setTimeout(1000);
             if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             {
+//                maxTries = MAX_TRIES;
+                serialPort->setTimeout(10000);
                 result = true;
                 if (TApplication::isDebugMode(4))
                 {
@@ -551,7 +560,6 @@ bool DriverFR::isLocked()
         if (lockedByHost.size() > 0)        // Если фискальник как будто заблокирован
         {                                   // то сначала проверим, в сети ли хост, который его заблокировал
             app->getTcpServer()->pingClient(lockedByHost);              // Пошлем пинг
-            app->timeOut(app->getConfig()->frNetDriverTimeOut);         // Выждем таймаут
             if (!app->getTcpServer()->getPingOk())                      // Если пинг не пришел, значит клиент не в сети
             {
                 setLock(false);             // то разблокируем его
@@ -572,6 +580,7 @@ void DriverFR::setLock(bool lock, QString lockedBy)
 }
 
 
+/*
 int DriverFR::checkState()
 {
   short int repl;
@@ -587,7 +596,7 @@ int DriverFR::checkState()
         return -1;
     }
 }
-
+*/
 
 int DriverFR::sendENQ()
 {
@@ -624,33 +633,31 @@ int DriverFR::sendACK()
 
 unsigned short int DriverFR::readByte()
 {
-    app->startTimeOut(200);                   // Ждем ответа в течение 0.2 сек
-    while (!app->isTimeOut())
+    unsigned char readbuff[1] = "";
+    int result = readBytes(readbuff, 1);
+    if (result >= 0)
     {
-        unsigned char readbuff;
-        int result = readBytes(&readbuff, 1);
-        if (result > 0)
-        {
-            unsigned short int result = (unsigned int) readbuff;
-            return result;
-        }
-        else if (result < 0)
-            break;
-        serialPort->writeLog();
-        app->timeOut(20);       // Неудача. Повторим чтение байта через 20мс
-        if (app->isTimeOut())
-            break;
-
+        unsigned short int result = (unsigned int) readbuff[0];
+        return result;
     }
     return -1;
 }
 
 
+
 int DriverFR::readBytes(unsigned char *buff, int len)
 {
+    int readed = 0;
     for (int i = 0; i < len; i++)
         buff[i] = 0;
-    return serialPort->readData((char*)(buff), len);
+
+    int result = serialPort->readData((char*)(buff + readed), len - readed);
+    if (result > 0)
+    {
+        return result;      // то выходим
+    }
+    serialPort->writeLog();
+    return -1;
 }
 
 
@@ -738,7 +745,7 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
         if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
         {
             serialPort->writeLog();
-            for (int tries = 1; tries <= MAX_TRIES; tries++)    // будем в цикле передавать сообщение
+            for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
             {
                 short int repl = readByte();
                 if (repl == ACK)                // Если сообщение получено
@@ -747,6 +754,8 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
                     result = 1;                 // установим положительный результат
                     break;                      // и выйдем из цикла
                 }
+                else if (repl == -1)
+                    break;
             }
         }
     }
@@ -757,7 +766,7 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
 bool DriverFR::deviceIsReady()
 {
     sendENQ();
-    for (int i = 0; i < MAX_TRIES; i++)
+    for (int i = 0; i < maxTries; i++)
     {
         short int repl = readByte();
         if (repl == NAK)
@@ -908,101 +917,10 @@ void DriverFR::DefineECRModeDescription(void)
 }
 
 
-int DriverFR::Beep()
-{
-    logCommand(BEEP, "Гудок");
-    parameter  p;
-    answer     a;
-    int result = -1;
-    if (connected)
-    {
-        if (sendCommand(BEEP, fr.Password, &p) >= 0)
-        {
-            if (readAnswer(&a) >= 0)
-            {
-                if (a.buff[0] == BEEP)
-                {
-                    if (errHand(&a) != 0)
-                        result = fr.ResultCode;
-                    else
-                    {
-                        fr.OperatorNumber = a.buff[2];
-                        result = 0;
-                    }
-                }
-            }
-        }
-    }
-    return result;
-}
-
-
-int DriverFR::Buy()
-{
-  parameter  p;
-  answer     a;
-  p.len   = 55;
-
-  if (!connected)
-      return -1;
-
-  int64_t quant = llround(fr.Quantity * 1000);
-  int64_t price = llround(fr.Price * 100);
-
-  memcpy(p.buff,    &quant, 5);
-  memcpy(p.buff+5,  &price, 5);
-  p.buff[10] = fr.Department;
-
-  p.buff[11] = fr.Tax1;
-  p.buff[12] = fr.Tax2;
-  p.buff[13] = fr.Tax3;
-  p.buff[14] = fr.Tax4;
-
-  memcpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
-
-  if (sendCommand(BUY, fr.Password, &p) < 0)
-      return -1;
-
-  if (readAnswer(&a) < 0)
-      return -1;
-
-  if (a.buff[0] != BUY)
-      return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
-}
-
-
-int DriverFR::CutCheck()
-{
-  parameter  p;
-  answer     a;
-  p.len    = 1;
-
-  if (!connected) return -1;
-
-  p.buff[0] = fr.CutType;
-
-  if (sendCommand(CUT_CHECK, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != CUT_CHECK) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
-}
-
-
 int DriverFR::processCommand(int command, parameter* p, answer* a)
 {
     int result;
-    int attempts = 0;
+    int attempts = 1;
     while (true)
     {
         result = sendCommand(command, fr.Password, p);
@@ -1024,11 +942,11 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                     result = -1;
             }
         }
-        if (result == 0x50 || (result < 0 && attempts <= MAX_TRIES))
+        if ((result < 0 || result == 0x50) && attempts < maxTries)
         {
             attempts++;
             serialPort->writeLog();
-            app->timeOut(50);
+            app->sleep(100);
             serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
         }
         else
@@ -1047,15 +965,83 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
             }
         }
         app->showError(error);
+        serialPort->writeLog(error);
+    }
+    else
+        fr.OperatorNumber = a->buff[2];
+
+    return result;
+}
+
+
+//-----------------------------------------------------------------------------
+int DriverFR::Beep()
+{
+    parameter  p;
+    answer     a;
+    int result = -1;
+
+    if (connected)
+    {
+        logCommand(BEEP, "Гудок");
+        result = processCommand(BEEP, &p, &a);
     }
     return result;
 }
 
 
 //-----------------------------------------------------------------------------
+int DriverFR::Buy()
+{
+    parameter  p;
+    answer     a;
+    int result = -1;
+    p.len   = 55;
+
+    if (connected)
+    {
+        logCommand(BUY, "Покупка");
+
+        int64_t quant = llround(fr.Quantity * 1000);
+        int64_t price = llround(fr.Price * 100);
+        memcpy(p.buff,    &quant, 5);
+        memcpy(p.buff+5,  &price, 5);
+        p.buff[10] = fr.Department;
+        p.buff[11] = fr.Tax1;
+        p.buff[12] = fr.Tax2;
+        p.buff[13] = fr.Tax3;
+        p.buff[14] = fr.Tax4;
+        memcpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
+
+        result = processCommand(BUY, &p, &a);
+    }
+    return result;
+}
+
+
+//-----------------------------------------------------------------------------
+int DriverFR::CutCheck()
+{
+    parameter  p;
+    answer     a;
+    p.len    = 1;
+    int result = -1;
+
+    if (connected)
+    {
+        logCommand(CUT_CHECK, "Отрезать чек");
+        p.buff[0] = fr.CutType;
+        result = processCommand(CUT_CHECK, &p, &a);
+    }
+
+    return result;
+}
+
+
+
+//-----------------------------------------------------------------------------
 int DriverFR::PrintString()
 {
-    logCommand(PRINT_STRING, "Печать строки");
     parameter  p;
     answer     a;
     p.len	  = 41;
@@ -1063,14 +1049,13 @@ int DriverFR::PrintString()
 
     if (connected)
     {
+        logCommand(PRINT_STRING, "Печать строки");
+
         p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
         p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
         memcpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 40);
+
         result = processCommand(PRINT_STRING, &p, &a);
-        if (result == 0)
-        {
-            fr.OperatorNumber = a.buff[2];
-        }
     }
     return result;
 }
@@ -1094,31 +1079,28 @@ int DriverFR::PrintString(QString str, int count)
 //-----------------------------------------------------------------------------
 int DriverFR::PrintWideString()
 {
-  parameter  p;
-  answer     a;
-  p.len	  = 21;
+    parameter  p;
+    answer     a;
+    p.len	  = 21;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(PRINT_WIDE_STRING, "Печать широкой строки");
 
-  p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
-  p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
+        p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
+        p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
+        memcpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 20);
 
-  memcpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 20);
-
-  if (sendCommand(PRINT_WIDE_STRING, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != PRINT_WIDE_STRING) return -1;
-
-  if (errHand(&a) != 0) return  fr.ResultCode;;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+        result = processCommand(PRINT_WIDE_STRING, &p, &a);
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::FeedDocument()
 {
-    logCommand(FEED_DOCUMENT, "Протяжка");
     parameter  p;
     answer     a;
     p.len    = 2;
@@ -1126,22 +1108,22 @@ int DriverFR::FeedDocument()
 
     if (connected)
     {
+        logCommand(FEED_DOCUMENT, "Протяжка");
+
         p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
         p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
         p.buff[0] |= (fr.UseSlipDocument  == true) ? 4 : 0;
         p.buff[1] = fr.StringQuantity;
+
         result = processCommand(FEED_DOCUMENT, &p, &a);
-        if (result == 0)
-        {
-            fr.OperatorNumber = a.buff[2];
-        }
     }
     return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::SetExchangeParam()
 {
-    logCommand(SET_EXCHANGE_PARAM, "Установка параметров обмена");
     parameter  p;
     answer     a;
     p.len = 3;
@@ -1149,14 +1131,13 @@ int DriverFR::SetExchangeParam()
 
     if (connected)
     {
+        logCommand(SET_EXCHANGE_PARAM, "Установка параметров обмена");
+
         p.buff[0] = fr.PortNumber;
         p.buff[1] = fr.BaudRate;
         p.buff[2] = fr.Timeout;
+
         result = processCommand(SET_EXCHANGE_PARAM, &p, &a);
-        if (result == 0)
-        {
-            result = fr.ResultCode;
-        }
     }
     return result;
 }
@@ -1165,7 +1146,6 @@ int DriverFR::SetExchangeParam()
 //-----------------------------------------------------------------------------
 int DriverFR::GetExchangeParam()
 {
-    logCommand(GET_EXCHANGE_PARAM, "Чтение параметров обмена");
     parameter  p;
     answer     a;
     p.len = 1;
@@ -1173,7 +1153,10 @@ int DriverFR::GetExchangeParam()
 
     if (connected)
     {
+        logCommand(GET_EXCHANGE_PARAM, "Чтение параметров обмена");
+
         p.buff[0] = fr.PortNumber;
+
         result = processCommand(GET_EXCHANGE_PARAM, &p, &a);
         if (result == 0)
         {
@@ -1184,16 +1167,18 @@ int DriverFR::GetExchangeParam()
     return result;
 }
 
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetECRStatus()
 {
-  logCommand(GET_ECR_STATUS, "Запрос состояния ФР");
   parameter  p;
   answer     a;
   int result = -1;
 
   if (connected)
   {
+    logCommand(GET_ECR_STATUS, "Запрос состояния ФР");
+
     result = processCommand(GET_ECR_STATUS, &p, &a);
     if (result == 0)
     {
@@ -1245,99 +1230,83 @@ int DriverFR::GetECRStatus()
   }
   return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetDeviceMetrics()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 1;
+    parameter  p;
+    answer     a;
+    p.len    = 1;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(GET_DEVICE_METRICS, "Получить параметры устройства");
 
-  if (sendCommand(GET_DEVICE_METRICS, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != GET_DEVICE_METRICS) return -1;
-  if (errHand(&a)) return  fr.ResultCode;
-  fr.UMajorType            = evalint((unsigned char*)&a.buff + 2, 1);
-  fr.UMinorType            = evalint((unsigned char*)&a.buff + 3, 1);
-  fr.UMajorProtocolVersion = evalint((unsigned char*)&a.buff + 4, 1);
-  fr.UMinorProtocolVersion = evalint((unsigned char*)&a.buff + 5, 1);
-  fr.UModel                = evalint((unsigned char*)&a.buff + 6, 1);
-  fr.UCodePage             = evalint((unsigned char*)&a.buff + 7, 1);
-
-  QByteArray data;
-  data.append((char*)&a.buff+8);
-  fr.UDescription = codec->toUnicode(data);
-
-  return 0;
+        result = processCommand(GET_DEVICE_METRICS, &p, &a);
+        if (result == 0)
+        {
+            fr.UMajorType            = evalint((unsigned char*)&a.buff + 2, 1);
+            fr.UMinorType            = evalint((unsigned char*)&a.buff + 3, 1);
+            fr.UMajorProtocolVersion = evalint((unsigned char*)&a.buff + 4, 1);
+            fr.UMinorProtocolVersion = evalint((unsigned char*)&a.buff + 5, 1);
+            fr.UModel                = evalint((unsigned char*)&a.buff + 6, 1);
+            fr.UCodePage             = evalint((unsigned char*)&a.buff + 7, 1);
+            QByteArray data;
+            data.append((char*)&a.buff+8);
+            fr.UDescription = codec->toUnicode(data);
+        }
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::Test()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 1;
+    parameter  p;
+    answer     a;
+    p.len    = 1;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  p.buff[0] = fr.RunningPeriod;
-
-  if (sendCommand(TEST, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != TEST) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+    if (connected)
+    {
+        logCommand(TEST, "Тест");
+        result = processCommand(TEST, &p, &a);
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::InterruptTest()
 {
-  parameter  p;
-  answer     a;
+    parameter  p;
+    answer     a;
+    p.len    = 1;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  if (sendCommand(INTERRUPT_TEST, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != INTERRUPT_TEST) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+    if (connected)
+    {
+        logCommand(INTERRUPT_TEST, "Прервать тест");
+        result = processCommand(INTERRUPT_TEST, &p, &a);
+    }
+    return result;
 }
 
 
 //-----------------------------------------------------------------------------
 int DriverFR::ContinuePrint()
 {
-    logCommand(CONTINUE_PRINTING, "Продолжение печати");
     parameter  p;
     answer     a;
     int result = -1;
 
     if (connected)
     {
-        if (sendCommand(CONTINUE_PRINTING, fr.Password, &p) >= 0)
-        {
-            if (readAnswer(&a) >= 0)
-            {
-                if (a.buff[0] == CONTINUE_PRINTING)
-                {
-                    if (errHand(&a) != 0)
-                        result = fr.ResultCode;
-                    else
-                    {
-                        fr.OperatorNumber = a.buff[2];
-                        result = 0;
-                    }
-                }
-            }
-        }
+        logCommand(CONTINUE_PRINTING, "Продолжение печати");
+        result = processCommand(CONTINUE_PRINTING, &p, &a);
     }
     return result;
 }
@@ -1346,174 +1315,157 @@ int DriverFR::ContinuePrint()
 //-----------------------------------------------------------------------------
 int DriverFR::OpenDrawer()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 1;
+    parameter  p;
+    answer     a;
+    p.len    = 1;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(OPEN_DRAWER, "Открыть рисование");
 
-  p.buff[0] = fr.DrawerNumber;
+        p.buff[0] = fr.DrawerNumber;
 
-  if (sendCommand(OPEN_DRAWER, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != OPEN_DRAWER) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+        result = processCommand(OPEN_DRAWER, &p, &a);
+    }
+    return result;
 }
 
 
 //-----------------------------------------------------------------------------
 int DriverFR::PrintDocumentTitle()
 {
-  parameter  p;
-  answer     a;
-  p.len	  = 32;
+    parameter  p;
+    answer     a;
+    p.len	  = 32;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(PRINT_DOCUMENT_TITLE, "Печать заголовка документа");
 
-  memcpy((char*)p.buff, (char*)fr.DocumentName, 30);
-  memcpy((char*)p.buff+30, &fr.DocumentNumber, 2);
+        memcpy((char*)p.buff, (char*)fr.DocumentName, 30);
+        memcpy((char*)p.buff+30, &fr.DocumentNumber, 2);
 
-  if (sendCommand(PRINT_DOCUMENT_TITLE, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != PRINT_DOCUMENT_TITLE) return -1;
-
-  if (errHand(&a) != 0) return  fr.ResultCode;;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
+        result = processCommand(PRINT_DOCUMENT_TITLE, &p, &a);
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::ResetSettings()
 {
-  parameter  p;
+    answer     a;
+    parameter  p;
+    int result = -1;
 
-  if (!connected) return -1;
-
-  if (sendCommand(RESET_SETTINGS, fr.Password, &p) < 0) return -1;
-
-  return 0;
+    if (connected)
+    {
+        logCommand(RESET_SETTINGS, "Сброс настроек");
+        result = processCommand(RESET_SETTINGS, &p, &a);
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::ResetSummary()
 {
   parameter  p;
   answer     a;
+  int result = -1;
 
-  if (!connected) return -1;
-
-  if (sendCommand(RESET_SUMMARY, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != RESET_SUMMARY) return -1;
-
-  return errHand(&a);
+  if (connected)
+  {
+      logCommand(RESET_SUMMARY, "Сброс сумм");
+      result = processCommand(RESET_SUMMARY, &p, &a);
+  }
+  return result;
 }
+
 
 //-----------------------------------------------------------------------------
 int DriverFR::ReturnBuy()
 {
-  parameter  p;
-  answer     a;
-  p.len   = 55;
-
-  if (!connected) return -1;
-
-  int64_t quant = llround(fr.Quantity * 1000);
-  int64_t price = llround(fr.Price * 100);
-
-  memcpy(p.buff,    &quant, 5);
-  memcpy(p.buff+5,  &price, 5);
-  p.buff[10] = fr.Department;
-
-  p.buff[11] = fr.Tax1;
-  p.buff[12] = fr.Tax2;
-  p.buff[13] = fr.Tax3;
-  p.buff[14] = fr.Tax4;
-
-  memcpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
-
-  if (sendCommand(RETURN_BUY, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != RETURN_BUY) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-
-  return 0;
-}
-
-//-----------------------------------------------------------------------------
-int DriverFR::Sale()
-{
-    logCommand(SALE, "Продажа");
     parameter  p;
     answer     a;
-    int result = -1;
     p.len   = 55;
+    int result = -1;
 
     if (connected)
     {
+        logCommand(RETURN_BUY, "Возврат покупки");
+
         int64_t quant = llround(fr.Quantity * 1000);
         int64_t price = llround(fr.Price * 100);
-
         memcpy(p.buff,    &quant, 5);
         memcpy(p.buff+5,  &price, 5);
         p.buff[10] = fr.Department;
-
         p.buff[11] = fr.Tax1;
         p.buff[12] = fr.Tax2;
         p.buff[13] = fr.Tax3;
         p.buff[14] = fr.Tax4;
-
         memcpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
-        result = processCommand(SALE, &p, &a);
-        if (result == 0)
-        {
-            fr.OperatorNumber = a.buff[2];
-        }
+        result = processCommand(RETURN_BUY, &p, &a);
     }
     return result;
 }
 
 //-----------------------------------------------------------------------------
-int DriverFR::ReturnSale()
+int DriverFR::Sale()
 {
-    logCommand(RETURN_SALE, "Возврат продажи");
     parameter  p;
     answer     a;
     int result = -1;
-
     p.len   = 55;
 
     if (connected)
     {
+        logCommand(SALE, "Продажа");
 
         int64_t quant = llround(fr.Quantity * 1000);
         int64_t price = llround(fr.Price * 100);
-
         memcpy(p.buff,    &quant, 5);
         memcpy(p.buff+5,  &price, 5);
         p.buff[10] = fr.Department;
-
         p.buff[11] = fr.Tax1;
         p.buff[12] = fr.Tax2;
         p.buff[13] = fr.Tax3;
         p.buff[14] = fr.Tax4;
+        memcpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
+        result = processCommand(SALE, &p, &a);
+    }
+    return result;
+}
+
+
+//-----------------------------------------------------------------------------
+int DriverFR::ReturnSale()
+{
+    parameter  p;
+    answer     a;
+    int result = -1;
+    p.len   = 55;
+
+    if (connected)
+    {
+        logCommand(RETURN_SALE, "Возврат продажи");
+
+        int64_t quant = llround(fr.Quantity * 1000);
+        int64_t price = llround(fr.Price * 100);
+        memcpy(p.buff,    &quant, 5);
+        memcpy(p.buff+5,  &price, 5);
+        p.buff[10] = fr.Department;
+        p.buff[11] = fr.Tax1;
+        p.buff[12] = fr.Tax2;
+        p.buff[13] = fr.Tax3;
+        p.buff[14] = fr.Tax4;
         memcpy((char*)p.buff+15, (char*)fr.StringForPrinting, 40);
 
         result = processCommand(RETURN_SALE, &p, &a);
-        if (result == 0)
-        {
-            fr.OperatorNumber = a.buff[2];
-        }
     }
     return result;
 }
@@ -1522,18 +1474,14 @@ int DriverFR::ReturnSale()
 //-----------------------------------------------------------------------------
 int DriverFR::CancelCheck()
 {
-    logCommand(CANCEL_CHECK, "Аннулирование чека");
     parameter  p;
     answer     a;
     int result = -1;
 
     if (connected)
     {
+        logCommand(CANCEL_CHECK, "Аннулирование чека");
         result = processCommand(CANCEL_CHECK, &p, &a);
-        if (result == 0)
-        {
-            fr.OperatorNumber = a.buff[2];
-        }
     }
     return result;
 }
@@ -1542,15 +1490,17 @@ int DriverFR::CancelCheck()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZJournal()
 {
-  logCommand(GET_EKLZ_JOURNAL, "Запрос контрольной ленты ЭКЛЗ");
-  parameter  p;
-  answer     a;
-  int result = -1;
+    parameter  p;
+    answer     a;
+    p.len = 2;
+    int result = -1;
 
-  if (connected)
-  {
-        p.len = 2;
+    if (connected)
+    {
+        logCommand(GET_EKLZ_JOURNAL, "Запрос контрольной ленты ЭКЛЗ");
+
         memcpy(&p.buff, &fr.SessionNumber, 2);
+
         result = processCommand(GET_EKLZ_JOURNAL, &p, &a);
         if (result == 0)
         {
@@ -1566,13 +1516,13 @@ int DriverFR::GetEKLZJournal()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZData()
 {
-    logCommand(GET_EKLZ_DATA, "Запрос данных отчета ЭКЛЗ");
     parameter  p;
     answer     a;
     int result = -1;
 
     if (connected)
     {
+        logCommand(GET_EKLZ_DATA, "Запрос данных отчета ЭКЛЗ");
         result = processCommand(GET_EKLZ_DATA, &p, &a);
         if (result == 0)
         {
@@ -1588,13 +1538,13 @@ int DriverFR::GetEKLZData()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZCode1Report()
 {
-    logCommand(GET_EKLZ_CODE1_REPORT, "Запрос состояния по коду 1 ЭКЛЗ");
     parameter  p;
     answer     a;
     int result = -1;
 
     if (connected)
     {
+        logCommand(GET_EKLZ_CODE1_REPORT, "Запрос состояния по коду 1 ЭКЛЗ");
         result = processCommand(GET_EKLZ_CODE1_REPORT, &p, &a);
         if (result == 0)
         {
@@ -1626,13 +1576,13 @@ int DriverFR::GetEKLZCode1Report()
 
 int DriverFR::EKLZInterrupt()
 {
-    logCommand(EKLZ_INTERRUPT, "Прекращение ЭКЛЗ");
     parameter  p;
     answer     a;
     int result = -1;
 
     if (connected)
     {
+        logCommand(EKLZ_INTERRUPT, "Прекращение ЭКЛЗ");
         result = processCommand(EKLZ_INTERRUPT, &p, &a);
     }
     return result;
@@ -1642,51 +1592,53 @@ int DriverFR::EKLZInterrupt()
 //-----------------------------------------------------------------------------
 int DriverFR::CashIncome()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 5;
+    parameter  p;
+    answer     a;
+    p.len    = 5;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(CASH_INCOME, "Поступление наличных");
 
-  int64_t  sum = llround(fr.Summ1 * 100);
+        int64_t  sum = llround(fr.Summ1 * 100);
+        memcpy(p.buff, &sum, 5);
 
-  memcpy(p.buff, &sum, 5);
-
-  if (sendCommand(CASH_INCOME, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != CASH_INCOME) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-  fr.OpenDocumentNumber = evalint((unsigned char*)&a.buff+3, 2);
-
-  return 0;
+        result = processCommand(CASH_INCOME, &p, &a);
+        if (result == 0)
+        {
+            fr.OpenDocumentNumber = evalint((unsigned char*)&a.buff+3, 2);
+        }
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::CashOutcome()
 {
-  parameter  p;
-  answer     a;
-  p.len    = 5;
+    parameter  p;
+    answer     a;
+    p.len    = 5;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(CASH_OUTCOME, "Выдача наличных");
 
-  int64_t  sum = llround(fr.Summ1 * 100);
+        int64_t  sum = llround(fr.Summ1 * 100);
+        memcpy(p.buff, &sum, 5);
 
-  memcpy(p.buff, &sum, 5);
-
-  if (sendCommand(CASH_OUTCOME, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != CASH_OUTCOME) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-  fr.OpenDocumentNumber = evalint((unsigned char*)&a.buff+3, 2);
-
-  return 0;
+        result = processCommand(CASH_OUTCOME, &p, &a);
+        if (result == 0)
+        {
+            fr.OpenDocumentNumber = evalint((unsigned char*)&a.buff+3, 2);
+        }
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::Charge()
 {
@@ -1752,7 +1704,6 @@ int DriverFR::StornoCharge()
 //-----------------------------------------------------------------------------
 int DriverFR::Discount()
 {
-    logCommand(DISCOUNT, "Скидка");
     parameter  p;
     answer     a;
     p.len   = 49;
@@ -1760,6 +1711,8 @@ int DriverFR::Discount()
 
     if (connected)
     {
+        logCommand(DISCOUNT, "Скидка");
+
         int64_t  sum = llround(fr.Summ1 * 100);
         memcpy(p.buff, &sum, 5);
         p.buff[5] = fr.Tax1;
@@ -1767,22 +1720,13 @@ int DriverFR::Discount()
         p.buff[7] = fr.Tax3;
         p.buff[8] = fr.Tax4;
         memcpy((char*)p.buff+9, (char*)fr.StringForPrinting, 40);
-        if (sendCommand(DISCOUNT, fr.Password, &p) >= 0)
-        {
-            if (readAnswer(&a) >= 0)
-            {
-                if (a.buff[0] == DISCOUNT)
-                {
-                    if (errHand(&a) != 0)
-                        result = fr.ResultCode;
-                    else
-                        fr.OperatorNumber = a.buff[2];
-                }
-            }
-        }
+
+        result = processCommand(DISCOUNT, &p, &a);
     }
     return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::StornoDiscount()
 {
@@ -1837,16 +1781,16 @@ int DriverFR::CheckSubTotal()
 //-----------------------------------------------------------------------------
 int DriverFR::CloseCheck()
 {
-    logCommand(CLOSE_CHECK, "Закрытие чека");
     parameter  p;
     answer     a;
     int result = -1;
 
     if (connected)
     {
+        logCommand(CLOSE_CHECK, "Закрытие чека");
+
         int64_t  sum;
         p.len   = 67;
-
         sum = llround(fr.Summ1 * 100);
         memcpy(p.buff,    &sum, 5);			// 0-4
         sum = llround(fr.Summ2 * 100);
@@ -1855,16 +1799,13 @@ int DriverFR::CloseCheck()
         memcpy(p.buff+10, &sum, 5);			//10-14
         sum = llround(fr.Summ4 * 100);
         memcpy(p.buff+15, &sum, 5);			//15-19
-
         sum = llround(fr.DiscountOnCheck * 100);
         memcpy(p.buff+20, &sum, 3);			//20-22
-
         p.buff[23] = fr.Tax1;				//23
         p.buff[24] = fr.Tax2;				//24
         p.buff[25] = fr.Tax3;				//25
         p.buff[26] = fr.Tax4;				//26
         memcpy((char*)p.buff+27, (char*)fr.StringForPrinting, 40);
-
         result = processCommand(CLOSE_CHECK, &p, &a);
         if (result == 0)
         {

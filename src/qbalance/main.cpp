@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
-//-h 192.168.0.1 -p 5432 -l "sa Морозов Владимир Александрович" -db enterprise -pw kfz192vbe -d1 -d4 -d5
+// Пример параметров для запуска из консоли
+//-h 192.168.0.1 -p 5432 -l "sa Морозов Владимир Александрович" -db enterprise -pw ******** -d1 -d4 -d5
 
 #ifdef Q_OS_LINUX
 #define CRASHHANDLER
@@ -172,7 +173,9 @@ int main(int argc, char *argv[])
 
     TApplication application(argc, argv);
 
+#ifdef CRASHHANDLER
     Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->getCrashDumpsPath());
+#endif
 
 //    buggyFunc();
 
@@ -184,7 +187,6 @@ int main(int argc, char *argv[])
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
         application.setDebugMode(0);
-        application.debug(0, "Program startup.");
 
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
         if (application.getScript().size() > 0)
@@ -192,6 +194,7 @@ int main(int argc, char *argv[])
 
         if (application.open())
         {       // Если приложение удалось создать
+            application.debug(0, "Program startup.");
             if (application.isScriptMode())
                 lResult = application.runScript(application.getScript());
             else if (application.isServerMode())
@@ -201,8 +204,8 @@ int main(int argc, char *argv[])
                 application.show();         // Откроем приложение
                 lResult = application.exec();
             }
+            application.debug(0, "Program shutdown.\n");
         }
-        application.debug(0, "Program shutdown.\n");
         application.close();            // Закроем приложение
         application.quit();
     }

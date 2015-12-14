@@ -25,6 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QNetworkSession>
 
 
+class TApplication;
+
 class TcpClient : public QObject
 {
     Q_OBJECT
@@ -40,8 +42,10 @@ private slots:
     void slotReadyRead();
     void slotError(QAbstractSocket::SocketError);
     void slotConnected();
+    void tryReceive();
 
 private:
+    TApplication*   app;
     QTcpSocket* m_pTcpSocket;
     quint16     m_nNextBlockSize;
     bool        connected;

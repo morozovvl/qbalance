@@ -800,7 +800,7 @@ public:
 
 private:
 
-    int checkState();
+//    int checkState();
     unsigned short int readByte();
     int readBytes(unsigned char *, int);
     int sendENQ();
@@ -843,7 +843,7 @@ private:
     TApplication* app;
     MyProgressDialog* progressDialog;
     bool    showProgressBar;
-
+    int     maxTries;
 };
 
 #endif // DRIVERFR_H

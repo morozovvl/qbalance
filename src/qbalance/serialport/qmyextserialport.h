@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define QMYEXTSERIALPORT_H
 
 #include <QByteArray>
+#include <QQueue>
 #include "../../qextserialport/src/qextserialport.h"
 #include "../kernel/tcpclient.h"
 
@@ -30,13 +31,11 @@ class QMyExtSerialPort : public QextSerialPort
 {
     Q_OBJECT
 public:
-    QMyExtSerialPort();
-    QMyExtSerialPort(QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(mode, parent) { ; }
-    QMyExtSerialPort(const QString & name, QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(name, mode, parent) { ; }
-    QMyExtSerialPort(const PortSettings & settings, QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(settings, mode, parent) { ; }
-    QMyExtSerialPort(const QString & name, const PortSettings & settings, QueryMode mode = EventDriven, QObject * parent = 0): QextSerialPort(name, settings, mode, parent) { ; }
+    QMyExtSerialPort(const QString & name, QueryMode mode = EventDriven, QObject * parent = 0);
     ~QMyExtSerialPort();
 
+    virtual bool open(OpenMode mode);
+    virtual void close();
     qint64 writeData(const char *, qint64, bool = false);
     qint64 readData(char *, qint64, bool = false);
 
@@ -44,6 +43,7 @@ public:
     bool    isReadyDriverFR();
     bool    setLock(bool lock);
     void    setRemote(bool r) { remote = r; }
+    void    setTimeout(int t) { timeOut = t; }
 
     // Работа с TCP соединением
     void setTcpClient(QString, int);
@@ -53,12 +53,17 @@ public:
     // Работа с журналом
     QString     getLog() { return log; }
     void        writeLog(QString = "", bool = false);
+private slots:
+    void        tryReceive();
 private:
-    bool remote;
-    bool outLog;
-    QString log;
-    static TcpClient* tcpClient;
-    TApplication* app;
+    bool                remote;
+    bool                outLog;
+    QString             log;
+    static TcpClient*   tcpClient;
+    TApplication*       app;
+    QQueue<unsigned char> buffer;
+    int                 tryReceiveExit;
+    int                 timeOut;
 
     void appendLog(bool, QString, bool = false);
 };

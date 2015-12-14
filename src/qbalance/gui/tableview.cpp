@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mynumericitemdelegate.h"
 #include "mybooleanitemdelegate.h"
 #include "mydateitemdelegate.h"
-#include "../storage/dbfactory.h"
 
 
 TableView::TableView(): QTableView()
@@ -53,7 +52,6 @@ void TableView::open()
     parentWidget = 0;
     name = "tableView";
     app = 0;
-    db = 0;
     essence = 0;
     picture = 0;
     tableModel = 0;
@@ -82,7 +80,6 @@ void TableView::setEssence(Essence* ess)
     if (parent != 0)
     {
         app = parent->getApp();
-        db = app->getDBFactory();
         fields = essence->returnColumnsProperties();
         connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
 
@@ -156,7 +153,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     if (essence != 0)
         essence->beforeRowChanged();
 
-    if (isVisible())
+    if (isVisible() && current.row() != previous.row())
         showPhoto();
 
     if (essence != 0)
@@ -252,7 +249,7 @@ bool TableView::setColumnsHeaders()
             header->setMovable(true);
 #endif
             header->setSortIndicatorShown(true);
-            db->getColumnsHeaders(essence->getTagName(), &fields);
+            app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
             if (fields.count() > 0)
             {
                 setColumnsDelegates();
@@ -563,7 +560,7 @@ void TableView::setReadOnly(bool ro)
 {
     if (parent != 0)
     {
-        db->getColumnsHeaders(essence->getTagName(), &fields);
+        app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
         for (int i = 0; i < fields.count(); i++)
         {
             MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(i);
@@ -623,7 +620,7 @@ void TableView::readSettings()
         QHash<QString, int> values;
 
         app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + parent->getConfigName() + "...");
-        config = db->getConfig();
+        config = app->getDBFactory()->getConfig();
         config.first();
         while (config.isValid())
         {
@@ -679,7 +676,7 @@ void TableView::writeSettings()
                 {
                     int width = columnWidth(i);
                     if (width > 0)
-                        db->setConfig(parent->getConfigName(), QString("grid/%1/width").arg(i), QString("%1").arg(width));
+                        app->getDBFactory()->setConfig(parent->getConfigName(), QString("grid/%1/width").arg(i), QString("%1").arg(width));
                 }
                 app->showMessageOnStatusBar("");
             }

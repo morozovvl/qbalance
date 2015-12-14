@@ -49,8 +49,10 @@ QString TApplication::script           = "";
 QString TApplication::scriptParameter  = "";
 bool TApplication::serverMode = false;
 bool TApplication::sendCommandMode = false;
-//DBFactory* TApplication::db            = 0;
 GUIFactory* TApplication::gui          = 0;
+bool        TApplication::timeIsOut = false;
+QTimer      TApplication::timer;
+
 
 
 
@@ -62,8 +64,8 @@ TApplication::TApplication(int & argc, char** argv)
     setApplicationVersion("0.0.1");
     setWindowIcon(QIcon(":qbalance.ico"));
 
-    db  = new DBFactory();
-    gui = new GUIFactory(db);
+    db  = 0;
+    gui = 0;
 
     dictionaryList = 0;
     topersList = 0;
@@ -111,8 +113,8 @@ void TApplication::initConfig()
     config.frDriverBaudRate = 6;
 #endif
     config.frNeeded = false;
-    config.frDriverTimeOut = 50;
-    config.frLocalDriverTimeOut = 50;
+    config.frDriverTimeOut = 100;
+    config.frLocalDriverTimeOut = 100;
     config.frRemoteDriverTimeOut = 150;
     config.frNetDriverTimeOut = 200;
     config.frDriverPassword = 30;
@@ -177,22 +179,23 @@ bool TApplication::open() {
 
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
+    gui = new GUIFactory();
 
     readSettings();
 
+    if (config.frNeeded && !isScriptMode())
+    {
+        driverFR = new DriverFR(this);
+        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
+            driverFRisValid = true;
+    }
+    db  = new DBFactory();
     tcpServer = new TcpServer(config.localPort, this);
     barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
     messagesWindow = new MessageWindow();
 
     if (gui->open())
     {  // Попытаемся открыть графический интерфейс
-
-        if (config.frNeeded)
-        {
-            driverFR = new DriverFR(this);
-            if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
-                driverFRisValid = true;
-        }
 
         forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
         {
@@ -332,7 +335,7 @@ void TApplication::showConfigs() {
 
 
 QString TApplication::getLogsPath() {
-    return applicationDirPath() + "/data/logs/";
+    return getAnyPath("/logs");
 }
 
 
@@ -407,7 +410,8 @@ Dialog* TApplication::createForm(QString fileName)
         {
             QUiLoader formLoader(gui);
             formLoader.setWorkingDirectory(getFormsPath());
-            formLoader.addPluginPath(applicationDirPath() + "/plugins");
+            formLoader.clearPluginPaths();
+            formLoader.addPluginPath(applicationDirPath() + "/plugins/designer");
 
             formWidget = (Dialog*)(formLoader.load(&file));
             file.close();
@@ -499,7 +503,11 @@ void TApplication::showError(QString error)
         showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error);
     for (int i = scriptStack.count(); i > 0; i--)
-        debug(0, QString("Script: %1").arg(scriptStack.at(i - 1)));
+    {
+        QString scriptName = scriptStack.at(i - 1).trimmed();
+        if (scriptName.size() > 0)
+            debug(0, QString("Script: %1").arg(scriptName));
+    }
 }
 
 
@@ -582,6 +590,17 @@ void TApplication::startTimeOut(int ms)
 }
 
 
+void TApplication::sleep(int ms)
+{
+    QTime timer;
+    timer.start();
+    do
+    {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, ms);
+    } while (timer.elapsed() < ms);
+}
+
+
 void TApplication::showProcesses()
 {
 /*
@@ -625,10 +644,14 @@ int TApplication::runScript(QString scriptName)
             scriptEngine->close();
         }
         delete scriptEngine;
-        showMessageOnStatusBar(QString(trUtf8("Скрипт %1 %2\n")).arg(scriptName).arg(result ? "выполнен" : "не выполнен"));
+        QString message = QString(trUtf8("Скрипт %1 %2")).arg(scriptName).arg(result ? "выполнен" : "не выполнен");
         if (isScriptMode())
-            QTextStream(stdout) << "" << endl;
-        return result;
+        {
+            QTextStream(stdout) << message << endl;
+            debug(0, message);
+        }
+        else
+            showMessageOnStatusBar(message);
     }
     else
     {
@@ -651,6 +674,7 @@ int TApplication::runScript(QString scriptName)
         else
             showError(QString("Не удалось подключиться к хосту %1").arg(host));
     }
+    return result;
 }
 
 
@@ -840,7 +864,8 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
     reply = manager.get(QNetworkRequest(QUrl(command)));
     connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
-//    qDebug() << reply->error() << reply->errorString();
+    if (reply->error() != QNetworkReply::NoError)
+        debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
 }
 
 

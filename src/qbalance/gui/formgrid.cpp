@@ -250,9 +250,9 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
     }
     // Подключим кнопку "Удалить"
-    setButtonDelete(true);
+    parent->setDeleteable(true);
     // Подключим кнопку "Добавить"
-    setButtonAdd(true);
+    parent->setInsertable(true);
 
     grdTables.append(grdTable);
 }
@@ -279,10 +279,6 @@ void FormGrid::setButtonAdd(bool set)
                 connect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
                 app->setIcons(formWidget);
             }
-            else
-            {
-                parent->setInsertable(false);
-            }
         }
     }
     else
@@ -291,6 +287,7 @@ void FormGrid::setButtonAdd(bool set)
             buttonAdd = (QPushButton*)formWidget->findChild("buttonAdd");
         if (parent != 0 && buttonAdd != 0)
         {
+            buttonAdd->hide();
             cmdButtonLayout->removeWidget(buttonAdd);
             disconnect(buttonAdd, SIGNAL(clicked()), this, SLOT(cmdAdd()));
             if (defaultForm)
@@ -298,7 +295,6 @@ void FormGrid::setButtonAdd(bool set)
                 delete buttonAdd;
                 buttonAdd = 0;
             }
-            parent->setInsertable(false);
         }
     }
 }
@@ -325,10 +321,6 @@ void FormGrid::setButtonDelete(bool set)
                 connect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
                 app->setIcons(formWidget);
             }
-            else
-            {
-                parent->setDeleteable(false);
-            }
         }
     }
     else
@@ -337,6 +329,7 @@ void FormGrid::setButtonDelete(bool set)
             buttonDelete = (QPushButton*)formWidget->findChild("buttonDelete");
         if (parent != 0 && buttonDelete != 0)
         {
+            buttonDelete->hide();
             cmdButtonLayout->removeWidget(buttonDelete);
             disconnect(buttonDelete, SIGNAL(clicked()), this, SLOT(cmdDelete()));
             if (defaultForm)
@@ -344,7 +337,6 @@ void FormGrid::setButtonDelete(bool set)
                 delete buttonDelete;
                 buttonDelete = 0;
             }
-            parent->setDeleteable(false);
         }
     }
 }

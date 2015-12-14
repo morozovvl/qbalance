@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 #include <QDebug>
 #include <QHostInfo>
+#include <QBuffer>
 #include "../kernel/app.h"
 #include "qmyextserialport.h"
 
@@ -25,12 +26,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 TcpClient* QMyExtSerialPort::tcpClient = 0;
 
 
-QMyExtSerialPort::QMyExtSerialPort()
+QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject* parent): QextSerialPort(name, mode, parent)
 {
     remote = false;
     outLog = false;
     log = "";
     app = TApplication::exemplar();
+    tryReceiveExit = false;
+    timeOut = 1000;
 }
 
 
@@ -38,6 +41,84 @@ QMyExtSerialPort::~QMyExtSerialPort()
 {
     if (tcpClient != 0)
         delete tcpClient;
+}
+
+
+bool QMyExtSerialPort::open(OpenMode mode)
+{
+    bool result = QextSerialPort::open(mode);
+    return result;
+}
+
+
+void QMyExtSerialPort::close()
+{
+    QextSerialPort::close();
+}
+
+
+void QMyExtSerialPort::tryReceive()
+{
+    QByteArray result = QextSerialPort::readAll();
+    if (result.size() > 0)
+    {
+        for (int i = 0; i < result.size(); i++)
+            buffer.enqueue(result.at(i));
+    }
+    if (!tryReceiveExit)
+        QTimer::singleShot(5, this, SLOT(tryReceive()));
+}
+
+
+qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
+{
+    qint64 result = -1;
+    if (!remote)
+    {
+        tryReceiveExit = false;                     // Запустим цикл опроса данных в процедуре tryReceive() по таймауту
+        tryReceive();
+        app->startTimeOut(timeOut);                    // Ждем ответа в течение ...
+        while (true)
+        {
+            if (buffer.size() >= maxSize)
+            {
+                for (int i = 0; i < maxSize; i++)
+                    data[i] = buffer.dequeue();
+                result = maxSize;
+                break;
+            }
+            if (app->isTimeOut())
+            {
+                writeLog(QString("*** ЗАДЕРЖКА свыше %1 сек ***").arg(timeOut/1000));
+                break;
+            }
+            app->sleep(10);
+        }
+        tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
+        appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
+    }
+    else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)
+    {
+        QString command = QString("=fr=<<%1").arg(maxSize);
+        if (tcpClient->sendToServer(command))
+        {
+            if (tcpClient->waitResult())
+            {
+                QString res = tcpClient->getResult();
+                int pos = res.indexOf("<<");
+                result = res.left(pos).toLongLong();
+                if (result > 0)
+                {
+                    QByteArray arr;
+                    res.remove(0, pos + 2);
+                    arr.append(QByteArray::fromHex(QByteArray().append(res)));
+                    memcpy(data, arr.data(), maxSize);
+                    appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
+                }
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -58,39 +139,6 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
                 QString res = tcpClient->getResult();
                 result = res.toLongLong();
                 appendLog(true, QByteArray(data, maxSize).toHex().data(), fromRemote);
-            }
-        }
-    }
-    return result;
-}
-
-
-qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
-{
-    qint64 result = -1;
-    if (!remote)
-    {
-      result = QextSerialPort::readData(data, maxSize);
-      appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
-    }
-    else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)
-    {
-        QString command = QString("=fr=<<%1").arg(maxSize);
-        if (tcpClient->sendToServer(command))
-        {
-            if (tcpClient->waitResult())
-            {
-                QString res = tcpClient->getResult();
-                int pos = res.indexOf("<<");
-                result = res.left(pos).toLongLong();
-                if (result > 0)
-                {
-                    QByteArray arr;
-                    res.remove(0, pos + 2);
-                    arr.append(QByteArray::fromHex(QByteArray().append(res)));
-                    memcpy(data, arr.data(), maxSize);
-                    appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
-                }
             }
         }
     }
@@ -163,7 +211,7 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
         outLog = out;
     }
 
-/*
+
     // Удалим лидирующие нули
     while (str.length() > 0)
     {
@@ -172,7 +220,7 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
         else
             break;
     }
-*/
+
 
     while (str.length() > 0)
     {
@@ -187,6 +235,10 @@ void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
 
 void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
 {
+    if (remote && tcpClient != 0 && tcpClient->isValid())
+    {
+        tcpClient->sendToServer(QString("=fr=writeLog=%1").arg(str));
+    }
     // Если задана строка, то запишем ее в журнал
     if (str.size() > 0)
         app->debug(4, (fromRemote ? "remote " : "") + str);
@@ -201,11 +253,6 @@ void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
         }
         // Очистим журнал
         log = "";
-    }
-    if (remote && tcpClient != 0 && tcpClient->isValid())
-    {
-        if (tcpClient->sendToServer("=fr=writeLog=" + str))
-            tcpClient->waitResult();
     }
 }
 

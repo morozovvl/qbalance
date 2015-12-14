@@ -42,6 +42,14 @@ void TcpServer::pingClient(QString host)
 {
     pingOk = false;
     sendToClient(host, "*ping*");
+    app->startTimeOut(2000);                   // Ждем ответа в течение 2 сек
+    while (!app->isTimeOut())
+    {
+        slotReadClient();
+        if (pingOk)
+            break;
+        app->sleep(10);
+    }
 }
 
 
@@ -51,8 +59,6 @@ void TcpServer::sendToClient(QString host, QString str)
     {
         if (clients.value(host)->isValid())         // и слот рабочий
             sendToClient(clients.value(host), str);
-        else
-            slotDisconnected(clients.value(host));   // Слот нерабочий удалим его
     }
 }
 
@@ -60,13 +66,14 @@ void TcpServer::sendToClient(QString host, QString str)
 void TcpServer::slotNewConnection()
 {
     QTcpSocket* pClientSocket = m_ptcpServer->nextPendingConnection();
-    connect(pClientSocket, SIGNAL(disconnected()), pClientSocket, SLOT(slotDisconnected(pClientSocket)));
+    connect(pClientSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(pClientSocket, SIGNAL(readyRead()), this, SLOT(slotReadClient()));
 }
 
 
-void TcpServer::slotDisconnected(QTcpSocket* clientSocket)
+void TcpServer::slotDisconnected()
 {
+    QTcpSocket* clientSocket = ((QTcpSocket*)sender());
     clients.remove(clientSocket->peerAddress().toString());         // Удалим клиента из списка обслуживаемых
     clientSocket->deleteLater();
 }
@@ -165,7 +172,14 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     }
     else if (str.indexOf("isLockedDriverFR") == 0)
     {
-        bool result = app->getDrvFR()->isLocked();
+        bool result = false;
+        // Если драйвер ФР заблокировал сам клиент
+        if (pClientSocket->peerAddress().toString() == app->getDrvFR()->getLockedByHost())
+            result = true;
+        else
+            result = app->getDrvFR()->isLocked();
+        resStr = (result ? "true" : "false");
+        sendToClient(pClientSocket, resStr);
     }
     else if (str.indexOf("setLockDriverFR(true)") == 0)
     {

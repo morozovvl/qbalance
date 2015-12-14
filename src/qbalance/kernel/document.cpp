@@ -781,9 +781,9 @@ bool Document::open()
 
 void Document::close()
 {
+    Essence::close();
     dictionaries->close();
     delete dictionaries;
-    Essence::close();
 }
 
 

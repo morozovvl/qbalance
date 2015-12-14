@@ -137,7 +137,7 @@ public:
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
     static bool isDebugMode(int mode)        { return DebugModes.contains(mode);}
-    QString debugFileName(int debugMode) { return getLogsPath().append(QString("debug%1.log").arg(debugMode));}
+    QString debugFileName(int debugMode) {  return getLogsPath().append(QString("debug%1.log").arg(debugMode));}
     static QString errorFileName() { return "error.log";}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
@@ -183,6 +183,7 @@ public:
     Q_INVOKABLE void timeOut(int);
     Q_INVOKABLE void startTimeOut(int);
     Q_INVOKABLE bool isTimeOut() { return timeIsOut; }
+    Q_INVOKABLE void sleep(int);
 
     void saveCustomization();
     void loadFile();
@@ -213,7 +214,6 @@ signals:
 private:
     Dictionaries*           dictionaryList;                               // Форма со списком справочников
     Topers*                 topersList;                                   // Форма со списком операций
-    DBFactory*              db;
     static GUIFactory*      gui;
     QDate                   beginDate;
     QDate                   endDate;
@@ -223,6 +223,7 @@ private:
     bool                    fsWebCamIsValid;
     static QList<int>       DebugModes;
     static TApplication*    Exemplar;
+    DBFactory*              db;
     BarCodeReader*          barCodeReader;
     QString                 cardReaderCode;
     MessageWindow*          messagesWindow;
@@ -239,8 +240,8 @@ private:
 
     QHash<QString, QStringList>     arraysForPrint;
     TcpServer*              tcpServer;
-    QTimer                  timer;
-    bool                    timeIsOut;
+    static QTimer           timer;
+    static bool             timeIsOut;
     bool                    scriptMode;
     static bool             sendCommandMode;
 

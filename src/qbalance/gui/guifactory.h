@@ -31,7 +31,7 @@ class MainWindow;
 class GUIFactory: public QObject {
     Q_OBJECT
 public:
-    GUIFactory(DBFactory *d);
+    GUIFactory();
     MainWindow* getMainWindow() { return mainWindow; }
     QString getLastDbName() { return lastDbName; }
     QString getLastHostName() { return lastHostName; }

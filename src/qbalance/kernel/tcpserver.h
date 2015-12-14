@@ -38,6 +38,7 @@ public:
 
 public slots:
     void    sendToClient(QString, QString);
+    void    slotDisconnected();
 
 private:
     QTcpServer* m_ptcpServer;
@@ -46,7 +47,6 @@ private:
 private slots:
     void    slotNewConnection();
     void    slotReadClient();
-    void    slotDisconnected(QTcpSocket*);
 
 private:
     TApplication*   app;
