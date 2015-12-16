@@ -49,6 +49,8 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont)
             tableNameForPrinting = table;
             writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
         }
+        writeHeader();
+
         ooxmlEngine->close();
 
         // Запустим OpenOffice
@@ -80,15 +82,11 @@ void OOXMLReportEngine::writeVariables()
     Шаблоном строки таблицы является первая строка тела таблицы в шаблоне документа.
     Если в теле таблицы несколько строк, то из первой строки клонируются новые строки
     Попутно создается список выражений, которые нужно пропустить через скриптовый движок
-2.  Заполняет данными оставшиеся в документе ячейки, содержащие шаблон "[<выражение>]", не входящие в тело таблицы.
-    Попутно создается список выражений, которые нужно пропустить через скриптовый движок
-3.  Подготовленный список выражений пропускается через скриптовый движок и результаты записываются в соответствующие ячейки документа
 */
 {
     QDomDocument* doc = ooxmlEngine->getDomDocument();
 
     expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
-
 
 // Пункт 1 (см. комментарий выше)
 
@@ -109,7 +107,7 @@ void OOXMLReportEngine::writeVariables()
     if (!firstRowNode.isNull())                 // Если в шаблоне было найдено "тело" таблицы
     {
         QDomNode lastNode = firstRowNode;       // lastNode будет указывать на последнюю добавленную строку таблицы
-        bool valFound = true;                   // флаг, указывающий, что заполнение таблицы нужно закончить
+        bool valFound = true;                   // флаг, указывающий, что заполнение таблицы можно продолжать
         for (int strNum = 1; valFound; strNum++)    // по порядку строк документа
         {
             if (scriptEngine != 0)
@@ -136,16 +134,40 @@ void OOXMLReportEngine::writeVariables()
         firstRowNode.parentNode().removeChild(firstRowNode);                        // удалим первую строку тела документа, т.к. в ней содержатся только шаблоны (без данных)
                                                                                     // он не заполнялся данными, т.к. был нужен для клонирования следующих строк
     }
+}
 
+
+void OOXMLReportEngine::writeHeader()
+/*
+2.  Заполняет данными оставшиеся в документе ячейки, содержащие шаблон "[<выражение>]", не входящие в тело таблицы.
+    Попутно создается список выражений, которые нужно пропустить через скриптовый движок
+3.  Подготовленный список выражений пропускается через скриптовый движок и результаты записываются в соответствующие ячейки документа
+*/
+{
+    QDomDocument* doc = ooxmlEngine->getDomDocument();
+    expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
+    cells = doc->elementsByTagName("text:p");   // будем выбирать только те ячейки, которые содержат текст
+    tableNameForPrinting = "таблица";
 
 // Пункт 2 (см. комментарий выше)
 
     // Теперь вставим все оставшиеся переменные
     cells =  doc->elementsByTagName("text:p");  // будем выбирать только те ячейки, которые содержат текст
-    for (int i = 0; i < cells.count(); i++)
+    bool valFound = false;
+    while (!valFound)
     {
-         readExpression(i, 1);             // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
-                                           // данные для выражений, которые выглядят как [<таблица...>] и находятся вне тела таблицы, будут браться из первой строки тела таблицы
+        valFound = true;
+        int i = 0;
+        for (; i < cells.count(); i++)
+        {
+             if (readExpression(i, 1))             // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
+             {                                     // данные для выражений, которые выглядят как [<таблица...>] и находятся вне тела таблицы, будут браться из первой строки тела таблицы
+                 valFound = true;
+                 break;
+             }
+        }
+        if (i < cells.count() && valFound)         // Нашли может быть еще не все, продолжим
+            valFound = false;
     }
 
 
@@ -165,6 +187,7 @@ void OOXMLReportEngine::writeVariables()
             }
         }
     }
+
 }
 
 
@@ -176,6 +199,8 @@ i - номер ячейки в списке элементов, подлежащ
 strNum - номер текущей строки тела таблицы
 */
 {
+//    QString tableNameForPrinting = "таблица";
+
     bool result = true;         // результат оценки выражения
     QRegExp rx("\\[.+\\]");     // фильтр (регулярное выражение) для отсеивания не нужных символов в шаблоне
     while(true)                 // бесконечный цикл, чтобы в выражении можно было бы обработать любое количество элементов "[<...>]"
@@ -187,37 +212,50 @@ strNum - номер текущей строки тела таблицы
         {
             QVariant var;
             QString value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
-            if (value.size() > 0)           // если ячейка таблицы OpenOffice содержит выражение "[таблица<...>]"
+            QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
+            QString key = sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower();
+            var = context->getValue(key);  // в контексте печати наименования данных хранятся в нижнем регистре
+            if (var.isValid())                                      // если данные имеются
             {
-                QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
-                QString key = sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower();
-                var = context->getValue(key);  // в контексте печати наименования данных хранятся в нижнем регистре
+                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
+                break;
             }
-            else
-            {
+//            if (value.indexOf(tableNameForPrinting) == -1)
+//            {
                 // ячейка не относится к таблице
                 int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
                 value = cellText.mid(fpos, lpos - fpos);
                 value = value.remove("[").remove("]");      // освободим его от квадратных скобок
                 var = context->getValue(value);      // и получим данные для него из контекста печати
-            }
-            if (var.isValid())                                      // если данные имеются
-                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
-            else
+                if (var.isValid())                                      // если данные имеются
+                {
+                    writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
+                    break;
+                }
+//            }
+            if (!var.isValid() && value.size() > 0)
             {
-                // данных для выражения нет
+            // данных для выражения нет
                 if (strNum == 1 && !invalidExpressions.contains(value))                    // выведем сообщение об ошибке (для таблицы это будет только для первой строки)
                 {
-//                    QString tableName = value.mid(0, value.indexOf(".", 0));
+        //          QString tableName = value.mid(0, value.indexOf(".", 0));
                     TApplication::exemplar()->print(QString(QObject::trUtf8("Неизвестное выражение %1 в шаблоне %2")).arg(value).arg(fileName));
                     invalidExpressions.append(value);
                 }
                 result = false;
                 break;                      // выйдем из бесконечного цикла
             }
+            else
+            {
+                result = false;
+                break;                      // выйдем из бесконечного цикла
+            }
         }
         else
+        {
+            result = false;
             break;  // элементов "[<...>]" в выражении больше нет, выходим
+        }
     }
     return result;
 }

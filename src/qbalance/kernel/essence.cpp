@@ -93,7 +93,7 @@ Dialog* Essence::getFormWidget() {
 
 bool Essence::calculate()
 {
-    if (scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != 0)
     {
         scriptEngine->eventCalcTable();
         scriptEngine->eventAfterCalculate();
@@ -495,7 +495,8 @@ void Essence::replyFinished(QNetworkReply* reply)
                 if (idValue == getValue(photoIdField).toString().trimmed())
                 {
                     emit photoLoaded();                 // Выведем фотографию на экран
-                    scriptEngine->eventPhotoLoaded();
+                    if (scriptEngineEnabled && scriptEngine != 0)
+                        scriptEngine->eventPhotoLoaded();
                 }
             }
             else
@@ -590,6 +591,7 @@ bool Essence::open()
         setOrderClause();
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();
+        openScriptEngine();
         return true;
     }
     return false;
@@ -676,7 +678,7 @@ void Essence::openScriptEngine()
     {
         setScriptEngine();
         evaluateEngine();
-        if (dictionaries != 0 && dictionaries->getDocument() != 0 && scriptEngine != 0)          // Если этот справочник является частью документа
+        if (dictionaries != 0 && dictionaries->getDocument() != 0)          // Если этот справочник является частью документа
             scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
 
         initFormEvent(form);
@@ -687,7 +689,7 @@ void Essence::openScriptEngine()
 void Essence::closeScriptEngine()
 {
     closeFormEvent(form);
-    if (scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != 0)
         scriptEngine->deleteLater();
 }
 
@@ -696,7 +698,7 @@ void Essence::setEnabled(bool en)
 {
     QString disabledMessage = QObject::trUtf8(" - изменения запрещены");
     enabled = en;
-    if (scriptEngine != 0)
+    if (scriptEngineEnabled && scriptEngine != 0)
         scriptEngine->eventSetEnabled(en);
     if (enabled)
         setFormTitle(getFormTitle().remove(disabledMessage));
@@ -906,7 +908,8 @@ void Essence::preparePrintValues()
             }
             reportScriptEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg("номерстроки"), QVariant(i));
         }
-        scriptEngine->eventPreparePrintValues();
+        if (scriptEngineEnabled && scriptEngine != 0)
+            scriptEngine->eventPreparePrintValues();
     }
 }
 
@@ -1010,19 +1013,19 @@ void Essence::restoreOldValues()
 
 void Essence::keyboardReaded(QString barCode)
 {
-    if (scriptEngine != 0 && enabled)
+    if (scriptEngineEnabled && scriptEngine != 0 && enabled)
         scriptEngine->eventBarCodeReaded(barCode);
 }
 
 
 void Essence::cardCodeReaded(QString cardCode)
 {
-    if (scriptEngine != 0 && enabled)
+    if (scriptEngineEnabled && scriptEngine != 0 && enabled)
         scriptEngine->eventCardCodeReaded(cardCode);
 }
 
 
-void Essence::print(QString fileName)
+void Essence::print(QString fileName, bool newFile)
 // fileName - файл с шаблоном документа
 {
     // Подготовим контекст для печати
@@ -1039,6 +1042,28 @@ void Essence::print(QString fileName)
 
     // Если такого шаблона нет, попробуем получить его с сервера
     getFile(app->getReportsPath(), fileName, ReportTemplateFileType);
+
+    QString ext = QFileInfo(fileName).suffix();
+    if (newFile)
+    {
+        QFile().copy(app->applicationDirPath() + "/empty.ods", fullFileName);
+    }
+    else
+    {
+        QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
+        // Скопируем шаблон во временный файл
+        QTemporaryFile templateFile(tmpFileName);
+        if (templateFile.open())
+        {
+            tmpFileName = templateFile.fileName();
+            templateFile.close();
+            templateFile.remove();
+
+            // Скопируем файл отчета (шаблон) во временный файл
+            QFile().copy(fullFileName, tmpFileName);
+        }
+        fullFileName = tmpFileName;
+    }
     if (QDir().exists(fullFileName))
     {
         bool result = true;                         // По умолчанию документ будет печататься
@@ -1056,38 +1081,24 @@ void Essence::print(QString fileName)
 
         if (result)
         {
-            // Скопируем шаблон во временный файл
-            QString ext = QFileInfo(fileName).suffix();
-            QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
+            // На 3 секунды выведем сообщение об открытии документа
+            app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
 
-            QTemporaryFile templateFile(tmpFileName);
-            if (templateFile.open())
+            // Из пользовательских настроек выберем обработчик шаблона
+            switch (app->getReportTemplateType())
             {
-                tmpFileName = templateFile.fileName();
-                templateFile.close();
-                templateFile.remove();
-
-                // Скопируем файл отчета (шаблон) во временный файл
-                if (QFile().copy(fullFileName, tmpFileName))
+                // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
+                case OOreportTemplate:
                 {
-                    // На 3 секунды выведем сообщение об открытии документа
-                    app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);
-
-                    // Из пользовательских настроек выберем обработчик шаблона
-                    switch (app->getReportTemplateType())
+                    OOReportEngine* report = new OOReportEngine(&scriptEngine);
+                    if (report->open())
                     {
-                        // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
-                        case OOreportTemplate:
-                            {
-                                OOReportEngine* report = new OOReportEngine(&scriptEngine);
-                                if (report->open())
-                                {
-                                    report->open(&printValues, fileName, ext);
-                                    report->close();
-                                }
-                                delete report;
-                            }
-                            break;
+                        report->open(&printValues, fileName, ext);
+                        report->close();
+                    }
+                    delete report;
+                }
+                break;
 /*
                     // Обработчик шаблона с использованием OpenOffice UNO. С UNO работает медленно, поэтому не вижу смысла разрабатывать
                     case OOUNOreportTemplate:
@@ -1102,32 +1113,30 @@ void Essence::print(QString fileName)
                         }
                         break;
 */
-                        // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
-                        case OOXMLreportTemplate:
-                            {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                                OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
-                                if (report->open())
-                                {
-                                    report->setFileName(fileName);
-                                    report->open(tmpFileName, reportScriptEngine->getReportContext());
-                                    report->close();
-                                }
-                                delete report;
-                            }
-                            break;
-                        // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
-                        case OpenRPTreportTemplate:
-                            {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-//                               OpenRPTreportEngine report(&printValues, file, ext);
-//                           report.open();
-                            }
-                            break;
+                // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
+                case OOXMLreportTemplate:
+                {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+                    OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
+                    if (report->open())
+                    {
+                        report->setFileName(fileName);
+                        report->open(fullFileName, reportScriptEngine->getReportContext());
+                        report->close();
                     }
+                    delete report;
                 }
+                break;
+                // Обработчик шаблона с подключение проекта OpenRPT, который предлагал Drake. С его уходом ветка умерла.
+                case OpenRPTreportTemplate:
+                {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
+//                              OpenRPTreportEngine report(&printValues, file, ext);
+//                           report.open();
+                }
+                break;
             }
         }
-        reportScriptEngine = 0;
     }
+    reportScriptEngine = 0;
 }
 
 

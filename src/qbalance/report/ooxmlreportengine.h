@@ -47,6 +47,7 @@ private:
     QString                     fileName;
 
     void writeVariables();                                              // Заполняет поля с переменными в шаблоне
+    void writeHeader();
     bool readExpression(int, int);
     QString getTableVariable(QDomElement, QString);
     void writeCell(QDomNode, QString, QVariant);

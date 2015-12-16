@@ -488,7 +488,7 @@ void FormGrid::cmdPrint(bool autoPrint)
                                                       QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
                                                       reportName, &ok);
                         if (ok && !reportName.isEmpty())
-                            parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt());
+                            parent->print(getParent()->getTagName() + "." + reportName + "." + app->getReportTemplateExt(), true);
                     }
                     else
                         parent->print(getParent()->getTagName() + "." + action->text() + "." + app->getReportTemplateExt());

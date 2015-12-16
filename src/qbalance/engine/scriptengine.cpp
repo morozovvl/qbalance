@@ -708,7 +708,7 @@ bool ScriptEngine::evaluate()
         }
         else
         {
-            if (globalObject().property("EventKeyPressed").isValid())
+            if (globalObject().property("EventKeyPressed").isValid() && !app->isScriptMode())
             {
                 // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
                 if (parent() != 0)
@@ -1046,7 +1046,7 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     appendEvent("GetFilter(filter)", func);
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
-    if (document != 0 && document->isQuanAccount())
+    if (document != 0 && document->isQuanAccount() && document->getPrvQuan() == 1)
     {
         func.body = "var кол = getValue(\"P1__КОЛ\");\n"
                     "var цена = getValue(\"P1__ЦЕНА\");\n"

@@ -839,7 +839,8 @@ void WizardOperation::generateScripts()
     QString scripts = textEditor->toPlainText();
     if (scripts.size() == 0)
     {
-        DocumentScriptEngine engine;
+        DocumentScriptEngine engine((Essence*)(app->getDocuments(oper)->getDocument()));
+
         EventFunction func;
         QString script;
         QTextStream stream(&script, QIODevice::Text);

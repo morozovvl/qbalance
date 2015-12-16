@@ -670,29 +670,32 @@ int DriverFR::readAnswer(answer *ans)
     if (repl == STX)
     {
         len = readByte();
-        int readedLen = readBytes(ans->buff, len);
-        if (readedLen == len)
+        if (len > 0)
         {
-            crc = readByte();
-            if (crc == (LRC(ans->buff, len, 0) ^ len))
+            int readedLen = readBytes(ans->buff, len);
+            if (readedLen == len)
             {
-                sendACK();
-                ans->len = len;
-                result = len;
-                return result;
+                crc = readByte();
+                if (crc == (LRC(ans->buff, len, 0) ^ len))
+                {
+                    sendACK();
+                    ans->len = len;
+                    result = len;
+                    return result;
+                }
+                else
+                {
+                    serialPort->writeLog();
+                    app->debug(4, QString("Не сходится контрольная сумма"));
+                }
             }
             else
             {
                 serialPort->writeLog();
-                app->debug(4, QString("Не сходится контрольная сумма"));
+                app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
             }
-         }
-         else
-        {
-            serialPort->writeLog();
-            app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
+            sendNAK();
         }
-        sendNAK();
     }
     return result;
 }
@@ -946,7 +949,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
         {
             attempts++;
             serialPort->writeLog();
-            app->sleep(100);
+            app->sleep(500);
             serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
         }
         else

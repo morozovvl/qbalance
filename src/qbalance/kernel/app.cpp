@@ -497,6 +497,7 @@ void TApplication::setIcons(QWidget* formWidget)
 
 void TApplication::showError(QString error)
 {
+    QWidget* widget = QApplication::focusWidget();
     if (!isScriptMode())
         gui->showError(error);
     else
@@ -508,6 +509,8 @@ void TApplication::showError(QString error)
         if (scriptName.size() > 0)
             debug(0, QString("Script: %1").arg(scriptName));
     }
+    if (widget != 0)
+        widget->setFocus();
 }
 
 

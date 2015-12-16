@@ -66,11 +66,20 @@ Document::Document(int oper, Documents* par): Essence()
 
     // Проверим, есть ли в документе "свободная" проводка
     for (int i = 0; i < topersList->count(); i++)
+    {
         if (topersList->at(i).freePrv)
         {
             freePrv = topersList->at(i).number;
             break;
         }
+    }
+
+    // Проверим есть ли количественный учет
+    for (int i = 0; i < topersList->count(); i++)
+    {
+        if (topersList->at(i).dbQuan || topersList->at(i).crQuan)
+            quanAccount = true;                     // Используется количественный учет
+    }
 
     lInsertable = true;
     lDeleteable = true;
@@ -206,31 +215,29 @@ void Document::showItog()
 }
 
 
-
-void Document::resolveMustShownDicts()
-{
-    foreach (QString dictName, getDictionariesList()->keys())
-    {
-        Dictionary* dict = getDictionariesList()->value(dictName);
-        if (!dict->isConst())
-        {
-            if (!dict->isSet() && dict->canShow())
-            {
-                dict->setMustShow(true);
-            }
-            if(dict->isSaldo() && dict->canShow())
-            {
-                dict->setMustShow(true);
-            }
-        }
-    }
-}
-
-
 bool Document::add()
 {
     bool result = false;
-    if ((checkConstDicts() && scriptEngine->eventBeforeAddString() && showNextDict()) || getIsSingleString())    // Показать все справочники, которые должны быть показаны перед добавлением новой записи
+
+    if (getIsSingleString())
+        result = true;
+    else
+    {
+        if (checkConstDicts())
+        {
+            result = true;
+
+            if (scriptEngineEnabled && scriptEngine != 0)
+                result = scriptEngine->eventBeforeAddString();
+
+            if (result)
+                result = showNextDict();
+            else
+                result = false;
+        }
+    }
+
+    if (result)
     {
         if (topersList->at(0).attributes && topersList->at(0).number == 0)
         {
@@ -248,7 +255,6 @@ bool Document::add()
             }
         }
         appendDocString();
-        result = true;
     }
     grdTable->setFocus();
     return result;
@@ -322,7 +328,9 @@ bool Document::remove(bool noAsk)
 {
     if (lDeleteable)
     {
-        scriptEngine->eventBeforeDeleteString();
+        if (scriptEngineEnabled && scriptEngine != 0)
+            scriptEngine->eventBeforeDeleteString();
+
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove(noAsk))
         {
@@ -330,7 +338,10 @@ bool Document::remove(bool noAsk)
             {
                 query();
                 calcItog();
-                scriptEngine->eventAfterDeleteString();
+
+                if (scriptEngineEnabled && scriptEngine != 0)
+                    scriptEngine->eventAfterDeleteString();
+
                 saveChanges();     // Принудительно обновим итог при удалении строки
                 return true;
             }
@@ -555,8 +566,6 @@ void Document::loadDocument()
 
     for (int i = 0; i < topersList->count(); i++)
     {
-        if (topersList->at(i).dbQuan || topersList->at(i).crQuan)
-            quanAccount = true;                     // Используется количественный учет
         int prvNumber = topersList->at(i).number;
         dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
         if (getDictionariesList()->contains(dictName))
@@ -579,6 +588,7 @@ void Document::loadDocument()
             foreach (QString dictName, dict->getChildDicts())
             {
                 Dictionary* childDict = getDictionariesList()->value(dictName);
+                childDict->setCanShow(true);
                 if (childDict != 0)
                 {
                     if (childDict->isConst())
@@ -652,7 +662,24 @@ void Document::loadDocument()
     }
     restoreVariablesFromDB();   // Загрузим переменные для этого экземпляра документа
     parent->saveOldValues();    // Запомним старые значения текущей строки списка документов
-    resolveMustShownDicts();                // Решить, какие справочники показывать при добавлении новой строки
+
+    // Решить, какие справочники показывать при добавлении новой строки
+    foreach (QString dictName, getDictionariesList()->keys())
+    {
+        Dictionary* dict = getDictionariesList()->value(dictName);
+        if (!dict->isConst())
+        {
+            if (!dict->isSet() && dict->canShow())
+            {
+                dict->setMustShow(true);
+            }
+            if(dict->isSaldo() && dict->canShow())
+            {
+                dict->setMustShow(true);
+            }
+        }
+    }
+
 }
 
 
@@ -772,7 +799,6 @@ bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
     {
-//        resolveMustShownDicts();                // Решить, какие справочники показывать при добавлении новой строки
         return true;
     }
     return false;
@@ -809,7 +835,7 @@ void Document::setForm(QString formName)
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
     form->open(parentForm, (Document*)this, formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
-    openScriptEngine();
+//    openScriptEngine();
 }
 
 
@@ -956,7 +982,7 @@ bool Document::showNextDict()
             }
         }
     }
-    if (anyShown)
+    if (anyShown && scriptEngineEnabled && scriptEngine != 0)
         anyShown = scriptEngine->eventAfterShowNextDicts();
 
     foreach(QString dictName, lockedDicts)

@@ -65,7 +65,7 @@ public:
     Q_INVOKABLE virtual bool            add() = 0;                      // Добавление записи
     Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
-    virtual void                        print(QString);                 // Печать
+    virtual void                        print(QString, bool = false);                 // Печать
     virtual void                        load();
 
 // Функции для получения, сохранения данных модели

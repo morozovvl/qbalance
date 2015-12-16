@@ -166,7 +166,7 @@ void MainWindow::createMenus()
     saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
     connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
 
-    loadFileAct = serviceMenu->addAction(QObject::trUtf8("Загрузить файл"));
+    loadFileAct = serviceMenu->addAction(QObject::trUtf8("Загрузить файл со скриптом"));
     connect(loadFileAct, SIGNAL(triggered()), this, SLOT(loadFile()));
 
     configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));

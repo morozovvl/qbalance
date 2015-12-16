@@ -47,6 +47,7 @@ public:
     ~Document();
     Q_INVOKABLE int getDocId() { return docId; }
     Q_INVOKABLE int getOperNumber() { return operNumber; }
+    int             getPrvQuan() { return topersList->count(); }
     Documents* getParent() { return parent; }
     QHash<QString, Dictionary*>* getDictionariesList() { return dictionaries->getDictionariesList(); }
     Dictionaries* getDocDictionaries() { return dictionaries; }
@@ -126,7 +127,6 @@ private:
     void showItog();
     int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
     bool                            checkConstDicts();
-    void                            resolveMustShownDicts();    // Решить, которые справочники отображать при добавлении новой строки в документе
 };
 
 #endif // DOCUMENT_H
