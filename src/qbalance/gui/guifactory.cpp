@@ -181,12 +181,10 @@ int GUIFactory::showError(QString errorText) {
     msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
-//    mainWindow->setUpdatesEnabled(false);
     msgBox.show();
     msgBox.activateWindow();
     msgBox.raise();
     msgBox.exec();
-//    mainWindow->setUpdatesEnabled(true);
     if (window != 0)
         mainWindow->getWorkSpace()->setActiveSubWindow(window);
     return 0;

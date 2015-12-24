@@ -285,6 +285,7 @@ void    TableView::setColumnsDelegates()
                 if (!fields.at(i).readOnly)
                 {
                     connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+
                 }
                 delegate->setReadOnly(fields.at(i).readOnly);
                 setItemDelegateForColumn(i, delegate);

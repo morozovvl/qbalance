@@ -381,6 +381,8 @@ void Dictionary::setForm(QString formName)
 
 bool Dictionary::open(QString command, QString tName)
 {
+    if (tableName.size() == 0 && command.size() == 0)
+        return true;
     sqlCommand = command;
     if (tName == "undefined")
         tName = "";

@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QPointer>
 #include <QtUiTools/QtUiTools>
 #include <QtGui/QTextEdit>
+#include <QtGui/QFileDialog>
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
@@ -141,7 +142,7 @@ public:
     static QString errorFileName() { return "error.log";}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
-    static QString getScriptFileName(int oper) { return QString("./scripts/формулы%1.qs").arg(oper); }
+    static QString getScriptFileName(int oper) { return QString("формулы%1.qs").arg(oper); }
     static void setDebugMode(const int& value);
 
     Q_INVOKABLE void debug(int, const QString&, bool = false);
@@ -184,6 +185,9 @@ public:
     Q_INVOKABLE void startTimeOut(int);
     Q_INVOKABLE bool isTimeOut() { return timeIsOut; }
     Q_INVOKABLE void sleep(int);
+
+    Q_INVOKABLE void setDirName(QString str) { dirName = str; }
+    Q_INVOKABLE QString getOpenFileName(QWidget* parent = 0, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = 0, QFileDialog::Options options = 0);
 
     void saveCustomization();
     void loadFile();
@@ -251,6 +255,8 @@ private:
     void                    writeSettings();
     void                    saveMessages();
     QStringList             scriptStack;
+    QHash<QString, QString>     dirs;
+    QString                 dirName;
 
 private slots:
     void                    setTimeIsOut() { timeIsOut = true; }

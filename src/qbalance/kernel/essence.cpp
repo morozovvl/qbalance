@@ -60,7 +60,9 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     isCurrentCalculate = false;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
-    scriptFileName =  tagName + ".qs";
+    scriptFileName =  tagName;
+    if (tagName.size() > 0)
+        scriptFileName += ".js";
     scriptEngineEnabled = true;                 // По умолчанию разрешена загрузка скриптового движка
     photoPath = "";
     photoPathVerified = false;
@@ -674,7 +676,8 @@ ScriptEngine* Essence::getScriptEngine()
 
 void Essence::openScriptEngine()
 {
-    if (scriptEngineEnabled && db->isFileExist(scriptFileName, ScriptFileType))
+//    if (scriptEngineEnabled && db->isFileExist(scriptFileName, ScriptFileType))
+    if (scriptEngineEnabled && scriptFileName.size() > 0)
     {
         setScriptEngine();
         evaluateEngine();

@@ -91,6 +91,7 @@ TApplication::TApplication(int & argc, char** argv)
     tcpServer = 0;
     scriptMode = false;
     DebugModes.clear();
+    dirName = "";
 }
 
 
@@ -235,6 +236,8 @@ bool TApplication::open() {
                         else
                             showMessageOnStatusBar("Фискальный регистратор не найден.\n");
                     }
+
+                    db->clearLockedDocuementList();
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -497,7 +500,6 @@ void TApplication::setIcons(QWidget* formWidget)
 
 void TApplication::showError(QString error)
 {
-    QWidget* widget = QApplication::focusWidget();
     if (!isScriptMode())
         gui->showError(error);
     else
@@ -509,8 +511,8 @@ void TApplication::showError(QString error)
         if (scriptName.size() > 0)
             debug(0, QString("Script: %1").arg(scriptName));
     }
-    if (widget != 0)
-        widget->setFocus();
+//    if (gui->getMainWindow() != 0)
+//        gui->getMainWindow()->getWorkSpace()->activeSubWindow()->setFocus();
 }
 
 
@@ -847,14 +849,38 @@ void TApplication::loadFile()
 {
     if (isSA())
     {
-        QFileDialog dlg;
-        QString fileName = dlg.getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", QDir::currentPath(), tr("Scripts (*.js *.qs)"));
+        dirName = "scriptLoadDir";
+        QString fileName = getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", "", tr("Scripts (*.js *.qs)"));
         if (fileName.size() > 0)
         {
             QFileInfo fi(fileName);
             saveFileToServer(fileName, fi.fileName(), ScriptFileType);
         }
     }
+}
+
+
+QString TApplication::getOpenFileName(QWidget* parent, QString caption, QString dir, QString filter, QString* selectedFilter, QFileDialog::Options options)
+{
+    if (dir.size() == 0)
+    {
+        if (dirName.size() > 0)
+           dir = dirs.value(dirName);
+        if (dir.size() == 0)
+           dir = QDir::currentPath();
+    }
+
+    QString fileName = QFileDialog::getOpenFileName(parent, caption, dir, filter, selectedFilter, options);
+    if (fileName.size() > 0)
+    {
+        if (dirName.size() > 0)
+        {
+            dirs.remove(dirName);
+            dirs.insert(dirName, fileName);
+        }
+    }
+    dirName = "";
+    return fileName;
 }
 
 
@@ -891,6 +917,12 @@ void TApplication::readSettings()
     config.remoteHost = settings.value("remoteHost", config.remoteHost).toString();
     config.remotePort = settings.value("remotePort", config.remotePort).toInt();
     config.saveFormConfigToDB = settings.value("saveFormConfigToDB", config.saveFormConfigToDB).toBool();
+    int dirsCount = settings.value("dirsCount", 0).toInt();
+    for (int i = 0; i < dirsCount; i++)
+    {
+        QString dirName = settings.value(QString("dirName%1").arg(i), "").toString();
+        dirs.insert(dirName, settings.value(QString("dir%1").arg(i), "").toString());
+    }
     settings.endGroup();
 }
 
@@ -915,6 +947,13 @@ void TApplication::writeSettings()
     settings.setValue("remoteHost", config.remoteHost);
     settings.setValue("remotePort", config.remotePort);
     settings.setValue("saveFormConfigToDB", config.saveFormConfigToDB);
+    settings.setValue("dirsCount", dirs.count());
+    for (int i = 0; i < dirs.count(); i++)
+    {
+        QString dirName = dirs.keys().at(i);
+        settings.setValue(QString("dirName%1").arg(i), dirName);
+        settings.setValue(QString("dir%1").arg(i), dirs.value(dirName));
+    }
     settings.endGroup();
 }
 

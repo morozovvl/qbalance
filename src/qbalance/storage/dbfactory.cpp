@@ -110,7 +110,6 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
         //Нет смысла создавать локальный временный экземпляр в куче
         //Лучше на стеке - система его удалит
         QDir dir;
-
         for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
         {
             if (dir.exists(*script))
@@ -123,7 +122,6 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
                 proc.setProcessEnvironment(env);
                 command = QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName);
                 proc.start(command);
-
                 lResult = proc.waitForStarted();
                 if (!lResult)
                 {// выдадим сообщение об ошибке и выйдем из цикла
@@ -131,7 +129,7 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
                 }
                 else
                 {
-                    proc.waitForFinished();
+                    proc.waitForFinished(-1);
                     if (proc.exitStatus() == QProcess::CrashExit)
                     {
                         TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
@@ -191,7 +189,6 @@ bool DBFactory::open(QString login, QString password)
         currentPassword = password;
 
         pid = getValue("SELECT pg_backend_pid();").toInt();
-        clearLockedDocuementList();
         dbIsOpened = true;
         return true;
     }

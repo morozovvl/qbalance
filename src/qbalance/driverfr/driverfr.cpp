@@ -516,7 +516,7 @@ bool DriverFR::Connect(bool showError)
             if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             {
 //                maxTries = MAX_TRIES;
-                serialPort->setTimeout(10000);
+                serialPort->setTimeout(5000);
                 result = true;
                 if (TApplication::isDebugMode(4))
                 {
@@ -669,32 +669,40 @@ int DriverFR::readAnswer(answer *ans)
     repl = readByte();
     if (repl == STX)
     {
-        len = readByte();
-        if (len > 0)
+        for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
         {
-            int readedLen = readBytes(ans->buff, len);
-            if (readedLen == len)
+            len = readByte();
+            if (len > 0)
             {
-                crc = readByte();
-                if (crc == (LRC(ans->buff, len, 0) ^ len))
+                int readedLen = readBytes(ans->buff, len);
+                if (readedLen == len)
                 {
-                    sendACK();
-                    ans->len = len;
-                    result = len;
-                    return result;
+                    crc = readByte();
+                    if (crc == (LRC(ans->buff, len, 0) ^ len))
+                    {
+                        sendACK();
+                        ans->len = len;
+                        result = len;
+                        return result;
+                    }
+                    else
+                    {
+                        serialPort->writeLog();
+                        app->debug(4, QString("Не сходится контрольная сумма"));
+                    }
                 }
                 else
                 {
                     serialPort->writeLog();
-                    app->debug(4, QString("Не сходится контрольная сумма"));
+                    app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
                 }
+                sendNAK();
+                break;
             }
+            else if (len == 0)
+                app->timeOut(200);      // Повторим попытку прочитать длину сообщения через 200мс
             else
-            {
-                serialPort->writeLog();
-                app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
-            }
-            sendNAK();
+                break;
         }
     }
     return result;
@@ -757,6 +765,8 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
                     result = 1;                 // установим положительный результат
                     break;                      // и выйдем из цикла
                 }
+                else if (repl == NAK)
+                    break;
                 else if (repl == -1)
                     break;
             }
@@ -784,7 +794,13 @@ bool DriverFR::deviceIsReady()
             sendENQ();
         }
         else
-            break;
+//            break;
+        {                                       // от предыдущей команды
+            serialPort->writeLog();
+            answer     a;
+            readAnswer(&a);
+            sendENQ();
+        }
     }
     return false;
 }
@@ -2143,7 +2159,7 @@ int DriverFR::WriteTable()
   else
   {
     len = fr.FieldSize;
-    tmp = (char*)fr.ValueOfFieldInteger;
+    tmp = (char*)&fr.ValueOfFieldInteger;
   }
   p.len = 4 + len;
 

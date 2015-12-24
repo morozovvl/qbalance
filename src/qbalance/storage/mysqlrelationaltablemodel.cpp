@@ -205,11 +205,11 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             QString type = updateInfo.value(index.column()).type.toUpper();
             if (type == "CHARACTER" || type == "CHARACTER VARYING")
             {
-                value = QString("'%1'").arg(recValue.toString().left(length));
+                value = QString("'%1'").arg(recValue.toString().trimmed().left(length));
             }
             else if (type == "TEXT")
             {
-                value = QString("'%1'").arg(recValue.toString());
+                value = QString("'%1'").arg(recValue.toString().trimmed());
             }
             else if (type == "DATE")
             {
@@ -248,7 +248,7 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             }
             else
             {
-                value = QString("%1").arg(recValue.toString());
+                value = QString("%1").arg(recValue.toString().trimmed());
             }
             // Сгенерируем для сервера команду сохранения значения из модели
             if (write)

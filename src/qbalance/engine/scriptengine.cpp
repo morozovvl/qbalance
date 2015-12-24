@@ -822,14 +822,14 @@ void ScriptEngine::eventExport(Form* form)
 void ScriptEngine::eventAfterCalculate()
 {
     QString eventName = "EventAfterCalculate";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
 void ScriptEngine::eventParametersChanged()
 {
     QString eventName = "EventParametersChanged";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
@@ -838,7 +838,7 @@ bool ScriptEngine::eventBeforeAddString()
     bool result = true;
     QScriptValue res;
     QString eventName = "EventBeforeAddString";
-    res = scriptCall(eventName);
+    res = scriptCall(eventName, QScriptValue());
     if (res.toString() != "undefined")
         result = res.toBool();
     return result;
@@ -848,7 +848,7 @@ bool ScriptEngine::eventBeforeAddString()
 void ScriptEngine::eventAfterAddString()
 {
     QString eventName = "EventAfterAddString";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
@@ -857,7 +857,7 @@ bool ScriptEngine::eventAfterShowNextDicts()
     bool result = true;
     QScriptValue res;
     QString eventName = "EventAfterShowNextDicts";
-    res = scriptCall(eventName);
+    res = scriptCall(eventName, QScriptValue());
     if (res.toString() != "undefined")
         result = res.toBool();
     return result;
@@ -867,14 +867,14 @@ bool ScriptEngine::eventAfterShowNextDicts()
 void ScriptEngine::eventBeforeDeleteString()
 {
     QString eventName = "EventBeforeDeleteString";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
 void ScriptEngine::eventAfterDeleteString()
 {
     QString eventName = "EventAfterDeleteString";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
@@ -883,28 +883,28 @@ void ScriptEngine::eventSetEnabled(bool enabled)
     QString eventName = "EventSetEnabled";
     QScriptValueList args;
     args << QScriptValue(enabled);
-    globalObject().property(eventName).call(QScriptValue(), args);
+    scriptCall(eventName, QScriptValue(), args);
 }
 
 
 void ScriptEngine::eventBeforeRowChanged()
 {
     QString eventName = "EventBeforeRowChanged";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
 void ScriptEngine::eventAfterRowChanged()
 {
     QString eventName = "EventAfterRowChanged";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
 void ScriptEngine::eventPhotoLoaded()
 {
     QString eventName = "EventPhotoLoaded";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
@@ -943,7 +943,7 @@ void ScriptEngine::eventCalcTable()
     errorMessage = "";
     scriptResult = true;
     QString eventName = "EventCalcTable";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
     errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
     scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
 }
@@ -954,7 +954,7 @@ void ScriptEngine::eventBarCodeReaded(QString barCode)
     QString eventName = "EventBarCodeReaded";
     QScriptValueList args;
     args << QScriptValue(barCode);
-    globalObject().property(eventName).call(QScriptValue(), args);
+    scriptCall(eventName, QScriptValue(), args);
 }
 
 
@@ -963,14 +963,14 @@ void ScriptEngine::eventCardCodeReaded(QString cardCode)
     QString eventName = "EventCardCodeReaded";
     QScriptValueList args;
     args << QScriptValue(cardCode);
-    globalObject().property(eventName).call(QScriptValue(), args);
+    scriptCall(eventName, QScriptValue(), args);
 }
 
 
 void ScriptEngine::eventPreparePrintValues()
 {
     QString eventName = "EventPreparePrintValues";
-    scriptCall(eventName);
+    scriptCall(eventName, QScriptValue());
 }
 
 
@@ -1127,24 +1127,14 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    QFile file(scriptFile);
+    QString scriptPath = TApplication::exemplar()->getScriptsPath();
+    Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+    QFile file(scriptPath + scriptFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QString script(file.readAll());
         file.close();
         result = script;
-    }
-    else
-    {
-        QString scriptPath = TApplication::exemplar()->getScriptsPath();
-        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-        QFile file(scriptPath + scriptFile);
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QString script(file.readAll());
-            file.close();
-            result = script;
-        }
     }
     scriptFileName = scriptFile;
     return result;

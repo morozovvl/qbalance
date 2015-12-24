@@ -25,3 +25,9 @@ SOURCES += \
 
 CONFIG -= debug
 CONFIG += release
+
+#unix:MOC_DIR = ../../../.moc
+#win32:MOC_DIR = ../../../.moc
+
+#unix:OBJECTS_DIR = ../../../.obj
+#win32:OBJECTS_DIR = ../../../.obj

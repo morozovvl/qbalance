@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.3.10
 -- Dumped by pg_dump version 9.3.10
--- Started on 2015-12-16 14:38:11 MSK
+-- Started on 2015-12-16 16:37:36 MSK
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -14,7 +14,17 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 357 (class 3079 OID 12350)
+-- TOC entry 7 (class 2615 OID 506872)
+-- Name: session_variables; Type: SCHEMA; Schema: -; Owner: sa
+--
+
+CREATE SCHEMA session_variables;
+
+
+ALTER SCHEMA session_variables OWNER TO sa;
+
+--
+-- TOC entry 359 (class 3079 OID 12350)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -22,8 +32,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 3961 (class 0 OID 0)
--- Dependencies: 357
+-- TOC entry 3977 (class 0 OID 0)
+-- Dependencies: 359
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -33,7 +43,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 753 (class 1247 OID 504184)
+-- TOC entry 760 (class 1247 OID 506875)
 -- Name: sp_calcaccoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -58,7 +68,7 @@ CREATE TYPE sp_calcaccoborot_fret AS (
 ALTER TYPE public.sp_calcaccoborot_fret OWNER TO sa;
 
 --
--- TOC entry 756 (class 1247 OID 504187)
+-- TOC entry 763 (class 1247 OID 506878)
 -- Name: sp_calcobjoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -88,7 +98,7 @@ CREATE TYPE sp_calcobjoborot_fret AS (
 ALTER TYPE public.sp_calcobjoborot_fret OWNER TO sa;
 
 --
--- TOC entry 759 (class 1247 OID 504190)
+-- TOC entry 766 (class 1247 OID 506881)
 -- Name: sp_calcoborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -116,7 +126,7 @@ CREATE TYPE sp_calcoborot_fret AS (
 ALTER TYPE public.sp_calcoborot_fret OWNER TO sa;
 
 --
--- TOC entry 762 (class 1247 OID 504193)
+-- TOC entry 769 (class 1247 OID 506884)
 -- Name: sp_calctovaroborot_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -146,7 +156,7 @@ CREATE TYPE sp_calctovaroborot_fret AS (
 ALTER TYPE public.sp_calctovaroborot_fret OWNER TO sa;
 
 --
--- TOC entry 765 (class 1247 OID 504196)
+-- TOC entry 772 (class 1247 OID 506887)
 -- Name: sp_get_users_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -159,7 +169,7 @@ CREATE TYPE sp_get_users_fret AS (
 ALTER TYPE public.sp_get_users_fret OWNER TO sa;
 
 --
--- TOC entry 768 (class 1247 OID 504199)
+-- TOC entry 775 (class 1247 OID 506890)
 -- Name: sp_pricesearch_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -175,7 +185,7 @@ CREATE TYPE sp_pricesearch_fret AS (
 ALTER TYPE public.sp_pricesearch_fret OWNER TO sa;
 
 --
--- TOC entry 771 (class 1247 OID 504202)
+-- TOC entry 778 (class 1247 OID 506893)
 -- Name: sp_tovarsearch_fret; Type: TYPE; Schema: public; Owner: sa
 --
 
@@ -188,7 +198,7 @@ CREATE TYPE sp_tovarsearch_fret AS (
 ALTER TYPE public.sp_tovarsearch_fret OWNER TO sa;
 
 --
--- TOC entry 364 (class 1255 OID 504203)
+-- TOC entry 366 (class 1255 OID 506894)
 -- Name: insert_топер(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -205,7 +215,7 @@ $$;
 ALTER FUNCTION public."insert_топер"() OWNER TO sa;
 
 --
--- TOC entry 371 (class 1255 OID 504204)
+-- TOC entry 373 (class 1255 OID 506895)
 -- Name: sp_abc_analyze(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -352,7 +362,7 @@ $$;
 ALTER FUNCTION public.sp_abc_analyze() OWNER TO sa;
 
 --
--- TOC entry 412 (class 1255 OID 504205)
+-- TOC entry 418 (class 1255 OID 506896)
 -- Name: sp_analyze_sale(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -408,7 +418,7 @@ $$;
 ALTER FUNCTION public.sp_analyze_sale() OWNER TO sa;
 
 --
--- TOC entry 372 (class 1255 OID 504206)
+-- TOC entry 374 (class 1255 OID 506897)
 -- Name: sp_analyze_sale(integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -472,7 +482,7 @@ $_$;
 ALTER FUNCTION public.sp_analyze_sale(integer) OWNER TO sa;
 
 --
--- TOC entry 411 (class 1255 OID 504207)
+-- TOC entry 417 (class 1255 OID 506898)
 -- Name: sp_analyze_sale_pos(integer, date, date); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -581,7 +591,7 @@ $_$;
 ALTER FUNCTION public.sp_analyze_sale_pos(integer, date, date) OWNER TO sa;
 
 --
--- TOC entry 413 (class 1255 OID 504208)
+-- TOC entry 419 (class 1255 OID 506899)
 -- Name: sp_calcaccoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -642,7 +652,7 @@ $$;
 ALTER FUNCTION public.sp_calcaccoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 374 (class 1255 OID 504209)
+-- TOC entry 376 (class 1255 OID 506900)
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -690,7 +700,7 @@ $$;
 ALTER FUNCTION public.sp_calcdocoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 373 (class 1255 OID 504210)
+-- TOC entry 375 (class 1255 OID 506901)
 -- Name: sp_calcnewprice(integer, numeric); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -719,7 +729,7 @@ $$;
 ALTER FUNCTION public.sp_calcnewprice(ngroup integer, nprice numeric) OWNER TO sa;
 
 --
--- TOC entry 414 (class 1255 OID 504211)
+-- TOC entry 420 (class 1255 OID 506902)
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -852,7 +862,7 @@ $$;
 ALTER FUNCTION public.sp_calcobjoborot(cacc character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 377 (class 1255 OID 504212)
+-- TOC entry 379 (class 1255 OID 506903)
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -907,7 +917,7 @@ $$;
 ALTER FUNCTION public.sp_calcoborot(cacc character varying, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 415 (class 1255 OID 504213)
+-- TOC entry 421 (class 1255 OID 506904)
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -944,7 +954,7 @@ $$;
 ALTER FUNCTION public.sp_calctotobjoborot(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 376 (class 1255 OID 504214)
+-- TOC entry 378 (class 1255 OID 506905)
 -- Name: sp_calctovaroborot(integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1033,7 +1043,7 @@ $$;
 ALTER FUNCTION public.sp_calctovaroborot(pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 378 (class 1255 OID 504215)
+-- TOC entry 380 (class 1255 OID 506906)
 -- Name: sp_del_bad_positions(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1075,7 +1085,7 @@ $$;
 ALTER FUNCTION public.sp_del_bad_positions() OWNER TO sa;
 
 --
--- TOC entry 375 (class 1255 OID 504216)
+-- TOC entry 377 (class 1255 OID 506907)
 -- Name: sp_deletedoc(integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1104,7 +1114,7 @@ $_$;
 ALTER FUNCTION public.sp_deletedoc(ndocid integer) OWNER TO sa;
 
 --
--- TOC entry 416 (class 1255 OID 504217)
+-- TOC entry 422 (class 1255 OID 506908)
 -- Name: sp_deletedocstr(integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1147,7 +1157,7 @@ $$;
 ALTER FUNCTION public.sp_deletedocstr(ndocid integer, ndocstr integer) OWNER TO sa;
 
 --
--- TOC entry 379 (class 1255 OID 504218)
+-- TOC entry 381 (class 1255 OID 506909)
 -- Name: sp_get_users(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1196,7 +1206,7 @@ $$;
 ALTER FUNCTION public.sp_get_users() OWNER TO sa;
 
 --
--- TOC entry 417 (class 1255 OID 504219)
+-- TOC entry 423 (class 1255 OID 506910)
 -- Name: sp_insertdoc(integer, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1238,7 +1248,7 @@ $_$;
 ALTER FUNCTION public.sp_insertdoc(noper integer, cdate character varying) OWNER TO sa;
 
 --
--- TOC entry 418 (class 1255 OID 504220)
+-- TOC entry 424 (class 1255 OID 506911)
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1337,7 +1347,7 @@ $$;
 ALTER FUNCTION public.sp_insertdocstr(noper integer, ndocid integer, pcparam character varying, pncount integer, pndocstr integer) OWNER TO sa;
 
 --
--- TOC entry 381 (class 1255 OID 504221)
+-- TOC entry 383 (class 1255 OID 506912)
 -- Name: sp_islockedperiod(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1361,7 +1371,7 @@ $$;
 ALTER FUNCTION public.sp_islockedperiod(cdate character varying) OWNER TO sa;
 
 --
--- TOC entry 419 (class 1255 OID 504222)
+-- TOC entry 426 (class 1255 OID 506913)
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1429,7 +1439,7 @@ $$;
 ALTER FUNCTION public.sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) OWNER TO sa;
 
 --
--- TOC entry 382 (class 1255 OID 504223)
+-- TOC entry 384 (class 1255 OID 506914)
 -- Name: sp_pricesearch(integer, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1484,7 +1494,7 @@ $$;
 ALTER FUNCTION public.sp_pricesearch(firmid integer, expr character varying) OWNER TO sa;
 
 --
--- TOC entry 383 (class 1255 OID 504224)
+-- TOC entry 385 (class 1255 OID 506915)
 -- Name: sp_tovarsearch(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1536,7 +1546,7 @@ $_$;
 ALTER FUNCTION public.sp_tovarsearch(expr character varying) OWNER TO sa;
 
 --
--- TOC entry 384 (class 1255 OID 504225)
+-- TOC entry 386 (class 1255 OID 506916)
 -- Name: sp_updateprice(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1591,7 +1601,7 @@ $$;
 ALTER FUNCTION public.sp_updateprice() OWNER TO sa;
 
 --
--- TOC entry 385 (class 1255 OID 504226)
+-- TOC entry 387 (class 1255 OID 506917)
 -- Name: sp_заказатьтовар(integer); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1662,7 +1672,7 @@ $$;
 ALTER FUNCTION public."sp_заказатьтовар"(nid integer) OWNER TO sa;
 
 --
--- TOC entry 380 (class 1255 OID 504227)
+-- TOC entry 382 (class 1255 OID 506918)
 -- Name: sp_распределитьзаказ(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1719,7 +1729,7 @@ $$;
 ALTER FUNCTION public."sp_распределитьзаказ"(cfirmlist character varying) OWNER TO sa;
 
 --
--- TOC entry 386 (class 1255 OID 504228)
+-- TOC entry 388 (class 1255 OID 506919)
 -- Name: splitname(character varying, character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1814,7 +1824,7 @@ $_$;
 ALTER FUNCTION public.splitname(pcname character varying, pctable character varying) OWNER TO sa;
 
 --
--- TOC entry 387 (class 1255 OID 504229)
+-- TOC entry 389 (class 1255 OID 506920)
 -- Name: synonymtsvectorupdate(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1831,7 +1841,7 @@ $$;
 ALTER FUNCTION public.synonymtsvectorupdate() OWNER TO sa;
 
 --
--- TOC entry 388 (class 1255 OID 504230)
+-- TOC entry 390 (class 1255 OID 506921)
 -- Name: testdeleting_Сальдо(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1853,7 +1863,7 @@ $$;
 ALTER FUNCTION public."testdeleting_Сальдо"() OWNER TO sa;
 
 --
--- TOC entry 389 (class 1255 OID 504231)
+-- TOC entry 391 (class 1255 OID 506922)
 -- Name: testdeletingdictobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -1951,7 +1961,7 @@ $$;
 ALTER FUNCTION public.testdeletingdictobject() OWNER TO sa;
 
 --
--- TOC entry 390 (class 1255 OID 504232)
+-- TOC entry 392 (class 1255 OID 506923)
 -- Name: testdeletingtoperobject(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2039,7 +2049,7 @@ $$;
 ALTER FUNCTION public.testdeletingtoperobject() OWNER TO sa;
 
 --
--- TOC entry 391 (class 1255 OID 504233)
+-- TOC entry 393 (class 1255 OID 506924)
 -- Name: testinsertingid(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2056,7 +2066,7 @@ $$;
 ALTER FUNCTION public.testinsertingid() OWNER TO sa;
 
 --
--- TOC entry 392 (class 1255 OID 504234)
+-- TOC entry 394 (class 1255 OID 506925)
 -- Name: testupdatingattrib(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2076,7 +2086,7 @@ $$;
 ALTER FUNCTION public.testupdatingattrib() OWNER TO sa;
 
 --
--- TOC entry 393 (class 1255 OID 504235)
+-- TOC entry 395 (class 1255 OID 506926)
 -- Name: testupdatingdocattrib(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2096,7 +2106,7 @@ $$;
 ALTER FUNCTION public.testupdatingdocattrib() OWNER TO sa;
 
 --
--- TOC entry 394 (class 1255 OID 504236)
+-- TOC entry 396 (class 1255 OID 506927)
 -- Name: testupdatingid(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2116,7 +2126,7 @@ $$;
 ALTER FUNCTION public.testupdatingid() OWNER TO sa;
 
 --
--- TOC entry 395 (class 1255 OID 504237)
+-- TOC entry 397 (class 1255 OID 506928)
 -- Name: tsvectorupdate(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2156,7 +2166,7 @@ $$;
 ALTER FUNCTION public.tsvectorupdate() OWNER TO sa;
 
 --
--- TOC entry 396 (class 1255 OID 504238)
+-- TOC entry 398 (class 1255 OID 506929)
 -- Name: write_name_split(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2172,7 +2182,7 @@ $$;
 ALTER FUNCTION public.write_name_split(pcname character varying) OWNER TO sa;
 
 --
--- TOC entry 397 (class 1255 OID 504239)
+-- TOC entry 399 (class 1255 OID 506930)
 -- Name: ВставитьПроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2216,7 +2226,7 @@ $$;
 ALTER FUNCTION public."ВставитьПроводку"() OWNER TO sa;
 
 --
--- TOC entry 398 (class 1255 OID 504240)
+-- TOC entry 400 (class 1255 OID 506931)
 -- Name: ВставитьТоварВПрайсах(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2250,7 +2260,7 @@ $$;
 ALTER FUNCTION public."ВставитьТоварВПрайсах"() OWNER TO sa;
 
 --
--- TOC entry 399 (class 1255 OID 504241)
+-- TOC entry 401 (class 1255 OID 506932)
 -- Name: ПредотвратитьПовторВТС(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2283,7 +2293,7 @@ $$;
 ALTER FUNCTION public."ПредотвратитьПовторВТС"() OWNER TO sa;
 
 --
--- TOC entry 400 (class 1255 OID 504242)
+-- TOC entry 402 (class 1255 OID 506933)
 -- Name: СчитатьКонечноеСальдо(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2306,7 +2316,7 @@ $$;
 ALTER FUNCTION public."СчитатьКонечноеСальдо"() OWNER TO sa;
 
 --
--- TOC entry 401 (class 1255 OID 504243)
+-- TOC entry 403 (class 1255 OID 506934)
 -- Name: СчитатьПроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2369,7 +2379,7 @@ $$;
 ALTER FUNCTION public."СчитатьПроводку"() OWNER TO sa;
 
 --
--- TOC entry 402 (class 1255 OID 504244)
+-- TOC entry 404 (class 1255 OID 506935)
 -- Name: УдалитьДокумент(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2393,7 +2403,7 @@ $_$;
 ALTER FUNCTION public."УдалитьДокумент"() OWNER TO sa;
 
 --
--- TOC entry 403 (class 1255 OID 504245)
+-- TOC entry 405 (class 1255 OID 506936)
 -- Name: УдалитьПроводку(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2423,7 +2433,7 @@ $$;
 ALTER FUNCTION public."УдалитьПроводку"() OWNER TO sa;
 
 --
--- TOC entry 404 (class 1255 OID 504246)
+-- TOC entry 406 (class 1255 OID 506937)
 -- Name: прайс_search(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2460,7 +2470,7 @@ $$;
 ALTER FUNCTION public."прайс_search"(pcname character varying) OWNER TO sa;
 
 --
--- TOC entry 405 (class 1255 OID 504247)
+-- TOC entry 407 (class 1255 OID 506938)
 -- Name: прайс_search1(character varying); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2482,7 +2492,7 @@ $$;
 ALTER FUNCTION public."прайс_search1"(pcname character varying) OWNER TO sa;
 
 --
--- TOC entry 406 (class 1255 OID 504248)
+-- TOC entry 408 (class 1255 OID 506939)
 -- Name: проверитьповторнаименования(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2502,7 +2512,7 @@ $$;
 ALTER FUNCTION public."проверитьповторнаименования"() OWNER TO sa;
 
 --
--- TOC entry 407 (class 1255 OID 504249)
+-- TOC entry 409 (class 1255 OID 506940)
 -- Name: проверитьцену(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2523,7 +2533,7 @@ $$;
 ALTER FUNCTION public."проверитьцену"() OWNER TO sa;
 
 --
--- TOC entry 408 (class 1255 OID 504250)
+-- TOC entry 410 (class 1255 OID 506941)
 -- Name: сальдоизменилось_заказ(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2546,7 +2556,7 @@ $$;
 ALTER FUNCTION public."сальдоизменилось_заказ"() OWNER TO sa;
 
 --
--- TOC entry 409 (class 1255 OID 504251)
+-- TOC entry 411 (class 1255 OID 506942)
 -- Name: товардобавили_заказ(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2563,7 +2573,7 @@ $$;
 ALTER FUNCTION public."товардобавили_заказ"() OWNER TO sa;
 
 --
--- TOC entry 410 (class 1255 OID 504252)
+-- TOC entry 412 (class 1255 OID 506943)
 -- Name: товарудалили_заказ(); Type: FUNCTION; Schema: public; Owner: sa
 --
 
@@ -2579,8 +2589,100 @@ $$;
 
 ALTER FUNCTION public."товарудалили_заказ"() OWNER TO sa;
 
+SET search_path = session_variables, pg_catalog;
+
 --
--- TOC entry 2168 (class 3600 OID 504258)
+-- TOC entry 413 (class 1255 OID 506944)
+-- Name: cleanup(); Type: FUNCTION; Schema: session_variables; Owner: sa
+--
+
+CREATE FUNCTION cleanup() RETURNS void
+    LANGUAGE sql
+    AS $$
+DELETE FROM session_variables.data WHERE backend_pid = pg_backend_pid();
+$$;
+
+
+ALTER FUNCTION session_variables.cleanup() OWNER TO sa;
+
+--
+-- TOC entry 414 (class 1255 OID 506945)
+-- Name: expire(); Type: FUNCTION; Schema: session_variables; Owner: sa
+--
+
+CREATE FUNCTION expire() RETURNS void
+    LANGUAGE sql
+    AS $$
+DELETE FROM session_variables.data WHERE expires_on < clock_timestamp();
+$$;
+
+
+ALTER FUNCTION session_variables.expire() OWNER TO sa;
+
+--
+-- TOC entry 415 (class 1255 OID 506946)
+-- Name: get_value(text); Type: FUNCTION; Schema: session_variables; Owner: sa
+--
+
+CREATE FUNCTION get_value(text) RETURNS text
+    LANGUAGE sql
+    AS $_$
+SELECT session_variables.expire();
+SELECT variable_value FROM session_variables.data WHERE backend_pid = pg_backend_pid() AND variable_name = $1;
+$_$;
+
+
+ALTER FUNCTION session_variables.get_value(text) OWNER TO sa;
+
+--
+-- TOC entry 416 (class 1255 OID 506947)
+-- Name: set_value(text, text); Type: FUNCTION; Schema: session_variables; Owner: sa
+--
+
+CREATE FUNCTION set_value(text, text) RETURNS void
+    LANGUAGE sql
+    AS $_$
+SELECT session_variables.set_value($1, $2, now());
+$_$;
+
+
+ALTER FUNCTION session_variables.set_value(text, text) OWNER TO sa;
+
+--
+-- TOC entry 425 (class 1255 OID 506948)
+-- Name: set_value(text, text, timestamp with time zone); Type: FUNCTION; Schema: session_variables; Owner: sa
+--
+
+CREATE FUNCTION set_value(_name text, _value text, _expires timestamp with time zone) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+_pid int4 := pg_backend_pid();
+BEGIN
+PERFORM session_variables.expire();
+LOOP
+UPDATE session_variables.data SET variable_value = _value, expires_on = _expires WHERE backend_pid = _pid AND variable_name = _name;
+IF FOUND THEN
+RETURN;
+END IF;
+BEGIN
+INSERT INTO session_variables.data( backend_pid, variable_name, variable_value, expires_on ) VALUES ( _pid, _name, _value, _expires );
+RETURN;
+EXCEPTION
+WHEN unique_violation THEN
+-- ignore
+END;
+END LOOP;
+END;
+$$;
+
+
+ALTER FUNCTION session_variables.set_value(_name text, _value text, _expires timestamp with time zone) OWNER TO sa;
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 2179 (class 3600 OID 506949)
 -- Name: mydict_showball; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: sa
 --
 
@@ -2596,7 +2698,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 177 (class 1259 OID 504259)
+-- TOC entry 178 (class 1259 OID 506950)
 -- Name: configs; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2610,7 +2712,7 @@ CREATE TABLE configs (
 ALTER TABLE public.configs OWNER TO sa;
 
 --
--- TOC entry 178 (class 1259 OID 504265)
+-- TOC entry 179 (class 1259 OID 506956)
 -- Name: last_income; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2629,7 +2731,7 @@ CREATE TABLE last_income (
 ALTER TABLE public.last_income OWNER TO sa;
 
 --
--- TOC entry 179 (class 1259 OID 504271)
+-- TOC entry 180 (class 1259 OID 506962)
 -- Name: last_income_code_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2644,8 +2746,8 @@ CREATE SEQUENCE last_income_code_seq
 ALTER TABLE public.last_income_code_seq OWNER TO sa;
 
 --
--- TOC entry 3977 (class 0 OID 0)
--- Dependencies: 179
+-- TOC entry 3998 (class 0 OID 0)
+-- Dependencies: 180
 -- Name: last_income_code_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2653,7 +2755,7 @@ ALTER SEQUENCE last_income_code_seq OWNED BY last_income.code;
 
 
 --
--- TOC entry 180 (class 1259 OID 504273)
+-- TOC entry 181 (class 1259 OID 506964)
 -- Name: last_price; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2678,7 +2780,7 @@ CREATE TABLE last_price (
 ALTER TABLE public.last_price OWNER TO sa;
 
 --
--- TOC entry 181 (class 1259 OID 504284)
+-- TOC entry 182 (class 1259 OID 506975)
 -- Name: last_price_code_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2693,8 +2795,8 @@ CREATE SEQUENCE last_price_code_seq
 ALTER TABLE public.last_price_code_seq OWNER TO sa;
 
 --
--- TOC entry 3979 (class 0 OID 0)
--- Dependencies: 181
+-- TOC entry 4000 (class 0 OID 0)
+-- Dependencies: 182
 -- Name: last_price_code_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2702,7 +2804,7 @@ ALTER SEQUENCE last_price_code_seq OWNED BY last_price.code;
 
 
 --
--- TOC entry 182 (class 1259 OID 504286)
+-- TOC entry 183 (class 1259 OID 506977)
 -- Name: objectnames; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2715,7 +2817,7 @@ CREATE TABLE objectnames (
 ALTER TABLE public.objectnames OWNER TO sa;
 
 --
--- TOC entry 183 (class 1259 OID 504289)
+-- TOC entry 184 (class 1259 OID 506980)
 -- Name: objectnames1; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2728,7 +2830,7 @@ CREATE TABLE objectnames1 (
 ALTER TABLE public.objectnames1 OWNER TO sa;
 
 --
--- TOC entry 184 (class 1259 OID 504292)
+-- TOC entry 185 (class 1259 OID 506983)
 -- Name: test; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2742,7 +2844,7 @@ CREATE TABLE test (
 ALTER TABLE public.test OWNER TO sa;
 
 --
--- TOC entry 185 (class 1259 OID 504298)
+-- TOC entry 186 (class 1259 OID 506989)
 -- Name: test_id_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2757,8 +2859,8 @@ CREATE SEQUENCE test_id_seq
 ALTER TABLE public.test_id_seq OWNER TO sa;
 
 --
--- TOC entry 3983 (class 0 OID 0)
--- Dependencies: 185
+-- TOC entry 4004 (class 0 OID 0)
+-- Dependencies: 186
 -- Name: test_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2766,7 +2868,7 @@ ALTER SEQUENCE test_id_seq OWNED BY test.id;
 
 
 --
--- TOC entry 186 (class 1259 OID 504300)
+-- TOC entry 187 (class 1259 OID 506991)
 -- Name: tmp_checks; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2780,7 +2882,7 @@ CREATE TABLE tmp_checks (
 ALTER TABLE public.tmp_checks OWNER TO sa;
 
 --
--- TOC entry 187 (class 1259 OID 504303)
+-- TOC entry 188 (class 1259 OID 506994)
 -- Name: users; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2793,7 +2895,7 @@ CREATE TABLE users (
 ALTER TABLE public.users OWNER TO sa;
 
 --
--- TOC entry 188 (class 1259 OID 504307)
+-- TOC entry 189 (class 1259 OID 506998)
 -- Name: users_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -2808,8 +2910,8 @@ CREATE SEQUENCE "users_КОД_seq"
 ALTER TABLE public."users_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 3986 (class 0 OID 0)
--- Dependencies: 188
+-- TOC entry 4007 (class 0 OID 0)
+-- Dependencies: 189
 -- Name: users_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -2817,7 +2919,7 @@ ALTER SEQUENCE "users_КОД_seq" OWNED BY users."КОД";
 
 
 --
--- TOC entry 189 (class 1259 OID 504309)
+-- TOC entry 190 (class 1259 OID 507000)
 -- Name: блокпериоды; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2835,7 +2937,7 @@ CREATE TABLE "блокпериоды" (
 ALTER TABLE public."блокпериоды" OWNER TO sa;
 
 --
--- TOC entry 190 (class 1259 OID 504314)
+-- TOC entry 191 (class 1259 OID 507005)
 -- Name: пользователи; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -2849,7 +2951,7 @@ CREATE VIEW "пользователи" AS
 ALTER TABLE public."пользователи" OWNER TO sa;
 
 --
--- TOC entry 191 (class 1259 OID 504318)
+-- TOC entry 192 (class 1259 OID 507009)
 -- Name: vw_блокпериоды; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -2867,7 +2969,7 @@ CREATE VIEW "vw_блокпериоды" AS
 ALTER TABLE public."vw_блокпериоды" OWNER TO sa;
 
 --
--- TOC entry 192 (class 1259 OID 504322)
+-- TOC entry 193 (class 1259 OID 507013)
 -- Name: группы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2882,7 +2984,7 @@ CREATE TABLE "группы" (
 ALTER TABLE public."группы" OWNER TO sa;
 
 --
--- TOC entry 193 (class 1259 OID 504328)
+-- TOC entry 194 (class 1259 OID 507019)
 -- Name: документы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2905,7 +3007,7 @@ CREATE TABLE "документы" (
 ALTER TABLE public."документы" OWNER TO sa;
 
 --
--- TOC entry 194 (class 1259 OID 504337)
+-- TOC entry 195 (class 1259 OID 507028)
 -- Name: набор1; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2919,7 +3021,7 @@ CREATE TABLE "набор1" (
 ALTER TABLE public."набор1" OWNER TO sa;
 
 --
--- TOC entry 195 (class 1259 OID 504340)
+-- TOC entry 196 (class 1259 OID 507031)
 -- Name: проводки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2942,7 +3044,7 @@ CREATE TABLE "проводки" (
 ALTER TABLE public."проводки" OWNER TO sa;
 
 --
--- TOC entry 196 (class 1259 OID 504346)
+-- TOC entry 197 (class 1259 OID 507037)
 -- Name: товар; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -2975,7 +3077,7 @@ CREATE TABLE "товар" (
 ALTER TABLE public."товар" OWNER TO sa;
 
 --
--- TOC entry 197 (class 1259 OID 504370)
+-- TOC entry 198 (class 1259 OID 507061)
 -- Name: топер; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3014,7 +3116,7 @@ CREATE TABLE "топер" (
 ALTER TABLE public."топер" OWNER TO sa;
 
 --
--- TOC entry 198 (class 1259 OID 504397)
+-- TOC entry 199 (class 1259 OID 507088)
 -- Name: vw_продажи_товара_за_период; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3138,7 +3240,7 @@ CREATE VIEW "vw_продажи_товара_за_период" AS
 ALTER TABLE public."vw_продажи_товара_за_период" OWNER TO sa;
 
 --
--- TOC entry 199 (class 1259 OID 504402)
+-- TOC entry 200 (class 1259 OID 507093)
 -- Name: vw_ABC_анализ_продаж; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3172,7 +3274,7 @@ CREATE VIEW "vw_ABC_анализ_продаж" AS
 ALTER TABLE public."vw_ABC_анализ_продаж" OWNER TO sa;
 
 --
--- TOC entry 200 (class 1259 OID 504407)
+-- TOC entry 201 (class 1259 OID 507098)
 -- Name: vw_permissions; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3190,7 +3292,7 @@ CREATE VIEW vw_permissions AS
 ALTER TABLE public.vw_permissions OWNER TO sa;
 
 --
--- TOC entry 201 (class 1259 OID 504411)
+-- TOC entry 202 (class 1259 OID 507102)
 -- Name: сальдо; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3212,7 +3314,7 @@ CREATE TABLE "сальдо" (
 ALTER TABLE public."сальдо" OWNER TO sa;
 
 --
--- TOC entry 202 (class 1259 OID 504423)
+-- TOC entry 203 (class 1259 OID 507114)
 -- Name: vw_saldo40; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3233,7 +3335,7 @@ CREATE VIEW vw_saldo40 AS
 ALTER TABLE public.vw_saldo40 OWNER TO sa;
 
 --
--- TOC entry 203 (class 1259 OID 504428)
+-- TOC entry 204 (class 1259 OID 507119)
 -- Name: атрибуты123; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3250,7 +3352,7 @@ CREATE TABLE "атрибуты123" (
 ALTER TABLE public."атрибуты123" OWNER TO sa;
 
 --
--- TOC entry 204 (class 1259 OID 504431)
+-- TOC entry 205 (class 1259 OID 507122)
 -- Name: докатрибуты123; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3266,7 +3368,7 @@ CREATE TABLE "докатрибуты123" (
 ALTER TABLE public."докатрибуты123" OWNER TO sa;
 
 --
--- TOC entry 205 (class 1259 OID 504435)
+-- TOC entry 206 (class 1259 OID 507126)
 -- Name: набор402; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3280,7 +3382,7 @@ CREATE TABLE "набор402" (
 ALTER TABLE public."набор402" OWNER TO sa;
 
 --
--- TOC entry 206 (class 1259 OID 504438)
+-- TOC entry 207 (class 1259 OID 507129)
 -- Name: vw_saldo402; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3310,7 +3412,7 @@ CREATE VIEW vw_saldo402 AS
 ALTER TABLE public.vw_saldo402 OWNER TO sa;
 
 --
--- TOC entry 207 (class 1259 OID 504443)
+-- TOC entry 208 (class 1259 OID 507134)
 -- Name: vw_saldo411; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3328,7 +3430,7 @@ CREATE VIEW vw_saldo411 AS
 ALTER TABLE public.vw_saldo411 OWNER TO sa;
 
 --
--- TOC entry 208 (class 1259 OID 504447)
+-- TOC entry 209 (class 1259 OID 507138)
 -- Name: виды_расходов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3341,7 +3443,7 @@ CREATE TABLE "виды_расходов" (
 ALTER TABLE public."виды_расходов" OWNER TO sa;
 
 --
--- TOC entry 209 (class 1259 OID 504451)
+-- TOC entry 210 (class 1259 OID 507142)
 -- Name: vw_saldo44; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3357,7 +3459,7 @@ CREATE VIEW vw_saldo44 AS
 ALTER TABLE public.vw_saldo44 OWNER TO sa;
 
 --
--- TOC entry 210 (class 1259 OID 504455)
+-- TOC entry 211 (class 1259 OID 507146)
 -- Name: vw_types; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3411,7 +3513,7 @@ CREATE VIEW vw_types AS
 ALTER TABLE public.vw_types OWNER TO sa;
 
 --
--- TOC entry 211 (class 1259 OID 504460)
+-- TOC entry 212 (class 1259 OID 507151)
 -- Name: счета; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3429,7 +3531,7 @@ CREATE TABLE "счета" (
 ALTER TABLE public."счета" OWNER TO sa;
 
 --
--- TOC entry 212 (class 1259 OID 504469)
+-- TOC entry 213 (class 1259 OID 507160)
 -- Name: vw_баланс; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3458,7 +3560,7 @@ CREATE VIEW "vw_баланс" AS
 ALTER TABLE public."vw_баланс" OWNER TO sa;
 
 --
--- TOC entry 213 (class 1259 OID 504474)
+-- TOC entry 214 (class 1259 OID 507165)
 -- Name: бюджет; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3473,7 +3575,7 @@ CREATE TABLE "бюджет" (
 ALTER TABLE public."бюджет" OWNER TO sa;
 
 --
--- TOC entry 214 (class 1259 OID 504479)
+-- TOC entry 215 (class 1259 OID 507170)
 -- Name: организации; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3498,7 +3600,7 @@ CREATE TABLE "организации" (
 ALTER TABLE public."организации" OWNER TO sa;
 
 --
--- TOC entry 215 (class 1259 OID 504491)
+-- TOC entry 216 (class 1259 OID 507182)
 -- Name: vw_бюджет; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3523,7 +3625,7 @@ CREATE VIEW "vw_бюджет" AS
 ALTER TABLE public."vw_бюджет" OWNER TO sa;
 
 --
--- TOC entry 216 (class 1259 OID 504495)
+-- TOC entry 217 (class 1259 OID 507186)
 -- Name: vw_грузополучатели; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3547,7 +3649,7 @@ CREATE VIEW "vw_грузополучатели" AS
 ALTER TABLE public."vw_грузополучатели" OWNER TO sa;
 
 --
--- TOC entry 217 (class 1259 OID 504499)
+-- TOC entry 218 (class 1259 OID 507190)
 -- Name: vw_документы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3568,7 +3670,7 @@ CREATE VIEW "vw_документы" AS
 ALTER TABLE public."vw_документы" OWNER TO sa;
 
 --
--- TOC entry 218 (class 1259 OID 504503)
+-- TOC entry 219 (class 1259 OID 507194)
 -- Name: доступ; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3587,7 +3689,7 @@ CREATE TABLE "доступ" (
 ALTER TABLE public."доступ" OWNER TO sa;
 
 --
--- TOC entry 219 (class 1259 OID 504510)
+-- TOC entry 220 (class 1259 OID 507201)
 -- Name: vw_доступ; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3608,7 +3710,7 @@ CREATE VIEW "vw_доступ" AS
 ALTER TABLE public."vw_доступ" OWNER TO sa;
 
 --
--- TOC entry 220 (class 1259 OID 504515)
+-- TOC entry 221 (class 1259 OID 507206)
 -- Name: справочники; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3630,7 +3732,7 @@ CREATE TABLE "справочники" (
 ALTER TABLE public."справочники" OWNER TO sa;
 
 --
--- TOC entry 221 (class 1259 OID 504527)
+-- TOC entry 222 (class 1259 OID 507218)
 -- Name: доступ_к_справочникам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3652,7 +3754,7 @@ CREATE VIEW "доступ_к_справочникам" AS
 ALTER TABLE public."доступ_к_справочникам" OWNER TO sa;
 
 --
--- TOC entry 222 (class 1259 OID 504532)
+-- TOC entry 223 (class 1259 OID 507223)
 -- Name: vw_доступ_к_справочникам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3676,7 +3778,7 @@ CREATE VIEW "vw_доступ_к_справочникам" AS
 ALTER TABLE public."vw_доступ_к_справочникам" OWNER TO sa;
 
 --
--- TOC entry 223 (class 1259 OID 504536)
+-- TOC entry 224 (class 1259 OID 507227)
 -- Name: vw_доступ_к_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3708,7 +3810,7 @@ CREATE VIEW "vw_доступ_к_топер" AS
 ALTER TABLE public."vw_доступ_к_топер" OWNER TO sa;
 
 --
--- TOC entry 224 (class 1259 OID 504541)
+-- TOC entry 225 (class 1259 OID 507232)
 -- Name: журнал; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3725,7 +3827,7 @@ CREATE TABLE "журнал" (
 ALTER TABLE public."журнал" OWNER TO sa;
 
 --
--- TOC entry 225 (class 1259 OID 504546)
+-- TOC entry 226 (class 1259 OID 507237)
 -- Name: vw_журнал; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3741,7 +3843,7 @@ CREATE VIEW "vw_журнал" AS
 ALTER TABLE public."vw_журнал" OWNER TO sa;
 
 --
--- TOC entry 226 (class 1259 OID 504550)
+-- TOC entry 227 (class 1259 OID 507241)
 -- Name: vw_за_сегодня_продано; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3763,7 +3865,7 @@ CREATE VIEW "vw_за_сегодня_продано" AS
 ALTER TABLE public."vw_за_сегодня_продано" OWNER TO sa;
 
 --
--- TOC entry 227 (class 1259 OID 504555)
+-- TOC entry 228 (class 1259 OID 507246)
 -- Name: vw_закупоч_цены_на_товар; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3804,7 +3906,7 @@ CREATE VIEW "vw_закупоч_цены_на_товар" AS
 ALTER TABLE public."vw_закупоч_цены_на_товар" OWNER TO sa;
 
 --
--- TOC entry 228 (class 1259 OID 504560)
+-- TOC entry 229 (class 1259 OID 507251)
 -- Name: адрес; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3817,7 +3919,7 @@ CREATE TABLE "адрес" (
 ALTER TABLE public."адрес" OWNER TO sa;
 
 --
--- TOC entry 229 (class 1259 OID 504564)
+-- TOC entry 230 (class 1259 OID 507255)
 -- Name: vw_закупоч_и_розн_цены; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3845,7 +3947,7 @@ CREATE VIEW "vw_закупоч_и_розн_цены" AS
 ALTER TABLE public."vw_закупоч_и_розн_цены" OWNER TO sa;
 
 --
--- TOC entry 230 (class 1259 OID 504569)
+-- TOC entry 231 (class 1259 OID 507260)
 -- Name: vw_закупоч_цены_на_новый_товар; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3915,7 +4017,7 @@ CREATE VIEW "vw_закупоч_цены_на_новый_товар" AS
 ALTER TABLE public."vw_закупоч_цены_на_новый_товар" OWNER TO sa;
 
 --
--- TOC entry 231 (class 1259 OID 504574)
+-- TOC entry 232 (class 1259 OID 507265)
 -- Name: запросы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3931,7 +4033,7 @@ CREATE TABLE "запросы" (
 ALTER TABLE public."запросы" OWNER TO sa;
 
 --
--- TOC entry 232 (class 1259 OID 504584)
+-- TOC entry 233 (class 1259 OID 507275)
 -- Name: vw_запросы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -3957,7 +4059,7 @@ CREATE VIEW "vw_запросы" AS
 ALTER TABLE public."vw_запросы" OWNER TO sa;
 
 --
--- TOC entry 233 (class 1259 OID 504589)
+-- TOC entry 234 (class 1259 OID 507280)
 -- Name: заявка; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -3988,7 +4090,7 @@ CREATE TABLE "заявка" (
 ALTER TABLE public."заявка" OWNER TO sa;
 
 --
--- TOC entry 234 (class 1259 OID 504604)
+-- TOC entry 235 (class 1259 OID 507295)
 -- Name: константы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4003,7 +4105,7 @@ CREATE TABLE "константы" (
 ALTER TABLE public."константы" OWNER TO sa;
 
 --
--- TOC entry 235 (class 1259 OID 504609)
+-- TOC entry 236 (class 1259 OID 507300)
 -- Name: прайс; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4038,7 +4140,7 @@ CREATE TABLE "прайс" (
 ALTER TABLE public."прайс" OWNER TO sa;
 
 --
--- TOC entry 236 (class 1259 OID 504629)
+-- TOC entry 237 (class 1259 OID 507320)
 -- Name: vw_заявка; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4074,7 +4176,7 @@ CREATE VIEW "vw_заявка" AS
 ALTER TABLE public."vw_заявка" OWNER TO sa;
 
 --
--- TOC entry 237 (class 1259 OID 504634)
+-- TOC entry 238 (class 1259 OID 507325)
 -- Name: vw_заявка_нераспределенная; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4096,7 +4198,7 @@ CREATE VIEW "vw_заявка_нераспределенная" AS
 ALTER TABLE public."vw_заявка_нераспределенная" OWNER TO sa;
 
 --
--- TOC entry 238 (class 1259 OID 504639)
+-- TOC entry 239 (class 1259 OID 507330)
 -- Name: люди; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4117,7 +4219,7 @@ CREATE TABLE "люди" (
 ALTER TABLE public."люди" OWNER TO sa;
 
 --
--- TOC entry 239 (class 1259 OID 504648)
+-- TOC entry 240 (class 1259 OID 507339)
 -- Name: vw_люди; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4140,7 +4242,7 @@ CREATE VIEW "vw_люди" AS
 ALTER TABLE public."vw_люди" OWNER TO sa;
 
 --
--- TOC entry 240 (class 1259 OID 504652)
+-- TOC entry 241 (class 1259 OID 507343)
 -- Name: набор3; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4154,7 +4256,7 @@ CREATE TABLE "набор3" (
 ALTER TABLE public."набор3" OWNER TO sa;
 
 --
--- TOC entry 241 (class 1259 OID 504655)
+-- TOC entry 242 (class 1259 OID 507346)
 -- Name: vw_накладные_по_браку; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4344,7 +4446,7 @@ CREATE VIEW "vw_накладные_по_браку" AS
 ALTER TABLE public."vw_накладные_по_браку" OWNER TO sa;
 
 --
--- TOC entry 242 (class 1259 OID 504660)
+-- TOC entry 243 (class 1259 OID 507351)
 -- Name: vw_наценки; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4374,7 +4476,7 @@ CREATE VIEW "vw_наценки" AS
 ALTER TABLE public."vw_наценки" OWNER TO sa;
 
 --
--- TOC entry 243 (class 1259 OID 504665)
+-- TOC entry 244 (class 1259 OID 507356)
 -- Name: vw_недовоз; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4433,7 +4535,7 @@ CREATE VIEW "vw_недовоз" AS
 ALTER TABLE public."vw_недовоз" OWNER TO sa;
 
 --
--- TOC entry 244 (class 1259 OID 504670)
+-- TOC entry 245 (class 1259 OID 507361)
 -- Name: наценки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4453,7 +4555,7 @@ CREATE TABLE "наценки" (
 ALTER TABLE public."наценки" OWNER TO sa;
 
 --
--- TOC entry 245 (class 1259 OID 504680)
+-- TOC entry 246 (class 1259 OID 507371)
 -- Name: vw_новыецены; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4559,7 +4661,7 @@ CREATE VIEW "vw_новыецены" AS
 ALTER TABLE public."vw_новыецены" OWNER TO sa;
 
 --
--- TOC entry 246 (class 1259 OID 504685)
+-- TOC entry 247 (class 1259 OID 507376)
 -- Name: vw_новыецены1; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4581,7 +4683,7 @@ CREATE VIEW "vw_новыецены1" AS
 ALTER TABLE public."vw_новыецены1" OWNER TO sa;
 
 --
--- TOC entry 247 (class 1259 OID 504690)
+-- TOC entry 248 (class 1259 OID 507381)
 -- Name: vw_новыецены2; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4604,7 +4706,7 @@ CREATE VIEW "vw_новыецены2" AS
 ALTER TABLE public."vw_новыецены2" OWNER TO sa;
 
 --
--- TOC entry 248 (class 1259 OID 504694)
+-- TOC entry 249 (class 1259 OID 507385)
 -- Name: vw_новыецены3; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4629,7 +4731,7 @@ CREATE VIEW "vw_новыецены3" AS
 ALTER TABLE public."vw_новыецены3" OWNER TO sa;
 
 --
--- TOC entry 249 (class 1259 OID 504699)
+-- TOC entry 250 (class 1259 OID 507390)
 -- Name: vw_новыецены_на_остатки; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4737,7 +4839,7 @@ CREATE VIEW "vw_новыецены_на_остатки" AS
 ALTER TABLE public."vw_новыецены_на_остатки" OWNER TO sa;
 
 --
--- TOC entry 250 (class 1259 OID 504704)
+-- TOC entry 251 (class 1259 OID 507395)
 -- Name: vw_остатки_товара; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4772,7 +4874,7 @@ CREATE VIEW "vw_остатки_товара" AS
 ALTER TABLE public."vw_остатки_товара" OWNER TO sa;
 
 --
--- TOC entry 251 (class 1259 OID 504709)
+-- TOC entry 252 (class 1259 OID 507400)
 -- Name: vw_остатки_товара_на_конец_периода; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4818,7 +4920,7 @@ CREATE VIEW "vw_остатки_товара_на_конец_периода" AS
 ALTER TABLE public."vw_остатки_товара_на_конец_периода" OWNER TO sa;
 
 --
--- TOC entry 252 (class 1259 OID 504714)
+-- TOC entry 253 (class 1259 OID 507405)
 -- Name: vw_отрицательные_остатки_на_411_счет; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4838,7 +4940,7 @@ CREATE VIEW "vw_отрицательные_остатки_на_411_счет" AS
 ALTER TABLE public."vw_отрицательные_остатки_на_411_счет" OWNER TO sa;
 
 --
--- TOC entry 253 (class 1259 OID 504719)
+-- TOC entry 254 (class 1259 OID 507410)
 -- Name: vw_отчет_о_продажах; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4876,7 +4978,7 @@ CREATE VIEW "vw_отчет_о_продажах" AS
 ALTER TABLE public."vw_отчет_о_продажах" OWNER TO sa;
 
 --
--- TOC entry 254 (class 1259 OID 504724)
+-- TOC entry 255 (class 1259 OID 507415)
 -- Name: vw_отчет_о_продажах_за_период; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4917,7 +5019,7 @@ CREATE VIEW "vw_отчет_о_продажах_за_период" AS
 ALTER TABLE public."vw_отчет_о_продажах_за_период" OWNER TO sa;
 
 --
--- TOC entry 255 (class 1259 OID 504729)
+-- TOC entry 256 (class 1259 OID 507420)
 -- Name: посладрес; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4931,7 +5033,7 @@ CREATE TABLE "посладрес" (
 ALTER TABLE public."посладрес" OWNER TO sa;
 
 --
--- TOC entry 256 (class 1259 OID 504732)
+-- TOC entry 257 (class 1259 OID 507423)
 -- Name: vw_перемещение; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -4964,7 +5066,7 @@ CREATE VIEW "vw_перемещение" AS
 ALTER TABLE public."vw_перемещение" OWNER TO sa;
 
 --
--- TOC entry 257 (class 1259 OID 504737)
+-- TOC entry 258 (class 1259 OID 507428)
 -- Name: фирмы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -4987,7 +5089,7 @@ CREATE TABLE "фирмы" (
 ALTER TABLE public."фирмы" OWNER TO sa;
 
 --
--- TOC entry 258 (class 1259 OID 504750)
+-- TOC entry 259 (class 1259 OID 507441)
 -- Name: vw_прайс; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5039,7 +5141,7 @@ CREATE VIEW "vw_прайс" AS
 ALTER TABLE public."vw_прайс" OWNER TO sa;
 
 --
--- TOC entry 259 (class 1259 OID 504755)
+-- TOC entry 260 (class 1259 OID 507446)
 -- Name: vw_прайс1; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5063,7 +5165,7 @@ CREATE VIEW "vw_прайс1" AS
 ALTER TABLE public."vw_прайс1" OWNER TO sa;
 
 --
--- TOC entry 260 (class 1259 OID 504759)
+-- TOC entry 261 (class 1259 OID 507450)
 -- Name: vw_прайс2; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5097,7 +5199,7 @@ CREATE VIEW "vw_прайс2" AS
 ALTER TABLE public."vw_прайс2" OWNER TO sa;
 
 --
--- TOC entry 261 (class 1259 OID 504764)
+-- TOC entry 262 (class 1259 OID 507455)
 -- Name: vw_проводки; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5122,7 +5224,7 @@ CREATE VIEW "vw_проводки" AS
 ALTER TABLE public."vw_проводки" OWNER TO sa;
 
 --
--- TOC entry 262 (class 1259 OID 504768)
+-- TOC entry 263 (class 1259 OID 507459)
 -- Name: vw_разница_консальдо_и_цены; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5145,7 +5247,7 @@ CREATE VIEW "vw_разница_консальдо_и_цены" AS
 ALTER TABLE public."vw_разница_консальдо_и_цены" OWNER TO sa;
 
 --
--- TOC entry 263 (class 1259 OID 504773)
+-- TOC entry 264 (class 1259 OID 507464)
 -- Name: столбцы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5163,7 +5265,7 @@ CREATE TABLE "столбцы" (
 ALTER TABLE public."столбцы" OWNER TO sa;
 
 --
--- TOC entry 264 (class 1259 OID 504778)
+-- TOC entry 265 (class 1259 OID 507469)
 -- Name: vw_справочники_со_столбцами; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5197,7 +5299,7 @@ UNION
 ALTER TABLE public."vw_справочники_со_столбцами" OWNER TO sa;
 
 --
--- TOC entry 265 (class 1259 OID 504783)
+-- TOC entry 266 (class 1259 OID 507474)
 -- Name: vw_справочники_со_столбцами1; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5224,7 +5326,7 @@ UNION
 ALTER TABLE public."vw_справочники_со_столбцами1" OWNER TO sa;
 
 --
--- TOC entry 266 (class 1259 OID 504788)
+-- TOC entry 267 (class 1259 OID 507479)
 -- Name: vw_спрдокументы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5248,7 +5350,7 @@ CREATE VIEW "vw_спрдокументы" AS
 ALTER TABLE public."vw_спрдокументы" OWNER TO sa;
 
 --
--- TOC entry 267 (class 1259 OID 504792)
+-- TOC entry 268 (class 1259 OID 507483)
 -- Name: vw_столбцы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5283,7 +5385,7 @@ CREATE VIEW "vw_столбцы" AS
 ALTER TABLE public."vw_столбцы" OWNER TO sa;
 
 --
--- TOC entry 268 (class 1259 OID 504797)
+-- TOC entry 269 (class 1259 OID 507488)
 -- Name: vw_столбцы_типы; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5319,7 +5421,7 @@ CREATE VIEW "vw_столбцы_типы" AS
 ALTER TABLE public."vw_столбцы_типы" OWNER TO sa;
 
 --
--- TOC entry 269 (class 1259 OID 504802)
+-- TOC entry 270 (class 1259 OID 507493)
 -- Name: vw_счета; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5338,7 +5440,7 @@ CREATE VIEW "vw_счета" AS
 ALTER TABLE public."vw_счета" OWNER TO sa;
 
 --
--- TOC entry 270 (class 1259 OID 504806)
+-- TOC entry 271 (class 1259 OID 507497)
 -- Name: vw_товар_без_продаж_за_год; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5378,7 +5480,7 @@ CREATE VIEW "vw_товар_без_продаж_за_год" AS
 ALTER TABLE public."vw_товар_без_продаж_за_год" OWNER TO sa;
 
 --
--- TOC entry 271 (class 1259 OID 504811)
+-- TOC entry 272 (class 1259 OID 507502)
 -- Name: vw_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -5415,7 +5517,7 @@ CREATE VIEW "vw_топер" AS
 ALTER TABLE public."vw_топер" OWNER TO sa;
 
 --
--- TOC entry 272 (class 1259 OID 504816)
+-- TOC entry 273 (class 1259 OID 507507)
 -- Name: ос; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5429,7 +5531,7 @@ CREATE TABLE "ос" (
 ALTER TABLE public."ос" OWNER TO sa;
 
 --
--- TOC entry 273 (class 1259 OID 504821)
+-- TOC entry 274 (class 1259 OID 507512)
 -- Name: ОС_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5444,8 +5546,8 @@ CREATE SEQUENCE "ОС_КОД_seq"
 ALTER TABLE public."ОС_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4060 (class 0 OID 0)
--- Dependencies: 273
+-- TOC entry 4081 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: ОС_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5453,7 +5555,7 @@ ALTER SEQUENCE "ОС_КОД_seq" OWNED BY "ос"."КОД";
 
 
 --
--- TOC entry 274 (class 1259 OID 504823)
+-- TOC entry 275 (class 1259 OID 507514)
 -- Name: адрес_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5468,8 +5570,8 @@ CREATE SEQUENCE "адрес_КОД_seq"
 ALTER TABLE public."адрес_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4062 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 4083 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: адрес_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5477,7 +5579,7 @@ ALTER SEQUENCE "адрес_КОД_seq" OWNED BY "адрес"."КОД";
 
 
 --
--- TOC entry 275 (class 1259 OID 504825)
+-- TOC entry 276 (class 1259 OID 507516)
 -- Name: атрибуты121; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5492,7 +5594,7 @@ CREATE TABLE "атрибуты121" (
 ALTER TABLE public."атрибуты121" OWNER TO sa;
 
 --
--- TOC entry 276 (class 1259 OID 504828)
+-- TOC entry 277 (class 1259 OID 507519)
 -- Name: атрибуты121_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5507,8 +5609,8 @@ CREATE SEQUENCE "атрибуты121_КОД_seq"
 ALTER TABLE public."атрибуты121_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4065 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 4086 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: атрибуты121_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5516,7 +5618,7 @@ ALTER SEQUENCE "атрибуты121_КОД_seq" OWNED BY "атрибуты121"."
 
 
 --
--- TOC entry 277 (class 1259 OID 504830)
+-- TOC entry 278 (class 1259 OID 507521)
 -- Name: атрибуты123_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5531,8 +5633,8 @@ CREATE SEQUENCE "атрибуты123_КОД_seq"
 ALTER TABLE public."атрибуты123_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4066 (class 0 OID 0)
--- Dependencies: 277
+-- TOC entry 4087 (class 0 OID 0)
+-- Dependencies: 278
 -- Name: атрибуты123_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5540,7 +5642,7 @@ ALTER SEQUENCE "атрибуты123_КОД_seq" OWNED BY "атрибуты123"."
 
 
 --
--- TOC entry 278 (class 1259 OID 504832)
+-- TOC entry 279 (class 1259 OID 507523)
 -- Name: атрибуты129; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5556,7 +5658,7 @@ CREATE TABLE "атрибуты129" (
 ALTER TABLE public."атрибуты129" OWNER TO sa;
 
 --
--- TOC entry 279 (class 1259 OID 504835)
+-- TOC entry 280 (class 1259 OID 507526)
 -- Name: атрибуты129_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5571,8 +5673,8 @@ CREATE SEQUENCE "атрибуты129_КОД_seq"
 ALTER TABLE public."атрибуты129_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4068 (class 0 OID 0)
--- Dependencies: 279
+-- TOC entry 4089 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: атрибуты129_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5580,7 +5682,7 @@ ALTER SEQUENCE "атрибуты129_КОД_seq" OWNED BY "атрибуты129"."
 
 
 --
--- TOC entry 280 (class 1259 OID 504837)
+-- TOC entry 281 (class 1259 OID 507528)
 -- Name: атрибуты5; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5596,7 +5698,7 @@ CREATE TABLE "атрибуты5" (
 ALTER TABLE public."атрибуты5" OWNER TO sa;
 
 --
--- TOC entry 281 (class 1259 OID 504840)
+-- TOC entry 282 (class 1259 OID 507531)
 -- Name: атрибуты5_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5611,8 +5713,8 @@ CREATE SEQUENCE "атрибуты5_КОД_seq"
 ALTER TABLE public."атрибуты5_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4070 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 4091 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: атрибуты5_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5620,7 +5722,7 @@ ALTER SEQUENCE "атрибуты5_КОД_seq" OWNED BY "атрибуты5"."КО
 
 
 --
--- TOC entry 282 (class 1259 OID 504842)
+-- TOC entry 283 (class 1259 OID 507533)
 -- Name: атрибуты71; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5635,7 +5737,7 @@ CREATE TABLE "атрибуты71" (
 ALTER TABLE public."атрибуты71" OWNER TO sa;
 
 --
--- TOC entry 283 (class 1259 OID 504845)
+-- TOC entry 284 (class 1259 OID 507536)
 -- Name: атрибуты71_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5650,8 +5752,8 @@ CREATE SEQUENCE "атрибуты71_КОД_seq"
 ALTER TABLE public."атрибуты71_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4072 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 4093 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: атрибуты71_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5659,7 +5761,7 @@ ALTER SEQUENCE "атрибуты71_КОД_seq" OWNED BY "атрибуты71"."К
 
 
 --
--- TOC entry 284 (class 1259 OID 504848)
+-- TOC entry 285 (class 1259 OID 507538)
 -- Name: атрибуты8; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5676,7 +5778,7 @@ CREATE TABLE "атрибуты8" (
 ALTER TABLE public."атрибуты8" OWNER TO sa;
 
 --
--- TOC entry 285 (class 1259 OID 504852)
+-- TOC entry 286 (class 1259 OID 507542)
 -- Name: атрибуты8_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5691,8 +5793,8 @@ CREATE SEQUENCE "атрибуты8_КОД_seq"
 ALTER TABLE public."атрибуты8_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4074 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 4095 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: атрибуты8_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5700,7 +5802,7 @@ ALTER SEQUENCE "атрибуты8_КОД_seq" OWNED BY "атрибуты8"."КО
 
 
 --
--- TOC entry 286 (class 1259 OID 504854)
+-- TOC entry 287 (class 1259 OID 507544)
 -- Name: банки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5717,7 +5819,7 @@ CREATE TABLE "банки" (
 ALTER TABLE public."банки" OWNER TO sa;
 
 --
--- TOC entry 287 (class 1259 OID 504861)
+-- TOC entry 288 (class 1259 OID 507551)
 -- Name: банки_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5732,8 +5834,8 @@ CREATE SEQUENCE "банки_КОД_seq"
 ALTER TABLE public."банки_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4076 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 4097 (class 0 OID 0)
+-- Dependencies: 288
 -- Name: банки_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5741,7 +5843,7 @@ ALTER SEQUENCE "банки_КОД_seq" OWNED BY "банки"."КОД";
 
 
 --
--- TOC entry 288 (class 1259 OID 504863)
+-- TOC entry 289 (class 1259 OID 507553)
 -- Name: банковские_счета; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5756,7 +5858,7 @@ CREATE TABLE "банковские_счета" (
 ALTER TABLE public."банковские_счета" OWNER TO sa;
 
 --
--- TOC entry 289 (class 1259 OID 504868)
+-- TOC entry 290 (class 1259 OID 507558)
 -- Name: банковские_счета_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5771,8 +5873,8 @@ CREATE SEQUENCE "банковские_счета_КОД_seq"
 ALTER TABLE public."банковские_счета_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4079 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 4100 (class 0 OID 0)
+-- Dependencies: 290
 -- Name: банковские_счета_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5780,7 +5882,7 @@ ALTER SEQUENCE "банковские_счета_КОД_seq" OWNED BY "банко
 
 
 --
--- TOC entry 290 (class 1259 OID 504870)
+-- TOC entry 291 (class 1259 OID 507560)
 -- Name: блокдокументов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5793,7 +5895,7 @@ CREATE TABLE "блокдокументов" (
 ALTER TABLE public."блокдокументов" OWNER TO sa;
 
 --
--- TOC entry 291 (class 1259 OID 504873)
+-- TOC entry 292 (class 1259 OID 507563)
 -- Name: блокпериоды_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5808,8 +5910,8 @@ CREATE SEQUENCE "блокпериоды_КОД_seq"
 ALTER TABLE public."блокпериоды_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4082 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 4103 (class 0 OID 0)
+-- Dependencies: 292
 -- Name: блокпериоды_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5817,7 +5919,7 @@ ALTER SEQUENCE "блокпериоды_КОД_seq" OWNED BY "блокперио�
 
 
 --
--- TOC entry 292 (class 1259 OID 504875)
+-- TOC entry 293 (class 1259 OID 507565)
 -- Name: бюджет_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5832,8 +5934,8 @@ CREATE SEQUENCE "бюджет_КОД_seq"
 ALTER TABLE public."бюджет_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4084 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 4105 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: бюджет_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5841,7 +5943,7 @@ ALTER SEQUENCE "бюджет_КОД_seq" OWNED BY "бюджет"."КОД";
 
 
 --
--- TOC entry 293 (class 1259 OID 504878)
+-- TOC entry 294 (class 1259 OID 507567)
 -- Name: виды_расходов_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5856,8 +5958,8 @@ CREATE SEQUENCE "виды_расходов_КОД_seq"
 ALTER TABLE public."виды_расходов_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4086 (class 0 OID 0)
--- Dependencies: 293
+-- TOC entry 4107 (class 0 OID 0)
+-- Dependencies: 294
 -- Name: виды_расходов_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5865,7 +5967,7 @@ ALTER SEQUENCE "виды_расходов_КОД_seq" OWNED BY "виды_рас�
 
 
 --
--- TOC entry 294 (class 1259 OID 504880)
+-- TOC entry 295 (class 1259 OID 507569)
 -- Name: города; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5878,7 +5980,7 @@ CREATE TABLE "города" (
 ALTER TABLE public."города" OWNER TO sa;
 
 --
--- TOC entry 295 (class 1259 OID 504884)
+-- TOC entry 296 (class 1259 OID 507573)
 -- Name: города_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5893,8 +5995,8 @@ CREATE SEQUENCE "города_КОД_seq"
 ALTER TABLE public."города_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4089 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 4110 (class 0 OID 0)
+-- Dependencies: 296
 -- Name: города_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5902,7 +6004,7 @@ ALTER SEQUENCE "города_КОД_seq" OWNED BY "города"."КОД";
 
 
 --
--- TOC entry 296 (class 1259 OID 504886)
+-- TOC entry 297 (class 1259 OID 507575)
 -- Name: группы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5917,8 +6019,8 @@ CREATE SEQUENCE "группы_КОД_seq"
 ALTER TABLE public."группы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4091 (class 0 OID 0)
--- Dependencies: 296
+-- TOC entry 4112 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: группы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5926,7 +6028,7 @@ ALTER SEQUENCE "группы_КОД_seq" OWNED BY "группы"."КОД";
 
 
 --
--- TOC entry 297 (class 1259 OID 504888)
+-- TOC entry 298 (class 1259 OID 507577)
 -- Name: докатрибуты1; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5944,7 +6046,7 @@ CREATE TABLE "докатрибуты1" (
 ALTER TABLE public."докатрибуты1" OWNER TO sa;
 
 --
--- TOC entry 298 (class 1259 OID 504892)
+-- TOC entry 299 (class 1259 OID 507581)
 -- Name: докатрибуты71; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -5957,7 +6059,7 @@ CREATE TABLE "докатрибуты71" (
 ALTER TABLE public."докатрибуты71" OWNER TO sa;
 
 --
--- TOC entry 299 (class 1259 OID 504896)
+-- TOC entry 300 (class 1259 OID 507585)
 -- Name: документы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5972,8 +6074,8 @@ CREATE SEQUENCE "документы_КОД_seq"
 ALTER TABLE public."документы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4095 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 4116 (class 0 OID 0)
+-- Dependencies: 300
 -- Name: документы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -5981,7 +6083,7 @@ ALTER SEQUENCE "документы_КОД_seq" OWNED BY "документы"."К
 
 
 --
--- TOC entry 300 (class 1259 OID 504898)
+-- TOC entry 301 (class 1259 OID 507587)
 -- Name: доступ_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -5996,8 +6098,8 @@ CREATE SEQUENCE "доступ_КОД_seq"
 ALTER TABLE public."доступ_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4097 (class 0 OID 0)
--- Dependencies: 300
+-- TOC entry 4118 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: доступ_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6005,7 +6107,7 @@ ALTER SEQUENCE "доступ_КОД_seq" OWNED BY "доступ"."КОД";
 
 
 --
--- TOC entry 301 (class 1259 OID 504900)
+-- TOC entry 302 (class 1259 OID 507589)
 -- Name: доступ_к_оборотам; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -6022,7 +6124,7 @@ CREATE VIEW "доступ_к_оборотам" AS
 ALTER TABLE public."доступ_к_оборотам" OWNER TO sa;
 
 --
--- TOC entry 302 (class 1259 OID 504904)
+-- TOC entry 303 (class 1259 OID 507593)
 -- Name: доступ_к_сальдо; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -6039,7 +6141,7 @@ CREATE VIEW "доступ_к_сальдо" AS
 ALTER TABLE public."доступ_к_сальдо" OWNER TO sa;
 
 --
--- TOC entry 303 (class 1259 OID 504908)
+-- TOC entry 304 (class 1259 OID 507597)
 -- Name: доступ_к_топер; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -6071,7 +6173,7 @@ CREATE VIEW "доступ_к_топер" AS
 ALTER TABLE public."доступ_к_топер" OWNER TO sa;
 
 --
--- TOC entry 304 (class 1259 OID 504913)
+-- TOC entry 305 (class 1259 OID 507602)
 -- Name: журнал_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6086,8 +6188,8 @@ CREATE SEQUENCE "журнал_КОД_seq"
 ALTER TABLE public."журнал_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4102 (class 0 OID 0)
--- Dependencies: 304
+-- TOC entry 4123 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: журнал_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6095,7 +6197,7 @@ ALTER SEQUENCE "журнал_КОД_seq" OWNED BY "журнал"."КОД";
 
 
 --
--- TOC entry 305 (class 1259 OID 504915)
+-- TOC entry 306 (class 1259 OID 507604)
 -- Name: заказчики; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6110,7 +6212,7 @@ CREATE TABLE "заказчики" (
 ALTER TABLE public."заказчики" OWNER TO sa;
 
 --
--- TOC entry 306 (class 1259 OID 504921)
+-- TOC entry 307 (class 1259 OID 507610)
 -- Name: заказчики_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6125,8 +6227,8 @@ CREATE SEQUENCE "заказчики_КОД_seq"
 ALTER TABLE public."заказчики_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4104 (class 0 OID 0)
--- Dependencies: 306
+-- TOC entry 4125 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: заказчики_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6134,7 +6236,7 @@ ALTER SEQUENCE "заказчики_КОД_seq" OWNED BY "заказчики"."К
 
 
 --
--- TOC entry 307 (class 1259 OID 504923)
+-- TOC entry 308 (class 1259 OID 507612)
 -- Name: запросы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6149,8 +6251,8 @@ CREATE SEQUENCE "запросы_КОД_seq"
 ALTER TABLE public."запросы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4106 (class 0 OID 0)
--- Dependencies: 307
+-- TOC entry 4127 (class 0 OID 0)
+-- Dependencies: 308
 -- Name: запросы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6158,7 +6260,7 @@ ALTER SEQUENCE "запросы_КОД_seq" OWNED BY "запросы"."КОД";
 
 
 --
--- TOC entry 308 (class 1259 OID 504925)
+-- TOC entry 309 (class 1259 OID 507614)
 -- Name: заявка_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6173,8 +6275,8 @@ CREATE SEQUENCE "заявка_КОД_seq"
 ALTER TABLE public."заявка_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4108 (class 0 OID 0)
--- Dependencies: 308
+-- TOC entry 4129 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: заявка_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6182,7 +6284,7 @@ ALTER SEQUENCE "заявка_КОД_seq" OWNED BY "заявка"."КОД";
 
 
 --
--- TOC entry 309 (class 1259 OID 504927)
+-- TOC entry 310 (class 1259 OID 507616)
 -- Name: заявка_на_весь_товар; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -6199,7 +6301,7 @@ CREATE VIEW "заявка_на_весь_товар" AS
 ALTER TABLE public."заявка_на_весь_товар" OWNER TO sa;
 
 --
--- TOC entry 310 (class 1259 OID 504931)
+-- TOC entry 311 (class 1259 OID 507620)
 -- Name: карточки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6214,7 +6316,7 @@ CREATE TABLE "карточки" (
 ALTER TABLE public."карточки" OWNER TO sa;
 
 --
--- TOC entry 311 (class 1259 OID 504936)
+-- TOC entry 312 (class 1259 OID 507625)
 -- Name: карточки_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6229,8 +6331,8 @@ CREATE SEQUENCE "карточки_КОД_seq"
 ALTER TABLE public."карточки_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4112 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 4133 (class 0 OID 0)
+-- Dependencies: 312
 -- Name: карточки_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6238,7 +6340,7 @@ ALTER SEQUENCE "карточки_КОД_seq" OWNED BY "карточки"."КОД
 
 
 --
--- TOC entry 312 (class 1259 OID 504938)
+-- TOC entry 313 (class 1259 OID 507627)
 -- Name: константы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6253,8 +6355,8 @@ CREATE SEQUENCE "константы_КОД_seq"
 ALTER TABLE public."константы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4114 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 4135 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: константы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6262,7 +6364,7 @@ ALTER SEQUENCE "константы_КОД_seq" OWNED BY "константы"."К
 
 
 --
--- TOC entry 313 (class 1259 OID 504940)
+-- TOC entry 314 (class 1259 OID 507629)
 -- Name: лишние_слова; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6275,7 +6377,7 @@ CREATE TABLE "лишние_слова" (
 ALTER TABLE public."лишние_слова" OWNER TO sa;
 
 --
--- TOC entry 314 (class 1259 OID 504943)
+-- TOC entry 315 (class 1259 OID 507632)
 -- Name: лишние_слова_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6290,8 +6392,8 @@ CREATE SEQUENCE "лишние_слова_КОД_seq"
 ALTER TABLE public."лишние_слова_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4116 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 4137 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: лишние_слова_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6299,7 +6401,7 @@ ALTER SEQUENCE "лишние_слова_КОД_seq" OWNED BY "лишние_сл�
 
 
 --
--- TOC entry 315 (class 1259 OID 504945)
+-- TOC entry 316 (class 1259 OID 507634)
 -- Name: люди_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6314,8 +6416,8 @@ CREATE SEQUENCE "люди_КОД_seq"
 ALTER TABLE public."люди_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4117 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 4138 (class 0 OID 0)
+-- Dependencies: 316
 -- Name: люди_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6323,7 +6425,7 @@ ALTER SEQUENCE "люди_КОД_seq" OWNED BY "люди"."КОД";
 
 
 --
--- TOC entry 316 (class 1259 OID 504947)
+-- TOC entry 317 (class 1259 OID 507636)
 -- Name: материалы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6337,7 +6439,7 @@ CREATE TABLE "материалы" (
 ALTER TABLE public."материалы" OWNER TO sa;
 
 --
--- TOC entry 317 (class 1259 OID 504952)
+-- TOC entry 318 (class 1259 OID 507641)
 -- Name: материалы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6352,8 +6454,8 @@ CREATE SEQUENCE "материалы_КОД_seq"
 ALTER TABLE public."материалы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4120 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 4141 (class 0 OID 0)
+-- Dependencies: 318
 -- Name: материалы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6361,7 +6463,7 @@ ALTER SEQUENCE "материалы_КОД_seq" OWNED BY "материалы"."К
 
 
 --
--- TOC entry 318 (class 1259 OID 504954)
+-- TOC entry 319 (class 1259 OID 507643)
 -- Name: набор1_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6376,8 +6478,8 @@ CREATE SEQUENCE "набор1_КОД_seq"
 ALTER TABLE public."набор1_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4122 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 4143 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: набор1_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6385,7 +6487,7 @@ ALTER SEQUENCE "набор1_КОД_seq" OWNED BY "набор1"."КОД";
 
 
 --
--- TOC entry 319 (class 1259 OID 504956)
+-- TOC entry 320 (class 1259 OID 507645)
 -- Name: набор3_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6400,8 +6502,8 @@ CREATE SEQUENCE "набор3_КОД_seq"
 ALTER TABLE public."набор3_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4124 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 4145 (class 0 OID 0)
+-- Dependencies: 320
 -- Name: набор3_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6409,7 +6511,7 @@ ALTER SEQUENCE "набор3_КОД_seq" OWNED BY "набор3"."КОД";
 
 
 --
--- TOC entry 320 (class 1259 OID 504958)
+-- TOC entry 321 (class 1259 OID 507647)
 -- Name: набор4; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6423,7 +6525,7 @@ CREATE TABLE "набор4" (
 ALTER TABLE public."набор4" OWNER TO sa;
 
 --
--- TOC entry 321 (class 1259 OID 504961)
+-- TOC entry 322 (class 1259 OID 507650)
 -- Name: набор401; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6437,7 +6539,7 @@ CREATE TABLE "набор401" (
 ALTER TABLE public."набор401" OWNER TO sa;
 
 --
--- TOC entry 322 (class 1259 OID 504964)
+-- TOC entry 323 (class 1259 OID 507653)
 -- Name: набор401_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6452,8 +6554,8 @@ CREATE SEQUENCE "набор401_КОД_seq"
 ALTER TABLE public."набор401_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4128 (class 0 OID 0)
--- Dependencies: 322
+-- TOC entry 4149 (class 0 OID 0)
+-- Dependencies: 323
 -- Name: набор401_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6461,7 +6563,7 @@ ALTER SEQUENCE "набор401_КОД_seq" OWNED BY "набор401"."КОД";
 
 
 --
--- TOC entry 323 (class 1259 OID 504966)
+-- TOC entry 324 (class 1259 OID 507655)
 -- Name: набор402_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6476,8 +6578,8 @@ CREATE SEQUENCE "набор402_КОД_seq"
 ALTER TABLE public."набор402_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4129 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 4150 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: набор402_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6485,7 +6587,7 @@ ALTER SEQUENCE "набор402_КОД_seq" OWNED BY "набор402"."КОД";
 
 
 --
--- TOC entry 324 (class 1259 OID 504968)
+-- TOC entry 325 (class 1259 OID 507657)
 -- Name: набор4_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6500,8 +6602,8 @@ CREATE SEQUENCE "набор4_КОД_seq"
 ALTER TABLE public."набор4_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4130 (class 0 OID 0)
--- Dependencies: 324
+-- TOC entry 4151 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: набор4_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6509,7 +6611,7 @@ ALTER SEQUENCE "набор4_КОД_seq" OWNED BY "набор4"."КОД";
 
 
 --
--- TOC entry 325 (class 1259 OID 504970)
+-- TOC entry 326 (class 1259 OID 507659)
 -- Name: наценки_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6524,8 +6626,8 @@ CREATE SEQUENCE "наценки_КОД_seq"
 ALTER TABLE public."наценки_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4132 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 4153 (class 0 OID 0)
+-- Dependencies: 326
 -- Name: наценки_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6533,7 +6635,7 @@ ALTER SEQUENCE "наценки_КОД_seq" OWNED BY "наценки"."КОД";
 
 
 --
--- TOC entry 326 (class 1259 OID 504972)
+-- TOC entry 327 (class 1259 OID 507661)
 -- Name: нумераторы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6547,7 +6649,7 @@ CREATE TABLE "нумераторы" (
 ALTER TABLE public."нумераторы" OWNER TO sa;
 
 --
--- TOC entry 327 (class 1259 OID 504977)
+-- TOC entry 328 (class 1259 OID 507666)
 -- Name: нумераторы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6562,8 +6664,8 @@ CREATE SEQUENCE "нумераторы_КОД_seq"
 ALTER TABLE public."нумераторы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4135 (class 0 OID 0)
--- Dependencies: 327
+-- TOC entry 4156 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: нумераторы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6571,7 +6673,7 @@ ALTER SEQUENCE "нумераторы_КОД_seq" OWNED BY "нумераторы"
 
 
 --
--- TOC entry 328 (class 1259 OID 504979)
+-- TOC entry 329 (class 1259 OID 507668)
 -- Name: объекты; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6584,7 +6686,7 @@ CREATE TABLE "объекты" (
 ALTER TABLE public."объекты" OWNER TO sa;
 
 --
--- TOC entry 329 (class 1259 OID 504983)
+-- TOC entry 330 (class 1259 OID 507672)
 -- Name: объекты_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6599,8 +6701,8 @@ CREATE SEQUENCE "объекты_КОД_seq"
 ALTER TABLE public."объекты_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4138 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 4159 (class 0 OID 0)
+-- Dependencies: 330
 -- Name: объекты_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6608,7 +6710,7 @@ ALTER SEQUENCE "объекты_КОД_seq" OWNED BY "объекты"."КОД";
 
 
 --
--- TOC entry 330 (class 1259 OID 504985)
+-- TOC entry 331 (class 1259 OID 507674)
 -- Name: организации_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6623,8 +6725,8 @@ CREATE SEQUENCE "организации_КОД_seq"
 ALTER TABLE public."организации_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4140 (class 0 OID 0)
--- Dependencies: 330
+-- TOC entry 4161 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: организации_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6632,7 +6734,7 @@ ALTER SEQUENCE "организации_КОД_seq" OWNED BY "организац�
 
 
 --
--- TOC entry 331 (class 1259 OID 504987)
+-- TOC entry 332 (class 1259 OID 507676)
 -- Name: персонал; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6656,7 +6758,7 @@ CREATE TABLE "персонал" (
 ALTER TABLE public."персонал" OWNER TO sa;
 
 --
--- TOC entry 332 (class 1259 OID 504998)
+-- TOC entry 333 (class 1259 OID 507687)
 -- Name: персонал_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6671,8 +6773,8 @@ CREATE SEQUENCE "персонал_КОД_seq"
 ALTER TABLE public."персонал_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4143 (class 0 OID 0)
--- Dependencies: 332
+-- TOC entry 4164 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: персонал_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6680,7 +6782,7 @@ ALTER SEQUENCE "персонал_КОД_seq" OWNED BY "персонал"."КОД
 
 
 --
--- TOC entry 333 (class 1259 OID 505000)
+-- TOC entry 334 (class 1259 OID 507689)
 -- Name: посладрес_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6695,8 +6797,8 @@ CREATE SEQUENCE "посладрес_КОД_seq"
 ALTER TABLE public."посладрес_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4145 (class 0 OID 0)
--- Dependencies: 333
+-- TOC entry 4166 (class 0 OID 0)
+-- Dependencies: 334
 -- Name: посладрес_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6704,7 +6806,7 @@ ALTER SEQUENCE "посладрес_КОД_seq" OWNED BY "посладрес"."К
 
 
 --
--- TOC entry 334 (class 1259 OID 505002)
+-- TOC entry 335 (class 1259 OID 507691)
 -- Name: пр_пользователи; Type: VIEW; Schema: public; Owner: sa
 --
 
@@ -6734,7 +6836,7 @@ CREATE VIEW "пр_пользователи" AS
 ALTER TABLE public."пр_пользователи" OWNER TO sa;
 
 --
--- TOC entry 335 (class 1259 OID 505007)
+-- TOC entry 336 (class 1259 OID 507696)
 -- Name: прайс_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6749,8 +6851,8 @@ CREATE SEQUENCE "прайс_КОД_seq"
 ALTER TABLE public."прайс_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4148 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 4169 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: прайс_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6758,7 +6860,7 @@ ALTER SEQUENCE "прайс_КОД_seq" OWNED BY "прайс"."КОД";
 
 
 --
--- TOC entry 336 (class 1259 OID 505009)
+-- TOC entry 337 (class 1259 OID 507698)
 -- Name: предметы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6772,7 +6874,7 @@ CREATE TABLE "предметы" (
 ALTER TABLE public."предметы" OWNER TO sa;
 
 --
--- TOC entry 337 (class 1259 OID 505014)
+-- TOC entry 338 (class 1259 OID 507703)
 -- Name: предметы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6787,8 +6889,8 @@ CREATE SEQUENCE "предметы_КОД_seq"
 ALTER TABLE public."предметы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4151 (class 0 OID 0)
--- Dependencies: 337
+-- TOC entry 4172 (class 0 OID 0)
+-- Dependencies: 338
 -- Name: предметы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6796,7 +6898,7 @@ ALTER SEQUENCE "предметы_КОД_seq" OWNED BY "предметы"."КОД
 
 
 --
--- TOC entry 338 (class 1259 OID 505016)
+-- TOC entry 339 (class 1259 OID 507705)
 -- Name: проводки_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6811,8 +6913,8 @@ CREATE SEQUENCE "проводки_КОД_seq"
 ALTER TABLE public."проводки_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4153 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 4174 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: проводки_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6820,7 +6922,7 @@ ALTER SEQUENCE "проводки_КОД_seq" OWNED BY "проводки"."КОД
 
 
 --
--- TOC entry 339 (class 1259 OID 505018)
+-- TOC entry 340 (class 1259 OID 507707)
 -- Name: синонимы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6835,7 +6937,7 @@ CREATE TABLE "синонимы" (
 ALTER TABLE public."синонимы" OWNER TO sa;
 
 --
--- TOC entry 340 (class 1259 OID 505024)
+-- TOC entry 341 (class 1259 OID 507713)
 -- Name: синонимы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6850,8 +6952,8 @@ CREATE SEQUENCE "синонимы_КОД_seq"
 ALTER TABLE public."синонимы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4156 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 4177 (class 0 OID 0)
+-- Dependencies: 341
 -- Name: синонимы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6859,7 +6961,7 @@ ALTER SEQUENCE "синонимы_КОД_seq" OWNED BY "синонимы"."КОД
 
 
 --
--- TOC entry 341 (class 1259 OID 505026)
+-- TOC entry 342 (class 1259 OID 507715)
 -- Name: скидки; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6875,7 +6977,7 @@ CREATE TABLE "скидки" (
 ALTER TABLE public."скидки" OWNER TO sa;
 
 --
--- TOC entry 342 (class 1259 OID 505030)
+-- TOC entry 343 (class 1259 OID 507719)
 -- Name: скидки_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6890,8 +6992,8 @@ CREATE SEQUENCE "скидки_КОД_seq"
 ALTER TABLE public."скидки_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4158 (class 0 OID 0)
--- Dependencies: 342
+-- TOC entry 4179 (class 0 OID 0)
+-- Dependencies: 343
 -- Name: скидки_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6899,7 +7001,7 @@ ALTER SEQUENCE "скидки_КОД_seq" OWNED BY "скидки"."КОД";
 
 
 --
--- TOC entry 343 (class 1259 OID 505032)
+-- TOC entry 344 (class 1259 OID 507721)
 -- Name: справочник; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -6912,7 +7014,7 @@ CREATE TABLE "справочник" (
 ALTER TABLE public."справочник" OWNER TO sa;
 
 --
--- TOC entry 344 (class 1259 OID 505036)
+-- TOC entry 345 (class 1259 OID 507725)
 -- Name: справочник_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6927,8 +7029,8 @@ CREATE SEQUENCE "справочник_КОД_seq"
 ALTER TABLE public."справочник_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4159 (class 0 OID 0)
--- Dependencies: 344
+-- TOC entry 4180 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: справочник_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6936,7 +7038,7 @@ ALTER SEQUENCE "справочник_КОД_seq" OWNED BY "справочник"
 
 
 --
--- TOC entry 345 (class 1259 OID 505038)
+-- TOC entry 346 (class 1259 OID 507727)
 -- Name: справочники_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6951,8 +7053,8 @@ CREATE SEQUENCE "справочники_КОД_seq"
 ALTER TABLE public."справочники_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4161 (class 0 OID 0)
--- Dependencies: 345
+-- TOC entry 4182 (class 0 OID 0)
+-- Dependencies: 346
 -- Name: справочники_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6960,7 +7062,7 @@ ALTER SEQUENCE "справочники_КОД_seq" OWNED BY "справочни�
 
 
 --
--- TOC entry 346 (class 1259 OID 505040)
+-- TOC entry 347 (class 1259 OID 507729)
 -- Name: столбцы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6975,8 +7077,8 @@ CREATE SEQUENCE "столбцы_КОД_seq"
 ALTER TABLE public."столбцы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4163 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 4184 (class 0 OID 0)
+-- Dependencies: 347
 -- Name: столбцы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -6984,7 +7086,7 @@ ALTER SEQUENCE "столбцы_КОД_seq" OWNED BY "столбцы"."КОД";
 
 
 --
--- TOC entry 347 (class 1259 OID 505042)
+-- TOC entry 348 (class 1259 OID 507731)
 -- Name: счета_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -6999,8 +7101,8 @@ CREATE SEQUENCE "счета_КОД_seq"
 ALTER TABLE public."счета_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4164 (class 0 OID 0)
--- Dependencies: 347
+-- TOC entry 4185 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: счета_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -7008,7 +7110,7 @@ ALTER SEQUENCE "счета_КОД_seq" OWNED BY "счета"."КОД";
 
 
 --
--- TOC entry 348 (class 1259 OID 505044)
+-- TOC entry 349 (class 1259 OID 507733)
 -- Name: типыобъектов; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -7021,7 +7123,7 @@ CREATE TABLE "типыобъектов" (
 ALTER TABLE public."типыобъектов" OWNER TO sa;
 
 --
--- TOC entry 349 (class 1259 OID 505048)
+-- TOC entry 350 (class 1259 OID 507737)
 -- Name: типыобъектов_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -7036,8 +7138,8 @@ CREATE SEQUENCE "типыобъектов_КОД_seq"
 ALTER TABLE public."типыобъектов_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4167 (class 0 OID 0)
--- Dependencies: 349
+-- TOC entry 4188 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: типыобъектов_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -7045,7 +7147,7 @@ ALTER SEQUENCE "типыобъектов_КОД_seq" OWNED BY "типыобъе�
 
 
 --
--- TOC entry 350 (class 1259 OID 505050)
+-- TOC entry 351 (class 1259 OID 507739)
 -- Name: товар_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -7060,8 +7162,8 @@ CREATE SEQUENCE "товар_КОД_seq"
 ALTER TABLE public."товар_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4169 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 4190 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: товар_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -7069,7 +7171,7 @@ ALTER SEQUENCE "товар_КОД_seq" OWNED BY "товар"."КОД";
 
 
 --
--- TOC entry 351 (class 1259 OID 505052)
+-- TOC entry 352 (class 1259 OID 507741)
 -- Name: топер_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -7084,8 +7186,8 @@ CREATE SEQUENCE "топер_КОД_seq"
 ALTER TABLE public."топер_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4171 (class 0 OID 0)
--- Dependencies: 351
+-- TOC entry 4192 (class 0 OID 0)
+-- Dependencies: 352
 -- Name: топер_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -7093,7 +7195,7 @@ ALTER SEQUENCE "топер_КОД_seq" OWNED BY "топер"."КОД";
 
 
 --
--- TOC entry 352 (class 1259 OID 505054)
+-- TOC entry 353 (class 1259 OID 507743)
 -- Name: файлы; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -7111,7 +7213,7 @@ CREATE TABLE "файлы" (
 ALTER TABLE public."файлы" OWNER TO sa;
 
 --
--- TOC entry 353 (class 1259 OID 505063)
+-- TOC entry 354 (class 1259 OID 507752)
 -- Name: файлы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -7126,8 +7228,8 @@ CREATE SEQUENCE "файлы_КОД_seq"
 ALTER TABLE public."файлы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4173 (class 0 OID 0)
--- Dependencies: 353
+-- TOC entry 4194 (class 0 OID 0)
+-- Dependencies: 354
 -- Name: файлы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -7135,7 +7237,7 @@ ALTER SEQUENCE "файлы_КОД_seq" OWNED BY "файлы"."КОД";
 
 
 --
--- TOC entry 354 (class 1259 OID 505065)
+-- TOC entry 355 (class 1259 OID 507754)
 -- Name: фирмы_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -7150,8 +7252,8 @@ CREATE SEQUENCE "фирмы_КОД_seq"
 ALTER TABLE public."фирмы_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4174 (class 0 OID 0)
--- Dependencies: 354
+-- TOC entry 4195 (class 0 OID 0)
+-- Dependencies: 355
 -- Name: фирмы_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
@@ -7159,7 +7261,7 @@ ALTER SEQUENCE "фирмы_КОД_seq" OWNED BY "фирмы"."КОД";
 
 
 --
--- TOC entry 355 (class 1259 OID 505067)
+-- TOC entry 356 (class 1259 OID 507756)
 -- Name: фонды; Type: TABLE; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -7173,7 +7275,7 @@ CREATE TABLE "фонды" (
 ALTER TABLE public."фонды" OWNER TO sa;
 
 --
--- TOC entry 356 (class 1259 OID 505071)
+-- TOC entry 357 (class 1259 OID 507760)
 -- Name: фонды_КОД_seq; Type: SEQUENCE; Schema: public; Owner: sa
 --
 
@@ -7188,16 +7290,35 @@ CREATE SEQUENCE "фонды_КОД_seq"
 ALTER TABLE public."фонды_КОД_seq" OWNER TO sa;
 
 --
--- TOC entry 4177 (class 0 OID 0)
--- Dependencies: 356
+-- TOC entry 4198 (class 0 OID 0)
+-- Dependencies: 357
 -- Name: фонды_КОД_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sa
 --
 
 ALTER SEQUENCE "фонды_КОД_seq" OWNED BY "фонды"."КОД";
 
 
+SET search_path = session_variables, pg_catalog;
+
 --
--- TOC entry 3118 (class 2604 OID 505079)
+-- TOC entry 358 (class 1259 OID 507762)
+-- Name: data; Type: TABLE; Schema: session_variables; Owner: sa; Tablespace: 
+--
+
+CREATE TABLE data (
+    backend_pid integer NOT NULL,
+    variable_name text NOT NULL,
+    variable_value text,
+    expires_on timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE session_variables.data OWNER TO sa;
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 3129 (class 2604 OID 507768)
 -- Name: code; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7205,7 +7326,7 @@ ALTER TABLE ONLY last_income ALTER COLUMN code SET DEFAULT nextval('last_income_
 
 
 --
--- TOC entry 3124 (class 2604 OID 505080)
+-- TOC entry 3135 (class 2604 OID 507769)
 -- Name: code; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7213,7 +7334,7 @@ ALTER TABLE ONLY last_price ALTER COLUMN code SET DEFAULT nextval('last_price_co
 
 
 --
--- TOC entry 3125 (class 2604 OID 505081)
+-- TOC entry 3136 (class 2604 OID 507770)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7221,7 +7342,7 @@ ALTER TABLE ONLY test ALTER COLUMN id SET DEFAULT nextval('test_id_seq'::regclas
 
 
 --
--- TOC entry 3126 (class 2604 OID 505082)
+-- TOC entry 3137 (class 2604 OID 507771)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7229,7 +7350,7 @@ ALTER TABLE ONLY users ALTER COLUMN "КОД" SET DEFAULT nextval('"users_КОД_
 
 
 --
--- TOC entry 3234 (class 2604 OID 505083)
+-- TOC entry 3245 (class 2604 OID 507772)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7237,7 +7358,7 @@ ALTER TABLE ONLY "адрес" ALTER COLUMN "КОД" SET DEFAULT nextval('"адр
 
 
 --
--- TOC entry 3303 (class 2604 OID 505084)
+-- TOC entry 3314 (class 2604 OID 507773)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7245,7 +7366,7 @@ ALTER TABLE ONLY "атрибуты121" ALTER COLUMN "КОД" SET DEFAULT nextval
 
 
 --
--- TOC entry 3194 (class 2604 OID 505085)
+-- TOC entry 3205 (class 2604 OID 507774)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7253,7 +7374,7 @@ ALTER TABLE ONLY "атрибуты123" ALTER COLUMN "КОД" SET DEFAULT nextval
 
 
 --
--- TOC entry 3304 (class 2604 OID 505086)
+-- TOC entry 3315 (class 2604 OID 507775)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7261,7 +7382,7 @@ ALTER TABLE ONLY "атрибуты129" ALTER COLUMN "КОД" SET DEFAULT nextval
 
 
 --
--- TOC entry 3305 (class 2604 OID 505087)
+-- TOC entry 3316 (class 2604 OID 507776)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7269,7 +7390,7 @@ ALTER TABLE ONLY "атрибуты5" ALTER COLUMN "КОД" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3306 (class 2604 OID 505088)
+-- TOC entry 3317 (class 2604 OID 507777)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7277,7 +7398,7 @@ ALTER TABLE ONLY "атрибуты71" ALTER COLUMN "КОД" SET DEFAULT nextval(
 
 
 --
--- TOC entry 3307 (class 2604 OID 505089)
+-- TOC entry 3318 (class 2604 OID 507778)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7285,7 +7406,7 @@ ALTER TABLE ONLY "атрибуты8" ALTER COLUMN "КОД" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3313 (class 2604 OID 505090)
+-- TOC entry 3324 (class 2604 OID 507779)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7293,7 +7414,7 @@ ALTER TABLE ONLY "банки" ALTER COLUMN "КОД" SET DEFAULT nextval('"бан
 
 
 --
--- TOC entry 3316 (class 2604 OID 505091)
+-- TOC entry 3327 (class 2604 OID 507780)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7301,7 +7422,7 @@ ALTER TABLE ONLY "банковские_счета" ALTER COLUMN "КОД" SET DEF
 
 
 --
--- TOC entry 3130 (class 2604 OID 505092)
+-- TOC entry 3141 (class 2604 OID 507781)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7309,7 +7430,7 @@ ALTER TABLE ONLY "блокпериоды" ALTER COLUMN "КОД" SET DEFAULT next
 
 
 --
--- TOC entry 3208 (class 2604 OID 505093)
+-- TOC entry 3219 (class 2604 OID 507782)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7317,7 +7438,7 @@ ALTER TABLE ONLY "бюджет" ALTER COLUMN "КОД" SET DEFAULT nextval('"бю
 
 
 --
--- TOC entry 3197 (class 2604 OID 505094)
+-- TOC entry 3208 (class 2604 OID 507783)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7325,7 +7446,7 @@ ALTER TABLE ONLY "виды_расходов" ALTER COLUMN "КОД" SET DEFAULT n
 
 
 --
--- TOC entry 3317 (class 2604 OID 505095)
+-- TOC entry 3328 (class 2604 OID 507784)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7333,7 +7454,7 @@ ALTER TABLE ONLY "города" ALTER COLUMN "КОД" SET DEFAULT nextval('"го
 
 
 --
--- TOC entry 3134 (class 2604 OID 505096)
+-- TOC entry 3145 (class 2604 OID 507785)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7341,7 +7462,7 @@ ALTER TABLE ONLY "группы" ALTER COLUMN "КОД" SET DEFAULT nextval('"гр
 
 
 --
--- TOC entry 3138 (class 2604 OID 505097)
+-- TOC entry 3149 (class 2604 OID 507786)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7349,7 +7470,7 @@ ALTER TABLE ONLY "документы" ALTER COLUMN "КОД" SET DEFAULT nextval(
 
 
 --
--- TOC entry 3223 (class 2604 OID 505098)
+-- TOC entry 3234 (class 2604 OID 507787)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7357,7 +7478,7 @@ ALTER TABLE ONLY "доступ" ALTER COLUMN "КОД" SET DEFAULT nextval('"до
 
 
 --
--- TOC entry 3233 (class 2604 OID 505099)
+-- TOC entry 3244 (class 2604 OID 507788)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7365,7 +7486,7 @@ ALTER TABLE ONLY "журнал" ALTER COLUMN "КОД" SET DEFAULT nextval('"жу
 
 
 --
--- TOC entry 3324 (class 2604 OID 505100)
+-- TOC entry 3335 (class 2604 OID 507789)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7373,7 +7494,7 @@ ALTER TABLE ONLY "заказчики" ALTER COLUMN "КОД" SET DEFAULT nextval(
 
 
 --
--- TOC entry 3240 (class 2604 OID 505101)
+-- TOC entry 3251 (class 2604 OID 507790)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7381,7 +7502,7 @@ ALTER TABLE ONLY "запросы" ALTER COLUMN "КОД" SET DEFAULT nextval('"з
 
 
 --
--- TOC entry 3253 (class 2604 OID 505102)
+-- TOC entry 3264 (class 2604 OID 507791)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7389,7 +7510,7 @@ ALTER TABLE ONLY "заявка" ALTER COLUMN "КОД" SET DEFAULT nextval('"за
 
 
 --
--- TOC entry 3327 (class 2604 OID 505103)
+-- TOC entry 3338 (class 2604 OID 507792)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7397,7 +7518,7 @@ ALTER TABLE ONLY "карточки" ALTER COLUMN "КОД" SET DEFAULT nextval('"
 
 
 --
--- TOC entry 3256 (class 2604 OID 505104)
+-- TOC entry 3267 (class 2604 OID 507793)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7405,7 +7526,7 @@ ALTER TABLE ONLY "константы" ALTER COLUMN "КОД" SET DEFAULT nextval(
 
 
 --
--- TOC entry 3328 (class 2604 OID 505105)
+-- TOC entry 3339 (class 2604 OID 507794)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7413,7 +7534,7 @@ ALTER TABLE ONLY "лишние_слова" ALTER COLUMN "КОД" SET DEFAULT nex
 
 
 --
--- TOC entry 3278 (class 2604 OID 505106)
+-- TOC entry 3289 (class 2604 OID 507795)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7421,7 +7542,7 @@ ALTER TABLE ONLY "люди" ALTER COLUMN "КОД" SET DEFAULT nextval('"люди
 
 
 --
--- TOC entry 3331 (class 2604 OID 505107)
+-- TOC entry 3342 (class 2604 OID 507796)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7429,7 +7550,7 @@ ALTER TABLE ONLY "материалы" ALTER COLUMN "КОД" SET DEFAULT nextval(
 
 
 --
--- TOC entry 3139 (class 2604 OID 505108)
+-- TOC entry 3150 (class 2604 OID 507797)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7437,7 +7558,7 @@ ALTER TABLE ONLY "набор1" ALTER COLUMN "КОД" SET DEFAULT nextval('"на�
 
 
 --
--- TOC entry 3279 (class 2604 OID 505109)
+-- TOC entry 3290 (class 2604 OID 507798)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7445,7 +7566,7 @@ ALTER TABLE ONLY "набор3" ALTER COLUMN "КОД" SET DEFAULT nextval('"на�
 
 
 --
--- TOC entry 3332 (class 2604 OID 505110)
+-- TOC entry 3343 (class 2604 OID 507799)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7453,7 +7574,7 @@ ALTER TABLE ONLY "набор4" ALTER COLUMN "КОД" SET DEFAULT nextval('"на�
 
 
 --
--- TOC entry 3333 (class 2604 OID 505111)
+-- TOC entry 3344 (class 2604 OID 507800)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7461,7 +7582,7 @@ ALTER TABLE ONLY "набор401" ALTER COLUMN "КОД" SET DEFAULT nextval('"н�
 
 
 --
--- TOC entry 3196 (class 2604 OID 505112)
+-- TOC entry 3207 (class 2604 OID 507801)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7469,7 +7590,7 @@ ALTER TABLE ONLY "набор402" ALTER COLUMN "КОД" SET DEFAULT nextval('"н�
 
 
 --
--- TOC entry 3287 (class 2604 OID 505113)
+-- TOC entry 3298 (class 2604 OID 507802)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7477,7 +7598,7 @@ ALTER TABLE ONLY "наценки" ALTER COLUMN "КОД" SET DEFAULT nextval('"н
 
 
 --
--- TOC entry 3336 (class 2604 OID 505114)
+-- TOC entry 3347 (class 2604 OID 507803)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7485,7 +7606,7 @@ ALTER TABLE ONLY "нумераторы" ALTER COLUMN "КОД" SET DEFAULT nextva
 
 
 --
--- TOC entry 3337 (class 2604 OID 505115)
+-- TOC entry 3348 (class 2604 OID 507804)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7493,7 +7614,7 @@ ALTER TABLE ONLY "объекты" ALTER COLUMN "КОД" SET DEFAULT nextval('"о
 
 
 --
--- TOC entry 3218 (class 2604 OID 505116)
+-- TOC entry 3229 (class 2604 OID 507805)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7501,7 +7622,7 @@ ALTER TABLE ONLY "организации" ALTER COLUMN "КОД" SET DEFAULT next
 
 
 --
--- TOC entry 3302 (class 2604 OID 505117)
+-- TOC entry 3313 (class 2604 OID 507806)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7509,7 +7630,7 @@ ALTER TABLE ONLY "ос" ALTER COLUMN "КОД" SET DEFAULT nextval('"ОС_КОД_
 
 
 --
--- TOC entry 3347 (class 2604 OID 505118)
+-- TOC entry 3358 (class 2604 OID 507807)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7517,7 +7638,7 @@ ALTER TABLE ONLY "персонал" ALTER COLUMN "КОД" SET DEFAULT nextval('"
 
 
 --
--- TOC entry 3288 (class 2604 OID 505119)
+-- TOC entry 3299 (class 2604 OID 507808)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7525,7 +7646,7 @@ ALTER TABLE ONLY "посладрес" ALTER COLUMN "КОД" SET DEFAULT nextval(
 
 
 --
--- TOC entry 3271 (class 2604 OID 505120)
+-- TOC entry 3282 (class 2604 OID 507809)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7533,7 +7654,7 @@ ALTER TABLE ONLY "прайс" ALTER COLUMN "КОД" SET DEFAULT nextval('"пра
 
 
 --
--- TOC entry 3350 (class 2604 OID 505121)
+-- TOC entry 3361 (class 2604 OID 507810)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7541,7 +7662,7 @@ ALTER TABLE ONLY "предметы" ALTER COLUMN "КОД" SET DEFAULT nextval('"
 
 
 --
--- TOC entry 3143 (class 2604 OID 505122)
+-- TOC entry 3154 (class 2604 OID 507811)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7549,7 +7670,7 @@ ALTER TABLE ONLY "проводки" ALTER COLUMN "КОД" SET DEFAULT nextval('"
 
 
 --
--- TOC entry 3351 (class 2604 OID 505123)
+-- TOC entry 3362 (class 2604 OID 507812)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7557,7 +7678,7 @@ ALTER TABLE ONLY "синонимы" ALTER COLUMN "КОД" SET DEFAULT nextval('"
 
 
 --
--- TOC entry 3352 (class 2604 OID 505124)
+-- TOC entry 3363 (class 2604 OID 507813)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7565,7 +7686,7 @@ ALTER TABLE ONLY "скидки" ALTER COLUMN "КОД" SET DEFAULT nextval('"ск
 
 
 --
--- TOC entry 3354 (class 2604 OID 505125)
+-- TOC entry 3365 (class 2604 OID 507814)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7573,7 +7694,7 @@ ALTER TABLE ONLY "справочник" ALTER COLUMN "КОД" SET DEFAULT nextva
 
 
 --
--- TOC entry 3230 (class 2604 OID 505126)
+-- TOC entry 3241 (class 2604 OID 507815)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7581,7 +7702,7 @@ ALTER TABLE ONLY "справочники" ALTER COLUMN "КОД" SET DEFAULT next
 
 
 --
--- TOC entry 3299 (class 2604 OID 505127)
+-- TOC entry 3310 (class 2604 OID 507816)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7589,7 +7710,7 @@ ALTER TABLE ONLY "столбцы" ALTER COLUMN "КОД" SET DEFAULT nextval('"с
 
 
 --
--- TOC entry 3205 (class 2604 OID 505128)
+-- TOC entry 3216 (class 2604 OID 507817)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7597,7 +7718,7 @@ ALTER TABLE ONLY "счета" ALTER COLUMN "КОД" SET DEFAULT nextval('"сче
 
 
 --
--- TOC entry 3356 (class 2604 OID 505129)
+-- TOC entry 3367 (class 2604 OID 507818)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7605,7 +7726,7 @@ ALTER TABLE ONLY "типыобъектов" ALTER COLUMN "КОД" SET DEFAULT ne
 
 
 --
--- TOC entry 3162 (class 2604 OID 505130)
+-- TOC entry 3173 (class 2604 OID 507819)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7613,7 +7734,7 @@ ALTER TABLE ONLY "товар" ALTER COLUMN "КОД" SET DEFAULT nextval('"тов
 
 
 --
--- TOC entry 3184 (class 2604 OID 505131)
+-- TOC entry 3195 (class 2604 OID 507820)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7621,7 +7742,7 @@ ALTER TABLE ONLY "топер" ALTER COLUMN "КОД" SET DEFAULT nextval('"топ
 
 
 --
--- TOC entry 3361 (class 2604 OID 505132)
+-- TOC entry 3372 (class 2604 OID 507821)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7629,7 +7750,7 @@ ALTER TABLE ONLY "файлы" ALTER COLUMN "КОД" SET DEFAULT nextval('"фай
 
 
 --
--- TOC entry 3296 (class 2604 OID 505133)
+-- TOC entry 3307 (class 2604 OID 507822)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7637,7 +7758,7 @@ ALTER TABLE ONLY "фирмы" ALTER COLUMN "КОД" SET DEFAULT nextval('"фир
 
 
 --
--- TOC entry 3362 (class 2604 OID 505134)
+-- TOC entry 3373 (class 2604 OID 507823)
 -- Name: КОД; Type: DEFAULT; Schema: public; Owner: sa
 --
 
@@ -7645,8 +7766,8 @@ ALTER TABLE ONLY "фонды" ALTER COLUMN "КОД" SET DEFAULT nextval('"фон
 
 
 --
--- TOC entry 3833 (class 0 OID 504259)
--- Dependencies: 177
+-- TOC entry 3847 (class 0 OID 506950)
+-- Dependencies: 178
 -- Data for Name: configs; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -7724,7 +7845,6 @@ COPY configs ("group", name, value) FROM stdin;
 Документ71	grid/35/width	100
 персонал	grid/0/width	100
 СписокДокументов23	y	0
-СписокДокументов71	height	644
 СписокДокументов47	grid/4/width	766
 Документ121	grid/26/width	541
 СписокДокументов121	grid/5/width	134
@@ -7766,6 +7886,7 @@ saldo401	x	0
 Документ71	grid/16/width	100
 Документ119	grid/8/width	100
 Документ71	grid/32/width	100
+организации	width	1278
 СписокДокументов11	grid/5/width	100
 Документ1	x	6
 saldo401	grid/23/width	100
@@ -7815,20 +7936,21 @@ saldo401	grid/27/width	100
 топер	grid/19/width	100
 Документ23	grid/49/width	580
 топер	height	606
+СписокДокументов71	grid/4/width	583
 топер	x	0
-Документ23	grid/47/width	100
-СписокДокументов23	grid/2/width	136
-СписокДокументов71	x	0
 СписокДокументов71	grid/26/width	100
-СписокДокументов5	grid/1/width	80
-СписокДокументов71	width	1366
+СписокДокументов71	x	0
+Документ23	grid/47/width	100
 СписокДокументов71	y	0
+СписокДокументов23	grid/2/width	136
+СписокДокументов71	width	1366
 Документ71	grid/6/width	100
-Документ71	height	644
-Документ71	y	0
+Документ71	grid/7/width	100
+СписокДокументов5	grid/1/width	80
 Документ71	x	0
+Документ71	y	0
 Документ71	width	1366
-СписокДокументов71	grid/4/width	752
+Документ71	height	644
 Документ47	height	556
 Документ122	grid/19/width	100
 СписокДокументов23	grid/4/width	805
@@ -7875,24 +7997,26 @@ saldo401	grid/26/width	100
 персонал	grid/8/width	100
 персонал	grid/9/width	100
 персонал	grid/15/width	100
-Документ71	grid/7/width	100
+организации	grid/7/width	100
 прайс	grid/47/width	100
+организации	grid/8/width	273
 фирмы	grid/0/width	100
+организации	grid/6/width	100
 топер	grid/1/width	83
+СписокДокументов71	grid/5/width	100
 Документ8	grid/18/width	100
 Документ1	y	0
+организации	y	0
 Документ11	grid/6/width	100
 vw_прайс	grid/15/width	100
 Документ23	grid/70/width	100
 Документ23	grid/71/width	100
-организации	grid/8/width	273
-организации	grid/18/width	100
-организации	width	1278
-организации	y	0
+Документ41	height	200
 СписокДокументов11	grid/1/width	100
 СписокДокументов11	grid/4/width	829
 СписокДокументов11	x	0
 СписокДокументов11	y	0
+организации	x	0
 СписокДокументов11	width	1231
 СписокДокументов11	height	620
 Документ1	width	1349
@@ -7930,6 +8054,8 @@ vw_прайс	grid/21/width	100
 Документ9	grid/20/width	100
 заявка	grid/46/width	100
 Документ11	height	586
+организации	grid/18/width	100
+организации	grid/9/width	100
 цены	grid/10/width	100
 СписокДокументов23	height	612
 топер	grid/10/width	100
@@ -7950,7 +8076,7 @@ vw_прайс	grid/21/width	100
 прайс	grid/0/width	84
 адрес	grid/1/width	226
 vw_saldo40	x	0
-СписокДокументов71	grid/5/width	100
+посладрес	y	0
 цены	grid/16/width	100
 цены	grid/17/width	100
 цены	grid/18/width	100
@@ -7963,13 +8089,14 @@ vw_saldo40	x	0
 топер	grid/12/width	100
 СписокДокументов5	grid/5/width	100
 топер	width	1361
-посладрес	height	644
+посладрес	x	0
+посладрес	width	1366
 персонал	x	0
 СписокДокументов5	y	8
 СписокДокументов5	height	615
-посладрес	width	1366
+посладрес	height	644
+организации	grid/16/width	100
 vw_журнал	grid/23/width	100
-посладрес	x	0
 vw_saldo40	y	0
 vw_saldo40	grid/24/width	100
 vw_saldo40	width	1332
@@ -7988,11 +8115,10 @@ saldo40	height	618
 СписокДокументов9	width	994
 СписокДокументов9	height	606
 персонал	grid/10/width	100
-посладрес	y	0
 Документ122	grid/20/width	100
 Документ11	grid/8/width	100
 Документ122	grid/46/width	100
-СписокДокументов4	width	1081
+СписокДокументов4	height	605
 СписокДокументов41	grid/1/width	100
 Документ5	grid/38/width	530
 заявка	grid/58/width	100
@@ -8010,16 +8136,16 @@ saldo40	height	618
 Документ41	x	0
 Документ41	y	0
 Документ41	width	400
-организации	x	0
-Документ41	height	200
 СписокДокументов122	grid/0/width	100
 СписокДокументов122	grid/2/width	100
 Документ5	grid/36/width	82
 Документ121	grid/30/width	685
+СписокДокументов4	width	1081
 фирмы	grid/6/width	100
+организации	grid/1/width	600
 Документ121	grid/49/width	100
-СписокДокументов4	height	605
 Документ4	x	32
+Документ4	height	612
 заявка	grid/61/width	100
 Документ121	grid/29/width	671
 Документ11	y	0
@@ -8028,27 +8154,27 @@ saldo40	height	618
 СписокДокументов122	grid/8/width	100
 СписокДокументов122	grid/9/width	100
 СписокДокументов122	grid/10/width	100
-Документ55	y	0
+Документ55	width	1364
 Документ12	width	918
 пользователи	y	0
-Документ4	height	612
+организации	grid/2/width	157
 доступ	grid/1/width	100
-Документ55	height	609
 банковские_счета	width	1254
-Документ55	x	0
-СписокДокументов55	height	615
-банковские_счета	y	0
 СписокДокументов55	x	0
+Документ55	y	0
+Документ55	x	0
+банковские_счета	y	0
+СписокДокументов55	y	0
 СписокДокументов122	grid/4/width	710
 СписокДокументов122	grid/5/width	100
 Документ122	grid/26/width	667
 Документ122	grid/27/width	100
-СписокДокументов55	y	0
+СписокДокументов55	height	615
 Документ12	height	398
 СписокДокументов12	y	0
 СписокДокументов12	width	746
 СписокДокументов12	height	561
-Документ55	width	1364
+Документ55	height	609
 доступ	grid/2/width	100
 vw_журнал	y	0
 доступ	grid/9/width	480
@@ -8130,13 +8256,14 @@ vw_saldo411	grid/25/width	100
 Документ122	grid/14/width	705
 Документ122	grid/15/width	100
 Документ122	grid/34/width	100
-организации	grid/2/width	157
 СписокДокументов8	x	1
 Документ122	grid/6/width	100
 СписокДокументов8	y	1
+банки	height	438
 прайс	grid/22/width	100
 Документ8	grid/51/width	100
 банковские_счета	x	0
+банки	y	0
 СписокДокументов8	width	873
 СписокДокументов55	grid/3/width	100
 СписокДокументов8	height	639
@@ -8155,14 +8282,15 @@ vw_saldo411	grid/25/width	100
 Документ12	x	0
 Документ8	width	1355
 Документ8	height	646
+банки	width	1350
 СписокДокументов122	grid/1/width	100
-СписокДокументов55	width	1211
-	grid/1/width	651
 банковские_счета	height	616
+	grid/1/width	651
+СписокДокументов55	width	1211
 СписокДокументов4	grid/4/width	674
 СписокДокументов4	grid/5/width	100
 доступ	x	0
-vw_saldo411	grid/5/width	100
+vw_saldo411	grid/6/width	100
 справочники	grid/5/width	100
 	height	685
 СписокДокументов122	grid/3/width	100
@@ -8176,7 +8304,7 @@ vw_saldo411	grid/5/width	100
 Документ122	height	590
 прайс	grid/14/width	100
 справочники	grid/6/width	100
-vw_saldo411	grid/4/width	100
+vw_saldo411	grid/5/width	100
 СписокДокументов4	grid/3/width	100
 Документ12	y	0
 СписокДокументов12	x	0
@@ -8188,31 +8316,34 @@ vw_saldo411	grid/4/width	100
 счета	grid/4/width	100
 справочники	grid/9/width	100
 справочники	grid/10/width	100
+vw_грузополучатели	width	400
+vw_грузополучатели	x	0
 vw_журнал	grid/24/width	100
+vw_грузополучатели	height	200
 справочники	y	12
 справочники	width	1355
 счета	grid/3/width	182
 справочники	x	64
 цены	grid/24/width	100
-vw_saldo411	grid/6/width	100
 vw_saldo411	grid/10/width	100
-vw_saldo411	x	0
-цены	grid/25/width	100
 vw_saldo411	grid/21/width	100
+vw_saldo411	height	625
+цены	grid/25/width	100
 vw_saldo411	grid/26/width	100
 vw_saldo411	width	1280
 цены	grid/26/width	100
 цены	grid/27/width	100
-vw_saldo411	height	625
+vw_saldo411	x	0
 цены	grid/28/width	100
+vw_saldo411	grid/3/width	473
 СписокДокументов9	grid/3/width	100
 СписокДокументов9	grid/4/width	604
 СписокДокументов9	grid/5/width	100
 СписокДокументов9	x	0
 СписокДокументов9	y	0
+vw_saldo411	grid/4/width	100
 персонал	grid/2/width	100
 типыобъектов	grid/1/width	100
-vw_saldo411	grid/3/width	473
 Документ55	grid/8/width	100
 СписокДокументов55	grid/1/width	100
 прайс	grid/26/width	100
@@ -8244,10 +8375,6 @@ vw_saldo411	grid/3/width	473
 Документ18	x	0
 Документ18	y	0
 Документ18	width	1253
-банки	width	1350
-vw_грузополучатели	height	200
-банки	height	438
-банки	y	0
 Документ18	height	583
 СписокДокументов8	grid/5/width	100
 saldo40	grid/1/width	736
@@ -8285,6 +8412,7 @@ saldo40	grid/25/width	100
 Документ18	grid/35/width	100
 saldo40	grid/27/width	100
 заявка	grid/62/width	100
+банки	x	0
 файлы	grid/2/width	100
 файлы	grid/4/width	121
 файлы	grid/5/width	127
@@ -8320,6 +8448,7 @@ vw_saldo411	y	0
 СписокДокументов108	grid/6/width	100
 СписокДокументов108	grid/7/width	100
 СписокДокументов108	grid/8/width	100
+vw_грузополучатели	y	0
 СписокДокументов108	grid/9/width	100
 СписокДокументов108	grid/10/width	100
 файлы	grid/1/width	397
@@ -8333,7 +8462,7 @@ vw_saldo411	y	0
 цены	grid/36/width	100
 цены	grid/37/width	100
 прайс	grid/15/width	78
-прайс	grid/17/width	59
+vw_прайс	grid/22/width	100
 СписокДокументов17	y	0
 СписокДокументов108	grid/11/width	100
 СписокДокументов108	grid/12/width	100
@@ -8366,7 +8495,6 @@ vw_saldo411	y	0
 СписокДокументов78	grid/1/width	100
 СписокДокументов78	grid/2/width	100
 СписокДокументов120	grid/3/width	100
-банки	x	0
 СписокДокументов120	grid/4/width	901
 СписокДокументов120	x	0
 СписокДокументов120	y	0
@@ -8382,7 +8510,6 @@ vw_saldo411	y	0
 Документ14	y	0
 Документ14	width	1243
 Документ14	height	612
-vw_прайс	grid/19/width	100
 СписокДокументов14	grid/3/width	100
 СписокДокументов14	grid/4/width	627
 СписокДокументов14	grid/5/width	100
@@ -8412,7 +8539,7 @@ vw_прайс	grid/19/width	100
 СписокДокументов61	width	1155
 СписокДокументов61	height	600
 СписокДокументов108	grid/22/width	100
-vw_прайс	grid/22/width	100
+vw_прайс	grid/19/width	100
 Документ61	y	0
 СписокДокументов61	grid/4/width	780
 СписокДокументов61	grid/5/width	100
@@ -8444,7 +8571,6 @@ vw_прайс	grid/22/width	100
 цены	grid/42/width	100
 Документ61	grid/8/width	100
 цены	grid/43/width	100
-прайс	grid/16/width	132
 СписокДокументов78	grid/3/width	100
 СписокДокументов78	grid/4/width	100
 СписокДокументов78	grid/5/width	100
@@ -8481,6 +8607,7 @@ vw_прайс	grid/22/width	100
 СписокДокументов26	grid/15/width	100
 СписокДокументов26	grid/16/width	100
 СписокДокументов26	grid/17/width	100
+Документ26	grid/47/width	100
 СписокДокументов26	grid/18/width	100
 СписокДокументов26	grid/19/width	100
 СписокДокументов26	grid/20/width	100
@@ -8577,10 +8704,15 @@ saldo402	grid/5/width	100
 Документ124	grid/20/width	100
 СписокДокументов125	y	0
 saldo402	grid/36/width	493
+набор402	x	0
 Документ123	grid/40/width	100
+Документ123	grid/6/width	100
+СписокДокументов123	x	44
+Документ123	width	1349
 Документ123	grid/8/width	100
 типыобъектов	height	307
 Документ123	grid/37/width	100
+набор402	width	400
 Документ123	grid/38/width	100
 Документ125	y	0
 пользователи	height	307
@@ -8593,12 +8725,7 @@ saldo402	grid/36/width	493
 Документ26	grid/44/width	100
 Документ26	grid/45/width	100
 Документ124	grid/59/width	88
-Документ123	grid/6/width	100
-Документ123	width	1349
-набор402	width	400
-набор402	x	0
 Документ26	grid/46/width	100
-Документ26	grid/47/width	100
 Документ26	grid/48/width	100
 карточки	grid/0/width	100
 карточки	grid/3/width	100
@@ -8631,6 +8758,7 @@ saldo402	grid/36/width	493
 СписокДокументов125	grid/2/width	100
 СписокДокументов125	grid/3/width	100
 СписокДокументов125	grid/4/width	735
+СписокДокументов123	grid/3/width	89
 пользователи	x	0
 цены	grid/45/width	100
 Документ124	grid/48/width	100
@@ -8785,8 +8913,8 @@ saldo402	x	0
 СписокДокументов73	grid/12/width	100
 СписокДокументов73	grid/13/width	100
 СписокДокументов73	grid/14/width	100
-СписокДокументов128	width	986
 СписокДокументов128	height	560
+Документ128	x	259
 СписокДокументов73	grid/15/width	100
 Документ23	grid/0/width	100
 СписокДокументов73	grid/16/width	100
@@ -8798,7 +8926,6 @@ saldo402	x	0
 СписокДокументов73	grid/22/width	100
 СписокДокументов73	grid/23/width	100
 СписокДокументов73	grid/24/width	100
-Документ128	x	259
 упущенныепродажи	grid/8/width	100
 упущенныепродажи	grid/9/width	100
 СписокДокументов128	grid/0/width	100
@@ -8826,7 +8953,6 @@ saldo402	x	0
 СписокДокументов128	grid/19/width	100
 СписокДокументов128	grid/20/width	100
 СписокДокументов128	grid/21/width	100
-Документ18	grid/13/width	689
 СписокДокументов128	grid/22/width	100
 СписокДокументов128	grid/23/width	100
 СписокДокументов128	grid/24/width	100
@@ -8912,6 +9038,7 @@ vw_наценки	height	200
 Документ129	grid/7/width	76
 Документ129	grid/6/width	79
 СписокДокументов129	grid/3/width	100
+СписокДокументов128	x	165
 Документ129	x	0
 Документ129	y	0
 Документ129	width	1361
@@ -8921,10 +9048,12 @@ vw_наценки	height	200
 банки	grid/5/width	100
 банки	grid/2/width	100
 банки	grid/3/width	100
+набор402	y	0
 Документ129	height	620
 vw_saldo402	grid/27/width	74
+СписокДокументов128	y	33
 СписокДокументов123	grid/27/width	100
-СписокДокументов128	x	165
+Документ128	y	105
 saldo401	grid/37/width	100
 СписокДокументов49	grid/0/width	100
 СписокДокументов49	grid/2/width	100
@@ -8939,6 +9068,7 @@ saldo401	grid/37/width	100
 СписокДокументов49	grid/13/width	100
 СписокДокументов49	grid/14/width	100
 СписокДокументов49	grid/15/width	100
+Документ11	grid/5/width	100
 СписокДокументов49	grid/16/width	100
 СписокДокументов49	grid/17/width	100
 СписокДокументов49	grid/18/width	100
@@ -8981,16 +9111,14 @@ vw_прайс2	height	200
 vw_saldo402	grid/29/width	133
 vw_saldo402	grid/42/width	100
 vw_saldo402	grid/25/width	70
-СписокДокументов128	y	33
-Документ128	y	105
+Документ128	width	795
+Документ128	height	373
 Документ130	height	639
 СписокДокументов130	grid/4/width	497
 Документ130	x	0
-Документ128	width	795
 vw_saldo402	grid/44/width	100
-Документ128	height	373
-vw_saldo402	grid/4/width	76
 прайс	grid/50/width	100
+vw_saldo402	grid/4/width	76
 упущенныепродажи	grid/13/width	100
 упущенныепродажи	grid/14/width	100
 vw_saldo402	grid/2/width	66
@@ -9004,6 +9132,7 @@ saldo401	grid/38/width	100
 набор401	x	0
 Документ123	grid/36/width	100
 Документ123	grid/44/width	100
+Документ4	width	1314
 saldo402	grid/40/width	100
 saldo402	grid/39/width	100
 vw_saldo402	grid/40/width	78
@@ -9014,6 +9143,7 @@ vw_saldo402	grid/40/width	78
 СписокДокументов123	grid/30/width	100
 СписокДокументов123	grid/31/width	100
 СписокДокументов123	grid/32/width	100
+организации	height	616
 СписокДокументов123	grid/33/width	100
 СписокДокументов123	grid/34/width	100
 Документ73	grid/8/width	100
@@ -9021,7 +9151,7 @@ vw_saldo402	grid/40/width	78
 СписокДокументов123	grid/35/width	100
 СписокДокументов123	grid/36/width	100
 прайс	grid/21/width	100
-Документ4	width	1314
+прайс	grid/4/width	79
 прайс	grid/30/width	100
 vw_прайс	grid/3/width	100
 vw_прайс	grid/4/width	100
@@ -9040,20 +9170,19 @@ vw_saldo402	grid/6/width	100
 vw_saldo402	grid/7/width	100
 vw_saldo402	grid/8/width	100
 СписокДокументов123	grid/41/width	100
-прайс	grid/4/width	79
+прайс	grid/1/width	654
+Документ123	grid/5/width	100
+Документ123	grid/14/width	620
 Документ123	grid/17/width	100
 Документ123	grid/18/width	100
 Документ123	grid/19/width	100
 Документ123	grid/20/width	100
 Документ123	grid/21/width	100
+прайс	grid/18/width	100
 Документ123	grid/22/width	100
 СписокДокументов123	grid/2/width	100
-прайс	grid/18/width	100
-СписокДокументов123	grid/6/width	100
-Документ123	grid/13/width	73
-Документ123	grid/14/width	620
 Документ123	height	644
-организации	height	616
+СписокДокументов123	grid/6/width	100
 СписокДокументов123	grid/7/width	100
 СписокДокументов123	grid/8/width	100
 Документ123	grid/23/width	100
@@ -9073,7 +9202,7 @@ vw_saldo402	grid/8/width	100
 Документ123	grid/24/width	100
 Документ123	grid/25/width	100
 Документ123	grid/26/width	100
-прайс	grid/1/width	654
+Документ123	grid/13/width	73
 Документ123	grid/31/width	140
 СписокДокументов123	grid/22/width	100
 Документ123	grid/0/width	100
@@ -9150,8 +9279,10 @@ vw_saldo402	grid/39/width	80
 Документ127	grid/19/width	100
 Документ127	grid/25/width	765
 Документ127	grid/57/width	100
+Документ71	grid/44/width	100
 банки	grid/6/width	162
 банки	grid/7/width	220
+организации	grid/4/width	100
 Документ14	grid/0/width	100
 Документ14	grid/1/width	100
 Документ14	grid/2/width	100
@@ -9169,9 +9300,9 @@ vw_saldo402	grid/39/width	80
 Документ14	grid/13/width	100
 Документ14	grid/14/width	100
 Документ14	grid/15/width	100
-организации	grid/4/width	100
+Документ18	grid/13/width	689
 Документ18	grid/34/width	100
-Документ11	grid/5/width	100
+прайс	grid/19/width	73
 Документ14	grid/16/width	100
 Документ124	grid/61/width	100
 Документ124	grid/64/width	100
@@ -9211,13 +9342,13 @@ vw_saldo402	grid/39/width	80
 Документ73	grid/14/width	92
 Документ130	grid/38/width	137
 Документ120	grid/5/width	100
-прайс	grid/19/width	73
+СписокДокументов123	y	0
 упущенныепродажи	grid/17/width	100
 Документ130	grid/35/width	90
 Документ130	grid/37/width	79
 Документ124	grid/18/width	100
 Документ130	grid/47/width	100
-Документ71	grid/44/width	100
+Документ123	grid/15/width	66
 Документ124	grid/5/width	100
 saldo402	grid/6/width	100
 Документ130	grid/5/width	100
@@ -9225,15 +9356,21 @@ saldo402	grid/6/width	100
 Документ73	grid/7/width	100
 Документ17	grid/5/width	100
 Документ55	grid/7/width	100
-Документ4	y	16
+СписокДокументов123	grid/4/width	615
+Документ123	grid/16/width	100
+СписокДокументов71	grid/1/width	100
 СписокДокументов36	grid/0/width	100
+СписокДокументов123	grid/43/width	85
+СписокДокументов123	grid/5/width	100
 СписокДокументов36	grid/1/width	100
 СписокДокументов36	grid/2/width	100
+СписокДокументов4	x	2
 упущенныепродажи	grid/18/width	100
 упущенныепродажи	x	0
 СписокДокументов36	grid/3/width	100
 СписокДокументов36	grid/4/width	100
 СписокДокументов36	grid/5/width	100
+Документ123	y	0
 Документ73	grid/13/width	887
 упущенныепродажи	y	0
 СписокДокументов36	grid/6/width	100
@@ -9263,24 +9400,19 @@ saldo402	grid/6/width	100
 СписокДокументов36	width	1133
 СписокДокументов36	height	534
 Документ121	grid/5/width	100
+СписокДокументов123	grid/42/width	110
 Документ122	grid/5/width	100
 СписокДокументов8	grid/1/width	100
 Документ8	grid/54/width	100
 Документ122	grid/18/width	100
 Документ71	grid/48/width	100
 Документ36	x	0
-Документ71	grid/26/width	472
 Документ71	grid/27/width	100
 Документ71	grid/28/width	100
-СписокДокументов71	grid/1/width	100
-Документ71	grid/5/width	100
-Документ71	grid/51/width	100
-СписокДокументов123	grid/42/width	110
-СписокДокументов123	grid/43/width	85
-СписокДокументов123	y	0
 Документ123	grid/32/width	100
-Документ123	x	5
-Документ123	y	0
+Документ71	grid/5/width	100
+Документ71	grid/19/width	100
+Документ71	grid/51/width	100
 Документ36	y	0
 Документ36	width	400
 Документ36	height	200
@@ -9294,11 +9426,12 @@ saldo402	grid/6/width	100
 Документ1	grid/71/width	100
 Документ121	grid/18/width	100
 Документ8	grid/56/width	100
-Документ71	grid/19/width	100
-СписокДокументов4	x	2
+Документ71	grid/26/width	489
 СписокДокументов4	y	1
+Документ4	y	16
 Документ23	grid/52/width	100
 Документ23	grid/73/width	100
+СписокДокументов123	grid/26/width	125
 упущенныепродажи	grid/19/width	100
 упущенныепродажи	grid/20/width	100
 упущенныепродажи	grid/21/width	100
@@ -9309,6 +9442,7 @@ saldo402	grid/6/width	100
 упущенныепродажи	grid/25/width	100
 Документ47	grid/7/width	100
 упущенныепродажи	width	1297
+Документ123	x	5
 Документ121	grid/59/width	100
 Документ121	grid/65/width	100
 Документ124	grid/65/width	100
@@ -9336,9 +9470,13 @@ saldo402	grid/6/width	100
 прайс	grid/8/width	100
 прайс	grid/9/width	100
 прайс	grid/10/width	100
+организации	grid/11/width	273
 прайс	grid/11/width	100
 прайс	grid/12/width	100
 прайс	grid/13/width	100
+СписокДокументов123	grid/1/width	100
+СписокДокументов123	height	651
+vw_saldo411	grid/27/width	100
 СписокДокументов12	grid/1/width	100
 СписокДокументов12	grid/3/width	100
 СписокДокументов12	grid/4/width	100
@@ -9365,7 +9503,6 @@ vw_types	grid/2/width	100
 vw_types	grid/3/width	100
 vw_types	x	0
 vw_types	y	0
-vw_saldo411	grid/27/width	100
 vw_types	width	623
 vw_types	height	488
 скидки	grid/2/width	100
@@ -9375,73 +9512,77 @@ vw_types	height	488
 	grid/24/width	100
 константы	grid/1/width	253
 константы	grid/2/width	758
-прайс	x	0
+прайс	grid/49/width	100
+прайс	grid/17/width	59
 Документ52	grid/5/width	100
-прайс	y	0
-прайс	grid/27/width	479
-Документ52	grid/6/width	100
-vw_прайс	grid/16/width	100
-vw_прайс	grid/17/width	100
-vw_прайс	grid/18/width	86
-vw_справочники_со_столбцами	width	400
-vw_справочники_со_столбцами	height	200
-прайс	width	1362
-vw_прайс	x	1
-прайс	grid/28/width	100
-прайс	grid/29/width	100
-vw_прайс	width	1361
-Документ52	grid/7/width	100
-СписокДокументов123	grid/4/width	615
-СписокДокументов123	grid/26/width	125
-СписокДокументов123	height	651
-Документ123	grid/16/width	100
 организации	grid/3/width	100
 организации	grid/5/width	100
-документы123	y	0
-документы123	width	400
-документы123	height	200
-документы123	x	0
+прайс	grid/28/width	100
+прайс	grid/23/width	100
+Документ52	grid/6/width	100
+vw_прайс	y	0
+vw_прайс	width	1361
+vw_справочники_со_столбцами	width	400
+vw_справочники_со_столбцами	height	200
+прайс	grid/25/width	100
+vw_прайс	grid/1/width	100
+Документ123	grid/7/width	100
+прайс	grid/27/width	479
+прайс	grid/51/width	100
+vw_прайс	grid/16/width	100
+vw_прайс	grid/2/width	587
+Документ52	grid/7/width	100
 Документ52	grid/13/width	501
 Документ52	grid/14/width	100
-прайс	grid/46/width	100
-прайс	grid/48/width	100
+документы123	y	0
+СписокДокументов128	width	986
+vw_прайс	grid/17/width	100
+СписокДокументов71	height	644
 Документ52	x	289
 Документ52	y	12
 Документ52	width	961
-прайс	grid/49/width	100
-прайс	grid/51/width	100
-прайс	grid/52/width	110
+Документ71	grid/52/width	100
+vw_прайс	height	644
+документы123	width	400
+прайс	x	0
+документы123	height	200
 Документ52	height	594
 СписокДокументов52	grid/1/width	100
 СписокДокументов52	grid/3/width	100
-прайс	grid/53/width	100
-прайс	height	652
+СписокДокументов123	width	1335
+прайс	y	0
+организации	grid/0/width	100
+прайс	grid/16/width	132
 СписокДокументов52	grid/4/width	657
 СписокДокументов52	grid/5/width	100
 СписокДокументов52	x	0
 СписокДокументов52	y	0
-vw_прайс	height	644
-vw_прайс	grid/2/width	479
+vw_прайс	grid/18/width	86
+прайс	grid/29/width	100
+прайс	grid/46/width	100
 СписокДокументов52	width	1003
 СписокДокументов52	height	534
-vw_прайс	grid/1/width	100
 Документ131	y	0
 карточки	width	901
+прайс	grid/48/width	100
 vw_saldo402	grid/43/width	100
 Документ131	width	1218
 Документ131	grid/5/width	100
-прайс	grid/23/width	100
-прайс	grid/25/width	100
+прайс	width	1362
+набор402	height	200
 скидки	grid/0/width	76
 	grid/26/width	100
 saldo401	grid/29/width	100
 vw_saldo402	grid/48/width	126
+прайс	grid/52/width	110
+документы123	x	0
+прайс	grid/53/width	100
 vw_прайс	grid/5/width	100
+прайс	height	652
+vw_прайс	x	1
 Документ11	grid/48/width	100
 Документ11	grid/50/width	100
-Документ71	grid/52/width	100
 скидки	grid/1/width	508
-vw_прайс	y	0
 vw_справочники_со_столбцами	x	0
 Документ131	height	563
 СписокДокументов131	grid/1/width	100
@@ -9474,141 +9615,22 @@ vw_saldo40	grid/12/width	100
 Документ9	grid/49/width	100
 СписокДокументов73	grid/1/width	100
 saldo401	grid/39/width	100
-заявка	grid/66/width	100
-заявка	grid/67/width	100
-заявка	x	-2
-заявка	y	0
-заявка	width	1366
-заявка	height	652
-товар	grid/0/width	59
-заявка	grid/13/width	72
-заявка	grid/14/width	531
-заявка	grid/15/width	64
-заявка	grid/16/width	143
-заявка	grid/17/width	79
-заявка	grid/21/width	70
-заявка	grid/36/width	100
-заявка	grid/37/width	100
-заявка	grid/48/width	87
-заявка	grid/49/width	603
-заявка	grid/50/width	79
-заявка	grid/51/width	100
-заявка	grid/54/width	100
-заявка	grid/57/width	100
-заявка	grid/60/width	100
-заявка	grid/63/width	100
-заявка	grid/64/width	100
-заявка	grid/65/width	100
-товар	grid/1/width	614
-товар	grid/2/width	60
-товар	grid/3/width	136
-товар	grid/4/width	68
-товар	grid/7/width	48
-товар	grid/9/width	100
-товар	grid/12/width	100
-товар	grid/18/width	100
-товар	grid/19/width	100
-товар	grid/23/width	100
-товар	grid/24/width	100
-товар	grid/25/width	100
-люди	x	0
-люди	y	0
-люди	width	965
-люди	height	589
-доступ_к_справочникам	grid/1/width	524
-messagesWindow	x	2
-messagesWindow	y	142
-messagesWindow	width	1349
-messagesWindow	height	514
-saldo411	grid/2/width	43
-saldo411	grid/3/width	354
-saldo411	grid/4/width	48
-Документ123	grid/7/width	100
-организации	grid/0/width	100
-набор402	height	200
-фирмы	y	0
-фирмы	width	1191
-фирмы	height	415
-фирмы	x	0
-saldo411	grid/5/width	64
-saldo411	grid/6/width	53
-saldo411	grid/21/width	73
-saldo411	grid/22/width	100
-saldo411	grid/26/width	61
-saldo411	grid/27/width	60
-saldo411	x	0
-saldo411	y	0
-saldo411	width	1206
-saldo411	height	626
-СписокДокументов1	grid/2/width	133
-СписокДокументов1	grid/3/width	100
-СписокДокументов1	grid/4/width	569
-СписокДокументов1	grid/5/width	100
-СписокДокументов1	grid/44/width	76
-СписокДокументов1	grid/45/width	100
-СписокДокументов1	x	67
-СписокДокументов1	y	0
-СписокДокументов1	width	1182
-СписокДокументов1	height	640
-Документ1	grid/5/width	100
-Документ1	grid/6/width	100
-Документ1	grid/7/width	100
-Документ1	grid/50/width	675
-Документ1	grid/51/width	100
-Документ1	grid/72/width	100
-Документ1	grid/73/width	100
-группы	x	0
-группы	y	0
-группы	width	683
-группы	height	588
-набор1	height	447
-адрес	x	0
-доступ_к_топер	x	1
-доступ_к_топер	y	1
+СписокДокументов93	grid/0/width	100
+СписокДокументов93	grid/1/width	100
 СписокДокументов93	grid/2/width	100
-нумераторы	grid/0/width	100
-нумераторы	grid/1/width	509
-нумераторы	grid/2/width	100
-нумераторы	x	0
-нумераторы	y	0
-нумераторы	width	885
-нумераторы	height	485
-адрес	y	0
-константы	x	0
-константы	y	0
 СписокДокументов93	grid/3/width	100
-СписокДокументов93	grid/4/width	100
+СписокДокументов93	grid/4/width	710
 СписокДокументов93	grid/5/width	100
-доступ_к_топер	grid/1/width	505
-товар	width	1362
-Form	x	510
-Form	y	283
-константы	width	1035
-товар	height	652
-константы	height	618
-доступ_к_топер	width	646
-доступ_к_топер	height	634
-доступ_к_справочникам	x	0
-доступ_к_справочникам	y	0
 СписокДокументов93	grid/6/width	100
 СписокДокументов93	grid/7/width	100
 СписокДокументов93	grid/8/width	100
 СписокДокументов93	grid/9/width	100
-Form	width	350
-Form	height	200
-доступ_к_топер	grid/3/width	47
-доступ_к_справочникам	width	603
-доступ_к_справочникам	height	614
 СписокДокументов93	grid/10/width	100
 СписокДокументов93	grid/11/width	100
 СписокДокументов93	grid/12/width	100
 СписокДокументов93	grid/13/width	100
 СписокДокументов93	grid/14/width	100
 СписокДокументов93	grid/15/width	100
-счета	x	0
-счета	y	0
-СписокДокументов93	grid/0/width	100
-СписокДокументов93	grid/1/width	100
 СписокДокументов93	grid/16/width	100
 СписокДокументов93	grid/17/width	100
 СписокДокументов93	grid/18/width	100
@@ -9618,19 +9640,10 @@ Form	height	200
 СписокДокументов93	grid/22/width	100
 СписокДокументов93	grid/23/width	100
 СписокДокументов93	grid/24/width	100
-счета	width	1216
-счета	height	584
-адрес	width	683
-адрес	height	307
-товар	x	0
-набор1	x	0
-набор1	y	0
-набор1	width	1048
-товар	y	0
 СписокДокументов93	x	0
 СписокДокументов93	y	0
-СписокДокументов93	width	400
-СписокДокументов93	height	200
+СписокДокументов93	width	1060
+СписокДокументов93	height	445
 Документ93	grid/0/width	100
 Документ93	grid/1/width	100
 Документ93	grid/2/width	100
@@ -9638,17 +9651,13 @@ Form	height	200
 Документ93	grid/4/width	100
 Документ93	grid/5/width	100
 Документ93	grid/6/width	100
-Документ93	grid/7/width	100
 Документ93	grid/8/width	100
 Документ93	grid/9/width	100
 Документ93	grid/10/width	100
 Документ93	grid/11/width	100
 Документ93	grid/12/width	100
 Документ93	grid/13/width	100
-Документ93	grid/14/width	100
-Документ93	grid/15/width	100
 Документ93	grid/16/width	100
-Документ93	grid/17/width	100
 Документ93	grid/18/width	100
 Документ93	grid/19/width	100
 Документ93	grid/20/width	100
@@ -9667,40 +9676,139 @@ Form	height	200
 Документ93	grid/33/width	100
 Документ93	grid/34/width	100
 Документ93	grid/35/width	100
+Документ93	grid/7/width	100
+Документ93	grid/14/width	721
+Документ93	grid/15/width	100
+Документ93	grid/17/width	100
 Документ93	grid/36/width	100
 Документ93	x	0
 Документ93	y	0
-Документ93	width	1140
-Документ93	height	515
-набор1	grid/3/width	475
-набор1	grid/4/width	100
-набор1	grid/5/width	100
-набор1	grid/6/width	100
-набор1	grid/21/width	100
-набор1	grid/26/width	100
-СписокДокументов123	grid/1/width	100
-СписокДокументов123	grid/3/width	89
-СписокДокументов123	grid/5/width	100
-СписокДокументов123	x	44
-СписокДокументов123	width	1335
-Документ123	grid/5/width	100
-Документ123	grid/15/width	66
-набор402	y	0
-организации	grid/1/width	600
-организации	grid/6/width	100
-организации	grid/7/width	100
-организации	grid/9/width	100
-организации	grid/11/width	273
-организации	grid/16/width	100
-vw_грузополучатели	x	0
-vw_грузополучатели	y	0
-vw_грузополучатели	width	400
+Документ93	width	1366
+Документ93	height	652
+заявка	grid/13/width	72
+заявка	grid/14/width	531
+заявка	grid/15/width	64
+заявка	grid/16/width	143
+заявка	grid/17/width	79
+заявка	grid/21/width	70
+заявка	grid/36/width	100
+заявка	grid/37/width	100
+заявка	grid/48/width	87
+заявка	grid/49/width	603
+заявка	grid/50/width	79
+заявка	grid/51/width	100
+заявка	grid/54/width	100
+заявка	grid/57/width	100
+заявка	grid/60/width	100
+заявка	grid/63/width	100
+заявка	grid/64/width	100
+заявка	grid/65/width	100
+заявка	grid/66/width	100
+заявка	grid/67/width	100
+товар	grid/0/width	59
+заявка	x	-2
+заявка	y	0
+заявка	width	1366
+заявка	height	652
+люди	height	589
+фирмы	x	0
+фирмы	y	0
+фирмы	width	1191
+фирмы	height	415
+доступ_к_справочникам	grid/1/width	524
+товар	grid/1/width	614
+товар	grid/2/width	60
+товар	grid/3/width	136
+товар	grid/4/width	68
+товар	grid/7/width	48
+товар	grid/9/width	100
+товар	grid/12/width	100
+товар	grid/18/width	100
+товар	grid/19/width	100
+товар	grid/23/width	100
+товар	grid/24/width	100
+товар	grid/25/width	100
+люди	x	0
+люди	y	0
+люди	width	965
+messagesWindow	x	2
+messagesWindow	y	142
+messagesWindow	width	1349
+messagesWindow	height	514
+набор1	x	100
+набор1	y	100
+набор1	width	400
+набор1	height	400
+адрес	x	0
+адрес	y	0
+адрес	width	683
+адрес	height	307
+СписокДокументов1	grid/2/width	125
+константы	x	0
+saldo411	grid/2/width	69
+saldo411	grid/3/width	363
+saldo411	grid/4/width	100
+saldo411	grid/5/width	100
+saldo411	grid/6/width	100
+константы	y	0
+константы	width	1035
+константы	height	618
+СписокДокументов1	grid/3/width	75
+СписокДокументов1	grid/4/width	494
+СписокДокументов1	grid/5/width	82
+СписокДокументов1	grid/44/width	60
+счета	x	0
+группы	x	0
+группы	y	0
+группы	width	683
+группы	height	588
+Документ1	grid/5/width	100
+Документ1	grid/6/width	100
+saldo411	grid/21/width	100
+saldo411	grid/22/width	100
+saldo411	grid/26/width	100
+saldo411	grid/27/width	100
+Документ1	grid/7/width	100
+Документ1	grid/50/width	675
+Документ1	grid/51/width	100
+Документ1	grid/72/width	100
+Документ1	grid/73/width	100
+СписокДокументов1	grid/45/width	66
+СписокДокументов1	x	96
+СписокДокументов1	y	1
+СписокДокументов1	width	1136
+СписокДокументов1	height	628
+товар	x	0
+товар	y	0
+товар	width	1362
+товар	height	652
+счета	y	0
+счета	width	1216
+saldo411	x	0
+saldo411	y	0
+saldo411	width	1274
+saldo411	height	606
+Form	x	510
+Form	y	283
+Form	width	350
+Form	height	200
+счета	height	584
+доступ_к_справочникам	x	0
+доступ_к_справочникам	y	0
+доступ_к_справочникам	width	603
+доступ_к_справочникам	height	614
+доступ_к_топер	x	1
+доступ_к_топер	y	1
+доступ_к_топер	width	646
+доступ_к_топер	height	634
+доступ_к_топер	grid/1/width	426
+доступ_к_топер	grid/3/width	52
 \.
 
 
 --
--- TOC entry 3834 (class 0 OID 504265)
--- Dependencies: 178
+-- TOC entry 3848 (class 0 OID 506956)
+-- Dependencies: 179
 -- Data for Name: last_income; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -9794,8 +9902,8 @@ COPY last_income (code, id_firm, id, name, katalog, unit, quan, summa) FROM stdi
 
 
 --
--- TOC entry 4179 (class 0 OID 0)
--- Dependencies: 179
+-- TOC entry 4201 (class 0 OID 0)
+-- Dependencies: 180
 -- Name: last_income_code_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -9803,83 +9911,27 @@ SELECT pg_catalog.setval('last_income_code_seq', 25016, true);
 
 
 --
--- TOC entry 3836 (class 0 OID 504273)
--- Dependencies: 180
+-- TOC entry 3850 (class 0 OID 506964)
+-- Dependencies: 181
 -- Data for Name: last_price; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY last_price (code, id_firm, id, name, katalog, unit, price, upak, max_price, nalich, proizv, articul, photo_url, description) FROM stdin;
-51003492	193	22317	Аккумулятор Energizer 1300 mAh AA-HR6 4 шт.			473.00	1.000	\N	+				
-51003493	193	31710	Аккумулятор Energizer 2300 mAh AA-HR6 2 шт.			477.00	1.000	\N	+				
-51003494	193	39649	Аккумулятор Energizer Rech AA 2400 mAh AA ВР2 2 шт.			545.00	1.000	\N	+				
-51003495	193	9227	Аккумулятор GP 650 mAh AAA-HR03 2 шт.			108.00	1.000	\N	+				
-51003496	193	4264	З/У Energizer Аккумулятор 2000mAh AA 2шт.			585.00	1.000	\N	+				
-51003497	193	4236	З/У Energizer Аккумулятор 850mAh AA 2шт.			563.00	1.000	\N	+				
-51003498	193	31378	Фонарь Energizer FL Hi-Tech брелок			324.00	1.000	\N	+				
-51003499	193	37259	Фонарь Energizer FL Impact Led 2AA 032629-01			306.00	1.000	\N	+				
-51003500	193	39423	Фонарь Energizer FL LED Headlight Vision			675.00	1.000	\N	+				
-51003501	193	24447	Фонарь Energizer FL Metall Light 33657/38842			338.00	1.000	\N	+				
-51003502	193	3996	Фонарь Energizer FL X-Focus Х215 22360			360.00	1.000	\N	+				
-51003503	193	10347	Эл. питания 23A Energizer(MN21)			81.00	1.000	\N	+				
-51003504	193	17231	Эл. питания 23А Samsung			32.00	1.000	\N	+				
-51003505	193	39019	Эл. питания 27А Energizer 2шт (MN27)			140.00	1.000	\N	+				
-51003506	193	5022	Эл. питания 286 Daewoo AAA-R3			10.00	1.000	\N	+				
-51003507	193	37798	Эл. питания 286 Energizer AAA-LR03 1 шт			25.00	1.000	\N	+				
-51003508	193	5717	Эл. питания 286 Energizer AAA LR03 2 шт			63.00	1.000	\N	+				
-51003509	193	13667	Эл. питания 286 Energizer AAA LR03 4 шт			117.00	1.000	\N	+				
-51003510	193	8954	Эл. питания 286 Eveready AAA R03			11.00	1.000	\N	+				
-51003511	193	5734	Эл. питания 286 GP AAA R03			12.00	1.000	\N	+				
-51003512	193	9397	Эл. питания 286 Samsung AAA R03			10.00	1.000	\N	+				
-51003513	193	9907	Эл. питания 286 Sony AAA R03			12.00	1.000	\N	+				
-51003514	193	5031	Эл. питания 316 Daewoo AA-R6			10.00	1.000	\N	+				
-51003515	193	37799	Эл. питания 316 Energizer AA-LR6 1шт			23.00	1.000	\N	+				
-51003516	193	4229	Эл. питания 316 Energizer AA-LR6 2 шт.			59.00	1.000	\N	+				
-51003517	193	10204	Эл. питания 316 Energizer AA-LR6 4 шт.			117.00	1.000	\N	+				
-51003518	193	31711	Эл. питания 316 Energizer Ultim Lithium AAA FR03 2 шт.			261.00	1.000	\N	+				
-51003519	193	13807	Эл. питания 316 Eveready AA-R6			11.00	1.000	\N	+				
-51003520	193	5032	Эл. питания 316 GP AA-R6			12.00	1.000	\N	+				
-51003521	193	4238	Эл. питания 316 Panasonic AA-R6			10.00	1.000	\N	+				
-51003522	193	4240	Эл. питания 316 Samsung AA-R6			9.00	1.000	\N	+				
-51003523	193	20520	Эл. питания 316 Sony AA-R6			12.00	1.000	\N	+				
-51003524	193	4247	Эл. питания 343 Panasonic C-R14			23.00	1.000	\N	+				
-51003525	193	6124	Эл. питания 373 Eveready D-R20			36.00	1.000	\N	+				
-51003526	193	4252	Эл. питания 373 Panasonic D-R20			32.00	1.000	\N	+				
-51003527	193	4257	Эл. питания 6F22 Daewoo			44.00	1.000	\N	+				
-51003528	193	35647	Эл. питания 6F22 Energizer Крона (029740)			153.00	1.000	\N	+				
-51003529	193	33974	Эл. питания CR 1616 Energizer			66.00	1.000	\N	+				
-51003530	193	33322	Эл. питания CR 1616 Sony			59.00	1.000	\N	+				
-51003531	193	33483	Эл. питания CR 1620 Еnergizer			54.00	1.000	\N	+				
-51003532	193	34563	Эл. питания CR 2016 Sony			23.00	1.000	\N	+				
-51003533	193	32536	Эл. питания CR 2016 Еnergizer 1 шт.			72.00	1.000	\N	+				
-51003534	193	20257	Эл. питания CR 2025 Energizer (1 шт.)			72.00	1.000	\N	+				
-51003535	193	34545	Эл. питания CR 2025 Sony			23.00	1.000	\N	+				
-51003536	193	19301	Эл. питания CR 2032 Energizer (1 шт.)			72.00	1.000	\N	+				
-51003537	193	33013	Эл. питания CR 2032 Sony			27.00	1.000	\N	+				
-51003538	193	34722	Эл. питания CR 2430 Energizer (1 шт.)			81.00	1.000	\N	+				
-51003539	193	27051	Эл. питания CR 2430 Sony			45.00	1.000	\N	+				
-51003540	193	34723	Эл. питания CR 2450 Energizer (1 шт.)			99.00	1.000	\N	+				
-51003541	193	4246	Эл. питания Daewoo C-R14			21.00	1.000	\N	+				
-51003542	193	5718	Эл. питания Duracell Turbo AA-LR6 1шт			36.00	1.000	\N	+				
-51003543	193	34527	Эл. питания Energizer D-LR20 2 шт			221.00	1.000	\N	+				
-51003544	193	36978	Эл. питания Energizer Maximum AA-LR6 4 шт			176.00	1.000	\N	+				
-51003545	193	36574	Эл. питания Energizer Maximum AAA LR03 4 шт			176.00	1.000	\N	+				
-51003546	193	32537	Эл. питания Energizer Ultim Lithium AA-FR6 2 шт.			252.00	1.000	\N	+				
-51003547	193	9550	Эл. питания Panasonic AAA R03			14.00	1.000	\N	+				
 \.
 
 
 --
--- TOC entry 4180 (class 0 OID 0)
--- Dependencies: 181
+-- TOC entry 4202 (class 0 OID 0)
+-- Dependencies: 182
 -- Name: last_price_code_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('last_price_code_seq', 51003547, true);
+SELECT pg_catalog.setval('last_price_code_seq', 51334612, true);
 
 
 --
--- TOC entry 3838 (class 0 OID 504286)
--- Dependencies: 182
+-- TOC entry 3852 (class 0 OID 506977)
+-- Dependencies: 183
 -- Data for Name: objectnames; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -9888,8 +9940,8 @@ COPY objectnames (name, value) FROM stdin;
 
 
 --
--- TOC entry 3839 (class 0 OID 504289)
--- Dependencies: 183
+-- TOC entry 3853 (class 0 OID 506980)
+-- Dependencies: 184
 -- Data for Name: objectnames1; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10144,8 +10196,8 @@ vw_прайс.e_mail	E_MAIL
 
 
 --
--- TOC entry 3840 (class 0 OID 504292)
--- Dependencies: 184
+-- TOC entry 3854 (class 0 OID 506983)
+-- Dependencies: 185
 -- Data for Name: test; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10154,8 +10206,8 @@ COPY test (id, text, text_vector) FROM stdin;
 
 
 --
--- TOC entry 4181 (class 0 OID 0)
--- Dependencies: 185
+-- TOC entry 4203 (class 0 OID 0)
+-- Dependencies: 186
 -- Name: test_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10163,36 +10215,89 @@ SELECT pg_catalog.setval('test_id_seq', 1, false);
 
 
 --
--- TOC entry 3842 (class 0 OID 504300)
--- Dependencies: 186
+-- TOC entry 3856 (class 0 OID 506991)
+-- Dependencies: 187
 -- Data for Name: tmp_checks; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY tmp_checks ("ОПЕР", "НОМЕРЧЕКА", "СУММА") FROM stdin;
-1	26648	187.50
-1	26649	212.00
-1	26650	1282.00
-1	26651	2.00
-1	26652	2.00
-1	26653	935.00
-1	26654	949.00
-1	26655	630.00
-1	26656	158.00
-71	26657	500.00
-1	26658	530.00
-1	26659	290.00
-1	26660	98.00
-71	26661	290.00
-1	26662	35.00
-1	26663	190.00
-1	26664	780.00
-1	26665	320.00
+1	26725	49.00
+1	26726	2.00
+1	26727	5589.30
+1	26728	200.00
+1	26729	756.00
+1	26730	16.00
+1	26731	200.00
+1	26732	75.00
+1	26733	2.00
+1	26734	224.00
+71	26735	200.00
+1	26736	56.00
+1	26737	124.00
+1	26738	100.00
+1	26739	76.00
+1	26740	25.00
+1	26741	280.00
+1	26742	169.00
+1	26743	479.00
+1	26744	117.00
+1	26745	260.00
+1	26746	123.00
+1	26747	75.00
+1	26748	123.00
+1	26749	196.65
+1	26750	293.00
+1	26751	34.00
+1	26752	370.00
+1	26753	2300.00
+1	26754	106.00
+1	26755	57.00
+1	26756	660.00
+1	26757	52.00
+1	26758	35.00
+1	26759	2.00
+1	26760	2.00
+1	26761	1140.00
+1	26762	63.00
+1	26763	90.00
+1	26764	90.00
+1	26765	2.00
+1	26766	609.15
+1	26767	2.50
+1	26768	126.00
+1	26769	81.00
+1	26770	10.00
+1	26771	370.00
+1	26772	124.00
+1	26773	1775.10
+71	26774	29.00
+1	26775	29.00
+1	26776	169.00
+71	26777	146.00
+1	26778	730.00
+1	26779	600.00
+1	26780	100.00
+71	26781	400.00
+1	26782	39.00
+1	26783	5.00
+1	26784	86.40
+1	26785	480.00
+1	26786	599.00
+1	26787	69.00
+1	26788	122.00
+1	26789	2175.50
+1	26790	2.00
+1	26791	4797.00
+1	26792	770.00
+1	26793	51.00
+1	26794	16.00
+1	26795	1067.00
 \.
 
 
 --
--- TOC entry 3843 (class 0 OID 504303)
--- Dependencies: 187
+-- TOC entry 3857 (class 0 OID 506994)
+-- Dependencies: 188
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10205,8 +10310,8 @@ COPY users ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4182 (class 0 OID 0)
--- Dependencies: 188
+-- TOC entry 4204 (class 0 OID 0)
+-- Dependencies: 189
 -- Name: users_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10214,8 +10319,8 @@ SELECT pg_catalog.setval('"users_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 4183 (class 0 OID 0)
--- Dependencies: 273
+-- TOC entry 4205 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: ОС_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10223,8 +10328,8 @@ SELECT pg_catalog.setval('"ОС_КОД_seq"', 3, true);
 
 
 --
--- TOC entry 3863 (class 0 OID 504560)
--- Dependencies: 228
+-- TOC entry 3877 (class 0 OID 507251)
+-- Dependencies: 229
 -- Data for Name: адрес; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10233,8 +10338,8 @@ COPY "адрес" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4184 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 4206 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: адрес_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10242,8 +10347,8 @@ SELECT pg_catalog.setval('"адрес_КОД_seq"', 922, true);
 
 
 --
--- TOC entry 3877 (class 0 OID 504825)
--- Dependencies: 275
+-- TOC entry 3891 (class 0 OID 507516)
+-- Dependencies: 276
 -- Data for Name: атрибуты121; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10252,8 +10357,8 @@ COPY "атрибуты121" ("КОД", "ДОККОД", "СТР", "ПРОЦЕНТ"
 
 
 --
--- TOC entry 4185 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 4207 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: атрибуты121_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10261,8 +10366,8 @@ SELECT pg_catalog.setval('"атрибуты121_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3853 (class 0 OID 504428)
--- Dependencies: 203
+-- TOC entry 3867 (class 0 OID 507119)
+-- Dependencies: 204
 -- Data for Name: атрибуты123; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10271,8 +10376,8 @@ COPY "атрибуты123" ("КОД", "ДОККОД", "СТР", "КОД_ПРАЙ
 
 
 --
--- TOC entry 4186 (class 0 OID 0)
--- Dependencies: 277
+-- TOC entry 4208 (class 0 OID 0)
+-- Dependencies: 278
 -- Name: атрибуты123_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10280,8 +10385,8 @@ SELECT pg_catalog.setval('"атрибуты123_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3880 (class 0 OID 504832)
--- Dependencies: 278
+-- TOC entry 3894 (class 0 OID 507523)
+-- Dependencies: 279
 -- Data for Name: атрибуты129; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10290,8 +10395,8 @@ COPY "атрибуты129" ("КОД", "ДОККОД", "СТР", "ЦЕНА_РЕА
 
 
 --
--- TOC entry 4187 (class 0 OID 0)
--- Dependencies: 279
+-- TOC entry 4209 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: атрибуты129_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10299,8 +10404,8 @@ SELECT pg_catalog.setval('"атрибуты129_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3882 (class 0 OID 504837)
--- Dependencies: 280
+-- TOC entry 3896 (class 0 OID 507528)
+-- Dependencies: 281
 -- Data for Name: атрибуты5; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10309,8 +10414,8 @@ COPY "атрибуты5" ("КОД", "ДОККОД", "СТР", "КОД_ПРАЙС
 
 
 --
--- TOC entry 4188 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 4210 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: атрибуты5_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10318,8 +10423,8 @@ SELECT pg_catalog.setval('"атрибуты5_КОД_seq"', 18780, true);
 
 
 --
--- TOC entry 3884 (class 0 OID 504842)
--- Dependencies: 282
+-- TOC entry 3898 (class 0 OID 507533)
+-- Dependencies: 283
 -- Data for Name: атрибуты71; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10328,8 +10433,8 @@ COPY "атрибуты71" ("КОД", "ДОККОД", "СТР", "ПРОЦЕНТ")
 
 
 --
--- TOC entry 4189 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 4211 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: атрибуты71_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10337,8 +10442,8 @@ SELECT pg_catalog.setval('"атрибуты71_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3886 (class 0 OID 504848)
--- Dependencies: 284
+-- TOC entry 3900 (class 0 OID 507538)
+-- Dependencies: 285
 -- Data for Name: атрибуты8; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10347,8 +10452,8 @@ COPY "атрибуты8" ("КОД", "ДОККОД", "СТР", "ЗАКЦЕНА", 
 
 
 --
--- TOC entry 4190 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 4212 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: атрибуты8_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10356,8 +10461,8 @@ SELECT pg_catalog.setval('"атрибуты8_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3888 (class 0 OID 504854)
--- Dependencies: 286
+-- TOC entry 3902 (class 0 OID 507544)
+-- Dependencies: 287
 -- Data for Name: банки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10366,8 +10471,8 @@ COPY "банки" ("КОД", "ИМЯ", "КОД_ГОРОДА", "БИК", "КОР�
 
 
 --
--- TOC entry 4191 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 4213 (class 0 OID 0)
+-- Dependencies: 288
 -- Name: банки_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10375,8 +10480,8 @@ SELECT pg_catalog.setval('"банки_КОД_seq"', 63, true);
 
 
 --
--- TOC entry 3890 (class 0 OID 504863)
--- Dependencies: 288
+-- TOC entry 3904 (class 0 OID 507553)
+-- Dependencies: 289
 -- Data for Name: банковские_счета; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10385,8 +10490,8 @@ COPY "банковские_счета" ("КОД", "ИМЯ", "СЧЕТ", "КОД_
 
 
 --
--- TOC entry 4192 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 4214 (class 0 OID 0)
+-- Dependencies: 290
 -- Name: банковские_счета_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10394,18 +10499,19 @@ SELECT pg_catalog.setval('"банковские_счета_КОД_seq"', 8, true
 
 
 --
--- TOC entry 3892 (class 0 OID 504870)
--- Dependencies: 290
+-- TOC entry 3906 (class 0 OID 507560)
+-- Dependencies: 291
 -- Data for Name: блокдокументов; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "блокдокументов" ("PID", "КОД_ДОКУМЕНТЫ") FROM stdin;
+4181	603999
 \.
 
 
 --
--- TOC entry 3845 (class 0 OID 504309)
--- Dependencies: 189
+-- TOC entry 3859 (class 0 OID 507000)
+-- Dependencies: 190
 -- Data for Name: блокпериоды; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10416,8 +10522,8 @@ COPY "блокпериоды" ("КОД", "ИМЯ", "КОД_ПОЛЬЗОВАТЕ�
 
 
 --
--- TOC entry 4193 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 4215 (class 0 OID 0)
+-- Dependencies: 292
 -- Name: блокпериоды_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10425,8 +10531,8 @@ SELECT pg_catalog.setval('"блокпериоды_КОД_seq"', 3, true);
 
 
 --
--- TOC entry 3858 (class 0 OID 504474)
--- Dependencies: 213
+-- TOC entry 3872 (class 0 OID 507165)
+-- Dependencies: 214
 -- Data for Name: бюджет; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10435,8 +10541,8 @@ COPY "бюджет" ("КОД", "ИМЯ", "КОД_ОРГАНИЗАЦИИ", "КО�
 
 
 --
--- TOC entry 4194 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 4216 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: бюджет_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10444,8 +10550,8 @@ SELECT pg_catalog.setval('"бюджет_КОД_seq"', 8, true);
 
 
 --
--- TOC entry 3856 (class 0 OID 504447)
--- Dependencies: 208
+-- TOC entry 3870 (class 0 OID 507138)
+-- Dependencies: 209
 -- Data for Name: виды_расходов; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10454,8 +10560,8 @@ COPY "виды_расходов" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4195 (class 0 OID 0)
--- Dependencies: 293
+-- TOC entry 4217 (class 0 OID 0)
+-- Dependencies: 294
 -- Name: виды_расходов_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10463,8 +10569,8 @@ SELECT pg_catalog.setval('"виды_расходов_КОД_seq"', 57, true);
 
 
 --
--- TOC entry 3896 (class 0 OID 504880)
--- Dependencies: 294
+-- TOC entry 3910 (class 0 OID 507569)
+-- Dependencies: 295
 -- Data for Name: города; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10473,8 +10579,8 @@ COPY "города" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4196 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 4218 (class 0 OID 0)
+-- Dependencies: 296
 -- Name: города_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10482,8 +10588,8 @@ SELECT pg_catalog.setval('"города_КОД_seq"', 41, true);
 
 
 --
--- TOC entry 3846 (class 0 OID 504322)
--- Dependencies: 192
+-- TOC entry 3860 (class 0 OID 507013)
+-- Dependencies: 193
 -- Data for Name: группы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10525,8 +10631,8 @@ COPY "группы" ("КОД", "ИМЯ", "ЦЕНЫ_СНИЖАТЬ", "ОТДЕЛ"
 
 
 --
--- TOC entry 4197 (class 0 OID 0)
--- Dependencies: 296
+-- TOC entry 4219 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: группы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -10534,8 +10640,8 @@ SELECT pg_catalog.setval('"группы_КОД_seq"', 91, true);
 
 
 --
--- TOC entry 3899 (class 0 OID 504888)
--- Dependencies: 297
+-- TOC entry 3913 (class 0 OID 507577)
+-- Dependencies: 298
 -- Data for Name: докатрибуты1; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10544,19 +10650,18 @@ COPY "докатрибуты1" ("КОД", "КОД_ЛЮДИ", "СКИДКА", "К
 
 
 --
--- TOC entry 3854 (class 0 OID 504431)
--- Dependencies: 204
+-- TOC entry 3868 (class 0 OID 507122)
+-- Dependencies: 205
 -- Data for Name: докатрибуты123; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "докатрибуты123" ("КОД", "МОЖНОРАЗБИРАТЬ", "КОД_ОРГАНИЗАЦИИ", "ДАТАПЛАТЕЖА", "ОПЛАЧЕНО") FROM stdin;
-2	f	\N	\N	\N
 \.
 
 
 --
--- TOC entry 3900 (class 0 OID 504892)
--- Dependencies: 298
+-- TOC entry 3914 (class 0 OID 507581)
+-- Dependencies: 299
 -- Data for Name: докатрибуты71; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10565,29 +10670,27 @@ COPY "докатрибуты71" ("КОД", "ЧЕКОТБИТ") FROM stdin;
 
 
 --
--- TOC entry 3847 (class 0 OID 504328)
--- Dependencies: 193
+-- TOC entry 3861 (class 0 OID 507019)
+-- Dependencies: 194
 -- Data for Name: документы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "документы" ("КОД", "ДАТА", "ДАТАВРЕМЯ", "НОМЕР", "КОММЕНТАРИЙ", "СУММА", "ОПИСАНИЕ", "ОПЕР", "АВТО", "ПЕРЕМЕННЫЕ1", "ПЕРЕМЕННЫЕ", "КОД_ПЕРСОНАЛ") FROM stdin;
-1	2015-12-15	2015-12-15 13:43:50.206151			0.00	\N	93	0	\N	\N	1000002
-2	2015-12-15	2015-12-15 17:30:20.644669	1		0.00	\N	123	0	\N	\N	1000002
 \.
 
 
 --
--- TOC entry 4198 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 4220 (class 0 OID 0)
+-- Dependencies: 300
 -- Name: документы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"документы_КОД_seq"', 605117, true);
+SELECT pg_catalog.setval('"документы_КОД_seq"', 605289, true);
 
 
 --
--- TOC entry 3860 (class 0 OID 504503)
--- Dependencies: 218
+-- TOC entry 3874 (class 0 OID 507194)
+-- Dependencies: 219
 -- Data for Name: доступ; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -10618,14 +10721,7 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 90	t	                                                                                                    	3	17118	6                                                                                                   	бухгалтер	бухгалтер
 67	t	                                                                                                    	1	17118	персонал                                                                                            	бухгалтер	бухгалтер
 351	f		1	17116	vw_наценки                                                                                          	sa	sa
-354	f		1	17116	vw_отрицательные_остатки_на_411_счет                                                                	sa	sa
 239	f		3	17116	15	sa	sa
-326	f		3	17116	103	sa	sa
-92	f	                                                                                                    	3	17118	22                                                                                                  	бухгалтер	бухгалтер
-339	f		3	17116	116	sa	sa
-365	f		3	0	118                                                                                                 	sa                                                	
-200	f	                                                                                                    	3	17121	44                                                                                                  	\N	\N
-199	f	                                                                                                    	3	17121	21                                                                                                  	\N	\N
 71	t	                                                                                                    	1	17118	константы                                                                                           	бухгалтер	бухгалтер
 42	t	                                                                                                    	2	17119	12                                                                                                  	\N	\N
 20	t	                                                                                                    	1	17120	организации                                                                                         	продавец	продавец
@@ -10650,10 +10746,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 44	t	                                                                                                    	2	17119	01                                                                                                  	\N	\N
 46	t	                                                                                                    	2	17119	761                                                                                                 	\N	\N
 227	f		3	17116	3	sa	sa
-79	f	                                                                                                    	3	17118	27                                                                                                  	бухгалтер	бухгалтер
-355	f		3	17116	117                                                                                                 	sa	sa
-43	f	                                                                                                    	2	17119	44                                                                                                  	\N	\N
-146	f	                                                                                                    	4	17119	44                                                                                                  	\N	\N
 47	t	                                                                                                    	2	17119	762                                                                                                 	\N	\N
 12	t	                                                                                                    	2	17119	411                                                                                                 	\N	\N
 338	t		3	17116	115	sa	sa
@@ -10672,9 +10764,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 346	f		1	17116	vw_новыецены3                                                                                       	sa	sa
 90	t	                                                                                                    	3	17119	6                                                                                                   	\N	\N
 66	t	                                                                                                    	1	17119	организации                                                                                         	\N	\N
-80	f	                                                                                                    	3	17119	28                                                                                                  	\N	\N
-92	f	                                                                                                    	3	17119	22                                                                                                  	\N	\N
-91	f	                                                                                                    	3	17119	21                                                                                                  	\N	\N
 238	f		3	17116	14	sa	sa
 107	f	                                                                                                    	1	17120	набор5                                                                                              	продавец	продавец
 141	t	                                                                                                    	4	17119	46                                                                                                  	sa                                                	sa                            
@@ -10700,8 +10789,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 41	t	                                                                                                    	2	17118	711                                                                                                 	бухгалтер	бухгалтер
 406	t		3	\N	130	sa	
 407	t		\N	\N	vw_saldo402	продавец	
-127	f	                                                                                                    	4	17119	70                                                                                                  	sa                                                	sa                            
-146	f	                                                                                                    	4	17118	44                                                                                                  	бухгалтер	бухгалтер
 229	f		3	17116	5	sa	sa
 42	t	                                                                                                    	2	17118	12                                                                                                  	бухгалтер	бухгалтер
 44	t	                                                                                                    	2	17118	01                                                                                                  	бухгалтер	бухгалтер
@@ -10721,9 +10808,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 216	t	                                                                                                    	3	17121	23                                                                                                  	\N	\N
 218	t	                                                                                                    	4	17121	413                                                                                                 	\N	\N
 128	t	                                                                                                    	4	17118	411                                                                                                 	бухгалтер	бухгалтер
-132	f	                                                                                                    	1	17118	объекты                                                                                             	бухгалтер	бухгалтер
-79	f	                                                                                                    	3	17119	27                                                                                                  	\N	\N
-43	f	                                                                                                    	2	17118	44                                                                                                  	бухгалтер	бухгалтер
 135	t	                                                                                                    	4	17118	711                                                                                                 	бухгалтер	бухгалтер
 140	t	                                                                                                    	4	17118	49                                                                                                  	бухгалтер	бухгалтер
 143	t	                                                                                                    	4	17118	421                                                                                                 	бухгалтер	бухгалтер
@@ -10750,12 +10834,10 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 315	t		3	17116	91	sa	sa
 53	t	                                                                                                    	2	17116	712                                                                                                 	sa	sa
 353	f		1	17116	vw_журнал                                                                                           	sa	sa
-358	f		1	17116	ос                                                                                                  	sa	sa
 54	t	                                                                                                    	2	17116	761                                                                                                 	sa	sa
 55	t	                                                                                                    	2	17116	762                                                                                                 	sa	sa
 20	t	                                                                                                    	1	17116	организации                                                                                         	sa	sa
 316	t		3	17116	92	sa	sa
-317	t		3	17116	93	sa	sa
 318	t		3	17116	94	sa	sa
 319	t		3	17116	95	sa	sa
 103	t	(DOS)                                                                                               	2	17116	411                                                                                                 	sa	sa
@@ -10767,6 +10849,7 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 171	t	                                                                                                    	4	17116	49                                                                                                  	sa	sa
 155	t	                                                                                                    	1	17116	блокпериоды                                                                                         	sa	sa
 363	f		1	17116	vw_новыецены_на_остатки                                                                             	sa	sa
+317	t		3	17116	93	sa	sa
 162	t	                                                                                                    	1	17116	vw_прайс                                                                                            	sa	sa
 110	t	                                                                                                    	1	17116	города                                                                                              	sa	sa
 114	t	                                                                                                    	1	17116	набор5                                                                                              	sa	sa
@@ -10777,19 +10860,9 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 172	t	                                                                                                    	4	17116	712                                                                                                 	sa	sa
 173	t	                                                                                                    	1	17116	Банковские_счета                                                                                    	sa	sa
 341	t		1	17116	vw_закупоч_цены_на_новый_товар                                                                      	sa	sa
-165	f	                                                                                                    	1	17116	фонды                                                                                               	sa	sa
-152	f	                                                                                                    	1	17116	заказчики                                                                                           	sa	sa
-164	f	                                                                                                    	1	17116	бюджет                                                                                              	sa	sa
-185	f	                                                                                                    	3	17116	76                                                                                                  	sa	sa
-180	f	                                                                                                    	3	17116	102                                                                                                 	sa	sa
 320	f		3	17116	96	sa	sa
 324	f		3	17116	100	sa	sa
-191	f	                                                                                                    	3	17116	34                                                                                                  	sa	sa
 322	f		3	17116	98	sa	sa
-323	f		3	17116	99	sa	sa
-176	f	                                                                                                    	2	17116	68                                                                                                  	sa	sa
-177	f	                                                                                                    	4	17116	68                                                                                                  	sa	sa
-321	f		3	17116	97	sa	sa
 209	t	                                                                                                    	1	17116	адрес1                                                                                              	sa	sa
 31	t	                                                                                                    	1	17116	персонал                                                                                            	sa	sa
 36	t	                                                                                                    	1	17116	нумераторы                                                                                          	sa	sa
@@ -10821,11 +10894,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 328	f		3	17116	105	sa	sa
 285	t		3	17116	61	sa	sa
 37	t	                                                                                                    	1	17116	счета                                                                                               	sa	sa
-134	f	                                                                                                    	1	17116	материалы                                                                                           	sa	sa
-331	f		3	17116	108	sa	sa
-330	f		3	17116	107	sa	sa
-284	f		3	17116	60	sa	sa
-223	f	                                                                                                    	4	17116	80                                                                                                  	sa	sa
 40	t	                                                                                                    	1	17116	vw_запросы                                                                                          	sa	sa
 63	f	                                                                                                    	1	17116	vw_новыецены1                                                                                       	sa	sa
 64	f	                                                                                                    	1	17116	vw_новыецены2                                                                                       	sa	sa
@@ -10856,10 +10924,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 65	t	                                                                                                    	1	17116	запросы                                                                                             	sa	sa
 22	t	                                                                                                    	1	17116	пользователи                                                                                        	sa	sa
 7	t	                                                                                                    	3	17116	23                                                                                                  	sa	sa
-165	f	                                                                                                    	1	17116	фонды                                                                                               	sa	sa
-164	f	                                                                                                    	1	17116	бюджет                                                                                              	sa	sa
-133	f	                                                                                                    	1	17116	объекты                                                                                             	sa	sa
-134	f	                                                                                                    	1	17116	материалы                                                                                           	sa	sa
 233	f		3	17116	9	sa	sa
 234	f		3	17116	10	sa	sa
 8	t	                                                                                                    	3	17116	1                                                                                                   	sa	sa
@@ -10895,35 +10959,6 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 274	t		3	17116	50	sa	sa
 275	t		3	17116	51	sa	sa
 278	t		3	17116	54	sa	sa
-152	f	                                                                                                    	1	17116	заказчики                                                                                           	sa	sa
-133	f	                                                                                                    	1	17116	объекты                                                                                             	sa	sa
-296	f		3	17116	72	sa	sa
-310	f		3	17116	86	sa	sa
-5	f	                                                                                                    	3	17116	3                                                                                                   	sa	sa
-300	f		3	17116	76	sa	sa
-308	f		3	17116	84	sa	sa
-180	f	                                                                                                    	3	17116	102                                                                                                 	sa	sa
-251	f		3	17116	27	sa	sa
-252	f		3	17116	28	sa	sa
-176	f	                                                                                                    	2	17116	68                                                                                                  	sa	sa
-177	f	                                                                                                    	4	17116	68                                                                                                  	sa	sa
-277	f		3	17116	53	sa	sa
-312	f		3	17116	88	sa	sa
-246	f		3	17116	22	sa	sa
-306	f		3	17116	82	sa	sa
-303	f		3	17116	79	sa	sa
-311	f		3	17116	87	sa	sa
-223	f	                                                                                                    	4	17116	80                                                                                                  	sa	sa
-304	f		3	17116	80	sa	sa
-293	f		3	17116	69	sa	sa
-294	f		3	17116	70	sa	sa
-268	f		3	17116	44	sa	sa
-245	f		3	17116	21	sa	sa
-301	f		3	17116	77	sa	sa
-244	f		3	17116	20	sa	sa
-258	f		3	17116	34	sa	sa
-336	f		3	17116	113	sa	sa
-250	f		3	17116	26	sa	sa
 138	t	                                                                                                    	4	17118	08                                                                                                  	бухгалтер	бухгалтер
 138	t	                                                                                                    	4	17119	08                                                                                                  	\N	\N
 217	t	                                                                                                    	4	17121	411                                                                                                 	\N	\N
@@ -10961,14 +10996,7 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 295	t		3	17116	71	продавец                                          	продавец                      
 201	t	                                                                                                    	3	17116	71                                                                                                  	sa	\N
 378	t		4	0	51	sa                                                	sa                            
-290	f		3	17116	66	sa	sa
-280	f		3	17116	56	sa	sa
-276	f		3	17116	52	sa	sa
-297	f		3	17116	73	sa	sa
-289	f		3	17116	65	sa	sa
-48	f	                                                                                                    	2	17119	60                                                                                                  	\N	\N
-126	f	                                                                                                    	4	17119	60                                                                                                  	sa                                                	sa                            
-48	f	                                                                                                    	2	17118	60                                                                                                  	бухгалтер	бухгалтер
+133	f	                                                                                                    	1	17116	объекты                                                                                             	sa	sa
 166	t	                                                                                                    	4	17116	511                                                                                                 	sa	sa                            
 166	t	                                                                                                    	4	17116	511                                                                                                 	sa	sa                            
 125	t	                                                                                                    	4	17119	512                                                                                                 	sa                                                	бухгалтер                     
@@ -10997,12 +11025,12 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 379	t		3	\N	1	sa	
 388	f		\N	\N	saldo40	sa	
 386	f		\N	\N	saldo401	sa	
+371	f		1	16384	saldo411	sa	sa
 393	t		3	\N	124	sa	
 377	f		1	\N	доступ_к_топер	sa	sa
 410	t		3	\N	131	sa	
 139	t	                                                                                                    	4	17118	762                                                                                                 	sa	бухгалтер
 139	t	                                                                                                    	4	17119	762                                                                                                 	sa	\N
-371	f		1	16384	saldo411	sa	sa
 361	f		1	17120	vw_saldo411                                                                                         	продавец	продавец
 184	f	                                                                                                    	1	17121	vw_saldo411                                                                                         	\N	\N
 184	f	                                                                                                    	1	17116	vw_saldo411                                                                                         	sa	sa
@@ -11010,28 +11038,92 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 156	f	                                                                                                    	1	17116	vw_saldo411                                                                                         	sa	sa
 62	f	                                                                                                    	1	17116	vw_saldo40                                                                                          	sa	sa
 62	f	                                                                                                    	1	17116	vw_saldo40                                                                                          	sa	sa
+354	f		1	17116	vw_отрицательные_остатки_на_411_счет                                                                	sa	sa
 147	f	                                                                                                    	1	17116	vw_разница_консальдо_и_цены                                                                         	sa	sa
 147	f	                                                                                                    	1	17116	vw_разница_консальдо_и_цены                                                                         	sa	sa
+165	f	                                                                                                    	1	17116	фонды                                                                                               	sa	sa
+165	f	                                                                                                    	1	17116	фонды                                                                                               	sa	sa
+152	f	                                                                                                    	1	17116	заказчики                                                                                           	sa	sa
+152	f	                                                                                                    	1	17116	заказчики                                                                                           	sa	sa
+164	f	                                                                                                    	1	17116	бюджет                                                                                              	sa	sa
+164	f	                                                                                                    	1	17116	бюджет                                                                                              	sa	sa
 132	f	                                                                                                    	1	17119	объекты                                                                                             	\N	\N
+132	f	                                                                                                    	1	17118	объекты                                                                                             	бухгалтер	бухгалтер
+133	f	                                                                                                    	1	17116	объекты                                                                                             	sa	sa
+358	f		1	17116	ос                                                                                                  	sa	sa
+134	f	                                                                                                    	1	17116	материалы                                                                                           	sa	sa
+134	f	                                                                                                    	1	17116	материалы                                                                                           	sa	sa
+296	f		3	17116	72	sa	sa
+310	f		3	17116	86	sa	sa
 5	f	                                                                                                    	3	17120	3                                                                                                   	продавец	продавец
+5	f	                                                                                                    	3	17116	3                                                                                                   	sa	sa
 402	f		3	\N	129	sa	
+331	f		3	17116	108	sa	sa
 185	f	                                                                                                    	3	17121	76                                                                                                  	\N	\N
+185	f	                                                                                                    	3	17116	76                                                                                                  	sa	sa
+300	f		3	17116	76	sa	sa
+355	f		3	17116	117                                                                                                 	sa	sa
+308	f		3	17116	84	sa	sa
+180	f	                                                                                                    	3	17116	102                                                                                                 	sa	sa
+180	f	                                                                                                    	3	17116	102                                                                                                 	sa	sa
+330	f		3	17116	107	sa	sa
+290	f		3	17116	66	sa	sa
+79	f	                                                                                                    	3	17118	27                                                                                                  	бухгалтер	бухгалтер
+79	f	                                                                                                    	3	17119	27                                                                                                  	\N	\N
+251	f		3	17116	27	sa	sa
 80	f	                                                                                                    	3	17118	28                                                                                                  	бухгалтер	бухгалтер
+80	f	                                                                                                    	3	17119	28                                                                                                  	\N	\N
+252	f		3	17116	28	sa	sa
+323	f		3	17116	99	sa	sa
+176	f	                                                                                                    	2	17116	68                                                                                                  	sa	sa
+177	f	                                                                                                    	4	17116	68                                                                                                  	sa	sa
+176	f	                                                                                                    	2	17116	68                                                                                                  	sa	sa
+177	f	                                                                                                    	4	17116	68                                                                                                  	sa	sa
 292	f		3	17116	68	sa	sa
 178	f	                                                                                                    	2	17116	85                                                                                                  	sa	sa
 178	f	                                                                                                    	2	17116	85                                                                                                  	sa	sa
 309	f		3	17116	85	sa	sa
 291	f		3	17116	67	sa	sa
+277	f		3	17116	53	sa	sa
+326	f		3	17116	103	sa	sa
+312	f		3	17116	88	sa	sa
+92	f	                                                                                                    	3	17118	22                                                                                                  	бухгалтер	бухгалтер
+92	f	                                                                                                    	3	17119	22                                                                                                  	\N	\N
+246	f		3	17116	22	sa	sa
+306	f		3	17116	82	sa	sa
+303	f		3	17116	79	sa	sa
+223	f	                                                                                                    	4	17116	80                                                                                                  	sa	sa
+223	f	                                                                                                    	4	17116	80                                                                                                  	sa	sa
+304	f		3	17116	80	sa	sa
+280	f		3	17116	56	sa	sa
+339	f		3	17116	116	sa	sa
+293	f		3	17116	69	sa	sa
+365	f		3	0	118                                                                                                 	sa                                                	
+76	f	                                                                                                    	3	17119	5                                                                                                   	\N	\N
+127	f	                                                                                                    	4	17119	70                                                                                                  	sa                                                	sa                            
+294	f		3	17116	70	sa	sa
 127	f	                                                                                                    	4	17118	70                                                                                                  	sa                                                	sa                            
-399	f		3	\N	126	sa	
-398	f		3	\N	125	sa	
 45	f	                                                                                                    	2	17119	70                                                                                                  	бухгалтер                                         	sa                            
 45	f	                                                                                                    	2	17118	70                                                                                                  	бухгалтер                                         	sa                            
+399	f		3	\N	126	sa	
+311	f		3	17116	87	sa	sa
+276	f		3	17116	52	sa	sa
+200	f	                                                                                                    	3	17121	44                                                                                                  	\N	\N
+43	f	                                                                                                    	2	17119	44                                                                                                  	\N	\N
+146	f	                                                                                                    	4	17119	44                                                                                                  	\N	\N
+146	f	                                                                                                    	4	17118	44                                                                                                  	бухгалтер	бухгалтер
+43	f	                                                                                                    	2	17118	44                                                                                                  	бухгалтер	бухгалтер
 200	f	                                                                                                    	3	17116	44                                                                                                  	sa	sa
+268	f		3	17116	44	sa	sa
+199	f	                                                                                                    	3	17121	21                                                                                                  	\N	\N
+91	f	                                                                                                    	3	17119	21                                                                                                  	\N	\N
 91	f	                                                                                                    	3	17118	21                                                                                                  	бухгалтер	бухгалтер
 199	f	                                                                                                    	3	17116	21                                                                                                  	sa	sa
+245	f		3	17116	21	sa	sa
+301	f		3	17116	77	sa	sa
 93	f	                                                                                                    	3	17119	20                                                                                                  	\N	\N
 93	f	                                                                                                    	3	17118	20                                                                                                  	бухгалтер	бухгалтер
+244	f		3	17116	20	sa	sa
 348	f		3	17120	9	продавец	продавец
 193	f	                                                                                                    	3	17121	9                                                                                                   	\N	\N
 193	f	                                                                                                    	3	17116	9                                                                                                   	sa	sa
@@ -11043,8 +11135,8 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 144	f	                                                                                                    	1	17118	10                                                                                                  	бухгалтер	бухгалтер
 145	f	                                                                                                    	2	17118	10                                                                                                  	бухгалтер	бухгалтер
 149	f	                                                                                                    	4	17118	10                                                                                                  	бухгалтер	бухгалтер
+297	f		3	17116	73	sa	sa
 76	f	                                                                                                    	3	17118	5                                                                                                   	бухгалтер	бухгалтер
-76	f	                                                                                                    	3	17119	5                                                                                                   	\N	\N
 192	f	                                                                                                    	3	17121	5                                                                                                   	\N	\N
 192	f	                                                                                                    	3	17116	5                                                                                                   	sa	sa
 95	f	                                                                                                    	3	17119	14                                                                                                  	\N	\N
@@ -11052,10 +11144,20 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 96	f	                                                                                                    	3	17118	34                                                                                                  	бухгалтер	бухгалтер
 96	f	                                                                                                    	3	17119	34                                                                                                  	\N	\N
 191	f	                                                                                                    	3	17121	34                                                                                                  	\N	\N
+191	f	                                                                                                    	3	17116	34                                                                                                  	sa	sa
+258	f		3	17116	34	sa	sa
+336	f		3	17116	113	sa	sa
+289	f		3	17116	65	sa	sa
+321	f		3	17116	97	sa	sa
 204	f	                                                                                                    	3	17121	26                                                                                                  	\N	\N
 97	f	                                                                                                    	3	17118	26                                                                                                  	бухгалтер	бухгалтер
 97	f	                                                                                                    	3	17119	26                                                                                                  	\N	\N
 204	f	                                                                                                    	3	17116	26                                                                                                  	sa	sa
+250	f		3	17116	26	sa	sa
+48	f	                                                                                                    	2	17119	60                                                                                                  	\N	\N
+126	f	                                                                                                    	4	17119	60                                                                                                  	sa                                                	sa                            
+48	f	                                                                                                    	2	17118	60                                                                                                  	бухгалтер	бухгалтер
+284	f		3	17116	60	sa	sa
 126	f	                                                                                                    	4	17118	60                                                                                                  	sa                                                	sa                            
 98	f	                                                                                                    	3	17118	18                                                                                                  	бухгалтер	бухгалтер
 242	f		3	17116	18	sa	sa
@@ -11063,12 +11165,13 @@ COPY "доступ" ("КОД", "МЕНЮ", "КОММЕНТАРИЙ", "КОД_Т�
 240	f		3	17116	16	sa	sa
 99	f	                                                                                                    	3	17118	16                                                                                                  	бухгалтер	бухгалтер
 99	f	                                                                                                    	3	17119	16                                                                                                  	\N	\N
+398	f		3	\N	125	sa	
 \.
 
 
 --
--- TOC entry 4199 (class 0 OID 0)
--- Dependencies: 300
+-- TOC entry 4221 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: доступ_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11076,8 +11179,8 @@ SELECT pg_catalog.setval('"доступ_КОД_seq"', 387, true);
 
 
 --
--- TOC entry 3862 (class 0 OID 504541)
--- Dependencies: 224
+-- TOC entry 3876 (class 0 OID 507232)
+-- Dependencies: 225
 -- Data for Name: журнал; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11086,8 +11189,8 @@ COPY "журнал" ("КОД", "ИМЯ", "ДАТАВРЕМЯ", "СОДЕРЖАН
 
 
 --
--- TOC entry 4200 (class 0 OID 0)
--- Dependencies: 304
+-- TOC entry 4222 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: журнал_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11095,8 +11198,8 @@ SELECT pg_catalog.setval('"журнал_КОД_seq"', 8064, true);
 
 
 --
--- TOC entry 3904 (class 0 OID 504915)
--- Dependencies: 305
+-- TOC entry 3918 (class 0 OID 507604)
+-- Dependencies: 306
 -- Data for Name: заказчики; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11107,8 +11210,8 @@ COPY "заказчики" ("КОД", "ИМЯ", "АДРЕС", "ТЕЛЕФОНЫ")
 
 
 --
--- TOC entry 4201 (class 0 OID 0)
--- Dependencies: 306
+-- TOC entry 4223 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: заказчики_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11116,8 +11219,8 @@ SELECT pg_catalog.setval('"заказчики_КОД_seq"', 2, true);
 
 
 --
--- TOC entry 3864 (class 0 OID 504574)
--- Dependencies: 231
+-- TOC entry 3878 (class 0 OID 507265)
+-- Dependencies: 232
 -- Data for Name: запросы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11144,8 +11247,8 @@ COPY "запросы" ("КОД", "ИМЯ", "ОПЕР", "ФОРМУЛЫ", "КОМ
 
 
 --
--- TOC entry 4202 (class 0 OID 0)
--- Dependencies: 307
+-- TOC entry 4224 (class 0 OID 0)
+-- Dependencies: 308
 -- Name: запросы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11153,8 +11256,8 @@ SELECT pg_catalog.setval('"запросы_КОД_seq"', 12, true);
 
 
 --
--- TOC entry 3865 (class 0 OID 504589)
--- Dependencies: 233
+-- TOC entry 3879 (class 0 OID 507280)
+-- Dependencies: 234
 -- Data for Name: заявка; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11163,17 +11266,17 @@ COPY "заявка" ("КОД", "КОД_ЛЮДИ", "КОД_ТОВАР", "КОД_�
 
 
 --
--- TOC entry 4203 (class 0 OID 0)
--- Dependencies: 308
+-- TOC entry 4225 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: заявка_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"заявка_КОД_seq"', 297391, true);
+SELECT pg_catalog.setval('"заявка_КОД_seq"', 297476, true);
 
 
 --
--- TOC entry 3908 (class 0 OID 504931)
--- Dependencies: 310
+-- TOC entry 3922 (class 0 OID 507620)
+-- Dependencies: 311
 -- Data for Name: карточки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11182,8 +11285,8 @@ COPY "карточки" ("КОД", "ИМЯ", "КОД_ЛЮДИ", "СКИДКА") 
 
 
 --
--- TOC entry 4204 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 4226 (class 0 OID 0)
+-- Dependencies: 312
 -- Name: карточки_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11191,8 +11294,8 @@ SELECT pg_catalog.setval('"карточки_КОД_seq"', 838, true);
 
 
 --
--- TOC entry 3866 (class 0 OID 504604)
--- Dependencies: 234
+-- TOC entry 3880 (class 0 OID 507295)
+-- Dependencies: 235
 -- Data for Name: константы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11233,8 +11336,8 @@ COPY "константы" ("КОД", "ИМЯ", "ЗНАЧЕНИЕ", "КОММЕН
 
 
 --
--- TOC entry 4205 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 4227 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: константы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11242,8 +11345,8 @@ SELECT pg_catalog.setval('"константы_КОД_seq"', 25, true);
 
 
 --
--- TOC entry 3911 (class 0 OID 504940)
--- Dependencies: 313
+-- TOC entry 3925 (class 0 OID 507629)
+-- Dependencies: 314
 -- Data for Name: лишние_слова; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11254,8 +11357,8 @@ COPY "лишние_слова" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4206 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 4228 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: лишние_слова_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11263,8 +11366,8 @@ SELECT pg_catalog.setval('"лишние_слова_КОД_seq"', 2, true);
 
 
 --
--- TOC entry 3868 (class 0 OID 504639)
--- Dependencies: 238
+-- TOC entry 3882 (class 0 OID 507330)
+-- Dependencies: 239
 -- Data for Name: люди; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11273,8 +11376,8 @@ COPY "люди" ("КОД", "ИМЯ", "КОД_ГОРОДА", "АДРЕС", "ТЕ�
 
 
 --
--- TOC entry 4207 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 4229 (class 0 OID 0)
+-- Dependencies: 316
 -- Name: люди_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11282,8 +11385,8 @@ SELECT pg_catalog.setval('"люди_КОД_seq"', 371, true);
 
 
 --
--- TOC entry 3914 (class 0 OID 504947)
--- Dependencies: 316
+-- TOC entry 3928 (class 0 OID 507636)
+-- Dependencies: 317
 -- Data for Name: материалы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11292,8 +11395,8 @@ COPY "материалы" ("КОД", "ИМЯ", "ЕДИЗМ") FROM stdin;
 
 
 --
--- TOC entry 4208 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 4230 (class 0 OID 0)
+-- Dependencies: 318
 -- Name: материалы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11301,8 +11404,8 @@ SELECT pg_catalog.setval('"материалы_КОД_seq"', 323, true);
 
 
 --
--- TOC entry 3848 (class 0 OID 504337)
--- Dependencies: 194
+-- TOC entry 3862 (class 0 OID 507028)
+-- Dependencies: 195
 -- Data for Name: набор1; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11311,8 +11414,8 @@ COPY "набор1" ("КОД", "КОД_ТОВАР", "КОД_АДРЕС") FROM std
 
 
 --
--- TOC entry 4209 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 4231 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: набор1_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11320,8 +11423,8 @@ SELECT pg_catalog.setval('"набор1_КОД_seq"', 45884, true);
 
 
 --
--- TOC entry 3869 (class 0 OID 504652)
--- Dependencies: 240
+-- TOC entry 3883 (class 0 OID 507343)
+-- Dependencies: 241
 -- Data for Name: набор3; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11330,8 +11433,8 @@ COPY "набор3" ("КОД", "КОД_ПЕРСОНАЛ", "КОД_ТОВАР") FR
 
 
 --
--- TOC entry 4210 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 4232 (class 0 OID 0)
+-- Dependencies: 320
 -- Name: набор3_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11339,8 +11442,8 @@ SELECT pg_catalog.setval('"набор3_КОД_seq"', 417, true);
 
 
 --
--- TOC entry 3918 (class 0 OID 504958)
--- Dependencies: 320
+-- TOC entry 3932 (class 0 OID 507647)
+-- Dependencies: 321
 -- Data for Name: набор4; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11349,8 +11452,8 @@ COPY "набор4" ("КОД", "КОД_ПЕРСОНАЛ", "КОД_ПРЕДМЕТ�
 
 
 --
--- TOC entry 3919 (class 0 OID 504961)
--- Dependencies: 321
+-- TOC entry 3933 (class 0 OID 507650)
+-- Dependencies: 322
 -- Data for Name: набор401; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11359,8 +11462,8 @@ COPY "набор401" ("КОД", "КОД_ТОВАР", "КОД_ДОКУМЕНТЫ1
 
 
 --
--- TOC entry 4211 (class 0 OID 0)
--- Dependencies: 322
+-- TOC entry 4233 (class 0 OID 0)
+-- Dependencies: 323
 -- Name: набор401_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11368,8 +11471,8 @@ SELECT pg_catalog.setval('"набор401_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3855 (class 0 OID 504435)
--- Dependencies: 205
+-- TOC entry 3869 (class 0 OID 507126)
+-- Dependencies: 206
 -- Data for Name: набор402; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11378,8 +11481,8 @@ COPY "набор402" ("КОД", "КОД_ТОВАР", "КОД_ДОКУМЕНТЫ1
 
 
 --
--- TOC entry 4212 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 4234 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: набор402_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11387,8 +11490,8 @@ SELECT pg_catalog.setval('"набор402_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 4213 (class 0 OID 0)
--- Dependencies: 324
+-- TOC entry 4235 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: набор4_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11396,8 +11499,8 @@ SELECT pg_catalog.setval('"набор4_КОД_seq"', 84, true);
 
 
 --
--- TOC entry 3870 (class 0 OID 504670)
--- Dependencies: 244
+-- TOC entry 3884 (class 0 OID 507361)
+-- Dependencies: 245
 -- Data for Name: наценки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11556,8 +11659,8 @@ COPY "наценки" ("КОД", "КОД_ГРУППЫ", "ИМЯ", "МИНПРО�
 
 
 --
--- TOC entry 4214 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 4236 (class 0 OID 0)
+-- Dependencies: 326
 -- Name: наценки_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11565,8 +11668,8 @@ SELECT pg_catalog.setval('"наценки_КОД_seq"', 120, true);
 
 
 --
--- TOC entry 3924 (class 0 OID 504972)
--- Dependencies: 326
+-- TOC entry 3938 (class 0 OID 507661)
+-- Dependencies: 327
 -- Data for Name: нумераторы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11581,13 +11684,13 @@ COPY "нумераторы" ("КОД", "ИМЯ", "ЗНАЧЕНИЕ") FROM stdin;
 3	Счет-фактура                            	0
 4	Договор                                 	0
 1	Товарный чек                            	0
-2	Накладная                               	1
+2	Накладная                               	0
 \.
 
 
 --
--- TOC entry 4215 (class 0 OID 0)
--- Dependencies: 327
+-- TOC entry 4237 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: нумераторы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11595,8 +11698,8 @@ SELECT pg_catalog.setval('"нумераторы_КОД_seq"', 11, true);
 
 
 --
--- TOC entry 3926 (class 0 OID 504979)
--- Dependencies: 328
+-- TOC entry 3940 (class 0 OID 507668)
+-- Dependencies: 329
 -- Data for Name: объекты; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11605,8 +11708,8 @@ COPY "объекты" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4216 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 4238 (class 0 OID 0)
+-- Dependencies: 330
 -- Name: объекты_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11614,19 +11717,18 @@ SELECT pg_catalog.setval('"объекты_КОД_seq"', 17, true);
 
 
 --
--- TOC entry 3859 (class 0 OID 504479)
--- Dependencies: 214
+-- TOC entry 3873 (class 0 OID 507170)
+-- Dependencies: 215
 -- Data for Name: организации; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "организации" ("КОД", "ИМЯ", "АДРЕС", "ТЕЛЕФОН", "ИНН", "КПП", "ОКОНХ", "ОКПО", "СЧЕТ", "КОД_БАНКИ", "КОД_ФИРМЫ", "ГОРОД", "ЛИМИТ", "КОД_vw_ГРУЗОПОЛУЧАТЕЛИ") FROM stdin;
-1	Смарт								\N	\N	\N	0.00	\N
 \.
 
 
 --
--- TOC entry 4217 (class 0 OID 0)
--- Dependencies: 330
+-- TOC entry 4239 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: организации_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11634,8 +11736,8 @@ SELECT pg_catalog.setval('"организации_КОД_seq"', 245, true);
 
 
 --
--- TOC entry 3874 (class 0 OID 504816)
--- Dependencies: 272
+-- TOC entry 3888 (class 0 OID 507507)
+-- Dependencies: 273
 -- Data for Name: ос; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11644,8 +11746,8 @@ COPY "ос" ("КОД", "ИМЯ", "ЕДИЗМ") FROM stdin;
 
 
 --
--- TOC entry 3929 (class 0 OID 504987)
--- Dependencies: 331
+-- TOC entry 3943 (class 0 OID 507676)
+-- Dependencies: 332
 -- Data for Name: персонал; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11654,8 +11756,8 @@ COPY "персонал" ("КОД", "ИМЯ", "ИНН", "ПАСПОРТ_СЕРИ�
 
 
 --
--- TOC entry 4218 (class 0 OID 0)
--- Dependencies: 332
+-- TOC entry 4240 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: персонал_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11663,8 +11765,8 @@ SELECT pg_catalog.setval('"персонал_КОД_seq"', 28, true);
 
 
 --
--- TOC entry 3871 (class 0 OID 504729)
--- Dependencies: 255
+-- TOC entry 3885 (class 0 OID 507420)
+-- Dependencies: 256
 -- Data for Name: посладрес; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11673,8 +11775,8 @@ COPY "посладрес" ("КОД", "КОД_ТОВАР", "КОД_АДРЕС") F
 
 
 --
--- TOC entry 4219 (class 0 OID 0)
--- Dependencies: 333
+-- TOC entry 4241 (class 0 OID 0)
+-- Dependencies: 334
 -- Name: посладрес_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11682,8 +11784,8 @@ SELECT pg_catalog.setval('"посладрес_КОД_seq"', 10789, true);
 
 
 --
--- TOC entry 3867 (class 0 OID 504609)
--- Dependencies: 235
+-- TOC entry 3881 (class 0 OID 507300)
+-- Dependencies: 236
 -- Data for Name: прайс; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11692,17 +11794,17 @@ COPY "прайс" ("КОД", "ИМЯ", "КОД_ФИРМЫ", "КОДВПРАЙС�
 
 
 --
--- TOC entry 4220 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 4242 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: прайс_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"прайс_КОД_seq"', 6175863, true);
+SELECT pg_catalog.setval('"прайс_КОД_seq"', 6176833, true);
 
 
 --
--- TOC entry 3933 (class 0 OID 505009)
--- Dependencies: 336
+-- TOC entry 3947 (class 0 OID 507698)
+-- Dependencies: 337
 -- Data for Name: предметы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11711,8 +11813,8 @@ COPY "предметы" ("КОД", "ИМЯ", "ЕДИЗМ") FROM stdin;
 
 
 --
--- TOC entry 4221 (class 0 OID 0)
--- Dependencies: 337
+-- TOC entry 4243 (class 0 OID 0)
+-- Dependencies: 338
 -- Name: предметы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11720,8 +11822,8 @@ SELECT pg_catalog.setval('"предметы_КОД_seq"', 80, true);
 
 
 --
--- TOC entry 3849 (class 0 OID 504340)
--- Dependencies: 195
+-- TOC entry 3863 (class 0 OID 507031)
+-- Dependencies: 196
 -- Data for Name: проводки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11730,8 +11832,8 @@ COPY "проводки" ("КОД", "ДБСЧЕТ", "ДБКОД", "КРСЧЕТ",
 
 
 --
--- TOC entry 4222 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 4244 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: проводки_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11739,8 +11841,8 @@ SELECT pg_catalog.setval('"проводки_КОД_seq"', 3337190, true);
 
 
 --
--- TOC entry 3852 (class 0 OID 504411)
--- Dependencies: 201
+-- TOC entry 3866 (class 0 OID 507102)
+-- Dependencies: 202
 -- Data for Name: сальдо; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11749,8 +11851,8 @@ COPY "сальдо" ("СЧЕТ", "КОД", "КОЛ", "САЛЬДО", "ДБКОЛ
 
 
 --
--- TOC entry 3936 (class 0 OID 505018)
--- Dependencies: 339
+-- TOC entry 3950 (class 0 OID 507707)
+-- Dependencies: 340
 -- Data for Name: синонимы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11793,8 +11895,8 @@ COPY "синонимы" ("КОД", "ИМЯ", "ИМЯ1", "FTS") FROM stdin;
 
 
 --
--- TOC entry 4223 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 4245 (class 0 OID 0)
+-- Dependencies: 341
 -- Name: синонимы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11802,8 +11904,8 @@ SELECT pg_catalog.setval('"синонимы_КОД_seq"', 89, true);
 
 
 --
--- TOC entry 3938 (class 0 OID 505026)
--- Dependencies: 341
+-- TOC entry 3952 (class 0 OID 507715)
+-- Dependencies: 342
 -- Data for Name: скидки; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11817,8 +11919,8 @@ COPY "скидки" ("КОД", "ИМЯ", "МИНСУММА", "МАКССУММА
 
 
 --
--- TOC entry 4224 (class 0 OID 0)
--- Dependencies: 342
+-- TOC entry 4246 (class 0 OID 0)
+-- Dependencies: 343
 -- Name: скидки_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11826,8 +11928,8 @@ SELECT pg_catalog.setval('"скидки_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3940 (class 0 OID 505032)
--- Dependencies: 343
+-- TOC entry 3954 (class 0 OID 507721)
+-- Dependencies: 344
 -- Data for Name: справочник; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11836,8 +11938,8 @@ COPY "справочник" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4225 (class 0 OID 0)
--- Dependencies: 344
+-- TOC entry 4247 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: справочник_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11845,8 +11947,8 @@ SELECT pg_catalog.setval('"справочник_КОД_seq"', 1, false);
 
 
 --
--- TOC entry 3861 (class 0 OID 504515)
--- Dependencies: 220
+-- TOC entry 3875 (class 0 OID 507206)
+-- Dependencies: 221
 -- Data for Name: справочники; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11872,14 +11974,17 @@ COPY "справочники" ("КОД", "ИМЯ", "КОММЕНТАРИЙ", "Ф
 44	vw_отрицательные_остатки_на_411_счет                                                                	Служебная. Отрицательные остатки на 411 счете.                                                  	                                                  							\N
 33	виды_расходов                                                                                       	Список. Виды расходов.                                                                              	                                                  						Виды расходов	\N
 50	блокпериоды                                                                                         	Служебная. Заблокированные периоды.                                                             	                                                  							\N
-58	бюджет                                                                                              	Список. Налоги, исчисляемые в бюджет	                                                  							\N
-42	наценки                                                                                             	Список. Нормы наценок на товар	                                                  							\N
+34	нумераторы                                                                                          	Служебная. Нумераторы.                                                                          	                                                  							\N
 38	группы                                                                                              	Список. Группы.                                                                                     	                                                  					Группы	Группы	\N
 61	Банковские_счета                                                                                    	Список. Банковские счета                                                                            	                                                  							\N
 43	vw_разница_консальдо_и_цены                                                                         	Служебная. Список позиций в которых цена в справочнике отлич. от цены в сальдо.                 	                                                  							\N
 45	посладрес                                                                                           	Последний (рекомендуемый) адрес хранения                                                            	                                                  							\N
 51	vw_saldo411                                                                                         	Остатки на 411 счете                                                         	                                                  						Остатки товара	\N
 63	ОС                                                                                                  	Список. Основные средства.                                                                      	                                                  							\N
+70	vw_грузополучатели                                                                                  	Список. Грузополучатели                                                                         		\N	\N	\N				\N
+59	фонды                                                                                               	Список. Внебюджетные фонды	                                                  							\N
+58	бюджет                                                                                              	Список. Налоги, исчисляемые в бюджет	                                                  							\N
+42	наценки                                                                                             	Список. Нормы наценок на товар	                                                  							\N
 79	vw_новыецены_на_остатки                                                                             	Запрос на переоценку товара заведомо дешевого по всем прайсам                                       		\N	\N	\N				\N
 15	vw_saldo40                                                                                          	Остатки на 40 счете                                                                                 	                                                  							\N
 17	vw_новыецены1                                                                                       	Запрос на переоценку товара (для автоматических цен) для адреса 0                                   	                                                  							\N
@@ -11897,25 +12002,24 @@ COPY "справочники" ("КОД", "ИМЯ", "КОММЕНТАРИЙ", "Ф
 22	организации                                                                                         	Список. Организации.                                                                                	                                                  					Организации	Организации	\N
 94	карточки	Список. Магнитные карты		\N	\N	\N				\N
 88	saldo411	saldo411		\N	\N	\N				\N
+57	vw_прайс                                                                                            	Список. Все прайсы с ценами для поставки по заказу	priceform                                         				~/photo	Прайс	Прайс	\N
 81	доступ_к_топер	доступ_к_топер		\N	\N	\N				\N
 23	счета                                                                                               	    Бухгалтерские счета, используемые программой                                                    	                                                  		                                                                                                                                                                                                                                                              					\N
 90	файлы	Служебная. Файлы		\N	\N	\N			Файлы	\N
 93	saldo402	saldo402		\N	\N	\N				\N
 96	vw_saldo402	Остатки на 402 счете		\N	\N	\N			Неразобранный товар	\N
+10	адрес                                                                                               	Список. Адреса хранения товара в магазине                                             	                                                  					Адрес	Адрес	\N
+70	столбцы	Список. Грузополучатели                                                                         		\N	\N	\N				\N
 60	прайс                                                                                               	Список. Прайсы	priceform1                                        					Прайсы	Прайсы	\N
 8	заявка                                                                                              	Список. Заявка	Zakaz                                             		oApp.Dictionaries.Заявка.SetValue("МОДИФИЦИРОВАНО", .T.)\r\n\r\n		товар	Заказ	Заказ	\N
-10	адрес                                                                                               	Список. Адреса хранения товара в магазине                                             	                                                  					Адрес	Адрес	\N
 3	товар                                                                                               	Список. Товар.                                                                                      	tovarform                                         		=Zakaz()                                                                                                                                                                                                                                                      		товар	Товар	Товар	\N
 97	скидки	Список. Скидки		\N	\N	\N		Справочник. Скидки	Скидки	\N
-34	нумераторы                                                                                          	Служебная. Нумераторы.                                                                          	                                                  							\N
-59	фонды                                                                                               	Список. Внебюджетные фонды	                                                  							\N
-57	vw_прайс                                                                                            	Список. Все прайсы с ценами для поставки по заказу	priceform                                         				~/photo	Прайс	Прайс	\N
 \.
 
 
 --
--- TOC entry 4226 (class 0 OID 0)
--- Dependencies: 345
+-- TOC entry 4248 (class 0 OID 0)
+-- Dependencies: 346
 -- Name: справочники_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -11923,8 +12027,8 @@ SELECT pg_catalog.setval('"справочники_КОД_seq"', 94, true);
 
 
 --
--- TOC entry 3873 (class 0 OID 504773)
--- Dependencies: 263
+-- TOC entry 3887 (class 0 OID 507464)
+-- Dependencies: 264
 -- Data for Name: столбцы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -11957,6 +12061,22 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 26696	1000015	ДАТА	Дата	1	t	1000015
 96607	2000005	P1__СУММА	Сумма	9	f	2000005
 96608	2000005	P1__СТР	P1__СТР	0	t	2000005
+124406	2000093	P1__КОД	P1__КОД	0	t	2000093
+124407	2000093	P1__ДБСЧЕТ	P1__ДБСЧЕТ	0	t	2000093
+124408	2000093	P1__ДБКОД	P1__ДБКОД	0	f	2000093
+124409	2000093	P1__КРСЧЕТ	P1__КРСЧЕТ	0	t	2000093
+124410	2000093	P1__КРКОД	P1__КРКОД	0	f	2000093
+124411	2000093	P1__КОЛ	Кол-во	5	f	2000093
+124412	2000093	P1__ЦЕНА	Цена	6	f	2000093
+124413	2000093	P1__СУММА	Сумма	7	f	2000093
+124414	2000093	P1__СТР	P1__СТР	0	t	2000093
+124415	2000093	P1__ДОККОД	P1__ДОККОД	0	t	2000093
+124416	2000093	P1__ОПЕР	P1__ОПЕР	0	t	2000093
+124417	2000093	P1__НОМЕРОПЕР	P1__НОМЕРОПЕР	0	t	2000093
+124418	2000093	НАБОР1__КОД	НАБОР1__КОД	0	t	2000093
+124419	2000093	ТОВАР__КОД	ТОВАР__КОД	0	t	2000093
+124420	2000093	ТОВАР__ИМЯ	Наименование	1	t	2000093
+124421	2000093	ТОВАР__ЕДИЗМ	Ед.Изм.	2	t	2000093
 45751	51	ИМЯ	Наименование	1	t	3
 45752	51	ЕДИЗМ	Ед.Изм.	2	t	3
 45753	51	ШИФР_ПО_КАТАЛОГУ	Артикул ОЕМ	3	t	3
@@ -12119,7 +12239,6 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 93049	1000120	ДЕНЬ_РОЖДЕНИЯ	ПЕРСОНАЛ__ДЕНЬ_РОЖДЕНИЯ	0	t	1000120
 93050	1000120	РАБОТАЕТ	ПЕРСОНАЛ__РАБОТАЕТ	0	t	1000120
 93051	1000120	МЕДСТРАХ	ПЕРСОНАЛ__МЕДСТРАХ	0	t	1000120
-11637	2000081	VW_БЮДЖЕТ__ОКОНХ	VW_БЮДЖЕТ__ОКОНХ	0	t	2000081
 93052	1000120	КОД_ПР_ПОЛЬЗОВАТЕЛИ	ПЕРСОНАЛ__КОД_ПР_ПОЛЬЗОВАТЕЛИ	0	t	1000120
 96614	2000005	СТР	СТР	0	t	2000005
 96615	2000005	КОД_ПРАЙС	КОД_ПРАЙС	0	f	2000005
@@ -12207,7 +12326,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 11634	2000081	VW_БЮДЖЕТ__ТЕЛЕФОН	VW_БЮДЖЕТ__ТЕЛЕФОН	0	t	2000081
 11635	2000081	VW_БЮДЖЕТ__ИНН	VW_БЮДЖЕТ__ИНН	0	t	2000081
 11636	2000081	VW_БЮДЖЕТ__КПП	VW_БЮДЖЕТ__КПП	0	t	2000081
-39596	1000047	ОПЕР	ОПЕР	0	t	1000047
+11637	2000081	VW_БЮДЖЕТ__ОКОНХ	VW_БЮДЖЕТ__ОКОНХ	0	t	2000081
 11638	2000081	VW_БЮДЖЕТ__ОКПО	VW_БЮДЖЕТ__ОКПО	0	t	2000081
 11639	2000081	VW_БЮДЖЕТ__СЧЕТ	VW_БЮДЖЕТ__СЧЕТ	0	t	2000081
 11640	2000081	VW_БЮДЖЕТ__КОД_БАНКИ	VW_БЮДЖЕТ__КОД_БАНКИ	0	t	2000081
@@ -12399,6 +12518,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 39593	1000047	КОММЕНТАРИЙ	Комментарий	2	f	1000047
 39594	1000047	СУММА	Сумма	3	t	1000047
 39595	1000047	ОПИСАНИЕ	ОПИСАНИЕ	0	t	1000047
+39596	1000047	ОПЕР	ОПЕР	0	t	1000047
 39597	1000047	АВТО	АВТО	0	t	1000047
 39598	1000047	ПЕРЕМЕННЫЕ1	ПЕРЕМЕННЫЕ1	0	t	1000047
 39599	1000047	ПЕРЕМЕННЫЕ	ПЕРЕМЕННЫЕ	0	t	1000047
@@ -13247,7 +13367,6 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 92047	1000125	РАБОТАЕТ	ПЕРСОНАЛ__РАБОТАЕТ	0	t	1000125
 92048	1000125	МЕДСТРАХ	ПЕРСОНАЛ__МЕДСТРАХ	0	t	1000125
 92049	1000125	КОД_ПР_ПОЛЬЗОВАТЕЛИ	ПЕРСОНАЛ__КОД_ПР_ПОЛЬЗОВАТЕЛИ	0	t	1000125
-124104	2000001	P2__КОД	P2__КОД	0	t	2000001
 92050	1000125	КОРИМЯ	ПЕРСОНАЛ__КОРИМЯ	0	t	1000125
 98422	2000049	КОД	КОД	0	t	2000049
 98423	2000049	P1__КОД	P1__КОД	0	t	2000049
@@ -13433,7 +13552,6 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 98454	1000049	АДРЕС	ПЕРСОНАЛ__АДРЕС	0	t	1000049
 98455	1000049	ДЕНЬ_РОЖДЕНИЯ	ПЕРСОНАЛ__ДЕНЬ_РОЖДЕНИЯ	0	t	1000049
 98456	1000049	РАБОТАЕТ	ПЕРСОНАЛ__РАБОТАЕТ	0	t	1000049
-121351	1000131	НОМЕР	Номер	2	t	1000131
 98457	1000049	МЕДСТРАХ	ПЕРСОНАЛ__МЕДСТРАХ	0	t	1000049
 98458	1000049	КОД_ПР_ПОЛЬЗОВАТЕЛИ	ПЕРСОНАЛ__КОД_ПР_ПОЛЬЗОВАТЕЛИ	0	t	1000049
 98459	1000049	КОРИМЯ	ПЕРСОНАЛ__КОРИМЯ	0	t	1000049
@@ -13765,6 +13883,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 105979	2000023	ДБНАБОР1__НАБОР1__КОД	ДБНАБОР1__НАБОР1__КОД	0	t	2000023
 105980	2000023	ДБНАБОР1__ТОВАР__КОД	ДБНАБОР1__ТОВАР__КОД	0	t	2000023
 105981	2000023	ДБНАБОР1__ТОВАР__ИМЯ	ДБНАБОР1__ТОВАР__ИМЯ	0	t	2000023
+94292	1000128	ИНН	ПЕРСОНАЛ__ИНН	0	t	1000128
 105982	2000023	ДБНАБОР1__ТОВАР__ЕДИЗМ	ДБНАБОР1__ТОВАР__ЕДИЗМ	0	t	2000023
 105983	2000023	ДБНАБОР1__ТОВАР__ШИФР_ПО_КАТАЛОГУ	ДБНАБОР1__ТОВАР__ШИФР_ПО_КАТАЛОГУ	0	t	2000023
 105984	2000023	ДБНАБОР1__ТОВАР__ЦЕНА	ДБНАБОР1__ТОВАР__ЦЕНА	0	t	2000023
@@ -13841,6 +13960,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 105998	2000023	ДБНАБОР1__ТОВАР__FTS	ДБНАБОР1__ТОВАР__FTS	0	t	2000023
 105999	2000023	ДБНАБОР1__ТОВАР__АРТИКУЛ	ДБНАБОР1__ТОВАР__АРТИКУЛ	0	t	2000023
 106000	2000023	ДБНАБОР1__ТОВАР__ШТРИХКОД	ДБНАБОР1__ТОВАР__ШТРИХКОД	0	t	2000023
+124136	2000001	P4__СТР	P4__СТР	0	t	2000001
 106001	2000023	ДБНАБОР1__АДРЕС__КОД	ДБНАБОР1__АДРЕС__КОД	0	t	2000023
 106002	2000023	ДБНАБОР1__АДРЕС__ИМЯ	Дб.Адрес	5	t	2000023
 123944	1000123	АДРЕС	ПЕРСОНАЛ__АДРЕС	0	t	1000123
@@ -13883,6 +14003,8 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 84664	30	ТЕЛЕФОН	Телефон	5	t	30
 84665	30	ФОТО_КАТАЛОГ	Каталог фото	6	t	30
 84666	30	ПРАЙС_АКТУАЛЕН	Прайс актуален	7	t	30
+124422	2000093	ТОВАР__ШИФР_ПО_КАТАЛОГУ	ТОВАР__ШИФР_ПО_КАТАЛОГУ	0	t	2000093
+124423	2000093	ТОВАР__ЦЕНА	Розн.Цена	3	t	2000093
 84667	30	ПРОЦЕНТ	Процент	8	f	30
 106011	2000023	КРНАБОР1__ТОВАР__КОД_ГРУППЫ	КРНАБОР1__ТОВАР__КОД_ГРУППЫ	0	t	2000023
 106012	2000023	КРНАБОР1__ТОВАР__ЗАПАС	КРНАБОР1__ТОВАР__ЗАПАС	0	t	2000023
@@ -14009,7 +14131,6 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 94289	1000128	КОД_ПЕРСОНАЛ	КОД_ПЕРСОНАЛ	0	t	1000128
 94290	1000128	КОД	ПЕРСОНАЛ__КОД	0	t	1000128
 94291	1000128	ИМЯ	ПЕРСОНАЛ__ИМЯ	0	t	1000128
-94292	1000128	ИНН	ПЕРСОНАЛ__ИНН	0	t	1000128
 94293	1000128	ПАСПОРТ_СЕРИЯ	ПЕРСОНАЛ__ПАСПОРТ_СЕРИЯ	0	t	1000128
 94294	1000128	ПАСПОРТ_НОМЕР	ПЕРСОНАЛ__ПАСПОРТ_НОМЕР	0	t	1000128
 94295	1000128	ПАСПОРТ_ВЫДАН	ПЕРСОНАЛ__ПАСПОРТ_ВЫДАН	0	t	1000128
@@ -14578,6 +14699,22 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 109268	1000071	КОРИМЯ	ПЕРСОНАЛ__КОРИМЯ	0	t	1000071
 109269	1000071	КОД	КОД	0	t	1000071
 109270	1000071	ЧЕКОТБИТ	Чек отбит	4	t	1000071
+124424	2000093	ТОВАР__ЦЕНА1	ТОВАР__ЦЕНА1	0	t	2000093
+124425	2000093	ТОВАР__АВТОМАТ_ЦЕНА	ТОВАР__АВТОМАТ_ЦЕНА	0	t	2000093
+124426	2000093	ТОВАР__КОД_ГРУППЫ	ТОВАР__КОД_ГРУППЫ	0	t	2000093
+124427	2000093	ТОВАР__ЗАПАС	ТОВАР__ЗАПАС	0	t	2000093
+124428	2000093	ТОВАР__АВТЗАПАС	ТОВАР__АВТЗАПАС	0	t	2000093
+124429	2000093	ТОВАР__ABC_ВСЕ	ТОВАР__ABC_ВСЕ	0	t	2000093
+124430	2000093	ТОВАР__ABC_ПО_ГРУППЕ	ТОВАР__ABC_ПО_ГРУППЕ	0	t	2000093
+124431	2000093	ТОВАР__РЕНТАБЕЛЬНОСТЬ	ТОВАР__РЕНТАБЕЛЬНОСТЬ	0	t	2000093
+124432	2000093	ТОВАР__СКИДКА	ТОВАР__СКИДКА	0	t	2000093
+124433	2000093	ТОВАР__ИМЯ_НА_ЦЕННИКЕ	ТОВАР__ИМЯ_НА_ЦЕННИКЕ	0	t	2000093
+124434	2000093	ТОВАР__ТИП_ЦЕННИКА	ТОВАР__ТИП_ЦЕННИКА	0	t	2000093
+124435	2000093	ТОВАР__ОПИСАНИЕ	ТОВАР__ОПИСАНИЕ	0	t	2000093
+124436	2000093	ТОВАР__КОЛ_НА_АВТОМОБИЛЕ	ТОВАР__КОЛ_НА_АВТОМОБИЛЕ	0	t	2000093
+124437	2000093	ТОВАР__FTS	ТОВАР__FTS	0	t	2000093
+124438	2000093	ТОВАР__АРТИКУЛ	ТОВАР__АРТИКУЛ	0	t	2000093
+124439	2000093	ТОВАР__ШТРИХКОД	ТОВАР__ШТРИХКОД	0	t	2000093
 120009	8	КОД	Код	1	t	3
 120010	8	ИМЯ	Наименование	3	t	3
 120011	8	ЕДИЗМ	Ед.Изм.	5	t	3
@@ -14598,6 +14735,8 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 120026	8	НАЛИЧИЕ	Наличие	14	t	8
 120027	8	ЦЕНА_ОБРАБОТАННАЯ	Цена заказа	16	t	8
 120028	8	ПОСТОЯННО	Постоянно	17	f	8
+124440	2000093	ТОВАР__ЦЕНАФИКСИРОВАНА	ТОВАР__ЦЕНАФИКСИРОВАНА	0	t	2000093
+124441	2000093	АДРЕС__КОД	АДРЕС__КОД	0	t	2000093
 109393	2000036	P1__КОД	P1__КОД	0	t	2000036
 109394	2000036	P1__ДБСЧЕТ	P1__ДБСЧЕТ	0	t	2000036
 109395	2000036	P1__ДБКОД	P1__ДБКОД	0	f	2000036
@@ -14628,6 +14767,29 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 109420	1000036	ПАСПОРТ_СЕРИЯ	ПЕРСОНАЛ__ПАСПОРТ_СЕРИЯ	0	t	1000036
 109421	1000036	ПАСПОРТ_НОМЕР	ПЕРСОНАЛ__ПАСПОРТ_НОМЕР	0	t	1000036
 110729	96	КОД	Код	5	t	3
+124442	2000093	АДРЕС__ИМЯ	Адрес	4	t	2000093
+124443	1000093	КОД	КОД	0	t	1000093
+124444	1000093	ДАТА	Дата	1	t	1000093
+124445	1000093	ДАТАВРЕМЯ	ДАТАВРЕМЯ	0	t	1000093
+124446	1000093	НОМЕР	Номер	2	t	1000093
+124447	1000093	КОММЕНТАРИЙ	Комментарий	3	f	1000093
+124448	1000093	СУММА	Сумма	4	t	1000093
+124449	1000093	ОПИСАНИЕ	ОПИСАНИЕ	0	t	1000093
+124450	1000093	ОПЕР	ОПЕР	0	t	1000093
+124451	1000093	АВТО	АВТО	0	t	1000093
+124452	1000093	ПЕРЕМЕННЫЕ1	ПЕРЕМЕННЫЕ1	0	t	1000093
+124453	1000093	ПЕРЕМЕННЫЕ	ПЕРЕМЕННЫЕ	0	t	1000093
+124454	1000093	КОД_ПЕРСОНАЛ	КОД_ПЕРСОНАЛ	0	t	1000093
+124455	1000093	КОД	ПЕРСОНАЛ__КОД	0	t	1000093
+124456	1000093	ИМЯ	ПЕРСОНАЛ__ИМЯ	0	t	1000093
+124457	1000093	ИНН	ПЕРСОНАЛ__ИНН	0	t	1000093
+124458	1000093	ПАСПОРТ_СЕРИЯ	ПЕРСОНАЛ__ПАСПОРТ_СЕРИЯ	0	t	1000093
+124459	1000093	ПАСПОРТ_НОМЕР	ПЕРСОНАЛ__ПАСПОРТ_НОМЕР	0	t	1000093
+124460	1000093	ПАСПОРТ_ВЫДАН	ПЕРСОНАЛ__ПАСПОРТ_ВЫДАН	0	t	1000093
+124461	1000093	ПАСПОРТ_ДАТА	ПЕРСОНАЛ__ПАСПОРТ_ДАТА	0	t	1000093
+124462	1000093	АДРЕС	ПЕРСОНАЛ__АДРЕС	0	t	1000093
+124463	1000093	ДЕНЬ_РОЖДЕНИЯ	ПЕРСОНАЛ__ДЕНЬ_РОЖДЕНИЯ	0	t	1000093
+124464	1000093	РАБОТАЕТ	ПЕРСОНАЛ__РАБОТАЕТ	0	t	1000093
 109422	1000036	ПАСПОРТ_ВЫДАН	ПЕРСОНАЛ__ПАСПОРТ_ВЫДАН	0	t	1000036
 109423	1000036	ПАСПОРТ_ДАТА	ПЕРСОНАЛ__ПАСПОРТ_ДАТА	0	t	1000036
 109424	1000036	АДРЕС	ПЕРСОНАЛ__АДРЕС	0	t	1000036
@@ -14657,6 +14819,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 124101	2000001	P1__ДОККОД	P1__ДОККОД	0	t	2000001
 124102	2000001	P1__ОПЕР	P1__ОПЕР	0	t	2000001
 124103	2000001	P1__НОМЕРОПЕР	P1__НОМЕРОПЕР	0	t	2000001
+124104	2000001	P2__КОД	P2__КОД	0	t	2000001
 124105	2000001	P2__ДБСЧЕТ	P2__ДБСЧЕТ	0	t	2000001
 124106	2000001	P2__ДБКОД	P2__ДБКОД	0	f	2000001
 124107	2000001	P2__КРСЧЕТ	P2__КРСЧЕТ	0	t	2000001
@@ -14688,7 +14851,6 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 124133	2000001	P4__КОЛ	P4__КОЛ	0	f	2000001
 124134	2000001	P4__ЦЕНА	P4__ЦЕНА	0	f	2000001
 124135	2000001	P4__СУММА	P4__СУММА	0	f	2000001
-124136	2000001	P4__СТР	P4__СТР	0	t	2000001
 124137	2000001	P4__ДОККОД	P4__ДОККОД	0	t	2000001
 124138	2000001	P4__ОПЕР	P4__ОПЕР	0	t	2000001
 124139	2000001	P4__НОМЕРОПЕР	P4__НОМЕРОПЕР	0	t	2000001
@@ -14776,6 +14938,9 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 124212	1000001	ФОТОКЛИЕНТА	ФОТОКЛИЕНТА	0	f	1000001
 124213	1000001	ЧЕКОТБИТ	Чек отбит	5	t	1000001
 124214	1000001	НОМЕРЧЕКА	Номер чека	6	t	1000001
+124465	1000093	МЕДСТРАХ	ПЕРСОНАЛ__МЕДСТРАХ	0	t	1000093
+124466	1000093	КОД_ПР_ПОЛЬЗОВАТЕЛИ	ПЕРСОНАЛ__КОД_ПР_ПОЛЬЗОВАТЕЛИ	0	t	1000093
+124467	1000093	КОРИМЯ	ПЕРСОНАЛ__КОРИМЯ	0	t	1000093
 124215	90	КОД	Код	1	t	90
 124216	90	ИМЯ	Наименование	2	f	90
 124217	90	ТИП	Тип	3	f	90
@@ -14835,6 +15000,7 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 121348	1000131	КОД	КОД	0	t	1000131
 121349	1000131	ДАТА	Дата	1	t	1000131
 121350	1000131	ДАТАВРЕМЯ	ДАТАВРЕМЯ	0	t	1000131
+121351	1000131	НОМЕР	Номер	2	t	1000131
 121352	1000131	КОММЕНТАРИЙ	Комментарий	3	f	1000131
 121353	1000131	СУММА	Сумма	4	t	1000131
 122120	97	КОД	Код	1	t	97
@@ -14842,36 +15008,30 @@ COPY "столбцы" ("КОД", "КОД_VW_СПРАВОЧНИКИ_СО_СТОЛ
 122122	97	МИНСУММА	Мин.Сумма	3	f	97
 122123	97	МАКССУММА	Макс.Сумма	4	f	97
 122124	97	ПРОЦЕНТ	Процент	5	f	97
-124220	34	ИМЯ	Наименование	1	f	34
-124221	34	ЗНАЧЕНИЕ	Значение	2	f	34
 \.
 
 
 --
--- TOC entry 4227 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 4249 (class 0 OID 0)
+-- Dependencies: 347
 -- Name: столбцы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"столбцы_КОД_seq"', 128957, true);
+SELECT pg_catalog.setval('"столбцы_КОД_seq"', 129203, true);
 
 
 --
--- TOC entry 3857 (class 0 OID 504460)
--- Dependencies: 211
+-- TOC entry 3871 (class 0 OID 507151)
+-- Dependencies: 212
 -- Data for Name: счета; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
 COPY "счета" ("КОД", "ИМЯ", "СЧЕТ", "ИМЯСПРАВОЧНИКА", "АНАЛИТИКА", "КОЛИЧЕСТВО", "БАЛАНС") FROM stdin;
 2	Расчеты по заработной плате                                 	70   	Персонал                                          	t	f	t
-3	Прибыль от реализации (магазин на ул.Гоголя)                	46   	                                                  	f	f	t
 4	Расчеты с организациями                                     	60   	Организации                                       	t	f	t
 6	Касса                                                       	50   	                                                  	f	f	t
-7	Товар, привезенный по заказу в магазин                      	412  	Набор5                                            	t	t	t
 8	Расчеты с физическими лицами                                	762  	Люди                                              	t	f	t
-9	Результат от реализации (магазин на ул.Гоголя)              	49   	                                                  	f	f	t
 10	Товар вне реализации                                        	40   	Товар                                             	t	t	t
-14	Наценка на заказные товары                                  	422  	Набор5                                            	t	f	t
 15	Накладные расходы                                           	44   	Виды_расходов                                     	f	f	t
 16	Деньги на подотчете                                         	711  	Персонал                                          	f	f	t
 18	Малоценные и быстроизнашивающиеся предметы (МБП)            	12   	Набор4                                            	t	t	t
@@ -14880,7 +15040,6 @@ COPY "счета" ("КОД", "ИМЯ", "СЧЕТ", "ИМЯСПРАВОЧНИКА
 22	Скидки на поступивший товар                                 	47   	                                                  	f	f	t
 23	Товар вне реализации по продажным ценам                     	41   	Товар                                             	t	t	t
 24	Наценка на товаре вне реализации                            	42   	Товар                                             	t	f	t
-289	 Забалансовый счет. Заказы на поставку с ПигМы              	001  	набор5                                            	t	t	f
 293	Капитальные вложения                                        	08   	Объекты                                           	t	f	t
 294	Материалы                                                   	10   	Материалы                                         	t	t	t
 295	Прибыль по итогам работы за год                             	80   	                                                  	f	f	t
@@ -14889,25 +15048,24 @@ COPY "счета" ("КОД", "ИМЯ", "СЧЕТ", "ИМЯСПРАВОЧНИКА
 300	Расчеты с внебюджетными фондами                             	69   	Фонды                                             	t	f	t
 301	Банковский терминал                                         	513  	                                                  	f	f	t
 302	 Забалансовый счет. Заявки1.                                	003  	заявка                                            	t	t	f
-304	Наценка на товары (магазин на ул.Советская)                 	423  	набор6                                            	t	f	t
-306	Результат от реализации (магазин на ул.Советская)           	491  	                                                  	f	f	t
-307	Прибыль от реализации (магазин на ул.Советская)             	461  	                                                  	f	f	t
 12	Расчеты с клиентами, заказавшими товар                                                              	761  	Заказчики                                         	t	f	t
 303	 Забалансовый счет. Заявки1. Люди                                                                   	004  	люди                                              	t	f	f
 17	Товар на подотчете                                                                                  	712  	Набор3                                            	t	t	t
 21	Банковские счета                                                                                    	512  	Банковские_счета                                  	t	f	t
 288	Уставной капитал                                                                                    	85   	                                                  	f	f	t
-13	Наценка на товары (магазин на ул.Гоголя)                    	421  	Набор1                                            	t	f	t
 309	Товар вне реализации к приходованию	402  	набор402	t	t	t
 310	  Забалансовый счет. Заявки.	005  	vw_прайс2	t	t	f
 308	Товар вне реализации к списанию	401  	набор401	t	t	t
-1	Товар на реализации в магазине      	411  	Набор1                                            	t	t	t
+1	Товар на реализации в магазине                	411  	Набор1                                            	t	t	t
+13	Наценка на товары	421  	Набор1                                            	t	f	t
+3	Прибыль от реализации	46   	                                                  	f	f	t
+9	Результат от реализации	49   	                                                  	f	f	t
 \.
 
 
 --
--- TOC entry 4228 (class 0 OID 0)
--- Dependencies: 347
+-- TOC entry 4250 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: счета_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -14915,8 +15073,8 @@ SELECT pg_catalog.setval('"счета_КОД_seq"', 307, true);
 
 
 --
--- TOC entry 3945 (class 0 OID 505044)
--- Dependencies: 348
+-- TOC entry 3959 (class 0 OID 507733)
+-- Dependencies: 349
 -- Data for Name: типыобъектов; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -14930,8 +15088,8 @@ COPY "типыобъектов" ("КОД", "ИМЯ") FROM stdin;
 
 
 --
--- TOC entry 4229 (class 0 OID 0)
--- Dependencies: 349
+-- TOC entry 4251 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: типыобъектов_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -14939,8 +15097,8 @@ SELECT pg_catalog.setval('"типыобъектов_КОД_seq"', 5, true);
 
 
 --
--- TOC entry 3850 (class 0 OID 504346)
--- Dependencies: 196
+-- TOC entry 3864 (class 0 OID 507037)
+-- Dependencies: 197
 -- Data for Name: товар; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -14949,8 +15107,8 @@ COPY "товар" ("КОД", "ИМЯ", "ЕДИЗМ", "ШИФР_ПО_КАТАЛО
 
 
 --
--- TOC entry 4230 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 4252 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: товар_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -14958,8 +15116,8 @@ SELECT pg_catalog.setval('"товар_КОД_seq"', 13723, true);
 
 
 --
--- TOC entry 3851 (class 0 OID 504370)
--- Dependencies: 197
+-- TOC entry 3865 (class 0 OID 507061)
+-- Dependencies: 198
 -- Data for Name: топер; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -15080,7 +15238,6 @@ COPY "топер" ("КОД", "ОПЕР", "НОМЕР", "ДБСЧЕТ", "КРСЧ
 159	118	1	08   	711  	Подотчет. Деньги. Расходы на объекты капитальных вложений                                           	+	t	                    		t	f	t	t	f	f	f	f	f	f	f	f		f	t	\N	\N	\N
 96	69	1	08   	60   	Организации. Капитальные вложения. Выставлен счет за услуги.                                        	+	t	                    	                                        	t	f	t	t	\N	\N	\N	\N	f	f	t	t	                                                  	f	t	\N	\N	\N
 148	110	1	423  	40   	Товар вне продажи. Передача в продажу в магазин на ул.Советская                                     	 	f	Накладная           	Накладная                               	f	t	f	f	f	f	f	f	f	t	f	t	                                                  	f	t	\N	\N	\N
-77	93	1	411  	85   	 Ввод остатков по товару                                                                            	+	t	                    	                                        	f	f	f	f	\N	\N	\N	\N	f	f	t	t	                                                  	f	t	\N	\N	\N
 145	109	1	491  	413  	Товар. Реализация за наличный расчет (магазин на ул.Советская)                                      	+	f	Товарный чек        	Товарный чек1                           	f	t	f	f	f	f	f	f	f	t	f	t	Oper1Form                                         	f	t	\N	\N	\N
 115	81	1	70	68	Зарплата. Удержание подоходного налога.	+	t	                    		f	f	f	f	f	f	f	f	f	f	t	t	                                                  	f	t	\N	f	\N
 150	111	1	50   	491  	Выручка. Сдача денег в кассу (магазин на ул.Советская)                                              	+	f	                    	Расходный кассовый ордер                	t	f	f	f	f	f	f	f	f	f	f	t	                                                  	f	t	\N	\N	\N
@@ -15090,6 +15247,7 @@ COPY "топер" ("КОД", "ОПЕР", "НОМЕР", "ДБСЧЕТ", "КРСЧ
 76	55	1	512	60	Расчетный счет. Поступление от организации.	+	t	                    		t	f	t	t	\N	\N	\N	\N	f	f	f	t	                                                  	f	t	\N	f	\N
 57	41	1	50	49	Выручка. Сдача денег в кассу	+	t	                    	Расходный кассовый ордер	t	f	f	f	\N	\N	\N	\N	f	t	f	t	                                                  	f	t	\N	f	\N
 10	9	1	421	40	Товар вне продажи. Передача в продажу в магазин		t	Накладная           	Накладная	f	t	f	f	f	f	t	t	f	t	f	t	                                                  	f	t	\N	f	\N
+77	93	1	411	85	Ввод остатков по товару	+	t	                    		f	f	f	f	\N	\N	\N	\N	f	f	t	f	                                                  	f	t	\N	f	\N
 87	61	1	50	60	Касса. Получено от организации наличными.	+	t	                    	Приходный кассовый ордер	t	f	f	t	\N	\N	\N	\N	f	f	f	t	                                                  	f	t	\N	f	\N
 33	23	1	411	411	Товар. Внутреннее перемещение.	+	t	                    		f	f	f	f	\N	\N	\N	\N	t	t	t	t	                                                  	f	t	\N	f	\N
 16	11	1	60	411	Товар. Реализация организации.	+	t	Счет-фактура        	Счет-фактура	f	f	t	f	\N	\N	\N	\N	t	t	t	t	                                                  	f	t	\N	f	\N
@@ -15134,8 +15292,8 @@ COPY "топер" ("КОД", "ОПЕР", "НОМЕР", "ДБСЧЕТ", "КРСЧ
 
 
 --
--- TOC entry 4231 (class 0 OID 0)
--- Dependencies: 351
+-- TOC entry 4253 (class 0 OID 0)
+-- Dependencies: 352
 -- Name: топер_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -15143,8 +15301,8 @@ SELECT pg_catalog.setval('"топер_КОД_seq"', 167, true);
 
 
 --
--- TOC entry 3949 (class 0 OID 505054)
--- Dependencies: 352
+-- TOC entry 3963 (class 0 OID 507743)
+-- Dependencies: 353
 -- Data for Name: файлы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -15202,10 +15360,10 @@ COPY "файлы" ("КОД", "ИМЯ", "ТИП", "ЗНАЧЕНИЕ", "КОНТР
 1050	смена.ui	3	\\x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0a3c75692076657273696f6e3d22342e30223e0a203c636c6173733e6469616c6f673c2f636c6173733e0a203c77696467657420636c6173733d224469616c6f6722206e616d653d226469616c6f67223e0a20203c70726f7065727479206e616d653d2277696e646f774d6f64616c697479223e0a2020203c656e756d3e51743a3a4170706c69636174696f6e4d6f64616c3c2f656e756d3e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2267656f6d65747279223e0a2020203c726563743e0a202020203c783e303c2f783e0a202020203c793e303c2f793e0a202020203c77696474683e3330313c2f77696474683e0a202020203c6865696768743e3134363c2f6865696768743e0a2020203c2f726563743e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2277696e646f775469746c65223e0a2020203c737472696e673ed0a1d0bcd0b5d0bdd0b03c2f737472696e673e0a20203c2f70726f70657274793e0a20203c77696467657420636c6173733d225157696467657422206e616d653d22677269644c61796f7574576964676574223e0a2020203c70726f7065727479206e616d653d2267656f6d65747279223e0a202020203c726563743e0a20202020203c783e37303c2f783e0a20202020203c793e34303c2f793e0a20202020203c77696474683e3231313c2f77696474683e0a20202020203c6865696768743e39313c2f6865696768743e0a202020203c2f726563743e0a2020203c2f70726f70657274793e0a2020203c6c61796f757420636c6173733d2251477269644c61796f757422206e616d653d22677269644c61796f7574223e0a202020203c6974656d20726f773d22312220636f6c756d6e3d2231223e0a20202020203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d22766572746963616c4c61796f75745f32223e0a2020202020203c6974656d3e0a202020202020203c737061636572206e616d653d22766572746963616c537061636572223e0a20202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a2020202020202020203c656e756d3e51743a3a566572746963616c3c2f656e756d3e0a20202020202020203c2f70726f70657274793e0a20202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a2020202020202020203c73697a653e0a202020202020202020203c77696474683e32303c2f77696474683e0a202020202020202020203c6865696768743e34303c2f6865696768743e0a2020202020202020203c2f73697a653e0a20202020202020203c2f70726f70657274793e0a202020202020203c2f7370616365723e0a2020202020203c2f6974656d3e0a2020202020203c6974656d3e0a202020202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22686f72697a6f6e74616c4c61796f7574223e0a20202020202020203c6974656d3e0a2020202020202020203c737061636572206e616d653d22686f72697a6f6e74616c537061636572223e0a202020202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a20202020202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a20202020202020202020203c73697a653e0a2020202020202020202020203c77696474683e34303c2f77696474683e0a2020202020202020202020203c6865696768743e32303c2f6865696768743e0a20202020202020202020203c2f73697a653e0a202020202020202020203c2f70726f70657274793e0a2020202020202020203c2f7370616365723e0a20202020202020203c2f6974656d3e0a20202020202020203c6974656d3e0a2020202020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e4f6b223e0a202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a20202020202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a2020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a2020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a20202020202020202020203c2f73697a65706f6c6963793e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d22666f637573506f6c696379223e0a20202020202020202020203c656e756d3e51743a3a4e6f466f6375733c2f656e756d3e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020202020203c737472696e672f3e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020202020203c69636f6e7365743e0a2020202020202020202020203c6e6f726d616c6f66663e2e2e2f2e2e2f7265736f75726365732f6f6b2e706e673c2f6e6f726d616c6f66663e2e2e2f2e2e2f7265736f75726365732f6f6b2e706e673c2f69636f6e7365743e0a202020202020202020203c2f70726f70657274793e0a2020202020202020203c2f7769646765743e0a20202020202020203c2f6974656d3e0a202020202020203c2f6c61796f75743e0a2020202020203c2f6974656d3e0a20202020203c2f6c61796f75743e0a202020203c2f6974656d3e0a202020203c6974656d20726f773d22302220636f6c756d6e3d2230223e0a20202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c223e0a2020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a20202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a20202020202020203c766572737472657463683e303c2f766572737472657463683e0a202020202020203c2f73697a65706f6c6963793e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d22666f6e74223e0a202020202020203c666f6e743e0a20202020202020203c706f696e7473697a653e31303c2f706f696e7473697a653e0a202020202020203c2f666f6e743e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d2274657874223e0a202020202020203c737472696e673ed0a1d0bcd0b5d0bdd0b020d0a4d0a03a3c2f737472696e673e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d22616c69676e6d656e74223e0a202020202020203c7365743e51743a3a416c69676e52696768747c51743a3a416c69676e547261696c696e677c51743a3a416c69676e5643656e7465723c2f7365743e0a2020202020203c2f70726f70657274793e0a20202020203c2f7769646765743e0a202020203c2f6974656d3e0a202020203c6974656d20726f773d22302220636f6c756d6e3d2231223e0a20202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e6545646974536d656e61223e0a2020202020203c70726f7065727479206e616d653d22696e7075744d61736b223e0a202020202020203c737472696e673e30303030303b203c2f737472696e673e0a2020202020203c2f70726f70657274793e0a20202020203c2f7769646765743e0a202020203c2f6974656d3e0a2020203c2f6c61796f75743e0a20203c2f7769646765743e0a203c2f7769646765743e0a203c637573746f6d776964676574733e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e4469616c6f673c2f636c6173733e0a2020203c657874656e64733e514469616c6f673c2f657874656e64733e0a2020203c6865616465723e6469616c6f672e683c2f6865616465723e0a20203c2f637573746f6d7769646765743e0a203c2f637573746f6d776964676574733e0a203c7265736f75726365732f3e0a203c636f6e6e656374696f6e732f3e0a3c2f75693e0a	1223771455	2015-03-13 18:47:43.299619	t
 1051	товар2.ui	3	\\x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0a3c75692076657273696f6e3d22342e30223e0a203c636c6173733e6469616c6f673c2f636c6173733e0a203c77696467657420636c6173733d224469616c6f6722206e616d653d226469616c6f67223e0a20203c70726f7065727479206e616d653d2267656f6d65747279223e0a2020203c726563743e0a202020203c783e303c2f783e0a202020203c793e303c2f793e0a202020203c77696474683e3837393c2f77696474683e0a202020203c6865696768743e3630393c2f6865696768743e0a2020203c2f726563743e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d226e616d6522207374647365743d2230223e0a2020203c737472696e673e76775fd0bfd180d0b0d0b9d1813c2f737472696e673e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2263617074696f6e22207374647365743d2230223e0a2020203c737472696e673ed092d181d0b520d0bfd180d0b0d0b9d181d18b20d18120d186d0b5d0bdd0b0d0bcd0b820d0b4d0bbd18f20d0bfd0bed181d182d0b0d0b2d0bad0b820d0bfd0be20d0b7d0b0d0bad0b0d0b7d1833c2f737472696e673e0a20203c2f70726f70657274793e0a20203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d227662784c61796f7574223e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c223e0a202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a20202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a2020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a2020202020202020203c766572737472657463683e303c2f766572737472657463683e0a20202020202020203c2f73697a65706f6c6963793e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09fd0b0d180d0b0d0bcd0b5d182d180d18b20d0b4d0bbd18f20d0bfd0bed0b8d181d0bad0b03a3c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d22766572746963616c4c61796f7574223e0a202020202020203c6974656d3e0a20202020202020203c77696467657420636c6173733d22536561726368506172616d657465727322206e616d653d22736561726368506172616d6574657273222f3e0a202020202020203c2f6974656d3e0a202020202020203c6974656d3e0a20202020202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22686f72697a6f6e74616c4c61796f7574223e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5f32223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d2274657874223e0a2020202020202020202020203c737472696e673ed09cd0b8d0bd2ed186d0b5d0bdd0b03a3c2f737472696e673e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e65456469744d696e5072696365223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d22696e7075744d61736b223e0a2020202020202020202020203c737472696e672f3e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d22616c69676e6d656e74223e0a2020202020202020202020203c7365743e51743a3a416c69676e52696768747c51743a3a416c69676e547261696c696e677c51743a3a416c69676e5643656e7465723c2f7365743e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5f33223e0a20202020202020202020203c70726f7065727479206e616d653d2274657874223e0a2020202020202020202020203c737472696e673ed09cd0b0d0bad1812ed186d0b5d0bdd0b03a3c2f737472696e673e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e65456469744d61785072696365223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d2250726566657272656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d22696e7075744d61736b223e0a2020202020202020202020203c737472696e672f3e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d22616c69676e6d656e74223e0a2020202020202020202020203c7365743e51743a3a416c69676e52696768747c51743a3a416c69676e547261696c696e677c51743a3a416c69676e5643656e7465723c2f7365743e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5f34223e0a20202020202020202020203c70726f7065727479206e616d653d2274657874223e0a2020202020202020202020203c737472696e673ed090d180d182d0b8d0bad183d0bb20d09ed095d09c3a3c2f737472696e673e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e65456469744172746963756c4f454d223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d2250726566657272656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5f35223e0a20202020202020202020203c70726f7065727479206e616d653d2274657874223e0a2020202020202020202020203c737472696e673ed090d180d182d0b8d0bad183d0bb3a3c2f737472696e673e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e65456469744172746963756c223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d2250726566657272656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5f36223e0a20202020202020202020203c70726f7065727479206e616d653d2274657874223e0a2020202020202020202020203c737472696e673e49d0a8d182d180d0b8d185d09ad0bed0b43a3c2f737472696e673e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e6545646974426172436f6465223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d2250726566657272656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5f37223e0a20202020202020202020203c70726f7065727479206e616d653d2274657874223e0a2020202020202020202020203c737472696e673ed097d0b0d0bfd0b0d1813a3c2f737472696e673e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e65456469745a61706173223e0a20202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a2020202020202020202020203c73697a65706f6c696379206873697a65747970653d2250726566657272656422207673697a65747970653d224669786564223e0a202020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a202020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a2020202020202020202020203c2f73697a65706f6c6963793e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7769646765743e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c737061636572206e616d653d22686f72697a6f6e74616c5370616365725f32223e0a20202020202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a2020202020202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a2020202020202020202020203c73697a653e0a202020202020202020202020203c77696474683e34303c2f77696474683e0a202020202020202020202020203c6865696768743e32303c2f6865696768743e0a2020202020202020202020203c2f73697a653e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7370616365723e0a2020202020202020203c2f6974656d3e0a2020202020202020203c6974656d3e0a202020202020202020203c737061636572206e616d653d22686f72697a6f6e74616c5370616365725f33223e0a20202020202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a2020202020202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a20202020202020202020203c2f70726f70657274793e0a20202020202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a2020202020202020202020203c73697a653e0a202020202020202020202020203c77696474683e34303c2f77696474683e0a202020202020202020202020203c6865696768743e32303c2f6865696768743e0a2020202020202020202020203c2f73697a653e0a20202020202020202020203c2f70726f70657274793e0a202020202020202020203c2f7370616365723e0a2020202020202020203c2f6974656d3e0a20202020202020203c2f6c61796f75743e0a202020202020203c2f6974656d3e0a2020202020203c2f6c61796f75743e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d227461626c654c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225461626c655669657722206e616d653d227461626c6556696577223e0a202020202020203c7a6f726465723e7069637475726550726963653c2f7a6f726465723e0a202020202020203c7a6f726465723e7069637475726550726963653c2f7a6f726465723e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22686f72697a6f6e74616c4c61796f75745f32223e0a202020202020203c6974656d3e0a20202020202020203c77696467657420636c6173733d225069637475726522206e616d653d2270696374757265223e0a2020202020202020203c70726f7065727479206e616d653d22746f6f6c546970223e0a202020202020202020203c737472696e673e506963747572653c2f737472696e673e0a2020202020202020203c2f70726f70657274793e0a2020202020202020203c70726f7065727479206e616d653d22776861747354686973223e0a202020202020202020203c737472696e673e506963747572652e3c2f737472696e673e0a2020202020202020203c2f70726f70657274793e0a20202020202020203c2f7769646765743e0a202020202020203c2f6974656d3e0a202020202020203c6974656d3e0a20202020202020203c737061636572206e616d653d22686f72697a6f6e74616c5370616365725f34223e0a2020202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a202020202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a2020202020202020203c2f70726f70657274793e0a2020202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a202020202020202020203c73697a653e0a20202020202020202020203c77696474683e34303c2f77696474683e0a20202020202020202020203c6865696768743e32303c2f6865696768743e0a202020202020202020203c2f73697a653e0a2020202020202020203c2f70726f70657274793e0a20202020202020203c2f7370616365723e0a202020202020203c2f6974656d3e0a202020202020203c6974656d3e0a20202020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c5072696365223e0a2020202020202020203c70726f7065727479206e616d653d22656e61626c6564223e0a202020202020202020203c626f6f6c3e747275653c2f626f6f6c3e0a2020202020202020203c2f70726f70657274793e0a2020202020202020203c70726f7065727479206e616d653d2274657874223e0a202020202020202020203c737472696e673ed0a4d0bed182d0be20d0b220d0bfd180d0b0d0b9d181d0b53a3c2f737472696e673e0a2020202020202020203c2f70726f70657274793e0a20202020202020203c2f7769646765743e0a202020202020203c2f6974656d3e0a202020202020203c6974656d3e0a20202020202020203c77696467657420636c6173733d225069637475726522206e616d653d22706963747572655072696365223e0a2020202020202020203c70726f7065727479206e616d653d22656e61626c6564223e0a202020202020202020203c626f6f6c3e747275653c2f626f6f6c3e0a2020202020202020203c2f70726f70657274793e0a20202020202020203c2f7769646765743e0a202020202020203c2f6974656d3e0a2020202020203c2f6c61796f75743e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22636d64427574746f6e4c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e416464223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e4164643c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e4164643c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e4164643c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e4164643c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e4164643c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e4164643c2f73656c65637465646f6e3e3a627574746f6e4164643c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e44656c657465223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e44656c6574653c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e44656c6574653c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e44656c6574653c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e44656c6574653c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e44656c6574653c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e44656c6574653c2f73656c65637465646f6e3e3a627574746f6e44656c6574653c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e52657175657279223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e526571756572793c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e526571756572793c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e526571756572793c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e526571756572793c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e526571756572793c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e526571756572793c2f73656c65637465646f6e3e3a627574746f6e526571756572793c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e5072696e74223e0a202020202020203c70726f7065727479206e616d653d22656e61626c6564223e0a20202020202020203c626f6f6c3e747275653c2f626f6f6c3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e5072696e743c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e5072696e743c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e5072696e743c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e5072696e743c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e5072696e743c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e5072696e743c2f73656c65637465646f6e3e3a627574746f6e5072696e743c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e436174616c6f67223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09fd180d0bed181d0bcd0bed182d180d0b5d182d18c20d0b2204f6e6c696e6520d0bad0b0d182d0b0d0bbd0bed0b3d0b53c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c737061636572206e616d653d22686f72697a6f6e74616c537061636572223e0a202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a20202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a20202020202020203c73697a653e0a2020202020202020203c77696474683e34303c2f77696474683e0a2020202020202020203c6865696768743e32303c2f6865696768743e0a20202020202020203c2f73697a653e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7370616365723e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e4f6b223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e4f6b3c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e4f6b3c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e4f6b3c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e4f6b3c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e4f6b3c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e4f6b3c2f73656c65637465646f6e3e3a627574746f6e4f6b3c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e43616e63656c223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e43616e63656c3c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e43616e63656c3c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e43616e63656c3c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e43616e63656c3c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e43616e63656c3c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e43616e63656c3c2f73656c65637465646f6e3e3a627574746f6e43616e63656c3c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a20203c2f6c61796f75743e0a203c2f7769646765743e0a203c637573746f6d776964676574733e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e4469616c6f673c2f636c6173733e0a2020203c657874656e64733e514469616c6f673c2f657874656e64733e0a2020203c6865616465723e6469616c6f672e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e506963747572653c2f636c6173733e0a2020203c657874656e64733e514672616d653c2f657874656e64733e0a2020203c6865616465723e706963747572652e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e5461626c65566965773c2f636c6173733e0a2020203c657874656e64733e515461626c65566965773c2f657874656e64733e0a2020203c6865616465723e7461626c65766965772e683c2f6865616465723e0a2020203c616464706167656d6574686f643e616464506167653c2f616464706167656d6574686f643e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e536561726368506172616d65746572733c2f636c6173733e0a2020203c657874656e64733e514672616d653c2f657874656e64733e0a2020203c6865616465723e736561726368706172616d65746572732e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a203c2f637573746f6d776964676574733e0a203c74616273746f70733e0a20203c74616273746f703e6c696e65456469744d696e50726963653c2f74616273746f703e0a20203c74616273746f703e6c696e65456469744d617850726963653c2f74616273746f703e0a20203c74616273746f703e6c696e65456469744172746963756c4f454d3c2f74616273746f703e0a20203c74616273746f703e6c696e65456469744172746963756c3c2f74616273746f703e0a20203c74616273746f703e6c696e6545646974426172436f64653c2f74616273746f703e0a20203c74616273746f703e7461626c65566965773c2f74616273746f703e0a20203c74616273746f703e627574746f6e4164643c2f74616273746f703e0a20203c74616273746f703e627574746f6e44656c6574653c2f74616273746f703e0a20203c74616273746f703e627574746f6e526571756572793c2f74616273746f703e0a20203c74616273746f703e627574746f6e5072696e743c2f74616273746f703e0a20203c74616273746f703e627574746f6e436174616c6f673c2f74616273746f703e0a20203c74616273746f703e627574746f6e4f6b3c2f74616273746f703e0a20203c74616273746f703e627574746f6e43616e63656c3c2f74616273746f703e0a203c2f74616273746f70733e0a203c7265736f75726365733e0a20203c696e636c756465206c6f636174696f6e3d222e2e2f2e2e2f7265736f75726365732e717263222f3e0a203c2f7265736f75726365733e0a203c636f6e6e656374696f6e732f3e0a3c2f75693e0a	3419367748	2015-03-17 17:25:56.849888	t
 1091	Документ123.Товарная накладная (Торг-12).ods	1	\\x504b030414000008000005338c45856c398a2e0000002e000000080000006d696d65747970656170706c69636174696f6e2f766e642e6f617369732e6f70656e646f63756d656e742e7370726561647368656574504b030414000008000005338c453f80fcc04722000047220000180000005468756d626e61696c732f7468756d626e61696c2e706e6789504e470d0a1a0a0000000d49484452000000cc000001000802000000701d0ede0000220e49444154789ced9d777c554516c7af103a2474084184d0a40a6bb05082224a593fb2b40f453e880445020844589ad22c1429012551026ea4c922e22e020a52c30ad213130402468a8180a17703617f79470ec3bdefbdbcbc64929778be7f3ceebb6feecc9c99df9db97332f7e075f7ee5d431074e295d31510f23e2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b2232413b69227befbdf7ae5fbffec1071fe4603d3efef8e3d6ad5b3ffae8a3afbdf6da638f3d969c9c5ca04081b163c7ce9831e3ca952b13264cd8bb772fd2f8f9f92526267ef1c5176fdb5073f0042b9292929a376f1e151555a952257c9d356b566c6cecb163c7a64d9b161d1dbd65cb96aa55ab9e3a752a2424e4c71f7fdcb871e3238f3c82644d9a34d9b06183b7b7f7c58b175f7ae9a56ddbb6152f5edc645daee6cf912c3838189fdbb76f5fbc78310e0e1c38d0b265cbdf7fffbd43870e870e1d8a8f8f87fd6885cb972f8f1c39f2ebafbfeed7af1f92cd9f3f1f9f6fbcf1c68a152b264f9edcb56bd7c68d1bbff2ca2b68329c4162e8232222222e2e0ea2413e9412c77c158e2120ae0d9abe58b162748cd2f179e6cc99a2458be260cf9e3d5061cf9e3d77eedce9e3e363d71858c126f4e8d163ddba75f9f2e5433ebffefaabbfbf7f404040952a55a862376edcf8e8a38f4c26a03210316c871538a094b0f7cb2fbf1c346890c98ac183079f3e7dda6442c43dc68f1f8faf28173afbd7bffe45bff6e9d30726e02a68ae5ebd7a414141f88af3d3a74f875d2d5ab4a064f8894cc8333c305da2c53ffdf4531c142c58107d400dd1a85123745efdfaf5717ed7ae5d5bb76e356571e9d225dc9d18817af7ee1d1e1e8e33ad6d203135a2292532371d13a9a9a9e81edce59b376fc6d772e5caa193a0ecdbb76fe32b6ad2b76f5f949e9292e24864aa09fdfbf7c770d2a54b1758e1e5e58511854ca08ab56ddbd66ec56045424202acc0ad42291dd96b3501154385df79e71d4804c7188971679aaa7af7ee5ddc06b56ad5c2f182050b7037e200231f84ebc8a23cc003227be8a187d00af84cfbc1cb8bced04ff3e6cd3b7cf8f0850b171a366c88af3367cec4271480cfc8c848f4cdc2850bd1bbd5aa55531343376afe9cd2744c7cf6d967e8dafcf9f3d3d776edda61ba1c3264c8b7df7e6bd8ba07b321d263b45bb66c99237b5413d80a46ad985d13704c5698ecb55a8191db640246350c9c98e6503a06bfce9d3be3abe94248168f04b801602c8f6453a64c819a5bb56a854117a5f7ead5cb9175b99407fa0093e0b061c370f0ecb3cf2e5dbaf4dcb973ddbb773f78f020ce9c3d7bb670e1c24f3ef9e49a356bfef6b7bf61bc31eecd359883d055981730e06176531363a6c05c80af98f22a56ac4829a92c3e8662480a68e2c0c040cc479c009fd5ab57a7af280b738a5a5bead44e9d3ad93501076bd7ae252b78dc522b6635c1b03d45214f58817188ed85ceec5a613261d5aa554b962cc1e577eedc815056af5e8d7c860f1fbe6fdfbee3c78f6340a5e992abca231934bd68d1221484d979e2c4897ffcf147e6fad4e3f8536461616178647eda06bee276c4005eb972651cb769d3069f34d718b669882f561fa73077f0313fb47262b4352756af528f89476dd03124c269060c1840279f7aeaa9fffce73f3868d0a001e623f55ab682be42646c85a38a39af8cc95ed50afe1f8ff90ca6663ac0608ca5092485477b3ad3cf869aade98c5acaa851a3f0e06fad49ee254d64d6850c566a595b0c46822ccc0df38bf5a4a75981c9918f69bc7411bbd6e56abcf8f14510748021df4bfea37b4137e2f1f708366fdefcdb6fbf1d3d7a148b89c71f7f1c8bad53a74e952c59124bcef8f8787c62a18de7361c63e6494c4cac51a30612d3afcf3cf3cc8e1d3b525252fcfdfd67cf9eddb4695364824f648b47c33d7bf6d4ad5b372929e9cd37df8c8d8dc5f9efbefb6ef1e2c52fbcf04293264d70fe371bc58a15c35aa74c993278843d71e2c4351b388922903996322d5ab43872e4088a4089b76edd421a94929c9c5ca952252c897ef8e187888808d5a2a8a828a4c7e558d688c83c825dbb768d1c3912aac25266ead4a9850a15c2b2069db769d326ac4ccf9f3fffcd37df60ed75e5ca15ac5bc78c19f3f0c30f230d7ec59966cd9a4170e8f8d3a74f6fddba1517262424a0fbb130c7f2b66cd9b24141417e7e7ef80a61a12c2c8cdab56b079da1207c45b923468c4086b8049a80044f9e3c397af4e8e79e7beed5575fa50a60598d453ae485225062b76edd906ccb962dcd9b3787ac172e5c3870e0c0676df8fafa9245376fdea41aa274119947803103a30e7a08cb05f437e4b577ef5e0c57c78e1d2b5dba74c78e1d7bf7ee8db164cd9a3518f3b0f6dcb66d5bc3860df12b06b0d5ab576328c2ea1e63d5bbefbedbb66d5b48eda5975e42b6df7ffffdd5ab57912756d9d071f7eedd0ddba809d12c58b0a066cd9a182f512e0ed4cad025a80354822270a662c58ad02ba48c2250074a46de251f1f9f0a152a1836551d387000426cd9b225be72fd0d992e3d84418306614a4247424cecc2a5c7655a99414c940c9f1010d2a8bf7ef2c927e449c10c854f76e70e1d3a3434341479fefbdfff668fe33ffef10f8c46b89cfcde28971de0742d5dd2a74f1fb508d0be7d7bae0315919a9a4a7e4accad9466fffefd7480b1901ff745649e027a7af0e0c1ea1f091c2dfc298dfaab93bf4a519e98e0d49cd5635561ea254e2a60371fa271e3c6d6fa8bc83c086b7f67559e563564673544648276446482764464827644648276446482764464827644648276446482764464827664d3a2a017d9b4286407325d0ada119109da119109da119109da119109da119109da119109da119109da119109da119109da4913d9279f7c12151555a54a95ca952bd35b75b997ec8c1c1b1a1afa948d1f6d74efde9d03c67efbedb79b366dfaedb7df060e1c78e8d0a12d5bb654ab562d212161c68c19b890939972f0f2f25203e7162e5c98e3ca3ef3cc3314650da5500c4053945d245663d2ae58b1420dba5bb66cd9468d1aa15cc316181529939393ad916935b5de9f23d9ebafbf0e330c5b00268ab3fad5575f9d3d7b36282868c18205111111070e1cb871e306bd2cd5a3478fad5bb7a296a9a9a9e5cb976fd5aa1587691d3d7a74d3a64d91034c5db870215d3e7cf870648bf46fbcf1468d1a352e5fbe0cfb6363637bf5ea151818181e1e5ea850217446fffefde9da92254b76e9d20529dd3329383878d4a85183070f1e3f7e7cdfbe7db96ee8300e75dbb56bd74f3ffd141db36ad52a0e6d678d88ebeded8dcb51cff3e7cfe3f643b2a4a424f4aedda0546ac0d87636d6ac59f3cb2fbf18b668b1cf3efbeca44993ce9c398312d5b8b256d4c0b91c8d11401990575c5c1c1a8ae301aa89d598b43e3e3ea6a0bb26d0177623d3bad17a689f860d1b5a83f152ebeddbb7cfce7449715631bc9d3c7992de40a748aad5ab57a7208030d2dfdf7fe8d0a1b76fdf86d91ca615653ff9e493fffce73fa74f9f8e3ee3cba12168eec2850b680218b06bd72e340d74861b0e66e06ec61d0c9bf95a5c3267ce9cbb77efb66cd99223cb6594cf3ffffcd5575f5543c852e846222c2c6cead4a9b895d11f683b8a1f668d108b1afefcf3cff8c44d828a61643229030d8ac645bf629c30058cfddffffeb77cf9721878e4c891c8c8480c6cd7ae5dc35daa26537368d2a48961099ccbd1187bf7eebd72e54a8c3110c1e4c993274e9c58b3664d53624389490b6d9982ee22e5dab56bd10ba852d6b61ec5acb406e3a5d633ec3e935170cddab56bc3a46eddbad1492a4c0dc7ca7098d6f8f8f8175f7c914efefdef7fe7cbd12e4b972e85e4e7cd9b87db4b0dc48a710be339ae458bd4a95387f37cf3cd37a163b4acdb22dbb97327446f0a21abc689bd73e70e2776121197c178fcdffffe1703b07a12773c4d7643860c69d0a001078cc54883b9a971e3c618a17140630c464168114dc4c9d41c8061099cab8e64688d71e3c66124c3278ed1a3a6c46a4c5a8c9aa6a0bb1829501334ecb973e7b2b6f50cc7c178093b22a338abb366cdc2dc41431f45527dfef9e7391c2bee4b4ecf615a6fddbac542c6b00453e9723f3fbf1123461c3d7a1419722056ccb3866d9ac6ed8ecc719b6edbb68df3c44886fb0f76a6db1c8e80a998d4903fd779fdfaf51c271603272a833985827d3a8988cb6024c37883916ccc9831d08a49fde8f21d3b7670c0580cf931313157af5e85083063a2fb31d9a1144c6de80f4e86124dd53605cee5910c0a7ef9e597030202f04c86f99a4a342536c5a43505dda5910cad8ae7334e6337ee6e465bcf701c8c97481399299202c5598525288346352a4985c25f19f7826872985662ca9429eae5049eb1d0e874cc21529fb081030cbc7cad91393098532614409febc675a6d824781eb05e6b8d884b8da53e84e16ea1033c30d0018622de96470163d53cf134660a186b4d468ffffc9503e75a2fe4c8dfbc4453a3ec9a2aaf06dd5581582932adddb8bb6eb49ea360bcd47ae6918c5b3393cbcc9c5aa5e6a5ffc8432b2ec6ddcd12c44f266827ef884c5e56f04cd2f6f8e7741db20c7959c163c93b22133c1611d95f170ab98d95664c4cccb56bd7d4a8db2929294141415bb66c41328a786d37eaf6a44993faf6ed8b63c3f65fd270d46d43a25f0b0485dc9e3a756a6a6aeae8d1a3d5a8dbe3c68df3f1f13977ee1cb44511afed46dd5ebb766deddab5715ca04001a44c4848609149f46b210d0ab95db366cdbd7bf79aa26edfba75ab63c78ef3e7cfe788d776a36e474747534cee1b376e74ead469ab0d897e2ddc87426ee7cf9fffc48913a6a8db5dba74c1c8c4ce4e4751b72f5ebc88d9909361b493e8d78219fabb671646dd96e8d7827d7444dd56119109da119109da119109da4913596868e8eeddbb7d7d7d697f26ef60c966b2737bbe23d48df35f7ffdf5b061c3789bfc840913b02c47023f3fbfc4c4c4c71e7b2c292929dbb6c96708548c5f23306cdb016363638f1d3b366ddab4e8e8687e15c0dbdbfbcc9933fc0e418b162d860f1f8e9358336221b96ddb36ab75eef1e748a6eecfdcbe7d3befec2e5dba34ede6a6dd6038af6e87ffe69b6f929393d1a6717171cb972f5fbd7a75404000ce2025d6c0e815ac3e56ac588133376fdea46de3ceffa3e4e0e060b5f475ebd6d10b071d3a743874e8507c7c3cec472b5837e31bb6950eca9a3c7972d7ae5db1c679e59557366cd8401bcf2191888808541235413e5c2bbe0ac7eaa62bde386fda26bf67cf1e48b067cf9e3b77ee441a27dbe4ed5af1ebafbffafbfba76b022a031d1f38700056e0804c40e22fbffc72d0a041b0029f108a1313d4b70df015e54267b43fcc505e05a855ab162ac0fb1ca74f9f0ed32035fa5aaf5e3dbbd6b9819de952ddd95da44811dacd4d3ffdfcf3cfa6edf018f6505d88c06eee972e5dc21d53b06041e3deb6f1742ba4968e1b915e38080a0a6ad4a8113aaf7efdfa86bdcdf85c1646a0debd7b8787871bb65de7b4f15cdd2f6aaa957a4cf0c67934b1699b3caad1b76f5f149d929282912ca356787979614449d70454865eaa8015b855c80453622726a06ea6b70d206b1f1f1ff5727e15407d87806e3fa79de326764466dad9ed6837376d87c7548b94a54a95b29b7b646424da6be1c285c6bd6de3e956c8543aedade5af4e36e37359e8dd6ad5aa190f6e3c77542bf5985037ce9bb6c9a36218b69198b7e467c80ad74d306c2f55c00a5362574ca01dd5fc1a41e7ce9d4dff7b97fa2a004656be03315941cdad5ab5c2a08bd2f9ff33cc3c7644c67bf67150a24409decd8df9ce78703b3ced9cc6bd82564063613adbb76f1fba81de69336cdbccf98502da36ce83b623d4d2d7ae5d4b2f1c74efdefde0c18386d3cdf85416e6050c7898e08c07379e632ec0577efb8d6bc5c7cb962d2329a81be74ddbe45110bf8bc6d8dd266fd70a7a01225d138c7b2f55c00ab42d2786cec80ac8ce8909ab56ad5ab26409bf46806718e483872d74cdf1e3c731a0f2ab0028547d8700b330ba180561769e387122bd999625a435abba579d769aab7bf6d5dddcea1395ba1d9e77e81330c950b696f341ba0a0b0b0bc32333978eeea1170e70dca64d1b7cd25c63d8db8c4f60eee063ebc67354cc5a2bc3de2e78dce8f4c4a36e931f306000fd4a0de5649bbc232b5c31c15a1953e2f2e5cb534dec5ec56fb8d06b0490d4c68d1be94c3f1b7c89e9abf160079175d69ab881161706bd3b9951ac0b19bbefd06606f72ae60817b7c9e7ac15981cf9d8f9aacb44e6dfe861c44f26684744266847442668c7534426ef1ae5553ce86d2579d7280fe3292213f23022b2bf2ef2b692a01d795b49d08ebcad246847de5612b203795b49c826e46d2521d7e3417bfcade460507e3402ef94c70a5f77507ee3c1d70bd01df5ebd77714947fc28409489c6e5cfeec6c3dd37f2a70fbf66d6e0a7cdad9e34f0d4721f57125ed31a7c8fbc8a54891221476bf5ebd7a94ecc30f3f3c72e40885dd87fdfdfaf573b4d91fa5509472d7f79c6428acbcf545046b58791783f21b96b8fc5a83f2d38a4c4d9fa1a0fc8683b8fcd9dc7aaab12a76a64be4c221f5799b3c45de4f4d4d9d356b16eed13163c68c1b378e9241641c76dfaefdc6bd7de886cb3bfd4db818569ebeaa2f2258c3cabb12941fc3b969a7fcce9d3bb506e5a7a6e3f4e405751294dfc8485cfeec693d93b1dc14f7473295f8f8780ea96fda63ce61f79b356ba626e3b0fb8efe1b11da878e067571a7bf89ac0d2b6fa417941f9876ca63b0d11a949f4eaae99d07e5373212973f7b5acf642c37856177249b3b772ed440c7ea86f4f2e5cb73d87d3cc0a9c938ecfefefdfb9d6ff67771a7bf09d7c3ca9b5e44b01b56de5082f2fff4d34fbcbb5f45dd298f5ff190a43528bf35bdf3a0fc4646e2f2674feb998c55b1bfc79f5037e0aa91f7e9809e3a8d07375098de8d336df6a7941952981b61e5edbe88e02828bff581ccd408b83555033505e5371e8ccb1f1d1dad26b306e53745b07714973ffb5bcff49f0a503be8756164724fbd04e5771deb967ccf693df19309daf15091c946d93c8307ed8c35211b65f3121e2a32212f2122fbeb223b6305edc8ce58413bb23356d08eec8c15b203d9192b6413d9b13336393919831bd6143898316346e9d2a5b51629fcd54813d9cc9933434242ead4a983e73888ecfdf7df3f70e0006f64c39a96feb28bc52aede4e9d1a3079eef282431a479d9869330bb2fbef8627878386f75cc517b851c204d645841d05fceebd7af4fbb77d48d6cbc87e2fbefbfc73ac2b0fd71dedfdf9f4212e3412f3838d879985de4161a1a4a5b1d71908dd6091e419ac8aa56ad1a1b1b8ba52906b05ab56ad10fea4636dab966d8d61dfc3447218931f8fdf2cb2fcec3ecaa5b1db3d134c1534813d9881123305d962f5f1e5aa19723d48d6c866deb2d3e2141def5b669d326c31692f8f0e1c34d9b36751e6657ddea9863860a39479ac8ca952bb768d122f56c83060dd48d6cc4ba75ebf8981dbb1c92d879985ddeea28fc05111786a01d4f11996c20cbab78d07e32d9409687f114910979181199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01d1199a01daf871e7a28a7eb20e465eedebdeb45ff5cbc78d1c7c707823b7ffe7ce9d2a533940bae420e7a6a98c5242626a6a4a4e000c6962a552aa7ab9395587be1a20d1c142f5ebc6cd9b23954af34fe9c2e434343870f1f8eda4c9a3469d6ac593ffdf453d5aa55af5fbfeeeded5da85021f4cd238f3c021b70be5ab56a376fdefce38f3f8a142952a64c991cacba1bc4c6c67ef1c517cd9a357bfae9a74f9c3841365eb8700146c1cc83070f3efcf0c3b9d73a13e8d31a356a142e5c1866fefefbefe8beba75eb9e3d7bb67cf9f2e8d002050ae0005f91523d73e6cc990a152aa4a6a6526b40007c899f9fdf8d1b37d06ede369c0803e3149fc1b5f79fc9962c594297bdfffefb2d5bb61c33660c6e771453b972e5afbefa2a3232f2bdf7de6bd1a2c5bc79f3509b366ddaac5cb912c7b96bb66ddbb66d5c5c5cfbf6ed610ed988c6822de88f2e5dbae4cf9f7ff6ecd9458b16cda5d659b973e7ceeddbb70b162c3877eedcab57afc2eab0b0b0e0e0e00e1d3aa029d0a173e6ccf1f2f252cf6088993265ca860d1ba835d0087cc99e3d7ba2a2a2a0d7b7df7e7be4c8914e8401d9040606e20ca60bfc7a5f64cf3fff3cda77d7ae5db8b371cde6cd9baf5cb972ebd6ad848404648704382857ae5c952a55a0e576eddaa148d4bb44891239d786eec336e2c68d8f8ff7f5f53d76ec18ce272727e3becfedd63118b0d1a730f085175ed8be7d3bcee4cb970fa309f4842167fefcf9478e1ca957af1e9d512fe4d6502fc131343470e0c03a75ea3817464c4c0c06309c3975ea94a1ae2e7116d325548f41151a84c28a152b56bd7af5a4a4244a805ec1e88776479a458b169d3e7d3af7f6816a231af1dab56b68207f7f7f0cf5c78f1fcfedd6312b56ac40678d1e3dfac30f3fc4fc75e8d0a1cb972fe36961dbb66df8b55fbf7e10139fc19303648764274f9ee4d6c0817ac9c2850b717eddba7518db9c080373059da136fc536413264ca0034c1cf8c4d331863e538dfbf6ed4be7478d1ad5b367cf5ebd7a65473b653578f4c467505090d546cc2cb031575ba7c27d0abb860e1d0a8ba0b9e9d3a7e3cc73cf3d473f612ea3033ef3d4534f611cc2796a0d9c512fe9ddbb3786c0b7de7a4b2dc82a0c3c66a8cd6bdf4f6655987afef5d75fc784edaeed9e82d5463c9d1879c53a953e7dfae0b364c9929d3b774e3731d60a78a232eeb586150c57d6935661a8cdeb8e331603a6e94c6e7f40ce1b78662ffce927cb928cb2249f3c49f6f811b3a114b78bb82f323caf9d3b77ae70e1c278d8273f998f8f8f93f376219f0a7db2af859c2589898978c466ff0a961ee44a614f0c3eb14861179dd57dc539b3e7a652a54a9c095b81a5223e2b54a860f27b6139cdbe1ff20661415eba7469cc237e7e7e264f0f16ffec1c8221f8b576edda780ac6a306d263caa05f31a7201fe4869a73e66e7403d5079fc8961b191992732ba3b9712b952d5bd6ed2e70d2cbaed88265010e289ffb229b33674e870e1dc2c3c3d149e4439a3b77ae93f3764162f2bee0937d2d9002395ab09066c71b244bce15e4c65741ca8edc576802ce993d378033a10a7cf7dd7758d15cbd7a15859afc5ec80a9a20dfcfac59b30202022e5ebc089d8d1f3fdeeae9c1e558ab937368f2e4c94f3cf1049657cd9b37c785488f551855a075ebd6c807fd848765762cb9d131541fe4131111412d3073e64c766e6534376ecfc0c040b7bbc0492fbb62cb92254b424242289ffb22436db0b258bd7a35fb90b0b0c70adf7a7ec1820538dfbd7b776b01ec7d31145f0b4c22470bfa98fd2bec5cc119be0ae71db9af307e70ceecb95133c1dd899fba75eb86daeed8b103098c07fd5e717171d01ff97e5022d6e1e8d1a3478fa2adad9e1eacdbd93974fefcf9e76de018bd85f45c018cb8940f698b327703aecfd2a54ba905b66fdfcece2d3772a3b682456e7781935e76c5163cb8533e86dd077fd58764f73cd6ff8e0ac03c42de171cb3af05bddbbf7f7f72b4b0e38d9d2b10075f855bd991fb0a574d9b368d7266cf0d67b265cb96c71f7f1cb3c38c1933300e61d58d79cde4f7c2cc8819937c3f28110b6ff42855dbeae9c1f8d7b06143aaf3a38f3e8ac1e0d2a54be3c68da3f45c01ce87eb09a174ecd831a37f2be47cb891d1c7180fc8b9850a6434376acfcc7481935e76c596b7df7e9bf231549191cb843e552787a3f3765113abbe1643f1c4309c9bf322d44c288deab9a1f4bb77efa65be29d77dec1276634c3e2f7c2732b673565ca14c3e610c74f86034f0f17f1da6bafe1eea4a53b5d68f236211f2e8e6b9221b83e6c11ceb0732ba32253db334bbac00d5b366edcc8f9b8e327731d47be1627b939725f39cfa44993268e4a579d374eb272ee02b4eb1cb25b9cdd9a6408aa49869c5be9d6ca7959ae9c7483749cb17909ab572fab126ba562c58a864d22786ccae9ba6496bc2f3221fbc1a2383131b1468d1a7826c360fc80c8ce9e3d4b0f1f584862d640229c246f4d993265c8918363dc64e40bc97c6dd805859533bb67a81ab46f0955a43ff5536293eb0beb26478e2baa279e7069c557a74e1d5874f8f0614a4f8e31bb0e39721a595d6b99373647c022860c843926cfa5ba99ccea71742567bb0e542c2fd6af5f8f75d8dcb973f12b966b0f88ec830f3e68d3a64dfbf6edf1d48635dac71f7f8cc52d796bd061e4c8c10a082b38acb69038f34dc02e28acddd83d43d5c0233c94c17fe505ec7863d7d7800103424343ed3aaea89e7890f7f5f5459b8e1d3b162b3e488a1c5dbc67ceea90c39a882a6072ad65ded81c61ce9c3964204ce00664a7236f26b37a1c5dc9d9ae0375f9f2e5f8092b27b4edb061c3cc22cb972f5fbb76ed020303972d5b865b1967626262c85bc38e1cac72172f5edca851a32c69027641bdf5d65bec9ca36aecd9b307e310ee124e6cddf255b3664d478e2baa27e488cc719f510e8d1b37a6f44ef693713b985c6bb9943b77ee908186d280ec74e4cd64568f63ba3872ac62f4c27481b9e5c68d1b183e0dd33319a698458b16454545e126c61d6fd8d44ade1a5c3372e4480c0f5dbb76856cc9c99679d805a53ae7a81a188d69e88668c807e664cb97d57145f5ac5fbf3e464a1619e3643f190eb802aa6b8d1c9bb91132d0503c97ec74b47a1c5d54988ac9b11a141414121282672d1a410c93c850007b89c865824e626fcdd33676efdedda9532737aa6217d505c56e15b51af88a9ea6dab3e34dddf2e5c87145f544e53123e0934ba4f44ef693992aa0fa99722310131f9b3c97a6cd6419758f3972ad61e0f8e8a38f30226248a3330f88ccea25b27a6b300161a275bd2ae9c22e28aea5a91aaae7c9f52d5f544f27c99c38e45c74ade546d2f514ba87e95adc9cac30c32432ab97c8eaadc12cee76555c245d67952bdeacccd4d373bc6579833c759b0a9e89884cd08e884cd08e884cd08e884cd08e884cd08e884cd04e9ac832ffbe9e67bef1e739644ffb6443296e14713f3e59260b96f72e9d20ef5da63f5d5eb870a164c992b965ac3a7af468a54a958a162d9ad315711f7a6588f62f68c58d8087ae4321f80a1428e0e7e7978ec876efde3d76ecd8952b57162f5e5c536db290b0b0301f1f9ff5ebd77ffef9e7395d1737993d7bb6afafefe4c9933ffbec33ad052d5dba343a3a5afdf379d6327dfaf480808012254aa42fb2264d9a0406066aaa4796131c1c9c9292b27ffffe9cae88fb0c193264eddab5baff407cecd8b1dbb76f6b1defaf5dbb8652e84fde796a7579e5ca158c01a3468dcae98ab8cfd5ab57ebd6adbb6edd3ade01a58377df7db775ebd671717168314d61d8264e9ce8eded3d62c488975f7e391d916dddbaf5871f7ec8972f1f5267d59b52fac0cc5eaa54a9c8c848e79b7c3c99f0f0703cfe5eba74496b6b878686deb973272626c68d57445d64fefcf990cdf5ebd78d7447b2963634d523cb9933674e4e5721b3e066767d03b4dbd0e845fb3735111212c286e4a9e9326fa05b61d9061b22ced8bc83c7f68297f851f3069edc8fff07898845206ddde92a0000000049454e44ae426082504b030414000808080005338c450000000000000000000000000c00000073657474696e67732e786d6ced5acd72e23810beef53a4b86e653026c98ea98429f31b1248c00607b84cc9b6c01a64c925c918b8edbec6bec83ec6cc1badcc4f2a61f084009eddadda1c005beaafdbddadfe73ae3fcd7c7c36858c234a6e32b90f4ae60c1287ba888c6f32bd6eedfc63e653f1976b3a1a2107165cea843e24e29c4321e4167e26c9092fac966f322123050a38e205027cc80bc229d000920d59e1e5eec292d9eace0c2332b9c9784204856c368aa20f51fe0365e36c4ed3b4ec7275b3d5a16484c6fbb25aed7ec98a52facc28265809b364a62aca4576759d395b0bf942356aa6b8d1c3e6f18bd76b06abaf7324a01febe66c7d3b16ed26235916a60846cf5acbeca27b4d63218e6c0c750641970699cda2980772111191292ad7d9ef41de05dc8423910ef2137285b70b5afded523b1efe16a2b1b75374f5f2f2f26a5ffc731f04e788b87006dd6d5e30da6da5258df42f36df47621835dc2d31b960d20532c5d82172ef923406dd92b30ba446de12f435c9d73fbffef5edf76f7fe4f670c272c838656dca919067a0bf4be15afe306bbe861eec82ceefad9ed7d0b794a10525026033c048b4a80bb76de05176849f4326909316fa96f41b0d9df29cbe943f057cdd11680a97e80620e304f5a887816fe43d71ecdac01a4981e548dcd3c6f00d6a890a41fd13020f29f5bb12e5a41e1d835a0087dba8abf87171a00ac018c6f1f587e057074a6c7a34aa33b41dba6d4a31042453142c84bb9177dc7c9931929697a17ddf93b50cfa0959e539ba1f1d7c1c4631b6014b4ce51fd5ff9dec58278b19946441336933181704490e3702982778dc3e6c8690d1a5fcfcfd1ebd0ffe031569411f760cdf428e51cb1453b6058d697c8872ea555e55f7af237f60d714b4720bb8143df48941a35b085cd9a0a4c2c4f4201432d6a480dee08fa1904d1d34e7be4d3137e176ce3d09139380a04b0dc005dc36f4294ed60ab8c1d78d496a1c0cc8a5bd132bf09ca21c1881b6e17756e1c7c29ba1eda229e289e29f087cb7f087bace0a5e9f216ece89e3314ad002febc7a60dd94eedec0a1d87feeb0ba1132101bf83d0388742340d5b7a15b93954622f691292fa594d4e095f580c9f4004bf68823a4d7319609449673e28eda65401c88d349ad6956056926d82605ae21131f25789e82fe7b810b04ac3159a4423fc0f2773aea4fb34648af7232c1145aab99e8232963cad3c87b0d7e0f19d13902a41d12478460c788e2148ccaf210034746fa32f5030679fc5827684d92078b35ca6ce4ba903c733e7eccd804641c82efe72ceb96908507ea868631ff0454a377e0f0093069d5ed726f8d9a7d9bbe04c7883465e978304295b83fa43f3665bf19df4341cb003b613aa1659939207b901709a62b312a3cc83edf36cf5525af7ce69021c88fe2260bf8707bc065030eaf2e4a8800e944457f7cfb6b56b99bdb79830efb7723b31a89d6177dd1aa690b791d0cfb2dfddff4d7c9599dde22283bbea680ba35ef2b5eabd96d44ad4569e4a8d61c3c598bf5d6275d6fe9d30de158afeaba67ca5f55577e98be868c7a4d1998faac4c4a92ee5219f61b5a87dc4dddba871dac35ba6565deaab4a27efe013b3ec64e144ce36f9b189e5bc753fb4bae63e7ef14c7af05ae1e7cb1f3a5585f5aab138841ff8e48ccc9e029c83979430c257ebbabf356398a9a15fd7ea06a5cd24e86fd92022acafc410f22479d61d7b7b8dc77efd40d7f58b754f0f480dbddea8bfdc360a0f6b4961e747a55a362abb1dc5e75d037bcf20487ceada5f4d4d9d4ad049edb37a67aade40d55ab0bfa017e9c5495f8d1f5ea43bb6b954a564dab5a56a96558dea8dbd3aa46e742376a56a75bb506fd9cf5682a976d4bb9b8f9a78bf5b739fd948e32d58e29e56e2fe55e35cd665b2685c9aaf64b7ea773e0cbae549b553d08f0bc2783780508f01f1d379d642094d82b67bf7b6b9f4dfa7f86e2df504b07087e31148f7905000011210000504b030414000808080005338c450000000000000000000000000b000000636f6e74656e742e786d6ced5d5b8fdb46967edf5f4174b00307b05aa2a84babc7f66031833c4d1683b577b1403008d812d5ad89246a49caedde27dbb90e12ac07136726c8cd4966765ef6616cc78e3bbefe05ea2fcc2fd953458aa224522a8a2c162f2740daddac6255f1d439dfb9d4a9aa4bbfb8311a4ad735c31ce8e3cb7bf27e6d4fd2c65dbd37181f5fdefbf76b6f540ef67e71e59f2ee9fdfea0ab1df6f4ee74a48dad4a571f5bf0af046f8fcd43a7f4f2ded4181feaaa39300fc7ea48330fadeea13ed1c6f3b70efdb50f695fce13d33a1b32bf4e2bfbdfb6b41b16ebcba4eed2bbea117bcfb4b2ffed9ea19eb2be4cea0251fdaff775d6976f98c34a5f07aa8f26aa355819c58de160fccee5bd13cb9a1c56aba7a7a7fba7cabe6e1c57e54ea753a5a5de80bb5ebdc9d418d25abd6e551b6aa433b32aefcbd579dd9166a9ace32375fd431a4f47479ac14c1ad552d766756268265481cf258cc9d690ff9d25feba7ecccc5dd78f43c8dc3d510d663ea395975945e9b1b38ad2f3bf3b52ad9390f93da8be0985f4c79bbf5ef0953162ed8bd45d2255d7184c983fd3a9ed7f5fd7756fa8e40547d8e970ebb55aa3eafcedab7dbab1faa931b034c357bdbbb17a571d763d8aeba320a2413db90a352ada75c2f29e10114298212fd4ab4eb157d9ec8536fd9f6ffefa6af7441ba98bca83ed952b83b169a9e305650c3209a15fdaac1ada44372c8f307d76f085d9aa7b633bb146c370e820a5f3aac746af17581586a354014640882bd707dae96b4bd8ba991f3a555ac98fa71b5f906b5552c7134998ee05f81bc79e7eeaebd371cf81018718da8d89660c48913aa4af1d2eb5e0e7e0a1be4393ae4ef3b5b004f4036d38977eef93029bd1f5cac8046600a6d72787beb797f58631bac1d61c6174bdd75f6d7145e8bba6a95841737beddfaaa4ac42d4262806b7279fb950dfbb32b70d1c2c30abde833ed80895bedad52a3dad3b34af5c7230de7b2c397f93715fdefb1763a00ea55f9e81ac0304cf2b8d06c3b3cb7b3f5327baf973af86f3e75e757383d7d4139d08e15a6b6ec196d7696f72c0ebb4604f5a7a9794548eb531501ef0c93c1d982653fb319af7d7980cac2e2888eb2abc4ba4697bd7233db86bfa9c63d7bf548783236310d0f9a2846bf723e823882916251cbbff95f63bf53fa6d255756c8672b9af8ecbe71b8774665ada28d6980c7dd0a3dd496fa8c3e191da7d277c6ceb755319e31b86a68510cd57147704d530d8729fab530b70c31a742bb41d0fcfe8cfa5f17675d9ebcc1d27557360580ea7a3f1defc4dffc3ca04e05933ac81664a7dfdf0c8d0d4772a471a20353448ba9eb7e8563f1df4885158dbafb73bdd111dbf6f38e16333c2c666e8a72b038327fe513945e4e18936383eb148e74a1bfade3cdea9a955f4893518a9c38aff65cb986a51865d4f72d88d466ae356121cb75c6bed3ceebe3a34230dbc91e0c01beddd071e95e0cd24c7dd4c6dd8ad2487dd494f2edb098ebba9c8a98dfb20c171b79bbbf34964b9ec2438f07a273d82cbb52439bcaea437f0243566333dcd2327aa3253841439499dd9ac77d2934d3951a5d9aca744724b0d66f1f9c3910a06b45199a8c75ac579e337f0eb5552f676b3ffb6fda57d3ebb35bb2daf7ca3effb9cd0796f604e86ea993b3cb77112e21b8c8f2b23bd070d0f8d8a75b427cd6347a4256221ebc6e5bdd714a5d5eaf7d73fcb8936bb41e7cafae7fd2b89522c5592dcbfc0c2a7a483517535f3f21e488c5b321a8c69d0e4185aec0d8e071694cab4eb80debcd67baaa5050d4069790d2fdc08dde8911839a585af85b3794dda0250441f1f938edda724147365df1b06fd735e3602d7e564f7d7cf34d50879bbbaf6814b2d067db35cabed2d5772178d7ccd2ddedde04d6961de9436f4222513d520cb52f48fcadcdbeeabd3a1b5ea6dc14beb82773c3c9b9cc0840ce6ab0795eba4bcab0e4110e77dd0c1aac3c1f1b862ea53832c785d578753ad629d4d3c6e36b489a67a9f3a871022c4a7863aa1b24a226763bd42fe9ebfd51b185ad729195a06ad3e517bce225c6dbfd6a65a7a8e11ee08d5f13199a1da7a011922e962ec8dca3c3106e3772a965ee90f168372cae65f3a7f6f34e8f586eba5bf9b9ad6a07fe6c28fe7b103e1d563f892133f51693cd1a1d7f26be4c346aa710cc235d4fa04e5161fb68c03046b16bdd0a6d6668d80dfe960dc03dca34ebb8b137e70a12fea536b38186b2bdf4d8bc8f38a7562e8d3e3938acbf37ec2d176972276f005f4a139f86f78d89e58be47f3f78d915bd3e1ef13b5479639fcedd282e91800808e60a9e77973a72e96cfdbf38d88745e51cd813a7687e02fa332e01606bceb34bba102f95cba0636d46e04052469e75e7970f75e71f80056ab306babae1662d820202020880604b9261e119c3188838490fef9624288cf901e26103b9d9a749523ddb2c8e233086a6b6249a63e1cf4a4d76af4bf8580abc7fa18c4e86858b18c6556f0ca2c283602d8641973fa831bbb82cd62cc8ef42d8f820182160d1873d65cb49020322dfab1f4c9f20b1ce06a2ea76e8ba6a592a5f6e282989c1514a338e3c250f0ca5408e2d5f9225ee032d30ae8050f812fe885841b32600825014a3be0517e4ca2158ce96a639ae8545c9041d7290bae53c8ea189a496826a19984be5e3e7cbd90b5f20c983d18ff2979fca7251e125a621121b87bbe8010928482808080201a100ec403c281584008ee9e2f20846477897473025d974cb9359b1db15ddc9c4d2df2737b36f58a911c84b862405c481e28425c19202eddc80e421a425a1a901696229eb61f9731ec4a00b6f2e31922f420f488809e8c2419670e7a70091ea106a12651a8c1f4e53481c2db7083016b2650c0556d41abda61db1e33800bd14d89aca201a6bdc4cf0e166436ec9a1cccd9c460c80d16626508cf0dc64cbfa266fa95cf5342a3489451243c619907cc94c12e2a1f48e08e06113b1a64e1d9c0795c08cf8b6183b93c18124e17c384386bc21398cb8961989f88988698c609d33007bb4498860128c4b00262580693accb1844473b0d310e318e0fc6d585275d1701e392df585286f85ae1732710e232017198dc1d045d3b586689c311220d224d91902623b9dd99439af2ee6043e441e449037984678fe7c88dcb774e041eeb88a75fe3e9d70079e54d718fbf51af88e0875bfda2596a98d52e28abbd2e3cabbd9cb9116588a9976fdd10f3ee855cc2263cef9e07e6444097c461242d84d0c6bd32c1035a39a2ac9c7859ed7359542d75a9dcbd5936bfce5b094d224c0f458c2b26c609cf72cf243c9529b500d106d1262db4119e8f8e3e17aea2214664192314cce74ec0b1aaed773a495f1410de22cf587478af681a61f25331929f14e109dec5c0bc625c8e829887985702cc139e6a8e3904d9c821801710c03081206f09040a66ac67d4684347b5f89887469b10a3adbc29eb68c421a621a61511d33298cc9e3f4cc3036410e310e3328b71c293dd8b8171c92faae20203621e621e17cc137e283d574cc214d5224306a69f894a3fcb48423ca6a8224820486415240a99c78ea6453950434e01358ef4612f1c33e45898b1d67644c408ee3d0a62d01144c08b86f09c76342a101e101eb20a0f194cffe6940a99fcc16f795d78e27ca44089000bbd20315e50a33c19dc085b085b98b45d80a4ed460693b6cbb0eba40cb77a96ec5c3a5cd516b1aadd109e819d65e3aad091ebf2400bba74a25c3ae1b9d0882e882ee87915d1f3129e829c1d68415c2922aea0d522ca6ae17450771d373e14eb64a574e341e5cb1dc09090909090f09465c438c438c438c4388e1897918ceb8c6157a13dc7d2430d06aa4404aa9ac293b583cca94d3bcf330549b8571e312f06e675c4635e472ce60577cf19f33298819e47cc2b860b899887985702cc139ebe9e492c2b934b59b28c4d5ca014b440d98c97753e97455ca044cb0b2daf24111183f92282f9cd7839eca170a8b4d013c55b15100fd113cd99279a91ac7b2ed9f385f423cb830869ac416e3c0d26de0a64ccc360e2af3f463d0ba6192f4d1e5d45348dd0344257b130aea2f043bcd7310fcf98e10e6da9dec9521e0cc38432210965e5cdcf474cc373b37011b3208b98c253f011c684c3189a66086bc582b55606d3fd73e361c63f1810612bd7b0851ea5088fb295c974fd9c9a6279c130f420d1d4cab9a9253ce31e610b4d2f843184b1783096c133e4314515f330ca017b98a22a2245b555bc63e771b36434a8312dd5b0ca843468608932b0b29b0f8fd7a5e2866a8c7e0b8e7e0b3f493eb515bb4cdde155c8781102180258ea0096c1a4f6fc6de4c90ba0715eb72b3780a18f26ca472b6f527b09310c8d32c4b412609af00c771e9813015d12871144082e08d1120f102db1f810dc3d5f7868c7cb149f0be2dad10c32e8d29206a58a736e9f48fba87c49006822093291daf132cfd3c7c0fcf9843c6ecec87a621441a91174d745584458cc232cc6cb6c47582c132cb29b8a088b088bb986454ee7de232c7284c5ecad28200c220ce61a06399d778f30987b18dc941c82b087b0976bd88b97c62f02f6f2b789129d62844584c55cc122a713fe1382c54cc2dd0e9972894316a21166b470c42221192db811018d303cc94210e6e1e62b119bafdab87121a39887897b887988795c304ff8c6060cb665c9ce43cc43cc2b3ae61d64f05c7fc43cb4f310f310f3b8615ede7667647f871aeed04780c3e5d3608813b27c7a805b2d10f3708719c25ec9600fb75220ec61b21cc25ec9602f6f5b27d0a34598439843988b0873f9db2a81d61dee08439843988b0473d9defa508405dbbcc01c5a77087ba5813ddc669100b215e7ac50dc6681a928854f4511becd22935896008c258e4f083d083d85821edced80e61626c621e69508f33a783745f62269087865003c0cab090aab75f2b6db217f31b7243030eb4799e0ea02c260ae61103744200ce2222bc260c961306f1b24cae10123ec21ec21ec7184bdbc6d9040eb2f2d18c44c6284bdc2c25efe364ce46d0138afb087d61fc260696030de860a34f0b8a5ba647dd503577e31d525a7a92eb89b02310fb35d10f3ca8479c2775314c1a345cc43cc43cccb07e65d5b4fee036aee6de695c597b91ffe2b430711b9aa8e4de90d75383c52bbef440820acfbf7ecc35f4fcae13dfcfacaf09767f80d43d348439bbeb01ef48555bddf1f74b5432f54e64cbe79e5925b70a4f7cebc3fcc89a1a93df344d3ac2b97a8ba3904b8e94e870ee2999a45c4df94e64520dca636360114ae2f44d7295c74d807f1af0cd5236d68aed421e06068c7d0bc51d16e40dfa609dd78b5aaf331d09fee3bce04d95fdae7b35bb3dbf2bc29bfdeb45479cffba43e702e014163e41f92de9d9a3e7c268593c9f0acd2d34ca2bd1c7c0b1a0501b0e9681cd06b57f706339e8e8e00ed9daa66c5517c5aeff25ebdd99ed7e939cadd51e74bed68f544fb6cb7b6f739b73456fa35f4d3804e0d9d9077697cd05ed0e83486d135d63e36acb166734f7227f5ba3a9c824e389b40816981ce3d0685068c0a721954061d9092c915fb2ff60b609cf7e0ff0fe0ff9bf64bfba17d1f9ebdb0efcfee4850f0121e3eb7ef4bff78ef4f92fdbdfd8dfdadfd6945ae5faaba2dc02f2b634d8c149d4687caefca0cb04d493dbf5332bb0d93f018e8fea3fdc87e4ca642b25fc1448078d3b92173f48c169cc3cfe792fd2929b49f42c173a712f95f829922efdc825ae7385ddca6ebe5ecb6546feecbf5fdce01951259c9be7428e1e40eed50aed51bbbf7d8d8a1c703f6996cd7769dc9e0419813753ca65fdd5ca9011fe82ff671c21720808f18a6beab83dfa2f52a1148af04a9757a4146756babcbaf746a1b681ace6cf5e6ee53dfdc65ea15e6a9afb7e20bf15f3d3d4790560235f705a8c6bb527c416ecbc219b3a628b53a93ca4e9033ebd139534e9d335bac5a47e13489ed36eb24be4539f4076a009cdb4f40c77f4014fbbefdb9fd95fdf7df5e94422bfcc1be0ba6c067f677bfe5c201ed563007c89bc03bb4b556aa62efc9fa3dfb9b2464bd1e5b68b70b4d745154a28be2bac7c55b14990dc08670510c12b4d99d8afdc3ece6ec5d78f092d884f62ba8741f2cf573f8fdb1fd6cf6c94509fe7e044f1fcf6e5d949ca7f03bb858f68b8bc4d5ba6f3f2525f603da3431e71f52b31eac7c89bc06bf3ea43d4293b38fd315e626b35c6eb75cd965bcc5de6d6cd9635158c2652fb293908a765c25ec1ae9c9b1f7bc60ef2084f47efdc348fa36cb6c09e781ec18e97576f154ea9c605bd9c65a1e6c93d00845e8a7f0efbb00a82492f2981afc1496ef03b23e7240d909ad70415825844b949da6bcceee2127612ffd11c8f24822549add99ab3542461a753af7f94e77ed7b684f0995e776903cc79dff4f3d0b8708cd3390a20f69b09132c22ef31d4efc4dce603abe598bd9c176fe252592f39b6f7cd7c0b07d8b1a732fe6015c62bdeddb5f8363f66790a83fc06f9f837bf657f8f92df872ff477db980173e878a5f87157a4e9eaf1d7742c8b8ae70c1b256035d3f84aaf45c3f96f5c43c5924c18e641efcc49dac98c893c96edce4df518ceead74d843e49c1dc5031eb6c63d6fc5f3e1ecf7c0ce4f13b52fdaecca869b7dd149cebe482c36ccd15838288fb1c01a6f6011fae850d28c0e253bcd012a7d54faa8f4cbaaf4b90418ee01d77b01050e6aff407c54e100a30a5b547b1b0d053414d0504043613357b3637993dddb6bd5b676ccce442d76f04103259d15cdb800ff0dc8d20b2f4b9e6d91907d1ed8f9545e8591e8e18518fcb2932fbf2293ece2dbdace281164b21d5fcb1306784e32f451c563ee019b2e7f042cf303c50dd0eaa09d9f103d4d520e2a74abcdcdd91d4ea9e3c9e61b4451ba1d76990c537e3b09f8417c017fe46ea1c175c1bca524b5d3f5f7bea77943e035d30d5a3781699c8d73e41f90ef67c456771fc5e7a53c4b5424958932952d9962374bf3cca208fa5960d09df609a6bb59cccd822449706497aebb989a04df6c4da416c237ade87cb34972f9f04d87354cd8da0a3b11d8a9c58e77eded1d47d865b1bdb158d4946bace45cdd351380e2ec34da19c5b789cd6a0421dc51fbda3354a8cff674f62ef9932c88d8f7f9eca0ac85885d9ea876d7d59d60087b593bf344fad99d8cd26d3beb761a4a0c19da702a48688f8d4ddbb3573cf80eaf79674e4ca2078290c5c66fe9c2e3df25facf17f69774e5903ee233f721f1c708d46b723b3080596ade5a4518b27cfb8dfd95fd99fd2d9fbdba6132d364cfb66ff2da7f198b6e7781d5beb7ffc0876a9ded4463b48b5a9b2c0b3e2894a05d14ef001099792197973e638fd67a4600177eaa07f3931cddce96232c18f1d216752582b6a00b67bcc81a465776a52073530aab118170227d06e8764eeda60fc8712464a59eb2225f632af0dcb848b4e325b5abb8144e39ea9773214f33aea9a970d39aec8c458e277a061cf421491da1678cbd4cd5c8f0f31223be29ec0eb178f6fb0a908d1cb7c6c74d8ccd82e2099416031680547f73cefdbb88f409a6cf77d4f8a7e7753d00523dc9269db280fa5f836ff41de23c17de9bddca26df3104b6620587993d395e3e07bb274713b2e14725554f2e7a642042620db7702ffb015824bbe1dc89bef873212f4ab3f7897b4773906f53a7e5dc391a84e43af1516672c88955e2e9c98e284fb91d1c5a0055bfc46b7cc4b80054ca300bf15202ccc4017dfd8aa66311a87aca741876626412bff6c9ce430f494ec32327552b9bac249e46cf1ddf35a38e997051b31f9013a266b741e7a7eadbb38b9970125d20ae43fa81a21c51881e32f6605fa288fd6a1fa914a2d568208ddef4409dfc543129477acdcb47213e88f4cfd944ee2c50c90d6ba06edb2270299b4711520c31eeb3502177c0947d3a7bb738711f6ee95ecc711f9add7713ac5f896e59a3711d408d6712158a874ee827d5284f247d1d0f07626456e7dfd888b4dfb99404f24efef8ccfe3cb334420988edf9a3048429878fc8b1ea4ce73521f3e76c6e01fa1f3b419dd7717a8b37bd7909b8e014177e8a05e35c96036959f2ee37d39be36d3fa23cefcd1fbcd5858eb32db7f4ae2f0e1e078f83c7c1e3e071f038781c7ca65c865c3856bc5d07e6d342423658f687ba6a2d97102207ce9f5b77f3f4312f14ca7c0e5d0cf15262ef440d24543d06a1d817ff38dd1f1f76e170dc8da781945262508a1911946ce64f44e1a8461a746aa449273efcd44c834ecd6cf2530432b5d220532bf7646aa741a676eec9749006990e724fa64e1a64eae49e4c442df2a7935ccb3fa1e2d8e3ec84e26390a74aa838f6383ba1f8d8e3a99a99722af6b89caa41cec7d09453b1c8e5544d723ec2978a492e67d426e71de75162c67952cc007f8b6efa78400f9cf9c0beef3b5ad1fecefe1e7e925ccdcff91c18183ffc53e776101973bc678d80de599f6fbfed5e2ccc272214220575961baed6a8c87c544bd8bd5f6944c11bc15fac444f6a50d88faee676380d338a6ee4b0cfecbbc0657fb6bfe2c3652124e77b768d1276c6a6c0a51685fde85725ec1e2e1c7e4ac3cf96bcfe460639fd0264f64b3e328a539eefe137b9dda11c8b63ff06bae56b5e67452740b59d6f28e14ab5efecbf80cdf7152fba093381b266f4a10582b29105d9e01c4a68314712b65ffeca7ee96c9de15ae90847aa33dc38ce9ea3d3d8595b7acc69ff7176cb7e4cee19959cfda8cbb710beb47f4ae092aa461867088490067b88ac7180c3173b7cc15b7cfe374dbb2f0a69f22d57dc22be199dd908c1dcbccbecce37a6276674ad5ff8c3d9e4da856a820d25861b01371923a2cdbc9def685fc8bf77bd4cf825ccee49b28f67b7c14222c71343e94bfb47e76e15fb317d25be89b4763c7b8061c8eeb3d5b77aa98d6d5767c57153434e79afb35bdd49cced33f724e9fbb3f753999f8d4e690164e59c5ed50872410ee9fe11887b3b15b2b23b57dbb9beb9ed9ac2385a33e482c194b9deb9549e9e6446b06df6f1ec7d6971953a7924d94f00de5e11e90010fb096563ebe8d90d1f18301fc3672be7fa38804e339ddfd927b3ffe163ec84313bbb8eda4e7625fdabc413649a067be06cbbb65e4d354810b79490bb2a23dc2ccd1e8d6d6ff558b75c57ce92d1111ea80bbbaebccdd0eaca46ba569678336a3031ae92f1ee2d93ec1fe86e46d028d28568473e459a36664ecca628059a005159ae7dc085f7595a5de1fd4d2659c170994f46e2361e4c5799a7ab01b69f8c234203e4570a125c0072cfab4c14bc23ac8d6dc5ee3a47ec9677c36efe4ad5773d06aa550e6af580257b223aa074a2034a8623c549fac8bcb4ea56744857ab86024a922e7284c6d0984990ecf9f0fee49a137cdcadc7360f6be35ec00aca0572d71a283e2774799b5cb9426c12e7ba80d97bce5590a0013f96480cfaf6befd6afff59d975dc25de5080bd75bd5e15a8d242d95b0bd429b02cd496442ed9c49177f4d8619e4d81d91c6ce80e8e36662353fa26b8824b84e18fa053031bdbf54fac77b7f4a20752a8cd57cfcb0294c1a9971158e8c1b76122b3b0f3290839d1acd04965b5ece6e4b3ffbafa96efd3cfe5cd7b70647394e4ec8dcd4d9fdb7567c814a8a920c7cbeed3af4387c2ea7c1e7ecde5b127cfe035df965bae84bbc4114d59c8b9072cb6d816fabc590b2f712626424bac0b7c98a5e910776546fac860f036c9e8c64352518ba033d047cf1eeecf7cea5d7d43c96e617f4315d6916813722242285e5316e5be5cda8c1f770f6318141c7ce4b22778201e8d9a584214cc751ed3576517ba27503affd866b09bcab8b181e4f39ff9212c9f9cd37c06b00fb57a7a36bfa55dae9858d59adf3e83069ea4aaae72c44df55d488c3684a18a3f158af4a56f3b05bd30d6e17626e838005da3d05267b7ed139a71894887481046840df38f7fa3d012ffe033042ee5c747ce067f68f73ef77f6c94569f61ed47b4e833d4e9df37df8f1729fcf755061e02354d5efc0da217955328bc0ac6cdc63496a89ea0e2ab17210c2f6afc642831dce7809d4a81c2c0e067dcc3121b5c1c04b99d3c7f16c77741ab69bb0dfb89ec22dfba97fa199dcc36b3f2141ccd94704b4b3bbd42c735c6a8e9d04b0db276d3616637d515bcc1765670104713d17b81e2538ca2b04c7be92bd66ef72316ad3cccbe345d46dd076c5bf7305e8ea8635b9d0330c0bf3444ff63831d1e840ca8fc81abab3f387aca34b7e3adbe7a9068f73e0a017c5cafb94ee617d68bf987d6cff245d7017dd6f52dbeea7d725fb015880ef5357fe19b9a07c7633d95c8a087bded0382a9671944498fd53c72d996fb87e31bbb39b43123d972249c645470565b180967a842560342ad1a82cbc51c9eb80c12dfba094407d49fc5230ed3e2421bc4578efa5afe03eb1f7e0773ed22087c4f81b11723dd0bdcf0f722012231233113a47be73c80a899b774716be1f1204c51512743c0ae178ec1204482e79288265809c8f9c9f28e7e7c5e5c6c531b49ed17a2eb1f59c441c4388ca4638ca91f8201c211c65cd99dfd2619474d0ddce206dc7384261a723fb024719fb70a17dc9beb79f6cc8825dc012383a0037593b5577de16923825191cbdcd2b18f11c3d86cd0409ca8fbbff3959018ae0d5ed845db9819208874725bc311e110c110c116c57b98d70946abc835bc2cd33e77ebaf4ccb356b44cb86d04dc7425109f8f0ee468ff99618d8366ad93fa6963c1be92dfbf1630a224bbf43f99b74bbaea55b41b134333cd813e36c99baea09bf050ed99279a662d1e1ee9bdb3c55f3dbd3b1d69630bc631b6e0df2bff0f504b070803361d40361e00000d040300504b030414000808080005338c450000000000000000000000000a0000007374796c65732e786d6ced5ddd8fdbc6117fef5f41c8489000a5448a92eea8dcc928120429501b81e314edd3618f222536fc0249dd479e6c074d0aa48083f6a1458ba04d80bebb89dd24ced7bf40fd479d5d722952fc38ea4451d2dd9ecff66977767776767e33b3c35dded1dd0bd3e0ce54d7d36debb825b68516a75a8a3dd6adc971ebfd876ff387adbba35f1cd99aa62bea706c2b3353b57cdef32f0dd5e3a0b1e50dc3cae3d6ccb58636f2746f682153f586be32b41dd5a28d8649ea21192a2c219d556d4e8893ad7df5c2afda18d3a6daa2d3ea2313e264ebb18bceab36c6b420d36473cdaedaf8c23378cde615db7490af2f717161e8d607c7ada9ef3bc34ee7fcfcbc7d2eb56d77d2116559ee90da986125a67366ae41a8c64a4735543c98d711db6287d29aaa8faaf28769932c5933f354752b8b06f928b3aa8eab7a4002d3c57a59ada3649b947e9d4d2a6bd7d9a440ccca14b995f58c10a755451a575715699c6c6b227f5ab0be879d7b5049feb9f79b855eb966d5b1306d4a548aab3b95a7195227dbdbb61db38a1b846027ec7605a1d7093f27a8cf4bc9cf5ddd57dd04b9524aae204389256e9b7942033ab10314bc7a86559e52bb78d2853df73baeead8ae1f33a2553776209d6e0cd5a96f1ac550c5b59474e28ec7b9a4c08ed401d80268f8335d3dbf93b265e5f2973b842869bf4a1b884207d3c41000f12e8cad3b89dd8166cfac7108bb5018ea85a3ba3aae420669364cf590d418c3be4697910f49f49082aae7497e9eec1e3ee8e03a1ebb013074512f09efd76d8da8abd36c70731a52547eac2a86373a0a4d545ccc859f3173c7ad5fb93a32b8372f4155c182502253372e8f5baf22c7f6de8829c28fad4e79870fd1d436514e6f51c515cdc968624e7352d1e2526d710d3f512d102fc0cb3bd73daf52ff6b749fa470745f01fb7686a02d56ceab8736edfca149f906877e1319faa9abe70cbea8d9e8f0268c91a7148b9a0d0eff96fa07f4db19f71eb2bc422d4fd0447a5ecad2a5e7abe65a3cb9b63e26c3716f23c33845ca07c5bc65691be1f16d57550b8496a85a97834e91d98acac3809d723a56353433a2309ef61c31455c04afa886d1a2e40e72d1c445ce94775c7012aeaf43ec1f560135f4623bfc58f77c64e16d0098d1be622ec482ad6db62161340569cd1e1ac89accd004cadc192950c00df82e70f5e0fdd672431ebc2fb2961593d0d07e28c987535a1375482bdebc9fed16c77f867a51de714c34d597bb8eab7e7d9fac4c8ec8474761881c45caa9750865725f682d1171d12753b778ddf2d509b41beb13ddf740e464a09c3ee33e9499ebc2c6ee326f2851387857a0b338b30d70bb7857e4bb33b58809502edd4406ef18a06ac0008438a5ecd1da896bcf1cb2b724bd77e2eeb1928cb8780ee46396f74bf3d436685f6965a1b4098519cd1fcd3f0afedb8e7b5dea689453b18ad05a451a4e14d7b061077447d304f85a9e289f3fd11b29e350442672629858633ddcd69d2163a6bef6faab13ff8de3580191e31891c4f9948276ae5caf62348982bcae8a0bb5887ffea8bdb400a5b02d9d51ab06a5dad4ac6a597539bdeaab4a48146eda9a8b42c3366797d5832cef3aead1dd0daf57a37a74eb30099b9a552d6bde5d73cda51bb7e6d25e86211b520f694df5e86dcf635c9fe7edc601b5ac5b6fcd75ebefe1baf5f7c697d7b2c4fd359778b03dcb7d7d9eb7eb8f6b59b7c19aebb6c5dcc2f579de1b9f5acb121facb7c45df1ea25cecd3d844f6e34dd3078fcc41429beea62a2dcf226372c1c7cd5149f8170c44ac259569c5b229c6e739a138a7955f68905c8673ecd240fd8f355cbbf22e1560db1a5802580ab067ee3eaaec46a5d95db10b292091bb2905a253da810bfed970581fd4d6d20e9df340b52af701ab720abb25f6c41fa5bb320fdfa2c48bf260bd25fcb8254c8ef3765416a7a5053a39b9577c782eca2701ab720f56fdf33fb90fac21c796b464aaecf48c9351929791d232555c83eef9791aad19383706e9891aa573837d148d5164949d2b68c9424d566a408026a30524459ca8d94af9b6abe20134f13600967beead1152584c72dc3b626cbeb38ccd7154fc5ac1775d0c9f05281bd7eac60a0fc96827c95b72dde3e535dcdc087c9356478094c4ced99eb55637617673b6866318ad02c5ec17899c13a58b0ee293a4051d774852fb71e62a9f59052b5ea85635bf82a524d67e0a4c3dd7832bc5767e0a4c3bd49946f55c6d5fccc1556fdb0fc0c5cd832bb4a6f85074fe373aec5c77c17454b0be9a071782150680b07a2121f4676edf0b2158f0c7d0273b10091ab9dfba5b72660900a97260a4f00e71e035fd04647aa23eaeb1f07a73d141dc9a6f5f1c1ece2b3c5c91b2399e162aac2bb239dc46a172ffd03d52b5ff9a8c6416e7ca9934f6b4d09bc09c7911bd17d500185f6478867d658750ddd52298d671bfab880e45c1fe34b6e68e6db051491312183929f174a73aeea93a97fdc02a88d57154ef75ad2490b96dcc54a83553858e0203bf43b2ac278aa676172419b1021c126ef4120840fe76bfa458c5ed551511c29d3d029663bf7d03f887cd1e9714b8186aa5b0cf9584bf40ff1c58081e3b78a3467bdc58c242a5e4ba47439aa887461f2ac09665f16aa337922754f84936effe4a42b9cf0f89fe0b3e0e5fce3e045f0e3fc49ccfb58f7c0dd5d46cc758557389ecb25dc80dec02a604b88dda735a698bba3c097a6b5725d41d9dad3f602f94a01db9ef918d654eb925504eefe1458984ca99610cf92f520f1bdab65ff51cf85ac65fd1573f4d7b25d13df79a3c8f0a6688c3722498ef3ed6148b1acf7b4bf045b7874ea5a421e9295648da3da9cc661bf250469bf5422b82a34d451c6b405425e10e4fa4a32e398a460ce717df1ac97496a826ab72a54afe75dd681aaa6c9b2a230a832a832a862044a55a12a350e55ec531954195419544304f6aa42b5b705a8ca320b80195419544304f6ab42b5bf05a86a1a832a832a836a88c04155a80e1a872a0e7f6599419541f5f640b5b77a06b8b70319609c54625e95419541b534039c85ea3632c087c2a1c0a0caa0caa05a9201ce42b5f90cb020e0a3510caa0caa0caa2519e02c54590698419541759b502dc80067a1da7c0698ed5519541954afcc0067a1ba9d0c300b8019546f135407ab6780073b90011684c1609dd34a9a163e9765506550bd09502dc80067a1ba7f1960065506d59b04d5820c7016aafb970166506550bd49502dc80067a1da7c06f810769accab32a832a8966680b3506d3e032c49f8c62a832a832a836a4906380bd56d6480659905c00caab707aadb4de34af0b5ce997b863786b7fdc5db3672b1e1134a863786b7db87b7e613aad8bb0d060c6f0c6fb7116f2c2bcaf0c6f0d61cde586a93e18de1ad39bc6d233f3918b0fd1bc3db2dc2db5f82af829f82e7f82142fe73034ac16d018de11b43285768625bc8e04f0dde77d37a17d7f950ed2634eed47641190988078ecf9197527377f081b9a23036ea71b5979d274c004db93213c04cc0be9880f9a721c41b47b822e03f1b40b844be368770496208af8270f25ef70de13bd3f7ad40f76a6fcac7d89e7f127c3b7f1c7c8f83eae0dbe0c5cd41f926fd383daac050ce50bef328ff5bf02cf81a3cf8f7f0177bf297389c2fb85e9625e6367d308180973fb57ddf36413ced7eda51d712e3f386aaf989d2ac415890ba34fc5cf49e6b27124d7cdb59c1780882240d06fb6f3cfa5b371efd5b673cf267dcb4f128b8f096633c367dcaa2c478d4165830e3b101e3216ddd7848b7ce78e4cfb869e35170052fc7786cfac848da78086d595e580f7ac79d598f5db41e6cdf725bf72d05b70273acc7860fc05cf325350c7f0c7f7b82bfbfcf9f0090be6ed8099314ded89e01fd7202803ad4f8b7c42e9a2926074d855ef47f7791e3db71d79d7d3201f365efbb62a6e44699927f8021f971fe64fe087be8f99f831f8367f3a7d89dcf9fce3f095e04df052f8367059e3db72d97d7b0b9d74a0ef09f1a2c4caec15b3c3ecc18bc024bb799471cecb412b32f7b625f3e87e8ff1b88fb9f35f11073d7227f13d616e5c129aaa8154e875b87d3e166e15428b42a349b8153fe8c370a27f0acc4e53e0b5deefcd3e0bbc6bd2cf63febdc4f9665496211323b6cb73d2fb6f261bb7fe1fcd5fc8f10e96e036eebfdba787afd8bc18dc16d6fe0f613ec231f43d0d8c8e9b76bc2eaf0c6c24af761286547604599b95db02a9ef51ab082c0f1dbe087e0c5fc9366766405c1632dcf6f9753b4f458c935722e15c5f745f0d5fc296c67b1e856499465da3599242b4de3a78fcbdec4343e3b39cca2a45d30e79b8892be0413f272fe78fe84bc4bf06730ee2f82e7f38fa29ffe173c0fa3a7f9d302bb14b7e7aa34dea1d08bbeb089619561754fb0fa1fd8d13c82bf7f82a0abf91402fe656beba410700281018e016ef700d7b1354d57a28fdee828fa886610b74274a8f0b482e26aa2f2e002417b53f8bce798622b87288987883bddf5a018935833f314ef43146058b766b104ce5d1d3e4f78d31e43d70644a2a70b944d558483d394bd88ca34dbf6e1bf34044ddde2a7916a09ed837e14169bc89d404d18410be9c228565e2a5d6c01bafd10f69d628e22569ae7323a7bb3c4629a9d4e66992a2c6fb7daf2eec5da2537c1dd762f753a3af75596e2216d5578cf93ce2741a19b20a98c9e6466bafb8ab4a3f2aa41aba5abb49a4c6c129f52e98ab07b17e3a329504185dd95db078b5d3d9836601c4c2ed4c4f70c1d5707cb6cbb3a842664e77ddc726cd77791eee748fe205f85c5bc151573573491b9a960753d05814ff16dfe770996e3c2df270a378671b12dcab9f313da72bece2e972f2e4c09f2868d744f96d70457dd26bab7aa32cbb192a5553956f2d594d940d61814c65177489ba19d20bcb2bdc8e21a8a7b78b89df0a22aab6b286f766377ef61f61a366c165a459baab074e66125b6609fc1936837f22dbe3b53ebda648503db9e1eeab6f00a9754a4c416ec219a42a8bcbc551a34b05312175bcacc3669b0d62e69b9e7f41689ceb870bf923ff82adb15cc40e15e25bb39892a4ce4c56a186f59a242ac8d29cda3f9002ea3ad7cce9e2644d7e808afcfd089fef7a6aa1a528feedebd7bd4592e8c4a9c252c2f2116c32f9d60a4fada49e33d1e3df8223ac384138c1f07cfb8a862611047221d3b51966187769b0271293b9d8c4caf12f30315c738a552ee66a41c7e72d5097e3c81195a51f0dc6b219daffb469224fcfc7a4610a9915245c4082e8d3e463e9d23fc885259a6fbdd161713f167c898416157107bbcd885efd648c0cf7fda386a8eb8c084a35f729461f3eaae3111ed1a77c493ef87823cec8a43a1db3e1044a1d7eff6c86843f21dcf3f4f2bd353dd0955e53a494205b607fe4896938461d95654fa5d28780f7f3ee96b27c13ff17b860a7fadf5823643988b0569090bf96c57408883ac505b922a84bded089f0e099ee34b85e41ed457d13b927ee2e68f39f2cea49fa30b09df90dae84177f003d48733c01fe69f72c15f83cf827fc3dfcf832f290461d442fd0ab9bc9e7add9409a74c4ca89d95f0d4880a17bcfd22abc2dd5215eead6ecef762ed98b26e4c593bf9011c2d1edbcacc8c9fe778a3ff03504b0708f33c0384c30f0000d2e90000504b030414000808080005338c45000000000000000000000000080000006d6574612e786d6c8d93cd8edb201485f77d0acb335b0c384c1223c72375d1d554add454ea2e7280f130c160018e336f5ffc973a6d1695bce1f21dceb9d7903f5f6a159d8575d2e85d8c1314474233c3a5ae76f1cffd17b08d9f8b4fb9797d954c506e585b0bed412d7c1905a97674dcdac5add5d4944e3aaacb5a38ea19358dd0b3842e693a188d958b92fab48bdfbc6f28845dd725dd2a31b68238cb3238ecce286757ae69ad1a28cea050a27770102718ce6c9ff07f43f5ec329231e66ad4e363e8c12e4588c0713dd395e55cdd6b20b02b181296be046729ba87389ada5f0c3c8d8b79ba7d8c221fc2482dbd2c15605694ded842aa8f3272ede9cdd8f664ce39bc4b8dda61154e07c15814210406280378b3c71b8a328a5693fa96cb39a393001380d3f0ed039d128ac3583141284319cee18c8d5e8d95e136cc464f207c18ef31a6784b09998c16d0a8aa84167648fc228f567c1bda8724c1c93a491f5fa46e2f875fdbf5614da2057068ac7917cc4382518d1e3fb75271904e1e7f8e1c2d040fa3d115e0ad1d9a2cbeef09fefab4f931f1ffecdfcad80753c21529f90b9fea237c7d0dce87339c972c1aeabe3c2a019869b50f7f381e8b4c2875ad91ed5435c7bea3b98e6258e4f0e636c07b2faff80d504b0708731f60f8cb010000b7030000504b030414000808080005338c450000000000000000000000000c0000006d616e69666573742e726466cd93cd6e83301084ef3c8565ced8402f05057228cab96a9fc0358658052ff29a12debe8e935651a4aaea9fd4e3ae4633df8eb49bed611cc88bb2a8c15434632925ca4868b5e92b3abb2eb9a5db3adad8b62b1f9a1df16a83a59f2aba776e2a395f96852d370c6ccfb3a228789af33c4fbc22c1d53871480cc6b48e08091e8d4269f5e47c1a39cee20966575174eba09079f7203d8bdd3aa9a0b20a61b652bd87b6209181408d094cca8474831cba4e4bc53396f35139c1a1ede2c760bdd383a23c60f02b8ecfd8de880ca6e55ee0bdb0ee5c83df7c95687aee637a75d3c5f1df2394609c32ee4feabb3b79ffe7fe2ecfff19e2afb476446c40cea367fa90e7b4f21f5547af504b0708b4f768d20501000083030000504b030414000808080005338c4500000000000000000000000027000000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c0300504b0708000000000200000000000000504b030414000008000005338c450000000000000000000000001a000000436f6e66696775726174696f6e73322f7374617475736261722f504b030414000008000005338c450000000000000000000000001a000000436f6e66696775726174696f6e73322f706f7075706d656e752f504b030414000008000005338c450000000000000000000000001f000000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b030414000008000005338c450000000000000000000000001c000000436f6e66696775726174696f6e73322f70726f67726573736261722f504b030414000008000005338c4500000000000000000000000018000000436f6e66696775726174696f6e73322f746f6f6c6261722f504b030414000008000005338c450000000000000000000000001a000000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b030414000008000005338c4500000000000000000000000018000000436f6e66696775726174696f6e73322f666c6f617465722f504b030414000008000005338c4500000000000000000000000018000000436f6e66696775726174696f6e73322f6d656e756261722f504b030414000808080005338c45000000000000000000000000150000004d4554412d494e462f6d616e69666573742e786d6cad54cb6ec32010bce72b2cae95a1cda9427172a8d42f483f80e2b583040b629728fefbda51f3a8aa54b19a1bbb3b3b33b0c06a7308beda432617b1112ff259548036b60efb467c6cdfeb57b1592f56c1a0eb80589f16d5d887740e1b5132ea68c891461380345b1d13601b6d0980ac7fe2f551e91c5d19588af5a2bae875ce433df6e7e182ee8af77532bc6b84ba45724907689da97948d008939277d6f008537b6ce5d1b0bcf6292965302ded0058a83956b6bb123ed1384f8a4f4b99b0bf61c505d3839aeab3540898c7d9901ccff30633c381d5549e456c23f2b4ff47f3120f1e1e6f37009bc7937ee7646ebb3b6ed0887a9aadf116b1737dc9470a5a2a632d7818c398952d39ff3d83ff69ddf92aa8e064411627ed35c324be52bfbe82f517504b0708532aa99f2101000045040000504b0102140014000008000005338c45856c398a2e0000002e0000000800000000000000000000000000000000006d696d6574797065504b0102140014000008000005338c453f80fcc047220000472200001800000000000000000000000000540000005468756d626e61696c732f7468756d626e61696c2e706e67504b0102140014000808080005338c457e31148f79050000112100000c00000000000000000000000000d122000073657474696e67732e786d6c504b0102140014000808080005338c4503361d40361e00000d0403000b0000000000000000000000000084280000636f6e74656e742e786d6c504b0102140014000808080005338c45f33c0384c30f0000d2e900000a00000000000000000000000000f34600007374796c65732e786d6c504b0102140014000808080005338c45731f60f8cb010000b70300000800000000000000000000000000ee5600006d6574612e786d6c504b0102140014000808080005338c45b4f768d205010000830300000c00000000000000000000000000ef5800006d616e69666573742e726466504b0102140014000808080005338c4500000000020000000000000027000000000000000000000000002e5a0000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c504b0102140014000008000005338c450000000000000000000000001a00000000000000000000000000855a0000436f6e66696775726174696f6e73322f7374617475736261722f504b0102140014000008000005338c450000000000000000000000001a00000000000000000000000000bd5a0000436f6e66696775726174696f6e73322f706f7075706d656e752f504b0102140014000008000005338c450000000000000000000000001f00000000000000000000000000f55a0000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b0102140014000008000005338c450000000000000000000000001c00000000000000000000000000325b0000436f6e66696775726174696f6e73322f70726f67726573736261722f504b0102140014000008000005338c4500000000000000000000000018000000000000000000000000006c5b0000436f6e66696775726174696f6e73322f746f6f6c6261722f504b0102140014000008000005338c450000000000000000000000001a00000000000000000000000000a25b0000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b0102140014000008000005338c450000000000000000000000001800000000000000000000000000da5b0000436f6e66696775726174696f6e73322f666c6f617465722f504b0102140014000008000005338c450000000000000000000000001800000000000000000000000000105c0000436f6e66696775726174696f6e73322f6d656e756261722f504b0102140014000808080005338c45532aa99f21010000450400001500000000000000000000000000465c00004d4554412d494e462f6d616e69666573742e786d6c504b0506000000001100110070040000aa5d00000000	3048199183	2015-06-08 19:08:16.129777	t
-1065	заявка.Заказ в наименованиях поставщика.ods	1	\\x504b0304140000080000063b2e47856c398a2e0000002e000000080000006d696d65747970656170706c69636174696f6e2f766e642e6f617369732e6f70656e646f63756d656e742e7370726561647368656574504b0304140000080000063b2e4715d532e1b5100000b5100000180000005468756d626e61696c732f7468756d626e61696c2e706e6789504e470d0a1a0a0000000d4948445200000100000000e808020000008f70ad6a0000107c49444154789ced9c798c14451b871b18605158ae5544911b975b10501694b82e47381424248ad1880a4230c40389262a444c3481e02d8a4740518898884645045d9143d1a878809c22a2dc22d77a00223e3befb795764032ebe7b2b0efeff963d2d3535d5d53f53e6f5577cf6ee2da6baf8d8e3b7ffef9674646467e7e7e767676ddba750f1e3c58ae5cb9e3df0ce196c3870f13720505058969d3a61dffd3fff1c71f894462c89021c3870fcfc9c93974e850850a158e7f33845b2c0209fe045ba5757ae601429fb7bc62e4f16f86704b88405e13e91c6053868569cac6bf5ebd942f5fde127f8524ffae92939492e84f515c88c0b4a23f4a8e4dd8389c84836dc3f6dbc86908d3c4ba28de51a1638f7de051bb37be336c1f7b20345e46ba0244b1a405cc1d5cb956aa54893d6c23837ab3b8c4fb33658f75261d9bd299f179c3125028167646c9252533aaedb462514cb0b03fd4ef79d4d215c0fa68cf9e3d3367ce1c3162c4840913faf5ebd7ba75ebddbb7757af5e9d02fbf6ed3be59453585079eecdf449e9cf5dbb76cd9a356bf8f0e13ffffc33dd989191417446c9a8b50d83a8ddbb772f9d4c19bb82629b9d050505447c952a55a890c4949595c57050be5ab56a9c88f56ef0c1ea640f256bd4a861d57a1eaf62cc005132b510f1d3a74faf5ab52ad13f71e2c41f7ef8a1478f1e9999998f3efa68972e5d468f1e1d2684126a715982bedab265cbfefdfbb76fdf4e102f5dba74ce9c39c465bb76eda264b82f5ebcf8c08103ad5ab5cacdcdbde5965be8deb973e712e8975d76d992254b060d1a3463c60c0a4f9d3ab576edda5dbb76e5f0060d1a6011956cdebc79e8d0a1d440318e22e219a9d9b367d7ac59137f962f5fdea14307ea095694725f9412c51380ccb466cd9a458b164d9932851ee42d713f69d224066fe4c8912b56ac88925de9b6378b0b1db86edd3afa70ebd6ad646bf234d3e9ead5ab4f3df554a27ceddab5442a9d49c7f25ab16245524f8b162d366edcc810ac5ab56af2e4c9bffdf61be13e6edcb80d1b369806e426429f57f62f5bb60cb528b673e7ceecec6c9cf9eebbefd8c3fc70e18517bef1c61bbd7bf7a65acfb7e08a2700ddddb66ddb4b2fbd942510f33549859eddb66d1b02d4aa55eb975f7e8992937bc934b50c427f92ddc78c194350b2049a376f1e59992e25eb93b3478d1ab572e54ad6330437b19b939383124c1acd9a356bdab429a1dcb2654bdc409bf5ebd713f4d8c236b331917df7dd7733455315f14df9afbffe9ad159b870e1b061c3e6cf9f8f5dac9da8904f4bbb0f4a9962cf008d1a356ad2a449e7ce9d097464602a604149b2212731db3260a4285b0595508bcb12952b576ed3a60d1b952a556adebc39eb96fcfcfc4e9d3a11dc03060c2040318480a6c3095f962e797979842fdbf5ebd7278577ebd68d886fdfbefd134f3c51af5e3d82fba5975edab163c77df7dd8733679e79268b2b5e59f95033fb199ac68d1bf7ecd993b15bb0600183182597619e67ece2dd0625c7f4efdf9f2e1b3c78306f19331691afbcf24ac3860d19b63a75ea306025d8d83284f5274b1da6533608d0eeddbbb3d1b163c7f8dda1be7dfba6cca8e47e3b9c8867207af5eac5dbf1e3c75bb1b163c7a6dc06e5952b372e0fecb60ffbebd6adcb2bfec46f1cb9a5787781a264c2a0cbe8535beb93fe070e1c1825af8fb9d82221d92db6126c7299201ee5e1894ab84d696542c8c6af536d8ff5b0f57694ecfc7f2acfab150b65e2375e430d6e278144fa4bf6f8ed641b80a33e9189d2b80c482996ce03a0b2c7918f818feccf239f97a53c32b78fc2ce7f8ae378e5f1edf810fc5f5fe664234460a254d40fc31606d86d0612a582c55be14f21b87e65de4485f86c182668bb420a0f1d8f5d69fc3965203c160853bcada06ad7aecd05c39e3d7b7efdf557aeeaececf17468ad0ac71efbec29c706bfe38f54439d293bc3fea848c5f847f1f670a95aad5ab503070eecdbb7cffa245cee87e756b61d1e3c49ec131396ee4420e39878f2c927ab54a99291918109516c85c36bc58a15ab56ad7af0e0417bac18f274cab8c643c78eb2dff7dbbccc753381be7fff7ededa7d3a229e028944222b2beba38f3efafefbef39350d2a17fb15001b5c2012707bf7eeb58fe2b376fcec71c1ca27b1ca2d2ed9e6d59e4f530f75d23c22f8f7df7f679ba3700f1bf9fa952b57b6f2403b296f1fd160aae210766ed8b061f1e2c55c44e6e6e6f2a5d8c35114a3301d65ddca21f4e7eeddbb23c70beb9305863571d75d77ad5dbb76f9f2e523478e8cfefe7314e2fed34f3f65683b75ea94ce9dcdf0783f333393882f28282082d7ad5bd7a851a39a356bf2e99a356b089773ce39873aad42e2fbadb7debaf2ca2b39246502f9f6db6f57ad5a75d1451755af5e3dcd198093f29548d2167fece458cec25b8292605dbd7a35cd3bfdf4d3ebd7afffcd37df503e3b3b9bc66cdbb66dd3a64d94cf4a4231e29e767214ba528cf623c6ce9d3b972c5972da69a775e8d0017fb624a118a7a0a9447fad5ab5a824a533ff93a1122544e15d20b21ac3fce5975f123d767ba755ab560ce794295388cb3e7dfa30cc2b57ae6cdcb8716692eddbb7134ce43f8e25956edebc99435ab66cc921e4d7c71e7b6cf4e8d1cf3efb2c0210ee4d9a3499366ddaa851a328f3f4d34f7354c3860d6fb8e106ce45de250a099df3cf3f7fc58a15e4696aa851a3468b162de6cc99f3d9679f5d70c10584ddc2850b09d933ce38039d788b33942134d9a001042be56915f57308eda4f2abaebaaa57af5e0b162c98387162d3a64dafb8e28a071f7c90925f7df51511ffe28b2f0e1c3870f6ecd9ddba759b3163c6a449931e7ae8210b7d0af035f18166bffefaeb63c78ea5f0279f7cc2d759ba742999e2faebafbffcf2cbfbf7ef4fb51420faa90119f82ecd9b37dfb56b57c78e1ddf7befbd4b2eb904f79cdf623f9109d9b65000a296b04080575f7db54183068cdc3befbc73de79e7912cc96d9f7ffef9175f7c4174ce9a358bccd7b973e77beeb9a777efde39393968f0cc33cf10311420c8f2f2f2a2e47a63dcb871ad5bb7e604040a6210df5468bf3c217d7ef8e18751d18d3c5a400c51d21ea8356bd66cc78e1d7dfbf6259449cc443372dacdd63a75ea50ffcb2fbfbc7efdfac18307b3cde28dd6528650befffefb6dd946e3f3f3f3b1e5acb3cee27bd178946306c0100ea491d882c024f5b3cf3e9b462e5bb68c6670d490214310803a59dbd06ce278cc9831a47cbe0e2d2705a01c73cbbbefbe4b61b6f916f7de7b2f95d3b6c99327f3bddab56b47b5ac2cebd5ab17ee394a80139c420148ab0c2d51c53093f90841d62d844b5e12d23903397efc78c69b4822020868469af0b23fa66179404cb094b71aa98d6264445650b63226f8a881b4daa64d1ba69af89fe0d82a1c857af4e8611308530a318d5ab7de7a2b4997b8c4ae175e7881c2f3e7cfa75a96e0f6873c165ecc27c42251cb57202e994f3876e8d0a12884a21b376e648975f1c517331ddd78e38d03060c4060c29af8e623a61d9237c7725efbcb38bb7479eaa9a758235d73cd35f40395e3de9b6fbe490b79a5fcb061c34816b484d3f1653996afcf79d943ab98072cfac54941612cdab52351c5a282352e0998a53f698f4024aac8c1646e8699c022faefbcf3ce1f7ffc71ebd6ad946129f2c1071f904749b7ec249e187e828045c5840913a870faf4e9d4f6da6bafb56fdf9ef0253b1228c46214bb40341fa89f5373529237fe1073efbfff3ea7431e028be8a46d5c15dc76db6d8f3ffe381b5c3d7349caea8b05096b24323db307859f7ffe798ea230a6e106053081050991ba68d1229673b7df7efb238f3c421b683362702c66d206bb64b7074623468cc09028f984b55fbf7ecc154c32e405e6c0b7df7e9b0de60a9ac4d7e412851a7efae927566b349e2590dd0628b5f114c5a430f88854563bc4f7d5575f4d6a27f793e40856960a3870c71d7774e9d285f86061402475edda95f863f889578298b513dbece44002d79ede931aa981c3398a62acc8c9e5c431330cc1c13522599f541a15cd006c6008099b622c99680fb18b00cc0ccf3df71c9f3211510c1b49ffd75d771d16e11b95b76ddb96c8bef9e69b897836b85478f8e1875917d93acaeed210eb9c9ad3d13c2e0fac3604c30d16545c7f73aedcdc5c2ae723361080f54c94bc45c04a8fa5a0fdd41e493087caa90df3b906983b772eb393fd1a1c31e6cd9bc751d4c624a695cfc942a1008cd9c71f7fdcbd7b77f2376fcf3df75cbb3e608c89eca8e84627a16037f2097a5e594c336f30fb6305e115ae2a084a5e59079338398ab70410330616d9ef58489fe1f4a4e14d9b36119ae46f8e1a346850b811848d51d14362ce1815fd6c8bdc8c2dd4c929f0813aed869235801ccf5b22387e9628691ad9daeef73365f1cae22a3c9de02bdb49ad07ecbc5c73732e7cc070f6730a1a490dc88369f63b9cd0da9b6ebac99ac145855dca97f8d089ff824201580990f9527e8e1282232a5a23a5fce0e45012126df8e70ee1d3f03c28bc127c94b1bbf2c468885782f881071e2857f4774fe1585eed5f45d81fce87075851d1bf90a02a8c8a92b7dead70f8d4eefa1ff96c3f3c31b0b3a4d41f6f73f8fae1911685e38f0bad31a106bb4cb73d5c0ae3e761df3fb039892814208c7474cc5f25a4fce0243c344d79ea197f8d8aee8484625132c80ec77eb16871694ac4af8fe38f1de2dbe19971785e1bbfdd6e351cf55b84f65b6d473d57fc44e1595ef4f75fe084ca536a0873201a847b5c72e004e77f17c1f6a658a355aee8d714c73e36a558f4cf4196fed9d33cf5712698ff2fbe91282d8af707314294312480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8e62f64a8230366e2d1490000000049454e44ae426082504b0304140008080800063b2e470000000000000000000000000c00000073657474696e67732e786d6ced59dd72e23614beef53647cdbc9624c92d64cc28ef94f3624608303dc74645b602db2e491640cdcb5afd117e963ecbe51657eb659167759b0b79d4eb9006ceb7cdfe1fce91c71fb7611e08b39641c5172a714dfa8ca05242ef51099de29837ef3f267e56de5875b3a992017963dea460124e2924321e4127e21c5092f6f1edf291123650a38e2650202c8cbc22dd310929d58f9f5eaf29a6c7367811199dd29be1061b95088e3f84d5c7a43d9b450d475bdb07eba5bea523241d363a936ab5f53514a3f1125021b65d6649aaa5e1536d7cac556c957a6d194cace0ebb9f5fb9dd126c3e2e918041629b8beded44b53b455296e708c69faca61c92fb5cc6461c39181a0c823e0d95dd43b10ce543448452516f0b5f827c13f0239c887c905f9027fc43d09aa65f5f9f0ddf8668ea1f54bd582aeac7c25f0620bc44c4830be8ed53c1f8b093d63232bcd8f21885617cefed69c9059311a0549278287e93a609e89e9e7d200df235453f17f9f0fb873f3efefaf1b7e21131588b18a7ac4b391232058687ec7da22f3f471e1d8c94d390db94a1152502602bc44874a807f73de0537646904326909b17fa9ef63b036599a4aff5cf01df70059ac335ba09c834c53c273a77a76fc6856b076ba655953371b32de03bd42a15820619028f290dfa1225d3884e406d80a37dd44db5564fb50198c2a4bcfe2dfacd89e0964fe31643fb95dba1144340948a60113c8c7ce0e6eb0d23edf1bab21f9b5aeb9a9fb2a97c2aee67571f97518c1dc0d237f29ffe8fb2b3a32c21a8ca7e66d665306908d2226e02304f09b96368c690d1b5fe3c2782272ad2b1d3d325bf44fc1a72825aa398b23d684c93342a6a37254dbbbec9c0b13958a50db8543d0a8849e336049e1c507221b17c0885ac3639a0dff3e748c8a10e5acbc0a1985b707fdbcd84c42220ec53137001f71d9d45e46f80eff97630c98dc1845cfa3bb50597e5edc412b40f7fb00f3f17de8a1c0fcd114f553f23f0c3ca9f1a3a1b786381b8b524aecf28412bf8fd3a82ed547a780187e2f87387cd8d8881c4c1df7200f1488167caf242095ee6b16d8039b437672bcfa48629cf237fee797d7b1c64f980a5fbef2c8a779011832340ba117145040e0c54591019618897030e591d08907db5ac49030157c67c8d0621833c714ce66d5a57b6a949d64211ed4f440ee0f0e6aa8a08604ba5124cdb3f16d487a55332e978f830b11ab1e8bc37569da6be92d7e178d831fe4daf5ed1ee0d5661cd0d7415b4ece550f53b8ffdfbb8b3aa4e5ccd5e82177bb55dfa62181d63be139c1a0dc3f02df9ade1c9372bd091d96aaa23cb58d44855ca5dabe3e1bdde230f73afe56317ebf7fd9abaecd43bf1b0f484dd0063370ee7c9a7434cdf6be1b9f3bed8734a0faa1b3443cf08df3ba56a622fbdd30bc568f84024e66cf41216dd9229c612bfdb3778a716c78f75e3dd48d3b9949d8d875515d4d5e59311c6aeb6c05e6073b9ee9ddb328371cbd6c0cb134eaeff5a3f0e47da40ef18616fd030eb8e96e8ed374643d3afcd70e4b66d75a02de65e3df4bda139379a557facd97d300cf1f3aca1263fdd683c75fb76b56a37f5866d573ba6ed4ffa03bd61f6ae0cb369f7fa0d7b342cdacf967addb5d5abbbb342f0495ea40c515546850fd92fedc74b4d2da9bfc89443909fc636083d206093c99107062196dfb3cf5c2312b406b01be503df081ce835e55498c7f0907f0bf59dbac09cba9cefd2281b18cb8925c98b07ead4007121ce9e24e75636df79e51191d92695d34f7c4bff74abf9d58eebbf3097e63db8e773dc90ebb092f31497f3f9ce596753a9d351e18bff690b69ff6057fe04504b0708407eeac426050000031f0000504b0304140008080800063b2e470000000000000000000000000b000000636f6e74656e742e786d6cdd594f8f133714bff753a443d543256736096c77d3cd72a19ce052685509a1ca99f1242e9ef1c8f624d963a9d4335445a5a5d0d2033d422b5091f8f319bcdfa8cff32f9e2113264053e8ae94ecd8bff7deef3d3f3f3fcf1e9c5e84ac332342521e8d9c5e77c7e990c8e33e8d2623e7f38b67d19e73faf0bd031e04d423439f7b494822853c1e29f8ee80742487d9ecc8494434e45852398c7048e45079431e93a8901adae8616a2b1b91ea88b5164fc1b6b4220bd556d8602bb278dcde720ab6a57d81e76d850d16826a8b07bcadf042321470887a1863456b2c168c465746ce54a978e8baf3f9bc3b1f74b998b8bdfdfd7d379d2d097b252e4e044b51bee712468c31e9f6ba3db7c08644e1b6fc0cd6a61425e19888d6a1c10abfb0aab1201220e0ae49cc768a6c994a7ecd26adb36b366908b337c5a2759ea5e06aaa0cfcf6a932f06dd910ab69c3faeeb9e76132fd387f6e9957226c6bcb602ba1f2048d5bbb99a16d79ce7949d508649b3da5dbdfd939e966cf167abe163e17541161c1bdb5700f33af8c380f57050d703d171088cc4cca979bc804423608f4dd6cba044bbf51f597e7cf5df0a624c44b307d3918d1482a1c2d2323cc22347a7aca1524e642958109da175f58ad7ec96daa42d65c3acc6c019d08df5f09053a0317ca086c6234a3647ea2525bd7e7c3be9b82ec7aba56a0b7e31a4cb92561b997c55f4ccaf329e049e46765200b0659c444503385592a36ac68b03398f15750999f6996864aa1a78415bbbf7469a51ace5128211920e9793cb4a4abe7860817edd49944e77e50d758dbf49e9403b56a6d2f7ee69a39648e4d3818724b56bbd0770e8bde20ab05d22d0702e81150803d827ce231797890d5f872b8933d1bde23e71c8503230d6fe7028e60a741212ea021654723e7431c73f9490d970d3a9d8a6a834713124120a05cc83995b28288a9f2a0a0ceb0a069f6b9eba99d215fe32f92f5b42c4c1b4a475291f0b538094efdd45ce72c666c8cbd2bcddc5ec46e85e359414843d0aca9d765e036655b3e8e13c5e100a51e4af59469987e56f87abc571acb79a6d509fa019684915348da8328865d4584a24476023e1c0b82afa031810d060a8de942630e9f53df9ce5fd6effd49e17a6fc2d3aebb8f5b7c5add7ebeeeeee6e424e34054ef0798d198cd8b4b2293338257432851ab4d3dddb359159cf389104f158d11033644b079849b209f186a8be12f193a7faaf4c5c896403de0aaf0e783118423b4d048af184a0a286053861aae694e55076b7f1a98c193ecaf9e4da4c0f06371714721f343181d47883c4254d9b8a3056ccc458984b65fab096b011aaa735173ef83ae64a99866fa7fbf1c95875246750f34eeca43f8519738a21cce824429227c2dc5803ba2866a1a322b8bcd916b96499602480e188479551512cff2abb4b98e2f17a7233e312b42319c1911352e8b7ac1a0b31c21381e369cdffa55326d8e698df64719aaaca9b589c3711f4b7316683ff5742bf2c73f304afe7fd7f9ad06ee3e19e4f8cb97fb4ec4c63a8c7be9c12a20e0fb242977ee6452f5b1f7d4b3f3efee6f82a94ab6cd85e3c53702ba2f911bb029a76117935cd963c5be40a068aa2db5a5fbf85befe06fa4a7ed95b9a1c2a51962f042e2a6fa7c541dd221ca02bcc996ea4c60c74957717cc1282d4510c48a9049c6b4ea7b804ae98034566263ed43febe7fae1819b3f1eb87503ff82c9dbfa817eac9fea47fa1918ff0b9e9ec1f3a3ed92b8a11f76f54dfdb77edaddae6113f02708dc7ebe5dbbf7d2783fd8aed1bbc7dfc2423f7d8959b796fdedb6437fd5767811581c50afebcba5e3ab90a97fea27504fbfd30fbab09077f40ffa7bfdabfe4d5fd33fe9bbfac6e5cda2bb45b237f52ffafebb42f606c4f5a6fe1128bf23844d2adcfa0a3eaea76cafc35fbfc3f76df8bdf336f3be07a1beadafad667e4ddf7f73ccb329f3822e6178e4f06038bad4fde04cfff247f0f569fff25adf8a7e277d442962e4ac769908c1c5d2e3139045c6933f8ca3ef6f5884ec91c25be3968fc8c2fc4bc6bc2c94d6ab9a4a3fe6563ab6e2a9fe8fc6c37f00504b0708c3b21c16cd050000a91c0000504b0304140008080800063b2e47000000000000000000000000080000006d6574612e786d6c8d93cd8edb201485f77d0a8bce1663b0e3c4c8f1485d7435552b35237517397027a5c510613c4edfbef82ff5b45974e9c37738e7022e1faf8d8e5ec1b5ca9a3da271822230c24a65ce7bf47cf88877e8b17a57da971725804b2bba068cc70df83a0a56d3f269698f3a67b8ad5bd5725337d0722fb8bd80592c7c4df3316852ae5a999f7bf4ddfb0b27a4effbb84f63ebce84164541c6d50595e2c65d3aa7474a0a021a868496d09892851d1afe6fa9815d57b2d6de82067c2a3dc6b124c9c8f4bdd06727a5be37406053121ad6bec6af0afaf7289ac75f1d3843d572ba438daa1ccb0807b50f040e66a858423738c930cd0f34e72ce16c136f182d76b4d8d292dc719452f095b5c0343bd0e0cb38657190e8364b735692059b52412a1f2e1ecbce8d7b555f0edb4facf83a47fcb3fcd6257e090d6db5f98b9ee5893d838160b6ae7a5227079fc7c14916a7f136660f4fca74d7e3b75d7eccb368051c2fcefe00e14996264df2f0a1535a6236e7fcd9728ab8bdd1d68796ad57221a755f9f3460613be3c3b9a34914a0f54d63b3684f43d82227885425797345e4deef50fd06504b0708249203cd9f0100004c030000504b0304140008080800063b2e470000000000000000000000000a0000007374796c65732e786d6ced59cd6edc3610bef72904190852a05a49eb38f16ebceb4383a00592a07093de6989d2b2a14481a276d739052dd0f7e81ba4b75efa0ef61b7548895cfd5bb1db2008621bb6457e33fcf8cd901c6acfcef709b5b698e784a52bdb9f79b685d38085248d57f69bd7cf9d53fb7cfdcd198b2212e065c88222c1a970727145716e81719a2fcbce955df074c9504ef2658a129c2f45b064194eb5d1b28e5eaaa1ca16e56caab902d7ad05de8ba9c612dbb04597d34756e0ba75c8d16eaab1c482a675f3884d35dee7d4899813b0244382b458ec2949dfaeec8d10d9d27577bbdd6c773c633c76fdc562e1aa5e433830b8ace054a1c2c0c514cbc172d79ff9aec62658a0a9fc24b64e292d924bcc274b8304ea4435e33807084c57e6e53447759b467e6de3c9d9b58d07640e36884fce33056ea6ca71383d558ec3ba6d82c46620bea7ee4be854bf5ebe38e4154fa68e25b10da9024eb2c9d32cd1757bc698a12a0dcac5aee8ce3def915b3ed7d0bb51f88e1381790d1e8cc2034403a3384bfa44039cef02c2c15b99f21acde5a4073d9fb81c678c0b43249abed9813a73b3543722a1c34b55f66a68ccc3b0170a748e5d58b6b0689c2dc1bba3c65e36aeffc255a0fafe356ae07baec4982500f21e365b1e9be32062451a96cbae1403ef33cc89ec4254992d1b1eea1943d91d5c566748cd4363a9e6f9b1e8d3eef5852bfb1c790cc0465779a99d7e737bad8fba88c13117a1003b210e68be3e2bb728d36c95cf92dcca7e4160bf536cad9f510a5905fb888626845eadec072863f9d316ae6cb4ad866b8977629cc26c21dbf31dc9f30622232280fd608b3851c174c7a93dc3bfa25f8a715a35cc144a57b9c0c9bd38714642359cf51c517a8982b7c3dcbad84fc2f139c77840b45ad77d19b843d956b5977596661ae20815b4aabeb4e78a945ad94e8029b5353c431cc51c651b27e3b0b6b92050b2955d80062f2c7342920b94caea0db2ff24480eb2c845d235544407923e624b8ad2b84031f4f2423504b08e05077e176fecb60b07b64f94b6535461b41f0d79b7d13d9543ddf1fdabae5b798053bc1f776c401bd2766dba7e7ca562d423fefaacac71aa52a71191529d579edd0259d553425287a402c760179298881cc45703f5f8343e828273a8ccaffa86f2bd273f797a165b462128b2ac15bcc0432420cd4882a89351483a200067d4283ddd1b735664ea72a0bcbbc6bd4c97b565e6a01ebbdcaf924b46b5af66b2686c2d61d637ef6f7ebffe6b66bcb61cad7b3a3e46347b28d755e2520625ec511479f0d59ea8d33fd12f52e352a204656699a42129ebf22da2057ef8ed83583c5d99044459462bc59d4682baf78cd7e9d724bf83685f93fc9325f9e978929796dd283d2b4f16fbf613fd9633d91ca8bdf555a756a9d077afb3b487a15a47f79b8a67f8a81eaba926813425031e2465108d42ac169ce1485de07c3c5096a9bccc5b32a719e491d5a838562fc3085c7348a0fd29305c8830a724c51a93334ac201c88e84f2ad012a041b40546b5f0daafeb70d871d26f1066e50b032c28f15677e27759ac2aacb6dfb003954a6dda17fc048beb1fc6f02638c7aca66292104264e9d9c155c96cd11d96be71c6718493161d34b41be08d1bc76cfe82dc741f283d3951d8021e6c345b8c912f24e96ec8f33610f65cefd825929eadf49521d8e29927256beb073600f97f4175e97a4dbba0d558f32b913300e9ce6352993f53d4557ac108d39bdcc12dfee017549c9f74e3001276121d851ee88cb434c3630bb4379de688b1883f0b50226cfc14d15046ff6445eb25433e231f4501cc9f66623afd0cdd64b26847cabe5999b9a3bcca8a2f2e959c2adb28762938edb89c184d8cdbfa0d8c99e4bc643f9967c3e7bb4c860b67237b78e3cf5a500190acbcf61bc99e79f6a2b389865ed94867a073f0a3cf96dd4a921a0328b71274f3a33fdfc13e933d5ebf6ac7607f7aaaa2341b971911fea50d5283d8d558af575d0b3c595f4d767ea53afacfa9b6f302ed1ebf3f3f333b7dd58b5642d115a919761d48735c9a1f6bfea1c77a53666f4eb3f6f7ebb797ffde1fa9febbf6ffeb8fe60551d720a65bdbcf6f5d8b5b60e1dedb61180513a6e47d3db64bea8def68fa83cefa8ac6b80581e6692d0470a6f3d2c7182085a8794cfdf7684688cd46852cba9353a945478b0ba829acd801c75dd8155e6f9278eb770fc47f6da8305257f3caf622181ebef2c4d38b9ddb50469d7beb79c1f2f4f4e67fee9dc7b7ce22f7c39c452fd9849f7a562737e9f457e5a6e1da8ee9cebc5a20e2cdbfea73c76fb7711b7fff3faf5bf504b0708e9f937137b060000ef1f0000504b0304140008080800063b2e470000000000000000000000000c0000006d616e69666573742e726466cd93cd6e83301084ef3c8565ced8402f05057228cab96a9fc0358658052ff29a12debe8e935651a4aaea9fd4e3ae4633df8eb49bed611cc88bb2a8c15434632925ca4868b5e92b3abb2eb9a5db3adad8b62b1f9a1df16a83a59f2aba776e2a395f96852d370c6ccfb3a228789af33c4fbc22c1d53871480cc6b48e08091e8d4269f5e47c1a39cee20966575174eba09079f7203d8bdd3aa9a0b20a61b652bd87b6209181408d094cca8474831cba4e4bc53396f35139c1a1ede2c760bdd383a23c60f02b8ecfd8de880ca6e55ee0bdb0ee5c83df7c95687aee637a75d3c5f1df2394609c32ee4feabb3b79ffe7fe2ecfff19e2afb476446c40cea367fa90e7b4f21f5547af504b0708b4f768d20501000083030000504b0304140000080000063b2e470000000000000000000000001a000000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b0304140000080000063b2e470000000000000000000000001c000000436f6e66696775726174696f6e73322f70726f67726573736261722f504b0304140008080800063b2e4700000000000000000000000027000000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c0300504b0708000000000200000000000000504b0304140000080000063b2e4700000000000000000000000018000000436f6e66696775726174696f6e73322f666c6f617465722f504b0304140000080000063b2e470000000000000000000000001f000000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b0304140000080000063b2e4700000000000000000000000018000000436f6e66696775726174696f6e73322f746f6f6c6261722f504b0304140000080000063b2e4700000000000000000000000018000000436f6e66696775726174696f6e73322f6d656e756261722f504b0304140000080000063b2e470000000000000000000000001a000000436f6e66696775726174696f6e73322f7374617475736261722f504b0304140000080000063b2e470000000000000000000000001a000000436f6e66696775726174696f6e73322f706f7075706d656e752f504b0304140008080800063b2e47000000000000000000000000150000004d4554412d494e462f6d616e69666573742e786d6cad544b6ec32010dde71416dbcad06655a1385954ea09d203503c76906040cc1025b72f8e944f55a5aad5ece6fbde6306586d0ec1377bc8e42276e2453e8b06d0c6dee1d8898fed7bfb2a36ebc52a18740310ebb3d1d43ea48bdb89925147438e349a00a4d9ea9800fb684b0064fdbd5e9f982ede8d80a5582f9a2bdfe03cb4b53f1fafd543f1be4d86779d50f740aee100bd332d1f1374c2a4e49d355ccbd41e7b79122c6f754a4a194c4f3b00166a8e94edae844f34ce93e2b329138e77a4b8604650537e160b0173dd0dc93acf3bc80c0756537a16b08dc8d3f91f8d1b80cdc341898f1e1e3f83734ce67ef8c30daa554fb339de220e6e2cf904414b65ac050fd58d59d992f3ef3bf81fd71f5f05159c24c8e2a4bd4598c857eac757b0fe02504b070842d9648e2001000045040000504b01021400140000080000063b2e47856c398a2e0000002e0000000800000000000000000000000000000000006d696d6574797065504b01021400140000080000063b2e4715d532e1b5100000b51000001800000000000000000000000000540000005468756d626e61696c732f7468756d626e61696c2e706e67504b01021400140008080800063b2e47407eeac426050000031f00000c000000000000000000000000003f11000073657474696e67732e786d6c504b01021400140008080800063b2e47c3b21c16cd050000a91c00000b000000000000000000000000009f160000636f6e74656e742e786d6c504b01021400140008080800063b2e47249203cd9f0100004c0300000800000000000000000000000000a51c00006d6574612e786d6c504b01021400140008080800063b2e47e9f937137b060000ef1f00000a000000000000000000000000007a1e00007374796c65732e786d6c504b01021400140008080800063b2e47b4f768d205010000830300000c000000000000000000000000002d2500006d616e69666573742e726466504b01021400140000080000063b2e470000000000000000000000001a000000000000000000000000006c260000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b01021400140000080000063b2e470000000000000000000000001c00000000000000000000000000a4260000436f6e66696775726174696f6e73322f70726f67726573736261722f504b01021400140008080800063b2e470000000002000000000000002700000000000000000000000000de260000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c504b01021400140000080000063b2e47000000000000000000000000180000000000000000000000000035270000436f6e66696775726174696f6e73322f666c6f617465722f504b01021400140000080000063b2e470000000000000000000000001f000000000000000000000000006b270000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b01021400140000080000063b2e470000000000000000000000001800000000000000000000000000a8270000436f6e66696775726174696f6e73322f746f6f6c6261722f504b01021400140000080000063b2e470000000000000000000000001800000000000000000000000000de270000436f6e66696775726174696f6e73322f6d656e756261722f504b01021400140000080000063b2e470000000000000000000000001a0000000000000000000000000014280000436f6e66696775726174696f6e73322f7374617475736261722f504b01021400140000080000063b2e470000000000000000000000001a000000000000000000000000004c280000436f6e66696775726174696f6e73322f706f7075706d656e752f504b01021400140008080800063b2e4742d9648e20010000450400001500000000000000000000000000842800004d4554412d494e462f6d616e69666573742e786d6c504b0506000000001100110070040000e72900000000	1019205176	2015-09-14 10:25:09.699243	t
 1162	./scripts/формулы73.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792871756572794e616d652c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bad0b0d0b6d0b4d0bed0b920d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b02e20d095d181d0bbd0b820d0b3d0bed182d0bed0b2d0bed0b3d0be20d0b7d0b0d0bfd180d0bed181d0b020d0bdd0b020d181d0b5d180d0b2d0b5d180d0b520d0bdd0b5d1822c20d182d0be20d182d0bed0b3d0b4d0b020d0b2d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bed0b4d0b8d0bd20d180d0b0d0b720d0b820d181d0bad180d0b8d0bfd18220d181d0b0d0bc20d0b4d0bed0bbd0b6d0b5d0bd20d181d0bed0b7d0b4d0b0d182d18c20d0b820d0bed0b1d180d0b0d0b1d0bed182d0b0d182d18c20d0b7d0b0d0bfd180d0bed1812e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0976617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a0976617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a0976617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a0a096966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d203029200a097b0a0909d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a097d0a09656c7365200a097b0a0909d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a097d0a0a0973657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a0973657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a0973657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74507265706172655072696e7456616c75657328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d181d0bed0b7d0b4d0b0d0bdd0b8d0b5d0bc20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b020d0bfd0b5d187d0b0d182d0b820d0b820d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d0bdd0bed0b2d18bd18520d0b4d0b0d0bdd0bdd18bd18520d0b4d0bbd18f20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a	143107080	2015-08-16 10:19:59.668388	t
 1067	заявка.Заказ в наших наименованиях.ods	1	\\x504b0304140000080000ab395c47856c398a2e0000002e000000080000006d696d65747970656170706c69636174696f6e2f766e642e6f617369732e6f70656e646f63756d656e742e7370726561647368656574504b0304140000080000ab395c47994d86976016000060160000180000005468756d626e61696c732f7468756d626e61696c2e706e6789504e470d0a1a0a0000000d49484452000000ff000000f208020000000df484430000162749444154789ced5c598c9545b7add64383cc3209220a2220015464501123620045130d46494c0413126e22891a4c34263ee813d10763821a1e1c787048c4a0d107c7a0220e80c8030e8022334a03362073a3e72eba3875f7d9bbea6bbc37f9efa7b5d6c3499d3a35ecdab56ad7aafabeeecaecd9b35d2baad56a434383ab417e45da2790e3d332e10cf053a552d9bf7ffff6eddb2fbffcf2e3c78f9f75d659be41f9195a961d857c592c6aa1cab775a32d47abc87c393a35ead0a02c263f65f954d72997b6e955db9ab22adab2f4892a603b6dd321b6356766cdd54f6bb127a3a3b05e8d1a694db213a18cc467bb76ed9a9a9aa64d9b366fdebccae2c58ba36eb50e2d9860d5c75f7ffd05ba6fdab4e9dd77df7df0c1074f9e3c79f6d967db0144c7a35c965a18b6d302f6a726353a07059364fd6b8713f5bbcd8ca2c0bdc52eb273979a41573f9bc56cb6dd15c497e840947fa2b552f3959ad068ac51ddc9afd6b7cdcdcd8b162d42bad2d2d2928a4c0571ceba4c8e04ec6f6c6c04e991402612d623d62667e63815ec8b1de7d28b5355b436a44240410452d65acb0bfa7266b65c9a4f29a6ba04998a872ffb2a707bc146618d29b64a0dd6ee0ceeefb03fea9fe8c2506341ecf784042a3e2a5b17584fa9e6da8c1c68193b804f0029f647c77386238f122e1a6352748c36a5061e756871884d51a4a096724e2ad644d7a42aa09c1cada5fa4ab95779a038369de14661875630f654c554ec2ff6a42f19d858895623881c50c4fe368507f1b720c34f4af610ff4954bc38f1f05c97bb52432bbc7c474924c26cf9a3adaf2e77555f4c66fa84bff671463c848e5c6cbd85f6436159462552f9de2a39cca83c487940d91ceeaf827fac1290dda5c6824fe9a8b02ab02f235f657aaffaae952408b3130afbbabe11ff553a5f3a21ea40393a3523290f479d19462d9d16e65155b4e645ddab263a3a834a4ad9c221b36de5b36fdfbece9d3b1f3e7c188df6ecd933345da95494c54431fcfc353535f5e8d1e3782b90a8d6ee0902473d57fc2c7a851a569d13eb2a105a12cbd5446da86b170c1150c4fe3ffffc13145fba74e9d8b163d7ae5d3b7dfaf4ad5bb7ae5bb76ecc9831cdcdcddf7ffffdf8f1e32fbae8221f93fe6316ff73014781912fbcf0c2fcf9f3376edcb872e5ca8913271e3b76ac6fdfbe70f5a143874e9c38b16bd7aea953a7ae5ab50a8166c080015f7df5d5902143f0d3f9e79fbf63c78ee1c3877ff6d9675dba74e9d7afdf860d1bce3df7dc0e1d3aecdfbf1fe169d0a0413b77ee442d7c76efde1d44dfbb77efb061c356af5e8d5afdfbf7e7345954d426eb843cf5391d3b767ce6996766cd9ad5a74f9f050b16cc993367f1e2c5ddba75ebd4a9d39a356bc07ecc9c0cff411dc9067dbe6adf899d3d544f6ddfb66eb4a9689ba11d594b1676b19b0169894c4b4511ed34a8112524fcafa0f88a152bb66ddbd6d2d272f2e4c90f3ef8a077efdee0f1175f7c3174e850fc04a2bffaeaab93274f5ebe7c79bb76ede064ec12a3468ddabd7bf7e6cd9b417decc30b172e1c3c7870af5ebdb66fdf3e61c284254b964c993205255117ecc727d6062217a88f8581cf471f7dd40b2deb2e9f56e22de5013b472a5f5697331866df4e71609a2d90e24634dfa6038d957c0a3d16e97eff15b375db6db721f62390c0a10854082a5dbb7605eff7ecd9e3eaa55595ba5f98ad705a6b562a23478e8403df7cf3cd1f7ef8015fb1063efef8e3ebafbffee0c183d8669186224201047b901e396fbffd76636323da3c7af4283604944702011e2cc7e2c18c604b3972e408960aca202a2d5bb60cbb0a8a6182468f1e8d46a427a513a20e94a3533392f270d499c115d5d2eafe82d8efbf22c68c183102c1091e9f366dda871f7e8891206e4105fdfaebafceac5dc6fe54ecf718376e1cf4090a4c9a34a97dfbf660f9810307a02ac17288496caa08ed6033e2fa15575c81ad0005aebbee3aa817d01a52f3fdf7df07efe7ce9dbb7efd7a343b73e64cecbd28895574edb5d7629ab66cd98202584b9b366d828842e08728921e60ecff9fd8efd2f0970f703d8ac29b7e0cfed115d60366055bb34bc439c2c2ef8a6024d2fd5ae144acc22762b9aa3263c68cf02b94a7ccc10622436698d1810307faf2d81390c05e516dd53c9c268bb6effb55f4f541cbb57a1c1369b50a9182f4a7ab5d19fba0281563800c99a1a29c8e10cc54b1d05a83b90fe5644914b15f095f57afc31c1f87fd4da86303b65057afad53e2dbd51f5d826c951ada8a7829f4395351fcbd371dc2fc39739424887f1022a75e99b0279868be6aced50e31fecc10cebb3899c992eaac295b8b9e51a419f2fc1aba4b1d6b5449d97e74c872b076d4a9436181af9491ae76fa575dd8b989f665375e19d4d57130b54bab73a11abef598526b6a746ddae0c485871a6c81d30a26d416b30e8c76e14b4a85590182dd720c512f443d2b216568787bd41f94a3034b4d92729f334cb59d5a5ab8f4be1f6d5fba2c6580a2b51d8eaa15ed2b8502f716bbc8ce5d6a069d619bf54f9409d69f36bed881b8188fad7fa2f3959a50e5ede874c8afd624af3981cacc9933adf55117a8598cb23f74830efef8e38fddbb77af5ebdbaa5a5459a151d794153c55b4dca9282b989f66b3d1e3a2a880bee0ce8d8a6016742fad430538dbbb49f53ec8f769d0af067c281542fa15841b48d5aebd22c728985610b20dcefddbbf79a6bae414ee589279e90d702b2f5707b90dab06c2c9196a162bb76ed8e1d3be6c49d83748abff48872458ddf369e9a80606ab576222c8e1cae3e5ac8b14bdbec7416cf90254474aa5cfdda2e605baad9022aa4bc149d4a95a35a73311ecb3205b56c2351835d3d598bd91f1d8beaa2c02d985c7fb95cb9f4d24bed18ecf06cbba9881b6da4808251b7a63c92f2752ac61454b1ed177b301aaded70527e776dad0a97a05a6af8a9c2a940ee622bad4d36db18e7621e4e0d44f927c5fee87ca526341a8f5477f26bca03cedff9ecdcb9f3e8d1a3975c7289eaa0b9b9f9e79f7f1e3e7c78e7ce9d7de88dbe79ebf321750e1c3870e4c811e49f73ce39ddbb77f72fc96197d9b3670f1af12d847be843870efdf8e38f83070feed1a3876f4a3d58f091dbef3f681cc69c3871025fbb75eb86fd048df7e9d3073910578d8d8de79d771e8680f21d3a744019f478fcf8f1be7dfbe22779ed8d04aa6047c2272c81795065f8ea5afffc12bffef6db6fc8ecd9b3e7faf5eb870d1bd6be7dfbf016930d01d1b064fd2ee74fcd7d34bc59c6b842f6dbeee4738354f8f0c6845fe57156ce6f8338f22a1217b35ff61b656aca09b623d99d6d4721b530a2c1e214fb3ffae82390068400632ebcf0c26ddbb6f977d75e7ef9657cc5e6b076ed5a54e8dab5eb800103b66fdf0ebea2320a809458395dba744179dfeed2a54bc1a77befbd37f4f7f5d75fefd8b1c3ff8b878b2fbe18e57bf5ea0506bff8e28b585443860cf9eebbefd06fa74e9db012b66edd0ae6f9658385b46fdf3e7cc526e5d7c64b2fbd3468d0203012d682ac6807d4f7338796bffcf24baca8471e7964d5aa55df7cf3cd942953162d5a74fffdf7cbd772907eeeb9e71e7ae8a1071e78e0d65b6fbde5965beebefbee254b966cd9b265c18205575f7df5b871e3d6ac5903ab3064f48205a0fc25e723b4ac1860e7d2be65145a53156566f4abcc8fee6fd1c6abb1ebe960b91c8565b3ff299429b05fed2172f8c154bbb0cf70ec05155381c03a4499718afd600f02ffb265cbc021c44bc4fbcf3fff1c74ecdfbf3f62eaebafbf8e280bd6e2fc3a7bf66cb076d6ac59a882480ffe21b8bef1c61b73e7cebde0820bb03cc04eac2204fef0c7f2a0329a05990e1f3e8c5ec0332c3634ebb985d5023623fabef2ca2b8f3df6d8534f3d75df7df781f468016b0615d1f8c30f3f0c63d0d7c08103b118366cd8306fde3c34fefcf3cf630d60cd80f4a02c5c8caf070f1ec49ac472f27f56af3ce55a17000c80fd1d3b76c44fd89ab0547ef9e5172c365f11b560330c504f5e897f1f4eb31f61b877efde88f408ed6000a800965c75d555f8f5d9679f5db870e18a152bf013f4c0f8f1e3f12be808d622f42281eae09f6fae5afb7ba510699003a2a371ec18bffffe3b7600700b2b67e4c89143870e7dfae9a71f7ffc715016f92b57ae44f485aa415d54c11684a508639083edc5d5fede00ebca9741cbb00189b163c7fe572bc0e64f3ffd146b0685b1bdf81cf566014681ea77dc710794121237de78e35b6fbd8576264e9c882adf7efb2d3ebddc0a0143059effcb3b9e0521df991382da558a435a6a7b897664cb48c3ec4697b2c1b669475daa773cc3835a9f3e7dd90f6281a008879e58e03428e52322688150ed1508b8e2ffa8e2a79f7e025fa1c5afbcf24a6c1188e820d3e8d1a3bddc77f5aa1439a03ef604ff152b6dc488115830cb972f07dda19a2078b075a0232c27b4b06edd3a2c8f8d1b37a2f17efdfaeddab50b9660297a1b90f3de7bef214e4f9d3a155486c4c72e71d96597dd75d75dd85ef013b83b6ad42814f6525ebe20e05affa1c54d37dd849d013b0c0a8c1933a6a9a9c9cbadcd9b37cf9f3f1f520d7ec08882f60da253ea60a9569d10cabea3d4fbfdd1bddb6edcaa475946169669a9cead2696d6cacff0ab324c9554942ac897d543d06928cd3b9eea85a853ec072130d910c16003a40ba8e31f81858756f89c3c7932a8ef35126a4e9830019cfbe4934f6ebffd76d0baa1f65779c877b53f62f2cb003c03b96fb8e106ff3fadc0f2f0e4eb54f7ad1da1c7d75e7b2d30068cc4da40f9e9d3a74b3edd7cf3cd7e0c503bde6c08747fd89d346912bac3697bc68c19f809ab0b9f584bd8ac50ccc71ed88995f6e4934ffa83ac773d46ad3c0be90fabde79e71d6c088ef857e314f9eebcf34e70c8d5fe24d4df81b8d6e7c0ae26185c6b08971b134ec0f7dc738f67702053d853aaad17354863cd40d8d8c61b5a5ff38a368e06b103cc993327fc29b78a22be11bf12c0785f3d6c6aa11d6c59d8a6a4ae4045df88cc5402c0ffb90954134e1a7e2c543e291b6c9b76d4a5563e60c339ad08b4b0030e96a9ad44fe6a354043ed9fba8146b2713b4839798a490d4206a8698e32b241ec71585dd03092528aebd23b21df57840e74e21e500d4a76ad46eda87cfe41ca47f138ba7c15a2ebde22ba48fe178d9f795d6b804d170f53cde899fb84f827a24eb4a83fa2f525a2cbc37e7ad84664e3aa1dbb9759aafdbffc5daf7c2fc3fe131e2a9f68c28e2bb8a25a5ae563cd25884c40f613f9a2edffe960f3c36142e68716a3ff85c1f17f3af0d41bab1e35b84d6e14f841c91e35b4c87d3f41e48936fe8badab3f91c8f390faf4a8fe2b4ebdd191069b79ea8d26ecb8822baaa53df552f94447a72c91692a9f827c595dce6049950f63bfecce7a40e55419fb13093baee08a6a6963bf3597203201d94fe40bb29fc8173cf5f2d4cb536f2dcbc5ce43eab4eaea0f496a2279ea753cf50a94fad4cbd81f1d9db244a619fb0bf2657539838cfd8cfd91d025bf2aab6c80548392b631f6aba6c2575980379e04711a643f912fa8fba9fba9fb6b592ea608955e77f532514d2475bfa3ee17a0ee27883282ec27f205753f753f757f2dcbc514a1d2ebae5e26aa89a4ee77d4fd02d4fd04514690fd44bea0eea7eecf58f73b82c815643f912fc87e225f90fd44be20fb897cc1a75d7cdaa51da85a2eb0c1b669475deaa75dbcf18c8e4e5922d3bcf12cc897d5e50c96f4c693b15f76673da072aa8cfd89841d577045b5b4b1df9a4b109980ca87ca87caa796e5627ba2522cae7ea3541349e5e3a87c04a87c08a28c20fb897c41f613f982ec27f205d94fe40bde78f2c693379eb52c17bb0b533795aefe824c4d246f3c1d6f3c0578e349106504950f950f954f2dcbc5f644a5585cfd46a92692cac751f908945af930f64747a72c9169c6fe827c595dce604963bf23885c41e543e5a31da85a2eb0c1b669474de543e543e5534ae5c3d82fbbb31e503955c6fe44c28e2bb8a25adad86fcd25884c40e543e593b1f27104912ba8fba9fbb50355cb0536d836eda8a9fb09a28ca0eea7eecf58f753f9c8eeac07544e95ca2791b0e30aaea852f91044d940f613f982ba9fba3f63ddef082257f0d4cb53af76a06ab9c006dba61d75a94fbd543ed1d1294b649acaa7205f5697335852e5c3d82fbbb31e503955c6fe44c28e2bb8a25adad86fcd25884c40f613f982ba9fba9fbabf96e5628a50e975572f13d54452f73bea7e01ea7e822823c87e225f90fd44be20fb897c41f613f982ec27f205d94fe40b3eede2d32e3eedaa65b9d87310f594cad53f1c5113c9a75d8e4fbb04f8b48b20ca08b29fc817643f912f78eae5a997a7de5a968b9d87d469d5d51f92d444f2d4eb78ea1528f5a997b13f3a3a65894c33f617e4cbea720619fb19fb23a14b7e5556d900a906256d63ec574d85afb2006f3c09e234c87e225f90fd44be20fb897cc13b1fdef9647ce7e3082257f0c693379eda81aae5021b6c9b76d4a5bef1a4f2898e4e5922d3543e05f9b2ba9cc1922a1fc67ed99df580caa932f62712765cc11555c67ec67e1b62950d72fe6c80b485659ab1dfa68327c3d018fb19fb2365a2b360db497938eacce08a6a6963bf3597203201950f950f954f2dcbc5f644a5585cfd46a92692cac751f908945af930f64747a72c9169c6fe827c595dce20633f637f2474c9afca2a1b20d5a0a46d8cfdaaa9f05516e0a997204e83ec27f205d94fe40bb29fc817643f912fc87e225ff0be9ff7fd19dff73b82c815643f912ff8ac97cf7ab50355cb0536d836eda8f9ac9720ca089e7a79eacdf8d44be523bbb31e5039552a9f44c28e2bb8a25a5ae5c3d81f1d9db244a619fb0bf265753983258dfd8e207205d94fe40bea7eea7eed40d572810db64d3bea52eb7e6b2e416402b29fc817643f912fc87e225f90fd44be20fb897c41f613f9826f3af04d07bee94010f981cf7af9ac573b50b55c60836dd38e9acf7a09a28c20fb897c41f613f982773ebcf3c9f8ce87a75ed99df580caa9f2d49b48d87105575479ea2588b281ec27f205d94fe40bb29fc817643f912fc87e225f90fd44be20fb897c41f613f9826f3af04d07bee950cb72b167e0ea0d0557ff605c4d24df74707cd341806f3a10441941e543e543e553cb72b13d51291657bf51aa89a4f271543e02543e04514650f950f950f9d4b25c6c4f548ac5d56f946a22a97c1c958f00950f419411643f912fc87e225f90fd44be20fb897cc11b4fde78f2c6b396e5627761eaa6d2d55f90a989e48da7e38da7006f3c09a28c20fb897c41dd4fdd4fdd5fcb723145a8f4baab97896a22a9fb1d75bf00753f419411543e543e543eb52c17db13956271f51ba59a482a1f47e52340e543106504950f950f954f2dcbc5f644a5585cfd46a92692cac751f908945af930f64747a72c9169c6fe827c595dce604963bf23885c41f613f982ec27f2054fbd3cf56a07aa960b6cb06dda5197fad46bcd25884c40f613f982ec27f205d94fe40bb29fc817643f912fc87e225f90fd44be20fb897cc1773cf98e27dff12488fc40f613f982ec27f205dff1e43b9eda81aae5021b6c9b76d47cc79320ca08def9f0ce87773e04911fa8fba9fbb50355cb0536d836eda8a9fb09a28c20fb897cc1532f4fbd199f7aa9fb6577d6032aa74add9f48d871055754a9fb09a26c20fb897c41f613f982a75e9e7a79eaad65b9d879489d565dfd21494d244fbd8ea75e019e7a09a28ca0f2a1f2a1f2a965b9d89ea8148babdf28d54452f9382a1f81522b1fc6fee8e8942532cdd85f902fabcb1964ec67ec8f842ef955596503a41a94b48db15f3515beca028cfd8cfd8cfd8cfdf525531e503955c6fe44c28e2bb8a25adad86fcd25884c40f613f982ec27f205d94fe40bb29fc817ff0d33d45b1ca75b439a0000000049454e44ae426082504b0304140008080800ab395c470000000000000000000000000c00000073657474696e67732e786d6ced59dd72da3814bedfa7c8f87627c598242d4c42c7fc9386046c70809b8e6c0bac46963c928c81bbddd7d817d9c768df68657eba09c51b02766767677301d8d6f9be93f3a773e4eb8f731f9fcd20e388921b25ff4e55ce2071a88bc8f44619f41be71f948fe55faee964821c5872a913fa9088730e85904bf8991427bcb47e7ca3848c9428e0889708f0212f09a7440348b662a5e7ab4b2bb2f59d3946e4e946f184084ab95c1445efa2c23bcaa6b97cb158ccad9e6e973a944cd0f450aaf5eae75494d2ef44b1c05a991599a6aa17b9f5b572b651f2996934a5bcb5c3f6df2f5f6f08d65fe748403fb6cdd9e676acda8d22294b3304a3ef5653f6c9bd94b1104736863a83a04f0365fb502c02f91011a194d5ebdc8f206f02be8313910df2237285b70f3afffe4a2d9c0cdf8268eaed553d5f78af1d0a7fee83e01c1117cea1bb4b05a3fd4e5ac9c8f0628b43148651dbddd1920b26234029c7f1907f93a631e88e9e7d200df29aa22f45befef1f5cf6fbf7dfb3d7f400c5643c629eb528e844c81e13e7b5f1ee7cb97c8a37dc807bbf125728b32b4a444006c0618890e75e1ae073cca4e0872c80472b242dfd17e6ba03493f4b9fe19e0eb8e4033b8423700992698e748e76ef54db9706d618da4aa72226eba057c8b5aa142503f45e031a57e5fa2a41ad131a80570b88bbaaed6eab13600531897d77f44bf3a12dcf468d46468b772db9462088852162c84fb91f7dc7cbe61243d5e55f643536b55f3133695efc5fde4eae3308ab10d58e246aebdff3fca4e8eb298a022fb99a72e83714390147113807942c81d4233868caef4e71911dc53918c9d9c2ed925e26bc8316a9562ca76a0318dd328af5d1534edf22a05c766609516e052f5d027068d5a10b87240c984c4f42014b2da6480dee60fa190431d3417be4d3137e1eeb69b0a894940d0a706e002ee3a3a8dc85f03b7f96630c98cc1805cfa3bb10597e5edc812b40bbfb70f3f15de0c6d17cd104f543f25f0fdca1f1b3a6b787d8eb8b9208ec728414bf8f33a82cd54ba7f0187e2f07387f58d9081d8c16f3980b8a3c0356479a1042fb2d836c00c5aebb3950752c59467913f6d5edb1c07991e60c9fe3b89e2136444e708906e481c11823d03551a447a10e0c58043560302a45f2dabd240c091315fa57ec0208f1d937a9bd6956d6a9cb55084bb13910d38bcbaa82002d84229fbd3d6af39f57661170c3a1ede4ecc7a243a5ff465a7515ccaeb603cece8ffa6bf5edeea0d9641d5f18b2a685a8ba1ea75eefaeda8b3ac4c1ccd5a80476bb959faa8eb1d7db6159cea755df74cf9abeeca0fd32f22a3d95047a63eaf928a94bb54c7c376b1476e676ed3c30e2eb6fb5575d1a975a261e11e3b3ec64e14cce26f9b189edbc433fb4bbe67176e55c76f04ae1e7cb10b95d85ec54e2f10a3e12d91984fa3c720ef140c3196f8ddbece3bd528baabe99f465a914bd9a7f1b0a2829abab8d783c8d1e6d8f52d2ed77d729a863f6e5a1a78bcc7f1f5dfebc7c1481b143b7ad01bd48d9aadc57a7bf5d1d0f0aab8e28d35ab0f86017e78aaab7a1d874ecb5207da7ce6d602cf1d1ab1394cbd7edfed5b958ad528d62dabd2312c6fd21f14eb46ef42371a56af5fb746c3bcf560aa975d4bbdb8392904efe545c21055615478907d6edd9d6b6a41fd2c530e417e1cdb207081800d26471ee80758fe4e3f73f550d02ac04e980d7cddb7a1db90536116c343f62dd44fea0233ea727e4aa3ac632c2796382f6ea95d05c481387d928c5bd96ce7953b449ed6a99c7ce27be45b8df45acd573baeffc25c9af5e09ecd7143a6c34ac6535cc6e73b279d4d254e47b91fded3e692de6097ff02504b07087ff4f9f12c050000031f0000504b0304140008080800ab395c470000000000000000000000000b000000636f6e74656e742e786d6ce55acb8edb3614ddf72b0c07e88e969fb1c71d4f364556c9a6498b024511d01265b3a14481a46c4f574d0a741d1409123469fafa804e8b040d9a477f81f347bd942c59722c471ebbae810c3036449e7b7978795fd4ccf19599c72a132224e5fea0daa8d5ab15e2dbdca1fe6850fdf4e655d4ab5e39f9e098bb2eb549dfe176e8115f219bfb0abe2b20edcb7e3c3ba886c2ef732ca9ecfbd823b2afec3e0f889f48f5b3e87eb4563c22d5292b2d1e81b3d28acc54596183cdc9e261f995237056da11785a56d860c1a859719797159e49865c0e56f702ace8128b19a3feed4175ac54d0b7ace9745a9bb66a5c8cacc6d1d19115cda684ed141784824528c7b60823663169356a0d2bc17a44e1b2fc0c364bc90fbd2111a54d83157eeb540341244060bbc631cb29cacae4fc6b322aed5d93518199ed3116a5fd2c02e75da5e5947795969395f5b01a179c6fcfba0e93d1c7f56b0bbf125ed9b50c36672a5bd0a0f4366374569e739e52350271b047749bf57adb8a9f33e8e95af854504544066eaf85db98d9a9c5b9b7ca68806b58804064625c3e0d2263085920d0b4e2e9142c9d42d59f5fbf76c31e130f2fc0f4dd60447da9b0bfb08c308750b8d38e2548c0854a0de3964fbe705acd94db5879ac387598d9043a128eb3120a745a16a411086234a1647a29975bd7fbc3911581b2f974ad40a36e194c1a9270dc8be42f46697d7279e83b711a888d41660111d44c611689f5731ab21eccf80554ce6b5a46432ed153c292e84fb7b4520de7c893e00ce0f43ce867a4f3754378b372ea8ca373c75dd6b814f4b6942db5ea6c6f7e62993964ca261486f94a9976a1593d497a833817482b1d70a147402eb6097288cde4c9719ce3d3e14afc6c780faad728148cc8bc951bd8874883449c403dca4e07d50f71c0e5474bb878b05ac9a9367834223e1802d2859c52297388802a1b12ea040b1a799fb59edac7e42bfc59b89e56065386d2a954c4db8a93e0d48996ab5cc58c0db17dbb98dbdbd8bd70bc2a0829305a666a5b065691b7cdc771a83814506aa3484fea86d1678eafcd1be962739e5176827e80859e5f4d24b3832880a8224251222b2eef0f05c1b7d19040808142b374a2710e9f52c7d4f246add3edd85ec43f43671db7e6deb84154779a9b916bedcf70edcbedcdb8b5f7c5ad5eeb75363cd4cefeecd6e87537e376797fdc9a1b52ebee8b5a1342a1b70937519443049f2e1183912cab78ca0c8e091d8d95f1a7a36603165f4f389404f140510f3394957631936413e20509e642c4db5102b9187125c20d782bbcdae0c9a007374b225080470425e5dcc521534b9bca6c28bee63b54060c9fcef9ccb599eb085ce291c71dd0c40452c30dfc9614d517c25832136061deaf440f6b091ba165afe6c281bd0eb952e6ee53af75db81aa48cea0fc5faa473fc932a6a14398d1918f240f857979e3d259320b970b82d3973c892f659660c485619ffbb951911cffaa751730c583f5e426664bd099c70407558fc2d523d36e808df048e060bcb4ffc5a68cb14dc7bb9089e6f2f0a86390f46bd87b2f50b93ec38c22b84b61bf60cebc22606416cf6ee00145557c430f388ccd1455fd5db8f32edcf4bdf5b2a296e7ff3f98291834cafae6fa681ede9fe3b20a2f24f38921774e17b7e9000aa723c784a893e3b822459ff3ea149f987eac5f9cdf39bf0b75251ece1ea7a98c39d1792bb4021add7ce6652f7682f8d87318c85d56697dcd1deb6bed585f7bc7fa3a3bd67779c7faba89bef8cdfc1c2a511ca9c4812ebcdeb8d0a2d0baad58d1f4c14be440d72a6aa6294ade2b611612a44e0318974a40a355ad242fe856cc817e33139ce81ff41bfdecd89a3f1e5bcbeb9664d2da9ec98ffa4cbfd0aff473fd1a38fd094fafe1f9f94170bb77fecdf95d60f3f7f9b7fae5f68cdadb337aa09fd5f423fd977e7510067a08c7f58f3e3bbf73106c8c53bf44e0436f2e42677d9c5b4baa2088cb45757355546fb9d32fc02bcff41ffa2514b3eff4594dffaa9feaeff53dfdf3ad5b6085a7fafe979b59e0bfe4f3483fd1bf1f101ff884e74760a7dff4e303e2f540df07560ff59303e2f410be7f82df5f36e4f4ee88ea6e135179fd80cb2b6ff73add5671315d43abd9dc71a05f78c5ec48a2d7ace42032337fb4377f4e929997f9b9eed7caf5c7c9d3f2bfa29cfc0b504b0708408a2ddb1c060000cb220000504b0304140008080800ab395c47000000000000000000000000080000006d6574612e786d6c8d934b8fd3301485f7fc8ac8ccd6f1238f26569a9158b01a0412456257a5f69d6270ecca7126e5df9347d3e940172c73fc1d9f736da77a3cb7267a01df6967b788c5144560a553da1eb7e8dbee232ed063fdae72cfcf5a82504ef62dd8805b084d345a6d2796a52deabd15aee974276cd342278214ee0476b5885b5acc418b7236dafedaa21f219c0421c330c443123b7f24ac2c4b32afaea89257eed47b33534a123030257484c58cacecd4f07f4b4dec6d25e7dc3568c297d2731ca73425cbf74a1fbd52e6de00239b90b161131afca261788fa2cbf83707ce51bd9eee54a3aee632d2431346028f66a8396519a62966f98ee58253c1b338e3ac2c58b96115b9e3a89414af5646312f768c0a9608cee33c4db3a2e034afc88a2da9a074182f1eabdecf7bd55f76e9e653c6be5e32fe597f6b93bfa581aee6c95ff8455fe0235818ddced74ffae0e1f33c3a49e324dec4fce149dbfebcff5ee4fb3c8d6e80fdc9bb9f20034913dad2870fbd360af34bceeb964bc4f5957661acd9052da3590fcdc10096aeb7613c79b488128cb96aabe80e53d82a5344ea8abcb92472ef87a8ff00504b0708de4161cea20100004e030000504b0304140008080800ab395c470000000000000000000000000a0000007374796c65732e786d6ced5ad16edb36147ddf57080a50b4c064494ed3c46eec3cac2836a02d86acdd3b2d51325b4a14482a4efa546cc0fe637fd0bded65ff90fcd12e29919664c95193ae2886a6411a91e75e1ede7b485eca393dbbcca87381b9202c5fb8e124701d9c472c2679ba70dfbc7eee9db867cbef4e59929008cf63169519cea527e415c5c201e35cccabce855bf27cce9020629ea30c8bb98ce6acc0b9319a37d1733d54d5a29d8d35d7e0a6b5c49772acb1c2b66cd16afcc81adcb48e39da8c3556588869d33c61638d2f05f512e6452c2b90241d169794e4ef16ee5aca62eefb9bcd66b2399c309efae16c36f375af251c595c5172aa5171e4638ad560c20f27a16fb01996682c3f856d52cacb6c85f9e8d0208976b25a702c0002d355ba1ce7a869d3d2d7453a5a5d17e94098a335e2a375a6c16da91cc6e3a57218376d3324d703f93df15f42a7fef1f2c556573c1b3b96c2b6421571528c9e66856eda33c62c5565502d764d771a048ffdeab981deec856f38919837e0d15e7884686423ceb2bea0012ef401e1e10b257983e66ad2839e8f7c8e0bc6a525928cdfec203a53bb54d732a3c34b55f51a68cae3b8170a740e7d58b6b068bc0b823707adbd6c7ffc67be0635f7afbd0661e02b8c5d0210deed66cb537b1c24accce36ad955c1c09705e6447521aacde62d0f4dc550760797f519d2f0d05aaa421ccabed8bd3ef7559fa78e01d8e86a2f8dd36fea2ecd51973038e61214612fc61115cbd36a8bb2cd4ef5acc82ddc1704f63bcdd6f905e5a02ad8470c3423f46ae13e4005134f3bb8aad1755aae15de4b710eb305b58b0d11a28528888c603fb8409ce864fafba93dc36fd1afe57e5a0dcc184a5742e2ec5e9c3823b11ece798e285da1e8dd30b75dec17e1f89c633c10b446d77d19f8436aabdbab3acb308d71824a5a575fc6734d4aaf6c2fc294ba065e208e528e8ab5577058db5c1228d9aa2e4083175678311112e5aa7a03f51f45d9362c6a91ec1a6aa203a24fd89ca23c2d510abdbcd40d11ac63c981dff91bb7ebc283ed13e55d896a8cf16320efd7a6a776683a7e78b5eb561de0145fee776c416bd2756dbb7e7aa573d413fce56955e3d4a54e2b2355745e056e07e4d44f19c93d924b9c825d4c522205045f0fd4e3d3fa884acea132bfea1b2a0c8e7f0ecc2c2e1885a4a8b256f2120f910099910c51afa0203a200067d45e7aa637e5ac2cf4e5407bf7ad7b2597a563e7a01f77b95f652b468dafb6580cb62198e5cd879bdfafff9a58af1d47cb9e8e4f099a3ba4752d5ccaa0843d489200beba13f5fa27fabf8c7115a20c157699e431a9eaf20b444bfcf0d183543e5d5801a2a2a075c4bd9640fd7be6ebe49bc8ef10b46f22ff62223fd92ff2ca72374bcfaa93c5bdfd44bfe54cb6076a6f7db553abd4e8bbd759c6c350ad63fa6dc5337c54efaba946810c250b1e246511ad42ac919ce14c9d63b13f518eadbcec5b32af9de43dab5173ac5f8611b8e690c8f8d360b810614e498e0d46304ae201c886c4eaad012a251b40d46b5f0faa7f772d870d26e91a6e50b032e24f0dcef44ed16907565f6ebb07c8b632dd1dfa478cd41bcbcf93186bd45336ab104262d2dc13ace4aa6c4ec8a571ce7181910a266c7a39842f415434ee19bde538847ceb74e1466088f970116e5542deab92fd4921dd21e5dc2f997544c33b85d4a4634c4839ab5ed879b0872bfab36097a4dfb90dd58f4adc1918475efb9a54a8fa9ea22b56cad69c5e1659e8f6803a01ce104fe1e882dbd1c20d26c76108b7a246fb8a49a9de2d059327ed0e8a13a9ae51e1b4ddceabf8079343eda91a5ebdd9821079198b8119e59e5cd98072a2d4a3df210aa77e712c1cb67a8b2329b6da584394b7d784565bc218c8a83b2fe0b2c686ccf1511ffba09ffa5004cc8dd11f665453f9f22cebfc7528b6e9f83b5a18a1a1e96d1a1acef057973bd5b3623c566feba793c7b30266ab4e15e720d05f1a50a0b8fa3c289804e189b1820241d570796c4e92832850ff6c741a08a81053bca3939d997efd42fa4ae375bbaafdc13db3eec890b02ec4b61ed68dcad3be8ab5b90e7ab6da8abe39db8980abc295391d97a7fa33b9a2fe5fac31ae7c2ccfcece4efd6e63dd527442d3d1834a6eff707e5b4db770bafef3e6b79b0fd71fafffb9fefbe68feb8f4edda1a65bd5f8cbd0306ab4ed90ac06eb08792f497f27feb7a5e4bcfe84624f46a69d8c98278e5375002b429f980ee761859344d226a47a7eb41388d648ad26bdf43aa3431988072b42a8332dc8d3573458914178e4858137854b6f008b4f7d0741cd420197df3b867076bb6b0532aec3601e4ee747e164163e3e3e9e8647811a62aebfeda4fb04da9edf6751ed7df5e9f84da0be272f67b326b06afb8f74ecf7ef387effdf182cff05504b0708b13867adb9060000a3200000504b0304140008080800ab395c470000000000000000000000000c0000006d616e69666573742e726466cd93cd6e83301084ef3c8565ced8402f05057228cab96a9fc0358658052ff29a12debe8e935651a4aaea9fd4e3ae4633df8eb49bed611cc88bb2a8c15434632925ca4868b5e92b3abb2eb9a5db3adad8b62b1f9a1df16a83a59f2aba776e2a395f96852d370c6ccfb3a228789af33c4fbc22c1d53871480cc6b48e08091e8d4269f5e47c1a39cee20966575174eba09079f7203d8bdd3aa9a0b20a61b652bd87b6209181408d094cca8474831cba4e4bc53396f35139c1a1ede2c760bdd383a23c60f02b8ecfd8de880ca6e55ee0bdb0ee5c83df7c95687aee637a75d3c5f1df2394609c32ee4feabb3b79ffe7fe2ecfff19e2afb476446c40cea367fa90e7b4f21f5547af504b0708b4f768d20501000083030000504b0304140000080000ab395c470000000000000000000000001a000000436f6e66696775726174696f6e73322f706f7075706d656e752f504b0304140000080000ab395c470000000000000000000000001a000000436f6e66696775726174696f6e73322f7374617475736261722f504b0304140000080000ab395c4700000000000000000000000018000000436f6e66696775726174696f6e73322f746f6f6c6261722f504b0304140000080000ab395c4700000000000000000000000018000000436f6e66696775726174696f6e73322f6d656e756261722f504b0304140000080000ab395c4700000000000000000000000018000000436f6e66696775726174696f6e73322f666c6f617465722f504b0304140008080800ab395c4700000000000000000000000027000000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c0300504b0708000000000200000000000000504b0304140000080000ab395c470000000000000000000000001f000000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b0304140000080000ab395c470000000000000000000000001a000000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b0304140000080000ab395c470000000000000000000000001c000000436f6e66696775726174696f6e73322f70726f67726573736261722f504b0304140008080800ab395c47000000000000000000000000150000004d4554412d494e462f6d616e69666573742e786d6cad544b6ec32010dde71416dbcad06655a1385954ea09d203503c76906040cc1025b72f8e944f55a5aad5ece6fbde6306586d0ec1377bc8e42276e2453e8b06d0c6dee1d8898fed7bfb2a36ebc52a18740310ebb3d1d43ea48bdb89925147438e349a00a4d9ea9800fb684b0064fdbd5e9f982ede8d80a5582f9a2bdfe03cb4b53f1fafd543f1be4d86779d50f740aee100bd332d1f1374c2a4e49d355ccbd41e7b79122c6f754a4a194c4f3b00166a8e94edae844f34ce93e2b329138e77a4b8604650537e160b0173dd0dc93acf3bc80c0756537a16b08dc8d3f91f8d1b80cdc341898f1e1e3f83734ce67ef8c30daa554fb339de220e6e2cf904414b65ac050fd58d59d992f3ef3bf81fd71f5f05159c24c8e2a4bd4598c857eac757b0fe02504b070842d9648e2001000045040000504b01021400140000080000ab395c47856c398a2e0000002e0000000800000000000000000000000000000000006d696d6574797065504b01021400140000080000ab395c47994d869760160000601600001800000000000000000000000000540000005468756d626e61696c732f7468756d626e61696c2e706e67504b01021400140008080800ab395c477ff4f9f12c050000031f00000c00000000000000000000000000ea16000073657474696e67732e786d6c504b01021400140008080800ab395c47408a2ddb1c060000cb2200000b00000000000000000000000000501c0000636f6e74656e742e786d6c504b01021400140008080800ab395c47de4161cea20100004e0300000800000000000000000000000000a52200006d6574612e786d6c504b01021400140008080800ab395c47b13867adb9060000a32000000a000000000000000000000000007d2400007374796c65732e786d6c504b01021400140008080800ab395c47b4f768d205010000830300000c000000000000000000000000006e2b00006d616e69666573742e726466504b01021400140000080000ab395c470000000000000000000000001a00000000000000000000000000ad2c0000436f6e66696775726174696f6e73322f706f7075706d656e752f504b01021400140000080000ab395c470000000000000000000000001a00000000000000000000000000e52c0000436f6e66696775726174696f6e73322f7374617475736261722f504b01021400140000080000ab395c4700000000000000000000000018000000000000000000000000001d2d0000436f6e66696775726174696f6e73322f746f6f6c6261722f504b01021400140000080000ab395c470000000000000000000000001800000000000000000000000000532d0000436f6e66696775726174696f6e73322f6d656e756261722f504b01021400140000080000ab395c470000000000000000000000001800000000000000000000000000892d0000436f6e66696775726174696f6e73322f666c6f617465722f504b01021400140008080800ab395c470000000002000000000000002700000000000000000000000000bf2d0000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c504b01021400140000080000ab395c470000000000000000000000001f00000000000000000000000000162e0000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b01021400140000080000ab395c470000000000000000000000001a00000000000000000000000000532e0000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b01021400140000080000ab395c470000000000000000000000001c000000000000000000000000008b2e0000436f6e66696775726174696f6e73322f70726f67726573736261722f504b01021400140008080800ab395c4742d9648e20010000450400001500000000000000000000000000c52e00004d4554412d494e462f6d616e69666573742e786d6c504b0506000000001100110070040000283000000000	1297342518	2015-10-28 10:16:00.804222	t
 1092	./scripts/формулы124.qs	0	\\x766172206c61737441646472203d2067657444696374696f6e6172792822d0bfd0bed181d0bbd0b0d0b4d180d0b5d18122293b0a7661722061646472203d2067657444696374696f6e6172792822d0b0d0b4d180d0b5d18122293b0a0a66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0967657444696374696f6e617279282273616c646f34303222292e7365744f72646572436c617573652822d094d09ed09ad0a3d09cd095d09dd0a2d0ab5f5fd098d09cd0af22293b0a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0976617220d186d0b5d0bdd0b0203d2067657456616c75652822d0a2d09ed092d090d0a05f5fd0a6d095d09dd09022293b0a0973657456616c7565282250325f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a0972657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a092f2f20d0a1d187d0b8d182d0b0d0b5d0bc20d0b7d0bdd0b0d187d0b5d0bdd0b8d18f20d0b220d182d0b0d0b1d0bbd0b8d187d0bdd0bed0b920d187d0b0d181d182d0b80a096966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd09ad09ed09b222909092f2f20d0a2d0bed0bbd18cd0bad0be20d0bfd180d0b820d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d0b820d0bad0bed0bbd0b8d187d0b5d181d182d0b2d0b0200a097b0a09094576656e744166746572416464537472696e6728293b09092f2f20d09ed0b1d0bdd0bed0b2d0b8d0bc20d186d0b5d0bdd18320d0bdd0b020d0b2d181d18fd0bad0b8d0b920d181d0bbd183d187d0b0d0b92e20d092d0b4d180d183d0b320d0bed0bdd0b020d0b8d0b7d0bcd0b5d0bdd0b8d0bbd0b0d181d18c20d18120d0b220d0bfd180d0bed0bcd0b5d0b6d183d182d0bed0ba20d0b2d180d0b5d0bcd0b5d0bdd0b820d0bcd0b5d0b6d0b4d18320d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b820d0bfd180d0bed181d182d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d0bad0bed0bbd0b8d187d0b5d181d182d0b2d0b00a09096966202867657456616c7565282250325f5fd0a6d095d09dd090222920213d203029092f2f20d095d181d0bbd0b820d180d0bed0b7d0bdd0b8d187d0bdd0b0d18f20d186d0b5d0bdd0b020d183d0bad0b0d0b7d0b0d0bdd0b00a09097b0a09090976617220d0bad0bed0bb203d206765744f6c6456616c7565282250315f5fd09ad09ed09b2229202b2067657456616c75652822d09ad0a03430325f5fd09ad09ed09dd09ad09ed09b22293b09092f2f20d09ad0bed0bbd0b8d187d0b5d181d182d0b2d0be20d0b2d181d0b5d0b3d0be0a09090976617220d181d183d0bcd0bcd0b0203d206765744f6c6456616c7565282250315f5fd0a1d0a3d09cd09cd0902229202b2067657456616c75652822d09ad0a03430325f5fd09ad09ed09dd0a1d090d09bd0acd094d09e22293b09092f2f20d0a1d183d0bcd0bcd0b020d0b2d181d0b5d0b3d0be0a0909096966202867657456616c7565282250315f5fd09ad09ed09b2229203e20d0bad0bed0bb290a0909097b0a090909096572726f724d657373616765203d2022d09ed181d182d0b0d182d0bed0ba20d0bcd0b5d0bdd18cd188d0b5203021223b0a0909097d0a09090973657456616c7565282250325f5fd09ad09ed09b222c2067657456616c7565282250315f5fd09ad09ed09b2229293b0a0909092f2f20d09fd0bed181d187d0b8d182d0b0d0b5d0bc20d0bfd0b5d180d0b2d183d18e20d0bfd180d0bed0b2d0bed0b4d0bad1832028d0bfd0be20d0b7d0b0d0bad183d0bfd0bed187d0bdd0bed0b920d186d0b5d0bdd0b5290a09090976617220d186d0b5d0bdd0b0203d20303b0a09090969662028d0bad0bed0bb20213d2030290a09090909d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a090909d181d183d0bcd0bcd0b0203d202067657456616c7565282250315f5fd09ad09ed09b2229202a20d186d0b5d0bdd0b03b0a09090973657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a09090973657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0909092f2f20d09fd0bed181d187d0b8d182d0b0d0b5d0bc20d0b2d182d0bed180d183d18e20d0bfd180d0bed0b2d0bed0b4d0bad1832028d0bfd0be20d180d0bed0b7d0bdd0b8d187d0bdd0bed0b920d186d0b5d0bdd0b5290a090909d186d0b5d0bdd0b0203d2067657456616c7565282250325f5fd0a6d095d09dd09022293b0a090909d181d183d0bcd0bcd0b0203d2067657456616c7565282250325f5fd09ad09ed09b2229202a20d186d0b5d0bdd0b03b0a09090973657456616c7565282250325f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a09097d0a0909656c73650a09097b0a0909096966202867657456616c7565282250315f5fd09ad09ed09b222920213d2030290a0909097b0a090909096572726f724d657373616765203d2022d0a0d0bed0b7d0bdd0b8d187d0bdd0b0d18f20d186d0b5d0bdd0b020d0bfd0bed0b7d0b8d186d0b8d0b8205b22202b2067657456616c75652822d0a2d09ed092d090d0a05f5fd098d09cd0af2229202b20225d20d0bdd0b520d0bed0bfd180d0b5d0b4d0b5d0bbd0b5d0bdd0b021223b0a09090909736372697074526573756c74203d2066616c73653b0a0909097d0a09097d0a097d0a0972657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a097072696e7428222d2d2220202b20626172436f6465293b0a72657475726e2022223b0a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0967657444696374696f6e6172792822d182d0bed0b2d0b0d18022292e7365744d75737453686f772866616c7365293b0a0967657444696374696f6e6172792822d0b0d0b4d180d0b5d18122292e7365744d75737453686f772866616c7365293b0a0967657444696374696f6e6172792822d0bfd0bed181d0bbd0b0d0b4d180d0b5d18122292e7365744d75737453686f772866616c7365293b0a0967657444696374696f6e6172792822d0bfd0bed181d0bbd0b0d0b4d180d0b5d18122292e736574446f5375626d69742874727565293b0a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0972657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2fd0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd18222293b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0976617220726573756c74203d2066616c73653b0a0976617220746f7661724964203d2067657444696374696f6e6172792822d182d0bed0b2d0b0d18022292e676574496428293b0a096c617374416464722e71756572792822d09ad09ed0945fd0a2d09ed092d090d0a03d22202b20746f7661724964293b0a09696620286c617374416464722e676574526f77436f756e742829203e2030290a097b0a090976617220616464724964203d206c617374416464722e67657456616c75652822d09ad09ed0945fd090d094d0a0d095d0a122293b0a0909616464722e736574496428616464724964293b0a0909616464722e736574466f726d5469746c652822d09fd0bed181d0bbd0b5d0b4d0bdd0b8d0b92028d180d0b5d0bad0bed0bcd0b5d0bdd0b4d183d0b5d0bcd18bd0b92920d0b0d0b4d180d0b5d18120d185d180d0b0d0bdd0b5d0bdd0b8d18f22293b0a0909616464722e676574466f726d28292e636c656172416c6c436f6d626f426f78657328293b0a097d0a09656c73650a097b0a0909616464722e736574466f726d5469746c652822d092d0b2d0b5d0b4d0b8d182d0b520d0b0d0b4d180d0b5d18120d185d180d0b0d0bdd0b5d0bdd0b8d18f22293b0a097d0a09616464722e6578656328293b0a0969662028616464722e6973466f726d53656c65637465642829290a097b0a0909616464722e6c6f636b28293b0a09097365744c6173744164647228746f7661724964293b0a0909726573756c74203d20747275653b0a097d0a0972657475726e20726573756c743b0a7d0a0a0a66756e6374696f6e207365744c6173744164647228746f7661724964290a7b202f2f20d181d0bed185d180d0b0d0bdd0b8d182d18c20d0bfd0bed181d0bbd0b5d0b4d0bdd0b8d0b920d0b0d0b4d180d0b5d18120d185d180d0b0d0bdd0b5d0bdd0b8d18f0a0976617220616464724e616d65203d20616464722e6765744e616d6528293b0a0976617220666972737443686172203d20616464724e616d652e737562737472696e6728302c2031293b0a096966202820666972737443686172203d3d20223122207c7c20666972737443686172203d3d20223222207c7c20666972737443686172203d3d2022332229092f2f20d095d181d0bbd0b820d0b0d0b4d180d0b5d18120d0bdd0b0d187d0b8d0bdd0b0d0b5d182d181d18f20d18120312c203220d0b8d0bbd0b820330a097b0a2f2f090976617220746f7661724964203d2067657456616c75652822d0a2d09ed092d090d0a05f5fd09ad09ed09422293b0a09096c617374416464722e71756572792822d09ad09ed0945fd0a2d09ed092d090d0a03d22202b20746f7661724964293b0a0909696620286c617374416464722e676574526f77436f756e742829203e2030290a0909096c617374416464722e73657456616c75652822d09ad09ed0945fd090d094d0a0d095d0a1222c20616464722e676574496428292c2030293b0a0909656c73650a0909096c617374416464722e676574496428293b092f2f20d09220d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b520d0bfd0bed181d0bbd0b5d0b4d0bdd0b8d18520d0b0d0b4d180d0b5d181d0bed0b220d0bdd0b5d18220d181d0bed187d0b5d182d0b0d0bdd0b8d18f20d0b4d0bbd18f20d18dd182d0bed0b920d0bfd0bed0b7d0b8d186d0b8d0b820d182d0bed0b2d0b0d180d0b020d0b820d18dd182d0bed0b3d0be20d0b0d0b4d180d0b5d181d0b00a09090909092f2f20d0bfd0bed18dd182d0bed0bcd18320d183d181d182d0b0d0bdd0bed0b2d0b8d0bc20d182d0b0d0bad0bed0b520d181d0bed187d0b5d182d0b0d0bdd0b8d0b520d0bfd180d0bed181d182d0be20d0bfd180d0bed187d0b8d182d0b0d0b2204964200a09090909092f2f20d09fd180d0b820d18dd182d0bed0bc20d0bad0bed0b420d182d0bed0b2d0b0d180d0b020d0b820d0bad0bed0b420d0b0d0b4d180d0b5d181d0b020d0b220d18dd182d0bed0bc20d181d0bed187d0b5d182d0b0d0bdd0b8d0b820d183d181d182d0b0d0bdd0bed0b2d18fd182d181d18f20d0b0d0b2d182d0bed0bcd0b0d182d0b8d187d0b5d181d0bad0b80a097d0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f096170702e646562756728332c202266756e6374696f6e204576656e74426172436f646552656164656428626172436f64652922293b0a090a0976617220616464537472203d20747275653b0a097661722073616c646f203d20646f63756d656e742e67657453616c646f282234303222293b0a0973616c646f2e71756572792822d182d0bed0b2d0b0d1802ed0a8d0a2d0a0d098d0a5d09ad09ed094203d202722202b20626172436f6465202b202227222c2074727565293b0a090a096966202873616c646f2e676574526f77436f756e742829203d3d2031290a090973616c646f2e6c6f636b2874727565293b09092f2f20d095d181d0bbd0b820d0bed0bad0b0d0b7d0b0d0bbd0b0d181d18c20d182d0bed0bbd18cd0bad0be20d0bed0b4d0bdd0b020d0bfd0bed0b7d0b8d186d0b8d18f20d0b220d0bed181d182d0b0d182d0bad0b0d18520d18120d182d0b0d0bad0b8d0bc20d188d182d180d0b8d1852dd0bad0bed0b4d0bed0bc2c20d182d0be20d0b2d18bd0b1d0b5d180d0b5d0bc20d0b5d0b50a09656c73650a097b090909092f2f20d098d0bdd0b0d187d0b520d0bed182d0bad180d0bed0b5d0bc20d0bed0bad0bdd0be20d18120d0bed181d182d0b0d182d0bad0b0d0bcd0b820d0b820d0bfd180d0b5d0b4d0bbd0bed0b6d0b8d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18e20d183d182d0bed187d0bdd0b8d182d18c20d0bfd0bed0b7d0b8d186d0b8d18e0a09096966202873616c646f2e676574526f77436f756e742829203d3d2030290a0909096170702e73686f774d6573736167654f6e5374617475734261722822d09220d0bed181d182d0b0d182d0bad0b0d18520d0bdd0b520d0bdd0b0d0b9d0b4d0b5d0bdd0b020d0bfd0bed0b7d0b8d186d0b8d18f20d18120d182d0b0d0bad0b8d0bc20d188d182d180d0b8d1852dd0bad0bed0b4d0bed0bc2e22293b0a0a090973616c646f2e6578656328293b0a0909696620282173616c646f2e6973466f726d53656c65637465642829290a090909616464537472203d2066616c73653b092f2f20d09fd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18c20d0bed182d0bad0b0d0b7d0b0d0bbd181d18f20d0bed18220d0b2d18bd0b1d0bed180d0b020d0bfd0bed0b7d0b8d186d0b8d0b82c20d0b4d0bed0b1d0b0d0b2d0bbd18fd182d18c20d181d182d180d0bed0bad18320d0bdd0b520d0b1d183d0b4d0b5d0bc0a0909656c73650a09097b0a09090976617220746f7661724964203d2073616c646f2e67657456616c75652822d09ad09ed0945fd0a2d09ed092d090d0a022293b0a0920202020090976617220626172436f64654d657373616765203d206e657720514d657373616765426f7828666f726d2c2022d092d0bdd0b8d0bcd0b0d0bdd0b8d0b521222c2022d09fd180d0b8d181d0b2d0bed0b8d182d18c20d18dd182d0bed18220d188d182d180d0b8d185d0bad0bed0b420d0b2d18bd0b1d180d0b0d0bdd0bdd0bed0b920d0bfd0bed0b7d0b8d186d0b8d0b83f222c20514d657373616765426f782e5374616e64617264427574746f6e7328514d657373616765426f782e5965732c20514d657373616765426f782e4e6f292c20666f726d293b0a0920202020090969662028626172436f64654d6573736167652e657865632829203d3d20514d657373616765426f782e596573290a0909090964622e65786563282255504441544520d182d0bed0b2d0b0d1802053455420d0a8d0a2d0a0d098d0a5d09ad09ed094203d202722202b20626172436f6465202b20222720574845524520d09ad09ed094203d2022202b20746f7661724964293b0909090a09090973616c646f2e6c6f636b2874727565293b0a09097d0a097d0a0969662028616464537472290a097b0a090976617220726f77203d20646f63756d656e742e6c6f6361746556616c7565282250315f5fd09ad0a0d09ad09ed094222c2073616c646f2e67657449642829293b0a090969662028726f77203e3d203029092f2f20d095d181d0bbd0b820d182d0b0d0bad0b0d18f20d0bfd0bed0b7d0b8d186d0b8d18f20d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b520d183d0b6d0b520d0b5d181d182d18c0a09097b0a090909646f63756d656e742e73657443757272656e74526f7728726f77293b0a090909646f63756d656e742e73657456616c7565282250315f5fd09ad09ed09b222c20646f63756d656e742e67657456616c7565282250315f5fd09ad09ed09b2229202b2031293b0a090909646f63756d656e742e63616c63756c61746528293b0a09097d0a0909656c73650a09097b0909092f2f20d0a2d0b0d0bad0bed0b920d0bfd0bed0b7d0b8d186d0b8d0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b520d0b5d189d0b520d0bdd0b5d1822c20d0b4d0bed0b1d0b0d0b2d0b8d0bc20d0b5d0b50a09090969662028646f63756d656e742e6164642829290a0909097b0a09090909646f63756d656e742e73657456616c7565282250315f5fd09ad09ed09b222c2031293b0a09090909646f63756d656e742e63616c63756c61746528293b0a0909097d0a09097d0a0909646f63756d656e742e736176654368616e67657328293b0a097d0a0973616c646f2e6c6f636b2866616c7365293b0909092f2f20d0a0d0b0d0b7d0b1d0bbd0bed0bad0b8d180d183d0b5d0bc20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0ba20d0bed181d182d0b0d182d0bad0bed0b22c20d187d182d0bed0b1d18b20d0bcd0bed0b6d0bdd0be20d0b1d18bd0bbd0be20d0b220d0bdd0b5d0bc0a7d0a0a0a0a0a	1257835678	2015-11-22 17:13:27.01921	t
+1065	заявка.Заказ в наименованиях поставщика.ods	1	\\x504b030414000008000031599047856c398a2e0000002e000000080000006d696d65747970656170706c69636174696f6e2f766e642e6f617369732e6f70656e646f63756d656e742e7370726561647368656574504b03041400000800003159904715d532e1b5100000b5100000180000005468756d626e61696c732f7468756d626e61696c2e706e6789504e470d0a1a0a0000000d4948445200000100000000e808020000008f70ad6a0000107c49444154789ced9c798c14451b871b18605158ae5544911b975b10501694b82e47381424248ad1880a4230c40389262a444c3481e02d8a4740518898884645045d9143d1a878809c22a2dc22d77a00223e3befb795764032ebe7b2b0efeff963d2d3535d5d53f53e6f5577cf6ee2da6baf8d8e3b7ffef9674646467e7e7e767676ddba750f1e3c58ae5cb9e3df0ce196c3870f13720505058969d3a61dffd3fff1c71f894462c89021c3870fcfc9c93974e850850a158e7f33845b2c0209fe045ba5757ae601429fb7bc62e4f16f86704b88405e13e91c6053868569cac6bf5ebd942f5fde127f8524ffae92939492e84f515c88c0b4a23f4a8e4dd8389c84836dc3f6dbc86908d3c4ba28de51a1638f7de051bb37be336c1f7b20345e46ba0244b1a405cc1d5cb956aa54893d6c23837ab3b8c4fb33658f75261d9bd299f179c3125028167646c9252533aaedb462514cb0b03fd4ef79d4d215c0fa68cf9e3d3367ce1c3162c4840913faf5ebd7ba75ebddbb7757af5e9d02fbf6ed3be59453585079eecdf449e9cf5dbb76cd9a356bf8f0e13ffffc33dd989191417446c9a8b50d83a8ddbb772f9d4c19bb82629b9d050505447c952a55a890c4949595c57050be5ab56a9c88f56ef0c1ea640f256bd4a861d57a1eaf62cc005132b510f1d3a74faf5ab52ad13f71e2c41f7ef8a1478f1e9999998f3efa68972e5d468f1e1d2684126a715982bedab265cbfefdfbb76fdf4e102f5dba74ce9c39c465bb76eda264b82f5ebcf8c08103ad5ab5cacdcdbde5965be8deb973e712e8975d76d992254b060d1a3463c60c0a4f9d3ab576edda5dbb76e5f0060d1a6011956cdebc79e8d0a1d440318e22e219a9d9b367d7ac59137f962f5fdea14307ea095694725f9412c51380ccb466cd9a458b164d9932851ee42d713f69d224066fe4c8912b56ac88925de9b6378b0b1db86edd3afa70ebd6ad646bf234d3e9ead5ab4f3df554a27ceddab5442a9d49c7f25ab16245524f8b162d366edcc810ac5ab56af2e4c9bffdf61be13e6edcb80d1b369806e426429f57f62f5bb60cb528b673e7ceecec6c9cf9eebbefd8c3fc70e18517bef1c61bbd7bf7a65acfb7e08a2700ddddb66ddb4b2fbd942510f33549859eddb66d1b02d4aa55eb975f7e8992937bc934b50c427f92ddc78c194350b2049a376f1e59992e25eb93b3478d1ab572e54ad6330437b19b939383124c1acd9a356bdab429a1dcb2654bdc409bf5ebd713f4d8c236b331917df7dd7733455315f14df9afbffe9ad159b870e1b061c3e6cf9f8f5dac9da8904f4bbb0f4a9962cf008d1a356ad2a449e7ce9d097464602a604149b2212731db3260a4285b0595508bcb12952b576ed3a60d1b952a556adebc39eb96fcfcfc4e9d3a11dc03060c2040318480a6c3095f962e797979842fdbf5ebd7278577ebd68d886fdfbefd134f3c51af5e3d82fba5975edab163c77df7dd8733679e79268b2b5e59f95033fb199ac68d1bf7ecd993b15bb0600183182597619e67ece2dd0625c7f4efdf9f2e1b3c78306f19331691afbcf24ac3860d19b63a75ea306025d8d83284f5274b1da6533608d0eeddbbb3d1b163c7f8dda1be7dfba6cca8e47e3b9c8867207af5eac5dbf1e3c75bb1b163c7a6dc06e5952b372e0fecb60ffbebd6adcb2bfec46f1cb9a5787781a264c2a0cbe8535beb93fe070e1c1825af8fb9d82221d92db6126c7299201ee5e1894ab84d696542c8c6af536d8ff5b0f57694ecfc7f2acfab150b65e2375e430d6e278144fa4bf6f8ed641b80a33e9189d2b80c482996ce03a0b2c7918f818feccf239f97a53c32b78fc2ce7f8ae378e5f1edf810fc5f5fe664234460a254d40fc31606d86d0612a582c55be14f21b87e65de4485f86c182668bb420a0f1d8f5d69fc3965203c160853bcada06ad7aecd05c39e3d7b7efdf557aeeaececf17468ad0ac71efbec29c706bfe38f54439d293bc3fea848c5f847f1f670a95aad5ab503070eecdbb7cffa245cee87e756b61d1e3c49ec131396ee4420e39878f2c927ab54a99291918109516c85c36bc58a15ab56ad7af0e0417bac18f274cab8c643c78eb2dff7dbbccc753381be7fff7ededa7d3a229e028944222b2beba38f3efafefbef39350d2a17fb15001b5c2012707bf7eeb58fe2b376fcec71c1ca27b1ca2d2ed9e6d59e4f530f75d23c22f8f7df7f679ba3700f1bf9fa952b57b6f2403b296f1fd160aae210766ed8b061f1e2c55c44e6e6e6f2a5d8c35114a3301d65ddca21f4e7eeddbb23c70beb9305863571d75d77ad5dbb76f9f2e523478e8cfefe7314e2fed34f3f65683b75ea94ce9dcdf0783f333393882f28282082d7ad5bd7a851a39a356bf2e99a356b089773ce39873aad42e2fbadb7debaf2ca2b39246502f9f6db6f57ad5a75d1451755af5e3dcd198093f29548d2167fece458cec25b8292605dbd7a35cd3bfdf4d3ebd7afffcd37df503e3b3b9bc66cdbb66dd3a64d94cf4a4231e29e767214ba528cf623c6ce9d3b972c5972da69a775e8d0017fb624a118a7a0a9447fad5ab5a824a533ff93a1122544e15d20b21ac3fce5975f123d767ba755ab560ce794295388cb3e7dfa30cc2b57ae6cdcb8716692eddbb7134ce43f8e25956edebc99435ab66cc921e4d7c71e7b6cf4e8d1cf3efb2c0210ee4d9a3499366ddaa851a328f3f4d34f7354c3860d6fb8e106ce45de250a099df3cf3f7fc58a15e4696aa851a3468b162de6cc99f3d9679f5d70c10584ddc2850b09d933ce38039d788b33942134d9a001042be56915f57308eda4f2abaebaaa57af5e0b162c98387162d3a64dafb8e28a071f7c90925f7df51511ffe28b2f0e1c3870f6ecd9ddba759b3163c6a449931e7ae8210b7d0af035f18166bffefaeb63c78ea5f0279f7cc2d759ba742999e2faebafbffcf2cbfbf7ef4fb51420faa90119f82ecd9b37dfb56b57c78e1ddf7befbd4b2eb904f79cdf623f9109d9b65000a296b04080575f7db54183068cdc3befbc73de79e7912cc96d9f7ffef9175f7c4174ce9a358bccd7b973e77beeb9a777efde39393968f0cc33cf10311420c8f2f2f2a2e47a63dcb871ad5bb7e604040a6210df5468bf3c217d7ef8e18751d18d3c5a400c51d21ea8356bd66cc78e1d7dfbf6259449cc443372dacdd63a75ea50ffcb2fbfbc7efdfac18307b3cde28dd6528650befffefb6dd946e3f3f3f3b1e5acb3cee27bd178946306c0100ea491d882c024f5b3cf3e9b462e5bb68c6670d490214310803a59dbd06ce278cc9831a47cbe0e2d2705a01c73cbbbefbe4b61b6f916f7de7b2f95d3b6c99327f3bddab56b47b5ac2cebd5ab17ee394a80139c420148ab0c2d51c53093f90841d62d844b5e12d23903397efc78c69b4822020868469af0b23fa66179404cb094b71aa98d6264445650b63226f8a881b4daa64d1ba69af89fe0d82a1c857af4e8611308530a318d5ab7de7a2b4997b8c4ae175e7881c2f3e7cfa75a96e0f6873c165ecc27c42251cb57202e994f3876e8d0a12884a21b376e648975f1c517331ddd78e38d03060c4060c29af8e623a61d9237c7725efbcb38bb7479eaa9a758235d73cd35f40395e3de9b6fbe490b79a5fcb061c34816b484d3f1653996afcf79d943ab98072cfac54941612cdab52351c5a282352e0998a53f698f4024aac8c1646e8699c022faefbcf3ce1f7ffc71ebd6ad946129f2c1071f904749b7ec249e187e828045c5840913a870faf4e9d4f6da6bafb56fdf9ef0253b1228c46214bb40341fa89f5373529237fe1073efbfff3ea7431e028be8a46d5c15dc76db6d8f3ffe381b5c3d7349caea8b05096b24323db307859f7ffe798ea230a6e106053081050991ba68d1229673b7df7efb238f3c421b683362702c66d206bb64b7074623468cc09028f984b55fbf7ecc154c32e405e6c0b7df7e9b0de60a9ac4d7e412851a7efae927566b349e2590dd0628b5f114c5a430f88854563bc4f7d5575f4d6a27f793e40856960a3870c71d7774e9d285f86061402475edda95f863f889578298b513dbece44002d79ede931aa981c3398a62acc8c9e5c431330cc1c13522599f541a15cd006c6008099b622c99680fb18b00cc0ccf3df71c9f3211510c1b49ffd75d771d16e11b95b76ddb96c8bef9e69b897836b85478f8e1875917d93acaeed210eb9c9ad3d13c2e0fac3604c30d16545c7f73aedcdc5c2ae723361080f54c94bc45c04a8fa5a0fdd41e493087caa90df3b906983b772eb393fd1a1c31e6cd9bc751d4c624a695cfc942a1008cd9c71f7fdcbd7b77f2376fcf3df75cbb3e608c89eca8e84627a16037f2097a5e594c336f30fb6305e115ae2a084a5e59079338398ab70410330616d9ef58489fe1f4a4e14d9b36119ae46f8e1a346850b811848d51d14362ce1815fd6c8bdc8c2dd4c929f0813aed869235801ccf5b22387e9628691ad9daeef73365f1cae22a3c9de02bdb49ad07ecbc5c73732e7cc070f6730a1a490dc88369f63b9cd0da9b6ebac99ac145855dca97f8d089ff824201580990f9527e8e1282232a5a23a5fce0e45012126df8e70ee1d3f03c28bc127c94b1bbf2c468885782f881071e2857f4774fe1585eed5f45d81fce87075851d1bf90a02a8c8a92b7dead70f8d4eefa1ff96c3f3c31b0b3a4d41f6f73f8fae1911685e38f0bad31a106bb4cb73d5c0ae3e761df3fb039892814208c7474cc5f25a4fce0243c344d79ea197f8d8aee8484625132c80ec77eb16871694ac4af8fe38f1de2dbe19971785e1bbfdd6e351cf55b84f65b6d473d57fc44e1595ef4f75fe084ca536a0873201a847b5c72e004e77f17c1f6a658a355aee8d714c73e36a558f4cf4196fed9d33cf5712698ff2fbe91282d8af707314294312480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8460208d74800e11a09205c2301846b2480708d0410ae9100c2351240b8e62f64a8230366e2d1490000000049454e44ae426082504b0304140008080800315990470000000000000000000000000c00000073657474696e67732e786d6ced59db92e236107dcf574cf935358b3133b33135c396b9cf8519b0c103bc6cc9b6c0da9125972463e02df98dfc483e63f78f2273d9ccb238cb82bd49a5c203d896fa9ca6d5ddea96afdfcd037c36838c234a6e94e21b553983c4a51e22d31b65d06f9effa2bcabfc744d2713e4c2b247dd2880449c7328849cc2cfa438e1e5f5f08d123152a680235e262080bc2cdc320d21d98a955fcf2eafc8d64fe61891971bc517222c170a711cbf894b6f289b168abaae1756a3dba92e2513343d946a3dfb3515a5f4335122b0566645a6a9ea45617daf9c6d947c651a4da96cedb0fdfb95eb0dc1fae71c091824b639db3c4e54bb512465798660fcd96aca3eb92f656cc49183a1c120e8d350d90e8a45280711114a45bd2e7c0df25dc00f7022f2417e469ef0f7416bea95fef664f83644537fafeac552513f14fe3c00e139221e9c436f970ac6fb17692523dd8b2d0e5118c6b7de8e965c30e9014a25f187e277699a80eee8d907d220df52f44b918fbf7ffce3d3af9f7e2b1ee083b58871caba9423214360b8cfde97c7ade597c8a30c9db04d195a522200b6428c44877a7077057cca4e7072c80472f342dfd17e6ba02c83f4b5fe39e01bae4033b842370199a698473b0e7cab6fc6896b0b6ba665951371b34de05bd42a15820619028f290dfa1225538f4e406d80a35dd475b6568fb50198c224bdfe2dfad591e0964fe31643bb99dba1144340948a6011dc8fbce7e1eb0d236d7895d90f0dad55ce4fd9543e27f793b38fcb28c60e60e91bf9dbffbdec642f4b08aab29e79e932981404691e370198a7b8dc213463c8e84a7f9e13c12315e9d8e9e1925f207e0b3941ad514cd90e34a6491815b5ab92a65d5e65b0b03958a50db8543d0a8849e336049e6c507221b17c0885cc3639a0dff2a748c8a60e5a8bc0a1985b7077dbcd84c42220ec5313700177173a0bcf5f03dff24d63921b8309b95cefd4125ca6b72353d02efcde3afc54782b723c34433c55fd8cc0f72b7facebace18d39e2d682b83ea3042de18fab08365de9fe091c8ac3cf1dd60f22069205fe9e0388070a3c53a6174af0228f6d03cca0bd3e5b7922354c791ef173cbeb9be320cb072c7dfd4ea2b8878c181c01d28d882b22b0a7a1ca82c80843bc1870c8ea4080ecb3654d1a08b8d2e76b340819e4c9c2645ea67565999a442d14d16e47e4000eaf2eaa8800b6502ac1b4fd7341bd5b3825938e877713ab118bce0763d969ea4b791f8e871de3dff4e915edde6019d6dc405741cb5e0c55bff3d0bf8d3bcbeac4d5ec0578b6979ba9cf86d131665bc1a9d1300cdf92570d4f7e59818ecc56531d59c6bc46aa52ee521d0f6ff51eb99b792d1fbb58bfedd7d445a7de8987a547ec0618bb71384b7e1d62fa5e0bcf9c0fc59e53ba53dda0197a46f8c12955137be99d5e2846c33b22315f46cf61d12d99622cf1bb7d83776a71fc5037ee479acea5eccb785855415d5d3c1a61ec6a73ec053697f3eedd96198c5bb6069e1f7172ffd7fc7138d2067ac7087b83865977b4446fbf311a9a7e0d57fdb166f7c130c44f2f0dd568e0c86ddbea409bcfbc7ae87b4333318765341ebb7dbb5ab59b7ac3b6ab1dd3f627fd81de307b1786d9b47bfd863d1a16ed274bbdecdaeac5cd492ef8286f529aa82aa3c287ec7dfbe15c534bea7b197208f2e3d806a107046c32d9f2c020c4f23afbc83522416b00bb513ef08dc0815e53768579340ff997503fa80acca9caf92185b281b1ec5892b8b8a34e0d1017e2ec49722e65f3ed571e1079598772fa896fe99f2e35bf5971fd17fad2bc1bf77c8e1b726d5672eee2723edf39e96c2ab53b2a7cf59eb690f606bbf227504b07082447e77126050000031f0000504b0304140008080800315990470000000000000000000000000b000000636f6e74656e742e786d6cdd594b8fdb3610bef757180ad01b2d3f92edaebbde5c8a9c924b9316058aa2a025ca6643890249d9de6373c839291a346d9af471c8356991a001f2f80dcc3fea502f535a4b91f3d826dd05e415f9cdccc7e17066e83d3cbf0e596f4984a43c9a3ac3fec0e991c8e33e8de653e78b2b17d0be73fee8a3431e04d423139f7b494822853c1e29f8ec81742427d9ecd4494434e1585239897048e44479131e93a8909ad8e8496a2b1b91ea9875164fc1b6b4226bd555d8602bb278d6dd720ab6a57d81575d850d169c6a8b07bcabf05a321470f07a1863456b2cd68c4657a7ce42a978e2baabd5aabf1af7b998bbc3838303379d2d097b252e4e044b51bee712468c31e90efb43b7c08644e1aefc0cd6a61425e18c88ceaec10a9fd8d55810091058ae09cc6e8a6c994a7c2de79da36b396f70b3b7c0a2739ca5e06aa88cfdeea132f66dd910ab45c3feeebb9760327d5cbab8892b1176b565b015577982c69d9799a16d79ce7949d50864873da53b1a0ccebad9bb855eb5c257822a222cb8d70af730f34a8ff3709bd30037740181c8d2847c79888c236483c0c8cda64bb0f41b557f75e9e2656f4142bc01d35783118da4c2d1c633c26c42e34acfb982c45ca8d23141f7e40bbb352ab92d54c89a5387992da073e1fb5ba14067ec421a81438c9694acce54726b7b3c1cb829c8cea7ad02c3816b30e59184edde247f312feb53c093c8cfd240e60cb28e89a0660ab3546c52d1604730e3afa132af6996864aa2a78415a7bf5cd256359ca350423040d0f378624957eb8608d7ddd49940e77e50d7583bf49e9463b56d6faf7cee9a3964ca261486dc92d52e8c9ca3a237c8728174cb81007a0414608f209f784c1e1d6639be1cee65ef86f7d4b948a160a4eeed5dc6119c3448c40534a4ec78ea7c8c632e3fade1b241a757516df0684e227004a40bb9a252561031551e24d42516348d3eb79dda67e43bfc65d24ecbc274a1742c1509df8893e0d44fcdf52e60c666d8bbdacced24f654385e10843438cd9a7a53066e53b4e5e338511c0a28f550aaa70cc3f459e1ebf161692ce7996627e8075812464e21690fa2184e15118a12d90bf8642608be8a66040e182834a60b8d397c457d53cb47fdd1b97d2f4cf95b74dab88d4e8bdb70d8dfdbdbdb859c68729ce0ab1a3318b1696553667041e87c013968d0dfdf339e69679c488278ac688819b2a503cc24d9857883575f8bf8d973a3d726ae44b2036f85b73bbc180ca19d2602c5784e5091c3029c30555b94b5a0ec6ee35319337c9cf3c9b5991e0c6e2e28e43e686202a9d90e814b9a0e1561ac9889b13097caf4a595b011aa8735173eac75c695320ddfa0ffc9d958f5246790f3ce0cd29fc28ca96208333a8f90e4893037d680ae8b59e8a8082e6fb6452c592618096038e251655414dbbfcdee06a678dc4e6e699604ed484670ea8414fa2d2bc7828ff05ce078515bff6651c6d9a6ccefb2394d59e56d6ccedb70fafbe8b3f1ff2ba05f15b97980d7e3fe3f0d68b7b1b8e71333ee1f6f3ad318f2b12f1784a8a3c32cd1a5cf3ce965fba3efe8272fbf7f790dd255366c6f9e49b815d1bcc46e81a65d449e4db32dcf36b98281a4e876d637eaa06fb483be925ff62d4d0e95288b170217957766b145dfb8ae0fcae31665a6d7a8d9055de5cd04b38420751c03522a0155cbe91557bc2d73a0c8ccc447fa17fd423f3a74f3d743b76ee01d98bcab1fea27fa997eac9f83f1bfe1ed39bc3f3e5d12b7f4a3bebeadffd1cffaa76bd838fc298265bf385dbbf7537f3f6c35ead6c2b05b5c8eb6c5e549605107de74255fbfbc0621f3977e0a69ebba7ed8078fded33fea1ff46ffa777d43ffacffd0b7bed9cdb7a748f6b6fe553ff850c8de02bfded63f01e50f84b009853bdfc2e366caf626fcf5277cde85df7bef33effbe0eabbfac676e637f48376e6278fad3d52accc2cc147646dfe5760bec592d677089546c1adb412c55bfd3f6047ff02504b0708f03014ce8e050000421b0000504b030414000808080031599047000000000000000000000000080000006d6574612e786d6c8d93cd8e9b301485f77d0ae4ce166cf38f4518a98baea66aa5a6527711b1efa46e8d1d1933a46f5f3090c9b45974c9f1777cceb54dfd78e954f002b69746ef108d080a407323a43eedd0b7fdc7b0448fcdbbda3c3f4b0e4c183e74a05dd8816b83c9aa7bb62cedd06035336d2f7ba6db0e7ae6383367d09b85ddd2cc072dca4549fd6b877e387766188fe3188d4964ec09d3aaaab05fdd50c1afdc79b0ca538263503027f49846146fecdcf07f4bcdec6d2563cc3568c697d23e2e2624c5cbf7469fac10eade00139be0a961ebdaf045c2f81e05ebf837071ea3663bddb94653fb32dc42eb26229cccd0c484662149439aef69ce62c2e22cca625a95b42a688def386ac1d9ab95c6de9a3252b1248b922a29b3222b498d376c490521dd74f1a118acdfabf9b22f3ea5c5d735e29fe5b72efe9b2be89bfc2f7a9517f6041a26b3b1cd933c5af8ec07c769944445143f3c493d5c0edfcbfc90a7c10d70385bf313b8c369423af2f061904a84f19af3bae512717da3bd9b5af64ef2c0ebae3d2a08b919b49bce1d2d2207a5ae1a5945739cc3369920dcd4f8cd15e17bbf43f307504b0708f61db86a9f0100004c030000504b0304140008080800315990470000000000000000000000000a0000007374796c65732e786d6ced59cd6edc3610bef72904190812a05a49eb38f66ebceb4383a00192a07093de6989d2b2a14481a276ed9c8216e87bf40dd25b2f7d07fb8d3aa444aefeadd86d1004b10ddb22bf197efc66480eb5a7679709b5b698e784a52bdb9f79b685d38085248d57f6db37cf9d13fb6cfddd298b2212e065c88222c1a970727145716e81719a2fcbce955df074c9504ef2658a129c2f45b064194eb5d1b28e5eaaa1ca16e56caab902d7ad05be14538d25b6618b2ea68facc075eb90a3dd546389054debe6119b6a7c995327624ec0920c09d262714949fa6e656f84c896aebbdbed66bbc319e3b1eb2f160b57f51ac281c16505a70a15062ea6580e96bbfecc773536c1024de527b1754a69915c603e591a245027aa19c7394060ba322fa739aadb34f26b1b4fceae6d3c2073b0417c729e297033550ec3e9a97218d66d13243603f13d715f41a7faf5eae53eaf7832752c896d481570924d9e6689aedb33c60c5569502e764577ee798fddf2b986de8dc2779c08cc6bf060141e201a18c559d2271ae07c17100edeca94d7682e273de8f9c8e538635c1822d1f4cd0ed4999ba5ba11091d5eaab25743631e86bd50a073e8c2b28545e36c09de1d34f6b271fd17ae02d5f7af5103df7325c62c019077bfd9f2d81c07112bd2b05c76a518f832c39cc82e4495d9b2e1a19e3194ddc1657586d43c34966a9e1f8a3eedde9cbbb2cf91c7006c749597dae937b7d7faa88b181c73110ab013e280e6ebd3728b32cd56f92cc9adec9704f63bc5d6fa19a59055b08f686842e8d5ca7e8032963f6de1ca46db6ab8967827c629cc16b23ddf913c6f20322202d80fb68813154c779cda33fc2bfaa518a755c34ca174950b9cdc8b13672454c359cf11a517287837ccad8bfd2c1c9f738c0744ab75dd97813b946d557b596769a6218e5041abea4b7bae48a995ed0498525bc333c451cc51b671320e6b9b0b02255bd90568f0c2322724b940a9acde20fb8f82642f8b5c245d43457420e923b6a4288d0b14432f2f544300eb5870e077fed66ebb7060fb44693b451546fbd190f71bdd5339d41d3fbceeba950738c597e38e0d6843daae4dd78bd72a463de2af4fcb1aa72a751a1129d579edd92d90553d252475482a700c76218989c8417c35508f4fe323283887cafcaa6f28df3bfec9d3b3d8320a419165ade0051e2201694612449d8c42d2010138a346e9e9de98b322539703e5dd35ee65baac2d3307f5d8e57e955c30aa7d359345636b09b3bef970f3fbf55f33e3b5e568ddd3f129a2d943b9ae12973228610fa2c883aff6449dfe897e951a9712252833cb240d4959976f112df0c3470f62f1746512106519ad14771a09eade335e27df92fc0ea27d4bf2cf96e427e3495e5a76a3f4ac3c59ecdb4ff45bce6473a0f6d6579d5aa542dfbdced21e866a1ddd6f2a9ee1a37aaca69a04d2940c78909441340ab15a708623758ef3f14059a6f2326fc99c66904756a3e258bd0c2370cd2181f6a7c07021c29c92146b4cce280907203b12cab706a8106c0051ad7d35a8fadf361c7698c41bb841c1ca083f559cf99dd4690aab2eb7ed03645f997687fe1123f9c6f2bf098c31ea299ba58410983875725670593647e4523be738c3488a099b5e0af24588e6b57b466f390e92ef9daeec000c311f2ec24d9690f7b2647f92097b2873ee17cc4a51ff4e92ea704c9194b3f2859d037bb8a4bff0ba24ddd66da87a94c99d8071e034af4999acef29ba628568cce95596f8760fa84b4abe77820938090bc18e72475cec63b281d9edcbf3465bc41884af1530790e6eaa2078b36379c952cd88c7d0437124db9b8dbc42375b2f9810f2ad96676e6aee30a38acae76709b7ca1e8a4d3a6e2706136237ff8a62277b2e180fe55bf2f9ecf12283d9cadddc3af0d4970264282c3f87f1669e7fa2ade06096b5531aea1dfc20f0e4b751a78680ca2cc69d3ce9ccf4cb4fa42f54afdbb3da1ddcabaa8e04e5c645beaf4355a3f4345629d6d741cf1657d25f9faa4fbdb2ea6fbec1b844afcfcece4edd7663d592b54468455e86511fd62487daffaa73dc95da98d1afffbcf9ede6c3f5c7eb7faeffbef9e3faa35575c82994f5f2dad763d7da3a74b4db460046e9b81d4d6f93f9bc7adb3fa2f2bca3b2ae0162799849429f28bcf5b0c40922681d523e3fea08d118a9d1a496536b7428a9f0607505359b0139eaba03abccf38f1c7feef84fecb5070b4afe785ec54202d7df5b9a7072bb6b09d2aefdc74b6fb1f48f6747c727fee1136fae8658aa1f33e9be546cceef8bc84fcbad03d59d73bd58d48165dbff94c76eff2ee2f67f5ebffe17504b07089d7b93e97b060000ef1f0000504b0304140008080800315990470000000000000000000000000c0000006d616e69666573742e726466cd93cd6e83301084ef3c8565ced8402f05057228cab96a9fc0358658052ff29a12debe8e935651a4aaea9fd4e3ae4633df8eb49bed611cc88bb2a8c15434632925ca4868b5e92b3abb2eb9a5db3adad8b62b1f9a1df16a83a59f2aba776e2a395f96852d370c6ccfb3a228789af33c4fbc22c1d53871480cc6b48e08091e8d4269f5e47c1a39cee20966575174eba09079f7203d8bdd3aa9a0b20a61b652bd87b6209181408d094cca8474831cba4e4bc53396f35139c1a1ede2c760bdd383a23c60f02b8ecfd8de880ca6e55ee0bdb0ee5c83df7c95687aee637a75d3c5f1df2394609c32ee4feabb3b79ffe7fe2ecfff19e2afb476446c40cea367fa90e7b4f21f5547af504b0708b4f768d20501000083030000504b0304140000080000315990470000000000000000000000001a000000436f6e66696775726174696f6e73322f706f7075706d656e752f504b0304140000080000315990470000000000000000000000001a000000436f6e66696775726174696f6e73322f7374617475736261722f504b03041400000800003159904700000000000000000000000018000000436f6e66696775726174696f6e73322f746f6f6c6261722f504b03041400000800003159904700000000000000000000000018000000436f6e66696775726174696f6e73322f6d656e756261722f504b03041400000800003159904700000000000000000000000018000000436f6e66696775726174696f6e73322f666c6f617465722f504b03041400080808003159904700000000000000000000000027000000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c0300504b0708000000000200000000000000504b0304140000080000315990470000000000000000000000001f000000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b0304140000080000315990470000000000000000000000001a000000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b0304140000080000315990470000000000000000000000001c000000436f6e66696775726174696f6e73322f70726f67726573736261722f504b030414000808080031599047000000000000000000000000150000004d4554412d494e462f6d616e69666573742e786d6cad544b6ec32010dde71416dbcad06655a1385954ea09d203503c76906040cc1025b72f8e944f55a5aad5ece6fbde6306586d0ec1377bc8e42276e2453e8b06d0c6dee1d8898fed7bfb2a36ebc52a18740310ebb3d1d43ea48bdb89925147438e349a00a4d9ea9800fb684b0064fdbd5e9f982ede8d80a5582f9a2bdfe03cb4b53f1fafd543f1be4d86779d50f740aee100bd332d1f1374c2a4e49d355ccbd41e7b79122c6f754a4a194c4f3b00166a8e94edae844f34ce93e2b329138e77a4b8604650537e160b0173dd0dc93acf3bc80c0756537a16b08dc8d3f91f8d1b80cdc341898f1e1e3f83734ce67ef8c30daa554fb339de220e6e2cf904414b65ac050fd58d59d992f3ef3bf81fd71f5f05159c24c8e2a4bd4598c857eac757b0fe02504b070842d9648e2001000045040000504b0102140014000008000031599047856c398a2e0000002e0000000800000000000000000000000000000000006d696d6574797065504b010214001400000800003159904715d532e1b5100000b51000001800000000000000000000000000540000005468756d626e61696c732f7468756d626e61696c2e706e67504b01021400140008080800315990472447e77126050000031f00000c000000000000000000000000003f11000073657474696e67732e786d6c504b0102140014000808080031599047f03014ce8e050000421b00000b000000000000000000000000009f160000636f6e74656e742e786d6c504b0102140014000808080031599047f61db86a9f0100004c0300000800000000000000000000000000661c00006d6574612e786d6c504b01021400140008080800315990479d7b93e97b060000ef1f00000a000000000000000000000000003b1e00007374796c65732e786d6c504b0102140014000808080031599047b4f768d205010000830300000c00000000000000000000000000ee2400006d616e69666573742e726466504b01021400140000080000315990470000000000000000000000001a000000000000000000000000002d260000436f6e66696775726174696f6e73322f706f7075706d656e752f504b01021400140000080000315990470000000000000000000000001a0000000000000000000000000065260000436f6e66696775726174696f6e73322f7374617475736261722f504b010214001400000800003159904700000000000000000000000018000000000000000000000000009d260000436f6e66696775726174696f6e73322f746f6f6c6261722f504b01021400140000080000315990470000000000000000000000001800000000000000000000000000d3260000436f6e66696775726174696f6e73322f6d656e756261722f504b0102140014000008000031599047000000000000000000000000180000000000000000000000000009270000436f6e66696775726174696f6e73322f666c6f617465722f504b010214001400080808003159904700000000020000000000000027000000000000000000000000003f270000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c504b01021400140000080000315990470000000000000000000000001f0000000000000000000000000096270000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b01021400140000080000315990470000000000000000000000001a00000000000000000000000000d3270000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b01021400140000080000315990470000000000000000000000001c000000000000000000000000000b280000436f6e66696775726174696f6e73322f70726f67726573736261722f504b010214001400080808003159904742d9648e20010000450400001500000000000000000000000000452800004d4554412d494e462f6d616e69666573742e786d6c504b0506000000001100110070040000a82900000000	2584451549	2015-12-16 14:13:07.366952	t
 2	vw_доступ_к_справочникам.qs	0	\\x66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	0	\N	t
 1094	карточки.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	2214837232	2015-06-16 18:49:59.845091	t
 1098	./scripts/формулы127.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f096170702e646562756728332c202266756e6374696f6e204576656e744166746572416464537472696e67282922293b0a0a0976617220d186d0b5d0bdd0b0203d2067657456616c75652822d09ad0a03430315f5fd09ad09ed09dd0a6d095d09dd09022293b0a0973657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a0973657456616c7565282250325f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a0976617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a0976617220d186d0b5d0bdd0b0203d2067657456616c7565282250325f5fd0a6d095d09dd09022293b0a0976617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250325f5fd0a1d0a3d09cd09cd09022293b0a0a096966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d203029200a097b0a0909d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a097d0a09656c7365200a097b0a0909d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a097d0a0a0973657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a0973657456616c7565282250325f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a0973657456616c7565282250325f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0973657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c2067657456616c7565282250315f5fd0a6d095d09dd0902229202a20d0bad0bed0bb293b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b0a2f2f20d097d0b0d0bfd0b8d188d0b5d0bc20d0bdd0b0d0b8d0bcd0b5d0bdd0bed0b2d0b0d0bdd0b8d0b520d184d0b8d180d0bcd18b2dd0bfd0bed181d182d0b0d0b2d189d0b8d0bad0b020d0b220d0bad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b820d0ba20d0b4d0bed0bad183d0bcd0b5d0bdd182d1830a09646f63756d656e74732e73657456616c75652822d09ad0bed0bcd0bcd0b5d0bdd182d0b0d180d0b8d0b9222c2067657444696374696f6e6172792822d0bfd0b5d180d181d0bed0bdd0b0d0bb22292e67657456616c75652822d0b8d0bcd18f2229293b0a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b0a0a0a0976617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a0976617220d186d0b5d0bdd0b0203d2067657456616c7565282250325f5fd0a6d095d09dd09022293b0a0976617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250325f5fd0a1d0a3d09cd09cd09022293b0a0a096966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d203029200a097b0a0909d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a097d0a09656c7365200a097b0a090969662028d0bad0bed0bb20203d3d2067657456616c75652822d09ad0a03430315f5fd09ad09ed09dd09ad09ed09b2229202b206765744f6c6456616c7565282250315f5fd09ad09ed09b2229290a09090973657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c2067657456616c75652822d09ad0a03430315f5fd09ad09ed09dd0a1d090d09bd0acd094d09e2229202b2067657456616c7565282250315f5fd0a1d0a3d09cd09cd0902229293b0a0909656c73650a09090973657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c2067657456616c7565282250315f5fd0a6d095d09dd0902229202a20d0bad0bed0bb293b0a0909d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a097d0a0a0973657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a0973657456616c7565282250325f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a0973657456616c7565282250325f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a7d0a0a0a	2819262065	2015-08-18 14:18:12.138977	t
@@ -15283,7 +15441,6 @@ COPY "файлы" ("КОД", "ИМЯ", "ТИП", "ЗНАЧЕНИЕ", "КОНТР
 1174	printReturnSaleCheck.js	0	\\x766172206472764652203d20303b0a7661722073756d466f726d203d206170702e637265617465466f726d2822d181d183d0bcd0bcd0b0d0b2d0bed0b7d0b2d180d0b0d182d0b0d0bfd180d0bed0b4d0b0d0b6d0b822293b0a0a0a696620286170702e6472764652697356616c69642829290909092f2f20d095d181d0bbd0b820d184d0b8d181d0bad0b0d0bbd18cd0bdd18bd0b920d180d0b5d0b3d0b8d181d182d180d0b0d182d0bed18020d0bfd180d0b8d181d183d182d181d182d0b2d183d0b5d18220d0b220d181d0b8d181d182d0b5d0bcd0b50a7b0a20206472764652203d206170702e676574447276465228293b0a20206966202864727646522e436f6e6e6563742829290a20207b0a2020202073756d466f726d2e6578656328290a202020206966202873756d466f726d2e6973466f726d53656c65637465642829290a202020207b0a2020202020207661722073756d203d2073756d466f726d2e66696e644368696c6428226c696e654564697453756d22292e746578743b0a2020202020200a20202020202064727646522e73657450726f70657274792822537472696e67466f725072696e74696e67222c2022d182d0bed0b2d0b0d18022293b0a20202020202064727646522e73657450726f706572747928225175616e74697479222c2031293b0a20202020202064727646522e73657450726f706572747928225072696365222c2073756d293b0a20202020202064727646522e73657450726f706572747928224465706172746d656e74222c2031293b0a20202020202064727646522e73657450726f7065727479282254617831222c2030293b0a20202020202064727646522e73657450726f7065727479282254617832222c2030293b0a20202020202064727646522e73657450726f7065727479282254617833222c2030293b0a20202020202064727646522e73657450726f7065727479282254617834222c2030293b0a20202020202064727646522e52657475726e53616c6528293b0a2020202020200a20202020202064727646522e73657450726f70657274792822537472696e67466f725072696e74696e67222c202222293b0a20202020202064727646522e73657450726f7065727479282253756d6d31222c2073756d293b0a20202020202064727646522e73657450726f7065727479282253756d6d32222c2030293b0a20202020202064727646522e73657450726f7065727479282253756d6d33222c2030293b0a20202020202064727646522e73657450726f7065727479282253756d6d34222c2030293b0a20202020202064727646522e73657450726f70657274792822446973636f756e744f6e436865636b222c2030293b0a20202020202064727646522e73657450726f7065727479282254617831222c2030293b0a20202020202064727646522e73657450726f7065727479282254617832222c2030293b0a20202020202064727646522e73657450726f7065727479282254617833222c2030293b0a20202020202064727646522e73657450726f7065727479282254617834222c2030293b0a20202020202064727646522e436c6f7365436865636b28293b0a202020207d0a2020202064727646522e446973436f6e6e65637428293b0a20207d0a7d0a	2993245080	2015-11-16 19:26:22.47597	t
 904	saldo411.qs	0	\\x76617220666f726d3b0a0a66756e6374696f6e204576656e74496e6974466f726d28290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a09666f726d203d207461626c652e676574466f726d57696467657428293b0a0969662028217461626c652e697344656661756c74466f726d2829290a097b0a090920666f726d2e627574746f6e436174616c6f672e636c69636b65642e636f6e6e6563742856696577436174616c6f67293b0a090920666f726d2e66696e644368696c6428226c696e65456469744d696e507269636522292e72657475726e507265737365642e636f6e6e65637428636d6452657175657279293b0a090920666f726d2e66696e644368696c6428226c696e65456469744d6178507269636522292e72657475726e507265737365642e636f6e6e65637428636d6452657175657279293b0a090920666f726d2e66696e644368696c6428226c696e65456469744172746963756c4f454d22292e72657475726e507265737365642e636f6e6e65637428636d6452657175657279293b0a090920666f726d2e66696e644368696c6428226c696e65456469744172746963756c22292e72657475726e507265737365642e636f6e6e65637428636d6452657175657279293b0a090920666f726d2e66696e644368696c6428226c696e65456469744f737461746f6b22292e72657475726e507265737365642e636f6e6e65637428636d6452657175657279293b0a097d0a097461626c652e73657450686f746f4e616d654669656c642822d0a2d09ed092d090d0a05f5fd098d09cd0af22293b0a0967657444696374696f6e6172792822d0b0d0b4d180d0b5d18122292e676574466f726d28292e7365744c65667450657263656e742866616c7365293b092f2f20d090d0b4d180d0b5d18120d0b1d183d0b4d0b5d0bc20d0b8d181d0bad0b0d182d18c20d0bfd0be20d0bfd0b5d180d0b2d18bd0bc20d181d0b8d0bcd0b2d0bed0bbd0b0d0bc2028d0b2d18bd180d0b0d0b6d0b5d0bdd0b8d0b520494c494b4520273cd187d0b0d181d182d18c20d0b8d0bbd0b820d0bfd0bed0bbd0bdd18bd0b920d0b0d0b4d180d0b5d1813e2527290a7d0a0a0a66756e6374696f6e20636d645265717565727928290a7b0a097461626c652e676574466f726d28292e636d645265717565727928290a7d0a0a0a0a66756e6374696f6e2056696577436174616c6f6728290a7b0a09766172206e6f6d5f4172746963756c203d207461626c652e67657456616c75652822d0a2d09ed092d090d0a05f5fd0a8d098d0a4d0a05fd09fd09e5fd09ad090d0a2d090d09bd09ed093d0a322292e7472696d28293b0a09696620286e6f6d5f4172746963756c2e6c656e677468203e2030290a097b0a090976617220636f6d6d616e64203d202266697265666f7820687474703a2f2f616361742e6175746f6465616c65722e72752f696e6465782e7068703f7365617263683d22202b206e6f6d5f4172746963756c202b20222665783d332677686572653d6f6e223b0a09096170702e72756e50726f6365737328636f6d6d616e642c20224d6f7a696c6c612046697265466f7822293b0a0909666f726d2e676574466f726d57696467657428292e73657447726964466f63757328293b0a097d0a7d0a0a0a66756e6374696f6e2047657446696c7465722866696c746572290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a09766172206d696e5072696365203d207061727365466c6f617428666f726d2e66696e644368696c6428226c696e65456469744d696e507269636522292e74657874293b0a09766172206d61785072696365203d207061727365466c6f617428666f726d2e66696e644368696c6428226c696e65456469744d6178507269636522292e74657874293b0a09766172206172746963756c4f454d203d20666f726d2e66696e644368696c6428226c696e65456469744172746963756c4f454d22292e746578742e7472696d28293b0a09766172206172746963756c203d20666f726d2e66696e644368696c6428226c696e65456469744172746963756c22292e746578742e7472696d28293b0a09766172206f737461746f6b203d20666f726d2e66696e644368696c6428226c696e65456469744f737461746f6b22292e746578742e7472696d28293b0a09696620286d696e5072696365203e2030290a097b0a09096966202866696c7465722e6c656e677468203e2030290a09090966696c746572203d2066696c746572202b202220414e4420223b0a090966696c746572203d2066696c746572202b2022d182d0bed0b2d0b0d1802ed0a6d095d09dd090203e3d2022202b206d696e50726963653b0a097d0a09696620286d61785072696365203e2030290a097b0a09096966202866696c7465722e6c656e677468203e2030290a09090966696c746572203d2066696c746572202b202220414e4420223b0a090966696c746572203d2066696c746572202b2022d182d0bed0b2d0b0d1802ed0a6d095d09dd090203c3d2022202b206d617850726963653b0a097d0a09696620286172746963756c4f454d2e6c656e677468203e2030290a097b0a09096966202866696c7465722e6c656e677468203e2030290a09090966696c746572203d2066696c746572202b202220414e4420223b0a090966696c746572203d2066696c746572202b2022d182d0bed0b2d0b0d1802ed0a8d098d0a4d0a05fd09fd09e5fd09ad090d0a2d090d09bd09ed093d0a3204c494b4520272522202b206172746963756c4f454d202b20222527223b0a097d0a09696620286172746963756c2e6c656e677468203e2030290a097b0a09096966202866696c7465722e6c656e677468203e2030290a09090966696c746572203d2066696c746572202b202220414e4420223b0a090966696c746572203d2066696c746572202b2022d182d0bed0b2d0b0d1802ed090d0a0d0a2d098d09ad0a3d09b204c494b4520272522202b206172746963756c202b20222527223b0a097d0a09696620286f737461746f6b2e6c656e677468203e2030290a097b0a09096966202866696c7465722e6c656e677468203e2030290a09090966696c746572203d2066696c746572202b202220414e4420223b0a090966696c746572203d2066696c746572202b2022d181d0b0d0bbd18cd0b4d0be2ed09ad09ed09dd09ad09ed09b203d2022202b206f737461746f6b3b0a097d0a0972657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b20202f2f20d09fd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b0a2f2a0a09766172207363616e6e6564426172436f6465203d20666f726d2e676574466f726d57696467657428292e66696e644368696c6428226c696e6545646974426172436f646522293b0a0969662028666f726d2e6973466f726d53656c65637465642829290909092f2f20d095d181d0bbd0b820d0b1d18bd0bbd0b020d0bdd0b0d0b6d0b0d182d0b020d0bad0bdd0bed0bfd0bad0b0204f6b0a097b0a090976617220626172436f6465203d207363616e6e6564426172436f64652e746578743b0a090969662028626172436f64652e6c656e677468203e2030290909092f2f20d095d181d0bbd0b820d0b5d181d182d18c20d0bfd180d0b5d0b4d0b2d0b0d180d0b8d182d0b5d0bbd18cd0bdd0be20d0bfd180d0bed187d0b8d182d0b0d0bdd0bdd18bd0b920d188d182d180d0b8d185d0bad0bed0b40a0909094576656e74426172436f646552656164656428626172436f6465293b092f2f20d097d0b0d0bfd0bed0bcd0bdd0b8d0bc20d0bfd180d0b5d0b4d0b2d0b0d180d0b8d182d0b5d0bbd18cd0bdd18bd0b920d188d182d180d0b8d185d0bad0bed0b420d0bad0b0d0ba20d0bfd0bed181d182d0bed18fd0bdd0bdd18bd0b920d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b920d0bfd0bed0b7d0b8d186d0b8d0b80a097d0a097363616e6e6564426172436f64652e73657454657874282222293b0a2a2f0a7d0a0a0a0a	1348811616	2015-11-22 17:11:47.355707	t
 1175	суммавозвратапродажи.ui	3	\\x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0a3c75692076657273696f6e3d22342e30223e0a203c636c6173733e6469616c6f673c2f636c6173733e0a203c77696467657420636c6173733d224469616c6f6722206e616d653d226469616c6f67223e0a20203c70726f7065727479206e616d653d2277696e646f774d6f64616c697479223e0a2020203c656e756d3e51743a3a4170706c69636174696f6e4d6f64616c3c2f656e756d3e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2267656f6d65747279223e0a2020203c726563743e0a202020203c783e303c2f783e0a202020203c793e303c2f793e0a202020203c77696474683e3330313c2f77696474683e0a202020203c6865696768743e3134363c2f6865696768743e0a2020203c2f726563743e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2277696e646f775469746c65223e0a2020203c737472696e673ed0a1d183d0bcd0bcd0b020d0b2d0bed0b7d0b2d180d0b0d182d0b020d0bfd180d0bed0b4d0b0d0b6d0b83c2f737472696e673e0a20203c2f70726f70657274793e0a20203c77696467657420636c6173733d225157696467657422206e616d653d22677269644c61796f7574576964676574223e0a2020203c70726f7065727479206e616d653d2267656f6d65747279223e0a202020203c726563743e0a20202020203c783e37303c2f783e0a20202020203c793e34303c2f793e0a20202020203c77696474683e3231313c2f77696474683e0a20202020203c6865696768743e39313c2f6865696768743e0a202020203c2f726563743e0a2020203c2f70726f70657274793e0a2020203c6c61796f757420636c6173733d2251477269644c61796f757422206e616d653d22677269644c61796f7574223e0a202020203c6974656d20726f773d22312220636f6c756d6e3d2231223e0a20202020203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d22766572746963616c4c61796f75745f32223e0a2020202020203c6974656d3e0a202020202020203c737061636572206e616d653d22766572746963616c537061636572223e0a20202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a2020202020202020203c656e756d3e51743a3a566572746963616c3c2f656e756d3e0a20202020202020203c2f70726f70657274793e0a20202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a2020202020202020203c73697a653e0a202020202020202020203c77696474683e32303c2f77696474683e0a202020202020202020203c6865696768743e34303c2f6865696768743e0a2020202020202020203c2f73697a653e0a20202020202020203c2f70726f70657274793e0a202020202020203c2f7370616365723e0a2020202020203c2f6974656d3e0a2020202020203c6974656d3e0a202020202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22686f72697a6f6e74616c4c61796f7574223e0a20202020202020203c6974656d3e0a2020202020202020203c737061636572206e616d653d22686f72697a6f6e74616c537061636572223e0a202020202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a20202020202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a20202020202020202020203c73697a653e0a2020202020202020202020203c77696474683e34303c2f77696474683e0a2020202020202020202020203c6865696768743e32303c2f6865696768743e0a20202020202020202020203c2f73697a653e0a202020202020202020203c2f70726f70657274793e0a2020202020202020203c2f7370616365723e0a20202020202020203c2f6974656d3e0a20202020202020203c6974656d3e0a2020202020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e4f6b223e0a202020202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a20202020202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a2020202020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a2020202020202020202020203c766572737472657463683e303c2f766572737472657463683e0a20202020202020202020203c2f73697a65706f6c6963793e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d22666f637573506f6c696379223e0a20202020202020202020203c656e756d3e51743a3a4e6f466f6375733c2f656e756d3e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020202020203c737472696e672f3e0a202020202020202020203c2f70726f70657274793e0a202020202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020202020203c69636f6e7365743e0a2020202020202020202020203c6e6f726d616c6f66663e2e2e2f2e2e2f7265736f75726365732f6f6b2e706e673c2f6e6f726d616c6f66663e2e2e2f2e2e2f7265736f75726365732f6f6b2e706e673c2f69636f6e7365743e0a202020202020202020203c2f70726f70657274793e0a2020202020202020203c2f7769646765743e0a20202020202020203c2f6974656d3e0a202020202020203c2f6c61796f75743e0a2020202020203c2f6974656d3e0a20202020203c2f6c61796f75743e0a202020203c2f6974656d3e0a202020203c6974656d20726f773d22302220636f6c756d6e3d2230223e0a20202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c223e0a2020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a20202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a20202020202020203c766572737472657463683e303c2f766572737472657463683e0a202020202020203c2f73697a65706f6c6963793e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d22666f6e74223e0a202020202020203c666f6e743e0a20202020202020203c706f696e7473697a653e31303c2f706f696e7473697a653e0a202020202020203c2f666f6e743e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d2274657874223e0a202020202020203c737472696e673ed0a1d183d0bcd0bcd0b03a3c2f737472696e673e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d22616c69676e6d656e74223e0a202020202020203c7365743e51743a3a416c69676e52696768747c51743a3a416c69676e547261696c696e677c51743a3a416c69676e5643656e7465723c2f7365743e0a2020202020203c2f70726f70657274793e0a20202020203c2f7769646765743e0a202020203c2f6974656d3e0a202020203c6974656d20726f773d22302220636f6c756d6e3d2231223e0a20202020203c77696467657420636c6173733d22514c696e654564697422206e616d653d226c696e654564697453756d223e0a2020202020203c70726f7065727479206e616d653d22696e7075744d61736b223e0a202020202020203c737472696e673e585858585858585858203b203c2f737472696e673e0a2020202020203c2f70726f70657274793e0a2020202020203c70726f7065727479206e616d653d2274657874223e0a202020202020203c737472696e673e203c2f737472696e673e0a2020202020203c2f70726f70657274793e0a20202020203c2f7769646765743e0a202020203c2f6974656d3e0a2020203c2f6c61796f75743e0a20203c2f7769646765743e0a203c2f7769646765743e0a203c637573746f6d776964676574733e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e4469616c6f673c2f636c6173733e0a2020203c657874656e64733e514469616c6f673c2f657874656e64733e0a2020203c6865616465723e6469616c6f672e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a203c2f637573746f6d776964676574733e0a203c7265736f75726365732f3e0a203c636f6e6e656374696f6e732f3e0a3c2f75693e0a	4220172602	2015-11-16 19:13:02.770058	t
-896	заявка.ui	3	\\x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0a3c75692076657273696f6e3d22342e30223e0a203c636c6173733e6469616c6f673c2f636c6173733e0a203c77696467657420636c6173733d224469616c6f6722206e616d653d226469616c6f67223e0a20203c70726f7065727479206e616d653d2267656f6d65747279223e0a2020203c726563743e0a202020203c783e303c2f783e0a202020203c793e303c2f793e0a202020203c77696474683e313336323c2f77696474683e0a202020203c6865696768743e3630393c2f6865696768743e0a2020203c2f726563743e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d226e616d6522207374647365743d2230223e0a2020203c737472696e673e76775fd0bfd180d0b0d0b9d1813c2f737472696e673e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2263617074696f6e22207374647365743d2230223e0a2020203c737472696e673ed092d181d0b520d0bfd180d0b0d0b9d181d18b20d18120d186d0b5d0bdd0b0d0bcd0b820d0b4d0bbd18f20d0bfd0bed181d182d0b0d0b2d0bad0b820d0bfd0be20d0b7d0b0d0bad0b0d0b7d1833c2f737472696e673e0a20203c2f70726f70657274793e0a20203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d227662784c61796f7574223e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22736561726368506172616d6574657273222f3e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d227461626c654c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225461626c655669657722206e616d653d227461626c6556696577223e0a202020202020203c70726f7065727479206e616d653d2267656f6d65747279223e0a20202020202020203c726563743e0a2020202020202020203c783e303c2f783e0a2020202020202020203c793e303c2f793e0a2020202020202020203c77696474683e3634303c2f77696474683e0a2020202020202020203c6865696768743e3438303c2f6865696768743e0a20202020202020203c2f726563743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22686f72697a6f6e74616c4c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225069637475726522206e616d653d2270696374757265222f3e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d22515461626c655669657722206e616d653d227461626c6556696577223e0a202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a20202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a2020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a2020202020202020203c766572737472657463683e303c2f766572737472657463683e0a20202020202020203c2f73697a65706f6c6963793e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c737061636572206e616d653d22686f72697a6f6e74616c5370616365725f32223e0a202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a20202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a20202020202020203c73697a653e0a2020202020202020203c77696474683e34303c2f77696474683e0a2020202020202020203c6865696768743e32303c2f6865696768743e0a20202020202020203c2f73697a653e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7370616365723e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22636d64427574746f6e4c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e416464223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e4164643c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e4164643c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e4164643c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e4164643c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e4164643c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e4164643c2f73656c65637465646f6e3e3a627574746f6e4164643c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e44656c657465223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e44656c6574653c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e44656c6574653c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e44656c6574653c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e44656c6574653c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e44656c6574653c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e44656c6574653c2f73656c65637465646f6e3e3a627574746f6e44656c6574653c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e52657175657279223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e526571756572793c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e526571756572793c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e526571756572793c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e526571756572793c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e526571756572793c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e526571756572793c2f73656c65637465646f6e3e3a627574746f6e526571756572793c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e5072696e74223e0a202020202020203c70726f7065727479206e616d653d22656e61626c6564223e0a20202020202020203c626f6f6c3e747275653c2f626f6f6c3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e5072696e743c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e5072696e743c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e5072696e743c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e5072696e743c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e5072696e743c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e5072696e743c2f73656c65637465646f6e3e3a627574746f6e5072696e743c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e436c6561725a616b617a223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09ed187d0b8d181d182d0b8d182d18c20d0b7d0b0d0bad0b0d0b73c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e5a616b617a223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed0a0d0b0d181d0bfd180d0b5d0b4d0b5d0bbd0b8d182d18c20d0b7d0b0d0bad0b0d0b73c2f737472696e673e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e53697a65223e0a20202020202020203c73697a653e0a2020202020202020203c77696474683e303c2f77696474683e0a2020202020202020203c6865696768743e303c2f6865696768743e0a20202020202020203c2f73697a653e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e536561726368223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09fd0bed0b8d181d0ba20d181d0bed0bed182d0b2d0b5d182d181d182d0b2d0b8d0b93c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c737061636572206e616d653d22686f72697a6f6e74616c537061636572223e0a202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a20202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a20202020202020203c73697a653e0a2020202020202020203c77696474683e34303c2f77696474683e0a2020202020202020203c6865696768743e32303c2f6865696768743e0a20202020202020203c2f73697a653e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7370616365723e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e4f6b223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e4f6b3c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e4f6b3c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e4f6b3c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e4f6b3c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e4f6b3c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e4f6b3c2f73656c65637465646f6e3e3a627574746f6e4f6b3c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e43616e63656c223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e43616e63656c3c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e43616e63656c3c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e43616e63656c3c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e43616e63656c3c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e43616e63656c3c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e43616e63656c3c2f73656c65637465646f6e3e3a627574746f6e43616e63656c3c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a20203c2f6c61796f75743e0a203c2f7769646765743e0a203c637573746f6d776964676574733e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e4469616c6f673c2f636c6173733e0a2020203c657874656e64733e514469616c6f673c2f657874656e64733e0a2020203c6865616465723e6469616c6f672e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e506963747572653c2f636c6173733e0a2020203c657874656e64733e514672616d653c2f657874656e64733e0a2020203c6865616465723e706963747572652e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e5461626c65566965773c2f636c6173733e0a2020203c657874656e64733e515461626c65566965773c2f657874656e64733e0a2020203c6865616465723e7461626c65766965772e683c2f6865616465723e0a2020203c616464706167656d6574686f643e616464506167653c2f616464706167656d6574686f643e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a203c2f637573746f6d776964676574733e0a203c7265736f75726365733e0a20203c696e636c756465206c6f636174696f6e3d222e2e2f2e2e2f2e2e2f7265736f75726365732e717263222f3e0a203c2f7265736f75726365733e0a203c636f6e6e656374696f6e732f3e0a3c2f75693e0a	1688285651	2015-12-15 08:55:26.060784	t
 1073	Документ1.Отчет о продажах за день.ods.js	0	\\x76617220646f6354797065203d2022223b0a76617220646f634461746554696d653b0a76617220646f634e756d203d2022223b0a76617220646f6353756d203d20303b0a76617220646f63436865636b203d2022223b0a76617220646f63446973636f756e74203d20303b0a7661722063757272656e7444617465203d20646f63756d656e74732e67657456616c75652822d094d090d0a2d090d092d0a0d095d09cd0af22293b0a76617220646179203d2063757272656e74446174652e6765745554434461746528293b0a766172206d6f6e7468203d2063757272656e74446174652e6765744d6f6e74682829202b20313b0a7661722079656172203d2063757272656e74446174652e67657446756c6c5965617228293b0a76617220636f6d6d616e64203d202253454c4543542027312ed09fd180d0bed0b4d0b0d0b6d0b82720415320d0a2d098d09f2c20702ed09ad09ed0942c20702ed094d090d0a2d090d092d0a0d095d09cd0af2c20702ed0a1d0a2d0a02c20702ed09dd09ed09cd095d0a02c20702ed09dd09ed09cd095d0a0d0a7d095d09ad0902c20732ed090d094d0a0d095d0a12c20732ed09dd090d098d09cd095d09dd09ed092d090d09dd098d0952c20732ed095d094d098d097d09c2c20702ed09ad09ed09b20415320d09ad09ed09b2c20702ed0a6d095d09dd0902c20702ed0a1d0a3d09cd09cd0902c20702ed0a1d09ad098d094d09ad0902c20702ed094d09ed09ad0a1d0a3d09cd09cd090205c0a090920202046524f4d202853454c45435420702ed09ad09ed0942c20642ed094d090d0a2d090d092d0a0d095d09cd0af2c20642ed09dd09ed09cd095d0a02c2064612ed09dd09ed09cd095d0a0d0a7d095d09ad0902c20642ed0a1d0a3d09cd09cd09020415320d094d09ed09ad0a1d0a3d09cd09cd0902c20702ed0a1d0a2d0a02c20702ed09ad0a0d09ad09ed0942c20702ed09ad09ed09b2c20702ed0a6d095d09dd0902c20702ed0a1d0a3d09cd09cd0902c2043415345205c0a090909090909090909092020202020205748454e20702ed0a1d0a2d0a0203d2070312ed0a1d0a2d0a0205448454e2070312ed0a1d0a3d09cd09cd090205c0a09090909090909090909202020202020454c53452030205c0a090909090909090909092020202020454e4420415320d0a1d09ad098d094d09ad090205c0a2020202020200909092046524f4d20d0b4d0bed0bad183d0bcd0b5d0bdd182d18b206420494e4e4552204a4f494e20d0bfd180d0bed0b2d0bed0b4d0bad0b82070204f4e20642ed09ad09ed094203d20702ed094d09ed09ad09ad09ed09420414e4420702ed09ed09fd095d0a0203d203120414e4420702ed09dd09ed09cd095d0a0d09ed09fd095d0a0203d2031205c0a09090909204c454654204f55544552204a4f494e20d0bfd180d0bed0b2d0bed0b4d0bad0b8207031204f4e20642ed09ad09ed094203d2070312ed094d09ed09ad09ad09ed09420414e442070312ed09ed09fd095d0a0203d203120414e442070312ed09dd09ed09cd095d0a0d09ed09fd095d0a0203d2033205c0a09090909204c454654204f55544552204a4f494e20d0b4d0bed0bad0b0d182d180d0b8d0b1d183d182d18b31206461204f4e20642ed09ad09ed094203d2064612ed09ad09ed094205c0a20202020202009090920574845524520702ed09ad09ed09b203c3e203020414e442045585452414354286461792066726f6d20642ed094d090d0a2d090d092d0a0d095d09cd0af29203d2022202b20646179202b202220414e442045585452414354286d6f6e74682066726f6d20642ed094d090d0a2d090d092d0a0d095d09cd0af29203d2022202b206d6f6e7468202b202220414e44204558545241435428796561722066726f6d20642ed094d090d0a2d090d092d0a0d095d09cd0af29203d2022202b2079656172202b2022205c0a20202020202009090920292070205c0a090909092009494e4e4552204a4f494e202853454c45435420732ed09ad09ed0942c20612ed098d09cd0af20415320d090d094d0a0d095d0a12c20742ed098d09cd0af20415320d09dd090d098d09cd095d09dd09ed092d090d09dd098d0952c20742ed095d094d098d097d09c2c20742ed0a6d095d09dd090205c0a090920202020090909090946524f4d20d0bdd0b0d0b1d0bed18031207320494e4e4552204a4f494e20d182d0bed0b2d0b0d1802074204f4e20732ed09ad09ed0945fd0a2d09ed092d090d0a0203d20742ed09ad09ed094205c0a09090909090909092020202009092020494e4e4552204a4f494e20d0b0d0b4d180d0b5d1812061204f4e20732ed09ad09ed0945fd090d094d0a0d095d0a1203d20612ed09ad09ed094205c0a0909090909090909292073204f4e20732ed09ad09ed094203d20702ed09ad0a0d09ad09ed094205c0a090909554e494f4e205c0a09090953454c4543542027322ed092d0bed0b7d0b2d180d0b0d182d18b2720415320d0a2d098d09f2c20702ed09ad09ed0942c20702ed094d090d0a2d090d092d0a0d095d09cd0af2c20702ed0a1d0a2d0a02c20702ed09dd09ed09cd095d0a02c203020415320d09dd09ed09cd095d0a0d0a7d095d09ad0902c20732ed090d094d0a0d095d0a12c20732ed09dd090d098d09cd095d09dd09ed092d090d09dd098d0952c20732ed095d094d098d097d09c2c20702ed09ad09ed09b2c20702ed0a6d095d09dd0902c20702ed09ad09ed09b202a20702ed0a6d095d09dd09020415320d0a1d0a3d09cd09cd0902c203020415320d0a1d09ad098d094d09ad0902c20702ed0a1d0a3d09cd09cd09020415320d094d09ed09ad0a1d0a3d09cd09cd090205c0a09090946524f4d202853454c45435420702ed09ad09ed0942c20642ed094d090d0a2d09020415320d094d090d0a2d090d092d0a0d095d09cd0af2c20642ed09dd09ed09cd095d0a02c20642ed0a1d0a3d09cd09cd0902c20702ed0a1d0a2d0a02c20702ed094d091d09ad09ed0942c20702ed09ad09ed09b2c20702ed0a6d095d09dd090205c0a0909090946524f4d20d0b4d0bed0bad183d0bcd0b5d0bdd182d18b206420494e4e4552204a4f494e20d0bfd180d0bed0b2d0bed0b4d0bad0b82070204f4e20642ed09ad09ed094203d20702ed094d09ed09ad09ad09ed09420414e4420702ed09ed09fd095d0a0203d20373120414e4420702ed09dd09ed09cd095d0a0d09ed09fd095d0a0203d2031205c0a09090909204c454654204f55544552204a4f494e20d0b4d0bed0bad0b0d182d180d0b8d0b1d183d182d18b3731206461204f4e20642ed09ad09ed094203d2064612ed09ad09ed094205c0a2020202020090909574845524520702ed09ad09ed09b203c3e203020414e442045585452414354286461792066726f6d20642ed094d090d0a2d09029203d2022202b20646179202b202220414e442045585452414354286d6f6e74682066726f6d20642ed094d090d0a2d09029203d2022202b206d6f6e7468202b202220414e44204558545241435428796561722066726f6d20642ed094d090d0a2d09029203d2022202b2079656172202b2022205c0a09090909292070205c0a0909090909494e4e4552204a4f494e202853454c45435420732ed09ad09ed0942c20612ed098d09cd0af20415320d090d094d0a0d095d0a12c20742ed098d09cd0af20415320d09dd090d098d09cd095d09dd09ed092d090d09dd098d0952c20742ed095d094d098d097d09c2c20742ed0a6d095d09dd090205c0a090920202020090909090946524f4d20d0bdd0b0d0b1d0bed18031207320494e4e4552204a4f494e20d182d0bed0b2d0b0d1802074204f4e20732ed09ad09ed0945fd0a2d09ed092d090d0a0203d20742ed09ad09ed094205c0a0909090909090909494e4e4552204a4f494e20d0b0d0b4d180d0b5d1812061204f4e20732ed09ad09ed0945fd090d094d0a0d095d0a1203d20612ed09ad09ed094205c0a0909202020090909090909292073204f4e20732ed09ad09ed094203d20702ed094d091d09ad09ed094205c0a090909554e494f4e205c0a09090953454c4543542027322ed092d0bed0b7d0b2d180d0b0d182d18b2720415320d0a2d098d09f2c20702ed09ad09ed0942c20702ed094d090d0a2d090d092d0a0d095d09cd0af2c20702ed0a1d0a2d0a02c20702ed09dd09ed09cd095d0a02c203020415320d09dd09ed09cd095d0a0d0a7d095d09ad0902c20732ed090d094d0a0d095d0a12c20732ed09dd090d098d09cd095d09dd09ed092d090d09dd098d0952c20732ed095d094d098d097d09c2c20702ed09ad09ed09b2c20702ed0a6d095d09dd0902c204341535428702ed09ad09ed09b202a20702ed0a6d095d09dd090204153206e756d657269632831342c2032292920415320d0a1d0a3d09cd09cd0902c203020415320d0a1d09ad098d094d09ad0902c20702ed0a1d0a3d09cd09cd09020415320d094d09ed09ad0a1d0a3d09cd09cd090205c0a09090946524f4d202853454c45435420702ed09ad09ed0942c20702ed094d090d0a2d090d092d0a0d095d09cd0af2c20702ed09dd09ed09cd095d0a02c20702ed0a1d0a3d09cd09cd0902c20702ed0a1d0a2d0a02c20702ed094d091d09ad09ed0942c20702ed09ad09ed09b2c204341535428702ed0a6d095d09dd0902b434f414c455343452870312ed0a6d095d09dd0902c203029204153206e756d657269632831322c322929415320d0a6d095d09dd090205c0a2020202020200909090946524f4d202853454c45435420702ed09ad09ed0942c20702ed094d09ed09ad09ad09ed0942c20642ed094d090d0a2d09020415320d094d090d0a2d090d092d0a0d095d09cd0af2c20642ed09dd09ed09cd095d0a02c20642ed0a1d0a3d09cd09cd0902c20702ed0a1d0a2d0a02c20702ed094d091d09ad09ed0942c20702ed09ad09ed09b2c20702ed0a6d095d09dd090205c0a09202020200909090946524f4d20d0b4d0bed0bad183d0bcd0b5d0bdd182d18b2064204c454654204f55544552204a4f494e20d0bfd180d0bed0b2d0bed0b4d0bad0b82070204f4e20642ed09ad09ed094203d20702ed094d09ed09ad09ad09ed09420414e4420702ed09ed09fd095d0a0203d2031313820414e4420702ed09dd09ed09cd095d0a0d09ed09fd095d0a0203d2031205c0a09202020202009090909574845524520702ed09ad09ed09b203c3e203020414e442045585452414354286461792066726f6d20642ed094d090d0a2d09029203d2022202b20646179202b202220414e442045585452414354286d6f6e74682066726f6d20642ed094d090d0a2d09029203d2022202b206d6f6e7468202b202220414e44204558545241435428796561722066726f6d20642ed094d090d0a2d09029203d2022202b2079656172202b2022292070205c0a090909094c454654204f55544552204a4f494e20d0bfd180d0bed0b2d0bed0b4d0bad0b8207031204f4e20702ed094d09ed09ad09ad09ed094203d2070312ed094d09ed09ad09ad09ed09420414e442070312ed09ed09fd095d0a0203d2031313820414e442070312ed09dd09ed09cd095d0a0d09ed09fd095d0a0203d203320414e4420702ed0a1d0a2d0a0203d2070312ed0a1d0a2d0a0205c0a09090909292070205c0a0909090909494e4e4552204a4f494e202853454c45435420732ed09ad09ed0942c20612ed098d09cd0af20415320d090d094d0a0d095d0a12c20742ed098d09cd0af20415320d09dd090d098d09cd095d09dd09ed092d090d09dd098d0952c20742ed095d094d098d097d09c2c20742ed0a6d095d09dd090205c0a090920202020090909090946524f4d20d0bdd0b0d0b1d0bed18031207320494e4e4552204a4f494e20d182d0bed0b2d0b0d1802074204f4e20732ed09ad09ed0945fd0a2d09ed092d090d0a0203d20742ed09ad09ed094205c0a0909090909090909494e4e4552204a4f494e20d0b0d0b4d180d0b5d1812061204f4e20732ed09ad09ed0945fd090d094d0a0d095d0a1203d20612ed09ad09ed094205c0a0909202020090909090909292073204f4e20732ed09ad09ed094203d20702ed094d091d09ad09ed094205c0a0909094f5244455220425920d0a2d098d09f2c20d094d090d0a2d090d092d0a0d095d09cd0af2c20d09dd09ed09cd095d0a02c20d0a1d0a2d0a0223b0a766172207175657279203d2064622e65786563517565727928636f6d6d616e64293b0a7461626c652e617070656e645072696e7456616c7565732822d0b7d0b0d0bfd180d0bed181222c207175657279293b0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2fd092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0b5d180d0b5d0b420d0bfd0b5d187d0b0d182d18cd18e20d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a20207661722076616c75653b0a202076617220726573756c743b0a20200a202076616c7565203d207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed0a2d098d09f222c207374724e756d293b0a2020726573756c74203d2022223b0a20206966202876616c756520213d20756e646566696e656420262620646f635479706520213d2076616c7565290a20207b0a202020202020726573756c74203d2076616c75653b0a20207d0a20207265706f7274436f6e746578742e73657456616c75652822d0a2d098d09f222c20726573756c74293b0a0a202076616c7565203d207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed094d090d0a2d090d092d0a0d095d09cd0af222c207374724e756d293b0a2020726573756c74203d2022223b0a20206966202876616c756520213d20756e646566696e656420262620646f634461746554696d6520213d2076616c75652e67657454696d652829290a20207b0a202020202020726573756c74203d2076616c75652e746f4c6f63616c6554696d65537472696e6728293b0a20207d0a20207265706f7274436f6e746578742e73657456616c75652822d094d090d0a2d090d092d0a0d095d09cd0af222c20726573756c74293b0a0a202076616c7565203d207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed09dd09ed09cd095d0a0222c207374724e756d293b0a2020726573756c74203d2022223b0a20206966202876616c756520213d20756e646566696e656420262620646f634e756d20213d2076616c7565290a20207b0a20202020726573756c74203d2076616c75653b0a20207d0a20207265706f7274436f6e746578742e73657456616c75652822d09dd09ed09cd095d0a0222c20726573756c74293b0a0a202076616c7565203d207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed09dd09ed09cd095d0a0d0a7d095d09ad090222c207374724e756d293b0a2020726573756c74203d2022223b0a20206966202876616c756520213d20756e646566696e656420262620646f63436865636b20213d2076616c7565290a20207b0a20202020726573756c74203d2076616c75653b0a20207d0a20207265706f7274436f6e746578742e73657456616c75652822d09dd09ed09cd095d0a0d0a7d095d09ad090222c20726573756c74293b0a0a202076616c7565203d207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed094d09ed09ad0a1d0a3d09cd09cd090222c207374724e756d293b0a2020726573756c74203d20303b0a20206966202876616c756520213d20756e646566696e656420262620646f6353756d20213d2076616c7565290a20207b0a20202020726573756c74203d2076616c75653b0a20207d0a20207265706f7274436f6e746578742e73657456616c75652822d094d09ed09ad0a1d0a3d09cd09cd090222c20726573756c74293b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2fd092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f2020646f6353756d203d20646f6353756d202b207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed0a1d0a3d09cd09cd090222c207374724e756d293b0a202069662028646f63446973636f756e74203d3d2030290a20202020646f63446973636f756e74203d207265706f7274436f6e746578742e67657456616c75652822d0b7d0b0d0bfd180d0bed1812ed0a1d09ad098d094d09ad090222c207374724e756d293b0a7d0a20200a	3624021148	2015-12-01 09:22:58.942773	t
 990	getPictureUrl.js	0	\\x696620286669726d4964203d3d203131372909092f2f20d095d181d0bbd0b820d18dd182d0be20d0bfd0bed0b7d0b8d186d0b8d18f20d0b8d0b720d0bfd180d0b0d0b9d181d0b020d09fd0b0d181d0bad0b5d180d0b00a7b0a097461626c652e73657450686f746f506174682822d0bfd0b0d181d0bad0b5d18022293b0a0975726c203d2022687474703a2f2f7061736b65722e72752f70686f746f5f6c69622f22202b206964202b20222e6a7067223b0a7d0a656c736520696620286669726d4964203d3d20343139290a7b0a097461626c652e73657450686f746f506174682822d0bad183d180d181d0b0d0b2d182d0be22293b0a0976617220664e616d65203d2022303030303022202b2069643b0a0975726c203d2022687474703a2f2f6b7572736176746f2e72752f66696c65732f6175746f6b757273322f70686f746f2f6b6122202b20664e616d652e736c696365282d3529202b20222e6a7067223b0a7d0a656c736520696620286669726d4964203d3d20323234290a7b0a097461626c652e73657450686f746f506174682822d0b7d0b0d180d0b5d187d18cd0b522293b0a0975726c203d2022687474703a2f2f74642d7a61722e72752f636f6d706f6e656e74732f636f6d5f7669727475656d6172742f73686f705f696d6167652f70726f647563742f22202b206964202b20222e6a7067223b0a7d0a656c736520696620286669726d4964203d3d20333836290a7b0a097461626c652e73657450686f746f506174682822d182d0b8d18122293b0a0976617220664e616d65203d2022303030303022202b2069643b0a0975726c203d2022687474703a2f2f7472616e732d696d706f72742e72752f7069632f22202b20664e616d652e736c696365282d3529202b20222e6a7067223b0a7d0a656c736520696620286669726d4964203d3d20343230290a7b0a097461626c652e73657450686f746f506174682822d182d0b8d1812dd0b2d0bed181d182d0bed0ba22293b0a097461626c652e73657450686f746f49644669656c642822d09ad09ed09422293b0a0975726c203d2022223b0a7d0a656c736520696620286669726d4964203d3d20343136290a7b0a097461626c652e73657450686f746f506174682822d0b3d0b0d0bbd0b022293b0a0975726c203d2022223b0a7d0a656c736520696620286669726d4964203d3d20343236290a7b0a097461626c652e73657450686f746f506174682822d0bcd0b0d0b3d0b8d181d182d180d0b0d0bbd18c2dd0bdd0bd22293b0a0976617220664e616d65203d2022303030303022202b2069643b0a0975726c203d2022687474703a2f2f7777772e6d616769737472616c2d6e6e2e72752f75706c6f61642f70726f645f696d616765732f636174616c6f672f22202b20664e616d652e736c696365282d3629202b20222e6a7067223b0a7d0a656c736520696620286669726d4964203d3d20343237290a7b0a097461626c652e73657450686f746f506174682822d0bdd0bed180d0bcd0b0d0bbd18c22293b0a0969662028217461626c652e6765745461626c654e616d652829203d3d2022d0b7d0b0d18fd0b2d0bad0b022290a09202075726c203d207461626c652e67657456616c7565282250484f544f5f55524c22293b0a7d0a656c736520696620286669726d4964203d3d20313933290a7b0a097461626c652e73657450686f746f506174682822d18ed0bdd0b8d0bad18122293b0a0976617220664e616d65203d2022303030303022202b2069643b0a0975726c203d2022687474703a2f2f7777772e756e69786d6167617a696e2e72752f6173736574732f696d616765732f70726f64756374732f22202b20664e616d652e736c696365282d3629202b20222e6a7067223b0a7d0a656c73650a7b0a097461626c652e73657450686f746f49644669656c64282222293b0a7d0a	930746199	2015-12-02 18:26:52.966866	t
 912	доступ_к_топер.qs	0	\\x66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	880250797	2015-12-01 13:33:17.439249	t
@@ -15291,23 +15448,26 @@ COPY "файлы" ("КОД", "ИМЯ", "ТИП", "ЗНАЧЕНИЕ", "КОНТР
 1006	доступ.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	1338208090	2015-12-02 17:14:25.379484	t
 1176	./scripts/формулы131.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792871756572794e616d652c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bad0b0d0b6d0b4d0bed0b920d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b02e20d095d181d0bbd0b820d0b3d0bed182d0bed0b2d0bed0b3d0be20d0b7d0b0d0bfd180d0bed181d0b020d0bdd0b020d181d0b5d180d0b2d0b5d180d0b520d0bdd0b5d1822c20d182d0be20d182d0bed0b3d0b4d0b020d0b2d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bed0b4d0b8d0bd20d180d0b0d0b720d0b820d181d0bad180d0b8d0bfd18220d181d0b0d0bc20d0b4d0bed0bbd0b6d0b5d0bd20d181d0bed0b7d0b4d0b0d182d18c20d0b820d0bed0b1d180d0b0d0b1d0bed182d0b0d182d18c20d0b7d0b0d0bfd180d0bed1812e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e2047657446696c7465722866696c746572290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744265666f7265526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b4d0be20d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74507265706172655072696e7456616c75657328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d181d0bed0b7d0b4d0b0d0bdd0b8d0b5d0bc20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b020d0bfd0b5d187d0b0d182d0b820d0b820d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d0bdd0bed0b2d18bd18520d0b4d0b0d0bdd0bdd18bd18520d0b4d0bbd18f20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a	2989617349	2015-12-02 17:25:42.123804	t
 1177	скидки.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	1323936436	2015-12-03 16:30:05.475524	t
+896	заявка.ui	3	\\x3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e0a3c75692076657273696f6e3d22342e30223e0a203c636c6173733e6469616c6f673c2f636c6173733e0a203c77696467657420636c6173733d224469616c6f6722206e616d653d226469616c6f67223e0a20203c70726f7065727479206e616d653d2267656f6d65747279223e0a2020203c726563743e0a202020203c783e303c2f783e0a202020203c793e303c2f793e0a202020203c77696474683e313336323c2f77696474683e0a202020203c6865696768743e3630393c2f6865696768743e0a2020203c2f726563743e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d226e616d6522207374647365743d2230223e0a2020203c737472696e673e76775fd0bfd180d0b0d0b9d1813c2f737472696e673e0a20203c2f70726f70657274793e0a20203c70726f7065727479206e616d653d2263617074696f6e22207374647365743d2230223e0a2020203c737472696e673ed092d181d0b520d0bfd180d0b0d0b9d181d18b20d18120d186d0b5d0bdd0b0d0bcd0b820d0b4d0bbd18f20d0bfd0bed181d182d0b0d0b2d0bad0b820d0bfd0be20d0b7d0b0d0bad0b0d0b7d1833c2f737472696e673e0a20203c2f70726f70657274793e0a20203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d227662784c61796f7574223e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d22514c6162656c22206e616d653d226c6162656c223e0a202020202020203c70726f7065727479206e616d653d2273697a65506f6c696379223e0a20202020202020203c73697a65706f6c696379206873697a65747970653d22466978656422207673697a65747970653d224669786564223e0a2020202020202020203c686f72737472657463683e303c2f686f72737472657463683e0a2020202020202020203c766572737472657463683e303c2f766572737472657463683e0a20202020202020203c2f73697a65706f6c6963793e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09fd0b0d180d0b0d0bcd0b5d182d180d18b20d0b4d0bbd18f20d0bfd0bed0b8d181d0bad0b03a3c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d22536561726368506172616d657465727322206e616d653d22736561726368506172616d6574657273222f3e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225156426f784c61796f757422206e616d653d227461626c654c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225461626c655669657722206e616d653d227461626c6556696577222f3e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225069637475726522206e616d653d2270696374757265222f3e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a2020203c6974656d3e0a202020203c6c61796f757420636c6173733d225148426f784c61796f757422206e616d653d22636d64427574746f6e4c61796f7574223e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e416464223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e4164643c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e4164643c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e4164643c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e4164643c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e4164643c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e4164643c2f73656c65637465646f6e3e3a627574746f6e4164643c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e44656c657465223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e44656c6574653c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e44656c6574653c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e44656c6574653c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e44656c6574653c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e44656c6574653c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e44656c6574653c2f73656c65637465646f6e3e3a627574746f6e44656c6574653c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e52657175657279223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e526571756572793c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e526571756572793c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e526571756572793c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e526571756572793c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e526571756572793c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e526571756572793c2f73656c65637465646f6e3e3a627574746f6e526571756572793c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e5072696e74223e0a202020202020203c70726f7065727479206e616d653d22656e61626c6564223e0a20202020202020203c626f6f6c3e747275653c2f626f6f6c3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e5072696e743c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e5072696e743c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e5072696e743c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e5072696e743c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e5072696e743c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e5072696e743c2f73656c65637465646f6e3e3a627574746f6e5072696e743c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e436c6561725a616b617a223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09ed187d0b8d181d182d0b8d182d18c20d0b7d0b0d0bad0b0d0b73c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e5a616b617a223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed0a0d0b0d181d0bfd180d0b5d0b4d0b5d0bbd0b8d182d18c20d0b7d0b0d0bad0b0d0b73c2f737472696e673e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e53697a65223e0a20202020202020203c73697a653e0a2020202020202020203c77696474683e303c2f77696474683e0a2020202020202020203c6865696768743e303c2f6865696768743e0a20202020202020203c2f73697a653e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e536561726368223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e673ed09fd0bed0b8d181d0ba20d181d0bed0bed182d0b2d0b5d182d181d182d0b2d0b8d0b93c2f737472696e673e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c737061636572206e616d653d22686f72697a6f6e74616c537061636572223e0a202020202020203c70726f7065727479206e616d653d226f7269656e746174696f6e223e0a20202020202020203c656e756d3e51743a3a486f72697a6f6e74616c3c2f656e756d3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2273697a6548696e7422207374647365743d2230223e0a20202020202020203c73697a653e0a2020202020202020203c77696474683e34303c2f77696474683e0a2020202020202020203c6865696768743e32303c2f6865696768743e0a20202020202020203c2f73697a653e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7370616365723e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e4f6b223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e4f6b3c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e4f6b3c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e4f6b3c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e4f6b3c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e4f6b3c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e4f6b3c2f73656c65637465646f6e3e3a627574746f6e4f6b3c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a20202020203c6974656d3e0a2020202020203c77696467657420636c6173733d225150757368427574746f6e22206e616d653d22627574746f6e43616e63656c223e0a202020202020203c70726f7065727479206e616d653d2274657874223e0a20202020202020203c737472696e672f3e0a202020202020203c2f70726f70657274793e0a202020202020203c70726f7065727479206e616d653d2269636f6e223e0a20202020202020203c69636f6e7365743e0a2020202020202020203c6e6f726d616c6f66663e3a627574746f6e43616e63656c3c2f6e6f726d616c6f66663e0a2020202020202020203c6e6f726d616c6f6e3e3a627574746f6e43616e63656c3c2f6e6f726d616c6f6e3e0a2020202020202020203c6163746976656f66663e3a627574746f6e43616e63656c3c2f6163746976656f66663e0a2020202020202020203c6163746976656f6e3e3a627574746f6e43616e63656c3c2f6163746976656f6e3e0a2020202020202020203c73656c65637465646f66663e3a627574746f6e43616e63656c3c2f73656c65637465646f66663e0a2020202020202020203c73656c65637465646f6e3e3a627574746f6e43616e63656c3c2f73656c65637465646f6e3e3a627574746f6e43616e63656c3c2f69636f6e7365743e0a202020202020203c2f70726f70657274793e0a2020202020203c2f7769646765743e0a20202020203c2f6974656d3e0a202020203c2f6c61796f75743e0a2020203c2f6974656d3e0a20203c2f6c61796f75743e0a203c2f7769646765743e0a203c637573746f6d776964676574733e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e4469616c6f673c2f636c6173733e0a2020203c657874656e64733e514469616c6f673c2f657874656e64733e0a2020203c6865616465723e6469616c6f672e683c2f6865616465723e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e506963747572653c2f636c6173733e0a2020203c657874656e64733e514672616d653c2f657874656e64733e0a2020203c6865616465723e706963747572652e683c2f6865616465723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e5461626c65566965773c2f636c6173733e0a2020203c657874656e64733e515461626c65566965773c2f657874656e64733e0a2020203c6865616465723e7461626c65766965772e683c2f6865616465723e0a2020203c616464706167656d6574686f643e616464506167653c2f616464706167656d6574686f643e0a2020203c636f6e7461696e65723e313c2f636f6e7461696e65723e0a20203c2f637573746f6d7769646765743e0a20203c637573746f6d7769646765743e0a2020203c636c6173733e536561726368506172616d65746572733c2f636c6173733e0a2020203c657874656e64733e514672616d653c2f657874656e64733e0a2020203c6865616465723e736561726368706172616d65746572732e683c2f6865616465723e0a20203c2f637573746f6d7769646765743e0a203c2f637573746f6d776964676574733e0a203c7265736f75726365733e0a20203c696e636c756465206c6f636174696f6e3d222e2e2f2e2e2f7265736f75726365732e717263222f3e0a203c2f7265736f75726365733e0a203c636f6e6e656374696f6e732f3e0a3c2f75693e0a	1222720823	2015-12-04 08:46:11.716206	t
 1037	файлы.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792869642c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e2047657446696c74657228290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2022223b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a	1338208090	2015-12-14 17:29:55.976202	t
-1178	нумераторы.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792871756572794e616d652c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bad0b0d0b6d0b4d0bed0b920d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b02e20d095d181d0bbd0b820d0b3d0bed182d0bed0b2d0bed0b3d0be20d0b7d0b0d0bfd180d0bed181d0b020d0bdd0b020d181d0b5d180d0b2d0b5d180d0b520d0bdd0b5d1822c20d182d0be20d182d0bed0b3d0b4d0b020d0b2d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bed0b4d0b8d0bd20d180d0b0d0b720d0b820d181d0bad180d0b8d0bfd18220d181d0b0d0bc20d0b4d0bed0bbd0b6d0b5d0bd20d181d0bed0b7d0b4d0b0d182d18c20d0b820d0bed0b1d180d0b0d0b1d0bed182d0b0d182d18c20d0b7d0b0d0bfd180d0bed1812e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e2047657446696c7465722866696c746572290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744265666f7265526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b4d0be20d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74507265706172655072696e7456616c75657328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d181d0bed0b7d0b4d0b0d0bdd0b8d0b5d0bc20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b020d0bfd0b5d187d0b0d182d0b820d0b820d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d0bdd0bed0b2d18bd18520d0b4d0b0d0bdd0bdd18bd18520d0b4d0bbd18f20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a	2989617349	2015-12-15 08:27:42.361613	t
+1179	./scripts/формулы93.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792871756572794e616d652c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bad0b0d0b6d0b4d0bed0b920d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b02e20d095d181d0bbd0b820d0b3d0bed182d0bed0b2d0bed0b3d0be20d0b7d0b0d0bfd180d0bed181d0b020d0bdd0b020d181d0b5d180d0b2d0b5d180d0b520d0bdd0b5d1822c20d182d0be20d182d0bed0b3d0b4d0b020d0b2d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bed0b4d0b8d0bd20d180d0b0d0b720d0b820d181d0bad180d0b8d0bfd18220d181d0b0d0bc20d0b4d0bed0bbd0b6d0b5d0bd20d181d0bed0b7d0b4d0b0d182d18c20d0b820d0bed0b1d180d0b0d0b1d0bed182d0b0d182d18c20d0b7d0b0d0bfd180d0bed1812e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e2047657446696c7465722866696c746572290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e744265666f7265526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b4d0be20d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74507265706172655072696e7456616c75657328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d181d0bed0b7d0b4d0b0d0bdd0b8d0b5d0bc20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b020d0bfd0b5d187d0b0d182d0b820d0b820d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d0bdd0bed0b2d18bd18520d0b4d0b0d0bdd0bdd18bd18520d0b4d0bbd18f20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a	1991156193	2015-12-15 20:05:12.232642	t
+1178	./scripts/формулы93.qs	0	\\x66756e6374696f6e204576656e74416674657244656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d183d0b4d0b0d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74496e6974466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d181d180d0b0d0b7d18320d0bfd0bed181d0bbd0b520d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726548696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f72654c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0b4d0be20d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744166746572526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e7443617264436f64655265616465642863617264436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d0bcd0b0d0b3d0bdd0b8d182d0bdd0bed0b920d0bad0b0d180d182d18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e744166746572416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d18f20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657253686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bed182d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74417070656e6446726f6d51756572792871756572794e616d652c207265636f7264290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d0bad0b0d0b6d0b4d0bed0b920d0bdd0bed0b2d0bed0b920d0b7d0b0d0bfd0b8d181d0b820d0b8d0b720d0b7d0b0d0bfd180d0bed181d0b02e20d095d181d0bbd0b820d0b3d0bed182d0bed0b2d0bed0b3d0be20d0b7d0b0d0bfd180d0bed181d0b020d0bdd0b020d181d0b5d180d0b2d0b5d180d0b520d0bdd0b5d1822c20d182d0be20d182d0bed0b3d0b4d0b020d0b2d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bed0b4d0b8d0bd20d180d0b0d0b720d0b820d181d0bad180d0b8d0bfd18220d181d0b0d0bc20d0b4d0bed0bbd0b6d0b5d0bd20d181d0bed0b7d0b4d0b0d182d18c20d0b820d0bed0b1d180d0b0d0b1d0bed182d0b0d182d18c20d0b7d0b0d0bfd180d0bed1812e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7443616c635461626c6528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d18fd187d0b5d0b9d0bad0b820d0b220d182d0b0d0b1d0bbd0b8d186d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e2047657446696c7465722866696c746572290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b7d0b0d0bfd180d0bed181d0bed0bc20d0ba20d091d0942e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c20d0b4d0bed0bfd0bed0bbd0bdd0b8d182d0b5d0bbd18cd0bdd18bd0b920d184d0b8d0bbd18cd182d18020d0ba20d0b7d0b0d0bfd180d0bed181d1832e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e2066696c7465723b0a7d0a0a0a66756e6374696f6e204576656e74506172616d65746572734368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b220d0bcd0bed0bcd0b5d0bdd18220d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0bfd0bed181d182d0bed18fd0bdd0bdd0bed0b3d0be20d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0b020d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74536574456e61626c656428656e61626c6564290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d0b8d0b7d0bcd0b5d0bdd0b5d0bdd0b8d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d0b820d0b4d0bed181d182d183d0bfd0b020d0ba20d18dd0bbd0b5d0bcd0b5d0bdd182d0b0d0bc20d0bfd0bed0bbd18cd0b7d0bed0b2d0b0d182d0b5d0bbd18cd181d0bad0bed0b920d184d0bed180d0bcd18b0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e74426172436f646552656164656428626172436f6465290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd180d0bed187d182d0b5d0bdd0b8d18f20d188d182d180d0b8d1852dd0bad0bed0b4d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e744265666f7265526f774368616e67656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0b4d0be20d0bfd0b5d180d0b5d0bcd0b5d189d0b5d0bdd0b8d18f20d0bdd0b020d0b4d180d183d0b3d183d18e20d181d182d180d0bed0bad1830a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e744265666f726553686f77466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f7265416464537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e7441667465724c696e655072696e74287374724e756d290a7b202f2f20d092d18bd0b7d18bd0b2d0b0d0b5d182d181d18f20d0bfd0bed181d0bbd0b520d0bfd0b5d187d0b0d182d0b820d0bed187d0b5d180d0b5d0b4d0bdd0bed0b920d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd182d0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744265666f726544656c657465537472696e6728290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d181d182d180d0bed0bad0b820d0b8d0b720d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74416674657243616c63756c61746528290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b2d18bd187d0b8d181d0bbd0b5d0bdd0b8d18f20d0b220d18fd187d0b5d0b9d0bad0b50a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744578706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd0add0bad181d0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74416674657253686f774e657874446963747328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0bfd0bed0bad0b0d0b7d0b020d0b2d181d0b5d18520d0bdd0b5d0bed0b1d185d0bed0b4d0b8d0bcd18bd18520d181d0bfd180d0b0d0b2d0bed187d0bdd0b8d0bad0bed0b220d0bfd180d0b820d0b4d0bed0b1d0b0d0b2d0bbd0b5d0bdd0b8d0b820d181d182d180d0bed0bad0b820d0b220d0b4d0bed0bad183d0bcd0b5d0bdd1820a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a66756e6374696f6e204576656e74436c6f7365466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d183d0b4d0b0d0bbd0b5d0bdd0b8d0b5d0bc20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e7450686f746f4c6f6164656428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0b3d180d183d0b7d0bad0b820d184d0bed182d0bed0b3d180d0b0d184d0b8d0b820d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a76617220d0bad0bed0bb203d2067657456616c7565282250315f5fd09ad09ed09b22293b0a76617220d186d0b5d0bdd0b0203d2067657456616c7565282250315f5fd0a6d095d09dd09022293b0a76617220d181d183d0bcd0bcd0b0203d2067657456616c7565282250315f5fd0a1d0a3d09cd09cd09022293b0a6966202867657443757272656e744669656c644e616d652829203d3d202250315f5fd0a1d0a3d09cd09cd0902220262620d0bad0bed0bb20213d2030290a2020d186d0b5d0bdd0b0203d20d181d183d0bcd0bcd0b0202f20d0bad0bed0bb3b0a656c73650a202020d181d183d0bcd0bcd0b0203d20d0bad0bed0bb202a20d186d0b5d0bdd0b03b0a73657456616c7565282250315f5fd09ad09ed09b222c20d0bad0bed0bb293b0a73657456616c7565282250315f5fd0a6d095d09dd090222c20d186d0b5d0bdd0b0293b0a73657456616c7565282250315f5fd0a1d0a3d09cd09cd090222c20d181d183d0bcd0bcd0b0293b0a0a7d0a0a0a66756e6374696f6e204576656e74416674657248696465466f726d28666f726d290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0bed181d0bbd0b520d0b7d0b0d0bad180d18bd182d0b8d18f20d184d0bed180d0bcd18b20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e744b657950726573736564286b65794576656e74290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bbd18ed0b1d0bed0b920d0bad0bdd0bed0bfd0bad0b820d0bdd0b020d184d0bed180d0bcd0b52e20d09fd0b0d180d0b0d0bcd0b5d182d180206b65794576656e7420d0b8d0bcd0b5d0b5d18220d182d0b8d0bf20514b65794576656e740a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e20507265706172655069637475726555726c286f626a656374290a7b202f2f20d092d18bd0b7d0bed0b220d18dd182d0bed0b920d184d183d0bdd0bad186d0b8d0b820d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d0bed182d0bad180d18bd182d0b8d0b5d0bc20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e20d097d0b4d0b5d181d18c20d0b8d0bcd0b5d0b5d182d181d18f20d0b2d0bed0b7d0bcd0bed0b6d0bdd0bed181d182d18c20d0b7d0b0d0b3d180d183d0b7d0b8d182d18c20d184d0bed182d0bed0b3d180d0b0d184d0b8d18e20d0b4d0bbd18f20d182d0b5d0bad183d189d0b5d0b3d0be20d0bed0b1d18ad0b5d0bad182d0b0206f626a65637420d0b8d0b720d098d0bdd182d0b5d180d0bdd0b5d182d0b02e20d0a4d183d0bdd0bad186d0b8d18f20d0b4d0bed0bbd0b6d0bdd0b020d0b2d0b5d180d0bdd183d182d18c2075726c20d184d0bed182d0bed0b3d180d0b0d184d0b8d0b82e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74496d706f727428290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd180d0b820d0bdd0b0d0b6d0b0d182d0b8d0b820d0bad0bdd0bed0bfd0bad0b8203cd098d0bcd0bfd0bed180d1823e0a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a7d0a0a0a66756e6374696f6e204576656e74507265706172655072696e7456616c75657328290a7b202f2f20d0a1d0bed0b1d18bd182d0b8d0b520d0bfd180d0bed0b8d181d185d0bed0b4d0b8d18220d0bfd0b5d180d0b5d0b420d181d0bed0b7d0b4d0b0d0bdd0b8d0b5d0bc20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b020d0bfd0b5d187d0b0d182d0b820d0b820d0bfd180d0b5d0b4d0bdd0b0d0b7d0bdd0b0d187d0b5d0bdd0be20d0b4d0bbd18f20d181d0bed0b7d0b4d0b0d0bdd0b8d18f20d0bdd0bed0b2d18bd18520d0b4d0b0d0bdd0bdd18bd18520d0b4d0bbd18f20d0b4d0bed0bad183d0bcd0b5d0bdd182d0b00a2f2f20d097d0b4d0b5d181d18c20d092d18b20d0bcd0bed0b6d0b5d182d0b520d0b2d181d182d0b0d0b2d0b8d182d18c20d181d0b2d0bed0b920d0bad0bed0b40a72657475726e20747275653b0a7d0a0a0a	1991156193	2015-12-15 20:05:12.232642	t
+1180	Документ93.Отчет1.ods	1	\\x504b0304140000080000558f8f47856c398a2e0000002e000000080000006d696d65747970656170706c69636174696f6e2f766e642e6f617369732e6f70656e646f63756d656e742e7370726561647368656574504b0304140000080000558f8f4725dcc59df6150000f6150000180000005468756d626e61696c732f7468756d626e61696c2e706e6789504e470d0a1a0a0000000d49484452000000bd000000ff08020000002b254000000015bd49444154789ced5d67a86cc5d2edabc79c15144c98c5808a8a193120a8084614d30f454c60404414cca2a220220a06544444c58401132ae69c302b0a66c19cb3bef395d39ffbecd35db5aa76cfe13db877ad1fc39e3abd575575d7aeaaee99b977e2efbfff9e6baeb9d208939393b366cdea2efe33c2c4c48448e4a21b26d7f9224bf25bb9ce63f26b47d54114cd3df7dc79f0ac11b2fcafbffe92f1dd5bb9b15324b788bccfdc579455f76fccb49df19d851dfa16f67de9bfed980b615f52dca80eae690b060bfde92da6ba30b2760db0256dbd542353b59af5444dc8147ffffdf7efbdf7de3aebac33efbcf3ca52a5d1bae64112349f7efae90f3ffcb0e69a6be655eceecf23f332ffe75f4c8e90d7efe79f7ffeedb7df165e78e11f7ffc71b1c5169b679e79bef9e69b25975c321bf1ebafbffef2cb2f8b2fbeb8a8e8963fdf2b91241ae56289259648bd68ee8f91d7ec4016ca2d39befbc6cbebb7df7e2be48b2ebae8db6fbf2d96acb4d24a454017c1ddbdadc75823e3830ba10560de50a12a577dac8d54df76f8276eaebdf6daa79f7efaca2baf9c6b84ee6f7ffef9e765975df6e5975faebefaea6badb55616e6011234120759220b238924f58231e7b0e79e7beed9679f7de8a187b6df7e7b917cf7dd7712071285871c72c8575f7d75c515576cb8e1861f7ffcf12ebbecb2f3ce3b9f7cf2c97ffcf1c7f9e79f2fa176c00107acb7de7a72cb4f3ffd74d249272db5d452fdc5ce4fc0638f3df6c8238f9c72ca2912f4c2b0d34e3bdd73cf3d77dd759704e24b2fbd242aeebbefbe8b2eba4846ce3ffffcafbefaeac61b6ffcd4534fdd7efbed1261d95a621cfcf38cca73bfe38e3b7ef6d967575f7db5e40699d915575c51128ce486f7df7f5f667cdb6db7950470d65967c9c2cbf22fbffcf2471f7df4e9a79fbef9e69b7ff0c107871e7ae84d37dd240bf6d1471f499049946cb2c926b2eadb8ef0e4934f1e7ef8e1471e79e471c71d275492d8ce3cf3cc35d65863d34d373dfef8e3efbefbee9b6fbe79bbedb69300928090db2537482a3af5d453c5b0a38e3a4afe7ac4114788495d8ec93124768a3a090b098edf7fff5d02f1adb7de7ae08107f6de7bef5b6eb945acbde38e3bc4a36baeb9466ed96fbffdb6d9669bd75e7b2d8d9e9b2e5765b6fe74746feb31d6c8f8e0426801983754a8ca551f6b23d5b71d26e4bd6478997789958d36da48267dafbdf69287feaaabae92acbed0420b49f44894ecbffffe32e3b2fc1b8db0d9669b9d71c619975c72c9830f3e280ff7e38f3f2ea1202325094978c9639dab9840e2e0e5975f96475c82462ad76aabad268ade7df7ddafbffe5ae2f5e1871f3ef7dc73efbffffe1d76d861bef9e6938471f0c1074b0ab9f4d24be55e192f51984b613f61e66ab8dc72cb3dfffcf3126d1258628698fdca2bafc878b95dcc5b7ffdf55f7ffdf50b2eb8400cf8fcf3cf25b6ba32da67eb38eb6bb7fae0c1410680483d75852e2110d63677d713dd953437b212f2acbff0c20bb2c60b2eb8a044cf565b6d25a9489edd679e7946b288249565975d56d6e0c61b6f946420c1b1f4d24b4b4c4884c9126eb0c106123ab22a738f900b4a1e236b292a240ae5552246da1d197ccc31c7ecbbefbee79d779ed423a1955b3ef9e413899b05165840ea94d823c12aab9e573a2f79e780fcf58b2fbe90da2aa54deaac982a094c1e8073ce3947b297a43129826fbcf186f872d04107dd79e79d0dcb46004cf4b721520ede79e71d99fd3df7dc539e51e96964de6515658564b10f3cf0404900d2f448569066421e6ea9591f7ef8a1249b37df7c5324120a52c864f0134f3c216c1273123af276e5955796b59428d9638f3da42991cc24c3a4ef910648ca9c049ce406295e728bc4e2a38f3e2ae1b5e5965b66fb7233deef8573132d617df9e5974b62931014dbc430c95ebbedb69b642f497812d69281eebdf7de1b6eb8616204699eba5d5ebf5bca9cc5a6ac7f917a9d783fecfa37aa836bda7a8fa9a2dff217ed7f616471974ade7fd83a6bfbe496e585cdc5e07ff28de40f691ee54216f8faebaf973590b275f1c517e78421d9feb4d34e9310910d973cd6679f7db6bc4a12920c212125b1223d90848584910c5e75d555a534c8222db2c8225981b441c27cecb1c74a30c9c82db6d8424a92743352d1a45a493ab9eebaeba442c96647064b172cf69d78e289c290f747750f9b256bafbdf66db7ddb6ebaebbcaf87df6d947ca93a43ae9c96ebdf55609a9134e3841e4124042220f833452125e92d5f244e400aaa7b298cd42583446ea1af407d7b40583853a88ebe5af792c7237d62dcb0b9b8bc1ffe49b55565945b28544c67223148a2519745a25bc6485d2e8a197522217b2d5ca7f95b8910659d6acbb3187ddd65b6f9dafb71a21f3acb0c20a5283fa5ab241b2f09d246fca5e7cf145e97eba9e268de246fe240969f7dd77cfdbef6eaf2703a498e6d7be0d32f8c20b2f5c6699658a2d7d62be69ce37f979950c2f0940aefbc74445d0c982e50179e3dd1de76446e9336415f35f67fd0bf9535efe59a353994c9befed5ad44e9846cb9cd9ba138175d75db70bcdfe6c8ab5f9c030df9595e6762af3a77f4f1705f2f6b0c30e93980e9ebc112e26f2da4ba548a340e9d705f591920179eafbc1d1e5fffca7fc9ae599305f74837324d5a9bb3868ce8665db547441d66591ac2e877867b9bc95a0e97772333b897320feff8cb54b1256cfa8d65a9c7541deb3ca67aa2a45364ca50259b4d09efe3d26efea1debd40cd4a94247f138766febc7b4ffa73e7b7d4b5f5ebf16e44063ad5dbdd1e229ec546f0426e11968630088b8e60a5d422004333ce19b4f1015a6e2464d7d2950a740661ba74ea9ccfdb7a9ca1f209917c99f756adc3a5547035653684ad3e70e2fb0f58a27cb0dc7c2d49ac79a9dfac69a395581eb4e8ee554c160013c42aa6b4098aa804b55ac5b96ab0ff6549d52231aa82934a5e973c77c33c7e59b1afd3f59d7fdb7b3a61fa981b7f52b56a452a917ae91837c51b54708d5c191a0c1e60d15aa726bd222cbd781fd0df34d53be0115b7ff27ebbaff7652db5aab6feb57ac48a5522f5c2307f9a26a8f10aa83c15447981b84aadc9ab4c8f27598aa536ea2c3b5402d3df122e5d68e48fe04a5c46203246ef571cd883000b4b93694d06d0cd4013cbf215ac0fd14fb9ba6fe067862e5492b67460a0a285540112e7f354990d6f545d51e21c4a51603983754a8caad498bf70389758a6803e38668c154dcb81b39bcd755b7d6f14db8bb378eec0fc156d9620324eeeeda3523c200d0e6da5042f7e0431d30d517ab3f1d4dc64f59fbb7805f865abf1b2d5e93f64b5b953955bff3557f859aaadfbd163f9ee5ef7c67e077be9603ec8b55ed11c2d9bf2fe63e5cd5ce7db8b30f5715a88ad9dfb0bf99ea6f40aa2fe4b816a8a5275ea4dcda11c99fa094586c80c4ad3eae1911068036d78612ba8d813a80758a75aaa94e014fac78b7623f921840ca018a701aab4982b4ae2faaf608214e9918c0bca142556e4d5a3caf27f6378084fd0dea6fba2b9edf249edfc4cf6f3a52e61be02ff34d31809f4f112de0f78bb99f1a6f3f556739554da1294d9f3bbcc0d62b9e2c371c0b536b1e6b76ea1b6be65405ae3b399653058305f008a9ae0161aa022e55b16e59ae3ed84a9d62be2908996f50be5115a88aeb017dc924fbe226068036d7861202616df354be5123ba3f88f986f9a69e287e3e659258dea937363300b4b9369410086b9ba7e20624372b4f5a3933525040a9028a70f9ab4982b4ae2faaf608212eb518c0bca142556e4d5abc1f48cc378084f906e51bdf7c82a8c0fd9449e2561fd78c0803409b6b4309ddc6401dc0f31beea79af653ae1b045183fb29eea77423413f90f87d3fec8baa3d4288b78418c0bca142556e4d5a7cdf9a58a78836f0fb7efcbe1f7faf69f034fba26a8f10cefe754adde965701fde17721fde1fcc733f93c4dd25b966441800da5c1b4ae86e60d501fc7cca2471ab8f6b468401a0cdb5a1846e63a00e609d629d6aaa537534603585a6347deef0025baf78b2dc702c4cad79acd9a96fac995315b8eee4584e150c16c023a4ba0684a90ab854c5ba65b9fa604fd52955015053684ad3e78ef9664ec937ae1b0451837143b4807d31ebd4787d718dfe9facebfedb59d3b76de06dfd8a15a954ea856be4205f54ed114275702468b0794385aadc9ab4c8f275e0f728902faaf608a13a184c7584b941a8caad498b2c5f079efb99246e1671cd883000b4b93694d04df0ea00e61be61bdd48e61bc566e69b71f38d6f3e4154609d629dd28d649d526c669d625fac9814a4757d51b5470867ff7c639a4f103658a74c12d629eea7881906bf5f6c92b85d8b6b468401a0cdb5a1846e43a90ee0efa7f8fb29fe7ecae069f645d51e21c42d1a06306fa850955b9316ef2313fb1ba20d8c1ba205fcbe9fae7d92dff7e3ef60acd9a96fac995315b8eee4584e150c16c023a4ba0684a90ab854c5ba65b9fa604feda75c3708a206e38668017f77c7fea6a9bf71dd20881a8c1ba205fcfe0df245d51e215407473653d8bca142556e4d5a64f93af073067ecea01b69cd7906cffdd8178f77ee5783f946d51e219cfdf30d50c07cd31732dff407f37b5b2689e59d7a633303409b6b430981b0b6b9bb667fc37c335ebe218838d8df30df703f65f034fba26a8f10aa83234183cd1b2a54e5d6a44596af03fb1be61beea7b89f1a4e0884b5cddd35fb1be69bf1fa9b3a5a553585a6347deef0025baf78b2dc702c4cad79acd9a96fac995315b8eee4584e150c16c023a4ba0684a90ab854c5ba65b9fa604fe59bee8abfbb4bfcdd5dc3efee986f12f34d43be514b66ada6d094a6cf1d5e60eb154f961b8e85a9358f353bf58d3573aa02d79d1ccba982c102788454d78030550197aa58b72c571fec6e30cf6f902faaf608a13a381234d8bca142556e4d5a64f93a30df30df8c976fdc80c5cfb49a42e2c9c6cd0191e700a4048b0d90b859c43523c200d0e6da504237c1ab0378ee679258dea937363300b4b9369410086b9bbb6b9efbb14e35d5295581aa98f986f9662adfa811dd1fc47cc37c534f14bfb745b480e737c817557b84501d1c4936d8bca142556e4d5a64f93af0f3297e3ed5f4f994eb0641d4609d629dd28d74ea94693e41d8e0bf47817c51b54708f1111406306fa850955b93163f274bac53ac539691ac53c4cc839f4ff1bc58b7dc392f562d73a7c6b2837133a7c40df0a4ad2788bcad5fb122abd65ad53748ebfaa26a8f10aa83234183cd1b2a54e5d6a44596af03f30df30df38dc1d3ec8baa3d4238fbe71bd37c82b0c1b8215ac0b8215ac0be987d71535fecba4110351837440bf87b0693c4f24ebdb19901a0cdb5a1844058dbdc5d33df102de0b91fcffd7423a3e77edc4f1584dc4fa1fd14288a567db56a6da411012d0e5084dba69a2448ebfaa26a8f10e2160d03983754a8caad498bf79189ff1e052071ab8f6b468401a0cdb5a1846e63a00ee0b91feb54539d029e58f16ec57e243180940314e134569304695d5f54ed11429c323180794385aadc9ab4785e4fdc87136d605fccbe5837927db16273bc3882bb5c33220c006dae0d25741b037500eb14d102d629d629dd48d629c566d629d629e27f007e8fc22471ab8f6b468401a0cdb5a1846e63a00ee079b1ae7d92e7c5fc9e2831e3605f6c92b02f0ef5c5ec6f80bfec6f8a01fcf744f9ef898ef7ffddd5b0f2a49533230505942aa00897bf9a2448ebfaa26a8f10e2528b01cc1b2a54e5d6a4c5fb81c4be9868033f6740bea8da2384b845c300e60d15aa726bd2e27d64e2f7d22ded933cbf099edfb8018b9f693585c4938d9b0322cf417cd3114f72e02ed78c0803409b6b4309dd04af0ee0f98d49e276bbae1911068036d78612ba1b117500fb62a2058c1ba2058c1ba205dc87731fae1b09f61f89e7c5d817557b8410b7f618c0bca142556e4d5a7cff91787e63699fe4f90dbf7f43cc38d8dfb0bfd18d74fa1bd37c82b0c1fe86fdcd78fd8d9be8702d504b4fbc48b9b523923f4129b1d800895b7d5c33220c006dae0d25741b0375003f9f32492cefd41b9b1900da5c1b4a0884b5cddc4f116381fb29eea77423413f90d8175bda27d917e3be187862d557abd6461a11d0e20045b86daa4982b4ae2faaf608216ed13080794385aadc9ab4781f99f83b5fe61be61bd3f8665f54ed11c2d93fdf74576e63857bcf7e1b65f5add6ab4aa53237dca8da0c4602663003cd0c006dae0d2504c2dae6ee9a7d31eb54539d72dd20881aec8b996fc6cb375675540b612d512b22a897d6c85a913a327ea36a33180998c10c343300b4b9369410086b9bbb6bf637cc37dc871b3ccdbea8da2384eae048d060f3860a55b9356991e5ebc0cfa7902faaf608212eb518c0bca142556e4d5abc1f48dc4f116de0f76f4c12b7fab866441800da5c1b4ae83606ea00e61ba205ec6fd8dfe8463afd0deb9445c23a85ea14f30df045d51e219c83f24d8db6338fc85b2b9c2d45388dd524415ad717557b8410a74c0c60de50a12ab7262d9ed713cf8b2ded933c2fe6e7e1c48c837143b4807143b480dfbf617fd3d4df004fdaf62091b7f52b5664f5f656b71fa4757d51b54708d5c191a0c1e60d15aa726bd222cbd781758a6801cffd78eea71b69cd7906f30dd102f637ec6f7423d9df10330ffe3f89fc7f12c7fb7f12eb064addeea75ecaaacf30f0418bf5dad75e2b728f850a536b9ec2665545715731a6b80b4f8ee554c160a130b53fd5aa6b4098a6d717f5ccc9b2bc5ecdfe60e61be69ba67cd391ba1b39bcd755b7d6f14db8bb378eec0fc156d9620324eeeeda3523c200d0e6da5042f7e0431dc0effb9924ee2ec93523c200d0e6da50427703ab0e60be3149986f50be293ac45a4dd146f56fae7b43dcc05aaf7dedb522b7dd2e4cad790a9b5515c55dc598e22e3c399653058385c2d4fe54abae01619abeea6a2f6f595eaf667f30eb9449c23a85ea14f38daa9df9269a6f6a58f16ec57e243180940314e134569304695d5f54ed11429c323180794385aadc9ab4785e4ffc9c816803bf47817c51b54708d5c160aa23cc0d42556e4d5a64f93af07730ec6f9afa1b5581aa183fd36a0a89271b3707449e0390122c3640e26611d78c0803409b6b4309dd04af0e607f43b480e7372689bb4b72cd883000b4b93694d0ddc0aa03986f8816703fc5fd946e24e82313eb1420619d42758af906f8a26a8f1032df30df9877b966cc11f9a6d69aff94e5933cf7e3b99fba9f72131dae056ae9891729b77644f2272825161b2071ab8f6b468401a0cdb5a1846e63a00e609d324958a7509dea44cc37c05fe69b6200fb1bf6374dfd0deb9445c23a85ea14486e569eb47266a4a080520514e1f2579304695d5f54ed11425c6a3180794385aadc9ab4783f90986f0009f30df30df38d22192bdf98e613840dc60dd102f6372609fb1bf637ec6f1409fb1be2bf0dc60dd102c60dd102feee4ed73ec9cfa7f8fd1bc00648dc6ed73523c200d0e6da50427723a20e609d225ac0b8215ac07fff06f9a26a8f10e2a34b0c60de50a12ab7262d7ebe9ad817b32f6eec8b55cbdca9b1ec60dccc2971033c69cbed91b7f52b5664e54c2b8b06695d5f54ed114275702468b0794385aadc9ab4c8f275e0e753c817557b84501d0ca63ac2dc2054e5d6a44596af03f30df38d6e6434dff0fff548fc7f3d1afe5f0f8288839f3398246ed7e29a11610068736d28a1db50aa03d8dfb0bfd18d647f53daccfe268ddddffc1f636fa644a8e599640000000049454e44ae426082504b0304140008080800558f8f470000000000000000000000000c00000073657474696e67732e786d6ced59dd72e23614beef53647cdbc9624c365b98841df31bd8980403e6e76647b60556224b1e49c6c05dfb1a7d913ec6ee1b55e6679bb0b821c1de763ae5029075ce770ee74fe788ab8f0b1f9fcd21e388926b25ff4e55ce2071a88bc8ec5a19f41be7bf281fcb3f5dd1e91439b0e45227f42111e71c0a2149f8996427bcb4d9be5642464a1470c44b04f890978453a201243bb6d253ead25ad8e6c90223f278ad784204a55c2e8aa27751e11d65b35cbe582ce6d6bb3b528792299a1d2b6a43fd5414a5f49ba09861a3cc5a98a6aa17b9cd5a39db2af9c4349a52ded961f7f3cb575b019b8f7324a01fdbe66cfb3856ed5a91224b7304a36f56530ef13de7b1104736863a83a04f0365b7299681dc44442865f52af73dc8ab806fe15464833c44aef00e416bdafb0f27a3df4034f30e6a7ef13e7f2cfab90f8273445cb880eebe24181d76d19a4706175b1ea32f8c5aee9e925c30e97fa51c47c3eb348d41f7f4ec03698f97147dcef2e5f72f7f7cfdf5eb6ff92322b01a324ed93de548c80418a51828cf91c787908f36ce73e41bcad08a1201702fc04818d485fb1ef0283b21c42113c8c90a7d4ffb9d81d24cd1a7fa6780af3b02cde11add046496601eed6de03b7d532e5b3b5833a9a89c889b6ef9dea156a810d44f117842a9df9728a946740c6a011ceea36e725c7dab0dc00cc6e5f56fd12fdf08def368d46468bf72db9462088852162c8487910f3c7c7a60246daf2bfbb1a9b5aef90987cab7e27e72f57118c5d8062cf918fff07f949d1c65b1808a6c671eef198c1b82a4889b02cc1342ee183113c8e85a7f9e91800e15c9d8c9e9925d22be841ca35629a66c0f1ad3388df2da6541b6a99729383603abdc002e550f7d62d2e80602578e279908e979100a596d32406ff1bb50c8910ef696be4d31efc1fd633715213d02823e35011770dfd16944fe06b8c5b7734966124cc8a5bf135b7059dede5882f6e10ff7e127c2f742db4573c413d54f093ccd21a2c537f0fa02f1de92381ea304ade08feb08b653e961020ec5f1b70e9b072103b1835f73fd704b816bcaf242095e66716c8039b436372b77a48a29cf227f5abcb6bd0cea798025fbef24119f20233a4780dc87c41121383050a521480f02bc1c70c86a4080f4ab65551a083832e6abd40f18e4b163526fd3ee659b1a672d14e1fe4464030e2f2f2a8800b654cab47bf3734e6d2fed824927a3f6b4578f84f1a0af8c467125d7c16464e8ffa657376f7507aba0eaf8451534ade548f58cdb7e2b325695a9a3594b30b4565bd2a1ae1b7a146d5733bdaeeb5e4f7eabbbf2ade71791d96ca8e39ebea8928ae47baf4e46ad6297b4e76ed3c30e2eb6fa557569d48c6854e860c7c7d8898279fc6913d3739b786e3fe4bb76a1ad3a7e2370f5e0c12e54627b158d6e20c6a33691988fe36190770aa69848fcfbbece8d6a14ddd6f44f63adc825efe3645451414d5d76f42072b405767d8b4bba4f4ed3f4274d4b03c30e8ed77fd14f82b136281a7ad01dd4cd9aadc57a7bf5f1c8f4aab88d1d49e78eccc0d62e2e3b0f7a046be3c8689a11e856bae3a18b071abe9cf4834a2736c4ac52ebabf96ed732a766c3eaf6ebd678a4e6efcdfae04eaf9bd6a0be680c1b45abff28eefa79f7eea450ecc845c23055615478907dbeb93dd7d482fa59a61e82fc6dd206810b046c3039fa403fc0f27bfa19ac8782560176c26ce0ebbe0ddd869c0eb31822b26fa57e50379851b7f3431a661d6339b9c479d1a676151007e2f48564dcd2663bb7dc22f2b849e5e49bdfc23fdd72bed879fd17e6d3ac07f86cae1d321d5a329ee632bee739e98e2a714aca7df76f6d2ee97fecf29f504b0708d8d3e05029050000091f0000504b0304140008080800558f8f470000000000000000000000000b000000636f6e74656e742e786d6cbd57cd8e233510bef314512371733cc9ec483b4d92bda039cd5cd8052121b472dceec48cdd6ed9ee7472640f9c1127241042bc00cb0d8997e87923caee9fb833e9d062252e3d4ad557559fcbf5e359bcda4b31d9316db8ca96d16c7a154d584655c2b3cd32fae2cd1d7a19bd5a7db45069ca298b13450bc9328ba8ca2cfc9d807566e25abb8c0a9dc58a186ee28c4866624b6395b3acb58a4374ec63d512630f62b4b90787d696eded586387edd992f5f8c81e1c5a279a94638d1d16921a9aa76aacf1de08942ac8bacc89e5272cf682678fcb686b6d1e635c96e5b4bc9e2abdc1b3dbdb5becb51d61dae1f2420b8f4a286682b96006cfa633dc6225b3642c3f870d2965855c333d3a35c49267b79a6b660002c7758539ce5168d3abafdd667475ed360369a65ba247d79907f74be53a195f2ad749682b89dd0edcef4bfc004aff79b83fd695966363396c2f5554f37cf4316b7468af94eaa83a83bad93dddf9d5d50b5cff0ed0e54578a9b9653a80d38b704a04ed32aee4b9a4016e860181d8ce957cd7442e1166c0608e6b750736c9a0ebaf1eee5fd32d93e408e6ff0e463c339664c7cc6877098327bdc19ae54adb2e31e9f8e10bb735efb86dad14c3a3c3695be84627c95928d0b9c63046a089d18eb3f2e3de6cbd5c0fb7d883c2797ad16076851da66b49b8eee3f0d79b6e3fa5aac8927a0cd4c960fb9c69ee544478b3b8e721ac60a1fe83cb66a7051e7a839e33d1767f77a4b36e9442d2403140d1ab3c0eacfb7b43cbfd3877aed055929e7a3c697a6accb53d77b76f3ec74e87dcda84c5d0440a9e0bf368d5be0dea5960702748e18d805242194a181566b5a8677c279ed4bf1def6574cf6161f8f44e5e930c3a0d06710b955c1c96d1272457e6d3135c2d8c263dd70e8f362c8344c0b8302537a687c8b9a530507744735f7df832b5cfd8b7e4cbe232ad003386d2c158263f8893563cf1e12677448835a18fc3dc9e63ff178e779ab181a405aa0f658087aaad9193c22a58a09c22efa72b43ffedf1a56ad6056b78fae904ef0151c82c6a2d4321caa1ab98b69c9949aae2b566e411ad1934183874a15b8f0dbce489dbe5f3e9fce625959e7f4067989b1ee2a65579420c2421ab5ae5845bc6375b68f3abe98b9b3904bf4cb8300ca9dc7249040aadad2ed878de969ce7dd0a253cfc984639d930d4765b4a0a614f0e151ca87e8527dce4821c1a3e8d37f75a803736922a014f4223bb7e4e150f1646a358abe4709c6af0a62489d93266578b3ab4ff36346aced5cfd55f4fdf3dbd83b3d662ef111d53d0336d4ae70cd4576073be3a0d883221508869f383fb3ee18ace38746573121bfc75739c8882217bc80169ac86cc459376219ed18123a7c9575f3fbdabde577f567fc3a9bfafde4fabdfab5fab1fab1faadfdebead7eaa7ea9fef866811bec029f463f1101f1bea4e5eb4e9020d867f0a877ebc604cddebb15dcbb373cf0afeaea1f504b07084a91823724040000eb0e0000504b0304140008080800558f8f47000000000000000000000000080000006d6574612e786d6c8d93cb6edb301045f7fd0a81cd962f49966d4266802cba0ad0027581ec0c999cb86c28d2a0a8c8fdfbea61394ee24597ba3c33f7ce902aef4fb54d5e2134c6bb0de284a1049cf2dab8c306fdda7ec32b742fbf94fef9d92810daabb60617710db14afa52d788e96883dae084af1ad30857d5d088a8843f829b4bc4352d46a3493959e35e36e8778c474169d775a4cb880f07cad7eb351d4f6754ab0b776c831d29ad2858181c1aca09a7333b24fcdf50037b1dc97b7f311af029f468973296d3e97ba60f416b7b6b809ecd689fb08a157e35d07d45c979fcab85a748cedb1d62c8720ca30254b127705f0c32657c81798af9629b329116821784f3352b385f6525bd51317539808350451fe4a3d907f83edad09c646449d2bb47e3dad3ee6955ec8a3cb90276c7e0ff808a34cf58cdee1e5a63354ecf366f2d4badc48d748b95c853922dd9822d0b569474c6a648a04decdf16d66d18e3ca1f5bbefc796efee9f07d8dfaab2c34927fa0cff2c45e5e6813fb164d342a19f558ed2d60e55b17fbada3495460ed47cdef87d96795212a4bfaee7ee8ad7f41fe03504b0708a5ce239d9901000049030000504b0304140008080800558f8f470000000000000000000000000a0000007374796c65732e786d6ced59cd6edc3610bef72904190812a05a49eb6ce3dd78d78706410b2441e126bdd312a56543890245edda39052dd0f7e81ba4b75efa0ef61b7548895cfd5bb1db2008621bb6457e33fcf8cd901c6a4fcf2e136aed30cf094bd7b63ff36c0ba7010b491aafed37af9f3b27f6d9e69b53164524c0ab9005458253e1e4e28ae2dc02e3345f959d6bbbe0e98aa19ce4ab1425385f8960c5329c6aa3551dbd5243952dcad9547305ae5b0b7c29a61a4b6cc3165d4c1f5981ebd62147fba9c6120b9ad6cd2336d5f832a74ec49c80251912a4c5e29292f4eddade0a91ad5c77bfdfcff6c733c663d75f2e97aeea35840383cb0a4e152a0c5c4cb11c2c77fd99ef6a6c82059aca4f62eb94d222b9c07cb23448a04e54338e7380c074655e4e7354b769e4d72e9e9c5dbb7840e6608bf8e43c53e066aa1c87d353e538acdb26486c07e27be2be844ef5ebe58b435ef164ea5812db902ae0249b3ccd125db7678c19aad2a05cec8aeedcf31ebbe5730dbd1f85ef391198d7e0c1283c4034308ab3a44f34c0f92e201cbc9329afd15c4e7ad0f3c2e538635c1822d1f4cd0ed4999ba5ba15091d5eaab25743631e86bd50a073ecc2b28545e3ec08de1f35f6b271fd97ae02d5f7af5103df7325c62c0190f7b0d9f2d81c07112bd2b05c76a518f832c39cc82e4495d9aae1a19e3194ddc1657586d43c34966a9e1f8b3eed5e9fbbb2cf91c7006c749597dae937b737faa88b181c73110ab013e280e69bd3728b32cd56f92cc9aded1704f63bc5d6fa19a59055b08f686842e8d5da7e8032963f6de1ca46db6ab8967827c629cc16b23ddf933c6f20322202d80f768813154c779cda33fc2bfaa518a755c34ca174950b9cdc8b13672454c359cf11a51728783bccad8bfd241c9f738c0744ab75dd97813b946d557b596769a6218e5041abea4b7bae48a995ed0498525bc333c451cc51b675320e6b9b0b02255bd90568f0c2322724b940a9acde20fb17417290452e92aea1223a90f4115b5194c6058aa19717aa2180752c38f03b7f63b75d38b07da2b49da20aa3fd68c8bbadeea91cea8eef5f75ddca039ce2cb71c706b4256dd7a6ebc7572a463de26f4ecb1aa72a751a1129d579e5d92d90553d252475482a700c76218989c8417c35508f4fe323283887cafcaa6f28df7bf293a767b163148222cb5ac10b3c4402d28c24883a1985a4030270468dd2d3bd316745a62e07cabb6bdccb74d958660eeab1cbfd2ab96054fb6a268bc6d6126673f3fee6f7ebbf66c66bcbd1a6a7e36344b387725d252e6550c21e4591075fed893afd13fd22352e254a506696491a92b22edf215ae0878f1ec4e2e9da2420ca325a29ee3412d4bd67bc4ebe26f91d44fb9ae49f2cc94fc693bcb4ec46e95979b2d8b79fe8b79cc9e640edadaf3ab54a85be7b9da53d0cd53abadf543cc347f5584d3509a42919f0202983681462b5e00c47ea1ce7e381b24ce565de9239cd208fac46c5b17a1946e09a4302ed4f81e14284392529d6989c51120e40f624946f0d5021d800a25afb6a50f5bf6d38ec3189b770838295117eac38f33ba9d314565d6edb07c8a132ed0efd0346f28de57f131863d453364b09213071eae4ace0b26c8ec8a576ce718691141336bd14e48b10cd6bf78cde721c243f385ddb0118623e5c849b2c21ef64c9fe5d26eca1ccb95f302b45fd3b49aac3314552ceca17760eece192fed2eb92745bb7a1ea51267702c681d3bc2665b2bea7e88a15a231a79759e2db3da02e29f9de0926e0242c043bca1d717188c916667728cf1b6d116310be56c0e439b8ad82e0cd9ec84b966a463c861e8a23d9de6ce415bad97ac184906fb53c735373871955543e3d4bb855f6506cd2713b319810bbf917143bd973c17828df92cf678f9719cc56eee6d691a7be14204361f9398c37f3fc136d0507b3ac9dd250efe0478127bf8d3a3504546631eee44967a69f7f227da67add9ed5eee05e55752428372ef2431daa1aa5a7b14ab1be0e7ab6b892fee6547dea95557ff32dc6257a73767676eab61bab96ac25422bf2328cfab02639d4fe579de3aed4c68c7efde7cd6f37efaf3f5cff73fdf7cd1fd71facaa434ea1ac9737be1ebbd6d6a1a3dd3602304ac7ed687a9bcce7d5dbfe1195e71d95750d10cbc34c12fa48e1ad87254e1041eb90f2f9514788c6488d26b59c5aa343498507ab2ba8d90cc851d71d58659ebf70fcb9e32fec8d070b4afe785ec5420237df5a9a7072bb6b093ab85e2d4e56f3c5ecf8f1d29f2f16c74b39c44afd9849f7a562737e9f457e5a6e1da8ee9c9be5b20e2cdbfea73c76fb7711b7fff3facdbf504b0708200b3cbe7a060000ef1f0000504b0304140008080800558f8f470000000000000000000000000c0000006d616e69666573742e726466cd93cd6e83301084ef3c8565ced8402f05057228cab96a9fc0358658052ff29a12debe8e935651a4aaea9fd4e3ae4633df8eb49bed611cc88bb2a8c15434632925ca4868b5e92b3abb2eb9a5db3adad8b62b1f9a1df16a83a59f2aba776e2a395f96852d370c6ccfb3a228789af33c4fbc22c1d53871480cc6b48e08091e8d4269f5e47c1a39cee20966575174eba09079f7203d8bdd3aa9a0b20a61b652bd87b6209181408d094cca8474831cba4e4bc53396f35139c1a1ede2c760bdd383a23c60f02b8ecfd8de880ca6e55ee0bdb0ee5c83df7c95687aee637a75d3c5f1df2394609c32ee4feabb3b79ffe7fe2ecfff19e2afb476446c40cea367fa90e7b4f21f5547af504b0708b4f768d20501000083030000504b0304140000080000558f8f4700000000000000000000000027000000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c504b0304140000080000558f8f4700000000000000000000000018000000436f6e66696775726174696f6e73322f666c6f617465722f504b0304140000080000558f8f470000000000000000000000001a000000436f6e66696775726174696f6e73322f706f7075706d656e752f504b0304140000080000558f8f470000000000000000000000001a000000436f6e66696775726174696f6e73322f7374617475736261722f504b0304140000080000558f8f4700000000000000000000000018000000436f6e66696775726174696f6e73322f746f6f6c6261722f504b0304140000080000558f8f4700000000000000000000000018000000436f6e66696775726174696f6e73322f6d656e756261722f504b0304140000080000558f8f470000000000000000000000001f000000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b0304140000080000558f8f470000000000000000000000001a000000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b0304140000080000558f8f470000000000000000000000001c000000436f6e66696775726174696f6e73322f70726f67726573736261722f504b0304140008080800558f8f47000000000000000000000000150000004d4554412d494e462f6d616e69666573742e786d6cad544b6ec32010dde71416dbcad06655a1385954ea09d203503c76906040cc1025b72f8e944f55a5aad5ece6fbde6306586d0ec1377bc8e42276e2453e8b06d0c6dee1d8898fed7bfb2a36ebc52a18740310ebb3d1d43ea48bdb89925147438e349a00a4d9ea9800fb684b0064fdbd5e9f982ede8d80a5582f9a2bdfe03cb4b53f1fafd543f1be4d86779d50f740aee100bd332d1f1374c2a4e49d355ccbd41e7b79122c6f754a4a194c4f3b00166a8e94edae844f34ce93e2b329138e77a4b8604650537e160b0173dd0dc93acf3bc80c0756537a16b08dc8d3f91f8d1b80cdc341898f1e1e3f83734ce67ef8c30daa554fb339de220e6e2cf904414b65ac050fd58d59d992f3ef3bf81fd71f5f05159c24c8e2a4bd4598c857eac757b0fe02504b070842d9648e2001000045040000504b01021400140000080000558f8f47856c398a2e0000002e0000000800000000000000000000000000000000006d696d6574797065504b01021400140000080000558f8f4725dcc59df6150000f61500001800000000000000000000000000540000005468756d626e61696c732f7468756d626e61696c2e706e67504b01021400140008080800558f8f47d8d3e05029050000091f00000c000000000000000000000000008016000073657474696e67732e786d6c504b01021400140008080800558f8f474a91823724040000eb0e00000b00000000000000000000000000e31b0000636f6e74656e742e786d6c504b01021400140008080800558f8f47a5ce239d99010000490300000800000000000000000000000000402000006d6574612e786d6c504b01021400140008080800558f8f47200b3cbe7a060000ef1f00000a000000000000000000000000000f2200007374796c65732e786d6c504b01021400140008080800558f8f47b4f768d205010000830300000c00000000000000000000000000c12800006d616e69666573742e726466504b01021400140000080000558f8f470000000000000000000000002700000000000000000000000000002a0000436f6e66696775726174696f6e73322f616363656c657261746f722f63757272656e742e786d6c504b01021400140000080000558f8f470000000000000000000000001800000000000000000000000000452a0000436f6e66696775726174696f6e73322f666c6f617465722f504b01021400140000080000558f8f470000000000000000000000001a000000000000000000000000007b2a0000436f6e66696775726174696f6e73322f706f7075706d656e752f504b01021400140000080000558f8f470000000000000000000000001a00000000000000000000000000b32a0000436f6e66696775726174696f6e73322f7374617475736261722f504b01021400140000080000558f8f470000000000000000000000001800000000000000000000000000eb2a0000436f6e66696775726174696f6e73322f746f6f6c6261722f504b01021400140000080000558f8f470000000000000000000000001800000000000000000000000000212b0000436f6e66696775726174696f6e73322f6d656e756261722f504b01021400140000080000558f8f470000000000000000000000001f00000000000000000000000000572b0000436f6e66696775726174696f6e73322f696d616765732f4269746d6170732f504b01021400140000080000558f8f470000000000000000000000001a00000000000000000000000000942b0000436f6e66696775726174696f6e73322f746f6f6c70616e656c2f504b01021400140000080000558f8f470000000000000000000000001c00000000000000000000000000cc2b0000436f6e66696775726174696f6e73322f70726f67726573736261722f504b01021400140008080800558f8f4742d9648e20010000450400001500000000000000000000000000062c00004d4554412d494e462f6d616e69666573742e786d6c504b0506000000001100110070040000692d00000000	809598207	2015-12-15 21:02:14.940381	t
 \.
 
 
 --
--- TOC entry 4232 (class 0 OID 0)
--- Dependencies: 353
+-- TOC entry 4254 (class 0 OID 0)
+-- Dependencies: 354
 -- Name: файлы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
-SELECT pg_catalog.setval('"файлы_КОД_seq"', 1181, true);
+SELECT pg_catalog.setval('"файлы_КОД_seq"', 1183, true);
 
 
 --
--- TOC entry 3872 (class 0 OID 504737)
--- Dependencies: 257
+-- TOC entry 3886 (class 0 OID 507428)
+-- Dependencies: 258
 -- Data for Name: фирмы; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -15316,8 +15476,8 @@ COPY "фирмы" ("КОД", "ИМЯ", "КОД_ГОРОДА", "АДРЕС", "Т�
 
 
 --
--- TOC entry 4233 (class 0 OID 0)
--- Dependencies: 354
+-- TOC entry 4255 (class 0 OID 0)
+-- Dependencies: 355
 -- Name: фирмы_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
@@ -15325,8 +15485,8 @@ SELECT pg_catalog.setval('"фирмы_КОД_seq"', 424, true);
 
 
 --
--- TOC entry 3952 (class 0 OID 505067)
--- Dependencies: 355
+-- TOC entry 3966 (class 0 OID 507756)
+-- Dependencies: 356
 -- Data for Name: фонды; Type: TABLE DATA; Schema: public; Owner: sa
 --
 
@@ -15335,16 +15495,31 @@ COPY "фонды" ("КОД", "ИМЯ", "КОД_ОРГАНИЗАЦИИ") FROM std
 
 
 --
--- TOC entry 4234 (class 0 OID 0)
--- Dependencies: 356
+-- TOC entry 4256 (class 0 OID 0)
+-- Dependencies: 357
 -- Name: фонды_КОД_seq; Type: SEQUENCE SET; Schema: public; Owner: sa
 --
 
 SELECT pg_catalog.setval('"фонды_КОД_seq"', 3, true);
 
 
+SET search_path = session_variables, pg_catalog;
+
 --
--- TOC entry 3454 (class 2606 OID 505188)
+-- TOC entry 3968 (class 0 OID 507762)
+-- Dependencies: 358
+-- Data for Name: data; Type: TABLE DATA; Schema: session_variables; Owner: sa
+--
+
+COPY data (backend_pid, variable_name, variable_value, expires_on) FROM stdin;
+4295	client_user_id	1000002	2015-12-16 15:48:21.18771+03
+\.
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 3465 (class 2606 OID 507881)
 -- Name: атрибуты121_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15353,7 +15528,7 @@ ALTER TABLE ONLY "атрибуты121"
 
 
 --
--- TOC entry 3399 (class 2606 OID 505190)
+-- TOC entry 3410 (class 2606 OID 507883)
 -- Name: атрибуты123_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15362,7 +15537,7 @@ ALTER TABLE ONLY "атрибуты123"
 
 
 --
--- TOC entry 3458 (class 2606 OID 505192)
+-- TOC entry 3469 (class 2606 OID 507885)
 -- Name: атрибуты129_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15371,7 +15546,7 @@ ALTER TABLE ONLY "атрибуты129"
 
 
 --
--- TOC entry 3462 (class 2606 OID 505194)
+-- TOC entry 3473 (class 2606 OID 507887)
 -- Name: атрибуты5_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15380,7 +15555,7 @@ ALTER TABLE ONLY "атрибуты5"
 
 
 --
--- TOC entry 3466 (class 2606 OID 505196)
+-- TOC entry 3477 (class 2606 OID 507889)
 -- Name: атрибуты71_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15389,7 +15564,7 @@ ALTER TABLE ONLY "атрибуты71"
 
 
 --
--- TOC entry 3470 (class 2606 OID 505198)
+-- TOC entry 3481 (class 2606 OID 507891)
 -- Name: атрибуты8_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15398,7 +15573,7 @@ ALTER TABLE ONLY "атрибуты8"
 
 
 --
--- TOC entry 3382 (class 2606 OID 505200)
+-- TOC entry 3393 (class 2606 OID 507893)
 -- Name: проводки_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15407,7 +15582,7 @@ ALTER TABLE ONLY "проводки"
 
 
 --
--- TOC entry 3505 (class 2606 OID 505202)
+-- TOC entry 3516 (class 2606 OID 507895)
 -- Name: скидки_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15416,7 +15591,7 @@ ALTER TABLE ONLY "скидки"
 
 
 --
--- TOC entry 3450 (class 2606 OID 505204)
+-- TOC entry 3461 (class 2606 OID 507897)
 -- Name: столбцы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15425,7 +15600,7 @@ ALTER TABLE ONLY "столбцы"
 
 
 --
--- TOC entry 3393 (class 2606 OID 505206)
+-- TOC entry 3404 (class 2606 OID 507899)
 -- Name: товар_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15434,7 +15609,7 @@ ALTER TABLE ONLY "товар"
 
 
 --
--- TOC entry 3509 (class 2606 OID 505208)
+-- TOC entry 3520 (class 2606 OID 507901)
 -- Name: файлы_pkey; Type: CONSTRAINT; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15442,8 +15617,21 @@ ALTER TABLE ONLY "файлы"
     ADD CONSTRAINT "файлы_pkey" PRIMARY KEY ("КОД");
 
 
+SET search_path = session_variables, pg_catalog;
+
 --
--- TOC entry 3364 (class 1259 OID 505211)
+-- TOC entry 3527 (class 2606 OID 507903)
+-- Name: data_pkey; Type: CONSTRAINT; Schema: session_variables; Owner: sa; Tablespace: 
+--
+
+ALTER TABLE ONLY data
+    ADD CONSTRAINT data_pkey PRIMARY KEY (backend_pid, variable_name);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 3375 (class 1259 OID 507904)
 -- Name: configs_name_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15451,7 +15639,7 @@ CREATE INDEX configs_name_idx ON configs USING btree ("group", name);
 
 
 --
--- TOC entry 3365 (class 1259 OID 505212)
+-- TOC entry 3376 (class 1259 OID 507905)
 -- Name: objectnames1_name_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15459,7 +15647,7 @@ CREATE INDEX objectnames1_name_idx ON objectnames1 USING btree (name);
 
 
 --
--- TOC entry 3366 (class 1259 OID 505213)
+-- TOC entry 3377 (class 1259 OID 507906)
 -- Name: test_id_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15467,7 +15655,7 @@ CREATE INDEX test_id_idx ON test USING btree (id);
 
 
 --
--- TOC entry 3367 (class 1259 OID 505214)
+-- TOC entry 3378 (class 1259 OID 507907)
 -- Name: test_text_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15475,7 +15663,7 @@ CREATE INDEX test_text_idx ON test USING btree (text);
 
 
 --
--- TOC entry 3368 (class 1259 OID 505215)
+-- TOC entry 3379 (class 1259 OID 507908)
 -- Name: users_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15483,7 +15671,7 @@ CREATE INDEX "users_ИМЯ_idx" ON users USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3369 (class 1259 OID 505216)
+-- TOC entry 3380 (class 1259 OID 507909)
 -- Name: users_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15491,7 +15679,7 @@ CREATE INDEX "users_КОД_idx" ON users USING btree ("КОД");
 
 
 --
--- TOC entry 3451 (class 1259 OID 505217)
+-- TOC entry 3462 (class 1259 OID 507910)
 -- Name: ОС_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15499,7 +15687,7 @@ CREATE INDEX "ОС_ИМЯ_idx" ON "ос" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3452 (class 1259 OID 505218)
+-- TOC entry 3463 (class 1259 OID 507911)
 -- Name: ОС_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15507,7 +15695,7 @@ CREATE INDEX "ОС_КОД_idx" ON "ос" USING btree ("КОД");
 
 
 --
--- TOC entry 3418 (class 1259 OID 505219)
+-- TOC entry 3429 (class 1259 OID 507912)
 -- Name: адрес_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15515,7 +15703,7 @@ CREATE INDEX "адрес_ИМЯ_idx" ON "адрес" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3419 (class 1259 OID 505220)
+-- TOC entry 3430 (class 1259 OID 507913)
 -- Name: адрес_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15523,7 +15711,7 @@ CREATE INDEX "адрес_КОД_idx" ON "адрес" USING btree ("КОД");
 
 
 --
--- TOC entry 3455 (class 1259 OID 505221)
+-- TOC entry 3466 (class 1259 OID 507914)
 -- Name: атрибуты121_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15531,7 +15719,7 @@ CREATE INDEX "атрибуты121_доккод_стр_idx" ON "атрибуты1
 
 
 --
--- TOC entry 3456 (class 1259 OID 505222)
+-- TOC entry 3467 (class 1259 OID 507915)
 -- Name: атрибуты121_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15539,7 +15727,7 @@ CREATE INDEX "атрибуты121_код_idx" ON "атрибуты121" USING btr
 
 
 --
--- TOC entry 3400 (class 1259 OID 505223)
+-- TOC entry 3411 (class 1259 OID 507916)
 -- Name: атрибуты123_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15547,7 +15735,7 @@ CREATE INDEX "атрибуты123_доккод_стр_idx" ON "атрибуты1
 
 
 --
--- TOC entry 3401 (class 1259 OID 505224)
+-- TOC entry 3412 (class 1259 OID 507917)
 -- Name: атрибуты123_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15555,7 +15743,7 @@ CREATE INDEX "атрибуты123_код_idx" ON "атрибуты123" USING btr
 
 
 --
--- TOC entry 3459 (class 1259 OID 505225)
+-- TOC entry 3470 (class 1259 OID 507918)
 -- Name: атрибуты129_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15563,7 +15751,7 @@ CREATE INDEX "атрибуты129_доккод_стр_idx" ON "атрибуты1
 
 
 --
--- TOC entry 3460 (class 1259 OID 505226)
+-- TOC entry 3471 (class 1259 OID 507919)
 -- Name: атрибуты129_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15571,7 +15759,7 @@ CREATE INDEX "атрибуты129_код_idx" ON "атрибуты129" USING btr
 
 
 --
--- TOC entry 3463 (class 1259 OID 505227)
+-- TOC entry 3474 (class 1259 OID 507920)
 -- Name: атрибуты5_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15579,7 +15767,7 @@ CREATE INDEX "атрибуты5_доккод_стр_idx" ON "атрибуты5" 
 
 
 --
--- TOC entry 3464 (class 1259 OID 505228)
+-- TOC entry 3475 (class 1259 OID 507921)
 -- Name: атрибуты5_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15587,7 +15775,7 @@ CREATE INDEX "атрибуты5_код_idx" ON "атрибуты5" USING btree (
 
 
 --
--- TOC entry 3467 (class 1259 OID 505229)
+-- TOC entry 3478 (class 1259 OID 507922)
 -- Name: атрибуты71_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15595,7 +15783,7 @@ CREATE INDEX "атрибуты71_доккод_стр_idx" ON "атрибуты71
 
 
 --
--- TOC entry 3468 (class 1259 OID 505230)
+-- TOC entry 3479 (class 1259 OID 507923)
 -- Name: атрибуты71_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15603,7 +15791,7 @@ CREATE INDEX "атрибуты71_код_idx" ON "атрибуты71" USING btree
 
 
 --
--- TOC entry 3471 (class 1259 OID 505231)
+-- TOC entry 3482 (class 1259 OID 507924)
 -- Name: атрибуты8_доккод_стр_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15611,7 +15799,7 @@ CREATE INDEX "атрибуты8_доккод_стр_idx" ON "атрибуты8" 
 
 
 --
--- TOC entry 3472 (class 1259 OID 505232)
+-- TOC entry 3483 (class 1259 OID 507925)
 -- Name: атрибуты8_код_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15619,7 +15807,7 @@ CREATE INDEX "атрибуты8_код_idx" ON "атрибуты8" USING btree (
 
 
 --
--- TOC entry 3473 (class 1259 OID 505233)
+-- TOC entry 3484 (class 1259 OID 507926)
 -- Name: банки_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15627,7 +15815,7 @@ CREATE INDEX "банки_ИМЯ_idx" ON "банки" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3474 (class 1259 OID 505234)
+-- TOC entry 3485 (class 1259 OID 507927)
 -- Name: банки_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15635,7 +15823,7 @@ CREATE INDEX "банки_КОД_idx" ON "банки" USING btree ("КОД");
 
 
 --
--- TOC entry 3475 (class 1259 OID 505235)
+-- TOC entry 3486 (class 1259 OID 507928)
 -- Name: банковские_счета_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15643,7 +15831,7 @@ CREATE INDEX "банковские_счета_ИМЯ_idx" ON "банковски
 
 
 --
--- TOC entry 3476 (class 1259 OID 505236)
+-- TOC entry 3487 (class 1259 OID 507929)
 -- Name: банковские_счета_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15651,7 +15839,7 @@ CREATE INDEX "банковские_счета_КОД_idx" ON "банковски
 
 
 --
--- TOC entry 3477 (class 1259 OID 505237)
+-- TOC entry 3488 (class 1259 OID 507930)
 -- Name: блокдокументов_PID_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15659,7 +15847,7 @@ CREATE INDEX "блокдокументов_PID_idx" ON "блокдокумент
 
 
 --
--- TOC entry 3478 (class 1259 OID 505238)
+-- TOC entry 3489 (class 1259 OID 507931)
 -- Name: блокдокументов_КОД_ДОКУМЕНТЫ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15667,7 +15855,7 @@ CREATE INDEX "блокдокументов_КОД_ДОКУМЕНТЫ_idx" ON "б
 
 
 --
--- TOC entry 3370 (class 1259 OID 505239)
+-- TOC entry 3381 (class 1259 OID 507932)
 -- Name: блокпериоды_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15675,7 +15863,7 @@ CREATE INDEX "блокпериоды_ИМЯ_idx" ON "блокпериоды" USI
 
 
 --
--- TOC entry 3371 (class 1259 OID 505240)
+-- TOC entry 3382 (class 1259 OID 507933)
 -- Name: блокпериоды_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15683,7 +15871,7 @@ CREATE INDEX "блокпериоды_КОД_idx" ON "блокпериоды" USI
 
 
 --
--- TOC entry 3410 (class 1259 OID 505241)
+-- TOC entry 3421 (class 1259 OID 507934)
 -- Name: бюджет_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15691,7 +15879,7 @@ CREATE INDEX "бюджет_ИМЯ_idx" ON "бюджет" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3411 (class 1259 OID 505242)
+-- TOC entry 3422 (class 1259 OID 507935)
 -- Name: бюджет_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15699,7 +15887,7 @@ CREATE INDEX "бюджет_КОД_idx" ON "бюджет" USING btree ("КОД");
 
 
 --
--- TOC entry 3406 (class 1259 OID 505243)
+-- TOC entry 3417 (class 1259 OID 507936)
 -- Name: виды_расходов_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15707,7 +15895,7 @@ CREATE INDEX "виды_расходов_ИМЯ_idx" ON "виды_расходо�
 
 
 --
--- TOC entry 3407 (class 1259 OID 505244)
+-- TOC entry 3418 (class 1259 OID 507937)
 -- Name: виды_расходов_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15715,7 +15903,7 @@ CREATE INDEX "виды_расходов_КОД_idx" ON "виды_расходо�
 
 
 --
--- TOC entry 3479 (class 1259 OID 505245)
+-- TOC entry 3490 (class 1259 OID 507938)
 -- Name: города_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15723,7 +15911,7 @@ CREATE INDEX "города_ИМЯ_idx" ON "города" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3480 (class 1259 OID 505246)
+-- TOC entry 3491 (class 1259 OID 507939)
 -- Name: города_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15731,7 +15919,7 @@ CREATE INDEX "города_КОД_idx" ON "города" USING btree ("КОД");
 
 
 --
--- TOC entry 3372 (class 1259 OID 505247)
+-- TOC entry 3383 (class 1259 OID 507940)
 -- Name: группы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15739,7 +15927,7 @@ CREATE INDEX "группы_ИМЯ_idx" ON "группы" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3373 (class 1259 OID 505248)
+-- TOC entry 3384 (class 1259 OID 507941)
 -- Name: группы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15747,7 +15935,7 @@ CREATE INDEX "группы_КОД_idx" ON "группы" USING btree ("КОД");
 
 
 --
--- TOC entry 3402 (class 1259 OID 505249)
+-- TOC entry 3413 (class 1259 OID 507942)
 -- Name: докатрибуты123_доккод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15755,7 +15943,7 @@ CREATE INDEX "докатрибуты123_доккод_idx" ON "докатрибу
 
 
 --
--- TOC entry 3481 (class 1259 OID 505250)
+-- TOC entry 3492 (class 1259 OID 507943)
 -- Name: докатрибуты1_доккод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15763,7 +15951,7 @@ CREATE INDEX "докатрибуты1_доккод_idx" ON "докатрибут
 
 
 --
--- TOC entry 3482 (class 1259 OID 505251)
+-- TOC entry 3493 (class 1259 OID 507944)
 -- Name: докатрибуты1_код_карточки_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15771,7 +15959,7 @@ CREATE INDEX "докатрибуты1_код_карточки_idx" ON "дока�
 
 
 --
--- TOC entry 3483 (class 1259 OID 505252)
+-- TOC entry 3494 (class 1259 OID 507945)
 -- Name: докатрибуты71_доккод_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15779,7 +15967,7 @@ CREATE INDEX "докатрибуты71_доккод_idx" ON "докатрибу�
 
 
 --
--- TOC entry 3374 (class 1259 OID 505253)
+-- TOC entry 3385 (class 1259 OID 507946)
 -- Name: документы_АВТО_ОПЕР_ДАТА_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15787,7 +15975,7 @@ CREATE INDEX "документы_АВТО_ОПЕР_ДАТА_idx" ON "докум�
 
 
 --
--- TOC entry 3375 (class 1259 OID 505256)
+-- TOC entry 3386 (class 1259 OID 507952)
 -- Name: документы_ДАТА_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15795,7 +15983,7 @@ CREATE INDEX "документы_ДАТА_idx" ON "документы" USING btr
 
 
 --
--- TOC entry 3376 (class 1259 OID 505257)
+-- TOC entry 3387 (class 1259 OID 507953)
 -- Name: документы_ДАТА_ОПЕР_АВТО_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15803,7 +15991,7 @@ CREATE INDEX "документы_ДАТА_ОПЕР_АВТО_idx" ON "докум�
 
 
 --
--- TOC entry 3377 (class 1259 OID 505258)
+-- TOC entry 3388 (class 1259 OID 507954)
 -- Name: документы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15811,7 +15999,7 @@ CREATE INDEX "документы_КОД_idx" ON "документы" USING btree
 
 
 --
--- TOC entry 3414 (class 1259 OID 505259)
+-- TOC entry 3425 (class 1259 OID 507955)
 -- Name: доступ_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15819,7 +16007,7 @@ CREATE INDEX "доступ_ИМЯ_idx" ON "доступ" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3415 (class 1259 OID 505260)
+-- TOC entry 3426 (class 1259 OID 507956)
 -- Name: доступ_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15827,7 +16015,7 @@ CREATE INDEX "доступ_КОД_idx" ON "доступ" USING btree ("КОД");
 
 
 --
--- TOC entry 3484 (class 1259 OID 505261)
+-- TOC entry 3495 (class 1259 OID 507957)
 -- Name: заказчики_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15835,7 +16023,7 @@ CREATE INDEX "заказчики_ИМЯ_idx" ON "заказчики" USING btree
 
 
 --
--- TOC entry 3485 (class 1259 OID 505262)
+-- TOC entry 3496 (class 1259 OID 507958)
 -- Name: заказчики_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15843,7 +16031,7 @@ CREATE INDEX "заказчики_КОД_idx" ON "заказчики" USING btree
 
 
 --
--- TOC entry 3420 (class 1259 OID 505263)
+-- TOC entry 3431 (class 1259 OID 507959)
 -- Name: запросы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15851,7 +16039,7 @@ CREATE INDEX "запросы_ИМЯ_idx" ON "запросы" USING btree ("ИМ�
 
 
 --
--- TOC entry 3421 (class 1259 OID 505264)
+-- TOC entry 3432 (class 1259 OID 507960)
 -- Name: запросы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15859,7 +16047,7 @@ CREATE INDEX "запросы_КОД_idx" ON "запросы" USING btree ("КО�
 
 
 --
--- TOC entry 3422 (class 1259 OID 505265)
+-- TOC entry 3433 (class 1259 OID 507961)
 -- Name: заявка_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15867,7 +16055,7 @@ CREATE INDEX "заявка_КОД_idx" ON "заявка" USING btree ("КОД");
 
 
 --
--- TOC entry 3423 (class 1259 OID 505266)
+-- TOC entry 3434 (class 1259 OID 507962)
 -- Name: заявка_КОД_ТОВАР; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15875,7 +16063,7 @@ CREATE INDEX "заявка_КОД_ТОВАР" ON "заявка" USING btree ("К
 
 
 --
--- TOC entry 3486 (class 1259 OID 505267)
+-- TOC entry 3497 (class 1259 OID 507963)
 -- Name: карточки_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15883,7 +16071,7 @@ CREATE INDEX "карточки_ИМЯ_idx" ON "карточки" USING btree ("�
 
 
 --
--- TOC entry 3487 (class 1259 OID 505268)
+-- TOC entry 3498 (class 1259 OID 507964)
 -- Name: карточки_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15891,7 +16079,7 @@ CREATE INDEX "карточки_КОД_idx" ON "карточки" USING btree ("�
 
 
 --
--- TOC entry 3424 (class 1259 OID 505269)
+-- TOC entry 3435 (class 1259 OID 507965)
 -- Name: константы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15899,7 +16087,7 @@ CREATE INDEX "константы_ИМЯ_idx" ON "константы" USING btree
 
 
 --
--- TOC entry 3425 (class 1259 OID 505270)
+-- TOC entry 3436 (class 1259 OID 507966)
 -- Name: константы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15907,7 +16095,7 @@ CREATE INDEX "константы_КОД_idx" ON "константы" USING btree
 
 
 --
--- TOC entry 3435 (class 1259 OID 505271)
+-- TOC entry 3446 (class 1259 OID 507967)
 -- Name: люди_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15915,7 +16103,7 @@ CREATE INDEX "люди_ИМЯ_idx" ON "люди" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3436 (class 1259 OID 505272)
+-- TOC entry 3447 (class 1259 OID 507968)
 -- Name: люди_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15923,7 +16111,7 @@ CREATE INDEX "люди_КОД_idx" ON "люди" USING btree ("КОД");
 
 
 --
--- TOC entry 3488 (class 1259 OID 505273)
+-- TOC entry 3499 (class 1259 OID 507969)
 -- Name: материалы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15931,7 +16119,7 @@ CREATE INDEX "материалы_ИМЯ_idx" ON "материалы" USING btree
 
 
 --
--- TOC entry 3489 (class 1259 OID 505274)
+-- TOC entry 3500 (class 1259 OID 507970)
 -- Name: материалы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15939,7 +16127,7 @@ CREATE INDEX "материалы_КОД_idx" ON "материалы" USING btree
 
 
 --
--- TOC entry 3378 (class 1259 OID 505275)
+-- TOC entry 3389 (class 1259 OID 507971)
 -- Name: набор1_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15947,7 +16135,7 @@ CREATE INDEX "набор1_КОД_idx" ON "набор1" USING btree ("КОД");
 
 
 --
--- TOC entry 3379 (class 1259 OID 505276)
+-- TOC entry 3390 (class 1259 OID 507972)
 -- Name: набор1_КОД_АДРЕС_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15955,7 +16143,7 @@ CREATE INDEX "набор1_КОД_АДРЕС_idx" ON "набор1" USING btree ("
 
 
 --
--- TOC entry 3380 (class 1259 OID 505277)
+-- TOC entry 3391 (class 1259 OID 507973)
 -- Name: набор1_КОД_ТОВАР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15963,7 +16151,7 @@ CREATE INDEX "набор1_КОД_ТОВАР_idx" ON "набор1" USING btree ("
 
 
 --
--- TOC entry 3437 (class 1259 OID 505278)
+-- TOC entry 3448 (class 1259 OID 507974)
 -- Name: набор3_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15971,7 +16159,7 @@ CREATE INDEX "набор3_КОД_idx" ON "набор3" USING btree ("КОД");
 
 
 --
--- TOC entry 3438 (class 1259 OID 505279)
+-- TOC entry 3449 (class 1259 OID 507975)
 -- Name: набор3_КОД_ПЕРСОНАЛ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15979,7 +16167,7 @@ CREATE INDEX "набор3_КОД_ПЕРСОНАЛ_idx" ON "набор3" USING bt
 
 
 --
--- TOC entry 3439 (class 1259 OID 505280)
+-- TOC entry 3450 (class 1259 OID 507976)
 -- Name: набор3_КОД_ТОВАР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15987,7 +16175,7 @@ CREATE INDEX "набор3_КОД_ТОВАР_idx" ON "набор3" USING btree ("
 
 
 --
--- TOC entry 3493 (class 1259 OID 505281)
+-- TOC entry 3504 (class 1259 OID 507977)
 -- Name: набор401_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -15995,7 +16183,7 @@ CREATE INDEX "набор401_КОД_idx" ON "набор401" USING btree ("КОД"
 
 
 --
--- TOC entry 3494 (class 1259 OID 505282)
+-- TOC entry 3505 (class 1259 OID 507978)
 -- Name: набор401_КОД_ДОКУМЕНТЫ119_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16003,7 +16191,7 @@ CREATE INDEX "набор401_КОД_ДОКУМЕНТЫ119_idx" ON "набор401"
 
 
 --
--- TOC entry 3495 (class 1259 OID 505283)
+-- TOC entry 3506 (class 1259 OID 507979)
 -- Name: набор401_КОД_ТОВАР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16011,7 +16199,7 @@ CREATE INDEX "набор401_КОД_ТОВАР_idx" ON "набор401" USING btre
 
 
 --
--- TOC entry 3403 (class 1259 OID 505284)
+-- TOC entry 3414 (class 1259 OID 507980)
 -- Name: набор402_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16019,7 +16207,7 @@ CREATE INDEX "набор402_КОД_idx" ON "набор402" USING btree ("КОД"
 
 
 --
--- TOC entry 3404 (class 1259 OID 505285)
+-- TOC entry 3415 (class 1259 OID 507981)
 -- Name: набор402_КОД_ДОКУМЕНТЫ123_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16027,7 +16215,7 @@ CREATE INDEX "набор402_КОД_ДОКУМЕНТЫ123_idx" ON "набор402"
 
 
 --
--- TOC entry 3405 (class 1259 OID 505286)
+-- TOC entry 3416 (class 1259 OID 507982)
 -- Name: набор402_КОД_ТОВАР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16035,7 +16223,7 @@ CREATE INDEX "набор402_КОД_ТОВАР_idx" ON "набор402" USING btre
 
 
 --
--- TOC entry 3490 (class 1259 OID 505287)
+-- TOC entry 3501 (class 1259 OID 507983)
 -- Name: набор4_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16043,7 +16231,7 @@ CREATE INDEX "набор4_КОД_idx" ON "набор4" USING btree ("КОД");
 
 
 --
--- TOC entry 3491 (class 1259 OID 505288)
+-- TOC entry 3502 (class 1259 OID 507984)
 -- Name: набор4_КОД_ПЕРСОНАЛ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16051,7 +16239,7 @@ CREATE INDEX "набор4_КОД_ПЕРСОНАЛ_idx" ON "набор4" USING bt
 
 
 --
--- TOC entry 3492 (class 1259 OID 505289)
+-- TOC entry 3503 (class 1259 OID 507985)
 -- Name: набор4_КОД_ПРЕДМЕНТЫ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16059,7 +16247,7 @@ CREATE INDEX "набор4_КОД_ПРЕДМЕНТЫ_idx" ON "набор4" USING 
 
 
 --
--- TOC entry 3440 (class 1259 OID 505290)
+-- TOC entry 3451 (class 1259 OID 507986)
 -- Name: наценки_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16067,7 +16255,7 @@ CREATE INDEX "наценки_ИМЯ_idx" ON "наценки" USING btree ("ИМ�
 
 
 --
--- TOC entry 3441 (class 1259 OID 505291)
+-- TOC entry 3452 (class 1259 OID 507987)
 -- Name: наценки_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16075,7 +16263,7 @@ CREATE INDEX "наценки_КОД_idx" ON "наценки" USING btree ("КО�
 
 
 --
--- TOC entry 3442 (class 1259 OID 505292)
+-- TOC entry 3453 (class 1259 OID 507988)
 -- Name: наценки_КОД_ГРУППЫ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16083,7 +16271,7 @@ CREATE INDEX "наценки_КОД_ГРУППЫ_idx" ON "наценки" USING 
 
 
 --
--- TOC entry 3496 (class 1259 OID 505293)
+-- TOC entry 3507 (class 1259 OID 507989)
 -- Name: нумераторы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16091,7 +16279,7 @@ CREATE INDEX "нумераторы_ИМЯ_idx" ON "нумераторы" USING b
 
 
 --
--- TOC entry 3497 (class 1259 OID 505294)
+-- TOC entry 3508 (class 1259 OID 507990)
 -- Name: нумераторы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16099,7 +16287,7 @@ CREATE INDEX "нумераторы_КОД_idx" ON "нумераторы" USING b
 
 
 --
--- TOC entry 3498 (class 1259 OID 505295)
+-- TOC entry 3509 (class 1259 OID 507991)
 -- Name: объекты_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16107,7 +16295,7 @@ CREATE INDEX "объекты_ИМЯ_idx" ON "объекты" USING btree ("ИМ�
 
 
 --
--- TOC entry 3499 (class 1259 OID 505296)
+-- TOC entry 3510 (class 1259 OID 507992)
 -- Name: объекты_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16115,7 +16303,7 @@ CREATE INDEX "объекты_КОД_idx" ON "объекты" USING btree ("КО�
 
 
 --
--- TOC entry 3412 (class 1259 OID 505297)
+-- TOC entry 3423 (class 1259 OID 507993)
 -- Name: организации_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16123,7 +16311,7 @@ CREATE INDEX "организации_ИМЯ_idx" ON "организации" USI
 
 
 --
--- TOC entry 3413 (class 1259 OID 505298)
+-- TOC entry 3424 (class 1259 OID 507994)
 -- Name: организации_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16131,7 +16319,7 @@ CREATE INDEX "организации_КОД_idx" ON "организации" USI
 
 
 --
--- TOC entry 3500 (class 1259 OID 505299)
+-- TOC entry 3511 (class 1259 OID 507995)
 -- Name: персонал_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16139,7 +16327,7 @@ CREATE INDEX "персонал_ИМЯ_idx" ON "персонал" USING btree ("�
 
 
 --
--- TOC entry 3501 (class 1259 OID 505300)
+-- TOC entry 3512 (class 1259 OID 507996)
 -- Name: персонал_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16147,7 +16335,7 @@ CREATE INDEX "персонал_КОД_idx" ON "персонал" USING btree ("�
 
 
 --
--- TOC entry 3443 (class 1259 OID 505301)
+-- TOC entry 3454 (class 1259 OID 507997)
 -- Name: посладрес_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16155,7 +16343,7 @@ CREATE INDEX "посладрес_КОД_idx" ON "посладрес" USING btree
 
 
 --
--- TOC entry 3444 (class 1259 OID 505302)
+-- TOC entry 3455 (class 1259 OID 507998)
 -- Name: посладрес_КОД_АДРЕС_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16163,7 +16351,7 @@ CREATE INDEX "посладрес_КОД_АДРЕС_idx" ON "посладрес" 
 
 
 --
--- TOC entry 3445 (class 1259 OID 505303)
+-- TOC entry 3456 (class 1259 OID 507999)
 -- Name: посладрес_КОД_ТОВАР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16171,7 +16359,7 @@ CREATE INDEX "посладрес_КОД_ТОВАР_idx" ON "посладрес" 
 
 
 --
--- TOC entry 3426 (class 1259 OID 505304)
+-- TOC entry 3437 (class 1259 OID 508000)
 -- Name: прайс_fts_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16179,7 +16367,7 @@ CREATE INDEX "прайс_fts_idx" ON "прайс" USING gin (fts);
 
 
 --
--- TOC entry 3427 (class 1259 OID 505305)
+-- TOC entry 3438 (class 1259 OID 508006)
 -- Name: прайс_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16187,7 +16375,7 @@ CREATE INDEX "прайс_ИМЯ_idx" ON "прайс" USING btree ("ИМЯ" varch
 
 
 --
--- TOC entry 3428 (class 1259 OID 505306)
+-- TOC entry 3439 (class 1259 OID 508007)
 -- Name: прайс_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16195,7 +16383,7 @@ CREATE INDEX "прайс_КОД_idx" ON "прайс" USING btree ("КОД");
 
 
 --
--- TOC entry 3429 (class 1259 OID 505307)
+-- TOC entry 3440 (class 1259 OID 508008)
 -- Name: прайс_КОД_ТОВАР; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16203,7 +16391,7 @@ CREATE INDEX "прайс_КОД_ТОВАР" ON "прайс" USING btree ("КОД
 
 
 --
--- TOC entry 3430 (class 1259 OID 505308)
+-- TOC entry 3441 (class 1259 OID 508009)
 -- Name: прайс_КОД_ТОВАР_КОД_ФИРМЫ; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16211,7 +16399,7 @@ CREATE INDEX "прайс_КОД_ТОВАР_КОД_ФИРМЫ" ON "прайс" US
 
 
 --
--- TOC entry 3431 (class 1259 OID 505309)
+-- TOC entry 3442 (class 1259 OID 508010)
 -- Name: прайс_КОД_ФИРМЫ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16219,7 +16407,7 @@ CREATE INDEX "прайс_КОД_ФИРМЫ_idx" ON "прайс" USING btree ("К
 
 
 --
--- TOC entry 3432 (class 1259 OID 505310)
+-- TOC entry 3443 (class 1259 OID 508011)
 -- Name: прайс_КОД_ФИРМЫ_ИМЯ; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16227,7 +16415,7 @@ CREATE INDEX "прайс_КОД_ФИРМЫ_ИМЯ" ON "прайс" USING btree (
 
 
 --
--- TOC entry 3433 (class 1259 OID 505311)
+-- TOC entry 3444 (class 1259 OID 508012)
 -- Name: прайс_КОД_ФИРМЫ_КОДВПРАЙСЕ; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16235,7 +16423,7 @@ CREATE INDEX "прайс_КОД_ФИРМЫ_КОДВПРАЙСЕ" ON "прайс"
 
 
 --
--- TOC entry 3434 (class 1259 OID 505312)
+-- TOC entry 3445 (class 1259 OID 508013)
 -- Name: прайс_КОДВПРАЙСЕ; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16243,7 +16431,7 @@ CREATE INDEX "прайс_КОДВПРАЙСЕ" ON "прайс" USING btree ("К�
 
 
 --
--- TOC entry 3502 (class 1259 OID 505313)
+-- TOC entry 3513 (class 1259 OID 508014)
 -- Name: предметы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16251,7 +16439,7 @@ CREATE INDEX "предметы_ИМЯ_idx" ON "предметы" USING btree ("�
 
 
 --
--- TOC entry 3503 (class 1259 OID 505314)
+-- TOC entry 3514 (class 1259 OID 508015)
 -- Name: предметы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16259,7 +16447,7 @@ CREATE INDEX "предметы_КОД_idx" ON "предметы" USING btree ("�
 
 
 --
--- TOC entry 3383 (class 1259 OID 505315)
+-- TOC entry 3394 (class 1259 OID 508016)
 -- Name: проводки_ДБКОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16267,7 +16455,7 @@ CREATE INDEX "проводки_ДБКОД_idx" ON "проводки" USING btree
 
 
 --
--- TOC entry 3384 (class 1259 OID 505344)
+-- TOC entry 3395 (class 1259 OID 508038)
 -- Name: проводки_ДБСЧЕТ_ОПЕР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16275,7 +16463,7 @@ CREATE INDEX "проводки_ДБСЧЕТ_ОПЕР_idx" ON "проводки" 
 
 
 --
--- TOC entry 3385 (class 1259 OID 505345)
+-- TOC entry 3396 (class 1259 OID 508039)
 -- Name: проводки_ДОККОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16283,7 +16471,7 @@ CREATE INDEX "проводки_ДОККОД_idx" ON "проводки" USING btr
 
 
 --
--- TOC entry 3386 (class 1259 OID 505346)
+-- TOC entry 3397 (class 1259 OID 508040)
 -- Name: проводки_ДОККОД_ОПЕР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16291,7 +16479,7 @@ CREATE INDEX "проводки_ДОККОД_ОПЕР_idx" ON "проводки" 
 
 
 --
--- TOC entry 3387 (class 1259 OID 505347)
+-- TOC entry 3398 (class 1259 OID 508041)
 -- Name: проводки_ДОККОД_СТР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16299,7 +16487,7 @@ CREATE INDEX "проводки_ДОККОД_СТР_idx" ON "проводки" US
 
 
 --
--- TOC entry 3388 (class 1259 OID 505348)
+-- TOC entry 3399 (class 1259 OID 508042)
 -- Name: проводки_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16307,7 +16495,7 @@ CREATE INDEX "проводки_КОД_idx" ON "проводки" USING btree ("�
 
 
 --
--- TOC entry 3389 (class 1259 OID 505349)
+-- TOC entry 3400 (class 1259 OID 508043)
 -- Name: проводки_КРКОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16315,7 +16503,7 @@ CREATE INDEX "проводки_КРКОД_idx" ON "проводки" USING btree
 
 
 --
--- TOC entry 3390 (class 1259 OID 505350)
+-- TOC entry 3401 (class 1259 OID 508044)
 -- Name: проводки_КРСЧЕТ_ОПЕР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16323,7 +16511,7 @@ CREATE INDEX "проводки_КРСЧЕТ_ОПЕР_idx" ON "проводки" 
 
 
 --
--- TOC entry 3391 (class 1259 OID 505351)
+-- TOC entry 3402 (class 1259 OID 508045)
 -- Name: проводки_ОПЕР_НОМЕРОПЕР_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16331,7 +16519,7 @@ CREATE INDEX "проводки_ОПЕР_НОМЕРОПЕР_idx" ON "провод
 
 
 --
--- TOC entry 3397 (class 1259 OID 505352)
+-- TOC entry 3408 (class 1259 OID 508046)
 -- Name: сальдо_СЧЕТ_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16339,7 +16527,7 @@ CREATE INDEX "сальдо_СЧЕТ_КОД_idx" ON "сальдо" USING btree ("
 
 
 --
--- TOC entry 3416 (class 1259 OID 505353)
+-- TOC entry 3427 (class 1259 OID 508047)
 -- Name: справочники_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16347,7 +16535,7 @@ CREATE INDEX "справочники_ИМЯ_idx" ON "справочники" USI
 
 
 --
--- TOC entry 3417 (class 1259 OID 505354)
+-- TOC entry 3428 (class 1259 OID 508048)
 -- Name: справочники_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16355,7 +16543,7 @@ CREATE INDEX "справочники_КОД_idx" ON "справочники" USI
 
 
 --
--- TOC entry 3408 (class 1259 OID 505355)
+-- TOC entry 3419 (class 1259 OID 508049)
 -- Name: счета_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16363,7 +16551,7 @@ CREATE INDEX "счета_ИМЯ_idx" ON "счета" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3409 (class 1259 OID 505356)
+-- TOC entry 3420 (class 1259 OID 508050)
 -- Name: счета_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16371,7 +16559,7 @@ CREATE INDEX "счета_КОД_idx" ON "счета" USING btree ("КОД");
 
 
 --
--- TOC entry 3506 (class 1259 OID 505357)
+-- TOC entry 3517 (class 1259 OID 508051)
 -- Name: типыобъектов_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16379,7 +16567,7 @@ CREATE INDEX "типыобъектов_ИМЯ_idx" ON "типыобъектов"
 
 
 --
--- TOC entry 3507 (class 1259 OID 505358)
+-- TOC entry 3518 (class 1259 OID 508052)
 -- Name: типыобъектов_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16387,7 +16575,7 @@ CREATE INDEX "типыобъектов_КОД_idx" ON "типыобъектов"
 
 
 --
--- TOC entry 3394 (class 1259 OID 505359)
+-- TOC entry 3405 (class 1259 OID 508053)
 -- Name: товар_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16395,7 +16583,7 @@ CREATE INDEX "товар_ИМЯ_idx" ON "товар" USING btree ("ИМЯ" varch
 
 
 --
--- TOC entry 3395 (class 1259 OID 505360)
+-- TOC entry 3406 (class 1259 OID 508054)
 -- Name: товар_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16403,7 +16591,7 @@ CREATE INDEX "товар_КОД_idx" ON "товар" USING btree ("КОД");
 
 
 --
--- TOC entry 3396 (class 1259 OID 505361)
+-- TOC entry 3407 (class 1259 OID 508055)
 -- Name: товар_ШТРИХКОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16411,7 +16599,7 @@ CREATE INDEX "товар_ШТРИХКОД_idx" ON "товар" USING btree ("Ш�
 
 
 --
--- TOC entry 3510 (class 1259 OID 505362)
+-- TOC entry 3521 (class 1259 OID 508056)
 -- Name: файлы_ИМЯ_ТИП; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16419,7 +16607,7 @@ CREATE INDEX "файлы_ИМЯ_ТИП" ON "файлы" USING btree ("ИМЯ", "
 
 
 --
--- TOC entry 3446 (class 1259 OID 505363)
+-- TOC entry 3457 (class 1259 OID 508057)
 -- Name: фирмы_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16427,7 +16615,7 @@ CREATE INDEX "фирмы_ИМЯ_idx" ON "фирмы" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3447 (class 1259 OID 505364)
+-- TOC entry 3458 (class 1259 OID 508058)
 -- Name: фирмы_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16435,7 +16623,7 @@ CREATE INDEX "фирмы_КОД_idx" ON "фирмы" USING btree ("КОД");
 
 
 --
--- TOC entry 3448 (class 1259 OID 505365)
+-- TOC entry 3459 (class 1259 OID 508059)
 -- Name: фирмы_КОД_ГОРОДА_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16443,7 +16631,7 @@ CREATE INDEX "фирмы_КОД_ГОРОДА_idx" ON "фирмы" USING btree ("
 
 
 --
--- TOC entry 3511 (class 1259 OID 505366)
+-- TOC entry 3522 (class 1259 OID 508060)
 -- Name: фонды_ИМЯ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16451,7 +16639,7 @@ CREATE INDEX "фонды_ИМЯ_idx" ON "фонды" USING btree ("ИМЯ");
 
 
 --
--- TOC entry 3512 (class 1259 OID 505367)
+-- TOC entry 3523 (class 1259 OID 508061)
 -- Name: фонды_КОД_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
@@ -16459,15 +16647,27 @@ CREATE INDEX "фонды_КОД_idx" ON "фонды" USING btree ("КОД");
 
 
 --
--- TOC entry 3513 (class 1259 OID 505368)
+-- TOC entry 3524 (class 1259 OID 508062)
 -- Name: фонды_КОД_ОРГАНИЗАЦИИ_idx; Type: INDEX; Schema: public; Owner: sa; Tablespace: 
 --
 
 CREATE INDEX "фонды_КОД_ОРГАНИЗАЦИИ_idx" ON "фонды" USING btree ("КОД_ОРГАНИЗАЦИИ");
 
 
+SET search_path = session_variables, pg_catalog;
+
 --
--- TOC entry 3538 (class 2620 OID 505370)
+-- TOC entry 3525 (class 1259 OID 508063)
+-- Name: data_expires_on; Type: INDEX; Schema: session_variables; Owner: sa; Tablespace: 
+--
+
+CREATE INDEX data_expires_on ON data USING btree (expires_on);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 3552 (class 2620 OID 508064)
 -- Name: insert_топер; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16475,7 +16675,7 @@ CREATE TRIGGER "insert_топер" BEFORE INSERT ON "топер" FOR EACH ROW EX
 
 
 --
--- TOC entry 3604 (class 2620 OID 505371)
+-- TOC entry 3618 (class 2620 OID 508065)
 -- Name: testdeleting_ОС; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16483,7 +16683,7 @@ CREATE TRIGGER "testdeleting_ОС" BEFORE DELETE ON "ос" FOR EACH ROW EXECUTE 
 
 
 --
--- TOC entry 3541 (class 2620 OID 505372)
+-- TOC entry 3555 (class 2620 OID 508066)
 -- Name: testdeleting_Сальдо; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16491,7 +16691,7 @@ CREATE TRIGGER "testdeleting_Сальдо" BEFORE DELETE ON "сальдо" FOR E
 
 
 --
--- TOC entry 3570 (class 2620 OID 505373)
+-- TOC entry 3584 (class 2620 OID 508067)
 -- Name: testdeleting_адрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16499,7 +16699,7 @@ CREATE TRIGGER "testdeleting_адрес" BEFORE DELETE ON "адрес" FOR EACH 
 
 
 --
--- TOC entry 3612 (class 2620 OID 505374)
+-- TOC entry 3626 (class 2620 OID 508068)
 -- Name: testdeleting_банки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16507,7 +16707,7 @@ CREATE TRIGGER "testdeleting_банки" BEFORE DELETE ON "банки" FOR EACH 
 
 
 --
--- TOC entry 3615 (class 2620 OID 505375)
+-- TOC entry 3629 (class 2620 OID 508069)
 -- Name: testdeleting_банковские_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16515,7 +16715,7 @@ CREATE TRIGGER "testdeleting_банковские_счета" BEFORE DELETE ON "
 
 
 --
--- TOC entry 3514 (class 2620 OID 505376)
+-- TOC entry 3528 (class 2620 OID 508070)
 -- Name: testdeleting_блокпериоды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16523,7 +16723,7 @@ CREATE TRIGGER "testdeleting_блокпериоды" BEFORE DELETE ON "блок�
 
 
 --
--- TOC entry 3555 (class 2620 OID 505377)
+-- TOC entry 3569 (class 2620 OID 508071)
 -- Name: testdeleting_бюджет; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16531,7 +16731,7 @@ CREATE TRIGGER "testdeleting_бюджет" BEFORE DELETE ON "бюджет" FOR E
 
 
 --
--- TOC entry 3549 (class 2620 OID 505378)
+-- TOC entry 3563 (class 2620 OID 508072)
 -- Name: testdeleting_виды_расходов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16539,7 +16739,7 @@ CREATE TRIGGER "testdeleting_виды_расходов" BEFORE DELETE ON "вид
 
 
 --
--- TOC entry 3618 (class 2620 OID 505379)
+-- TOC entry 3632 (class 2620 OID 508073)
 -- Name: testdeleting_города; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16547,7 +16747,7 @@ CREATE TRIGGER "testdeleting_города" BEFORE DELETE ON "города" FOR E
 
 
 --
--- TOC entry 3517 (class 2620 OID 505380)
+-- TOC entry 3531 (class 2620 OID 508074)
 -- Name: testdeleting_группы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16555,7 +16755,7 @@ CREATE TRIGGER "testdeleting_группы" BEFORE DELETE ON "группы" FOR E
 
 
 --
--- TOC entry 3562 (class 2620 OID 505381)
+-- TOC entry 3576 (class 2620 OID 508075)
 -- Name: testdeleting_доступ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16563,7 +16763,7 @@ CREATE TRIGGER "testdeleting_доступ" BEFORE DELETE ON "доступ" FOR E
 
 
 --
--- TOC entry 3623 (class 2620 OID 505382)
+-- TOC entry 3637 (class 2620 OID 508076)
 -- Name: testdeleting_заказчики; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16571,7 +16771,7 @@ CREATE TRIGGER "testdeleting_заказчики" BEFORE DELETE ON "заказч�
 
 
 --
--- TOC entry 3574 (class 2620 OID 505383)
+-- TOC entry 3588 (class 2620 OID 508077)
 -- Name: testdeleting_запросы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16579,7 +16779,7 @@ CREATE TRIGGER "testdeleting_запросы" BEFORE DELETE ON "запросы" F
 
 
 --
--- TOC entry 3577 (class 2620 OID 505384)
+-- TOC entry 3591 (class 2620 OID 508078)
 -- Name: testdeleting_заявка; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16587,7 +16787,7 @@ CREATE TRIGGER "testdeleting_заявка" BEFORE DELETE ON "заявка" FOR E
 
 
 --
--- TOC entry 3626 (class 2620 OID 505385)
+-- TOC entry 3640 (class 2620 OID 508079)
 -- Name: testdeleting_карточки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16595,7 +16795,7 @@ CREATE TRIGGER "testdeleting_карточки" BEFORE DELETE ON "карточк�
 
 
 --
--- TOC entry 3580 (class 2620 OID 505386)
+-- TOC entry 3594 (class 2620 OID 508080)
 -- Name: testdeleting_константы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16603,7 +16803,7 @@ CREATE TRIGGER "testdeleting_константы" BEFORE DELETE ON "конста�
 
 
 --
--- TOC entry 3586 (class 2620 OID 505387)
+-- TOC entry 3600 (class 2620 OID 508081)
 -- Name: testdeleting_люди; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16611,7 +16811,7 @@ CREATE TRIGGER "testdeleting_люди" BEFORE DELETE ON "люди" FOR EACH ROW 
 
 
 --
--- TOC entry 3629 (class 2620 OID 505388)
+-- TOC entry 3643 (class 2620 OID 508082)
 -- Name: testdeleting_материалы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16619,7 +16819,7 @@ CREATE TRIGGER "testdeleting_материалы" BEFORE DELETE ON "матери�
 
 
 --
--- TOC entry 3523 (class 2620 OID 505389)
+-- TOC entry 3537 (class 2620 OID 508083)
 -- Name: testdeleting_набор1; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16627,7 +16827,7 @@ CREATE TRIGGER "testdeleting_набор1" BEFORE DELETE ON "набор1" FOR EAC
 
 
 --
--- TOC entry 3590 (class 2620 OID 505390)
+-- TOC entry 3604 (class 2620 OID 508084)
 -- Name: testdeleting_набор3; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16635,7 +16835,7 @@ CREATE TRIGGER "testdeleting_набор3" BEFORE DELETE ON "набор3" FOR EAC
 
 
 --
--- TOC entry 3632 (class 2620 OID 505391)
+-- TOC entry 3646 (class 2620 OID 508085)
 -- Name: testdeleting_набор4; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16643,7 +16843,7 @@ CREATE TRIGGER "testdeleting_набор4" BEFORE DELETE ON "набор4" FOR EAC
 
 
 --
--- TOC entry 3635 (class 2620 OID 505392)
+-- TOC entry 3649 (class 2620 OID 508086)
 -- Name: testdeleting_набор401; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16651,7 +16851,7 @@ CREATE TRIGGER "testdeleting_набор401" BEFORE DELETE ON "набор401" FOR
 
 
 --
--- TOC entry 3546 (class 2620 OID 505393)
+-- TOC entry 3560 (class 2620 OID 508087)
 -- Name: testdeleting_набор402; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16659,7 +16859,7 @@ CREATE TRIGGER "testdeleting_набор402" BEFORE DELETE ON "набор402" FOR
 
 
 --
--- TOC entry 3593 (class 2620 OID 505394)
+-- TOC entry 3607 (class 2620 OID 508088)
 -- Name: testdeleting_наценки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16667,7 +16867,7 @@ CREATE TRIGGER "testdeleting_наценки" BEFORE DELETE ON "наценки" F
 
 
 --
--- TOC entry 3638 (class 2620 OID 505395)
+-- TOC entry 3652 (class 2620 OID 508089)
 -- Name: testdeleting_нумераторы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16675,7 +16875,7 @@ CREATE TRIGGER "testdeleting_нумераторы" BEFORE DELETE ON "нумер�
 
 
 --
--- TOC entry 3641 (class 2620 OID 505396)
+-- TOC entry 3655 (class 2620 OID 508090)
 -- Name: testdeleting_объекты; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16683,7 +16883,7 @@ CREATE TRIGGER "testdeleting_объекты" BEFORE DELETE ON "объекты" F
 
 
 --
--- TOC entry 3558 (class 2620 OID 505397)
+-- TOC entry 3572 (class 2620 OID 508091)
 -- Name: testdeleting_организации; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16691,7 +16891,7 @@ CREATE TRIGGER "testdeleting_организации" BEFORE DELETE ON "орга�
 
 
 --
--- TOC entry 3644 (class 2620 OID 505398)
+-- TOC entry 3658 (class 2620 OID 508092)
 -- Name: testdeleting_персонал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16699,7 +16899,7 @@ CREATE TRIGGER "testdeleting_персонал" BEFORE DELETE ON "персона�
 
 
 --
--- TOC entry 3596 (class 2620 OID 505399)
+-- TOC entry 3610 (class 2620 OID 508093)
 -- Name: testdeleting_посладрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16707,7 +16907,7 @@ CREATE TRIGGER "testdeleting_посладрес" BEFORE DELETE ON "послад�
 
 
 --
--- TOC entry 3647 (class 2620 OID 505400)
+-- TOC entry 3661 (class 2620 OID 508094)
 -- Name: testdeleting_предметы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16715,7 +16915,7 @@ CREATE TRIGGER "testdeleting_предметы" BEFORE DELETE ON "предмет�
 
 
 --
--- TOC entry 3653 (class 2620 OID 505401)
+-- TOC entry 3667 (class 2620 OID 508095)
 -- Name: testdeleting_скидки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16723,7 +16923,7 @@ CREATE TRIGGER "testdeleting_скидки" BEFORE DELETE ON "скидки" FOR E
 
 
 --
--- TOC entry 3656 (class 2620 OID 505402)
+-- TOC entry 3670 (class 2620 OID 508096)
 -- Name: testdeleting_справочник; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16731,7 +16931,7 @@ CREATE TRIGGER "testdeleting_справочник" BEFORE DELETE ON "справ�
 
 
 --
--- TOC entry 3565 (class 2620 OID 505403)
+-- TOC entry 3579 (class 2620 OID 508097)
 -- Name: testdeleting_справочники; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16739,7 +16939,7 @@ CREATE TRIGGER "testdeleting_справочники" BEFORE DELETE ON "спра�
 
 
 --
--- TOC entry 3552 (class 2620 OID 505404)
+-- TOC entry 3566 (class 2620 OID 508098)
 -- Name: testdeleting_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16747,7 +16947,7 @@ CREATE TRIGGER "testdeleting_счета" BEFORE DELETE ON "счета" FOR EACH 
 
 
 --
--- TOC entry 3659 (class 2620 OID 505405)
+-- TOC entry 3673 (class 2620 OID 508099)
 -- Name: testdeleting_типыобъектов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16755,7 +16955,7 @@ CREATE TRIGGER "testdeleting_типыобъектов" BEFORE DELETE ON "тип�
 
 
 --
--- TOC entry 3531 (class 2620 OID 505406)
+-- TOC entry 3545 (class 2620 OID 508100)
 -- Name: testdeleting_товар; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16763,7 +16963,7 @@ CREATE TRIGGER "testdeleting_товар" BEFORE DELETE ON "товар" FOR EACH 
 
 
 --
--- TOC entry 3599 (class 2620 OID 505407)
+-- TOC entry 3613 (class 2620 OID 508101)
 -- Name: testdeleting_фирмы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16771,7 +16971,7 @@ CREATE TRIGGER "testdeleting_фирмы" BEFORE DELETE ON "фирмы" FOR EACH 
 
 
 --
--- TOC entry 3664 (class 2620 OID 505408)
+-- TOC entry 3678 (class 2620 OID 508102)
 -- Name: testdeleting_фонды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16779,7 +16979,7 @@ CREATE TRIGGER "testdeleting_фонды" BEFORE DELETE ON "фонды" FOR EACH 
 
 
 --
--- TOC entry 3571 (class 2620 OID 505409)
+-- TOC entry 3585 (class 2620 OID 508103)
 -- Name: testdoublename_адрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16787,7 +16987,7 @@ CREATE TRIGGER "testdoublename_адрес" BEFORE INSERT OR UPDATE ON "адре�
 
 
 --
--- TOC entry 3587 (class 2620 OID 505410)
+-- TOC entry 3601 (class 2620 OID 508104)
 -- Name: testdoublename_люди; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16795,7 +16995,7 @@ CREATE TRIGGER "testdoublename_люди" BEFORE INSERT OR UPDATE ON "люди" F
 
 
 --
--- TOC entry 3559 (class 2620 OID 505411)
+-- TOC entry 3573 (class 2620 OID 508105)
 -- Name: testdoublename_организации; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16803,7 +17003,7 @@ CREATE TRIGGER "testdoublename_организации" BEFORE INSERT OR UPDATE O
 
 
 --
--- TOC entry 3654 (class 2620 OID 505412)
+-- TOC entry 3668 (class 2620 OID 508106)
 -- Name: testinserting_скидки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16811,7 +17011,7 @@ CREATE TRIGGER "testinserting_скидки" BEFORE INSERT ON "скидки" FOR 
 
 
 --
--- TOC entry 3572 (class 2620 OID 505413)
+-- TOC entry 3586 (class 2620 OID 508107)
 -- Name: testinsertingid_адрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16819,7 +17019,7 @@ CREATE TRIGGER "testinsertingid_адрес" BEFORE INSERT ON "адрес" FOR EA
 
 
 --
--- TOC entry 3613 (class 2620 OID 505414)
+-- TOC entry 3627 (class 2620 OID 508108)
 -- Name: testinsertingid_банки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16827,7 +17027,7 @@ CREATE TRIGGER "testinsertingid_банки" BEFORE INSERT ON "банки" FOR EA
 
 
 --
--- TOC entry 3616 (class 2620 OID 505415)
+-- TOC entry 3630 (class 2620 OID 508109)
 -- Name: testinsertingid_банковские_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16835,7 +17035,7 @@ CREATE TRIGGER "testinsertingid_банковские_счета" BEFORE INSERT O
 
 
 --
--- TOC entry 3515 (class 2620 OID 505416)
+-- TOC entry 3529 (class 2620 OID 508110)
 -- Name: testinsertingid_блокпериоды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16843,7 +17043,7 @@ CREATE TRIGGER "testinsertingid_блокпериоды" BEFORE INSERT ON "бло
 
 
 --
--- TOC entry 3556 (class 2620 OID 505417)
+-- TOC entry 3570 (class 2620 OID 508111)
 -- Name: testinsertingid_бюджет; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16851,7 +17051,7 @@ CREATE TRIGGER "testinsertingid_бюджет" BEFORE INSERT ON "бюджет" FO
 
 
 --
--- TOC entry 3550 (class 2620 OID 505418)
+-- TOC entry 3564 (class 2620 OID 508112)
 -- Name: testinsertingid_виды_расходов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16859,7 +17059,7 @@ CREATE TRIGGER "testinsertingid_виды_расходов" BEFORE INSERT ON "в�
 
 
 --
--- TOC entry 3619 (class 2620 OID 505419)
+-- TOC entry 3633 (class 2620 OID 508113)
 -- Name: testinsertingid_города; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16867,7 +17067,7 @@ CREATE TRIGGER "testinsertingid_города" BEFORE INSERT ON "города" FO
 
 
 --
--- TOC entry 3518 (class 2620 OID 505420)
+-- TOC entry 3532 (class 2620 OID 508114)
 -- Name: testinsertingid_группы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16875,7 +17075,7 @@ CREATE TRIGGER "testinsertingid_группы" BEFORE INSERT ON "группы" FO
 
 
 --
--- TOC entry 3520 (class 2620 OID 505421)
+-- TOC entry 3534 (class 2620 OID 508115)
 -- Name: testinsertingid_документы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16883,7 +17083,7 @@ CREATE TRIGGER "testinsertingid_документы" BEFORE INSERT ON "докум
 
 
 --
--- TOC entry 3563 (class 2620 OID 505422)
+-- TOC entry 3577 (class 2620 OID 508116)
 -- Name: testinsertingid_доступ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16891,7 +17091,7 @@ CREATE TRIGGER "testinsertingid_доступ" BEFORE INSERT ON "доступ" FO
 
 
 --
--- TOC entry 3568 (class 2620 OID 505423)
+-- TOC entry 3582 (class 2620 OID 508117)
 -- Name: testinsertingid_журнал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16899,7 +17099,7 @@ CREATE TRIGGER "testinsertingid_журнал" BEFORE INSERT ON "журнал" FO
 
 
 --
--- TOC entry 3624 (class 2620 OID 505424)
+-- TOC entry 3638 (class 2620 OID 508118)
 -- Name: testinsertingid_заказчики; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16907,7 +17107,7 @@ CREATE TRIGGER "testinsertingid_заказчики" BEFORE INSERT ON "заказ
 
 
 --
--- TOC entry 3575 (class 2620 OID 505425)
+-- TOC entry 3589 (class 2620 OID 508119)
 -- Name: testinsertingid_запросы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16915,7 +17115,7 @@ CREATE TRIGGER "testinsertingid_запросы" BEFORE INSERT ON "запросы
 
 
 --
--- TOC entry 3578 (class 2620 OID 505426)
+-- TOC entry 3592 (class 2620 OID 508120)
 -- Name: testinsertingid_заявка; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16923,7 +17123,7 @@ CREATE TRIGGER "testinsertingid_заявка" BEFORE INSERT ON "заявка" FO
 
 
 --
--- TOC entry 3627 (class 2620 OID 505427)
+-- TOC entry 3641 (class 2620 OID 508121)
 -- Name: testinsertingid_карточки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16931,7 +17131,7 @@ CREATE TRIGGER "testinsertingid_карточки" BEFORE INSERT ON "карточ
 
 
 --
--- TOC entry 3581 (class 2620 OID 505428)
+-- TOC entry 3595 (class 2620 OID 508122)
 -- Name: testinsertingid_константы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16939,7 +17139,7 @@ CREATE TRIGGER "testinsertingid_константы" BEFORE INSERT ON "конст
 
 
 --
--- TOC entry 3588 (class 2620 OID 505429)
+-- TOC entry 3602 (class 2620 OID 508123)
 -- Name: testinsertingid_люди; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16947,7 +17147,7 @@ CREATE TRIGGER "testinsertingid_люди" BEFORE INSERT ON "люди" FOR EACH R
 
 
 --
--- TOC entry 3630 (class 2620 OID 505430)
+-- TOC entry 3644 (class 2620 OID 508124)
 -- Name: testinsertingid_материалы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16955,7 +17155,7 @@ CREATE TRIGGER "testinsertingid_материалы" BEFORE INSERT ON "матер
 
 
 --
--- TOC entry 3524 (class 2620 OID 505431)
+-- TOC entry 3538 (class 2620 OID 508125)
 -- Name: testinsertingid_набор1; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16963,7 +17163,7 @@ CREATE TRIGGER "testinsertingid_набор1" BEFORE INSERT ON "набор1" FOR 
 
 
 --
--- TOC entry 3591 (class 2620 OID 505432)
+-- TOC entry 3605 (class 2620 OID 508126)
 -- Name: testinsertingid_набор3; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16971,7 +17171,7 @@ CREATE TRIGGER "testinsertingid_набор3" BEFORE INSERT ON "набор3" FOR 
 
 
 --
--- TOC entry 3633 (class 2620 OID 505433)
+-- TOC entry 3647 (class 2620 OID 508127)
 -- Name: testinsertingid_набор4; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16979,7 +17179,7 @@ CREATE TRIGGER "testinsertingid_набор4" BEFORE INSERT ON "набор4" FOR 
 
 
 --
--- TOC entry 3636 (class 2620 OID 505434)
+-- TOC entry 3650 (class 2620 OID 508128)
 -- Name: testinsertingid_набор401; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16987,7 +17187,7 @@ CREATE TRIGGER "testinsertingid_набор401" BEFORE INSERT ON "набор401" 
 
 
 --
--- TOC entry 3547 (class 2620 OID 505435)
+-- TOC entry 3561 (class 2620 OID 508129)
 -- Name: testinsertingid_набор402; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -16995,7 +17195,7 @@ CREATE TRIGGER "testinsertingid_набор402" BEFORE INSERT ON "набор402" 
 
 
 --
--- TOC entry 3594 (class 2620 OID 505436)
+-- TOC entry 3608 (class 2620 OID 508130)
 -- Name: testinsertingid_наценки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17003,7 +17203,7 @@ CREATE TRIGGER "testinsertingid_наценки" BEFORE INSERT ON "наценки
 
 
 --
--- TOC entry 3639 (class 2620 OID 505437)
+-- TOC entry 3653 (class 2620 OID 508131)
 -- Name: testinsertingid_нумераторы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17011,7 +17211,7 @@ CREATE TRIGGER "testinsertingid_нумераторы" BEFORE INSERT ON "нуме
 
 
 --
--- TOC entry 3642 (class 2620 OID 505438)
+-- TOC entry 3656 (class 2620 OID 508132)
 -- Name: testinsertingid_объекты; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17019,7 +17219,7 @@ CREATE TRIGGER "testinsertingid_объекты" BEFORE INSERT ON "объекты
 
 
 --
--- TOC entry 3560 (class 2620 OID 505439)
+-- TOC entry 3574 (class 2620 OID 508133)
 -- Name: testinsertingid_организации; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17027,7 +17227,7 @@ CREATE TRIGGER "testinsertingid_организации" BEFORE INSERT ON "орг
 
 
 --
--- TOC entry 3605 (class 2620 OID 505440)
+-- TOC entry 3619 (class 2620 OID 508134)
 -- Name: testinsertingid_ос; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17035,7 +17235,7 @@ CREATE TRIGGER "testinsertingid_ос" BEFORE INSERT ON "ос" FOR EACH ROW EXECU
 
 
 --
--- TOC entry 3645 (class 2620 OID 505441)
+-- TOC entry 3659 (class 2620 OID 508135)
 -- Name: testinsertingid_персонал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17043,7 +17243,7 @@ CREATE TRIGGER "testinsertingid_персонал" BEFORE INSERT ON "персон
 
 
 --
--- TOC entry 3597 (class 2620 OID 505442)
+-- TOC entry 3611 (class 2620 OID 508136)
 -- Name: testinsertingid_посладрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17051,7 +17251,7 @@ CREATE TRIGGER "testinsertingid_посладрес" BEFORE INSERT ON "посла
 
 
 --
--- TOC entry 3583 (class 2620 OID 505443)
+-- TOC entry 3597 (class 2620 OID 508137)
 -- Name: testinsertingid_прайс; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17059,7 +17259,7 @@ CREATE TRIGGER "testinsertingid_прайс" BEFORE INSERT ON "прайс" FOR EA
 
 
 --
--- TOC entry 3648 (class 2620 OID 505444)
+-- TOC entry 3662 (class 2620 OID 508138)
 -- Name: testinsertingid_предметы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17067,7 +17267,7 @@ CREATE TRIGGER "testinsertingid_предметы" BEFORE INSERT ON "предме
 
 
 --
--- TOC entry 3526 (class 2620 OID 505445)
+-- TOC entry 3540 (class 2620 OID 508139)
 -- Name: testinsertingid_проводки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17075,7 +17275,7 @@ CREATE TRIGGER "testinsertingid_проводки" BEFORE INSERT ON "провод
 
 
 --
--- TOC entry 3650 (class 2620 OID 505446)
+-- TOC entry 3664 (class 2620 OID 508140)
 -- Name: testinsertingid_синонимы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17083,7 +17283,7 @@ CREATE TRIGGER "testinsertingid_синонимы" BEFORE INSERT ON "синони
 
 
 --
--- TOC entry 3657 (class 2620 OID 505447)
+-- TOC entry 3671 (class 2620 OID 508141)
 -- Name: testinsertingid_справочник; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17091,7 +17291,7 @@ CREATE TRIGGER "testinsertingid_справочник" BEFORE INSERT ON "спра
 
 
 --
--- TOC entry 3566 (class 2620 OID 505448)
+-- TOC entry 3580 (class 2620 OID 508142)
 -- Name: testinsertingid_справочники; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17099,7 +17299,7 @@ CREATE TRIGGER "testinsertingid_справочники" BEFORE INSERT ON "спр
 
 
 --
--- TOC entry 3602 (class 2620 OID 505449)
+-- TOC entry 3616 (class 2620 OID 508143)
 -- Name: testinsertingid_столбцы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17107,7 +17307,7 @@ CREATE TRIGGER "testinsertingid_столбцы" BEFORE INSERT ON "столбцы
 
 
 --
--- TOC entry 3553 (class 2620 OID 505450)
+-- TOC entry 3567 (class 2620 OID 508144)
 -- Name: testinsertingid_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17115,7 +17315,7 @@ CREATE TRIGGER "testinsertingid_счета" BEFORE INSERT ON "счета" FOR EA
 
 
 --
--- TOC entry 3660 (class 2620 OID 505451)
+-- TOC entry 3674 (class 2620 OID 508145)
 -- Name: testinsertingid_типыобъектов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17123,7 +17323,7 @@ CREATE TRIGGER "testinsertingid_типыобъектов" BEFORE INSERT ON "ти
 
 
 --
--- TOC entry 3532 (class 2620 OID 505452)
+-- TOC entry 3546 (class 2620 OID 508146)
 -- Name: testinsertingid_товар; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17131,7 +17331,7 @@ CREATE TRIGGER "testinsertingid_товар" BEFORE INSERT ON "товар" FOR EA
 
 
 --
--- TOC entry 3539 (class 2620 OID 505453)
+-- TOC entry 3553 (class 2620 OID 508147)
 -- Name: testinsertingid_топер; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17139,7 +17339,7 @@ CREATE TRIGGER "testinsertingid_топер" BEFORE INSERT ON "топер" FOR EA
 
 
 --
--- TOC entry 3662 (class 2620 OID 505454)
+-- TOC entry 3676 (class 2620 OID 508148)
 -- Name: testinsertingid_файлы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17147,7 +17347,7 @@ CREATE TRIGGER "testinsertingid_файлы" BEFORE INSERT ON "файлы" FOR EA
 
 
 --
--- TOC entry 3600 (class 2620 OID 505455)
+-- TOC entry 3614 (class 2620 OID 508149)
 -- Name: testinsertingid_фирмы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17155,7 +17355,7 @@ CREATE TRIGGER "testinsertingid_фирмы" BEFORE INSERT ON "фирмы" FOR EA
 
 
 --
--- TOC entry 3665 (class 2620 OID 505456)
+-- TOC entry 3679 (class 2620 OID 508150)
 -- Name: testinsertingid_фонды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17163,7 +17363,7 @@ CREATE TRIGGER "testinsertingid_фонды" BEFORE INSERT ON "фонды" FOR EA
 
 
 --
--- TOC entry 3533 (class 2620 OID 505457)
+-- TOC entry 3547 (class 2620 OID 508151)
 -- Name: testupdateprice_товар; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17171,7 +17371,7 @@ CREATE TRIGGER "testupdateprice_товар" BEFORE UPDATE ON "товар" FOR EA
 
 
 --
--- TOC entry 3655 (class 2620 OID 505458)
+-- TOC entry 3669 (class 2620 OID 508152)
 -- Name: testupdating_скидки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17179,7 +17379,7 @@ CREATE TRIGGER "testupdating_скидки" BEFORE UPDATE ON "скидки" FOR E
 
 
 --
--- TOC entry 3573 (class 2620 OID 505459)
+-- TOC entry 3587 (class 2620 OID 508153)
 -- Name: testupdatingid_адрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17187,7 +17387,7 @@ CREATE TRIGGER "testupdatingid_адрес" BEFORE UPDATE ON "адрес" FOR EAC
 
 
 --
--- TOC entry 3607 (class 2620 OID 505460)
+-- TOC entry 3621 (class 2620 OID 508154)
 -- Name: testupdatingid_атрибуты121; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17195,7 +17395,7 @@ CREATE TRIGGER "testupdatingid_атрибуты121" BEFORE UPDATE ON "атриб
 
 
 --
--- TOC entry 3544 (class 2620 OID 505461)
+-- TOC entry 3558 (class 2620 OID 508155)
 -- Name: testupdatingid_атрибуты123; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17203,7 +17403,7 @@ CREATE TRIGGER "testupdatingid_атрибуты123" BEFORE UPDATE ON "атриб
 
 
 --
--- TOC entry 3608 (class 2620 OID 505462)
+-- TOC entry 3622 (class 2620 OID 508156)
 -- Name: testupdatingid_атрибуты129; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17211,7 +17411,7 @@ CREATE TRIGGER "testupdatingid_атрибуты129" BEFORE UPDATE ON "атриб
 
 
 --
--- TOC entry 3609 (class 2620 OID 505463)
+-- TOC entry 3623 (class 2620 OID 508157)
 -- Name: testupdatingid_атрибуты5; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17219,7 +17419,7 @@ CREATE TRIGGER "testupdatingid_атрибуты5" BEFORE UPDATE ON "атрибу
 
 
 --
--- TOC entry 3610 (class 2620 OID 505464)
+-- TOC entry 3624 (class 2620 OID 508158)
 -- Name: testupdatingid_атрибуты71; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17227,7 +17427,7 @@ CREATE TRIGGER "testupdatingid_атрибуты71" BEFORE UPDATE ON "атриб�
 
 
 --
--- TOC entry 3611 (class 2620 OID 505465)
+-- TOC entry 3625 (class 2620 OID 508159)
 -- Name: testupdatingid_атрибуты8; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17235,7 +17435,7 @@ CREATE TRIGGER "testupdatingid_атрибуты8" BEFORE UPDATE ON "атрибу
 
 
 --
--- TOC entry 3614 (class 2620 OID 505466)
+-- TOC entry 3628 (class 2620 OID 508160)
 -- Name: testupdatingid_банки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17243,7 +17443,7 @@ CREATE TRIGGER "testupdatingid_банки" BEFORE UPDATE ON "банки" FOR EAC
 
 
 --
--- TOC entry 3617 (class 2620 OID 505467)
+-- TOC entry 3631 (class 2620 OID 508161)
 -- Name: testupdatingid_банковские_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17251,7 +17451,7 @@ CREATE TRIGGER "testupdatingid_банковские_счета" BEFORE UPDATE ON
 
 
 --
--- TOC entry 3516 (class 2620 OID 505468)
+-- TOC entry 3530 (class 2620 OID 508162)
 -- Name: testupdatingid_блокпериоды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17259,7 +17459,7 @@ CREATE TRIGGER "testupdatingid_блокпериоды" BEFORE UPDATE ON "бло�
 
 
 --
--- TOC entry 3557 (class 2620 OID 505469)
+-- TOC entry 3571 (class 2620 OID 508163)
 -- Name: testupdatingid_бюджет; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17267,7 +17467,7 @@ CREATE TRIGGER "testupdatingid_бюджет" BEFORE UPDATE ON "бюджет" FOR
 
 
 --
--- TOC entry 3551 (class 2620 OID 505470)
+-- TOC entry 3565 (class 2620 OID 508164)
 -- Name: testupdatingid_виды_расходов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17275,7 +17475,7 @@ CREATE TRIGGER "testupdatingid_виды_расходов" BEFORE UPDATE ON "ви
 
 
 --
--- TOC entry 3620 (class 2620 OID 505471)
+-- TOC entry 3634 (class 2620 OID 508165)
 -- Name: testupdatingid_города; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17283,7 +17483,7 @@ CREATE TRIGGER "testupdatingid_города" BEFORE UPDATE ON "города" FOR
 
 
 --
--- TOC entry 3519 (class 2620 OID 505472)
+-- TOC entry 3533 (class 2620 OID 508166)
 -- Name: testupdatingid_группы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17291,7 +17491,7 @@ CREATE TRIGGER "testupdatingid_группы" BEFORE UPDATE ON "группы" FOR
 
 
 --
--- TOC entry 3621 (class 2620 OID 505473)
+-- TOC entry 3635 (class 2620 OID 508167)
 -- Name: testupdatingid_докатрибуты1; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17299,7 +17499,7 @@ CREATE TRIGGER "testupdatingid_докатрибуты1" BEFORE UPDATE ON "док
 
 
 --
--- TOC entry 3545 (class 2620 OID 505474)
+-- TOC entry 3559 (class 2620 OID 508168)
 -- Name: testupdatingid_докатрибуты123; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17307,7 +17507,7 @@ CREATE TRIGGER "testupdatingid_докатрибуты123" BEFORE UPDATE ON "до
 
 
 --
--- TOC entry 3622 (class 2620 OID 505475)
+-- TOC entry 3636 (class 2620 OID 508169)
 -- Name: testupdatingid_докатрибуты71; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17315,7 +17515,7 @@ CREATE TRIGGER "testupdatingid_докатрибуты71" BEFORE UPDATE ON "до�
 
 
 --
--- TOC entry 3521 (class 2620 OID 505476)
+-- TOC entry 3535 (class 2620 OID 508170)
 -- Name: testupdatingid_документы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17323,7 +17523,7 @@ CREATE TRIGGER "testupdatingid_документы" BEFORE UPDATE ON "докум�
 
 
 --
--- TOC entry 3564 (class 2620 OID 505477)
+-- TOC entry 3578 (class 2620 OID 508171)
 -- Name: testupdatingid_доступ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17331,7 +17531,7 @@ CREATE TRIGGER "testupdatingid_доступ" BEFORE UPDATE ON "доступ" FOR
 
 
 --
--- TOC entry 3569 (class 2620 OID 505478)
+-- TOC entry 3583 (class 2620 OID 508172)
 -- Name: testupdatingid_журнал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17339,7 +17539,7 @@ CREATE TRIGGER "testupdatingid_журнал" BEFORE UPDATE ON "журнал" FOR
 
 
 --
--- TOC entry 3625 (class 2620 OID 505479)
+-- TOC entry 3639 (class 2620 OID 508173)
 -- Name: testupdatingid_заказчики; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17347,7 +17547,7 @@ CREATE TRIGGER "testupdatingid_заказчики" BEFORE UPDATE ON "заказ�
 
 
 --
--- TOC entry 3576 (class 2620 OID 505480)
+-- TOC entry 3590 (class 2620 OID 508174)
 -- Name: testupdatingid_запросы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17355,7 +17555,7 @@ CREATE TRIGGER "testupdatingid_запросы" BEFORE UPDATE ON "запросы"
 
 
 --
--- TOC entry 3579 (class 2620 OID 505481)
+-- TOC entry 3593 (class 2620 OID 508175)
 -- Name: testupdatingid_заявка; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17363,7 +17563,7 @@ CREATE TRIGGER "testupdatingid_заявка" BEFORE UPDATE ON "заявка" FOR
 
 
 --
--- TOC entry 3628 (class 2620 OID 505482)
+-- TOC entry 3642 (class 2620 OID 508176)
 -- Name: testupdatingid_карточки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17371,7 +17571,7 @@ CREATE TRIGGER "testupdatingid_карточки" BEFORE UPDATE ON "карточ�
 
 
 --
--- TOC entry 3582 (class 2620 OID 505483)
+-- TOC entry 3596 (class 2620 OID 508177)
 -- Name: testupdatingid_константы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17379,7 +17579,7 @@ CREATE TRIGGER "testupdatingid_константы" BEFORE UPDATE ON "конст�
 
 
 --
--- TOC entry 3589 (class 2620 OID 505484)
+-- TOC entry 3603 (class 2620 OID 508178)
 -- Name: testupdatingid_люди; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17387,7 +17587,7 @@ CREATE TRIGGER "testupdatingid_люди" BEFORE UPDATE ON "люди" FOR EACH RO
 
 
 --
--- TOC entry 3631 (class 2620 OID 505485)
+-- TOC entry 3645 (class 2620 OID 508179)
 -- Name: testupdatingid_материалы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17395,7 +17595,7 @@ CREATE TRIGGER "testupdatingid_материалы" BEFORE UPDATE ON "матер�
 
 
 --
--- TOC entry 3525 (class 2620 OID 505486)
+-- TOC entry 3539 (class 2620 OID 508180)
 -- Name: testupdatingid_набор1; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17403,7 +17603,7 @@ CREATE TRIGGER "testupdatingid_набор1" BEFORE UPDATE ON "набор1" FOR E
 
 
 --
--- TOC entry 3592 (class 2620 OID 505487)
+-- TOC entry 3606 (class 2620 OID 508181)
 -- Name: testupdatingid_набор3; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17411,7 +17611,7 @@ CREATE TRIGGER "testupdatingid_набор3" BEFORE UPDATE ON "набор3" FOR E
 
 
 --
--- TOC entry 3634 (class 2620 OID 505488)
+-- TOC entry 3648 (class 2620 OID 508182)
 -- Name: testupdatingid_набор4; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17419,7 +17619,7 @@ CREATE TRIGGER "testupdatingid_набор4" BEFORE UPDATE ON "набор4" FOR E
 
 
 --
--- TOC entry 3637 (class 2620 OID 505489)
+-- TOC entry 3651 (class 2620 OID 508183)
 -- Name: testupdatingid_набор401; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17427,7 +17627,7 @@ CREATE TRIGGER "testupdatingid_набор401" BEFORE UPDATE ON "набор401" F
 
 
 --
--- TOC entry 3548 (class 2620 OID 505490)
+-- TOC entry 3562 (class 2620 OID 508184)
 -- Name: testupdatingid_набор402; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17435,7 +17635,7 @@ CREATE TRIGGER "testupdatingid_набор402" BEFORE UPDATE ON "набор402" F
 
 
 --
--- TOC entry 3595 (class 2620 OID 505491)
+-- TOC entry 3609 (class 2620 OID 508185)
 -- Name: testupdatingid_наценки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17443,7 +17643,7 @@ CREATE TRIGGER "testupdatingid_наценки" BEFORE UPDATE ON "наценки"
 
 
 --
--- TOC entry 3640 (class 2620 OID 505492)
+-- TOC entry 3654 (class 2620 OID 508186)
 -- Name: testupdatingid_нумераторы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17451,7 +17651,7 @@ CREATE TRIGGER "testupdatingid_нумераторы" BEFORE UPDATE ON "нуме�
 
 
 --
--- TOC entry 3643 (class 2620 OID 505493)
+-- TOC entry 3657 (class 2620 OID 508187)
 -- Name: testupdatingid_объекты; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17459,7 +17659,7 @@ CREATE TRIGGER "testupdatingid_объекты" BEFORE UPDATE ON "объекты"
 
 
 --
--- TOC entry 3561 (class 2620 OID 505494)
+-- TOC entry 3575 (class 2620 OID 508188)
 -- Name: testupdatingid_организации; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17467,7 +17667,7 @@ CREATE TRIGGER "testupdatingid_организации" BEFORE UPDATE ON "орг�
 
 
 --
--- TOC entry 3606 (class 2620 OID 505495)
+-- TOC entry 3620 (class 2620 OID 508189)
 -- Name: testupdatingid_ос; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17475,7 +17675,7 @@ CREATE TRIGGER "testupdatingid_ос" BEFORE UPDATE ON "ос" FOR EACH ROW EXECUT
 
 
 --
--- TOC entry 3646 (class 2620 OID 505496)
+-- TOC entry 3660 (class 2620 OID 508190)
 -- Name: testupdatingid_персонал; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17483,7 +17683,7 @@ CREATE TRIGGER "testupdatingid_персонал" BEFORE UPDATE ON "персон�
 
 
 --
--- TOC entry 3598 (class 2620 OID 505497)
+-- TOC entry 3612 (class 2620 OID 508191)
 -- Name: testupdatingid_посладрес; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17491,7 +17691,7 @@ CREATE TRIGGER "testupdatingid_посладрес" BEFORE UPDATE ON "посла�
 
 
 --
--- TOC entry 3584 (class 2620 OID 505498)
+-- TOC entry 3598 (class 2620 OID 508192)
 -- Name: testupdatingid_прайс; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17499,7 +17699,7 @@ CREATE TRIGGER "testupdatingid_прайс" BEFORE UPDATE ON "прайс" FOR EAC
 
 
 --
--- TOC entry 3649 (class 2620 OID 505499)
+-- TOC entry 3663 (class 2620 OID 508193)
 -- Name: testupdatingid_предметы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17507,7 +17707,7 @@ CREATE TRIGGER "testupdatingid_предметы" BEFORE UPDATE ON "предме�
 
 
 --
--- TOC entry 3527 (class 2620 OID 505500)
+-- TOC entry 3541 (class 2620 OID 508194)
 -- Name: testupdatingid_проводки; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17515,7 +17715,7 @@ CREATE TRIGGER "testupdatingid_проводки" BEFORE UPDATE ON "провод�
 
 
 --
--- TOC entry 3651 (class 2620 OID 505501)
+-- TOC entry 3665 (class 2620 OID 508195)
 -- Name: testupdatingid_синонимы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17523,7 +17723,7 @@ CREATE TRIGGER "testupdatingid_синонимы" BEFORE UPDATE ON "синони�
 
 
 --
--- TOC entry 3658 (class 2620 OID 505502)
+-- TOC entry 3672 (class 2620 OID 508196)
 -- Name: testupdatingid_справочник; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17531,7 +17731,7 @@ CREATE TRIGGER "testupdatingid_справочник" BEFORE UPDATE ON "спра�
 
 
 --
--- TOC entry 3567 (class 2620 OID 505503)
+-- TOC entry 3581 (class 2620 OID 508197)
 -- Name: testupdatingid_справочники; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17539,7 +17739,7 @@ CREATE TRIGGER "testupdatingid_справочники" BEFORE UPDATE ON "спр�
 
 
 --
--- TOC entry 3603 (class 2620 OID 505504)
+-- TOC entry 3617 (class 2620 OID 508198)
 -- Name: testupdatingid_столбцы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17547,7 +17747,7 @@ CREATE TRIGGER "testupdatingid_столбцы" BEFORE UPDATE ON "столбцы"
 
 
 --
--- TOC entry 3554 (class 2620 OID 505505)
+-- TOC entry 3568 (class 2620 OID 508199)
 -- Name: testupdatingid_счета; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17555,7 +17755,7 @@ CREATE TRIGGER "testupdatingid_счета" BEFORE UPDATE ON "счета" FOR EAC
 
 
 --
--- TOC entry 3661 (class 2620 OID 505506)
+-- TOC entry 3675 (class 2620 OID 508200)
 -- Name: testupdatingid_типыобъектов; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17563,7 +17763,7 @@ CREATE TRIGGER "testupdatingid_типыобъектов" BEFORE UPDATE ON "ти�
 
 
 --
--- TOC entry 3534 (class 2620 OID 505507)
+-- TOC entry 3548 (class 2620 OID 508201)
 -- Name: testupdatingid_товар; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17571,7 +17771,7 @@ CREATE TRIGGER "testupdatingid_товар" BEFORE UPDATE ON "товар" FOR EAC
 
 
 --
--- TOC entry 3540 (class 2620 OID 505508)
+-- TOC entry 3554 (class 2620 OID 508202)
 -- Name: testupdatingid_топер; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17579,7 +17779,7 @@ CREATE TRIGGER "testupdatingid_топер" BEFORE UPDATE ON "топер" FOR EAC
 
 
 --
--- TOC entry 3663 (class 2620 OID 505509)
+-- TOC entry 3677 (class 2620 OID 508203)
 -- Name: testupdatingid_файлы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17587,7 +17787,7 @@ CREATE TRIGGER "testupdatingid_файлы" BEFORE UPDATE ON "файлы" FOR EAC
 
 
 --
--- TOC entry 3601 (class 2620 OID 505510)
+-- TOC entry 3615 (class 2620 OID 508204)
 -- Name: testupdatingid_фирмы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17595,7 +17795,7 @@ CREATE TRIGGER "testupdatingid_фирмы" BEFORE UPDATE ON "фирмы" FOR EAC
 
 
 --
--- TOC entry 3666 (class 2620 OID 505511)
+-- TOC entry 3680 (class 2620 OID 508205)
 -- Name: testupdatingid_фонды; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17603,7 +17803,7 @@ CREATE TRIGGER "testupdatingid_фонды" BEFORE UPDATE ON "фонды" FOR EAC
 
 
 --
--- TOC entry 3585 (class 2620 OID 505512)
+-- TOC entry 3599 (class 2620 OID 508206)
 -- Name: tsvectorupdate_прайс; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17611,7 +17811,7 @@ CREATE TRIGGER "tsvectorupdate_прайс" BEFORE INSERT OR UPDATE ON "прай�
 
 
 --
--- TOC entry 3652 (class 2620 OID 505513)
+-- TOC entry 3666 (class 2620 OID 508207)
 -- Name: tsvectorupdate_синонимы; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17619,7 +17819,7 @@ CREATE TRIGGER "tsvectorupdate_синонимы" BEFORE INSERT OR UPDATE ON "с�
 
 
 --
--- TOC entry 3535 (class 2620 OID 505514)
+-- TOC entry 3549 (class 2620 OID 508208)
 -- Name: tsvectorupdate_товар; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17627,7 +17827,7 @@ CREATE TRIGGER "tsvectorupdate_товар" BEFORE INSERT OR UPDATE ON "това�
 
 
 --
--- TOC entry 3528 (class 2620 OID 505515)
+-- TOC entry 3542 (class 2620 OID 508209)
 -- Name: ВставитьПроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17635,7 +17835,7 @@ CREATE TRIGGER "ВставитьПроводку" BEFORE INSERT ON "провод
 
 
 --
--- TOC entry 3542 (class 2620 OID 505516)
+-- TOC entry 3556 (class 2620 OID 508210)
 -- Name: СчитатьКонечноеСальдо; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17643,7 +17843,7 @@ CREATE TRIGGER "СчитатьКонечноеСальдо" BEFORE INSERT OR UPD
 
 
 --
--- TOC entry 3529 (class 2620 OID 505517)
+-- TOC entry 3543 (class 2620 OID 508211)
 -- Name: СчитатьПроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17651,7 +17851,7 @@ CREATE TRIGGER "СчитатьПроводку" BEFORE UPDATE ON "проводк
 
 
 --
--- TOC entry 3522 (class 2620 OID 505518)
+-- TOC entry 3536 (class 2620 OID 508212)
 -- Name: УдалитьДокумент; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17659,7 +17859,7 @@ CREATE TRIGGER "УдалитьДокумент" BEFORE DELETE ON "докумен
 
 
 --
--- TOC entry 3530 (class 2620 OID 505527)
+-- TOC entry 3544 (class 2620 OID 508218)
 -- Name: УдалитьПроводку; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17667,7 +17867,7 @@ CREATE TRIGGER "УдалитьПроводку" BEFORE DELETE ON "проводк
 
 
 --
--- TOC entry 3536 (class 2620 OID 505520)
+-- TOC entry 3550 (class 2620 OID 508214)
 -- Name: проверитьзаказ_добавление; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17675,7 +17875,7 @@ CREATE TRIGGER "проверитьзаказ_добавление" AFTER INSERT 
 
 
 --
--- TOC entry 3537 (class 2620 OID 505521)
+-- TOC entry 3551 (class 2620 OID 508215)
 -- Name: проверитьзаказ_удаление; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17683,7 +17883,7 @@ CREATE TRIGGER "проверитьзаказ_удаление" AFTER DELETE OR U
 
 
 --
--- TOC entry 3543 (class 2620 OID 505522)
+-- TOC entry 3557 (class 2620 OID 508216)
 -- Name: сальдо_проверитьзаказ; Type: TRIGGER; Schema: public; Owner: sa
 --
 
@@ -17691,7 +17891,7 @@ CREATE TRIGGER "сальдо_проверитьзаказ" AFTER INSERT OR UPDAT
 
 
 --
--- TOC entry 3960 (class 0 OID 0)
+-- TOC entry 3975 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -17703,8 +17903,20 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- TOC entry 3962 (class 0 OID 0)
--- Dependencies: 412
+-- TOC entry 3976 (class 0 OID 0)
+-- Dependencies: 7
+-- Name: session_variables; Type: ACL; Schema: -; Owner: sa
+--
+
+REVOKE ALL ON SCHEMA session_variables FROM PUBLIC;
+REVOKE ALL ON SCHEMA session_variables FROM sa;
+GRANT ALL ON SCHEMA session_variables TO sa;
+GRANT ALL ON SCHEMA session_variables TO PUBLIC;
+
+
+--
+-- TOC entry 3978 (class 0 OID 0)
+-- Dependencies: 418
 -- Name: sp_analyze_sale(); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17715,8 +17927,8 @@ GRANT ALL ON FUNCTION sp_analyze_sale() TO PUBLIC;
 
 
 --
--- TOC entry 3963 (class 0 OID 0)
--- Dependencies: 411
+-- TOC entry 3979 (class 0 OID 0)
+-- Dependencies: 417
 -- Name: sp_analyze_sale_pos(integer, date, date); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17727,8 +17939,8 @@ GRANT ALL ON FUNCTION sp_analyze_sale_pos(integer, date, date) TO PUBLIC;
 
 
 --
--- TOC entry 3964 (class 0 OID 0)
--- Dependencies: 413
+-- TOC entry 3980 (class 0 OID 0)
+-- Dependencies: 419
 -- Name: sp_calcaccoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17740,8 +17952,8 @@ GRANT ALL ON FUNCTION sp_calcaccoborot(cacc character varying, cdate1 character 
 
 
 --
--- TOC entry 3965 (class 0 OID 0)
--- Dependencies: 374
+-- TOC entry 3981 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: sp_calcdocoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17753,8 +17965,8 @@ GRANT ALL ON FUNCTION sp_calcdocoborot(cacc character varying, cdate1 character 
 
 
 --
--- TOC entry 3966 (class 0 OID 0)
--- Dependencies: 414
+-- TOC entry 3982 (class 0 OID 0)
+-- Dependencies: 420
 -- Name: sp_calcobjoborot(character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17766,8 +17978,8 @@ GRANT ALL ON FUNCTION sp_calcobjoborot(cacc character varying, pnobj integer, cd
 
 
 --
--- TOC entry 3967 (class 0 OID 0)
--- Dependencies: 377
+-- TOC entry 3983 (class 0 OID 0)
+-- Dependencies: 379
 -- Name: sp_calcoborot(character varying, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17779,8 +17991,8 @@ GRANT ALL ON FUNCTION sp_calcoborot(cacc character varying, cdate1 character var
 
 
 --
--- TOC entry 3968 (class 0 OID 0)
--- Dependencies: 415
+-- TOC entry 3984 (class 0 OID 0)
+-- Dependencies: 421
 -- Name: sp_calctotobjoborot(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17792,8 +18004,8 @@ GRANT ALL ON FUNCTION sp_calctotobjoborot(cacc character varying, pcdictname cha
 
 
 --
--- TOC entry 3969 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 3985 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: sp_del_bad_positions(); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17805,8 +18017,8 @@ GRANT ALL ON FUNCTION sp_del_bad_positions() TO test;
 
 
 --
--- TOC entry 3970 (class 0 OID 0)
--- Dependencies: 375
+-- TOC entry 3986 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: sp_deletedoc(integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17817,8 +18029,8 @@ GRANT ALL ON FUNCTION sp_deletedoc(ndocid integer) TO PUBLIC;
 
 
 --
--- TOC entry 3971 (class 0 OID 0)
--- Dependencies: 416
+-- TOC entry 3987 (class 0 OID 0)
+-- Dependencies: 422
 -- Name: sp_deletedocstr(integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17830,8 +18042,8 @@ GRANT ALL ON FUNCTION sp_deletedocstr(ndocid integer, ndocstr integer) TO "пр�
 
 
 --
--- TOC entry 3972 (class 0 OID 0)
--- Dependencies: 417
+-- TOC entry 3988 (class 0 OID 0)
+-- Dependencies: 423
 -- Name: sp_insertdoc(integer, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17843,8 +18055,8 @@ GRANT ALL ON FUNCTION sp_insertdoc(noper integer, cdate character varying) TO "�
 
 
 --
--- TOC entry 3973 (class 0 OID 0)
--- Dependencies: 418
+-- TOC entry 3989 (class 0 OID 0)
+-- Dependencies: 424
 -- Name: sp_insertdocstr(integer, integer, character varying, integer, integer); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17856,8 +18068,8 @@ GRANT ALL ON FUNCTION sp_insertdocstr(noper integer, ndocid integer, pcparam cha
 
 
 --
--- TOC entry 3974 (class 0 OID 0)
--- Dependencies: 381
+-- TOC entry 3990 (class 0 OID 0)
+-- Dependencies: 383
 -- Name: sp_islockedperiod(character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17869,8 +18081,8 @@ GRANT ALL ON FUNCTION sp_islockedperiod(cdate character varying) TO "прода�
 
 
 --
--- TOC entry 3975 (class 0 OID 0)
--- Dependencies: 419
+-- TOC entry 3991 (class 0 OID 0)
+-- Dependencies: 426
 -- Name: sp_maketotobjoborotcommand(character varying, character varying, integer, character varying, character varying); Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17881,9 +18093,73 @@ GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictn
 GRANT ALL ON FUNCTION sp_maketotobjoborotcommand(cacc character varying, pcdictname character varying, pnobj integer, cdate1 character varying, cdate2 character varying) TO "продавец";
 
 
+SET search_path = session_variables, pg_catalog;
+
 --
--- TOC entry 3976 (class 0 OID 0)
--- Dependencies: 177
+-- TOC entry 3992 (class 0 OID 0)
+-- Dependencies: 413
+-- Name: cleanup(); Type: ACL; Schema: session_variables; Owner: sa
+--
+
+REVOKE ALL ON FUNCTION cleanup() FROM PUBLIC;
+REVOKE ALL ON FUNCTION cleanup() FROM sa;
+GRANT ALL ON FUNCTION cleanup() TO sa;
+GRANT ALL ON FUNCTION cleanup() TO PUBLIC;
+
+
+--
+-- TOC entry 3993 (class 0 OID 0)
+-- Dependencies: 414
+-- Name: expire(); Type: ACL; Schema: session_variables; Owner: sa
+--
+
+REVOKE ALL ON FUNCTION expire() FROM PUBLIC;
+REVOKE ALL ON FUNCTION expire() FROM sa;
+GRANT ALL ON FUNCTION expire() TO sa;
+GRANT ALL ON FUNCTION expire() TO PUBLIC;
+
+
+--
+-- TOC entry 3994 (class 0 OID 0)
+-- Dependencies: 415
+-- Name: get_value(text); Type: ACL; Schema: session_variables; Owner: sa
+--
+
+REVOKE ALL ON FUNCTION get_value(text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION get_value(text) FROM sa;
+GRANT ALL ON FUNCTION get_value(text) TO sa;
+GRANT ALL ON FUNCTION get_value(text) TO PUBLIC;
+
+
+--
+-- TOC entry 3995 (class 0 OID 0)
+-- Dependencies: 416
+-- Name: set_value(text, text); Type: ACL; Schema: session_variables; Owner: sa
+--
+
+REVOKE ALL ON FUNCTION set_value(text, text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION set_value(text, text) FROM sa;
+GRANT ALL ON FUNCTION set_value(text, text) TO sa;
+GRANT ALL ON FUNCTION set_value(text, text) TO PUBLIC;
+
+
+--
+-- TOC entry 3996 (class 0 OID 0)
+-- Dependencies: 425
+-- Name: set_value(text, text, timestamp with time zone); Type: ACL; Schema: session_variables; Owner: sa
+--
+
+REVOKE ALL ON FUNCTION set_value(_name text, _value text, _expires timestamp with time zone) FROM PUBLIC;
+REVOKE ALL ON FUNCTION set_value(_name text, _value text, _expires timestamp with time zone) FROM sa;
+GRANT ALL ON FUNCTION set_value(_name text, _value text, _expires timestamp with time zone) TO sa;
+GRANT ALL ON FUNCTION set_value(_name text, _value text, _expires timestamp with time zone) TO PUBLIC;
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 3997 (class 0 OID 0)
+-- Dependencies: 178
 -- Name: configs; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17895,8 +18171,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE configs TO PUBLIC;
 
 
 --
--- TOC entry 3978 (class 0 OID 0)
--- Dependencies: 180
+-- TOC entry 3999 (class 0 OID 0)
+-- Dependencies: 181
 -- Name: last_price; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17907,8 +18183,8 @@ GRANT ALL ON TABLE last_price TO seller;
 
 
 --
--- TOC entry 3980 (class 0 OID 0)
--- Dependencies: 181
+-- TOC entry 4001 (class 0 OID 0)
+-- Dependencies: 182
 -- Name: last_price_code_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17919,8 +18195,8 @@ GRANT ALL ON SEQUENCE last_price_code_seq TO seller;
 
 
 --
--- TOC entry 3981 (class 0 OID 0)
--- Dependencies: 182
+-- TOC entry 4002 (class 0 OID 0)
+-- Dependencies: 183
 -- Name: objectnames; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17931,8 +18207,8 @@ GRANT SELECT ON TABLE objectnames TO "продавец";
 
 
 --
--- TOC entry 3982 (class 0 OID 0)
--- Dependencies: 183
+-- TOC entry 4003 (class 0 OID 0)
+-- Dependencies: 184
 -- Name: objectnames1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17943,8 +18219,8 @@ GRANT SELECT ON TABLE objectnames1 TO "продавец";
 
 
 --
--- TOC entry 3984 (class 0 OID 0)
--- Dependencies: 186
+-- TOC entry 4005 (class 0 OID 0)
+-- Dependencies: 187
 -- Name: tmp_checks; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17955,8 +18231,8 @@ GRANT ALL ON TABLE tmp_checks TO PUBLIC;
 
 
 --
--- TOC entry 3985 (class 0 OID 0)
--- Dependencies: 187
+-- TOC entry 4006 (class 0 OID 0)
+-- Dependencies: 188
 -- Name: users; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17967,8 +18243,8 @@ GRANT SELECT ON TABLE users TO PUBLIC;
 
 
 --
--- TOC entry 3987 (class 0 OID 0)
--- Dependencies: 189
+-- TOC entry 4008 (class 0 OID 0)
+-- Dependencies: 190
 -- Name: блокпериоды; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17980,8 +18256,8 @@ GRANT SELECT,UPDATE ON TABLE "блокпериоды" TO "продавец";
 
 
 --
--- TOC entry 3988 (class 0 OID 0)
--- Dependencies: 190
+-- TOC entry 4009 (class 0 OID 0)
+-- Dependencies: 191
 -- Name: пользователи; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -17994,8 +18270,8 @@ GRANT SELECT ON TABLE "пользователи" TO test;
 
 
 --
--- TOC entry 3989 (class 0 OID 0)
--- Dependencies: 191
+-- TOC entry 4010 (class 0 OID 0)
+-- Dependencies: 192
 -- Name: vw_блокпериоды; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18006,8 +18282,8 @@ GRANT SELECT ON TABLE "vw_блокпериоды" TO "продавец";
 
 
 --
--- TOC entry 3990 (class 0 OID 0)
--- Dependencies: 192
+-- TOC entry 4011 (class 0 OID 0)
+-- Dependencies: 193
 -- Name: группы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18018,8 +18294,8 @@ GRANT SELECT ON TABLE "группы" TO "продавец";
 
 
 --
--- TOC entry 3991 (class 0 OID 0)
--- Dependencies: 193
+-- TOC entry 4012 (class 0 OID 0)
+-- Dependencies: 194
 -- Name: документы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18030,8 +18306,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "документы" TO "продав
 
 
 --
--- TOC entry 3992 (class 0 OID 0)
--- Dependencies: 194
+-- TOC entry 4013 (class 0 OID 0)
+-- Dependencies: 195
 -- Name: набор1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18042,8 +18318,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "набор1" TO "продавец";
 
 
 --
--- TOC entry 3993 (class 0 OID 0)
--- Dependencies: 195
+-- TOC entry 4014 (class 0 OID 0)
+-- Dependencies: 196
 -- Name: проводки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18054,8 +18330,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "проводки" TO "продаве
 
 
 --
--- TOC entry 3994 (class 0 OID 0)
--- Dependencies: 196
+-- TOC entry 4015 (class 0 OID 0)
+-- Dependencies: 197
 -- Name: товар; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18066,8 +18342,8 @@ GRANT SELECT,UPDATE ON TABLE "товар" TO "продавец";
 
 
 --
--- TOC entry 3995 (class 0 OID 0)
--- Dependencies: 197
+-- TOC entry 4016 (class 0 OID 0)
+-- Dependencies: 198
 -- Name: топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18078,8 +18354,8 @@ GRANT SELECT ON TABLE "топер" TO "продавец";
 
 
 --
--- TOC entry 3996 (class 0 OID 0)
--- Dependencies: 198
+-- TOC entry 4017 (class 0 OID 0)
+-- Dependencies: 199
 -- Name: vw_продажи_товара_за_период; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18089,8 +18365,8 @@ GRANT ALL ON TABLE "vw_продажи_товара_за_период" TO sa;
 
 
 --
--- TOC entry 3997 (class 0 OID 0)
--- Dependencies: 199
+-- TOC entry 4018 (class 0 OID 0)
+-- Dependencies: 200
 -- Name: vw_ABC_анализ_продаж; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18100,8 +18376,8 @@ GRANT ALL ON TABLE "vw_ABC_анализ_продаж" TO sa;
 
 
 --
--- TOC entry 3998 (class 0 OID 0)
--- Dependencies: 200
+-- TOC entry 4019 (class 0 OID 0)
+-- Dependencies: 201
 -- Name: vw_permissions; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18112,8 +18388,8 @@ GRANT SELECT ON TABLE vw_permissions TO PUBLIC;
 
 
 --
--- TOC entry 3999 (class 0 OID 0)
--- Dependencies: 201
+-- TOC entry 4020 (class 0 OID 0)
+-- Dependencies: 202
 -- Name: сальдо; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18124,8 +18400,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "сальдо" TO "продавец";
 
 
 --
--- TOC entry 4000 (class 0 OID 0)
--- Dependencies: 202
+-- TOC entry 4021 (class 0 OID 0)
+-- Dependencies: 203
 -- Name: vw_saldo40; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18135,8 +18411,8 @@ GRANT ALL ON TABLE vw_saldo40 TO sa;
 
 
 --
--- TOC entry 4001 (class 0 OID 0)
--- Dependencies: 203
+-- TOC entry 4022 (class 0 OID 0)
+-- Dependencies: 204
 -- Name: атрибуты123; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18146,8 +18422,8 @@ GRANT ALL ON TABLE "атрибуты123" TO sa;
 
 
 --
--- TOC entry 4002 (class 0 OID 0)
--- Dependencies: 204
+-- TOC entry 4023 (class 0 OID 0)
+-- Dependencies: 205
 -- Name: докатрибуты123; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18158,8 +18434,8 @@ GRANT ALL ON TABLE "докатрибуты123" TO PUBLIC;
 
 
 --
--- TOC entry 4003 (class 0 OID 0)
--- Dependencies: 205
+-- TOC entry 4024 (class 0 OID 0)
+-- Dependencies: 206
 -- Name: набор402; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18170,8 +18446,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "набор402" TO "продавец";
 
 
 --
--- TOC entry 4004 (class 0 OID 0)
--- Dependencies: 207
+-- TOC entry 4025 (class 0 OID 0)
+-- Dependencies: 208
 -- Name: vw_saldo411; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18182,8 +18458,8 @@ GRANT SELECT ON TABLE vw_saldo411 TO "продавец";
 
 
 --
--- TOC entry 4005 (class 0 OID 0)
--- Dependencies: 208
+-- TOC entry 4026 (class 0 OID 0)
+-- Dependencies: 209
 -- Name: виды_расходов; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18193,8 +18469,8 @@ GRANT ALL ON TABLE "виды_расходов" TO sa;
 
 
 --
--- TOC entry 4006 (class 0 OID 0)
--- Dependencies: 209
+-- TOC entry 4027 (class 0 OID 0)
+-- Dependencies: 210
 -- Name: vw_saldo44; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18204,8 +18480,8 @@ GRANT ALL ON TABLE vw_saldo44 TO sa;
 
 
 --
--- TOC entry 4007 (class 0 OID 0)
--- Dependencies: 211
+-- TOC entry 4028 (class 0 OID 0)
+-- Dependencies: 212
 -- Name: счета; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18216,8 +18492,8 @@ GRANT SELECT ON TABLE "счета" TO "продавец";
 
 
 --
--- TOC entry 4008 (class 0 OID 0)
--- Dependencies: 212
+-- TOC entry 4029 (class 0 OID 0)
+-- Dependencies: 213
 -- Name: vw_баланс; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18227,8 +18503,8 @@ GRANT ALL ON TABLE "vw_баланс" TO sa;
 
 
 --
--- TOC entry 4009 (class 0 OID 0)
--- Dependencies: 213
+-- TOC entry 4030 (class 0 OID 0)
+-- Dependencies: 214
 -- Name: бюджет; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18238,8 +18514,8 @@ GRANT ALL ON TABLE "бюджет" TO sa;
 
 
 --
--- TOC entry 4010 (class 0 OID 0)
--- Dependencies: 214
+-- TOC entry 4031 (class 0 OID 0)
+-- Dependencies: 215
 -- Name: организации; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18250,8 +18526,8 @@ GRANT SELECT ON TABLE "организации" TO "продавец";
 
 
 --
--- TOC entry 4011 (class 0 OID 0)
--- Dependencies: 215
+-- TOC entry 4032 (class 0 OID 0)
+-- Dependencies: 216
 -- Name: vw_бюджет; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18261,8 +18537,8 @@ GRANT ALL ON TABLE "vw_бюджет" TO sa;
 
 
 --
--- TOC entry 4012 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 4033 (class 0 OID 0)
+-- Dependencies: 217
 -- Name: vw_грузополучатели; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18273,8 +18549,8 @@ GRANT SELECT ON TABLE "vw_грузополучатели" TO "продавец";
 
 
 --
--- TOC entry 4013 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 4034 (class 0 OID 0)
+-- Dependencies: 219
 -- Name: доступ; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18285,8 +18561,8 @@ GRANT SELECT ON TABLE "доступ" TO "продавец";
 
 
 --
--- TOC entry 4014 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 4035 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: vw_доступ; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18297,8 +18573,8 @@ GRANT SELECT ON TABLE "vw_доступ" TO PUBLIC;
 
 
 --
--- TOC entry 4015 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 4036 (class 0 OID 0)
+-- Dependencies: 221
 -- Name: справочники; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18310,8 +18586,8 @@ GRANT SELECT ON TABLE "справочники" TO "продавец";
 
 
 --
--- TOC entry 4016 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 4037 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: доступ_к_справочникам; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18323,8 +18599,8 @@ GRANT SELECT ON TABLE "доступ_к_справочникам" TO "прода�
 
 
 --
--- TOC entry 4017 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 4038 (class 0 OID 0)
+-- Dependencies: 223
 -- Name: vw_доступ_к_справочникам; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18335,8 +18611,8 @@ GRANT SELECT ON TABLE "vw_доступ_к_справочникам" TO "прод
 
 
 --
--- TOC entry 4018 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 4039 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: vw_доступ_к_топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18347,8 +18623,8 @@ GRANT SELECT ON TABLE "vw_доступ_к_топер" TO PUBLIC;
 
 
 --
--- TOC entry 4019 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 4040 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: vw_журнал; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18358,8 +18634,8 @@ GRANT ALL ON TABLE "vw_журнал" TO sa;
 
 
 --
--- TOC entry 4020 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 4041 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: адрес; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18370,8 +18646,8 @@ GRANT SELECT ON TABLE "адрес" TO "продавец";
 
 
 --
--- TOC entry 4021 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 4042 (class 0 OID 0)
+-- Dependencies: 230
 -- Name: vw_закупоч_и_розн_цены; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18381,8 +18657,8 @@ GRANT ALL ON TABLE "vw_закупоч_и_розн_цены" TO sa;
 
 
 --
--- TOC entry 4022 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 4043 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: vw_закупоч_цены_на_новый_товар; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18392,8 +18668,8 @@ GRANT ALL ON TABLE "vw_закупоч_цены_на_новый_товар" TO sa
 
 
 --
--- TOC entry 4023 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 4044 (class 0 OID 0)
+-- Dependencies: 232
 -- Name: запросы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18404,8 +18680,8 @@ GRANT SELECT ON TABLE "запросы" TO "продавец";
 
 
 --
--- TOC entry 4024 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 4045 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: vw_запросы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18416,8 +18692,8 @@ GRANT SELECT ON TABLE "vw_запросы" TO "продавец";
 
 
 --
--- TOC entry 4025 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 4046 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: заявка; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18428,8 +18704,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "заявка" TO "продавец";
 
 
 --
--- TOC entry 4026 (class 0 OID 0)
--- Dependencies: 234
+-- TOC entry 4047 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: константы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18441,8 +18717,8 @@ GRANT SELECT ON TABLE "константы" TO "продавец";
 
 
 --
--- TOC entry 4027 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 4048 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: прайс; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18454,8 +18730,8 @@ GRANT ALL ON TABLE "прайс" TO seller;
 
 
 --
--- TOC entry 4028 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 4049 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: vw_заявка_нераспределенная; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18465,8 +18741,8 @@ GRANT ALL ON TABLE "vw_заявка_нераспределенная" TO sa;
 
 
 --
--- TOC entry 4029 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 4050 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: люди; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18477,8 +18753,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "люди" TO "продавец";
 
 
 --
--- TOC entry 4030 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 4051 (class 0 OID 0)
+-- Dependencies: 241
 -- Name: набор3; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18489,8 +18765,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "набор3" TO "продавец";
 
 
 --
--- TOC entry 4031 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 4052 (class 0 OID 0)
+-- Dependencies: 242
 -- Name: vw_накладные_по_браку; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18500,8 +18776,8 @@ GRANT ALL ON TABLE "vw_накладные_по_браку" TO sa;
 
 
 --
--- TOC entry 4032 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 4053 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: vw_наценки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18511,8 +18787,8 @@ GRANT ALL ON TABLE "vw_наценки" TO sa;
 
 
 --
--- TOC entry 4033 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 4054 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: наценки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18522,8 +18798,8 @@ GRANT ALL ON TABLE "наценки" TO sa;
 
 
 --
--- TOC entry 4034 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 4055 (class 0 OID 0)
+-- Dependencies: 246
 -- Name: vw_новыецены; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18533,8 +18809,8 @@ GRANT ALL ON TABLE "vw_новыецены" TO sa;
 
 
 --
--- TOC entry 4035 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 4056 (class 0 OID 0)
+-- Dependencies: 247
 -- Name: vw_новыецены1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18544,8 +18820,8 @@ GRANT ALL ON TABLE "vw_новыецены1" TO sa;
 
 
 --
--- TOC entry 4036 (class 0 OID 0)
--- Dependencies: 247
+-- TOC entry 4057 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: vw_новыецены2; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18555,8 +18831,8 @@ GRANT ALL ON TABLE "vw_новыецены2" TO sa;
 
 
 --
--- TOC entry 4037 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 4058 (class 0 OID 0)
+-- Dependencies: 249
 -- Name: vw_новыецены3; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18566,8 +18842,8 @@ GRANT ALL ON TABLE "vw_новыецены3" TO sa;
 
 
 --
--- TOC entry 4038 (class 0 OID 0)
--- Dependencies: 250
+-- TOC entry 4059 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: vw_остатки_товара; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18578,8 +18854,8 @@ GRANT SELECT ON TABLE "vw_остатки_товара" TO "продавец";
 
 
 --
--- TOC entry 4039 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 4060 (class 0 OID 0)
+-- Dependencies: 252
 -- Name: vw_остатки_товара_на_конец_периода; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18589,8 +18865,8 @@ GRANT ALL ON TABLE "vw_остатки_товара_на_конец_период�
 
 
 --
--- TOC entry 4040 (class 0 OID 0)
--- Dependencies: 252
+-- TOC entry 4061 (class 0 OID 0)
+-- Dependencies: 253
 -- Name: vw_отрицательные_остатки_на_411_счет; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18600,8 +18876,8 @@ GRANT ALL ON TABLE "vw_отрицательные_остатки_на_411_сче
 
 
 --
--- TOC entry 4041 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 4062 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: vw_отчет_о_продажах; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18611,8 +18887,8 @@ GRANT ALL ON TABLE "vw_отчет_о_продажах" TO sa;
 
 
 --
--- TOC entry 4042 (class 0 OID 0)
--- Dependencies: 254
+-- TOC entry 4063 (class 0 OID 0)
+-- Dependencies: 255
 -- Name: vw_отчет_о_продажах_за_период; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18622,8 +18898,8 @@ GRANT ALL ON TABLE "vw_отчет_о_продажах_за_период" TO sa;
 
 
 --
--- TOC entry 4043 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 4064 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: посладрес; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18634,8 +18910,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "посладрес" TO "продавец";
 
 
 --
--- TOC entry 4044 (class 0 OID 0)
--- Dependencies: 256
+-- TOC entry 4065 (class 0 OID 0)
+-- Dependencies: 257
 -- Name: vw_перемещение; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18646,8 +18922,8 @@ GRANT SELECT ON TABLE "vw_перемещение" TO "продавец";
 
 
 --
--- TOC entry 4045 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 4066 (class 0 OID 0)
+-- Dependencies: 258
 -- Name: фирмы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18658,8 +18934,8 @@ GRANT SELECT ON TABLE "фирмы" TO "продавец";
 
 
 --
--- TOC entry 4046 (class 0 OID 0)
--- Dependencies: 258
+-- TOC entry 4067 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: vw_прайс; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18670,8 +18946,8 @@ GRANT SELECT ON TABLE "vw_прайс" TO "продавец";
 
 
 --
--- TOC entry 4047 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 4068 (class 0 OID 0)
+-- Dependencies: 260
 -- Name: vw_прайс1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18682,8 +18958,8 @@ GRANT SELECT ON TABLE "vw_прайс1" TO "продавец";
 
 
 --
--- TOC entry 4048 (class 0 OID 0)
--- Dependencies: 260
+-- TOC entry 4069 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: vw_прайс2; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18694,8 +18970,8 @@ GRANT SELECT ON TABLE "vw_прайс2" TO "продавец";
 
 
 --
--- TOC entry 4049 (class 0 OID 0)
--- Dependencies: 262
+-- TOC entry 4070 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: vw_разница_консальдо_и_цены; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18705,8 +18981,8 @@ GRANT ALL ON TABLE "vw_разница_консальдо_и_цены" TO sa;
 
 
 --
--- TOC entry 4050 (class 0 OID 0)
--- Dependencies: 263
+-- TOC entry 4071 (class 0 OID 0)
+-- Dependencies: 264
 -- Name: столбцы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18717,8 +18993,8 @@ GRANT SELECT ON TABLE "столбцы" TO "продавец";
 
 
 --
--- TOC entry 4051 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 4072 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: vw_справочники_со_столбцами; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18730,8 +19006,8 @@ GRANT SELECT ON TABLE "vw_справочники_со_столбцами" TO PUB
 
 
 --
--- TOC entry 4052 (class 0 OID 0)
--- Dependencies: 265
+-- TOC entry 4073 (class 0 OID 0)
+-- Dependencies: 266
 -- Name: vw_справочники_со_столбцами1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18742,8 +19018,8 @@ GRANT SELECT ON TABLE "vw_справочники_со_столбцами1" TO PU
 
 
 --
--- TOC entry 4053 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 4074 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: vw_спрдокументы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18754,8 +19030,8 @@ GRANT SELECT ON TABLE "vw_спрдокументы" TO "продавец";
 
 
 --
--- TOC entry 4054 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 4075 (class 0 OID 0)
+-- Dependencies: 268
 -- Name: vw_столбцы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18766,8 +19042,8 @@ GRANT SELECT ON TABLE "vw_столбцы" TO "продавец";
 
 
 --
--- TOC entry 4055 (class 0 OID 0)
--- Dependencies: 268
+-- TOC entry 4076 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: vw_столбцы_типы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18777,8 +19053,8 @@ GRANT ALL ON TABLE "vw_столбцы_типы" TO sa;
 
 
 --
--- TOC entry 4056 (class 0 OID 0)
--- Dependencies: 269
+-- TOC entry 4077 (class 0 OID 0)
+-- Dependencies: 270
 -- Name: vw_счета; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18789,8 +19065,8 @@ GRANT SELECT ON TABLE "vw_счета" TO PUBLIC;
 
 
 --
--- TOC entry 4057 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 4078 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: vw_товар_без_продаж_за_год; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18800,8 +19076,8 @@ GRANT ALL ON TABLE "vw_товар_без_продаж_за_год" TO sa;
 
 
 --
--- TOC entry 4058 (class 0 OID 0)
--- Dependencies: 271
+-- TOC entry 4079 (class 0 OID 0)
+-- Dependencies: 272
 -- Name: vw_топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18812,8 +19088,8 @@ GRANT SELECT ON TABLE "vw_топер" TO "продавец";
 
 
 --
--- TOC entry 4059 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 4080 (class 0 OID 0)
+-- Dependencies: 273
 -- Name: ос; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18824,8 +19100,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "ос" TO "продавец";
 
 
 --
--- TOC entry 4061 (class 0 OID 0)
--- Dependencies: 273
+-- TOC entry 4082 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: ОС_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18836,8 +19112,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "ОС_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4063 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 4084 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: адрес_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18848,8 +19124,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "адрес_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4064 (class 0 OID 0)
--- Dependencies: 275
+-- TOC entry 4085 (class 0 OID 0)
+-- Dependencies: 276
 -- Name: атрибуты121; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18859,8 +19135,8 @@ GRANT ALL ON TABLE "атрибуты121" TO sa;
 
 
 --
--- TOC entry 4067 (class 0 OID 0)
--- Dependencies: 278
+-- TOC entry 4088 (class 0 OID 0)
+-- Dependencies: 279
 -- Name: атрибуты129; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18870,8 +19146,8 @@ GRANT ALL ON TABLE "атрибуты129" TO sa;
 
 
 --
--- TOC entry 4069 (class 0 OID 0)
--- Dependencies: 280
+-- TOC entry 4090 (class 0 OID 0)
+-- Dependencies: 281
 -- Name: атрибуты5; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18881,8 +19157,8 @@ GRANT ALL ON TABLE "атрибуты5" TO sa;
 
 
 --
--- TOC entry 4071 (class 0 OID 0)
--- Dependencies: 282
+-- TOC entry 4092 (class 0 OID 0)
+-- Dependencies: 283
 -- Name: атрибуты71; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18893,8 +19169,8 @@ GRANT ALL ON TABLE "атрибуты71" TO PUBLIC;
 
 
 --
--- TOC entry 4073 (class 0 OID 0)
--- Dependencies: 284
+-- TOC entry 4094 (class 0 OID 0)
+-- Dependencies: 285
 -- Name: атрибуты8; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18904,8 +19180,8 @@ GRANT ALL ON TABLE "атрибуты8" TO sa;
 
 
 --
--- TOC entry 4075 (class 0 OID 0)
--- Dependencies: 286
+-- TOC entry 4096 (class 0 OID 0)
+-- Dependencies: 287
 -- Name: банки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18916,8 +19192,8 @@ GRANT SELECT ON TABLE "банки" TO "продавец";
 
 
 --
--- TOC entry 4077 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 4098 (class 0 OID 0)
+-- Dependencies: 288
 -- Name: банки_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18928,8 +19204,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "банки_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4078 (class 0 OID 0)
--- Dependencies: 288
+-- TOC entry 4099 (class 0 OID 0)
+-- Dependencies: 289
 -- Name: банковские_счета; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18940,8 +19216,8 @@ GRANT SELECT ON TABLE "банковские_счета" TO "продавец";
 
 
 --
--- TOC entry 4080 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 4101 (class 0 OID 0)
+-- Dependencies: 290
 -- Name: банковские_счета_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18952,8 +19228,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "банковские_счета_КОД_seq" TO 
 
 
 --
--- TOC entry 4081 (class 0 OID 0)
--- Dependencies: 290
+-- TOC entry 4102 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: блокдокументов; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18964,8 +19240,8 @@ GRANT ALL ON TABLE "блокдокументов" TO PUBLIC;
 
 
 --
--- TOC entry 4083 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 4104 (class 0 OID 0)
+-- Dependencies: 292
 -- Name: блокпериоды_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18976,8 +19252,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "блокпериоды_КОД_seq" TO "прод
 
 
 --
--- TOC entry 4085 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 4106 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: бюджет_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -18988,8 +19264,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "бюджет_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4087 (class 0 OID 0)
--- Dependencies: 293
+-- TOC entry 4108 (class 0 OID 0)
+-- Dependencies: 294
 -- Name: виды_расходов_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19000,8 +19276,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "виды_расходов_КОД_seq" TO "пр�
 
 
 --
--- TOC entry 4088 (class 0 OID 0)
--- Dependencies: 294
+-- TOC entry 4109 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: города; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19012,8 +19288,8 @@ GRANT SELECT ON TABLE "города" TO "продавец";
 
 
 --
--- TOC entry 4090 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 4111 (class 0 OID 0)
+-- Dependencies: 296
 -- Name: города_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19024,8 +19300,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "города_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4092 (class 0 OID 0)
--- Dependencies: 296
+-- TOC entry 4113 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: группы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19036,8 +19312,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "группы_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4093 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 4114 (class 0 OID 0)
+-- Dependencies: 298
 -- Name: докатрибуты1; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19048,8 +19324,8 @@ GRANT ALL ON TABLE "докатрибуты1" TO PUBLIC;
 
 
 --
--- TOC entry 4094 (class 0 OID 0)
--- Dependencies: 298
+-- TOC entry 4115 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: докатрибуты71; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19060,8 +19336,8 @@ GRANT ALL ON TABLE "докатрибуты71" TO PUBLIC;
 
 
 --
--- TOC entry 4096 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 4117 (class 0 OID 0)
+-- Dependencies: 300
 -- Name: документы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19072,8 +19348,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "документы_КОД_seq" TO "продав
 
 
 --
--- TOC entry 4098 (class 0 OID 0)
--- Dependencies: 300
+-- TOC entry 4119 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: доступ_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19084,8 +19360,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "доступ_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4099 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 4120 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: доступ_к_оборотам; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19096,8 +19372,8 @@ GRANT SELECT ON TABLE "доступ_к_оборотам" TO PUBLIC;
 
 
 --
--- TOC entry 4100 (class 0 OID 0)
--- Dependencies: 302
+-- TOC entry 4121 (class 0 OID 0)
+-- Dependencies: 303
 -- Name: доступ_к_сальдо; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19108,8 +19384,8 @@ GRANT SELECT ON TABLE "доступ_к_сальдо" TO PUBLIC;
 
 
 --
--- TOC entry 4101 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 4122 (class 0 OID 0)
+-- Dependencies: 304
 -- Name: доступ_к_топер; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19121,8 +19397,8 @@ GRANT SELECT ON TABLE "доступ_к_топер" TO "продавец";
 
 
 --
--- TOC entry 4103 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 4124 (class 0 OID 0)
+-- Dependencies: 306
 -- Name: заказчики; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19133,8 +19409,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "заказчики" TO "продавец";
 
 
 --
--- TOC entry 4105 (class 0 OID 0)
--- Dependencies: 306
+-- TOC entry 4126 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: заказчики_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19145,8 +19421,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "заказчики_КОД_seq" TO "продав
 
 
 --
--- TOC entry 4107 (class 0 OID 0)
--- Dependencies: 307
+-- TOC entry 4128 (class 0 OID 0)
+-- Dependencies: 308
 -- Name: запросы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19157,8 +19433,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "запросы_КОД_seq" TO "продавец
 
 
 --
--- TOC entry 4109 (class 0 OID 0)
--- Dependencies: 308
+-- TOC entry 4130 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: заявка_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19169,8 +19445,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "заявка_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4110 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 4131 (class 0 OID 0)
+-- Dependencies: 310
 -- Name: заявка_на_весь_товар; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19180,8 +19456,8 @@ GRANT ALL ON TABLE "заявка_на_весь_товар" TO sa;
 
 
 --
--- TOC entry 4111 (class 0 OID 0)
--- Dependencies: 310
+-- TOC entry 4132 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: карточки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19192,8 +19468,8 @@ GRANT ALL ON TABLE "карточки" TO "продавец";
 
 
 --
--- TOC entry 4113 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 4134 (class 0 OID 0)
+-- Dependencies: 312
 -- Name: карточки_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19204,8 +19480,8 @@ GRANT ALL ON SEQUENCE "карточки_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4115 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 4136 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: константы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19216,8 +19492,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "константы_КОД_seq" TO "продав
 
 
 --
--- TOC entry 4118 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 4139 (class 0 OID 0)
+-- Dependencies: 316
 -- Name: люди_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19228,8 +19504,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "люди_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4119 (class 0 OID 0)
--- Dependencies: 316
+-- TOC entry 4140 (class 0 OID 0)
+-- Dependencies: 317
 -- Name: материалы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19239,8 +19515,8 @@ GRANT ALL ON TABLE "материалы" TO sa;
 
 
 --
--- TOC entry 4121 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 4142 (class 0 OID 0)
+-- Dependencies: 318
 -- Name: материалы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19251,8 +19527,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "материалы_КОД_seq" TO "продав
 
 
 --
--- TOC entry 4123 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 4144 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: набор1_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19263,8 +19539,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "набор1_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4125 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 4146 (class 0 OID 0)
+-- Dependencies: 320
 -- Name: набор3_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19275,8 +19551,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "набор3_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4126 (class 0 OID 0)
--- Dependencies: 320
+-- TOC entry 4147 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: набор4; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19287,8 +19563,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "набор4" TO "продавец";
 
 
 --
--- TOC entry 4127 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 4148 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: набор401; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19299,8 +19575,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE "набор401" TO "продавец";
 
 
 --
--- TOC entry 4131 (class 0 OID 0)
--- Dependencies: 324
+-- TOC entry 4152 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: набор4_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19311,8 +19587,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "набор4_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4133 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 4154 (class 0 OID 0)
+-- Dependencies: 326
 -- Name: наценки_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19323,8 +19599,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "наценки_КОД_seq" TO "продавец
 
 
 --
--- TOC entry 4134 (class 0 OID 0)
--- Dependencies: 326
+-- TOC entry 4155 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: нумераторы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19335,8 +19611,8 @@ GRANT SELECT,UPDATE ON TABLE "нумераторы" TO "продавец";
 
 
 --
--- TOC entry 4136 (class 0 OID 0)
--- Dependencies: 327
+-- TOC entry 4157 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: нумераторы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19347,8 +19623,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "нумераторы_КОД_seq" TO "прода
 
 
 --
--- TOC entry 4137 (class 0 OID 0)
--- Dependencies: 328
+-- TOC entry 4158 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: объекты; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19358,8 +19634,8 @@ GRANT ALL ON TABLE "объекты" TO sa;
 
 
 --
--- TOC entry 4139 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 4160 (class 0 OID 0)
+-- Dependencies: 330
 -- Name: объекты_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19370,8 +19646,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "объекты_КОД_seq" TO "продавец
 
 
 --
--- TOC entry 4141 (class 0 OID 0)
--- Dependencies: 330
+-- TOC entry 4162 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: организации_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19382,8 +19658,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "организации_КОД_seq" TO "прод
 
 
 --
--- TOC entry 4142 (class 0 OID 0)
--- Dependencies: 331
+-- TOC entry 4163 (class 0 OID 0)
+-- Dependencies: 332
 -- Name: персонал; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19394,8 +19670,8 @@ GRANT SELECT ON TABLE "персонал" TO PUBLIC;
 
 
 --
--- TOC entry 4144 (class 0 OID 0)
--- Dependencies: 332
+-- TOC entry 4165 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: персонал_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19406,8 +19682,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "персонал_КОД_seq" TO "продаве
 
 
 --
--- TOC entry 4146 (class 0 OID 0)
--- Dependencies: 333
+-- TOC entry 4167 (class 0 OID 0)
+-- Dependencies: 334
 -- Name: посладрес_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19418,8 +19694,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "посладрес_КОД_seq" TO "продав
 
 
 --
--- TOC entry 4147 (class 0 OID 0)
--- Dependencies: 334
+-- TOC entry 4168 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: пр_пользователи; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19430,8 +19706,8 @@ GRANT SELECT ON TABLE "пр_пользователи" TO test;
 
 
 --
--- TOC entry 4149 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 4170 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: прайс_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19443,8 +19719,8 @@ GRANT ALL ON SEQUENCE "прайс_КОД_seq" TO seller;
 
 
 --
--- TOC entry 4150 (class 0 OID 0)
--- Dependencies: 336
+-- TOC entry 4171 (class 0 OID 0)
+-- Dependencies: 337
 -- Name: предметы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19454,8 +19730,8 @@ GRANT ALL ON TABLE "предметы" TO sa;
 
 
 --
--- TOC entry 4152 (class 0 OID 0)
--- Dependencies: 337
+-- TOC entry 4173 (class 0 OID 0)
+-- Dependencies: 338
 -- Name: предметы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19466,8 +19742,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "предметы_КОД_seq" TO "продаве
 
 
 --
--- TOC entry 4154 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 4175 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: проводки_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19478,8 +19754,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "проводки_КОД_seq" TO "продаве
 
 
 --
--- TOC entry 4155 (class 0 OID 0)
--- Dependencies: 339
+-- TOC entry 4176 (class 0 OID 0)
+-- Dependencies: 340
 -- Name: синонимы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19489,8 +19765,8 @@ GRANT ALL ON TABLE "синонимы" TO sa;
 
 
 --
--- TOC entry 4157 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 4178 (class 0 OID 0)
+-- Dependencies: 342
 -- Name: скидки; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19501,8 +19777,8 @@ GRANT SELECT ON TABLE "скидки" TO "продавец";
 
 
 --
--- TOC entry 4160 (class 0 OID 0)
--- Dependencies: 344
+-- TOC entry 4181 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: справочник_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19513,8 +19789,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "справочник_КОД_seq" TO "прода
 
 
 --
--- TOC entry 4162 (class 0 OID 0)
--- Dependencies: 345
+-- TOC entry 4183 (class 0 OID 0)
+-- Dependencies: 346
 -- Name: справочники_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19525,8 +19801,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "справочники_КОД_seq" TO "прод
 
 
 --
--- TOC entry 4165 (class 0 OID 0)
--- Dependencies: 347
+-- TOC entry 4186 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: счета_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19537,8 +19813,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "счета_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4166 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 4187 (class 0 OID 0)
+-- Dependencies: 349
 -- Name: типыобъектов; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19549,8 +19825,8 @@ GRANT SELECT ON TABLE "типыобъектов" TO "продавец";
 
 
 --
--- TOC entry 4168 (class 0 OID 0)
--- Dependencies: 349
+-- TOC entry 4189 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: типыобъектов_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19561,8 +19837,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "типыобъектов_КОД_seq" TO "про
 
 
 --
--- TOC entry 4170 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 4191 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: товар_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19573,8 +19849,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "товар_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4172 (class 0 OID 0)
--- Dependencies: 352
+-- TOC entry 4193 (class 0 OID 0)
+-- Dependencies: 353
 -- Name: файлы; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19585,8 +19861,8 @@ GRANT SELECT ON TABLE "файлы" TO PUBLIC;
 
 
 --
--- TOC entry 4175 (class 0 OID 0)
--- Dependencies: 354
+-- TOC entry 4196 (class 0 OID 0)
+-- Dependencies: 355
 -- Name: фирмы_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19597,8 +19873,8 @@ GRANT SELECT,UPDATE ON SEQUENCE "фирмы_КОД_seq" TO "продавец";
 
 
 --
--- TOC entry 4176 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 4197 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: фонды; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19608,8 +19884,8 @@ GRANT ALL ON TABLE "фонды" TO sa;
 
 
 --
--- TOC entry 4178 (class 0 OID 0)
--- Dependencies: 356
+-- TOC entry 4199 (class 0 OID 0)
+-- Dependencies: 357
 -- Name: фонды_КОД_seq; Type: ACL; Schema: public; Owner: sa
 --
 
@@ -19619,7 +19895,21 @@ GRANT ALL ON SEQUENCE "фонды_КОД_seq" TO sa;
 GRANT SELECT,UPDATE ON SEQUENCE "фонды_КОД_seq" TO "продавец";
 
 
--- Completed on 2015-12-16 14:38:12 MSK
+SET search_path = session_variables, pg_catalog;
+
+--
+-- TOC entry 4200 (class 0 OID 0)
+-- Dependencies: 358
+-- Name: data; Type: ACL; Schema: session_variables; Owner: sa
+--
+
+REVOKE ALL ON TABLE data FROM PUBLIC;
+REVOKE ALL ON TABLE data FROM sa;
+GRANT ALL ON TABLE data TO sa;
+GRANT ALL ON TABLE data TO PUBLIC;
+
+
+-- Completed on 2015-12-16 16:37:55 MSK
 
 --
 -- PostgreSQL database dump complete

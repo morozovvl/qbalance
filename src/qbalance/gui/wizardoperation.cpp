@@ -483,6 +483,7 @@ void WizardOperation::getData()
 //         DocumentScriptEngine engine;
 //         scripts = engine.getBlankScripts();
 //     }
+     qDebug() << scripts;
      textEditor->setText(scripts);
 
      connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
