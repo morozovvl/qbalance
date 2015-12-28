@@ -43,7 +43,7 @@ public:
     bool    isReadyDriverFR();
     bool    setLock(bool lock);
     void    setRemote(bool r) { remote = r; }
-    void    setTimeout(int t) { timeOut = t; }
+    void    setMyTimeout(int t) { timeOut = t; }
 
     // Работа с TCP соединением
     void setTcpClient(QString, int);

@@ -234,7 +234,12 @@ bool TApplication::open() {
                         if (driverFRisValid)
                             showMessageOnStatusBar("Найден фискальный регистратор.\n");
                         else
-                            showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                        {
+                            if (driverFR->isLocked())
+                                showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
+                            else
+                                showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                        }
                     }
 
                     db->clearLockedDocuementList();
@@ -378,7 +383,7 @@ QString TApplication::getAnyPath(QString subPath, QString fName)
     QString dir = applicationDirPath() + "/data";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    dir += getConfigPrefix();
+    dir += "/" + getConfigPrefix();
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
     dir += subPath;
@@ -394,7 +399,7 @@ QString TApplication::getAnyPath(QString subPath, QString fName)
 QString TApplication::getConfigPrefix()
 {
     if (db != 0 && db->isOpened())
-        return QString("/%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName());
+        return QString("%1-%2-%3").arg(db->getHostName()).arg(db->getPort()).arg(db->getDatabaseName());
     return QString();
 }
 

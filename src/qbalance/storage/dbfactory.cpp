@@ -445,7 +445,7 @@ QStringList DBFactory::getFieldsList(QString tableName, int level)
             result << fields.value(i).column;
     }
     if (result.count() == 0)
-        TApplication::exemplar()->showError(QString("Список полей таблицы <%1> пустой. Возможно, таблица недоступна.").arg(tableName));
+        TApplication::exemplar()->showError(QString("Список полей таблицы <%1> пустой. Возможно, нет разрешения доступа к таблице.").arg(tableName));
     return result;
 }
 

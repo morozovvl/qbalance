@@ -65,7 +65,7 @@ void CalendarForm::cmdOk() {
     beginDate = pBeginCalendar->selectedDate();
     endDate = pEndCalendar->selectedDate();
     if (beginDate > endDate)
-        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
+        TApplication::exemplar()->showError(QObject::trUtf8("Дата конца периода НЕ МОЖЕТ БЫТЬ РАНЬШЕ даты начала периода."));
     else
     {
         Form::cmdOk();

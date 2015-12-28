@@ -192,7 +192,7 @@ public:
     void saveCustomization();
     void loadFile();
     void printReportWithoutCleaning();
-    int runScript(QString);
+    Q_INVOKABLE int runScript(QString);
     Q_INVOKABLE QString getScript() { return script; }                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter() { return scriptParameter; }
 

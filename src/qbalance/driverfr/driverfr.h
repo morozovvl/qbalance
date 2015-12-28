@@ -698,7 +698,7 @@ public:
         if (progressDialog != 0)
             progressDialog->setValue(value);
     }
-    Q_INVOKABLE void setShowProgressBar(bool show) { showProgressBar = show; }
+    Q_INVOKABLE void setShowProgressBar(bool);
     Q_INVOKABLE void writeLog(QString = "");
     bool deviceIsReady();
     int decodeTimeOut(int);
@@ -800,7 +800,6 @@ public:
 
 private:
 
-//    int checkState();
     unsigned short int readByte();
     int readBytes(unsigned char *, int);
     int sendENQ();

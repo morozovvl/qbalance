@@ -104,7 +104,7 @@ bool Documents::remove(bool noAsk)
         }
     }
     else
-        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять документы пользователю %2")).arg(app->getLogin()));
+        app->showError(QString(QObject::trUtf8("Запрещено удалять документы пользователю %2")).arg(app->getLogin()));
     return false;
 }
 

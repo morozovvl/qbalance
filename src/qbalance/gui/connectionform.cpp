@@ -119,7 +119,7 @@ void ConnectionForm::buttonSave()
         readConnectionsList();
     }
     else
-        TApplication::exemplar()->getGUIFactory()->showError(trUtf8("Укажите наименование соединения!"));
+        TApplication::exemplar()->showError(trUtf8("Укажите наименование соединения!"));
 }
 
 

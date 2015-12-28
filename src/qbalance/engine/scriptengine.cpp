@@ -217,7 +217,7 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
             {
                 // Если в скриптах произошла ошибка
                 QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
-                TApplication::exemplar()->getGUIFactory()->showError(errorMessage);
+                TApplication::exemplar()->showError(errorMessage);
             }
             TApplication::exemplar()->removeLastScriptStack();
         }
@@ -701,7 +701,7 @@ bool ScriptEngine::evaluate()
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
-            app->getGUIFactory()->showError(errorMessage);
+            app->showError(errorMessage);
             // Если произошла ошибка, то удалим ошибочные скрипты
             script = "";
             return false;
@@ -1127,9 +1127,13 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    QString scriptPath = TApplication::exemplar()->getScriptsPath();
-    Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-    QFile file(scriptPath + scriptFile);
+    if (!QFileInfo(scriptFile).exists())
+    {
+        QString scriptPath = TApplication::exemplar()->getScriptsPath();
+        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+        scriptFile = scriptPath + scriptFile;
+    }
+    QFile file(scriptFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QString script(file.readAll());

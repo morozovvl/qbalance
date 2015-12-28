@@ -210,17 +210,17 @@ bool WizardOperation::setData()
     QString opName = operName->text().trimmed();
     if (opName.size() == 0)
     {
-        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("Укажите наименование типовой операции."));
+        TApplication::exemplar()->showError(QObject::trUtf8("Укажите наименование типовой операции."));
         return false;
     }
     if (prvTable->rowCount() == 0)
     {
-        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("В типовой операции должна быть хотя бы одна проводка."));
+        TApplication::exemplar()->showError(QObject::trUtf8("В типовой операции должна быть хотя бы одна проводка."));
         return false;
     }
     if (headers.count() == 0)
     {
-        TApplication::exemplar()->getGUIFactory()->showError(QObject::trUtf8("В документе должен отображаться хотя бы один столбец."));
+        TApplication::exemplar()->showError(QObject::trUtf8("В документе должен отображаться хотя бы один столбец."));
         return false;
     }
     db->beginTransaction();
@@ -483,7 +483,6 @@ void WizardOperation::getData()
 //         DocumentScriptEngine engine;
 //         scripts = engine.getBlankScripts();
 //     }
-     qDebug() << scripts;
      textEditor->setText(scripts);
 
      connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));

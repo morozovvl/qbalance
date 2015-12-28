@@ -512,11 +512,11 @@ bool DriverFR::Connect(bool showError)
             serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
             serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
 //            maxTries = 10;
-            serialPort->setTimeout(1000);
+//            serialPort->setMyTimeout(1000);
             if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             {
 //                maxTries = MAX_TRIES;
-                serialPort->setTimeout(5000);
+//                serialPort->setMyTimeout(5000);
                 result = true;
                 if (TApplication::isDebugMode(4))
                 {
@@ -551,6 +551,22 @@ void DriverFR::DisConnect()
 }
 
 
+void DriverFR::setShowProgressBar(bool show)
+{
+    showProgressBar = show;
+    if (showProgressBar)
+    {
+        if (!progressDialog->isVisible())
+            progressDialog->show();
+    }
+    else
+    {
+        if (progressDialog->isVisible())
+            progressDialog->hide();
+    }
+}
+
+
 bool DriverFR::isLocked()
 {
     if (remote)
@@ -579,24 +595,6 @@ void DriverFR::setLock(bool lock, QString lockedBy)
     locked = lock;
 }
 
-
-/*
-int DriverFR::checkState()
-{
-  short int repl;
-  sendENQ();
-  repl = readByte();
-  switch(repl)
-    {
-      case NAK:
-        return NAK;
-      case ACK:
-        return ACK;
-      default:
-        return -1;
-    }
-}
-*/
 
 int DriverFR::sendENQ()
 {
@@ -794,7 +792,6 @@ bool DriverFR::deviceIsReady()
             sendENQ();
         }
         else
-//            break;
         {                                       // от предыдущей команды
             serialPort->writeLog();
             answer     a;

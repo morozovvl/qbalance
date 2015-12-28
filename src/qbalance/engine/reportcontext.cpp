@@ -62,6 +62,16 @@ void ReportContext::setValue(QString tag, QVariant val)
 }
 
 
+void ReportContext::setValue(QString tag, QVariant val, int strNum)
+{
+    QString pref = tag.left(tag.indexOf("."));
+    tag = tag.toLower();
+    tag.remove(pref);
+    tag = QString("%1%2%3").arg(pref).arg(strNum).arg(tag);
+    setValue(tag, val);
+}
+
+
 void ReportContext::removeValue(QString tag)
 {
     tag = tag.toLower();

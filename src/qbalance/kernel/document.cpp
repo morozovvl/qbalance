@@ -345,11 +345,11 @@ bool Document::remove(bool noAsk)
                 saveChanges();     // Принудительно обновим итог при удалении строки
                 return true;
             }
-            app->getGUIFactory()->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
+            app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
         }
     }
     else
-        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(app->getLogin()));
+        app->showError(QString(QObject::trUtf8("Запрещено удалять строки в документах пользователю %2")).arg(app->getLogin()));
     return false;
 }
 

@@ -76,8 +76,8 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
     if (!remote)
     {
         tryReceiveExit = false;                     // Запустим цикл опроса данных в процедуре tryReceive() по таймауту
-        tryReceive();
         app->startTimeOut(timeOut);                    // Ждем ответа в течение ...
+        tryReceive();
         while (true)
         {
             if (buffer.size() >= maxSize)

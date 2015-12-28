@@ -92,7 +92,7 @@ bool Dictionary::add()
 {
     if (!lInsertable)
     {
-        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
+        app->showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
                       app->getDictionaries()->getDictionaryTitle(tableName),
                       app->getLogin()));
         return false;
@@ -129,7 +129,7 @@ bool Dictionary::add()
                             }
                             else
                             {
-                                TApplication::exemplar()->getGUIFactory()->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
+                                app->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
                                 lAddDict = false;
                             }
                         }
@@ -220,7 +220,7 @@ bool Dictionary::remove(bool noAsk)
         }
     }
     else
-        app->getGUIFactory()->showError(QString(QObject::trUtf8("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
+        app->showError(QString(QObject::trUtf8("Запрещено удалять записи из справочника %1 пользователю %2")).arg(
             app->getDictionaries()->getDictionaryTitle(tableName),
             app->getLogin()));
     return false;
