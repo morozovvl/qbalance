@@ -36,23 +36,27 @@ public:
 
     virtual bool open(OpenMode mode);
     virtual void close();
-    qint64 writeData(const char *, qint64, bool = false);
-    qint64 readData(char *, qint64, bool = false);
+    virtual qint64 writeData(const char *, qint64, bool = false);
+    virtual qint64 readData(char *, qint64, bool = false);
+    virtual QByteArray readAll() { return QextSerialPort::readAll(); }
 
-    bool    isLockedDriverFR();
-    bool    isReadyDriverFR();
-    bool    setLock(bool lock);
-    void    setRemote(bool r) { remote = r; }
-    void    setMyTimeout(int t) { timeOut = t; }
+    virtual bool    isLockedDriverFR();
+    virtual bool    isReadyDriverFR();
+    virtual bool    setLock(bool lock);
+    virtual void    setRemote(bool r) { remote = r; }
+    virtual void    setMyTimeout(int t) { timeOut = t; }
+    virtual void    setBaudRate(BaudRateType rate) { QextSerialPort::setBaudRate(rate); }
+    virtual void    setTimeout(long timeOut) { QextSerialPort::setTimeout(timeOut); }
 
     // Работа с TCP соединением
-    void setTcpClient(QString, int);
-    TcpClient* getTcpClient() { return tcpClient; }
-    void closeTcpClient();
+    virtual void setTcpClient(QString, int);
+    virtual TcpClient* getTcpClient() { return tcpClient; }
+    virtual void closeTcpClient();
 
     // Работа с журналом
-    QString     getLog() { return log; }
-    void        writeLog(QString = "", bool = false);
+    virtual QString     getLog() { return log; }
+    virtual void        writeLog(QString = "", bool = false);
+
 private slots:
     void        tryReceive();
 private:

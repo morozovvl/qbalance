@@ -78,7 +78,7 @@ QString TableViewPlugin::whatsThis() const {
     return "Your what's this.";
 }
 
-QWidget *TableViewPlugin::createWidget(QWidget *parent) {
+QWidget *TableViewPlugin::createWidget(QWidget*) {
     return new TableView();
 }
 

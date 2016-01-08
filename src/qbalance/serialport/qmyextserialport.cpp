@@ -46,6 +46,10 @@ QMyExtSerialPort::~QMyExtSerialPort()
 
 bool QMyExtSerialPort::open(OpenMode mode)
 {
+    setFlowControl(FLOW_OFF);
+    setParity(PAR_NONE);
+    setDataBits(DATA_8);
+    setStopBits(STOP_2);
     bool result = QextSerialPort::open(mode);
     return result;
 }

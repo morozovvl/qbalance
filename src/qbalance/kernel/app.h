@@ -33,14 +33,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionaries.h"
 #include "documents.h"
 #include "topers.h"
-#include "barcodereader.h"
 #include "tcpclient.h"
 #include "tcpserver.h"
 #include "../gui/guifactory.h"
 #include "../gui/mainwindow.h"
 #include "../gui/dialog.h"
 #include "../gui/messagewindow.h"
+#include "../gui/myprogressdialog.h"
 #include "../driverfr/driverfr.h"
+#include "../bankterminal/bankterminal.h"
+#include "../serialport/qmyextserialport.h"
+#include "../barcodereader/barcodereader.h"
 
 class Dictionaries;
 class Topers;
@@ -102,7 +105,7 @@ public:
     Q_INVOKABLE void clearMessageOnStatusBar() { gui->getMainWindow()->getStatusBar()->clearMessage(); }
     Q_INVOKABLE virtual void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
     Q_INVOKABLE QVariant getConst(QString);
-    GUIFactory* getGUIFactory() { return gui; }
+    virtual GUIFactory* getGUIFactory() { return gui; }
     Q_INVOKABLE QString getLogin() { return db->getLogin(); }
     Q_INVOKABLE bool isSA() { return getLogin().toLower() == "sa" ? true : false; }
     QDate getBeginDate() { return beginDate; }
@@ -134,10 +137,10 @@ public:
     Q_INVOKABLE virtual void setIcons(QWidget*);         // Устанавливает иконки на кнопки указанной формы
 
     static QString encoding();
-    static QTextCodec* codec();
+    virtual QTextCodec* codec();
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
-    static bool isDebugMode(int mode)        { return DebugModes.contains(mode);}
+    virtual bool isDebugMode(int mode)        { return DebugModes.contains(mode);}
     QString debugFileName(int debugMode) {  return getLogsPath().append(QString("debug%1.log").arg(debugMode));}
     static QString errorFileName() { return "error.log";}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
@@ -145,7 +148,7 @@ public:
     static QString getScriptFileName(int oper) { return QString("формулы%1.qs").arg(oper); }
     static void setDebugMode(const int& value);
 
-    Q_INVOKABLE void debug(int, const QString&, bool = false);
+    Q_INVOKABLE virtual void debug(int, const QString&, bool = false);
 
     static TApplication* exemplar();
 
@@ -156,8 +159,11 @@ public:
     bool getSaveFormConfigToDb() { return config.saveFormConfigToDB; }
     QString getReportTemplateExt();
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
-    Q_INVOKABLE DriverFR* getDrvFR() { return driverFR; }
+    Q_INVOKABLE virtual DriverFR* getDrvFR() { return driverFR; }
     void setFR();
+
+    Q_INVOKABLE BankTerminal* getBankTerminal() { return bankTerminal; }
+
     TcpServer* getTcpServer() { return tcpServer; }
 
     Q_INVOKABLE void virtual showError(QString);
@@ -165,7 +171,7 @@ public:
 
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);
-    void         barCodeReadyRead(QString);
+    virtual void barCodeReadyRead(QString);
     virtual bool readCardReader(QKeyEvent*);
 
     Q_INVOKABLE void capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
@@ -181,10 +187,10 @@ public:
     int getSecDiff() { return secDiff; }
     void    initConfig();
     QString     findFileFromEnv(QString);
-    Q_INVOKABLE void timeOut(int);
+    Q_INVOKABLE virtual void timeOut(int);
     Q_INVOKABLE void startTimeOut(int);
     Q_INVOKABLE bool isTimeOut() { return timeIsOut; }
-    Q_INVOKABLE void sleep(int);
+    Q_INVOKABLE virtual void sleep(int);
 
     Q_INVOKABLE void setDirName(QString str) { dirName = str; }
     Q_INVOKABLE QString getOpenFileName(QWidget* parent = 0, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = 0, QFileDialog::Options options = 0);
@@ -212,6 +218,11 @@ public:
     void            appendScriptStack(QString scriptName) { scriptStack.append(scriptName); }
     void            removeLastScriptStack() { scriptStack.removeLast(); }
 
+    QObject*        createPlugin(QString);
+    virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0) { return new QMyExtSerialPort(name, mode, parent); }
+    virtual MyProgressDialog* getMyProgressDialog(QString mess) { return new MyProgressDialog(mess, getMainWindow()); }
+
+
 signals:
     void cardCodeReaded(QString);
 
@@ -224,6 +235,7 @@ private:
     DriverFR*               driverFR;
     bool                    driverFRisValid;
     bool                    driverFRlocked;
+    BankTerminal*           bankTerminal;
     bool                    fsWebCamIsValid;
     static QList<int>       DebugModes;
     static TApplication*    Exemplar;

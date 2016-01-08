@@ -125,7 +125,7 @@ int GUIFactory::openDB()
                     }
                     else
                     {
-                        showCriticalError(QObject::trUtf8("Неверно введен пароль."));
+                        showError(QObject::trUtf8("Неверно введен пароль."));
                         returnCode = -3;
                     }
                 }

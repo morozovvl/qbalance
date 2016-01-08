@@ -16,44 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
+#include "bankterminalplugin.h"
 
-#ifndef TCPCLIENT_H
-#define TCPCLIENT_H
-
-#include <QObject>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QNetworkSession>
-
-
-class TApplication;
-
-class TcpClient : public QObject
-{
-    Q_OBJECT
-public:
-    TcpClient(const QString& strHost, int nPort, QObject *parent = 0);
-    bool sendToServer(QString);
-    virtual bool isValid();
-    QString     getResult() { return result; }
-    bool        waitResult();
-    virtual void logError();
-
-private slots:
-    void slotReadyRead();
-    void slotError(QAbstractSocket::SocketError);
-    void slotConnected();
-    void tryReceive();
-
-private:
-    TApplication*   app;
-    QTcpSocket* m_pTcpSocket;
-    quint16     m_nNextBlockSize;
-    bool        connected;
-    bool        resultReady;
-    QString     hostName;
-    int         port;
-
-    QString     result;
-};
-
-#endif // TCPCLIENT_H
+#if QT_VERSION < 0x050000
+    Q_EXPORT_PLUGIN2(BankTerminal, BankTerminal)
+#endif

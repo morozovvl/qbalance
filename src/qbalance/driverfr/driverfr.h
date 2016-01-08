@@ -682,121 +682,122 @@ class DriverFR : public QObject
 {
     Q_OBJECT
 public:
-    DriverFR(QObject *parent = 0);
+    explicit DriverFR(QObject *parent = 0);
     ~DriverFR();
-    bool open(QString, int, int, int, QString, int);
-    void close();
-    Q_INVOKABLE QVariant getProperty(QString name);
-    Q_INVOKABLE bool setProperty(QString name, QVariant value);
-    QMyExtSerialPort* getSerialPort() { return serialPort; }
-    bool isRemote() { return remote; }
-    Q_INVOKABLE bool isLocked();
-    void        setLock(bool lock, QString lockedByHost = "");
-    QString     getLockedByHost() { return lockedByHost; }          // Вернуть кем заблокирован фискальник
-    Q_INVOKABLE void setProgressDialogValue(int value)
+    virtual void setApp(TApplication* a) { app = a; }
+    virtual bool open(QString, int, int, int, QString, int);
+    virtual void close();
+    Q_INVOKABLE virtual QVariant getProperty(QString name);
+    Q_INVOKABLE virtual bool setProperty(QString name, QVariant value);
+    virtual QMyExtSerialPort* getSerialPort() { return serialPort; }
+    virtual bool isRemote() { return remote; }
+    Q_INVOKABLE virtual bool isLocked();
+    virtual void        setLock(bool lock, QString lockedByHost = "");
+    virtual QString     getLockedByHost() { return lockedByHost; }          // Вернуть кем заблокирован фискальник
+    Q_INVOKABLE virtual void setProgressDialogValue(int value)
     {
         if (progressDialog != 0)
             progressDialog->setValue(value);
     }
-    Q_INVOKABLE void setShowProgressBar(bool);
-    Q_INVOKABLE void writeLog(QString = "");
-    bool deviceIsReady();
-    int decodeTimeOut(int);
-    int codeTimeOut(int);
+    Q_INVOKABLE virtual void setShowProgressBar(bool);
+    Q_INVOKABLE virtual void writeLog(QString = "");
+    virtual bool deviceIsReady();
+    virtual int decodeTimeOut(int);
+    virtual int codeTimeOut(int);
 
 
 // Функции для работы с фискальным регистратором
-    Q_INVOKABLE bool Connect(bool showError = true);
-    Q_INVOKABLE void DisConnect();
-    Q_INVOKABLE int Beep();
-    Q_INVOKABLE int Buy();
-    Q_INVOKABLE int CancelCheck();
-    Q_INVOKABLE int CashIncome();
-    Q_INVOKABLE int CashOutcome();
-    Q_INVOKABLE int Charge();
-    Q_INVOKABLE int CheckSubTotal();
-    Q_INVOKABLE int CloseCheck();
-    Q_INVOKABLE int ConfirmDate();
-    Q_INVOKABLE int ContinuePrint();
-    Q_INVOKABLE int Correction();
-    Q_INVOKABLE int CutCheck();
-    Q_INVOKABLE int DampRequest();
-    Q_INVOKABLE int Discount();
-    Q_INVOKABLE int DozeOilCheck();
-    Q_INVOKABLE int Draw();
-    Q_INVOKABLE int EjectSlipDocument();
-    Q_INVOKABLE int EKLZDepartmentReportInDatesRange();
-    Q_INVOKABLE int EKLZDepartmentReportInSessionsRange();
-    Q_INVOKABLE int EKLZJournalOnSessionNumber();
-    Q_INVOKABLE int EKLZSessionReportInDatesRange();
-    Q_INVOKABLE int EKLZSessionReportInSessionRange();
-    Q_INVOKABLE int FeedDocument();
-    Q_INVOKABLE int Fiscalization();
-    Q_INVOKABLE int FiscalReportForDatesRange();
-    Q_INVOKABLE int FiscalReportForSessionRange();
-    Q_INVOKABLE int GetData();
-    Q_INVOKABLE int GetDeviceMetrics();
-    Q_INVOKABLE int GetExchangeParam();
-    Q_INVOKABLE int GetFieldStruct();
-    Q_INVOKABLE int GetFiscalizationParameters();
-    Q_INVOKABLE int GetFMRecordsSum();
-    Q_INVOKABLE int GetECRStatus();
-    Q_INVOKABLE int GetEKLZData();
-    Q_INVOKABLE int GetEKLZJournal();
-    Q_INVOKABLE int GetEKLZCode1Report();
-    Q_INVOKABLE int EKLZInterrupt();
-    Q_INVOKABLE int GetLastFMRecordDate();
-    Q_INVOKABLE int GetLiterSumCounter();
-    Q_INVOKABLE int GetCashReg();
-    Q_INVOKABLE int GetOperationReg();
-    Q_INVOKABLE int GetRangeDatesAndSessions();
-    Q_INVOKABLE int GetRKStatus();
-    Q_INVOKABLE int GetTableStruct();
-    Q_INVOKABLE int InitFM();
-    Q_INVOKABLE int InitTable();
-    Q_INVOKABLE int InterruptDataStream();
-    Q_INVOKABLE int InterruptFullReport();
-    Q_INVOKABLE int InterruptTest();
-    Q_INVOKABLE int LaunchRK();
-    Q_INVOKABLE int LoadLineData();
-    Q_INVOKABLE int OilSale();
-    Q_INVOKABLE int OpenDrawer();
-    Q_INVOKABLE int PrintBarCode();
-    Q_INVOKABLE int PrintDocumentTitle();
-    Q_INVOKABLE int PrintOperationReg();
-    Q_INVOKABLE int PrintReportWithCleaning();
-    Q_INVOKABLE int PrintReportWithoutCleaning();
-    Q_INVOKABLE int PrintString();
-    Q_INVOKABLE int PrintString(QString, int = 1);
-    Q_INVOKABLE int PrintWideString();
-    Q_INVOKABLE int ReadEKLZDocumentOnKPK();
-    Q_INVOKABLE int ReadEKLZSessionTotal();
-    Q_INVOKABLE int ReadLicense();
-    Q_INVOKABLE int ReadTable();
-    Q_INVOKABLE int ResetAllTRK();
-    Q_INVOKABLE int ResetRK();
-    Q_INVOKABLE int ResetSettings();
-    Q_INVOKABLE int ResetSummary();
-    Q_INVOKABLE int ReturnBuy();
-    Q_INVOKABLE int ReturnSale();
-    Q_INVOKABLE int Sale();
-    Q_INVOKABLE int SetDate();
-    Q_INVOKABLE int SetDozeInMilliliters();
-    Q_INVOKABLE int SetDozeInMoney();
-    Q_INVOKABLE int SetExchangeParam();
-    Q_INVOKABLE int SetPointPosition();
-    Q_INVOKABLE int SetRKParameters();
-    Q_INVOKABLE int SetSerialNumber();
-    Q_INVOKABLE int SetTime();
-    Q_INVOKABLE int StopEKLZDocumentPrinting();
-    Q_INVOKABLE int StopRK();
-    Q_INVOKABLE int Storno();
-    Q_INVOKABLE int StornoCharge();
-    Q_INVOKABLE int StornoDiscount();
-    Q_INVOKABLE int SummOilCheck();
-    Q_INVOKABLE int Test();
-    Q_INVOKABLE int WriteLicense();
-    Q_INVOKABLE int WriteTable();
+    Q_INVOKABLE virtual bool Connect(bool showError = true);
+    Q_INVOKABLE virtual void DisConnect();
+    Q_INVOKABLE virtual int Beep();
+    Q_INVOKABLE virtual int Buy();
+    Q_INVOKABLE virtual int CancelCheck();
+    Q_INVOKABLE virtual int CashIncome();
+    Q_INVOKABLE virtual int CashOutcome();
+    Q_INVOKABLE virtual int Charge();
+    Q_INVOKABLE virtual int CheckSubTotal();
+    Q_INVOKABLE virtual int CloseCheck();
+    Q_INVOKABLE virtual int ConfirmDate();
+    Q_INVOKABLE virtual int ContinuePrint();
+    Q_INVOKABLE virtual int Correction();
+    Q_INVOKABLE virtual int CutCheck();
+    Q_INVOKABLE virtual int DampRequest();
+    Q_INVOKABLE virtual int Discount();
+    Q_INVOKABLE virtual int DozeOilCheck();
+    Q_INVOKABLE virtual int Draw();
+    Q_INVOKABLE virtual int EjectSlipDocument();
+    Q_INVOKABLE virtual int EKLZDepartmentReportInDatesRange();
+    Q_INVOKABLE virtual int EKLZDepartmentReportInSessionsRange();
+    Q_INVOKABLE virtual int EKLZJournalOnSessionNumber();
+    Q_INVOKABLE virtual int EKLZSessionReportInDatesRange();
+    Q_INVOKABLE virtual int EKLZSessionReportInSessionRange();
+    Q_INVOKABLE virtual int FeedDocument();
+    Q_INVOKABLE virtual int Fiscalization();
+    Q_INVOKABLE virtual int FiscalReportForDatesRange();
+    Q_INVOKABLE virtual int FiscalReportForSessionRange();
+    Q_INVOKABLE virtual int GetData();
+    Q_INVOKABLE virtual int GetDeviceMetrics();
+    Q_INVOKABLE virtual int GetExchangeParam();
+    Q_INVOKABLE virtual int GetFieldStruct();
+    Q_INVOKABLE virtual int GetFiscalizationParameters();
+    Q_INVOKABLE virtual int GetFMRecordsSum();
+    Q_INVOKABLE virtual int GetECRStatus();
+    Q_INVOKABLE virtual int GetEKLZData();
+    Q_INVOKABLE virtual int GetEKLZJournal();
+    Q_INVOKABLE virtual int GetEKLZCode1Report();
+    Q_INVOKABLE virtual int EKLZInterrupt();
+    Q_INVOKABLE virtual int GetLastFMRecordDate();
+    Q_INVOKABLE virtual int GetLiterSumCounter();
+    Q_INVOKABLE virtual int GetCashReg();
+    Q_INVOKABLE virtual int GetOperationReg();
+    Q_INVOKABLE virtual int GetRangeDatesAndSessions();
+    Q_INVOKABLE virtual int GetRKStatus();
+    Q_INVOKABLE virtual int GetTableStruct();
+    Q_INVOKABLE virtual int InitFM();
+    Q_INVOKABLE virtual int InitTable();
+    Q_INVOKABLE virtual int InterruptDataStream();
+    Q_INVOKABLE virtual int InterruptFullReport();
+    Q_INVOKABLE virtual int InterruptTest();
+    Q_INVOKABLE virtual int LaunchRK();
+    Q_INVOKABLE virtual int LoadLineData();
+    Q_INVOKABLE virtual int OilSale();
+    Q_INVOKABLE virtual int OpenDrawer();
+    Q_INVOKABLE virtual int PrintBarCode();
+    Q_INVOKABLE virtual int PrintDocumentTitle();
+    Q_INVOKABLE virtual int PrintOperationReg();
+    Q_INVOKABLE virtual int PrintReportWithCleaning();
+    Q_INVOKABLE virtual int PrintReportWithoutCleaning();
+    Q_INVOKABLE virtual int PrintString();
+    Q_INVOKABLE virtual int PrintString(QString, int = 1);
+    Q_INVOKABLE virtual int PrintWideString();
+    Q_INVOKABLE virtual int ReadEKLZDocumentOnKPK();
+    Q_INVOKABLE virtual int ReadEKLZSessionTotal();
+    Q_INVOKABLE virtual int ReadLicense();
+    Q_INVOKABLE virtual int ReadTable();
+    Q_INVOKABLE virtual int ResetAllTRK();
+    Q_INVOKABLE virtual int ResetRK();
+    Q_INVOKABLE virtual int ResetSettings();
+    Q_INVOKABLE virtual int ResetSummary();
+    Q_INVOKABLE virtual int ReturnBuy();
+    Q_INVOKABLE virtual int ReturnSale();
+    Q_INVOKABLE virtual int Sale();
+    Q_INVOKABLE virtual int SetDate();
+    Q_INVOKABLE virtual int SetDozeInMilliliters();
+    Q_INVOKABLE virtual int SetDozeInMoney();
+    Q_INVOKABLE virtual int SetExchangeParam();
+    Q_INVOKABLE virtual int SetPointPosition();
+    Q_INVOKABLE virtual int SetRKParameters();
+    Q_INVOKABLE virtual int SetSerialNumber();
+    Q_INVOKABLE virtual int SetTime();
+    Q_INVOKABLE virtual int StopEKLZDocumentPrinting();
+    Q_INVOKABLE virtual int StopRK();
+    Q_INVOKABLE virtual int Storno();
+    Q_INVOKABLE virtual int StornoCharge();
+    Q_INVOKABLE virtual int StornoDiscount();
+    Q_INVOKABLE virtual int SummOilCheck();
+    Q_INVOKABLE virtual int Test();
+    Q_INVOKABLE virtual int WriteLicense();
+    Q_INVOKABLE virtual int WriteTable();
 
 private:
 
@@ -844,5 +845,7 @@ private:
     bool    showProgressBar;
     int     maxTries;
 };
+
+Q_DECLARE_INTERFACE(DriverFR, "org.QBalance.DriverFR")
 
 #endif // DRIVERFR_H

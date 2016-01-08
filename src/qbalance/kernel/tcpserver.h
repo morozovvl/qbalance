@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define TCPSERVER_H
 
 #include <QObject>
-#include <QTcpServer>
-#include <QNetworkSession>
+#include <QtNetwork/QTcpServer>
+#include <QtNetwork/QNetworkSession>
 
 
 class TApplication;
@@ -33,7 +33,7 @@ class TcpServer : public QObject
 
 public:
     TcpServer(int nPort, QObject *parent = 0);
-    void    pingClient(QString);
+    virtual void    pingClient(QString);
     bool    getPingOk() { return pingOk; }
 
 public slots:

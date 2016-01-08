@@ -17,30 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef BARCODEREADER_H
-#define BARCODEREADER_H
+#include "bankterminal.h"
 
-#include <QObject>
-#include "../../qextserialport/src/qextserialport.h"
-
-
-class QextSerialPort;
-
-class BarCodeReader : public QObject
+BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit BarCodeReader(QObject *parent = 0, QString = "");
-    ~BarCodeReader();
-    
-signals:
-    
-public slots:
-    void                    barCodeReadyRead();
-
-private:
-    QextSerialPort*         barCodeReaderComPort;
-    QString                 barCodeString;
-};
-
-#endif // BARCODEREADER_H
+}

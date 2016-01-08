@@ -38,6 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/dialog.h"
 #include "../gui/picture.h"
 #include "../driverfr/driverfr.h"
+#include "../bankterminal/bankterminal.h"
 #include "../openoffice/ooxmlengine.h"
 
 #include "eventloop.h"
@@ -240,10 +241,12 @@ QScriptValue debug(QScriptContext* context, QScriptEngine*) {
 // класс DriverFR
 Q_DECLARE_METATYPE(DriverFR*)
 
+/*
 QScriptValue DriverFRConstructor(QScriptContext *, QScriptEngine *engine) {
     DriverFR *object = new DriverFR(TApplication::exemplar());
      return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
+*/
 
 QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
     return engine->newQObject(in);
@@ -251,6 +254,18 @@ QScriptValue DriverFRToScriptValue(QScriptEngine *engine, DriverFR* const &in) {
 
 void DriverFRFromScriptValue(const QScriptValue &object, DriverFR* &out) {
     out = qobject_cast<DriverFR*>(object.toQObject());
+}
+
+
+// класс BankTerminal
+Q_DECLARE_METATYPE(BankTerminal*)
+
+QScriptValue BankTerminalToScriptValue(QScriptEngine *engine, BankTerminal* const &in) {
+    return engine->newQObject(in);
+}
+
+void BankTerminalFromScriptValue(const QScriptValue &object, BankTerminal* &out) {
+    out = (BankTerminal*)(object.toQObject());
 }
 
 // класс EventLoop
@@ -602,7 +617,8 @@ void ScriptEngine::loadScriptObjects()
 
     // Объявим классы для работы с пользовательскими формами
     qScriptRegisterMetaType(this, DriverFRToScriptValue, DriverFRFromScriptValue);
-    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
+//    globalObject().setProperty("DriverFR", newQMetaObject(&QObject::staticMetaObject, newFunction(DriverFRConstructor)));
+    qScriptRegisterMetaType(this, BankTerminalToScriptValue, BankTerminalFromScriptValue);
     qScriptRegisterMetaType(this, EventLoopToScriptValue, EventLoopFromScriptValue);
     globalObject().setProperty("EventLoop", newQMetaObject(&QObject::staticMetaObject, newFunction(EventLoopConstructor)));
     qScriptRegisterMetaType(this, FormToScriptValue, FormFromScriptValue);

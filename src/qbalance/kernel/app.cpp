@@ -36,6 +36,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/configform.h"
 #include "../engine/documentscriptengine.h"
 #include "../storage/dbfactory.h"
+#include "../bankterminal/bankterminal.h"
+#include "../driverfr/driverfr.h"
 
 
 QList<int>    TApplication::DebugModes;
@@ -71,6 +73,7 @@ TApplication::TApplication(int & argc, char** argv)
     topersList = 0;
     driverFR = 0;
     barCodeReader = 0;
+    bankTerminal = 0;
 
     driverFRisValid = false;
     driverFRlocked = false;
@@ -184,15 +187,30 @@ bool TApplication::open() {
 
     readSettings();
 
-    if (config.frNeeded && !isScriptMode())
+    driverFR = (DriverFR*)createPlugin("driverfr");
+//    driverFR = new DriverFR();
+    if (driverFR != 0)
     {
-        driverFR = new DriverFR(this);
-        if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
-            driverFRisValid = true;
+        driverFR->setApp(this);
+        if (config.frNeeded && !isScriptMode())
+        {
+            if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
+                    driverFRisValid = true;
+        }
     }
+
+    barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
+    if (barCodeReader != 0)
+    {
+        barCodeReader->setApp(this);
+        barCodeReader->open(config.barCodeReaderPort);
+    }
+//    barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
+
+    bankTerminal = (BankTerminal*)createPlugin("bankterminal");
+
     db  = new DBFactory();
     tcpServer = new TcpServer(config.localPort, this);
-    barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
     messagesWindow = new MessageWindow();
 
     if (gui->open())
@@ -435,6 +453,31 @@ Dialog* TApplication::createForm(QString fileName)
         }
     }
     return formWidget;
+}
+
+
+QObject* TApplication::createPlugin(QString fileName)
+{
+    QObject* result = 0;
+    QString pluginFile = applicationDirPath() + "/plugins/lib" + fileName;
+#ifdef Q_OS_WIN32
+    pluginFile.append(".dll");
+#else
+    pluginFile.append(".so");
+#endif
+    if (QDir().exists(pluginFile))
+    {
+        QPluginLoader loader(pluginFile);
+        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+        loader.load();
+        if (loader.isLoaded())
+        {
+            result = loader.instance();
+        }
+        else
+            showError(loader.errorString());
+    }
+    return result;
 }
 
 

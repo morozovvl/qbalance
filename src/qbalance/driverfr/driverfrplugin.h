@@ -17,43 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef TCPCLIENT_H
-#define TCPCLIENT_H
+#ifndef DRIVERFRPLUGIN_H
+#define DRIVERFRPLUGIN_H
 
-#include <QObject>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QNetworkSession>
+#include <QtCore/QObject>
+#include <QtCore/qplugin.h>
+#include "driverfr.h"
 
-
-class TApplication;
-
-class TcpClient : public QObject
+class DriverFRPlugin : public DriverFR
 {
     Q_OBJECT
-public:
-    TcpClient(const QString& strHost, int nPort, QObject *parent = 0);
-    bool sendToServer(QString);
-    virtual bool isValid();
-    QString     getResult() { return result; }
-    bool        waitResult();
-    virtual void logError();
-
-private slots:
-    void slotReadyRead();
-    void slotError(QAbstractSocket::SocketError);
-    void slotConnected();
-    void tryReceive();
-
-private:
-    TApplication*   app;
-    QTcpSocket* m_pTcpSocket;
-    quint16     m_nNextBlockSize;
-    bool        connected;
-    bool        resultReady;
-    QString     hostName;
-    int         port;
-
-    QString     result;
+    Q_INTERFACES(DriverFR)
 };
 
-#endif // TCPCLIENT_H
+#endif // DRIVERFRPLUGIN_H

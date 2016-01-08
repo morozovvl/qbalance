@@ -41,7 +41,7 @@ int buggyFunc() {
 bool readParameters(int argc, char *argv[]) {
     bool lContinue = true;
     QTextStream out(stdout);
-    out.setCodec(TApplication::codec());
+//    out.setCodec(TApplication::codec());
     for (int i = 1; i < argc; i++) {
         if (QString(argv[i]).compare("-?", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0)
@@ -165,13 +165,12 @@ void test() {
 
 int main(int argc, char *argv[])
 {
-#if QT_VERSION < 0x050000
-    QTextCodec::setCodecForTr(TApplication::codec());
-    QTextCodec::setCodecForCStrings(TApplication::codec());
-#endif
-    QTextCodec::setCodecForLocale(TApplication::codec());
-
     TApplication application(argc, argv);
+#if QT_VERSION < 0x050000
+    QTextCodec::setCodecForTr(application.codec());
+    QTextCodec::setCodecForCStrings(application.codec());
+#endif
+    QTextCodec::setCodecForLocale(application.codec());
 
 #ifdef CRASHHANDLER
     Breakpad::CrashHandler::instance()->Init(TApplication::exemplar()->getCrashDumpsPath());

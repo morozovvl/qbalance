@@ -398,15 +398,11 @@ DriverFR::DriverFR(QObject *parent) : QObject(parent)
     remote = false;
     locked = false;
     codec = QTextCodec::codecForName("Windows-1251");
-    app = TApplication::exemplar();
+    app = 0;
     progressDialog = 0;
-    if (app->getGUIFactory() != 0)
-    {
-        progressDialog = new MyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."), app->getMainWindow());
-        progressDialog->resize(600, progressDialog->height());
-    }
     showProgressBar = false;
     maxTries = MAX_TRIES;
+    serialPort = 0;
 }
 
 
@@ -419,12 +415,14 @@ DriverFR::~DriverFR()
 bool DriverFR::open(QString port, int rate, int timeout, int password, QString ipAddress, int ipPort)
 {
     bool result = false;
+    if (app == 0)
+        return result;
     locked = false;
     // Установление связи с ккм
     fr.BaudRate      = rate;
     fr.Timeout       = timeout;
     fr.Password      = password;
-    serialPort = new QMyExtSerialPort(port, QextSerialPort::Polling);
+    serialPort = app->getSerialPort(port, QextSerialPort::Polling);
     if (serialPort != 0)
     {
         serialPort->setRemote(false);
@@ -432,10 +430,6 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
 
         serialPort->setBaudRate(LineSpeedVal[rate]);
         serialPort->setTimeout(timeout);
-        serialPort->setFlowControl(FLOW_OFF);
-        serialPort->setParity(PAR_NONE);
-        serialPort->setDataBits(DATA_8);
-        serialPort->setStopBits(STOP_2);
         if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
         {
             if (Connect(false))
@@ -475,6 +469,11 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
         if (result)
         {
             serialPort->setRemote(remote);
+            if (app->getGUIFactory() != 0)
+            {
+                progressDialog = app->getMyProgressDialog(trUtf8("Ожидайте окончания работы фискального регистратора..."));
+                progressDialog->resize(600, progressDialog->height());
+            }
         }
     }
     if (!result)
@@ -485,9 +484,13 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
 
 void DriverFR::close()
 {
+    if (serialPort != 0)
+    {
+        if (connected)
+            serialPort->close();
+        delete serialPort;
+    }
     connected = false;
-    serialPort->close();
-    delete serialPort;
 }
 
 
@@ -518,7 +521,7 @@ bool DriverFR::Connect(bool showError)
 //                maxTries = MAX_TRIES;
 //                serialPort->setMyTimeout(5000);
                 result = true;
-                if (TApplication::isDebugMode(4))
+                if (app->isDebugMode(4))
                 {
                     serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
                     serialPort->writeLog(QString("Подрежим: %1 %2").arg(fr.ECRAdvancedMode).arg(fr.ECRAdvancedModeDescription));
@@ -831,7 +834,7 @@ QVariant DriverFR::getProperty(QString name)
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
     const char* propName = name.toAscii().data();
     result = fr.property(propName);
-    QTextCodec::setCodecForLocale(TApplication::codec());
+    QTextCodec::setCodecForLocale(app->codec());
     return result;
 }
 
@@ -842,7 +845,7 @@ bool DriverFR::setProperty(QString name, QVariant value)
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
     const char* propName = name.toAscii().data();
     result = fr.setProperty(propName, value);
-    QTextCodec::setCodecForLocale(TApplication::codec());
+    QTextCodec::setCodecForLocale(app->codec());
     return result;
 }
 

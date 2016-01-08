@@ -81,17 +81,16 @@ SOURCES += main.cpp \
     gui/mytextedit.cpp \
     gui/mysyntaxhighlighter.cpp \
     gui/dialog.cpp \
-    driverfr/driverfr.cpp \
     gui/mydateitemdelegate.cpp \
     report/ooxmlreportengine.cpp \
     gui/mymdisubwindow.cpp \
-    kernel/barcodereader.cpp \
     openoffice/ooxmlengine.cpp \
     gui/messagewindow.cpp \
     serialport/qmyextserialport.cpp \
     kernel/tcpserver.cpp \
     kernel/tcpclient.cpp \
     gui/myprogressdialog.cpp
+
 HEADERS += kernel/app.h \
     storage/dbfactory.h \
     gui/guifactory.h \
@@ -146,17 +145,16 @@ HEADERS += kernel/app.h \
     gui/mytextedit.h \
     gui/mysyntaxhighlighter.h \
     gui/dialog.h \
-    driverfr/driverfr.h \
     gui/mydateitemdelegate.h \
     report/ooxmlreportengine.h \
     gui/mymdisubwindow.h \
-    kernel/barcodereader.h \
     openoffice/ooxmlengine.h \
     gui/messagewindow.h \
     serialport/qmyextserialport.h \
     kernel/tcpserver.h \
     kernel/tcpclient.h \
     gui/myprogressdialog.h
+
 
 RESOURCES += ../../resources.qrc
 

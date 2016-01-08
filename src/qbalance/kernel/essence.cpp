@@ -62,7 +62,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     nameFieldName = db->getObjectName("имя");
     scriptFileName =  tagName;
     if (tagName.size() > 0)
-        scriptFileName += ".js";
+        scriptFileName += ".qs";
     scriptEngineEnabled = true;                 // По умолчанию разрешена загрузка скриптового движка
     photoPath = "";
     photoPathVerified = false;
