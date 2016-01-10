@@ -200,7 +200,6 @@ int Form::exec()
             parent->beforeShowFormEvent(parent->getForm());
 
         lSelected = false;
-//        checkVisibility();
         if (!autoSelect)
         {
             if (subWindow != 0)
@@ -218,8 +217,6 @@ int Form::exec()
             formWidget->exec();
             formWidget->done(0);
             getSubWindow();
-//            if (subWindow != 0)
-//                subWindow->setGeometry(oldRect);
         }
         else
             cmdOk();

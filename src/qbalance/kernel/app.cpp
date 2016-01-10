@@ -187,27 +187,46 @@ bool TApplication::open() {
 
     readSettings();
 
-    driverFR = (DriverFR*)createPlugin("driverfr");
-//    driverFR = new DriverFR();
-    if (driverFR != 0)
+    // Если нужно и если есть соответствующий плагин, попытаемся открыть драйвер фискального регистратора
+    if (config.frNeeded && !isScriptMode())
     {
-        driverFR->setApp(this);
-        if (config.frNeeded && !isScriptMode())
+        driverFR = (DriverFR*)createPlugin("driverfr");
+        if (driverFR != 0)
         {
+            driverFR->setApp(this);
             if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
                     driverFRisValid = true;
+            else
+            {
+                driverFR->close();
+                driverFR = 0;
+            }
         }
     }
 
+    // Запустим сканер штрих-кодов, если есть его плагин
     barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
     if (barCodeReader != 0)
     {
         barCodeReader->setApp(this);
-        barCodeReader->open(config.barCodeReaderPort);
+        if (!barCodeReader->open(config.barCodeReaderPort))
+        {
+            barCodeReader->close();
+            barCodeReader = 0;
+        }
     }
-//    barCodeReader = new BarCodeReader(this, config.barCodeReaderPort);
 
+    // Запустим банковский терминал, если есть плагин
     bankTerminal = (BankTerminal*)createPlugin("bankterminal");
+    if (bankTerminal != 0)
+    {
+        bankTerminal->setApp(this);
+        if (!bankTerminal->open())
+        {
+            bankTerminal->close();
+            bankTerminal = 0;
+        }
+    }
 
     db  = new DBFactory();
     tcpServer = new TcpServer(config.localPort, this);

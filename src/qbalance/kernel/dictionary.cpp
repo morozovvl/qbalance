@@ -42,7 +42,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     isDepend = false;
     ftsEnabled = false;
     lIsSaldo = false;
-    lIsAutoLoaded = true;
+    lIsAutoLoaded = false;
     lsetIdEnabled = true;
     parentDict = 0;
     locked = false;

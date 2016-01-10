@@ -50,6 +50,7 @@ Q_DECLARE_METATYPE(Dialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
 
 QString ScriptEngine::scriptFileName = "";
+QHash<QString, QString> ScriptEngine::scripts;
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
 
@@ -1143,21 +1144,36 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction func)
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    if (!QFileInfo(scriptFile).exists())
+    if (!scripts.contains(scriptFile))
     {
-        QString scriptPath = TApplication::exemplar()->getScriptsPath();
-        Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
-        scriptFile = scriptPath + scriptFile;
+        QString fullScriptFile = scriptFile;
+        if (!QFileInfo(scriptFile).exists())
+        {
+            QString scriptPath = TApplication::exemplar()->getScriptsPath();
+            Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его
+            fullScriptFile = scriptPath + scriptFile;
+        }
+        QFile file(fullScriptFile);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QString script(file.readAll());
+            file.close();
+            result = script;
+        }
+        scripts.insert(scriptFile, result);
     }
-    QFile file(scriptFile);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    else
     {
-        QString script(file.readAll());
-        file.close();
-        result = script;
+        result = scripts.value(scriptFile);
     }
     scriptFileName = scriptFile;
     return result;
+}
+
+
+void ScriptEngine::removeScript(QString scriptFile)
+{
+    scripts.remove(scriptFile);
 }
 
 

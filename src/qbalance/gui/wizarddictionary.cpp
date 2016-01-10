@@ -448,7 +448,9 @@ bool WizardDictionary::setData()
         }
     }
     // Сохраним скрипты
-    db->setFile(table + ".qs", ScriptFileType, QByteArray().append(textEditor->toPlainText()));
+    QString scriptFile = table + ".qs";
+    ScriptEngine::removeScript(scriptFile);
+    db->setFile(scriptFile, ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
 
     if (app->getDictionaries()->getDictionariesList()->contains(table))

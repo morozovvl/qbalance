@@ -284,16 +284,15 @@ QString Essence::getName(int row)
 
 void Essence::setId(qulonglong id)
 {
+    bool enabled = photoEnabled;
+    photoEnabled = false;
     if (getValue(idFieldName) != id)
     {
         // На время отключим обновление(показ) фотографии
-        bool enabled = photoEnabled;
-        photoEnabled = false;
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id), true);
-        photoEnabled = enabled;
     }
     grdTable->selectRow(0);
-
+    photoEnabled = enabled;
 }
 
 
@@ -380,12 +379,12 @@ QString Essence::getPhotoFile(QString copyTo)
             pictureUrl = preparePictureUrl();
             localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
             idValue = getValue(photoIdField).toString().trimmed();
-            if (localFile.size() > 0)
+            if (localFile.size() > 0 && photoEnabled)
             {
                 file = getLocalPhotoFile();
                 if (isDictionary)
                 {
-                    if (!QFile(file).exists())
+                    if (!QFile(file).exists() && phEnabled)
                     {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа
                         // Мы знаем, под каким именем искать фотографию на нашем сервере, то попробуем обратиться к нему за фотографией
                         if (db->getFileCheckSum(localFile, PictureFileType, true) != 0)
@@ -436,12 +435,11 @@ QString Essence::getPhotoFile(QString copyTo)
                     }
                     else
                     {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        app->saveFileToServer(file, localFile, PictureFileType, true);
+                        if (QFile(file).exists())
+                            app->saveFileToServer(file, localFile, PictureFileType, true);
                         if (copyTo.size() > 0)
                         {
-                            QString file = app->getPhotosPath(copyTo);
-                            if (!QFile(file).exists())
-                                db->copyFile(localFile, PictureFileType, copyTo, true);
+                            db->copyFile(localFile, copyTo, true);
                         }
                     }
                 }
@@ -490,7 +488,7 @@ void Essence::replyFinished(QNetworkReply* reply)
 
                 if (copyTo.size() > 0)
                 {
-                    db->copyFile(localFile, PictureFileType, copyTo, true);
+                    db->copyFile(localFile, copyTo, true);
                 }
 
                 // Проверим, не нужно ли обновить фотографию
@@ -538,11 +536,7 @@ int Essence::exec()
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
-
-//        beforeShowFormEvent(form);
         result = form->exec();
-//        afterShowFormEvent(form);
-
         return result;
     }
     return 0;
@@ -556,10 +550,7 @@ void Essence::show()
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
-
-//        beforeShowFormEvent(form);
         form->show();
-//        afterShowFormEvent(form);
     }
 }
 

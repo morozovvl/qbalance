@@ -64,6 +64,7 @@ public:
     bool isConst() { return lIsConst; }
     bool isSet() { return lIsSet; }
     bool isSaldo() { return lIsSaldo; }
+    Q_INVOKABLE void setIsSaldo(bool s) { lIsSaldo = s; }
     Q_INVOKABLE void setConst(bool);
     Q_INVOKABLE void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
                                                                             // которые будут блокироваться при добавлении записи в документ

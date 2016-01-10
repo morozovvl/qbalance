@@ -22,13 +22,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QObject>
 #include <QDebug>
+//#include "../kernel/app.h"
+
+class TApplication;
 
 class BankTerminal : public QObject
 {
     Q_OBJECT
 public:
     explicit BankTerminal(QObject *parent = 0);
+    virtual bool open();
+    virtual void close();
+    virtual void setApp(TApplication* a) { app = a; }
     Q_INVOKABLE virtual void test() { qDebug() << "Ok"; }
+
+private:
+    TApplication* app;
 };
 
 Q_DECLARE_INTERFACE(BankTerminal, "org.QBalance.BankTerminal")

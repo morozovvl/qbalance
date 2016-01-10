@@ -89,6 +89,7 @@ public:
     void eventCardCodeReaded(QString);
     friend bool isNumeric(ScriptEngine engine, QString field);
     static QString loadScript(QString);
+    static void removeScript(QString);
     void   showScriptError(QString);
 
 protected:
@@ -101,6 +102,7 @@ protected:
     Documents*      documents;
     virtual void    loadScriptObjects();
 private:
+    static QHash<QString, QString> scripts;
     int                 scriptResult;
     QString             errorMessage;
     static QString      scriptFileName;

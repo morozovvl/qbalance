@@ -145,7 +145,7 @@ public:
     bool removeDoc(int);
     int addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
     bool removeDocStr(int, int);
-    void saveDocAttribute(int, int, QString, QVariant);
+    void saveDocAttribute(int, int, QString);
     void saveDocumentVariables(int docId, QString xml);
     QString restoreDocumentVariables(int docId);
     QSqlQuery getDocumentAddQueriesList(int);
@@ -158,7 +158,7 @@ public:
     bool isFileExist(QString, FileType, bool = false);
     void removeFile(QString, FileType, bool = false);
     void setFile(QString, FileType, QByteArray, bool = false);
-    void copyFile(QString, FileType, QString, bool = false);
+    void copyFile(QString, QString, bool = false);
     static qulonglong calculateCRC32(QByteArray*);
 
     // Работа с соединением

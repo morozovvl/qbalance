@@ -359,7 +359,9 @@ bool WizardOperation::setData()
     }
 
     // Сохраним скрипты
-    db->setFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType, QByteArray().append(textEditor->toPlainText()));
+    QString scriptFile = TApplication::exemplar()->getScriptFileName(oper);
+    ScriptEngine::removeScript(scriptFile);
+    db->setFile(scriptFile, ScriptFileType, QByteArray().append(textEditor->toPlainText()));
     db->commitTransaction();
 
     if (app->getDocuments(oper) != 0)

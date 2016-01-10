@@ -351,7 +351,6 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
         if (errorText.size() > 0)
             setError(errorText);
     }
-//    query->clear();
     delete query;
     return lResult;
 }
@@ -373,7 +372,6 @@ QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
         setError(query->lastError().text());
     }
     result = *query;
-//    query->clear();
     delete query;
     return result;
 }
@@ -1257,18 +1255,12 @@ int DBFactory::addDocStr(int operNumber, int docId, QString cParam, int nQuan, i
 }
 
 
-void DBFactory::saveDocAttribute(int operNumber, int docId, QString attribute, QVariant val)
+void DBFactory::saveDocAttribute(int operNumber, int docId, QString attributes)
 {
     clearError();
-    QString value;
-    if (val.type() == QVariant::String)
-        value = QString("'%1'").arg(val.toString());
-    else
-        value = val.toString();
-    QString command = QString("UPDATE %1%2 SET %3=%4 WHERE %5=%6 AND %7=(SELECT max(%7) FROM %1%2 WHERE %5=%6);").arg(getObjectName("атрибуты"))
+    QString command = QString("UPDATE %1%2 SET %3 WHERE %4=%5 AND %6=(SELECT max(%6) FROM %1%2 WHERE %4=%5);").arg(getObjectName("атрибуты"))
                                                                                                                  .arg(operNumber)
-                                                                                                                 .arg(attribute)
-                                                                                                                 .arg(value)
+                                                                                                                 .arg(attributes)
                                                                                                                  .arg(getObjectNameCom("атрибуты.доккод"))
                                                                                                                  .arg(docId)
                                                                                                                  .arg(getObjectNameCom("атрибуты.стр"));
@@ -1434,23 +1426,17 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
 }
 
 
-void DBFactory::copyFile(QString fileFrom, FileType type, QString fileTo, bool extend)
+void DBFactory::copyFile(QString fileFrom, QString fileTo, bool extend)
 {
-    if (isFileExist(fileFrom, type, extend))
-    {
-        QString text;
-        if (!isFileExist(fileTo, type, extend))
-        {
-            text = QString("INSERT INTO %1 (%2, %3, %4, %5) SELECT '%6', %3, %4, %5 FROM %1 WHERE %2 = '%7';").arg(getObjectNameCom("файлы"))
+    QString text;
+    text = QString("INSERT INTO %1 (%2, %3, %4, %5) SELECT '%6', %3, %4, %5 FROM %1 WHERE %2 = '%7';").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.имя"))
                                                                                   .arg(getObjectNameCom("файлы.тип"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(fileTo)
                                                                                   .arg(fileFrom);
-            exec(text, true, (extend && extDbExist) ? dbExtend : db);
-        }
-    }
+    exec(text, true, (extend && extDbExist) ? dbExtend : db);
 }
 
 
@@ -1589,17 +1575,6 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
-/*
-        text = QString("UPDATE %1 SET %2 = (:value), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(size)
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(type)
-                                                                                  .arg(getObjectNameCom("файлы.датавремя"));
-*/
         if (!extend)
             text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
@@ -1624,16 +1599,6 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     }
     else
     {
-/*
-        text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, (:value));").arg(getObjectNameCom("файлы"))
-                                                                                  .arg(getObjectNameCom("файлы.имя"))
-                                                                                  .arg(getObjectNameCom("файлы.тип"))
-                                                                                  .arg(getObjectNameCom("файлы.контрсумма"))
-                                                                                  .arg(getObjectNameCom("файлы.значение"))
-                                                                                  .arg(fileName)
-                                                                                  .arg(type)
-                                                                                  .arg(size);
-*/
         text = QString("INSERT INTO %1 (%2, %3, %4, %6) VALUES ('%7', %8, %9, decode('%10', 'hex'));").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.имя"))
                                                                                   .arg(getObjectNameCom("файлы.тип"))

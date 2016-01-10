@@ -889,32 +889,27 @@ bool Document::setTableModel(int)
         db->getColumnsRestrictions(tagName, &columnsProperties);
 
         // Откроем постоянные справочники
-        Dictionary* dict;
         QList<DictType> dictsList;
         db->getToperDictAliases(operNumber, topersList, &dictsList);
         for (int i = 0; i < dictsList.count(); i++)
         {
-            if (dictsList.at(i).isConst)
-            {
-                dict = dictionaries->getDictionary(dictsList.at(i).name);
-                if (dict != 0)
-                {
-                    dict->setConst(true);
-                }
-            }
             if (dictsList.at(i).isSaldo)
             {
                 Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
                 SearchParameters* searchParameters = saldo->getForm()->getSearchParameters();
                 if (searchParameters != 0)
                     searchParameters->setDictionaries(dictionaries);
+                saldo->setAutoLoaded(true);
             }
             else
             {
                 Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
+                if (dictsList.at(i).isConst)
+                    dict->setConst(true);
                 SearchParameters* searchParameters = dict->getForm()->getSearchParameters();
                 if (searchParameters != 0)
                     searchParameters->setDictionaries(dictionaries);
+                dict->setAutoLoaded(true);
             }
         }
 
@@ -1033,7 +1028,8 @@ int Document::appendDocString()
     foreach (QString dictName, getDictionariesList()->keys())
     {
         Dictionary* dict = getDictionariesList()->value(dictName);
-        prepareValue(dictName, dict);
+        if (dict->isAutoLoaded())
+            prepareValue(dictName, dict);
     }
 
     // Просмотрим все проводки типовой операции
@@ -1077,13 +1073,27 @@ int Document::appendDocString()
      }
     // Добавим строку в документ с параметрами всех проводок операции
     result = db->addDocStr(operNumber, docId, parameter);
+    QString attrList;
     foreach (QString attr, attrFields)
     {
         if (prvValues.keys().contains(attr))
         {
-            db->saveDocAttribute(operNumber, docId, attr, prvValues.value(attr));
+            if (attrList.size() > 0)
+                attrList = attrList + ", ";
+            QVariant val = prvValues.value(attr);
+            QString value;
+            if (val.type() == QVariant::String)
+                value = QString("'%1'").arg(val.toString());
+            else
+                value = val.toString();
+            attrList.append(QString("%1=%2").arg(attr).arg(value));
         }
     }
+    if (attrList.size() > 0)
+    {
+        db->saveDocAttribute(operNumber, docId, attrList);
+    }
+
     prvValues.clear();
 
     if (result > 0)                         // Если строка была добавлена
