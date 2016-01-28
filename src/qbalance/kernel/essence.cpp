@@ -898,9 +898,9 @@ void Essence::preparePrintValues()
             QSqlRecord rec = getTableModel()->record(i-1);
             foreach(QString field, fieldsList)
             {
-                reportScriptEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg(field).toLower(), rec.value(field));
+                reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg(field).toLower(), rec.value(field), i);
             }
-            reportScriptEngine->getReportContext()->setValue(QString("таблица%1.%2").arg(i).arg("номерстроки"), QVariant(i));
+            reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg("номерстроки"), QVariant(i), i);
         }
         if (scriptEngineEnabled && scriptEngine != 0)
             scriptEngine->eventPreparePrintValues();

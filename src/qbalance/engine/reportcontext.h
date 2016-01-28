@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
+#include <QtCore/QStringList>
 
 class ReportContext : public QObject
 {
@@ -37,9 +38,20 @@ public:
     Q_INVOKABLE QHash<QString, QVariant>* getData() { return data; }
     Q_INVOKABLE QList<QString> getKeysList() { return data->keys(); }
     Q_INVOKABLE void removeValue(QString key);    // Удалить значение, ключ которого начинается с key
-//    Q_INVOKABLE void sortTable(QString);        // сортировка контекста печати в разделе таблица по заданному полю
+    Q_INVOKABLE int getRowCount() { return rowCount; }
+    Q_INVOKABLE void sortTable();        // сортировка контекста печати в разделе таблица по заданному полю
+    Q_INVOKABLE void clearSortOrder() { sortOrder.clear(); sortRef.clear(); }
+    Q_INVOKABLE void appendSortOrder(QString order) { sortOrder.append(order); }
+    Q_INVOKABLE void setShowRepeatValue(bool rep) { showRepeat = rep;}
 private:
     QHash<QString, QVariant>*    data;
+    QHash<QString, QVariant>*    lastData;
+    int             lastStrNum;
+    int             rowCount;
+    QStringList     sortOrder;
+    QStringList     fieldsInTable;
+    QHash<int, int> sortRef;
+    bool            showRepeat;
 };
 
 #endif // REPORTCONTEXT_H

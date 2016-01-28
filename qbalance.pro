@@ -5,13 +5,9 @@
 TEMPLATE = subdirs
 SUBDIRS = src/qextserialport \
 	  src/qbalance/plugins \
+          src/qbalance/bankterminal \
+          src/qbalance/barcodereader \
+          src/qbalance/driverfr \
           src/qbalance
           
-
-# build must be last:
-#SUBDIRS += build
-
-#windows {
-#    CONFIG += rtti
-#}
 

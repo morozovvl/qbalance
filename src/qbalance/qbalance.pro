@@ -29,49 +29,25 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    kernel/app.cpp \
-    storage/dbfactory.cpp \
     gui/passwordform.cpp \
     gui/form.cpp \
     gui/guifactory.cpp \
     gui/connectionform.cpp \
     gui/mainwindow.cpp \
     gui/calendarform.cpp \
-    kernel/essence.cpp \
     gui/searchparameters.cpp \
     gui/formgrid.cpp \
     gui/formgridsearch.cpp \
-    kernel/dictionary.cpp \
-    kernel/dictionaries.cpp \
     gui/mycombobox.cpp \
-    report/reportengine.cpp \
     gui/formdocument.cpp \
-    kernel/documents.cpp \
-    storage/mysqlrelationaltablemodel.cpp \
-    kernel/topers.cpp \
-    kernel/document.cpp \
-    kernel/table.cpp \
     gui/tableview.cpp \
     gui/mynumericitemdelegate.cpp \
     gui/mybooleanitemdelegate.cpp \
-    kernel/saldo.cpp \
     gui/docparameters.cpp \
     gui/myitemdelegate.cpp \
     gui/mylineitemdelegate.cpp \
     gui/picture.cpp \
-    engine/scriptengine.cpp \
     gui/mynumericedit.cpp \
-    report/reports.cpp \
-    report/ooreportengine.cpp \
-    engine/reportcontext.cpp \
-    engine/sqlqueryclass.cpp \
-    engine/sqlqueryprototype.cpp \
-    engine/sqlrecordclass.cpp \
-    engine/sqlrecordprototype.cpp \
-    engine/sqlfieldclass.cpp \
-    engine/sqlfieldprototype.cpp \
-    engine/eventloop.cpp \
-    engine/documentscriptengine.cpp \
     gui/configform.cpp \
     gui/wizardform.cpp \
     gui/mybuttonlineedit.cpp \
@@ -82,60 +58,58 @@ SOURCES += main.cpp \
     gui/mysyntaxhighlighter.cpp \
     gui/dialog.cpp \
     gui/mydateitemdelegate.cpp \
-    report/ooxmlreportengine.cpp \
     gui/mymdisubwindow.cpp \
-    openoffice/ooxmlengine.cpp \
     gui/messagewindow.cpp \
-    serialport/qmyextserialport.cpp \
+    gui/myprogressdialog.cpp \
+    kernel/app.cpp \
+    kernel/essence.cpp \
+    kernel/dictionary.cpp \
+    kernel/dictionaries.cpp \
+    kernel/documents.cpp \
+    kernel/topers.cpp \
+    kernel/document.cpp \
+    kernel/table.cpp \
+    kernel/saldo.cpp \
     kernel/tcpserver.cpp \
     kernel/tcpclient.cpp \
-    gui/myprogressdialog.cpp
+    storage/mysqlrelationaltablemodel.cpp \
+    storage/dbfactory.cpp \
+    report/reports.cpp \
+    report/ooreportengine.cpp \
+    report/reportengine.cpp \
+    report/ooxmlreportengine.cpp \
+    engine/scriptengine.cpp \
+    engine/reportcontext.cpp \
+    engine/sqlqueryclass.cpp \
+    engine/sqlqueryprototype.cpp \
+    engine/sqlrecordclass.cpp \
+    engine/sqlrecordprototype.cpp \
+    engine/sqlfieldclass.cpp \
+    engine/sqlfieldprototype.cpp \
+    engine/eventloop.cpp \
+    engine/documentscriptengine.cpp \
+    openoffice/ooxmlengine.cpp \
+    serialport/qmyextserialport.cpp
 
-HEADERS += kernel/app.h \
-    storage/dbfactory.h \
-    gui/guifactory.h \
-    gui/passwordform.h \
+HEADERS +=  gui/passwordform.h \
     gui/form.h \
+    gui/guifactory.h \
     gui/connectionform.h \
     gui/mainwindow.h \
     gui/calendarform.h \
-    kernel/essence.h \
     gui/searchparameters.h \
     gui/formgrid.h \
     gui/formgridsearch.h \
-    kernel/dictionary.h \
-    kernel/dictionaries.h \
     gui/mycombobox.h \
-    report/reportengine.h \
     gui/formdocument.h \
-    kernel/documents.h \
-    storage/mysqlrelationaltablemodel.h \
-    kernel/topers.h \
-    kernel/document.h \
-    kernel/table.h \
     gui/tableview.h \
     gui/mynumericitemdelegate.h \
     gui/mybooleanitemdelegate.h \
-    kernel/saldo.h \
     gui/docparameters.h \
     gui/myitemdelegate.h \
     gui/mylineitemdelegate.h \
-    definitions.h \
     gui/picture.h \
-    engine/scriptengine.h \
     gui/mynumericedit.h \
-    report/reports.h \
-    report/ooreportengine.h \
-    engine/reportcontext.h \
-    engine/sqlqueryclass.h \
-    engine/sqlqueryprototype.h \
-    engine/sqlrecordclass.h \
-    engine/sqlrecordprototype.h \
-    engine/sqlfieldclass.h \
-    engine/sqlfieldprototype.h \
-    engine/eventloop.h \
-    engine/documentscriptengine.h \
-    engine/reportcontextfunctions.h \
     gui/configform.h \
     gui/wizardform.h \
     gui/mybuttonlineedit.h \
@@ -146,14 +120,38 @@ HEADERS += kernel/app.h \
     gui/mysyntaxhighlighter.h \
     gui/dialog.h \
     gui/mydateitemdelegate.h \
-    report/ooxmlreportengine.h \
     gui/mymdisubwindow.h \
-    openoffice/ooxmlengine.h \
     gui/messagewindow.h \
-    serialport/qmyextserialport.h \
+    gui/myprogressdialog.h \
+    kernel/app.h \
+    kernel/essence.h \
+    kernel/dictionary.h \
+    kernel/dictionaries.h \
+    kernel/documents.h \
+    kernel/topers.h \
+    kernel/document.h \
+    kernel/table.h \
+    kernel/saldo.h \
     kernel/tcpserver.h \
     kernel/tcpclient.h \
-    gui/myprogressdialog.h
+    storage/mysqlrelationaltablemodel.h \
+    storage/dbfactory.h \
+    report/reports.h \
+    report/ooreportengine.h \
+    report/reportengine.h \
+    report/ooxmlreportengine.h \
+    engine/scriptengine.h \
+    engine/reportcontext.h \
+    engine/sqlqueryclass.h \
+    engine/sqlqueryprototype.h \
+    engine/sqlrecordclass.h \
+    engine/sqlrecordprototype.h \
+    engine/sqlfieldclass.h \
+    engine/sqlfieldprototype.h \
+    engine/eventloop.h \
+    engine/documentscriptengine.h \
+    openoffice/ooxmlengine.h \
+    serialport/qmyextserialport.h
 
 
 RESOURCES += ../../resources.qrc

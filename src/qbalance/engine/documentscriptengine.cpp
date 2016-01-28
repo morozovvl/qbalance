@@ -125,20 +125,27 @@ void DocumentScriptEngine::eventAfterLinePrint(int strNum)
 }
 
 
+void DocumentScriptEngine::eventBeforeTotalPrint()
+{
+    QString eventName = "EventBeforeTotalPrint";
+    scriptCall(eventName, QScriptValue());
+}
+
+
 QHash<QString, EventFunction>* DocumentScriptEngine::getEventsList()
 {
     ScriptEngine::getEventsList();
     EventFunction func;
     func.comment = QObject::trUtf8("Событие происходит в момент изменения постоянного справочника документа");
-    appendEvent("EventParametersChanged()", func);
+    appendEvent("EventParametersChanged()", &func);
     func.comment = QObject::trUtf8("Событие происходит после вычисления в ячейке");
-    appendEvent("EventAfterCalculate()", func);
+    appendEvent("EventAfterCalculate()", &func);
     func.comment = QObject::trUtf8("Вызывается при добавлении каждой новой записи из запроса. Если готового запроса на сервере нет, то тогда вызывается один раз и скрипт сам должен создать и обработать запрос.");
-    appendEvent("EventAppendFromQuery(queryName, record)", func);
+    appendEvent("EventAppendFromQuery(queryName, record)", &func);
     func.comment = QObject::trUtf8("Вызывается до печати очередной строки в документе");
-    appendEvent("EventBeforeLinePrint(strNum)", func);
+    appendEvent("EventBeforeLinePrint(strNum)", &func);
     func.comment = QObject::trUtf8("Вызывается после печати очередной строки в документе");
-    appendEvent("EventAfterLinePrint(strNum)", func);
+    appendEvent("EventAfterLinePrint(strNum)", &func);
     return &eventsList;
 }
 

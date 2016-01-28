@@ -36,6 +36,7 @@ public:
     void eventAppendFromQuery(QString, QSqlRecord*);
     void eventBeforeLinePrint(int);
     void eventAfterLinePrint(int);
+    void eventBeforeTotalPrint();
     virtual QHash<QString, EventFunction>* getEventsList();
     ReportContext* getReportContext() { return reportContext; }
 

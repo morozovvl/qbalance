@@ -868,7 +868,7 @@ void WizardOperation::generateScripts()
                 stream << QObject::trUtf8("setValue(\"P1__ЦЕНА\", цена);") << endl;
                 stream << QObject::trUtf8("setValue(\"P1__СУММА\", сумма);");
                 func.body = script;
-                engine.appendEvent("EventCalcTable()", func);
+                engine.appendEvent("EventCalcTable()", &func);
             }
         }
 
@@ -894,7 +894,7 @@ void WizardOperation::generateScripts()
             func.body = QString("documents.setValue(\"%1\", getDictionary(\"%2\").getValue(\"имя\"));").arg(db->getObjectName("документы.комментарий"))
                                                                                                        .arg(constDictName)
                                                                                                        .arg(db->getObjectName(constDictName + ".имя"));
-            engine.appendEvent("EventParametersChanged()", func);
+            engine.appendEvent("EventParametersChanged()", &func);
         }
 
         scripts = engine.getBlankScripts();

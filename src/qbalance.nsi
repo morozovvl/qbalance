@@ -84,6 +84,7 @@ Section "QBalance" SecQBalance
   File ..\zip.exe
   File ..\bzip2.dll
   File ..\unzip.exe
+  File ..\vcredist_x86.exe
   File ..\QtCore4.dll
   File ..\QtGui4.dll
   File ..\QtScript4.dll
@@ -112,6 +113,7 @@ Section "QBalance" SecQBalance
   File ..\qt.conf
   File ..\initdb*.sql
   File ..\qextserialport1.dll
+  File ..\empty.ods
 
   SetOutPath "$INSTDIR\plugins\platforms"
   File /r ..\plugins\platforms\qminimal.dll
@@ -131,6 +133,9 @@ Section "QBalance" SecQBalance
   SetOutPath "$INSTDIR\plugins\script"
   File /r ..\plugins\script\*.dll
  
+  SetOutPath "$INSTDIR\plugins"
+  File /r ..\plugins\*.dll
+
  ; SetOutPath "$INSTDIR\examples"
  ; File /r ..\examples\*.*
 
@@ -149,11 +154,13 @@ SectionEnd
 Section /o "source" SecSource
 
   SetOutPath "$INSTDIR\src"
-  
   File *.pri
   File *.bat
   File qbalance.nsi
   File /r *.*
+
+  SetOutPath "$INSTDIR"
+  File ..\qbalance.pro
 
 SectionEnd
 

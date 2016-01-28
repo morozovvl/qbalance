@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QPushButton>
 #include <QFileDialog>
 #include <QLineEdit>
+#include <QtCore/QStringList>
 #include <QDebug>
 #include "scriptengine.h"
 #include "../kernel/app.h"
@@ -51,6 +52,7 @@ Q_DECLARE_METATYPE(QLineEdit*)
 
 QString ScriptEngine::scriptFileName = "";
 QHash<QString, QString> ScriptEngine::scripts;
+bool ScriptEngine::isSA = false;
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
 
@@ -578,6 +580,7 @@ ScriptEngine::ScriptEngine(Essence *parent) : QScriptEngine(parent)
         if (document != 0)
             documents = document->getParent();
     }
+    isSA = app->isSA();
 }
 
 
@@ -1029,38 +1032,38 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     EventFunction func;
 
     func.comment = QObject::trUtf8("Событие происходит сразу после создания формы документа");
-    appendEvent("EventInitForm(form)", func);
+    appendEvent("EventInitForm(form)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед открытием формы документа");
-    appendEvent("EventBeforeShowForm(form)", func);
+    appendEvent("EventBeforeShowForm(form)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после открытия формы документа");
-    appendEvent("EventAfterShowForm(form)", func);
+    appendEvent("EventAfterShowForm(form)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед закрытием формы документа");
-    appendEvent("EventBeforeHideForm(form)", func);
+    appendEvent("EventBeforeHideForm(form)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после закрытия формы документа");
-    appendEvent("EventAfterHideForm(form)", func);
+    appendEvent("EventAfterHideForm(form)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед удалением формы документа");
-    appendEvent("EventCloseForm(form)", func);
+    appendEvent("EventCloseForm(form)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Импорт>");
-    appendEvent("EventImport()", func);
+    appendEvent("EventImport()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки <Экспорт>");
-    appendEvent("EventExport()", func);
+    appendEvent("EventExport()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит при нажатии любой кнопки на форме. Параметр keyEvent имеет тип QKeyEvent");
-    appendEvent("EventKeyPressed(keyEvent)", func);
+    appendEvent("EventKeyPressed(keyEvent)", &func);
 
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
-    appendEvent("PreparePictureUrl(object)", func);
+    appendEvent("PreparePictureUrl(object)", &func);
 
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
     func.body = "return filter;";
-    appendEvent("GetFilter(filter)", func);
+    appendEvent("GetFilter(filter)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
     if (document != 0 && document->isQuanAccount() && document->getPrvQuan() == 1)
@@ -1076,75 +1079,77 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
                     "setValue(\"P1__ЦЕНА\", цена);\n"
                     "setValue(\"P1__СУММА\", сумма);\n";
     }
-    appendEvent("EventCalcTable()", func);
+    appendEvent("EventCalcTable()", &func);
 
     func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
-    appendEvent("EventSetEnabled(enabled)", func);
+    appendEvent("EventSetEnabled(enabled)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после перемещения на другую строку");
-    appendEvent("EventAfterRowChanged()", func);
+    appendEvent("EventAfterRowChanged()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит до перемещения на другую строку");
-    appendEvent("EventBeforeRowChanged()", func);
+    appendEvent("EventBeforeRowChanged()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после загрузки фотографии из Интернета");
-    appendEvent("EventPhotoLoaded()", func);
+    appendEvent("EventPhotoLoaded()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после прочтения штрих-кода");
-    appendEvent("EventBarCodeReaded(barCode)", func);
+    appendEvent("EventBarCodeReaded(barCode)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после прочтения магнитной карты");
-    appendEvent("EventCardCodeReaded(cardCode)", func);
+    appendEvent("EventCardCodeReaded(cardCode)", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
     func.body = "return true;";
-    appendEvent("EventBeforeAddString()", func);
+    appendEvent("EventBeforeAddString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
     func.body = "return true;";
-    appendEvent("EventAfterAddString()", func);
+    appendEvent("EventAfterAddString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед удалением строки из документа");
     func.body = "return true;";
-    appendEvent("EventBeforeDeleteString()", func);
+    appendEvent("EventBeforeDeleteString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после удаления строки из документа");
     func.body = "return true;";
-    appendEvent("EventAfterDeleteString()", func);
+    appendEvent("EventAfterDeleteString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после показа всех необходимых справочников при добавлении строки в документ");
     func.body = "return true;";
-    appendEvent("EventAfterShowNextDicts()", func);
+    appendEvent("EventAfterShowNextDicts()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед созданием документа печати и предназначено для создания новых данных для документа");
-    appendEvent("EventPreparePrintValues()", func);
+    appendEvent("EventPreparePrintValues()", &func);
 
     return &eventsList;
 }
 
 
-void ScriptEngine::appendEvent(QString funcName, EventFunction func)
+void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 {
     EventFunction f;
     if (eventsList.contains(funcName))
     {
         f = eventsList.value(funcName);
-        if (func.comment.size() > 0)
-            f.comment = func.comment;
-        if (func.body.size() > 0)
-            f.body = func.body;
+        if (func->comment.size() > 0)
+            f.comment = func->comment;
+        if (func->body.size() > 0)
+            f.body = func->body;
     }
     else
-        f = func;
+        f = *func;
     eventsList.remove(funcName);
     eventsList.insert(funcName, f);
+    func->comment = "";
+    func->body = "";
 }
 
 
 QString ScriptEngine::loadScript(QString scriptFile)
 {
     QString result;
-    if (!scripts.contains(scriptFile))
+    if (!scripts.contains(scriptFile) || isSA)
     {
         QString fullScriptFile = scriptFile;
         if (!QFileInfo(scriptFile).exists())

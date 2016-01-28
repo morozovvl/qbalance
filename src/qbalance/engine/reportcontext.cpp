@@ -26,6 +26,9 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*
     QObject(parent)
 {
     data = d;
+    rowCount = 0;
+    showRepeat = true;
+    lastStrNum = 0;
 }
 
 
@@ -41,12 +44,22 @@ QVariant ReportContext::getValue(QString tag)
 QVariant ReportContext::getValue(QString tag, int strNum)
 {
 //    QRegExp rm("^\\D+\\.");
-    QVariant result;
+    QVariant result, lastResult;
+    QString lastTag;
     QString pref = tag.left(tag.indexOf("."));
     tag = tag.toLower();
     tag.remove(pref);
-    tag = QString("%1%2%3").arg(pref).arg(strNum).arg(tag);
+    tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
+    lastTag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum - 1 : sortRef.value(strNum - 1)).arg(tag);
     result = data->value(tag);
+/*
+    lastResult = lastData->value(lastTag);
+    if (!showRepeat && result == lastResult)
+    {
+
+    }
+*/
+    qDebug() << tag << strNum << result;
     return result;
 }
 
@@ -67,8 +80,12 @@ void ReportContext::setValue(QString tag, QVariant val, int strNum)
     QString pref = tag.left(tag.indexOf("."));
     tag = tag.toLower();
     tag.remove(pref);
-    tag = QString("%1%2%3").arg(pref).arg(strNum).arg(tag);
+    if (pref == "таблица" && !fieldsInTable.contains(tag))
+        fieldsInTable.append(pref + tag);
+    tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
     setValue(tag, val);
+    if (strNum > rowCount)
+        rowCount = strNum;
 }
 
 
@@ -84,3 +101,25 @@ void ReportContext::removeValue(QString tag)
         }
     }
 }
+
+
+void ReportContext::sortTable()        // сортировка контекста печати в разделе таблица по заданному полю
+{
+    QMultiMap<QString, int>    d;
+    QString key;
+    for (int i = 1; i <= rowCount; i++)
+    {
+        key = "";
+        for (int j = 0; j < sortOrder.count(); j++)
+            key.append(getValue(sortOrder.at(j), i).toString().trimmed() + " ");
+        d.insert(key, i);
+    }
+
+    int row = 1;
+    foreach (QString key, d.keys())
+    {
+        sortRef.insert(row, d.value(key));
+        row++;
+    }
+}
+

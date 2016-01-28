@@ -60,7 +60,7 @@ public:
     Document* getDocument() { return document; }
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
-    void    appendEvent(QString, EventFunction);
+    void    appendEvent(QString, EventFunction*);
     QString getBlankScripts();
     void eventAfterCalculate();
     void eventParametersChanged();
@@ -111,6 +111,7 @@ private:
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;
     TApplication*       app;
+    static bool                isSA;
 };
 
 

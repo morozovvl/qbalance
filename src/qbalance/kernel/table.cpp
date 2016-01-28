@@ -88,7 +88,7 @@ void Table::query(QString filter)
 
 bool Table::open()
 {
-    opened = true;
+    opened = false;
     if (tableName.size() > 0)
         opened = setTableModel();
     return opened;
