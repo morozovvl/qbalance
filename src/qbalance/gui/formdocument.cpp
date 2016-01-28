@@ -220,7 +220,7 @@ void FormDocument::show()
     if (textEdit != 0)
         textEdit->setText(getParent()->getParent()->getValue("описание").toString());
     FormGrid::show();
-    if (grdTable->currentIndex().row() + 1 > parent->getTableModel()->rowCount())
+    if (parent->getCurrentRow() + 1 > parent->getTableModel()->rowCount())
     {
         grdTable->selectRow(parent->getTableModel()->rowCount() - 1);
         if (grdTable->columnIsReadOnly())

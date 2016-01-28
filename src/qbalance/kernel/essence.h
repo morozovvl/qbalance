@@ -156,9 +156,12 @@ public:
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
-    Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(grdTable->currentIndex().column()).toUpper(); }
-    Q_INVOKABLE int             getCurrentRow() { return grdTable->currentIndex().row(); }
-    Q_INVOKABLE virtual void    setCurrentRow(int row) { grdTable->selectRow(row); }
+    QModelIndex getCurrentIndex();
+    void setCurrentIndex(QModelIndex);
+    Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(getCurrentColumn()).toUpper(); }
+    Q_INVOKABLE virtual int     getCurrentRow() { return getCurrentIndex().row(); }
+    Q_INVOKABLE virtual int     getCurrentColumn() { return getCurrentIndex().column(); }
+    Q_INVOKABLE virtual void    setCurrentRow(int row) { if (grdTable != 0) grdTable->selectRow(row); }
     Dictionaries* getDictionaries() { return dictionaries; }
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
     bool    isLoading() { return loading; }

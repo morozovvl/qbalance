@@ -102,7 +102,7 @@ bool Document::calculate()
         if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
 
-            int row = grdTable->currentIndex().row();
+            int row = getCurrentRow();
             // Начнем транзакцию
             // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
             for (int i = 0; i < tableModel->record().count(); i++)
@@ -157,7 +157,7 @@ void Document::saveChanges()
         getParent()->setValue("ДАТА", QVariant(((FormDocument*)form)->getDateEdit()->date()));
         getParent()->setValue("НОМЕР", QVariant(((FormDocument*)form)->getNumberEdit()->text()));
     }
-    QModelIndex index = grdTable->currentIndex();
+    QModelIndex index = getCurrentIndex();
     if (db->execCommands())
     {   // Если во время сохранения результатов ошибки не произошло
         // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
@@ -169,7 +169,7 @@ void Document::saveChanges()
         restoreOldValues();
         parent->restoreOldValues();
     }
-    grdTable->setCurrentIndex(index);
+    setCurrentIndex(index);
 }
 
 
@@ -472,7 +472,7 @@ int Document::findFreePrv()
 
 void Document::saveOldValues()
 {
-    QModelIndex index = grdTable->currentIndex();      // Запомним, где стоял курсор
+    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
     Essence::saveOldValues();
     if (freePrv > 0)
     {  // Если есть "свободная" проводка
@@ -485,7 +485,7 @@ void Document::saveOldValues()
         }
     }
     parent->saveOldValues();
-    grdTable->setCurrentIndex(index);
+    setCurrentIndex(index);
 }
 
 
@@ -687,7 +687,7 @@ void Document::setConstDictId(QString dName, QVariant id)
 {
     if (tableModel->rowCount() > 0)
     {
-        int currentRow = grdTable->currentIndex().row();
+        int currentRow = getCurrentRow();
         bool submit = doSubmit;
         doSubmit = true;
         Dictionary* dict;
@@ -1020,7 +1020,7 @@ bool Document::prepareValue(QString name, QVariant val)
 int Document::appendDocString()
 {
     int result = 0;
-    QModelIndex index = grdTable->currentIndex();
+    QModelIndex index = getCurrentIndex();
     QString dictName, parameter;
     qulonglong dbId, crId;
     float quan = 0, price = 0, sum = 0;
@@ -1121,7 +1121,7 @@ int Document::appendDocString()
         form->setButtons();
     }
     else
-        grdTable->setCurrentIndex(index);
+        setCurrentIndex(index);
     return result;
 }
 

@@ -158,13 +158,13 @@ bool Dictionary::add()
         int strNum = db->insertDictDefault(getTableName(), &values);
         if (strNum >= 0)
         {
-            int column = grdTable->currentIndex().column();
+            int column = getCurrentColumn();
             int newRow = tableModel->rowCount();
             if (newRow == 0)
             {
                 query();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                column = grdTable->currentIndex().column();
+                column = getCurrentColumn();
             }
             else
             {
@@ -174,7 +174,7 @@ bool Dictionary::add()
                 updateCurrentRow(strNum);
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
             }
-            grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+            grdTable->selectionModel()->setCurrentIndex(getCurrentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             form->setButtons();
             grdTable->setFocus();
             return true;
@@ -248,7 +248,7 @@ bool Dictionary::calculate() {
         {   // Если в вычислениях не было ошибки
 
             // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-            int row = grdTable->currentIndex().row();
+            int row = getCurrentRow();
 
             for (int i = 0; i < tableModel->record().count(); i++)
             {
@@ -381,13 +381,18 @@ void Dictionary::setForm(QString formName)
 
 bool Dictionary::open(QString command, QString tName)
 {
-    if (tableName.size() == 0 && command.size() == 0)
-        return true;
-    sqlCommand = command;
     if (tName == "undefined")
         tName = "";
-    if (tName.size() > 0)
-        queryTableName = tName;
+    sqlCommand = command;
+    queryTableName = tName;
+
+    if (tableName.size() == 0)
+    {
+        tableName = tName;
+        if (sqlCommand.size() == 0)
+            return true;
+    }
+
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
         dictTitle = tableName;
@@ -524,7 +529,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
         id = getValue(idFieldName).toLongLong();
 
     if (grdTable != 0)
-        index = grdTable->currentIndex();
+        index = getCurrentIndex();
 
     QString resFilter = defaultFilter;
 

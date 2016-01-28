@@ -152,21 +152,10 @@ QVariant Essence::getValue(QString n, int row)
         QSqlRecord record = tableModel->record();
         if (record.contains(name))
         {
-            if (row >= 0)
-            {
-                result =  tableModel->record(row).value(name);
-            }
-            else
-            {
-                int r = 0;
-                if (grdTable != 0)
-                {
-                    QModelIndex index = grdTable->currentIndex();
-                    if (index.isValid())
-                        r = grdTable->currentIndex().row();
-                }
-                result = tableModel->record(r).value(name);
-            }
+            if (row < 0)
+                row = getCurrentRow();
+            result = tableModel->record(row).value(name);
+
             QVariant::Type type = record.field(name).type();
             if (type == QVariant::Double ||
                 type == QVariant::Int)
@@ -194,11 +183,14 @@ void Essence::setValue(QString n, QVariant value, int row)
     int fieldColumn = tableModel->fieldIndex(n);
     if (fieldColumn >= 0)
     {
+        if (row < 0)
+            row = getCurrentRow();
+
         QModelIndex index, oldIndex;
 
-        if (row >= 0 && form != 0)
-            oldIndex = grdTable->currentIndex();
-        index = tableModel->index((row >= 0 ? row : grdTable->currentIndex().row()), fieldColumn);
+        oldIndex = getCurrentIndex();
+        index = tableModel->index(row, fieldColumn);
+
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             if (columnsProperties.at(i).column == n)
@@ -229,8 +221,7 @@ void Essence::setValue(QString n, QVariant value, int row)
         if (doSubmit)
             db->execCommands();
 
-        if (row >= 0 && form != 0 && oldIndex.isValid())
-            grdTable->setCurrentIndex(oldIndex);
+        setCurrentIndex(oldIndex);
     }
     else
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
@@ -239,15 +230,9 @@ void Essence::setValue(QString n, QVariant value, int row)
 
 qulonglong Essence::getId(int row)
 {
-    qulonglong result;
-    if (row >= 0)
-        result = getValue(idFieldName, row).toULongLong();
-    else
-    {
-        int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
-        result = getValue(idFieldName, r).toULongLong();
-    }
-    return result;
+    if (row < 0)
+        row = getCurrentRow();
+    return getValue(idFieldName, row).toULongLong();
 }
 
 
@@ -277,7 +262,7 @@ QString Essence::getName(int row)
 {
     if (row >= 0)
         return getValue(nameFieldName, row).toString().trimmed();
-    int r = grdTable->currentIndex().isValid() ? grdTable->currentIndex().row() : 0;
+    int r = getCurrentIndex().isValid() ? getCurrentRow() : 0;
     return getValue(nameFieldName, r).toString().trimmed();
 }
 
@@ -301,7 +286,7 @@ void Essence::query(QString filter, bool)
     QModelIndex index;
     if (grdTable != 0)
     {
-        index = grdTable->currentIndex();
+        index = getCurrentIndex();
     }
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
@@ -313,10 +298,8 @@ void Essence::query(QString filter, bool)
     }
     else
         Table::query(filter);
-    if (grdTable != 0 && index.isValid())
-    {
-        grdTable->setCurrentIndex(index);
-    }
+
+    setCurrentIndex(index);
  }
 
 
@@ -848,7 +831,7 @@ void Essence::updateCurrentRow()
     {
         if (preparedSelectCurrentRow.first())
         {
-            QModelIndex index = grdTable->currentIndex();
+            QModelIndex index = getCurrentIndex();
             for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
             {
                 QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
@@ -856,7 +839,7 @@ void Essence::updateCurrentRow()
                 if (value != tableModel->record(index.row()).value(fieldName))
                     tableModel->setData(tableModel->index(index.row(), i), value, true);
             }
-            grdTable->setCurrentIndex(index);
+            setCurrentIndex(index);
         }
     }
     else
@@ -1143,4 +1126,20 @@ bool Essence::isDocumentLoading()
             return true;
     }
     return false;
+}
+
+
+QModelIndex Essence::getCurrentIndex()
+{
+    QModelIndex index;
+    if (grdTable != 0)
+        index = grdTable->currentIndex();
+    return index;
+}
+
+
+void Essence::setCurrentIndex(QModelIndex index)
+{
+    if (grdTable != 0)
+        grdTable->setCurrentIndex(index);
 }

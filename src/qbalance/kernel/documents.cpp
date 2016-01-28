@@ -73,12 +73,12 @@ bool Documents::add()
             }
             else
             {
-                int column = grdTable->currentIndex().column();
+                int column = getCurrentColumn();
                 tableModel->insertRow(newRow);
                 grdTable->reset();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 updateCurrentRow(strNum);
-                grdTable->selectionModel()->setCurrentIndex(grdTable->currentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+                grdTable->selectionModel()->setCurrentIndex(getCurrentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             }
             setCurrentDocument(strNum);
             currentRow = tableModel->rowCount() - 1;
@@ -112,7 +112,7 @@ bool Documents::remove(bool noAsk)
 void Documents::view()
 {
     setCurrentDocument(getValue("код").toInt());
-    currentRow = grdTable->currentIndex().row();
+    currentRow = getCurrentRow();
     currentDocument->show();
 }
 
