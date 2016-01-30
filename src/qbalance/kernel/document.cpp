@@ -1021,7 +1021,6 @@ bool Document::prepareValue(QString name, QVariant val)
 int Document::appendDocString()
 {
     int result = 0;
-    QModelIndex index = getCurrentIndex();
     QString dictName, parameter;
     qulonglong dbId, crId;
     float quan = 0, price = 0, sum = 0;

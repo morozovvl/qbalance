@@ -30,6 +30,7 @@ public:
     Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
     void setQuan(bool q) { quan = q; }
     Q_INVOKABLE virtual void setOrderClause(QString = "");
+    Q_INVOKABLE virtual void setId(qulonglong);
     virtual void        lock(bool = true);
     Q_INVOKABLE virtual void setPhotoPath(QString path);
 

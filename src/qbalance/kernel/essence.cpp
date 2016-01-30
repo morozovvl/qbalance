@@ -543,12 +543,10 @@ void Essence::hide()
     if (opened && form != 0)
     {
 
-        if (form->getFormWidget()->isVisible())
+        if (isFormVisible())
             beforeHideFormEvent(form);
         form->hide();
         afterHideFormEvent(form);
-
-//        app->setActiveWindow(activeWidget);
     }
 }
 

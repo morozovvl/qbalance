@@ -104,8 +104,9 @@ void TableView::cmdAdd()
         if (rowCount == 1)
         {
             setCurrentIndex(index.sibling(rowCount - 1, column));
-            selectNextColumn();
             reset();
+            repaint();
+            selectNextColumn();
         }
         else
         {

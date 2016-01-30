@@ -140,10 +140,7 @@ void Saldo::setOrderClause(QString sOrder)
 QString Saldo::transformSelectStatement(QString statement) {
     QString tName = db->getObjectName("сальдо");
     QString command = statement;
-    QString appendString = QString(" %1 \"%2\".\"%3\"='%4'").arg(command.contains(" WHERE", Qt::CaseInsensitive) ? " AND":" WHERE")
-                                                            .arg(tName)
-                                                            .arg(db->getObjectName("счет.счет"))
-                                                            .arg(account);
+    QString appendString;
     if (quan)
         appendString.append(QString(" AND (\"%1\".\"%2\"<>0 OR \"%1\".\"%3\"<>0)").arg(tName)
                                                                                   .arg(db->getObjectName(tName + ".конкол"))
@@ -163,4 +160,23 @@ void Saldo::setPhotoPath(QString path)
 }
 
 
+void Saldo::setId(qulonglong id)
+{
+    bool enabled = photoEnabled;
+    photoEnabled = false;
+    bool q = quan;                          // Отменим временно ограничение на нулевые остатки сальдо
+    quan = false;                           // иначе не все сальдо будут видны
+    tableModel->selectStatement();
+    db->insertSaldo(account, id);
+    query(QString("%1.%2='%3' AND %1.%4=%5").arg(db->getObjectNameCom("сальдо"))
+                                            .arg(db->getObjectNameCom("сальдо.СЧЕТ"))
+                                            .arg(account)
+                                            .arg(db->getObjectNameCom("сальдо.КОД"))
+                                            .arg(id));
+    grdTable->selectRow(0);
+    photoEnabled = enabled;
+    quan = q;
+    tableModel->selectStatement();
+    lock(true);
+}
 

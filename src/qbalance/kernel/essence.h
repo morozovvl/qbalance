@@ -126,6 +126,7 @@ public:
     Q_INVOKABLE void showAllGridSections() { grdTable->showAllGridSections(); }
     Q_INVOKABLE virtual void setForm(QString = "") { ; }
     Q_INVOKABLE bool isDefaultForm() { return form->isDefaultForm(); }
+    Q_INVOKABLE bool isFormVisible() { return form != 0 ? form->isVisible() : false; }
 
 
 // Функции для обеспечения работы скриптов

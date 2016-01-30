@@ -106,7 +106,7 @@ bool Dictionary::add()
     if (result)
     {
         QHash<QString, QVariant> values;
-        bool lAddDict = true;
+        result = true;
         if (!isSet())
         {
             if (parameters != 0)
@@ -138,7 +138,7 @@ bool Dictionary::add()
                                 else
                                 {
                                     app->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
-                                    lAddDict = false;
+                                    result = false;
                                 }
                             }
                         }
@@ -146,6 +146,7 @@ bool Dictionary::add()
                 }
             }
         }
+/*
         else
         {
             for (int i = 0; i < fieldList.count(); i++)
@@ -161,21 +162,35 @@ bool Dictionary::add()
                 }
             }
         }
-        if (lAddDict)
+*/
+        if (result)
         {
-            int strNum = db->insertDictDefault(getTableName(), &values);
-            if (strNum >= 0)
+            result = false;
+            if (!isSet())
             {
-                int newRow = tableModel->rowCount();
-                if (newRow == 0)
-                    query();
-                else
+                int strNum = db->insertDictDefault(getTableName(), &values);
+                if (strNum >= 0)
                 {
-                    tableModel->insertRow(newRow);
-                    grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                    updateCurrentRow(strNum);
+                    int newRow = tableModel->rowCount();
+                    if (newRow == 0)
+                        query();
+                    else
+                    {
+                        tableModel->insertRow(newRow);
+                        grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                        updateCurrentRow(strNum);
+                    }
+                    result = true;
                 }
-                result = true;
+            }
+            else
+            {
+                int strNum = getId();
+                if (strNum > 0)
+                {
+                    updateCurrentRow(strNum);
+                    result = true;
+                }
             }
         }
     }

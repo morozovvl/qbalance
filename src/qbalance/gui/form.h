@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE virtual bool open(QWidget* = 0, Essence* = 0, QString = "");
     Q_INVOKABLE virtual void close();
     Q_INVOKABLE Dialog* getFormWidget() { return formWidget; }
-    Q_INVOKABLE bool isVisible() { return subWindow->isVisible(); }
+    Q_INVOKABLE bool isVisible() { return subWindow != 0 ? subWindow->isVisible() : false; }
     Q_INVOKABLE Essence* getParent() { return parent; }
     Q_INVOKABLE bool isFormSelected() { return lSelected; }
     QString getConfigName() { return configName; }

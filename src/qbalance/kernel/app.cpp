@@ -305,7 +305,6 @@ void TApplication::close()
     saveMessages();
     writeSettings();
 
-//    delete formLoader;
     if (driverFR)
     {
         driverFR->close();
@@ -330,13 +329,11 @@ void TApplication::close()
     if (dictionaryList != 0)
     {
         dictionaryList->close();
-//      delete dictionaryList;
         dictionaryList->deleteLater();
     }
     if (topersList != 0)
     {
         topersList->close();
-//        delete topersList;
         topersList->deleteLater();
     }
     if (gui != 0)

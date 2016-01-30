@@ -1211,6 +1211,27 @@ int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* va
 }
 
 
+void DBFactory::insertSaldo(QString acc, qulonglong id)
+{
+    QString command = QString("SELECT %1 FROM %2 WHERE %3 = '%4' AND %5 = %6;").arg(getObjectNameCom("сальдо.САЛЬДО"))
+                                                                              .arg(getObjectNameCom("сальдо"))
+                                                                              .arg(getObjectNameCom("сальдо.СЧЕТ"))
+                                                                              .arg(acc)
+                                                                              .arg(getObjectNameCom("сальдо.КОД"))
+                                                                              .arg(id);
+    QSqlQuery query = execQuery(command);
+    if (!query.first())
+    {
+        command = QString("INSERT INTO %1 (%2, %3) VALUES ('%4', %5);").arg(getObjectNameCom("сальдо"))
+                                                                       .arg(getObjectNameCom("сальдо.СЧЕТ"))
+                                                                       .arg(getObjectNameCom("сальдо.КОД"))
+                                                                       .arg(acc)
+                                                                       .arg(id);
+        exec(command);
+    }
+}
+
+
 bool DBFactory::removeDictValue(QString tableName, qulonglong id)
 {
     clearError();
