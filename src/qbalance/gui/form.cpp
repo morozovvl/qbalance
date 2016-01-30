@@ -364,7 +364,7 @@ void Form::keyPressEvent(QKeyEvent *event)
     {
         if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
         {
-            cmdOk();
+            buttonOk->click();
             event->setAccepted(true);
         }
     }
@@ -372,7 +372,7 @@ void Form::keyPressEvent(QKeyEvent *event)
     {
         if (event->key() == Qt::Key_Escape)
         {
-            cmdCancel();
+            buttonCancel->click();
             event->setAccepted(true);
         }
     }

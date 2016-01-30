@@ -256,7 +256,6 @@ bool Document::add()
         }
         appendDocString();
     }
-    grdTable->setFocus();
     return result;
 }
 
@@ -900,6 +899,8 @@ bool Document::setTableModel(int)
                 if (searchParameters != 0)
                     searchParameters->setDictionaries(dictionaries);
                 saldo->setAutoLoaded(true);
+                Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).prototype);
+                dict->setAutoLoaded(true);
             }
             else
             {
@@ -1098,7 +1099,6 @@ int Document::appendDocString()
 
     if (result > 0)                         // Если строка была добавлена
     {
-        grdTable->setFocus();
         int newRow = tableModel->rowCount();
         if (newRow == 0)                    // Если это первая строка в документе
         {
@@ -1107,21 +1107,16 @@ int Document::appendDocString()
         else
         {
             tableModel->insertRow(newRow);
-            grdTable->reset();
         }
         grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
         updateCurrentRow(result);
-        grdTable->selectRow(newRow);
         if (getScriptEngine() != 0)
         {
             saveOldValues();
             getScriptEngine()->eventAfterAddString();
             saveOldValues();
         }
-        form->setButtons();
     }
-    else
-        setCurrentIndex(index);
     return result;
 }
 

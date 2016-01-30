@@ -99,10 +99,18 @@ void TableView::cmdAdd()
     QModelIndex index = currentIndex();      // Запомним, где стоял курсор перед удалением записи
     if (essence->add())
     {
-        if (index.isValid())
+        int column = index.column() < 0 ? 0 : index.column();
+        int rowCount = tableModel->rowCount();
+        if (rowCount == 1)
         {
-            int rowCount = tableModel->rowCount();
-            setCurrentIndex(index.sibling(rowCount - 1, index.column()));
+            setCurrentIndex(index.sibling(rowCount - 1, column));
+            selectNextColumn();
+            reset();
+        }
+        else
+        {
+            reset();
+            setCurrentIndex(index.sibling(rowCount - 1, column));
         }
         parent->setButtons();
     }
@@ -140,9 +148,7 @@ void TableView::cmdView()
 
 void TableView::cmdRequery()
 {
-//    app->showMessageOnStatusBar(tr("Загрузка с сервера данных из таблицы ") + essence->getTagName() + "...");
     essence->query();
-//    app->showMessageOnStatusBar("");
     parent->setButtons();
     setFocus();
 }

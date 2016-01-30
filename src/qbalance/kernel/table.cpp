@@ -89,7 +89,7 @@ void Table::query(QString filter)
 bool Table::open()
 {
     opened = false;
-    if (tableName.size() > 0)
+    if (tagName.size() > 0)
         opened = setTableModel();
     return opened;
 }
@@ -128,6 +128,8 @@ void Table::setOrderClause(QString sort)
 QStringList Table::getFieldsList()
 {
     QStringList fields;
+    if (columnsProperties.size() == 0)
+        columnsProperties = returnColumnsProperties();
     for (int i = 0; i < columnsProperties.count(); i++)
     {
         fields << columnsProperties.at(i).column;

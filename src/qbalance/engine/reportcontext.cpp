@@ -59,7 +59,6 @@ QVariant ReportContext::getValue(QString tag, int strNum)
 
     }
 */
-    qDebug() << tag << strNum << result;
     return result;
 }
 

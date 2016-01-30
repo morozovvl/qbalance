@@ -90,97 +90,96 @@ Dictionary::~Dictionary() {
 
 bool Dictionary::add()
 {
+    bool result = false;
+
     if (!lInsertable)
     {
         app->showError(QString(QObject::trUtf8("Запрещено добавлять записи в справочник %1 пользователю %2")).arg(
                       app->getDictionaries()->getDictionaryTitle(tableName),
                       app->getLogin()));
-        return false;
+        return result;
     }
-    QHash<QString, QVariant> values;
-    bool lAddDict = true;
-    if (!isSet())
+
+    if (scriptEngineEnabled && scriptEngine != 0)
+        result = scriptEngine->eventBeforeAddString();
+
+    if (result)
     {
-        if (parameters != 0)
+        QHash<QString, QVariant> values;
+        bool lAddDict = true;
+        if (!isSet())
         {
-            QVector<sParam> searchParameters = parameters->getParameters();
-            if (searchParameters.size() > 0)
+            if (parameters != 0)
             {
-                for (int i = 0; i < searchParameters.size(); i++) {
-                    if (searchParameters[i].table == getTableName())
-                        values.insert(searchParameters[i].field, searchParameters[i].value);
-                    else
-                    {
-                        Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
-                        QString dictName = searchParameters[i].value.toString();
-                        if (dictName.size() > 0)
+                QVector<sParam> searchParameters = parameters->getParameters();
+                if (searchParameters.size() > 0)
+                {
+                    for (int i = 0; i < searchParameters.size(); i++) {
+                        if (searchParameters[i].table == getTableName())
+                            values.insert(searchParameters[i].field, searchParameters[i].value);
+                        else
                         {
-                            dictName = dict->getName();
-                            dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
-                            if (dict->getTableModel()->rowCount() == 1)
+                            Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);
+                            QString dictName = searchParameters[i].value.toString();
+                            if (dictName.size() > 0)
                             {
-                                // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
-                                // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
-                                QString dictTableName = dictName;
-                                QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
-                                values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
-                                                                                .arg(dictFieldName)),
-                                dict->getId(0));
-                            }
-                            else
-                            {
-                                app->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
-                                lAddDict = false;
+                                dictName = dict->getName();
+                                dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
+                                if (dict->getTableModel()->rowCount() == 1)
+                                {
+                                    // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
+                                    // поэтому настоящее имя поля код_<имя таблицы> получим путем запроса к БД
+                                    QString dictTableName = dictName;
+                                    QString dictFieldName = idFieldName.toLower() + "_" + searchParameters[i].table;
+                                    values.insert(db->getObjectName(QString("%1.%2").arg(dictTableName)
+                                                                                    .arg(dictFieldName)),
+                                    dict->getId(0));
+                                }
+                                else
+                                {
+                                    app->showError(QString(QObject::trUtf8("Уточните, пожалуйста, значение связанного справочника %1.")).arg(dict->getFormTitle()));
+                                    lAddDict = false;
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-    else
-    {
-        for (int i = 0; i < fieldList.count(); i++)
-        {       // Просмотрим список полей
-            QString name = fieldList.at(i);
-            if (name.left(4) == idFieldName + "_")
-            {        // Если поле ссылается на другую таблицу
-                name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                Dictionary* dict = dictionaries->getDictionary(name);
-                if (dict != 0)                       // Если удалось открыть справочник
-                    values.insert(fieldList.at(i), dict->getId());
-            }
-        }
-    }
-    if (lAddDict)
-    {
-        int strNum = db->insertDictDefault(getTableName(), &values);
-        if (strNum >= 0)
+        else
         {
-            int column = getCurrentColumn();
-            int newRow = tableModel->rowCount();
-            if (newRow == 0)
-            {
-                query();
-                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                column = getCurrentColumn();
+            for (int i = 0; i < fieldList.count(); i++)
+            {       // Просмотрим список полей
+                QString name = fieldList.at(i);
+                if (name.left(4) == idFieldName + "_")
+                {        // Если поле ссылается на другую таблицу
+                    name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
+                    name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
+                    Dictionary* dict = dictionaries->getDictionary(name);
+                    if (dict != 0)                       // Если удалось открыть справочник
+                        values.insert(fieldList.at(i), dict->getId());
+                }
             }
-            else
+        }
+        if (lAddDict)
+        {
+            int strNum = db->insertDictDefault(getTableName(), &values);
+            if (strNum >= 0)
             {
-                tableModel->insertRow(newRow);
-                grdTable->reset();
-                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                updateCurrentRow(strNum);
-                grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                int newRow = tableModel->rowCount();
+                if (newRow == 0)
+                    query();
+                else
+                {
+                    tableModel->insertRow(newRow);
+                    grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                    updateCurrentRow(strNum);
+                }
+                result = true;
             }
-            grdTable->selectionModel()->setCurrentIndex(getCurrentIndex().sibling(newRow, column), QItemSelectionModel::Select);
-            form->setButtons();
-            grdTable->setFocus();
-            return true;
         }
     }
-    return false;
+    return result;
 }
 
 
@@ -386,16 +385,16 @@ bool Dictionary::open(QString command, QString tName)
     sqlCommand = command;
     queryTableName = tName;
 
-    if (tableName.size() == 0)
+    if (tagName.size() == 0)
     {
-        tableName = tName;
+        tagName = tName;
         if (sqlCommand.size() == 0)
             return true;
     }
 
     dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
-        dictTitle = tableName;
+        dictTitle = tagName;
 
     if (Essence::open())
     {

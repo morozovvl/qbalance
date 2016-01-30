@@ -27,7 +27,7 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
     formTitle = QString(QObject::trUtf8("Остатки на %1 счете").arg(account));
     dictionaryName = dictName.trimmed().toLower();
     tagName = "saldo" + cAcc;
-//    scriptFileName =  tagName + ".qs";
+    scriptFileName =  tagName + ".qs";
     quan = false;
     lIsSaldo = true;
     QSqlQuery accounts = db->getAccounts();
