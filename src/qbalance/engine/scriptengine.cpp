@@ -50,29 +50,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Q_DECLARE_METATYPE(Dialog*)
 Q_DECLARE_METATYPE(QLineEdit*)
 
-QString ScriptEngine::scriptFileName = "";
 QHash<QString, QString> ScriptEngine::scripts;
 bool ScriptEngine::isSA = false;
+
 
 // Функции, преобразующие вид функций в скриптах table.<функция> к виду <функция> для упрощения написания скриптов
 
 bool isNumeric(ScriptEngine* engine, QString field = "")
 {
     QString fieldName;
-    if (engine->parent() != 0)
+    if (engine->getParent() != 0)
     {
         if (field.size() == 0)
-            fieldName = ((Essence*)engine->parent())->getCurrentFieldName();
+            fieldName = (engine->getParent())->getCurrentFieldName();
         else
             fieldName = field;
-        if (QString(((Essence*)engine->parent())->getValue(fieldName).typeName()).compare("double", Qt::CaseInsensitive) == 0)
+        if (QString((engine->getParent())->getValue(fieldName).typeName()).compare("double", Qt::CaseInsensitive) == 0)
             return true;
     }
     return false;
 }
 
 
-QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine) {
+QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine)
+{
     if (engine->evaluate("table").isValid())
     {
         QScriptValue value = engine->evaluate(QString("table.getCurrentFieldName()"));
@@ -83,7 +84,8 @@ QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine) {
 }
 
 
-QScriptValue getRowCount(QScriptContext *, QScriptEngine* engine) {
+QScriptValue getRowCount(QScriptContext *, QScriptEngine* engine)
+{
     if (engine->evaluate("table").isValid())
     {
         QScriptValue value = engine->evaluate(QString("table.getRowCount()"));
@@ -94,7 +96,8 @@ QScriptValue getRowCount(QScriptContext *, QScriptEngine* engine) {
 }
 
 
-QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
+QScriptValue getValue(QScriptContext* context, QScriptEngine* engine)
+{
     if (context->argument(0).isString() && engine->evaluate("table").isValid())
     {
         QString fieldName = context->argument(0).toString();
@@ -104,17 +107,15 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine) {
             value = engine->evaluate(QString("parseFloat(%1)").arg(value.toVariant().toFloat()));
         else
             value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
-
         if (value.isValid())
-        {
             return value;
-        }
     }
     return QScriptValue();
 }
 
 
-QScriptValue getId(QScriptContext* context, QScriptEngine* engine) {
+QScriptValue getId(QScriptContext* context, QScriptEngine* engine)
+{
     if (engine->evaluate("table").isValid())
     {
         QScriptValue value;
@@ -135,7 +136,8 @@ QScriptValue getId(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-QScriptValue setValue(QScriptContext* context, QScriptEngine* engine) {
+QScriptValue setValue(QScriptContext* context, QScriptEngine* engine)
+{
     QScriptValue fieldName = context->argument(0);
     int row = (context->argument(2).isNumber() ? context->argument(2).toInteger() : -1);
     if (fieldName.isString() && engine->evaluate("table").isValid())
@@ -150,7 +152,8 @@ QScriptValue setValue(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-QScriptValue getOldValue(QScriptContext* context, QScriptEngine* engine) {
+QScriptValue getOldValue(QScriptContext* context, QScriptEngine* engine)
+{
     QScriptValue fieldName = context->argument(0);
     if (engine->evaluate("table").isValid())
     {
@@ -171,7 +174,8 @@ QScriptValue getOldValue(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine) {
+QScriptValue getDictionary(QScriptContext* context, QScriptEngine* engine)
+{
     QScriptValue dictName = context->argument(0);
     if (dictName.isString())
     {
@@ -204,7 +208,8 @@ QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 }
 
 
-QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
+QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
+{
     QScriptValue result(false);
     if (context->argument(0).isString())
     {
@@ -212,7 +217,7 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
         QString script = ScriptEngine::loadScript(scriptFile);
         if (script.size() > 0)
         {
-            TApplication::exemplar()->appendScriptStack(scriptFile);
+            TApplication::exemplar()->appendScriptStack((ScriptEngine*)engine);
             QScriptContext *pc = context->parentContext();
             context->setActivationObject(pc->activationObject());
             context->setThisObject(pc->thisObject());
@@ -230,7 +235,8 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-QScriptValue debug(QScriptContext* context, QScriptEngine*) {
+QScriptValue debug(QScriptContext* context, QScriptEngine* engine)
+{
     QScriptValue result(true);
     if (context->argument(0).isString())
     {
@@ -563,8 +569,9 @@ void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
 //================================================================================================
 // Реализация класса
 
-ScriptEngine::ScriptEngine(Essence *parent) : QScriptEngine(parent)
+ScriptEngine::ScriptEngine(Essence *par) : QScriptEngine()
 {
+    parent = par;
     sqlFieldClass = new SqlFieldClass(this);
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
@@ -598,7 +605,7 @@ bool ScriptEngine::open(QString scriptFile)
     if (scriptFile.size() > 0)
     {
         script = loadScript(scriptFile);
-        p_scriptFileName = scriptFileName;
+        scriptFileName = scriptFile;
     }
     return true;
 }
@@ -660,10 +667,10 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("OOXMLEngine", newQMetaObject(&QObject::staticMetaObject, newFunction(OOXMLEngineConstructor)));
 
     // Объявим глобальные переменные и объекты
-    if (parent() != 0)
+    if (parent != 0)
     {
-        globalObject().setProperty("form", newQObject(((Document*)parent())->getForm()));
-        globalObject().setProperty("table", newQObject(parent()));
+        globalObject().setProperty("form", newQObject(((Document*)getParent())->getForm()));
+        globalObject().setProperty("table", newQObject(getParent()));
     }
     else
     {
@@ -731,9 +738,9 @@ bool ScriptEngine::evaluate()
             if (globalObject().property("EventKeyPressed").isValid() && !app->isScriptMode())
             {
                 // Соединим сигнал нажатия кнопки на форме со слотом обработчика нажатий кнопки в скриптах, если он есть
-                if (parent() != 0)
+                if (getParent() != 0)
                 {
-                    qScriptConnect(((Essence*)parent())->getFormWidget()->getForm(),
+                    qScriptConnect((getParent())->getFormWidget()->getForm(),
                                    SIGNAL(keyPressed(QKeyEvent*)),
                                    globalObject(),
                                    globalObject().property("EventKeyPressed"));
@@ -748,7 +755,7 @@ bool ScriptEngine::evaluate()
 
 QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fileName, int lineNumber)
 {
-    app->appendScriptStack(fileName);
+    app->appendScriptStack(this);
     QScriptEngine::evaluate(program, fileName, lineNumber);
     app->removeLastScriptStack();
     return globalObject().property("scriptResult");
@@ -758,7 +765,7 @@ QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fi
 QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
     QScriptValue result;
-    app->appendScriptStack(program.fileName());
+    app->appendScriptStack(this);
     result = QScriptEngine::evaluate(program);
     app->removeLastScriptStack();
     return result;
@@ -998,7 +1005,7 @@ void ScriptEngine::eventPreparePrintValues()
 
 void ScriptEngine::showScriptError(QString eventName)
 {
-    errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 события %2 скрипта %3: [%4]")).arg(uncaughtExceptionLineNumber()).arg(eventName).arg(p_scriptFileName).arg(uncaughtException().toString());
+    errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 события %2 скрипта %3: [%4]")).arg(uncaughtExceptionLineNumber()).arg(eventName).arg(scriptFileName).arg(uncaughtException().toString());
     app->showError(errorMessage);
 }
 
@@ -1171,7 +1178,7 @@ QString ScriptEngine::loadScript(QString scriptFile)
     {
         result = scripts.value(scriptFile);
     }
-    scriptFileName = scriptFile;
+//    scriptFileName = scriptFile;
     return result;
 }
 
@@ -1187,7 +1194,7 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     QScriptValue result;
     if (globalObject().property(eventName).isFunction())
     {
-        app->appendScriptStack(p_scriptFileName + ": " + eventName);
+        app->appendScriptStack(this);
         result = globalObject().property(eventName).call(thisObject, args);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка

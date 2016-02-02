@@ -96,26 +96,13 @@ void TableView::setEssence(Essence* ess)
 
 void TableView::cmdAdd()
 {
-    QModelIndex index = currentIndex();      // Запомним, где стоял курсор перед удалением записи
+    QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     if (essence->add())
     {
-        int column = index.column() < 0 ? 0 : index.column();
-        int rowCount = tableModel->rowCount();
-        if (rowCount == 1)
-        {
-            setCurrentIndex(index.sibling(rowCount - 1, column));
-            reset();
-            repaint();
-            selectNextColumn();
-        }
-        else
-        {
-            reset();
-            setCurrentIndex(index.sibling(rowCount - 1, column));
-        }
-        parent->setButtons();
+        setCurrentFocus(index);
     }
-    setFocus();
+    else
+        setFocus();
 }
 
 
@@ -127,15 +114,39 @@ void TableView::cmdDelete()
         int rowCount = tableModel->rowCount();
         if (rowCount > 0)
         {   // Если после удаления строки в таблице остались еще записи
-            if (index.row() < rowCount)
+/*
+            reset();
+            if (index.row() < rowCount - 1)
                 setCurrentIndex(index);
             else
                 setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
+*/
+            if (index.row() == rowCount)
+                selectRow(rowCount - 1);
         }
-        else
-            showPhoto();
         parent->setButtons();
     }
+    setFocus();
+}
+
+
+void TableView::setCurrentFocus(QModelIndex index)
+{
+    int column = index.column() < 0 ? 0 : index.column();
+    int rowCount = tableModel->rowCount();
+    if (rowCount == 1)
+    {
+        selectRow(rowCount - 1);
+        selectColumn(column);
+        selectNextColumn();
+        reset();
+    }
+    else
+    {
+        reset();
+        setCurrentIndex(index.sibling(rowCount - 1, column));
+    }
+    parent->setButtons();
     setFocus();
 }
 

@@ -382,7 +382,6 @@ void FormGrid::cmdAdd()
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
         grdTable->cmdAdd();
-        showPhoto();
     }
 }
 

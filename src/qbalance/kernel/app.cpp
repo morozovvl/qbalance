@@ -73,6 +73,7 @@ TApplication::TApplication(int & argc, char** argv)
     topersList = 0;
     driverFR = 0;
     barCodeReader = 0;
+    barCodeReaded = false;
     bankTerminal = 0;
 
     driverFRisValid = false;
@@ -571,7 +572,7 @@ void TApplication::showError(QString error)
     debug(0, "Error: " + error);
     for (int i = scriptStack.count(); i > 0; i--)
     {
-        QString scriptName = scriptStack.at(i - 1).trimmed();
+        QString scriptName = scriptStack.at(i - 1)->getScriptFileName();
         if (scriptName.size() > 0)
             debug(0, QString("Script: %1").arg(scriptName));
     }
@@ -749,11 +750,13 @@ int TApplication::runScript(QString scriptName)
 
 void TApplication::barCodeReadyRead(QString barCodeString)
 {
+    barCodeReaded = true;
     Dialog* dialog = 0;
     if (getActiveSubWindow() != 0)
         dialog = (Dialog*)(getActiveSubWindow()->widget());
     if (dialog != 0)
         dialog->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
+    barCodeReaded = false;
 }
 
 

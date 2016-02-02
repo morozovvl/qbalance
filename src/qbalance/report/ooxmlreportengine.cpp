@@ -49,6 +49,10 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont)
             tableNameForPrinting = table;
             writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
         }
+
+        if (scriptEngine != 0)
+            scriptEngine->eventBeforeTotalPrint();
+
         writeHeader();
 
         ooxmlEngine->close();
@@ -107,29 +111,23 @@ void OOXMLReportEngine::writeVariables()
     if (!firstRowNode.isNull())                 // Если в шаблоне было найдено "тело" таблицы
     {
         QDomNode lastNode = firstRowNode;       // lastNode будет указывать на последнюю добавленную строку таблицы
-        bool valFound = true;                   // флаг, указывающий, что заполнение таблицы можно продолжать
-        for (int strNum = 1; valFound; strNum++)    // по порядку строк документа
+        for (int strNum = 1; strNum <= scriptEngine->getReportContext()->getRowCount(); strNum++)    // по порядку строк документа
         {
-            if (scriptEngine != 0)
-            {
-                scriptEngine->eventBeforeLinePrint(strNum);
-            }
+            scriptEngine->eventBeforeLinePrint(strNum);
+
             QDomNode clone = firstRowNode.cloneNode();              // склонируем первую строку тела таблицы, будем читать из и писать в клон строки
             cells = clone.toElement().elementsByTagName("text:p");  // создадим список ячеек первой строки тела таблицы (узлов XML)
-            for (int i = 0; i < cells.count() && valFound; i++)     // будем по порядку просматривать этот список, пока есть что смотреть
+            for (int i = 0; i < cells.count(); i++)     // будем по порядку просматривать этот список, пока есть что смотреть
             {
                 if (!readExpression(i, strNum))                     // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
                 {
-                    valFound = false;                               // больше искать нечего
                     break;                                          // выходим из цикла
                 }
             }
-            if (valFound)                                                           // если для строки найдены все данные
-                lastNode = firstRowNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
-            if (scriptEngine != 0)
-            {
-                scriptEngine->eventAfterLinePrint(strNum);
-            }
+            lastNode = firstRowNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
+
+            scriptEngine->eventAfterLinePrint(strNum);
+
         }
         firstRowNode.parentNode().removeChild(firstRowNode);                        // удалим первую строку тела документа, т.к. в ней содержатся только шаблоны (без данных)
                                                                                     // он не заполнялся данными, т.к. был нужен для клонирования следующих строк
@@ -182,9 +180,7 @@ void OOXMLReportEngine::writeHeader()
         {
             QVariant var = scriptEngine->evaluate(cellText).toVariant();    // то оценим его скриптовым движком
             if (!scriptEngine->hasUncaughtException())                      // и если не было ошибок...
-            {
                 writeCell(cells.at(i), cellText, var);                      // запишем результат оценки вместо текста ячейки
-            }
         }
     }
 
@@ -213,8 +209,8 @@ strNum - номер текущей строки тела таблицы
             QVariant var;
             QString value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
             QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
-            QString key = sval.replace(tableNameForPrinting, QString("%1%2").arg(tableNameForPrinting).arg(strNum)).toLower();
-            var = context->getValue(key);  // в контексте печати наименования данных хранятся в нижнем регистре
+            QString key = sval.replace(tableNameForPrinting, QString("%1").arg(tableNameForPrinting)).toLower();
+            var = context->getValue(key, strNum);  // в контексте печати наименования данных хранятся в нижнем регистре
             if (var.isValid())                                      // если данные имеются
             {
                 writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона

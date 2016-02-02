@@ -172,6 +172,7 @@ public:
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);
     virtual void barCodeReadyRead(QString);
+    Q_INVOKABLE     bool    isBarCodeReaded() { return barCodeReaded; }
     virtual bool readCardReader(QKeyEvent*);
 
     Q_INVOKABLE void capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
@@ -214,9 +215,10 @@ public:
 
     static void    setSendCommandMode(bool mode) {sendCommandMode = mode; }
 
-    QStringList     getScriptStack() { return scriptStack; }
-    void            appendScriptStack(QString scriptName) { scriptStack.append(scriptName); }
+    QList<ScriptEngine*>     getScriptStack() { return scriptStack; }
+    void            appendScriptStack(ScriptEngine* script) { scriptStack.append(script); }
     void            removeLastScriptStack() { scriptStack.removeLast(); }
+    ScriptEngine*   getLastScriptStack() { return scriptStack.last(); }
 
     QObject*        createPlugin(QString);
     virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0) { return new QMyExtSerialPort(name, mode, parent); }
@@ -241,6 +243,7 @@ private:
     static TApplication*    Exemplar;
     DBFactory*              db;
     BarCodeReader*          barCodeReader;
+    bool                    barCodeReaded;
     QString                 cardReaderCode;
     MessageWindow*          messagesWindow;
     int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
@@ -266,7 +269,7 @@ private:
     void                    readSettings();
     void                    writeSettings();
     void                    saveMessages();
-    QStringList             scriptStack;
+    QList<ScriptEngine*>    scriptStack;
     QHash<QString, QString>     dirs;
     QString                 dirName;
 

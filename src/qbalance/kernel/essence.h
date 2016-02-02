@@ -157,7 +157,7 @@ public:
     static bool         getFile(QString, QString, FileType);
     virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
-    QModelIndex getCurrentIndex();
+    QModelIndex         getCurrentIndex();
     void setCurrentIndex(QModelIndex);
     Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(getCurrentColumn()).toUpper(); }
     Q_INVOKABLE virtual int     getCurrentRow() { return getCurrentIndex().row(); }

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define BANKTERMINAL_H
 
 #include <QtCore/QObject>
-#include <QDebug>
+//#include <QDebug>
 //#include "../kernel/app.h"
 
 class TApplication;
@@ -34,7 +34,7 @@ public:
     virtual bool open();
     virtual void close();
     virtual void setApp(TApplication* a) { app = a; }
-    Q_INVOKABLE virtual void test() { qDebug() << "Ok"; }
+    Q_INVOKABLE virtual void test() { ; }
 
 private:
     TApplication* app;

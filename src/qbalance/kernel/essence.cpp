@@ -154,7 +154,8 @@ QVariant Essence::getValue(QString n, int row)
         {
             if (row < 0)
                 row = getCurrentRow();
-            result = tableModel->record(row).value(name);
+//            result = tableModel->record(row).value(name);
+            result = tableModel->data(tableModel->index(row, tableModel->fieldIndex(name)));
 
             QVariant::Type type = record.field(name).type();
             if (type == QVariant::Double ||
@@ -629,7 +630,7 @@ void Essence::evaluateEngine()
         scriptEngineEnabled = false;
         if (scriptEngine->open(scriptFileName))
         {
-            app->appendScriptStack(scriptFileName);
+            app->appendScriptStack(scriptEngine);
             if (scriptEngine->evaluate())
             {
                 scriptEngineEnabled = true;
@@ -988,8 +989,13 @@ void Essence::restoreOldValues()
 
 void Essence::keyboardReaded(QString barCode)
 {
+    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
+
     if (scriptEngineEnabled && scriptEngine != 0 && enabled)
         scriptEngine->eventBarCodeReaded(barCode);
+
+    if (grdTable != 0)
+        grdTable->setCurrentFocus(index);
 }
 
 

@@ -1,17 +1,18 @@
-cmake_minimum_required(VERSION 3.0)
-set (CMAKE_BUILD_TYPE "Release")
-set (BIN qbalance)
-project (${BIN})
+cmake_minimum_required(VERSION 2.6)
+set (PROJECTNAME qbalance)
+project (${PROJECTNAME})
 
-set (QT_USE_QTXML TRUE)
-set (QT_USE_QTSQL TRUE)
-set (QT_USE_QTSCRIPT TRUE)
-set (QT_USE_QTNETWORK TRUE)
-set (QT_USE_QTUITOOLS TRUE)
-set (QT_USE_QTDESIGNER TRUE)
+add_subdirectory (./bankterminal)
 
-set (SOURCE_ROOT ./)
-aux_source_directory (${SOURCE_ROOT} SOURCES)
+#set (QT_USE_QTXML TRUE)
+#set (QT_USE_QTSQL TRUE)
+#set (QT_USE_QTSCRIPT TRUE)
+#set (QT_USE_QTNETWORK TRUE)
+#set (QT_USE_QTUITOOLS TRUE)
+#set (QT_USE_QTDESIGNER TRUE)
+
+#set (SOURCE_ROOT ./)
+#aux_source_directory (${SOURCE_ROOT} SOURCES)
 
 # Указываем пути, где искать заголовочники, дополнительно к стандартным путям.
 #include_directories( "/my/addition/path/to/headers" "${SOURCE_ROOT}" )
@@ -34,13 +35,13 @@ aux_source_directory (${SOURCE_ROOT} SOURCES)
 #		boost_system )
 
 # Устанавливаем флаги компилятора (причём никаких скрытых флагов, только эти).
-set( CMAKE_CXX_FLAGS "-O0 -Wall -pedantic -std=c++0x" ) 
+#set( CMAKE_CXX_FLAGS "-O0 -Wall -pedantic -std=c++0x" ) 
 
 # Собираем исполняемый файл с именем my_program.
-add_executable( ${BIN} ${SOURCES} )
+#add_executable( ${BIN} ${SOURCES} )
 
 # Компонуем собранную программу с необходимыми динамическими библиотеками.
-target_link_libraries( ${BIN} ${REQUIRED_LIBRARIES} )
+#target_link_libraries( ${BIN} ${REQUIRED_LIBRARIES} )
 
 # Установка. Это действие будет активировано при выполнении команды 'make install'.
 #install( TARGETS ${BIN} DESTINATION ${INSTALL_PATH} )

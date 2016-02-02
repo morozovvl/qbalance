@@ -1107,7 +1107,7 @@ int Document::appendDocString()
         {
             tableModel->insertRow(newRow);
         }
-        grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+        setCurrentRow(newRow);
         updateCurrentRow(result);
         if (getScriptEngine() != 0)
         {

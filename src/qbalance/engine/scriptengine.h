@@ -57,6 +57,8 @@ public:
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     int getScriptResult() { return scriptResult; }
     void setIsDocumentScript(bool docScr) { globalObject().setProperty("isDocumentScript", docScr); }
+    QString getScriptFileName() { return scriptFileName; }
+    Essence* getParent() { return parent; }
     Document* getDocument() { return document; }
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
@@ -105,13 +107,13 @@ private:
     static QHash<QString, QString> scripts;
     int                 scriptResult;
     QString             errorMessage;
-    static QString      scriptFileName;
-    QString             p_scriptFileName;
+    QString             scriptFileName;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;
     SqlFieldClass*      sqlFieldClass;
     TApplication*       app;
-    static bool                isSA;
+    Essence*            parent;
+    static bool         isSA;
 };
 
 

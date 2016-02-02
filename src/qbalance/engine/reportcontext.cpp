@@ -43,22 +43,12 @@ QVariant ReportContext::getValue(QString tag)
 
 QVariant ReportContext::getValue(QString tag, int strNum)
 {
-//    QRegExp rm("^\\D+\\.");
-    QVariant result, lastResult;
-    QString lastTag;
+    QVariant result;
     QString pref = tag.left(tag.indexOf("."));
     tag = tag.toLower();
     tag.remove(pref);
     tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
-    lastTag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum - 1 : sortRef.value(strNum - 1)).arg(tag);
     result = data->value(tag);
-/*
-    lastResult = lastData->value(lastTag);
-    if (!showRepeat && result == lastResult)
-    {
-
-    }
-*/
     return result;
 }
 
