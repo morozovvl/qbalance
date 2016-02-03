@@ -235,7 +235,7 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
 }
 
 
-QScriptValue debug(QScriptContext* context, QScriptEngine* engine)
+QScriptValue debug(QScriptContext* context, QScriptEngine*)
 {
     QScriptValue result(true);
     if (context->argument(0).isString())

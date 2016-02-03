@@ -146,23 +146,6 @@ bool Dictionary::add()
                 }
             }
         }
-/*
-        else
-        {
-            for (int i = 0; i < fieldList.count(); i++)
-            {       // Просмотрим список полей
-                QString name = fieldList.at(i);
-                if (name.left(4) == idFieldName + "_")
-                {        // Если поле ссылается на другую таблицу
-                    name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
-                    name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
-                    Dictionary* dict = dictionaries->getDictionary(name);
-                    if (dict != 0)                       // Если удалось открыть справочник
-                        values.insert(fieldList.at(i), dict->getId());
-                }
-            }
-        }
-*/
         if (result)
         {
             result = false;

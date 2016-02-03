@@ -255,6 +255,7 @@ bool Document::add()
             }
         }
         appendDocString();
+        setCurrentRow(tableModel->rowCount());
     }
     return result;
 }

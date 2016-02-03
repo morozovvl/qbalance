@@ -989,13 +989,11 @@ void Essence::restoreOldValues()
 
 void Essence::keyboardReaded(QString barCode)
 {
-    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
-
     if (scriptEngineEnabled && scriptEngine != 0 && enabled)
         scriptEngine->eventBarCodeReaded(barCode);
 
     if (grdTable != 0)
-        grdTable->setCurrentFocus(index);
+        grdTable->setCurrentFocus();
 }
 
 

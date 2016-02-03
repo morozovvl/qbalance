@@ -65,7 +65,7 @@ public:
     virtual void                restoreCurrentIndex(QModelIndex);
     virtual QList<FieldType>*   getFields() { return &fields; }
     Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
-    virtual void                setCurrentFocus(QModelIndex);
+    virtual void                setCurrentFocus();
 
 
 public slots:

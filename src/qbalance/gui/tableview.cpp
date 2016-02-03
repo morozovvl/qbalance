@@ -96,13 +96,10 @@ void TableView::setEssence(Essence* ess)
 
 void TableView::cmdAdd()
 {
-    QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     if (essence->add())
     {
-        setCurrentFocus(index);
+        setCurrentFocus();
     }
-    else
-        setFocus();
 }
 
 
@@ -114,40 +111,24 @@ void TableView::cmdDelete()
         int rowCount = tableModel->rowCount();
         if (rowCount > 0)
         {   // Если после удаления строки в таблице остались еще записи
-/*
-            reset();
-            if (index.row() < rowCount - 1)
-                setCurrentIndex(index);
-            else
-                setCurrentIndex(index.sibling(index.row() - 1, index.column()));    // Если была удалена последняя строка
-*/
             if (index.row() == rowCount)
                 selectRow(rowCount - 1);
         }
         parent->setButtons();
     }
-    setFocus();
 }
 
 
-void TableView::setCurrentFocus(QModelIndex index)
+void TableView::setCurrentFocus()
 {
+    QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     int column = index.column() < 0 ? 0 : index.column();
-    int rowCount = tableModel->rowCount();
-    if (rowCount == 1)
-    {
-        selectRow(rowCount - 1);
-        selectColumn(column);
-        selectNextColumn();
-        reset();
-    }
-    else
-    {
-        reset();
-        setCurrentIndex(index.sibling(rowCount - 1, column));
-    }
+    int row = index.row() < 0 ? 0 : index.row();
+    selectNextColumn();
+    column = currentIndex().column();
+    reset();
+    setCurrentIndex(index.sibling(row, column));
     parent->setButtons();
-    setFocus();
 }
 
 
