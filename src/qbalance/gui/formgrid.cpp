@@ -17,21 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QApplication>
+#include <QtGui/QApplication>
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QStringList>
-#include <QAbstractItemView>
+#include <QtGui/QAbstractItemView>
 #include <QtCore/QModelIndex>
 #include <QtCore/QRect>
-#include <QPalette>
-#include <QPixmap>
-#include <QHBoxLayout>
-#include <QPainter>
+#include <QtGui/QPalette>
+#include <QtGui/QPixmap>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QPainter>
 #include <QtCore/QUrl>
-#include <QHeaderView>
-#include <QPushButton>
-#include <QInputDialog>
-#include <QDebug>
+#include <QtGui/QHeaderView>
+#include <QtGui/QPushButton>
+#include <QtCore/QDebug>
+#include <QtGui/QInputDialog>
 #include "formgrid.h"
 #include "picture.h"
 #include "tableview.h"
@@ -419,6 +419,7 @@ void FormGrid::cmdPrint(bool autoPrint)
 {
     if (buttonPrint != 0 && buttonPrint->isVisible() && buttonPrint->isEnabled())
     {
+/*
         QDir dir = QDir(app->getReportsPath());
         QString ext = "." + app->getReportTemplateExt();
         QStringList files;
@@ -495,6 +496,11 @@ void FormGrid::cmdPrint(bool autoPrint)
                 }
             }
         }
+*/
+        QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
+        QString fileName = app->getReportFile(getParent()->getTagName(), autoPrint, formWidget, cmdButtonLayout->contentsRect());
+        if (fileName.size() > 0)
+            parent->print(fileName);
         grdTable->setFocus();
     }
 }

@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MYBOOLEANITEMDELEGATE_H
 
 #include <QtCore/QPointer>
-#include <QItemDelegate>
-#include <QCheckBox>
+#include <QtGui/QItemDelegate>
+#include <QtGui/QCheckBox>
 #include "myitemdelegate.h"
 
 class QDESIGNER_WIDGET_EXPORT MyBooleanItemDelegate : public MyItemDelegate {

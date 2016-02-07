@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <QtCore/QVariant>
-#include <QHeaderView>
-#include <QLabel>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
 #include "wizardoperation.h"
 #include "mybuttonlineedititemdelegate.h"
 #include "mybooleanitemdelegate.h"

@@ -223,6 +223,7 @@ public:
     QObject*        createPlugin(QString);
     virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0) { return new QMyExtSerialPort(name, mode, parent); }
     virtual MyProgressDialog* getMyProgressDialog(QString mess) { return new MyProgressDialog(mess, getMainWindow()); }
+    QString         getReportFile(QString, bool, QWidget*, QRect);
 
 
 signals:

@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QHash>
 #include <QtCore/QUuid>
 #include <QtCore/QLocale>
-#include <QDebug>
+#include <QtCore/QDebug>
 #include "mysqlrelationaltablemodel.h"
 #include "../kernel/app.h"
 

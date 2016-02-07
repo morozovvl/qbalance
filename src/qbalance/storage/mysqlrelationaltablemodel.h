@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYSQLRELATIONALTABLEMODEL_H
 #define MYSQLRELATIONALTABLEMODEL_H
 
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
 #include <QtCore/QHash>

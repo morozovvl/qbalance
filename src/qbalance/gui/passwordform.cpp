@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QComboBox>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QLabel>
+#include <QtGui/QComboBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QFormLayout>
+#include <QtGui/QLabel>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 

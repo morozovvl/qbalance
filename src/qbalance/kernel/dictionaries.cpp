@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QString>
-#include <QDebug>
+#include <QtCore/QDebug>
 #include "dictionaries.h"
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"

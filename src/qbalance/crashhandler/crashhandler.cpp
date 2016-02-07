@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
 #include <QtCore/QCoreApplication>
-#include <QString>
+#include <QtCore/QString>
 
 #if defined(Q_OS_LINUX)
 #include "../../google-breakpad/src/client/linux/handler/exception_handler.h"

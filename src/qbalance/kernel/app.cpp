@@ -18,14 +18,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDate>
-#include <QMessageBox>
+#include <QtGui/QMessageBox>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
 #include <QtGui/QFileDialog>
-#include <QPushButton>
-#include <QPaintEngine>
-#include <QHttp>
-#include <QFormBuilder>
+#include <QtGui/QPushButton>
+#include <QtGui/QPaintEngine>
+#include <QtNetwork/QHttp>
+#include <QtDesigner/QFormBuilder>
+#include <QtGui/QInputDialog>
+#include <QtGui/QWidget>
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -1051,4 +1053,81 @@ void TApplication::saveMessages()
         }
         file.close();
     }
+}
+
+
+QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* formWidget, QRect rect)
+{
+    QString result;
+    QDir dir = QDir(getReportsPath());
+    QString ext = "." + getReportTemplateExt();
+    QStringList files;
+    // Получим шаблоны с сервера
+    QStringList fs = db->getFilesList(tagName, ReportTemplateFileType, true);
+    foreach (QString f, fs)
+    {
+        if (!files.contains(f))
+            files << f;
+    }
+
+    // Получим список локальных шаблонов отчетов
+    fs = dir.entryList(QStringList(tagName + ".*" + ext), QDir::Files, QDir::Name);
+    foreach (QString f, fs)
+    {
+        if (!files.contains(f))
+        {
+            files << f;
+            Essence::getFile(getReportsPath(), f, ReportTemplateFileType);
+        }
+    }
+
+    QStringList reports;
+    QMenu* menu = new QMenu(formWidget);
+    QAction* newReportAct = new QAction(QObject::trUtf8("Создать новый отчет..."), this);
+    if (isSA())
+        menu->addAction(newReportAct);
+    if (files.count() > 0)
+    {
+        if (isSA())
+            menu->addSeparator();
+        for (int i = 0; i < files.size(); i++)
+        {
+            QString file = files.at(i);
+            QString oldFile = file;
+            file.remove(tagName + ".", Qt::CaseInsensitive);      // Уберем префикс файла
+            if (file != oldFile)
+            {
+                file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
+                reports << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
+                menu->addAction(file);
+            }
+        }
+    }
+    if (autoPrint && files.size() == 1)
+        result = files.at(0);
+    else
+    {
+        QAction* action = menu->exec(formWidget->mapToGlobal(formWidget->mapToGlobal(QPoint(rect.x() + 100, rect.y()-menu->height()))));
+        if (action != 0)
+        {
+            if (action == newReportAct)
+            {
+                QString reportName;                         // Создадим имя отчета по умолчанию
+                int i = 1;
+                do
+                {
+                    reportName = QString("Отчет%1").arg(i++);
+                } while (reports.contains(reportName));
+                bool ok;
+                reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый документ"),
+                                              QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
+                                              reportName, &ok);
+                if (ok && !reportName.isEmpty())
+                    result = tagName + "." + reportName + "." + getReportTemplateExt();
+            }
+            else
+                result = tagName + "." + action->text() + "." + getReportTemplateExt();
+        }
+    }
+    return result;
 }

@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define CONNECTION_GROUP_NAME   "connections"
 
 #include <QtCore/QString>
-#include <QComboBox>
-#include <QLineEdit>
+#include <QtGui/QComboBox>
+#include <QtGui/QLineEdit>
 #include "form.h"
 #include "../storage/dbfactory.h"
 

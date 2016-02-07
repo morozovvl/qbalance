@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef TCPCLIENT_H
 #define TCPCLIENT_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QNetworkSession>
 

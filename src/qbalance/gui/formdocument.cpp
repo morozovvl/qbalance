@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QWidget>
-#include <QFont>
-#include <QPushButton>
-#include <QLabel>
+#include <QtGui/QWidget>
+#include <QtGui/QFont>
+#include <QtGui/QPushButton>
+#include <QtGui/QLabel>
 #include "formgrid.h"
 #include "formdocument.h"
 #include "docparameters.h"

@@ -22,8 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QComboBox>
-#include <QLineEdit>
+#include <QtGui/QComboBox>
+#include <QtGui/QLineEdit>
 
 #include "form.h"
 

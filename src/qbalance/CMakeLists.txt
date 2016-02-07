@@ -1,47 +1,37 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required (VERSION 2.6)
 set (PROJECTNAME qbalance)
 project (${PROJECTNAME})
 
-add_subdirectory (./bankterminal)
+set (QT_USE_QTXML TRUE)
+set (QT_USE_QTSQL TRUE)
+set (QT_USE_QTSCRIPT TRUE)
+set (QT_USE_QTNETWORK TRUE)
+set (QT_USE_QTUITOOLS TRUE)
+set (QT_USE_QTDESIGNER TRUE)
+find_package (Qt4 REQUIRED)
 
-#set (QT_USE_QTXML TRUE)
-#set (QT_USE_QTSQL TRUE)
-#set (QT_USE_QTSCRIPT TRUE)
-#set (QT_USE_QTNETWORK TRUE)
-#set (QT_USE_QTUITOOLS TRUE)
-#set (QT_USE_QTDESIGNER TRUE)
+include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/google-breakpad/src/)
+add_subdirectory (crashhandler)
+add_subdirectory (engine)
+add_subdirectory (gui)
+add_subdirectory (kernel)
+add_subdirectory (openoffice)
+add_subdirectory (plugins)
+add_subdirectory (report)
+add_subdirectory (serialport)
+add_subdirectory (storage)
 
-#set (SOURCE_ROOT ./)
-#aux_source_directory (${SOURCE_ROOT} SOURCES)
+set (SOURCE_ROOT ./)
+aux_source_directory (${SOURCE_ROOT} PROJECT_NAME_SOURCES)
 
-# Указываем пути, где искать заголовочники, дополнительно к стандартным путям.
-#include_directories( "/my/addition/path/to/headers" "${SOURCE_ROOT}" )
+#aux_source_directory ("${SOURCE_ROOT}/*.h" PROJECT_NAME_HDRS)
+#aux_source_directory ("${SOURCE_ROOT}/*.cpp" PROJECT_NAME_SRCS)
+#set (PROJECT_NAME_RCS ../../resources.qrc)
+#qt4_wrap_cpp (PROJECT_NAME_MOC_HDRS ${PROJECT_NAME_HDRS})
+#qt4_add_resources (PROJECT_NAME_RCS_SRCS ${PROJECT_NAME_RCS})
+#add_executable ( ${PROJECT_NAME} WIN32 ${PROJECT_NAME_MOC_HDRS} ${PROJECT_NAME_SRCS} ${PROJECT_NAME_RCS_SRCS} ${PROJECT_NAME_SOURCES} )
+#target_link_libraries ( ${PROJECT_NAME} ${QT_LIBRARIES} )
+#qt4_add_resources(PROJECT_NAME_RCS_SRCS ${PROJECT_NAME_RCS} ) 
 
-# Устанавливаем путь, куда будет скопирован исполняемый файл при выполнении
-# команды 'make install'.
-#set( INSTALL_PATH /usr/local/bin/ )
-
-# Указываем пути, где искать сторонние динамически библиотеки. Эти пути будут
-# просмотрены в дополнение к умолчальными системным путям.
-#link_directories( "/my/addition/path/to/lib" )
-
-# Перечисляем необходимые сторонние динамические библиотеки и сохраняем
-# их список в переменной REQUIRED_LIBRARIES.
-# Поиск этих библиотек будет произведён как по стандартным системным путям, 
-# так и по указанным выше (с помощью функции link_directories).
-#set( REQUIRED_LIBRARIES
-#		my_addition_lib
-#		boost_thread 
-#		boost_system )
-
-# Устанавливаем флаги компилятора (причём никаких скрытых флагов, только эти).
-#set( CMAKE_CXX_FLAGS "-O0 -Wall -pedantic -std=c++0x" ) 
-
-# Собираем исполняемый файл с именем my_program.
-#add_executable( ${BIN} ${SOURCES} )
-
-# Компонуем собранную программу с необходимыми динамическими библиотеками.
-#target_link_libraries( ${BIN} ${REQUIRED_LIBRARIES} )
-
-# Установка. Это действие будет активировано при выполнении команды 'make install'.
-#install( TARGETS ${BIN} DESTINATION ${INSTALL_PATH} )
+add_executable (${PROJECTNAME} ${PROJECT_NAME_SOURCES})
+target_link_libraries(${PROJECTNAME} kernel gui crashhandler openoffice plugins report serialport storage QtScript QtSql QtNetwork QtUiTools QtXml QtGui QtCore QtDesigner  ${QT_LIBRARIES})

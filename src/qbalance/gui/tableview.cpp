@@ -17,13 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QLineEdit>
-#include <QTableView>
+#include <QtGui/QLineEdit>
+#include <QtGui/QTableView>
 #include <QtScript/QScriptContextInfo>
-#include <QTableView>
-#include <QHeaderView>
-#include <QPushButton>
-#include <QDebug>
+#include <QtGui/QTableView>
+#include <QtGui/QHeaderView>
+#include <QtGui/QPushButton>
+#include <QtCore/QDebug>
 #include "../kernel/app.h"
 #include "tableview.h"
 #include "formgrid.h"

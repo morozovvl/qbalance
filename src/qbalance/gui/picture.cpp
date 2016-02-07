@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDir>
-#include <QPainter>
+#include <QtGui/QPainter>
 #include <QtCore/QUrl>
 #include "picture.h"
 #include "../kernel/app.h"

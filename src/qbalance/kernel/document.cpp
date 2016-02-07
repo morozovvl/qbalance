@@ -18,10 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QModelIndex>
-#include <QProgressBar>
-#include <QXmlStreamWriter>
-#include <QXmlStreamReader>
-#include <QDebug>
+#include <QtGui/QProgressBar>
+#include <QtCore/QXmlStreamWriter>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QDebug>
 #include "dictionary.h"
 #include "saldo.h"
 #include "document.h"

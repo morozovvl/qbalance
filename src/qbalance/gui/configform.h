@@ -19,10 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #ifndef CONFIGFORM_H
 #define CONFIGFORM_H
-#include <QFrame>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QTreeWidgetItem>
+#include <QtGui/QFrame>
+#include <QtGui/QComboBox>
+#include <QtGui/QCheckBox>
+#include <QtGui/QTreeWidgetItem>
 #include "form.h"
 
 class TApplication;

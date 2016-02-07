@@ -27,7 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 #include <QtCore/QResource>
-#include <QtPlugin>
 #include "kernel/app.h"
 #include "crashhandler/crashhandler.h"
 

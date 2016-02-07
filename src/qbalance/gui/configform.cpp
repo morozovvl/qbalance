@@ -17,12 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QTreeWidgetItem>
-#include <QFrame>
-#include <QSizePolicy>
-#include <QLabel>
-#include <QLineEdit>
-#include <QGridLayout>
+#include <QtGui/QTreeWidgetItem>
+#include <QtGui/QFrame>
+#include <QtGui/QSizePolicy>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QGridLayout>
 #include "configform.h"
 #include "../kernel/app.h"
 #include "guifactory.h"

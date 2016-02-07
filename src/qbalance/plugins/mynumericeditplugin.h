@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYNUMERICEDITPLUGIN_H
 #define MYNUMERICEDITPLUGIN_H
 
-#include <QLineEdit>
+#include <QtGui/QLineEdit>
 #include <QtDesigner/QDesignerCustomWidgetInterface>
 
 class MyNumericEditPlugin : public QObject, public QDesignerCustomWidgetInterface

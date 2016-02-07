@@ -24,12 +24,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-#include <QMessageBox>
-#include <QMenu>
+#include <QtGui/QMessageBox>
+#include <QtGui/QMenu>
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
-#include <QDebug>
-#include <QImage>
+#include <QtCore/QDebug>
+#include <QtGui/QImage>
 //#include <boost/crc.hpp>
 #include "essence.h"
 #include "../kernel/app.h"
@@ -886,27 +886,6 @@ void Essence::preparePrintValues()
         }
         if (scriptEngineEnabled && scriptEngine != 0)
             scriptEngine->eventPreparePrintValues();
-    }
-}
-
-
-void Essence::appendPrintValues(QString prefix, QSqlQuery* query)
-{
-    if (reportScriptEngine != 0)
-    {
-        int i = 1;
-        query->first();
-        while (query->isValid())
-        {
-            QSqlRecord rec = query->record();
-            for (int j = 0; j < query->record().count(); j++)
-            {
-                reportScriptEngine->getReportContext()->setValue(QString("%1%2.%3").arg(prefix).arg(i).arg(query->record().fieldName(j)).toLower(), rec.value(j));
-            }
-            reportScriptEngine->getReportContext()->setValue(QString("%1%2.%3").arg(prefix).arg(i).arg("номерстроки"), QVariant(i));
-            query->next();
-            i++;
-        }
     }
 }
 

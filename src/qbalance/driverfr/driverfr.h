@@ -38,12 +38,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef DRIVERFR_H
 #define DRIVERFR_H
 
-#include <QObject>
-#include <QMetaObject>
-#include <QMetaProperty>
-#include <QDate>
-#include <QTime>
-#include <QDebug>
+#include <QtCore/QObject>
+#include <QtCore/QMetaObject>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QDate>
+#include <QtCore/QTime>
+#include <QtCore/QDebug>
 #include <sys/time.h>
 #include "../serialport/qmyextserialport.h"
 #include "../gui/myprogressdialog.h"

@@ -22,11 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QHash>
 #include <QtCore/QList>
-#include <QFrame>
+#include <QtGui/QFrame>
 #include <QtCore/QString>
 #include <QtCore/QObject>
-#include <QWidget>
-#include <QVBoxLayout>
+#include <QtGui/QWidget>
+#include <QtGui/QVBoxLayout>
 #include <QtCore/QStringList>
 #include <QtDesigner/QDesignerExportWidget>
 #include "../kernel/app.h"

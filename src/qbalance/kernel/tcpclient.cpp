@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "tcpclient.h"
 #include "app.h"
-#include <QNetworkConfigurationManager>
+#include <QtNetwork/QNetworkConfigurationManager>
 
 
 TcpClient::TcpClient(const QString& strHost, int nPort, QObject *parent /* = 0*/):   QObject(parent)

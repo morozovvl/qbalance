@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTimer>
-#include <QDebug>
+#include <QtCore/QDebug>
 #include "ooxmlreportengine.h"
 
 
@@ -119,10 +119,7 @@ void OOXMLReportEngine::writeVariables()
             cells = clone.toElement().elementsByTagName("text:p");  // создадим список ячеек первой строки тела таблицы (узлов XML)
             for (int i = 0; i < cells.count(); i++)     // будем по порядку просматривать этот список, пока есть что смотреть
             {
-                if (!readExpression(i, strNum))                     // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
-                {
-                    break;                                          // выходим из цикла
-                }
+                readExpression(i, strNum);                     // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
             }
             lastNode = firstRowNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
 
@@ -145,7 +142,7 @@ void OOXMLReportEngine::writeHeader()
     QDomDocument* doc = ooxmlEngine->getDomDocument();
     expressionsForEvaluation.clear();           // очистим список выражений для скриптового движка
     cells = doc->elementsByTagName("text:p");   // будем выбирать только те ячейки, которые содержат текст
-    tableNameForPrinting = "таблица";
+    tableNameForPrinting = context->getTableName();
 
 // Пункт 2 (см. комментарий выше)
 
@@ -195,8 +192,6 @@ i - номер ячейки в списке элементов, подлежащ
 strNum - номер текущей строки тела таблицы
 */
 {
-//    QString tableNameForPrinting = "таблица";
-
     bool result = true;         // результат оценки выражения
     QRegExp rx("\\[.+\\]");     // фильтр (регулярное выражение) для отсеивания не нужных символов в шаблоне
     while(true)                 // бесконечный цикл, чтобы в выражении можно было бы обработать любое количество элементов "[<...>]"
@@ -207,51 +202,33 @@ strNum - номер текущей строки тела таблицы
         if (fpos >= 0)                          // если шаблон найден
         {
             QVariant var;
-            QString value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
-            QString sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
-            QString key = sval.replace(tableNameForPrinting, QString("%1").arg(tableNameForPrinting)).toLower();
+            QString value;
+            QString sval;
+            QString key;
+            // ячейка не относится к таблице
+            int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
+            value = cellText.mid(fpos, lpos - fpos);
+            value = value.remove("[").remove("]");      // освободим его от квадратных скобок
+            var = context->getValue(value);      // и получим данные для него из контекста печати
+            if (var.isValid())                                      // если данные имеются
+            {
+                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
+                break;
+            }
+            // Ячейка относится к таблице
+            value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
+            sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
+            key = sval.replace(tableNameForPrinting, QString("%1").arg(tableNameForPrinting)).toLower();
             var = context->getValue(key, strNum);  // в контексте печати наименования данных хранятся в нижнем регистре
             if (var.isValid())                                      // если данные имеются
             {
                 writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
                 break;
             }
-//            if (value.indexOf(tableNameForPrinting) == -1)
-//            {
-                // ячейка не относится к таблице
-                int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
-                value = cellText.mid(fpos, lpos - fpos);
-                value = value.remove("[").remove("]");      // освободим его от квадратных скобок
-                var = context->getValue(value);      // и получим данные для него из контекста печати
-                if (var.isValid())                                      // если данные имеются
-                {
-                    writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
-                    break;
-                }
-//            }
-            if (!var.isValid() && value.size() > 0)
-            {
-            // данных для выражения нет
-                if (strNum == 1 && !invalidExpressions.contains(value))                    // выведем сообщение об ошибке (для таблицы это будет только для первой строки)
-                {
-        //          QString tableName = value.mid(0, value.indexOf(".", 0));
-                    TApplication::exemplar()->print(QString(QObject::trUtf8("Неизвестное выражение %1 в шаблоне %2")).arg(value).arg(fileName));
-                    invalidExpressions.append(value);
-                }
-                result = false;
-                break;                      // выйдем из бесконечного цикла
-            }
-            else
-            {
-                result = false;
-                break;                      // выйдем из бесконечного цикла
-            }
+            writeCell(cells.at(i), "[" + value + "]", var);     // Запишем в ячейку пустое выражение
         }
-        else
-        {
-            result = false;
-            break;  // элементов "[<...>]" в выражении больше нет, выходим
-        }
+        result = false;
+        break;  // элементов "[<...>]" в выражении больше нет, выходим
     }
     return result;
 }
@@ -284,9 +261,15 @@ QString OOXMLReportEngine::getTableVariable(QDomElement cell, QString tableName)
 }
 
 
-void OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
+bool OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
 //  Записывает в узел n XML модели документа значение var вместо выражения svar
 {
+    bool result = true;
+    if (!var.isValid() || var.isNull())
+    {
+        result = false;
+    }
+
     QString cellText = n.toElement().text().trimmed();
     QString type = "string";        // тип записываемого значения с точки зрения OpenOffice
     QString valueString;
@@ -324,6 +307,7 @@ void OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
         }
     }
     ooxmlEngine->writeCell(n, cellText, type);
+    return result;
 }
 
 

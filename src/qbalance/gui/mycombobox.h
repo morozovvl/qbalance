@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYCOMBOBOX_H
 #define MYCOMBOBOX_H
 
-#include <QComboBox>
+#include <QtGui/QComboBox>
 #include <QtDesigner/QDesignerExportWidget>
 
 class SearchParameters;

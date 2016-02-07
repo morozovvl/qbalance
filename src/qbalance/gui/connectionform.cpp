@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QIntValidator>
-#include <QLabel>
-#include <QPushButton>
+#include <QtGui/QIntValidator>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 #include <QtCore/QSettings>
 #include <QtCore/QStringList>
 #include "connectionform.h"

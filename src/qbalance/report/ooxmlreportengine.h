@@ -50,7 +50,7 @@ private:
     void writeHeader();
     bool readExpression(int, int);
     QString getTableVariable(QDomElement, QString);
-    void writeCell(QDomNode, QString, QVariant);
+    bool writeCell(QDomNode, QString, QVariant);
     void findTables();
 };
 

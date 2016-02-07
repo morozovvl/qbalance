@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef NUMERICEDIT_H
 #define NUMERICEDIT_H
 
-#include <QLineEdit>
+#include <QtGui/QLineEdit>
 #include <QtCore/QVariant>
-#include <QWidget>
-#include <QAbstractItemDelegate>
+#include <QtGui/QWidget>
+#include <QtGui/QAbstractItemDelegate>
 #include <QtDesigner/QDesignerExportWidget>
 
 class QDESIGNER_WIDGET_EXPORT MyNumericEdit : public QLineEdit {

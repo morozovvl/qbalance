@@ -20,11 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef SEARCHPARAMETERS_H
 #define SEARCHPARAMETERS_H
 
-#include <QFrame>
-#include <QVBoxLayout>
+#include <QtGui/QFrame>
+#include <QtGui/QVBoxLayout>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QWidget>
+#include <QtGui/QWidget>
 #include <QtCore/QObject>
 #include <QtDesigner/QDesignerExportWidget>
 #include "../kernel/app.h"

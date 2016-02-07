@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef QMYEXTSERIALPORT_H
 #define QMYEXTSERIALPORT_H
 
-#include <QByteArray>
-#include <QQueue>
+#include <QtCore/QByteArray>
+#include <QtCore/QQueue>
 #include "../../qextserialport/src/qextserialport.h"
 #include "../kernel/tcpclient.h"
 

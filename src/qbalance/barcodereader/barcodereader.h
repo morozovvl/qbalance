@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef BARCODEREADER_H
 #define BARCODEREADER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include "../serialport/qmyextserialport.h"
 
 class BarCodeReader : public QObject

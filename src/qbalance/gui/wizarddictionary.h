@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef WIZARDDICTIONARY_H
 #define WIZARDDICTIONARY_H
 
-#include <QCheckBox>
-#include <QTableWidget>
-#include <QListWidget>
-#include <QTextEdit>
+#include <QtGui/QCheckBox>
+#include <QtGui/QTableWidget>
+#include <QtGui/QListWidget>
+#include <QtGui/QTextEdit>
 #include "wizardform.h"
 //#include "mytextedit.h"
 #include "mysyntaxhighlighter.h"

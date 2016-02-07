@@ -28,7 +28,7 @@ public:
     Saldo(QString, QString, QObject *parent = 0);
     virtual QString transformSelectStatement(QString);
     Q_INVOKABLE virtual QString objectName() { return "Saldo"; }
-    void setQuan(bool q) { quan = q; }
+    Q_INVOKABLE void setQuan(bool q) { quan = q; tableModel->selectStatement(); }
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     Q_INVOKABLE virtual void setId(qulonglong);
     virtual void        lock(bool = true);

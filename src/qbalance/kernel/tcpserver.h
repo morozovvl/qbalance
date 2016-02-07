@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QNetworkSession>
 

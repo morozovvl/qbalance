@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define TMP_DIR         "./tmp/"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <QtCore/QVariant>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -167,8 +167,8 @@ public:
     void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
     bool    isLoading() { return loading; }
     Q_INVOKABLE void    clearPrintValues();
-    Q_INVOKABLE void    appendPrintValues(QString, QSqlQuery*);
     Q_INVOKABLE void    appendPrintValue(QString name, QVariant value) { reportScriptEngine->getReportContext()->setValue(name, value); }
+    Q_INVOKABLE void    appendPrintValues(QString str, QSqlQuery* query) { reportScriptEngine->getReportContext()->appendPrintValues(str, query); }
     Q_INVOKABLE QVariant getPrintValue(QString name) { return reportScriptEngine->getReportContext()->getValue(name); }
     bool                isDocument() { return lIsDocument; }
     Q_INVOKABLE void    showPhoto() { form->showPhoto(); }

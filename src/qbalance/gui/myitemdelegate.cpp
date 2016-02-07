@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QObject>
-#include <QLineEdit>
+#include <QtGui/QLineEdit>
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "myitemdelegate.h"
 #include "formgrid.h"

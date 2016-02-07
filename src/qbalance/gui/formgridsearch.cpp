@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QDebug>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtCore/QDebug>
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
 #include "formgridsearch.h"
