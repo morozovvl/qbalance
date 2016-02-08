@@ -49,6 +49,7 @@ private slots:
       void showDocuments();
       void showProcesses();
       void showReports();
+      void showQueries();
       void showConfigs();
       void showMessagesWindow();
       void saveCustomization();
@@ -97,6 +98,7 @@ private:
       QAction* operAct;
       QAction* processAct;
       QAction* reportAct;
+      QAction* queryAct;
       QAction* configAct;
       QAction* newAct;
       QAction* deleteAct;

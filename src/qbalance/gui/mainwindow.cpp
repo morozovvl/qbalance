@@ -69,6 +69,17 @@ void MainWindow::showReports() {
     TApplication::exemplar()->showReports();
 }
 
+
+void MainWindow::showQueries() {
+/*
+    TApplication* app = TApplication::exemplar();
+    QString fileName = app->getReportFile("запросы", false, app->getMainWindow(), reportMenu->contentsRect());
+    if (fileName.size() > 0)
+        Essence::print(fileName);
+*/
+}
+
+
 void MainWindow::showConfigs() {
     TApplication::exemplar()->showConfigs();
 }
@@ -129,6 +140,9 @@ void MainWindow::createMenus()
 
     reportAct = reportMenu->addAction(QObject::trUtf8("&Отчеты"));
     connect(reportAct, SIGNAL(triggered()), this, SLOT(showReports()));
+
+    queryAct = reportMenu->addAction(QObject::trUtf8("&Запросы"));
+    connect(queryAct, SIGNAL(triggered()), this, SLOT(showQueries()));
 
     serviceMenu = menuBar()->addMenu(QObject::trUtf8("&Сервис"));
     frMenu = serviceMenu->addMenu(QObject::trUtf8("&Фискальный регистратор"));

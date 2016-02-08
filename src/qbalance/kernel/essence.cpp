@@ -423,7 +423,7 @@ QString Essence::getPhotoFile(QString copyTo)
                             app->saveFileToServer(file, localFile, PictureFileType, true);
                         if (copyTo.size() > 0)
                         {
-                            db->copyFile(localFile, copyTo, true);
+                            app->saveFileToServer(app->getPhotosPath(copyTo), copyTo, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                         }
                     }
                 }
