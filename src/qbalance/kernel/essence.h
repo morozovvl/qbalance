@@ -91,8 +91,8 @@ public:
     Q_INVOKABLE FormGrid* getForm() { return form; }
     Q_INVOKABLE TableView* getGrdTable() { return grdTable; }
     void setGrdTable(TableView* gt);
-    virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
-    virtual void cmdCancel();                   // и "Cancel"
+    Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
+    Q_INVOKABLE virtual void cmdCancel();                   // и "Cancel"
     Q_INVOKABLE virtual bool isFormSelected();
     Q_INVOKABLE virtual int exec();                 // Показать форму в модальном режиме
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме

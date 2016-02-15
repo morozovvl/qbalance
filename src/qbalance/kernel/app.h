@@ -75,6 +75,11 @@ struct ConfigVars {
     int             frDriverPassword;
     bool            frConnectSignal;            // Подавать сигнал при соединении с ФР
     QString         cardReaderPrefix;           // Префикс магнитной карты
+    QString         bankTerminalPath;
+    int             bankTerminalPrintWaitTime;  // Время задержки печати между слипами и чеками
+    bool            bankTerminalPrintWaitMessage;   // Между слипами и чеками показывать сообщение "Нажмите любую клавишу" или таймаут без сообщения
+    int             bankTerminalProgramWaitTime;    // Время ожидания результата от программы банковского терминала
+    int             bankTerminalIntervalEmptyLines; // Количество пустых строк между слипами
     int             localPort;                  // Порт, по которому программа принимает соединения
     QString         remoteHost;                 // Адрес удаленного хоста, к которому будет пытаться соединиться программа
     int             remotePort;                 // Порт удаленного хоста, к которому будет пытаться соединиться программа
@@ -161,13 +166,20 @@ public:
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE virtual DriverFR* getDrvFR() { return driverFR; }
     void setFR();
+    virtual int decodeTimeOut(int);
+    virtual int codeTimeOut(int);
 
+
+    Q_INVOKABLE bool bankTerminalIsValid();
     Q_INVOKABLE BankTerminal* getBankTerminal() { return bankTerminal; }
 
     TcpServer* getTcpServer() { return tcpServer; }
 
     Q_INVOKABLE void virtual showError(QString);
     Q_INVOKABLE void virtual showCriticalError(QString);
+    Q_INVOKABLE int virtual showMessage(QString message, QString question = "",
+                    QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::StandardButton defButton = QMessageBox::No);      // Вывести сообщение пользователю и возможно задать вопрос
 
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);

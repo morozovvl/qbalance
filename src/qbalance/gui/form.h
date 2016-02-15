@@ -65,8 +65,8 @@ public slots:
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();
     Q_INVOKABLE virtual void hide();
-    virtual void cmdOk();
-    virtual void cmdCancel();
+    Q_INVOKABLE virtual void cmdOk();
+    Q_INVOKABLE virtual void cmdCancel();
     virtual void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
     Q_INVOKABLE virtual void gotoCenter();
 

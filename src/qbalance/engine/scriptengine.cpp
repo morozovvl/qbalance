@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptValueIterator>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPushButton>
+#include <QtGui/QKeyEvent>
 #include <QFileDialog>
 #include <QtGui/QLineEdit>
 #include <QtCore/QStringList>
@@ -566,6 +567,7 @@ void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
 }
 
 
+
 //================================================================================================
 // Реализация класса
 
@@ -1001,6 +1003,21 @@ void ScriptEngine::eventPreparePrintValues()
 }
 
 
+bool ScriptEngine::eventKeyPressed(int key, int modifiers)
+{
+    bool result = false;
+    QVariant res;
+    QString eventName = "EventKeyPressed";
+    QScriptValueList args;
+    args << QScriptValue(key);
+    args << QScriptValue(modifiers);
+    res = scriptCall(eventName, QScriptValue(), args).toVariant();
+    if (res.toString() != "undefined")
+        result = res.toBool();
+    return result;
+}
+
+
 // Конец списка событий
 
 void ScriptEngine::showScriptError(QString eventName)
@@ -1129,6 +1146,10 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит перед созданием документа печати и предназначено для создания новых данных для документа");
     appendEvent("EventPreparePrintValues()", &func);
 
+    func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки на форме. Должно вернуть ИСТИНА, если нажатие обработано");
+    func.body = "return false;";
+    appendEvent("EventKeyPressed(key, modifiers)", &func);
+
     return &eventsList;
 }
 
@@ -1191,7 +1212,7 @@ void ScriptEngine::removeScript(QString scriptFile)
 
 QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thisObject, const QScriptValueList &args)
 {
-    QScriptValue result;
+    QScriptValue result("undefined");
     if (globalObject().property(eventName).isFunction())
     {
         app->appendScriptStack(this);
@@ -1202,8 +1223,6 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         }
         app->removeLastScriptStack();
     }
-    else
-        result = "undefined";
     return result;
 }
 

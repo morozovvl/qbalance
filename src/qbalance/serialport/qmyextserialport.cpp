@@ -40,7 +40,7 @@ QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject*
 QMyExtSerialPort::~QMyExtSerialPort()
 {
     if (tcpClient != 0)
-        delete tcpClient;
+        tcpClient->deleteLater();
 }
 
 

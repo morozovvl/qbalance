@@ -89,6 +89,7 @@ public:
     QString getFilter(QString = "");
     void eventBarCodeReaded(QString);
     void eventCardCodeReaded(QString);
+    bool eventKeyPressed(int, int);
     friend bool isNumeric(ScriptEngine engine, QString field);
     static QString loadScript(QString);
     static void removeScript(QString);

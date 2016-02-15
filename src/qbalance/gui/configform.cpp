@@ -43,6 +43,11 @@ ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
     lnNetTimeOut = new QLineEdit();
     cbConnectSignal = new QCheckBox();
     barCodePortName = new QLineEdit();
+    lnTerminalPath = new QLineEdit();
+    lnSlipTime = new QLineEdit();
+    cbTerminalWaitMess = new QCheckBox();
+
+
 }
 
 
@@ -59,6 +64,11 @@ ConfigForm::~ConfigForm()
     delete cbConnectSignal;
     delete cbFrNeeded;
     delete barCodePortName;
+    delete lnTerminalPath;
+    delete lnSlipTime;
+    delete cbTerminalWaitMess;
+
+
 }
 
 
@@ -88,6 +98,7 @@ bool ConfigForm::open(QWidget* pwgt) {
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Фискальный регистратор") << "50");
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Сканер штрих-кодов") << "60");
         treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Считыватель магнитных карт") << "70");
+        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Банковский терминал") << "80");
 
         connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(dispatch(QTreeWidgetItem*, int)));
 
@@ -128,6 +139,8 @@ void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
     case 60: barCode();
                 break;
     case 70: cardReader();
+                break;
+    case 80: bankTerminal();
                 break;
     }
 }
@@ -269,8 +282,8 @@ void ConfigForm::fr()
     lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
     lnAddress->setText(app->getConfig()->remoteHost);
     lnTimeOut->setText(QString("%1").arg(app->getConfig()->frDriverTimeOut));
-    lnLocalTimeOut->setText(QString("%1").arg(app->getDrvFR()->decodeTimeOut(app->getConfig()->frLocalDriverTimeOut)));
-    lnRemoteTimeOut->setText(QString("%1").arg(app->getDrvFR()->decodeTimeOut(app->getConfig()->frRemoteDriverTimeOut)));
+    lnLocalTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frLocalDriverTimeOut)));
+    lnRemoteTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frRemoteDriverTimeOut)));
     lnNetTimeOut->setText(QString("%1").arg(app->getConfig()->frNetDriverTimeOut));
     cbConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
 }
@@ -305,6 +318,95 @@ void ConfigForm::cardReader()
 }
 
 
+void ConfigForm::bankTerminal()
+{
+    QLayout* layout = frame->layout();
+    if (layout != 0)
+    {
+        delete layout;
+        frame->setLayout(0);
+    }
+    QGridLayout* vLayout = new QGridLayout();
+
+    QLabel* lblTerminalPath = new QLabel(QObject::trUtf8("Каталог программы банковского терминала:"));
+    lblTerminalPath->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnTerminalPath->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblTerminalPath, 0, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnTerminalPath, 0, 1, Qt::AlignLeft);
+
+    QLabel* lblSlipTime = new QLabel(QObject::trUtf8("Задержка при печати между слипами (мс):"));
+    lblSlipTime->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    lnSlipTime->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblSlipTime, 1, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnSlipTime, 1, 1, Qt::AlignLeft);
+
+    QLabel* lblTerminalWaitMess = new QLabel(QObject::trUtf8("Показывать сообщение об ожидании между слипами:"));
+    lblTerminalWaitMess->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    cbTerminalWaitMess->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblTerminalWaitMess, 2, 0, Qt::AlignLeft);
+    vLayout->addWidget(cbTerminalWaitMess, 2, 1, Qt::AlignLeft);
+
+    QLabel* lblPort = new QLabel(QObject::trUtf8("Порт сервера ФР:"));
+    lblPort->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    lnPort->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblPort, 3, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnPort, 3, 1, Qt::AlignLeft);
+
+    QLabel* lblAddress = new QLabel(QObject::trUtf8("IP адрес сервера ФР:"));
+    lblAddress->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblAddress, 4, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnAddress, 4, 1, Qt::AlignLeft);
+
+    QLabel* lblTimeOut = new QLabel(QObject::trUtf8("Таймаут:"));
+    lblTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblTimeOut, 5, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnTimeOut, 5, 1, Qt::AlignLeft);
+
+    QLabel* lblLocalTimeOut = new QLabel(QObject::trUtf8("Таймаут для локального ФР, мс:"));
+    lblLocalTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnLocalTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblLocalTimeOut, 6, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnLocalTimeOut, 6, 1, Qt::AlignLeft);
+
+    QLabel* lblRemoteTimeOut = new QLabel(QObject::trUtf8("Таймаут для сетевого ФР, мс:"));
+    lblRemoteTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnRemoteTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblRemoteTimeOut, 7, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnRemoteTimeOut, 7, 1, Qt::AlignLeft);
+
+    QLabel* lblNetTimeOut = new QLabel(QObject::trUtf8("Таймаут для обмена по сети, мс:"));
+    lblNetTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    lnNetTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    vLayout->addWidget(lblNetTimeOut, 8, 0, Qt::AlignLeft);
+    vLayout->addWidget(lnNetTimeOut, 8, 1, Qt::AlignLeft);
+
+    QLabel* lblSignal = new QLabel(QObject::trUtf8("Подавать сигнал на ФР при подключении:"));
+    lblSignal->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    cbConnectSignal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    vLayout->addWidget(lblSignal, 9, 0, Qt::AlignLeft);
+    vLayout->addWidget(cbConnectSignal, 9, 1, Qt::AlignLeft);
+
+    vLayout->setRowStretch(10, 1);
+
+    frame->setLayout(vLayout);
+/*
+    lnTerminalPath->setText(app->getConfig()->bankTerminalPath);
+    lnSlipTime->setText(app->getConfig()->bankTerminalPrintWaitTime);
+    cbTerminalWaitMess->setCurrentIndex(app->getConfig()->bankTerminalPrintWaitMessage);
+    lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
+    lnAddress->setText(app->getConfig()->remoteHost);
+    lnTimeOut->setText(QString("%1").arg(app->getConfig()->frDriverTimeOut));
+    lnLocalTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frLocalDriverTimeOut)));
+    lnRemoteTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frRemoteDriverTimeOut)));
+    lnNetTimeOut->setText(QString("%1").arg(app->getConfig()->frNetDriverTimeOut));
+    cbConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
+*/
+}
+
+
 void ConfigForm::cmdOk()
 {
     switch(currentItem) {
@@ -322,8 +424,8 @@ void ConfigForm::cmdOk()
              app->getConfig()->localPort = lnPort->text().toInt();
              app->getConfig()->remoteHost = lnAddress->text();
              app->getConfig()->frDriverTimeOut = lnTimeOut->text().toInt();
-             app->getConfig()->frLocalDriverTimeOut = app->getDrvFR()->codeTimeOut(lnLocalTimeOut->text().toInt());
-             app->getConfig()->frRemoteDriverTimeOut = app->getDrvFR()->codeTimeOut(lnRemoteTimeOut->text().toInt());
+             app->getConfig()->frLocalDriverTimeOut = app->codeTimeOut(lnLocalTimeOut->text().toInt());
+             app->getConfig()->frRemoteDriverTimeOut = app->codeTimeOut(lnRemoteTimeOut->text().toInt());
              app->getConfig()->frNetDriverTimeOut = lnNetTimeOut->text().toInt();
              app->getConfig()->frConnectSignal = (cbConnectSignal->checkState() == Qt::Checked ? true : false);
              break;

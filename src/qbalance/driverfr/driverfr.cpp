@@ -806,28 +806,6 @@ bool DriverFR::deviceIsReady()
 }
 
 
-int DriverFR::decodeTimeOut(int timeOut)
-{
-    int result = timeOut;
-    if (timeOut >= 150 && timeOut < 250)
-        result = 150 + ((timeOut - 150) * 150);
-    else if (timeOut >= 250 && timeOut <= 255)
-        result = 30000 + ((timeOut - 250) * 15000);
-    return result;
-}
-
-
-int DriverFR::codeTimeOut(int timeOut)
-{
-    int result = timeOut;
-    if (timeOut >= 150 && timeOut <= 15000)
-        result = 150 + (timeOut / 150 - 1);
-    else if (timeOut > 15000 && timeOut <= 105000)
-        result = 250 + (timeOut / 15000 - 2);
-    return result;
-}
-
-
 QVariant DriverFR::getProperty(QString name)
 {
     QVariant result;
@@ -1084,6 +1062,8 @@ int DriverFR::PrintString()
 int DriverFR::PrintString(QString str, int count)
 {
     int result = -1;
+    setProperty("UseReceiptRibbon", 1);
+    setProperty("UseJournalRibbon", 0);
     setProperty("StringForPrinting", str);
     for (int i = 1; i <= count; i++)
     {
@@ -1136,6 +1116,17 @@ int DriverFR::FeedDocument()
 
         result = processCommand(FEED_DOCUMENT, &p, &a);
     }
+    return result;
+}
+
+
+int DriverFR::FeedDocument(int count)
+{
+    int result = -1;
+    setProperty("UseReceiptRibbon", 1);
+    setProperty("UseJournalRibbon", 0);
+    setProperty("StringQuantity", count);
+    result = FeedDocument();
     return result;
 }
 

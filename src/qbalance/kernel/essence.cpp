@@ -277,7 +277,8 @@ void Essence::setId(qulonglong id)
         // На время отключим обновление(показ) фотографии
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id), true);
     }
-    grdTable->selectRow(0);
+    if (grdTable != 0)
+        grdTable->selectRow(0);
     photoEnabled = enabled;
 }
 

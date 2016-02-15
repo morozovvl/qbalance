@@ -126,6 +126,11 @@ void TApplication::initConfig()
     config.frNetDriverTimeOut = 200;
     config.frDriverPassword = 30;
     config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
+    config.bankTerminalPath = "/home/vladimir/BankTerminal/";
+    config.bankTerminalPrintWaitTime = 3000;            // Задержка между слипами
+    config.bankTerminalPrintWaitMessage = false;
+    config.bankTerminalProgramWaitTime = 60000;
+    config.bankTerminalIntervalEmptyLines = 2;
     config.localPort = 44444;
     config.remoteHost = "192.168.0.1";
     config.remotePort = 44444;
@@ -275,7 +280,7 @@ bool TApplication::open() {
                             showMessageOnStatusBar("Найден фискальный регистратор.\n");
                         else
                         {
-                            if (driverFR->isLocked())
+                            if (driverFR != 0 && driverFR->isLocked())
                                 showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
                             else
                                 showMessageOnStatusBar("Фискальный регистратор не найден.\n");
@@ -567,7 +572,7 @@ void TApplication::setIcons(QWidget* formWidget)
 
 void TApplication::showError(QString error)
 {
-    if (!isScriptMode())
+    if (!isScriptMode() && error.size() > 0)
         gui->showError(error);
     else
         showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
@@ -585,11 +590,19 @@ void TApplication::showError(QString error)
 
 void TApplication::showCriticalError(QString error)
 {
-    if (!isScriptMode())
+    if (!isScriptMode() && error.size() > 0)
         gui->showCriticalError(error);
     else
         showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error);
+}
+
+
+int TApplication::showMessage(QString message, QString question,
+                QMessageBox::StandardButtons buttons,
+                QMessageBox::StandardButton defButton)
+{
+    return gui->showMessage(message, question, buttons, defButton);
 }
 
 
@@ -698,7 +711,8 @@ void TApplication::showProcesses()
         }
     }
 */
-    runScript("analizeBankAccount.js");
+//    runScript("analizeBankAccount.js");
+    runScript("bankTerminal.js");
 }
 
 
@@ -1131,3 +1145,38 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
     }
     return result;
 }
+
+
+bool TApplication::bankTerminalIsValid()
+{
+    bool result = true;
+    if (bankTerminal == 0)
+    {
+        result = false;
+    }
+    return result;
+}
+
+
+int TApplication::decodeTimeOut(int timeOut)
+{
+    int result = timeOut;
+    if (timeOut >= 150 && timeOut < 250)
+        result = 150 + ((timeOut - 150) * 150);
+    else if (timeOut >= 250 && timeOut <= 255)
+        result = 30000 + ((timeOut - 250) * 15000);
+    return result;
+}
+
+
+int TApplication::codeTimeOut(int timeOut)
+{
+    int result = timeOut;
+    if (timeOut >= 150 && timeOut <= 15000)
+        result = 150 + (timeOut / 150 - 1);
+    else if (timeOut > 15000 && timeOut <= 105000)
+        result = 250 + (timeOut / 15000 - 2);
+    return result;
+}
+
+

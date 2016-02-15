@@ -174,6 +174,14 @@ void MainWindow::createMenus()
     printReturnSaleCheckAct = frMenu->addAction(QObject::trUtf8("Возврат продажи"));
     connect(printReturnSaleCheckAct, SIGNAL(triggered()), this, SLOT(printReturnSaleCheck()));
 
+    terminalMenu = serviceMenu->addMenu(QObject::trUtf8("&Банковский терминал"));
+
+    verificationResultsAct = terminalMenu->addAction(QObject::trUtf8("Сверка итогов"));
+    connect(verificationResultsAct, SIGNAL(triggered()), this, SLOT(terminalVerificationResults()));
+
+    controlRibbonAct = terminalMenu->addAction(QObject::trUtf8("Контрольная лента"));
+    connect(controlRibbonAct, SIGNAL(triggered()), this, SLOT(terminalControlRibbon()));
+
     showMessageWindow = serviceMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
     connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
 
@@ -294,6 +302,18 @@ void MainWindow::EKLZinterrupt()
 void MainWindow::printReturnSaleCheck()
 {
     TApplication::exemplar()->runScript("printReturnSaleCheck.js");
+}
+
+
+void MainWindow::terminalVerificationResults()
+{
+    TApplication::exemplar()->runScript("verificateResults.js");
+}
+
+
+void MainWindow::terminalControlRibbon()
+{
+    TApplication::exemplar()->runScript("controlRibbon.js");
 }
 
 

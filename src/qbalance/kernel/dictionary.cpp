@@ -81,6 +81,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     lIsSet = db->isSet(tableName);
     doSubmit = true;
     sqlCommand = "";
+    nameIntIsCode = false;
 }
 
 

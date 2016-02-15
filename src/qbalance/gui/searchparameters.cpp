@@ -153,7 +153,8 @@ QVector<sParam> SearchParameters::getParameters()
     {
         QString field = parameters.at(i);
         MyComboBox* cmb = this->findChild<MyComboBox*>(field);
-        QString text = cmb->currentText().trimmed();
+//        QString text = cmb->currentText().trimmed();
+        QString text = cmb->currentText();
         while (text.contains("  ")) // Если есть пробелы, идущие подряд
             text.replace("  ", " "); // то уберем их
         sParam par;
@@ -194,7 +195,15 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
         {
             QString text = searchParameters[i].value.toString();
             bool isInt;
-            int id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
+            int id = 0;
+//            Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
+            if (text.size() > 0 && text.at(0).isDigit())
+                id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
+            else
+            {
+                isInt = false;
+                text = text.trimmed();
+            }
             text.replace("'", "''");
             QStringList paramList = text.split(QRegExp("\\s+"));
             if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
@@ -241,11 +250,9 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
             }
             if (isInt)
             {
-                if (filter.size() > 0)
-                    filter.append(" OR ");
-                filter.append(QString("%1.%2 = %3").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
+                filter = QString("%1.%2 = %3").arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table))
                                                        .arg(app->getDBFactory()->getObjectNameCom(searchParameters[i].table + ".КОД"))
-                                                       .arg(id));
+                                                       .arg(id);
                 filter = "(" + filter + ")";
             }
             break;

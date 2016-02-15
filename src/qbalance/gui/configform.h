@@ -57,6 +57,9 @@ private:
     QLineEdit* lnRemoteTimeOut;
     QLineEdit* lnNetTimeOut;
     QCheckBox* cbConnectSignal;
+    QLineEdit* lnTerminalPath;
+    QLineEdit* lnSlipTime;
+    QCheckBox* cbTerminalWaitMess;
 
     void dictAdd();
     void dictProperties();
@@ -66,6 +69,7 @@ private:
     void fr();
     void barCode();
     void cardReader();
+    void bankTerminal();
 };
 
 #endif // CONFIGFORM_H

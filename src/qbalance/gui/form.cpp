@@ -376,6 +376,15 @@ void Form::keyPressEvent(QKeyEvent *event)
             event->setAccepted(true);
         }
     }
+
+    // Попробуем отдать обработку события скриптам
+    ScriptEngine* engine = parent->getScriptEngine();
+    if (engine != 0)
+    {
+        bool result = engine->eventKeyPressed(event->key(), event->modifiers());
+        if (result)
+            event->setAccepted(true);       // Если скрипт вернул ИСТИНА, то событие обработано
+    }
 }
 
 

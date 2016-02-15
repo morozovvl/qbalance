@@ -114,7 +114,7 @@ bool TcpClient::sendToServer(QString str)
         out << quint16(arrBlock.size() - sizeof(quint16));
         m_pTcpSocket->write(arrBlock);
         app->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
-        return m_pTcpSocket->waitForReadyRead(100000);      // Будем ждать ответа от сервера в течение 100 сек
+        return m_pTcpSocket->waitForReadyRead(1000);      // Будем ждать ответа от сервера в течение 1 сек
     }
     return false;
 }

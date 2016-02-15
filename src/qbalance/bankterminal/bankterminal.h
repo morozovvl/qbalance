@@ -21,8 +21,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define BANKTERMINAL_H
 
 #include <QtCore/QObject>
+#include <QtCore/QHash>
+
+
+#define RESULT_CODE "КодРезультата"
+#define MESSAGE "Сообщение"
+#define CARD_NUMBER "НомерКарты"
+#define VALIDITY_PERIOD "СрокДействия"
+#define AUTHORIZATION_CODE "КодАвторизации"
+#define INTERNAL_OPERATION_CODE "ВнутрНомерОперации"
+#define CARD_TYPE "ТипКарты"
+#define IS_SBERCARD "КартаСбербанка"
+#define TERMINAL_NUMBER "НомерТерминала"
+#define OPERATION_DATETIME "ДатаВремяОперации"
+#define LINK_OPERATION_NUMBER "СсылочныйНомерОперации"
+#define CARD_NUMBER_HASH "ХэшНомераКарты"
+
 
 class TApplication;
+class DriverFR;
 
 class BankTerminal : public QObject
 {
@@ -32,10 +49,19 @@ public:
     virtual bool open();
     virtual void close();
     virtual void setApp(TApplication* a) { app = a; }
-    Q_INVOKABLE virtual void test() { ; }
+    Q_INVOKABLE virtual bool process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
+    Q_INVOKABLE virtual QString getCardCode() { return resultParams.value(CARD_NUMBER); }
+    Q_INVOKABLE QHash<QString, QString>* getResultData() { return &resultParams; }
 
 private:
     TApplication* app;
+    DriverFR*   driverFR;
+    QString     path;
+    QString     program;
+    QHash<QString, QString> resultParams;
+
+    bool    testResult();
+    void    printSlip();
 };
 
 Q_DECLARE_INTERFACE(BankTerminal, "org.QBalance.BankTerminal")

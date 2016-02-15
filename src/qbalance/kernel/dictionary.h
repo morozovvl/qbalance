@@ -92,6 +92,8 @@ public:
     Q_INVOKABLE void setGetIdRefresh(bool val) { getIdRefresh = val; }
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
+    bool            getNameIntIsCode() { return nameIntIsCode; }
+    Q_INVOKABLE void setNameIntIsCode(bool val) { nameIntIsCode = val; }
 
 protected:
     QString         prototypeName;          // Имя справочника - прототипа
@@ -109,6 +111,8 @@ protected:
     virtual bool    setTableModel(int = 0);
     bool            locked;
     bool            getIdRefresh;
+    bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
+                                    // или как часть имени
 
 
 private:

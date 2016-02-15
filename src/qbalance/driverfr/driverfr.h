@@ -702,8 +702,6 @@ public:
     Q_INVOKABLE virtual void setShowProgressBar(bool);
     Q_INVOKABLE virtual void writeLog(QString = "");
     virtual bool deviceIsReady();
-    virtual int decodeTimeOut(int);
-    virtual int codeTimeOut(int);
 
 
 // Функции для работы с фискальным регистратором
@@ -732,6 +730,7 @@ public:
     Q_INVOKABLE virtual int EKLZSessionReportInDatesRange();
     Q_INVOKABLE virtual int EKLZSessionReportInSessionRange();
     Q_INVOKABLE virtual int FeedDocument();
+    Q_INVOKABLE virtual int FeedDocument(int);
     Q_INVOKABLE virtual int Fiscalization();
     Q_INVOKABLE virtual int FiscalReportForDatesRange();
     Q_INVOKABLE virtual int FiscalReportForSessionRange();

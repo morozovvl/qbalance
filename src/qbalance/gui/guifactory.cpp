@@ -212,6 +212,10 @@ int GUIFactory::showCriticalError(QString errorText) {
 
 
 int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
+    int result = 0;
+    QMdiSubWindow* window = 0;
+    if (mainWindow != 0)
+        window = mainWindow->getWorkSpace()->activeSubWindow();
     QMessageBox msgBox;
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Внимание!"));
@@ -231,10 +235,18 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
     }
     msgBox.setMinimumWidth(400);
     msgBox.setMinimumHeight(200);
-    return msgBox.exec();
+    msgBox.show();
+    msgBox.activateWindow();
+    msgBox.raise();
+    result = msgBox.exec();
+    if (window != 0)
+        mainWindow->getWorkSpace()->setActiveSubWindow(window);
+    return result;
 }
 
-int GUIFactory::showYesNo(QString question) {
+
+int GUIFactory::showYesNo(QString question)
+{
     return showMessage("", question);
 }
 

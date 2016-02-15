@@ -33,6 +33,7 @@ struct sParam {
     QString table;
     QVariant value;
     bool    isFtsEnabled;
+    Dictionary* dict;
 };
 
 class FormGridSearch : public FormGrid {

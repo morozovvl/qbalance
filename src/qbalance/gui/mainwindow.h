@@ -63,6 +63,8 @@ private slots:
       void printProcessedEKLZReport();
       void EKLZinterrupt();
       void printReturnSaleCheck();
+      void terminalVerificationResults();
+      void terminalControlRibbon();
       void newRecord();
       void deleteRecord();
       void about();
@@ -89,6 +91,7 @@ private:
       QMenu* reportMenu;
       QMenu* serviceMenu;
       QMenu* frMenu;
+      QMenu* terminalMenu;
       QMenu* infoMenu;
 
       QToolBar* editToolBar;
@@ -117,6 +120,8 @@ private:
       QAction* printProcessedEKLZReportAct;
       QAction* EKLZinterruptAct;
       QAction* printReturnSaleCheckAct;
+      QAction* verificationResultsAct;
+      QAction* controlRibbonAct;
       QAction* exitAct;
       QMdiArea* workSpace;
 
