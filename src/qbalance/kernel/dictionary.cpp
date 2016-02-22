@@ -533,7 +533,9 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
     if (form != 0 && !exactlyDefaultFilter)
     {
-        QString filter = form->getFilter();
+        QString filter;
+        if (form->getFormWidget()->isVisible())
+            filter = form->getFilter();
         if (filter.size() > 0)
         {
             if (resFilter.size() > 0)

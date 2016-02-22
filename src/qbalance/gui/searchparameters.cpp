@@ -55,7 +55,6 @@ void SearchParameters::close() {
 void SearchParameters::setApp(TApplication* a)
 {
     app = a;
-    dictionaries = app->getDictionaries();
 }
 
 
@@ -123,18 +122,19 @@ void SearchParameters::addString(QString name, int strNum)
     }
     else
     {
-        name = parentForm->getParent()->getTableName();
+        Dictionary* dict = (Dictionary*)(parentForm->getParent());
+        name = dict->getTableName();
         if (app != 0)
         {
             labelName = "Наименование";
         }
         // Проверим, имеется ли в связанном справочнике полнотекстовый поиск
-        if (((Dictionary*)parentForm->getParent())->isFtsEnabled())
+        if (dict->isFtsEnabled())
         {
             QCheckBox* checkBox = new QCheckBox(QObject::trUtf8("ПТП"), parentWidget());
             checkBox->setToolTip(QObject::trUtf8("Использовать ПолноТекстовый Поиск"));
             checkBox->setTristate(false);
-            checkBox->setObjectName(parentForm->getParent()->getTableName());                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
+            checkBox->setObjectName(dict->getTableName());                    // Запомним в кнопке имя связанного справочника, чтобы потом извлечь его в слоте
             checkBox->setFocusPolicy(Qt::NoFocus);            // Запретим переход на кнопку по клавише TAB
             gridLayout->addWidget(checkBox, strNum, 2, 1, 1);
         }
@@ -194,10 +194,15 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
         if (searchParameters[i].table == dictName)
         {
             QString text = searchParameters[i].value.toString();
-            bool isInt;
+            bool isInt = false;
             int id = 0;
-//            Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
-            if (text.size() > 0 && text.at(0).isDigit())
+            if (dictionaries != 0)
+            {
+                Dictionary* dict = dictionaries->getDictionary(dictName);    // Поместим связанный справочник в список справочников приложения
+                if (dict != 0)
+                    isInt = dict->getNameIntIsCode();
+            }
+            if (text.size() > 0 && text.at(0).isDigit() && isInt)
                 id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
             else
             {
@@ -376,6 +381,13 @@ void SearchParameters::setParent(QWidget* parent)
     QFrame::setParent(parent);
     if (gridLayout != 0)
         gridLayout->setParent(parent);
+}
+
+
+void SearchParameters::setFormGrid(FormGridSearch* par)
+{
+    parentForm = par;
+    dictionaries = parentForm->getParent()->getDictionaries();
 }
 
 

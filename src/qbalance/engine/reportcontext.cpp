@@ -82,11 +82,10 @@ void ReportContext::setValue(QString tag, QVariant val, int strNum)
 
 void ReportContext::removeValue(QString tag)
 {
-    tag = tag.toLower();
+    tag = tag.toLower() + ".";
     foreach (QString key, data->keys())
     {
-        QRegExp rx("^" + tag + ".*$");
-        if (rx.exactMatch(key))
+        if (key.indexOf(tag) != -1)
         {
             data->remove(key);
         }
@@ -105,7 +104,9 @@ void ReportContext::sortTable(QString table)        // сортировка ко
         key = "";
         for (int j = 0; j < sortOrder.count(); j++)
             key.append(getValue(sortOrder.at(j), i).toString().trimmed() + " ");
-        d.insert(key, i);
+        key = key.trimmed();
+        if (key.size() > 0)
+            d.insert(key, i);
     }
 
     int row = 1;

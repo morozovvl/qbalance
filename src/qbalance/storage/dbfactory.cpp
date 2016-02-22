@@ -85,11 +85,11 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
                 }
             }
             else
-                TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
+                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
             close();
        }
        else
-          TApplication::exemplar()->showCriticalError(QObject::trUtf8("Не удалось создать соединение с сервером."));
+          TApplication::exemplar()->showError(QObject::trUtf8("Не удалось создать соединение с сервером."));
     }
     delete frm;
     setDatabaseName(defaultDatabase);
@@ -132,7 +132,7 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
                     proc.waitForFinished(-1);
                     if (proc.exitStatus() == QProcess::CrashExit)
                     {
-                        TApplication::exemplar()->showCriticalError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
+                        TApplication::exemplar()->showError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
                     }
                 }
             }

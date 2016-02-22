@@ -63,27 +63,40 @@ enum  ReportTemplateTypes
 };
 
 
-struct ConfigVars {
-    bool            frNeeded;
-    QString         barCodeReaderPort;          // COM-порт сканера штрих кодов
-    QString         frDriverPort;               // COM-порт фискального регистратора
-    int             frDriverBaudRate;           // Скорость COM-порта фискального регистратора
-    int             frDriverTimeOut;
-    int             frLocalDriverTimeOut;
-    int             frRemoteDriverTimeOut;
-    int             frNetDriverTimeOut;
-    int             frDriverPassword;
-    bool            frConnectSignal;            // Подавать сигнал при соединении с ФР
-    QString         cardReaderPrefix;           // Префикс магнитной карты
-    QString         bankTerminalPath;
-    int             bankTerminalPrintWaitTime;  // Время задержки печати между слипами и чеками
-    bool            bankTerminalPrintWaitMessage;   // Между слипами и чеками показывать сообщение "Нажмите любую клавишу" или таймаут без сообщения
-    int             bankTerminalProgramWaitTime;    // Время ожидания результата от программы банковского терминала
-    int             bankTerminalIntervalEmptyLines; // Количество пустых строк между слипами
-    int             localPort;                  // Порт, по которому программа принимает соединения
-    QString         remoteHost;                 // Адрес удаленного хоста, к которому будет пытаться соединиться программа
-    int             remotePort;                 // Порт удаленного хоста, к которому будет пытаться соединиться программа
-    bool            saveFormConfigToDB;
+struct ConfigEntry
+{
+    QString type;
+    QString label;
+    QVariant value;
+    bool isBoud;
+};
+
+
+enum ConfigVars {
+    LOCAL_PORT,
+    REMOTE_HOST,
+    REMOTE_PORT,
+    FR_NEEDED,
+    FR_DRIVER_PORT,
+    FR_DRIVER_BOUD_RATE,
+    FR_DRIVER_TIMEOUT,
+    FR_LOCAL_DRIVER_TIMEOUT,
+    FR_REMOTE_DRIVER_TIMEOUT,
+    FR_NET_DRIVER_TIMEOUT,
+    FR_DRIVER_PASSWORD,
+    FR_CONNECT_SIGNAL,
+    CARD_READER_NEEDED,
+    CARD_READER_PREFIX,
+    BAR_CODE_READER_NEEDED,
+    BAR_CODE_READER_PORT,
+    BAR_CODE_READER_BAUD_RATE,
+    BANK_TERMINAL_NEEDED,
+    BANK_TERMINAL_PRINT_WAIT_TIME,
+    BANK_TERMINAL_PRINT_WAIT_MESSAGE,
+    BANK_TERMINAL_PROGRAM_WAIT_TIME,
+    BANK_TERMINAL_INTERVAL_EMPTY_LINES,
+    BANK_TERMINAL_PATH,
+    SAVE_FORM_CONFIG_TO_DB
 };
 
 
@@ -161,11 +174,9 @@ public:
     virtual void close();
 
     int getReportTemplateType() { return reportTemplateType; }
-    bool getSaveFormConfigToDb() { return config.saveFormConfigToDB; }
     QString getReportTemplateExt();
     Q_INVOKABLE bool drvFRisValid() { return driverFRisValid; }
     Q_INVOKABLE virtual DriverFR* getDrvFR() { return driverFR; }
-    void setFR();
     virtual int decodeTimeOut(int);
     virtual int codeTimeOut(int);
 
@@ -176,7 +187,6 @@ public:
     TcpServer* getTcpServer() { return tcpServer; }
 
     Q_INVOKABLE void virtual showError(QString);
-    Q_INVOKABLE void virtual showCriticalError(QString);
     Q_INVOKABLE int virtual showMessage(QString message, QString question = "",
                     QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::StandardButton defButton = QMessageBox::No);      // Вывести сообщение пользователю и возможно задать вопрос
@@ -215,8 +225,6 @@ public:
     Q_INVOKABLE QString getScript() { return script; }                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter() { return scriptParameter; }
 
-    ConfigVars* getConfig() { return &config; }
-
     Q_INVOKABLE void sendSMS(QString url, QString number, QString message, QString from = "");                     // Посылка СМС через сервис SMS.RU
 
     void    setScriptMode(bool mode) { scriptMode = mode; }
@@ -236,6 +244,16 @@ public:
     virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0) { return new QMyExtSerialPort(name, mode, parent); }
     virtual MyProgressDialog* getMyProgressDialog(QString mess) { return new MyProgressDialog(mess, getMainWindow()); }
     QString         getReportFile(QString, bool, QWidget*, QRect);
+
+    void    openPlugins();
+
+// Работа с пользователской конфигурацией программы
+    virtual QVariant        getConfigValue(ConfigVars name);
+    QStringList     getConfigTypes();
+    QString         getConfigTypeName(QString type) { return configTypes.value(type); }
+    QHash<ConfigVars, ConfigEntry>* getConfigs() { return &configs; }
+    void            setConfigs(QHash<ConfigVars, ConfigEntry>* conf) { configs = *conf; }
+    QList<ConfigVars>     getConfigNames(QString type = "");
 
 
 signals:
@@ -267,8 +285,6 @@ private:
 
     // Свойства, устанавливаемые из настроек приложения
     ReportTemplateTypes     reportTemplateType;                        // тип шаблона печати
-    ConfigVars              config;
-//    QUiLoader               *formLoader;
 
     QHash<QString, QStringList>     arraysForPrint;
     TcpServer*              tcpServer;
@@ -276,15 +292,21 @@ private:
     static bool             timeIsOut;
     bool                    scriptMode;
     static bool             sendCommandMode;
+    QList<ScriptEngine*>    scriptStack;
+    QHash<QString, QString>     dirs;
+    QString                 dirName;
+    QHash<ConfigVars, ConfigEntry> configs;
+    QList<ConfigVars>                 configNames;
+    QHash<QString, QString>     configTypes;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");
     void                    readSettings();
     void                    writeSettings();
     void                    saveMessages();
-    QList<ScriptEngine*>    scriptStack;
-    QHash<QString, QString>     dirs;
-    QString                 dirName;
+    void            setConfig(QString type, ConfigVars name, QString label, QVariant value, bool = false);
+    void            setConfigValue(ConfigVars name, QVariant value);
+    void            setConfigTypeName(QString type, QString name) { configTypes.insert(type, name); }
 
 private slots:
     void                    setTimeIsOut() { timeIsOut = true; }

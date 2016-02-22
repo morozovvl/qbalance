@@ -168,54 +168,57 @@ void TableView::keyPressEvent(QKeyEvent* event)
     {
         return;
     }
+    event->setAccepted(false);
     if (parent != 0)
     {
-        parent->keyPressEvent(event);
+        if (event->modifiers() != Qt::ControlModifier)
+        {
+            switch (event->key())
+            {
+                case Qt::Key_Return:
+                    {
+                        selectNextColumn();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_Enter:
+                    {
+                        selectNextColumn();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_Right:
+                    {
+                        selectNextColumn();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_Tab:
+                    {
+                        selectNextColumn();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_Backtab:
+                    {
+                        selectPreviousColumn();
+                        event->setAccepted(true);
+                    }
+                    break;
+                case Qt::Key_Left:
+                    {
+                        selectPreviousColumn();
+                        event->setAccepted(true);
+                    }
+                    break;
+            }
+        }
         if (!event->isAccepted())
         {
-            if (event->modifiers() != Qt::ControlModifier)
-            {
-                switch (event->key())
-                {
-                    case Qt::Key_Return:
-                        {
-                            selectNextColumn();
-                        }
-                        break;
-                    case Qt::Key_Enter:
-                        {
-                            selectNextColumn();
-                        }
-                        break;
-                    case Qt::Key_Right:
-                        {
-                            selectNextColumn();
-                        }
-                        break;
-                    case Qt::Key_Tab:
-                        {
-                            selectNextColumn();
-                        }
-                        break;
-                    case Qt::Key_Backtab:
-                        {
-                            selectPreviousColumn();
-                        }
-                        break;
-                    case Qt::Key_Left:
-                        {
-                            selectPreviousColumn();
-                        }
-                        break;
-                    default:
-                        QTableView::keyPressEvent(event);
-                }
-            }
-            else
-                QTableView::keyPressEvent(event);
+            parent->keyPressEvent(event);
         }
     }
-    else
+    if (!event->isAccepted())
         QTableView::keyPressEvent(event);
 }
 
@@ -669,7 +672,7 @@ void TableView::writeSettings()
             settings.endGroup();
 
             // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
-            if (app->isSA() && app->getSaveFormConfigToDb())
+            if (app->isSA() && app->getConfigValue(SAVE_FORM_CONFIG_TO_DB).toBool())
             {
                 app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + parent->getConfigName() + "...");
                 for (int i = 0; i < columnCount; i++)

@@ -17,51 +17,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#ifndef MYVALUEEDITOR_H
+#define MYVALUEEDITOR_H
 
-#ifndef DIALOG_H
-#define DIALOG_H
-
-#include <QtGui/QDialog>
-#include <QtGui/QKeyEvent>
-#include <QtDesigner/QDesignerExportWidget>
+#include <QWidget>
 #include "../kernel/app.h"
-#include "mymdisubwindow.h"
-#include "form.h"
 
-class MainWindow;
-
-
-class QDESIGNER_WIDGET_EXPORT Dialog : public QDialog
-
+class MyValueEditor : public QWidget
 {
     Q_OBJECT
 public:
+    explicit MyValueEditor(ConfigEntry&, QWidget *parent = 0);
+    ~MyValueEditor();
+    QWidget* getEditor() { return widget; }
 
-    Dialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
-    ~Dialog();
-    Q_INVOKABLE virtual QObject* findChild(QString);
-    Q_INVOKABLE virtual bool isFormSelected();
-
-    virtual void setApp(TApplication*);
-    Q_INVOKABLE virtual void setForm(Form* f) { form = f; }
-    Q_INVOKABLE virtual Form* getForm() { return form; }
-    virtual void    findCmdOk();
-    virtual void    findCmdCancel();
-    virtual void    keyPressEvent(QKeyEvent*);
-
-protected:
-    virtual void showEvent(QShowEvent*);
-
-private:
-    TApplication*               app;
-    Form*                       form;
-    QPushButton*                buttonOk;
-    QPushButton*                buttonCancel;
-    bool                        isSelected;
+signals:
 
 private slots:
-    void    cmdOk();
-    void    cmdCancel();
+    void editingFinished(int = 0);
+
+private:
+    ConfigEntry* value;
+    QWidget* widget;
+    QString stringValue;
 };
 
-#endif // DIALOG_H
+#endif // MYVALUEEDITOR_H

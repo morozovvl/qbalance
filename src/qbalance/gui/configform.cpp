@@ -27,53 +27,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "guifactory.h"
 #include "mainwindow.h"
+#include "myvalueeditor.h"
 
 ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {
     app = TApplication::exemplar();
-
-    cbFrNeeded = new QCheckBox();
-    lnFrPortName = new QLineEdit();
-    lnBoud = new QComboBox();
-    lnPort = new QLineEdit();
-    lnAddress = new QLineEdit();
-    lnTimeOut = new QLineEdit();
-    lnLocalTimeOut = new QLineEdit();
-    lnRemoteTimeOut = new QLineEdit();
-    lnNetTimeOut = new QLineEdit();
-    cbConnectSignal = new QCheckBox();
-    barCodePortName = new QLineEdit();
-    lnTerminalPath = new QLineEdit();
-    lnSlipTime = new QLineEdit();
-    cbTerminalWaitMess = new QCheckBox();
-
-
+    configName = "ConfigForm";
 }
 
 
 ConfigForm::~ConfigForm()
 {
-    delete lnFrPortName;
-    delete lnBoud;
-    delete lnPort;
-    delete lnAddress;
-    delete lnTimeOut;
-    delete lnLocalTimeOut;
-    delete lnRemoteTimeOut;
-    delete lnNetTimeOut;
-    delete cbConnectSignal;
-    delete cbFrNeeded;
-    delete barCodePortName;
-    delete lnTerminalPath;
-    delete lnSlipTime;
-    delete cbTerminalWaitMess;
-
-
 }
 
 
-bool ConfigForm::open(QWidget* pwgt) {
-    if (Form::open(pwgt)) {
+bool ConfigForm::open(QWidget* pwgt)
+{
+    if (Form::open(pwgt))
+    {
+        configs = *(app->getConfigs());
+
         formWidget->setWindowTitle(QObject::trUtf8("Настройки"));
 
         QTreeWidget* treeWidget = new QTreeWidget();
@@ -94,11 +67,10 @@ bool ConfigForm::open(QWidget* pwgt) {
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Свойства") << "31"));
         treeWidgetItem0->addChild(new QTreeWidgetItem(treeWidgetItem0, QStringList() << QObject::trUtf8("Доступ") << "32"));
 
-        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Картинки") << "40");
-        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Фискальный регистратор") << "50");
-        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Сканер штрих-кодов") << "60");
-        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Считыватель магнитных карт") << "70");
-        treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << QObject::trUtf8("Банковский терминал") << "80");
+        foreach (QString type, app->getConfigTypes())
+        {
+            treeWidgetItem0 = new QTreeWidgetItem(treeWidget, QStringList() << app->getConfigTypeName(type) << type);
+        }
 
         connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(dispatch(QTreeWidgetItem*, int)));
 
@@ -124,25 +96,15 @@ bool ConfigForm::open(QWidget* pwgt) {
 
 
 void ConfigForm::dispatch(QTreeWidgetItem* item, int) {
-    currentItem = item->text(1).toInt();
-    switch(currentItem) {
-    case 10: dictAdd();
-                break;
-    case 11: dictProperties();
-                break;
-    case 12: dictPermissions();
-                break;
-    case 40: pictures();
-                break;
-    case 50: fr();
-                break;
-    case 60: barCode();
-                break;
-    case 70: cardReader();
-                break;
-    case 80: bankTerminal();
-                break;
-    }
+    QString currentItem = item->text(1);
+    if (currentItem == "10")
+        dictAdd();
+    else if (currentItem == "11")
+        dictProperties();
+    else if (currentItem == "12")
+        dictPermissions();
+    else if (app->getConfigTypes().contains(currentItem))
+        showConfigGroup(currentItem);
 }
 
 
@@ -155,7 +117,7 @@ void ConfigForm::dictAdd() {
     QLabel* lblTableName = new QLabel(QObject::trUtf8("Наименование таблицы:"));
     lblTableName->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     QLineEdit* lnEdit = new QLineEdit();
-    lnEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    lnEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vLayout->addWidget(lblTableName, 0, 0, Qt::AlignRight);
     vLayout->addWidget(lnEdit, 0, 1, Qt::AlignRight);
     frame->setLayout(vLayout);
@@ -186,251 +148,43 @@ void ConfigForm::dictPermissions() {
 }
 
 
-void ConfigForm::pictures()
-{
-}
-
-
-void ConfigForm::fr()
-{
-    QLayout* layout = frame->layout();
-    if (layout != 0)
-    {
-        delete layout;
-        frame->setLayout(0);
-    }
-    QGridLayout* vLayout = new QGridLayout();
-
-    QLabel* lblFrNeeded = new QLabel(QObject::trUtf8("Использовать ФР:"));
-    lblFrNeeded->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    cbFrNeeded->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblFrNeeded, 0, 0, Qt::AlignLeft);
-    vLayout->addWidget(cbFrNeeded, 0, 1, Qt::AlignLeft);
-
-
-    QLabel* lblPortName = new QLabel(QObject::trUtf8("COM порт:"));
-    lblPortName->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    lnFrPortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblPortName, 1, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnFrPortName, 1, 1, Qt::AlignLeft);
-
-    QLabel* lblBoud = new QLabel(QObject::trUtf8("Скорость:"));
-    lblBoud->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    lnBoud->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    lnBoud->addItem("2400");
-    lnBoud->addItem("4800");
-    lnBoud->addItem("9600");
-    lnBoud->addItem("19200");
-    lnBoud->addItem("38400");
-    lnBoud->addItem("57600");
-    lnBoud->addItem("115200");
-    lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
-
-    vLayout->addWidget(lblBoud, 2, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnBoud, 2, 1, Qt::AlignLeft);
-
-    QLabel* lblPort = new QLabel(QObject::trUtf8("Порт сервера ФР:"));
-    lblPort->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    lnPort->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblPort, 3, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnPort, 3, 1, Qt::AlignLeft);
-
-    QLabel* lblAddress = new QLabel(QObject::trUtf8("IP адрес сервера ФР:"));
-    lblAddress->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblAddress, 4, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnAddress, 4, 1, Qt::AlignLeft);
-
-    QLabel* lblTimeOut = new QLabel(QObject::trUtf8("Таймаут:"));
-    lblTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblTimeOut, 5, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnTimeOut, 5, 1, Qt::AlignLeft);
-
-    QLabel* lblLocalTimeOut = new QLabel(QObject::trUtf8("Таймаут для локального ФР, мс:"));
-    lblLocalTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnLocalTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblLocalTimeOut, 6, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnLocalTimeOut, 6, 1, Qt::AlignLeft);
-
-    QLabel* lblRemoteTimeOut = new QLabel(QObject::trUtf8("Таймаут для сетевого ФР, мс:"));
-    lblRemoteTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnRemoteTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblRemoteTimeOut, 7, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnRemoteTimeOut, 7, 1, Qt::AlignLeft);
-
-    QLabel* lblNetTimeOut = new QLabel(QObject::trUtf8("Таймаут для обмена по сети, мс:"));
-    lblNetTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnNetTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblNetTimeOut, 8, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnNetTimeOut, 8, 1, Qt::AlignLeft);
-
-    QLabel* lblSignal = new QLabel(QObject::trUtf8("Подавать сигнал на ФР при подключении:"));
-    lblSignal->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    cbConnectSignal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    vLayout->addWidget(lblSignal, 9, 0, Qt::AlignLeft);
-    vLayout->addWidget(cbConnectSignal, 9, 1, Qt::AlignLeft);
-
-    vLayout->setRowStretch(10, 1);
-
-    frame->setLayout(vLayout);
-
-    cbFrNeeded->setCheckState(app->getConfig()->frNeeded ? Qt::Checked : Qt::Unchecked);
-    lnFrPortName->setText(app->getConfig()->frDriverPort);
-    lnBoud->setCurrentIndex(app->getConfig()->frDriverBaudRate);
-    lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
-    lnAddress->setText(app->getConfig()->remoteHost);
-    lnTimeOut->setText(QString("%1").arg(app->getConfig()->frDriverTimeOut));
-    lnLocalTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frLocalDriverTimeOut)));
-    lnRemoteTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frRemoteDriverTimeOut)));
-    lnNetTimeOut->setText(QString("%1").arg(app->getConfig()->frNetDriverTimeOut));
-    cbConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
-}
-
-
-void ConfigForm::barCode()
-{
-    QLayout* layout = frame->layout();
-    if (layout != 0)
-    {
-        delete layout;
-        frame->setLayout(0);
-    }
-    QGridLayout* vLayout = new QGridLayout();
-
-    QLabel* lblPortName = new QLabel(QObject::trUtf8("COM порт:"));
-    lblPortName->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    barCodePortName->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblPortName, 0, 0, Qt::AlignLeft);
-    vLayout->addWidget(barCodePortName, 0, 1, Qt::AlignLeft);
-    vLayout->setRowStretch(1, 1);
-
-    frame->setLayout(vLayout);
-
-    barCodePortName->setText(app->getConfig()->barCodeReaderPort);
-}
-
-
-void ConfigForm::cardReader()
-{
-
-}
-
-
-void ConfigForm::bankTerminal()
-{
-    QLayout* layout = frame->layout();
-    if (layout != 0)
-    {
-        delete layout;
-        frame->setLayout(0);
-    }
-    QGridLayout* vLayout = new QGridLayout();
-
-    QLabel* lblTerminalPath = new QLabel(QObject::trUtf8("Каталог программы банковского терминала:"));
-    lblTerminalPath->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnTerminalPath->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblTerminalPath, 0, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnTerminalPath, 0, 1, Qt::AlignLeft);
-
-    QLabel* lblSlipTime = new QLabel(QObject::trUtf8("Задержка при печати между слипами (мс):"));
-    lblSlipTime->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    lnSlipTime->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblSlipTime, 1, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnSlipTime, 1, 1, Qt::AlignLeft);
-
-    QLabel* lblTerminalWaitMess = new QLabel(QObject::trUtf8("Показывать сообщение об ожидании между слипами:"));
-    lblTerminalWaitMess->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    cbTerminalWaitMess->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblTerminalWaitMess, 2, 0, Qt::AlignLeft);
-    vLayout->addWidget(cbTerminalWaitMess, 2, 1, Qt::AlignLeft);
-
-    QLabel* lblPort = new QLabel(QObject::trUtf8("Порт сервера ФР:"));
-    lblPort->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    lnPort->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblPort, 3, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnPort, 3, 1, Qt::AlignLeft);
-
-    QLabel* lblAddress = new QLabel(QObject::trUtf8("IP адрес сервера ФР:"));
-    lblAddress->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnAddress->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblAddress, 4, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnAddress, 4, 1, Qt::AlignLeft);
-
-    QLabel* lblTimeOut = new QLabel(QObject::trUtf8("Таймаут:"));
-    lblTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblTimeOut, 5, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnTimeOut, 5, 1, Qt::AlignLeft);
-
-    QLabel* lblLocalTimeOut = new QLabel(QObject::trUtf8("Таймаут для локального ФР, мс:"));
-    lblLocalTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnLocalTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblLocalTimeOut, 6, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnLocalTimeOut, 6, 1, Qt::AlignLeft);
-
-    QLabel* lblRemoteTimeOut = new QLabel(QObject::trUtf8("Таймаут для сетевого ФР, мс:"));
-    lblRemoteTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnRemoteTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblRemoteTimeOut, 7, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnRemoteTimeOut, 7, 1, Qt::AlignLeft);
-
-    QLabel* lblNetTimeOut = new QLabel(QObject::trUtf8("Таймаут для обмена по сети, мс:"));
-    lblNetTimeOut->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    lnNetTimeOut->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vLayout->addWidget(lblNetTimeOut, 8, 0, Qt::AlignLeft);
-    vLayout->addWidget(lnNetTimeOut, 8, 1, Qt::AlignLeft);
-
-    QLabel* lblSignal = new QLabel(QObject::trUtf8("Подавать сигнал на ФР при подключении:"));
-    lblSignal->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-    cbConnectSignal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    vLayout->addWidget(lblSignal, 9, 0, Qt::AlignLeft);
-    vLayout->addWidget(cbConnectSignal, 9, 1, Qt::AlignLeft);
-
-    vLayout->setRowStretch(10, 1);
-
-    frame->setLayout(vLayout);
-/*
-    lnTerminalPath->setText(app->getConfig()->bankTerminalPath);
-    lnSlipTime->setText(app->getConfig()->bankTerminalPrintWaitTime);
-    cbTerminalWaitMess->setCurrentIndex(app->getConfig()->bankTerminalPrintWaitMessage);
-    lnPort->setText(QString("%1").arg(app->getConfig()->localPort));
-    lnAddress->setText(app->getConfig()->remoteHost);
-    lnTimeOut->setText(QString("%1").arg(app->getConfig()->frDriverTimeOut));
-    lnLocalTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frLocalDriverTimeOut)));
-    lnRemoteTimeOut->setText(QString("%1").arg(app->decodeTimeOut(app->getConfig()->frRemoteDriverTimeOut)));
-    lnNetTimeOut->setText(QString("%1").arg(app->getConfig()->frNetDriverTimeOut));
-    cbConnectSignal->setCheckState(app->getConfig()->frConnectSignal ? Qt::Checked : Qt::Unchecked);
-*/
-}
-
-
 void ConfigForm::cmdOk()
 {
-    switch(currentItem) {
-    case 10: dictAdd();
-                break;
-    case 11: dictProperties();
-                break;
-    case 12: dictPermissions();
-                break;
-    case 40: pictures();
-                break;
-    case 50: app->getConfig()->frNeeded = (cbFrNeeded->checkState() == Qt::Checked ? true : false);
-             app->getConfig()->frDriverPort = lnFrPortName->text();
-             app->getConfig()->frDriverBaudRate = lnBoud->currentIndex();
-             app->getConfig()->localPort = lnPort->text().toInt();
-             app->getConfig()->remoteHost = lnAddress->text();
-             app->getConfig()->frDriverTimeOut = lnTimeOut->text().toInt();
-             app->getConfig()->frLocalDriverTimeOut = app->codeTimeOut(lnLocalTimeOut->text().toInt());
-             app->getConfig()->frRemoteDriverTimeOut = app->codeTimeOut(lnRemoteTimeOut->text().toInt());
-             app->getConfig()->frNetDriverTimeOut = lnNetTimeOut->text().toInt();
-             app->getConfig()->frConnectSignal = (cbConnectSignal->checkState() == Qt::Checked ? true : false);
-             break;
-    case 60: app->getConfig()->barCodeReaderPort = barCodePortName->text();
-             break;
-    }
+    app->setConfigs(&configs);
     Form::cmdOk();
+}
+
+
+void ConfigForm::showConfigGroup(QString type)
+{
+    QLayout* layout = frame->layout();
+    if (layout != 0)
+    {
+        QLayoutItem* item;
+        while ((item = layout->takeAt(0)) != NULL)
+        {
+            delete item->widget();
+            delete item;
+        }
+        delete layout;
+    }
+    QGridLayout* vLayout = new QGridLayout();
+
+    int row = 0;
+    foreach (ConfigVars name, app->getConfigNames(type))
+    {
+        if (type.size() == 0 || type == configs.value(name).type)
+        {
+            QLabel* label = new QLabel(configs[name].label.trimmed() + ":");
+            MyValueEditor* line = new MyValueEditor(configs[name]);
+            label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+            line->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+            vLayout->addWidget(label, row, 0, Qt::AlignRight);
+            vLayout->addWidget(line->getEditor(), row, 1, Qt::AlignLeft);
+            row++;
+        }
+    }
+    vLayout->setRowStretch(row, 1);
+    vLayout->setColumnStretch(1, 1);
+    frame->setLayout(vLayout);
 }

@@ -66,6 +66,7 @@ public:
     virtual QList<FieldType>*   getFields() { return &fields; }
     Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
     virtual void                setCurrentFocus();
+    virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
 
 
 public slots:
@@ -78,7 +79,6 @@ public slots:
     virtual void                showPhoto();
 
 protected:
-    virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     virtual void                currentChanged(const QModelIndex &, const QModelIndex &);
     void                        focusInEvent(QFocusEvent*);
 

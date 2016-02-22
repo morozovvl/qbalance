@@ -47,6 +47,7 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     freeWindow = false;
     subWindow = 0;
     autoSelect = false;
+    configName = "Form";
 }
 
 
@@ -101,10 +102,6 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     if (parent != 0)
     {
         configName = getParent()->getTagName();
-    }
-    else
-    {
-        configName = "Form";
     }
     setObjectName(configName);
     uiCreated = false;
@@ -360,23 +357,6 @@ void Form::setButtonsSignals()
 void Form::keyPressEvent(QKeyEvent *event)
 {
     event->setAccepted(false);
-    if (event->modifiers() == Qt::ControlModifier)
-    {
-        if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-        {
-            buttonOk->click();
-            event->setAccepted(true);
-        }
-    }
-    else
-    {
-        if (event->key() == Qt::Key_Escape)
-        {
-            buttonCancel->click();
-            event->setAccepted(true);
-        }
-    }
-
     // Попробуем отдать обработку события скриптам
     ScriptEngine* engine = parent->getScriptEngine();
     if (engine != 0)
@@ -384,6 +364,10 @@ void Form::keyPressEvent(QKeyEvent *event)
         bool result = engine->eventKeyPressed(event->key(), event->modifiers());
         if (result)
             event->setAccepted(true);       // Если скрипт вернул ИСТИНА, то событие обработано
+    }
+    if (!event->isAccepted())
+    {
+        getFormWidget()->keyPressEvent(event);
     }
 }
 
@@ -461,7 +445,7 @@ void Form::writeSettings()
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
-    if (app->isSA() && app->getSaveFormConfigToDb())
+    if (app->isSA() && app->getConfigValue(SAVE_FORM_CONFIG_TO_DB).toBool())
     {
         app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
         db->setConfig(configName, "x", QString("%1").arg(widget->geometry().x()));

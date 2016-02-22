@@ -90,8 +90,6 @@ TApplication::TApplication(int & argc, char** argv)
     {
         Exemplar = this;
     }
-    initConfig();
-
     connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
     timeIsOut = false;
     tcpServer = 0;
@@ -110,32 +108,113 @@ TApplication::~TApplication()
 
 void TApplication::initConfig()
 {
+    setConfigTypeName("server", "Сервер взаимодействия");
+    setConfig("server", LOCAL_PORT, "Локальный порт", 44444);
+
+    setConfigTypeName("client", "Клиент взаимодействия");
+    setConfig("client", REMOTE_HOST, "Удаленный хост", "192.168.0.1");
+    setConfig("client", REMOTE_PORT, "Удаленный порт", 44444);
+
+    setConfigTypeName("fr", "Фискальный регистратор");
+    setConfig("fr", FR_NEEDED, "Использовать ФР", false);
 #ifdef Q_OS_WIN32
-    config.barCodeReaderPort = "COM3";                  // COM-порт сканера штрих кодов в Windows
-    config.frDriverPort = "COM1";                       // COM-порт фискального регистратора
-    config.frDriverBaudRate = 3;
+    setConfig("fr", FR_DRIVER_PORT, "COM порт", "COM1");
 #else
-    config.barCodeReaderPort = "/dev/ttyUSB0";          // COM-порт сканера штрих кодов в Linux
-    config.frDriverPort = "/dev/ttyUSB0";               // COM-порт фискального регистратора
-    config.frDriverBaudRate = 6;
+    setConfig("fr", FR_DRIVER_PORT, "COM порт", "/dev/ttyUSB0");
 #endif
-    config.frNeeded = false;
-    config.frDriverTimeOut = 100;
-    config.frLocalDriverTimeOut = 100;
-    config.frRemoteDriverTimeOut = 150;
-    config.frNetDriverTimeOut = 200;
-    config.frDriverPassword = 30;
-    config.cardReaderPrefix = ";8336322632=";           // Префикс магнитной карты
-    config.bankTerminalPath = "/home/vladimir/BankTerminal/";
-    config.bankTerminalPrintWaitTime = 3000;            // Задержка между слипами
-    config.bankTerminalPrintWaitMessage = false;
-    config.bankTerminalProgramWaitTime = 60000;
-    config.bankTerminalIntervalEmptyLines = 2;
-    config.localPort = 44444;
-    config.remoteHost = "192.168.0.1";
-    config.remotePort = 44444;
-    config.saveFormConfigToDB = true;
-    config.frConnectSignal = true;
+    setConfig("fr", FR_DRIVER_BOUD_RATE, "Скорость", 6, true);
+    setConfig("fr", FR_DRIVER_TIMEOUT, "Таймаут, мс", 100);
+    setConfig("fr", FR_LOCAL_DRIVER_TIMEOUT, "Таймаут для локального ФР, мс", 100);
+    setConfig("fr", FR_REMOTE_DRIVER_TIMEOUT, "Таймаут для сетевого ФР, мс", 150);
+    setConfig("fr", FR_NET_DRIVER_TIMEOUT, "Таймаут для обмена по сети, мс", 200);
+    setConfig("fr", FR_DRIVER_PASSWORD, "Пароль администратора ФР", 30);
+    setConfig("fr", FR_CONNECT_SIGNAL, "Подавать сигнал на ФР при подключении", true);
+
+    setConfigTypeName("cReader", "Ридер магнитных карт");
+    setConfig("cReader", CARD_READER_NEEDED, "Использовать считыватель магнитных карт", false);
+    setConfig("cReader", CARD_READER_PREFIX, "Префикс магнитной карты", ";8336322632=");
+
+    setConfigTypeName("bcReader", "Сканер штрих кодов");
+    setConfig("bcReader", BAR_CODE_READER_NEEDED, "Использовать сканер штрих кодов", false);
+#ifdef Q_OS_WIN32
+    setConfig("bcReader", BAR_CODE_READER_PORT, "COM порт", "COM3");
+#else
+    setConfig("bcReader", BAR_CODE_READER_PORT, "COM порт", "/dev/ttyUSB0");
+#endif
+    setConfig("bcReader", BAR_CODE_READER_BAUD_RATE, "Скорость", 6, true);
+
+    setConfigTypeName("bt", "Банковский терминал");
+    setConfig("bt", BANK_TERMINAL_NEEDED, "Использовать банковский терминал", false);
+    setConfig("bt", BANK_TERMINAL_PRINT_WAIT_TIME, "Продолжительность остановок при печати слипов, мс", 0);
+    setConfig("bt", BANK_TERMINAL_PRINT_WAIT_MESSAGE, "Показывать сообщение о продолжении при печати слипов", false);
+    setConfig("bt", BANK_TERMINAL_PROGRAM_WAIT_TIME, "Время ожидания окончания работы программы банковского терминала, мс", 60000);
+    setConfig("bt", BANK_TERMINAL_INTERVAL_EMPTY_LINES, "Количество пустых строк между слипами и чеком", 2);
+#ifdef Q_OS_WIN32
+    setConfig("bt", BANK_TERMINAL_PATH, "Каталог программы банковского терминала", "C:/BankTerminal/");
+#else
+    setConfig("bt", BANK_TERMINAL_PATH, "Каталог программы банковского терминала", "/home/vladimir/BankTerminal/");
+#endif
+
+    setConfigTypeName("form", "Формы");
+    setConfig("form", SAVE_FORM_CONFIG_TO_DB, "Сохранять геометрию форм на сервере", true);
+}
+
+
+void TApplication::setConfig(QString type, ConfigVars name, QString label, QVariant value, bool isBoud)
+{
+    ConfigEntry entry;
+    configs.remove(name);
+    configNames.removeAll(name);
+    entry.type = type;
+    entry.label = label;
+    entry.value = value;
+    entry.isBoud = isBoud;
+    configs.insert(name, entry);
+    configNames.append(name);
+}
+
+void TApplication::setConfigValue(ConfigVars name, QVariant value)
+{
+    ConfigEntry entry;
+    if (configs.contains(name))
+        entry = configs.value(name);
+    entry.value = value;
+    setConfig(entry.type, name, entry.label, entry.value, entry.isBoud);
+}
+
+
+QVariant TApplication::getConfigValue(ConfigVars name)
+{
+    QVariant result;
+    if (configs.contains(name))
+        result = configs.value(name).value;
+    return result;
+}
+
+
+QStringList TApplication::getConfigTypes()
+{
+    QStringList result;
+    foreach (ConfigVars name, configs.keys())
+    {
+        QString type = configs.value(name).type;
+        if (!result.contains(type))
+            result.append(type);
+    }
+    return result;
+}
+
+
+
+QList<ConfigVars> TApplication::getConfigNames(QString type)
+{
+    QList<ConfigVars> result;
+    foreach (ConfigVars name, configNames)
+    {
+        if (type.size() == 0 || type == configs.value(name).type)
+            result.append(name);
+    }
+    return result;
 }
 
 
@@ -193,51 +272,14 @@ bool TApplication::open() {
     beginDate = endDate.addDays(-31);
     gui = new GUIFactory();
 
+    initConfig();
     readSettings();
 
-    // Если нужно и если есть соответствующий плагин, попытаемся открыть драйвер фискального регистратора
-    if (config.frNeeded && !isScriptMode())
-    {
-        driverFR = (DriverFR*)createPlugin("driverfr");
-        if (driverFR != 0)
-        {
-            driverFR->setApp(this);
-            if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
-                    driverFRisValid = true;
-            else
-            {
-                driverFR->close();
-                driverFR = 0;
-            }
-        }
-    }
-
-    // Запустим сканер штрих-кодов, если есть его плагин
-    barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
-    if (barCodeReader != 0)
-    {
-        barCodeReader->setApp(this);
-        if (!barCodeReader->open(config.barCodeReaderPort))
-        {
-            barCodeReader->close();
-            barCodeReader = 0;
-        }
-    }
-
-    // Запустим банковский терминал, если есть плагин
-    bankTerminal = (BankTerminal*)createPlugin("bankterminal");
-    if (bankTerminal != 0)
-    {
-        bankTerminal->setApp(this);
-        if (!bankTerminal->open())
-        {
-            bankTerminal->close();
-            bankTerminal = 0;
-        }
-    }
+    if (!isScriptMode())
+        openPlugins();
 
     db  = new DBFactory();
-    tcpServer = new TcpServer(config.localPort, this);
+    tcpServer = new TcpServer(getConfigValue(LOCAL_PORT).toInt(), this);
     messagesWindow = new MessageWindow();
 
     if (gui->open())
@@ -274,7 +316,7 @@ bool TApplication::open() {
 
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
-                    if (config.frNeeded)
+                    if (getConfigValue(FR_NEEDED).toBool())
                     {
                         if (driverFRisValid)
                             showMessageOnStatusBar("Найден фискальный регистратор.\n");
@@ -351,15 +393,56 @@ void TApplication::close()
 }
 
 
-void TApplication::setFR()
+void    TApplication::openPlugins()
 {
-/*
-    driverFR = new DriverFR(this);
-    if (driverFR->open(config.frDriverPort, config.frDriverBaudRate, config.frDriverTimeOut, config.frDriverPassword, config.remoteHost, config.remotePort))
+    // Если нужно и если есть соответствующий плагин, попытаемся открыть драйвер фискального регистратора
+    if (getConfigValue(FR_NEEDED).toBool())
     {
-        driverFRisValid = true;
+        driverFR = (DriverFR*)createPlugin("driverfr");
+        if (driverFR != 0)
+        {
+            driverFR->setApp(this);
+            if (driverFR->open(getConfigValue(FR_DRIVER_PORT).toString(),
+                               getConfigValue(FR_DRIVER_BOUD_RATE).toInt(),
+                               getConfigValue(FR_DRIVER_TIMEOUT).toInt(),
+                               getConfigValue(FR_DRIVER_PASSWORD).toInt(),
+                               getConfigValue(REMOTE_HOST).toString(),
+                               getConfigValue(REMOTE_PORT).toInt()))
+                    driverFRisValid = true;
+            else
+            {
+                driverFR->close();
+                driverFR = 0;
+            }
+        }
     }
-*/
+
+    // Запустим сканер штрих-кодов, если есть его плагин
+    barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
+    if (barCodeReader != 0 && !isScriptMode())
+    {
+        barCodeReader->setApp(this);
+        if (!barCodeReader->open(getConfigValue(BAR_CODE_READER_PORT).toString()))
+        {
+            barCodeReader->close();
+            barCodeReader = 0;
+        }
+    }
+
+    // Запустим банковский терминал, если есть плагин
+    if (getConfigValue(BANK_TERMINAL_NEEDED).toBool())
+    {
+        bankTerminal = (BankTerminal*)createPlugin("bankterminal");
+        if (bankTerminal != 0)
+        {
+            bankTerminal->setApp(this);
+            if (!bankTerminal->open())
+            {
+                bankTerminal->close();
+                bankTerminal = 0;
+            }
+        }
+    }
 }
 
 
@@ -416,7 +499,7 @@ QString TApplication::getPhotosPath(QString fileName) {
 
 
 QString TApplication::getCrashDumpsPath() {
-    return applicationDirPath() + "/data/crashdumps/";
+    return applicationDirPath() + "/data/crashdumps";
 }
 
 
@@ -588,16 +671,6 @@ void TApplication::showError(QString error)
 }
 
 
-void TApplication::showCriticalError(QString error)
-{
-    if (!isScriptMode() && error.size() > 0)
-        gui->showCriticalError(error);
-    else
-        showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
-    debug(0, "Error: " + error);
-}
-
-
 int TApplication::showMessage(QString message, QString question,
                 QMessageBox::StandardButtons buttons,
                 QMessageBox::StandardButton defButton)
@@ -711,8 +784,7 @@ void TApplication::showProcesses()
         }
     }
 */
-//    runScript("analizeBankAccount.js");
-    runScript("bankTerminal.js");
+    runScript("analizeBankAccount.js");
 }
 
 
@@ -787,20 +859,22 @@ bool TApplication::readCardReader(QKeyEvent* keyEvent)
         text = keyEvent->text();
 
     cardReaderCode.append(text);
-    int leftSize = cardReaderCode.size() <= config.cardReaderPrefix.size() ? cardReaderCode.size() : config.cardReaderPrefix.size();
-    if (leftSize > 0 && (config.cardReaderPrefix.left(leftSize) == cardReaderCode.left(leftSize)))   // Если начальные введенные символы начинают совпадать с префиксом
+    QString crPrefix = getConfigValue(CARD_READER_PREFIX).toString();
+    int leftSize = cardReaderCode.size() <= crPrefix.size() ? cardReaderCode.size() : crPrefix.size();
+    if (leftSize > 0 && (crPrefix.left(leftSize) == cardReaderCode.left(leftSize)))   // Если начальные введенные символы начинают совпадать с префиксом
     {                                                                // считывателя магнитных карт
-        if (config.cardReaderPrefix == cardReaderCode.left(leftSize))       // Если префикс полностью совпал
+        if (crPrefix == cardReaderCode.left(leftSize))       // Если префикс полностью совпал
         {
             if (keyEvent->key() == 44 || keyEvent->key() == 63)     // Последовательность заканчивается клавишей "?"
             {
                 QString cardCode = cardReaderCode;
-                cardCode.replace(config.cardReaderPrefix, "");
+                cardCode.replace(crPrefix, "");
                 cardCode.chop(1);
                 emit cardCodeReaded(cardCode.trimmed());
                 cardReaderCode = "";
             }
         }
+        keyEvent->setAccepted(true);
         return true;                // Строка, вводимая с клавиатуры (кард-ридера) начинает походить на префикс карты
     }
     else
@@ -985,27 +1059,22 @@ void TApplication::readSettings()
 {
     QSettings settings;
     settings.beginGroup("app");
-    config.frNeeded = settings.value("frNeeded", config.frNeeded).toBool();
-    config.barCodeReaderPort = settings.value("barCodeReaderPort", config.barCodeReaderPort).toString();
-    config.frDriverPort = settings.value("frDriverPort", config.frDriverPort).toString();
-    config.frDriverBaudRate = settings.value("frDriverBaudRate", config.frDriverBaudRate).toInt();
-    config.frDriverTimeOut = settings.value("frDriverTimeOut", config.frDriverTimeOut).toInt();
-    config.frLocalDriverTimeOut = settings.value("frLocalDriverTimeOut", config.frLocalDriverTimeOut).toInt();
-    config.frRemoteDriverTimeOut = settings.value("frRemoteDriverTimeOut", config.frRemoteDriverTimeOut).toInt();
-    config.frNetDriverTimeOut = settings.value("frNetDriverTimeOut", config.frNetDriverTimeOut).toInt();
-    config.frDriverPassword = settings.value("frDriverPassword", config.frDriverPassword).toInt();
-    config.frConnectSignal = settings.value("frConnectSignal", config.frConnectSignal).toBool();
-    config.cardReaderPrefix = settings.value("cardReaderPrefix", config.cardReaderPrefix).toString();
-    config.localPort = settings.value("localPort", config.localPort).toInt();
-    config.remoteHost = settings.value("remoteHost", config.remoteHost).toString();
-    config.remotePort = settings.value("remotePort", config.remotePort).toInt();
-    config.saveFormConfigToDB = settings.value("saveFormConfigToDB", config.saveFormConfigToDB).toBool();
     int dirsCount = settings.value("dirsCount", 0).toInt();
     for (int i = 0; i < dirsCount; i++)
     {
         QString dirName = settings.value(QString("dirName%1").arg(i), "").toString();
         dirs.insert(dirName, settings.value(QString("dir%1").arg(i), "").toString());
     }
+
+    foreach (ConfigVars name, getConfigNames())
+    {
+        QVariant value = settings.value(QString("ConfigVars%1").arg(name), getConfigValue(name));
+        if (value == "true" || value == "false")
+            setConfigValue(name, value.toBool());
+        else
+            setConfigValue(name, value);
+    }
+
     settings.endGroup();
 }
 
@@ -1015,21 +1084,6 @@ void TApplication::writeSettings()
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings;
     settings.beginGroup("app");
-    settings.setValue("frNeeded", config.frNeeded);
-    settings.setValue("barCodeReaderPort", config.barCodeReaderPort);
-    settings.setValue("frDriverPort", config.frDriverPort);
-    settings.setValue("frDriverBaudRate", config.frDriverBaudRate);
-    settings.setValue("frDriverTimeOut", config.frDriverTimeOut);
-    settings.setValue("frLocalDriverTimeOut", config.frLocalDriverTimeOut);
-    settings.setValue("frRemoteDriverTimeOut", config.frRemoteDriverTimeOut);
-    settings.setValue("frNetDriverTimeOut", config.frNetDriverTimeOut);
-    settings.setValue("frDriverPassword", config.frDriverPassword);
-    settings.setValue("frConnectSignal", config.frConnectSignal);
-    settings.setValue("cardReaderPrefix", config.cardReaderPrefix);
-    settings.setValue("localPort", config.localPort);
-    settings.setValue("remoteHost", config.remoteHost);
-    settings.setValue("remotePort", config.remotePort);
-    settings.setValue("saveFormConfigToDB", config.saveFormConfigToDB);
     settings.setValue("dirsCount", dirs.count());
     for (int i = 0; i < dirs.count(); i++)
     {
@@ -1037,6 +1091,11 @@ void TApplication::writeSettings()
         settings.setValue(QString("dirName%1").arg(i), dirName);
         settings.setValue(QString("dir%1").arg(i), dirs.value(dirName));
     }
+    foreach (ConfigVars name, getConfigNames())
+    {
+        settings.setValue(QString("ConfigVars%1").arg(name), getConfigValue(name));
+    }
+
     settings.endGroup();
 }
 

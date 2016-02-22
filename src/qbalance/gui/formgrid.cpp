@@ -494,51 +494,52 @@ void FormGrid::setEnabled(bool enabled)
 
 void FormGrid::keyPressEvent(QKeyEvent *event)
 {
-    Form::keyPressEvent(event);
+    event->setAccepted(false);
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        switch (event->key())
+        {
+            case Qt::Key_Insert:
+                {
+                    cmdAdd();
+                    event->setAccepted(true);
+                }
+                break;
+            case Qt::Key_Delete:
+                {
+                    cmdDelete();
+                    event->setAccepted(true);
+                }
+                break;
+        }
+    }
+    else
+    {
+        switch (event->key())
+        {
+            case Qt::Key_F2:
+                {
+                    cmdView();
+                    event->setAccepted(true);
+                }
+                break;
+            case Qt::Key_F3:
+                {
+                    cmdRequery();
+                    event->setAccepted(true);
+                }
+                break;
+            case Qt::Key_F4:
+                {
+                    cmdPrint(true);
+                    event->setAccepted(true);
+                }
+                break;
+        }
+    }
     if (!event->isAccepted())
     {
-        if (event->modifiers() == Qt::ControlModifier)
-        {
-            switch (event->key())
-            {
-                case Qt::Key_Insert:
-                    {
-                        cmdAdd();
-                        event->setAccepted(true);
-                    }
-                    break;
-                case Qt::Key_Delete:
-                    {
-                        cmdDelete();
-                        event->setAccepted(true);
-                    }
-                    break;
-            }
-        }
-        else
-        {
-            switch (event->key())
-            {
-                case Qt::Key_F2:
-                    {
-                        cmdView();
-                        event->setAccepted(true);
-                    }
-                    break;
-                case Qt::Key_F3:
-                    {
-                        cmdRequery();
-                        event->setAccepted(true);
-                    }
-                    break;
-                case Qt::Key_F4:
-                    {
-                        cmdPrint(true);
-                        event->setAccepted(true);
-                    }
-                    break;
-            }
-        }
+        Form::keyPressEvent(event);
     }
 }
 

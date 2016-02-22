@@ -47,7 +47,7 @@ public:
     virtual void setParameter(QString, QString);
     virtual void setFieldsList(QStringList);
     virtual void setFocus();
-    virtual void setFormGrid(FormGridSearch* par) { parentForm = par; }
+    virtual void setFormGrid(FormGridSearch* par);
     virtual void setApp(TApplication* a);
     virtual void setProgramIdFieldName(QString s) { programIdFieldName = s; }
     virtual void setProgramNameFieldName(QString s) { programNameFieldName = s; }

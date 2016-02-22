@@ -42,7 +42,6 @@ public:
     void setWindowTitle(QString);
     void show();
     int showError(QString);             // Сообщить пользователю об ошибке и вернуть его реакцию
-    int showCriticalError(QString);
     int showMessage(QString message, QString question = "",
                     QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::StandardButton defButton = QMessageBox::No);      // Вывести сообщение пользователю и возможно задать вопрос

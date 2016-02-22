@@ -44,7 +44,7 @@ bool BankTerminal::open()
     bool result = false;
     if (app != 0)
     {
-        path = app->getConfig()->bankTerminalPath;
+        path = app->getConfigValue(BANK_TERMINAL_PATH).toString();
         program = path + program;
         if (QFileInfo(program).exists())        // Программа терминала обнаружена
         {
@@ -86,12 +86,17 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
             command.append(QString(" %1").arg(track));
 
 #ifdef Q_OS_LINUX
-        if (oper == 1 || oper == 3)
-            app->showMessage(QObject::trUtf8("Вставьте банковскую карту в терминал и нажмите любую клавишу"));
+//        if (oper == 1 || oper == 3)
+//            app->showMessage(QObject::trUtf8("Вставьте банковскую карту в терминал и нажмите любую клавишу"));
 #endif
 
+        // Очистим предыдущие результаты
+        QDir(path).remove("e");
+        QDir(path).remove("p");
+
+        // Запустим программу терминала
         termProcess->start(command);
-        if (!termProcess->waitForFinished(app->getConfig()->bankTerminalProgramWaitTime))
+        if (!termProcess->waitForFinished(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()))
             app->showError(QObject::trUtf8("Время ожидания терминала (1 минута) истекло. Нажмите кнопку <ОТМЕНА> на терминале.") + termProcess->errorString());                  // выдадим сообщение об ошибке
         delete termProcess;
 
@@ -137,8 +142,6 @@ bool BankTerminal::testResult()
             file.close();
             if (resultParams.value(RESULT_CODE) == "0")
                 result = true;
-//            foreach (QString key, resultParams.keys())
-//                qDebug() << key << resultParams.value(key);
         }
     }
     return result;
@@ -175,11 +178,11 @@ void BankTerminal::printSlip()
                     driverFR->PrintString(line);
                 else
                 {
-                    driverFR->FeedDocument(app->getConfig()->bankTerminalIntervalEmptyLines);
-                    if (app->getConfig()->bankTerminalPrintWaitMessage)
+                    driverFR->FeedDocument(app->getConfigValue(BANK_TERMINAL_INTERVAL_EMPTY_LINES).toInt());
+                    if (app->getConfigValue(BANK_TERMINAL_PRINT_WAIT_MESSAGE).toBool())
                         app->showMessage(QObject::trUtf8("Оторвите чек и нажмите любую клавишу для продолжения печати"));
                     else
-                        app->sleep(app->getConfig()->bankTerminalPrintWaitTime);
+                        app->sleep(app->getConfigValue(BANK_TERMINAL_PRINT_WAIT_TIME).toInt());
                 }
                 driverFR->setProgressDialogValue(proc * i);
             }

@@ -205,21 +205,21 @@ strNum - номер текущей строки тела таблицы
             QString value;
             QString sval;
             QString key;
-            // ячейка не относится к таблице
-            int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
-            value = cellText.mid(fpos, lpos - fpos);
-            value = value.remove("[").remove("]");      // освободим его от квадратных скобок
-            var = context->getValue(value);      // и получим данные для него из контекста печати
-            if (var.isValid())                                      // если данные имеются
-            {
-                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
-                break;
-            }
             // Ячейка относится к таблице
             value = getTableVariable(cells.at(i).toElement(), tableNameForPrinting);  // проверим, не ячейка ли это тела таблицы
             sval = value;       // если это тело таблицы, то из контекста печати получим данные для соответствующей строки таблицы для этого выражения
             key = sval.replace(tableNameForPrinting, QString("%1").arg(tableNameForPrinting)).toLower();
             var = context->getValue(key, strNum);  // в контексте печати наименования данных хранятся в нижнем регистре
+            if (var.isValid())                                      // если данные имеются
+            {
+                writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
+                break;
+            }
+            // ячейка не относится к таблице
+            int lpos = cellText.indexOf("]", fpos) + 1; // получим выражение "[<...>]" полностью
+            value = cellText.mid(fpos, lpos - fpos);
+            value = value.remove("[").remove("]");      // освободим его от квадратных скобок
+            var = context->getValue(value);      // и получим данные для него из контекста печати
             if (var.isValid())                                      // если данные имеются
             {
                 writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона

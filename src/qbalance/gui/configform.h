@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QCheckBox>
 #include <QtGui/QTreeWidgetItem>
 #include "form.h"
+#include "../kernel/app.h"
 
 class TApplication;
 
@@ -44,32 +45,14 @@ private slots:
 private:
     TApplication* app;
     QFrame* frame;
-    int currentItem;
-
-    QCheckBox* cbFrNeeded;
-    QLineEdit* lnFrPortName;
-    QLineEdit* barCodePortName;
-    QComboBox* lnBoud;
-    QLineEdit* lnPort;
-    QLineEdit* lnAddress;
-    QLineEdit* lnTimeOut;
-    QLineEdit* lnLocalTimeOut;
-    QLineEdit* lnRemoteTimeOut;
-    QLineEdit* lnNetTimeOut;
-    QCheckBox* cbConnectSignal;
-    QLineEdit* lnTerminalPath;
-    QLineEdit* lnSlipTime;
-    QCheckBox* cbTerminalWaitMess;
+    QHash<ConfigVars, ConfigEntry> configs;
 
     void dictAdd();
     void dictProperties();
     void dictColumns();
     void dictPermissions();
-    void pictures();
-    void fr();
-    void barCode();
-    void cardReader();
-    void bankTerminal();
+
+    void showConfigGroup(QString);
 };
 
 #endif // CONFIGFORM_H

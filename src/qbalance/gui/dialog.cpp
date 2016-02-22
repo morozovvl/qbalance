@@ -28,7 +28,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     app = 0;
     form = 0;
     buttonOk = 0;
-//    buttonCancel = 0;
+    buttonCancel = 0;
     isSelected = false;
 }
 
@@ -64,7 +64,7 @@ void Dialog::cmdOk()
         accept();
 }
 
-/*
+
 void Dialog::findCmdCancel()
 {
     buttonCancel = (QPushButton*)this->findChild("buttonCancel");
@@ -83,7 +83,7 @@ void Dialog::cmdCancel()
     else
         accept();
 }
-*/
+
 
 bool Dialog::isFormSelected()
 {
@@ -111,17 +111,41 @@ QObject* Dialog::findChild(QString name)
 
 void Dialog::keyPressEvent(QKeyEvent *event)
 {
+    if (buttonOk == 0)
+        findCmdOk();
+    if (buttonCancel == 0)
+        findCmdCancel();
+
     event->setAccepted(false);
-    if (event->modifiers() == Qt::ControlModifier)
+    if (!event->isAccepted())
     {
-        if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+        if (event->modifiers() == Qt::ControlModifier)
         {
-            buttonOk->click();
-            event->setAccepted(true);
-            return;
+            if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+            {
+                if (buttonOk != 0)
+                {
+                    buttonOk->click();
+                    event->setAccepted(true);
+                }
+            }
+        }
+        else
+        {
+            if (event->key() == Qt::Key_Escape)
+            {
+                if (buttonCancel != 0)
+                {
+                    buttonCancel->click();
+                    event->setAccepted(true);
+                }
+            }
         }
     }
-    QDialog::keyPressEvent(event);
+    if (!event->isAccepted())
+    {
+        QDialog::keyPressEvent(event);
+    }
 }
 
 

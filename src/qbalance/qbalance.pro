@@ -89,7 +89,8 @@ SOURCES += main.cpp \
     engine/eventloop.cpp \
     engine/documentscriptengine.cpp \
     openoffice/ooxmlengine.cpp \
-    serialport/qmyextserialport.cpp
+    serialport/qmyextserialport.cpp \
+    gui/myvalueeditor.cpp
 
 HEADERS +=  gui/passwordform.h \
     gui/form.h \
@@ -151,7 +152,8 @@ HEADERS +=  gui/passwordform.h \
     engine/eventloop.h \
     engine/documentscriptengine.h \
     openoffice/ooxmlengine.h \
-    serialport/qmyextserialport.h
+    serialport/qmyextserialport.h \
+    gui/myvalueeditor.h
 
 
 RESOURCES += ../../resources.qrc

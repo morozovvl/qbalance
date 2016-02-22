@@ -445,14 +445,14 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
             if (ipAddress.size() > 0)
             {
                 serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
-                app->timeOut(app->getConfig()->frNetDriverTimeOut);                                  // Подеждем, пока произойдет соенинение с сервером приложения
+                app->timeOut(app->getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
                 if (serialPort->getTcpClient()->isValid())
                 {
                     remote = true;
                     serialPort->setRemote(remote);
                     if (Connect(false))
                     {
-                        if (app->getConfig()->frConnectSignal)
+                        if (app->getConfigValue(FR_CONNECT_SIGNAL).toBool())
                             Beep();
                         result = true;
                     }
@@ -507,11 +507,11 @@ bool DriverFR::Connect(bool showError)
             connected = true;
 
             fr.PortNumber = 0;
-            fr.BaudRate = app->getConfig()->frDriverBaudRate;
+            fr.BaudRate = app->getConfigValue(FR_DRIVER_BOUD_RATE).toInt();
             if (remote)
-                fr.Timeout = app->getConfig()->frRemoteDriverTimeOut;
+                fr.Timeout = app->getConfigValue(FR_REMOTE_DRIVER_TIMEOUT).toInt();
             else
-                fr.Timeout = app->getConfig()->frLocalDriverTimeOut;
+                fr.Timeout = app->getConfigValue(FR_LOCAL_DRIVER_TIMEOUT).toInt();
             serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
             serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
 //            maxTries = 10;

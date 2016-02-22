@@ -191,32 +191,13 @@ int GUIFactory::showError(QString errorText) {
 }
 
 
-int GUIFactory::showCriticalError(QString errorText) {
-    QMdiSubWindow* window = mainWindow->getWorkSpace()->activeSubWindow();
-    QMessageBox msgBox;
-    msgBox.setWindowModality(Qt::ApplicationModal);
-    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
-    msgBox.setWindowTitle(QObject::trUtf8("Критическая ошибка!"));
-    msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setText(errorText);
-//    mainWindow->setUpdatesEnabled(false);
-    msgBox.show();
-    msgBox.activateWindow();
-    msgBox.raise();
-    msgBox.exec();
-//    mainWindow->setUpdatesEnabled(true);
-    if (window != 0)
-        mainWindow->getWorkSpace()->setActiveSubWindow(window);
-    return 0;
-}
-
-
 int GUIFactory::showMessage(QString message, QString question, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defButton) {
     int result = 0;
     QMdiSubWindow* window = 0;
     if (mainWindow != 0)
         window = mainWindow->getWorkSpace()->activeSubWindow();
-    QMessageBox msgBox;
+    QMessageBox msgBox(window);
+    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Внимание!"));
     msgBox.setText(message);
@@ -249,6 +230,7 @@ int GUIFactory::showYesNo(QString question)
 {
     return showMessage("", question);
 }
+
 
 bool GUIFactory::open() {
     mainWindow = new MainWindow(this);
