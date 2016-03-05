@@ -82,9 +82,11 @@ bool Dictionaries::addDictionary(QString dictName)
         dict->setDictionaries(this);
         dict->setPhotoEnabled(true);
 
-        if (dict->open()) {
-            dictionariesList.insert(dictName, dict);
+        dictionariesList.insert(dictName, dict);
+        if (dict->open())
+        {
             dictionariesNamesList.append(dictName);
+//            dict->initFormEvent();
             dict->setDictionaries(this);
 
             // Установим прототипы справочников
@@ -123,6 +125,8 @@ bool Dictionaries::addDictionary(QString dictName)
 
             return true;
         }
+        else
+            dictionariesList.remove(dictName);
     }
     return false;
 }

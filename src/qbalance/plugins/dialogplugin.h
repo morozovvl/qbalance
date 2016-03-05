@@ -48,4 +48,6 @@ private:
 
 };
 
+//Q_DECLARE_INTERFACE(DialogPlugin, "org.QBalance.DialogPlugin")
+
 #endif // DIALOGPLUGIN_H

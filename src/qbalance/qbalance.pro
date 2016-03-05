@@ -153,7 +153,8 @@ HEADERS +=  gui/passwordform.h \
     engine/documentscriptengine.h \
     openoffice/ooxmlengine.h \
     serialport/qmyextserialport.h \
-    gui/myvalueeditor.h
+    gui/myvalueeditor.h \
+    engine/reportcontextfunctions.h
 
 
 RESOURCES += ../../resources.qrc

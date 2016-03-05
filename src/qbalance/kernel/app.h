@@ -44,6 +44,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../bankterminal/bankterminal.h"
 #include "../serialport/qmyextserialport.h"
 #include "../barcodereader/barcodereader.h"
+#include "../cardcodereader/cardcodereader.h"
 
 class Dictionaries;
 class Topers;
@@ -90,6 +91,7 @@ enum ConfigVars {
     BAR_CODE_READER_NEEDED,
     BAR_CODE_READER_PORT,
     BAR_CODE_READER_BAUD_RATE,
+    BAR_CODE_READER_TIMEOUT,
     BANK_TERMINAL_NEEDED,
     BANK_TERMINAL_PRINT_WAIT_TIME,
     BANK_TERMINAL_PRINT_WAIT_MESSAGE,
@@ -113,10 +115,16 @@ public:
     static QString script;
     static QString scriptParameter;
     static bool    serverMode;
+    static bool loadDefaultConfig;
 
     TApplication(int& argc, char** argv);
     ~TApplication();
     Q_INVOKABLE virtual Dictionaries* getDictionaries();
+    Q_INVOKABLE virtual Dictionary* getDictionary(QString name) { return getDictionaries()->getDictionary(name); }
+    Q_INVOKABLE virtual Saldo* getSaldo(QString acc)  { return getDictionaries()->getSaldo(acc); }
+    Q_INVOKABLE virtual bool addDictionary(QString name)  { return getDictionaries()->addDictionary(name); }
+    Q_INVOKABLE virtual bool addSaldo(QString acc)  { return getDictionaries()->getSaldo(acc); }
+    Q_INVOKABLE virtual void removeDictionary(QString name)  { getDictionaries()->removeDictionary(name); }
     Q_INVOKABLE Documents* getDocuments(int);
     void removeDocuments(int opNumber);
     Q_INVOKABLE virtual DBFactory* getDBFactory() { return db; }
@@ -195,7 +203,7 @@ public:
     Q_INVOKABLE bool waitProcessEnd(QProcess *);
     virtual void barCodeReadyRead(QString);
     Q_INVOKABLE     bool    isBarCodeReaded() { return barCodeReaded; }
-    virtual bool readCardReader(QKeyEvent*);
+    virtual void readCardReader(QKeyEvent*);
 
     Q_INVOKABLE void capturePhoto(QString fileName = "", QString deviceName = "");    // Захватить кадр с видеокамеры и записать в базу
     Q_INVOKABLE void saveFileToServer(QString, QString, FileType, bool = false);
@@ -221,11 +229,12 @@ public:
     void saveCustomization();
     void loadFile();
     void printReportWithoutCleaning();
-    Q_INVOKABLE int runScript(QString);
+    Q_INVOKABLE virtual int runScript(QString);
     Q_INVOKABLE QString getScript() { return script; }                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter() { return scriptParameter; }
 
     Q_INVOKABLE void sendSMS(QString url, QString number, QString message, QString from = "");                     // Посылка СМС через сервис SMS.RU
+    Q_INVOKABLE void sendSMS(QString url, QString number);                               // Посылка СМС через сервис SMS.RU
 
     void    setScriptMode(bool mode) { scriptMode = mode; }
     bool    isScriptMode() { return scriptMode; }
@@ -274,8 +283,8 @@ private:
     static TApplication*    Exemplar;
     DBFactory*              db;
     BarCodeReader*          barCodeReader;
+    CardCodeReader*         cardCodeReader;
     bool                    barCodeReaded;
-    QString                 cardReaderCode;
     MessageWindow*          messagesWindow;
     int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
                                                                     // Если число положительное, то время на этих часах отстает

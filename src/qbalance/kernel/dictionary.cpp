@@ -82,6 +82,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     doSubmit = true;
     sqlCommand = "";
     nameIntIsCode = false;
+    sortedTable = true;
 }
 
 
@@ -373,7 +374,7 @@ void Dictionary::setForm(QString formName)
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
     parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
-//    openScriptEngine();
+
 }
 
 
@@ -587,15 +588,16 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
         if (lAutoSelect)
             form->setAutoSelect(true);
     }
-    else
-    {
-//        lock(false);
-    }
 }
 
 
 void Dictionary::setOrderClause(QString sOrder)
 {
+    if (!sortedTable)
+    {
+        Table::setOrderClause("");
+        return;
+    }
     if (sOrder.size() > 0)
     {
         Table::setOrderClause(sOrder);

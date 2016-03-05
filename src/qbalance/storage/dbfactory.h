@@ -272,11 +272,12 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, int column);
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, QString column);
     Q_INVOKABLE virtual QVariant getValue(QString command) { return getValue(command, 0, 0); }
+    Q_INVOKABLE virtual QSqlRecord getRecord(QString command, int row);
     Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
 
     bool    lockDocument(int);
     void    unlockDocument(int);
-    void clearLockedDocuementList();
+    void clearLockedDocumentList();
 
 private:
     QSqlDatabase*           db;

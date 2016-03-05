@@ -827,7 +827,6 @@ private:
     bool            locked;     // Фискальный регистратор заблокирован на период работы с клиентом
     QString         lockedByHost;   // IP адрес хоста, который заблокировал фискальник. Если заблокирован локальным хостом, то пустая строка
     struct timeval  timeout;
-    static BaudRateType LineSpeedVal[7];
     static unsigned commlen[0x100];
     static const char* errmsg[];
     static const char* errrecomendations[];

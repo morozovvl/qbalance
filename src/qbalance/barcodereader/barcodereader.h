@@ -28,7 +28,7 @@ class BarCodeReader : public QObject
     Q_OBJECT
 public:
     explicit BarCodeReader(QObject *parent = 0);
-    virtual bool open(QString = "");
+    virtual bool open(QString, int, int);
     virtual void close();
     virtual void setApp(TApplication* a) { app = a; }
     ~BarCodeReader();

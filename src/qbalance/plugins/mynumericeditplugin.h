@@ -47,6 +47,9 @@ public:
 private:
     bool m_initialized;
 };
+
+//Q_DECLARE_INTERFACE(MyNumericEditPlugin, "org.QBalance.MyNumericEditPlugin")
+
 #endif // MYNUMERICEDITPLUGIN_H
 
 

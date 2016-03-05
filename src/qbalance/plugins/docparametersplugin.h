@@ -47,4 +47,6 @@ private:
     bool m_initialized;
 };
 
+//Q_DECLARE_INTERFACE(DocParametersPlugin, "org.QBalance.DocParametersPlugin")
+
 #endif // DOCPARAMETERSPLUGIN_H

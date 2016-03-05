@@ -56,6 +56,8 @@ bool TApplication::sendCommandMode = false;
 GUIFactory* TApplication::gui          = 0;
 bool        TApplication::timeIsOut = false;
 QTimer      TApplication::timer;
+bool  TApplication::loadDefaultConfig = false;
+
 
 
 
@@ -76,6 +78,7 @@ TApplication::TApplication(int & argc, char** argv)
     driverFR = 0;
     barCodeReader = 0;
     barCodeReaded = false;
+    cardCodeReader = 0;
     bankTerminal = 0;
 
     driverFRisValid = false;
@@ -83,8 +86,6 @@ TApplication::TApplication(int & argc, char** argv)
     fsWebCamIsValid = true;                     // Поначалу будем считать, что утилита fsWebCam установлена
 
     reportTemplateType = OOXMLreportTemplate;
-
-    cardReaderCode = "";                        // Прочитанный код на магнитной карте
 
     if (!Exemplar)
     {
@@ -142,6 +143,8 @@ void TApplication::initConfig()
     setConfig("bcReader", BAR_CODE_READER_PORT, "COM порт", "/dev/ttyUSB0");
 #endif
     setConfig("bcReader", BAR_CODE_READER_BAUD_RATE, "Скорость", 6, true);
+    setConfig("bcReader", BAR_CODE_READER_TIMEOUT, "Таймаут, мс", 100);
+
 
     setConfigTypeName("bt", "Банковский терминал");
     setConfig("bt", BANK_TERMINAL_NEEDED, "Использовать банковский терминал", false);
@@ -273,7 +276,8 @@ bool TApplication::open() {
     gui = new GUIFactory();
 
     initConfig();
-    readSettings();
+    if (!loadDefaultConfig)
+        readSettings();
 
     if (!isScriptMode())
         openPlugins();
@@ -316,7 +320,7 @@ bool TApplication::open() {
 
                     secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
-                    if (getConfigValue(FR_NEEDED).toBool())
+                    if (getConfigValue(FR_NEEDED).toBool() && !isScriptMode())
                     {
                         if (driverFRisValid)
                             showMessageOnStatusBar("Найден фискальный регистратор.\n");
@@ -329,7 +333,7 @@ bool TApplication::open() {
                         }
                     }
 
-                    db->clearLockedDocuementList();
+                    db->clearLockedDocumentList();
 
                     lResult = true;     // Приложение удалось открыть
                     break;  // Выйдем из бесконечного цикла открытия БД
@@ -418,14 +422,19 @@ void    TApplication::openPlugins()
     }
 
     // Запустим сканер штрих-кодов, если есть его плагин
-    barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
-    if (barCodeReader != 0 && !isScriptMode())
+    if (getConfigValue(BAR_CODE_READER_NEEDED).toBool())
     {
-        barCodeReader->setApp(this);
-        if (!barCodeReader->open(getConfigValue(BAR_CODE_READER_PORT).toString()))
+        barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
+        if (barCodeReader != 0)
         {
-            barCodeReader->close();
-            barCodeReader = 0;
+            barCodeReader->setApp(this);
+            if (!barCodeReader->open(getConfigValue(BAR_CODE_READER_PORT).toString(),
+                                     getConfigValue(BAR_CODE_READER_BAUD_RATE).toInt(),
+                                     getConfigValue(BAR_CODE_READER_TIMEOUT).toInt()))
+            {
+                barCodeReader->close();
+                barCodeReader = 0;
+            }
         }
     }
 
@@ -441,6 +450,23 @@ void    TApplication::openPlugins()
                 bankTerminal->close();
                 bankTerminal = 0;
             }
+        }
+    }
+
+    // Запустим считыватель магнитных карт, если есть его плагин
+    if (getConfigValue(CARD_READER_NEEDED).toBool())
+    {
+        cardCodeReader = (CardCodeReader*)createPlugin("cardcodereader");
+        if (cardCodeReader != 0)
+        {
+            cardCodeReader->setApp(this);
+            if (!cardCodeReader->open())
+            {
+                cardCodeReader->close();
+                cardCodeReader = 0;
+            }
+            else
+                connect (cardCodeReader, SIGNAL(cardCodeReaded(QString)), this, SIGNAL(cardCodeReaded(QString)));
         }
     }
 }
@@ -848,38 +874,13 @@ void TApplication::barCodeReadyRead(QString barCodeString)
 }
 
 
-bool TApplication::readCardReader(QKeyEvent* keyEvent)
+void TApplication::readCardReader(QKeyEvent* keyEvent)
 {
-    // Обработаем поступление с клавиатуры кодов кард-ридера
-    QString text;
-
-    if (keyEvent->key() == 59 || keyEvent->key() == 1046)   // Если это клавиша ";" в английской или русской раскладке
-        text = ";";
-    else
-        text = keyEvent->text();
-
-    cardReaderCode.append(text);
-    QString crPrefix = getConfigValue(CARD_READER_PREFIX).toString();
-    int leftSize = cardReaderCode.size() <= crPrefix.size() ? cardReaderCode.size() : crPrefix.size();
-    if (leftSize > 0 && (crPrefix.left(leftSize) == cardReaderCode.left(leftSize)))   // Если начальные введенные символы начинают совпадать с префиксом
-    {                                                                // считывателя магнитных карт
-        if (crPrefix == cardReaderCode.left(leftSize))       // Если префикс полностью совпал
-        {
-            if (keyEvent->key() == 44 || keyEvent->key() == 63)     // Последовательность заканчивается клавишей "?"
-            {
-                QString cardCode = cardReaderCode;
-                cardCode.replace(crPrefix, "");
-                cardCode.chop(1);
-                emit cardCodeReaded(cardCode.trimmed());
-                cardReaderCode = "";
-            }
-        }
-        keyEvent->setAccepted(true);
-        return true;                // Строка, вводимая с клавиатуры (кард-ридера) начинает походить на префикс карты
+    if (getConfigValue(CARD_READER_NEEDED).toBool())
+    {
+        if (cardCodeReader != 0)
+            cardCodeReader->readCardReader(keyEvent);
     }
-    else
-        cardReaderCode = "";
-    return false;                   // Строка не похожа на префикс карты
 }
 
 
@@ -1052,6 +1053,12 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
     loop.exec();
     if (reply->error() != QNetworkReply::NoError)
         debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
+}
+
+
+void TApplication::sendSMS(QString number, QString message)
+{
+    sendSMS(getConst("СМС_URL").toString(), number, message, getConst("ОтправительСМС").toString());
 }
 
 

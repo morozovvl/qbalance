@@ -46,4 +46,7 @@ public:
 private:
     bool m_initialized;
 };
+
+//Q_DECLARE_INTERFACE(TableViewPlugin, "org.QBalance.TableViewPlugin")
+
 #endif /* TABLEVIEWPLUGIN_H */

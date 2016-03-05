@@ -63,6 +63,7 @@ bool readParameters(int argc, char *argv[]) {
             out << QObject::trUtf8("  -sp| --scriptparameter - Параметр для скрипта (имя файла или строка, которую скрипт должен сам разобрать)\n");
             out << QObject::trUtf8("  -sr| --server     - Запустить программу в режиме сервера\n");
             out << QObject::trUtf8("  -c | --command    - Послать команду хосту (адрес и порт д.б. заданы параметрами -h и -p, команда в параметре -s)\n");
+            out << QObject::trUtf8("  -dc| --def_conf   - Загрузить конфигурационные параметры по умолчанию\n");
             lContinue = false;
         }
         else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
@@ -142,6 +143,11 @@ bool readParameters(int argc, char *argv[]) {
                  QString(argv[i]).compare("--command", Qt::CaseInsensitive) == 0)
             {
                 TApplication::setSendCommandMode(true);
+            }
+        else if (QString(argv[i]).compare("-dc", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--def_conf", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::loadDefaultConfig = true;
             }
     }
     return lContinue;

@@ -91,8 +91,7 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 
 void Form::close()
 {
-    if (defaultForm)
-        writeSettings();
+    writeSettings();
     hide();
 }
 
@@ -423,6 +422,8 @@ void Form::readSettings()
         int h = settingValues.value("height", 200);
 
         widget->setGeometry(x, y, w, h);
+
+//        qDebug() << "readSettings" << configName << defaultForm << w << h;
     }
 }
 
@@ -431,17 +432,22 @@ void Form::writeSettings()
 {
     // Сохраним координаты и размеры окна
     QWidget* widget;
-    widget = (QWidget*)getSubWindow();
-    if (widget == 0)
+    if (defaultForm)
+    {
+        widget = (QWidget*)getSubWindow();
+        if (widget == 0)
+            widget = (QWidget*)formWidget;
+    }
+    else
         widget = (QWidget*)formWidget;
 
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings;
     settings.beginGroup(configName);
-    settings.setValue("x", widget->x());
-    settings.setValue("y", widget->y());
-    settings.setValue("width", widget->frameGeometry().width());
-    settings.setValue("height", widget->frameGeometry().height());
+    settings.setValue("x", widget->geometry().x());
+    settings.setValue("y", widget->geometry().y());
+    settings.setValue("width", widget->geometry().width());
+    settings.setValue("height", widget->geometry().height());
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
@@ -454,5 +460,6 @@ void Form::writeSettings()
         db->setConfig(configName, "height", QString("%1").arg(widget->geometry().height()));
         app->showMessageOnStatusBar("");
     }
+//    qDebug() << "writeSettings" << configName << defaultForm << widget->geometry().width() << widget->geometry().height();
 }
 

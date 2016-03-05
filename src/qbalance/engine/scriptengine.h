@@ -47,12 +47,11 @@ class ScriptEngine : public QScriptEngine {
 public:
     ScriptEngine(Essence* parent = 0);
     ~ScriptEngine();
-    bool open(QString fileName = "");
-    void close();
-    bool evaluate();
-//    QScriptValue evaluate(const QString &, const QString & = QString(), int = 1);
-    QScriptValue evaluate(const QString &, const QString &, int);
-    QScriptValue evaluate(const QScriptProgram &);
+    virtual bool open(QString fileName = "");
+    virtual void close();
+    virtual bool evaluate();
+    virtual QScriptValue evaluate(const QString &, const QString &, int);
+    virtual QScriptValue evaluate(const QScriptProgram &);
     QString getErrorMessage() { return errorMessage; }
     void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
     int getScriptResult() { return scriptResult; }
@@ -62,34 +61,34 @@ public:
     Document* getDocument() { return document; }
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
-    void    appendEvent(QString, EventFunction*);
-    QString getBlankScripts();
-    void eventAfterCalculate();
-    void eventParametersChanged();
-    bool eventBeforeAddString();
-    void eventAfterAddString();
-    bool eventAfterShowNextDicts();
-    void eventBeforeDeleteString();
-    void eventAfterDeleteString();
-    void eventInitForm(Form*);
-    void eventBeforeShowForm(Form*);
-    void eventAfterShowForm(Form*);
-    void eventBeforeHideForm(Form*);
-    void eventAfterHideForm(Form*);
-    void eventCloseForm(Form*);
-    void eventImport(Form*);
-    void eventExport(Form*);
-    void eventCalcTable();
-    void eventSetEnabled(bool);
-    void eventAfterRowChanged();
-    void eventBeforeRowChanged();
-    void eventPhotoLoaded();
-    void eventPreparePrintValues();
-    QString preparePictureUrl(Essence*);
-    QString getFilter(QString = "");
-    void eventBarCodeReaded(QString);
-    void eventCardCodeReaded(QString);
-    bool eventKeyPressed(int, int);
+    virtual void    appendEvent(QString, EventFunction*);
+    virtual QString getBlankScripts();
+    virtual void eventAfterCalculate();
+    virtual void eventParametersChanged();
+    virtual bool eventBeforeAddString();
+    virtual void eventAfterAddString();
+    virtual bool eventAfterShowNextDicts();
+    virtual void eventBeforeDeleteString();
+    virtual void eventAfterDeleteString();
+    virtual void eventInitForm(Form*);
+    virtual void eventBeforeShowForm(Form*);
+    virtual void eventAfterShowForm(Form*);
+    virtual void eventBeforeHideForm(Form*);
+    virtual void eventAfterHideForm(Form*);
+    virtual void eventCloseForm(Form*);
+    virtual void eventImport(Form*);
+    virtual void eventExport(Form*);
+    virtual void eventCalcTable();
+    virtual void eventSetEnabled(bool);
+    virtual void eventAfterRowChanged();
+    virtual void eventBeforeRowChanged();
+    virtual void eventPhotoLoaded();
+    virtual void eventPreparePrintValues();
+    virtual QString preparePictureUrl(Essence*);
+    virtual QString getFilter(QString = "");
+    virtual void eventBarCodeReaded(QString);
+    virtual void eventCardCodeReaded(QString);
+    virtual bool eventKeyPressed(int, int);
     friend bool isNumeric(ScriptEngine engine, QString field);
     static QString loadScript(QString);
     static void removeScript(QString);

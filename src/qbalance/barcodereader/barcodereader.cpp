@@ -35,12 +35,14 @@ BarCodeReader::~BarCodeReader()
 }
 
 
-bool BarCodeReader::open(QString port)
+bool BarCodeReader::open(QString port, int rate, int timeout)
 {
     bool result = false;
     serialPort = app->getSerialPort(port, QextSerialPort::EventDriven);
     if (serialPort != 0)
     {
+        serialPort->setBaudRate(rate);
+        serialPort->setTimeout(timeout);
         if (serialPort->open(QIODevice::ReadWrite))
         {
             connect(serialPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
@@ -61,20 +63,18 @@ void BarCodeReader::close()
 
 void BarCodeReader::barCodeReadyRead()
 {
-     if (serialPort->bytesAvailable())
-     {
-         QByteArray array = serialPort->readAll();
-         QString readedPart = QString::fromLatin1(array);
-         if (readedPart.right(1) == QString('\n'))
+    if (serialPort->bytesAvailable())
+    {
+         QString readedPart;
+         do
          {
-             barCodeString.append(readedPart);
-             QString bcString = barCodeString;
-             barCodeString = "";
-             app->barCodeReadyRead(bcString);
-         }
-         else
-             barCodeString.append(readedPart);
-     }
+            readedPart = QString::fromLatin1(serialPort->readAll());
+            barCodeString.append(readedPart);
+         } while (readedPart.size() > 0);
+
+         app->barCodeReadyRead(barCodeString.trimmed());
+         barCodeString = "";
+    }
 }
 
 

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 set (PROJECTNAME qbalance)
 PROJECT(${PROJECTNAME} )
+set(CMAKE_AUTOMOC ON)
+
 
 #add_subdirectory(./src/qtscriptgenerator)
 #add_subdirectory(./src/qextserialport)

@@ -138,6 +138,7 @@ bool Documents::open()
 {
     if (operNumber > 0 && Essence::open())
     {     // Откроем этот справочник
+//        initFormEvent();
         prepareSelectCurrentRowCommand();
 
         tableModel->setTestSelect(true);

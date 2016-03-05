@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MYVALUEEDITOR_H
 #define MYVALUEEDITOR_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 #include "../kernel/app.h"
 
 class MyValueEditor : public QWidget

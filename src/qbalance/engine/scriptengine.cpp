@@ -567,6 +567,23 @@ void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
 }
 
 
+// класс MyProgressDialog
+Q_DECLARE_METATYPE(MyProgressDialog*)
+
+QScriptValue MyProgressDialogConstructor(QScriptContext *, QScriptEngine *engine) {
+     MyProgressDialog *object = new MyProgressDialog();
+     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
+QScriptValue MyProgressDialogToScriptValue(QScriptEngine *engine, MyProgressDialog* const &in) {
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+}
+
+void MyProgressDialogFromScriptValue(const QScriptValue &object, MyProgressDialog* &out) {
+    out = qobject_cast<MyProgressDialog*>(object.toQObject());
+}
+
+
 
 //================================================================================================
 // Реализация класса
@@ -590,6 +607,7 @@ ScriptEngine::ScriptEngine(Essence *par) : QScriptEngine()
             documents = document->getParent();
     }
     isSA = app->isSA();
+    script = "";
 }
 
 
@@ -667,6 +685,10 @@ void ScriptEngine::loadScriptObjects()
     // Объявим класс OOXMLEngine
     qScriptRegisterMetaType(this, OOXMLEngineToScriptValue, OOXMLEngineFromScriptValue);
     globalObject().setProperty("OOXMLEngine", newQMetaObject(&QObject::staticMetaObject, newFunction(OOXMLEngineConstructor)));
+
+    // Объявим класс MyProgressDialog
+    qScriptRegisterMetaType(this, MyProgressDialogToScriptValue, MyProgressDialogFromScriptValue);
+    globalObject().setProperty("ProgressDialog", newQMetaObject(&QObject::staticMetaObject, newFunction(MyProgressDialogConstructor)));
 
     // Объявим глобальные переменные и объекты
     if (parent != 0)

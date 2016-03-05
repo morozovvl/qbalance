@@ -45,7 +45,7 @@ public:
     virtual bool    setLock(bool lock);
     virtual void    setRemote(bool r) { remote = r; }
     virtual void    setMyTimeout(int t) { timeOut = t; }
-    virtual void    setBaudRate(BaudRateType rate) { QextSerialPort::setBaudRate(rate); }
+    virtual void    setBaudRate(int rate) { QextSerialPort::setBaudRate(LineSpeedVal[rate]); }
     virtual void    setTimeout(long timeOut) { QextSerialPort::setTimeout(timeOut); }
 
     // Работа с TCP соединением
@@ -68,6 +68,7 @@ private:
     QQueue<unsigned char> buffer;
     int                 tryReceiveExit;
     int                 timeOut;
+    static BaudRateType LineSpeedVal[7];
 
     void appendLog(bool, QString, bool = false);
 };

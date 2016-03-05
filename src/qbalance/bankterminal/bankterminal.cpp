@@ -54,7 +54,7 @@ bool BankTerminal::open()
                 result = true;
             }
             else
-                app->showError(QObject::trUtf8("Фискальный регистратор не обнаружен"));
+                app->showError(QObject::trUtf8("Фискальный регистратор, необходимый для банковского терминала, не обнаружен"));
         }
         else
             app->showError(QObject::trUtf8("Программа банковского терминала не обнаружена"));

@@ -75,3 +75,5 @@ void DocParametersPlugin::initialize( QDesignerFormEditorInterface *core ) {
         return;
     m_initialized = true;
 }
+
+

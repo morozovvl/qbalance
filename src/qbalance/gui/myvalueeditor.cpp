@@ -34,11 +34,6 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
         ((QComboBox*)widget)->setCurrentIndex(value->value.toInt());
         connect (widget, SIGNAL(activated(int)), this, SLOT(editingFinished(int)));
     }
-    else if (value->value.type() == QVariant::String)
-    {
-        widget = new QLineEdit(value->value.toString(), this);
-        connect (widget, SIGNAL(editingFinished()), this, SLOT(editingFinished()));
-    }
     else if (value->value.type() == QVariant::Bool)
     {
         widget = new QCheckBox(this);
@@ -46,6 +41,11 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
         Qt::CheckState state = value->value.toBool() ? Qt::Checked : Qt::Unchecked;
         ((QCheckBox*)widget)->setCheckState(state);
         connect (widget, SIGNAL(stateChanged(int)), this, SLOT(editingFinished(int)));
+    }
+    else
+    {
+        widget = new QLineEdit(value->value.toString(), this);
+        connect (widget, SIGNAL(editingFinished()), this, SLOT(editingFinished()));
     }
 }
 

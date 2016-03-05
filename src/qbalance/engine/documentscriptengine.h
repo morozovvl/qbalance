@@ -33,12 +33,12 @@ class DocumentScriptEngine : public ScriptEngine
 public:
     DocumentScriptEngine(Essence *parent = 0);
     DocumentScriptEngine(QHash<QString, QVariant>*, Essence *parent = 0);
-    void eventAppendFromQuery(QString, QSqlRecord*);
-    void eventBeforeLinePrint(int);
-    void eventAfterLinePrint(int);
-    void eventBeforeTotalPrint();
+    virtual void eventAppendFromQuery(QString, QSqlRecord*);
+    virtual void eventBeforeLinePrint(int);
+    virtual void eventAfterLinePrint(int);
+    virtual void eventBeforeTotalPrint();
     virtual QHash<QString, EventFunction>* getEventsList();
-    ReportContext* getReportContext() { return reportContext; }
+    virtual ReportContext* getReportContext() { return reportContext; }
 
 protected:
     virtual void loadScriptObjects();

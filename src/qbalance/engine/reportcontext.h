@@ -33,10 +33,10 @@ class ReportContext : public QObject
 public:
     explicit ReportContext(QHash<QString, QVariant>*, QObject *parent = 0);
     Q_INVOKABLE int count() { return data->count(); }
-    Q_INVOKABLE QVariant getValue(QString);
-    Q_INVOKABLE QVariant getValue(QString, int);
-    Q_INVOKABLE void setValue(QString, QVariant);
-    Q_INVOKABLE void setValue(QString, QVariant, int);
+    Q_INVOKABLE virtual QVariant getValue(QString);
+    Q_INVOKABLE virtual QVariant getValue(QString, int);
+    Q_INVOKABLE virtual void setValue(QString, QVariant);
+    Q_INVOKABLE virtual void setValue(QString, QVariant, int);
     Q_INVOKABLE QHash<QString, QVariant>* getData() { return data; }
     Q_INVOKABLE QList<QString> getKeysList() { return data->keys(); }
     Q_INVOKABLE void removeValue(QString key);    // Удалить значение, ключ которого начинается с key
@@ -47,7 +47,7 @@ public:
     Q_INVOKABLE void setShowRepeatValue(bool rep) { showRepeat = rep; }
     Q_INVOKABLE void setTableName(QString name) { tableName = name; }
     QString getTableName() { return tableName; }
-    Q_INVOKABLE void appendPrintValues(QString, QSqlQuery*);
+    Q_INVOKABLE virtual void appendPrintValues(QString, QSqlQuery*);
 
 private:
     QHash<QString, QVariant>*    data;

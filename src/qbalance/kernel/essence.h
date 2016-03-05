@@ -133,15 +133,15 @@ public:
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
-    void                evaluateEngine();
+    virtual void                evaluateEngine();
     virtual bool        calculate();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
-    Q_INVOKABLE QScriptValue evaluateScript(QString);
+    Q_INVOKABLE virtual QScriptValue evaluateScript(QString);
 
 
 // Скриптовые события
-    void                initFormEvent(Form *);
+    void                initFormEvent();
     void                beforeShowFormEvent(Form *);
     void                afterShowFormEvent(Form *);
     void                beforeHideFormEvent(Form *);

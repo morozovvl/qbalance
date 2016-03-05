@@ -424,7 +424,7 @@ QString Essence::getPhotoFile(QString copyTo)
                             app->saveFileToServer(file, localFile, PictureFileType, true);
                         if (copyTo.size() > 0)
                         {
-                            app->saveFileToServer(app->getPhotosPath(copyTo), copyTo, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
+                            app->saveFileToServer(file, copyTo, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
                         }
                     }
                 }
@@ -658,7 +658,7 @@ void Essence::openScriptEngine()
         if (dictionaries != 0 && dictionaries->getDocument() != 0)          // Если этот справочник является частью документа
             scriptEngine->setIsDocumentScript(true);                                             // То обозначим контекст выполнения скриптов
 
-        initFormEvent(form);
+        initFormEvent();
     }
 }
 
@@ -750,7 +750,7 @@ void Essence::load()
 }
 
 
-void Essence::initFormEvent(Form* form)
+void Essence::initFormEvent()
 {
     if (scriptEngineEnabled && getScriptEngine() != 0)
         getScriptEngine()->eventInitForm(form);

@@ -164,7 +164,9 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
 void TableView::keyPressEvent(QKeyEvent* event)
 {
-    if (app->readCardReader(event))
+    event->setAccepted(false);
+    app->readCardReader(event);
+    if (event->isAccepted())
     {
         return;
     }

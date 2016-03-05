@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 TcpClient* QMyExtSerialPort::tcpClient = 0;
+BaudRateType QMyExtSerialPort::LineSpeedVal[7] = {BAUD2400, BAUD4800, BAUD9600, BAUD19200, BAUD38400, BAUD57600, BAUD115200};
 
 
 QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject* parent): QextSerialPort(name, mode, parent)

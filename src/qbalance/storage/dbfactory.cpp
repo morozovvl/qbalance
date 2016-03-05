@@ -1756,6 +1756,9 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 }
                 accounts.next();
             }
+            if (!accFounded && toperT.crAcc.size() > 0)
+                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
+
             accounts.first();
             accFounded = false;
             while (accounts.isValid())
@@ -1807,11 +1810,8 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 }
                 accounts.next();
             }
-            if (!accFounded)
+            if (!accFounded && toperT.dbAcc.size() > 0)
                 TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
-
-            if (!accFounded)
-                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
 
             topersList->removeAt(i);
             topersList->insert(i, toperT);
@@ -2849,6 +2849,8 @@ bool DBFactory::execCommands()
 
     updateValues.clear();
 
+    qDebug() << commands;
+
     // Выполним все команды
     if (commands.count() > 1)                           // Если команд больше одной
     {
@@ -2936,6 +2938,18 @@ QVariant DBFactory::getOstSum(QString acc, int id)
 }
 
 
+QSqlRecord DBFactory::getRecord(QString command, int row)
+{
+    QSqlRecord result;
+    QSqlQuery data = execQuery(command);
+    if (data.seek(row))
+    {
+        result = data.record();
+    }
+    return result;
+}
+
+
 bool DBFactory::lockDocument(int docId)
 {
     int id = getValue(QString("SELECT \"PID\" FROM \"блокдокументов\" WHERE \"КОД_ДОКУМЕНТЫ\" = %1;").arg(docId)).toInt();
@@ -2952,7 +2966,7 @@ void DBFactory::unlockDocument(int docId)
 }
 
 
-void DBFactory::clearLockedDocuementList()
+void DBFactory::clearLockedDocumentList()
 {
     exec(QString("DELETE FROM %1 WHERE %2 IN (SELECT %2 FROM %1 WHERE %2 NOT IN (SELECT pid FROM pg_stat_activity WHERE datname = '%3'))").arg("блокдокументов").arg("\"PID\"").arg(dbName));
 }

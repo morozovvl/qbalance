@@ -46,6 +46,7 @@ public:
     virtual bool                        calculate();
     Q_INVOKABLE virtual qulonglong      getId(int row = -1, bool = false);
     Q_INVOKABLE virtual void setOrderClause(QString = "");
+    Q_INVOKABLE virtual void setSorted(bool sorted) { sortedTable = sorted; }
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual void setValue(qulonglong, QString, QVariant);
     Q_INVOKABLE virtual void setSqlCommand(QString);
@@ -113,6 +114,7 @@ protected:
     bool            getIdRefresh;
     bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
                                     // или как часть имени
+    bool            sortedTable;
 
 
 private:

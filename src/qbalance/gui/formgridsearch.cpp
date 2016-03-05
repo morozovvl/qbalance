@@ -84,7 +84,6 @@ void FormGridSearch::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
 void FormGridSearch::close()
 {
-    writeSettings();
     if (defaultForm)
     {
         if (parameters != 0)

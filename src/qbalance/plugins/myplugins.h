@@ -36,7 +36,6 @@ class MyPlugins: public QObject, public QDesignerCustomWidgetCollectionInterface
 #if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QBalance.MyPlugins")
 #endif
-
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
 public:
@@ -47,5 +46,7 @@ public:
 private:
     QList<QDesignerCustomWidgetInterface*> widgets;
 };
+
+//Q_DECLARE_INTERFACE(MyPlugins, "org.QBalance.MyPlugins")
 
 #endif // MYPLUGINS_H

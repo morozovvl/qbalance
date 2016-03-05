@@ -59,7 +59,6 @@ unsigned DriverFR::commlen[0x100] =
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,255,  0,  0  // 0xf0 - 0xff
 };
 
-BaudRateType DriverFR::LineSpeedVal[7] = {BAUD2400, BAUD4800, BAUD9600, BAUD19200, BAUD38400, BAUD57600, BAUD115200};
 
 const char* DriverFR::errmsg[] =
 {
@@ -428,7 +427,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
         serialPort->setRemote(false);
         // Сначала поищем фискальник на этом компьютере
 
-        serialPort->setBaudRate(LineSpeedVal[rate]);
+        serialPort->setBaudRate(rate);
         serialPort->setTimeout(timeout);
         if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
         {

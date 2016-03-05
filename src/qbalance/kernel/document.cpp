@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QModelIndex>
-#include <QtGui/QProgressBar>
 #include <QtCore/QXmlStreamWriter>
 #include <QtCore/QXmlStreamReader>
 #include <QtCore/QDebug>
@@ -32,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/searchparameters.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
+#include "../gui/myprogressdialog.h"
 
 
 Document::Document(int oper, Documents* par): Essence()
@@ -86,6 +86,7 @@ Document::Document(int oper, Documents* par): Essence()
     lUpdateable = true;
     isDictionary = false;
     lIsDocument = true;
+    addingFromQuery = false;
 }
 
 
@@ -266,25 +267,52 @@ int Document::addFromQuery(QString queryName)
     if (queryName.size() > 0 && checkConstDicts())
     {
         QSqlRecord record;
-        if (db->isTableExists(queryName))
+        QSqlQuery queryData;
+        if (db->getDictionariesProperties(queryName).value(db->getObjectName("доступ_к_справочникам.меню")).toBool())
         {
-            QSqlQuery queryData = db->execQuery(QString("SELECT * FROM %1;").arg(queryName));
-            QProgressBar progressBar(TApplication::exemplar()->getMainWindow());
-            progressBar.setMaximum(queryData.size());
-            progressBar.show();
+            Dictionary* dict = app->getDictionaries()->getDictionary(queryName);
+            if (dict != 0)
+            {
+                dict->exec();
+                if (dict->isFormSelected())
+                {
+                    queryData = dict->getTableModel()->query();
+                }
+                else
+                    return 0;       // Пользователь решил выйти
+            }
+        }
+        if (!queryData.first())
+        {
+            if (db->isTableExists(queryName))
+            {
+                queryData = db->execQuery(QString("SELECT * FROM %1;").arg(queryName));
+            }
+        }
+        if (queryData.first())
+        {
+            addingFromQuery = true;
+            MyProgressDialog* progressDialog;
+            progressDialog = app->getMyProgressDialog(trUtf8("Ожидайте окончания работы запроса..."));
+            progressDialog->resize(600, progressDialog->height());
+            progressDialog->setMaximum(queryData.size());
+            progressDialog->show();
+
             int i = 0;
             db->beginTransaction();
-            while (queryData.next())
-            {
+            do {
                 record = queryData.record();
                 ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
                 i++;
-                progressBar.setValue(i);
-            }
+                progressDialog->setValue(i);
+            } while (queryData.next());
             calcItog();
             saveChanges();
             db->commitTransaction();
+            progressDialog->hide();
+            delete progressDialog;
             query();
+            addingFromQuery = false;
             return queryData.size();
         }
         else
@@ -835,7 +863,6 @@ void Document::setForm(QString formName)
     form->appendToolTip("buttonLoad", trUtf8("Импорт документа"));
 
     form->open(parentForm, (Document*)this, formName.size() == 0 ? QString("Документ%1").arg(operNumber) : formName);
-//    openScriptEngine();
 }
 
 
@@ -1110,7 +1137,7 @@ int Document::appendDocString()
         }
         setCurrentRow(newRow);
         updateCurrentRow(result);
-        if (getScriptEngine() != 0)
+        if (getScriptEngine() != 0 && !addingFromQuery)
         {
             saveOldValues();
             getScriptEngine()->eventAfterAddString();

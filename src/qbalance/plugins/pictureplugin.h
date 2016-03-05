@@ -46,4 +46,7 @@ public:
 private:
     bool m_initialized;
 };
+
+//Q_DECLARE_INTERFACE(PicturePlugin, "org.QBalance.PicturePlugin")
+
 #endif /* PICTUREPLUGIN_H */

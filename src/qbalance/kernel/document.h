@@ -115,13 +115,14 @@ private:
     bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
     QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
     QString                         selectStatement;
-    QHash<QString, QVariant>         oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
+    QHash<QString, QVariant>        oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
     QList<ToperType>*               topersList;
     bool                            localDictsOpened;
     bool                            docModified;
     bool                            quanAccount;        // В проводках есть количественный учет
     bool                            singlePrv;          // Проводка простая (одиночная)
     bool                            locked;
+    bool                            addingFromQuery;
 
     bool showNextDict();
     void showItog();

@@ -28,6 +28,7 @@ MyProgressDialog::MyProgressDialog(QString title, QWidget *parent): QProgressDia
     setFixedWidth(600);
     setCancelButton(NULL);
     connect(this , SIGNAL(canceled()),this,SLOT(cancel()));
+    setVisible(false);
 }
 
 

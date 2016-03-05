@@ -46,4 +46,7 @@ public:
 private:
     bool m_initialized;
 };
+
+//Q_DECLARE_INTERFACE(SearchParametersPlugin, "org.QBalance.SearchParametersPlugin")
+
 #endif /* SEARCHPARAMETERSPLUGIN_H */
