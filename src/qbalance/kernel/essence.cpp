@@ -352,7 +352,7 @@ QString Essence::getPhotoFile(QString copyTo)
     if (phEnabled || copyTo.size() > 0)
     {
         // Сначала получим имя поля из которого будем брать значение идентификатора
-        if (photoIdField.size() == 0 && isDictionary)
+        if (photoIdField.size() == 0 && (isDictionary || app->getConfigValue(GET_PICTURE_FROM_SERVER_IN_DOCUMENT).toBool()))
         {
             // Если имя поля, из которого нужно брать идентификатор фотографии не установлено, то будем считать идентификатором код позиции
             photoIdField = db->getObjectName("код");

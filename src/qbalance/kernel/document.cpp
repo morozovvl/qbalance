@@ -456,13 +456,20 @@ void Document::setValue(QString name, QVariant value, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
         {
-            Essence::setValue(name, value, findFreePrv());
+//            Essence::setValue(name, value, findFreePrv());
+            QString fieldName = name.mid(__pos + 2);
+            QString command = QString("UPDATE проводки SET %1 = %2 WHERE ДОККОД = %3 AND НОМЕРОПЕР = %4;").arg(fieldName).arg(value.toString()).arg(getDocId()).arg(freePrv);
+            db->exec(command);
         }
         else
             Essence::setValue(name, value, row);
     }
     else
+    {
+        if (row == -1)
+            row = getCurrentRow();
         Essence::setValue(name, value, row);
+    }
 }
 
 
@@ -475,7 +482,10 @@ QVariant Document::getValue(QString name, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим получить значение из свободной проводки
         {
-            result = Essence::getValue(name, findFreePrv());
+//            result = Essence::getValue(name, findFreePrv());
+            QString fieldName = name.mid(__pos + 2);
+            QString command = QString("SELECT %1 FROM проводки WHERE ДОККОД = %2 AND НОМЕРОПЕР = %3 LIMIT 1;").arg(fieldName).arg(getDocId()).arg(freePrv);
+            result = db->getValue(command);
         }
         else
             result = Essence::getValue(name, row);
@@ -967,7 +977,18 @@ bool Document::setTableModel(int)
                 tableModel->setUpdateInfo(columnsProperties.value(i).name, columnsProperties.value(i).table, field, columnsProperties.value(i).type, columnsProperties.value(i).length, columnsProperties.value(i).precision, columnCount, keyColumn);
             // Создадим список атрибутов документа, которые могут добавляться при добавлении новой строки документа
             if (columnsProperties.value(i).table == attrName)
-                attrFields.append(columnsProperties.value(i).column);
+            {
+                QString fieldName = columnsProperties.value(i).column;
+                attrFields.append(fieldName);
+                QString idFieldName = db->getObjectName("код");
+                if (fieldName.left(4) == idFieldName + "_")
+                {        // Если поле ссылается на другую таблицу
+                    QString dictName = fieldName;
+                    dictName.remove(0, 4);
+                    Dictionary* dict = dictionaries->getDictionary(dictName);
+                    dict->setAutoLoaded(true);
+                }
+            }
             columnCount++;      // Считаем столбцы
         }
         return true;
@@ -1055,7 +1076,7 @@ int Document::appendDocString()
 
     foreach (QString dictName, getDictionariesList()->keys())
     {
-        Dictionary* dict = getDictionariesList()->value(dictName);
+        Dictionary* dict = dictionaries->getDictionary(dictName);
         if (dict->isAutoLoaded())
             prepareValue(dictName, dict);
     }

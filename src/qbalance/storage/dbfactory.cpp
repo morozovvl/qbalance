@@ -37,6 +37,7 @@ DBFactory::DBFactory()
     extDbExist = true;
     commands.clear();
     dbIsOpened = false;
+    updateNum = 0;
 }
 
 
@@ -109,38 +110,58 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
         //Drake
         //Нет смысла создавать локальный временный экземпляр в куче
         //Лучше на стеке - система его удалит
-        QDir dir;
         for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
         {
-            if (dir.exists(*script))
-            {
-                QString command;
-                QProcess proc;
-                QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-                env.insert("PGPASSWORD", password);
-                env.insert("PGCLIENTENCODING", TApplication::encoding());
-                proc.setProcessEnvironment(env);
-                command = QString("psql -h %1 -p %2 -U postgres -f %3 %4").arg(hostName, QString::number(port), *script, dbName);
-                proc.start(command);
-                lResult = proc.waitForStarted();
-                if (!lResult)
-                {// выдадим сообщение об ошибке и выйдем из цикла
-                    TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить psql"));
-                }
-                else
-                {
-                    proc.waitForFinished(-1);
-                    if (proc.exitStatus() == QProcess::CrashExit)
-                    {
-                        TApplication::exemplar()->showError(QString(QObject::trUtf8("Файл инициализации <%1> по каким то причинам не загрузился.")).arg(*script));
-                    }
-                }
-            }
+            lResult = execPSql(*script, "postgres", password);
         }
         command = QString("ALTER DATABASE %1 OWNER TO %2;").arg(dbName).arg("sa");
         exec(command);
     }
     return lResult;
+}
+
+
+bool DBFactory::execPSql(QString script, QString user, QString password)
+{
+    bool result = false;
+    if (QDir().exists(script))
+    {
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert("PGPASSWORD", password);
+        env.insert("PGCLIENTENCODING", TApplication::encoding());
+        QProcess* proc = new QProcess();
+        proc->setWorkingDirectory(TApplication::exemplar()->applicationDirPath());
+        proc->setProcessEnvironment(env);
+        QString command = QString("PGPASSWORD=%6 psql -h %1 -p %2 -U %3 %4 < %5").arg(hostName).arg(port).arg(user).arg(dbName).arg(script).arg(password);
+//        QString command = "psql --help";
+        qDebug() << TApplication::exemplar()->applicationDirPath();
+        qDebug() << command;
+        proc->setStandardOutputFile("./result");
+        proc->start(command);
+        result = proc->waitForStarted();
+        qDebug() << result << proc->error();
+        qDebug() << proc->readAllStandardError() << proc->readAllStandardOutput();
+        if (!result)
+        {// выдадим сообщение об ошибке и выйдем из цикла
+//            foreach (QString line, env.toStringList())
+//                qDebug() << line;
+            qDebug() << proc->readAllStandardError() << proc->readAllStandardOutput();
+            TApplication::exemplar()->showError(QString(QObject::trUtf8("Не удалось запустить psql. %1")).arg(QString().append(proc->readAllStandardError())));
+        }
+        else
+        {
+            result = proc->waitForFinished();
+            qDebug() << proc->error();
+            if (proc->exitStatus() == QProcess::CrashExit)
+            {
+                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не удалось выполнить файл <%1>.")).arg(script));
+            }
+        }
+        delete proc;
+    }
+    else
+        TApplication::exemplar()->showError(QString(QObject::trUtf8("Не существует файл <%1>.")).arg(script));
+    return result;
 }
 
 
@@ -282,6 +303,12 @@ void DBFactory::loadSystemTables()
     dictionaries.clear();
     dictionaries = execQuery(QString("SELECT * FROM %1 ORDER BY %2;").arg(getObjectNameCom("справочники")).arg(getObjectNameCom("справочники.имя")));
 
+    QSqlQuery query = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("systables")));
+    while (query.next())
+    {
+        sysTables.append(query.value(0).toString());
+    }
+
     reloadColumnHeaders();
 }
 
@@ -353,6 +380,30 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
     }
     delete query;
     return lResult;
+}
+
+
+bool DBFactory::execQueryFile(QString fileName, bool showError)
+{
+    bool result = false;
+    QFile file(fileName);
+    if (file.open(QFile::ReadOnly))
+    {
+        QString script = QString().append(file.readAll());
+        if (script.size() > 0)
+            result = exec(script, showError);
+        file.close();
+    }
+    return result;
+}
+
+
+
+bool DBFactory::execSystem(QString command, QString tableName)
+{
+    if (sysTables.contains(tableName))
+        saveUpdate(command);
+    return exec(command);
 }
 
 
@@ -844,26 +895,26 @@ bool DBFactory::setTableGuiName(QString tableName, QString menuName, QString for
                                                                             .arg(formName)
                                                                             .arg(getObjectNameCom("справочники.имя"))
                                                                             .arg(tableName);
-    return exec(command);
+    return execSystem(command, "справочники");
 }
 
 
 bool DBFactory::renameTableColumn(QString table, QString oldColumnName, QString newColumnName)
 {
     clearError();
-    exec(QString("ALTER TABLE %1 RENAME COLUMN %2 TO %3;").arg(table).arg(oldColumnName).arg(newColumnName));
+    execSystem(QString("ALTER TABLE %1 RENAME COLUMN %2 TO %3;").arg(table).arg(oldColumnName).arg(newColumnName), table);
     QSqlQuery dict = execQuery(QString("SELECT %1 FROM %2 WHERE %3 = '" + table + "';").arg(getObjectNameCom("справочники.код"))
                                                                                        .arg(getObjectNameCom("справочники"))
                                                                                        .arg(getObjectNameCom("справочники.имя")));
     dict.first();
     if (dict.isValid())
     {
-        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %2 = '%3';").arg(getObjectNameCom("столбцы"))
+        return execSystem(QString("UPDATE %1 SET %2 = '%3' WHERE \"%4\" = %5 AND %2 = '%3';").arg(getObjectNameCom("столбцы"))
                                                                                    .arg(getObjectNameCom("столбцы.имя"))
                                                                                    .arg(newColumnName)
                                                                                    .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
                                                                                    .arg(dict.value(0).toInt())
-                                                                                   .arg(oldColumnName));
+                                                                                   .arg(oldColumnName), "столбцы");
     }
     return false;
 }
@@ -926,11 +977,12 @@ QSqlQuery DBFactory::getToper(int operNumber)
 bool DBFactory::deleteToper(int operNumber, int operNumber1)
 {
     clearError();
-    return exec(QString("DELETE FROM %1 WHERE %2=%3 AND %4>=%5;").arg(getObjectNameCom("топер"))
+    return execSystem(QString("DELETE FROM %1 WHERE %2=%3 AND %4>=%5;").arg(getObjectNameCom("топер"))
                                                              .arg(getObjectNameCom("топер.опер"))
                                                              .arg(operNumber)
                                                              .arg(getObjectNameCom("топер.номер"))
-                                                             .arg(operNumber1));
+                                                             .arg(operNumber1),
+                                                             "топер");
 }
 
 
@@ -949,15 +1001,18 @@ bool DBFactory::deleteAllToperInfo(int operNumber)
             return false;
         }
     beginTransaction();
-    exec(QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("столбцы"))
+    execSystem(QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("столбцы"))
                                                 .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
-                                                .arg(getDictionaryId(QString("Документ%1").arg(operNumber))));
-    exec(QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("топер"))
+                                                .arg(getDictionaryId(QString("Документ%1").arg(operNumber))),
+                                                "столбцы");
+    execSystem(QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("топер"))
                                                  .arg(getObjectNameCom("топер.опер"))
-                                                 .arg(operNumber));
-    exec(QString("DELETE FROM %1 WHERE %2 = '%3';").arg(getObjectNameCom("файлы"))
+                                                 .arg(operNumber),
+                                                 "топер");
+    execSystem(QString("DELETE FROM %1 WHERE %2 = '%3';").arg(getObjectNameCom("файлы"))
                                                    .arg(getObjectNameCom("файлы.имя"))
-                                                   .arg(TApplication::exemplar()->getScriptFileName(operNumber)));
+                                                   .arg(TApplication::exemplar()->getScriptFileName(operNumber)),
+                                                    "файлы");
     commitTransaction();
     }
     return true;
@@ -1041,7 +1096,7 @@ bool DBFactory::addToperPrv(int operNumber, int operNumber1, QString name, QStri
                                                                                                  .arg(freePrv ? "true" : "false")
                                                                                                  .arg(attribute ? "true" : "false");
     }
-    return exec(command);
+    return execSystem(command, "топер");
 }
 
 
@@ -1144,7 +1199,7 @@ bool DBFactory::removeColumnHeaders(int tableId)
     command = QString("DELETE FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("столбцы"))
                                                       .arg(getObjectNameCom("столбцы.код_vw_справочники_со_столбцами"))
                                                       .arg(tableId);
-    return exec(command);
+    return execSystem(command, "столбцы");
 }
 
 
@@ -1166,7 +1221,7 @@ bool DBFactory::appendColumnHeader(int mainTableId, int tableId, QString column,
             .arg(number)
             .arg(readOnly ? "true" : "false")
             .arg(tableId);
-    return exec(command);
+    return execSystem(command, "столбцы");
 }
 
 
@@ -1596,8 +1651,10 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
-        if (!extend)
-            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+        if (getFileCheckSum(fileName, type, extend) != size)
+        {
+            if (!extend)
+                text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1607,8 +1664,8 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(type)
                                                                                   .arg(getObjectNameCom("файлы.датавремя"))
                                                                                   .arg(QString(fileData.toHex()));
-        else
-            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+            else
+                text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1617,6 +1674,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(getObjectNameCom("файлы.тип"))
                                                                                   .arg(type)
                                                                                   .arg(QString(fileData.toHex()));
+        }
     }
     else
     {
@@ -1630,7 +1688,12 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(size)
                                                                                   .arg(QString(fileData.toHex()));
     }
-    exec(text, true, (extend && extDbExist) ? dbExtend : db);
+    if (text.size() > 0)
+    {
+        exec(text, true, (extend && extDbExist) ? dbExtend : db);
+        if (!extend)
+            saveUpdate(text);
+    }
 }
 
 
@@ -2460,7 +2523,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
         {   // Если имеются атрибуты для документа в данной операции
             QString attrName = QString("%1%2").arg(getObjectName("атрибуты")).arg(oper).toLower();
             getColumnsProperties(&fields, attrName);
-            selectClause += ",";
+            selectClause += ", a.*,";
             QString attrSelectClause = "";
             QString attrFromClause = "";
             foreach (QString fieldName, getFieldsList(attrName, 0))
@@ -2472,7 +2535,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     QString alias = QString("%1").arg(fieldName.toUpper());
                     if (!columns.contains(alias))
                     {
-                        selectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName.toUpper()).arg(alias));
+//                        selectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName.toUpper()).arg(alias));
                         columns.append(alias);
                     }
                     attrSelectClause.append(QString("a.\"%1\" AS %2,").arg(fieldName).arg(fieldName.toUpper()));
@@ -2486,7 +2549,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                         attrSelectClause.append(QString("\"%1\".\"%3\" AS \"%2__%4\",").arg(dictName).arg(dictName.toUpper()).arg(dictFieldName).arg(dictFieldName.toUpper()));
                         if (!columns.contains(alias))
                         {
-                            selectClause.append(QString("a.\"%1\",").arg(alias));
+//                            selectClause.append(QString("a.\"%1\",").arg(alias));
                             for (int i = 0; i < fields.count(); i++)
                                 if (fields.at(i).table == dictName && fields.at(i).name.toUpper() == dictFieldName.toUpper() && columnsProperties != 0)
                                     addColumnProperties(columnsProperties, dictName, QString("%1__%2").arg(dictName).arg(dictFieldName.toUpper()), fields.at(i).type, fields.at(i).length, fields.at(i).precision, true, true);
@@ -2501,7 +2564,7 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                     attrSelectClause.append(QString("a.\"%1\" AS \"%2\",").arg(fieldName).arg(fieldName.toUpper()));
                     if (!columns.contains(alias))
                     {
-                        selectClause.append(QString("a.\"%1\" AS \"%2\",").arg(fieldName.toUpper()).arg(alias));
+//                        selectClause.append(QString("a.\"%1\" AS \"%2\",").arg(fieldName.toUpper()).arg(alias));
                         for (int i = 0; i < fields.count(); i++)
                             if (fields.at(i).table == attrName && fields.at(i).name.toUpper() == fieldName.toUpper() && columnsProperties != 0)
                                 addColumnProperties(columnsProperties, attrName, fieldName, fields.at(i).type, fields.at(i).length, fields.at(i).precision, false, false);
@@ -2623,12 +2686,13 @@ bool DBFactory::setToperSignleString(int operNumber, bool singleString)
                                                                                      .arg(getObjectNameCom("vw_топер.номер")));
     if (query.first())
     {   // Если операция существует
-        return exec(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
+        return execSystem(QString("UPDATE %1 SET %2 = %3 WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
                                                                               .arg(getObjectNameCom("топер.однаоперация"))
                                                                               .arg(singleString ? "true" : "false")
                                                                               .arg(getObjectNameCom("топер.опер"))
                                                                               .arg(operNumber)
-                                                                              .arg(getObjectNameCom("топер.номер")));
+                                                                              .arg(getObjectNameCom("топер.номер")),
+                                                                              "топер");
     }
     return false;
 }
@@ -2659,12 +2723,13 @@ bool DBFactory::setToperNumerator(int operNumber, QString numerator)
                                                                                      .arg(getObjectNameCom("топер.номер")));
     if (query.first())
     {   // Если операция существует
-        return exec(QString("UPDATE %1 SET %2 = '%3' WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
+        return execSystem(QString("UPDATE %1 SET %2 = '%3' WHERE %4 = %5 AND (%6 = 0 OR %6 = 1);").arg(getObjectNameCom("топер"))
                                                                                 .arg(getObjectNameCom("топер.нумератор"))
                                                                                 .arg(numerator.trimmed())
                                                                                 .arg(getObjectNameCom("топер.опер"))
                                                                                 .arg(operNumber)
-                                                                                .arg(getObjectNameCom("топер.номер")));
+                                                                                .arg(getObjectNameCom("топер.номер")),
+                                                                                 "топер");
     }
     return false;
 }
@@ -2692,7 +2757,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
                                                                                              .arg(operNumber)
                                                                                              .arg(getObjectNameCom("доступ.имя_пользователи"))
                                                                                              .arg(user);
-        exec(command);
+        execSystem(command, "доступ");
     }
     else
     {
@@ -2705,7 +2770,7 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
                                                                                          .arg(operNumber)
                                                                                          .arg(user)
                                                                                          .arg(menu ? "true" : "false");
-        exec(command);
+        execSystem(command, "доступ");
     }
 
 }
@@ -2755,12 +2820,12 @@ void DBFactory::setConfig(QString config, QString name, QString value)
     if (query.value(0).toInt() > 0)     // Если уже есть запись о конфигурации
     {
         command = QString("UPDATE configs SET value = '%1' WHERE \"group\" = '%2' AND name = '%3';").arg(value).arg(config).arg(name);
-        exec(command);
+        execSystem(command, "configs");
     }
     else
     {
         command = QString("INSERT INTO configs (\"group\", name, value) VALUES ('%1', '%2', '%3');").arg(config).arg(name).arg(value);
-        exec(command);
+        execSystem(command, "configs");
     }
 }
 
@@ -2843,13 +2908,13 @@ bool DBFactory::execCommands()
             {
                 command = QString("UPDATE \"%1\" SET %2 WHERE %3=%4;").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
                 appendCommand(command);     // Добавим команду к списку готовых команд
+                if (sysTables.contains(table))
+                    saveUpdate(command);
             }
         }
     }
 
     updateValues.clear();
-
-    qDebug() << commands;
 
     // Выполним все команды
     if (commands.count() > 1)                           // Если команд больше одной
@@ -2970,3 +3035,91 @@ void DBFactory::clearLockedDocumentList()
 {
     exec(QString("DELETE FROM %1 WHERE %2 IN (SELECT %2 FROM %1 WHERE %2 NOT IN (SELECT pid FROM pg_stat_activity WHERE datname = '%3'))").arg("блокдокументов").arg("\"PID\"").arg(dbName));
 }
+
+
+void DBFactory::saveUpdate(QString value)
+{
+    if (TApplication::exemplar()->isSA() && TApplication::exemplar()->getConfigValue(SAVE_DB_UPDATES_TO_LOCAL).toBool())
+    {
+        QString templateString = TApplication::exemplar()->applicationDirPath().append("/db_updates/").append(dbName).append("/%1.sql");
+        QString fileName;
+        if (updateNum == 0)
+        {
+            updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
+            // Найдем не занятый номер обновления
+            do
+            {
+                updateNum++;
+                fileName = QString(templateString).arg(updateNum);
+            } while (QFileInfo(fileName).exists());
+            exec(QString("UPDATE константы SET \"ЗНАЧЕНИЕ\" = '%1' WHERE \"ИМЯ\" = 'Last_DB_Update';").arg(updateNum));
+        }
+        else
+            fileName = QString(templateString).arg(updateNum);
+        // Сохраним обновление
+        QFile file(fileName);
+        if (file.open(QFile::WriteOnly | QFile::Append))
+        {
+            QTextStream out(&file);
+            out << value << "\n";
+        }
+        file.close();
+    }
+}
+
+
+void DBFactory::loadUpdates()
+{
+    QString templateString = TApplication::exemplar()->applicationDirPath().append("/db_updates/").append(dbName).append("/");
+    int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
+    do
+    {
+        updateNum++;
+        QString fileName = QString("%1.sql").arg(updateNum);
+        QString fullFileName = templateString;
+        fullFileName.append(fileName);
+        TApplication::exemplar()->showMessageOnStatusBar(QString(QObject::trUtf8("Загрузка обновления %1 на сервер...")).arg(fileName));
+        if (!execQueryFile(fullFileName))
+        {
+            TApplication::exemplar()->showMessageOnStatusBar("");
+            return;
+        }
+        dbUpdatesList.removeOne(fileName);
+    } while (!dbUpdatesList.empty());
+    exec(QString("UPDATE константы SET \"ЗНАЧЕНИЕ\" = '%1' WHERE \"ИМЯ\" = 'Last_DB_Update';").arg(updateNum));
+}
+
+
+int DBFactory::updatesCount()
+{
+    QString templateString = TApplication::exemplar()->applicationDirPath().append("/db_updates/").append(dbName).append("/");
+    dbUpdatesList = QDir(templateString).entryList(QStringList() << "*.sql", QDir::Files);
+    int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
+    // Удалим предыдущие скрипты из списка
+    for (int i = 1; i <= updateNum; i++)
+    {
+        QString fileName = QString("%1.sql").arg(i);
+        if (dbUpdatesList.contains(fileName))
+        {
+            int index = -1;
+            do
+            {
+                // Удалим файл вида 1-*.sql
+                QString expr = QString("^").append(QString("%1").arg(i)).append("\\D+\\d*\\.sql");
+                index = dbUpdatesList.indexOf(QRegExp(expr));
+                if (index >= 0)
+                    dbUpdatesList.removeAt(index);
+                // Удалим файл вида 1.sql
+                index = dbUpdatesList.indexOf(fileName);
+                if (index >= 0)
+                    dbUpdatesList.removeAt(index);
+            } while (index >= 0);
+        }
+    }
+    return dbUpdatesList.count();
+}
+
+
+
+
+

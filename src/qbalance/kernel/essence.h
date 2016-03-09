@@ -133,7 +133,7 @@ public:
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
-    virtual void                evaluateEngine();
+    virtual void        evaluateEngine();
     virtual bool        calculate();
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();

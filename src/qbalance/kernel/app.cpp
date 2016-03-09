@@ -160,6 +160,13 @@ void TApplication::initConfig()
 
     setConfigTypeName("form", "Формы");
     setConfig("form", SAVE_FORM_CONFIG_TO_DB, "Сохранять геометрию форм на сервере", true);
+
+    setConfigTypeName("dbUpdates", "Обновления БД");
+    setConfig("dbUpdates", ASK_LOAD_UPDATES_TO_DB, "Спрашивать, если есть обновления базы данных", true);
+    setConfig("dbUpdates", SAVE_DB_UPDATES_TO_LOCAL, "Сохранять обновления БД локально", false);
+
+    setConfigTypeName("photo", "Фотографии");
+    setConfig("photo", GET_PICTURE_FROM_SERVER_IN_DOCUMENT, "Загружать фото с сервера в документе (замедлит работу с документом)", false);
 }
 
 
@@ -299,6 +306,19 @@ bool TApplication::open() {
                 topersList = new Topers();
                 if (dictionaryList->open() && topersList->open())
                 {
+                    // Проверим обновления БД, и если надо, применим их
+                    int updates = db->updatesCount();
+                    if (updates > 0)
+                    {
+                        if (getConfigValue(ASK_LOAD_UPDATES_TO_DB).toBool())
+                        {
+                            if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updates)) == QMessageBox::Yes)
+                                db->loadUpdates();
+                        }
+                        else
+                            db->loadUpdates();
+                    }
+
                     // Удалось открыть спосок справочников и типовых операций
                     db->getPeriod(beginDate, endDate);
                     gui->getMainWindow()->showPeriod();

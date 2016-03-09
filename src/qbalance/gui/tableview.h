@@ -80,7 +80,7 @@ public slots:
 
 protected:
     virtual void                currentChanged(const QModelIndex &, const QModelIndex &);
-    void                        focusInEvent(QFocusEvent*);
+    virtual void                focusInEvent(QFocusEvent*);
 
 private:
     bool                        columnsHeadersSeted;

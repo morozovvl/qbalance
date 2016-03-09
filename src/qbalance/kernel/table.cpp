@@ -80,7 +80,7 @@ QList<FieldType> Table::returnColumnsProperties()
 void Table::query(QString filter)
 {
     tableModel->setFilter(filter);
-    app->debug(1, "Query: " + tableModel->selectStatement());
+    app->debug(1, "Query: " + tableModel->getSelectStatement());
     if (!tableModel->select())
         app->showError(tableModel->lastError().text());
  }
@@ -89,8 +89,7 @@ void Table::query(QString filter)
 bool Table::open()
 {
     opened = false;
-    if (tagName.size() > 0)
-        opened = setTableModel();
+    opened = setTableModel();
     return opened;
 }
 

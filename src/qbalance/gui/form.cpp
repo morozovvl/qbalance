@@ -431,14 +431,8 @@ void Form::readSettings()
 void Form::writeSettings()
 {
     // Сохраним координаты и размеры окна
-    QWidget* widget;
-    if (defaultForm)
-    {
-        widget = (QWidget*)getSubWindow();
-        if (widget == 0)
-            widget = (QWidget*)formWidget;
-    }
-    else
+    QWidget* widget = (QWidget*)getSubWindow();
+    if (widget == 0)
         widget = (QWidget*)formWidget;
 
     // Сохраним данные локально, на компьютере пользователя

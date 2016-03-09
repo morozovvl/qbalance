@@ -58,7 +58,7 @@ public:
     void setAutoLoaded(bool al) { lIsAutoLoaded = al; }
     bool isAutoLoaded() { return lIsAutoLoaded; }
     bool canShow() { return lCanShow; }
-    void setCanShow(bool can) { lCanShow = can; }
+    Q_INVOKABLE void setCanShow(bool can) { lCanShow = can; }
 
     Q_INVOKABLE bool isMustShow() { return lMustShow; }
     Q_INVOKABLE virtual void setMustShow(bool);

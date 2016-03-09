@@ -383,6 +383,8 @@ void FormGrid::cmdAdd()
     {
         grdTable->cmdAdd();
     }
+    grdTable->setFocus();
+    setButtons();
 }
 
 
@@ -392,6 +394,8 @@ void FormGrid::cmdDelete()
     {
         grdTable->cmdDelete();
     }
+    grdTable->setFocus();
+    setButtons();
 }
 
 
@@ -412,6 +416,8 @@ void FormGrid::cmdRequery()
         showPhoto();
         app->showMessageOnStatusBar(trUtf8("Ничего не найдено."));
     }
+    grdTable->setFocus();
+    setButtons();
 }
 
 
@@ -423,8 +429,8 @@ void FormGrid::cmdPrint(bool autoPrint)
         QString fileName = app->getReportFile(getParent()->getTagName(), autoPrint, formWidget, cmdButtonLayout->contentsRect());
         if (fileName.size() > 0)
             parent->print(fileName);
-        grdTable->setFocus();
     }
+    grdTable->setFocus();
 }
 
 
@@ -434,6 +440,8 @@ void FormGrid::cmdLoad()
     {
         parent->load();
     }
+    grdTable->setFocus();
+    setButtons();
 }
 
 
@@ -443,13 +451,14 @@ void FormGrid::cmdSave()
     {
         parent->getScriptEngine()->eventExport(this);
     }
+    grdTable->setFocus();
 }
 
 
 void FormGrid::showPhoto()
 {
-    if (grdTable != 0)
-        grdTable->showPhoto();
+    grdTable->showPhoto();
+    grdTable->setFocus();
 }
 
 

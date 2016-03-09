@@ -126,7 +126,8 @@ bool Dictionary::add()
                             if (dictName.size() > 0)
                             {
                                 dictName = dict->getName();
-                                dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
+//                                dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
+                                dict->query(parameters->getFilter(searchParameters[i].table));
                                 if (dict->getTableModel()->rowCount() == 1)
                                 {
                                     // Далее первый параметр такой хитрый с запросом к БД имени поля, т.к. searchParameters[i].table - всегда в нижнем регистре, а idFieldName - может быть и в верхнем и в нижнем
@@ -308,7 +309,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
                     }
                     else
                     {
-                        app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
+//                        app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
                         return result.toLongLong();
                     }
                 }
@@ -524,7 +525,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
     QModelIndex index;
     qulonglong id = 0;
 
-    if (tableModel->rowCount() > 0)
+    if (tableModel->rowCount() > 0 && isFieldExists(idFieldName))
         id = getValue(idFieldName).toLongLong();
 
     if (grdTable != 0)

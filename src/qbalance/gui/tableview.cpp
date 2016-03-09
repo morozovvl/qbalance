@@ -114,7 +114,6 @@ void TableView::cmdDelete()
             if (index.row() == rowCount)
                 selectRow(rowCount - 1);
         }
-        parent->setButtons();
     }
 }
 
@@ -124,11 +123,10 @@ void TableView::setCurrentFocus()
     QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     int column = index.column() < 0 ? 0 : index.column();
     int row = index.row() < 0 ? 0 : index.row();
-    selectNextColumn();
+//    selectNextColumn();
     column = currentIndex().column();
     reset();
     setCurrentIndex(index.sibling(row, column));
-    parent->setButtons();
 }
 
 
@@ -142,7 +140,6 @@ void TableView::cmdView()
 void TableView::cmdRequery()
 {
     essence->query();
-    parent->setButtons();
     setFocus();
 }
 
@@ -556,7 +553,6 @@ void TableView::calculate()
         reset();
     else
         repaint();
-    selectNextColumn();       // Передвинуть курсор на следующую колонку
     setUpdatesEnabled(true);
 }
 
