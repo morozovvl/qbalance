@@ -166,7 +166,7 @@ public:
     Q_INVOKABLE virtual void setIcons(QWidget*);         // Устанавливает иконки на кнопки указанной формы
 
     static QString encoding();
-    virtual QTextCodec* codec();
+    Q_INVOKABLE virtual QTextCodec* codec();
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
     virtual bool isDebugMode(int mode)        { return DebugModes.contains(mode);}

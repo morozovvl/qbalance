@@ -2656,6 +2656,9 @@ QString DBFactory::getDictionarySqlSelectStatement(QString tableName, QString pr
         selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
         selectStatement.append(QLatin1String(" FROM ")).append(fromList);
     }
+//    qDebug() << selectStatement;
+//    qDebug() << "";
+//    qDebug() << "";
     return selectStatement;
 }
 

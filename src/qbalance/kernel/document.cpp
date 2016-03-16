@@ -911,6 +911,7 @@ QString Document::transformSelectStatement(QString string)
             string.replace(" WHERE a)", whereClause);
         }
     }
+    qDebug() << string;
     return string;
 }
 
