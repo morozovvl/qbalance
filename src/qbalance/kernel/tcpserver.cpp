@@ -197,6 +197,8 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     {
         resStr = "Ok";
         sendToClient(pClientSocket, resStr);
+        app->showMessageOnStatusBar("Получена команда завершить приложение. Приложение закроется через 10 секунд...", 10000);
+        app->timeOut(10000);
         app->quit();
     }
     else if (str.indexOf("*ping*Ok*") == 0)

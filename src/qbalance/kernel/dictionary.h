@@ -96,6 +96,9 @@ public:
     bool            getNameIntIsCode() { return nameIntIsCode; }
     Q_INVOKABLE void setNameIntIsCode(bool val) { nameIntIsCode = val; }
 
+    Q_INVOKABLE void setExact(bool e) { exact = e; }
+    bool getExact() { return exact; }
+
 protected:
     QString         prototypeName;          // Имя справочника - прототипа
     Dictionary*     parentDict;
@@ -115,6 +118,7 @@ protected:
     bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
                                     // или как часть имени
     bool            sortedTable;
+    bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
 
 
 private:

@@ -83,7 +83,7 @@ public:
     Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
     virtual void query(QString = "", bool = false);
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
-    Q_INVOKABLE int                     getRowCount() { return tableModel->rowCount(); }
+    Q_INVOKABLE int                     getRowCount() { return tableModel != 0 ? tableModel->rowCount() : 0; }
     Q_INVOKABLE int                     rowCount() { return getRowCount(); }
 
 

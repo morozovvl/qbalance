@@ -53,34 +53,34 @@ public:
 
 // Функции, помогающие усовершенствовать механизм создания реляционных отношений
     virtual int fieldIndex(const QString &) const;
-    void setRelation(int, const QSqlRelation &);
-    void setRelation(int, int, const QSqlRelation &);
-    void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
+    virtual void setRelation(int, const QSqlRelation &);
+    virtual void setRelation(int, int, const QSqlRelation &);
+    virtual void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
 
 // Функции, помогающие в генерации SQL запросов и работающие с ним
-    QString orderByClause() const;
-    QString escapedRelationField(const QString &, const QString &) const;
+    QString virtual orderByClause() const;
+    QString virtual escapedRelationField(const QString &, const QString &) const;
     virtual QString selectStatement() const;
-    QString getSelectStatement() { return selectCommand; }
-    void setSelectStatement(QString string = "") { selectCommand = string; }
-    void setOrderClause(QString);
-    Q_INVOKABLE bool select() { return QSqlRelationalTableModel::select(); }
-    Q_INVOKABLE void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
+    QString virtual getSelectStatement() { return selectCommand; }
+    virtual void setSelectStatement(QString string = "") { selectCommand = string; }
+    virtual void setOrderClause(QString);
+    Q_INVOKABLE virtual bool select() { return QSqlRelationalTableModel::select(); }
+    Q_INVOKABLE virtual void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
 
 // Функции для сохранения данных
-    void setReadOnly(bool ro) { readOnly = ro; }
-    bool isReadOnly() { return readOnly; }
-    bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
+    virtual void setReadOnly(bool ro) { readOnly = ro; }
+    virtual bool isReadOnly() { return readOnly; }
+    virtual bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
     virtual bool submit(const QModelIndex&);
     virtual bool updateRowInTable(int, const QSqlRecord&);
     virtual void setUpdateInfo(QString originField, QString table, QString field, QString type, int length, int prec, int fieldColumn, int keyFieldColumn);
 
 // Прочие функции
-    QStringList getFieldsList() const;
-    QString getFieldName(int i) { return record().fieldName(i); }
-    void    setTestSelect(bool test) { testSelect = test; }
+    virtual QStringList getFieldsList() const;
+    virtual QString getFieldName(int i) { return record().fieldName(i); }
+    virtual void    setTestSelect(bool test) { testSelect = test; }
 
-    QVariant headerData (int, Qt::Orientation, int) const;
+    virtual QVariant headerData (int, Qt::Orientation, int = Qt::DisplayRole) const;
 
 protected:
     Table*                  parent;

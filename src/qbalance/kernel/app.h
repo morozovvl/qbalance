@@ -245,7 +245,8 @@ public:
     void    setServerMode(bool mode) { serverMode = mode; }
     bool    isServerMode() { return serverMode; }
 
-    static void    setSendCommandMode(bool mode) {sendCommandMode = mode; }
+    static void    setSendCommandMode(bool mode) { sendCommandMode = mode; }
+    static bool    isSendCommandMode() { return sendCommandMode; }
 
     QList<ScriptEngine*>     getScriptStack() { return scriptStack; }
     void            appendScriptStack(ScriptEngine* script) { scriptStack.append(script); }

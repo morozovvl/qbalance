@@ -530,11 +530,6 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
     if (table.left(9) == "документы" && table.size() > 9)
     {
         table = "vw_спрдокументы";
-        fldTable = "документы";
-    }
-    else if (table.left(11) == "докатрибуты" && table.size() > 11)
-    {
-        fldTable = "документы";
     }
 
     for (columnsProperties.first(); columnsProperties.isValid(); columnsProperties.next())
@@ -2320,8 +2315,6 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                             {        // Если поле ссылается на другую таблицу
                                 QString setDictName = fieldName.toLower();
                                 setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
-                                if (setDictName.left(9) == "документы" && setDictName.size() > 9)
-                                    setDictName = "документы";
                                 getColumnsProperties(&fields, setDictName);
                                 foreach (QString setDictFieldName, getFieldsList(setDictName, 0))
                                 {
@@ -2337,7 +2330,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                     }
                                 }
                                 if (setDictName.left(9) == "документы" && setDictName.size() > 9)
-                                    setFromClause.append(QString(" LEFT OUTER JOIN \"vw_спрдокументы\" \"документы\" ON \"%1\".\"%2\"=\"документы\".%3").arg(dictName).arg(fieldName).arg(getObjectNameCom(setDictName + ".код")));
+                                {
+                                    setFromClause.append(QString(" LEFT OUTER JOIN \"vw_спрдокументы\" \"%1\" ON \"%2\".\"%3\"=\"%1\".%4").arg(setDictName).arg(dictName).arg(fieldName).arg(getObjectNameCom(setDictName + ".код")));
+                                }
                                 else
                                     setFromClause.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".%4").arg(setDictName).arg(dictName).arg(fieldName).arg(getObjectNameCom(setDictName + ".код")));
                             }
@@ -2407,8 +2402,6 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                               {        // Если поле ссылается на другую таблицу
                                   QString setDictName = fieldName.toLower();
                                   setDictName.remove(0, 4);                       // Получим наименование справочника, который входит в набор
-                                  if (setDictName.left(9) == "документы" && setDictName.size() > 9)
-                                      setDictName = "документы";
                                   getColumnsProperties(&fields, setDictName);
                                   foreach (QString setDictFieldName, getFieldsList(setDictName, 0))
                                   {
@@ -2424,7 +2417,9 @@ QString DBFactory::getDocumentSqlSelectStatement(int oper,  QList<ToperType>* to
                                       }
                                   }
                                   if (setDictName.left(9) == "документы" && setDictName.size() > 9)
-                                      setFromClause.append(QString(" LEFT OUTER JOIN \"vw_спрдокументы\" \"документы\" ON \"%1\".\"%2\"=\"документы\".%3").arg(dictName).arg(fieldName).arg(getObjectNameCom(setDictName + ".код")));
+                                  {
+                                      setFromClause.append(QString(" LEFT OUTER JOIN \"vw_спрдокументы\" \"%1\" ON \"%2\".\"%3\"=\"%1\".%4").arg(setDictName).arg(dictName).arg(fieldName).arg(getObjectNameCom(setDictName + ".код")));
+                                  }
                                   else
                                       setFromClause.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%2\".\"%3\"=\"%1\".%4").arg(setDictName).arg(dictName).arg(fieldName).arg(getObjectNameCom(setDictName + ".код")));
                               }
@@ -2656,9 +2651,6 @@ QString DBFactory::getDictionarySqlSelectStatement(QString tableName, QString pr
         selectStatement.append(QLatin1String("SELECT DISTINCT ")).append(selectList);;
         selectStatement.append(QLatin1String(" FROM ")).append(fromList);
     }
-//    qDebug() << selectStatement;
-//    qDebug() << "";
-//    qDebug() << "";
     return selectStatement;
 }
 

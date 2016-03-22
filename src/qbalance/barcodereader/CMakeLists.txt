@@ -1,0 +1,8 @@
+cmake_minimum_required (VERSION 2.6)
+set (PROJECTNAME barcodereader)
+project (${PROJECTNAME})
+find_package (Qt4 REQUIRED)
+set (SOURCE_ROOT ./)
+aux_source_directory (${SOURCE_ROOT} SOURCES)
+set (LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/plugins)
+add_library (${PROJECTNAME} MODULE ${SOURCES})

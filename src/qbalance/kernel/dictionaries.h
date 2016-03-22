@@ -39,6 +39,7 @@ public:
     Q_INVOKABLE virtual bool addDictionary(QString);
     Q_INVOKABLE virtual bool addSaldo(QString acc);
     Q_INVOKABLE virtual void removeDictionary(QString);
+    virtual void removeAll();
     QString getDictionaryTitle(QString);
     virtual void            query(QString filter = "", bool = false);
     QHash<QString, Dictionary*>* getDictionariesList() { return &dictionariesList; }

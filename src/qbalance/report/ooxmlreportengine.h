@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../openoffice/ooxmlengine.h"
 #include "reportengine.h"
 
+
 class OOXMLReportEngine : public ReportEngine
 {
     Q_OBJECT

@@ -56,17 +56,19 @@ public:
     virtual bool                columnIsReadOnly();
     virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
-    virtual void                setReadOnly(bool);
+    Q_INVOKABLE virtual void    setReadOnly(bool);
     virtual bool                setColumnsHeaders();
-    virtual void                hideAllGridSections();
+    Q_INVOKABLE virtual void    hideAllGridSections();
     virtual void                hideGridSection(QString);
-    virtual void                showGridSection(QString);
+    Q_INVOKABLE virtual void    showGridSection(QString);
     virtual void                showAllGridSections();
     virtual void                restoreCurrentIndex(QModelIndex);
     virtual QList<FieldType>*   getFields() { return &fields; }
+    Q_INVOKABLE virtual void    clearColumnDefinitions();
     Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
+    Q_INVOKABLE virtual void    setColumnsDelegates();
 
 
 public slots:
@@ -97,7 +99,6 @@ private:
     bool                        columnsSettingsReaded;
 
     virtual MyItemDelegate*     getColumnDelegate(FieldType);
-    virtual void                setColumnsDelegates();
     virtual void                readSettings();
     virtual void                writeSettings();
 };

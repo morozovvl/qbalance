@@ -111,7 +111,7 @@ bool Table::setTableModel(int level)
     db->getColumnsProperties(&columnsProperties, tableName, tableName, level);
     if (columnsProperties.size() == 0)
     {
-        app->showError(QString(QObject::trUtf8("Не существует таблица %1")).arg(tableName));
+        app->showError(QString(QObject::trUtf8("Не существует таблица <%1>")).arg(tableName));
         return false;
     }
     return true;

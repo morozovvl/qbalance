@@ -181,6 +181,14 @@ void Dictionaries::removeDictionary(QString dictName)
 }
 
 
+void Dictionaries::removeAll()
+{
+    QStringList dictsList = dictionariesNamesList;
+    foreach (QString dictName, dictsList)
+        removeDictionary(dictName);
+}
+
+
 QString Dictionaries::getDictionaryTitle(QString dictName) {
     return db->getDictionariesProperties(dictName).value(db->getObjectName("доступ_к_справочникам.имя")).toString().trimmed();
 }
@@ -250,10 +258,7 @@ bool Dictionaries::open()
 
 void Dictionaries::close()
 {
-    foreach(QString dictName, dictionariesList.keys())
-    {
-        removeDictionary(dictName);
-    }
+    removeAll();
     Dictionary::close();
 }
 

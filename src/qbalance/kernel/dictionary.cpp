@@ -83,6 +83,7 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     sqlCommand = "";
     nameIntIsCode = false;
     sortedTable = true;
+    exact = true;
 }
 
 
@@ -292,25 +293,27 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
             if (name.left(4) == idFieldName + "_")
             {        // Если поле ссылается на другую таблицу
                 QString field = db->getObjectNameCom(tableName + "." + name);
-                if (filter.size() > 0)
-                    filter.append(" AND ");
-                filter.append(field + "=");
-
                 name.remove(0, 4);                          // Уберем префикс "код_", останется только название таблицы, на которую ссылается это поле
                 name = name.toLower();                      // и переведем в нижний регистр, т.к. имена таблиц в БД могут быть только маленькими буквами
                 Dictionary* dict = dictionaries->getDictionary(name);
                 if (dict != 0)                       // Если удалось открыть справочник
                 {
                     qulonglong id = dict->getId();
-                    if (id != 0)
+                    if (dict->getExact())
                     {
-                        filter.append(QString("%1").arg(id));
-                        values.insert(field, QVariant(id));
-                    }
-                    else
-                    {
+                        if (id != 0)
+                        {
+                            if (filter.size() > 0)
+                                filter.append(" AND ");
+                            filter.append(field + "=");
+                            filter.append(QString("%1").arg(id));
+                            values.insert(field, QVariant(id));
+                        }
+                        else
+                        {
 //                        app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
-                        return result.toLongLong();
+                            return result.toLongLong();
+                        }
                     }
                 }
                 else
@@ -384,7 +387,9 @@ bool Dictionary::open(QString command, QString tName)
     if (tName == "undefined")
         tName = "";
     sqlCommand = command;
-    queryTableName = tName;
+
+    if (tName.size() > 0)
+        queryTableName = tName;
 
     if (tagName.size() == 0)
     {

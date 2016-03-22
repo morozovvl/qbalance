@@ -604,7 +604,7 @@ int DriverFR::sendENQ()
     char buff[2];
     buff[0] = ENQ;
     result = serialPort->writeData(buff,1);
-    serialPort->writeLog();
+//123    serialPort->writeLog();
     return result;
 }
 
@@ -615,7 +615,7 @@ int DriverFR::sendNAK()
     char buff[2];
     buff[0] = NAK;
     result = serialPort->writeData(buff, 1);
-    serialPort->writeLog();
+//123    serialPort->writeLog();
     return result;
 }
 
@@ -626,7 +626,7 @@ int DriverFR::sendACK()
     char buff[2];
     buff[0] = ACK;
     result = serialPort->writeData(buff,1);
-    serialPort->writeLog();
+//123    serialPort->writeLog();
     return result;
 }
 

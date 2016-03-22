@@ -1115,7 +1115,7 @@ QModelIndex Essence::getCurrentIndex()
 {
     QModelIndex index;
     if (grdTable != 0)
-        index = grdTable->currentIndex();
+        index = grdTable->currentIndex();   // ************* иногда происходит ОШИБКА СЕГМЕНТАЦИИ ***********
     return index;
 }
 

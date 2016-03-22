@@ -338,7 +338,7 @@ bool Document::checkConstDicts()
         {
             if (dictName.left(9) == "документы" && dictName.size() > 9)
                 dict->setId(getParent()->getId());
-            if (dict->getId() == 0)
+            if (dict->getId() == 0 && dict->getExact())
             {
                 if (!getIsSingleString())
                 {
@@ -911,7 +911,6 @@ QString Document::transformSelectStatement(QString string)
             string.replace(" WHERE a)", whereClause);
         }
     }
-    qDebug() << string;
     return string;
 }
 
@@ -994,7 +993,7 @@ bool Document::setTableModel(int)
         }
         return true;
     }
-    app->showError(QString(QObject::trUtf8("Не существует таблица %1")).arg(tableName));
+    app->showError(QString(QObject::trUtf8("Не существует таблица <%1>")).arg(tableName));
     return false;
 }
 
@@ -1047,7 +1046,7 @@ bool Document::prepareValue(QString name, Dictionary* dict)
             id = ((Saldo*)dict)->getId();
         else
             id = dict->getId();
-        if (id != 0)
+        if (id != 0 || !dict->getExact())
         {
             prvValues.insert(name, QVariant(id));
             return true;

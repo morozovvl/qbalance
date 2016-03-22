@@ -70,6 +70,8 @@ void TableView::open()
 
 void TableView::close()
 {
+    disconnect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
+    disconnect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
     writeSettings();
 }
 
@@ -286,9 +288,9 @@ void    TableView::setColumnsDelegates()
                 if (!fields.at(i).readOnly)
                 {
                     connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-
                 }
                 delegate->setReadOnly(fields.at(i).readOnly);
+                delete itemDelegateForColumn(i);
                 setItemDelegateForColumn(i, delegate);
             }
             columns.insert(fields.at(i).number - 1, i);
@@ -326,7 +328,7 @@ void    TableView::setColumnsDelegates()
 
 void TableView::hideAllGridSections()
 {
-    setColumnsHeaders();
+//    setColumnsHeaders();
 
     foreach (int i, columns.keys())
     {
@@ -337,7 +339,7 @@ void TableView::hideAllGridSections()
 
 void TableView::hideGridSection(QString columnName)
 {
-    setColumnsHeaders();
+//    setColumnsHeaders();
 
     foreach (int i, columns.keys())
     {
@@ -352,7 +354,7 @@ void TableView::hideGridSection(QString columnName)
 
 void TableView::showGridSection(QString columnName)
 {
-    setColumnsHeaders();
+//    setColumnsHeaders();
 
     foreach (int i, columns.keys())
     {
@@ -367,7 +369,7 @@ void TableView::showGridSection(QString columnName)
 
 void TableView::showAllGridSections()
 {
-    setColumnsHeaders();
+//    setColumnsHeaders();
 
     foreach (int i, columns.keys())
     {
@@ -704,4 +706,17 @@ void TableView::appendColumnDefinition(int number, QString column, QString heade
     }
 }
 
+
+void TableView::clearColumnDefinitions()
+{
+    for (int i = 0; i < fields.count(); i++)
+    {
+        FieldType field = fields.at(i);
+        field.number = 0;
+        field.header = "";
+        field.readOnly = true;
+        fields.removeAt(i);
+        fields.insert(i, field);
+    }
+}
 

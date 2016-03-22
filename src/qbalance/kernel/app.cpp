@@ -403,12 +403,12 @@ void TApplication::close()
     if (dictionaryList != 0)
     {
         dictionaryList->close();
-        dictionaryList->deleteLater();
+        delete dictionaryList;
     }
     if (topersList != 0)
     {
         topersList->close();
-        topersList->deleteLater();
+        delete topersList;
     }
     if (gui != 0)
         gui->close();
@@ -612,11 +612,11 @@ Dialog* TApplication::createForm(QString fileName)
 QObject* TApplication::createPlugin(QString fileName)
 {
     QObject* result = 0;
-    QString pluginFile = applicationDirPath() + "/plugins/lib" + fileName;
+    QString pluginFile = applicationDirPath() + "/plugins/";
 #ifdef Q_OS_WIN32
-    pluginFile.append(".dll");
+    pluginFile.append(QString("%1.dll").arg(fileName));
 #else
-    pluginFile.append(".so");
+    pluginFile.append(QString("lib%1.so").arg(fileName));
 #endif
     if (QDir().exists(pluginFile))
     {
@@ -859,7 +859,12 @@ int TApplication::runScript(QString scriptName)
     }
     else
     {
+        initConfig();
+        if (!loadDefaultConfig)
+            readSettings();
+
         TcpClient tcpcl(host, port);
+        timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
         if (tcpcl.isValid())
         {
             if (tcpcl.sendToServer(script))
@@ -1073,6 +1078,8 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
     loop.exec();
     if (reply->error() != QNetworkReply::NoError)
         debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
+    else
+        db->exec(QString("INSERT INTO смс_отправленные (ИМЯ, ТЕКСТ) VALUES ('%1', '%2');").arg(number).arg(message));
 }
 
 

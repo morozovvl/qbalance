@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPushButton>
 #include <QtGui/QKeyEvent>
-#include <QFileDialog>
+#include <QtGui/QFileDialog>
 #include <QtGui/QLineEdit>
 #include <QtCore/QStringList>
 #include <QtCore/QDebug>
