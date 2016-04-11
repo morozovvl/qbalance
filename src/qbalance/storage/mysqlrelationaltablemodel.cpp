@@ -47,6 +47,7 @@ MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* p
     db = app->getDBFactory();
     selectCommand = "";
     testSelect = false;
+    fullDebugInfo = false;
 }
 
 
@@ -75,7 +76,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
-            lResult = QSqlTableModel::setData(index, value, role);
+            lResult = QSqlTableModel::setData(index, value, role);  // QSqlQuery::value: not positioned on a valid record
         }
         else
         {
@@ -159,6 +160,10 @@ QString MySqlRelationalTableModel::selectStatement() const
         query = parent->transformSelectStatement(query);
     if (testSelect)
         query = "SELECT * FROM (" + query + ")s LIMIT 0";
+
+    if (fullDebugInfo)
+        app->debug(1, "Query: " + query);
+
     return query;
 }
 

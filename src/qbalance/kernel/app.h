@@ -169,13 +169,17 @@ public:
     Q_INVOKABLE virtual QTextCodec* codec();
 
     static QString authors()       { return "Морозов Владимир (morozovvladimir@mail.ru)";}
-    virtual bool isDebugMode(int mode)        { return DebugModes.contains(mode);}
-    QString debugFileName(int debugMode) {  return getLogsPath().append(QString("debug%1.log").arg(debugMode));}
+    virtual bool isDebugMode(int mode)        { return DebugModes.contains(QString("%1").arg(mode));}
+    QString debugFileName(QString debugMode) {  return getLogsPath().append(QString("debug%1.log").arg(debugMode));}
     static QString errorFileName() { return "error.log";}
     static QString logTimeFormat() { return "dd.MM.yy hh.mm.ss.zzz";}
     static QString resourcesFile() { return applicationDirPath() + "/resources.qrc";}
     static QString getScriptFileName(int oper) { return QString("формулы%1.qs").arg(oper); }
-    static void setDebugMode(const int& value);
+    static void setDebugMode(QString value);
+    void    setDebugToBuffer(bool buff) { debugToBuffer = buff; }
+    int getDebugBufferCount(int mode);
+    void clearDebugBuffer(int mode);
+    void setWriteDebug(bool write) { writeDebug = write; }
 
     Q_INVOKABLE virtual void debug(int, const QString&, bool = false);
 
@@ -283,7 +287,7 @@ private:
     bool                    driverFRlocked;
     BankTerminal*           bankTerminal;
     bool                    fsWebCamIsValid;
-    static QList<int>       DebugModes;
+    static QList<QString>       DebugModes;
     static TApplication*    Exemplar;
     DBFactory*              db;
     BarCodeReader*          barCodeReader;
@@ -311,6 +315,9 @@ private:
     QHash<ConfigVars, ConfigEntry> configs;
     QList<ConfigVars>                 configNames;
     QHash<QString, QString>     configTypes;
+    QHash<QString, QStringList> tempDebugBuffer;
+    bool                    debugToBuffer;
+    bool                    writeDebug;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");
@@ -320,6 +327,7 @@ private:
     void            setConfig(QString type, ConfigVars name, QString label, QVariant value, bool = false);
     void            setConfigValue(ConfigVars name, QVariant value);
     void            setConfigTypeName(QString type, QString name) { configTypes.insert(type, name); }
+    void            writeToDebugFile(QString, QString);
 
 private slots:
     void                    setTimeIsOut() { timeIsOut = true; }

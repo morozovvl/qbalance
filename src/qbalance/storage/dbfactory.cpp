@@ -134,24 +134,18 @@ bool DBFactory::execPSql(QString script, QString user, QString password)
         proc->setProcessEnvironment(env);
         QString command = QString("PGPASSWORD=%6 psql -h %1 -p %2 -U %3 %4 < %5").arg(hostName).arg(port).arg(user).arg(dbName).arg(script).arg(password);
 //        QString command = "psql --help";
-        qDebug() << TApplication::exemplar()->applicationDirPath();
-        qDebug() << command;
         proc->setStandardOutputFile("./result");
         proc->start(command);
         result = proc->waitForStarted();
-        qDebug() << result << proc->error();
-        qDebug() << proc->readAllStandardError() << proc->readAllStandardOutput();
         if (!result)
         {// выдадим сообщение об ошибке и выйдем из цикла
 //            foreach (QString line, env.toStringList())
 //                qDebug() << line;
-            qDebug() << proc->readAllStandardError() << proc->readAllStandardOutput();
             TApplication::exemplar()->showError(QString(QObject::trUtf8("Не удалось запустить psql. %1")).arg(QString().append(proc->readAllStandardError())));
         }
         else
         {
             result = proc->waitForFinished();
-            qDebug() << proc->error();
             if (proc->exitStatus() == QProcess::CrashExit)
             {
                 TApplication::exemplar()->showError(QString(QObject::trUtf8("Не удалось выполнить файл <%1>.")).arg(script));
@@ -204,13 +198,13 @@ bool DBFactory::open(QString login, QString password)
     db->setUserName(login);
     db->setPassword(password);
     if (db->open()) {
+        dbIsOpened = true;
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         exec("set standard_conforming_strings=on;");
         currentLogin = login;
         currentPassword = password;
 
         pid = getValue("SELECT pg_backend_pid();").toInt();
-        dbIsOpened = true;
         return true;
     }
     else
@@ -1533,21 +1527,23 @@ qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
 }
 
 
-QDateTime DBFactory::getFileDateTime(QString file, FileType type, bool extend)
+FileInfo DBFactory::getFileInfo(QString file, FileType type, bool extend)
 {
-    QDateTime result;
+    FileInfo result;
     QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
-    QString text = QString("SELECT %6 FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+    QString text = QString("SELECT %6, %7 FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                           .arg(getObjectNameCom("файлы.имя"))
                                                                           .arg(fileName)
                                                                           .arg(getObjectNameCom("файлы.тип"))
                                                                           .arg(type)
-                                                                          .arg(getObjectNameCom("файлы.датавремя"));
+                                                                          .arg(getObjectNameCom("файлы.датавремя"))
+                                                                          .arg(getObjectNameCom("файлы.контрсумма"));
     QSqlQuery query = execQuery(text, true, (extend && extDbExist) ? dbExtend : db);
     query.first();
     if (query.isValid())
     {
-        result = query.record().value(0).toDateTime();
+        result.lastModified = query.record().value(0).toDateTime();
+        result.size = query.record().value(1).toLongLong();
     }
     return result;
 }
@@ -1685,7 +1681,9 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     }
     if (text.size() > 0)
     {
+        TApplication::exemplar()->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
         exec(text, true, (extend && extDbExist) ? dbExtend : db);
+        TApplication::exemplar()->setWriteDebug(true);
         if (!extend)
             saveUpdate(text);
     }

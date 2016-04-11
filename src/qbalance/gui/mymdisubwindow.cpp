@@ -26,16 +26,16 @@ MyMdiSubWindow::MyMdiSubWindow(QWidget *parent) :
 {
 }
 
-
+/*
 void MyMdiSubWindow::closeEvent (QCloseEvent* event)
 {
     if (QString::compare(widget()->metaObject()->className(), "Dialog", Qt::CaseSensitive) == 0)
     {
-        Dialog* dialog = (Dialog*)widget();
+//        Dialog* dialog = (Dialog*)widget();
 
-        if (dialog->getForm() != 0)
-            dialog->getForm()->cmdCancel();
+//        if (dialog->getForm() != 0)
+//            dialog->getForm()->cmdCancel();
     }
     QMdiSubWindow::closeEvent(event);
 }
-
+*/

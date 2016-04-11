@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/myprogressdialog.h"
 
 
-Document::Document(int oper, Documents* par): Essence()
+Document::Document(int oper, Documents* par): Dictionary()
 {
     parent = par;
     operNumber = oper;
@@ -95,57 +95,22 @@ Document::~Document()
 }
 
 
-bool Document::calculate()
+bool Document::calculate(bool)
 {
     if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
-        isCurrentCalculate = true;
-        if (Essence::calculate())
+        if (Dictionary::calculate(false))           // Если во время вычислений все прошло нормально
         {   // Если в вычислениях не было ошибки
-
-            int row = getCurrentRow();
-            // Начнем транзакцию
-            // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-            for (int i = 0; i < tableModel->record().count(); i++)
-            {
-                QString fieldName = tableModel->record().fieldName(i);
-                QVariant oldValue = getOldValue(fieldName);
-                QVariant newValue = getValue(fieldName);
-                if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                    tableModel->submit(tableModel->index(row, i));
-            }
-
-            if (freePrv > 0)
-            {   // Если существует "свободная" проводка, то сохраним изменения и в ней
-                int freePrvRow = findFreePrv();
-                for (int i = 0; i < tableModel->record().count(); i++)
-                {
-                    QString fieldName = tableModel->record().fieldName(i);
-                    if (getValue(fieldName, freePrvRow) != oldValues0.value(fieldName))    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                        tableModel->submit(tableModel->index(freePrvRow, i));
-                }
-            }
-
-            row = parent->getGrdTable()->currentIndex().row();
-            for (int i = 0; i < parent->getTableModel()->record().count(); i++)
-            {
-                QString fieldName = parent->getTableModel()->record().fieldName(i);
-                QVariant oldValue = parent->getOldValue(fieldName);
-                QVariant newValue = parent->getValue(fieldName, row);
-                if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                    parent->getTableModel()->submit(parent->getTableModel()->index(row, i));
-            }
-            calcItog();
-            saveChanges();
-            docModified = true;
+            calcItog();                             // то посчитаем итоги
+            saveChanges();                          // сохраним изменения
+            updateCurrentRow();                     // обновим значения текущей строки
+            docModified = true;                     // поставим флаг, что документ изменен
         }
         else
         {
-            db->clearCommands();
-            restoreOldValues();
+            db->clearCommands();                    // была ошибка вычислений, поэтому забудем все изменения
+            restoreOldValues();                     // и восстановим старые значения
         }
-
-        isCurrentCalculate = false;
     }
     return true;
 }
@@ -153,24 +118,11 @@ bool Document::calculate()
 
 void Document::saveChanges()
 {
-    if (form->getSubWindow()->widget()->isActiveWindow())
-    {
-        getParent()->setValue("ДАТА", QVariant(((FormDocument*)form)->getDateEdit()->date()));
-        getParent()->setValue("НОМЕР", QVariant(((FormDocument*)form)->getNumberEdit()->text()));
-    }
-    QModelIndex index = getCurrentIndex();
-    if (db->execCommands())
-    {   // Если во время сохранения результатов ошибки не произошло
-        // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-        updateCurrentRow();
-        parent->updateCurrentRow();
-    }
-    else
+    if (!db->execCommands())
     {   // Во время сохранения результатов произошла ошибка
-        restoreOldValues();
         parent->restoreOldValues();
+        restoreOldValues();
     }
-    setCurrentIndex(index);
 }
 
 
@@ -256,7 +208,10 @@ bool Document::add()
             }
         }
         appendDocString();
-        setCurrentRow(tableModel->rowCount());
+        if (getScriptEngine() != 0)
+        {
+            getScriptEngine()->eventAfterAddString();
+        }
     }
     return result;
 }
@@ -456,20 +411,11 @@ void Document::setValue(QString name, QVariant value, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
         {
-//            Essence::setValue(name, value, findFreePrv());
-            QString fieldName = name.mid(__pos + 2);
-            QString command = QString("UPDATE проводки SET %1 = %2 WHERE ДОККОД = %3 AND НОМЕРОПЕР = %4;").arg(fieldName).arg(value.toString()).arg(getDocId()).arg(freePrv);
-            db->exec(command);
+            Essence::setValue(name, value, findFreePrv());
+            return;
         }
-        else
-            Essence::setValue(name, value, row);
     }
-    else
-    {
-        if (row == -1)
-            row = getCurrentRow();
-        Essence::setValue(name, value, row);
-    }
+    Essence::setValue(name, value, row);    // QSqlQuery::value: not positioned on a valid record
 }
 
 
@@ -482,16 +428,11 @@ QVariant Document::getValue(QString name, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим получить значение из свободной проводки
         {
-//            result = Essence::getValue(name, findFreePrv());
-            QString fieldName = name.mid(__pos + 2);
-            QString command = QString("SELECT %1 FROM проводки WHERE ДОККОД = %2 AND НОМЕРОПЕР = %3 LIMIT 1;").arg(fieldName).arg(getDocId()).arg(freePrv);
-            result = db->getValue(command);
+            result = Essence::getValue(name, findFreePrv());
+            return result;
         }
-        else
-            result = Essence::getValue(name, row);
     }
-    else
-        result = Essence::getValue(name, row);
+    result = Essence::getValue(name, row);
     return result;
 }
 
@@ -507,7 +448,7 @@ int Document::findFreePrv()
     return 0;
 }
 
-
+/*
 void Document::saveOldValues()
 {
     QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
@@ -519,13 +460,17 @@ void Document::saveOldValues()
         oldValues0.clear();
         foreach (QString field, tableModel->getFieldsList())
         {
-            oldValues0.insert(field.toUpper(), getValue(field, freePrvRow));
+//123            oldValues0.insert(field.toUpper(), getValue(field, freePrvRow));
+            QModelIndex index;
+            index = tableModel->index(freePrvRow, tableModel->fieldIndex(field));
+            QVariant val = tableModel->data(index);
+            oldValues0.insert(field.toUpper(), val);
         }
     }
     parent->saveOldValues();
     setCurrentIndex(index);
 }
-
+*/
 
 void Document::setCurrentRow(int row)
 {
@@ -533,7 +478,7 @@ void Document::setCurrentRow(int row)
     saveOldValues();
 }
 
-
+/*
 void Document::restoreOldValues()
 {
     Essence::restoreOldValues();
@@ -544,7 +489,7 @@ void Document::restoreOldValues()
     }
     parent->restoreOldValues();
 }
-
+*/
 
 QVariant Document::getSumValue(QString name)
 {   // Возвращает сумму полей <name> всех строк документа
@@ -559,32 +504,29 @@ QVariant Document::getSumValue(QString name)
 
 void Document::show()
 {
-    int docId = getDocId();
     app->debug(1, "");
     app->debug(1, QString("Opened document %1").arg(docId));
-    docModified = false;
-    loadDocument();
-    Essence::show();
     if (locked || !db->lockDocument(docId))
-    {
         setEnabled(false);
-    }
     else
         locked = true;
+    docModified = false;
+    prepareSelectCurrentRowCommand();
+    loadDocument();
+    Essence::show();
 }
 
 
 void Document::hide()
 {
-    int docId = getDocId();
     Essence::hide();
-    app->debug(1, QString("Closed document %1").arg(docId));
     if (locked)
     {
         db->unlockDocument(docId);
         setEnabled(true);
         locked = false;
     }
+    app->debug(1, QString("Closed document %1").arg(docId));
 }
 
 
@@ -836,9 +778,7 @@ void Document::prepareSelectCurrentRowCommand()
 bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
-    {
         return true;
-    }
     return false;
 }
 
@@ -1155,15 +1095,12 @@ int Document::appendDocString()
         else
         {
             tableModel->insertRow(newRow);
+            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+            updateCurrentRow(result);
+
         }
-        setCurrentRow(newRow);
-        updateCurrentRow(result);
-        if (getScriptEngine() != 0 && !addingFromQuery)
-        {
-            saveOldValues();
-            getScriptEngine()->eventAfterAddString();
-            saveOldValues();
-        }
+//        setCurrentRow(newRow);
+//        updateCurrentRow(result);
     }
     return result;
 }

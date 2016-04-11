@@ -42,7 +42,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../driverfr/driverfr.h"
 
 
-QList<int>    TApplication::DebugModes;
+QList<QString>    TApplication::DebugModes;
 TApplication* TApplication::Exemplar   = 0;
 QString TApplication::username         = "";
 QString TApplication::password         = "";
@@ -97,6 +97,8 @@ TApplication::TApplication(int & argc, char** argv)
     scriptMode = false;
     DebugModes.clear();
     dirName = "";
+    debugToBuffer = false;
+    writeDebug = true;
 }
 
 
@@ -657,29 +659,85 @@ QTextCodec* TApplication::codec()
 }
 
 
-void TApplication::setDebugMode(const int& value)
+void TApplication::setDebugMode(QString value)
 {
-    DebugModes.append(value);
+    if (!DebugModes.contains(value))
+        DebugModes.append(value);
 }
 
 
 void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {
-    for (int i = 0; i < DebugModes.count(); i++)
+    if (writeDebug && isDebugMode(mode))
     {
-        if (DebugModes.at(i) == mode)
+        QString debugMode = QString("%1").arg(mode);
+        if (DebugModes.contains(""))
+            debugMode = "";
+        if (!(db == 0 || debugToBuffer))                    // Если база данных открыта, то будем писать отладочную информацию в файл, иначе в буфер
         {
-            QFile file(debugFileName(DebugModes.at(i)));
-            if (file.open(QFile::WriteOnly | QFile::Append))
+            if (tempDebugBuffer.contains(debugMode))                        // Если есть информация в буфере
             {
-                QTextStream out(&file);
-                if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
-                    out << QDateTime::currentDateTime().toString(logTimeFormat()) << " ";
-                out << value << "\n";
+                foreach (QString str, tempDebugBuffer.value(debugMode))     // то скинем ее в файл
+                {
+                    writeToDebugFile(debugMode, str);
+                }
+                tempDebugBuffer.remove(debugMode);                          // и закроем буфер
             }
-            file.close();
+            QString str;                                                    // дальше будем писать в файл
+            if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
+                str = QDateTime::currentDateTime().toString(logTimeFormat()) + " ";
+            writeToDebugFile(debugMode, str + value);
+        }
+        else
+        {
+            QString str;                                                    // дальше будем писать в файл
+            QStringList buffer;
+            if (tempDebugBuffer.contains(debugMode))
+            {
+                buffer = tempDebugBuffer.value(debugMode);
+                tempDebugBuffer.remove(debugMode);
+            }
+            if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
+                str = QDateTime::currentDateTime().toString(logTimeFormat()) + " ";
+            buffer.append(str + value);
+            tempDebugBuffer.insert(debugMode, buffer);
         }
     }
+}
+
+
+void TApplication::writeToDebugFile(QString debugMode, QString value)
+{
+    QString fileName = debugFileName(debugMode);
+    QFile file(fileName);
+    if (file.open(QFile::WriteOnly | QFile::Append))
+    {
+        QTextStream out(&file);
+        out << value << "\n";
+    }
+    file.close();
+}
+
+
+int TApplication::getDebugBufferCount(int mode)
+{
+    QString smode = QString("%1").arg(mode);
+    if (DebugModes.contains(""))
+        smode = "";
+    if (tempDebugBuffer.contains(smode))
+    {
+        return tempDebugBuffer.value(smode).count();
+    }
+    return 0;
+}
+
+
+void TApplication::clearDebugBuffer(int mode)
+{
+    QString smode = QString("%1").arg(mode);
+    if (DebugModes.contains(""))
+        smode = "";
+    tempDebugBuffer.remove(smode);
 }
 
 

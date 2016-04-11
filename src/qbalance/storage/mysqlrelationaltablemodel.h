@@ -79,8 +79,10 @@ public:
     virtual QStringList getFieldsList() const;
     virtual QString getFieldName(int i) { return record().fieldName(i); }
     virtual void    setTestSelect(bool test) { testSelect = test; }
+    virtual bool    isTestSelect() { return testSelect; }
 
     virtual QVariant headerData (int, Qt::Orientation, int = Qt::DisplayRole) const;
+    virtual void     setFullDebugInfo(bool full) { fullDebugInfo = full; }
 
 protected:
     Table*                  parent;
@@ -100,6 +102,7 @@ private:
     TApplication*           app;
     DBFactory*              db;
     bool                    testSelect;
+    bool                    fullDebugInfo;
 };
 
 #endif // MYSQLRELATIONALTABLEMODEL_H

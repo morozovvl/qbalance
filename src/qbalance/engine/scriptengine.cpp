@@ -122,7 +122,7 @@ QScriptValue getId(QScriptContext* context, QScriptEngine* engine)
         QScriptValue value;
         if (context->argumentCount() > 0)
         {
-            int row = (context->argument(0).isNumber() ? context->argument(1).toInteger() : -1);
+            int row = (context->argument(0).isNumber() ? context->argument(0).toInteger() : -1);
             value = engine->evaluate(QString("table.getId(%1)").arg(row));
         }
         else
@@ -219,9 +219,15 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
         if (script.size() > 0)
         {
             TApplication::exemplar()->appendScriptStack((ScriptEngine*)engine);
+/*
             QScriptContext *pc = context->parentContext();
             context->setActivationObject(pc->activationObject());
             context->setThisObject(pc->thisObject());
+*/
+            for (int i = 1; i < context->argumentCount(); i++)
+            {
+                engine->globalObject().setProperty(QString("argument%1").arg(i), context->argument(i));
+            }
             result = engine->evaluate(script);
             if (engine->hasUncaughtException())
             {
@@ -777,10 +783,12 @@ bool ScriptEngine::evaluate()
 }
 
 
-QScriptValue ScriptEngine::evaluate (const QString & program, const QString & fileName, int lineNumber)
+QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fileName, int lineNumber)
 {
     app->appendScriptStack(this);
+    TApplication::exemplar()->debug(3, program);
     QScriptEngine::evaluate(program, fileName, lineNumber);
+    TApplication::exemplar()->debug(3, "/" + program);
     app->removeLastScriptStack();
     return globalObject().property("scriptResult");
 }
@@ -790,7 +798,9 @@ QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
     QScriptValue result;
     app->appendScriptStack(this);
+    TApplication::exemplar()->debug(3, program.fileName());
     result = QScriptEngine::evaluate(program);
+    TApplication::exemplar()->debug(3, "/" + program.fileName());
     app->removeLastScriptStack();
     return result;
 }
@@ -1238,11 +1248,19 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     if (globalObject().property(eventName).isFunction())
     {
         app->appendScriptStack(this);
+        TApplication::exemplar()->setDebugToBuffer(true);
+        TApplication::exemplar()->debug(3, scriptFileName + ":" + eventName);
         result = globalObject().property(eventName).call(thisObject, args);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
         }
+        TApplication::exemplar()->setDebugToBuffer(false);
+        int bufferCount = TApplication::exemplar()->getDebugBufferCount(3);
+        if (bufferCount > 1)
+            TApplication::exemplar()->debug(3, "/" + scriptFileName + ":" + eventName);
+        else
+            TApplication::exemplar()->clearDebugBuffer(3);
         app->removeLastScriptStack();
     }
     return result;

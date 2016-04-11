@@ -169,11 +169,13 @@ void Dictionaries::removeDictionary(QString dictName)
         if (!dict->isSaldo())
         {
             dict->close();
+            delete dict;
         }
         else
         {
             Saldo* sal = (Saldo*)dict;
             sal->close();
+            delete sal;
         }
         dictionariesList.remove(dictName);
         dictionariesNamesList.removeAt(dictionariesNamesList.indexOf(dictName));

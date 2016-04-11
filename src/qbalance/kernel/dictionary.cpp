@@ -172,7 +172,7 @@ bool Dictionary::add()
             }
             else
             {
-                int strNum = getId();
+                int strNum = getId(0, true);
                 if (strNum > 0)
                 {
                     updateCurrentRow(strNum);
@@ -241,7 +241,7 @@ void Dictionary::setValue(qulonglong id, QString name, QVariant value)
 }
 
 
-bool Dictionary::calculate() {
+bool Dictionary::calculate(bool update) {
     if (!isCurrentCalculate)
     {
         isCurrentCalculate = true;
@@ -262,15 +262,18 @@ bool Dictionary::calculate() {
                 }
             }
 
-            if (db->execCommands())
-            {   // Если во время работы скриптов ошибки не произошло
-                // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-                updateCurrentRow();
-                saveOldValues();
-            }
-            else
-            {   // Во время работы скриптов произошла ошибка
-                restoreOldValues();
+            if (update)
+            {
+                if (db->execCommands())
+                {   // Если во время работы скриптов ошибки не произошло
+                    // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+                    updateCurrentRow();
+                    saveOldValues();
+                }
+                else
+                {   // Во время работы скриптов произошла ошибка
+                    restoreOldValues();
+                }
             }
         }
         isCurrentCalculate = false;
@@ -282,7 +285,7 @@ bool Dictionary::calculate() {
 qulonglong Dictionary::getId(int row, bool forceToRefresh)
 {
     QVariant result = Essence::getId(row);
-    if ((result.isNull() || forceToRefresh || getIdRefresh) && isSet() && !isSaldo())
+    if ((result.isNull() || forceToRefresh || getIdRefresh) && isSet())
     {
         // Если это набор, то продолжаем
         QString filter;
@@ -550,7 +553,6 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
             else
                 resFilter = filter;
         }
-
         if (!isDocumentLoading())
         {
             if (scriptEngine != 0)
@@ -691,16 +693,21 @@ void Dictionary::lock(bool toLock)
 {
     if (toLock)
     {
-//        if (isSet())
-//        {
+        if (isSet())
+        {
+            if (rowCount() == 0)
+                getId();
             foreach (QString dictName, getChildDicts())
             {
                 Dictionary* dict = dictionaries->getDictionary(dictName);
                 qlonglong id = getValue(idFieldName + "_" + dictName).toLongLong();
-                dict->setId(id);
-                dict->lock();
+                if (id > 0)
+                {
+                    dict->setId(id);
+                    dict->lock();
+                }
             }
-//        }
+        }
         locked = true;
     }
     else

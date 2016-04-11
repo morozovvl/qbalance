@@ -34,7 +34,7 @@ QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject*
     log = "";
     app = TApplication::exemplar();
     tryReceiveExit = false;
-    timeOut = 1000;
+    timeOut = 10000;
 }
 
 

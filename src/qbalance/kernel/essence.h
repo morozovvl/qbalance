@@ -134,7 +134,7 @@ public:
     ScriptEngine*       getScriptEngine();
     void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
     virtual void        evaluateEngine();
-    virtual bool        calculate();
+    virtual bool        calculate(bool = true);
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
     virtual void        restoreOldValues();
     Q_INVOKABLE virtual QScriptValue evaluateScript(QString);

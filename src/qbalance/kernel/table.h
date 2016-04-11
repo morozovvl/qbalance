@@ -56,6 +56,8 @@ public:
     Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE virtual bool            isReadOnly();
+    Q_INVOKABLE virtual void            setFullDebugInfo(bool full) { fullDebugInfo = full; }
+
 
 protected:
     DBFactory*                          db;
@@ -67,6 +69,7 @@ protected:
     MySqlRelationalTableModel*          tableModel;
     QList<FieldType>                    columnsProperties;
     virtual bool                        setTableModel(int = 0);
+    bool                                fullDebugInfo;
 
 private:
     QString                             defineFieldType(QVariant::Type);

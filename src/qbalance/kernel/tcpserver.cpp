@@ -209,7 +209,7 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     {
         str.replace("setDebugMode(", "");
         str.replace(")", "");
-        app->setDebugMode(str.toInt());
+        app->setDebugMode(str);
         resStr = "Ok";
         sendToClient(pClientSocket, resStr);
     }

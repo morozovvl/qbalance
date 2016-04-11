@@ -156,10 +156,12 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             dateEdit = new QDateEdit();
             dateEdit->setObjectName("dateEdit");
             dateEdit->setDisplayFormat("dd.MM.yyyy");
+            connect(dateEdit, SIGNAL(editingFinished()), this, SLOT(saveDate()));
             hbxDateLayout->addWidget(dateEdit);
             hbxDateLayout->addWidget(new QLabel(LABEL_NUMBER, formWidget));
             numberEdit = new QLineEdit();
             numberEdit->setObjectName("numberEdit");
+            connect(numberEdit, SIGNAL(editingFinished()), this, SLOT(saveNumber()));
             hbxDateLayout->addWidget(numberEdit);
             hbxDateLayout->addStretch(1);
             vbxLayout->insertLayout(0, hbxDateLayout);
@@ -246,7 +248,6 @@ void FormDocument::cmdOk()
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
-
         getParent()->saveChanges();
     }
 }
@@ -295,4 +296,15 @@ void FormDocument::setEnabled(bool enabled)
         queriesMenu->setEnabled(enabled);
 }
 
+
+void FormDocument::saveDate()
+{
+    getParent()->getParent()->setValue("ДАТА", QVariant(getDateEdit()->date()));
+}
+
+
+void FormDocument::saveNumber()
+{
+    getParent()->getParent()->setValue("НОМЕР", QVariant(getNumberEdit()->text()));
+}
 

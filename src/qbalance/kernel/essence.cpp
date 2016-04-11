@@ -93,7 +93,7 @@ Dialog* Essence::getFormWidget() {
 }
 
 
-bool Essence::calculate()
+bool Essence::calculate(bool)
 {
     if (scriptEngineEnabled && scriptEngine != 0)
     {
@@ -188,7 +188,6 @@ void Essence::setValue(QString n, QVariant value, int row)
             row = getCurrentRow();
 
         QModelIndex index, oldIndex;
-
         oldIndex = getCurrentIndex();
         index = tableModel->index(row, fieldColumn);
 
@@ -212,7 +211,7 @@ void Essence::setValue(QString n, QVariant value, int row)
                     tableModel->setData(index, str.toDouble());
                 }
                 else
-                    tableModel->setData(index, value);
+                    tableModel->setData(index, value);  // QSqlQuery::value: not positioned on a valid record
                 break;
             }
         }
@@ -521,6 +520,7 @@ int Essence::exec()
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
+        beforeShowFormEvent(getForm());
         result = form->exec();
         return result;
     }
@@ -535,6 +535,7 @@ void Essence::show()
     if (opened && form != 0)
     {
         activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
+        beforeShowFormEvent(getForm());
         form->show();
     }
 }
@@ -667,7 +668,11 @@ void Essence::closeScriptEngine()
 {
     closeFormEvent(form);
     if (scriptEngineEnabled && scriptEngine != 0)
-        scriptEngine->deleteLater();
+    {
+        scriptEngine->close();
+        delete scriptEngine;
+//        scriptEngine->deleteLater();
+    }
 }
 
 
@@ -827,27 +832,23 @@ void Essence::prepareSelectCurrentRowCommand()
 
 void Essence::updateCurrentRow()
 {
-    if (preparedSelectCurrentRow.exec())
+    if (preparedSelectCurrentRow.exec() && preparedSelectCurrentRow.first())
     {
-        if (preparedSelectCurrentRow.first())
+        QModelIndex index = getCurrentIndex();
+        for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
         {
-            QModelIndex index = getCurrentIndex();
-            for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
-            {
-                QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
-                QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-                if (value != tableModel->record(index.row()).value(fieldName))
-                    tableModel->setData(tableModel->index(index.row(), i), value, true);
-            }
-            setCurrentIndex(index);
+            QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
+            QVariant value = preparedSelectCurrentRow.record().value(fieldName);
+            if (value != tableModel->record(index.row()).value(fieldName))
+                tableModel->setData(tableModel->index(index.row(), i), value, true);
         }
+        setCurrentIndex(index);
     }
     else
-        if (!preparedSelectCurrentRow.isValid())
-        {
-            QString command = preparedSelectCurrentRow.executedQuery();
-            TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
-            TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
+    {
+        QString command = preparedSelectCurrentRow.executedQuery();
+        TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
+        TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
     }
 }
 
@@ -920,15 +921,15 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
         QFile file(fullFileName);
         // Проверим, какой файл свежее, локальный или на сервере
         QDateTime locFileTime = QFileInfo(file).lastModified().addSecs(app->getSecDiff());  // Время модификации локального файла, приведенное к серверному времени
-        QDateTime servFileTime = db->getFileDateTime(fileName, type);
+        FileInfo servFileInfo = db->getFileInfo(fileName, type);
         if (file.open(QIODevice::ReadOnly))
         {
             QByteArray array = file.readAll();
             file.close();
             qulonglong localFileCheckSum = db->calculateCRC32(&array);
-            if (db->getFileCheckSum(fileName, type) != localFileCheckSum)
+            if (servFileInfo.size != localFileCheckSum)
             {   // контрольные суммы файлов не совпадают или нужно сохранить принудительно
-                if (app->isSA() && (!servFileTime.isValid() || servFileTime.secsTo(locFileTime) > 5))   // Если не указано время сохранения файла на сервере
+                if (app->isSA() && (!servFileInfo.lastModified.isValid() || servFileInfo.lastModified.secsTo(locFileTime) > 5))   // Если не указано время сохранения файла на сервере
                                                                                                         // или локальный файл свежее серверного более чем на 5 секунд
                     db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
                 else
@@ -951,9 +952,14 @@ void Essence::saveOldValues()
 {
     // Сохраним старые значения полей записи
     oldValues.clear();
+//123
     foreach (QString field, tableModel->getFieldsList())
     {
-        oldValues.insert(field.toUpper(), getValue(field));
+//123        oldValues.insert(field.toUpper(), getValue(field));
+        QModelIndex index;
+        index = tableModel->index(getCurrentRow(), tableModel->fieldIndex(field));
+        QVariant val = tableModel->data(index);
+        oldValues.insert(field.toUpper(), val);
     }
 }
 
@@ -971,6 +977,8 @@ void Essence::keyboardReaded(QString barCode)
 {
     if (scriptEngineEnabled && scriptEngine != 0 && enabled)
         scriptEngine->eventBarCodeReaded(barCode);
+
+    form->setButtons();
 
     if (grdTable != 0)
         grdTable->setCurrentFocus();

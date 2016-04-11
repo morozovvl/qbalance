@@ -40,7 +40,6 @@ void MyComboBox::keyPressEvent(QKeyEvent* event) {
     else
     {
         searchParameters->keyPressEvent(event);
-
         if (!event->isAccepted())
             QComboBox::keyPressEvent(event);
     }

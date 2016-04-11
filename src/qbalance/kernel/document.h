@@ -40,7 +40,7 @@ struct prvSaldo {
     double  crSaldo;
 };
 
-class Document : public Essence {
+class Document : public Dictionary {
     Q_OBJECT
 public:
     Document(int, Documents*);
@@ -61,7 +61,7 @@ public:
 
     virtual QString transformSelectStatement(QString string);
     void setDocId(int doc) { docId = doc; prepareSelectCurrentRowCommand(); }
-    Q_INVOKABLE virtual bool calculate();
+    Q_INVOKABLE virtual bool calculate(bool = true);
     virtual void setConstDictId(QString, QVariant);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
@@ -85,8 +85,8 @@ public:
     Q_INVOKABLE void saveChanges();
     void saveVariablesToDB();
     void restoreVariablesFromDB();
-    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
-    virtual void        restoreOldValues();
+//    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
+//    virtual void        restoreOldValues();
     Q_INVOKABLE virtual void setEnabled(bool);
     Q_INVOKABLE FormDocument* getForm() { return (FormDocument*)Essence::getForm(); }
     Q_INVOKABLE virtual void setForm(QString = "");

@@ -11,7 +11,7 @@ set (QT_USE_QTSCRIPT TRUE)
 set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTUITOOLS TRUE)
 set (QT_USE_QTDESIGNER TRUE)
-find_package (Qt4 REQUIRED)
+find_package (Qt4 REQUIRED COMPONENTS)
 include(${QT_USE_FILE})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -23,14 +23,16 @@ set (SOURCES
     ./src/qextserialenumerator_linux.cpp
     ./src/qextserialenumerator_unix.cpp
     ./src/qextserialport.cpp
+    ./src/moc_qextserialport.cxx
 #    ./src/qextserialport_win.cpp
 )
 
 set (HEADERS
     ./src/qextserialenumerator.h
     ./src/qextserialport_global.h
-    ./src/qextserialport.h
     ./src/qextserialport_p.h
+    ./src/qextserialport.h
+#    ./src/moc_qextserialport.cxx
 )
 
 

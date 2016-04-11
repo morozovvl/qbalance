@@ -82,7 +82,7 @@ bool Documents::add()
             }
             setCurrentDocument(strNum);
             currentRow = tableModel->rowCount() - 1;
-            Essence::saveOldValues();
+            saveOldValues();
             form->setButtons();
             grdTable->setFocus();
             return true;
@@ -111,7 +111,7 @@ bool Documents::remove(bool noAsk)
 
 void Documents::view()
 {
-    setCurrentDocument(getValue("код").toInt());
+    setCurrentDocument(getId());
     currentRow = getCurrentRow();
     currentDocument->show();
 }

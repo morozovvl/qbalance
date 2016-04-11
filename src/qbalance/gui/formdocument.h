@@ -63,6 +63,10 @@ private:
     QTextEdit*      textEdit;
     virtual void createForm(QString, QWidget* pwgt = 0);
 //    virtual QDomElement createWidgetsStructure();
+
+private slots:
+    void    saveDate();
+    void    saveNumber();
 };
 
 #endif // FORMDOCUMENT_H

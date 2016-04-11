@@ -220,14 +220,11 @@ strNum - номер текущей строки тела таблицы
             value = cellText.mid(fpos, lpos - fpos);
             value = value.remove("[").remove("]");      // освободим его от квадратных скобок
             var = context->getValue(value);      // и получим данные для него из контекста печати
-            qDebug() << value;
             if (var.isValid())                                      // если данные имеются
             {
                 writeCell(cells.at(i), "[" + value + "]", var);     // то запишем их вместо текста шаблона
                 break;
             }
-            qDebug() << value;
-
             writeCell(cells.at(i), "[" + value + "]", var);     // Запишем в ячейку пустое выражение
         }
         result = false;

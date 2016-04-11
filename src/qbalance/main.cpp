@@ -54,6 +54,7 @@ bool readParameters(int argc, char *argv[]) {
             out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
             out << QObject::trUtf8("  -d4| --debug4     - Запустить программу в режиме отладки устройства COM-порта (файл debug4.log)\n");
             out << QObject::trUtf8("  -d5| --debug5     - Запустить программу в режиме отладки обмена между экземплярами приложения (файл debug5.log)\n");
+            out << QObject::trUtf8("  -ul| --unitelogs  - Объединить все включенные журналы отладки в одном файле (debug.log)\n");
             out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
             out << QObject::trUtf8("  -p | --port       - Порт на хосте\n");
             out << QObject::trUtf8("  -db| --database   - Наименование базы данных\n");
@@ -77,27 +78,32 @@ bool readParameters(int argc, char *argv[]) {
         else if (QString(argv[i]).compare("-d1", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--debug1", Qt::CaseInsensitive) == 0)
             {
-                TApplication::setDebugMode(1);
+                TApplication::setDebugMode("1");
             }
         else if (QString(argv[i]).compare("-d2", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug2", Qt::CaseInsensitive) == 0)
             {
-                TApplication::setDebugMode(2);
+                TApplication::setDebugMode("2");
             }
         else if (QString(argv[i]).compare("-d3", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug3", Qt::CaseInsensitive) == 0)
             {
-                TApplication::setDebugMode(3);
+                TApplication::setDebugMode("3");
             }
         else if (QString(argv[i]).compare("-d4", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug4", Qt::CaseInsensitive) == 0)
             {
-                TApplication::setDebugMode(4);
+                TApplication::setDebugMode("4");
             }
         else if (QString(argv[i]).compare("-d5", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug5", Qt::CaseInsensitive) == 0)
             {
-                TApplication::setDebugMode(5);
+                TApplication::setDebugMode("5");
+            }
+        else if (QString(argv[i]).compare("-ul", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--unitelogs", Qt::CaseInsensitive) == 0)
+            {
+                TApplication::setDebugMode("");
             }
         else if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--host", Qt::CaseInsensitive) == 0)
@@ -191,8 +197,9 @@ int main(int argc, char *argv[])
     if (lStart) {
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
-        application.setDebugMode(0);
-
+        application.setDebugMode("0");
+        application.debug(0, "\n");
+        application.debug(0, "Program startup.");
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме
         if (application.getScript().size() > 0)
             application.setScriptMode(true);
@@ -201,7 +208,6 @@ int main(int argc, char *argv[])
         {
             if (application.open())
             {       // Если приложение удалось создать
-                application.debug(0, "Program startup.");
                 if (application.isScriptMode())
                     lResult = application.runScript(application.getScript());
                 else if (application.isServerMode())
@@ -211,9 +217,9 @@ int main(int argc, char *argv[])
                     application.show();         // Откроем приложение
                     lResult = application.exec();
                 }
-                application.debug(0, "Program shutdown.\n");
             }
             application.close();            // Закроем приложение
+            application.debug(0, "Program shutdown.\n");
             application.quit();
         }
         else

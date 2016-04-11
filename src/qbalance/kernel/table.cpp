@@ -37,6 +37,7 @@ Table::Table(QString name, QObject *parent)
     queryTableName = "";
     app = TApplication::exemplar();
     db = app->getDBFactory();
+    fullDebugInfo = false;                  // По умолчанию выводится неполная отладочная информация (для лучшей читаемости журнала)
 }
 
 
@@ -80,7 +81,18 @@ QList<FieldType> Table::returnColumnsProperties()
 void Table::query(QString filter)
 {
     tableModel->setFilter(filter);
-    app->debug(1, "Query: " + tableModel->getSelectStatement());
+    tableModel->setFullDebugInfo(fullDebugInfo);
+
+    if (!fullDebugInfo)
+    {
+        QString command = QString("SELECT * FROM %1").arg(tableModel->tableName());
+        if (filter.size() > 0)
+            command.append(QString(" WHERE %1;").arg(filter));
+        if (tableModel->isTestSelect())
+            command.append(QString(" LIMIT 0;"));
+        app->debug(1, "Query:(*) " + command);
+    }
+
     if (!tableModel->select())
         app->showError(tableModel->lastError().text());
  }
