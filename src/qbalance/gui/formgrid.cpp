@@ -69,6 +69,12 @@ FormGrid::~FormGrid()
 
 void FormGrid::close()
 {
+    if (grdTable != 0)
+    {
+        grdTable->close();
+        delete grdTable;
+        grdTable = 0;
+    }
     Form::close();
 }
 

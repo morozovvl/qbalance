@@ -577,36 +577,23 @@ bool Essence::open()
 
 void Essence::close()
 {
-    if (form != 0)
-    {
-        if (form->isDefaultForm())
-        {
-            if (grdTable != 0)
-            {
-                grdTable->close();
-                delete grdTable;
-                grdTable = 0;
-            }
-            form->close();
-            delete form;
-            form = 0;
-        }
-        else
-        {
-            if (grdTable != 0)
-            {
-                grdTable->close();
-                grdTable->deleteLater();
-            }
-            form->close();
-            form->deleteLater();
-        }
-    }
 
     if (m_networkAccessManager != 0)
         delete m_networkAccessManager;
 
     closeScriptEngine();
+
+    if (form != 0)
+    {
+        form->close();
+        if (form->isDefaultForm())
+        {
+            delete form;
+            form = 0;
+        }
+        else
+            form->deleteLater();
+    }
 
     Table::close();
 }
@@ -670,8 +657,7 @@ void Essence::closeScriptEngine()
     if (scriptEngineEnabled && scriptEngine != 0)
     {
         scriptEngine->close();
-        delete scriptEngine;
-//        scriptEngine->deleteLater();
+        scriptEngine->deleteLater();        // НЕ ИЗМЕНЯТЬ. ЕСЛИ СДЕЛАТЬ ПО-ДРУГОМУ, ВОЗМОЖНА ОШИБКА СЕГМЕНТАЦИИ
     }
 }
 

@@ -88,7 +88,6 @@ void Topers::view()
         removeDocument(operNumber);
     }
     delete wizard;
-    grdTable->setFocus();
 }
 
 

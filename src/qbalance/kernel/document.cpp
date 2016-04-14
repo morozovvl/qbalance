@@ -207,7 +207,15 @@ bool Document::add()
                 }
             }
         }
-        appendDocString();
+        int strNum = appendDocString();
+        if (strNum > 0)      // Если строка была добавлена
+        {
+            int newRow = tableModel->rowCount();
+            tableModel->insertRow(newRow);
+            setCurrentRow(newRow);
+            updateCurrentRow(strNum);
+        }
+
         if (getScriptEngine() != 0)
         {
             getScriptEngine()->eventAfterAddString();
@@ -1084,24 +1092,6 @@ int Document::appendDocString()
     }
 
     prvValues.clear();
-
-    if (result > 0)                         // Если строка была добавлена
-    {
-        int newRow = tableModel->rowCount();
-        if (newRow == 0)                    // Если это первая строка в документе
-        {
-            query();
-        }
-        else
-        {
-            tableModel->insertRow(newRow);
-            grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-            updateCurrentRow(result);
-
-        }
-//        setCurrentRow(newRow);
-//        updateCurrentRow(result);
-    }
     return result;
 }
 

@@ -125,7 +125,7 @@ void TableView::setCurrentFocus()
     QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     int column = index.column() < 0 ? 0 : index.column();
     int row = index.row() < 0 ? 0 : index.row();
-//    selectNextColumn();
+    selectNextColumn();
     column = currentIndex().column();
     reset();
     setCurrentIndex(index.sibling(row, column));
@@ -443,41 +443,28 @@ void TableView::selectNextColumn()
         QModelIndex index = currentIndex();
         if (!index.isValid())
             return;
-        int column = horizontalHeader()->visualIndex(index.column());
-        int oldColumn = column > 0 ? column : 0;
+        int column = 0;
         int logicalIndex;
         QModelIndex newIndex;
         while (true)
         {
-            if (column < 0)
-                column = 0;
-            else
-                column++;                       // Перейдем в следующий столбец
             logicalIndex = horizontalHeader()->logicalIndex(column);
             newIndex = index.sibling(index.row(), logicalIndex);
-            if (!newIndex.isValid())
+            if (newIndex.isValid())
             {
-                newIndex = index.sibling(index.row(), 0);
-                if (!newIndex.isValid())
+                if (!horizontalHeader()->isSectionHidden(logicalIndex))
                 {
-                    setCurrentIndex(index);
-                }
-                column = -1;
-            }
-
-            if (!horizontalHeader()->isSectionHidden(logicalIndex))
-            {
-                MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
-                if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
-                {
-                    setCurrentIndex(newIndex);
-                    break;
+                    MyItemDelegate* delegate = (MyItemDelegate*)itemDelegateForColumn(logicalIndex);
+                    if (delegate != 0 && !delegate->isReadOnly())    // Если эта колонка для редактирования
+                    {
+                        setCurrentIndex(newIndex);
+                        break;
+                    }
                 }
             }
-            if (column == oldColumn)                            // Выход из бесконечного цикла в случае, если ни одного поля для редактирования не найдено
-            {
+            else
                 break;
-            }
+            column++;                       // Перейдем в следующий столбец
         }
     }
 }

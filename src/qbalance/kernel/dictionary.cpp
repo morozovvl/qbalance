@@ -159,14 +159,9 @@ bool Dictionary::add()
                 if (strNum >= 0)
                 {
                     int newRow = tableModel->rowCount();
-                    if (newRow == 0)
-                        query();
-                    else
-                    {
-                        tableModel->insertRow(newRow);
-                        grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
-                        updateCurrentRow(strNum);
-                    }
+                    tableModel->insertRow(newRow);
+                    setCurrentRow(newRow);
+                    updateCurrentRow(strNum);
                     result = true;
                 }
             }

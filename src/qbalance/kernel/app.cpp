@@ -237,7 +237,7 @@ Documents* TApplication::getDocuments(int opNumber) {
         if (!doc->open())
             return 0;
         doc->query();
-        doc->getGrdTable()->selectRow(doc->getTableModel()->rowCount() - 1);
+        doc->setCurrentRow(doc->getTableModel()->rowCount() - 1);
         documents.insert(operName, doc);
     }
     return documents[operName];
