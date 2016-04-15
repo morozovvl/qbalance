@@ -80,7 +80,7 @@ enum ConfigVars {
     FR_NEEDED,
     FR_DRIVER_PORT,
     FR_DRIVER_BOUD_RATE,
-    FR_DRIVER_TIMEOUT,
+    FR_DRIVER_MAX_TIMEOUT,
     FR_LOCAL_DRIVER_TIMEOUT,
     FR_REMOTE_DRIVER_TIMEOUT,
     FR_NET_DRIVER_TIMEOUT,
@@ -180,6 +180,8 @@ public:
     int getDebugBufferCount(int mode);
     void clearDebugBuffer(int mode);
     void setWriteDebug(bool write) { writeDebug = write; }
+    QString getLastValueInDebugBuffer(int);
+    void removeLastValueInDebugBuffer(int);
 
     Q_INVOKABLE virtual void debug(int, const QString&, bool = false);
 

@@ -34,7 +34,7 @@ QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject*
     log = "";
     app = TApplication::exemplar();
     tryReceiveExit = false;
-    timeOut = 10000;
+    timeOut = app->getConfigValue(FR_DRIVER_MAX_TIMEOUT).toInt() * 1000;
 }
 
 

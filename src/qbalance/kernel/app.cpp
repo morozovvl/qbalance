@@ -126,7 +126,7 @@ void TApplication::initConfig()
     setConfig("fr", FR_DRIVER_PORT, "COM порт", "/dev/ttyUSB0");
 #endif
     setConfig("fr", FR_DRIVER_BOUD_RATE, "Скорость", 6, true);
-    setConfig("fr", FR_DRIVER_TIMEOUT, "Таймаут, мс", 100);
+    setConfig("fr", FR_DRIVER_MAX_TIMEOUT, "Максимальное время ожидания ФР, с", 30);
     setConfig("fr", FR_LOCAL_DRIVER_TIMEOUT, "Таймаут для локального ФР, мс", 100);
     setConfig("fr", FR_REMOTE_DRIVER_TIMEOUT, "Таймаут для сетевого ФР, мс", 150);
     setConfig("fr", FR_NET_DRIVER_TIMEOUT, "Таймаут для обмена по сети, мс", 200);
@@ -430,7 +430,7 @@ void    TApplication::openPlugins()
             driverFR->setApp(this);
             if (driverFR->open(getConfigValue(FR_DRIVER_PORT).toString(),
                                getConfigValue(FR_DRIVER_BOUD_RATE).toInt(),
-                               getConfigValue(FR_DRIVER_TIMEOUT).toInt(),
+                               getConfigValue(FR_LOCAL_DRIVER_TIMEOUT).toInt(),
                                getConfigValue(FR_DRIVER_PASSWORD).toInt(),
                                getConfigValue(REMOTE_HOST).toString(),
                                getConfigValue(REMOTE_PORT).toInt()))
@@ -603,7 +603,6 @@ Dialog* TApplication::createForm(QString fileName)
                     showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                     return 0;
                 }
-                formWidget->findCmdOk();
             }
         }
     }
@@ -738,6 +737,33 @@ void TApplication::clearDebugBuffer(int mode)
     if (DebugModes.contains(""))
         smode = "";
     tempDebugBuffer.remove(smode);
+}
+
+
+QString TApplication::getLastValueInDebugBuffer(int mode)
+{
+    QString smode = QString("%1").arg(mode);
+    if (DebugModes.contains(""))
+        smode = "";
+    QStringList list = tempDebugBuffer.value(smode);
+    if (list.size() > 0)
+        return tempDebugBuffer.value(smode).last();
+    return "";
+}
+
+
+void TApplication::removeLastValueInDebugBuffer(int mode)
+{
+    QString smode = QString("%1").arg(mode);
+    if (DebugModes.contains(""))
+        smode = "";
+    QStringList list = tempDebugBuffer.value(smode);
+    if (list.size() > 0)
+    {
+        list.removeLast();
+        tempDebugBuffer.remove(smode);
+        tempDebugBuffer.insert(smode, list);
+    }
 }
 
 
@@ -952,7 +978,7 @@ void TApplication::barCodeReadyRead(QString barCodeString)
     if (getActiveSubWindow() != 0)
         dialog = (Dialog*)(getActiveSubWindow()->widget());
     if (dialog != 0)
-        dialog->getForm()->getParent()->keyboardReaded(barCodeString.trimmed());
+        dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
     barCodeReaded = false;
 }
 

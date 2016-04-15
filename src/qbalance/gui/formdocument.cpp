@@ -269,9 +269,9 @@ void FormDocument::cmdQueryAdd()
     if (action != 0)
     {
         getParent()->addFromQuery(action->data().toString().trimmed());
-        grdTable->setFocus();
-        setButtons();
     }
+    grdTable->setFocus();
+    setButtons();
 }
 
 

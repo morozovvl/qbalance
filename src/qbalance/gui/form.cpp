@@ -187,14 +187,55 @@ void Form::cmdCancel()
         hide();
 }
 
+/*
+int Form::exec()
+{
+    if (formWidget != 0)
+    {
+        lSelected = false;
+        if (!autoSelect)
+        {
+
+            if (subWindow != 0)
+            {
+                int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
+                int y = (app->getMainWindow()->height() - subWindow->height()) / 2;
+                int w = subWindow->width();
+                int h = subWindow->height();
+                app->getMainWindow()->removeMdiWindow(subWindow);
+                subWindow = 0;
+                formWidget->setGeometry(x, y, w, h);
+                formWidget->setParent(app->getMainWindow());
+                formWidget->setWindowFlags(Qt::Dialog);
+            }
+
+            QWidget* activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
+
+            if (subWindow != 0)
+                subWindow->setWindowModality(Qt::ApplicationModal);
+            else
+                formWidget->setWindowModality(Qt::ApplicationModal);
+
+            formWidget->exec();
+
+            if (activeWidget != 0)
+                activeWidget->activateWindow();
+//            formWidget->done(0);
+//            getSubWindow();
+        }
+        else
+            cmdOk();
+        autoSelect = false;
+        return lSelected;
+    }
+    return 0;
+}
+*/
 
 int Form::exec()
 {
     if (formWidget != 0)
     {
-        if (parent != 0)
-            parent->beforeShowFormEvent(parent->getForm());
-
         lSelected = false;
         if (!autoSelect)
         {
@@ -210,17 +251,17 @@ int Form::exec()
                 formWidget->setParent(app->getMainWindow());
                 formWidget->setWindowFlags(Qt::Dialog);
             }
+
+            QWidget* activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
             formWidget->exec();
             formWidget->done(0);
             getSubWindow();
+            if (activeWidget != 0)
+                activeWidget->activateWindow();
         }
         else
             cmdOk();
         autoSelect = false;
-
-        if (parent != 0)
-            parent->afterShowFormEvent(parent->getForm());
-
         return lSelected;
     }
     return 0;
@@ -231,9 +272,6 @@ void Form::show()
 {
     if (formWidget != 0)
     {
-        if (parent != 0)
-            parent->beforeShowFormEvent(parent->getForm());
-
         lSelected = false;
         checkVisibility();
         if (getSubWindow() != 0)
@@ -245,14 +283,11 @@ void Form::show()
             autoSelect = false;
         }
         formWidget->show();
-
-        if (parent != 0)
-            parent->afterShowFormEvent(parent->getForm());
     }
 }
 
 
-MyMdiSubWindow* Form::getSubWindow()
+QMdiSubWindow* Form::getSubWindow()
 {
     if (app != 0 && !freeWindow)
     {
@@ -422,8 +457,6 @@ void Form::readSettings()
         int h = settingValues.value("height", 200);
 
         widget->setGeometry(x, y, w, h);
-
-//        qDebug() << "readSettings" << configName << defaultForm << w << h;
     }
 }
 
@@ -454,6 +487,5 @@ void Form::writeSettings()
         db->setConfig(configName, "height", QString("%1").arg(widget->geometry().height()));
         app->showMessageOnStatusBar("");
     }
-//    qDebug() << "writeSettings" << configName << defaultForm << widget->geometry().width() << widget->geometry().height();
 }
 

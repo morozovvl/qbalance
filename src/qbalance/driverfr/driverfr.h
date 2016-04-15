@@ -806,7 +806,7 @@ private:
     int sendNAK();
     int sendACK();
     unsigned short int LRC(unsigned char *, int, int = 0);
-    int readAnswer(answer*);
+    int readAnswer(answer*, short int = 0);
     int composeComm(command*, int, int, parameter*);
     int sendCommand(int, int, parameter*);
     int errHand(answer*);

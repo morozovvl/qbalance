@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QToolBar>
 #include <QtGui/QMainWindow>
 #include "guifactory.h"
-#include "mymdisubwindow.h"
 
 class TApplication;
 class Dialog;
@@ -40,9 +39,9 @@ public:
       QMdiArea* getWorkSpace() { return workSpace; }
       QStatusBar* getStatusBar() { return statusBar(); }
       virtual void showPeriod();
-      virtual MyMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс
-      virtual MyMdiSubWindow* findMdiWindow(QWidget*);
-      virtual void removeMdiWindow(MyMdiSubWindow*);                         // Удаляет окно из многооконного интерфейса
+      virtual QMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс
+      virtual QMdiSubWindow* findMdiWindow(QWidget*);
+      virtual void removeMdiWindow(QMdiSubWindow*);                         // Удаляет окно из многооконного интерфейса
 
 private slots:
       void showDictionaries();

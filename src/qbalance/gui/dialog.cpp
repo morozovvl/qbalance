@@ -42,15 +42,17 @@ void Dialog::setApp(TApplication* a)
 {
     app = a;
     setParent(app->getMainWindow(), Qt::Dialog);
-}
 
-
-void Dialog::findCmdOk()
-{
     buttonOk = (QPushButton*)this->findChild("buttonOk");
     if (buttonOk != 0)
     {
         connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
+    }
+
+    buttonCancel = (QPushButton*)this->findChild("buttonCancel");
+    if (buttonCancel != 0)
+    {
+        connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
     }
 }
 
@@ -62,16 +64,6 @@ void Dialog::cmdOk()
         form->cmdOk();
     else
         accept();
-}
-
-
-void Dialog::findCmdCancel()
-{
-    buttonCancel = (QPushButton*)this->findChild("buttonCancel");
-    if (buttonCancel != 0)
-    {
-        connect(buttonCancel, SIGNAL(clicked()), this, SLOT(cmdCancel()));
-    }
 }
 
 
@@ -111,11 +103,6 @@ QObject* Dialog::findChild(QString name)
 
 void Dialog::keyPressEvent(QKeyEvent *event)
 {
-    if (buttonOk == 0)
-        findCmdOk();
-    if (buttonCancel == 0)
-        findCmdCancel();
-
     event->setAccepted(false);
     if (!event->isAccepted())
     {
@@ -123,22 +110,16 @@ void Dialog::keyPressEvent(QKeyEvent *event)
         {
             if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
             {
-                if (buttonOk != 0)
-                {
-                    buttonOk->click();
-                    event->setAccepted(true);
-                }
+                cmdOk();
+                event->setAccepted(true);
             }
         }
         else
         {
             if (event->key() == Qt::Key_Escape)
             {
-                if (buttonCancel != 0)
-                {
-                    buttonCancel->click();
-                    event->setAccepted(true);
-                }
+                cmdCancel();
+                event->setAccepted(true);
             }
         }
     }

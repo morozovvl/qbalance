@@ -661,12 +661,12 @@ int DriverFR::readBytes(unsigned char *buff, int len)
 }
 
 
-int DriverFR::readAnswer(answer *ans)
+int DriverFR::readAnswer(answer *ans, short int byte)
 {
     int result;
     short int  len, crc, repl;
     result = -1;
-    repl = readByte();
+    repl = byte > 0 ? byte : readByte();
     if (repl == STX)
     {
         for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
@@ -797,7 +797,7 @@ bool DriverFR::deviceIsReady()
         {                                       // от предыдущей команды
             serialPort->writeLog();
             answer     a;
-            readAnswer(&a);
+            readAnswer(&a, repl);
             sendENQ();
         }
     }

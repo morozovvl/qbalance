@@ -269,17 +269,22 @@ int Document::addFromQuery(QString queryName)
                 i++;
                 progressDialog->setValue(i);
             } while (queryData.next());
+            query();
             calcItog();
             saveChanges();
             db->commitTransaction();
             progressDialog->hide();
             delete progressDialog;
-            query();
             addingFromQuery = false;
             return queryData.size();
         }
         else
+            db->beginTransaction();
             ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+            query();
+            calcItog();
+            saveChanges();
+            db->commitTransaction();
     }
     return 0;
 }
@@ -325,15 +330,14 @@ bool Document::remove(bool noAsk)
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove(noAsk))
         {
+            saveChanges();     // Принудительно обновим перед удалением строки
             if (db->removeDocStr(docId, strNum))
             {
                 query();
                 calcItog();
-
                 if (scriptEngineEnabled && scriptEngine != 0)
                     scriptEngine->eventAfterDeleteString();
-
-                saveChanges();     // Принудительно обновим итог при удалении строки
+                saveChanges();     // Принудительно обновим итог после удаления строки
                 return true;
             }
             app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
@@ -456,29 +460,6 @@ int Document::findFreePrv()
     return 0;
 }
 
-/*
-void Document::saveOldValues()
-{
-    QModelIndex index = getCurrentIndex();      // Запомним, где стоял курсор
-    Essence::saveOldValues();
-    if (freePrv > 0)
-    {  // Если есть "свободная" проводка
-
-        int freePrvRow = findFreePrv();
-        oldValues0.clear();
-        foreach (QString field, tableModel->getFieldsList())
-        {
-//123            oldValues0.insert(field.toUpper(), getValue(field, freePrvRow));
-            QModelIndex index;
-            index = tableModel->index(freePrvRow, tableModel->fieldIndex(field));
-            QVariant val = tableModel->data(index);
-            oldValues0.insert(field.toUpper(), val);
-        }
-    }
-    parent->saveOldValues();
-    setCurrentIndex(index);
-}
-*/
 
 void Document::setCurrentRow(int row)
 {
@@ -486,18 +467,6 @@ void Document::setCurrentRow(int row)
     saveOldValues();
 }
 
-/*
-void Document::restoreOldValues()
-{
-    Essence::restoreOldValues();
-    if (freePrv > 0)
-    {
-        foreach (QString fieldName, oldValues0.keys())
-            setValue(fieldName, oldValues0.value(fieldName), 0);
-    }
-    parent->restoreOldValues();
-}
-*/
 
 QVariant Document::getSumValue(QString name)
 {   // Возвращает сумму полей <name> всех строк документа

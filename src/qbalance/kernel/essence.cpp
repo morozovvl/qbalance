@@ -514,17 +514,16 @@ bool Essence::remove(bool noAsk)
 
 int Essence::exec()
 {
-    bool result;
+    int result = 0;
     if (!opened)
         open();
     if (opened && form != 0)
     {
-        activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
         beforeShowFormEvent(getForm());
-        result = form->exec();
-        return result;
+        form->exec();
+        afterShowFormEvent(getForm());
     }
-    return 0;
+    return result;
 }
 
 
@@ -534,9 +533,9 @@ void Essence::show()
         open();
     if (opened && form != 0)
     {
-        activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
         beforeShowFormEvent(getForm());
         form->show();
+        afterShowFormEvent(getForm());
     }
 }
 
@@ -545,7 +544,6 @@ void Essence::hide()
 {
     if (opened && form != 0)
     {
-
         if (isFormVisible())
             beforeHideFormEvent(form);
         form->hide();
@@ -959,15 +957,16 @@ void Essence::restoreOldValues()
 }
 
 
-void Essence::keyboardReaded(QString barCode)
+void Essence::barCodeReaded(QString barCode)
 {
     if (scriptEngineEnabled && scriptEngine != 0 && enabled)
+    {
         scriptEngine->eventBarCodeReaded(barCode);
-
-    form->setButtons();
+    }
 
     if (grdTable != 0)
         grdTable->setCurrentFocus();
+    form->setButtons();
 }
 
 

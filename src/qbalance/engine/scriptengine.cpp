@@ -787,8 +787,9 @@ QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fil
 {
     app->appendScriptStack(this);
     TApplication::exemplar()->debug(3, program);
-    QScriptEngine::evaluate(program, fileName, lineNumber);
-    TApplication::exemplar()->debug(3, "/" + program);
+   QScriptEngine::evaluate(program, fileName, lineNumber);
+   TApplication::exemplar()->debug(3, "/" + program);
+
     app->removeLastScriptStack();
     return globalObject().property("scriptResult");
 }
@@ -797,10 +798,12 @@ QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fil
 QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
     QScriptValue result;
+
     app->appendScriptStack(this);
     TApplication::exemplar()->debug(3, program.fileName());
     result = QScriptEngine::evaluate(program);
     TApplication::exemplar()->debug(3, "/" + program.fileName());
+
     app->removeLastScriptStack();
     return result;
 }
@@ -1247,20 +1250,21 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     QScriptValue result("undefined");
     if (globalObject().property(eventName).isFunction())
     {
+        QString program = scriptFileName + ":" + eventName;
         app->appendScriptStack(this);
         TApplication::exemplar()->setDebugToBuffer(true);
-        TApplication::exemplar()->debug(3, scriptFileName + ":" + eventName);
+        TApplication::exemplar()->debug(3, program);
         result = globalObject().property(eventName).call(thisObject, args);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
         }
-        TApplication::exemplar()->setDebugToBuffer(false);
-        int bufferCount = TApplication::exemplar()->getDebugBufferCount(3);
-        if (bufferCount > 1)
-            TApplication::exemplar()->debug(3, "/" + scriptFileName + ":" + eventName);
+        if (TApplication::exemplar()->getLastValueInDebugBuffer(3).contains(program))
+            TApplication::exemplar()->removeLastValueInDebugBuffer(3);
         else
-            TApplication::exemplar()->clearDebugBuffer(3);
+            TApplication::exemplar()->debug(3, "/" + program);
+
+        TApplication::exemplar()->setDebugToBuffer(false);
         app->removeLastScriptStack();
     }
     return result;

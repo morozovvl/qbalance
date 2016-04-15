@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "mainwindow.h"
 #include "dialog.h"
-#include "mymdisubwindow.h"
 #include "formgrid.h"
 
 
@@ -340,42 +339,42 @@ void MainWindow::writeSettings()
 }
 
 
-MyMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
+QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
 {
     if (dialogWidget != 0)
     {
-        // Сначала попытаемся найти окно MyMdiSubWindow, в котором виджет dialogWidget отображался ранее
+        // Сначала попытаемся найти окно QMdiSubWindow, в котором виджет dialogWidget отображался ранее
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
             Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
             if (widget == dialogWidget)
-                return (MyMdiSubWindow*)subWindow;
+                return subWindow;
         }
 
         // Такой виджет видимо ранее не отображался, поэтому создадим новое окно
-        MyMdiSubWindow* subWindow = new MyMdiSubWindow();
+        QMdiSubWindow* subWindow = new QMdiSubWindow();
         subWindow->hide();
         subWindow->setWidget(dialogWidget);
-        return (MyMdiSubWindow*)workSpace->addSubWindow(subWindow, Qt::Window);
+        return workSpace->addSubWindow(subWindow, Qt::Window);
     }
     return 0;
 }
 
 
-MyMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
+QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
 {
     if (dialogWidget != 0)
     {
         foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
             Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
             if (widget == dialogWidget)
-                return (MyMdiSubWindow*)subWindow;
+                return subWindow;
         }
     }
     return 0;
 }
 
 
-void MainWindow::removeMdiWindow(MyMdiSubWindow* subWindow)
+void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
 {
     if (subWindow != 0)
     {

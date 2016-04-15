@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtScript/QScriptValue>
+#include <QtGui/QMdiSubWindow>
 #include "mainwindow.h"
 
 class Dialog;
@@ -58,7 +59,7 @@ public:
     virtual void activateSubWindow();
     void setAutoSelect(bool select) { autoSelect = select; }
     virtual void readSettings();
-    virtual MyMdiSubWindow*     getSubWindow();
+    virtual QMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp() { return app; }
 
 public slots:
@@ -78,7 +79,7 @@ protected:
     TApplication*   app;
     DBFactory*      db;
     Dialog*         formWidget;
-    MyMdiSubWindow* subWindow;
+    QMdiSubWindow*  subWindow;
     Essence*        parent;
     bool            lSelected;
     bool            defaultForm;

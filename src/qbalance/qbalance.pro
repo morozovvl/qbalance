@@ -58,7 +58,6 @@ SOURCES += main.cpp \
     gui/mysyntaxhighlighter.cpp \
     gui/dialog.cpp \
     gui/mydateitemdelegate.cpp \
-    gui/mymdisubwindow.cpp \
     gui/messagewindow.cpp \
     gui/myprogressdialog.cpp \
     kernel/app.cpp \
@@ -121,7 +120,6 @@ HEADERS +=  gui/passwordform.h \
     gui/mysyntaxhighlighter.h \
     gui/dialog.h \
     gui/mydateitemdelegate.h \
-    gui/mymdisubwindow.h \
     gui/messagewindow.h \
     gui/myprogressdialog.h \
     kernel/app.h \

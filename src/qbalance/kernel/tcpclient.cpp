@@ -156,7 +156,7 @@ bool    TcpClient::waitResult()
             app->debug(5, "*** ЗАДЕРЖКА свыше 10 сек ***");
             break;
         }
-        app->sleep(10);
+        app->sleep(100);
     }
     return result;
 }

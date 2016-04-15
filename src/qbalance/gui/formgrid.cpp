@@ -353,6 +353,7 @@ int FormGrid::exec()
     if (grdTable != 0)
     {
         grdTable->setColumnsHeaders();
+        grdTable->setCurrentFocus();
     }
     setButtons();
     showPhoto();
@@ -364,9 +365,8 @@ void FormGrid::show()
 {
     if (grdTable != 0)
     {
-        QModelIndex index = grdTable->currentIndex();
-        grdTable->restoreCurrentIndex(index);
         grdTable->setColumnsHeaders();
+        grdTable->setCurrentFocus();
     }
     setButtons();
     showPhoto();
@@ -464,7 +464,6 @@ void FormGrid::cmdSave()
 void FormGrid::showPhoto()
 {
     grdTable->showPhoto();
-    grdTable->setFocus();
 }
 
 

@@ -25,7 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QKeyEvent>
 #include <QtDesigner/QDesignerExportWidget>
 #include "../kernel/app.h"
-#include "mymdisubwindow.h"
 #include "form.h"
 
 class MainWindow;
@@ -45,8 +44,6 @@ public:
     virtual void setApp(TApplication*);
     Q_INVOKABLE virtual void setForm(Form* f) { form = f; }
     Q_INVOKABLE virtual Form* getForm() { return form; }
-    virtual void    findCmdOk();
-    virtual void    findCmdCancel();
     virtual void    keyPressEvent(QKeyEvent*);
 
 protected:

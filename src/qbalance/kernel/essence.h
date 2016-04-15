@@ -155,7 +155,7 @@ public:
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
     Q_INVOKABLE         QString getLocalPhotoFile(QString = "");
     static bool         getFile(QString, QString, FileType);
-    virtual void        keyboardReaded(QString);    // прочитана строка с клавиатуры или со сканера штрих-кода
+    virtual void        barCodeReaded(QString);    // прочитана строка со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
     QModelIndex         getCurrentIndex();
     void setCurrentIndex(QModelIndex);
@@ -219,7 +219,6 @@ private:
     QString             photoPath;
     QString             photoIdField;
     QString             photoNameField;
-    QWidget*            activeWidget;
     bool                loading;            // Сейчас идет заполнение документа (справочника) из файла
 
 

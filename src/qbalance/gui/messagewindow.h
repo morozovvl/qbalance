@@ -39,7 +39,7 @@ public slots:
 
 private:
     QTextEdit*      textEditor;
-    MyMdiSubWindow* subWindow;
+    QMdiSubWindow* subWindow;
     TApplication*    app;
 
     void readSettings();
