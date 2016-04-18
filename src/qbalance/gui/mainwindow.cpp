@@ -31,7 +31,7 @@ MainWindow::MainWindow(GUIFactory* par) {
     createMenus();
     createToolBars();
     createStatusBar();
-    workSpace = new QMdiArea(this);
+    workSpace = new QMdiArea(this);             // POSSIBLY MEMORY LEAK
     workSpace->setActivationOrder(QMdiArea::ActivationHistoryOrder);
     workSpace->setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -343,32 +343,10 @@ QMdiSubWindow* MainWindow::appendMdiWindow(QWidget* dialogWidget)
 {
     if (dialogWidget != 0)
     {
-        // Сначала попытаемся найти окно QMdiSubWindow, в котором виджет dialogWidget отображался ранее
-        foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
-            Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
-            if (widget == dialogWidget)
-                return subWindow;
-        }
-
-        // Такой виджет видимо ранее не отображался, поэтому создадим новое окно
-        QMdiSubWindow* subWindow = new QMdiSubWindow();
+        QMdiSubWindow* subWindow = workSpace->addSubWindow(dialogWidget);
         subWindow->hide();
-        subWindow->setWidget(dialogWidget);
-        return workSpace->addSubWindow(subWindow, Qt::Window);
-    }
-    return 0;
-}
-
-
-QMdiSubWindow* MainWindow::findMdiWindow(QWidget* dialogWidget)
-{
-    if (dialogWidget != 0)
-    {
-        foreach (QMdiSubWindow *subWindow, workSpace->subWindowList()) {
-            Dialog* widget = qobject_cast<Dialog*>(subWindow->widget());
-            if (widget == dialogWidget)
-                return subWindow;
-        }
+        subWindow->setAttribute(Qt::WA_DeleteOnClose);
+        return subWindow;
     }
     return 0;
 }
@@ -381,9 +359,9 @@ void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
         workSpace->setActiveSubWindow(subWindow);
         subWindow->setWidget(0);    // Обнулим указатель на виджет, чтобы при удалении подокна оно одновременно не удалило и виджет
         workSpace->removeSubWindow(subWindow);
-        delete subWindow;
+        subWindow->close();
+        subWindow->deleteLater();
     }
-
 }
 
 

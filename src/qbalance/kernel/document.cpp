@@ -482,7 +482,7 @@ QVariant Document::getSumValue(QString name)
 void Document::show()
 {
     app->debug(1, "");
-    app->debug(1, QString("Opened document %1").arg(docId));
+    app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
     if (locked || !db->lockDocument(docId))
         setEnabled(false);
     else

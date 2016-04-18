@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
-#include <QtCore/QProcess>
 #include <QtCore/QDebug>
 #include "bankterminal.h"
 #include "../kernel/app.h"
@@ -36,6 +35,7 @@ BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 #else
         program = "sb_pilot";
 #endif
+    termProcess = 0;
 }
 
 
@@ -51,6 +51,10 @@ bool BankTerminal::open()
             if (app->drvFRisValid())            // И присутствует драйвер ФР
             {
                 driverFR = app->getDrvFR();
+
+                termProcess = new QProcess(app);
+                termProcess->setWorkingDirectory(path);
+
                 result = true;
             }
             else
@@ -65,7 +69,8 @@ bool BankTerminal::open()
 
 void BankTerminal::close()
 {
-
+    if (termProcess != 0)
+        delete termProcess;
 }
 
 
@@ -74,9 +79,6 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
     bool result = false;
     if (driverFR->Connect())
     {
-        QProcess* termProcess = new QProcess();
-        termProcess->setWorkingDirectory(path);
-
         QString command = QString("%1 %2").arg(program).arg(oper);
         if (sum > 0)
             command.append(QString(" %1").arg(sum));
@@ -98,7 +100,6 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
         termProcess->start(command);
         if (!termProcess->waitForFinished(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()))
             app->showError(QObject::trUtf8("Время ожидания терминала (1 минута) истекло. Нажмите кнопку <ОТМЕНА> на терминале.") + termProcess->errorString());                  // выдадим сообщение об ошибке
-        delete termProcess;
 
         result = testResult();
 

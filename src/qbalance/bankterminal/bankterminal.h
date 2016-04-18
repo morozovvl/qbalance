@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
+#include <QtCore/QProcess>
 
 
 #define RESULT_CODE "КодРезультата"
@@ -59,6 +60,7 @@ private:
     QString     path;
     QString     program;
     QHash<QString, QString> resultParams;
+    QProcess* termProcess;
 
     bool    testResult();
     void    printSlip();

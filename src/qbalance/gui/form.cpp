@@ -93,6 +93,7 @@ void Form::close()
 {
     writeSettings();
     hide();
+    app->getMainWindow()->removeMdiWindow(subWindow);
 }
 
 

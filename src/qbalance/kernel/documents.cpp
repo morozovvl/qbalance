@@ -74,7 +74,7 @@ bool Documents::add()
             else
             {
                 int column = getCurrentColumn();
-                tableModel->insertRow(newRow);
+                tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
                 grdTable->reset();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 updateCurrentRow(strNum);

@@ -726,23 +726,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("SumToString", newFunction(SumToString));
     globalObject().setProperty("debug", newFunction(debug));
 
-    QStringList extensions;
-    extensions << "qt.core"
-               << "qt.gui"
-               << "qt.xml"
-               << "qt.svg"
-               << "qt.network"
-               << "qt.sql"
-               << "qt.opengl"
-               << "qt.webkit"
-               << "qt.xmlpatterns"
-               << "qt.uitools";
-    QStringList failExtensions;
-    QScriptValue ret;
-    foreach (const QString &ext, extensions) {
-        ret = importExtension(ext);
-        if (ret.isError())
-            failExtensions.append(ext);
+    foreach (const QString &ext, availableExtensions()) {
+        importExtension(ext);
     }
 }
 

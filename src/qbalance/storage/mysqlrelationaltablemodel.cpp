@@ -67,7 +67,6 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 }
 
 
-
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
@@ -76,7 +75,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
-            lResult = QSqlTableModel::setData(index, value, role);  // QSqlQuery::value: not positioned on a valid record
+            lResult = QSqlRelationalTableModel::setData(index, value, role);
         }
         else
         {

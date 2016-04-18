@@ -244,6 +244,7 @@ bool GUIFactory::open() {
 void GUIFactory::close() {
     closeDB();
     mainWindow->close();
+    delete mainWindow;
 }
 
 void GUIFactory::setWindowTitle(QString title) {
