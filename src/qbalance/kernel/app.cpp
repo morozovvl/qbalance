@@ -603,6 +603,7 @@ Dialog* TApplication::createForm(QString fileName)
                     showError(QString(QObject::trUtf8("Загружаемая форма %1 должна иметь тип Dialog.")).arg(fileName));
                     return 0;
                 }
+                formWidget->setApp(this);
             }
         }
     }

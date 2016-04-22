@@ -483,10 +483,11 @@ void Document::show()
 {
     app->debug(1, "");
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
-    if (locked || !db->lockDocument(docId))
-        setEnabled(false);
-    else
-        locked = true;
+    locked = false;
+    bool lock = db->lockDocument(docId);        // Попытаемся заблокировать документ
+    if (!lock)
+        setEnabled(false);                      // Если заблокировать не удалось
+    locked = !lock;
     docModified = false;
     prepareSelectCurrentRowCommand();
     loadDocument();
@@ -1122,8 +1123,11 @@ void Document::preparePrintValues()
 
 void Document::setEnabled(bool en)
 {
-    Essence::setEnabled(en);
-    form->setEnabled(en);
+    if (!locked)
+    {
+        Essence::setEnabled(en);
+        form->setEnabled(en);
+    }
 }
 
 

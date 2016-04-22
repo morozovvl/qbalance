@@ -67,6 +67,7 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 }
 
 
+
 bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
 {
     bool lResult = false;
@@ -75,7 +76,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         if (!readOnly && value != data(index))
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
-            lResult = QSqlRelationalTableModel::setData(index, value, role);
+            lResult = QSqlRelationalTableModel::setData(index, value, role);  // QSqlQuery::value: not positioned on a valid record  // POSSIBLY MEMORY LEAK
         }
         else
         {

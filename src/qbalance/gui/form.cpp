@@ -93,7 +93,6 @@ void Form::close()
 {
     writeSettings();
     hide();
-    app->getMainWindow()->removeMdiWindow(subWindow);
 }
 
 
@@ -150,6 +149,10 @@ void Form::createForm(QString fileName, QWidget* pwgt)
         {                                   // Для нестандартной формы обработчик подключается во время загрузки формы
             connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
         }
+    }
+    if (buttonOk != 0)
+    {
+        connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
     }
     if (buttonCancel != 0)
     {

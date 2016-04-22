@@ -42,10 +42,10 @@
 
 #ifdef QT_GUI_LIB
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 class QextSerialRegistrationWidget : public QWidget
 #else
-#include <QtGui/QWindow>
+#include <QtWidgets/QWindow>
 class QextSerialRegistrationWidget : public QWindow
 #endif
 {

@@ -290,8 +290,7 @@ void    TableView::setColumnsDelegates()
                     connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
                 }
                 delegate->setReadOnly(fields.at(i).readOnly);
-                delegate->deleteLater();
-                itemDelegateForColumn(i)->deleteLater();
+                delete itemDelegateForColumn(i);
                 setItemDelegateForColumn(i, delegate);              // POSSIBLY MEMORY LEAK
             }
             columns.insert(fields.at(i).number - 1, i);
