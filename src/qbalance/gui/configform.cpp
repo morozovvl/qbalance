@@ -178,7 +178,7 @@ void ConfigForm::showConfigGroup(QString type)
             QLabel* label = new QLabel(configs[name].label.trimmed() + ":");
             MyValueEditor* line = new MyValueEditor(configs[name]);
             label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-            line->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+            line->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
             vLayout->addWidget(label, row, 0, Qt::AlignRight);
             vLayout->addWidget(line->getEditor(), row, 1, Qt::AlignLeft);
             row++;

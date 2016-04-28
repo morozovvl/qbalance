@@ -26,7 +26,7 @@ MessageWindow::MessageWindow() :
     QObject()
 {
     subWindow = 0;
-    app = 0;
+    app = TApplication::exemplar();
     textEditor = new QTextEdit();
     textEditor->setParent(subWindow);
     textEditor->setWindowTitle(QObject::trUtf8("Сообщения"));
@@ -37,8 +37,7 @@ MessageWindow::~MessageWindow()
 {
     if (subWindow != 0)
     {
-        writeSettings();
-        TApplication::exemplar()->getMainWindow()->removeMdiWindow(subWindow);
+        app->getMainWindow()->removeMdiWindow(subWindow);
         subWindow = 0;
     }
     delete textEditor;
@@ -55,18 +54,33 @@ void MessageWindow::print(QString str)
 
 void MessageWindow::show()
 {
-    if (subWindow == 0)
+    if (app->getMainWindow()->isVisible())
     {
-        app = TApplication::exemplar();
-        subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
-        readSettings();
-    }
+        if (subWindow == 0)
+        {
+            subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
+            readSettings();
+        }
 
+        if (subWindow != 0)
+        {
+            textEditor->show();
+            subWindow->show();
+        }
+    }
+    else
+        textEditor->show();
+}
+
+
+void MessageWindow::hide()
+{
     if (subWindow != 0)
     {
-        textEditor->show();
-        subWindow->show();
+        writeSettings();
+        subWindow->hide();
     }
+    textEditor->hide();
 }
 
 
@@ -114,7 +128,10 @@ void MessageWindow::readSettings()
         int w = settingValues.value("width", 400);
         int h = settingValues.value("height", 200);
 
-        subWindow->setGeometry(x, y, w, h);
+        if (subWindow != 0)
+            subWindow->setGeometry(x, y, w, h);
+        else
+            textEditor->setGeometry(x, y, w, h);
     }
 }
 
@@ -125,10 +142,20 @@ void MessageWindow::writeSettings()
     // Сохраним данные локально, на компьютере пользователя
     QSettings settings;
     settings.beginGroup(configName);
-    settings.setValue("x", subWindow->x());
-    settings.setValue("y", subWindow->y());
-    settings.setValue("width", subWindow->frameGeometry().width());
-    settings.setValue("height", subWindow->frameGeometry().height());
+    if (subWindow != 0)
+    {
+        settings.setValue("x", subWindow->x());
+        settings.setValue("y", subWindow->y());
+        settings.setValue("width", subWindow->frameGeometry().width());
+        settings.setValue("height", subWindow->frameGeometry().height());
+    }
+    else
+    {
+        settings.setValue("x", textEditor->x());
+        settings.setValue("y", textEditor->y());
+        settings.setValue("width", textEditor->frameGeometry().width());
+        settings.setValue("height", textEditor->frameGeometry().height());
+    }
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере

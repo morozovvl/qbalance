@@ -36,6 +36,7 @@ public:
 public slots:
     void print(QString = "");
     void show();
+    void hide();
 
 private:
     QTextEdit*      textEditor;

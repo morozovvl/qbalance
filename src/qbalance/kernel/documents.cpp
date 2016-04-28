@@ -32,6 +32,10 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
     operNumber = opNumber;
     tagName    = QString("СписокДокументов%1").arg(operNumber);
     prefix = "АТРИБУТЫ__";
+
+    app->debug(1, "");
+    app->debug(1, QString("Begin open documents list (ОПЕР=%1)").arg(operNumber));
+
     QSqlRecord operProperties = db->getTopersProperties(operNumber);
     db->getToperData(operNumber, &topersList);              // Получим список типовых операций
     formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString().trimmed()).arg(QObject::trUtf8("Список документов"));
@@ -136,6 +140,7 @@ void Documents::query(QString, bool)
 
 bool Documents::open()
 {
+    bool result = false;
     if (operNumber > 0 && Essence::open())
     {     // Откроем этот справочник
 //        initFormEvent();
@@ -149,11 +154,14 @@ bool Documents::open()
         if (currentDocument->open())
         {
             currentDocument->setFormTitle(subFormTitle);
-            return true;
+            result = true;
         }
     }
-    app->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(formTitle, app->getLogin()));
-    return false;
+    else
+        app->showError(QString(QObject::trUtf8("Запрещено просматривать операцию <%1> пользователю %2")).arg(formTitle, app->getLogin()));
+    app->debug(1, QString("End open documents list (ОПЕР=%1)").arg(operNumber));
+    app->debug(1, "");
+    return result;
 }
 
 

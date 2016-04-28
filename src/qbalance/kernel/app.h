@@ -101,7 +101,8 @@ enum ConfigVars {
     SAVE_FORM_CONFIG_TO_DB,
     ASK_LOAD_UPDATES_TO_DB,
     SAVE_DB_UPDATES_TO_LOCAL,
-    GET_PICTURE_FROM_SERVER_IN_DOCUMENT
+    GET_PICTURE_FROM_SERVER_IN_DOCUMENT,
+    PARAMETERS
 };
 
 
@@ -274,6 +275,7 @@ public:
     void            setConfigs(QHash<ConfigVars, ConfigEntry>* conf) { configs = *conf; }
     QList<ConfigVars>     getConfigNames(QString type = "");
 
+    static bool readParameters(int argc, char *argv[]);
 
 signals:
     void cardCodeReaded(QString);

@@ -28,6 +28,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextStream>
 #include <QtCore/QDateTime>
 #include <QtCore/QHash>
+#include <QtCore/QProcess>
+#include <QtCore/QPointer>
 
 #include "mysqlrelationaltablemodel.h"
 
@@ -286,6 +288,7 @@ public:
     virtual int updatesCount();
 
 private:
+    TApplication*           app;
     QSqlDatabase*           db;
     QSqlDatabase*           dbExtend;
     int                     pid;
@@ -309,10 +312,12 @@ private:
     QHash<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
     QStringList             commands;
     QStringList             sysTables;
+    QStringList             tables;
     QStringList             dbUpdatesList;
     QList<UpdateValues>     updateValues;
     bool                    dbIsOpened;
     int                     updateNum;
+    QPointer<QProcess>      proc;
 
     void setError(QString);
     void initObjectNames();
@@ -322,7 +327,10 @@ private:
     int getTypeId(QString);
     void clearError();
     void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
-    bool execPSql(QString script, QString user, QString password);
+    bool execPSql(QStringList command, QString user, QString password);
+
+private slots:
+    void showPSqlMessage();
 };
 
 #endif

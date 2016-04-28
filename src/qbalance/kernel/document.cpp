@@ -103,7 +103,6 @@ bool Document::calculate(bool)
         {   // Если в вычислениях не было ошибки
             calcItog();                             // то посчитаем итоги
             saveChanges();                          // сохраним изменения
-            updateCurrentRow();                     // обновим значения текущей строки
             docModified = true;                     // поставим флаг, что документ изменен
         }
         else
@@ -120,8 +119,13 @@ void Document::saveChanges()
 {
     if (!db->execCommands())
     {   // Во время сохранения результатов произошла ошибка
-        parent->restoreOldValues();
         restoreOldValues();
+        parent->restoreOldValues();
+    }
+    else
+    {
+        updateCurrentRow();
+        parent->updateCurrentRow();
     }
 }
 
@@ -207,6 +211,8 @@ bool Document::add()
                 }
             }
         }
+        appendDocString();
+/*
         int strNum = appendDocString();
         if (strNum > 0)      // Если строка была добавлена
         {
@@ -215,7 +221,7 @@ bool Document::add()
             setCurrentRow(newRow);
             updateCurrentRow(strNum);
         }
-
+*/
         if (getScriptEngine() != 0)
         {
             getScriptEngine()->eventAfterAddString();
@@ -491,6 +497,7 @@ void Document::show()
     docModified = false;
     prepareSelectCurrentRowCommand();
     loadDocument();
+//    parent->setCurrentDocument(docId);
     Essence::show();
 }
 
@@ -498,11 +505,10 @@ void Document::show()
 void Document::hide()
 {
     Essence::hide();
-    if (locked)
+    if (!locked)
     {
         db->unlockDocument(docId);
         setEnabled(true);
-        locked = false;
     }
     app->debug(1, QString("Closed document %1").arg(docId));
 }
@@ -1062,6 +1068,17 @@ int Document::appendDocString()
     }
 
     prvValues.clear();
+
+    if (result > 0)      // Если строка была добавлена
+    {
+        int newRow = tableModel->rowCount();
+        tableModel->insertRow(newRow);
+        setCurrentRow(newRow);
+        updateCurrentRow(result);
+        if (grdTable != 0)
+            grdTable->setCurrentFocus();
+    }
+
     return result;
 }
 

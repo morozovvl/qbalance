@@ -174,6 +174,8 @@ bool Dictionary::add()
                     result = true;
                 }
             }
+            if (grdTable != 0)
+                grdTable->setCurrentFocus();
         }
     }
     return result;

@@ -37,6 +37,7 @@ int buggyFunc() {
     return 0;
 }
 
+/*
 bool readParameters(int argc, char *argv[]) {
     bool lContinue = true;
     QTextStream out(stdout);
@@ -159,7 +160,7 @@ bool readParameters(int argc, char *argv[]) {
     }
     return lContinue;
 }
-
+*/
 
 void test() {
     // Процедура для тестирования на "утечки" памяти
@@ -193,7 +194,7 @@ int main(int argc, char *argv[])
     int lResult = 0;            // по умолчанию программа возвращает 0
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
-        lStart = readParameters(argc, argv);    // прочитаем их
+        lStart = TApplication::readParameters(argc, argv);    // прочитаем их
     if (lStart) {
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);

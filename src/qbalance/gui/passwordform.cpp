@@ -80,8 +80,7 @@ int PassWordForm::exec()
 void PassWordForm::addLogin(QString login)
 {
     LoginSelector->addItem(login);
-    LoginSelector->setCurrentIndex(0);
-    LoginSelector->repaint();
+    LoginSelector->setCurrentIndex(LoginSelector->findText(login));
 }
 
 
@@ -89,7 +88,6 @@ void PassWordForm::addLogin(QStringList list)
 {
     LoginSelector->addItems(list);
     LoginSelector->setCurrentIndex(0);
-    LoginSelector->repaint();
 }
 
 

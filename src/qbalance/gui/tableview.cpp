@@ -98,10 +98,7 @@ void TableView::setEssence(Essence* ess)
 
 void TableView::cmdAdd()
 {
-    if (essence->add())
-    {
-        setCurrentFocus();
-    }
+    essence->add();
 }
 
 

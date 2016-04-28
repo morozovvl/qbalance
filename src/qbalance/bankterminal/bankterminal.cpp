@@ -35,6 +35,7 @@ BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 #else
         program = "sb_pilot";
 #endif
+    termProcess = 0;
 }
 
 
@@ -68,7 +69,8 @@ bool BankTerminal::open()
 
 void BankTerminal::close()
 {
-    delete termProcess;
+    if (termProcess != 0)
+        delete termProcess;
 }
 
 

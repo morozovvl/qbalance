@@ -38,6 +38,8 @@ DBFactory::DBFactory()
     commands.clear();
     dbIsOpened = false;
     updateNum = 0;
+    app = TApplication::exemplar();
+    proc = 0;
 }
 
 
@@ -86,11 +88,11 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
                 }
             }
             else
-                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
+                app->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
             close();
        }
        else
-          TApplication::exemplar()->showError(QObject::trUtf8("Не удалось создать соединение с сервером."));
+          app->showError(QObject::trUtf8("Не удалось создать соединение с сервером."));
     }
     delete frm;
     setDatabaseName(defaultDatabase);
@@ -104,58 +106,60 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
     //Drake
     //Базу данных следует всегда создавать в UTF-8
     //т.к. есть возможность возвращать данные на клиент в нужной кодировке
-    QString command = QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = '%2';").arg(dbName, DBFactory::storageEncoding());
-    if (exec(command))
+    app->getMessageWindow()->show();
+    QString command = QString("CREATE DATABASE %1 WITH TEMPLATE template0 ENCODING = 'UTF-8';").arg(dbName);
+    if (execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password))
     {
         //Drake
         //Нет смысла создавать локальный временный экземпляр в куче
         //Лучше на стеке - система его удалит
-        for (QStringList::const_iterator script = scripts.constBegin(); lResult && script !=scripts.constEnd(); ++script)
+        foreach (QString script, scripts)
         {
-            lResult = execPSql(*script, "postgres", password);
+            lResult = execPSql(QStringList() << "-f" << script << dbName, "postgres", password);
         }
         command = QString("ALTER DATABASE %1 OWNER TO %2;").arg(dbName).arg("sa");
-        exec(command);
+        lResult = execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password);
     }
+    app->getMessageWindow()->hide();
     return lResult;
 }
 
 
-bool DBFactory::execPSql(QString script, QString user, QString password)
+bool DBFactory::execPSql(QStringList comm, QString user, QString password)
 {
     bool result = false;
-    if (QDir().exists(script))
-    {
-        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-        env.insert("PGPASSWORD", password);
-        env.insert("PGCLIENTENCODING", TApplication::encoding());
-        QProcess* proc = new QProcess();
-        proc->setWorkingDirectory(TApplication::exemplar()->applicationDirPath());
-        proc->setProcessEnvironment(env);
-        QString command = QString("PGPASSWORD=%6 psql -h %1 -p %2 -U %3 %4 < %5").arg(hostName).arg(port).arg(user).arg(dbName).arg(script).arg(password);
-//        QString command = "psql --help";
-        proc->setStandardOutputFile("./result");
-        proc->start(command);
-        result = proc->waitForStarted();
-        if (!result)
-        {// выдадим сообщение об ошибке и выйдем из цикла
-//            foreach (QString line, env.toStringList())
-//                qDebug() << line;
-            TApplication::exemplar()->showError(QString(QObject::trUtf8("Не удалось запустить psql. %1")).arg(QString().append(proc->readAllStandardError())));
-        }
-        else
-        {
-            result = proc->waitForFinished();
-            if (proc->exitStatus() == QProcess::CrashExit)
-            {
-                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не удалось выполнить файл <%1>.")).arg(script));
-            }
-        }
-        delete proc;
-    }
-    else
-        TApplication::exemplar()->showError(QString(QObject::trUtf8("Не существует файл <%1>.")).arg(script));
+    QStringList parameters = QStringList() << QString("-h %1").arg(hostName) << QString("-p %1").arg(port) << QString("-U %1").arg(user) << comm;
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("PGPASSWORD", password);
+    env.insert("PGCLIENTENCODING", TApplication::encoding());
+    proc = new QProcess(app);
+    proc->setWorkingDirectory(app->applicationDirPath());
+    proc->setProcessEnvironment(env);
+
+    QString command;
+    command.append("psql ").append(parameters.join(" "));
+
+    connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(showPSqlMessage()));
+
+    app->print(command);
+    app->print("Ждите...");
+    app->sleep(100);
+    proc->start(command);
+    if (proc->waitForFinished(-1))
+        result = true;
+
+    disconnect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(showPSqlMessage()));
+
+    delete proc;
     return result;
+}
+
+
+void DBFactory::showPSqlMessage()
+{
+    app->print(QString(proc->readAllStandardOutput()).trimmed());
+    app->getMessageWindow()->getTextEditor()->repaint();
 }
 
 
@@ -176,10 +180,10 @@ void DBFactory::setError(QString errText)
         errorText = "Ошибка соединения";
         emergencyExit = true;
     }
-    TApplication::exemplar()->debug(1, " Error: " + errorText);
-    TApplication::exemplar()->showError(errText);
+    app->debug(1, " Error: " + errorText);
+    app->showError(errText);
     if (emergencyExit)
-        TApplication::exemplar()->exit();
+        app->exit();
 }
 
 
@@ -218,7 +222,7 @@ bool DBFactory::open(QString login, QString password)
 bool DBFactory::beginTransaction()
 {
     QString command = "BEGIN;";
-//    TApplication::exemplar()->debug(1, command);
+//    app->debug(1, command);
     return exec(command);
 }
 
@@ -226,7 +230,7 @@ bool DBFactory::beginTransaction()
 void DBFactory::commitTransaction()
 {
     QString command = "COMMIT;";
-//    TApplication::exemplar()->debug(1, command);
+//    app->debug(1, command);
     exec(command);
 }
 
@@ -234,7 +238,7 @@ void DBFactory::commitTransaction()
 void DBFactory::rollbackTransaction()
 {
     QString command = "ROLLBACK;";
-//    TApplication::exemplar()->debug(1, command);
+//    app->debug(1, command);
     exec(command);
 }
 
@@ -304,6 +308,14 @@ void DBFactory::loadSystemTables()
     }
 
     reloadColumnHeaders();
+
+    query = execQuery(QString("SELECT tablename FROM pg_tables UNION SELECT viewname FROM pg_views;"));
+    while (query.next())
+    {
+            QString tableName = query.value(0).toString();
+            if (!tables.contains(tableName))
+                tables.append(tableName);
+    }
 }
 
 
@@ -356,7 +368,7 @@ void DBFactory::close()
 
 bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
 {
-    TApplication::exemplar()->debug(1, "Exec: " + str);
+    app->debug(1, "Exec: " + str);
 
     clearError();
     QSqlQuery* query;
@@ -403,7 +415,7 @@ bool DBFactory::execSystem(QString command, QString tableName)
 
 QSqlQuery DBFactory::execQuery(QString str, bool showError, QSqlDatabase* extDb)
 {
-    TApplication::exemplar()->debug(1, QString("Query: %1").arg(str));
+    app->debug(1, QString("Query: %1").arg(str));
     clearError();
     QSqlQuery result;
     QSqlQuery* query;
@@ -488,7 +500,7 @@ QStringList DBFactory::getFieldsList(QString tableName, int level)
             result << fields.value(i).column;
     }
     if (result.count() == 0)
-        TApplication::exemplar()->showError(QString("Список полей таблицы <%1> пустой. Возможно, нет разрешения доступа к таблице.").arg(tableName));
+        app->showError(QString("Список полей таблицы <%1> пустой. Возможно, нет разрешения доступа к таблице.").arg(tableName));
     return result;
 }
 
@@ -754,10 +766,13 @@ int DBFactory::getDictionaryId(QString dictionaryName)
 
 bool DBFactory::isTableExists(QString tName)
 {
+/*
     QString command = QString("SELECT tablename AS name, tableowner as owner FROM pg_tables WHERE tablename = '%1' " \
                               "UNION " \
                               "SELECT viewname AS name, viewowner as owner FROM pg_views WHERE viewname = '%1';").arg(tName);
     return execQuery(command).size() > 0 ? true : false;
+*/
+    return tables.contains(tName);
 }
 
 
@@ -986,7 +1001,7 @@ bool DBFactory::deleteAllToperInfo(int operNumber)
         if (query.value(0).toInt() > 0)
         {   // Если есть документы для данной типовой операции
             errorText = QObject::trUtf8("Нельзя удалить типовую операцию, т.к. по ней уже созданы документы");
-            TApplication::exemplar()->showError(errorText);
+            app->showError(errorText);
             return false;
         }
     beginTransaction();
@@ -1000,7 +1015,7 @@ bool DBFactory::deleteAllToperInfo(int operNumber)
                                                  "топер");
     execSystem(QString("DELETE FROM %1 WHERE %2 = '%3';").arg(getObjectNameCom("файлы"))
                                                    .arg(getObjectNameCom("файлы.имя"))
-                                                   .arg(TApplication::exemplar()->getScriptFileName(operNumber)),
+                                                   .arg(app->getScriptFileName(operNumber)),
                                                     "файлы");
     commitTransaction();
     }
@@ -1349,7 +1364,7 @@ void DBFactory::setPeriod(QDate begDate, QDate endDate)
                                                                  .arg(getObjectNameCom("блокпериоды.конец"))
                                                                  .arg(endDate.toString(Qt::LocaleDate))
                                                                  .arg(getObjectNameCom("блокпериоды.пользователь"))
-                                                                 .arg(TApplication::exemplar()->getLogin());
+                                                                 .arg(app->getLogin());
     exec(command);
 }
 
@@ -1361,7 +1376,7 @@ void DBFactory::getPeriod(QDate& begDate, QDate& endDate)
                                                                                .arg(getObjectNameCom("блокпериоды.конец"))
                                                                                .arg(getObjectNameCom("блокпериоды"))
                                                                                .arg(getObjectNameCom("блокпериоды.пользователь"))
-                                                                               .arg(TApplication::exemplar()->getLogin()));
+                                                                               .arg(app->getLogin()));
     if (query.first())
     {
         begDate = query.record().field(0).value().toDate();
@@ -1388,7 +1403,17 @@ void DBFactory::setConstDictId(QString fieldName, QVariant val, int docId, int o
 QStringList DBFactory::initializationScriptList(QString ext) const
 {
     QStringList result;
-
+    for (int i = 0;; i++)
+    {
+        QString fileName(QString("initdb%2%3.sql").arg(ext).arg(i));
+        if (QFileInfo(QCoreApplication::applicationDirPath() + "/" + fileName).exists())
+        {
+            result.append(fileName);
+        }
+        else
+            break;
+    }
+/*
     QDir dir(QCoreApplication::applicationDirPath());
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
     dir.setSorting(QDir::Name | QDir::IgnoreCase);
@@ -1399,7 +1424,7 @@ QStringList DBFactory::initializationScriptList(QString ext) const
     {
         result.append(file->canonicalFilePath());
     }
-
+*/
     return result;
 }
 
@@ -1450,7 +1475,7 @@ QString DBFactory::getObjectNameCom(const QString& name)
 
 QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
 {
-    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
+    QString fileName = file.replace(app->applicationDirPath(), "~");
     if (extend && extDbExist)
     {   // Если будем смотреть файлы в расширенной базе данных
         QString text = QString("SELECT encode(%1, 'hex') FROM %2 WHERE %3 = '%4' AND %5 = %6;").arg(getObjectNameCom("файлы.значение"))
@@ -1459,7 +1484,9 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
                                                                               .arg(fileName)
                                                                               .arg(getObjectNameCom("файлы.тип"))
                                                                               .arg(type);
+        app->setWriteDebug(false);         // Не будем записывать в журнал команды чтения файла, чтобы уменьшить разрастание журнала
         QSqlQuery query = execQuery(text, true, dbExtend);
+        app->setWriteDebug(true);
         query.first();
         if (query.isValid())
         {
@@ -1478,7 +1505,9 @@ QByteArray DBFactory::getFile(QString file, FileType type, bool extend)
                                                                       .arg(getObjectNameCom("файлы"))
                                                                       .arg(getObjectNameCom("файлы.код"))
                                                                       .arg(id);
+            app->setWriteDebug(false);         // Не будем записывать в журнал команды чтения файла, чтобы уменьшить разрастание журнала
             QSqlQuery query = execQuery(text);
+            app->setWriteDebug(true);
             query.first();
             if (query.isValid())
             {
@@ -1507,14 +1536,16 @@ void DBFactory::copyFile(QString fileFrom, QString fileTo, bool extend)
 
 qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
 {
-    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
+    QString fileName = file.replace(app->applicationDirPath(), "~");
     QString text = QString("SELECT %6 FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                            .arg(getObjectNameCom("файлы.имя"))
                                                                            .arg(fileName)
                                                                            .arg(getObjectNameCom("файлы.тип"))
                                                                            .arg(type)
                                                                            .arg(getObjectNameCom("файлы.контрсумма"));
+    app->setWriteDebug(false);         // Не будем записывать в журнал команды проверки контрольной суммы, чтобы уменьшить разрастание журнала
     QSqlQuery query = execQuery(text, true, (extend && extDbExist) ? dbExtend : db);
+    app->setWriteDebug(true);
     query.first();
     if (query.isValid())
     {
@@ -1530,7 +1561,7 @@ qulonglong DBFactory::getFileCheckSum(QString file, FileType type, bool extend)
 FileInfo DBFactory::getFileInfo(QString file, FileType type, bool extend)
 {
     FileInfo result;
-    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
+    QString fileName = file.replace(app->applicationDirPath(), "~");
     QString text = QString("SELECT %6, %7 FROM %1 WHERE %2 = '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
                                                                           .arg(getObjectNameCom("файлы.имя"))
                                                                           .arg(fileName)
@@ -1635,7 +1666,7 @@ void DBFactory::removeFile(QString fileName, FileType type, bool extend)
 
 void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool extend)
 {
-    QString fileName = file.replace(TApplication::exemplar()->applicationDirPath(), "~");
+    QString fileName = file.replace(app->applicationDirPath(), "~");
     clearError();
     qulonglong size = calculateCRC32(&fileData);
     QString text;
@@ -1681,9 +1712,9 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     }
     if (text.size() > 0)
     {
-        TApplication::exemplar()->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
+        app->setWriteDebug(false);         // Не будем записывать в журнал команды сохранения файлов в БД, чтобы уменьшить разрастание журнала
         exec(text, true, (extend && extDbExist) ? dbExtend : db);
-        TApplication::exemplar()->setWriteDebug(true);
+        app->setWriteDebug(true);
         if (!extend)
             saveUpdate(text);
     }
@@ -1813,7 +1844,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 accounts.next();
             }
             if (!accFounded && toperT.crAcc.size() > 0)
-                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
+                app->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.crAcc)));
 
             accounts.first();
             accFounded = false;
@@ -1867,7 +1898,7 @@ void DBFactory::getToperDictAliases(int oper, QList<ToperType>* topersList, QLis
                 accounts.next();
             }
             if (!accFounded && toperT.dbAcc.size() > 0)
-                TApplication::exemplar()->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
+                app->showError(QString(QObject::trUtf8("Не найден счет %1 в справочнике счетов").arg(toperT.dbAcc)));
 
             topersList->removeAt(i);
             topersList->insert(i, toperT);
@@ -3032,9 +3063,9 @@ void DBFactory::clearLockedDocumentList()
 
 void DBFactory::saveUpdate(QString value)
 {
-    if (TApplication::exemplar()->isSA() && TApplication::exemplar()->getConfigValue(SAVE_DB_UPDATES_TO_LOCAL).toBool())
+    if (app->isSA() && app->getConfigValue(SAVE_DB_UPDATES_TO_LOCAL).toBool())
     {
-        QString templateString = TApplication::exemplar()->applicationDirPath().append("/db_updates/").append(dbName).append("/%1.sql");
+        QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/%1.sql");
         QString fileName;
         if (updateNum == 0)
         {
@@ -3063,7 +3094,7 @@ void DBFactory::saveUpdate(QString value)
 
 void DBFactory::loadUpdates()
 {
-    QString templateString = TApplication::exemplar()->applicationDirPath().append("/db_updates/").append(dbName).append("/");
+    QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/");
     int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
     do
     {
@@ -3071,10 +3102,10 @@ void DBFactory::loadUpdates()
         QString fileName = QString("%1.sql").arg(updateNum);
         QString fullFileName = templateString;
         fullFileName.append(fileName);
-        TApplication::exemplar()->showMessageOnStatusBar(QString(QObject::trUtf8("Загрузка обновления %1 на сервер...")).arg(fileName));
+        app->showMessageOnStatusBar(QString(QObject::trUtf8("Загрузка обновления %1 на сервер...")).arg(fileName));
         if (!execQueryFile(fullFileName))
         {
-            TApplication::exemplar()->showMessageOnStatusBar("");
+            app->showMessageOnStatusBar("");
             return;
         }
         dbUpdatesList.removeOne(fileName);
@@ -3085,7 +3116,7 @@ void DBFactory::loadUpdates()
 
 int DBFactory::updatesCount()
 {
-    QString templateString = TApplication::exemplar()->applicationDirPath().append("/db_updates/").append(dbName).append("/");
+    QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/");
     dbUpdatesList = QDir(templateString).entryList(QStringList() << "*.sql", QDir::Files);
     int updateNum = getValue("SELECT \"ЗНАЧЕНИЕ\" FROM константы WHERE \"ИМЯ\" = 'Last_DB_Update';").toInt();
     // Удалим предыдущие скрипты из списка

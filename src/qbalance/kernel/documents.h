@@ -46,7 +46,7 @@ public:
     Q_INVOKABLE virtual void  setForm(QString = "");
     Q_INVOKABLE Document* getDocument() { return currentDocument; }
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
-
+    void                setCurrentDocument(int);       // Зафиксировать текущий документ
 
 protected:
     virtual bool        setTableModel(int = 0);
@@ -59,9 +59,6 @@ private:
     QString             prefix;
     QList<ToperType>    topersList;
     QList<FieldType>    attrFields;
-
-    void                setCurrentDocument(int);       // Зафиксировать текущий документ
-
 };
 
 #endif // DOCUMENTS_H

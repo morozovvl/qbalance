@@ -169,6 +169,9 @@ void TApplication::initConfig()
 
     setConfigTypeName("photo", "Фотографии");
     setConfig("photo", GET_PICTURE_FROM_SERVER_IN_DOCUMENT, "Загружать фото с сервера в документе (замедлит работу с документом)", false);
+
+    setConfigTypeName("params", "Параметры");
+    setConfig("params", PARAMETERS, "Параметры при запуске", "");
 }
 
 
@@ -1357,4 +1360,128 @@ int TApplication::codeTimeOut(int timeOut)
     return result;
 }
 
+
+bool TApplication::readParameters(int argc, char *argv[])
+{
+    bool lContinue = true;
+    QTextStream out(stdout);
+//    out.setCodec(TApplication::codec());
+    for (int i = 1; i < argc; i++) {
+        if (QString(argv[i]).compare("-?", Qt::CaseInsensitive) == 0 ||
+            QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0)
+        {
+            out << QObject::trUtf8("Использование программы: qbalance [Параметр]\n");
+            out << QObject::trUtf8("Параметры:\n");
+            out << QObject::trUtf8("  -? | --help       - Вывести список параметров запуска программы\n");
+            out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
+            out << QObject::trUtf8("  -d1| --debug1     - Запустить программу в режиме отладки комманд запросов (файл debug1.log)\n");
+            out << QObject::trUtf8("  -d2| --debug2     - Запустить программу в режиме отладки алгоритмов ядра (файл debug2.log)\n");
+            out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
+            out << QObject::trUtf8("  -d4| --debug4     - Запустить программу в режиме отладки устройства COM-порта (файл debug4.log)\n");
+            out << QObject::trUtf8("  -d5| --debug5     - Запустить программу в режиме отладки обмена между экземплярами приложения (файл debug5.log)\n");
+            out << QObject::trUtf8("  -ul| --unitelogs  - Объединить все включенные журналы отладки в одном файле (debug.log)\n");
+            out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
+            out << QObject::trUtf8("  -p | --port       - Порт на хосте\n");
+            out << QObject::trUtf8("  -db| --database   - Наименование базы данных\n");
+            out << QObject::trUtf8("  -l | --login      - Логин\n");
+            out << QObject::trUtf8("  -pw| --password   - Пароль\n");
+            out << QObject::trUtf8("  -s | --script     - Выполнить скрипт с заданным именем и выйти\n");
+            out << QObject::trUtf8("  -sp| --scriptparameter - Параметр для скрипта (имя файла или строка, которую скрипт должен сам разобрать)\n");
+            out << QObject::trUtf8("  -sr| --server     - Запустить программу в режиме сервера\n");
+            out << QObject::trUtf8("  -c | --command    - Послать команду хосту (адрес и порт д.б. заданы параметрами -h и -p)\n");
+            out << QObject::trUtf8("  -dc| --def_conf   - Загрузить конфигурационные параметры по умолчанию\n");
+            lContinue = false;
+        }
+        else if (QString(argv[i]).compare("-v", Qt::CaseInsensitive) == 0 ||
+                QString(argv[i]).compare("--version", Qt::CaseInsensitive) == 0)
+        {
+            out << QString(QObject::trUtf8("Название программы: %1\n")).arg(applicationName());
+            out << QString(QObject::trUtf8("Версия: %1\n")).arg(applicationVersion());
+            out << QString(QObject::trUtf8("Авторы: %1\n")).arg(authors());
+            lContinue = false;
+        }
+        else if (QString(argv[i]).compare("-d1", Qt::CaseInsensitive) == 0 ||
+                QString(argv[i]).compare("--debug1", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("1");
+            }
+        else if (QString(argv[i]).compare("-d2", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug2", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("2");
+            }
+        else if (QString(argv[i]).compare("-d3", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug3", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("3");
+            }
+        else if (QString(argv[i]).compare("-d4", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug4", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("4");
+            }
+        else if (QString(argv[i]).compare("-d5", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug5", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("5");
+            }
+        else if (QString(argv[i]).compare("-ul", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--unitelogs", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("");
+            }
+        else if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--host", Qt::CaseInsensitive) == 0)
+            {
+                host = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-p", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--port", Qt::CaseInsensitive) == 0)
+            {
+                port = QString(argv[++i]).toInt();
+            }
+        else if (QString(argv[i]).compare("-db", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--database", Qt::CaseInsensitive) == 0)
+            {
+                database = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-l", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--login", Qt::CaseInsensitive) == 0)
+            {
+                username = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-pw", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--password", Qt::CaseInsensitive) == 0)
+            {
+                password = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-s", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--script", Qt::CaseInsensitive) == 0)
+            {
+                script = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-sp", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--scriptparameter", Qt::CaseInsensitive) == 0)
+            {
+                scriptParameter = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-sr", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--server", Qt::CaseInsensitive) == 0)
+            {
+                serverMode = true;
+            }
+        else if (QString(argv[i]).compare("-c", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--command", Qt::CaseInsensitive) == 0)
+            {
+                setSendCommandMode(true);
+                script = argv[++i];
+            }
+        else if (QString(argv[i]).compare("-dc", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--def_conf", Qt::CaseInsensitive) == 0)
+            {
+                loadDefaultConfig = true;
+            }
+    }
+    return lContinue;
+}
 
