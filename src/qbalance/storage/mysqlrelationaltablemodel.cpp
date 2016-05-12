@@ -144,7 +144,10 @@ QString MySqlRelationalTableModel::selectStatement() const
     {
         int lastIndex = query.lastIndexOf("LIMIT");
         if (lastIndex == -1)
-            query.append(" " + orderByClause());
+        {
+            if (QString::compare(parent->metaObject()->className(), "Document", Qt::CaseInsensitive) != 0)
+                query.append(" " + orderByClause());
+        }
         else
             query.replace(lastIndex, 5, orderByClause() + " LIMIT");
     }

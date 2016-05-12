@@ -48,6 +48,10 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     locked = false;
     getIdRefresh = true;
     parameters = 0;
+    doSubmit = true;
+    sqlCommand = "";
+    nameIntIsCode = false;
+    exact = true;
 
     if (parent != 0)
     {
@@ -79,11 +83,6 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
         }
     }
     lIsSet = db->isSet(tableName);
-    doSubmit = true;
-    sqlCommand = "";
-    nameIntIsCode = false;
-    sortedTable = true;
-    exact = true;
 }
 
 
@@ -608,7 +607,7 @@ void Dictionary::setOrderClause(QString sOrder)
         Table::setOrderClause(sOrder);
         return;
     }
-    if (isSet())
+    if (lIsSet)
     {
         QString sortOrder;
         QStringList tablesList;

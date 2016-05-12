@@ -97,6 +97,9 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
         QDir(path).remove("p");
 
         // Запустим программу терминала
+
+        app->debug(6, command);
+
         termProcess->start(command);
         if (!termProcess->waitForFinished(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()))
             app->showError(QObject::trUtf8("Время ожидания терминала (1 минута) истекло. Нажмите кнопку <ОТМЕНА> на терминале.") + termProcess->errorString());                  // выдадим сообщение об ошибке

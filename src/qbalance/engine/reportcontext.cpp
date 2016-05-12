@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QRegExp>
 #include <QtSql/QSqlRecord>
 #include <QtCore/QDebug>
+#include <QtCore/qmath.h>
 #include "reportcontext.h"
 
 
@@ -56,12 +57,15 @@ QVariant ReportContext::getValue(QString tag, int strNum)
 
 void ReportContext::setValue(QString tag, QVariant val)
 {
-    tag = tag.toLower();
-    if (data->contains(tag))
+    if (val.isValid())
     {
-        data->remove(tag);
+        tag = tag.toLower();
+        if (data->contains(tag))
+        {
+            data->remove(tag);
+        }
+        data->insert(tag, val);
     }
-    data->insert(tag, val);
 }
 
 

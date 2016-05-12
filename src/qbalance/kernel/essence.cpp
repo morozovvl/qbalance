@@ -58,6 +58,7 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     isDictionary = true;
     enabled     = true;
     isCurrentCalculate = false;
+    sortedTable = true;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
     scriptFileName =  tagName;
@@ -904,7 +905,10 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
     {   // файл существует локально
         QFile file(fullFileName);
         // Проверим, какой файл свежее, локальный или на сервере
-        QDateTime locFileTime = QFileInfo(file).lastModified().addSecs(app->getSecDiff());  // Время модификации локального файла, приведенное к серверному времени
+        int diff = app->getSecDiff();
+        QFileInfo fi(file);
+        QDateTime locFileTime = fi.lastModified();
+        locFileTime.addSecs(diff);  // Время модификации локального файла, приведенное к серверному времени
         FileInfo servFileInfo = db->getFileInfo(fileName, type);
         if (file.open(QIODevice::ReadOnly))
         {

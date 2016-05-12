@@ -205,6 +205,7 @@ protected:
     QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     DocumentScriptEngine* reportScriptEngine;
     bool                lIsDocument;
+    bool                sortedTable;
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();

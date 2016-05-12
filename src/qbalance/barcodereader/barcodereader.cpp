@@ -38,15 +38,18 @@ BarCodeReader::~BarCodeReader()
 bool BarCodeReader::open(QString port, int rate, int timeout)
 {
     bool result = false;
-    serialPort = app->getSerialPort(port, QextSerialPort::EventDriven);
-    if (serialPort != 0)
+    if (app != 0)
     {
-        serialPort->setBaudRate(rate);
-        serialPort->setTimeout(timeout);
-        if (serialPort->open(QIODevice::ReadWrite))
+        serialPort = app->getSerialPort(port, QextSerialPort::EventDriven);
+        if (serialPort != 0)
         {
-            connect(serialPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
-            result = true;
+            serialPort->setBaudRate(rate);
+            serialPort->setTimeout(timeout);
+            if (serialPort->open(QIODevice::ReadWrite))
+            {
+                connect(serialPort, SIGNAL(readyRead()), this, SLOT(barCodeReadyRead()));
+                result = true;
+            }
         }
     }
     return result;

@@ -132,7 +132,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             phbxItogLayout->addWidget(itogNumeric, 0, Qt::AlignRight);
             QVBoxLayout* pvbxItogLayout = new QVBoxLayout();
             pvbxItogLayout->addLayout(phbxItogLayout);
-            pvbxItogLayout->addStretch(1);
+//            pvbxItogLayout->addStretch(1);
             imageLayout->addLayout(pvbxItogLayout);
 
             if (docParams)

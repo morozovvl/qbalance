@@ -307,6 +307,8 @@ bool TApplication::open() {
             if (result == 0)
             {   // БД открыть удалось
 
+                secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+
                 dictionaryList = new Dictionaries();
                 topersList = new Topers();
                 if (dictionaryList->open() && topersList->open())
@@ -342,8 +344,6 @@ bool TApplication::open() {
                     {
                         accDict->setPhotoEnabled(false);
                     }
-
-                    secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
                     if (getConfigValue(FR_NEEDED).toBool() && !isScriptMode())
                     {
@@ -1374,11 +1374,12 @@ bool TApplication::readParameters(int argc, char *argv[])
             out << QObject::trUtf8("Параметры:\n");
             out << QObject::trUtf8("  -? | --help       - Вывести список параметров запуска программы\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
-            out << QObject::trUtf8("  -d1| --debug1     - Запустить программу в режиме отладки комманд запросов (файл debug1.log)\n");
-            out << QObject::trUtf8("  -d2| --debug2     - Запустить программу в режиме отладки алгоритмов ядра (файл debug2.log)\n");
-            out << QObject::trUtf8("  -d3| --debug3     - Запустить программу в режиме отладки скриптов (файл debug3.log)\n");
-            out << QObject::trUtf8("  -d4| --debug4     - Запустить программу в режиме отладки устройства COM-порта (файл debug4.log)\n");
-            out << QObject::trUtf8("  -d5| --debug5     - Запустить программу в режиме отладки обмена между экземплярами приложения (файл debug5.log)\n");
+            out << QObject::trUtf8("  -d1| --debug1     - Включить журнал комманд запросов (файл debug1.log)\n");
+            out << QObject::trUtf8("  -d2| --debug2     - Включить журнал алгоритмов ядра (файл debug2.log)\n");
+            out << QObject::trUtf8("  -d3| --debug3     - Включить журнал скриптов (файл debug3.log)\n");
+            out << QObject::trUtf8("  -d4| --debug4     - Включить журнал устройства COM-порта (файл debug4.log)\n");
+            out << QObject::trUtf8("  -d5| --debug5     - Включить журнал обмена между экземплярами приложения (файл debug5.log)\n");
+            out << QObject::trUtf8("  -d6| --debug6     - Включить журнал терминала (файл debug6.log)\n");
             out << QObject::trUtf8("  -ul| --unitelogs  - Объединить все включенные журналы отладки в одном файле (debug.log)\n");
             out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
             out << QObject::trUtf8("  -p | --port       - Порт на хосте\n");
@@ -1424,6 +1425,11 @@ bool TApplication::readParameters(int argc, char *argv[])
                  QString(argv[i]).compare("--debug5", Qt::CaseInsensitive) == 0)
             {
                 setDebugMode("5");
+            }
+        else if (QString(argv[i]).compare("-d6", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--debug6", Qt::CaseInsensitive) == 0)
+            {
+                setDebugMode("6");
             }
         else if (QString(argv[i]).compare("-ul", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--unitelogs", Qt::CaseInsensitive) == 0)
