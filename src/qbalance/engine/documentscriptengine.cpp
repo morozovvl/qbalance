@@ -34,11 +34,6 @@ QScriptValue getSaldo(QScriptContext* context, QScriptEngine* engine) {
 }
 
 
-QScriptValue getSumValue(QScriptContext* context, QScriptEngine* engine) {
-    return engine->evaluate(QString("document.getSumValue('%1')").arg(context->argument(0).toString()));
-}
-
-
 QScriptValue saveVariable(QScriptContext* context, QScriptEngine* engine) {
     if (!context->argument(1).isString())
         return engine->evaluate(QString("document.saveVariable('%1', %2)").arg(context->argument(0).toString()).arg(context->argument(1).toString()));
@@ -71,7 +66,6 @@ void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
     globalObject().setProperty("getSaldo", newFunction(getSaldo));
-    globalObject().setProperty("getSumValue", newFunction(getSumValue));
     globalObject().setProperty("saveVariable", newFunction(saveVariable));
     globalObject().setProperty("restoreVariable", newFunction(restoreVariable));
     if (documents != 0)

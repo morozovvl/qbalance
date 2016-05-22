@@ -115,6 +115,22 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine)
 }
 
 
+QScriptValue getSumValue(QScriptContext* context, QScriptEngine* engine)
+{
+    if (context->argument(0).isString() && engine->evaluate("table").isValid())
+    {
+        QString fieldName = context->argument(0).toString();
+        int row = (context->argument(1).isNumber() ? context->argument(1).toInteger() : -1);
+        QScriptValue value = engine->evaluate(QString("table.getSumValue('%1', %2)").arg(fieldName).arg(row));
+        if (value.toVariant().type() == QVariant::Double)
+            value = engine->evaluate(QString("parseFloat(%1)").arg(value.toVariant().toFloat()));
+        if (value.isValid())
+            return value;
+    }
+    return QScriptValue();
+}
+
+
 QScriptValue getId(QScriptContext* context, QScriptEngine* engine)
 {
     if (engine->evaluate("table").isValid())
@@ -717,6 +733,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
     globalObject().setProperty("getId", newFunction(getId));
     globalObject().setProperty("getValue", newFunction(getValue));
+    globalObject().setProperty("getSumValue", newFunction(getSumValue));
     globalObject().setProperty("setValue", newFunction(setValue));
     globalObject().setProperty("getOldValue", newFunction(getOldValue));
     globalObject().setProperty("quotes", newFunction(quotes));

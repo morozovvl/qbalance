@@ -94,7 +94,7 @@ public:
     Q_INVOKABLE void setGetIdRefresh(bool val) { getIdRefresh = val; }
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
-    bool            getNameIntIsCode() { return nameIntIsCode; }
+    bool        getNameIntIsCode() { return nameIntIsCode; }
     Q_INVOKABLE void setNameIntIsCode(bool val) { nameIntIsCode = val; }
 
     Q_INVOKABLE void setExact(bool e) { exact = e; }
@@ -119,6 +119,7 @@ protected:
     bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
                                     // или как часть имени
     bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
+    SearchParameters* parameters;
 
 
 private:
@@ -127,7 +128,6 @@ private:
     bool            isDepend;
     QString         dictTitle;
     QString         sqlCommand;
-    SearchParameters* parameters;
 };
 
 #endif // DICTIONARY_H

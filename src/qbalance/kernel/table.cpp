@@ -37,7 +37,7 @@ Table::Table(QString name, QObject *parent)
     queryTableName = "";
     app = TApplication::exemplar();
     db = app->getDBFactory();
-    fullDebugInfo = false;                  // По умолчанию выводится неполная отладочная информация (для лучшей читаемости журнала)
+    fullDebugInfo = app->getFullDebugInfo();
 }
 
 

@@ -474,17 +474,6 @@ void Document::setCurrentRow(int row)
 }
 
 
-QVariant Document::getSumValue(QString name)
-{   // Возвращает сумму полей <name> всех строк документа
-    double sum = 0;
-    int col = tableModel->record().indexOf(name);
-    for (int j = 0; j < tableModel->rowCount(); j++) {
-        sum += tableModel->data(tableModel->index(j, col)).toDouble();
-    }
-    return QVariant(sum);
-}
-
-
 void Document::show()
 {
     app->debug(1, "");

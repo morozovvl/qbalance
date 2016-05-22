@@ -183,6 +183,7 @@ public:
     void setWriteDebug(bool write) { writeDebug = write; }
     QString getLastValueInDebugBuffer(int);
     void removeLastValueInDebugBuffer(int);
+    bool    getFullDebugInfo() { return fullDebugInfo; }
 
     Q_INVOKABLE virtual void debug(int, const QString&, bool = false);
 
@@ -322,6 +323,7 @@ private:
     QHash<QString, QStringList> tempDebugBuffer;
     bool                    debugToBuffer;
     bool                    writeDebug;
+    static  bool            fullDebugInfo;
 
     void loadConsts();
     QString getAnyPath(QString, QString = "");

@@ -145,6 +145,8 @@ void TableView::cmdRequery()
 
 void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
+    QTableView::currentChanged(current, previous);
+
     if (essence != 0)
         essence->beforeRowChanged();
 
@@ -153,8 +155,6 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
     if (essence != 0)
         essence->afterRowChanged();
-
-    QTableView::currentChanged(current, previous);
 }
 
 

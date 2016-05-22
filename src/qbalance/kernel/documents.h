@@ -47,6 +47,7 @@ public:
     Q_INVOKABLE Document* getDocument() { return currentDocument; }
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     void                setCurrentDocument(int);       // Зафиксировать текущий документ
+    virtual void        preparePrintValues();                   // Готовит значения для печати
 
 protected:
     virtual bool        setTableModel(int = 0);

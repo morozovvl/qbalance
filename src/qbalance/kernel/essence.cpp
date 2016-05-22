@@ -155,22 +155,26 @@ QVariant Essence::getValue(QString n, int row)
         {
             if (row < 0)
                 row = getCurrentRow();
-//            result = tableModel->record(row).value(name);
             result = tableModel->data(tableModel->index(row, tableModel->fieldIndex(name)));
-
             QVariant::Type type = record.field(name).type();
-            if (type == QVariant::Double ||
-                type == QVariant::Int)
+            if (type == QVariant::Double)
             {
-                if (!result.isValid())
-                    result = QVariant(0);
-                if (result.type() == QVariant::String)
+                // Округлим значение числового поля до точности как и в БД
+                int precision = 0;
+                for (int i = 0; i < columnsProperties.count(); i++)
                 {
-                    result = result.toString().replace(".", ",").toDouble();
+                    if (columnsProperties.at(i).column == n)
+                    {
+                        precision = columnsProperties.at(i).precision;
+                        break;
+                    }
                 }
+                result = QString().setNum(result.toDouble(), 'f', precision).toDouble();
             }
-
-            // Округлим значение числового поля до точности как и в БД
+            else if (type == QVariant::Int)
+            {
+                result = result.toInt();
+            }
         }
         else
             app->showError(QObject::trUtf8("Не существует колонки ") + n);
@@ -1122,3 +1126,16 @@ void Essence::setCurrentIndex(QModelIndex index)
     if (grdTable != 0)
         grdTable->setCurrentIndex(index);
 }
+
+
+QVariant Essence::getSumValue(QString name)
+{   // Возвращает сумму полей <name> всех строк документа
+    double sum = 0;
+    int col = tableModel->record().indexOf(name);
+    for (int j = 0; j < tableModel->rowCount(); j++) {
+        sum += tableModel->data(tableModel->index(j, col)).toDouble();
+    }
+    return QVariant(sum);
+}
+
+

@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
+#include "../gui/formdocuments.h"
 
 
 Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
@@ -45,6 +46,7 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
     lUpdateable = operProperties.value("updateable").toBool();
     scriptEngine = 0;
     scriptEngineEnabled = false;
+    lPrintable = true;
 }
 
 
@@ -235,7 +237,7 @@ void Documents::setForm(QString formName)
         form->close();
         delete form;
     }
-    form = new FormGrid();
+    form = new FormDocuments();
 
     form->appendToolTip("buttonOk",         trUtf8("Закрыть список документов"));
     form->appendToolTip("buttonAdd",        trUtf8("Создать новый документ (Ctrl+Ins)"));
@@ -244,6 +246,7 @@ void Documents::setForm(QString formName)
     form->appendToolTip("buttonRequery",    trUtf8("Обновить список документов (загрузить повторно с сервера) (F3)"));
 
     form->open(parentForm, this, formName);
+    parameters = 0;
 }
 
 
@@ -305,4 +308,16 @@ void Documents::updateCurrentRow(int strNum)
 {
     Dictionary::updateCurrentRow(strNum);
 }
+
+
+void Documents::preparePrintValues()
+{
+    if (reportScriptEngine != 0)
+    {
+        reportScriptEngine->getReportContext()->setValue("документы.СУММА", getSumValue(db->getObjectName("документы.сумма")));
+        Dictionary::preparePrintValues();
+    }
+}
+
+
 

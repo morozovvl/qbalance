@@ -40,6 +40,7 @@ SOURCES += main.cpp \
     gui/formgridsearch.cpp \
     gui/mycombobox.cpp \
     gui/formdocument.cpp \
+    gui/formdocuments.cpp \
     gui/tableview.cpp \
     gui/mynumericitemdelegate.cpp \
     gui/mybooleanitemdelegate.cpp \
@@ -102,6 +103,7 @@ HEADERS +=  gui/passwordform.h \
     gui/formgridsearch.h \
     gui/mycombobox.h \
     gui/formdocument.h \
+    gui/formdocuments.h \
     gui/tableview.h \
     gui/mynumericitemdelegate.h \
     gui/mybooleanitemdelegate.h \

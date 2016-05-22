@@ -280,8 +280,8 @@ bool Dictionary::calculate(bool update) {
 
 qulonglong Dictionary::getId(int row, bool forceToRefresh)
 {
-    QVariant result = Essence::getId(row);
-    if ((result.isNull() || forceToRefresh || getIdRefresh) && isSet())
+    qulonglong result = Essence::getId(row);
+    if ((result == 0 || forceToRefresh || getIdRefresh) && lIsSet)
     {
         // Если это набор, то продолжаем
         QString filter;
@@ -311,12 +311,12 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
                         else
                         {
 //                        app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
-                            return result.toLongLong();
+                            return result;
                         }
                     }
                 }
                 else
-                    return result.toLongLong();
+                    return result;
             }
         }
         if (filter.size() > 0)
@@ -330,7 +330,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
             result = Essence::getId(0);
         }
     }
-    return result.toLongLong();
+    return result;
 }
 
 
@@ -664,13 +664,16 @@ void Dictionary::preparePrintValues()
 {
     if (reportScriptEngine != 0)
     {
-        QVector<sParam> searchParameters = parameters->getParameters();
-        if (searchParameters.size() > 0)
+        if (parameters != 0)
         {
-            for (int i = 0; i < searchParameters.size(); i++)
+            QVector<sParam> searchParameters = parameters->getParameters();
+            if (searchParameters.size() > 0)
             {
-                if (searchParameters[i].value.toString().size() > 0)
-                    reportScriptEngine->getReportContext()->setValue(searchParameters[i].table, searchParameters[i].value);
+                for (int i = 0; i < searchParameters.size(); i++)
+                {
+                    if (searchParameters[i].value.toString().size() > 0)
+                        reportScriptEngine->getReportContext()->setValue(searchParameters[i].table, searchParameters[i].value);
+                }
             }
         }
         Essence::preparePrintValues();

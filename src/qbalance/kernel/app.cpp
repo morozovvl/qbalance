@@ -42,21 +42,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../driverfr/driverfr.h"
 
 
-QList<QString>    TApplication::DebugModes;
-TApplication* TApplication::Exemplar   = 0;
-QString TApplication::username         = "";
-QString TApplication::password         = "";
-QString TApplication::host             = "";
-int TApplication::port                 = 0;
-QString TApplication::database         = "";
-QString TApplication::script           = "";
-QString TApplication::scriptParameter  = "";
-bool TApplication::serverMode = false;
-bool TApplication::sendCommandMode = false;
-GUIFactory* TApplication::gui          = 0;
-bool        TApplication::timeIsOut = false;
-QTimer      TApplication::timer;
-bool  TApplication::loadDefaultConfig = false;
+QList<QString>      TApplication::DebugModes;
+TApplication*       TApplication::Exemplar   = 0;
+QString             TApplication::username         = "";
+QString             TApplication::password         = "";
+QString             TApplication::host             = "";
+int                 TApplication::port                 = 0;
+QString             TApplication::database         = "";
+QString             TApplication::script           = "";
+QString             TApplication::scriptParameter  = "";
+bool                TApplication::serverMode = false;
+bool                TApplication::sendCommandMode = false;
+GUIFactory*         TApplication::gui          = 0;
+bool                TApplication::timeIsOut = false;
+QTimer              TApplication::timer;
+bool                TApplication::loadDefaultConfig = false;
+bool                TApplication::fullDebugInfo = false;                  // По умолчанию выводится неполная отладочная информация (для лучшей читаемости журнала)
 
 
 
@@ -1381,6 +1382,7 @@ bool TApplication::readParameters(int argc, char *argv[])
             out << QObject::trUtf8("  -d5| --debug5     - Включить журнал обмена между экземплярами приложения (файл debug5.log)\n");
             out << QObject::trUtf8("  -d6| --debug6     - Включить журнал терминала (файл debug6.log)\n");
             out << QObject::trUtf8("  -ul| --unitelogs  - Объединить все включенные журналы отладки в одном файле (debug.log)\n");
+            out << QObject::trUtf8("  -fd| --fulldebug  - Выводить полную отладочную информацию (по умолчанию выключено)\n");
             out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");
             out << QObject::trUtf8("  -p | --port       - Порт на хосте\n");
             out << QObject::trUtf8("  -db| --database   - Наименование базы данных\n");
@@ -1486,6 +1488,11 @@ bool TApplication::readParameters(int argc, char *argv[])
                  QString(argv[i]).compare("--def_conf", Qt::CaseInsensitive) == 0)
             {
                 loadDefaultConfig = true;
+            }
+        else if (QString(argv[i]).compare("-fd", Qt::CaseInsensitive) == 0 ||
+                 QString(argv[i]).compare("--fulldebug", Qt::CaseInsensitive) == 0)
+            {
+                fullDebugInfo = true;
             }
     }
     return lContinue;
