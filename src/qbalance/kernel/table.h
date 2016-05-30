@@ -38,6 +38,7 @@ class Table : public QObject {
 
 public:
     Table(QString table = "", QObject *parent = 0);
+    virtual ~Table() = 0;
 
     Q_INVOKABLE virtual bool            open();
     Q_INVOKABLE virtual void            close();

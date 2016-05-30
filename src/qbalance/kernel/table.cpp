@@ -41,6 +41,11 @@ Table::Table(QString name, QObject *parent)
 }
 
 
+Table::~Table()
+{
+}
+
+
 QList<FieldType>* Table::getColumnsProperties()
 {
     if (columnsProperties.count() > 0)
