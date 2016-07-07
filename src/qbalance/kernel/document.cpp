@@ -145,17 +145,13 @@ void Document::calcItog()
         QString sign = topersList->at(i).itog;
         if (sign == "+" || sign == "-")
         {
-            double sum = 0;
-            int col = tableModel->record().indexOf(QString("P%1__%2").arg(topersList->at(i).number)
-                                                                     .arg(db->getObjectName("документы.сумма")));
-            for (int j = 0; j < tableModel->rowCount(); j++)
-            {
-                sum += tableModel->data(tableModel->index(j, col)).toDouble();
-            }
+            QString fieldName = QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("документы.сумма"));
+            QVariant sum = getSumValue(fieldName).toDouble();
+            qDebug() << fieldName << sum;
             if (sign == "+")
-                itog += sum;
+                itog += sum.toDouble();
             else
-                itog -= sum;
+                itog -= sum.toDouble();
         }
     }
 

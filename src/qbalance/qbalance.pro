@@ -6,6 +6,7 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
+QMAKE_CXXFLAGS += -std=c++11
 
 include(../qextserialport/src/qextserialport.pri)
 
@@ -154,7 +155,9 @@ HEADERS +=  gui/passwordform.h \
     openoffice/ooxmlengine.h \
     serialport/qmyextserialport.h \
     gui/myvalueeditor.h \
-    engine/reportcontextfunctions.h
+    engine/reportcontextfunctions.h \
+    mpreal.h \
+    fixed.h
 
 
 RESOURCES += ../../resources.qrc
@@ -202,3 +205,5 @@ OTHER_FILES += \
     ../qtscriptgenerator.bat \
     license.txt \
     ../../README
+
+ LIBS +=  ../../lib64/libmpfr.so

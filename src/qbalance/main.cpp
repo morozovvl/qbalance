@@ -30,7 +30,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "kernel/app.h"
 #include "crashhandler/crashhandler.h"
 
-
 // Процедура для создания ошибки сегментирования
 int buggyFunc() {
     delete reinterpret_cast<QString*>(0xFEE1DEAD);
@@ -195,7 +194,15 @@ int main(int argc, char *argv[])
     bool lStart = true;         // по умолчанию программа запускается
     if (argc > 1)                               // были заданы какие-то аргументы
         lStart = TApplication::readParameters(argc, argv);    // прочитаем их
-    if (lStart) {
+    if (lStart)
+    {
+
+        TApplication::setDebugMode("1");
+        TApplication::setDebugMode("3");
+        TApplication::setDebugMode("4");
+        TApplication::setDebugMode("5");
+        TApplication::setDebugMode("");
+
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
         application.setDebugMode("0");

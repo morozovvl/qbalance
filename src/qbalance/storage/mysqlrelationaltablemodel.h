@@ -82,7 +82,7 @@ public:
     virtual bool    isTestSelect() { return testSelect; }
 
     virtual QVariant headerData (int, Qt::Orientation, int = Qt::DisplayRole) const;
-    virtual void     setFullDebugInfo(bool full) { fullDebugInfo = full; }
+    void            setFullDebugInfo(bool full) { fullDebugInfo = full; }
 
 protected:
     Table*                  parent;
