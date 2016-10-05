@@ -37,13 +37,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkReply>
-#include "../kernel/table.h"
-#include "../engine/scriptengine.h"
-#include "../engine/documentscriptengine.h"
-#include "../gui/formgrid.h"
-#include "../gui/tableview.h"
+#include <QtScript/QScriptValue>
+#include "../storage/filetype.h"
+#include "table.h"
 
 class TApplication;
+class Dialog;
+class Form;
+class FormGrid;
+class TableView;
+class ScriptEngine;
+class DocumentScriptEngine;
+class Dictionaries;
 
 struct urlId {
     QString     id;                 // скачать файл с таким ID
@@ -73,23 +78,23 @@ public:
     Q_INVOKABLE virtual void            setId(qulonglong);
     Q_INVOKABLE virtual int             locateId(qulonglong);            // Возвращает номер строки с заданным полем КОД
     Q_INVOKABLE virtual int             locateValue(QString, QVariant);  // Возвращает номер строки с заданным значение поля
-    Q_INVOKABLE virtual bool            isFieldExists(QString field) { return getFieldsList().contains(field); }
+    Q_INVOKABLE virtual bool            isFieldExists(QString field);
     Q_INVOKABLE virtual QVariant        getValue(QString, int row = -1);                 // Возвращает значение заданного поля в текущей записи
     Q_INVOKABLE virtual QVariant        getOldValue(QString field);
     Q_INVOKABLE virtual QVariant        getOldValue();
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     Q_INVOKABLE QVariant                getSumValue(QString name);
-    Q_INVOKABLE void                    setDoSubmit(bool submit) { doSubmit = submit; }
-    Q_INVOKABLE void                    setFilter(const QString &filter) { defaultFilter = filter; tableModel->setFilter(filter); }
-    virtual void query(QString = "", bool = false);
+    Q_INVOKABLE void                    setDoSubmit(bool submit);
+    Q_INVOKABLE void                    setFilter(const QString &filter);
+    Q_INVOKABLE virtual void query(QString = "", bool = false);
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
-    Q_INVOKABLE int                     getRowCount() { return tableModel != 0 ? tableModel->rowCount() : 0; }
-    Q_INVOKABLE int                     rowCount() { return getRowCount(); }
+    Q_INVOKABLE int                     getRowCount();
+    Q_INVOKABLE int                     rowCount();
 
 
 // Функции для работы с модулем GUI
-    Q_INVOKABLE FormGrid* getForm() { return form; }
-    Q_INVOKABLE TableView* getGrdTable() { return grdTable; }
+    Q_INVOKABLE FormGrid* getForm();
+    Q_INVOKABLE TableView* getGrdTable();
     void setGrdTable(TableView* gt);
     Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"
     Q_INVOKABLE virtual void cmdCancel();                   // и "Cancel"
@@ -100,39 +105,39 @@ public:
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
     Q_INVOKABLE virtual Dialog* getFormWidget();
-    Q_INVOKABLE void setPhotoEnabled(bool enabled) { photoEnabled = enabled; }
-    Q_INVOKABLE bool isPhotoEnabled() { return photoEnabled; }
-    Q_INVOKABLE virtual void setPhotoPath(QString path) { photoPath = path; }
+    Q_INVOKABLE void setPhotoEnabled(bool enabled);
+    Q_INVOKABLE bool isPhotoEnabled();
+    Q_INVOKABLE virtual void setPhotoPath(QString path);
     Q_INVOKABLE QString getPhotoPath();
-    Q_INVOKABLE void setPhotoIdField(QString field) { photoIdField = field; }
-    Q_INVOKABLE void setPhotoNameField(QString field) { photoNameField = field; }
-    Q_INVOKABLE QString getPhotoNameField() { return photoNameField; }
+    Q_INVOKABLE void setPhotoIdField(QString field);
+    Q_INVOKABLE void setPhotoNameField(QString field);
+    Q_INVOKABLE virtual QString getPhotoNameField();
     Q_INVOKABLE virtual void removePhoto(QString = "");
-    Q_INVOKABLE bool isInsertable() { return lInsertable; }         // Получить/установить ...
-    Q_INVOKABLE bool isDeleteable() { return lDeleteable; }         // ... свойства отображения ...
-    Q_INVOKABLE bool isViewable() { return lViewable; }             // ... кнопок на форме
-    Q_INVOKABLE bool isUpdateable() { return lUpdateable; }
-    Q_INVOKABLE bool isPrintable() { return lPrintable; }
-    Q_INVOKABLE void setInsertable(bool b) { lInsertable = b; form->setButtonAdd(b); }
-    Q_INVOKABLE void setDeleteable(bool b) { lDeleteable = b; form->setButtonDelete(b); }
-    Q_INVOKABLE void setViewable(bool b) { lViewable = b; }
-    Q_INVOKABLE void setUpdateable(bool b) { lUpdateable = b; }
-    Q_INVOKABLE void setPrintable(bool b) { lPrintable = b; }
+    Q_INVOKABLE bool isInsertable();
+    Q_INVOKABLE bool isDeleteable();
+    Q_INVOKABLE bool isViewable();
+    Q_INVOKABLE bool isUpdateable();
+    Q_INVOKABLE bool isPrintable();
+    Q_INVOKABLE void setInsertable(bool b);
+    Q_INVOKABLE void setDeleteable(bool b);
+    Q_INVOKABLE void setViewable(bool b);
+    Q_INVOKABLE void setUpdateable(bool b);
+    Q_INVOKABLE void setPrintable(bool b);
     Q_INVOKABLE virtual void setEnabled(bool);
-    Q_INVOKABLE bool isEnabled() { return enabled; }
-    Q_INVOKABLE void hideAllGridSections() { grdTable->hideAllGridSections(); }
-    Q_INVOKABLE void hideGridSection(QString columnName)  { grdTable->hideGridSection(columnName); }
-    Q_INVOKABLE void showGridSection(QString columnName) { grdTable->showGridSection(columnName); }
-    Q_INVOKABLE void showAllGridSections() { grdTable->showAllGridSections(); }
+    Q_INVOKABLE bool isEnabled();
+    Q_INVOKABLE void hideAllGridSections();
+    Q_INVOKABLE void hideGridSection(QString columnName);
+    Q_INVOKABLE void showGridSection(QString columnName);
+    Q_INVOKABLE void showAllGridSections();
     Q_INVOKABLE virtual void setForm(QString = "") { ; }
-    Q_INVOKABLE bool isDefaultForm() { return form->isDefaultForm(); }
-    Q_INVOKABLE bool isFormVisible() { return form != 0 ? form->isVisible() : false; }
+    Q_INVOKABLE bool isDefaultForm();
+    Q_INVOKABLE bool isFormVisible();
 
 
 // Функции для обеспечения работы скриптов
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
-    void                setScriptEngineEnabled(bool enabled) { scriptEngineEnabled = enabled; }
+    void                setScriptEngineEnabled(bool enabled);
     virtual void        evaluateEngine();
     virtual bool        calculate(bool = true);
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
@@ -159,19 +164,19 @@ public:
     Q_INVOKABLE virtual void        updateCurrentRow();
     QModelIndex         getCurrentIndex();
     void setCurrentIndex(QModelIndex);
-    Q_INVOKABLE QString         getCurrentFieldName() { return tableModel->getFieldName(getCurrentColumn()).toUpper(); }
-    Q_INVOKABLE virtual int     getCurrentRow() { return getCurrentIndex().row(); }
-    Q_INVOKABLE virtual int     getCurrentColumn() { return getCurrentIndex().column(); }
-    Q_INVOKABLE virtual void    setCurrentRow(int row) { if (grdTable != 0) grdTable->selectRow(row); }
-    Dictionaries* getDictionaries() { return dictionaries; }
-    void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }     // Устанавливает указатель на список справочников,
-    bool    isLoading() { return loading; }
+    Q_INVOKABLE QString         getCurrentFieldName();
+    Q_INVOKABLE virtual int     getCurrentRow();
+    Q_INVOKABLE virtual int     getCurrentColumn();
+    Q_INVOKABLE virtual void    setCurrentRow(int row);
+    virtual Dictionaries* getDictionaries();
+    void setDictionaries(Dictionaries* dicts);
+    bool    isLoading();
     Q_INVOKABLE void    clearPrintValues();
-    Q_INVOKABLE void    appendPrintValue(QString name, QVariant value) { reportScriptEngine->getReportContext()->setValue(name, value); }
-    Q_INVOKABLE void    appendPrintValues(QString str, QSqlQuery* query) { reportScriptEngine->getReportContext()->appendPrintValues(str, query); }
-    Q_INVOKABLE QVariant getPrintValue(QString name) { return reportScriptEngine->getReportContext()->getValue(name); }
-    bool                isDocument() { return lIsDocument; }
-    Q_INVOKABLE void    showPhoto() { form->showPhoto(); }
+    Q_INVOKABLE void    appendPrintValue(QString name, QVariant value);
+    Q_INVOKABLE void    appendPrintValues(QString str, QSqlQuery* query);
+    Q_INVOKABLE QVariant getPrintValue(QString name);
+    bool                isDocument();
+    Q_INVOKABLE void    showPhoto();
 
 signals:
     void                photoLoaded();

@@ -31,7 +31,7 @@ class OOReportEngine : public ReportEngine
 public:
     OOReportEngine(DocumentScriptEngine*);
     ~OOReportEngine();
-    virtual bool open() { return ReportEngine::open(); }
+    virtual bool open();
     virtual bool open(QHash<QString, QVariant>* context, QString name, QString ext);
 };
 

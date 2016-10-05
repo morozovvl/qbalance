@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QLineEdit>
 #include "mydateitemdelegate.h"
 #include "formgrid.h"
-#include "../kernel/essence.h"
+#include "../kernel/dictionary.h"
 
 
 MyDateItemDelegate::MyDateItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
@@ -42,8 +42,10 @@ QWidget* MyDateItemDelegate::createEditor(QWidget*parent, const QStyleOptionView
     editorWidget = new QLineEdit(parent);
     if (!readOnly)
     {
-        if (parentForm != 0)
-            parentForm->getParent()->saveOldValues();
+//        if (parentForm != 0)
+//            parentForm->getParent()->saveOldValues();
+        if (dictionary != 0)
+            dictionary->saveOldValues();
         editorWidget->setReadOnly(false);
     }
     else

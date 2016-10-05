@@ -38,6 +38,12 @@ ReportEngine::~ReportEngine()
 }
 
 
+bool ReportEngine::open()
+{
+    return true;
+}
+
+
 bool ReportEngine::open(QHash<QString, QVariant>* context, QString name, QString ext)
 {
     reportContext = context;

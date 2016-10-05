@@ -18,9 +18,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtCore/QDebug>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlField>
 #include "dbfactory.h"
 #include "../kernel/app.h"
 #include "../gui/passwordform.h"
+#include "../gui/messagewindow.h"
 #include "../kernel/dictionaries.h"
 
 
@@ -47,16 +50,84 @@ DBFactory::~DBFactory()
 {
     delete dbExtend;
     delete db;
+}
 
-/*
-    QStringList list = QSqlDatabase::connectionNames();
 
-    for(int i = 0; i < list.count(); ++i)
-    {
-        QSqlDatabase::database(list[i]).close();
-        QSqlDatabase::removeDatabase(list[i]);
-    }
-*/
+bool DBFactory::isOpened()
+{
+    return dbIsOpened;
+}
+
+
+int DBFactory::getPort()
+{
+    return port;
+}
+
+
+QString DBFactory::getHostName()
+{
+    return hostName;
+}
+
+
+QString DBFactory::getLogin()
+{
+    return currentLogin;
+}
+
+
+void DBFactory::setHostName(QString name)
+{
+    hostName = (name == "127.0.0.1" ? "localhost" : name);
+}
+
+
+void DBFactory::setPort(int portNum)
+{
+    port = portNum;
+}
+
+
+void DBFactory::setDatabaseName(QString name)
+{
+    dbName = name;
+}
+
+
+QString DBFactory::getDatabaseName()
+{
+    return dbName;
+}
+
+
+QSqlDatabase* DBFactory::getDB()
+{
+    return db;
+}
+
+
+QSqlQuery DBFactory::getAccounts()
+{
+    return accounts;
+}
+
+
+QSqlQuery DBFactory::getConfig()
+{
+    return config;
+}
+
+
+QSqlQuery* DBFactory::getDictionaries()
+{
+    return &dictionaries;
+}
+
+
+QVariant DBFactory::getValue(QString command)
+{
+    return getValue(command, 0, 0);
 }
 
 
@@ -2836,6 +2907,7 @@ QString DBFactory::restoreDocumentVariables(int docId)
 void DBFactory::setConfig(QString config, QString name, QString value)
 {
     clearError();
+    app->setWriteDebug(false);         // Не будем записывать в журнал команды, чтобы уменьшить разрастание журнала
     QString command;
     command = QString("SELECT COUNT(*) FROM configs WHERE \"group\" = '%1' AND name = '%2';").arg(config).arg(name);
 
@@ -2851,6 +2923,7 @@ void DBFactory::setConfig(QString config, QString name, QString value)
         command = QString("INSERT INTO configs (\"group\", name, value) VALUES ('%1', '%2', '%3');").arg(config).arg(name).arg(value);
         execSystem(command, "configs");
     }
+    app->setWriteDebug(true);
 }
 
 

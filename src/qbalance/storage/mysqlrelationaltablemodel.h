@@ -29,7 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlRelationalTableModel>
 #include <QtSql/QSqlRecord>
 
-#include "../kernel/table.h"
 
 class Table;
 class TApplication;
@@ -55,21 +54,21 @@ public:
     virtual int fieldIndex(const QString &) const;
     virtual void setRelation(int, const QSqlRelation &);
     virtual void setRelation(int, int, const QSqlRelation &);
-    virtual void setRelationalAlias(int column, QString alias) { tablesAliases.insert(column, alias); }
+    virtual void setRelationalAlias(int column, QString alias);
 
 // Функции, помогающие в генерации SQL запросов и работающие с ним
     QString virtual orderByClause() const;
     QString virtual escapedRelationField(const QString &, const QString &) const;
     virtual QString selectStatement() const;
-    QString virtual getSelectStatement() { return selectCommand; }
-    virtual void setSelectStatement(QString string = "") { selectCommand = string; }
+    QString virtual getSelectStatement();
+    virtual void setSelectStatement(QString string = "");
     virtual void setOrderClause(QString);
-    Q_INVOKABLE virtual bool select() { return QSqlRelationalTableModel::select(); }
-    Q_INVOKABLE virtual void setFilter(const QString &filter) { QSqlRelationalTableModel::setFilter(filter); }
+    Q_INVOKABLE virtual bool select();
+    Q_INVOKABLE virtual void setFilter(const QString &filter);
 
 // Функции для сохранения данных
-    virtual void setReadOnly(bool ro) { readOnly = ro; }
-    virtual bool isReadOnly() { return readOnly; }
+    virtual void setReadOnly(bool ro);
+    virtual bool isReadOnly();
     virtual bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
     virtual bool submit(const QModelIndex&);
     virtual bool updateRowInTable(int, const QSqlRecord&);
@@ -77,12 +76,12 @@ public:
 
 // Прочие функции
     virtual QStringList getFieldsList() const;
-    virtual QString getFieldName(int i) { return record().fieldName(i); }
-    virtual void    setTestSelect(bool test) { testSelect = test; }
-    virtual bool    isTestSelect() { return testSelect; }
+    virtual QString getFieldName(int i);
+    virtual void    setTestSelect(bool test);
+    virtual bool    isTestSelect();
 
     virtual QVariant headerData (int, Qt::Orientation, int = Qt::DisplayRole) const;
-    void            setFullDebugInfo(bool full) { fullDebugInfo = full; }
+    void            setFullDebugInfo(bool full);
 
 protected:
     Table*                  parent;

@@ -21,6 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTimer>
 #include <QtCore/QDebug>
 #include "ooxmlreportengine.h"
+#include "../openoffice/ooxmlengine.h"
+#include "../engine/documentscriptengine.h"
+#include "../engine/reportcontext.h"
+#include "../kernel/app.h"
 
 
 OOXMLReportEngine::OOXMLReportEngine(DocumentScriptEngine* engine) : ReportEngine(engine)
@@ -35,6 +39,18 @@ OOXMLReportEngine::OOXMLReportEngine(DocumentScriptEngine* engine) : ReportEngin
 OOXMLReportEngine::~OOXMLReportEngine()
 {
     delete ooxmlEngine;
+}
+
+
+bool OOXMLReportEngine::open()
+{
+    return ReportEngine::open();
+}
+
+
+void OOXMLReportEngine::setFileName(QString fName)
+{
+    fileName = fName;
 }
 
 
@@ -111,17 +127,18 @@ void OOXMLReportEngine::writeVariables()
     if (!firstRowNode.isNull())                 // Если в шаблоне было найдено "тело" таблицы
     {
         QDomNode lastNode = firstRowNode;       // lastNode будет указывать на последнюю добавленную строку таблицы
-        for (int strNum = 1; strNum <= scriptEngine->getReportContext()->getRowCount(); strNum++)    // по порядку строк документа
+        for (int strNum = 1; strNum <= scriptEngine->getReportContext()->getRowCount(tableNameForPrinting); strNum++)    // по порядку строк документа
         {
-            scriptEngine->eventBeforeLinePrint(strNum);
-
-            QDomNode clone = firstRowNode.cloneNode();              // склонируем первую строку тела таблицы, будем читать из и писать в клон строки
-            cells = clone.toElement().elementsByTagName("text:p");  // создадим список ячеек первой строки тела таблицы (узлов XML)
-            for (int i = 0; i < cells.count(); i++)     // будем по порядку просматривать этот список, пока есть что смотреть
+            if (scriptEngine->eventBeforeLinePrint(strNum))
             {
-                readExpression(i, strNum);                     // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
+                QDomNode clone = firstRowNode.cloneNode();              // склонируем первую строку тела таблицы, будем читать из и писать в клон строки
+                cells = clone.toElement().elementsByTagName("text:p");  // создадим список ячеек первой строки тела таблицы (узлов XML)
+                for (int i = 0; i < cells.count(); i++)     // будем по порядку просматривать этот список, пока есть что смотреть
+                {
+                    readExpression(i, strNum);                     // будем читать выражение в ячейке, искать для него данные в контексте печати и записывать эти данные в ячейку
+                }
+                lastNode = firstRowNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
             }
-            lastNode = firstRowNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
 
             scriptEngine->eventAfterLinePrint(strNum);
 

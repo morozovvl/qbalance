@@ -28,17 +28,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QStringList>
 #include <QtCore/QDebug>
 #include "scriptengine.h"
+#include "sqlfieldclass.h"
+#include "sqlrecordclass.h"
+#include "sqlqueryclass.h"
 #include "../kernel/app.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/document.h"
 #include "../kernel/documents.h"
+#include "../kernel/saldo.h"
+#include "../kernel/dictionaries.h"
 #include "../storage/dbfactory.h"
 #include "../gui/mainwindow.h"
 #include "../gui/form.h"
 #include "../gui/formgrid.h"
 #include "../gui/formgridsearch.h"
+#include "../gui/formdocument.h"
 #include "../gui/dialog.h"
 #include "../gui/picture.h"
+#include "../gui/calendarform.h"
+#include "../gui/tableview.h"
 #include "../driverfr/driverfr.h"
 #include "../bankterminal/bankterminal.h"
 #include "../openoffice/ooxmlengine.h"
@@ -606,6 +614,31 @@ void MyProgressDialogFromScriptValue(const QScriptValue &object, MyProgressDialo
 }
 
 
+// класс CalendarForm
+Q_DECLARE_METATYPE(CalendarForm*)
+
+QScriptValue CalendarFormConstructor(QScriptContext *, QScriptEngine *engine)
+{
+     CalendarForm *object = new CalendarForm();
+     if (object->open())
+     {
+        object->setBeginDate(TApplication::exemplar()->getBeginDate());
+        object->setEndDate(TApplication::exemplar()->getEndDate());
+        return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     }
+     return QScriptValue();
+}
+
+QScriptValue CalendarFormToScriptValue(QScriptEngine *engine, CalendarForm* const &in)
+{
+    return engine->newQObject(in, QScriptEngine::ScriptOwnership);
+}
+
+void CalendarFormFromScriptValue(const QScriptValue &object, CalendarForm* &out)
+{
+    out = qobject_cast<CalendarForm*>(object.toQObject());
+}
+
 
 //================================================================================================
 // Реализация класса
@@ -638,6 +671,48 @@ ScriptEngine::~ScriptEngine()
     delete sqlQueryClass;
     delete sqlRecordClass;
     delete sqlFieldClass;
+}
+
+
+QString ScriptEngine::getErrorMessage()
+{
+    return errorMessage;
+}
+
+
+void ScriptEngine::setErrorMessage(QString error)
+{
+    globalObject().setProperty("errorMessage", error);
+}
+
+
+int ScriptEngine::getScriptResult()
+{
+    return scriptResult;
+}
+
+
+void ScriptEngine::setIsDocumentScript(bool docScr)
+{
+    globalObject().setProperty("isDocumentScript", docScr);
+}
+
+
+QString ScriptEngine::getScriptFileName()
+{
+    return scriptFileName;
+}
+
+
+Essence* ScriptEngine::getParent()
+{
+    return parent;
+}
+
+
+Document* ScriptEngine::getDocument()
+{
+    return document;
 }
 
 
@@ -693,6 +768,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("Documents", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentsConstructor)));
     qScriptRegisterMetaType(this, DocumentToScriptValue, DocumentFromScriptValue);
     globalObject().setProperty("Document", newQMetaObject(&QObject::staticMetaObject, newFunction(DocumentConstructor)));
+    qScriptRegisterMetaType(this, CalendarFormToScriptValue, CalendarFormFromScriptValue);
+    globalObject().setProperty("CalendarForm", newQMetaObject(&QObject::staticMetaObject, newFunction(CalendarFormConstructor)));
 
     globalObject().setProperty("QPushButton", newQMetaObject(&QObject::staticMetaObject, newFunction(QPushButtonConstructor)));
     qScriptRegisterMetaType(this, QPushButtonToScriptValue, QPushButtonFromScriptValue);

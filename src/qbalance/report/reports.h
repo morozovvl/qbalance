@@ -22,7 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtCore/QHash>
 #include "../kernel/dictionaries.h"
-#include "report.h"
+
+class Report;
 
 class Reports : public Dictionaries
 {

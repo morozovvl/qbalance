@@ -18,8 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtNetwork/QNetworkConfigurationManager>
+#include <QtNetwork/QTcpSocket>
 #include "tcpserver.h"
 #include "app.h"
+#include "../driverfr/driverfr.h"
 
 
 TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
@@ -35,6 +37,12 @@ TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
         return;
     }
     connect(m_ptcpServer, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
+}
+
+
+bool TcpServer::getPingOk()
+{
+    return pingOk;
 }
 
 

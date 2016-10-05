@@ -20,22 +20,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef GUIFACTORY_H
 #define GUIFACTORY_H
 
-#include "../storage/dbfactory.h"
 #include <QtCore/QString>
 #include <QtGui/QMessageBox>
 #include <QtGui/QErrorMessage>
 #include <QtGui/QDesktopWidget>
 
 class MainWindow;
+class DBFactory;
+
+struct UserInfo;
 
 class GUIFactory: public QObject {
     Q_OBJECT
 public:
     GUIFactory();
-    MainWindow* getMainWindow() { return mainWindow; }
-    QString getLastDbName() { return lastDbName; }
-    QString getLastHostName() { return lastHostName; }
-    int getLastPort() { return lastPort; }
+    MainWindow* getMainWindow();
+    QString getLastDbName();
+    QString getLastHostName();
+    int getLastPort();
     int openDB();
     void closeDB();
     void setPeriod();

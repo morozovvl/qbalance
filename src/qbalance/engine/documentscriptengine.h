@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define DOCUMENTSCRIPTENGINE_H
 
 #include <QtScript/QScriptValue>
+#include <QtSql/QSqlRecord>
 #include "scriptengine.h"
-#include "reportcontext.h"
 
 
 class Documents;
@@ -34,11 +34,11 @@ public:
     DocumentScriptEngine(Essence *parent = 0);
     DocumentScriptEngine(QHash<QString, QVariant>*, Essence *parent = 0);
     virtual void eventAppendFromQuery(QString, QSqlRecord*);
-    virtual void eventBeforeLinePrint(int);
+    virtual bool eventBeforeLinePrint(int);
     virtual void eventAfterLinePrint(int);
     virtual void eventBeforeTotalPrint();
     virtual QHash<QString, EventFunction>* getEventsList();
-    virtual ReportContext* getReportContext() { return reportContext; }
+    virtual ReportContext* getReportContext();
 
 protected:
     virtual void loadScriptObjects();

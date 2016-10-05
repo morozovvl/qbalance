@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "connectionform.h"
 #include "passwordform.h"
 #include "../kernel/app.h"
+#include "../storage/dbfactory.h"
 
 
 GUIFactory::GUIFactory()
@@ -41,6 +42,29 @@ GUIFactory::GUIFactory()
     mainWindow = 0;
 }
 
+
+MainWindow* GUIFactory::getMainWindow()
+{
+    return mainWindow;
+}
+
+
+QString GUIFactory::getLastDbName()
+{
+    return lastDbName;
+}
+
+
+QString GUIFactory::getLastHostName()
+{
+    return lastHostName;
+}
+
+
+int GUIFactory::getLastPort()
+{
+    return lastPort;
+}
 
 int GUIFactory::openDB()
 {

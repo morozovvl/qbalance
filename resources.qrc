@@ -19,6 +19,5 @@
         <file alias="buttonQueryAdd">resources/folder_new.png</file>
         <file>resources/qbalance.png</file>
         <file>resources/qbalance.ico</file>
-        <file alias="buttonSberbank">resources/sberbank.png</file>
     </qresource>
 </RCC>

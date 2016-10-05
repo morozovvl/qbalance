@@ -19,7 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtGui/QLayout>
 #include "mybuttonlineedititemdelegate.h"
-#include "../kernel/essence.h"
+#include "mybuttonlineedit.h"
+#include "../kernel/dictionary.h"
 
 
 MyButtonLineEditItemDelegate::MyButtonLineEditItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
@@ -32,12 +33,20 @@ MyButtonLineEditItemDelegate::~MyButtonLineEditItemDelegate()
 }
 
 
+void MyButtonLineEditItemDelegate::setFormOnPushButton(QString (*form)())
+{
+    buttonForm = form;
+}
+
+
 QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &, const QModelIndex &) const
 {
     if (!readOnly)
     {
-        if (parentForm != 0)
-            parentForm->getParent()->saveOldValues();
+//        if (parentForm != 0)
+//            parentForm->getParent()->saveOldValues();
+        if (dictionary != 0)
+            dictionary->saveOldValues();
         MyButtonLineEdit* editor = new MyButtonLineEdit(parent);
         editor->setFormOnPushButton(buttonForm);
         return editor;

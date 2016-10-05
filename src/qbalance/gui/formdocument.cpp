@@ -21,13 +21,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QFont>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
+#include <QtGui/QMenu>
 #include "formgrid.h"
 #include "formdocument.h"
 #include "docparameters.h"
+#include "../kernel/app.h"
 #include "../kernel/document.h"
 #include "../kernel/essence.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/documents.h"
+#include "../gui/dialog.h"
+#include "../gui/tableview.h"
+#include "../gui/mynumericedit.h"
+#include "../storage/dbfactory.h"
+#include "../engine/documentscriptengine.h"
 
 #define LABEL_ITOG     QObject::trUtf8("Итого:")
 #define LABEL_DATE     QObject::trUtf8("Дата:")
@@ -48,6 +55,48 @@ FormDocument::FormDocument(): FormGrid()
 
 FormDocument::~FormDocument()
 {
+}
+
+
+Document* FormDocument::getParent(bool)
+{
+    return (Document*)parent;
+}
+
+
+QDateEdit* FormDocument::getDateEdit()
+{
+    return dateEdit;
+}
+
+
+QLineEdit* FormDocument::getNumberEdit()
+{
+    return numberEdit;
+}
+
+
+void FormDocument::showParameterText(QString dictName)
+{
+    parameters->showText(dictName);
+}
+
+
+void FormDocument::showTextEdit(bool show)
+{
+    textEdit->setVisible(show);
+}
+
+
+DocParameters*  FormDocument::getDocParameters()
+{
+    return parameters;
+}
+
+
+QPushButton* FormDocument::getButtonQueryAdd()
+{
+    return buttonQueryAdd;
 }
 
 

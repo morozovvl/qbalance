@@ -25,13 +25,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "saldo.h"
 #include "document.h"
 #include "../engine/documentscriptengine.h"
+#include "../engine/reportcontext.h"
 #include "../kernel/app.h"
+#include "../kernel/dictionaries.h"
+#include "../kernel/documents.h"
+#include "../kernel/saldo.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formdocument.h"
+#include "../gui/dialog.h"
 #include "../gui/searchparameters.h"
+#include "../gui/mynumericedit.h"
+#include "../gui/tableview.h"
+#include "../gui/myprogressdialog.h"
+#include "../gui/formgridsearch.h"
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
-#include "../gui/myprogressdialog.h"
 
 
 Document::Document(int oper, Documents* par): Dictionary()
@@ -95,6 +103,90 @@ Document::~Document()
 }
 
 
+int Document::getDocId()
+{
+    return docId;
+}
+
+
+int Document::getOperNumber()
+{
+    return operNumber;
+}
+
+
+int Document::getPrvQuan()
+{
+    return topersList->count();
+}
+
+
+Documents* Document::getParent()
+{
+    return parent;
+}
+
+
+QHash<QString, Dictionary*>* Document::getDictionariesList()
+{
+    return dictionaries->getDictionariesList();
+}
+
+
+Dictionaries* Document::getDocDictionaries()
+{
+    return dictionaries;
+}
+
+
+Dictionary* Document::getDictionary(QString dictName)
+{
+    return dictionaries->getDictionary(dictName);
+}
+
+
+Saldo* Document::getSaldo(QString acc)
+{
+    return dictionaries->getSaldo(acc);
+}
+
+
+void Document::setDocId(int doc)
+{
+    docId = doc; prepareSelectCurrentRowCommand();
+}
+
+
+bool Document::getIsSingleString()
+{
+    return isSingleString;
+}
+
+
+FormDocument* Document::getForm(bool)
+{
+    return (FormDocument*)Essence::getForm();
+}
+
+
+bool Document::isModified()
+{
+    return docModified;
+}
+
+
+bool Document::isSinglePrv()
+{
+    return singlePrv;
+}
+
+
+bool Document::isQuanAccount()
+{
+    return quanAccount;
+}
+
+
 bool Document::calculate(bool)
 {
     if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
@@ -147,7 +239,6 @@ void Document::calcItog()
         {
             QString fieldName = QString("P%1__%2").arg(topersList->at(i).number).arg(db->getObjectName("документы.сумма"));
             QVariant sum = getSumValue(fieldName).toDouble();
-            qDebug() << fieldName << sum;
             if (sign == "+")
                 itog += sum.toDouble();
             else

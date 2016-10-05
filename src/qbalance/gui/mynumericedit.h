@@ -31,7 +31,7 @@ class QDESIGNER_WIDGET_EXPORT MyNumericEdit : public QLineEdit {
 public:
     MyNumericEdit(QWidget *parent = 0);
     Q_INVOKABLE virtual void setValue(QVariant);
-    Q_INVOKABLE virtual QVariant getValue() { return value; }
+    Q_INVOKABLE virtual QVariant getValue();
 private:
     QVariant value;
 };

@@ -29,12 +29,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QVBoxLayout>
 #include <QtCore/QStringList>
 #include <QtDesigner/QDesignerExportWidget>
-#include "../kernel/app.h"
-#include "mycombobox.h"
-#include "formgridsearch.h"
 
-//class TApplication;
+class TApplication;
 class FormDocument;
+class Dictionary;
+
 
 class QDESIGNER_WIDGET_EXPORT DocParameters : public QFrame {
     Q_OBJECT
@@ -45,10 +44,10 @@ public:
     virtual void addString(QString);
     virtual void setFocus();
     virtual void showText(QString);
-    virtual QStringList getKeys() { return dictList; }
-    virtual Dictionary* getDictionary(QString dictName) { return dictionaries->value(dictName); }
-    virtual void setDictionaries(QHash<QString, Dictionary*>* dicts) { dictionaries = dicts; }
-    virtual void setFormDocument(FormDocument* doc) { parentForm = doc; }
+    virtual QStringList getKeys();
+    virtual Dictionary* getDictionary(QString dictName);
+    virtual void setDictionaries(QHash<QString, Dictionary*>* dicts);
+    virtual void setFormDocument(FormDocument* doc);
     virtual void setApp(TApplication*);
 
 public slots:

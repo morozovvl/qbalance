@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mainwindow.h"
 #include "dialog.h"
 #include "formgrid.h"
+#include "../kernel/dictionary.h"
+#include "../gui/messagewindow.h"
 
 
 MainWindow::MainWindow(GUIFactory* par) {
@@ -69,13 +71,19 @@ void MainWindow::showReports() {
 }
 
 
-void MainWindow::showQueries() {
-/*
+void MainWindow::showQueries()
+{
     TApplication* app = TApplication::exemplar();
     QString fileName = app->getReportFile("запросы", false, app->getMainWindow(), reportMenu->contentsRect());
     if (fileName.size() > 0)
-        Essence::print(fileName);
-*/
+    {
+        Dictionary  dict;
+        if (dict.open("SELECT 0", ""))      // Пустой запрос
+        {
+            dict.print(fileName);
+            dict.close();
+        }
+    }
 }
 
 
@@ -164,7 +172,7 @@ void MainWindow::createMenus()
     printEKLZReportAct = frMenu->addAction(QObject::trUtf8("Снять отчет ЭКЛЗ за последнюю не закрытую смену"));
     connect(printEKLZReportAct, SIGNAL(triggered()), this, SLOT(printEKLZReport()));
 
-    printProcessedEKLZReportAct = frMenu->addAction(QObject::trUtf8("Снять обработанный отчет ЭКЛЗ за последнюю не закрытую смену"));
+    printProcessedEKLZReportAct = frMenu->addAction(QObject::trUtf8("Снять обработанный отчет ЭКЛЗ за смену"));
     connect(printProcessedEKLZReportAct, SIGNAL(triggered()), this, SLOT(printProcessedEKLZReport()));
 
     EKLZinterruptAct = frMenu->addAction(QObject::trUtf8("Прекращение ЭКЛЗ"));

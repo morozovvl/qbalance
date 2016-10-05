@@ -17,38 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef PASSWORDFORM_H
-#define PASSWORDFORM_H
+#ifndef FILETYPE_H
+#define FILETYPE_H
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtGui/QComboBox>
-#include <QtGui/QLineEdit>
-
-#include "form.h"
-
-class PassWordForm: public Form {
-    Q_OBJECT
-public:
-        PassWordForm(QObject* parent = 0);
-        ~PassWordForm();
-        Q_INVOKABLE virtual bool open(QWidget* pwgt = 0);
-        virtual void addLogin(QString);
-        virtual void addLogin(QStringList);
-        virtual QString getLogin();
-        QString getPassword();
-public slots:
-        int exec();
-        void cmdOk();
-
-protected:
-        void readSettings();
-        void writeSettings();
-private:
-        QString login;
-        QString password;
-        QComboBox* LoginSelector;
-        QLineEdit* PasswordEditor;
+enum FileType           // Типы данных, которые хранятся в таблице "файлы"
+{
+    ScriptFileType,
+    ReportTemplateFileType,
+    PictureFileType,
+    FormFileType
 };
 
-#endif
+#endif // FILETYPE_H

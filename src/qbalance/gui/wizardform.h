@@ -28,25 +28,25 @@ class WizardForm : public Form
 public:
     WizardForm(QObject* parent = 0);
     virtual bool open(QWidget* pwgt = 0);
-    bool getResult() { return result; }
+    bool getResult();
 public slots:
     virtual void                cmdOk();
     void                        cmdForward();
     void                        cmdBackward();
 protected:
-    QList<QWidget*>              frames;
+    QList<QWidget*>             frames;
     QPushButton*                buttonForward;
     QPushButton*                buttonBackward;
     void                        addFrame(QVBoxLayout*, QString = "");
     virtual void                initFrames() = 0;
-    virtual bool                setData() { return true; }
+    virtual bool                setData();
     virtual void                frameActivated(int) { ; }
     virtual void                frameDeactivated(int) { ; }
 private:
     bool                        result;
     int                         frameIndex;
     int                         oldFrameIndex;
-    QWidget*                     currentFrame;
+    QWidget*                    currentFrame;
     void                        setButtonsEnabled();
     void                        setFrame();
     virtual void                getData() { ; }

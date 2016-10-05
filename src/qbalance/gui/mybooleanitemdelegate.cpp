@@ -22,8 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QStyle>
 #include <QtGui/QApplication>
 #include "mybooleanitemdelegate.h"
-#include "formgrid.h"
-#include "../kernel/essence.h"
+//#include "formgrid.h"
+#include "../kernel/dictionary.h"
 
 
 MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
@@ -42,8 +42,10 @@ MyBooleanItemDelegate::~MyBooleanItemDelegate()
 
 QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex &) const
 {
-    if (parentForm != 0)
-        parentForm->getParent()->saveOldValues();
+//    if (parentForm != 0)
+//        parentForm->getParent()->saveOldValues();
+    if (dictionary != 0)
+        dictionary->saveOldValues();
     editorWidget = new QCheckBox(parent);
     if (!readOnly)
         editorWidget->setDisabled(false);

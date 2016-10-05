@@ -25,7 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QImage>
 #include <QtGui/QPaintEvent>
 #include <QtDesigner/QDesignerExportWidget>
-//#include "../kernel/app.h"
 
 
 class TApplication;
@@ -43,11 +42,11 @@ public:
     Q_INVOKABLE virtual void setApp(TApplication*);
     Q_INVOKABLE virtual void setVisibility(bool);
     Q_INVOKABLE virtual void setPhotoFileName(QString);
-    Q_INVOKABLE virtual QString getPhotoFileName() { return photoFileName; }
+    Q_INVOKABLE virtual QString getPhotoFileName();
     Q_INVOKABLE virtual void setPhotoWindowTitle(QString);
-    virtual void        setIsBig(bool big) { isBigPicture = big; }
-    virtual void        setForm(FormGrid* f = 0) { form = f; }
-    virtual bool        isPictureExist() { return pictureExist; }
+    virtual void        setIsBig(bool big);
+    virtual void        setForm(FormGrid* f = 0);
+    virtual bool        isPictureExist();
 
 protected:
     QString pictureDrawn;

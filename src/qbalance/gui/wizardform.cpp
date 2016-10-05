@@ -20,13 +20,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include "wizardform.h"
+#include "dialog.h"
 #include "../kernel/app.h"
+
 
 WizardForm::WizardForm(QObject* parent/* = 0*/): Form(parent)
 {
     result = true;
     frameIndex = 0;
     currentFrame = 0;
+}
+
+
+bool WizardForm::getResult()
+{
+    return result;
+}
+
+
+bool WizardForm::setData()
+{
+    return true;
 }
 
 

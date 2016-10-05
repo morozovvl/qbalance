@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtDesigner/QDesignerExportWidget>
 #include "myitemdelegate.h"
 
+
 class QDESIGNER_WIDGET_EXPORT MyNumericItemDelegate : public MyItemDelegate
 {
     Q_OBJECT
@@ -38,9 +39,9 @@ public:
     ~MyNumericItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setLength(int);
-    virtual int getLength() { return length; }
+    virtual int getLength();
     virtual void setPrecision(int);
-    virtual int getPrecision() { return precision; }
+    virtual int getPrecision();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     virtual void setColumnMask(const QString mask = "");
 private:

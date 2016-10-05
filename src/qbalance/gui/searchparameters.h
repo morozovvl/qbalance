@@ -27,13 +27,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QWidget>
 #include <QtCore/QObject>
 #include <QtDesigner/QDesignerExportWidget>
-#include "../kernel/app.h"
-#include "mycombobox.h"
-#include "formgridsearch.h"
-#include "guifactory.h"
 
-//class TApplication;
+
+class TApplication;
 class FormGridSearch;
+class Dictionaries;
 struct sParam;
 
 class QDESIGNER_WIDGET_EXPORT SearchParameters : public QFrame {
@@ -49,16 +47,16 @@ public:
     virtual void setFocus();
     virtual void setFormGrid(FormGridSearch* par);
     virtual void setApp(TApplication* a);
-    virtual void setProgramIdFieldName(QString s) { programIdFieldName = s; }
-    virtual void setProgramNameFieldName(QString s) { programNameFieldName = s; }
-    virtual void setDictionaries(Dictionaries* dicts) { dictionaries = dicts; }
+    virtual void setProgramIdFieldName(QString s);
+    virtual void setProgramNameFieldName(QString s);
+    virtual void setDictionaries(Dictionaries* dicts);
     virtual QString getFilter();
     virtual QString getFilter(QString, QString = "");
     virtual QString getSearchValue(QString);
     virtual void keyPressEvent(QKeyEvent*);
     virtual void setParent(QWidget *);
     virtual void clearAllComboBoxes();
-    virtual int  getParametersCount() { return parameters.count(); }
+    virtual int  getParametersCount();
 
 signals:
     void requery();

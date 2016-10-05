@@ -27,10 +27,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QVBoxLayout>
 #include <QtScript/QScriptValue>
 #include <QtGui/QMdiSubWindow>
-#include "mainwindow.h"
+#include <QtGui/QPushButton>
+//#include "mainwindow.h"
+//#include "../kernel/essence.h"
 
 class Dialog;
+class Dictionary;
 class Essence;
+class TApplication;
+class DBFactory;
 
 
 class Form: public QObject
@@ -41,26 +46,26 @@ public:
     ~Form();
     Q_INVOKABLE virtual bool open(QWidget* = 0, Essence* = 0, QString = "");
     Q_INVOKABLE virtual void close();
-    Q_INVOKABLE Dialog* getFormWidget() { return formWidget; }
-    Q_INVOKABLE bool isVisible() { return subWindow != 0 ? subWindow->isVisible() : false; }
-    Q_INVOKABLE Essence* getParent() { return parent; }
-    Q_INVOKABLE bool isFormSelected() { return lSelected; }
-    QString getConfigName() { return configName; }
+    Q_INVOKABLE Dialog* getFormWidget();
+    Q_INVOKABLE bool isVisible();
+    Q_INVOKABLE virtual Dictionary* getParent() { return (Dictionary*)parent; }
+    Q_INVOKABLE bool isFormSelected();
+    virtual QString getConfigName();
     void appendToolTip(QString name, QString value);
     virtual void keyPressEvent(QKeyEvent*);
 
     void setButtonsSignals();
-    Q_INVOKABLE bool isDefaultForm() { return defaultForm; }
+    Q_INVOKABLE bool isDefaultForm();
 
-    Q_INVOKABLE QPushButton* getButtonOk() { return buttonOk; }
-    Q_INVOKABLE QPushButton* getButtonCancel() { return buttonCancel; }
+    Q_INVOKABLE QPushButton* getButtonOk();
+    Q_INVOKABLE QPushButton* getButtonCancel();
     Q_INVOKABLE virtual void setEnabled(bool) { ; }
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
-    void setAutoSelect(bool select) { autoSelect = select; }
+    void setAutoSelect(bool select);
     virtual void readSettings();
     virtual QMdiSubWindow*     getSubWindow();
-    virtual TApplication*      getApp() { return app; }
+    virtual TApplication*      getApp();
 
 public slots:
     Q_INVOKABLE virtual int exec();
@@ -68,7 +73,7 @@ public slots:
     Q_INVOKABLE virtual void hide();
     Q_INVOKABLE virtual void cmdOk();
     Q_INVOKABLE virtual void cmdCancel();
-    virtual void buttonPressedSignalSend() { emit buttonPressed(sender()->objectName()); }
+    virtual void buttonPressedSignalSend();
     Q_INVOKABLE virtual void gotoCenter();
 
 signals:

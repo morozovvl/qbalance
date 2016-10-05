@@ -23,14 +23,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlTableModel>
 #include <QtCore/QString>
 #include <QtCore/QHash>
-#include "essence.h"
-#include "dictionaries.h"
-#include "documents.h"
-#include "../engine/documentscriptengine.h"
-#include "../gui/formdocument.h"
+#include "dictionary.h"
 
 
 class TApplication;
+class Documents;
+class Saldo;
+class FormDocument;
+
+struct ToperType;
 
 
 struct prvSaldo {
@@ -45,14 +46,14 @@ class Document : public Dictionary {
 public:
     Document(int, Documents*);
     ~Document();
-    Q_INVOKABLE int getDocId() { return docId; }
-    Q_INVOKABLE int getOperNumber() { return operNumber; }
-    int             getPrvQuan() { return topersList->count(); }
-    Documents* getParent() { return parent; }
-    QHash<QString, Dictionary*>* getDictionariesList() { return dictionaries->getDictionariesList(); }
-    Dictionaries* getDocDictionaries() { return dictionaries; }
-    Q_INVOKABLE Dictionary* getDictionary(QString dictName) { return dictionaries->getDictionary(dictName); }
-    Q_INVOKABLE Saldo* getSaldo(QString acc) { return dictionaries->getSaldo(acc); }
+    Q_INVOKABLE int getDocId();
+    Q_INVOKABLE int getOperNumber();
+    int             getPrvQuan();
+    Documents* getParent();
+    QHash<QString, Dictionary*>* getDictionariesList();
+    Dictionaries* getDocDictionaries();
+    Q_INVOKABLE Dictionary* getDictionary(QString dictName);
+    Q_INVOKABLE Saldo* getSaldo(QString acc);
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
@@ -60,7 +61,7 @@ public:
     virtual void             load();
 
     virtual QString transformSelectStatement(QString string);
-    void setDocId(int doc) { docId = doc; prepareSelectCurrentRowCommand(); }
+    void setDocId(int doc);
     Q_INVOKABLE virtual bool calculate(bool = true);
     virtual void setConstDictId(QString, QVariant);
     Q_INVOKABLE virtual bool open();
@@ -68,7 +69,7 @@ public:
     virtual void setScriptEngine();
     int    addFromQuery(QString);
     DocumentScriptEngine* getScriptEngine();
-    bool getIsSingleString() { return isSingleString; }
+    bool getIsSingleString();
     Q_INVOKABLE void setDate(QString);
     Q_INVOKABLE QString getDate();
     Q_INVOKABLE void setNumber(QString);
@@ -84,17 +85,15 @@ public:
     Q_INVOKABLE void saveChanges();
     void saveVariablesToDB();
     void restoreVariablesFromDB();
-//    virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
-//    virtual void        restoreOldValues();
     Q_INVOKABLE virtual void setEnabled(bool);
-    Q_INVOKABLE FormDocument* getForm() { return (FormDocument*)Essence::getForm(); }
+    Q_INVOKABLE FormDocument* getForm(bool = false);
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     Q_INVOKABLE void loadDocument();        // Загружает документ перед тем, как его показать
-    Q_INVOKABLE bool isModified() { return docModified; }
+    Q_INVOKABLE bool isModified();
     Q_INVOKABLE void calcItog();
-    bool isSinglePrv() { return singlePrv; }
-    bool isQuanAccount() { return quanAccount; }
+    bool isSinglePrv();
+    bool isQuanAccount();
     Q_INVOKABLE virtual void    setCurrentRow(int row);
 
 

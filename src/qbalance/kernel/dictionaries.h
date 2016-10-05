@@ -22,10 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtSql/QSqlQuery>
 #include "dictionary.h"
-#include "saldo.h"
 
 
 class Document;
+class Saldo;
 
 
 class Dictionaries : public Dictionary {
@@ -42,7 +42,7 @@ public:
     virtual void removeAll();
     QString getDictionaryTitle(QString);
     virtual void            query(QString filter = "", bool = false);
-    QHash<QString, Dictionary*>* getDictionariesList() { return &dictionariesList; }
+    QHash<QString, Dictionary*>* getDictionariesList();
     virtual void cmdOk();
     Q_INVOKABLE virtual bool add();        // Добавление справочника
     Q_INVOKABLE virtual bool remove(bool = false);     // Удаление справочника
@@ -50,9 +50,9 @@ public:
     Q_INVOKABLE virtual void view();                    // Исправление свойств справочника
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
-    void    setDocument(Document* doc) { document = doc; }
-    Document* getDocument() { return document; }
-    bool        isSaldoExist() { return lIsSaldoExist; }
+    void    setDocument(Document* doc);
+    Document* getDocument();
+    bool        isSaldoExist();
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void            prepareSelectCurrentRowCommand() { ; }
     Q_INVOKABLE virtual void setForm(QString = "");

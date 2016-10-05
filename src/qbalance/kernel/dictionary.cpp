@@ -27,7 +27,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgridsearch.h"
 #include "../gui/searchparameters.h"
 #include "../gui/docparameters.h"
+#include "../gui/picture.h"
+#include "../gui/tableview.h"
+#include "../gui/dialog.h"
 #include "../storage/mysqlrelationaltablemodel.h"
+#include "../storage/dbfactory.h"
+#include "../engine/scriptengine.h"
+#include "../engine/documentscriptengine.h"
+#include "../engine/reportcontext.h"
 
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
@@ -86,7 +93,199 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 }
 
 
+Dictionary::Dictionary(QObject *parent)
+{
+    Dictionary("", parent);
+}
+
+
 Dictionary::~Dictionary() {
+}
+
+
+void Dictionary::queryName(QString filter)
+{
+    query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName));
+}
+
+
+void Dictionary::setSorted(bool sorted)
+{
+    sortedTable = sorted;
+}
+
+
+void Dictionary::setAutoLoaded(bool al)
+{
+    lIsAutoLoaded = al;
+}
+
+
+bool Dictionary::isAutoLoaded()
+{
+    return lIsAutoLoaded;
+}
+
+
+bool Dictionary::canShow()
+{
+    return lCanShow;
+}
+
+
+void Dictionary::setCanShow(bool can)
+{
+    lCanShow = can;
+}
+
+
+bool Dictionary::isCanShow()
+{
+    return lCanShow;
+}
+
+
+bool Dictionary::isMustShow()
+{
+    return lMustShow;
+}
+
+
+bool Dictionary::isConst()
+{
+    return lIsConst;
+}
+
+
+bool Dictionary::isSet()
+{
+    return lIsSet;
+}
+
+
+bool Dictionary::isSaldo()
+{
+    return lIsSaldo;
+}
+
+
+void Dictionary::setIsSaldo(bool s)
+{
+    lIsSaldo = s;
+}
+
+
+void Dictionary::setAutoSelect(bool autoSelect)
+{
+    lAutoSelect = autoSelect;
+}
+
+
+QString Dictionary::objectName()
+{
+    return "Dictionary";
+}
+
+
+bool Dictionary::isDependent()
+{
+    return isDepend;
+}
+
+
+void Dictionary::setDependent(bool d)
+{
+    isDepend = d;
+}
+
+
+QString Dictionary::getPrototypeName()
+{
+    return prototypeName;
+}
+
+
+void Dictionary::setPrototypeName(QString prototype)
+{
+    prototypeName = prototype;
+}
+
+
+bool Dictionary::isFtsEnabled()
+{
+    return ftsEnabled;
+}
+
+
+QString Dictionary::getDictTitle()
+{
+    return dictTitle;
+}
+
+
+Dictionary* Dictionary::getParentDict()
+{
+    return parentDict;
+}
+
+
+void Dictionary::setParentDict(Dictionary* dict)
+{
+    parentDict = dict;
+}
+
+
+void Dictionary::setIdEnabled(bool e)
+{
+    lsetIdEnabled = e;
+}
+
+
+bool Dictionary::isLocked()
+{
+    return locked;
+}
+
+
+FormGridSearch* Dictionary::getForm()
+{
+    return (FormGridSearch*)form;
+}
+
+
+bool Dictionary::isPictureExist()
+{
+    return form->getPicture()->isPictureExist();
+}
+
+
+void Dictionary::setGetIdRefresh(bool val)
+{
+    getIdRefresh = val;
+}
+
+
+bool Dictionary::getNameIntIsCode()
+{
+    return nameIntIsCode;
+}
+
+
+void Dictionary::setNameIntIsCode(bool val)
+{
+    nameIntIsCode = val;
+}
+
+
+void Dictionary::setExact(bool e)
+{
+    exact = e;
+}
+
+
+bool Dictionary::getExact()
+{
+    return exact;
 }
 
 
@@ -385,6 +584,7 @@ bool Dictionary::open(QString command, QString tName)
 {
     if (tName == "undefined")
         tName = "";
+
     sqlCommand = command;
 
     if (tName.size() > 0)

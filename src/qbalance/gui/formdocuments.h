@@ -21,7 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define FORMDOCUMENTS_H
 
 #include "formgrid.h"
-#include "mynumericedit.h"
+//#include "mynumericedit.h"
+
+class MyNumericEdit;
 
 
 class FormDocuments : public FormGrid {

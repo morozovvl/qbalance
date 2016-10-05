@@ -41,6 +41,19 @@ SqlQueryClass::~SqlQueryClass()
 {
 }
 
+
+QString SqlQueryClass::name() const
+{
+    return "SqlQuery";
+}
+
+
+QScriptEngine* SqlQueryClass::getEngine()
+{
+    return engine();
+}
+
+
 QScriptValue SqlQueryClass::prototype() const
 {
     return proto;

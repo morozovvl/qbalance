@@ -30,13 +30,46 @@ MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
     columnMask = "";
     delegateType = String;
     setReadOnly(false);
-    parentForm = form;
+//    parentForm = form;
+    dictionary = 0;
+    if (form != 0)
+        dictionary = form->getParent();
 }
 
 
 MyItemDelegate::~MyItemDelegate()
 {
     this->disconnect();
+}
+
+
+void MyItemDelegate::setColumnMask(const QString mask)
+{
+    columnMask = mask;
+}
+
+
+QString MyItemDelegate::getColumnMask()
+{
+    return columnMask;
+}
+
+
+bool MyItemDelegate::isReadOnly()
+{
+    return readOnly;
+}
+
+
+void MyItemDelegate::setFieldName(QString name)
+{
+    fieldName = name;
+}
+
+
+QString MyItemDelegate::getFieldName()
+{
+    return fieldName;
 }
 
 

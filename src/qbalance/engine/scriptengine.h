@@ -23,9 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 #include <QtGui/QKeyEvent>
-#include "sqlqueryclass.h"
-#include "sqlrecordclass.h"
-#include "sqlfieldclass.h"
 
 
 class Form;
@@ -34,6 +31,9 @@ class TApplication;
 class Document;
 class Documents;
 class ReportContext;
+class SqlQueryClass;
+class SqlRecordClass;
+class SqlFieldClass;
 
 
 struct EventFunction {
@@ -52,13 +52,13 @@ public:
     virtual bool evaluate();
     virtual QScriptValue evaluate(const QString &, const QString &, int);
     virtual QScriptValue evaluate(const QScriptProgram &);
-    QString getErrorMessage() { return errorMessage; }
-    void setErrorMessage(QString error = "") { globalObject().setProperty("errorMessage", error); }
-    int getScriptResult() { return scriptResult; }
-    void setIsDocumentScript(bool docScr) { globalObject().setProperty("isDocumentScript", docScr); }
-    QString getScriptFileName() { return scriptFileName; }
-    Essence* getParent() { return parent; }
-    Document* getDocument() { return document; }
+    QString getErrorMessage();
+    void setErrorMessage(QString error = "");
+    int getScriptResult();
+    void setIsDocumentScript(bool docScr);
+    QString getScriptFileName();
+    Essence* getParent();
+    Document* getDocument();
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
     virtual void    appendEvent(QString, EventFunction*);

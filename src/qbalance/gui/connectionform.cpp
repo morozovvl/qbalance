@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QStringList>
 #include "connectionform.h"
 #include "../kernel/app.h"
+#include "dialog.h"
+#include "../storage/dbfactory.h"
 
 
 ConnectionForm::ConnectionForm(QObject* parent/* = 0*/): Form(parent)
@@ -34,6 +36,12 @@ ConnectionForm::ConnectionForm(QObject* parent/* = 0*/): Form(parent)
 
 ConnectionForm::~ConnectionForm()
 {
+}
+
+
+QString ConnectionForm::connectionName()
+{
+    return pcmbConnection->currentText();
 }
 
 

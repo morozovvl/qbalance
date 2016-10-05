@@ -23,27 +23,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QWidget>
 #include <QtGui/QDateEdit>
 #include <QtGui/QTextEdit>
+#include <QtGui/QPushButton>
 #include "formgrid.h"
-#include "mynumericedit.h"
-#include "docparameters.h"
+
 
 class Document;
-//class DocParameters;
+class DocParameters;
+class MyNumericEdit;
 
 class FormDocument : public FormGrid {
     Q_OBJECT
 public:
     FormDocument();
     ~FormDocument();
-    Document* getParent() { return (Document*)parent; }
+    virtual Document* getParent(bool = false);
     virtual void parametersChangedEvent();
-    QDateEdit* getDateEdit() { return dateEdit; }
-    QLineEdit* getNumberEdit() { return numberEdit; }
-    void showParameterText(QString dictName) { parameters->showText(dictName); }
-    void showTextEdit(bool show) { textEdit->setVisible(show); }
-    DocParameters*  getDocParameters() { return parameters; }
+    QDateEdit* getDateEdit();
+    QLineEdit* getNumberEdit();
+    void showParameterText(QString dictName);
+    void showTextEdit(bool show);
+    DocParameters*  getDocParameters();
 
-    Q_INVOKABLE QPushButton* getButtonQueryAdd() { return buttonQueryAdd; }
+    Q_INVOKABLE QPushButton* getButtonQueryAdd();
     Q_INVOKABLE virtual void setEnabled(bool);
 
 public slots:

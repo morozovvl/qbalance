@@ -23,7 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtScript/QScriptClass>
 #include <QtSql/QSqlRecord>
-#include "sqlfieldclass.h"
+
+class SqlFieldClass;
+class QScriptContext;
 
 class SqlRecordClass : public QObject, QScriptClass
 {
@@ -35,11 +37,11 @@ public:
     QScriptValue newInstance();
     QScriptValue newInstance(const QSqlRecord &);
     QScriptValue prototype() const;
-    QString name() const { return "SqlRecord"; }
+    QString name() const;
 private:
     QScriptValue proto;
     QScriptValue ctor;
-    static QScriptValue construct(QScriptContext *, QScriptEngine *);
+    static QScriptValue construct(QScriptContext*, QScriptEngine *);
 };
 
 #endif // SQLRECORDCLASS_H

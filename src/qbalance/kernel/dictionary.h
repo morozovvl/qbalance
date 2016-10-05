@@ -23,16 +23,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include "essence.h"
-#include "../gui/formgridsearch.h"
+
 
 class TApplication;
 class Dictionaries;
+class FormGridSearch;
+class SearchParameters;
+
 
 class Dictionary : public Essence {
     Q_OBJECT
 
 public:
-    Dictionary(QObject *parent = 0) { Dictionary("", parent); }
+    Dictionary(QObject *parent = 0);
     Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
     Q_INVOKABLE virtual bool open(QString = "", QString = "");
@@ -42,11 +45,11 @@ public:
     virtual bool add();
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void            query(QString filter = "", bool = false);
-    Q_INVOKABLE virtual void            queryName(QString filter = "") { query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName)); }
+    Q_INVOKABLE virtual void            queryName(QString filter = "");
     virtual bool                        calculate(bool update = true);
     Q_INVOKABLE virtual qulonglong      getId(int row = -1, bool = false);
     Q_INVOKABLE virtual void setOrderClause(QString = "");
-    Q_INVOKABLE virtual void setSorted(bool sorted) { sortedTable = sorted; }
+    Q_INVOKABLE virtual void setSorted(bool sorted);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual void setValue(qulonglong, QString, QVariant);
     Q_INVOKABLE virtual void setSqlCommand(QString);
@@ -55,50 +58,49 @@ public:
 // Функции для работы справочника в составе документа
 // Используются в момент добавления новых записей в документ
 // блокируют открытие связанных справочников и др.подобные функции
-    void setAutoLoaded(bool al) { lIsAutoLoaded = al; }
-    bool isAutoLoaded() { return lIsAutoLoaded; }
-    bool canShow() { return lCanShow; }
-    Q_INVOKABLE void setCanShow(bool can) { lCanShow = can; }
-    bool    isCanShow() { return lCanShow; }
+    void setAutoLoaded(bool al);
+    bool isAutoLoaded();
+    bool canShow();
+    Q_INVOKABLE void setCanShow(bool can);
+    bool    isCanShow();
 
-    Q_INVOKABLE bool isMustShow() { return lMustShow; }
+    Q_INVOKABLE bool isMustShow();
     Q_INVOKABLE virtual void setMustShow(bool);
-    bool isConst() { return lIsConst; }
-    bool isSet() { return lIsSet; }
-    bool isSaldo() { return lIsSaldo; }
-    Q_INVOKABLE void setIsSaldo(bool s) { lIsSaldo = s; }
+    bool isConst();
+    bool isSet();
+    bool isSaldo();
+    Q_INVOKABLE void setIsSaldo(bool s);
     Q_INVOKABLE void setConst(bool);
-    Q_INVOKABLE void setAutoSelect(bool autoSelect) { lAutoSelect = autoSelect; }
-                                                                            // которые будут блокироваться при добавлении записи в документ
+    Q_INVOKABLE void setAutoSelect(bool autoSelect);
 
-    virtual QString objectName() { return "Dictionary"; }
-    bool isDependent() { return isDepend; }
-    void setDependent(bool d) { isDepend = d; }
-    QString getPrototypeName() { return prototypeName; }
-    void setPrototypeName(QString prototype) { prototypeName = prototype; }
-    bool isFtsEnabled() { return ftsEnabled; }
-    QString     getDictTitle() { return dictTitle; }
+    virtual QString objectName();
+    bool isDependent();
+    void setDependent(bool d);
+    QString getPrototypeName();
+    void setPrototypeName(QString prototype);
+    virtual bool isFtsEnabled();
+    QString     getDictTitle();
     QStringList getChildDicts();
-    Dictionary* getParentDict() { return parentDict; }
-    void setParentDict(Dictionary* dict) { parentDict = dict; }
+    Dictionary* getParentDict();
+    void setParentDict(Dictionary* dict);
     Q_INVOKABLE virtual void            setId(qulonglong);
-    void    setIdEnabled(bool e) { lsetIdEnabled = e; }
+    void    setIdEnabled(bool e);
     Q_INVOKABLE virtual void setForm(QString = "");
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
 
     Q_INVOKABLE virtual void        lock(bool = true);
-    virtual bool isLocked() { return locked; }
-    Q_INVOKABLE FormGridSearch* getForm() { return (FormGridSearch*)form; }
-    Q_INVOKABLE bool isPictureExist() { return form->getPicture()->isPictureExist(); }
+    virtual bool isLocked();
+    Q_INVOKABLE virtual FormGridSearch* getForm();
+    Q_INVOKABLE bool isPictureExist();
     Q_INVOKABLE QString getSearchExpression(QString = "");
-    Q_INVOKABLE void setGetIdRefresh(bool val) { getIdRefresh = val; }
+    Q_INVOKABLE void setGetIdRefresh(bool val);
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
-    bool        getNameIntIsCode() { return nameIntIsCode; }
-    Q_INVOKABLE void setNameIntIsCode(bool val) { nameIntIsCode = val; }
+    virtual bool        getNameIntIsCode();
+    Q_INVOKABLE void setNameIntIsCode(bool val);
 
-    Q_INVOKABLE void setExact(bool e) { exact = e; }
-    bool getExact() { return exact; }
+    Q_INVOKABLE void setExact(bool e);
+    bool getExact();
 
 protected:
     QString         prototypeName;          // Имя справочника - прототипа

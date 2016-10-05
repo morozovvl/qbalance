@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptEngine>
 #include <QtSql/QSqlRecord>
 #include "sqlrecordprototype.h"
+#include "sqlfieldclass.h"
 
 Q_DECLARE_METATYPE(QSqlRecord*)
 Q_DECLARE_METATYPE(QSqlField)
@@ -33,6 +34,138 @@ SqlRecordPrototype::SqlRecordPrototype(QObject *parent, SqlFieldClass* fieldClas
 
 SqlRecordPrototype::~SqlRecordPrototype()
 {
+}
+
+
+void SqlRecordPrototype::clear()
+{
+    return thisSqlRecord()->clear();
+}
+
+
+void SqlRecordPrototype::clearValues()
+{
+    return thisSqlRecord()->clearValues();
+}
+
+
+bool SqlRecordPrototype::contains(const QString &name) const
+{
+    return thisSqlRecord()->contains(name);
+}
+
+
+int SqlRecordPrototype::count() const
+{
+    return thisSqlRecord()->count();
+}
+
+
+QScriptValue SqlRecordPrototype::field(int index) const
+{
+    return sqlFieldClass->newInstance(thisSqlRecord()->fieldName(index));
+}
+
+
+QScriptValue SqlRecordPrototype::field(const QString &name) const
+{
+    return sqlFieldClass->newInstance(name);
+}
+
+
+QString	SqlRecordPrototype::fieldName(int index) const
+{
+    return thisSqlRecord()->fieldName(index);
+}
+
+
+int SqlRecordPrototype::indexOf(const QString &name) const
+{
+    return thisSqlRecord()->indexOf(name);
+}
+
+
+bool SqlRecordPrototype::isEmpty() const
+{
+    return thisSqlRecord()->isEmpty();
+}
+
+
+bool SqlRecordPrototype::isGenerated(const QString &name) const
+{
+    return thisSqlRecord()->isGenerated(name);
+}
+
+
+bool SqlRecordPrototype::isGenerated(int index) const
+{
+    return thisSqlRecord()->isGenerated(index);
+}
+
+
+bool SqlRecordPrototype::isNull(const QString &name) const
+{
+    return thisSqlRecord()->isNull(name);
+}
+
+
+bool SqlRecordPrototype::isNull(int index) const
+{
+    return thisSqlRecord()->isNull(index);
+}
+
+
+void SqlRecordPrototype::remove(int pos)
+{
+    return thisSqlRecord()->remove(pos);
+}
+
+
+void SqlRecordPrototype::setGenerated(const QString &name, bool generated)
+{
+    return thisSqlRecord()->setGenerated(name, generated);
+}
+
+
+void SqlRecordPrototype::setGenerated(int index, bool generated)
+{
+    return thisSqlRecord()->setGenerated(index, generated);
+}
+
+
+void SqlRecordPrototype::setNull(int index)
+{
+    return thisSqlRecord()->setNull(index);
+}
+
+
+void SqlRecordPrototype::setNull(const QString &name)
+{
+    return thisSqlRecord()->setNull(name);
+}
+
+
+void SqlRecordPrototype::setValue(int index, const QVariant &val)
+{
+    return thisSqlRecord()->setValue(index, val);
+}
+
+
+void SqlRecordPrototype::setValue(const QString &name, const QVariant &val)
+{
+    return thisSqlRecord()->setValue(name, val);
+}
+
+
+QVariant SqlRecordPrototype::value(int index) const
+{
+    return thisSqlRecord()->value(index);
+}
+
+
+QVariant SqlRecordPrototype::value(const QString &name) const
+{
+    return thisSqlRecord()->value(name);
 }
 
 

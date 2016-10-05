@@ -31,10 +31,10 @@ public:
     CalendarForm(QObject* parent = 0);
     ~CalendarForm();
     virtual bool open(QWidget* pwgt = 0);
-    virtual QDate getBeginDate() { return beginDate; }
-    virtual QDate getEndDate() { return endDate; }
-    virtual void setBeginDate(QDate);
-    virtual void setEndDate(QDate);
+    Q_INVOKABLE virtual QDate getBeginDate();
+    Q_INVOKABLE virtual QDate getEndDate();
+    Q_INVOKABLE virtual void setBeginDate(QDate);
+    Q_INVOKABLE virtual void setEndDate(QDate);
 private:
     QCalendarWidget* pBeginCalendar;
     QCalendarWidget* pEndCalendar;

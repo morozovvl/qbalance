@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtDesigner/QDesignerExportWidget>
 
 class FormGrid;
+class Dictionary;
 
 enum DelegateTypes
 {
@@ -47,15 +48,16 @@ public:
     MyItemDelegate(QObject*, FormGrid* = 0);
     ~MyItemDelegate();
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-    virtual void setColumnMask(const QString mask = "") { columnMask = mask; }
-    virtual QString getColumnMask() { return columnMask; }
+    virtual void setColumnMask(const QString mask = "");
+    virtual QString getColumnMask();
     virtual void        setReadOnly(bool val);
-    virtual bool        isReadOnly() { return readOnly; }
-    virtual void        setFieldName(QString name) { fieldName = name; }
-    virtual QString     getFieldName() { return fieldName; }
+    virtual bool        isReadOnly();
+    virtual void        setFieldName(QString name);
+    virtual QString     getFieldName();
 
 protected:
-    FormGrid*               parentForm;
+//    FormGrid*               parentForm;
+    Dictionary*             dictionary;
     QString                 columnMask;
     DelegateTypes           delegateType;
     bool                    readOnly;

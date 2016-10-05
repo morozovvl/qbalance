@@ -30,21 +30,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QHash>
 #include <QtCore/QProcess>
 #include <QtCore/QPointer>
+#include <QtSql/QSqlQuery>
 
 #include "mysqlrelationaltablemodel.h"
+#include "filetype.h"
 
 
 class TApplication;
 class Dictionary;
 class Dictionaries;
-
-enum FileType           // Типы данных, которые хранятся в таблице "файлы"
-{
-    ScriptFileType,
-    ReportTemplateFileType,
-    PictureFileType,
-    FormFileType
-};
 
 
 struct FileInfo
@@ -138,7 +132,7 @@ public:
     virtual bool open();
     virtual bool open(QString, QString);
     virtual void close();
-    bool isOpened() { return dbIsOpened; }
+    bool isOpened();
     void initDBFactory();
     bool createNewDBs(QString, QString, int);
 
@@ -164,16 +158,16 @@ public:
     static qulonglong calculateCRC32(QByteArray*);
 
     // Работа с соединением
-    int getPort() { return port; }
-    QString getHostName() { return hostName; }
-    QString getLogin() { return currentLogin; }
-    void setHostName(QString name) { hostName = (name == "127.0.0.1" ? "localhost" : name); }
-    void setPort(int portNum) { port = portNum; }
+    int getPort();
+    QString getHostName();
+    QString getLogin();
+    void setHostName(QString name);
+    void setPort(int portNum);
 
     // Работа с базой
-    void setDatabaseName(QString name) { dbName = name; }
-    QString getDatabaseName() { return dbName; }
-    QSqlDatabase* getDB() { return db; }
+    void setDatabaseName(QString name);
+    QString getDatabaseName();
+    QSqlDatabase* getDB();
 
     virtual void getColumnsHeaders(QString, QList<FieldType>*);
     QSqlQuery getDictionariesProperties();
@@ -221,11 +215,11 @@ public:
                                           QList<FieldType>* = 0,
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
     QString getDictionarySqlSelectStatement(QString, QString = "");       // Генерирует текст SQL-запроса для справочника
-    QSqlQuery getAccounts() { return accounts; }
+    QSqlQuery getAccounts();
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
     virtual void setConfig(QString, QString, QString);
-    QSqlQuery getConfig() { return config; }
+    QSqlQuery getConfig();
 
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);
@@ -238,7 +232,7 @@ public:
     void reloadDictionariesPermitions();
     void reloadColumnHeaders();
     void reloadColumnProperties();
-    QSqlQuery* getDictionaries() { return &dictionaries; }
+    QSqlQuery* getDictionaries();
 
     // Функции для мастера работы со справочниками
     bool createNewDictionary(QString, QString = "", bool = true);
@@ -275,7 +269,7 @@ public:
     void    appendCommand(UpdateValues);
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, int column);
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, QString column);
-    Q_INVOKABLE virtual QVariant getValue(QString command) { return getValue(command, 0, 0); }
+    Q_INVOKABLE virtual QVariant getValue(QString command);
     Q_INVOKABLE virtual QSqlRecord getRecord(QString command, int row);
     Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
 

@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QLabel>
 #include "calendarform.h"
 #include "../kernel/app.h"
+#include "../gui/dialog.h"
 
 
 
@@ -30,6 +31,18 @@ CalendarForm::CalendarForm(QObject* parent/* = 0*/): Form(parent)
 
 CalendarForm::~CalendarForm()
 {
+}
+
+
+QDate CalendarForm::getBeginDate()
+{
+    return beginDate;
+}
+
+
+QDate CalendarForm::getEndDate()
+{
+    return endDate;
 }
 
 
@@ -62,6 +75,7 @@ bool CalendarForm::open(QWidget* pwgt) {
 }
 
 void CalendarForm::cmdOk() {
+    Form::hide();
     beginDate = pBeginCalendar->selectedDate();
     endDate = pEndCalendar->selectedDate();
     if (beginDate > endDate)

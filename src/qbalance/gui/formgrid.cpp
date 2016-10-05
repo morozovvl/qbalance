@@ -36,10 +36,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "picture.h"
 #include "tableview.h"
 #include "myitemdelegate.h"
-#include "../kernel/essence.h"
+#include "dialog.h"
+#include "../kernel/dictionary.h"
 #include "../kernel/app.h"
 #include "../kernel/table.h"
 #include "../storage/mysqlrelationaltablemodel.h"
+#include "../engine/scriptengine.h"
 
 
 FormGrid::FormGrid(QObject* parent/* = 0*/)
@@ -65,6 +67,82 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
 FormGrid::~FormGrid()
 {
 }
+
+
+void FormGrid::setLeftPercent(bool percent)
+{
+    leftPercent = percent;
+}
+
+
+bool FormGrid::isLeftPercent()
+{
+    return leftPercent;
+}
+
+
+void FormGrid::setRightPercent(bool percent)
+{
+    rightPercent = percent;
+}
+
+
+bool FormGrid::isRightPercent()
+{
+    return rightPercent;
+}
+
+QPushButton* FormGrid::getButtonAdd()
+{
+    return buttonAdd;
+}
+
+
+QPushButton* FormGrid::getButtonDelete()
+{
+    return buttonDelete;
+}
+
+
+QPushButton* FormGrid::getButtonView()
+{
+    return buttonView;
+}
+
+
+QPushButton* FormGrid::getButtonRequery()
+{
+    return buttonRequery;
+}
+
+
+QPushButton* FormGrid::getButtonPrint()
+{
+    return buttonPrint;
+}
+
+
+QPushButton* FormGrid::getButtonLoad()
+{
+    return buttonLoad;
+}
+
+
+QPushButton* FormGrid::getButtonSave()
+{
+    return buttonSave;
+}
+
+Picture* FormGrid::getPicture()
+{
+    return picture;
+}
+
+
+QString FormGrid::getFilter()
+{
+    return "";
+}    // Возвращает фильтр для поиска в справочнике
 
 
 void FormGrid::close()

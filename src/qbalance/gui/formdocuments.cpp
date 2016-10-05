@@ -23,6 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dialog.h"
 #include "formgrid.h"
 #include "formdocuments.h"
+#include "mynumericedit.h"
+#include "../kernel/essence.h"
+#include "../storage/dbfactory.h"
 
 
 FormDocuments::FormDocuments(): FormGrid()

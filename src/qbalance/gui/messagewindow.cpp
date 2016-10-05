@@ -18,8 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
 #include <QtGui/QTextEdit>
+#include <QtSql/QSqlQuery>
 #include "messagewindow.h"
 #include "../kernel/app.h"
+#include "../gui/mainwindow.h"
+#include "../storage/dbfactory.h"
 
 
 MessageWindow::MessageWindow() :
@@ -41,6 +44,12 @@ MessageWindow::~MessageWindow()
         subWindow = 0;
     }
     delete textEditor;
+}
+
+
+QTextEdit* MessageWindow::getTextEditor()
+{
+    return textEditor;
 }
 
 

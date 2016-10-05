@@ -49,7 +49,19 @@ MyButtonLineEdit::~MyButtonLineEdit()
 }
 
 
-/*virtual*/ void MyButtonLineEdit::paintEvent(QPaintEvent* event)
+QString MyButtonLineEdit::value()
+{
+    return lineEdit->text();
+}
+
+
+void MyButtonLineEdit::setValue(QString text)
+{
+    lineEdit->setText(text);
+}
+
+
+void MyButtonLineEdit::paintEvent(QPaintEvent* event)
 {
     QWidget::paintEvent(event);
     pushButton->setFixedSize(lineEdit->height(), lineEdit->height());

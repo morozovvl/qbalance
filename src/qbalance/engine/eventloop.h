@@ -27,10 +27,10 @@ class EventLoop : public QEventLoop
     Q_OBJECT
 public:
     explicit EventLoop(QObject *parent = 0);
-    Q_INVOKABLE int	exec()                      { return QEventLoop::exec(); }
-    Q_INVOKABLE void	exit(int returnCode = 0)    { QEventLoop::exit(returnCode); }
-    Q_INVOKABLE bool	isRunning() const           { return QEventLoop::isRunning(); }
-    Q_INVOKABLE void	wakeUp()                    { QEventLoop::wakeUp(); }
+    Q_INVOKABLE int	exec();
+    Q_INVOKABLE void	exit(int returnCode = 0);
+    Q_INVOKABLE bool	isRunning() const;
+    Q_INVOKABLE void	wakeUp();
 
 /* Пока не будем вызывать эти методы из скриптов
     bool	processEvents ( ProcessEventsFlags flags = AllEvents )

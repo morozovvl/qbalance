@@ -21,9 +21,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include "dictionaries.h"
 #include "../kernel/app.h"
+#include "../kernel/saldo.h"
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/wizarddictionary.h"
+#include "../gui/dialog.h"
+#include "../storage/dbfactory.h"
 
 
 Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_справочникам", parent)
@@ -38,6 +41,29 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
     formTitle = QObject::trUtf8("Справочники");
     scriptEngine = 0;
     scriptEngineEnabled = false;
+}
+
+QHash<QString, Dictionary*>* Dictionaries::getDictionariesList()
+{
+    return &dictionariesList;
+}
+
+
+void Dictionaries::setDocument(Document* doc)
+{
+    document = doc;
+}
+
+
+Document* Dictionaries::getDocument()
+{
+    return document;
+}
+
+
+bool Dictionaries::isSaldoExist()
+{
+    return lIsSaldoExist;
 }
 
 

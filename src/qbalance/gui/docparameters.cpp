@@ -29,11 +29,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../definitions.h"
 #include "docparameters.h"
 #include "../kernel/dictionary.h"
-#include "formgrid.h"
+#include "../kernel/document.h"
+//#include "formgrid.h"
 #include "formdocument.h"
 #include "../kernel/app.h"
 #include "../kernel/essence.h"
 #include "../kernel/document.h"
+#include "../storage/dbfactory.h"
+
 
 DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
 {
@@ -51,8 +54,30 @@ DocParameters::DocParameters(QWidget* pwgt): QFrame(pwgt)
 
 DocParameters::~DocParameters()
 {
-//    for(int i = 0; i < strNum; i++)
-//        removeString(i);
+}
+
+
+QStringList DocParameters::getKeys()
+{
+    return dictList;
+}
+
+
+Dictionary* DocParameters::getDictionary(QString dictName)
+{
+    return dictionaries->value(dictName);
+}
+
+
+void DocParameters::setDictionaries(QHash<QString, Dictionary*>* dicts)
+{
+    dictionaries = dicts;
+}
+
+
+void DocParameters::setFormDocument(FormDocument* doc)
+{
+    parentForm = doc;
 }
 
 
@@ -101,7 +126,8 @@ void DocParameters::dictionaryButtonPressed()
             if (dictionaries->value(dictName)->isFormSelected())
             {
                 showText(dictName);
-                parentForm->getParent()->setConstDictId(dictName, dictionaries->value(dictName)->getId());
+                Document* doc = parentForm->getParent();
+                doc->setConstDictId(dictName, dictionaries->value(dictName)->getId());
             }
             break;
         }

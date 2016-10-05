@@ -21,7 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MESSAGEWINDOW_H
 
 #include <QtGui/QTextEdit>
-#include "mainwindow.h"
+#include <QtGui/QMdiSubWindow>
+//#include "mainwindow.h"
 
 class TApplication;
 
@@ -31,7 +32,7 @@ class MessageWindow : public QObject
 public:
     explicit MessageWindow();
     ~MessageWindow();
-    QTextEdit* getTextEditor() { return textEditor; }
+    QTextEdit* getTextEditor();
 
 public slots:
     void print(QString = "");

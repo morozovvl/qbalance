@@ -29,8 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QItemDelegate>
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "form.h"
-#include "picture.h"
-#include "tableview.h"
 
 class TableView;
 class Picture;
@@ -41,18 +39,18 @@ public:
     FormGrid(QObject* parent = 0);
     ~FormGrid();
     virtual void close();
-    Q_INVOKABLE void    setLeftPercent(bool percent) { leftPercent = percent; }
-    Q_INVOKABLE bool    isLeftPercent() { return leftPercent; }
-    Q_INVOKABLE void    setRightPercent(bool percent) { rightPercent = percent; }
-    Q_INVOKABLE bool    isRightPercent() { return rightPercent; }
+    Q_INVOKABLE virtual void    setLeftPercent(bool percent);
+    Q_INVOKABLE virtual bool    isLeftPercent();
+    Q_INVOKABLE virtual void    setRightPercent(bool percent);
+    Q_INVOKABLE virtual bool    isRightPercent();
 
-    Q_INVOKABLE QPushButton* getButtonAdd() { return buttonAdd; }
-    Q_INVOKABLE QPushButton* getButtonDelete() { return buttonDelete; }
-    Q_INVOKABLE QPushButton* getButtonView() { return buttonView; }
-    Q_INVOKABLE QPushButton* getButtonRequery() { return buttonRequery; }
-    Q_INVOKABLE QPushButton* getButtonPrint() { return buttonPrint; }
-    Q_INVOKABLE QPushButton* getButtonLoad() { return buttonLoad; }
-    Q_INVOKABLE QPushButton* getButtonSave() { return buttonSave; }
+    Q_INVOKABLE QPushButton* getButtonAdd();
+    Q_INVOKABLE QPushButton* getButtonDelete();
+    Q_INVOKABLE QPushButton* getButtonView();
+    Q_INVOKABLE QPushButton* getButtonRequery();
+    Q_INVOKABLE QPushButton* getButtonPrint();
+    Q_INVOKABLE QPushButton* getButtonLoad();
+    Q_INVOKABLE QPushButton* getButtonSave();
 
     void setButtonAdd(bool);
     void setButtonDelete(bool);
@@ -61,8 +59,8 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool);
     virtual void activateWidget();
     virtual void keyPressEvent(QKeyEvent*);
-    Q_INVOKABLE virtual Picture* getPicture() { return picture; }
-    virtual QString getFilter() { return ""; }    // Возвращает фильтр для поиска в справочнике
+    Q_INVOKABLE virtual Picture* getPicture();
+    virtual QString getFilter();    // Возвращает фильтр для поиска в справочнике
 
 public slots:
     virtual void cmdAdd();

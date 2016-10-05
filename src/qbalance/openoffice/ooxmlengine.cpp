@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QProcess>
 #include <QtCore/QDebug>
 #include "ooxmlengine.h"
+#include "../kernel/app.h"
 
 
 OOXMLEngine::OOXMLEngine(): QObject()
@@ -30,6 +31,30 @@ OOXMLEngine::OOXMLEngine(): QObject()
 
 OOXMLEngine::~OOXMLEngine()
 {
+}
+
+
+void OOXMLEngine::setApp(TApplication* a)
+{
+    app = a;
+}
+
+
+QDomDocument* OOXMLEngine::getDomDocument()
+{
+    return & doc;
+}
+
+
+int OOXMLEngine::rowCount()
+{
+    return rowQuan;
+}
+
+
+void OOXMLEngine::setShowError(bool show)
+{
+    showError = show;
 }
 
 

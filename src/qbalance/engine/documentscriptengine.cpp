@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "documentscriptengine.h"
 #include "../kernel/document.h"
 #include "../kernel/documents.h"
+#include "../engine/reportcontext.h"
 
 
 QScriptValue getSaldo(QScriptContext* context, QScriptEngine* engine) {
@@ -62,6 +63,12 @@ DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Es
 }
 
 
+ReportContext* DocumentScriptEngine::getReportContext()
+{
+    return reportContext;
+}
+
+
 void DocumentScriptEngine::loadScriptObjects()
 {
     ScriptEngine::loadScriptObjects();
@@ -101,12 +108,17 @@ void DocumentScriptEngine::eventAppendFromQuery(QString queryName, QSqlRecord* v
 }
 
 
-void DocumentScriptEngine::eventBeforeLinePrint(int strNum)
+bool DocumentScriptEngine::eventBeforeLinePrint(int strNum)
 {
+    bool result = true;
+    QScriptValue res;
     QString eventName = "EventBeforeLinePrint";
     QScriptValueList args;
     args << newVariant(QVariant(strNum));
-    scriptCall(eventName, QScriptValue(), args);
+    res = scriptCall(eventName, QScriptValue(), args);
+    if (res.toString() != "undefined")
+        result = res.toBool();
+    return result;
 }
 
 

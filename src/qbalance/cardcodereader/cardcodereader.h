@@ -31,7 +31,7 @@ public:
     explicit CardCodeReader(QObject *parent = 0);
     virtual bool open();
     virtual void close();
-    virtual void setApp(TApplication* a) { app = a; }
+    virtual void setApp(TApplication* a);
     ~CardCodeReader();
     virtual void readCardReader(QKeyEvent*);
 

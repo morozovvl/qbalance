@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/dictionary.h"
 #include "formgridsearch.h"
 #include "searchparameters.h"
+#include "dialog.h"
+#include "../storage/dbfactory.h"
 
 #define LABEL_SEARCH_PARAMETERS     QObject::trUtf8("Параметры для поиска:")
 
@@ -35,6 +37,12 @@ FormGridSearch::FormGridSearch(QObject* parent/* = 0*/) : FormGrid(parent)
 
 FormGridSearch::~FormGridSearch()
 {
+}
+
+
+SearchParameters* FormGridSearch::getSearchParameters()
+{
+    return parameters;
 }
 
 

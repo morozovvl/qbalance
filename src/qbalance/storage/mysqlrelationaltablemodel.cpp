@@ -34,6 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include "mysqlrelationaltablemodel.h"
 #include "../kernel/app.h"
+#include "../kernel/essence.h"
+#include "../storage/dbfactory.h"
 
 
 MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* par) : QSqlRelationalTableModel()
@@ -54,6 +56,71 @@ MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* p
 MySqlRelationalTableModel::~MySqlRelationalTableModel()
 {
     updateInfo.clear();
+}
+
+
+void MySqlRelationalTableModel::setRelationalAlias(int column, QString alias)
+{
+    tablesAliases.insert(column, alias);
+}
+
+
+QString MySqlRelationalTableModel::getSelectStatement()
+{
+    return selectCommand;
+}
+
+
+void MySqlRelationalTableModel::setSelectStatement(QString string)
+{
+    selectCommand = string;
+}
+
+
+bool MySqlRelationalTableModel::select()
+{
+    return QSqlRelationalTableModel::select();
+}
+
+
+void MySqlRelationalTableModel::setFilter(const QString &filter)
+{
+    QSqlRelationalTableModel::setFilter(filter);
+}
+
+void MySqlRelationalTableModel::setReadOnly(bool ro)
+{
+    readOnly = ro;
+}
+
+
+bool MySqlRelationalTableModel::isReadOnly()
+{
+    return readOnly;
+}
+
+
+QString MySqlRelationalTableModel::getFieldName(int i)
+{
+    return record().fieldName(i);
+}
+
+
+void MySqlRelationalTableModel::setTestSelect(bool test)
+{
+    testSelect = test;
+}
+
+
+bool MySqlRelationalTableModel::isTestSelect()
+{
+    return testSelect;
+}
+
+
+void MySqlRelationalTableModel::setFullDebugInfo(bool full)
+{
+    fullDebugInfo = full;
 }
 
 
@@ -162,7 +229,7 @@ QString MySqlRelationalTableModel::selectStatement() const
     if (parent != 0)
         query = parent->transformSelectStatement(query);
     if (testSelect)
-        query = "SELECT * FROM (" + query + ")s LIMIT 0";
+        query = "SELECT * FROM (" + query + ") s LIMIT 0";
 
     if (fullDebugInfo)
         app->debug(1, "Query: " + query);

@@ -17,38 +17,39 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef PASSWORDFORM_H
-#define PASSWORDFORM_H
+#ifndef CONFIGVARS_H
+#define CONFIGVARS_H
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtGui/QComboBox>
-#include <QtGui/QLineEdit>
-
-#include "form.h"
-
-class PassWordForm: public Form {
-    Q_OBJECT
-public:
-        PassWordForm(QObject* parent = 0);
-        ~PassWordForm();
-        Q_INVOKABLE virtual bool open(QWidget* pwgt = 0);
-        virtual void addLogin(QString);
-        virtual void addLogin(QStringList);
-        virtual QString getLogin();
-        QString getPassword();
-public slots:
-        int exec();
-        void cmdOk();
-
-protected:
-        void readSettings();
-        void writeSettings();
-private:
-        QString login;
-        QString password;
-        QComboBox* LoginSelector;
-        QLineEdit* PasswordEditor;
+enum ConfigVars {
+    LOCAL_PORT,
+    REMOTE_HOST,
+    REMOTE_PORT,
+    FR_NEEDED,
+    FR_DRIVER_PORT,
+    FR_DRIVER_BOUD_RATE,
+    FR_DRIVER_MAX_TIMEOUT,
+    FR_LOCAL_DRIVER_TIMEOUT,
+    FR_REMOTE_DRIVER_TIMEOUT,
+    FR_NET_DRIVER_TIMEOUT,
+    FR_DRIVER_PASSWORD,
+    FR_CONNECT_SIGNAL,
+    CARD_READER_NEEDED,
+    CARD_READER_PREFIX,
+    BAR_CODE_READER_NEEDED,
+    BAR_CODE_READER_PORT,
+    BAR_CODE_READER_BAUD_RATE,
+    BAR_CODE_READER_TIMEOUT,
+    BANK_TERMINAL_NEEDED,
+    BANK_TERMINAL_PRINT_WAIT_TIME,
+    BANK_TERMINAL_PRINT_WAIT_MESSAGE,
+    BANK_TERMINAL_PROGRAM_WAIT_TIME,
+    BANK_TERMINAL_INTERVAL_EMPTY_LINES,
+    BANK_TERMINAL_PATH,
+    SAVE_FORM_CONFIG_TO_DB,
+    ASK_LOAD_UPDATES_TO_DB,
+    SAVE_DB_UPDATES_TO_LOCAL,
+    GET_PICTURE_FROM_SERVER_IN_DOCUMENT,
+    PARAMETERS
 };
 
-#endif
+#endif // CONFIGVARS_H

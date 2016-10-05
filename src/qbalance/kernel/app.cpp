@@ -31,15 +31,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
+#include "topers.h"
+#include "tcpserver.h"
+#include "tcpclient.h"
 #include "../gui/guifactory.h"
 #include "../gui/passwordform.h"
 #include "../gui/formgrid.h"
 #include "../gui/mainwindow.h"
 #include "../gui/configform.h"
+#include "../gui/messagewindow.h"
+#include "../gui/dialog.h"
 #include "../engine/documentscriptengine.h"
 #include "../storage/dbfactory.h"
 #include "../bankterminal/bankterminal.h"
 #include "../driverfr/driverfr.h"
+#include "../barcodereader/barcodereader.h"
+#include "../cardcodereader/cardcodereader.h"
 
 
 QList<QString>      TApplication::DebugModes;
@@ -107,6 +114,354 @@ TApplication::~TApplication()
 {
     delete gui;
     delete db;
+}
+
+
+Dictionary* TApplication::getDictionary(QString name)
+{
+    return getDictionaries()->getDictionary(name);
+}
+
+
+Saldo* TApplication::getSaldo(QString acc)
+{
+    return getDictionaries()->getSaldo(acc);
+}
+
+
+bool TApplication::addDictionary(QString name)
+{
+    return getDictionaries()->addDictionary(name);
+}
+
+
+bool TApplication::addSaldo(QString acc)
+{
+    return getDictionaries()->getSaldo(acc);
+}
+
+
+void TApplication::removeDictionary(QString name)
+{
+    getDictionaries()->removeDictionary(name);
+}
+
+
+DBFactory* TApplication::getDBFactory()
+{
+    return db;
+}
+
+
+void TApplication::clearMessageOnStatusBar()
+{
+    gui->getMainWindow()->getStatusBar()->clearMessage();
+}
+
+
+GUIFactory* TApplication::getGUIFactory()
+{
+    return gui;
+}
+
+
+QString TApplication::getLogin()
+{
+    return db->getLogin();
+}
+
+
+bool TApplication::isSA()
+{
+    return getLogin().toLower() == "sa" ? true : false;
+}
+
+
+QDate TApplication::getBeginDate()
+{
+    return beginDate;
+}
+
+
+QDate TApplication::getEndDate()
+{
+    return endDate;
+}
+
+
+MainWindow* TApplication::getMainWindow()
+{
+    return gui->getMainWindow();
+}
+
+
+QMdiSubWindow* TApplication::getActiveSubWindow()
+{
+    return gui->getMainWindow()->getWorkSpace()->activeSubWindow();
+}
+
+
+void TApplication::show()
+{
+    gui->show();
+}
+
+
+void TApplication::showDictionaries()
+{
+    dictionaryList->show();
+}
+
+
+void TApplication::showDocuments()
+{
+    topersList->show();
+}
+
+
+void TApplication::setPeriod()
+{
+    gui->setPeriod();
+}                                               // Установим рабочий интервал
+
+
+void TApplication::setBeginDate(QDate date)
+{
+    beginDate = date;
+}
+
+
+void TApplication::setEndDate(QDate date)
+{
+    endDate = date;
+}
+
+
+QString TApplication::authors()
+{
+    return "Морозов Владимир (morozovvladimir@mail.ru)";
+}
+
+
+bool TApplication::isDebugMode(int mode)
+{
+    return DebugModes.contains(QString("%1").arg(mode));
+}
+
+
+QString TApplication::debugFileName(QString debugMode)
+{
+    return getLogsPath().append(QString("debug%1.log").arg(debugMode));
+}
+
+
+QString TApplication::errorFileName()
+{
+    return "error.log";
+}
+
+
+QString TApplication::logTimeFormat()
+{
+    return "dd.MM.yy hh.mm.ss.zzz";
+}
+
+
+QString TApplication::resourcesFile()
+{
+    return applicationDirPath() + "/resources.qrc";
+}
+
+
+QString TApplication::getScriptFileName(int oper)
+{
+    return QString("формулы%1.qs").arg(oper);
+}
+
+
+void TApplication::setDebugToBuffer(bool buff)
+{
+    debugToBuffer = buff;
+}
+
+
+void TApplication::setWriteDebug(bool write)
+{
+    writeDebug = write;
+}
+
+
+bool TApplication::getFullDebugInfo()
+{
+    return fullDebugInfo;
+}
+
+
+int TApplication::getReportTemplateType()
+{
+    return reportTemplateType;
+}
+
+
+bool TApplication::drvFRisValid()
+{
+    return driverFRisValid;
+}
+
+
+DriverFR* TApplication::getDrvFR()
+{
+    return driverFR;
+}
+
+
+BankTerminal* TApplication::getBankTerminal()
+{
+    return bankTerminal;
+}
+
+
+TcpServer* TApplication::getTcpServer()
+{
+    return tcpServer;
+}
+
+
+bool TApplication::isBarCodeReaded()
+{
+    return barCodeReaded;
+}
+
+
+void TApplication::savePhotoToServer(QString file, QString localFile)
+{
+    saveFileToServer(file, localFile, PictureFileType, true);
+}
+
+
+MessageWindow* TApplication::getMessageWindow()
+{
+    return messagesWindow;
+}
+
+
+int TApplication::getSecDiff()
+{
+    return secDiff;
+}
+
+
+bool TApplication::isTimeOut()
+{
+    return timeIsOut;
+}
+
+
+void TApplication::setDirName(QString str)
+{
+    dirName = str;
+}
+
+
+QString TApplication::getScript()
+{
+    return script;
+}                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
+
+
+QString TApplication::getScriptParameter()
+{
+    return scriptParameter;
+}
+
+
+void TApplication::setScriptMode(bool mode)
+{
+    scriptMode = mode;
+}
+
+
+bool TApplication::isScriptMode()
+{
+    return scriptMode;
+}
+
+
+void TApplication::setServerMode(bool mode)
+{
+    serverMode = mode;
+}
+
+
+bool TApplication::isServerMode()
+{
+    return serverMode;
+}
+
+
+void TApplication::setSendCommandMode(bool mode)
+{
+    sendCommandMode = mode;
+}
+
+
+bool TApplication::isSendCommandMode()
+{
+    return sendCommandMode;
+}
+
+
+QList<ScriptEngine*> TApplication::getScriptStack()
+{
+    return scriptStack;
+}
+
+
+void TApplication::appendScriptStack(ScriptEngine* script)
+{
+    scriptStack.append(script);
+}
+
+
+void TApplication::removeLastScriptStack()
+{
+    scriptStack.removeLast();
+}
+
+
+ScriptEngine* TApplication::getLastScriptStack()
+{
+    return scriptStack.last();
+}
+
+
+QMyExtSerialPort* TApplication::getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode, QObject* parent)
+{
+    return new QMyExtSerialPort(name, mode, parent);
+}
+
+
+MyProgressDialog* TApplication::getMyProgressDialog(QString mess)
+{
+    return new MyProgressDialog(mess, getMainWindow());
+}
+
+
+QString TApplication::getConfigTypeName(QString type)
+{
+    return configTypes.value(type);
+}
+
+
+QHash<ConfigVars, ConfigEntry>* TApplication::getConfigs()
+{
+    return &configs;
+}
+
+
+void TApplication::setConfigs(QHash<ConfigVars, ConfigEntry>* conf)
+{
+    configs = *conf;
 }
 
 

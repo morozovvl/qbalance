@@ -6,7 +6,7 @@
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -std=c++11
 
 include(../qextserialport/src/qextserialport.pri)
 
@@ -157,7 +157,9 @@ HEADERS +=  gui/passwordform.h \
     gui/myvalueeditor.h \
     engine/reportcontextfunctions.h \
     mpreal.h \
-    fixed.h
+    fixed.h \
+    storage/filetype.h \
+    kernel/configvars.h
 
 
 RESOURCES += ../../resources.qrc
@@ -206,4 +208,4 @@ OTHER_FILES += \
     license.txt \
     ../../README
 
- LIBS +=  ../../lib64/libmpfr.so
+# LIBS +=  ../../lib64/libmpfr.so

@@ -24,6 +24,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/mainwindow.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/formdocuments.h"
+#include "../gui/tableview.h"
+#include "../storage/dbfactory.h"
+#include "../engine/documentscriptengine.h"
+#include "../engine/reportcontext.h"
 
 
 Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
@@ -39,7 +43,8 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
 
     QSqlRecord operProperties = db->getTopersProperties(operNumber);
     db->getToperData(operNumber, &topersList);              // Получим список типовых операций
-    formTitle  = QString("%1 - %2").arg(operProperties.value(db->getObjectName("имя")).toString().trimmed()).arg(QObject::trUtf8("Список документов"));
+    operName = operProperties.value(db->getObjectName("имя")).toString().trimmed();
+    formTitle  = QString("%1 - %2").arg(operName).arg(QObject::trUtf8("Список документов"));
     subFormTitle = operProperties.value(db->getObjectName("имя")).toString().trimmed();
     lInsertable = operProperties.value("insertable").toBool();
     lDeleteable = operProperties.value("deleteable").toBool();
@@ -52,6 +57,24 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
 
 Documents::~Documents()
 {
+}
+
+
+QList<ToperType>* Documents::getTopersList()
+{
+    return &topersList;
+}
+
+
+QString Documents::getAttrPrefix()
+{
+    return prefix;
+}
+
+
+Document* Documents::getDocument()
+{
+    return currentDocument;
 }
 
 
@@ -315,6 +338,7 @@ void Documents::preparePrintValues()
     if (reportScriptEngine != 0)
     {
         reportScriptEngine->getReportContext()->setValue("документы.СУММА", getSumValue(db->getObjectName("документы.сумма")));
+        reportScriptEngine->getReportContext()->setValue("документы.ИМЯ", operName);
         Dictionary::preparePrintValues();
     }
 }

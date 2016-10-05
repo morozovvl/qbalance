@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QByteArray>
 #include <QtCore/QQueue>
 #include "../../qextserialport/src/qextserialport.h"
-#include "../kernel/tcpclient.h"
 
 class TApplication;
+class TcpClient;
 
 class QMyExtSerialPort : public QextSerialPort
 {
@@ -38,23 +38,23 @@ public:
     virtual void close();
     virtual qint64 writeData(const char *, qint64, bool = false);
     virtual qint64 readData(char *, qint64, bool = false);
-    virtual QByteArray readAll() { return QextSerialPort::readAll(); }
+    virtual QByteArray readAll();
 
     virtual bool    isLockedDriverFR();
     virtual bool    isReadyDriverFR();
     virtual bool    setLock(bool lock);
-    virtual void    setRemote(bool r) { remote = r; }
-    virtual void    setMyTimeout(int t) { timeOut = t; }
-    virtual void    setBaudRate(int rate) { QextSerialPort::setBaudRate(LineSpeedVal[rate]); }
-    virtual void    setTimeout(long timeOut) { QextSerialPort::setTimeout(timeOut); }
+    virtual void    setRemote(bool r);
+    virtual void    setMyTimeout(int t);
+    virtual void    setBaudRate(int rate);
+    virtual void    setTimeout(long timeOut);
 
     // Работа с TCP соединением
     virtual void setTcpClient(QString, int);
-    virtual TcpClient* getTcpClient() { return tcpClient; }
+    virtual TcpClient* getTcpClient();
     virtual void closeTcpClient();
 
     // Работа с журналом
-    virtual QString     getLog() { return log; }
+    virtual QString     getLog();
     virtual void        writeLog(QString = "", bool = false);
 
 private slots:

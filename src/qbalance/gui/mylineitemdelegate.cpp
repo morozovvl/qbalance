@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QLineEdit>
 #include "mylineitemdelegate.h"
 #include "formgrid.h"
-#include "../kernel/essence.h"
+#include "../kernel/dictionary.h"
 
 
 MyLineItemDelegate::MyLineItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
@@ -37,14 +37,22 @@ MyLineItemDelegate::~MyLineItemDelegate()
 }
 
 
+void MyLineItemDelegate::setMaxLength(int l)
+{
+    length = l;
+}
+
+
 QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex&) const
 {
     editorWidget = new QLineEdit(parent);
     editorWidget->setMaxLength(length);
     if (!readOnly)
     {
-        if (parentForm != 0)
-            parentForm->getParent()->saveOldValues();
+//        if (parentForm != 0)
+//            parentForm->getParent()->saveOldValues();
+        if (dictionary != 0)
+            dictionary->saveOldValues();
         editorWidget->setReadOnly(false);
     }
     else

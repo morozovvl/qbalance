@@ -21,10 +21,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define WIZARDOPERATION_H
 
 #include <QtGui/QTextEdit>
-#include "wizarddictionary.h"
-//#include "mytextedit.h"
-#include "mysyntaxhighlighter.h"
-#include "mybuttonlineedit.h"
+#include <QtGui/QLineEdit>
+#include <QtGui/QCheckBox>
+#include <QtGui/QTableWidget>
+#include <QtGui/QListWidget>
+#include <QtSql/QSqlQuery>
+#include "wizardform.h"
+
+
+class MyButtonLineEdit;
+class MySyntaxHighlighter;
+
+struct ToperType;
+struct FieldType;
 
 class WizardOperation : public WizardForm
 {

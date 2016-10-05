@@ -30,7 +30,7 @@ class QDESIGNER_WIDGET_EXPORT MyComboBox : public QComboBox {
 public:
     MyComboBox(QWidget* parent = 0);
     ~MyComboBox();
-    virtual void setSearchParameters(SearchParameters* sp) { searchParameters = sp; }
+    virtual void setSearchParameters(SearchParameters* sp);
 
 signals:
     void enterPressed(QWidget*);

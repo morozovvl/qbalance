@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QVariant>
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlError>
+#include <QtSql/QSqlField>
 #include <QtCore/QHash>
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
@@ -34,14 +35,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "essence.h"
 #include "../kernel/app.h"
 #include "../kernel/document.h"
+#include "../kernel/dictionaries.h"
 #include "../gui/form.h"
 #include "../gui/formgridsearch.h"
 #include "../gui/mainwindow.h"
+#include "../gui/tableview.h"
+#include "../gui/dialog.h"
 #include "../report/reportengine.h"
 #include "../report/ooreportengine.h"
 //#include "../report/oounoreportengine.h"
 #include "../report/ooxmlreportengine.h"
 #include "../engine/reportcontext.h"
+#include "../engine/documentscriptengine.h"
+#include "../storage/dbfactory.h"
 //#include "../mpreal.h"
 //#include "../../fixedpoint/fixed_class.h"
 //#include "../../fixedpoint/fixed_func.h"
@@ -88,6 +94,266 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
 
 Essence::~Essence() {
     this->disconnect();
+}
+
+
+bool Essence::isFieldExists(QString field)
+{
+    return getFieldsList().contains(field);
+}
+
+
+void Essence::setDoSubmit(bool submit)
+{
+    doSubmit = submit;
+}
+
+
+void Essence::setFilter(const QString &filter)
+{
+    defaultFilter = filter;
+    tableModel->setFilter(filter);
+}
+
+
+int Essence::getRowCount()
+{
+    return tableModel != 0 ? tableModel->rowCount() : 0;
+}
+
+
+int Essence::rowCount()
+{
+    return getRowCount();
+}
+
+
+FormGrid* Essence::getForm()
+{
+    return form;
+}
+
+
+TableView* Essence::getGrdTable()
+{
+    return grdTable;
+}
+
+
+void Essence::setPhotoEnabled(bool enabled)
+{
+    photoEnabled = enabled;
+}
+
+
+bool Essence::isPhotoEnabled()
+{
+    return photoEnabled;
+}
+
+
+void Essence::setPhotoPath(QString path)
+{
+    photoPath = path;
+}
+
+
+void Essence::setPhotoIdField(QString field)
+{
+    photoIdField = field;
+}
+
+
+void Essence::setPhotoNameField(QString field)
+{
+    photoNameField = field;
+}
+
+
+QString Essence::getPhotoNameField()
+{
+    return photoNameField;
+}
+
+
+bool Essence::isInsertable()
+{
+    return lInsertable;
+}         // Получить/установить ...
+
+
+bool Essence::isDeleteable()
+{
+    return lDeleteable;
+}         // ... свойства отображения ...
+
+
+bool Essence::isViewable()
+{
+    return lViewable;
+}             // ... кнопок на форме
+
+
+bool Essence::isUpdateable()
+{
+    return lUpdateable;
+}
+
+
+bool Essence::isPrintable()
+{
+    return lPrintable;
+}
+
+
+void Essence::setViewable(bool b)
+{
+    lViewable = b;
+}
+
+
+void Essence::setUpdateable(bool b)
+{
+    lUpdateable = b;
+}
+
+
+void Essence::setPrintable(bool b)
+{
+    lPrintable = b;
+}
+
+
+bool Essence::isEnabled()
+{
+    return enabled;
+}
+
+
+void Essence::hideAllGridSections()
+{
+    grdTable->hideAllGridSections();
+}
+
+
+void Essence::hideGridSection(QString columnName)
+{
+    grdTable->hideGridSection(columnName);
+}
+
+
+void Essence::showGridSection(QString columnName)
+{
+    grdTable->showGridSection(columnName);
+}
+
+
+void Essence::showAllGridSections()
+{
+    grdTable->showAllGridSections();
+}
+
+
+bool Essence::isDefaultForm()
+{
+    return form->isDefaultForm();
+}
+
+
+bool Essence::isFormVisible()
+{
+    return form != 0 ? form->isVisible() : false;
+}
+
+
+void Essence::setScriptEngineEnabled(bool enabled)
+{
+    scriptEngineEnabled = enabled;
+}
+
+
+QString Essence::getCurrentFieldName()
+{
+    return tableModel->getFieldName(getCurrentColumn()).toUpper();
+}
+
+
+int Essence::getCurrentRow()
+{
+    return getCurrentIndex().row();
+}
+
+
+int Essence::getCurrentColumn()
+{
+    return getCurrentIndex().column();
+}
+
+
+void Essence::setCurrentRow(int row)
+{
+    if (grdTable != 0) grdTable->selectRow(row);
+}
+
+
+Dictionaries* Essence::getDictionaries()
+{
+    return dictionaries;
+}
+
+
+void Essence::setDictionaries(Dictionaries* dicts)
+{
+    dictionaries = dicts;
+}     // Устанавливает указатель на список справочников
+
+
+bool Essence::isLoading()
+{
+    return loading;
+}
+
+
+void Essence::appendPrintValue(QString name, QVariant value)
+{
+    reportScriptEngine->getReportContext()->setValue(name, value);
+}
+
+
+void Essence::appendPrintValues(QString str, QSqlQuery* query)
+{
+    reportScriptEngine->getReportContext()->appendPrintValues(str, query);
+}
+
+
+QVariant Essence::getPrintValue(QString name)
+{
+    return reportScriptEngine->getReportContext()->getValue(name);
+}
+
+
+bool Essence::isDocument()
+{
+    return lIsDocument;
+}
+
+
+void Essence::showPhoto()
+{
+    form->showPhoto();
+}
+
+
+void Essence::setInsertable(bool b)
+{
+    lInsertable = b; form->setButtonAdd(b);
+}
+
+
+void Essence::setDeleteable(bool b)
+{
+    lDeleteable = b;
+    form->setButtonDelete(b);
 }
 
 
@@ -994,58 +1260,56 @@ void Essence::cardCodeReaded(QString cardCode)
 void Essence::print(QString fileName, bool newFile)
 // fileName - файл с шаблоном документа
 {
+    bool result = true;                         // По умолчанию документ будет печататься
     // Подготовим контекст для печати
     QHash<QString, QVariant> printValues;
+    // Создадим скриптовый обработчик контекста печати
+    DocumentScriptEngine scriptEngine(&printValues, this);
+    reportScriptEngine = &scriptEngine;
+    // Заполним контекст данными
+    preparePrintValues();
 
-    // Найдем полный путь к файлам с шаблонами
-    QString fullFileName = app->getReportsPath();
-
-    // Если нет каталога с отчетами, то создадим его
-    if (!QDir(fullFileName).exists())
-        QDir().mkpath(fullFileName);
-
-    fullFileName += fileName;
-
-    // Если такого шаблона нет, попробуем получить его с сервера
-    getFile(app->getReportsPath(), fileName, ReportTemplateFileType);
-
-    QString ext = QFileInfo(fileName).suffix();
-    if (newFile)
+    if (scriptEngine.open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
     {
-        QFile().copy(app->applicationDirPath() + "/empty.ods", fullFileName);
+        result = scriptEngine.evaluate();       // Если скрипты вернут отрицательный результат, то документ не напечатается
     }
-    else
+
+    if (result)
     {
-        QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
-        // Скопируем шаблон во временный файл
-        QTemporaryFile templateFile(tmpFileName);
-        if (templateFile.open())
+        // Найдем полный путь к файлам с шаблонами
+        QString fullFileName = app->getReportsPath();
+
+        // Если нет каталога с отчетами, то создадим его
+        if (!QDir(fullFileName).exists())
+            QDir().mkpath(fullFileName);
+
+        fullFileName += fileName;
+
+        // Если такого шаблона нет, попробуем получить его с сервера
+        getFile(app->getReportsPath(), fileName, ReportTemplateFileType);
+
+        QString ext = QFileInfo(fileName).suffix();
+        if (newFile)
         {
-            tmpFileName = templateFile.fileName();
-            templateFile.close();
-            templateFile.remove();
-
-            // Скопируем файл отчета (шаблон) во временный файл
-            QFile().copy(fullFileName, tmpFileName);
+            QFile().copy(app->applicationDirPath() + "/empty.ods", fullFileName);
         }
-        fullFileName = tmpFileName;
-    }
-    if (QDir().exists(fullFileName))
-    {
-        bool result = true;                         // По умолчанию документ будет печататься
-        // Создадим скриптовый обработчик контекста печати
-        DocumentScriptEngine scriptEngine(&printValues, this);
-        reportScriptEngine = &scriptEngine;
-
-        // Заполним контекст данными
-        preparePrintValues();
-
-        if (scriptEngine.open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
+        else
         {
-            result = scriptEngine.evaluate();       // Если скрипты вернут отрицательный результат, то документ не напечатается
-        }
+            QString tmpFileName = QDir::tempPath() + "/qt_temp_XXXXXX." + ext;
+            // Скопируем шаблон во временный файл
+            QTemporaryFile templateFile(tmpFileName);
+            if (templateFile.open())
+            {
+                tmpFileName = templateFile.fileName();
+                templateFile.close();
+                templateFile.remove();
 
-        if (result)
+                // Скопируем файл отчета (шаблон) во временный файл
+                QFile().copy(fullFileName, tmpFileName);
+            }
+            fullFileName = tmpFileName;
+        }
+        if (QDir().exists(fullFileName))
         {
             // На 3 секунды выведем сообщение об открытии документа
             app->showMessageOnStatusBar(trUtf8("Открывается документ: ") + fileName, 3000);

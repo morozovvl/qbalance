@@ -23,9 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
 #include "dictionary.h"
-#include "essence.h"
 
 class Document;
+
+struct ToperType;
 
 class Documents : public Dictionary {
     Q_OBJECT
@@ -38,13 +39,13 @@ public:
     Q_INVOKABLE virtual void query(QString filter = "", bool = false);
     Q_INVOKABLE virtual bool open();
     Q_INVOKABLE virtual void close();
-    QList<ToperType>*   getTopersList() { return &topersList; }
+    QList<ToperType>*   getTopersList();
     Q_INVOKABLE virtual void setValue(QString, QVariant);
     Q_INVOKABLE virtual QVariant getValue(QString, int = -1);
-    QString getAttrPrefix() { return prefix; }
+    QString getAttrPrefix();
     Q_INVOKABLE virtual void  setOrderClause(QString = "");
     Q_INVOKABLE virtual void  setForm(QString = "");
-    Q_INVOKABLE Document* getDocument() { return currentDocument; }
+    Q_INVOKABLE Document* getDocument();
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
     void                setCurrentDocument(int);       // Зафиксировать текущий документ
     virtual void        preparePrintValues();                   // Готовит значения для печати
@@ -58,6 +59,7 @@ private:
     Document*           currentDocument;
     QString             subFormTitle;
     QString             prefix;
+    QString             operName;
     QList<ToperType>    topersList;
     QList<FieldType>    attrFields;
 };

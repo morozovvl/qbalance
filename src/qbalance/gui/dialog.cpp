@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QPushButton>
 #include "../kernel/app.h"
 #include "dialog.h"
+#include "mainwindow.h"
 
 
 Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
@@ -38,16 +39,28 @@ Dialog::~Dialog()
 }
 
 
+void Dialog::setForm(Form* f)
+{
+    form = f;
+}
+
+
+Form* Dialog::getForm()
+{
+    return form;
+}
+
+
 void Dialog::setApp(TApplication* a)
 {
     app = a;
     setParent(app->getMainWindow(), Qt::Dialog);
 
-    buttonOk = (QPushButton*)this->findChild("buttonOk");
-    if (buttonOk != 0)
-    {
-        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
-    }
+//    buttonOk = (QPushButton*)this->findChild("buttonOk");
+//    if (buttonOk != 0)
+//    {
+//        connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
+//    }
 
     buttonCancel = (QPushButton*)this->findChild("buttonCancel");
     if (buttonCancel != 0)

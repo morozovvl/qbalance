@@ -22,19 +22,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlError>
 #include <QtCore/QDateTime>
 #include <QtSql/QSqlRecord>
+#include <QtSql/QSqlField>
 #include <QtScript/QScriptClass>
 
 #include "../kernel/app.h"
 #include "../storage/mysqlrelationaltablemodel.h"
+#include "../storage/dbfactory.h"
 
 Table::Table(QString name, QObject *parent)
 : QObject(parent)
 , tableModel(0)
 {
     opened = false;
+    queryTableName = "";
     tableName = name.trimmed().toLower();
     tagName = tableName;
-    queryTableName = "";
     app = TApplication::exemplar();
     db = app->getDBFactory();
     fullDebugInfo = app->getFullDebugInfo();
@@ -43,6 +45,42 @@ Table::Table(QString name, QObject *parent)
 
 Table::~Table()
 {
+}
+
+
+MySqlRelationalTableModel*  Table::getTableModel()
+{
+    return tableModel;
+}
+
+
+QString Table::transformSelectStatement(QString string)
+{
+    return string;
+}
+
+
+QString Table::getTableName()
+{
+    return tableName;
+}
+
+
+QString Table::getTagName()
+{
+    return tagName;
+}
+
+
+QString Table::getQueryTableName()
+{
+    return queryTableName;
+}
+
+
+void Table::setFullDebugInfo(bool full)
+{
+    fullDebugInfo = full;
 }
 
 

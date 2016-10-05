@@ -40,6 +40,12 @@ TcpClient::TcpClient(const QString& strHost, int nPort, QObject *parent /* = 0*/
 }
 
 
+QString TcpClient::getResult()
+{
+    return result;
+}
+
+
 void TcpClient::slotReadyRead()
 {
     resultReady = false;

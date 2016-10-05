@@ -27,6 +27,13 @@ MyNumericEdit::MyNumericEdit(QWidget *parent): QLineEdit(parent) {
     setValue(0);
 }
 
+
+QVariant MyNumericEdit::getValue()
+{
+    return value;
+}
+
+
 void MyNumericEdit::setValue(QVariant val) {
     value = val;
     QLocale locale;

@@ -40,6 +40,13 @@ SqlRecordClass::~SqlRecordClass()
 {
 }
 
+
+QString SqlRecordClass::name() const
+{
+    return "SqlRecord";
+}
+
+
 QScriptValue SqlRecordClass::prototype() const
 {
     return proto;

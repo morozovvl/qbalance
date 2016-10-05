@@ -23,10 +23,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QComboBox>
 #include <QtGui/QCheckBox>
 #include <QtGui/QTreeWidgetItem>
+#include "../kernel/configvars.h"
 #include "form.h"
-#include "../kernel/app.h"
 
 class TApplication;
+
+struct ConfigEntry;
 
 class ConfigForm : public Form
 {

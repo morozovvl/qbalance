@@ -17,12 +17,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtGui/QApplication>
+#include<QtGui/QDesktopWidget>
 #include <QtCore/QDir>
 #include <QtGui/QPainter>
+#include <QtGui/QMenu>
 #include <QtCore/QUrl>
 #include "picture.h"
 #include "../kernel/app.h"
-#include "../kernel/essence.h"
+#include "../kernel/dictionary.h"
+#include "dialog.h"
 #include "formgrid.h"
 
 
@@ -46,6 +50,30 @@ Picture::Picture(QWidget* parent): QFrame(parent) {
 
 Picture::~Picture()
 {
+}
+
+
+QString Picture::getPhotoFileName()
+{
+    return photoFileName;
+}
+
+
+void Picture::setIsBig(bool big)
+{
+    isBigPicture = big;
+}
+
+
+void Picture::setForm(FormGrid* f)
+{
+    form = f;
+}
+
+
+bool Picture::isPictureExist()
+{
+    return pictureExist;
 }
 
 

@@ -21,7 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define MYVALUEEDITOR_H
 
 #include <QtGui/QWidget>
-#include "../kernel/app.h"
+//#include "../kernel/app.h"
+
+struct ConfigEntry;
 
 class MyValueEditor : public QWidget
 {
@@ -29,7 +31,7 @@ class MyValueEditor : public QWidget
 public:
     explicit MyValueEditor(ConfigEntry&, QWidget *parent = 0);
     ~MyValueEditor();
-    QWidget* getEditor() { return widget; }
+    QWidget* getEditor();
 
 signals:
 

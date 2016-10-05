@@ -20,14 +20,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QVariant>
 #include <QtGui/QLabel>
 #include <QtGui/QHeaderView>
+#include "QtGui/QCheckBox"
 #include "wizarddictionary.h"
 #include "../kernel/app.h"
 #include "mybuttonlineedit.h"
 #include "mybuttonlineedititemdelegate.h"
 #include "mybooleanitemdelegate.h"
 #include "mylineitemdelegate.h"
+#include "formgridsearch.h"
+#include "dialog.h"
+#include "mysyntaxhighlighter.h"
+#include "guifactory.h"
+#include "../kernel/dictionaries.h"
+#include "../kernel/saldo.h"
 #include "../definitions.h"
 #include "../engine/documentscriptengine.h"
+#include "../storage/dbfactory.h"
 
 
 enum dictFieldsEnums {tableField = 0,

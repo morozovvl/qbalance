@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QLineEdit>
 #include "mynumericitemdelegate.h"
 #include "formgrid.h"
-#include "../kernel/essence.h"
+#include "../kernel/dictionary.h"
 
 
 MyNumericItemDelegate::MyNumericItemDelegate(QObject* parent, FormGrid* form, int len, int prec)
@@ -40,6 +40,18 @@ MyNumericItemDelegate::~MyNumericItemDelegate()
 {
     if (editorWidget != 0)
         delete editorWidget;
+}
+
+
+int MyNumericItemDelegate::getLength()
+{
+    return length;
+}
+
+
+int MyNumericItemDelegate::getPrecision()
+{
+    return precision;
 }
 
 
@@ -81,8 +93,10 @@ QWidget* MyNumericItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
     editorWidget->setAlignment(Qt::AlignRight);
     if (!readOnly)
     {
-        if (parentForm != 0)
-            parentForm->getParent()->saveOldValues();
+//        if (parentForm != 0)
+//            parentForm->getParent()->saveOldValues();
+        if (dictionary != 0)
+            dictionary->saveOldValues();
         editorWidget->setReadOnly(false);
     }
     else

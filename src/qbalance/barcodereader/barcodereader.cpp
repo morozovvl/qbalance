@@ -35,6 +35,12 @@ BarCodeReader::~BarCodeReader()
 }
 
 
+void BarCodeReader::setApp(TApplication* a)
+{
+    app = a;
+}
+
+
 bool BarCodeReader::open(QString port, int rate, int timeout)
 {
     bool result = false;

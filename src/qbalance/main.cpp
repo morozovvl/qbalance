@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextStream>
 #include <QtCore/QResource>
 #include "kernel/app.h"
+#include "kernel/dictionaries.h"
 #include "crashhandler/crashhandler.h"
 
 // Процедура для создания ошибки сегментирования

@@ -25,7 +25,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptValue>
 #include <QtSql/QSqlRecord>
 #include <QtCore/QVariant>
-#include "sqlfieldclass.h"
+
+class SqlFieldClass;
+
 
 class SqlRecordPrototype : public QObject, public QScriptable
 {
@@ -35,30 +37,30 @@ public:
     ~SqlRecordPrototype();
 public slots:
     void	append(QScriptValue);
-    void	clear()                                                 { return thisSqlRecord()->clear(); }
-    void	clearValues()                                           { return thisSqlRecord()->clearValues(); }
-    bool	contains(const QString &name) const                     { return thisSqlRecord()->contains(name); }
-    int         count() const                                           { return thisSqlRecord()->count(); }
-    QScriptValue    field(int index) const                              { return sqlFieldClass->newInstance(thisSqlRecord()->fieldName(index)); }
-    QScriptValue    field(const QString &name) const                    { return sqlFieldClass->newInstance(name); }
-    QString	fieldName(int index) const                              { return thisSqlRecord()->fieldName(index); }
-    int         indexOf(const QString &name) const                      { return thisSqlRecord()->indexOf(name); }
+    void	clear();
+    void	clearValues();
+    bool	contains(const QString &name) const;
+    int         count() const;
+    QScriptValue    field(int index) const;
+    QScriptValue    field(const QString &name) const;
+    QString	fieldName(int index) const;
+    int         indexOf(const QString &name) const;
     void	insert(int, QScriptValue);
-    bool	isEmpty() const                                         { return thisSqlRecord()->isEmpty(); }
-    bool	isGenerated(const QString &name) const                  { return thisSqlRecord()->isGenerated(name); }
-    bool	isGenerated(int index) const                            { return thisSqlRecord()->isGenerated(index); }
-    bool	isNull(const QString &name) const                       { return thisSqlRecord()->isNull(name); }
-    bool	isNull(int index) const                                 { return thisSqlRecord()->isNull(index); }
-    void	remove(int pos)                                         { return thisSqlRecord()->remove(pos); }
+    bool	isEmpty() const;
+    bool	isGenerated(const QString &name) const;
+    bool	isGenerated(int index) const;
+    bool	isNull(const QString &name) const;
+    bool	isNull(int index) const;
+    void	remove(int pos);
     void	replace(int, QScriptValue);
-    void	setGenerated(const QString &name, bool generated)       { return thisSqlRecord()->setGenerated(name, generated); }
-    void	setGenerated(int index, bool generated)                 { return thisSqlRecord()->setGenerated(index, generated); }
-    void	setNull(int index)                                      { return thisSqlRecord()->setNull(index); }
-    void	setNull(const QString &name)                            { return thisSqlRecord()->setNull(name); }
-    void	setValue(int index, const QVariant &val)                { return thisSqlRecord()->setValue(index, val); }
-    void	setValue(const QString &name, const QVariant &val)      { return thisSqlRecord()->setValue(name, val); }
-    QVariant	value(int index) const                                  { return thisSqlRecord()->value(index); }
-    QVariant	value(const QString &name) const                        { return thisSqlRecord()->value(name); }
+    void	setGenerated(const QString &name, bool generated);
+    void	setGenerated(int index, bool generated);
+    void	setNull(int index);
+    void	setNull(const QString &name);
+    void	setValue(int index, const QVariant &val);
+    void	setValue(const QString &name, const QVariant &val);
+    QVariant	value(int index) const;
+    QVariant	value(const QString &name) const;
 private:
     SqlFieldClass*     sqlFieldClass;
     QSqlRecord* thisSqlRecord() const;

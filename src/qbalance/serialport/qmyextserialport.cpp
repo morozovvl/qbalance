@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QHostInfo>
 #include <QtCore/QBuffer>
 #include "../kernel/app.h"
+#include "../kernel/tcpclient.h"
 #include "qmyextserialport.h"
 
 
@@ -42,6 +43,48 @@ QMyExtSerialPort::~QMyExtSerialPort()
 {
     if (tcpClient != 0)
         tcpClient->deleteLater();
+}
+
+
+QByteArray QMyExtSerialPort::readAll()
+{
+    return QextSerialPort::readAll();
+}
+
+
+void QMyExtSerialPort::setRemote(bool r)
+{
+    remote = r;
+}
+
+
+void QMyExtSerialPort::setMyTimeout(int t)
+{
+    timeOut = t;
+}
+
+
+void QMyExtSerialPort::setBaudRate(int rate)
+{
+    QextSerialPort::setBaudRate(LineSpeedVal[rate]);
+}
+
+
+void QMyExtSerialPort::setTimeout(long timeOut)
+{
+    QextSerialPort::setTimeout(timeOut);
+}
+
+
+TcpClient* QMyExtSerialPort::getTcpClient()
+{
+    return tcpClient;
+}
+
+
+QString QMyExtSerialPort::getLog()
+{
+    return log;
 }
 
 

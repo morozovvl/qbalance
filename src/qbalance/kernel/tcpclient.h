@@ -34,7 +34,7 @@ public:
     TcpClient(const QString& strHost, int nPort, QObject *parent = 0);
     bool sendToServer(QString);
     virtual bool isValid();
-    QString     getResult() { return result; }
+    QString     getResult();
     bool        waitResult();
     virtual void logError();
 

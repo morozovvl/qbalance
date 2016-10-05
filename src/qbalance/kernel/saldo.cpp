@@ -19,7 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "saldo.h"
 #include "../kernel/app.h"
+#include "../kernel/dictionaries.h"
+#include "../gui/tableview.h"
 #include "../storage/mysqlrelationaltablemodel.h"
+#include "../storage/dbfactory.h"
 
 
 Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictName, parent) {
@@ -30,6 +33,7 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
     scriptFileName =  tagName + ".qs";
     quan = false;
     lIsSaldo = true;
+    getIdRefresh = false;
     QSqlQuery accounts = db->getAccounts();
     accounts.first();
     while (accounts.isValid())
@@ -45,6 +49,18 @@ Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictNa
     lDeleteable = false;
     lUpdateable = false;
     lPrintable = false;
+}
+
+
+QString Saldo::objectName()
+{
+    return "Saldo";
+}
+
+
+void Saldo::setQuan(bool q)
+{
+    quan = q; tableModel->selectStatement();
 }
 
 

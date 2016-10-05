@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class Dictionary;
 class SearchParameters;
 
+
 struct sParam {
     QString field;
     QString table;
@@ -46,7 +47,7 @@ public:
     virtual QString getFilter(QString, QString = "");    // Возвращает фильтр для поиска в справочнике
     Q_INVOKABLE virtual QString getSearchValue(QString);
     virtual void activateWidget();
-    SearchParameters* getSearchParameters() { return parameters; }
+    SearchParameters* getSearchParameters();
     Q_INVOKABLE void clearAllComboBoxes();
     Q_INVOKABLE void setParameter(QString, QString);
 

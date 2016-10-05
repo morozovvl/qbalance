@@ -25,7 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QItemDelegate>
 #include <QtCore/QAbstractItemModel>
 #include "myitemdelegate.h"
-#include "mybuttonlineedit.h"
 
 
 class MyButtonLineEditItemDelegate : public MyItemDelegate
@@ -37,7 +36,7 @@ public:
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setEditorData(QWidget* editor, const QModelIndex &index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const;
-    void setFormOnPushButton(QString (*form)()) { buttonForm = form; }
+    void setFormOnPushButton(QString (*form)());
 private:
     QString       (*buttonForm)();
 };

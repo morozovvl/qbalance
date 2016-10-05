@@ -26,9 +26,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QComboBox>
 #include <QtGui/QLineEdit>
 #include "form.h"
-#include "../storage/dbfactory.h"
 
 class TApplication;
+class DBFactory;
 
 class ConnectionForm : public Form {
     Q_OBJECT
@@ -36,7 +36,7 @@ public:
     ConnectionForm(QObject* parent = 0);
     ~ConnectionForm();
     virtual void initForm(QString, QString, int, bool readSettings = true);
-    QString connectionName() { return pcmbConnection->currentText(); }
+    QString connectionName();
 public slots:
     virtual int exec(DBFactory*);
 protected:

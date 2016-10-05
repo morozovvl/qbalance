@@ -28,15 +28,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptEngine>
 #include <QtDesigner/QDesignerExportWidget>
 
-#include "myitemdelegate.h"
-#include "../storage/mysqlrelationaltablemodel.h"
-
 
 class TApplication;
 class FormGrid;
 class Essence;
 class Picture;
 class MyItemDelegate;
+class MySqlRelationalTableModel;
+
 struct FieldType;
 
 
@@ -49,10 +48,10 @@ public:
     virtual void                open();
     virtual void                close();
 
-    virtual void                setFormGrid(FormGrid* par) { parent = par; }
-    virtual void                setParentWidget(QWidget* widget) { parentWidget = widget; }
+    virtual void                setFormGrid(FormGrid* par);
+    virtual void                setParentWidget(QWidget* widget);
     virtual void                setEssence(Essence*);
-    virtual void                setPicture(Picture* pic) { picture = pic; }
+    virtual void                setPicture(Picture* pic);
     virtual bool                columnIsReadOnly();
     virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию

@@ -28,10 +28,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include "form.h"
 #include "../kernel/app.h"
+#include "../kernel/dictionary.h"
+#include "../engine/scriptengine.h"
+#include "../storage/dbfactory.h"
 #include "mainwindow.h"
 #include "dialog.h"
 
-class TApplication;
 
 Form::Form(QObject* par/* = 0*/): QObject(par)
 {
@@ -93,6 +95,71 @@ void Form::close()
 {
     writeSettings();
     hide();
+}
+
+
+Dialog* Form::getFormWidget()
+{
+    return formWidget;
+}
+
+
+bool Form::isVisible()
+{
+    return subWindow != 0 ? subWindow->isVisible() : false;
+}
+
+/*
+Dictionary* Form::getParent()
+{
+    return (Dictionary*)parent;
+}
+*/
+
+bool Form::isFormSelected()
+{
+    return lSelected;
+}
+
+
+QString Form::getConfigName()
+{
+    return configName;
+}
+
+
+bool Form::isDefaultForm()
+{
+    return defaultForm;
+}
+
+QPushButton* Form::getButtonOk()
+{
+    return buttonOk;
+}
+
+
+QPushButton* Form::getButtonCancel()
+{
+    return buttonCancel;
+}
+
+
+void Form::setAutoSelect(bool select)
+{
+    autoSelect = select;
+}
+
+
+TApplication* Form::getApp()
+{
+    return app;
+}
+
+
+void Form::buttonPressedSignalSend()
+{
+    emit buttonPressed(sender()->objectName());
 }
 
 

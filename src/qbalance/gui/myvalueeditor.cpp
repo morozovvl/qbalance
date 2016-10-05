@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QComboBox>
 #include <QtGui/QCheckBox>
 #include "myvalueeditor.h"
+#include "../kernel/app.h"
 
 MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
 {
@@ -53,6 +54,12 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
 MyValueEditor::~MyValueEditor()
 {
     delete widget;
+}
+
+
+QWidget* MyValueEditor::getEditor()
+{
+    return widget;
 }
 
 

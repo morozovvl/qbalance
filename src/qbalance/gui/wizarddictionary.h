@@ -25,10 +25,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QListWidget>
 #include <QtGui/QTextEdit>
 #include "wizardform.h"
-//#include "mytextedit.h"
-#include "mysyntaxhighlighter.h"
-#include "../storage/dbfactory.h"
 
+
+class MySyntaxHighlighter;
+
+struct FieldType;
 
 class WizardDictionary : public WizardForm
 {

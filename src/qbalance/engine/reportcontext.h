@@ -32,21 +32,21 @@ class ReportContext : public QObject
     Q_OBJECT
 public:
     explicit ReportContext(QHash<QString, QVariant>*, QObject *parent = 0);
-    Q_INVOKABLE int count() { return data->count(); }
+    Q_INVOKABLE int count();
     Q_INVOKABLE virtual QVariant getValue(QString);
     Q_INVOKABLE virtual QVariant getValue(QString, int);
     Q_INVOKABLE virtual void setValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString, QVariant, int);
-    Q_INVOKABLE QHash<QString, QVariant>* getData() { return data; }
-    Q_INVOKABLE QList<QString> getKeysList() { return data->keys(); }
+    Q_INVOKABLE QHash<QString, QVariant>* getData();
+    Q_INVOKABLE QList<QString> getKeysList();
     Q_INVOKABLE void removeValue(QString key);    // Удалить значение, ключ которого начинается с key
-    Q_INVOKABLE int getRowCount() { return rowCounts.value(tableName); }
+    Q_INVOKABLE int getRowCount(QString name = "");
     Q_INVOKABLE void sortTable(QString = "");        // сортировка контекста печати в разделе таблица по заданному полю
-    Q_INVOKABLE void clearSortOrder() { sortOrder.clear(); sortRef.clear(); }
-    Q_INVOKABLE void appendSortOrder(QString order) { sortOrder.append(order); }
-    Q_INVOKABLE void setShowRepeatValue(bool rep) { showRepeat = rep; }
-    Q_INVOKABLE void setTableName(QString name) { tableName = name; }
-    QString getTableName() { return tableName; }
+    Q_INVOKABLE void clearSortOrder();
+    Q_INVOKABLE void appendSortOrder(QString order);
+    Q_INVOKABLE void setShowRepeatValue(bool rep);
+    Q_INVOKABLE void setTableName(QString name);
+    QString getTableName();
     Q_INVOKABLE virtual void appendPrintValues(QString, QSqlQuery*);
 
 private:

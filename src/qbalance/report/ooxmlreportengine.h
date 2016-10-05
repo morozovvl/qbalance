@@ -20,11 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef OOXMLREPORTENGINE_H
 #define OOXMLREPORTENGINE_H
 #include <QtCore/QHash>
-#include "../kernel/essence.h"
-#include "../kernel/app.h"
-#include "../openoffice/ooxmlengine.h"
+#include <QtCore/QStringList>
+#include <QtXml/QDomNodeList>
 #include "reportengine.h"
 
+
+class OOXMLEngine;
+class ReportContext;
 
 class OOXMLReportEngine : public ReportEngine
 {
@@ -32,9 +34,9 @@ class OOXMLReportEngine : public ReportEngine
 public:
     OOXMLReportEngine(DocumentScriptEngine* = 0);
     ~OOXMLReportEngine();
-    virtual bool open() { return ReportEngine::open(); }
+    virtual bool open();
     virtual bool open(QString name, ReportContext* context);
-    void         setFileName(QString fName) { fileName = fName; }
+    void         setFileName(QString fName);
 
 private:
     OOXMLEngine*                ooxmlEngine;

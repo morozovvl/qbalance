@@ -21,7 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define OOXMLENGINE_H
 #include <QtCore/QObject>
 #include <QtXml/QDomNode>
-#include "../kernel/app.h"
+
+class TApplication;
 
 
 class OOXMLEngine: public QObject
@@ -33,8 +34,8 @@ public:
     Q_INVOKABLE bool open(QString, bool = false);
     Q_INVOKABLE bool open(QString, QString, bool = false);
     Q_INVOKABLE void close();
-    Q_INVOKABLE void setApp(TApplication* a) { app = a; }
-    Q_INVOKABLE QDomDocument* getDomDocument() { return & doc; }
+    Q_INVOKABLE void setApp(TApplication* a);
+    Q_INVOKABLE QDomDocument* getDomDocument();
     Q_INVOKABLE QDomElement getCell(int, int);
     Q_INVOKABLE QString getCellText(QDomElement);
     Q_INVOKABLE QString getCellText(int, int);
@@ -42,8 +43,8 @@ public:
     Q_INVOKABLE int row(QDomElement);
     Q_INVOKABLE int column(QDomElement);
     Q_INVOKABLE void writeCell(QDomNode, QString, QString);
-    Q_INVOKABLE int rowCount() { return rowQuan; }
-    Q_INVOKABLE void setShowError(bool show) { showError = show; }
+    Q_INVOKABLE int rowCount();
+    Q_INVOKABLE void setShowError(bool show);
 
 
 private:

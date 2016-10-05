@@ -34,6 +34,60 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*
 }
 
 
+int ReportContext::count()
+{
+    return data->count();
+}
+
+
+QHash<QString, QVariant>* ReportContext::getData()
+{
+    return data;
+}
+
+
+QList<QString> ReportContext::getKeysList()
+{
+    return data->keys();
+}
+
+
+int ReportContext::getRowCount(QString name)
+{
+    return rowCounts.value(name.size() > 0 ? name : tableName);
+}
+
+
+void ReportContext::clearSortOrder()
+{
+    sortOrder.clear(); sortRef.clear();
+}
+
+
+void ReportContext::appendSortOrder(QString order)
+{
+    sortOrder.append(order);
+}
+
+
+void ReportContext::setShowRepeatValue(bool rep)
+{
+    showRepeat = rep;
+}
+
+
+void ReportContext::setTableName(QString name)
+{
+    tableName = name;
+}
+
+
+QString ReportContext::getTableName()
+{
+    return tableName;
+}
+
+
 QVariant ReportContext::getValue(QString tag)
 {
     QVariant result;
@@ -48,7 +102,7 @@ QVariant ReportContext::getValue(QString tag, int strNum)
     QVariant result;
     QString pref = tag.left(tag.indexOf("."));
     tag = tag.toLower();
-    tag.remove(pref);
+    tag.remove(pref.toLower());
     tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
     result = data->value(tag);
     return result;
@@ -117,6 +171,7 @@ void ReportContext::sortTable(QString table)        // сортировка ко
     foreach (QString key, d.keys())
     {
         sortRef.insert(row, d.value(key));
+        setValue("таблица.НОМЕРСТРОКИ", row, row);
         row++;
     }
 }

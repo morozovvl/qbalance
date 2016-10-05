@@ -35,8 +35,8 @@ public:
     QScriptValue newInstance(const QString & fieldName = QString(), QVariant::Type type = QVariant::Invalid);
     QScriptValue newInstance(const QSqlField &);
     QScriptValue prototype() const;
-    QString name() const { return "SqlField"; }
-    QScriptEngine* getEngine() { return engine(); }
+    QString name() const;
+    QScriptEngine* getEngine();
 private:
     QScriptValue proto;
     QScriptValue ctor;

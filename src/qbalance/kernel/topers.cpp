@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../gui/formgridsearch.h"
 #include "../gui/wizardoperation.h"
 #include "../gui/mainwindow.h"
+#include "../gui/dialog.h"
+#include "../storage/dbfactory.h"
 
 
 Topers::Topers(QObject *parent): Dictionary("доступ_к_топер", parent) {

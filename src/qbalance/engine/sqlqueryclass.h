@@ -24,7 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptClass>
 #include <QtScript/QScriptEngine>
 #include <QtSql/QSqlQuery>
-#include "sqlrecordclass.h"
+
+class SqlRecordClass;
 
 class SqlQueryClass : public QObject, QScriptClass
 {
@@ -36,8 +37,8 @@ public:
     QScriptValue newInstance(const QString s = "");
     QScriptValue newInstance(const QSqlQuery &);
     QScriptValue prototype() const;
-    QString name() const { return "SqlQuery"; }
-    QScriptEngine* getEngine() { return engine(); }
+    QString name() const;
+    QScriptEngine* getEngine();
 private:
     QScriptValue proto;
     QScriptValue ctor;

@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QDialog>
 #include <QtGui/QKeyEvent>
 #include <QtDesigner/QDesignerExportWidget>
-#include "../kernel/app.h"
 #include "form.h"
 
 class MainWindow;
@@ -42,8 +41,8 @@ public:
     Q_INVOKABLE virtual bool isFormSelected();
 
     virtual void setApp(TApplication*);
-    Q_INVOKABLE virtual void setForm(Form* f) { form = f; }
-    Q_INVOKABLE virtual Form* getForm() { return form; }
+    Q_INVOKABLE virtual void setForm(Form* f);
+    Q_INVOKABLE virtual Form* getForm();
     virtual void    keyPressEvent(QKeyEvent*);
 
 protected:

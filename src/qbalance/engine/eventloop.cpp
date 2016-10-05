@@ -23,3 +23,27 @@ EventLoop::EventLoop(QObject *parent) :
     QEventLoop(parent)
 {
 }
+
+
+int	EventLoop::exec()
+{
+    return QEventLoop::exec();
+}
+
+
+void EventLoop::exit(int returnCode)
+{
+    QEventLoop::exit(returnCode);
+}
+
+
+bool EventLoop::isRunning() const
+{
+    return QEventLoop::isRunning();
+}
+
+
+void EventLoop::wakeUp()
+{
+    QEventLoop::wakeUp();
+}

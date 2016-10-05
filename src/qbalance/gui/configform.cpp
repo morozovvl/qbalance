@@ -28,6 +28,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "guifactory.h"
 #include "mainwindow.h"
 #include "myvalueeditor.h"
+#include "dialog.h"
+
 
 ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {

@@ -40,6 +40,19 @@ SqlFieldClass::~SqlFieldClass()
 {
 }
 
+
+QString SqlFieldClass::name() const
+{
+    return "SqlField";
+}
+
+
+QScriptEngine* SqlFieldClass::getEngine()
+{
+    return engine();
+}
+
+
 QScriptValue SqlFieldClass::prototype() const
 {
     return proto;

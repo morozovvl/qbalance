@@ -25,8 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QHash>
-#include "../storage/dbfactory.h"
-#include "../storage/mysqlrelationaltablemodel.h"
 
 class TApplication;
 class DBFactory;
@@ -36,29 +34,8 @@ struct FieldType;
 class Table : public QObject {
     Q_OBJECT
 
-public:
-    Table(QString table = "", QObject *parent = 0);
-    virtual ~Table() = 0;
-
-    Q_INVOKABLE virtual bool            open();
-    Q_INVOKABLE virtual void            close();
-    Q_INVOKABLE virtual void            query(QString filter = "");
-
-    virtual QList<FieldType>*           getColumnsProperties();
-    virtual QList<FieldType>            returnColumnsProperties();
-    virtual MySqlRelationalTableModel*  getTableModel() { return tableModel; }
-    virtual QString                     transformSelectStatement(QString string) { return string; }
-
-    Q_INVOKABLE virtual QStringList     getFieldsList();
-    Q_INVOKABLE virtual QString         getFieldName(int);
-    Q_INVOKABLE QString                 getTableName() { return tableName; }
-    QString                             getTagName() { return tagName; }
-    QString                             getQueryTableName() { return queryTableName; }
-    Q_INVOKABLE virtual void            setOrderClause(QString);
-    Q_INVOKABLE void                    setReadOnly(bool);
-    Q_INVOKABLE virtual bool            isReadOnly();
-    Q_INVOKABLE virtual void            setFullDebugInfo(bool full) { fullDebugInfo = full; }
-
+private:
+    QString                             defineFieldType(QVariant::Type);
 
 protected:
     DBFactory*                          db;
@@ -72,8 +49,29 @@ protected:
     virtual bool                        setTableModel(int = 0);
     bool                                fullDebugInfo;
 
-private:
-    QString                             defineFieldType(QVariant::Type);
+public:
+    Table(QString table = "", QObject *parent = 0);
+    virtual ~Table() = 0;
+
+    Q_INVOKABLE virtual bool            open();
+    Q_INVOKABLE virtual void            close();
+    Q_INVOKABLE virtual void            query(QString filter = "");
+
+    virtual QList<FieldType>*           getColumnsProperties();
+    virtual QList<FieldType>            returnColumnsProperties();
+    virtual MySqlRelationalTableModel*  getTableModel();
+    virtual QString                     transformSelectStatement(QString string);
+
+    Q_INVOKABLE virtual QStringList     getFieldsList();
+    Q_INVOKABLE virtual QString         getFieldName(int);
+    Q_INVOKABLE virtual QString                 getTableName();
+    virtual QString                     getTagName();
+    QString                             getQueryTableName();
+    Q_INVOKABLE virtual void            setOrderClause(QString);
+    Q_INVOKABLE void                    setReadOnly(bool);
+    Q_INVOKABLE virtual bool            isReadOnly();
+    Q_INVOKABLE virtual void            setFullDebugInfo(bool full);
+
 
 };
 

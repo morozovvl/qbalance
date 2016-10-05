@@ -34,6 +34,12 @@ MyComboBox::~MyComboBox()
 }
 
 
+void MyComboBox::setSearchParameters(SearchParameters* sp)
+{
+    searchParameters = sp;
+}
+
+
 void MyComboBox::keyPressEvent(QKeyEvent* event) {
     if (event->modifiers() != Qt::ControlModifier && ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)))
         emit enterPressed(this);

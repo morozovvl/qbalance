@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "passwordform.h"
 #include "../kernel/app.h"
+#include "dialog.h"
 
 PassWordForm::PassWordForm(QObject* parent/* = 0*/) : Form(parent)
 {
@@ -36,6 +37,18 @@ PassWordForm::PassWordForm(QObject* parent/* = 0*/) : Form(parent)
 
 PassWordForm::~PassWordForm()
 {
+}
+
+
+QString PassWordForm::getLogin()
+{
+    return login;
+}
+
+
+QString PassWordForm::getPassword()
+{
+    return password;
 }
 
 

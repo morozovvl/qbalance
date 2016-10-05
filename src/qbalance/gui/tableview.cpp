@@ -27,8 +27,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/app.h"
 #include "tableview.h"
 #include "formgrid.h"
-#include "../kernel/table.h"
+#include "picture.h"
+#include "../kernel/dictionary.h"
 #include "../engine/scriptengine.h"
+#include "../storage/dbfactory.h"
 #include "mylineitemdelegate.h"
 #include "mynumericitemdelegate.h"
 #include "mybooleanitemdelegate.h"
@@ -44,6 +46,24 @@ TableView::~TableView()
 {
     QItemSelectionModel *oldModel = selectionModel();
     delete oldModel;
+}
+
+
+void TableView::setFormGrid(FormGrid* par)
+{
+    parent = par;
+}
+
+
+void TableView::setParentWidget(QWidget* widget)
+{
+    parentWidget = widget;
+}
+
+
+void TableView::setPicture(Picture* pic)
+{
+    picture = pic;
 }
 
 

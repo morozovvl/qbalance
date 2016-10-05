@@ -25,17 +25,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptContext>
-#include "../kernel/essence.h"
 
 class Essence;
+class DocumentScriptEngine;
 
 class ReportEngine : public QObject {
     Q_OBJECT
 public:
     ReportEngine(DocumentScriptEngine* = 0);
     ~ReportEngine();
-    virtual bool open() { return true; }
-    virtual void close() { return; }
+    virtual bool open();
+    virtual void close() { ; }
     virtual bool open(QHash<QString, QVariant>* context, QString name, QString ext);
 
 protected:

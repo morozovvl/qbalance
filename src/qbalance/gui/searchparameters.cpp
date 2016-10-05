@@ -27,14 +27,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QKeyEvent>
 #include <QtGui/QCheckBox>
 #include <QtGui/QLineEdit>
+#include "formgrid.h"
+#include "formgridsearch.h"
 #include "searchparameters.h"
 #include "../kernel/dictionary.h"
 #include "../kernel/dictionaries.h"
-#include "formgrid.h"
-#include "formgridsearch.h"
 #include "../kernel/essence.h"
 #include "../kernel/app.h"
 #include "../storage/dbfactory.h"
+#include "../gui/mycombobox.h"
 
 SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) {
     dictionaries = 0;
@@ -45,6 +46,30 @@ SearchParameters::SearchParameters(QWidget* parentWidget): QFrame(parentWidget) 
 
 SearchParameters::~SearchParameters()
 {
+}
+
+
+void SearchParameters::setProgramIdFieldName(QString s)
+{
+    programIdFieldName = s;
+}
+
+
+void SearchParameters::setProgramNameFieldName(QString s)
+{
+    programNameFieldName = s;
+}
+
+
+void SearchParameters::setDictionaries(Dictionaries* dicts)
+{
+    dictionaries = dicts;
+}
+
+
+int SearchParameters::getParametersCount()
+{
+    return parameters.count();
 }
 
 

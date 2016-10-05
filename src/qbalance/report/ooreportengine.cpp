@@ -83,3 +83,9 @@ bool OOReportEngine::open(QHash<QString, QVariant>* context, QString name, QStri
     return result;
  }
 
+
+bool OOReportEngine::open()
+{
+    return ReportEngine::open();
+}
+

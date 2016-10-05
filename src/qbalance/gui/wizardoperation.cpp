@@ -24,7 +24,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "wizardoperation.h"
 #include "mybuttonlineedititemdelegate.h"
 #include "mybooleanitemdelegate.h"
+#include "formgridsearch.h"
+#include "mybuttonlineedit.h"
+#include "dialog.h"
+#include "mysyntaxhighlighter.h"
 #include "../kernel/app.h"
+#include "../kernel/dictionaries.h"
+#include "../kernel/documents.h"
 #include "../storage/dbfactory.h"
 #include "../engine/documentscriptengine.h"
 

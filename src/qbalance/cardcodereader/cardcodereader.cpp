@@ -33,6 +33,12 @@ CardCodeReader::~CardCodeReader()
 }
 
 
+void CardCodeReader::setApp(TApplication* a)
+{
+    app = a;
+}
+
+
 bool CardCodeReader::open()
 {
     bool result = true;

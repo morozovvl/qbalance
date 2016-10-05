@@ -34,7 +34,7 @@ class TcpServer : public QObject
 public:
     TcpServer(int nPort, QObject *parent = 0);
     virtual void    pingClient(QString);
-    bool    getPingOk() { return pingOk; }
+    bool    getPingOk();
 
 public slots:
     void    sendToClient(QString, QString);
