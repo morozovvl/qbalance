@@ -68,7 +68,9 @@ public:
     virtual bool eventBeforeAddString();
     virtual void eventAfterAddString();
     virtual bool eventAfterShowNextDicts();
-    virtual void eventBeforeDeleteString();
+    virtual bool eventBeforeDeleteDocument();
+    virtual void eventAfterDeleteDocument();
+    virtual bool eventBeforeDeleteString();
     virtual void eventAfterDeleteString();
     virtual void eventInitForm(Form*);
     virtual void eventBeforeShowForm(Form*);
@@ -85,6 +87,7 @@ public:
     virtual void eventPhotoLoaded();
     virtual void eventPreparePrintValues();
     virtual QString preparePictureUrl(Essence*);
+    virtual QString prepareBarCodeData(Essence*);
     virtual QString getFilter(QString = "");
     virtual void eventBarCodeReaded(QString);
     virtual void eventCardCodeReaded(QString);
@@ -95,14 +98,14 @@ public:
     void   showScriptError(QString);
 
 protected:
-    QScriptValue      scriptCall(QString, const QScriptValue & thisObject = QScriptValue(), const QScriptValueList & args = QScriptValueList());
-
-protected:
     QHash<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
     QString         script;
     Document*       document;
     Documents*      documents;
     virtual void    loadScriptObjects();
+
+    QScriptValue      scriptCall(QString, const QScriptValue & thisObject = QScriptValue(), const QScriptValueList & args = QScriptValueList());
+
 private:
     static QHash<QString, QString> scripts;
     int                 scriptResult;

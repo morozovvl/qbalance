@@ -43,9 +43,51 @@ struct prvSaldo {
 
 class Document : public Dictionary {
     Q_OBJECT
-public:
+
+private:
+    QHash<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
+    QHash<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
+    Documents*                      parent;
+    int                             operNumber;
+    int                             docId;
+    int                             prv1;
+    int                             freePrv;            // Номер "свободной" проводки
+    bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
+    QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
+    QString                         selectStatement;
+    QHash<QString, QVariant>        oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
+    QList<ToperType>*               topersList;
+    bool                            localDictsOpened;
+    bool                            docModified;
+    bool                            quanAccount;        // В проводках есть количественный учет
+    bool                            singlePrv;          // Проводка простая (одиночная)
+    bool                            locked;
+    bool                            addingFromQuery;
+
+    bool showNextDict();
+    void showItog();
+    int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
+    bool                            checkConstDicts();
+
+protected:
+    virtual void        preparePrintValues();           // Готовит значения для печати
+    virtual void        prepareSelectCurrentRowCommand();
+    virtual bool        setTableModel(int = 0);
+
     Document(int, Documents*);
+    virtual void postInitialize(int, Documents*);
+
+public:
     ~Document();
+
+    template <class T>
+        static T* create(int opNumber, Documents *parent = 0)
+        {
+            T* p(new T(opNumber, parent));
+            p->postInitialize(opNumber, parent);
+            return p;
+        }
+
     Q_INVOKABLE int getDocId();
     Q_INVOKABLE int getOperNumber();
     int             getPrvQuan();
@@ -96,36 +138,6 @@ public:
     bool isQuanAccount();
     Q_INVOKABLE virtual void    setCurrentRow(int row);
 
-
-protected:
-    virtual void        preparePrintValues();           // Готовит значения для печати
-    virtual void        prepareSelectCurrentRowCommand();
-    virtual bool        setTableModel(int = 0);
-
-private:
-    QHash<QString, QVariant>         prvValues;          // Значения проводок для сохранения в БД из процедуры appendDocString
-    QHash<QString, QVariant>         variables;          // Значения переменных, используемых в скриптах для восстановления или последующего сохранения в БД
-    Documents*                      parent;
-    int                             operNumber;
-    int                             docId;
-    int                             prv1;
-    int                             freePrv;            // Номер "свободной" проводки
-    bool                            isSingleString;     // В документе должна присутствовать только одна строка (для платежных поручений, например)
-    QList<QString>                  attrFields;         // Имена полей атрибутов документа, которые могут добавляться при добавлении новой строки
-    QString                         selectStatement;
-    QHash<QString, QVariant>        oldValues0;         // Старые значения для первой строки документа - там хранятся значения "свободной" проводки
-    QList<ToperType>*               topersList;
-    bool                            localDictsOpened;
-    bool                            docModified;
-    bool                            quanAccount;        // В проводках есть количественный учет
-    bool                            singlePrv;          // Проводка простая (одиночная)
-    bool                            locked;
-    bool                            addingFromQuery;
-
-    bool showNextDict();
-    void showItog();
-    int findFreePrv();              // Ищет строку, в которой отображена "свободная" проводка, т.к. она может быть и не в первой строке
-    bool                            checkConstDicts();
 };
 
 #endif // DOCUMENT_H

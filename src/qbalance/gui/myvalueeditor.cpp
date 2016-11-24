@@ -28,20 +28,29 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
     value = &val;
     widget = 0;
 
-    if (value->isBoud)
+    if (value->valueType == CONFIG_VALUE_BOUND)
     {
         widget = new QComboBox(this);
         ((QComboBox*)widget)->addItems(QStringList() << "2400" << "4800" << "9600" << "19200" << "38400" << "57600" << "115200");
         ((QComboBox*)widget)->setCurrentIndex(value->value.toInt());
         connect (widget, SIGNAL(activated(int)), this, SLOT(editingFinished(int)));
     }
-    else if (value->value.type() == QVariant::Bool)
+    else if (value->valueType == CONFIG_VALUE_BOOLEAN)
     {
         widget = new QCheckBox(this);
         ((QCheckBox*)widget)->setTristate(false);
         Qt::CheckState state = value->value.toBool() ? Qt::Checked : Qt::Unchecked;
         ((QCheckBox*)widget)->setCheckState(state);
         connect (widget, SIGNAL(stateChanged(int)), this, SLOT(editingFinished(int)));
+    }
+    else if (value->valueType == CONFIG_VALUE_LABELSIZE)
+    {
+        widget = new QComboBox(this);
+        QStringList values;
+        values << "30*20" << "43*25" << "57*40";
+        ((QComboBox*)widget)->addItems(values);
+        ((QComboBox*)widget)->setCurrentIndex(values.indexOf(value->value.toString()));
+        connect (widget, SIGNAL(activated(int)), this, SLOT(editingFinished(int)));
     }
     else
     {
@@ -65,17 +74,21 @@ QWidget* MyValueEditor::getEditor()
 
 void MyValueEditor::editingFinished(int val)
 {
-    if (value->isBoud)
+    if (value->valueType == CONFIG_VALUE_BOUND)
     {
         value->value.setValue(val);
     }
-    else if (value->value.type() == QVariant::String)
+    else if (value->valueType == CONFIG_VALUE_STRING)
     {
         value->value.setValue(((QLineEdit*)widget)->text());
     }
-    else if (value->value.type() == QVariant::Bool)
+    else if (value->valueType == CONFIG_VALUE_BOOLEAN)
     {
         value->value.setValue(val == Qt::Checked ? true : false);
+    }
+    else if (value->valueType == CONFIG_VALUE_LABELSIZE)
+    {
+        value->value.setValue(((QComboBox*)widget)->currentText());
     }
 }
 

@@ -30,8 +30,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../engine/reportcontext.h"
 
 
-Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
+Documents::Documents(int, QObject *parent): Dictionary(parent)
 {
+}
+
+
+Documents::~Documents()
+{
+}
+
+
+void Documents::postInitialize(int opNumber, QObject *parent)
+{
+    Dictionary::postInitialize("", parent);
+
     lViewable  = true;
     tableName  = "документы";
     operNumber = opNumber;
@@ -52,11 +64,6 @@ Documents::Documents(int opNumber, QObject *parent): Dictionary(parent)
     scriptEngine = 0;
     scriptEngineEnabled = false;
     lPrintable = true;
-}
-
-
-Documents::~Documents()
-{
 }
 
 
@@ -123,18 +130,29 @@ bool Documents::add()
 
 bool Documents::remove(bool noAsk)
 {
+    bool result = false;
+    bool canRemove = true;
     if (lDeleteable)
     {
         if (Essence::remove(noAsk))
         {
-            db->removeDoc(getValue("код").toInt());
-            query();
-            return true;
+            scriptEngineEnabled = true;
+            if (scriptEngine != 0)
+                   canRemove = scriptEngine->eventBeforeDeleteDocument();
+            if (canRemove)
+            {
+                db->removeDoc(getValue("код").toInt());
+                query();
+                if (scriptEngine != 0)
+                       scriptEngine->eventAfterDeleteDocument();
+                result = true;
+            }
+            scriptEngineEnabled = false;
         }
     }
     else
         app->showError(QString(QObject::trUtf8("Запрещено удалять документы пользователю %2")).arg(app->getLogin()));
-    return false;
+    return result;
 }
 
 
@@ -175,10 +193,11 @@ bool Documents::open()
         query();
         tableModel->setTestSelect(false);
 
-        currentDocument = new Document(operNumber, this);
+        currentDocument = Document::create<Document>(operNumber, this);
         if (currentDocument->open())
         {
             currentDocument->setFormTitle(subFormTitle);
+            scriptEngine = currentDocument->getScriptEngine();
             result = true;
         }
     }
@@ -194,6 +213,7 @@ void Documents::close()
 {
     currentDocument->close();
     delete currentDocument;
+    scriptEngine = 0;
     currentDocument = 0;
     Essence::close();
 }

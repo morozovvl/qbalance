@@ -47,7 +47,7 @@ private slots:
 private:
     TApplication* app;
     QFrame* frame;
-    QHash<ConfigVars, ConfigEntry> configs;
+    QHash<QString, ConfigEntry> configs;
 
     void dictAdd();
     void dictProperties();

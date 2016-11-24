@@ -219,7 +219,7 @@ public:
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
     virtual void setConfig(QString, QString, QString);
-    QSqlQuery getConfig();
+    virtual QSqlQuery getConfig();
 
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);

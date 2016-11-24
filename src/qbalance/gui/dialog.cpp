@@ -82,7 +82,7 @@ void Dialog::cmdOk()
 
 void Dialog::cmdCancel()
 {
-    isSelected = true;
+    isSelected = false;
     if (form != 0)
         form->cmdCancel();
     else

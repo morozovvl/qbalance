@@ -39,6 +39,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
 {
+}
+
+
+Dictionary::Dictionary(QObject *parent)
+{
+    Dictionary("", parent);
+}
+
+
+Dictionary::~Dictionary()
+{
+}
+
+
+void Dictionary::postInitialize(QString name, QObject *parent)
+{
+    Essence::postInitialize(name, parent);
+
     prototypeName = name;
     formTitle = "";
     lPrintable = true;
@@ -60,16 +78,6 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
     nameIntIsCode = false;
     exact = true;
 
-    if (parent != 0)
-    {
-        if (((Dictionaries*)parent)->getDocument() != 0)
-            dictionaries = ((Dictionaries*)parent)->getDocument()->getDocDictionaries();
-        else
-            dictionaries = (Dictionaries*)parent;
-    }
-    else
-        dictionaries = app->getDictionaries();
-
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
     {
@@ -90,16 +98,6 @@ Dictionary::Dictionary(QString name, QObject *parent): Essence(name, parent)
         }
     }
     lIsSet = db->isSet(tableName);
-}
-
-
-Dictionary::Dictionary(QObject *parent)
-{
-    Dictionary("", parent);
-}
-
-
-Dictionary::~Dictionary() {
 }
 
 
@@ -597,7 +595,7 @@ bool Dictionary::open(QString command, QString tName)
             return true;
     }
 
-    dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
+//    dictTitle = TApplication::exemplar()->getDictionaries()->getDictionaryTitle(tableName).trimmed();
     if (dictTitle.size() == 0)
         dictTitle = tagName;
 

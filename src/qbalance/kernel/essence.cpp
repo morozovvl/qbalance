@@ -58,6 +58,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Essence::Essence(QString name, QObject *parent): Table(name, parent)
 {
+}
+
+
+Essence::~Essence() {
+    this->disconnect();
+}
+
+
+void Essence::postInitialize(QString name, QObject* parent)
+{
+    Table::postInitialize(name, parent);
+
     form = 0;
     scriptEngine = 0;
     parentForm = app->getMainWindow()->centralWidget();
@@ -89,11 +101,6 @@ Essence::Essence(QString name, QObject *parent): Table(name, parent)
     loading = false;
     reportScriptEngine = 0;
     lIsDocument = false;
-}
-
-
-Essence::~Essence() {
-    this->disconnect();
 }
 
 
@@ -266,6 +273,12 @@ bool Essence::isFormVisible()
 }
 
 
+bool Essence::getIsDictionary()
+{
+    return isDictionary;
+}
+
+
 void Essence::setScriptEngineEnabled(bool enabled)
 {
     scriptEngineEnabled = enabled;
@@ -316,19 +329,30 @@ bool Essence::isLoading()
 
 void Essence::appendPrintValue(QString name, QVariant value)
 {
-    reportScriptEngine->getReportContext()->setValue(name, value);
+    if (reportScriptEngine != 0)
+    {
+        int currentRow = reportScriptEngine->getReportContext()->getCurrentRow();
+        if (currentRow > 0)
+            reportScriptEngine->getReportContext()->setValue(QString("таблица.%1").arg(name).toLower(), value, currentRow);
+        else
+            reportScriptEngine->getReportContext()->setValue(name, value);
+    }
 }
 
 
 void Essence::appendPrintValues(QString str, QSqlQuery* query)
 {
-    reportScriptEngine->getReportContext()->appendPrintValues(str, query);
+    if (reportScriptEngine != 0)
+        reportScriptEngine->getReportContext()->appendPrintValues(str, query);
 }
 
 
 QVariant Essence::getPrintValue(QString name)
 {
-    return reportScriptEngine->getReportContext()->getValue(name);
+    QVariant result;
+    if (reportScriptEngine != 0)
+        result = reportScriptEngine->getReportContext()->getValue(name);
+    return result;
 }
 
 
@@ -357,12 +381,18 @@ void Essence::setDeleteable(bool b)
 }
 
 
-Dialog* Essence::getFormWidget() {
+Dialog* Essence::getFormWidget()
+{
     if (!opened)
     {
         open();
     }
     return (form != 0 ? form->getFormWidget() : 0);
+}
+
+bool Essence::isVisible()
+{
+    return form->isVisible();
 }
 
 
@@ -554,7 +584,10 @@ void Essence::setId(qulonglong id)
         query(QString("\"%1\".\"%2\"=%3").arg(tableName).arg(idFieldName).arg(id), true);
     }
     if (grdTable != 0)
+    {
         grdTable->selectRow(0);
+        grdTable->setCurrentIndex(grdTable->currentIndex().sibling(0, grdTable->currentIndex().column()));
+    }
     photoEnabled = enabled;
 }
 
@@ -628,7 +661,7 @@ QString Essence::getPhotoFile(QString copyTo)
     if (phEnabled || copyTo.size() > 0)
     {
         // Сначала получим имя поля из которого будем брать значение идентификатора
-        if (photoIdField.size() == 0 && (isDictionary || app->getConfigValue(GET_PICTURE_FROM_SERVER_IN_DOCUMENT).toBool()))
+        if (photoIdField.size() == 0 && (isDictionary || app->getConfigValue("GET_PICTURE_FROM_SERVER_IN_DOCUMENT").toBool()))
         {
             // Если имя поля, из которого нужно брать идентификатор фотографии не установлено, то будем считать идентификатором код позиции
             photoIdField = db->getObjectName("код");
@@ -1067,9 +1100,18 @@ QString Essence::preparePictureUrl()
 }
 
 
+QString Essence::prepareBarCodeData()
+{
+    QString result;
+    if (scriptEngineEnabled && getScriptEngine() != 0)
+        result = getScriptEngine()->prepareBarCodeData(this);
+    return result;
+}
+
+
 void Essence::afterRowChanged()
 {
-    if (scriptEngineEnabled && getScriptEngine() != 0)
+    if (scriptEngineEnabled && getScriptEngine() != 0 && isVisible())
         getScriptEngine()->eventAfterRowChanged();
 }
 
@@ -1216,10 +1258,8 @@ void Essence::saveOldValues()
 {
     // Сохраним старые значения полей записи
     oldValues.clear();
-//123
     foreach (QString field, tableModel->getFieldsList())
     {
-//123        oldValues.insert(field.toUpper(), getValue(field));
         QModelIndex index;
         index = tableModel->index(getCurrentRow(), tableModel->fieldIndex(field));
         QVariant val = tableModel->data(index);
@@ -1257,7 +1297,19 @@ void Essence::cardCodeReaded(QString cardCode)
 }
 
 
-void Essence::print(QString fileName, bool newFile)
+void Essence::printLabel(QString fileName, int copyCount)
+{
+    if (app->getConfigValue("BAR_CODE_PRINTER_NEEDED").toBool() && rowCount() > 0)
+    {
+        QString printerName = app->getConfigValue("BAR_CODE_PRINTER_NAME").toString();
+        QString labelSize = app->getConfigValue("BAR_CODE_PRINTER_BARCODESIZE").toString();
+        bool preview = app->getConfigValue("BAR_CODE_PRINTER_BARCODEPREVIEW").toBool();
+        print(fileName + "(" + labelSize + ").ods", false, !preview, copyCount, printerName);
+    }
+}
+
+
+void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCount, QString printerName)
 // fileName - файл с шаблоном документа
 {
     bool result = true;                         // По умолчанию документ будет печататься
@@ -1346,11 +1398,11 @@ void Essence::print(QString fileName, bool newFile)
                 // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
                 case OOXMLreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                    OOXMLReportEngine* report = new OOXMLReportEngine(&scriptEngine);
+                    OOXMLReportEngine* report = new OOXMLReportEngine(this, &scriptEngine);
                     if (report->open())
                     {
                         report->setFileName(fileName);
-                        report->open(fullFileName, reportScriptEngine->getReportContext());
+                        report->open(fullFileName, reportScriptEngine->getReportContext(), justPrint, copyCount, printerName);
                         report->close();
                     }
                     delete report;
@@ -1386,7 +1438,9 @@ QModelIndex Essence::getCurrentIndex()
 {
     QModelIndex index;
     if (grdTable != 0)
+    {
         index = grdTable->currentIndex();   // ************* иногда происходит ОШИБКА СЕГМЕНТАЦИИ ***********
+    }
     return index;
 }
 

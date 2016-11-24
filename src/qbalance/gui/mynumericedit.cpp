@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mynumericedit.h"
 
 MyNumericEdit::MyNumericEdit(QWidget *parent): QLineEdit(parent) {
+    decimals = 2;
     setAlignment(Qt::AlignRight);
     setValue(0);
 }
@@ -38,8 +39,13 @@ void MyNumericEdit::setValue(QVariant val) {
     value = val;
     QLocale locale;
     locale.setNumberOptions(QLocale::OmitGroupSeparator);
-    QString text = locale.toString(value.toDouble(), 'f', 2);
+    QString text = locale.toString(value.toDouble(), 'f', decimals);
     setText(text);
 }
 
+
+void MyNumericEdit::setDecimals(int dec)
+{
+    decimals = dec;
+}
 

@@ -30,10 +30,29 @@ class Saldo;
 
 class Dictionaries : public Dictionary {
     Q_OBJECT
+
+private:
+    Document*   document;
+    bool        lIsSaldoExist;
+
+protected:
+    Dictionaries(QObject* = 0);
+    virtual void postInitialize(QObject*);
+
 public:
     QHash<QString, Dictionary*> dictionariesList;                    // Объекты справочников
     QList<QString>              dictionariesNamesList;                    // Список справочников в порядке создания
-    Dictionaries(QObject *parent = 0);
+
+    ~Dictionaries();
+
+    template <class T>
+        static T* create(QObject *parent = 0)
+        {
+            T* p(new T(parent));
+            p->postInitialize(parent);
+            return p;
+        }
+
     Q_INVOKABLE virtual Dictionary* getDictionary(QString);   // По умолчанию добавлять справочник
     Q_INVOKABLE virtual Saldo* getSaldo(QString acc);
     Q_INVOKABLE virtual bool addDictionary(QString);
@@ -56,11 +75,6 @@ public:
     Q_INVOKABLE virtual void setOrderClause(QString = "");
     virtual void            prepareSelectCurrentRowCommand() { ; }
     Q_INVOKABLE virtual void setForm(QString = "");
-
-private:
-    Document*   document;
-    bool        lIsSaldoExist;
-
 };
 
 //Q_DECLARE_METATYPE(Dictionaries)

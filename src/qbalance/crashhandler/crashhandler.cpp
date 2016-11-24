@@ -69,8 +69,6 @@ namespace Breakpad {
         Q_UNUSED(assertion);
         Q_UNUSED(exinfo);
 #endif
-        qDebug("BreakpadQt crash");
-
         /*
         NO STACK USE, NO HEAP USE THERE !!!
         Creating QString's, using qDebug, etc. - everything is crash-unfriendly.

@@ -29,8 +29,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_справочникам", parent)
+Dictionaries::Dictionaries(QObject *parent): Dictionary("", parent)
 {
+}
+
+
+Dictionaries::~Dictionaries()
+{
+}
+
+
+void Dictionaries::postInitialize(QObject* parent)
+{
+    Dictionary::postInitialize("доступ_к_справочникам", parent);
+
     lInsertable = app->isSA();     // Если работает пользователь SA, то можно добавить новый справочник
     lViewable = app->isSA();       // Если работает пользователь SA, то можно просмотреть свойства справочника
     lDeleteable = app->isSA();       // Если работает пользователь SA, то можно попытаться удалить справочник
@@ -42,6 +54,7 @@ Dictionaries::Dictionaries(QObject *parent): Dictionary("доступ_к_спр�
     scriptEngine = 0;
     scriptEngineEnabled = false;
 }
+
 
 QHash<QString, Dictionary*>* Dictionaries::getDictionariesList()
 {
@@ -103,14 +116,14 @@ bool Dictionaries::addDictionary(QString dictName)
         return false;
     if (!dictionariesList.contains(dictName))
     {             // Если справочник с таким именем не существует, то попробуем его создать
-        Dictionary* dict;
-        dict = new Dictionary(dictName, this);
+        Dictionary* dict = Dictionary::create<Dictionary>(dictName, this);
+
         dict->setDictionaries(this);
         dict->setPhotoEnabled(true);
 
-        dictionariesList.insert(dictName, dict);
         if (dict->open())
         {
+            dictionariesList.insert(dictName, dict);
             dictionariesNamesList.append(dictName);
 //            dict->initFormEvent();
             dict->setDictionaries(this);
@@ -151,8 +164,6 @@ bool Dictionaries::addDictionary(QString dictName)
 
             return true;
         }
-        else
-            dictionariesList.remove(dictName);
     }
     return false;
 }
@@ -170,7 +181,7 @@ bool Dictionaries::addSaldo(QString acc)
         Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
         accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));
         QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString().trimmed().toLower();
-        Saldo* saldo = new Saldo(acc, dictName);
+        Saldo* saldo = Saldo::create<Saldo>(acc, dictName);
         saldo->setDictionaries(this);
         if (saldo->open())
         {

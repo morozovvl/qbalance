@@ -32,8 +32,10 @@ public:
     MyNumericEdit(QWidget *parent = 0);
     Q_INVOKABLE virtual void setValue(QVariant);
     Q_INVOKABLE virtual QVariant getValue();
+    Q_INVOKABLE virtual void setDecimals(int);
 private:
     QVariant value;
+    int     decimals;
 };
 
 #endif // NUMERICEDIT_H

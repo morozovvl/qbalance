@@ -19,16 +19,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTimer>
+#include <QtCore/QProcess>
 #include <QtCore/QDebug>
 #include "ooxmlreportengine.h"
 #include "../openoffice/ooxmlengine.h"
 #include "../engine/documentscriptengine.h"
 #include "../engine/reportcontext.h"
 #include "../kernel/app.h"
+#include "../gui/tableview.h"
 
 
-OOXMLReportEngine::OOXMLReportEngine(DocumentScriptEngine* engine) : ReportEngine(engine)
+OOXMLReportEngine::OOXMLReportEngine(Essence* ess, DocumentScriptEngine* engine) : ReportEngine(engine)
 {
+    app = TApplication::exemplar();
+    essence = ess;
     ooxmlEngine = new OOXMLEngine();
     ooPath = "";
     tableNameForPrinting = "";
@@ -54,22 +58,54 @@ void OOXMLReportEngine::setFileName(QString fName)
 }
 
 
-bool OOXMLReportEngine::open(QString fileName, ReportContext* cont)
+bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPrint, int copyCount, QString printerName)
 {
+    int strNumber = 0;
     if (ooxmlEngine->open(fileName))
     {
         context = cont;
+        QString barCodePicture = findBarCode();
+        if (barCodePicture.size() > 0)     // Найден штрих-код
+        {
+            strNumber = essence->getGrdTable()->currentIndex().row() + 1;      // Будем печатать одну конкретную текущую строку
+            context->setCurrentRow(strNumber);
+            QProcess* zint = new QProcess();
+            zint->setWorkingDirectory(ooxmlEngine->getTmpDir());
+            QString zintCommandLine = "zint -o " + barCodePicture;
+            zintCommandLine.append(QString(" -b %1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODETYPE").toInt()));
+            zintCommandLine.append(QString(" --height=%1").arg(app->getConfigValue("BAR_CODE_PRINTER_BARCODEHEIGHT").toInt()));
+            zintCommandLine.append(" --border=0");
+            zintCommandLine.append(" -d " + essence->prepareBarCodeData());
+#ifdef Q_OS_WIN32
+                zint->start(app->applicationDirPath() + zintCommandLine);
+#else
+                zint->start(zintCommandLine);
+#endif
+            if (app->waitProcessEnd(zint))
+            {
+
+            }
+            else
+            {
+                app->showError(QObject::trUtf8("Не удалось запустить программу") + " zint");
+                return false;
+            }
+
+        }
         findTables();
         foreach (QString table, tablesForPrinting)
         {
             tableNameForPrinting = table;
-            writeVariables();       // Перепишем переменные из контекста печати в файл content.xml
+            writeVariables(strNumber);       // Перепишем переменные из контекста печати в файл content.xml
         }
 
         if (scriptEngine != 0)
             scriptEngine->eventBeforeTotalPrint();
 
         writeHeader();
+
+        if (justPrint && copyCount > 1)     // Если будем печатать сразу несколько копий
+            copyPage(copyCount);            // То страницу размножим
 
         ooxmlEngine->close();
 
@@ -83,8 +119,12 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont)
 #endif
         }
         QProcess* ooProcess = new QProcess();
-        ooProcess->start(ooPath, QStringList() << "--calc" << "--invisible" << "--quickstart" << fileName);
-
+        QStringList commandLine;
+        commandLine << "--calc" << "--invisible" << "--quickstart";
+        if (justPrint && printerName.size() > 0)
+            commandLine << "--pt" << printerName;
+        commandLine << fileName;
+        ooProcess->start(ooPath, commandLine);
         if (!ooProcess->waitForStarted())    // Подождем 1 секунду и если процесс не запустился
             TApplication::exemplar()->showError(QObject::trUtf8("Не удалось запустить") + " Open Office" + ". " + ooProcess->errorString());                  // выдадим сообщение об ошибке
         else
@@ -94,7 +134,7 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont)
 }
 
 
-void OOXMLReportEngine::writeVariables()
+void OOXMLReportEngine::writeVariables(int strNumber)
 /*
 Ищет в шаблоне content.xml (см.разархивированный файл OpenOffice) ячейки с текстом вида "[<выражение>]".
 Заменяет <выражение> значением из контекста печати. Для этого:
@@ -127,7 +167,14 @@ void OOXMLReportEngine::writeVariables()
     if (!firstRowNode.isNull())                 // Если в шаблоне было найдено "тело" таблицы
     {
         QDomNode lastNode = firstRowNode;       // lastNode будет указывать на последнюю добавленную строку таблицы
-        for (int strNum = 1; strNum <= scriptEngine->getReportContext()->getRowCount(tableNameForPrinting); strNum++)    // по порядку строк документа
+        int strNum = 1;
+        int strCounter = scriptEngine->getReportContext()->getRowCount(tableNameForPrinting);
+        if (strNumber > 0)          // Это ценник со штрих-кодом
+        {
+            strNum = strNumber;     // Будем печатать только одну строку
+            strCounter = strNum;
+        }
+        for (; strNum <= strCounter; strNum++)    // по порядку строк документа
         {
             if (scriptEngine->eventBeforeLinePrint(strNum))
             {
@@ -197,7 +244,6 @@ void OOXMLReportEngine::writeHeader()
                 writeCell(cells.at(i), cellText, var);                      // запишем результат оценки вместо текста ячейки
         }
     }
-
 }
 
 
@@ -343,5 +389,37 @@ void OOXMLReportEngine::findTables()
             if (!tablesForPrinting.contains(table))
                 tablesForPrinting.append(table);
         }
+    }
+}
+
+
+QString OOXMLReportEngine::findBarCode()
+{
+    QString result = "";
+    QDomDocument* doc = ooxmlEngine->getDomDocument();
+
+// Обработка штрих-кодов
+    cells =  doc->elementsByTagName("draw:frame");    // Просмотрим все фреймы для картинок
+    for (int i = 0; i < cells.count(); i++)      // просмотрим все ячейки
+    {
+        if (cells.at(i).toElement().attribute("draw:name") == "BarCode")
+        {
+            result = cells.at(i).firstChildElement("draw:image").attribute("xlink:href");
+            break;
+        }
+    }
+    return result;
+}
+
+
+void OOXMLReportEngine::copyPage(int copyCount)
+{
+    QDomDocument* doc = ooxmlEngine->getDomDocument();
+    QDomNode firstNode = doc->elementsByTagName("office:spreadsheet").at(0);
+    QDomNode lastNode = firstNode;
+    for (int i = 1; i < copyCount; i++)     // будем по порядку просматривать этот список, пока есть что смотреть
+    {
+        QDomNode clone = firstNode.cloneNode();              // склонируем первую строку тела таблицы, будем читать из и писать в клон строки
+        lastNode = firstNode.parentNode().insertAfter(clone, lastNode);  // то добавим клон строки после первой строки тела документа
     }
 }

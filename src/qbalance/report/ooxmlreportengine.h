@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QStringList>
 #include <QtXml/QDomNodeList>
 #include "reportengine.h"
+#include "../kernel/essence.h"
 
 
 class OOXMLEngine;
@@ -32,13 +33,14 @@ class OOXMLReportEngine : public ReportEngine
 {
     Q_OBJECT
 public:
-    OOXMLReportEngine(DocumentScriptEngine* = 0);
+    OOXMLReportEngine(Essence*, DocumentScriptEngine* = 0);
     ~OOXMLReportEngine();
     virtual bool open();
-    virtual bool open(QString name, ReportContext* context);
+    virtual bool open(QString name, ReportContext* context, bool = false, int = 1, QString = "");
     void         setFileName(QString fName);
 
 private:
+    TApplication*               app;
     OOXMLEngine*                ooxmlEngine;
     ReportContext*              context;
     QStringList                 expressionsForEvaluation;
@@ -48,13 +50,16 @@ private:
     QString                     ooPath;
     QString                     tableNameForPrinting;
     QString                     fileName;
+    Essence*                    essence;
 
-    void writeVariables();                                              // Заполняет поля с переменными в шаблоне
+    void writeVariables(int);                                              // Заполняет поля с переменными в шаблоне
     void writeHeader();
     bool readExpression(int, int);
     QString getTableVariable(QDomElement, QString);
     bool writeCell(QDomNode, QString, QVariant);
     void findTables();
+    QString findBarCode();
+    void copyPage(int);
 };
 
 #endif // OOXMLREPORTENGINE_H

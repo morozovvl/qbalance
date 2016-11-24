@@ -67,12 +67,22 @@ enum  ReportTemplateTypes
 };
 
 
+enum ConfigEntryType
+{
+    CONFIG_VALUE_BOUND,
+    CONFIG_VALUE_STRING,
+    CONFIG_VALUE_INTEGER,
+    CONFIG_VALUE_BOOLEAN,
+    CONFIG_VALUE_LABELSIZE
+};
+
+
 struct ConfigEntry
 {
     QString type;
     QString label;
+    ConfigEntryType valueType;
     QVariant value;
-    bool isBoud;
 };
 
 
@@ -164,7 +174,7 @@ public:
 
     int getReportTemplateType();
     QString getReportTemplateExt();
-    Q_INVOKABLE bool drvFRisValid();
+    Q_INVOKABLE virtual bool drvFRisValid();
     Q_INVOKABLE virtual DriverFR* getDrvFR();
     virtual int decodeTimeOut(int);
     virtual int codeTimeOut(int);
@@ -173,7 +183,7 @@ public:
     Q_INVOKABLE bool bankTerminalIsValid();
     Q_INVOKABLE BankTerminal* getBankTerminal();
 
-    TcpServer* getTcpServer();
+    virtual TcpServer* getTcpServer();
 
     Q_INVOKABLE void virtual showError(QString);
     Q_INVOKABLE int virtual showMessage(QString message, QString question = "",
@@ -239,14 +249,17 @@ public:
     void    openPlugins();
 
 // Работа с пользователской конфигурацией программы
-    virtual QVariant        getConfigValue(ConfigVars name);
+    virtual QVariant        getConfigValue(QString name);
     QStringList     getConfigTypes();
     QString         getConfigTypeName(QString type);
-    QHash<ConfigVars, ConfigEntry>* getConfigs();
-    void            setConfigs(QHash<ConfigVars, ConfigEntry>* conf);
-    QList<ConfigVars>     getConfigNames(QString type = "");
+    QHash<QString, ConfigEntry>* getConfigs();
+    void            setConfigs(QHash<QString, ConfigEntry>* conf);
+    QList<QString>     getConfigNames(QString type = "");
 
     static bool readParameters(int argc, char *argv[]);
+    virtual QString getConfigFileName();
+
+//    virtual bool notify(QObject* receiver, QEvent* e);
 
 signals:
     void cardCodeReaded(QString);
@@ -287,8 +300,8 @@ private:
     QList<ScriptEngine*>    scriptStack;
     QHash<QString, QString>     dirs;
     QString                 dirName;
-    QHash<ConfigVars, ConfigEntry> configs;
-    QList<ConfigVars>                 configNames;
+    QHash<QString, ConfigEntry> configs;
+    QList<QString>              configNames;
     QHash<QString, QString>     configTypes;
     QHash<QString, QStringList> tempDebugBuffer;
     bool                    debugToBuffer;
@@ -300,8 +313,8 @@ private:
     void                    readSettings();
     void                    writeSettings();
     void                    saveMessages();
-    void            setConfig(QString type, ConfigVars name, QString label, QVariant value, bool = false);
-    void            setConfigValue(ConfigVars name, QVariant value);
+    void            setConfig(QString type, QString name, QString label, ConfigEntryType valType, QVariant value);
+    void            setConfigValue(QString name, QVariant value);
     void            setConfigTypeName(QString type, QString name) { configTypes.insert(type, name); }
     void            writeToDebugFile(QString, QString);
 

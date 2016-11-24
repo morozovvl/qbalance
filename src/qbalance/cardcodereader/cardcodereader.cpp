@@ -43,7 +43,7 @@ bool CardCodeReader::open()
 {
     bool result = true;
     cardReaderCode = "";
-    crPrefix = app->getConfigValue(CARD_READER_PREFIX).toString();
+    crPrefix = app->getConfigValue("CARD_READER_PREFIX").toString();
     return result;
 }
 

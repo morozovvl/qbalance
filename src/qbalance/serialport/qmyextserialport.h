@@ -37,6 +37,7 @@ public:
     virtual bool open(OpenMode mode);
     virtual void close();
     virtual qint64 writeData(const char *, qint64, bool = false);
+    virtual qint64 writeData(QString, bool = false);
     virtual qint64 readData(char *, qint64, bool = false);
     virtual QByteArray readAll();
 

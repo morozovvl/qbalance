@@ -24,8 +24,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Saldo : public Dictionary {
     Q_OBJECT
-public:
+
+private:
+    QString account;
+    QString dictionaryName;
+    bool quan;
+
+protected:
+    virtual bool    setTableModel(int = 0);
     Saldo(QString, QString, QObject *parent = 0);
+    virtual void postInitialize(QString, QString, QObject*);
+
+public:
+    ~Saldo();
+
+    template <class T>
+        static T* create(QString acc, QString name = "", QObject* parent = 0)
+        {
+            T* p(new T(acc, name, parent));
+            p->postInitialize(acc, name, parent);
+            return p;
+        }
+
     virtual QString transformSelectStatement(QString);
     Q_INVOKABLE virtual QString objectName();
     Q_INVOKABLE void setQuan(bool q);
@@ -33,14 +53,6 @@ public:
     Q_INVOKABLE virtual void setId(qulonglong);
     virtual void        lock(bool = true);
     Q_INVOKABLE virtual void setPhotoPath(QString path);
-
-protected:
-    virtual bool    setTableModel(int = 0);
-
-private:
-    QString account;
-    QString dictionaryName;
-    bool quan;
 };
 
 #endif // SALDO_H

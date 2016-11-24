@@ -25,7 +25,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-Saldo::Saldo(QString cAcc, QString dictName, QObject *parent): Dictionary(dictName, parent) {
+Saldo::Saldo(QString, QString dictName, QObject *parent): Dictionary(dictName, parent) {
+}
+
+
+Saldo::~Saldo()
+{
+}
+
+
+void Saldo::postInitialize(QString cAcc, QString dictName, QObject *parent)
+{
+    Dictionary::postInitialize(dictName, parent);
+
     account = cAcc;
     formTitle = QString(QObject::trUtf8("Остатки на %1 счете").arg(account));
     dictionaryName = dictName.trimmed().toLower();
@@ -93,7 +105,7 @@ bool Saldo::setTableModel(int)
             }
         }
         selectCommand.replace(" FROM", selectList + " FROM");
-        selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
+        selectCommand.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
                                                                                                                 .arg(db->getObjectName(dictionaryName + ".счет"))
                                                                                                                 .arg(account)
                                                                                                                 .arg(db->getObjectName(tName + ".код"))

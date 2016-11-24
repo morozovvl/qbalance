@@ -1220,13 +1220,14 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
     if (tableName.size() > 0)
     {
         int counter = 0;
+        int number = 1;
         for (columnsHeaders.first(); columnsHeaders.isValid(); columnsHeaders.next())
         {
             if (columnsHeaders.record().value(getObjectName("vw_столбцы.базсправочник")).toString().trimmed().toLower() == tableName.toLower())
             {
-                int number = columnsHeaders.record().value(getObjectName("vw_столбцы.номер")).toInt();
-                if (number > 0)
-                {
+//                int number = columnsHeaders.record().value(getObjectName("vw_столбцы.номер")).toInt();
+//                if (number > 0)
+//                {
                     QString table = columnsHeaders.record().value(getObjectName("vw_столбцы.справочник")).toString().trimmed().toLower();
                     QString column1 = columnsHeaders.record().value(getObjectName("vw_столбцы.столбец")).toString().toUpper();
 
@@ -1243,6 +1244,7 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                             FieldType field = fields->at(i);
                             field.header = columnsHeaders.record().value(getObjectName("vw_столбцы.заголовок")).toString();
                             field.number = number;
+                            number++;
                             field.headerExist = true;   // Для столбца найден заголовок
                             field.readOnly = columnsHeaders.record().value(getObjectName("vw_столбцы.толькочтение")).toBool();
                             fields->removeAt(i);
@@ -1250,7 +1252,7 @@ void DBFactory::getColumnsHeaders(QString tableName, QList<FieldType>* fields)
                             break;
                         }
                     }
-                }
+//                }
             }
         }
         if (counter == 0)
@@ -3136,7 +3138,7 @@ void DBFactory::clearLockedDocumentList()
 
 void DBFactory::saveUpdate(QString value)
 {
-    if (app->isSA() && app->getConfigValue(SAVE_DB_UPDATES_TO_LOCAL).toBool())
+    if (app->isSA() && app->getConfigValue("SAVE_DB_UPDATES_TO_LOCAL").toBool())
     {
         QString templateString = app->applicationDirPath().append("/db_updates/").append(dbName).append("/%1.sql");
         QString fileName;

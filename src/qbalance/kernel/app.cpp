@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtDesigner/QFormBuilder>
 #include <QtGui/QInputDialog>
 #include <QtGui/QWidget>
+#include <QtUiTools/QUiLoader>
 #include "app.h"
 #include "dictionaries.h"
 #include "documents.h"
@@ -425,7 +426,8 @@ void TApplication::appendScriptStack(ScriptEngine* script)
 
 void TApplication::removeLastScriptStack()
 {
-    scriptStack.removeLast();
+    if (scriptStack.count() > 0)
+        scriptStack.removeLast();
 }
 
 
@@ -453,13 +455,13 @@ QString TApplication::getConfigTypeName(QString type)
 }
 
 
-QHash<ConfigVars, ConfigEntry>* TApplication::getConfigs()
+QHash<QString, ConfigEntry>* TApplication::getConfigs()
 {
     return &configs;
 }
 
 
-void TApplication::setConfigs(QHash<ConfigVars, ConfigEntry>* conf)
+void TApplication::setConfigs(QHash<QString, ConfigEntry>* conf)
 {
     configs = *conf;
 }
@@ -468,93 +470,102 @@ void TApplication::setConfigs(QHash<ConfigVars, ConfigEntry>* conf)
 void TApplication::initConfig()
 {
     setConfigTypeName("server", "Сервер взаимодействия");
-    setConfig("server", LOCAL_PORT, "Локальный порт", 44444);
+    setConfig("server", "LOCAL_PORT", "Локальный порт", CONFIG_VALUE_INTEGER, 44444);
 
     setConfigTypeName("client", "Клиент взаимодействия");
-    setConfig("client", REMOTE_HOST, "Удаленный хост", "192.168.0.1");
-    setConfig("client", REMOTE_PORT, "Удаленный порт", 44444);
+    setConfig("client", "REMOTE_HOST", "Удаленный хост", CONFIG_VALUE_STRING, "192.168.0.1");
+    setConfig("client", "REMOTE_PORT", "Удаленный порт", CONFIG_VALUE_INTEGER, 44444);
 
     setConfigTypeName("fr", "Фискальный регистратор");
-    setConfig("fr", FR_NEEDED, "Использовать ФР", false);
+    setConfig("fr", "FR_NEEDED", "Использовать ФР", CONFIG_VALUE_BOOLEAN, false);
 #ifdef Q_OS_WIN32
-    setConfig("fr", FR_DRIVER_PORT, "COM порт", "COM1");
+    setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM1");
 #else
-    setConfig("fr", FR_DRIVER_PORT, "COM порт", "/dev/ttyUSB0");
+    setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
 #endif
-    setConfig("fr", FR_DRIVER_BOUD_RATE, "Скорость", 6, true);
-    setConfig("fr", FR_DRIVER_MAX_TIMEOUT, "Максимальное время ожидания ФР, с", 30);
-    setConfig("fr", FR_LOCAL_DRIVER_TIMEOUT, "Таймаут для локального ФР, мс", 100);
-    setConfig("fr", FR_REMOTE_DRIVER_TIMEOUT, "Таймаут для сетевого ФР, мс", 150);
-    setConfig("fr", FR_NET_DRIVER_TIMEOUT, "Таймаут для обмена по сети, мс", 200);
-    setConfig("fr", FR_DRIVER_PASSWORD, "Пароль администратора ФР", 30);
-    setConfig("fr", FR_CONNECT_SIGNAL, "Подавать сигнал на ФР при подключении", true);
+    setConfig("fr", "FR_DRIVER_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
+    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 3);
+    setConfig("fr", "FR_LOCAL_DRIVER_TIMEOUT", "Таймаут для локального ФР, мс", CONFIG_VALUE_INTEGER, 100);
+    setConfig("fr", "FR_REMOTE_DRIVER_TIMEOUT", "Таймаут для сетевого ФР, мс", CONFIG_VALUE_INTEGER, 150);
+    setConfig("fr", "FR_NET_DRIVER_TIMEOUT", "Таймаут для обмена по сети, мс", CONFIG_VALUE_INTEGER, 200);
+    setConfig("fr", "FR_DRIVER_PASSWORD", "Пароль администратора ФР", CONFIG_VALUE_INTEGER, 30);
+    setConfig("fr", "FR_CONNECT_SIGNAL", "Подавать сигнал на ФР при подключении", CONFIG_VALUE_BOOLEAN, true);
 
     setConfigTypeName("cReader", "Ридер магнитных карт");
-    setConfig("cReader", CARD_READER_NEEDED, "Использовать считыватель магнитных карт", false);
-    setConfig("cReader", CARD_READER_PREFIX, "Префикс магнитной карты", ";8336322632=");
+    setConfig("cReader", "CARD_READER_NEEDED", "Использовать считыватель магнитных карт", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("cReader", "CARD_READER_PREFIX", "Префикс магнитной карты", CONFIG_VALUE_STRING, ";8336322632=");
 
     setConfigTypeName("bcReader", "Сканер штрих кодов");
-    setConfig("bcReader", BAR_CODE_READER_NEEDED, "Использовать сканер штрих кодов", false);
+    setConfig("bcReader", "BAR_CODE_READER_NEEDED", "Использовать сканер штрих кодов", CONFIG_VALUE_BOOLEAN, false);
 #ifdef Q_OS_WIN32
-    setConfig("bcReader", BAR_CODE_READER_PORT, "COM порт", "COM3");
+    setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "COM3");
 #else
-    setConfig("bcReader", BAR_CODE_READER_PORT, "COM порт", "/dev/ttyUSB0");
+    setConfig("bcReader", "BAR_CODE_READER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
 #endif
-    setConfig("bcReader", BAR_CODE_READER_BAUD_RATE, "Скорость", 6, true);
-    setConfig("bcReader", BAR_CODE_READER_TIMEOUT, "Таймаут, мс", 100);
+    setConfig("bcReader", "BAR_CODE_READER_BAUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
+    setConfig("bcReader", "BAR_CODE_READER_TIMEOUT", "Таймаут, мс", CONFIG_VALUE_INTEGER, 100);
 
+    setConfigTypeName("bcPrinter", "Принтер этикеток");
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_NEEDED", "Использовать принтер этикеток", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_NAME", "Имя принтера этикеток", CONFIG_VALUE_STRING, "");
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODESIZE", "Размер этикеток (ширина*высота), мм", CONFIG_VALUE_LABELSIZE, "30*20");
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODETYPE", "Тип штрихкода (в кодах генератора ШК zint)", CONFIG_VALUE_INTEGER, 13);
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODEHEIGHT", "Высота штрихкода", CONFIG_VALUE_INTEGER, 20);
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODEHUMANREADABLE", "Человеко-читаемая подпись штрихкода", CONFIG_VALUE_BOOLEAN, true);
+    setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODEPREVIEW", "Предпросмотр этикетки", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("bt", "Банковский терминал");
-    setConfig("bt", BANK_TERMINAL_NEEDED, "Использовать банковский терминал", false);
-    setConfig("bt", BANK_TERMINAL_PRINT_WAIT_TIME, "Продолжительность остановок при печати слипов, мс", 0);
-    setConfig("bt", BANK_TERMINAL_PRINT_WAIT_MESSAGE, "Показывать сообщение о продолжении при печати слипов", false);
-    setConfig("bt", BANK_TERMINAL_PROGRAM_WAIT_TIME, "Время ожидания окончания работы программы банковского терминала, мс", 60000);
-    setConfig("bt", BANK_TERMINAL_INTERVAL_EMPTY_LINES, "Количество пустых строк между слипами и чеком", 2);
+    setConfig("bt", "BANK_TERMINAL_NEEDED", "Использовать банковский терминал", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("bt", "BANK_TERMINAL_PRINT_WAIT_TIME", "Продолжительность остановок при печати слипов, мс", CONFIG_VALUE_INTEGER, 0);
+    setConfig("bt", "BANK_TERMINAL_PRINT_WAIT_MESSAGE", "Показывать сообщение о продолжении при печати слипов", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("bt", "BANK_TERMINAL_PROGRAM_WAIT_TIME", "Время ожидания окончания работы программы банковского терминала, мс", CONFIG_VALUE_INTEGER, 60000);
+    setConfig("bt", "BANK_TERMINAL_INTERVAL_EMPTY_LINES", "Количество пустых строк между слипами и чеком", CONFIG_VALUE_INTEGER, 2);
 #ifdef Q_OS_WIN32
-    setConfig("bt", BANK_TERMINAL_PATH, "Каталог программы банковского терминала", "C:/BankTerminal/");
+    setConfig("bt", "BANK_TERMINAL_PATH", "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "C:/BankTerminal/");
 #else
-    setConfig("bt", BANK_TERMINAL_PATH, "Каталог программы банковского терминала", "/home/vladimir/BankTerminal/");
+    setConfig("bt", "BANK_TERMINAL_PATH", "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "/home/vladimir/BankTerminal/");
 #endif
 
     setConfigTypeName("form", "Формы");
-    setConfig("form", SAVE_FORM_CONFIG_TO_DB, "Сохранять геометрию форм на сервере", true);
+    setConfig("form", "SAVE_FORM_CONFIG_TO_DB", "Сохранять геометрию форм на сервере", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("dbUpdates", "Обновления БД");
-    setConfig("dbUpdates", ASK_LOAD_UPDATES_TO_DB, "Спрашивать, если есть обновления базы данных", true);
-    setConfig("dbUpdates", SAVE_DB_UPDATES_TO_LOCAL, "Сохранять обновления БД локально", false);
+    setConfig("dbUpdates", "ASK_LOAD_UPDATES_TO_DB", "Спрашивать, если есть обновления базы данных", CONFIG_VALUE_BOOLEAN, true);
+    setConfig("dbUpdates", "SAVE_DB_UPDATES_TO_LOCAL", "Сохранять обновления БД локально", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("photo", "Фотографии");
-    setConfig("photo", GET_PICTURE_FROM_SERVER_IN_DOCUMENT, "Загружать фото с сервера в документе (замедлит работу с документом)", false);
+    setConfig("photo", "GET_PICTURE_FROM_SERVER_IN_DOCUMENT", "Загружать фото с сервера в документе (замедлит работу с документом)", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("params", "Параметры");
-    setConfig("params", PARAMETERS, "Параметры при запуске", "");
+    setConfig("params", "PARAMETERS", "Параметры при запуске", CONFIG_VALUE_STRING, "");
 }
 
 
-void TApplication::setConfig(QString type, ConfigVars name, QString label, QVariant value, bool isBoud)
+void TApplication::setConfig(QString type, QString name, QString label, ConfigEntryType valType, QVariant value)
 {
     ConfigEntry entry;
     configs.remove(name);
     configNames.removeAll(name);
     entry.type = type;
     entry.label = label;
+    entry.valueType = valType;
     entry.value = value;
-    entry.isBoud = isBoud;
     configs.insert(name, entry);
     configNames.append(name);
 }
 
-void TApplication::setConfigValue(ConfigVars name, QVariant value)
+
+void TApplication::setConfigValue(QString name, QVariant value)
 {
     ConfigEntry entry;
     if (configs.contains(name))
         entry = configs.value(name);
     entry.value = value;
-    setConfig(entry.type, name, entry.label, entry.value, entry.isBoud);
+    setConfig(entry.type, name, entry.label, entry.valueType, entry.value);
 }
 
 
-QVariant TApplication::getConfigValue(ConfigVars name)
+QVariant TApplication::getConfigValue(QString name)
 {
     QVariant result;
     if (configs.contains(name))
@@ -566,7 +577,7 @@ QVariant TApplication::getConfigValue(ConfigVars name)
 QStringList TApplication::getConfigTypes()
 {
     QStringList result;
-    foreach (ConfigVars name, configs.keys())
+    foreach (QString name, configs.keys())
     {
         QString type = configs.value(name).type;
         if (!result.contains(type))
@@ -577,10 +588,10 @@ QStringList TApplication::getConfigTypes()
 
 
 
-QList<ConfigVars> TApplication::getConfigNames(QString type)
+QList<QString> TApplication::getConfigNames(QString type)
 {
-    QList<ConfigVars> result;
-    foreach (ConfigVars name, configNames)
+    QList<QString> result;
+    foreach (QString name, configNames)
     {
         if (type.size() == 0 || type == configs.value(name).type)
             result.append(name);
@@ -592,7 +603,8 @@ QList<ConfigVars> TApplication::getConfigNames(QString type)
 Documents* TApplication::getDocuments(int opNumber) {
     QString operName = QString("oper%1").arg(opNumber);
     if (!documents.contains(operName)) {
-        Documents* doc = new Documents(opNumber);
+
+        Documents* doc = Documents::create<Documents>(opNumber);
         if (!doc->open())
             return 0;
         doc->query();
@@ -651,7 +663,7 @@ bool TApplication::open() {
         openPlugins();
 
     db  = new DBFactory();
-    tcpServer = new TcpServer(getConfigValue(LOCAL_PORT).toInt(), this);
+    tcpServer = new TcpServer(getConfigValue("LOCAL_PORT").toInt(), this);
     messagesWindow = new MessageWindow();
 
     if (gui->open())
@@ -665,15 +677,17 @@ bool TApplication::open() {
 
                 secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
 
-                dictionaryList = new Dictionaries();
-                topersList = new Topers();
+                dictionaryList = Dictionaries::create<Dictionaries>();
+
+                topersList = Topers::create<Topers>();
+
                 if (dictionaryList->open() && topersList->open())
                 {
                     // Проверим обновления БД, и если надо, применим их
                     int updates = db->updatesCount();
                     if (updates > 0)
                     {
-                        if (getConfigValue(ASK_LOAD_UPDATES_TO_DB).toBool())
+                        if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                         {
                             if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updates)) == QMessageBox::Yes)
                                 db->loadUpdates();
@@ -687,6 +701,7 @@ bool TApplication::open() {
                     gui->getMainWindow()->showPeriod();
 
                     // Загрузим константы
+
                     Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
                     if (constDict != 0)
                     {
@@ -694,6 +709,15 @@ bool TApplication::open() {
                         constDict->query();
                     }
 
+/*
+                    QSharedPointer<Dictionary> constDict = Dictionary::create<Dictionary>(db->getObjectName("константы"));
+                    if (constDict != 0)
+                    {
+                        constDict->open();
+                        constDict->setPhotoEnabled(false);
+                        constDict->query();
+                    }
+*/
                     // Загрузим счета
                     Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
                     if (accDict != 0)
@@ -701,7 +725,7 @@ bool TApplication::open() {
                         accDict->setPhotoEnabled(false);
                     }
 
-                    if (getConfigValue(FR_NEEDED).toBool() && !isScriptMode())
+                    if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
                     {
                         if (driverFRisValid)
                             showMessageOnStatusBar("Найден фискальный регистратор.\n");
@@ -781,18 +805,18 @@ void TApplication::close()
 void    TApplication::openPlugins()
 {
     // Если нужно и если есть соответствующий плагин, попытаемся открыть драйвер фискального регистратора
-    if (getConfigValue(FR_NEEDED).toBool())
+    if (getConfigValue("FR_NEEDED").toBool())
     {
         driverFR = (DriverFR*)createPlugin("driverfr");
         if (driverFR != 0)
         {
             driverFR->setApp(this);
-            if (driverFR->open(getConfigValue(FR_DRIVER_PORT).toString(),
-                               getConfigValue(FR_DRIVER_BOUD_RATE).toInt(),
-                               getConfigValue(FR_LOCAL_DRIVER_TIMEOUT).toInt(),
-                               getConfigValue(FR_DRIVER_PASSWORD).toInt(),
-                               getConfigValue(REMOTE_HOST).toString(),
-                               getConfigValue(REMOTE_PORT).toInt()))
+            if (driverFR->open(getConfigValue("FR_DRIVER_PORT").toString(),
+                               getConfigValue("FR_DRIVER_BOUD_RATE").toInt(),
+                               getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt(),
+                               getConfigValue("FR_DRIVER_PASSWORD").toInt(),
+                               getConfigValue("REMOTE_HOST").toString(),
+                               getConfigValue("REMOTE_PORT").toInt()))
                     driverFRisValid = true;
             else
             {
@@ -803,15 +827,15 @@ void    TApplication::openPlugins()
     }
 
     // Запустим сканер штрих-кодов, если есть его плагин
-    if (getConfigValue(BAR_CODE_READER_NEEDED).toBool())
+    if (getConfigValue("BAR_CODE_READER_NEEDED").toBool())
     {
         barCodeReader = (BarCodeReader*)createPlugin("barcodereader");
         if (barCodeReader != 0)
         {
             barCodeReader->setApp(this);
-            if (!barCodeReader->open(getConfigValue(BAR_CODE_READER_PORT).toString(),
-                                     getConfigValue(BAR_CODE_READER_BAUD_RATE).toInt(),
-                                     getConfigValue(BAR_CODE_READER_TIMEOUT).toInt()))
+            if (!barCodeReader->open(getConfigValue("BAR_CODE_READER_PORT").toString(),
+                                     getConfigValue("BAR_CODE_READER_BAUD_RATE").toInt(),
+                                     getConfigValue("BAR_CODE_READER_TIMEOUT").toInt()))
             {
                 barCodeReader->close();
                 barCodeReader = 0;
@@ -820,13 +844,14 @@ void    TApplication::openPlugins()
     }
 
     // Запустим банковский терминал, если есть плагин
-    if (getConfigValue(BANK_TERMINAL_NEEDED).toBool())
+    if (getConfigValue("BANK_TERMINAL_NEEDED").toBool())
     {
         bankTerminal = (BankTerminal*)createPlugin("bankterminal");
         if (bankTerminal != 0)
         {
             bankTerminal->setApp(this);
-            if (!bankTerminal->open())
+            if (!bankTerminal->open(getConfigValue("REMOTE_HOST").toString(),
+                                    getConfigValue("REMOTE_PORT").toInt()))
             {
                 bankTerminal->close();
                 bankTerminal = 0;
@@ -835,7 +860,7 @@ void    TApplication::openPlugins()
     }
 
     // Запустим считыватель магнитных карт, если есть его плагин
-    if (getConfigValue(CARD_READER_NEEDED).toBool())
+    if (getConfigValue("CARD_READER_NEEDED").toBool())
     {
         cardCodeReader = (CardCodeReader*)createPlugin("cardcodereader");
         if (cardCodeReader != 0)
@@ -906,7 +931,7 @@ QString TApplication::getPhotosPath(QString fileName) {
 
 
 QString TApplication::getCrashDumpsPath() {
-    return applicationDirPath() + "/data/crashdumps";
+    return getAnyPath("/data/crashdumps");
 }
 
 
@@ -915,16 +940,29 @@ QString TApplication::getAnyPath(QString subPath, QString fName)
     QString dir = applicationDirPath() + "/data";
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
-    dir += "/" + getConfigPrefix();
-    if (!QDir().exists(dir))
-        QDir().mkdir(dir);
-    dir += subPath;
+    if (subPath.left(5) != dir.right(5))
+    {
+        dir += "/" + getConfigPrefix();
+        if (!QDir().exists(dir))
+            QDir().mkdir(dir);
+        dir += subPath;
+    }
+    else
+    {
+        dir = applicationDirPath() + subPath;
+    }
     if (!QDir().exists(dir))
         QDir().mkdir(dir);
     QString fileName = dir;
     fileName += "/" + fName;
     return fileName;
 
+}
+
+
+QString TApplication::getConfigFileName()
+{
+    return applicationDirPath() + "/configs";
 }
 
 
@@ -982,7 +1020,8 @@ QObject* TApplication::createPlugin(QString fileName)
     if (QDir().exists(pluginFile))
     {
         QPluginLoader loader(pluginFile);
-        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+//        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+        loader.setLoadHints(QLibrary::ExportExternalSymbolsHint);
         loader.load();
         if (loader.isLoaded())
         {
@@ -1308,7 +1347,7 @@ int TApplication::runScript(QString scriptName)
             readSettings();
 
         TcpClient tcpcl(host, port);
-        timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
+        timeOut(getConfigValue("FR_NET_DRIVER_TIMEOUT").toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
         if (tcpcl.isValid())
         {
             if (tcpcl.sendToServer(script))
@@ -1345,7 +1384,7 @@ void TApplication::barCodeReadyRead(QString barCodeString)
 
 void TApplication::readCardReader(QKeyEvent* keyEvent)
 {
-    if (getConfigValue(CARD_READER_NEEDED).toBool())
+    if (getConfigValue("CARD_READER_NEEDED").toBool())
     {
         if (cardCodeReader != 0)
             cardCodeReader->readCardReader(keyEvent);
@@ -1535,7 +1574,7 @@ void TApplication::sendSMS(QString number, QString message)
 
 void TApplication::readSettings()
 {
-    QSettings settings;
+    QSettings settings(getConfigFileName(), QSettings::IniFormat);
     settings.beginGroup("app");
     int dirsCount = settings.value("dirsCount", 0).toInt();
     for (int i = 0; i < dirsCount; i++)
@@ -1544,13 +1583,10 @@ void TApplication::readSettings()
         dirs.insert(dirName, settings.value(QString("dir%1").arg(i), "").toString());
     }
 
-    foreach (ConfigVars name, getConfigNames())
+    foreach (QString name, getConfigNames())
     {
-        QVariant value = settings.value(QString("ConfigVars%1").arg(name), getConfigValue(name));
-        if (value == "true" || value == "false")
-            setConfigValue(name, value.toBool());
-        else
-            setConfigValue(name, value);
+        QVariant value = settings.value(name, getConfigValue(name));
+        setConfigValue(name, value);
     }
 
     settings.endGroup();
@@ -1560,7 +1596,7 @@ void TApplication::readSettings()
 void TApplication::writeSettings()
 {
     // Сохраним данные локально, на компьютере пользователя
-    QSettings settings;
+    QSettings settings(getConfigFileName(), QSettings::IniFormat);
     settings.beginGroup("app");
     settings.setValue("dirsCount", dirs.count());
     for (int i = 0; i < dirs.count(); i++)
@@ -1569,9 +1605,9 @@ void TApplication::writeSettings()
         settings.setValue(QString("dirName%1").arg(i), dirName);
         settings.setValue(QString("dir%1").arg(i), dirs.value(dirName));
     }
-    foreach (ConfigVars name, getConfigNames())
+    foreach (QString name, getConfigNames())
     {
-        settings.setValue(QString("ConfigVars%1").arg(name), getConfigValue(name));
+        settings.setValue(name, getConfigValue(name));
     }
 
     settings.endGroup();
@@ -1853,3 +1889,10 @@ bool TApplication::readParameters(int argc, char *argv[])
     return lContinue;
 }
 
+/*
+bool TApplication::notify(QObject* receiver, QEvent* e)
+{
+    qDebug() << receiver->metaObject()->className() << receiver->objectName() << e->type();
+    return QApplication::notify(receiver, e);
+}
+*/

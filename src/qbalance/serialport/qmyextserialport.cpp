@@ -35,7 +35,7 @@ QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject*
     log = "";
     app = TApplication::exemplar();
     tryReceiveExit = false;
-    timeOut = app->getConfigValue(FR_DRIVER_MAX_TIMEOUT).toInt() * 1000;
+    timeOut = app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000;
 }
 
 
@@ -123,6 +123,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
     qint64 result = -1;
     if (!remote)
     {
+        qDebug() << "timeOut = " << timeOut;
         tryReceiveExit = false;                     // Запустим цикл опроса данных в процедуре tryReceive() по таймауту
         app->startTimeOut(timeOut);                    // Ждем ответа в течение ...
         tryReceive();
@@ -137,10 +138,12 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
             }
             if (app->isTimeOut())
             {
+                qDebug() << "Задежка";
                 writeLog(QString("*** ЗАДЕРЖКА свыше %1 сек ***").arg(timeOut/1000));
                 break;
             }
             app->sleep(10);
+            qDebug() << "sleep 10";
         }
         tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
         appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
@@ -191,6 +194,13 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
         }
     }
     return result;
+}
+
+
+qint64 QMyExtSerialPort::writeData(QString string, bool fromRemote)
+{
+    QByteArray data = string.toLatin1();
+    return writeData(data.data(), data.count(), fromRemote);
 }
 
 

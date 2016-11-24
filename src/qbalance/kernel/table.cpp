@@ -29,10 +29,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/mysqlrelationaltablemodel.h"
 #include "../storage/dbfactory.h"
 
-Table::Table(QString name, QObject *parent)
-: QObject(parent)
-, tableModel(0)
+Table::Table(QString, QObject *parent): QObject(parent)
 {
+}
+
+
+Table::~Table()
+{
+}
+
+
+void Table::postInitialize(QString name, QObject *parent)
+{
+    setParent(parent);
+    tableModel = 0;
     opened = false;
     queryTableName = "";
     tableName = name.trimmed().toLower();
@@ -40,11 +50,6 @@ Table::Table(QString name, QObject *parent)
     app = TApplication::exemplar();
     db = app->getDBFactory();
     fullDebugInfo = app->getFullDebugInfo();
-}
-
-
-Table::~Table()
-{
 }
 
 

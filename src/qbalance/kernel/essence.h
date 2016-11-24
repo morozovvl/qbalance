@@ -59,8 +59,57 @@ struct urlId {
 class Essence : public Table {
     Q_OBJECT
 
+private:
+    bool                photoPathVerified;
+    QString             photoPath;
+    QString             photoIdField;
+    QString             photoNameField;
+    bool                loading;            // Сейчас идет заполнение документа (справочника) из файла
+
+    QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
+    QNetworkAccessManager*  m_networkAccessManager;
+
+private slots:
+    void                replyFinished(QNetworkReply*);
+
+protected:
+    bool                scriptEngineEnabled;
+    QString             formTitle;
+    QString             idFieldName;
+    QString             nameFieldName;
+    FormGrid*           form;
+    Dictionaries*       dictionaries;
+    TableView*          grdTable;
+    QWidget*            parentForm;
+    ScriptEngine*       scriptEngine;
+    QString             scriptFileName;                     // Имя файла со скриптами
+    QSqlQuery           preparedSelectCurrentRow;           // Содержит подготовленный запрос для обновления текущей строки при вычислениях
+    QString             defaultFilter;
+    bool                lInsertable;
+    bool                lDeleteable;
+    bool                lViewable;
+    bool                lUpdateable;
+    bool                lPrintable;
+    bool                isDictionary;
+    bool                enabled;
+    bool                doSubmit;
+    bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
+    bool                photoEnabled;
+    QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
+    DocumentScriptEngine* reportScriptEngine;
+    bool                lIsDocument;
+    bool                sortedTable;
+
+    virtual void        preparePrintValues();                   // Готовит значения для печати
+    virtual void        prepareSelectCurrentRowCommand();
+    void                openScriptEngine();
+    void                closeScriptEngine();
+    bool                isDocumentLoading();
+
+    Essence(QString = "", QObject* = 0);
+    virtual void postInitialize(QString, QObject*);
+
 public:
-    Essence(QString name = "", QObject *parent = 0);
     ~Essence();
 
     Q_INVOKABLE virtual bool            open();
@@ -69,7 +118,8 @@ public:
     Q_INVOKABLE virtual bool            add() = 0;                      // Добавление записи
     Q_INVOKABLE virtual bool            remove(bool = false);     // Удаление записи
     Q_INVOKABLE virtual void            view();                         // Просмотр записи
-    virtual void                        print(QString, bool = false);                 // Печать
+    Q_INVOKABLE virtual void            print(QString, bool = false, bool = false, int = 1, QString = "");  // Печать
+    Q_INVOKABLE virtual void            printLabel(QString, int = 1);                 // Печать
     virtual void                        load();
 
 // Функции для получения, сохранения данных модели
@@ -106,7 +156,7 @@ public:
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
     Q_INVOKABLE virtual Dialog* getFormWidget();
     Q_INVOKABLE void setPhotoEnabled(bool enabled);
-    Q_INVOKABLE bool isPhotoEnabled();
+    Q_INVOKABLE virtual bool isPhotoEnabled();
     Q_INVOKABLE virtual void setPhotoPath(QString path);
     Q_INVOKABLE QString getPhotoPath();
     Q_INVOKABLE void setPhotoIdField(QString field);
@@ -132,6 +182,8 @@ public:
     Q_INVOKABLE virtual void setForm(QString = "") { ; }
     Q_INVOKABLE bool isDefaultForm();
     Q_INVOKABLE bool isFormVisible();
+    Q_INVOKABLE bool getIsDictionary();
+    Q_INVOKABLE virtual bool isVisible();
 
 
 // Функции для обеспечения работы скриптов
@@ -141,7 +193,7 @@ public:
     virtual void        evaluateEngine();
     virtual bool        calculate(bool = true);
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
-    virtual void        restoreOldValues();
+    Q_INVOKABLE virtual void restoreOldValues();
     Q_INVOKABLE virtual QScriptValue evaluateScript(QString);
 
 
@@ -153,6 +205,7 @@ public:
     void                afterHideFormEvent(Form *);
     void                closeFormEvent(Form *);
     QString             preparePictureUrl();
+    QString             prepareBarCodeData();
     virtual void        afterRowChanged();
     virtual void        beforeRowChanged();
 
@@ -184,56 +237,6 @@ signals:
 public slots:
     void                cardCodeReaded(QString);
 
-
-protected:
-    bool                scriptEngineEnabled;
-    QString             formTitle;
-    QString             idFieldName;
-    QString             nameFieldName;
-    FormGrid*           form;
-    Dictionaries*       dictionaries;
-    TableView*          grdTable;
-    QWidget*            parentForm;
-    ScriptEngine*       scriptEngine;
-    QString             scriptFileName;                     // Имя файла со скриптами
-    QSqlQuery           preparedSelectCurrentRow;           // Содержит подготовленный запрос для обновления текущей строки при вычислениях
-    QString             defaultFilter;
-    bool                lInsertable;
-    bool                lDeleteable;
-    bool                lViewable;
-    bool                lUpdateable;
-    bool                lPrintable;
-    bool                isDictionary;
-    bool                enabled;
-    bool                doSubmit;
-    bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
-    bool                photoEnabled;
-    QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
-    DocumentScriptEngine* reportScriptEngine;
-    bool                lIsDocument;
-    bool                sortedTable;
-
-    virtual void        preparePrintValues();                   // Готовит значения для печати
-    virtual void        prepareSelectCurrentRowCommand();
-    void                openScriptEngine();
-    void                closeScriptEngine();
-    bool                isDocumentLoading();
-
-
-private:
-    bool                photoPathVerified;
-    QString             photoPath;
-    QString             photoIdField;
-    QString             photoNameField;
-    bool                loading;            // Сейчас идет заполнение документа (справочника) из файла
-
-
-    QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
-    QNetworkAccessManager*  m_networkAccessManager;
-
-
-private slots:
-    void                replyFinished(QNetworkReply*);
 
 };
 

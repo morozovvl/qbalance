@@ -201,6 +201,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         grdTable->open();
         grdTable->setFormGrid(this);
         grdTable->setParentWidget(formWidget);
+        grdTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         if (parent != 0)
         {
             parent->setGrdTable(grdTable);

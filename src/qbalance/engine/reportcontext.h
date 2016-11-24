@@ -48,6 +48,8 @@ public:
     Q_INVOKABLE void setTableName(QString name);
     QString getTableName();
     Q_INVOKABLE virtual void appendPrintValues(QString, QSqlQuery*);
+    void        setCurrentRow(int);
+    int         getCurrentRow();
 
 private:
     QHash<QString, QVariant>*    data;
@@ -57,6 +59,7 @@ private:
     QHash<int, int> sortRef;
     bool            showRepeat;
     QString         tableName;
+    int             currentRow;
 };
 
 #endif // REPORTCONTEXT_H

@@ -158,7 +158,7 @@ void ConnectionForm::connectionChanged(int index)
 
 void ConnectionForm::readConnectionsList()
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
           settings.beginGroup(CONNECTION_GROUP_NAME);
@@ -171,7 +171,7 @@ void ConnectionForm::readConnectionsList()
 
 void ConnectionForm::readDefaultSettings()
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         QString connection = settings.value("defaultConnection").toString();
@@ -182,7 +182,7 @@ void ConnectionForm::readDefaultSettings()
 
 void ConnectionForm::writeDefaultSettings()
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         settings.setValue("defaultConnection", pcmbConnection->currentText());
@@ -191,7 +191,7 @@ void ConnectionForm::writeDefaultSettings()
 
 void ConnectionForm::readSettings(QString connectionName)
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (connectionName.size() > 0 && settings.status() == QSettings::NoError)
     {
         settings.beginGroup(CONNECTION_GROUP_NAME);
@@ -207,7 +207,7 @@ void ConnectionForm::readSettings(QString connectionName)
 void ConnectionForm::writeSettings()
 {
     Form::writeSettings();
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         settings.setValue("defaultConnection", pcmbConnection->currentText());
@@ -223,7 +223,7 @@ void ConnectionForm::writeSettings()
 
 void ConnectionForm::deleteSettings(QString connectionName)
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (connectionName.size() > 0 && settings.status() == QSettings::NoError)
     {
           settings.beginGroup(CONNECTION_GROUP_NAME);

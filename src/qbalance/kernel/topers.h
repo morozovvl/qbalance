@@ -24,17 +24,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "dictionary.h"
 
 class Topers : public Dictionary {
-public:
+
+private:
+    void addDocument(int);
+    void removeDocument(int opNumber);
+
+protected:
+    virtual void setForm();
+
     Topers(QObject *parent = 0);
+    virtual void postInitialize(QObject *parent = 0);
+
+public:
+    ~Topers();
+
+    template <class T>
+        static T* create(QObject *parent = 0)
+        {
+            T* p(new T(parent));
+            p->postInitialize(parent);
+            return p;
+        }
+
     void cmdOk();
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove();
     Q_INVOKABLE virtual void view();
-protected:
-    virtual void setForm();
-private:
-    void addDocument(int);
-    void removeDocument(int opNumber);
 };
 
 #endif // TOPERS_H

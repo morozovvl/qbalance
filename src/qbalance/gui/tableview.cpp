@@ -170,7 +170,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
     if (essence != 0)
         essence->beforeRowChanged();
 
-    if (isVisible() && current.row() != previous.row())
+    if (current.row() != previous.row())
         showPhoto();
 
     if (essence != 0)
@@ -542,9 +542,10 @@ void TableView::selectPreviousColumn()
 
 void TableView::showPhoto()
 {
-    if (picture != 0 && essence != 0)
+    QString photoFileName = "";
+//    if (picture != 0 && essence != 0 && essence->isPhotoEnabled() && essence->isVisible())
+    if (picture != 0 && essence != 0 && essence->isVisible())
     {
-        QString photoFileName;
         if (tableModel->rowCount() > 0)
         {
             photoFileName = essence->getPhotoFile(); // Получим имя фотографии
@@ -552,16 +553,12 @@ void TableView::showPhoto()
             {   // Если локальный файл с фотографией существует и имя файла не является адресом в интернете (из интернета фотографию еще нужно скачать в локальный файл)
                 if (QDir().exists(photoFileName))
                     picture->setVisibility(true);              // то включим просмотр фотографий
-                else
-                    photoFileName = "";
                 if (essence->getPhotoNameField().size() > 0)
                     picture->setPhotoWindowTitle(essence->getValue(essence->getPhotoNameField()).toString().trimmed());
             }
         }
-        else
-            photoFileName = "";
-        picture->show(photoFileName);
     }
+    picture->show(photoFileName);
 }
 
 
@@ -608,7 +605,7 @@ void TableView::focusInEvent(QFocusEvent* event)
 void TableView::readSettings()
 // Считывает сохраненную информацию о ширине столбцов при открытии формы с таблицей
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     bool readedFromEnv = true;  // Предположим, что удастся прочитать конфигурацию из окружения
     parent->readSettings();
 
@@ -673,7 +670,7 @@ void TableView::writeSettings()
 {
     if (columnsSettingsReaded)
     {
-        QSettings settings;
+        QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
         int columnCount = tableModel->columnCount();
         if (columnCount > 0)
         {
@@ -689,7 +686,7 @@ void TableView::writeSettings()
             settings.endGroup();
 
             // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
-            if (app->isSA() && app->getConfigValue(SAVE_FORM_CONFIG_TO_DB).toBool())
+            if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
             {
                 app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + parent->getConfigName() + "...");
                 for (int i = 0; i < columnCount; i++)

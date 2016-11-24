@@ -28,7 +28,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-Topers::Topers(QObject *parent): Dictionary("доступ_к_топер", parent) {
+Topers::Topers(QObject *parent): Dictionary("", parent) {
+}
+
+
+Topers::~Topers()
+{
+}
+
+
+void Topers::postInitialize(QObject* parent)
+{
+    Dictionary::postInitialize("доступ_к_топер", parent);
+
     lPrintable = false;
     lInsertable = TApplication::exemplar()->isSA();     // Если работает пользователь SA, то можно добавить операцию
     lViewable = TApplication::exemplar()->isSA();       // Если работает пользователь SA, то можно просмотреть свойства операции
@@ -36,7 +48,6 @@ Topers::Topers(QObject *parent): Dictionary("доступ_к_топер", parent
     formTitle = QObject::trUtf8("Операции");
     scriptEngineEnabled = false;
 }
-
 
 void Topers::cmdOk() {
     addDocument(getValue("опер").toInt());

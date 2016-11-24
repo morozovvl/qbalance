@@ -23,8 +23,7 @@ CONFIG(debug) {
 
 TARGET = ../../qbalance
 CONFIG += designer \
-    plugin \
-    uitools
+      uitools
 CONFIG -= app_bundle
 TEMPLATE = app
 
@@ -159,7 +158,7 @@ HEADERS +=  gui/passwordform.h \
     mpreal.h \
     fixed.h \
     storage/filetype.h \
-    kernel/configvars.h
+    kernel/ConfigVars.h
 
 
 RESOURCES += ../../resources.qrc

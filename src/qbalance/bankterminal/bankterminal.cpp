@@ -22,9 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include "bankterminal.h"
 #include "../kernel/app.h"
+#include "../kernel/tcpclient.h"
 #include <../driverfr/driverfr.h>
 
 
+TcpClient* BankTerminal::tcpClient = 0;
 
 BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
 {
@@ -36,15 +38,27 @@ BankTerminal::BankTerminal(QObject *parent) : QObject(parent)
         program = "sb_pilot";
 #endif
     termProcess = 0;
+    remote = false;
+    locked = true;
 }
 
 
-bool BankTerminal::open()
+BankTerminal::~BankTerminal()
+{
+    if (tcpClient != 0)
+    {
+        delete tcpClient;
+        tcpClient = 0;
+    }
+}
+
+
+bool BankTerminal::open(QString ipAddress, int ipPort)
 {
     bool result = false;
     if (app != 0)
     {
-        path = app->getConfigValue(BANK_TERMINAL_PATH).toString();
+        path = app->getConfigValue("BANK_TERMINAL_PATH").toString();
         program = path + program;
         if (QFileInfo(program).exists())        // Программа терминала обнаружена
         {
@@ -61,6 +75,26 @@ bool BankTerminal::open()
                 app->showError(QObject::trUtf8("Фискальный регистратор, необходимый для банковского терминала, не обнаружен"));
         }
         else
+        {
+            // а теперь поищем на удаленном, если указан его IP
+            if (ipAddress.size() > 0)
+            {
+                tcpClient = new TcpClient(ipAddress, ipPort);
+                app->timeOut(app->getConfigValue("FR_NET_DRIVER_TIMEOUT").toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
+                if (tcpClient->isValid())
+                {
+                    remote = true;
+                    result = true;
+                }
+                else
+                {
+                    tcpClient->logError();
+                    delete tcpClient;
+                    tcpClient = 0;
+                }
+            }
+        }
+        if (!result)
             app->showError(QObject::trUtf8("Программа банковского терминала не обнаружена"));
     }
     return result;
@@ -79,6 +113,7 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
     bool result = false;
     if (driverFR->Connect())
     {
+        locked = true;
         QString command = QString("%1 %2").arg(program).arg(oper);
         if (sum > 0)
             command.append(QString(" %1").arg(sum));
@@ -86,11 +121,6 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
             command.append(QString(" %1").arg(type));
         if (track > 0)
             command.append(QString(" %1").arg(track));
-
-#ifdef Q_OS_LINUX
-//        if (oper == 1 || oper == 3)
-//            app->showMessage(QObject::trUtf8("Вставьте банковскую карту в терминал и нажмите любую клавишу"));
-#endif
 
         // Очистим предыдущие результаты
         QDir(path).remove("e");
@@ -101,7 +131,7 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
         app->debug(6, command);
 
         termProcess->start(command);
-        if (!termProcess->waitForFinished(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()))
+        if (!termProcess->waitForFinished(app->getConfigValue("BANK_TERMINAL_PROGRAM_WAIT_TIME").toInt()))
             app->showError(QObject::trUtf8("Время ожидания терминала (1 минута) истекло. Нажмите кнопку <ОТМЕНА> на терминале.") + termProcess->errorString());                  // выдадим сообщение об ошибке
 
         result = testResult();
@@ -112,6 +142,7 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
             printSlip();
 
         driverFR->DisConnect();
+        locked = false;
     }
     return result;
 }
@@ -182,11 +213,11 @@ void BankTerminal::printSlip()
                     driverFR->PrintString(line);
                 else
                 {
-                    driverFR->FeedDocument(app->getConfigValue(BANK_TERMINAL_INTERVAL_EMPTY_LINES).toInt());
-                    if (app->getConfigValue(BANK_TERMINAL_PRINT_WAIT_MESSAGE).toBool())
+                    driverFR->FeedDocument(app->getConfigValue("BANK_TERMINAL_INTERVAL_EMPTY_LINES").toInt());
+                    if (app->getConfigValue("BANK_TERMINAL_PRINT_WAIT_MESSAGE").toBool())
                         app->showMessage(QObject::trUtf8("Оторвите чек и нажмите любую клавишу для продолжения печати"));
                     else
-                        app->sleep(app->getConfigValue(BANK_TERMINAL_PRINT_WAIT_TIME).toInt());
+                        app->sleep(app->getConfigValue("BANK_TERMINAL_PRINT_WAIT_TIME").toInt());
                 }
                 driverFR->setProgressDialogValue(proc * i);
             }

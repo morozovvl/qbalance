@@ -78,7 +78,8 @@ QLineEdit* FormDocument::getNumberEdit()
 
 void FormDocument::showParameterText(QString dictName)
 {
-    parameters->showText(dictName);
+    if (parameters != 0)
+        parameters->showText(dictName);
 }
 
 
@@ -166,7 +167,9 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
 
             // Вставим строчку "Итого"
             QHBoxLayout* phbxItogLayout = new QHBoxLayout();
-            phbxItogLayout->setObjectName("phbxItogLayout");
+//            phbxItogLayout->setObjectName("phbxItogLayout");
+//            QSpacerItem* docItogSpacer = new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Minimum);
+//            phbxItogLayout->addItem(docItogSpacer);
             phbxItogLayout->addStretch(1);
             phbxItogLayout->addWidget(new QLabel(LABEL_ITOG, formWidget), 0, Qt::AlignRight);
 

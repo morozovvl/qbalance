@@ -31,6 +31,7 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*
     showRepeat = true;
     lastStrNum = 0;
     tableName = "таблица";
+    currentRow = 0;
 }
 
 
@@ -101,6 +102,8 @@ QVariant ReportContext::getValue(QString tag, int strNum)
 {
     QVariant result;
     QString pref = tag.left(tag.indexOf("."));
+    if (currentRow > 0)
+        strNum = currentRow;
     tag = tag.toLower();
     tag.remove(pref.toLower());
     tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
@@ -194,4 +197,15 @@ void ReportContext::appendPrintValues(QString prefix, QSqlQuery* query)
     }
 }
 
+
+void ReportContext::setCurrentRow(int row)
+{
+    currentRow = row;
+}
+
+
+int ReportContext::getCurrentRow()
+{
+    return currentRow;
+}
 

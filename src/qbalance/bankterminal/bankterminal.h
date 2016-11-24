@@ -41,13 +41,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 class DriverFR;
+class TcpClient;
 
 class BankTerminal : public QObject
 {
     Q_OBJECT
 public:
     explicit BankTerminal(QObject *parent = 0);
-    virtual bool open();
+    ~BankTerminal();
+    virtual bool open(QString, int);
     virtual void close();
     virtual void setApp(TApplication* a) { app = a; }
     Q_INVOKABLE virtual bool process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
@@ -61,6 +63,9 @@ private:
     QString     program;
     QHash<QString, QString> resultParams;
     QProcess* termProcess;
+    static TcpClient*   tcpClient;
+    bool            remote;
+    bool            locked;     // Банковский терминал заблокирован на период работы с клиентом
 
     bool    testResult();
     void    printSlip();

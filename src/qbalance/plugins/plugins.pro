@@ -4,9 +4,8 @@ QT += script
 QT += gui
 QT += xml
 QT += network
-CONFIG += designer \
-    plugin \
-    uitools
+QT += designer
+QT += uitools
 
 unix:TARGET = ../../../plugins/designer/plugins
 win32:TARGET = ../../../../plugins/designer/plugins

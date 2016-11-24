@@ -77,11 +77,11 @@ void MainWindow::showQueries()
     QString fileName = app->getReportFile("запросы", false, app->getMainWindow(), reportMenu->contentsRect());
     if (fileName.size() > 0)
     {
-        Dictionary  dict;
-        if (dict.open("SELECT 0", ""))      // Пустой запрос
+        Dictionary* dict = Dictionary::create<Dictionary>();
+        if (dict->open("SELECT 0", ""))      // Пустой запрос
         {
-            dict.print(fileName);
-            dict.close();
+            dict->print(fileName);
+            dict->close();
         }
     }
 }
@@ -325,7 +325,7 @@ void MainWindow::terminalControlRibbon()
 
 
 void MainWindow::readSettings() {
-      QSettings settings;
+      QSettings settings(TApplication::exemplar()->getConfigFileName(), QSettings::IniFormat);
       if (settings.status() == QSettings::NoError) {
           settings.beginGroup("mainwindow");
           move(settings.value("x", 100).toInt(), settings.value("y", 100).toInt());
@@ -337,7 +337,7 @@ void MainWindow::readSettings() {
 
 void MainWindow::writeSettings()
 {
-      QSettings settings;
+      QSettings settings(TApplication::exemplar()->getConfigFileName(), QSettings::IniFormat);
       settings.beginGroup("mainwindow");
       settings.setValue("x", pos().x());
       settings.setValue("y", pos().y());

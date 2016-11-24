@@ -42,8 +42,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-Document::Document(int oper, Documents* par): Dictionary()
+Document::Document(int, Documents*): Dictionary()
 {
+}
+
+
+Document::~Document()
+{
+}
+
+
+void Document::postInitialize(int oper, Documents* par)
+{
+    Dictionary::postInitialize("", par);
+
     parent = par;
     operNumber = oper;
     lPrintable = true;
@@ -61,7 +73,8 @@ Document::Document(int oper, Documents* par): Dictionary()
     locked = false;
 
     // Подготовим структуру для хранения локальных справочников
-    dictionaries = new Dictionaries();
+    dictionaries = Dictionaries::create<Dictionaries>();
+
     if (dictionaries->open())
     {
         dictionaries->setDocument(this);
@@ -95,11 +108,6 @@ Document::Document(int oper, Documents* par): Dictionary()
     isDictionary = false;
     lIsDocument = true;
     addingFromQuery = false;
-}
-
-
-Document::~Document()
-{
 }
 
 
@@ -415,25 +423,29 @@ bool Document::checkConstDicts()
 
 bool Document::remove(bool noAsk)
 {
+    bool canRemove = true;
     if (lDeleteable)
     {
-        if (scriptEngineEnabled && scriptEngine != 0)
-            scriptEngine->eventBeforeDeleteString();
-
         int strNum = getValue(QString("P1__%1").arg(db->getObjectName("проводки.стр"))).toInt();
         if (Essence::remove(noAsk))
         {
-            saveChanges();     // Принудительно обновим перед удалением строки
-            if (db->removeDocStr(docId, strNum))
+            if (scriptEngineEnabled && scriptEngine != 0)
+                canRemove = scriptEngine->eventBeforeDeleteString();
+
+            if (canRemove)
             {
-                query();
-                calcItog();
-                if (scriptEngineEnabled && scriptEngine != 0)
-                    scriptEngine->eventAfterDeleteString();
-                saveChanges();     // Принудительно обновим итог после удаления строки
-                return true;
+                saveChanges();     // Принудительно обновим перед удалением строки
+                if (db->removeDocStr(docId, strNum))
+                {
+                    query();
+                    calcItog();
+                    if (scriptEngineEnabled && scriptEngine != 0)
+                        scriptEngine->eventAfterDeleteString();
+                    saveChanges();     // Принудительно обновим итог после удаления строки
+                    return true;
+                }
+                app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
             }
-            app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
         }
     }
     else

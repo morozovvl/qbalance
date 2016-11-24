@@ -487,7 +487,7 @@ void Form::readSettings()
 
     QHash<QString, int> settingValues;
     // Попытаемся сначала прочитать локальные значения координат окна и размеров на компьютере пользователя
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         settings.beginGroup(configName);
@@ -540,7 +540,7 @@ void Form::writeSettings()
         widget = (QWidget*)formWidget;
 
     // Сохраним данные локально, на компьютере пользователя
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     settings.beginGroup(configName);
     settings.setValue("x", widget->geometry().x());
     settings.setValue("y", widget->geometry().y());
@@ -549,7 +549,7 @@ void Form::writeSettings()
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
-    if (app->isSA() && app->getConfigValue(SAVE_FORM_CONFIG_TO_DB).toBool())
+    if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
     {
         app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
         db->setConfig(configName, "x", QString("%1").arg(widget->geometry().x()));

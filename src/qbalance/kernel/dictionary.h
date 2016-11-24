@@ -34,10 +34,43 @@ class SearchParameters;
 class Dictionary : public Essence {
     Q_OBJECT
 
+    friend class Table;
+
+private:
+    bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
+    bool            lsetIdEnabled;
+    bool            isDepend;
+    QString         dictTitle;
+    QString         sqlCommand;
+
+protected:
+    QString         prototypeName;          // Имя справочника - прототипа
+    Dictionary*     parentDict;
+    bool            lSelectable;
+    bool            lIsSet;
+    bool            lCanShow;
+    bool            lMustShow;
+    bool            lIsConst;
+    bool            lAutoSelect;
+    bool            lIsSaldo;
+    bool            lIsAutoLoaded;
+    QStringList     fieldList;
+    virtual void    prepareSelectCurrentRowCommand();
+    virtual bool    setTableModel(int = 0);
+    bool            locked;
+    bool            getIdRefresh;
+    bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
+                                    // или как часть имени
+    bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
+    SearchParameters* parameters;
+
+    Dictionary(QObject* = 0);
+    Dictionary(QString, QObject* = 0);
+    virtual void postInitialize(QString, QObject*);
+
 public:
-    Dictionary(QObject *parent = 0);
-    Dictionary(QString name, QObject *parent = 0);
     ~Dictionary();
+
     Q_INVOKABLE virtual bool open(QString = "", QString = "");
     Q_INVOKABLE virtual void close();
 
@@ -102,34 +135,6 @@ public:
     Q_INVOKABLE void setExact(bool e);
     bool getExact();
 
-protected:
-    QString         prototypeName;          // Имя справочника - прототипа
-    Dictionary*     parentDict;
-    bool            lSelectable;
-    bool            lIsSet;
-    bool            lCanShow;
-    bool            lMustShow;
-    bool            lIsConst;
-    bool            lAutoSelect;
-    bool            lIsSaldo;
-    bool            lIsAutoLoaded;
-    QStringList     fieldList;
-    virtual void    prepareSelectCurrentRowCommand();
-    virtual bool    setTableModel(int = 0);
-    bool            locked;
-    bool            getIdRefresh;
-    bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
-                                    // или как часть имени
-    bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
-    SearchParameters* parameters;
-
-
-private:
-    bool            ftsEnabled;     // Флаг, показывающий, имеется ли в связанном справочнике полнотекстовый поиск
-    bool            lsetIdEnabled;
-    bool            isDepend;
-    QString         dictTitle;
-    QString         sqlCommand;
 };
 
 #endif // DICTIONARY_H

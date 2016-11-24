@@ -138,7 +138,7 @@ void SearchParameters::addString(QString name, int strNum)
         if (app != 0)
         {
             labelName = app->getDBFactory()->getDictionariesProperties(name).value("имя_в_форме").toString();
-            name = name + "." + programNameFieldName;
+//            name = name + "." + programNameFieldName;
             if (labelName.size() == 0)
             {
                 labelName = name;
@@ -234,7 +234,7 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                 isInt = false;
                 text = text.trimmed();
             }
-            text.replace("'", "''");
+//            text.replace("'", "''");
             QStringList paramList = text.split(QRegExp("\\s+"));
             if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
             {
@@ -332,18 +332,21 @@ void SearchParameters::dictionaryButtonPressed()
             dict->exec();
             if (dict->isFormSelected())
             {
-                MyComboBox* cmb = (MyComboBox*)this->findChild<QObject*>(sender()->objectName() + "." + programNameFieldName);
-                QString text = dict->getValue(programNameFieldName).toString().trimmed();
-                int index = cmb->findText(text);
-                if (index > 0)
-                    cmb->setCurrentIndex(index);
-                else
+                MyComboBox* cmb = (MyComboBox*)this->findChild<QObject*>(sender()->objectName());
+                if (cmb != 0)
                 {
-                    cmb->insertItem(0, text);
-                    cmb->setCurrentIndex(0);
+                    QString text = dict->getValue(programNameFieldName).toString().trimmed();
+                    int index = cmb->findText(text);
+                    if (index > 0)
+                        cmb->setCurrentIndex(index);
+                    else
+                    {
+                        cmb->insertItem(0, text);
+                        cmb->setCurrentIndex(0);
+                    }
+                    cmb->lineEdit()->home(true);
+                    cmb->setFocus();
                 }
-                cmb->lineEdit()->home(true);
-                cmb->setFocus();
             }
         }
     }

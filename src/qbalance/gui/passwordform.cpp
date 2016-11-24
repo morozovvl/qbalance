@@ -115,7 +115,7 @@ void PassWordForm::cmdOk()
 
 void PassWordForm::readSettings()
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         QString user = settings.value("defaultUser").toString();
@@ -126,7 +126,7 @@ void PassWordForm::readSettings()
 
 void PassWordForm::writeSettings()
 {
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
         settings.setValue("defaultUser", login);
 }

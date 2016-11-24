@@ -49,9 +49,19 @@ protected:
     virtual bool                        setTableModel(int = 0);
     bool                                fullDebugInfo;
 
+    Table(QString = "", QObject* = 0);
+    virtual void postInitialize(QString, QObject*);
+
 public:
-    Table(QString table = "", QObject *parent = 0);
     virtual ~Table() = 0;
+
+    template <class T>
+        static T* create(QString name = "", QObject* parent = 0)
+        {
+            T* p(new T(name, parent));
+            p->postInitialize(name, parent);
+            return p;
+        }
 
     Q_INVOKABLE virtual bool            open();
     Q_INVOKABLE virtual void            close();

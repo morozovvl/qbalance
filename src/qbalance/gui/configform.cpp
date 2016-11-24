@@ -173,7 +173,7 @@ void ConfigForm::showConfigGroup(QString type)
     QGridLayout* vLayout = new QGridLayout();
 
     int row = 0;
-    foreach (ConfigVars name, app->getConfigNames(type))
+    foreach (QString name, app->getConfigNames(type))
     {
         if (type.size() == 0 || type == configs.value(name).type)
         {

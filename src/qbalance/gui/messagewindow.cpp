@@ -97,7 +97,7 @@ void MessageWindow::readSettings()
 {
     QString configName = "messagesWindow";
     QHash<QString, int> settingValues;
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
         settings.beginGroup(configName);
@@ -149,7 +149,7 @@ void MessageWindow::writeSettings()
 {
     QString configName = "messagesWindow";
     // Сохраним данные локально, на компьютере пользователя
-    QSettings settings;
+    QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     settings.beginGroup(configName);
     if (subWindow != 0)
     {
@@ -168,7 +168,7 @@ void MessageWindow::writeSettings()
     settings.endGroup();
 
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
-    if (app->isSA() && app->getConfigValue(SAVE_FORM_CONFIG_TO_DB).toBool())
+    if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
     {
         app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
         app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(subWindow->geometry().x()));

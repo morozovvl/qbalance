@@ -30,9 +30,34 @@ struct ToperType;
 
 class Documents : public Dictionary {
     Q_OBJECT
+
+private:
+    int                 operNumber;
+    int                 currentRow;
+    Document*           currentDocument;
+    QString             subFormTitle;
+    QString             prefix;
+    QString             operName;
+    QList<ToperType>    topersList;
+    QList<FieldType>    attrFields;
+
+protected:
+    virtual bool        setTableModel(int = 0);
+
+    Documents(int, QObject* parent = 0);
+    virtual void postInitialize(int, QObject*);
+
 public:
-    Documents(int, QObject *parent = 0);
     ~Documents();
+
+    template <class T>
+        static T* create(int opNumber, QObject *parent = 0)
+        {
+            T* p(new T(opNumber, parent));
+            p->postInitialize(opNumber, parent);
+            return p;
+        }
+
     Q_INVOKABLE virtual bool add();
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void view();
@@ -50,18 +75,6 @@ public:
     void                setCurrentDocument(int);       // Зафиксировать текущий документ
     virtual void        preparePrintValues();                   // Готовит значения для печати
 
-protected:
-    virtual bool        setTableModel(int = 0);
-
-private:
-    int                 operNumber;
-    int                 currentRow;
-    Document*           currentDocument;
-    QString             subFormTitle;
-    QString             prefix;
-    QString             operName;
-    QList<ToperType>    topersList;
-    QList<FieldType>    attrFields;
 };
 
 #endif // DOCUMENTS_H

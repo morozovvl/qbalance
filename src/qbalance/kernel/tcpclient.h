@@ -32,10 +32,10 @@ class TcpClient : public QObject
     Q_OBJECT
 public:
     TcpClient(const QString& strHost, int nPort, QObject *parent = 0);
-    bool sendToServer(QString);
+    virtual bool sendToServer(QString);
     virtual bool isValid();
-    QString     getResult();
-    bool        waitResult();
+    virtual QString     getResult();
+    virtual bool        waitResult();
     virtual void logError();
 
 private slots:

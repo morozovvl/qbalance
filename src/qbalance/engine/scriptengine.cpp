@@ -93,7 +93,7 @@ QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine)
 }
 
 
-QScriptValue getRowCount(QScriptContext *, QScriptEngine* engine)
+QScriptValue getRowCount(QScriptContext*, QScriptEngine* engine)
 {
     if (engine->evaluate("table").isValid())
     {
@@ -233,6 +233,13 @@ QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 }
 
 
+QScriptValue evaluateParentScript(QScriptContext* context, QScriptEngine*)
+{
+    ScriptEngine* engine = TApplication::exemplar()->getLastScriptStack();
+    return engine->evaluate(context->argument(0).toString());
+}
+
+
 QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
 {
     QScriptValue result(false);
@@ -240,28 +247,143 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
     {
         QString scriptFile = context->argument(0).toString();
         QString script = ScriptEngine::loadScript(scriptFile);
-        if (script.size() > 0)
-        {
-            TApplication::exemplar()->appendScriptStack((ScriptEngine*)engine);
+//        result = engine->evaluate(script);
 /*
+        ScriptEngine* scriptEngine;
+        scriptEngine = new ScriptEngine();
+        if (scriptEngine->open(script))
+        {
+            QScriptClass scrClass(engine);
+            QScriptValue object = engine->globalObject();
+            QScriptValueIterator it(object);
+            while (it.hasNext()) {
+                it.next();
+                qDebug() << it.name() << ": " << it.value().toString();
+            }
+            scriptEngine->setGlobalObject(engine->globalObject());
+            scriptEngine->evaluate(script);
+            result = scriptEngine->evaluate(QString("scriptResult"));
+            scriptEngine->close();
+        }
+        delete scriptEngine;
+*/
+/*
+        ScriptEngine scriptEngine;
+        if (scriptEngine.open(script))
+        {
             QScriptContext *pc = context->parentContext();
             context->setActivationObject(pc->activationObject());
             context->setThisObject(pc->thisObject());
+            for (int i = 1; i < context->argumentCount(); i++)
+            {
+                scriptEngine.globalObject().setProperty(QString("argument%1").arg(i), context->argument(i));
+            }
+            scriptEngine.evaluate(script);
+            result = scriptEngine.evaluate(QString("scriptResult"));
+            scriptEngine.close();
+        }
 */
+
+        if (script.size() > 0)
+        {
+//            result = engine->evaluate(script);
+            TApplication::exemplar()->appendScriptStack((ScriptEngine*)engine);
+
+
+            QScriptContext *pc = context->parentContext();
+            context->setActivationObject(pc->activationObject());
+            context->setThisObject(pc->thisObject());
+
+
             for (int i = 1; i < context->argumentCount(); i++)
             {
                 engine->globalObject().setProperty(QString("argument%1").arg(i), context->argument(i));
             }
             result = engine->evaluate(script);
+
+/*
+            ScriptEngine scriptEngine;
+            if (scriptEngine.open(script))
+            {
+                QScriptContext *pc = context->parentContext();
+                context->setActivationObject(pc->activationObject());
+                context->setThisObject(pc->thisObject());
+                for (int i = 1; i < context->argumentCount(); i++)
+                {
+                    scriptEngine.globalObject().setProperty(QString("argument%1").arg(i), scriptEngine.newVariant(context->argument(i).toVariant()));
+                }
+                scriptEngine.evaluate(script);
+                result = scriptEngine.evaluate(QString("scriptResult"));
+                scriptEngine.close();
+            }
+//123
+*/
+/*
+            qDebug() << "*" << context->argumentCount() << context->backtrace();
+            result = engine->evaluate(script);
+            qDebug() << "**" << context->backtrace();
             if (engine->hasUncaughtException())
             {
                 // Если в скриптах произошла ошибка
                 QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
                 TApplication::exemplar()->showError(errorMessage);
             }
+*/
+/*
+            QScriptValue func = engine->globalObject().property(scriptFile);
+            if (!func.isValid())
+            {
+                QScriptValue scr = engine->evaluate(script);
+                if (scr.isValid())
+                {
+                    engine->globalObject().setProperty(scriptFile, scr);
+                }
+                QScriptValue object = engine->globalObject();
+                QScriptValueIterator it(object);
+                while (it.hasNext()) {
+                    it.next();
+                    qDebug() << it.name() << ": " << it.value().toString();
+                }
+
+            }
+            else
+            {
+                qDebug() << func.call(context->thisObject()).toString();
+            }
+*/
+/*
+            ScriptEngine engine;
+            if (engine.open())
+            {
+                QScriptValue function = engine.globalObject().property(scriptFile);
+                if (!function.isFunction())
+                {
+                    result = engine.evaluate(scriptFile);
+                    qDebug() << result.isFunction() << result.toString();
+                    function = engine.globalObject().property(scriptFile);
+                }
+
+                QScriptValueIterator it(engine.globalObject());
+                while (it.hasNext()) {
+                    it.next();
+                    qDebug() << it.name() << ": " << it.value().toString();
+                }
+
+                QScriptValueList args;
+                for (int i = 0; i < context->argumentCount(); i++)
+                    args << context->argument(i);
+                result = function.call(QScriptValue(), args);
+*/
+                if (engine->hasUncaughtException())
+                {
+                // Если в скриптах произошла ошибка
+                    QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
+                    TApplication::exemplar()->showError(errorMessage);
+                }
+            }
+
             TApplication::exemplar()->removeLastScriptStack();
         }
-    }
     return result;
 }
 
@@ -349,8 +471,9 @@ QScriptValue DictionaryConstructor(QScriptContext *context, QScriptEngine *engin
     QString tableName;
     if (context->argumentCount() > 0)
         tableName = context->argument(0).toString();
-    Dictionary* object = new Dictionary(tableName);
-    return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+
+    Dictionary* dict = Dictionary::create<Dictionary>(tableName);
+    return engine->newQObject(dict, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue DictionaryToScriptValue(QScriptEngine *engine, Dictionary* const &in) {
@@ -365,7 +488,7 @@ void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
 Q_DECLARE_METATYPE(Saldo*)
 
 QScriptValue SaldoConstructor(QScriptContext *context, QScriptEngine *engine) {
-     Saldo* object = new Saldo(context->argument(0).toString(), context->argument(1).toString());
+     Saldo* object = Saldo::create<Saldo>(context->argument(0).toString(), context->argument(1).toString());
      return engine->newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
@@ -381,8 +504,8 @@ void SaldoFromScriptValue(const QScriptValue &object, Saldo* &out) {
 Q_DECLARE_METATYPE(Dictionaries*)
 
 QScriptValue DictionariesConstructor(QScriptContext*, QScriptEngine *engine) {
-     Dictionaries* object = new Dictionaries();
-     return engine->newQObject(object, QScriptEngine::ScriptOwnership);
+     Dictionaries* dicts = Dictionaries::create<Dictionaries>();
+     return engine->newQObject(dicts, QScriptEngine::ScriptOwnership);
 }
 
 QScriptValue DictionariesToScriptValue(QScriptEngine *engine, Dictionaries* const &in) {
@@ -398,8 +521,8 @@ void DictionariesFromScriptValue(const QScriptValue &object, Dictionaries* &out)
 Q_DECLARE_METATYPE(Documents*)
 
 QScriptValue DocumentsConstructor(QScriptContext *context, QScriptEngine *engine) {
-     Documents *object = new Documents(context->argument(0).toInteger());
-     return engine->newQObject(object, QScriptEngine::QtOwnership);
+     Documents* doc = Documents::create<Documents>(context->argument(0).toInteger());
+     return engine->newQObject(doc, QScriptEngine::QtOwnership);
 }
 
 
@@ -419,7 +542,8 @@ Q_DECLARE_METATYPE(Document*)
 QScriptValue DocumentConstructor(QScriptContext *context, QScriptEngine *engine) {
     Documents* docs;
     DocumentsFromScriptValue(context->argument(1), docs);
-    Document *object = new Document(context->argument(0).toInteger(), docs);
+    Document *object = Document::create<Document>(context->argument(0).toInteger(), docs);
+
     return engine->newQObject(object, QScriptEngine::QtOwnership);
 }
 
@@ -817,6 +941,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("document", newQObject(document));
     globalObject().setProperty("documents", newQObject(documents));
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
+    globalObject().setProperty("evaluateParentScript", newFunction(evaluateParentScript));
     globalObject().setProperty("SumToString", newFunction(SumToString));
     globalObject().setProperty("debug", newFunction(debug));
 
@@ -1007,10 +1132,34 @@ bool ScriptEngine::eventAfterShowNextDicts()
 }
 
 
-void ScriptEngine::eventBeforeDeleteString()
+bool ScriptEngine::eventBeforeDeleteDocument()
 {
-    QString eventName = "EventBeforeDeleteString";
+    bool result = true;
+    QScriptValue res;
+    QString eventName = "EventBeforeDeleteDocument";
+    res = scriptCall(eventName, QScriptValue());
+    if (res.toString() != "undefined")
+        result = res.toBool();
+    return result;
+}
+
+
+void ScriptEngine::eventAfterDeleteDocument()
+{
+    QString eventName = "EventAfterDeleteDocument";
     scriptCall(eventName, QScriptValue());
+}
+
+
+bool ScriptEngine::eventBeforeDeleteString()
+{
+    bool result = true;
+    QScriptValue res;
+    QString eventName = "EventBeforeDeleteString";
+    res = scriptCall(eventName, QScriptValue());
+    if (res.toString() != "undefined")
+        result = res.toBool();
+    return result;
 }
 
 
@@ -1055,6 +1204,21 @@ QString ScriptEngine::preparePictureUrl(Essence* essence)
 {
     QString result;
     QString eventName = "PreparePictureUrl";
+    QScriptValueList args;
+    args << newQObject(essence);
+    QScriptValue res = scriptCall(eventName, QScriptValue(), args);
+    if (!res.isValid() || res.isUndefined())
+        result = "";
+    else
+        result = res.toString();
+    return result;
+}
+
+
+QString ScriptEngine::prepareBarCodeData(Essence* essence)
+{
+    QString result;
+    QString eventName = "PrepareBarCodeData";
     QScriptValueList args;
     args << newQObject(essence);
     QScriptValue res = scriptCall(eventName, QScriptValue(), args);
@@ -1199,6 +1363,9 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед открытием фотографии. Здесь имеется возможность загрузить фотографию для текущего объекта object из Интернета. Функция должна вернуть url фотографии.");
     appendEvent("PreparePictureUrl(object)", &func);
 
+    func.comment = QObject::trUtf8("Вызов этой функции происходит перед печатью штрих-кода. Функция должна вернуть значение штрих-кода.");
+    appendEvent("PrepareBarCodeData(object)", &func);
+
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
     func.body = "return filter;";
     appendEvent("GetFilter(filter)", &func);
@@ -1242,15 +1409,20 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     appendEvent("EventBeforeAddString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
-    func.body = "return true;";
     appendEvent("EventAfterAddString()", &func);
+
+    func.comment = QObject::trUtf8("Событие происходит перед удалением документа");
+    func.body = "return true;";
+    appendEvent("EventBeforeDeleteDocument()", &func);
+
+    func.comment = QObject::trUtf8("Событие происходит после удаления документа");
+    appendEvent("EventAfterDeleteDocument()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед удалением строки из документа");
     func.body = "return true;";
     appendEvent("EventBeforeDeleteString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после удаления строки из документа");
-    func.body = "return true;";
     appendEvent("EventAfterDeleteString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит после показа всех необходимых справочников при добавлении строки в документ");
@@ -1290,6 +1462,7 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 
 QString ScriptEngine::loadScript(QString scriptFile)
 {
+//123
     QString result;
     if (!scripts.contains(scriptFile) || isSA)
     {

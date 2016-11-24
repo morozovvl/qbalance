@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE void writeCell(QDomNode, QString, QString);
     Q_INVOKABLE int rowCount();
     Q_INVOKABLE void setShowError(bool show);
+    QString getTmpDir() { return tmpDir; }
 
 
 private:

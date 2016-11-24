@@ -280,7 +280,9 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
             QString type = updateInfo.value(index.column()).type.toUpper();
             if (type == "CHARACTER" || type == "CHARACTER VARYING")
             {
-                value = QString("'%1'").arg(recValue.toString().trimmed().left(length));
+                value = recValue.toString().trimmed().left(length);
+                value.replace("'", "''");
+                value = QString("'%1'").arg(value);
             }
             else if (type == "TEXT")
             {

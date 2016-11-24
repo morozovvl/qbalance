@@ -17,10 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef CONFIGVARS_H
-#define CONFIGVARS_H
+#ifndef QString_H
+#define QString_H
 
-enum ConfigVars {
+/*
+enum QString {
     LOCAL_PORT,
     REMOTE_HOST,
     REMOTE_PORT,
@@ -39,6 +40,12 @@ enum ConfigVars {
     BAR_CODE_READER_PORT,
     BAR_CODE_READER_BAUD_RATE,
     BAR_CODE_READER_TIMEOUT,
+    BAR_CODE_PRINTER_NEEDED,
+    BAR_CODE_PRINTER_NAME,
+    BAR_CODE_PRINTER_BARCODETYPE,
+    BAR_CODE_PRINTER_BARCODEHEIGHT,
+    BAR_CODE_PRINTER_BARCODEHUMANREADABLE,
+    BAR_CODE_PRINTER_BARCODESIZE,
     BANK_TERMINAL_NEEDED,
     BANK_TERMINAL_PRINT_WAIT_TIME,
     BANK_TERMINAL_PRINT_WAIT_MESSAGE,
@@ -51,5 +58,6 @@ enum ConfigVars {
     GET_PICTURE_FROM_SERVER_IN_DOCUMENT,
     PARAMETERS
 };
+*/
 
-#endif // CONFIGVARS_H
+#endif // QString_H
