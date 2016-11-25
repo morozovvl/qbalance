@@ -414,58 +414,50 @@ DriverFR::~DriverFR()
 }
 
 
-bool DriverFR::open(QString port, int rate, int timeout, int password, QString ipAddress, int ipPort)
+bool DriverFR::open(QString port, int rate, int timeout, int password)
 {
     bool result = false;
     if (app == 0)
         return result;
     locked = false;
     // Установление связи с ккм
+    app->showMessageOnStatusBar("Подключаемся к ФР", -1);
     fr.BaudRate      = rate;
     fr.Timeout       = timeout;
     fr.Password      = password;
     serialPort = app->getSerialPort(port, QextSerialPort::Polling);
     if (serialPort != 0)
     {
-        serialPort->setRemote(false);
-        // Сначала поищем фискальник на этом компьютере
-
-        serialPort->setBaudRate(rate);
-        serialPort->setTimeout(timeout);
-        if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
+        // Сначала поищем на удаленном компьютере, т.к. это быстрее
+        if (serialPort->getTcpClient()->isValid())
         {
+            remote = true;
+            serialPort->setRemote(remote);
             if (Connect(false))
             {
-                Beep();
+                if (app->getConfigValue("FR_CONNECT_SIGNAL").toBool())
+                    Beep();
                 result = true;
             }
             DisConnect();
         }
+        else
+            serialPort->getTcpClient()->logError();                 // К удаленному фискальнику не удалось подсоединиться
         if (!result)
         {
-            // а теперь поищем на удаленном, если указан его IP
-            if (ipAddress.size() > 0)
+            // А теперь поищем фискальник на этом компьютере
+
+            serialPort->setRemote(false);
+            serialPort->setBaudRate(rate);
+            serialPort->setTimeout(timeout);
+            if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
             {
-                serialPort->setTcpClient(ipAddress, ipPort);        // Создадим TCP клиент для удаленной работы с ФР
-                app->timeOut(app->getConfigValue("FR_NET_DRIVER_TIMEOUT").toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
-                if (serialPort->getTcpClient()->isValid())
+                if (Connect(false))
                 {
-                    remote = true;
-                    serialPort->setRemote(remote);
-                    if (Connect(false))
-                    {
-                        if (app->getConfigValue("FR_CONNECT_SIGNAL").toBool())
-                            Beep();
-                        result = true;
-                    }
-                    DisConnect();
+                    Beep();
+                    result = true;
                 }
-                else
-                {
-                    serialPort->getTcpClient()->logError();
-                    serialPort->closeTcpClient();                               // иначе закроем TCP клиент
-                                                                                    // и все плохо
-                }                                                           // к фискальнику не удалось подсоединиться
+                DisConnect();
             }
         }
         if (result)
@@ -480,6 +472,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password, QString i
     }
     if (!result)
         app->showError(failConnectErrorMessage);
+    app->clearMessageOnStatusBar();
     return result;
 }
 
@@ -516,12 +509,8 @@ bool DriverFR::Connect(bool showError)
                 fr.Timeout = app->getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt();
             serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
             serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
-//            maxTries = 10;
-//            serialPort->setMyTimeout(1000);
             if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             {
-//                maxTries = MAX_TRIES;
-//                serialPort->setMyTimeout(5000);
                 result = true;
                 if (app->isDebugMode(4))
                 {
@@ -782,8 +771,8 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
 bool DriverFR::deviceIsReady()
 {
     sendENQ();
-    for (int i = 0; i < maxTries; i++)
-    {
+//    for (int i = 0; i < maxTries; i++)
+//    {
         short int repl = readByte();
         if (repl == NAK)
         {
@@ -802,7 +791,7 @@ bool DriverFR::deviceIsReady()
             answer     a;
             readAnswer(&a, repl);
             sendENQ();
-        }
+//        }
     }
     return false;
 }
@@ -944,6 +933,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
         if ((result < 0 || result == 0x50) && attempts < maxTries)
         {
             attempts++;
+            app->showMessageOnStatusBar(QString("Попытка %1/%2").arg(attempts).arg(maxTries), -1);
             serialPort->writeLog();
             app->sleep(500);
             serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));

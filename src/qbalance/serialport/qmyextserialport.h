@@ -50,9 +50,7 @@ public:
     virtual void    setTimeout(long timeOut);
 
     // Работа с TCP соединением
-    virtual void setTcpClient(QString, int);
     virtual TcpClient* getTcpClient();
-    virtual void closeTcpClient();
 
     // Работа с журналом
     virtual QString     getLog();
@@ -64,7 +62,7 @@ private:
     bool                remote;
     bool                outLog;
     QString             log;
-    static TcpClient*   tcpClient;
+    TcpClient*          tcpClient;
     TApplication*       app;
     QQueue<unsigned char> buffer;
     int                 tryReceiveExit;

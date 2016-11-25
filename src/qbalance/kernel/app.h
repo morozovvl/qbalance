@@ -35,6 +35,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "configvars.h"
 #include "../storage/filetype.h"
 #include "../serialport/qmyextserialport.h"
+#include "../bankterminal/bankterminal.h"
+
+
+#define FR_NET_DRIVER_TIMEOUT                 "FR_NET_DRIVER_TIMEOUT"
+#define BANK_TERMINAL_PLUGIN_NAME             "bankterminal"
 
 
 class Dictionary;
@@ -112,8 +117,8 @@ public:
     Q_INVOKABLE Documents* getDocuments(int);
     void removeDocuments(int opNumber);
     Q_INVOKABLE virtual DBFactory* getDBFactory();
-    Q_INVOKABLE void clearMessageOnStatusBar();
-    Q_INVOKABLE virtual void showMessageOnStatusBar(const QString &message = "", int timeout = 3000 );
+    Q_INVOKABLE virtual void clearMessageOnStatusBar();
+    Q_INVOKABLE virtual void showMessageOnStatusBar(const QString &message = "", int timeout = 5000 );
     Q_INVOKABLE QVariant getConst(QString);
     virtual GUIFactory* getGUIFactory();
     Q_INVOKABLE QString getLogin();
@@ -184,6 +189,7 @@ public:
     Q_INVOKABLE BankTerminal* getBankTerminal();
 
     virtual TcpServer* getTcpServer();
+    virtual TcpClient* getTcpClient();
 
     Q_INVOKABLE void virtual showError(QString);
     Q_INVOKABLE int virtual showMessage(QString message, QString question = "",
@@ -255,11 +261,13 @@ public:
     QHash<QString, ConfigEntry>* getConfigs();
     void            setConfigs(QHash<QString, ConfigEntry>* conf);
     QList<QString>     getConfigNames(QString type = "");
+    virtual void            setConfig(QString type, QString name, QString label, ConfigEntryType valType, QVariant value);
 
     static bool readParameters(int argc, char *argv[]);
     virtual QString getConfigFileName();
 
-//    virtual bool notify(QObject* receiver, QEvent* e);
+    bool initApplication();
+
 
 signals:
     void cardCodeReaded(QString);
@@ -293,6 +301,7 @@ private:
 
     QHash<QString, QStringList>     arraysForPrint;
     TcpServer*              tcpServer;
+    TcpClient*              tcpClient;
     static QTimer           timer;
     static bool             timeIsOut;
     bool                    scriptMode;
@@ -313,7 +322,6 @@ private:
     void                    readSettings();
     void                    writeSettings();
     void                    saveMessages();
-    void            setConfig(QString type, QString name, QString label, ConfigEntryType valType, QVariant value);
     void            setConfigValue(QString name, QVariant value);
     void            setConfigTypeName(QString type, QString name) { configTypes.insert(type, name); }
     void            writeToDebugFile(QString, QString);

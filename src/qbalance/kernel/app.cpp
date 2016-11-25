@@ -328,6 +328,12 @@ TcpServer* TApplication::getTcpServer()
 }
 
 
+TcpClient* TApplication::getTcpClient()
+{
+    return tcpClient;
+}
+
+
 bool TApplication::isBarCodeReaded()
 {
     return barCodeReaded;
@@ -469,12 +475,13 @@ void TApplication::setConfigs(QHash<QString, ConfigEntry>* conf)
 
 void TApplication::initConfig()
 {
-    setConfigTypeName("server", "Сервер взаимодействия");
-    setConfig("server", "LOCAL_PORT", "Локальный порт", CONFIG_VALUE_INTEGER, 44444);
+//    setConfigTypeName("server", "Сервер взаимодействия");
+//    setConfig("server", "LOCAL_PORT", "Локальный порт", CONFIG_VALUE_INTEGER, 44444);
 
-    setConfigTypeName("client", "Клиент взаимодействия");
+    setConfigTypeName("client", "Клиент(сервер) взаимодействия");
     setConfig("client", "REMOTE_HOST", "Удаленный хост", CONFIG_VALUE_STRING, "192.168.0.1");
-    setConfig("client", "REMOTE_PORT", "Удаленный порт", CONFIG_VALUE_INTEGER, 44444);
+    setConfig("client", "REMOTE_PORT", "Удаленный порт (локальный порт сервера)", CONFIG_VALUE_INTEGER, 44444);
+    setConfig("client", FR_NET_DRIVER_TIMEOUT, "Таймаут для обмена по сети, мс", CONFIG_VALUE_INTEGER, 200);
 
     setConfigTypeName("fr", "Фискальный регистратор");
     setConfig("fr", "FR_NEEDED", "Использовать ФР", CONFIG_VALUE_BOOLEAN, false);
@@ -487,7 +494,6 @@ void TApplication::initConfig()
     setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 3);
     setConfig("fr", "FR_LOCAL_DRIVER_TIMEOUT", "Таймаут для локального ФР, мс", CONFIG_VALUE_INTEGER, 100);
     setConfig("fr", "FR_REMOTE_DRIVER_TIMEOUT", "Таймаут для сетевого ФР, мс", CONFIG_VALUE_INTEGER, 150);
-    setConfig("fr", "FR_NET_DRIVER_TIMEOUT", "Таймаут для обмена по сети, мс", CONFIG_VALUE_INTEGER, 200);
     setConfig("fr", "FR_DRIVER_PASSWORD", "Пароль администратора ФР", CONFIG_VALUE_INTEGER, 30);
     setConfig("fr", "FR_CONNECT_SIGNAL", "Подавать сигнал на ФР при подключении", CONFIG_VALUE_BOOLEAN, true);
 
@@ -514,17 +520,8 @@ void TApplication::initConfig()
     setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODEHUMANREADABLE", "Человеко-читаемая подпись штрихкода", CONFIG_VALUE_BOOLEAN, true);
     setConfig("bcPrinter", "BAR_CODE_PRINTER_BARCODEPREVIEW", "Предпросмотр этикетки", CONFIG_VALUE_BOOLEAN, false);
 
-    setConfigTypeName("bt", "Банковский терминал");
-    setConfig("bt", "BANK_TERMINAL_NEEDED", "Использовать банковский терминал", CONFIG_VALUE_BOOLEAN, false);
-    setConfig("bt", "BANK_TERMINAL_PRINT_WAIT_TIME", "Продолжительность остановок при печати слипов, мс", CONFIG_VALUE_INTEGER, 0);
-    setConfig("bt", "BANK_TERMINAL_PRINT_WAIT_MESSAGE", "Показывать сообщение о продолжении при печати слипов", CONFIG_VALUE_BOOLEAN, false);
-    setConfig("bt", "BANK_TERMINAL_PROGRAM_WAIT_TIME", "Время ожидания окончания работы программы банковского терминала, мс", CONFIG_VALUE_INTEGER, 60000);
-    setConfig("bt", "BANK_TERMINAL_INTERVAL_EMPTY_LINES", "Количество пустых строк между слипами и чеком", CONFIG_VALUE_INTEGER, 2);
-#ifdef Q_OS_WIN32
-    setConfig("bt", "BANK_TERMINAL_PATH", "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "C:/BankTerminal/");
-#else
-    setConfig("bt", "BANK_TERMINAL_PATH", "Каталог программы банковского терминала", CONFIG_VALUE_STRING, "/home/vladimir/BankTerminal/");
-#endif
+    setConfigTypeName(BANK_TERMINAL_PLUGIN_NAME, "Банковский терминал");
+    setConfig(BANK_TERMINAL_PLUGIN_NAME, BANK_TERMINAL_NEEDED, "Использовать банковский терминал", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("form", "Формы");
     setConfig("form", "SAVE_FORM_CONFIG_TO_DB", "Сохранять геометрию форм на сервере", CONFIG_VALUE_BOOLEAN, false);
@@ -651,109 +648,113 @@ QString TApplication::getReportTemplateExt()
 bool TApplication::open() {
     bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
 
+    gui = new GUIFactory();
+    lResult = gui->open();
+
+    return lResult;
+}
+
+
+bool TApplication::initApplication()
+{
+    bool lResult = false;   // По умолчанию будем считать, что приложение открыть не удалось
+
     endDate = QDate::currentDate();
     beginDate = endDate.addDays(-31);
-    gui = new GUIFactory();
 
     initConfig();
+
     if (!loadDefaultConfig)
         readSettings();
+
+    tcpServer = new TcpServer(getConfigValue("REMOTE_PORT").toInt(), this);
+    tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
+    timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
     if (!isScriptMode())
         openPlugins();
 
+    if (!loadDefaultConfig)
+        readSettings();
+
     db  = new DBFactory();
-    tcpServer = new TcpServer(getConfigValue("LOCAL_PORT").toInt(), this);
+
     messagesWindow = new MessageWindow();
 
-    if (gui->open())
-    {  // Попытаемся открыть графический интерфейс
+    forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
+    {
+        int result = gui->openDB(); // Попытаемся открыть базу данных
+        if (result == 0)
+        {   // БД открыть удалось
 
-        forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
-        {
-            int result = gui->openDB(); // Попытаемся открыть базу данных
-            if (result == 0)
-            {   // БД открыть удалось
+            secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+            dictionaryList = Dictionaries::create<Dictionaries>();
+            topersList = Topers::create<Topers>();
 
-                secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+            if (dictionaryList->open() && topersList->open())
+            {
+                gui->showMenus();
 
-                dictionaryList = Dictionaries::create<Dictionaries>();
+                // Удалось открыть спосок справочников и типовых операций
+                db->getPeriod(beginDate, endDate);
+                gui->getMainWindow()->showPeriod();
 
-                topersList = Topers::create<Topers>();
-
-                if (dictionaryList->open() && topersList->open())
+                // Проверим обновления БД, и если надо, применим их
+                int updates = db->updatesCount();
+                if (updates > 0)
                 {
-                    // Проверим обновления БД, и если надо, применим их
-                    int updates = db->updatesCount();
-                    if (updates > 0)
+                    if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                     {
-                        if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
-                        {
-                            if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updates)) == QMessageBox::Yes)
-                                db->loadUpdates();
-                        }
-                        else
+                        if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updates)) == QMessageBox::Yes)
                             db->loadUpdates();
                     }
-
-                    // Удалось открыть спосок справочников и типовых операций
-                    db->getPeriod(beginDate, endDate);
-                    gui->getMainWindow()->showPeriod();
-
-                    // Загрузим константы
-
-                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
-                    if (constDict != 0)
-                    {
-                        constDict->setPhotoEnabled(false);
-                        constDict->query();
-                    }
-
-/*
-                    QSharedPointer<Dictionary> constDict = Dictionary::create<Dictionary>(db->getObjectName("константы"));
-                    if (constDict != 0)
-                    {
-                        constDict->open();
-                        constDict->setPhotoEnabled(false);
-                        constDict->query();
-                    }
-*/
-                    // Загрузим счета
-                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
-                    if (accDict != 0)
-                    {
-                        accDict->setPhotoEnabled(false);
-                    }
-
-                    if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
-                    {
-                        if (driverFRisValid)
-                            showMessageOnStatusBar("Найден фискальный регистратор.\n");
-                        else
-                        {
-                            if (driverFR != 0 && driverFR->isLocked())
-                                showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
-                            else
-                                showMessageOnStatusBar("Фискальный регистратор не найден.\n");
-                        }
-                    }
-
-                    db->clearLockedDocumentList();
-
-                    lResult = true;     // Приложение удалось открыть
-                    break;  // Выйдем из бесконечного цикла открытия БД
+                    else
+                        db->loadUpdates();
                 }
-            }
-            else if (result == -2)
-                {   // Произошла ошибка соединения с сервером
-                if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
-                                     QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
-                    // Попытаемся создать новую БД
-                    db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
-            }
-            else if (result == -1)      // Пользователь нажал кнопку Отмена
+
+                // Загрузим константы
+
+                Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
+                if (constDict != 0)
+                {
+                    constDict->setPhotoEnabled(false);
+                    constDict->query();
+                }
+
+                // Загрузим счета
+                Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
+                if (accDict != 0)
+                {
+                    accDict->setPhotoEnabled(false);
+                }
+
+                if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
+                {
+                    if (driverFRisValid)
+                        showMessageOnStatusBar("Найден фискальный регистратор.\n");
+                    else
+                    {
+                        if (driverFR != 0 && driverFR->isLocked())
+                            showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
+                        else
+                            showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                    }
+                }
+
+                db->clearLockedDocumentList();
+                lResult = true;     // Приложение удалось открыть
                 break;  // Выйдем из бесконечного цикла открытия БД
+            }
         }
+        else if (result == -2)
+            {   // Произошла ошибка соединения с сервером
+            if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
+                                 QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
+                // Попытаемся создать новую БД
+                db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
+        }
+        else if (result == -1)      // Пользователь нажал кнопку Отмена
+            break;  // Выйдем из бесконечного цикла открытия БД
     }
     return lResult;
 }
@@ -772,6 +773,9 @@ void TApplication::close()
 
     if (tcpServer != 0)
         delete tcpServer;
+
+    if (tcpClient != 0)
+        delete tcpClient;
 
     delete messagesWindow;
 
@@ -814,9 +818,7 @@ void    TApplication::openPlugins()
             if (driverFR->open(getConfigValue("FR_DRIVER_PORT").toString(),
                                getConfigValue("FR_DRIVER_BOUD_RATE").toInt(),
                                getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt(),
-                               getConfigValue("FR_DRIVER_PASSWORD").toInt(),
-                               getConfigValue("REMOTE_HOST").toString(),
-                               getConfigValue("REMOTE_PORT").toInt()))
+                               getConfigValue("FR_DRIVER_PASSWORD").toInt()))
                     driverFRisValid = true;
             else
             {
@@ -844,14 +846,14 @@ void    TApplication::openPlugins()
     }
 
     // Запустим банковский терминал, если есть плагин
-    if (getConfigValue("BANK_TERMINAL_NEEDED").toBool())
+    if (getConfigValue(BANK_TERMINAL_NEEDED).toBool())
     {
-        bankTerminal = (BankTerminal*)createPlugin("bankterminal");
+        bankTerminal = (BankTerminal*)createPlugin(BANK_TERMINAL_PLUGIN_NAME);
         if (bankTerminal != 0)
         {
             bankTerminal->setApp(this);
-            if (!bankTerminal->open(getConfigValue("REMOTE_HOST").toString(),
-                                    getConfigValue("REMOTE_PORT").toInt()))
+            bankTerminal->getDefaultConfigs(BANK_TERMINAL_PLUGIN_NAME);
+            if (!bankTerminal->open())
             {
                 bankTerminal->close();
                 bankTerminal = 0;
@@ -885,7 +887,11 @@ void TApplication::showMessageOnStatusBar(const QString &message, int timeout)
         QTextStream(stdout) << message << "\r";
     }
     else
+    {
+        if (timeout == -1)
+            timeout = 0;
         gui->getMainWindow()->getStatusBar()->showMessage(message, timeout);
+    }
 }
 
 
@@ -1020,8 +1026,7 @@ QObject* TApplication::createPlugin(QString fileName)
     if (QDir().exists(pluginFile))
     {
         QPluginLoader loader(pluginFile);
-//        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
-        loader.setLoadHints(QLibrary::ExportExternalSymbolsHint);
+        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
         loader.load();
         if (loader.isLoaded())
         {
@@ -1347,7 +1352,7 @@ int TApplication::runScript(QString scriptName)
             readSettings();
 
         TcpClient tcpcl(host, port);
-        timeOut(getConfigValue("FR_NET_DRIVER_TIMEOUT").toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
+        timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
         if (tcpcl.isValid())
         {
             if (tcpcl.sendToServer(script))
@@ -1889,10 +1894,3 @@ bool TApplication::readParameters(int argc, char *argv[])
     return lContinue;
 }
 
-/*
-bool TApplication::notify(QObject* receiver, QEvent* e)
-{
-    qDebug() << receiver->metaObject()->className() << receiver->objectName() << e->type();
-    return QApplication::notify(receiver, e);
-}
-*/

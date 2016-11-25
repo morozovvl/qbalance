@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "qmyextserialport.h"
 
 
-TcpClient* QMyExtSerialPort::tcpClient = 0;
 BaudRateType QMyExtSerialPort::LineSpeedVal[7] = {BAUD2400, BAUD4800, BAUD9600, BAUD19200, BAUD38400, BAUD57600, BAUD115200};
 
 
@@ -36,13 +35,13 @@ QMyExtSerialPort::QMyExtSerialPort(const QString& name, QueryMode mode, QObject*
     app = TApplication::exemplar();
     tryReceiveExit = false;
     timeOut = app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000;
+    tcpClient = app->getTcpClient();
 }
 
 
 QMyExtSerialPort::~QMyExtSerialPort()
 {
-    if (tcpClient != 0)
-        tcpClient->deleteLater();
+    tcpClient = 0;
 }
 
 
@@ -123,7 +122,6 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
     qint64 result = -1;
     if (!remote)
     {
-        qDebug() << "timeOut = " << timeOut;
         tryReceiveExit = false;                     // Запустим цикл опроса данных в процедуре tryReceive() по таймауту
         app->startTimeOut(timeOut);                    // Ждем ответа в течение ...
         tryReceive();
@@ -138,12 +136,10 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
             }
             if (app->isTimeOut())
             {
-                qDebug() << "Задежка";
                 writeLog(QString("*** ЗАДЕРЖКА свыше %1 сек ***").arg(timeOut/1000));
                 break;
             }
             app->sleep(10);
-            qDebug() << "sleep 10";
         }
         tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
         appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
@@ -255,12 +251,6 @@ bool QMyExtSerialPort::setLock(bool lock)
 }
 
 
-void QMyExtSerialPort::setTcpClient(QString host, int port)
-{
-    tcpClient = new TcpClient(host, port);
-}
-
-
 void QMyExtSerialPort::appendLog(bool out, QString str, bool fromRemote)
 {
     if (out != outLog)           // Журнал был для исходящих команд
@@ -314,9 +304,3 @@ void QMyExtSerialPort::writeLog(QString str, bool fromRemote)
     }
 }
 
-
-void QMyExtSerialPort::closeTcpClient()
-{
-    delete tcpClient;
-    tcpClient = 0;
-}

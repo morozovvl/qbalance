@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "tcpserver.h"
 #include "app.h"
 #include "../driverfr/driverfr.h"
+#include "../bankterminal/bankterminal.h"
 
 
 TcpServer::TcpServer(int nPort, QObject *parent /* = 0*/):   QObject(parent)
@@ -176,6 +177,17 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     {
         bool result = app->getDrvFR()->deviceIsReady();
         resStr = (result ? "true" : "false");
+        sendToClient(pClientSocket, resStr);
+    }
+    else if (str.indexOf(BANK_TERMINAL_PREFIX) == 0)
+    {
+        if (str.indexOf(BANK_TERMINAL_IS_READY) == 0)
+        {
+            bool result = app->bankTerminalIsValid();
+            resStr = (result ? "true" : "false");
+        }
+        else
+            resStr = app->getBankTerminal()->processRemoteQuery(str);
         sendToClient(pClientSocket, resStr);
     }
     else if (str.indexOf("isLockedDriverFR") == 0)

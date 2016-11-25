@@ -98,13 +98,22 @@ int main(int argc, char *argv[])
             if (application.open())
             {       // Если приложение удалось создать
                 if (application.isScriptMode())
-                    lResult = application.runScript(application.getScript());
+                {
+                    if (application.initApplication())
+                        lResult = application.runScript(application.getScript());
+                }
                 else if (application.isServerMode())
-                    lResult = application.exec();
+                {
+                    if (application.initApplication())
+                        lResult = application.exec();
+                }
                 else
                 {
                     application.show();         // Откроем приложение
-                    lResult = application.exec();
+                    if (application.initApplication())
+                    {
+                        lResult = application.exec();
+                    }
                 }
             }
             application.close();            // Закроем приложение

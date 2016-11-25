@@ -215,7 +215,7 @@ public:
     static bool         getFile(QString, QString, FileType);
     virtual void        barCodeReaded(QString);    // прочитана строка со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();
-    QModelIndex         getCurrentIndex();
+    virtual QModelIndex getCurrentIndex();
     void setCurrentIndex(QModelIndex);
     Q_INVOKABLE QString         getCurrentFieldName();
     Q_INVOKABLE virtual int     getCurrentRow();

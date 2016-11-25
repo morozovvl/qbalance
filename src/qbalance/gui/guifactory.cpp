@@ -193,8 +193,15 @@ void GUIFactory::setPeriod() {
     delete calendar;
 }
 
+
 void GUIFactory::show() {
     mainWindow->show();
+}
+
+
+void GUIFactory::showMenus()
+{
+    mainWindow->showMenus();
 }
 
 

@@ -685,7 +685,7 @@ public:
     explicit DriverFR(QObject *parent = 0);
     ~DriverFR();
     virtual void setApp(TApplication* a) { app = a; }
-    virtual bool open(QString, int, int, int, QString, int);
+    virtual bool open(QString, int, int, int);
     virtual void close();
     Q_INVOKABLE virtual QVariant getProperty(QString name);
     Q_INVOKABLE virtual bool setProperty(QString name, QVariant value);

@@ -29,9 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 MainWindow::MainWindow(GUIFactory* par) {
     parent = par;
-    createActions();
-    createMenus();
-    createToolBars();
     createStatusBar();
     workSpace = new QMdiArea(this);             // POSSIBLY MEMORY LEAK
     workSpace->setActivationOrder(QMdiArea::ActivationHistoryOrder);
@@ -46,6 +43,14 @@ void MainWindow::open() {
     setCentralWidget(workSpace);
     readSettings();
     statusBar()->showMessage("");
+}
+
+
+void  MainWindow::showMenus()
+{
+    createActions();
+    createMenus();
+    createToolBars();
 }
 
 

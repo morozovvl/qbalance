@@ -43,6 +43,7 @@ public:
     void setPeriod();
     void setWindowTitle(QString);
     void show();
+    void showMenus();
     int showError(QString);             // Сообщить пользователю об ошибке и вернуть его реакцию
     int showMessage(QString message, QString question = "",
                     QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,

@@ -42,6 +42,7 @@ public:
       virtual QMdiSubWindow* appendMdiWindow(QWidget*);                     // Добавляет новое окно во многооконный интерфейс
       virtual QMdiSubWindow* findMdiWindow(QWidget*);
       virtual void removeMdiWindow(QMdiSubWindow*);                         // Удаляет окно из многооконного интерфейса
+      void  showMenus();
 
 private slots:
       void showDictionaries();

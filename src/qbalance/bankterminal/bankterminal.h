@@ -24,6 +24,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QHash>
 #include <QtCore/QProcess>
 
+#define BANK_TERMINAL_NEEDED                  "BANK_TERMINAL_NEEDED"
+#define BANK_TERMINAL_PATH                    "BANK_TERMINAL_PATH"
+#define BANK_TERMINAL_PROGRAM_WAIT_TIME       "BANK_TERMINAL_PROGRAM_WAIT_TIME"
+#define BANK_TERMINAL_INTERVAL_EMPTY_LINES    "BANK_TERMINAL_INTERVAL_EMPTY_LINES"
+#define BANK_TERMINAL_PRINT_WAIT_MESSAGE      "BANK_TERMINAL_PRINT_WAIT_MESSAGE"
+#define BANK_TERMINAL_PRINT_WAIT_TIME         "BANK_TERMINAL_PRINT_WAIT_TIME"
+
 
 #define RESULT_CODE "КодРезультата"
 #define MESSAGE "Сообщение"
@@ -39,6 +46,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define CARD_NUMBER_HASH "ХэшНомераКарты"
 
 
+#define BANK_TERMINAL_PREFIX     "bankTerminal_"
+#define BANK_TERMINAL_IS_READY   "bankTerminal_IsReady"
+#define BANK_TERMINAL_IS_LOCKED  "bankTerminal_IsLocked"
+#define BANK_TERMINAL_PROCESS    "bankTerminal_process"
+
 class TApplication;
 class DriverFR;
 class TcpClient;
@@ -49,12 +61,15 @@ class BankTerminal : public QObject
 public:
     explicit BankTerminal(QObject *parent = 0);
     ~BankTerminal();
-    virtual bool open(QString, int);
+    virtual bool open();
     virtual void close();
     virtual void setApp(TApplication* a) { app = a; }
     Q_INVOKABLE virtual bool process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
     Q_INVOKABLE virtual QString getCardCode() { return resultParams.value(CARD_NUMBER); }
-    Q_INVOKABLE QHash<QString, QString>* getResultData() { return &resultParams; }
+    Q_INVOKABLE virtual QHash<QString, QString>* getResultData() { return &resultParams; }
+    Q_INVOKABLE virtual bool isLocked();
+    virtual QString processRemoteQuery(QString);
+    virtual void getDefaultConfigs(QString);
 
 private:
     TApplication* app;
@@ -63,7 +78,6 @@ private:
     QString     program;
     QHash<QString, QString> resultParams;
     QProcess* termProcess;
-    static TcpClient*   tcpClient;
     bool            remote;
     bool            locked;     // Банковский терминал заблокирован на период работы с клиентом
 
