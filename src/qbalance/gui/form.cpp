@@ -48,7 +48,6 @@ Form::Form(QObject* par/* = 0*/): QObject(par)
     db = app->getDBFactory();
     freeWindow = false;
     subWindow = 0;
-    autoSelect = false;
     configName = "Form";
 }
 
@@ -142,12 +141,6 @@ QPushButton* Form::getButtonOk()
 QPushButton* Form::getButtonCancel()
 {
     return buttonCancel;
-}
-
-
-void Form::setAutoSelect(bool select)
-{
-    autoSelect = select;
 }
 
 
@@ -308,8 +301,6 @@ int Form::exec()
     if (formWidget != 0)
     {
         lSelected = false;
-        if (!autoSelect)
-        {
             if (subWindow != 0)
             {
                 int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
@@ -329,10 +320,6 @@ int Form::exec()
             getSubWindow();
             if (activeWidget != 0)
                 activeWidget->activateWindow();
-        }
-        else
-            cmdOk();
-        autoSelect = false;
         return lSelected;
     }
     return 0;
@@ -346,13 +333,7 @@ void Form::show()
         lSelected = false;
         checkVisibility();
         if (getSubWindow() != 0)
-        {
-            if (!autoSelect)
                 subWindow->show();
-            else
-                cmdOk();
-            autoSelect = false;
-        }
         formWidget->show();
     }
 }

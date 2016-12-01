@@ -59,8 +59,6 @@ protected:
     virtual bool    setTableModel(int = 0);
     bool            locked;
     bool            getIdRefresh;
-    bool            nameIntIsCode;  // Флаг, показывающий, будет ли число введенное в строке имени в поиске, рассматриваться как код позиции,
-                                    // или как часть имени
     bool            exact;          // Значение справочника должно быть определено при добавлении строки в документ
     SearchParameters* parameters;
 
@@ -129,8 +127,6 @@ public:
     Q_INVOKABLE void setGetIdRefresh(bool val);
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
-    virtual bool        getNameIntIsCode();
-    Q_INVOKABLE void setNameIntIsCode(bool val);
 
     Q_INVOKABLE void setExact(bool e);
     bool getExact();

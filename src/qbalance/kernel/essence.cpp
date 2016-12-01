@@ -594,11 +594,14 @@ void Essence::setId(qulonglong id)
 
 void Essence::query(QString filter, bool)
 {
+    /*123
     QModelIndex index;
     if (grdTable != 0)
     {
         index = getCurrentIndex();
     }
+*/
+    int row = getCurrentRow();
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
         Table::query(filter + " AND " + defaultFilter);
@@ -609,8 +612,7 @@ void Essence::query(QString filter, bool)
     }
     else
         Table::query(filter);
-
-    setCurrentIndex(index);
+    setCurrentRow(row);
  }
 
 
@@ -1140,7 +1142,7 @@ void Essence::updateCurrentRow()
         QModelIndex index = getCurrentIndex();
         for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
         {
-            QString fieldName = preparedSelectCurrentRow.record().fieldName(i).toUpper();
+            QString fieldName = preparedSelectCurrentRow.record().fieldName(i);
             QVariant value = preparedSelectCurrentRow.record().value(fieldName);
             if (value != tableModel->record(index.row()).value(fieldName))
                 tableModel->setData(tableModel->index(index.row(), i), value, true);
@@ -1263,17 +1265,22 @@ void Essence::saveOldValues()
         QModelIndex index;
         index = tableModel->index(getCurrentRow(), tableModel->fieldIndex(field));
         QVariant val = tableModel->data(index);
-        oldValues.insert(field.toUpper(), val);
+        oldValues.insert(field, val);
     }
 }
 
 
 void Essence::restoreOldValues()
 {
+    bool oldDoSubmit = doSubmit;
+    doSubmit = false;
     foreach (QString fieldName, oldValues.keys())
     {
-        setValue(fieldName, oldValues.value(fieldName));
+        if (getValue(fieldName) != oldValues.value(fieldName))
+            setValue(fieldName, oldValues.value(fieldName));
     }
+    doSubmit = oldDoSubmit;
+    db->clearCommands();
 }
 
 

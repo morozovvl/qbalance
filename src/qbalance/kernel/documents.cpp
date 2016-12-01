@@ -63,6 +63,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     lUpdateable = operProperties.value("updateable").toBool();
     scriptEngine = 0;
     scriptEngineEnabled = false;
+    doSubmit = false;
     lPrintable = true;
 }
 

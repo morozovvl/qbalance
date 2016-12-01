@@ -397,6 +397,7 @@ void TableView::showAllGridSections()
 
 MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 {
+    MyItemDelegate* result = 0;
     if (fld.type.toUpper() == "NUMERIC" ||
         fld.type.toUpper() == "INTEGER")
     {     // для числовых полей зададим свой самодельный делегат
@@ -405,7 +406,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
     } else if (fld.type.toUpper() == "BOOLEAN")
            {
                 MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(this, parent);
-                return (MyItemDelegate*)booleanDelegate;
+                result = (MyItemDelegate*)booleanDelegate;
            } else
            {
                 if (fld.type.toUpper() == "CHARACTER" ||
@@ -414,7 +415,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
                 {
                     MyLineItemDelegate* textDelegate = new MyLineItemDelegate(this, parent);
                     textDelegate->setMaxLength(fld.length);
-                    return (MyItemDelegate*)textDelegate;
+                    result = (MyItemDelegate*)textDelegate;
                 }
                 else
                 {
@@ -422,11 +423,11 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
                         fld.type.toUpper().left(9) == "TIMESTAMP")
                     {
                         MyDateItemDelegate* dateDelegate = new MyDateItemDelegate(this, parent);
-                        return (MyItemDelegate*)dateDelegate;
+                        result = (MyItemDelegate*)dateDelegate;
                     }
                 }
            }
-    return 0;
+    return result;
 }
 
 
@@ -544,7 +545,7 @@ void TableView::showPhoto()
 {
     QString photoFileName = "";
 //    if (picture != 0 && essence != 0 && essence->isPhotoEnabled() && essence->isVisible())
-    if (picture != 0 && essence != 0 && essence->isVisible())
+    if (picture != 0 && essence != 0)
     {
         if (tableModel->rowCount() > 0)
         {

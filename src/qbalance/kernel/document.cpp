@@ -307,20 +307,11 @@ bool Document::add()
             }
         }
         appendDocString();
-/*
-        int strNum = appendDocString();
-        if (strNum > 0)      // Если строка была добавлена
-        {
-            int newRow = tableModel->rowCount();
-            tableModel->insertRow(newRow);
-            setCurrentRow(newRow);
-            updateCurrentRow(strNum);
-        }
-*/
         if (getScriptEngine() != 0)
         {
             getScriptEngine()->eventAfterAddString();
         }
+        saveChanges();
     }
     return result;
 }

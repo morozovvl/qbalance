@@ -219,22 +219,17 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
         if (searchParameters[i].table == dictName)
         {
             QString text = searchParameters[i].value.toString();
-            bool isInt = false;
+            bool isInt = true;
             int id = 0;
-            if (dictionaries != 0)
+            if (text.size() > 0 && text.at(0).isDigit())
             {
-                Dictionary* dict = dictionaries->getDictionary(dictName);    // Поместим связанный справочник в список справочников приложения
-                if (dict != 0)
-                    isInt = dict->getNameIntIsCode();
-            }
-            if (text.size() > 0 && text.at(0).isDigit() && isInt)
                 id = text.toInt(&isInt);    // Проверим, не является ли значение кодом
+            }
             else
             {
                 isInt = false;
                 text = text.trimmed();
             }
-//            text.replace("'", "''");
             QStringList paramList = text.split(QRegExp("\\s+"));
             if (searchParameters[i].isFtsEnabled && searchParameters[i].value.toString().size() > 0)   // Если включен полнотектовый поиск
             {

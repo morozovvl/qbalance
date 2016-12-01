@@ -3000,12 +3000,12 @@ bool DBFactory::execCommands()
                     table = updateValues.at(i).table;
                     if (command.size() > 0)
                         command.append(",");
-                    command.append(QString("\"%1\"=%2").arg(getObjectName(table + "." + updateValues.at(i).field)).arg(updateValues.at(i).value));
+                    command.append(QString("\"%1\"=%2").arg(updateValues.at(i).field).arg(updateValues.at(i).value));
                 }
             }
             if (table.size() > 0)
             {
-                command = QString("UPDATE \"%1\" SET %2 WHERE %3=%4;").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
+                command = QString("UPDATE %1 SET %2 WHERE %3=%4;").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
                 appendCommand(command);     // Добавим команду к списку готовых команд
                 if (sysTables.contains(table))
                     saveUpdate(command);

@@ -62,7 +62,6 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool) { ; }
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
-    void setAutoSelect(bool select);
     virtual void readSettings();
     virtual QMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp();
@@ -108,7 +107,6 @@ private:
     bool                    uiCreated;
     QHash<QString, QString>  toolTips;
     bool                    freeWindow;         // По умолчанию окно не является свободным, я является частью Mdi интерфейса
-    bool                    autoSelect;
 
     void                    checkVisibility();
 };

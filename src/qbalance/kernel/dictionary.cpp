@@ -75,7 +75,6 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     parameters = 0;
     doSubmit = true;
     sqlCommand = "";
-    nameIntIsCode = false;
     exact = true;
 
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
@@ -260,18 +259,6 @@ bool Dictionary::isPictureExist()
 void Dictionary::setGetIdRefresh(bool val)
 {
     getIdRefresh = val;
-}
-
-
-bool Dictionary::getNameIntIsCode()
-{
-    return nameIntIsCode;
-}
-
-
-void Dictionary::setNameIntIsCode(bool val)
-{
-    nameIntIsCode = val;
 }
 
 
@@ -724,15 +711,6 @@ bool Dictionary::setTableModel(int)
 
 void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 {
-    QModelIndex index;
-    qulonglong id = 0;
-
-    if (tableModel->rowCount() > 0 && isFieldExists(idFieldName))
-        id = getValue(idFieldName).toLongLong();
-
-    if (grdTable != 0)
-        index = getCurrentIndex();
-
     QString resFilter = defaultFilter;
 
     if (form != 0 && !exactlyDefaultFilter)
@@ -760,6 +738,8 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
     if (tableModel->rowCount() > 0 && grdTable != 0)
     {
+        QModelIndex index = getCurrentIndex();
+
         if (index.row() > tableModel->rowCount() - 1)       // Если старая последняя запись исчезла
             grdTable->selectRow(tableModel->rowCount() - 1);    // то перейдем на новую последнюю
         else
@@ -767,28 +747,14 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
             if (index.row() < 0)
                 grdTable->selectRow(0);
             else
-            {
-                if (id > 0)
-                {
-                    for (int i = 0; i < tableModel->rowCount(); i++)
-                    {
-                        if (getValue(idFieldName, i) == id)
-                        {
-                            grdTable->selectRow(i);
-                            break;
-                        }
-                    }
-                }
-                else
-                    grdTable->selectRow(index.row());
-            }
+                grdTable->selectRow(index.row());
         }
     }
 
     if (tableModel->rowCount() == 1)     // Если включен автоматический выбор позиции и позиция одна, то нажмем кнопку Ok (выберем позицию)
     {
         if (lAutoSelect)
-            form->setAutoSelect(true);
+            form->cmdOk();
     }
 }
 
