@@ -155,12 +155,12 @@ public:
     Q_INVOKABLE void setFormTitle(QString);         // Установить заголовок формы
     Q_INVOKABLE QString getFormTitle();             // прочитать заголовок формы
     Q_INVOKABLE virtual Dialog* getFormWidget();
-    Q_INVOKABLE void setPhotoEnabled(bool enabled);
+    Q_INVOKABLE virtual void setPhotoEnabled(bool enabled);
     Q_INVOKABLE virtual bool isPhotoEnabled();
     Q_INVOKABLE virtual void setPhotoPath(QString path);
-    Q_INVOKABLE QString getPhotoPath();
-    Q_INVOKABLE void setPhotoIdField(QString field);
-    Q_INVOKABLE void setPhotoNameField(QString field);
+    Q_INVOKABLE virtual QString getPhotoPath();
+    Q_INVOKABLE virtual void setPhotoIdField(QString field);
+    Q_INVOKABLE virtual void setPhotoNameField(QString field);
     Q_INVOKABLE virtual QString getPhotoNameField();
     Q_INVOKABLE virtual void removePhoto(QString = "");
     Q_INVOKABLE bool isInsertable();
@@ -211,7 +211,7 @@ public:
 
 // Прочие функции
     Q_INVOKABLE         virtual QString getPhotoFile(QString copyTo = "");
-    Q_INVOKABLE         QString getLocalPhotoFile(QString = "");
+    Q_INVOKABLE         virtual QString getLocalPhotoFile(QString = "");
     static bool         getFile(QString, QString, FileType);
     virtual void        barCodeReaded(QString);    // прочитана строка со сканера штрих-кода
     Q_INVOKABLE virtual void        updateCurrentRow();

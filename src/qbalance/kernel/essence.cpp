@@ -1323,14 +1323,14 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
     // Подготовим контекст для печати
     QHash<QString, QVariant> printValues;
     // Создадим скриптовый обработчик контекста печати
-    DocumentScriptEngine scriptEngine(&printValues, this);
-    reportScriptEngine = &scriptEngine;
+    reportScriptEngine = new DocumentScriptEngine(&printValues, this);
+//    reportScriptEngine = scriptEngine;
     // Заполним контекст данными
     preparePrintValues();
 
-    if (scriptEngine.open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
+    if (reportScriptEngine->open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
     {
-        result = scriptEngine.evaluate();       // Если скрипты вернут отрицательный результат, то документ не напечатается
+        result = reportScriptEngine->evaluate();       // Если скрипты вернут отрицательный результат, то документ не напечатается
     }
 
     if (result)
@@ -1379,7 +1379,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
                 // Обработчик шаблона запускает OpenOffice, для которого нужны специально подготовленные шаблоны с внутренними функциями
                 case OOreportTemplate:
                 {
-                    OOReportEngine* report = new OOReportEngine(&scriptEngine);
+                    OOReportEngine* report = new OOReportEngine(reportScriptEngine);
                     if (report->open())
                     {
                         report->open(&printValues, fileName, ext);
@@ -1405,7 +1405,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
                 // Обработчик шаблона с "потрошением" родных файлов OpenOffice. Это основной обработчик в настоящее время
                 case OOXMLreportTemplate:
                 {   // в пользовательских настройках стоит использовать ОО в качестве движка печати
-                    OOXMLReportEngine* report = new OOXMLReportEngine(this, &scriptEngine);
+                    OOXMLReportEngine* report = new OOXMLReportEngine(this, reportScriptEngine);
                     if (report->open())
                     {
                         report->setFileName(fileName);
@@ -1425,6 +1425,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
             }
         }
     }
+    delete reportScriptEngine;
     reportScriptEngine = 0;
 }
 
@@ -1461,37 +1462,6 @@ void Essence::setCurrentIndex(QModelIndex index)
 
 QVariant Essence::getSumValue(QString name)
 {   // Возвращает сумму полей <name> всех строк документа
-/*
-    int sum = 0;
-    int col = tableModel->record().indexOf(name);
-    for (int j = 0; j < tableModel->rowCount(); j++)
-    {
-        int value = tableModel->data(tableModel->index(j, col)).toDouble() * 100;
-        qDebug() << value << sum;
-        sum += value;
-        qDebug() << value << sum;
-    }
-    long double result1 = sum;
-    result1 /= 100;
-    double result = result1;
-    qDebug() << result;
-    return QVariant(result);
-*/
-/*
-    using fixedpoint::fixed_point;
-
-    fixed_point<3> sum = 0;
-    fixed_point<3> value = 0;
-    int col = tableModel->record().indexOf(name);
-    for (int j = 0; j < tableModel->rowCount(); j++)
-    {
-        float val1 = tableModel->data(tableModel->index(j, col)).toFloat();
-        value = fixedpoint::fixed_point<3>(val1);
-        sum += value;
-        qDebug() << val1 << value.fix2float<3>() << fixedpoint::fix2float<3>(sum.intValue);;
-    }
-    return QVariant(fixedpoint::fix2float<3>(sum.intValue));
-*/
     double sum = 0;
     int col = tableModel->record().indexOf(name);
     for (int j = 0; j < tableModel->rowCount(); j++)
@@ -1500,69 +1470,6 @@ QVariant Essence::getSumValue(QString name)
         sum += value;
     }
     return QVariant(sum);
-/*
-    using mpfr::mpreal;
-    using std::cout;
-    using std::endl;
-
-    mpreal::set_default_prec(mpfr::digits2bits(1));
-
-    mpreal sum = 0.00;
-    int col = tableModel->record().indexOf(name);
-    for (int j = 0; j < tableModel->rowCount(); j++)
-    {
-        double value = tableModel->data(tableModel->index(j, col)).toDouble();
-        sum += value;
-        cout << value << " " << sum << endl;
-    }
-    cout << "Precision = " << sum.getPrecision() << endl;
-    return QVariant(sum.toDouble());
-*/
-/*
-    // Setup default precision for all subsequent computations
-    // MPFR accepts precision in bits - so we do the conversion
-    mpreal::set_default_prec(mpfr::digits2bits(digits));
-
-    // Compute all the vital characteristics of mpreal (in current precision)
-    // Analogous to lamch from LAPACK
-    const mpreal one         =    1.0;
-    const mpreal zero        =    0.0;
-    const mpreal eps         =    std::numeric_limits<mpreal>::epsilon();
-    const int    base        =    std::numeric_limits<mpreal>::radix;
-    const mpreal prec        =    eps * base;
-    const int bindigits      =    std::numeric_limits<mpreal>::digits(); // eqv. to mpfr::mpreal::get_default_prec();
-    const mpreal rnd         =    std::numeric_limits<mpreal>::round_error();
-    const mpreal maxval      =    std::numeric_limits<mpreal>::max();
-    const mpreal minval      =    std::numeric_limits<mpreal>::min();
-    const mpreal small       =    one / maxval;
-    const mpreal sfmin       =    (small > minval) ? small * (one + eps) : minval;
-    const mpreal round       =    std::numeric_limits<mpreal>::round_style();
-    const int    min_exp     =    std::numeric_limits<mpreal>::min_exponent;
-    const mpreal underflow   =    std::numeric_limits<mpreal>::min();
-    const int    max_exp     =    std::numeric_limits<mpreal>::max_exponent;
-    const mpreal overflow    =    std::numeric_limits<mpreal>::max();
-
-    // Additionally compute pi with required accuracy - just for fun :)
-    const mpreal pi          =    mpfr::const_pi();
-
-    cout.precision(digits);    // Show all the digits
-    cout << "pi         =    "<<    pi          << endl;
-    cout << "eps        =    "<<    eps         << endl;
-    cout << "base       =    "<<    base        << endl;
-    cout << "prec       =    "<<    prec        << endl;
-    cout << "b.digits   =    "<<    bindigits   << endl;
-    cout << "rnd        =    "<<    rnd         << endl;
-    cout << "maxval     =    "<<    maxval      << endl;
-    cout << "minval     =    "<<    minval      << endl;
-    cout << "small      =    "<<    small       << endl;
-    cout << "sfmin      =    "<<    sfmin       << endl;
-    cout << "1/sfmin    =    "<<    1 / sfmin   << endl;
-    cout << "round      =    "<<    round       << endl;
-    cout << "max_exp    =    "<<    max_exp     << endl;
-    cout << "min_exp    =    "<<    min_exp     << endl;
-    cout << "underflow  =    "<<    underflow   << endl;
-    cout << "overflow   =    "<<    overflow    << endl;
-*/
 }
 
 

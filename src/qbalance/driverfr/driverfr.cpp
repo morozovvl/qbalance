@@ -447,7 +447,8 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
         {
             // А теперь поищем фискальник на этом компьютере
 
-            serialPort->setRemote(false);
+            remote = false;
+            serialPort->setRemote(remote);
             serialPort->setBaudRate(rate);
             serialPort->setTimeout(timeout);
             if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
@@ -933,7 +934,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
         if ((result < 0 || result == 0x50) && attempts < maxTries)
         {
             attempts++;
-            app->showMessageOnStatusBar(QString("Попытка %1/%2").arg(attempts).arg(maxTries), -1);
+            app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);
             serialPort->writeLog();
             app->sleep(500);
             serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
