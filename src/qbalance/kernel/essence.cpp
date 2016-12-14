@@ -731,8 +731,7 @@ QString Essence::getPhotoFile(QString copyTo)
                     }
                     else
                     {   // Локальный файл с фотографией найден. Проверим, имеется ли он на сервере в расширенной базе и если что, то сохраним его там
-                        if (QFile(file).exists())
-                            app->saveFileToServer(file, localFile, PictureFileType, true);
+                        app->saveFileToServer(file, localFile, PictureFileType, true);
                         if (copyTo.size() > 0)
                         {
                             app->saveFileToServer(file, copyTo, PictureFileType, true);   // Если указано, что фотографию нужно скопировать, то скопируем ее
@@ -752,7 +751,6 @@ void Essence::removePhoto(QString photo)
     if (photoFile.size() > 0)
     {
         QString localFile = getLocalPhotoFile(getPhotoPath());       // Запомним локальный путь к фотографии на случай обращения к серверу за фотографией
-
         QFile file(photoFile);
         if (file.remove())
         {

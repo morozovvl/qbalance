@@ -250,27 +250,26 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
         if (script.size() > 0)
         {
             TApplication::exemplar()->appendScriptStack((ScriptEngine*)engine);
-
+            engine->pushContext();
             QScriptContext *pc = context->parentContext();
             context->setActivationObject(pc->activationObject());
             context->setThisObject(pc->thisObject());
-
 
             for (int i = 1; i < context->argumentCount(); i++)
             {
                 engine->globalObject().setProperty(QString("argument%1").arg(i), context->argument(i));
             }
             result = engine->evaluate(script);
-                if (engine->hasUncaughtException())
-                {
+            if (engine->hasUncaughtException())
+            {
                 // Если в скриптах произошла ошибка
-                    QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
-                    TApplication::exemplar()->showError(errorMessage);
-                }
+                QString errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(engine->uncaughtExceptionLineNumber()).arg(scriptFile).arg(engine->uncaughtException().toString());
+                TApplication::exemplar()->showError(errorMessage);
             }
-
+            engine->popContext();
             TApplication::exemplar()->removeLastScriptStack();
         }
+    }
     return result;
 }
 

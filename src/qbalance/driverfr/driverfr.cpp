@@ -772,8 +772,8 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
 bool DriverFR::deviceIsReady()
 {
     sendENQ();
-//    for (int i = 0; i < maxTries; i++)
-//    {
+    for (int i = 0; i < maxTries; i++)
+    {
         short int repl = readByte();
         if (repl == NAK)
         {
@@ -792,7 +792,7 @@ bool DriverFR::deviceIsReady()
             answer     a;
             readAnswer(&a, repl);
             sendENQ();
-//        }
+        }
     }
     return false;
 }
