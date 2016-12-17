@@ -320,7 +320,7 @@ private:
     QStringList initializationScriptList(QString = "") const;
     int getTypeId(QString);
     void clearError();
-    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0);
+    void addColumnProperties(QList<FieldType>*, QString, QString, QString, int, int, bool = false, bool = false, int = 0, int = 0);
     bool execPSql(QStringList command, QString user, QString password);
 
 private slots:

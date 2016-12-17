@@ -1776,7 +1776,7 @@ bool TApplication::readParameters(int argc, char *argv[])
             out << QObject::trUtf8("  -d3| --debug3     - Включить журнал скриптов (файл debug3.log)\n");
             out << QObject::trUtf8("  -d4| --debug4     - Включить журнал устройства COM-порта (файл debug4.log)\n");
             out << QObject::trUtf8("  -d5| --debug5     - Включить журнал обмена между экземплярами приложения (файл debug5.log)\n");
-            out << QObject::trUtf8("  -d6| --debug6     - Включить журнал терминала (файл debug6.log)\n");
+            out << QObject::trUtf8("  -d6| --debug6     - Включить журнал банковского терминала (файл debug6.log)\n");
             out << QObject::trUtf8("  -ul| --unitelogs  - Объединить все включенные журналы отладки в одном файле (debug.log)\n");
             out << QObject::trUtf8("  -fd| --fulldebug  - Выводить полную отладочную информацию (по умолчанию выключено)\n");
             out << QObject::trUtf8("  -h | --host       - IP адрес хоста\n");

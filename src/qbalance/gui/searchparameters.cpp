@@ -251,7 +251,7 @@ QString SearchParameters::getFilter(QString dictName, QString defFilter)
                 {
                     if (param.size() > 0)
                     {
-                        if (parentForm != 0)
+                        if (parentForm != 0 && dictionaries != 0)
                         {
                             Dictionary* dict = dictionaries->getDictionary(searchParameters[i].table);    // Поместим связанный справочник в список справочников приложения
                             if (dict != 0)
@@ -410,7 +410,7 @@ void SearchParameters::setParent(QWidget* parent)
 void SearchParameters::setFormGrid(FormGridSearch* par)
 {
     parentForm = par;
-    dictionaries = parentForm->getParent()->getDictionaries();
+//    dictionaries = parentForm->getParent()->getDictionaries();
 }
 
 

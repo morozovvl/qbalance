@@ -346,13 +346,6 @@ bool WizardOperation::setData()
             db->removeColumnHeaders(tableId);
             for (int i = 0; i < docListFields.count(); i++)
             {
-/*
-                int tabId;
-                if (docListFields.value(0).table != docListFields.value(i).table)
-                    tabId = db->getDictionaryId(docListFields.value(i).table);
-                else
-                    tabId = tableId;
-*/
                if (!db->appendColumnHeader(tableId, tableId, docListFields.value(i).name, docListFields.value(i).header, docListFields.value(i).number, docListFields.value(i).readOnly))
                {
                    db->rollbackTransaction();
@@ -486,11 +479,6 @@ void WizardOperation::getData()
      textEditor = new QTextEdit(formWidget);
      highlighter = new MySyntaxHighlighter(textEditor->document());
      QString scripts = QString(db->getFile(TApplication::exemplar()->getScriptFileName(oper), ScriptFileType));
-//     if (scripts.size() == 0)
-//     {
-//         DocumentScriptEngine engine;
-//         scripts = engine.getBlankScripts();
-//     }
      textEditor->setText(scripts);
 
      connect(prvTable, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(toperTableChanged()));
