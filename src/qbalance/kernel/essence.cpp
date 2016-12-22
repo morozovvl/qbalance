@@ -101,6 +101,7 @@ void Essence::postInitialize(QString name, QObject* parent)
     loading = false;
     reportScriptEngine = 0;
     lIsDocument = false;
+    cardReaderEnabled = false;
 }
 
 
@@ -594,13 +595,6 @@ void Essence::setId(qulonglong id)
 
 void Essence::query(QString filter, bool)
 {
-    /*123
-    QModelIndex index;
-    if (grdTable != 0)
-    {
-        index = getCurrentIndex();
-    }
-*/
     int row = getCurrentRow();
     if (filter.size() > 0 && defaultFilter.size() > 0)
     {
@@ -1297,7 +1291,7 @@ void Essence::barCodeReaded(QString barCode)
 
 void Essence::cardCodeReaded(QString cardCode)
 {
-    if (scriptEngineEnabled && scriptEngine != 0 && enabled)
+    if (scriptEngineEnabled && scriptEngine != 0 && enabled && cardReaderEnabled)
         scriptEngine->eventCardCodeReaded(cardCode);
 }
 
@@ -1445,7 +1439,7 @@ QModelIndex Essence::getCurrentIndex()
     QModelIndex index;
     if (grdTable != 0)
     {
-        index = grdTable->currentIndex();   // ************* иногда происходит ОШИБКА СЕГМЕНТАЦИИ ***********
+        index = grdTable->currentIndex();
     }
     return index;
 }
@@ -1471,3 +1465,7 @@ QVariant Essence::getSumValue(QString name)
 }
 
 
+void Essence::setCardReaderEnabled(bool enabled)
+{
+    cardReaderEnabled = enabled;
+}

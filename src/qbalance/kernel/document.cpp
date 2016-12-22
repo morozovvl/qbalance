@@ -108,6 +108,7 @@ void Document::postInitialize(int oper, Documents* par)
     isDictionary = false;
     lIsDocument = true;
     addingFromQuery = false;
+    cardReaderEnabled = true;
 }
 
 
@@ -576,7 +577,6 @@ void Document::show()
     docModified = false;
     prepareSelectCurrentRowCommand();
     loadDocument();
-//    parent->setCurrentDocument(docId);
     Essence::show();
 }
 

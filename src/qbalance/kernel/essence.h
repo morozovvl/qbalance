@@ -99,6 +99,7 @@ protected:
     DocumentScriptEngine* reportScriptEngine;
     bool                lIsDocument;
     bool                sortedTable;
+    bool                cardReaderEnabled;
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -230,6 +231,8 @@ public:
     Q_INVOKABLE QVariant getPrintValue(QString name);
     bool                isDocument();
     Q_INVOKABLE void    showPhoto();
+
+    Q_INVOKABLE void    setCardReaderEnabled(bool);
 
 signals:
     void                photoLoaded();

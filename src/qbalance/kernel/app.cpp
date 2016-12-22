@@ -1200,8 +1200,6 @@ void TApplication::showError(QString error)
         if (scriptName.size() > 0)
             debug(0, QString("Script: %1").arg(scriptName));
     }
-//    if (gui->getMainWindow() != 0)
-//        gui->getMainWindow()->getWorkSpace()->activeSubWindow()->setFocus();
 }
 
 
