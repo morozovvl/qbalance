@@ -466,7 +466,7 @@ void TApplication::initConfig()
     setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
 #endif
     setConfig("fr", "FR_DRIVER_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
-    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 3);
+    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 10);
     setConfig("fr", "FR_LOCAL_DRIVER_TIMEOUT", "Таймаут для локального ФР, мс", CONFIG_VALUE_INTEGER, 100);
     setConfig("fr", "FR_REMOTE_DRIVER_TIMEOUT", "Таймаут для сетевого ФР, мс", CONFIG_VALUE_INTEGER, 150);
     setConfig("fr", "FR_DRIVER_PASSWORD", "Пароль администратора ФР", CONFIG_VALUE_INTEGER, 30);

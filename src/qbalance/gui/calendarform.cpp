@@ -49,6 +49,7 @@ QDate CalendarForm::getEndDate()
 bool CalendarForm::open(QWidget* pwgt) {
     if (Form::open(pwgt)) {
 
+        formWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
         formWidget->move(100, 100);
 
         formWidget->setWindowTitle(QObject::trUtf8("Рабочий период"));
