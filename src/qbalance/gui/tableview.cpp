@@ -433,7 +433,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
 
 bool TableView::columnIsReadOnly()
 {
-    if (tableModel->rowCount() > 0)
+    if (tableModel != 0 && tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
         if (!index.isValid())
@@ -456,7 +456,7 @@ bool TableView::columnIsReadOnly()
 void TableView::selectNextColumn()
 // Ищет следующую колонку для редактирования
 {
-    if (tableModel->rowCount() > 0)
+    if (tableModel != 0 && tableModel->rowCount() > 0)
     {
         QModelIndex index = currentIndex();
         if (!index.isValid())

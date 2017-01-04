@@ -28,7 +28,7 @@ class PicturePlugin : public QObject, public QDesignerCustomWidgetInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    PicturePlugin( QObject *parent = 0 );
+    PicturePlugin(QObject *parent = 0 );
 
     bool isContainer() const;
     bool isInitialized() const;
@@ -40,8 +40,8 @@ public:
     QString name() const;
     QString toolTip() const;
     QString whatsThis() const;
-    QWidget *createWidget( QWidget *parent );
-    void initialize( QDesignerFormEditorInterface *core );
+    QWidget *createWidget(QWidget *parent );
+    void initialize(QDesignerFormEditorInterface *core );
 
 private:
     bool m_initialized;

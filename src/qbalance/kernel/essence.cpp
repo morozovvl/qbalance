@@ -903,8 +903,11 @@ void Essence::close()
 
 void Essence::setGrdTable(TableView* gt)
 {
-    grdTable = gt;
-    grdTable->setEssence(this);
+    if (gt != 0)
+    {
+        grdTable = gt;
+        grdTable->setEssence(this);
+    }
 }
 
 
