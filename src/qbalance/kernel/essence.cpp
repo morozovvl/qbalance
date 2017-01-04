@@ -365,7 +365,7 @@ bool Essence::isDocument()
 
 void Essence::showPhoto()
 {
-    form->showPhoto();
+    grdTable->showPhoto();
 }
 
 
