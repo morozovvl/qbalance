@@ -203,7 +203,7 @@ QDomElement OOXMLEngine::getCell(int row, int column)
 {
     QDomNode rowNode;
     QDomElement element;
-    if (row >= 0 && row < rowQuan-1 && column >= 0)
+    if (row >= 0 && row < rowQuan && column >= 0)
     {
         rowNode = rowCells.at(row);
         if (!rowNode.isNull())

@@ -365,9 +365,3 @@ void Documents::preparePrintValues()
 }
 
 
-bool Documents::calculate(bool)
-{
-    return false;
-}
-
-
