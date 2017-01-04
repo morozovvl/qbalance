@@ -601,8 +601,8 @@ void OOXMLEngineFromScriptValue(const QScriptValue &object, OOXMLEngine* &out) {
 // класс MyProgressDialog
 Q_DECLARE_METATYPE(MyProgressDialog*)
 
-QScriptValue MyProgressDialogConstructor(QScriptContext *, QScriptEngine *engine) {
-     MyProgressDialog *object = new MyProgressDialog();
+QScriptValue MyProgressDialogConstructor(QScriptContext* context, QScriptEngine *engine) {
+     MyProgressDialog *object = new MyProgressDialog(context->argument(0).toString(), TApplication::exemplar()->getMainWindow()->centralWidget());
      return engine->newQObject(object);
 }
 
