@@ -306,7 +306,6 @@ private:
     static bool             timeIsOut;
     bool                    scriptMode;
     static bool             sendCommandMode;
-    QList<ScriptEngine*>    scriptStack;
     QHash<QString, QString>     dirs;
     QString                 dirName;
     QHash<QString, ConfigEntry> configs;

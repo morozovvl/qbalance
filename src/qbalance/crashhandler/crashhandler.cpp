@@ -59,7 +59,7 @@ namespace Breakpad {
 #if defined(Q_OS_WIN32)
     bool DumpCallback(const wchar_t* _dump_dir,const wchar_t* _minidump_id,void* context,EXCEPTION_POINTERS* exinfo,MDRawAssertionInfo* assertion,bool success)
 #elif defined(Q_OS_LINUX)
-    bool DumpCallback(const google_breakpad::MinidumpDescriptor &md,void *context, bool success)
+    bool DumpCallback(const google_breakpad::MinidumpDescriptor &,void *context, bool success)
 #endif
     {
         Q_UNUSED(context);

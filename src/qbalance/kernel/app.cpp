@@ -418,31 +418,6 @@ bool TApplication::isSendCommandMode()
 }
 
 
-QList<ScriptEngine*> TApplication::getScriptStack()
-{
-    return scriptStack;
-}
-
-
-void TApplication::appendScriptStack(ScriptEngine* script)
-{
-    scriptStack.append(script);
-}
-
-
-void TApplication::removeLastScriptStack()
-{
-    if (scriptStack.count() > 0)
-        scriptStack.removeLast();
-}
-
-
-ScriptEngine* TApplication::getLastScriptStack()
-{
-    return scriptStack.last();
-}
-
-
 QMyExtSerialPort* TApplication::getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode, QObject* parent)
 {
     return new QMyExtSerialPort(name, mode, parent);
@@ -1194,12 +1169,6 @@ void TApplication::showError(QString error)
     else
         showMessageOnStatusBar(error + "\n");      // В скриптовом режиме сообщение будет выведено в консоль
     debug(0, "Error: " + error);
-    for (int i = scriptStack.count(); i > 0; i--)
-    {
-        QString scriptName = scriptStack.at(i - 1)->getScriptFileName();
-        if (scriptName.size() > 0)
-            debug(0, QString("Script: %1").arg(scriptName));
-    }
 }
 
 

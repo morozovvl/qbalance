@@ -921,12 +921,10 @@ void Essence::evaluateEngine()
         scriptEngineEnabled = false;
         if (scriptEngine->open(scriptFileName))
         {
-            app->appendScriptStack(scriptEngine);
             if (scriptEngine->evaluate())
             {
                 scriptEngineEnabled = true;
             }
-            app->removeLastScriptStack();
         }
     }
 }

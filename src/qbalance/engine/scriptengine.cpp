@@ -233,13 +233,6 @@ QScriptValue quotes(QScriptContext* context, QScriptEngine*)
 }
 
 
-QScriptValue evaluateParentScript(QScriptContext* context, QScriptEngine*)
-{
-    ScriptEngine* engine = TApplication::exemplar()->getLastScriptStack();
-    return engine->evaluate(context->argument(0).toString());
-}
-
-
 QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
 {
     QScriptValue result(false);
@@ -249,7 +242,6 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
         QString script = ScriptEngine::loadScript(scriptFile);
         if (script.size() > 0)
         {
-            TApplication::exemplar()->appendScriptStack((ScriptEngine*)engine);
             engine->pushContext();
             QScriptContext *pc = context->parentContext();
             context->setActivationObject(pc->activationObject());
@@ -267,7 +259,6 @@ QScriptValue evaluateScript(QScriptContext* context, QScriptEngine* engine)
                 TApplication::exemplar()->showError(errorMessage);
             }
             engine->popContext();
-            TApplication::exemplar()->removeLastScriptStack();
         }
     }
     return result;
@@ -827,7 +818,6 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("document", newQObject(document));
     globalObject().setProperty("documents", newQObject(documents));
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
-    globalObject().setProperty("evaluateParentScript", newFunction(evaluateParentScript));
     globalObject().setProperty("SumToString", newFunction(SumToString));
     globalObject().setProperty("debug", newFunction(debug));
 
@@ -875,11 +865,9 @@ bool ScriptEngine::evaluate()
 
 QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fileName, int lineNumber)
 {
-    app->appendScriptStack(this);
     TApplication::exemplar()->debug(3, program);
     QScriptEngine::evaluate(program, fileName, lineNumber);
     TApplication::exemplar()->debug(3, "/" + program);
-    app->removeLastScriptStack();
     return globalObject().property("scriptResult");
 }
 
@@ -888,12 +876,10 @@ QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
     QScriptValue result;
 
-    app->appendScriptStack(this);
     TApplication::exemplar()->debug(3, program.fileName());
     result = QScriptEngine::evaluate(program);
     TApplication::exemplar()->debug(3, "/" + program.fileName());
 
-    app->removeLastScriptStack();
     return result;
 }
 
@@ -1388,7 +1374,6 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     if (globalObject().property(eventName).isFunction())
     {
         QString program = scriptFileName + ":" + eventName;
-        app->appendScriptStack(this);
         TApplication::exemplar()->setDebugToBuffer(true);
         TApplication::exemplar()->debug(3, program);
         result = globalObject().property(eventName).call(thisObject, args);
@@ -1402,7 +1387,6 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
             TApplication::exemplar()->debug(3, "/" + program);
 
         TApplication::exemplar()->setDebugToBuffer(false);
-        app->removeLastScriptStack();
     }
     return result;
 }

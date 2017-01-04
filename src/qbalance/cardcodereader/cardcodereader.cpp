@@ -73,7 +73,6 @@ void CardCodeReader::readCardReader(QKeyEvent* keyEvent)
                QString cardCode = cardReaderCode;
                cardCode.replace(crPrefix, "");
                cardCode.chop(1);
-               qDebug() << "emit " + cardCode.trimmed();
                emit cardCodeReaded(cardCode.trimmed());
                cardReaderCode = "";
            }
