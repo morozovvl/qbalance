@@ -49,7 +49,7 @@ public:
     virtual void                close();
 
     virtual void                setFormGrid(FormGrid* par);
-    virtual void                setEssence(Essence*);
+    Q_INVOKABLE virtual void    setEssence(Essence*);
     virtual void                setPicture(Picture* pic);
     virtual bool                columnIsReadOnly();
     virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию

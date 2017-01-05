@@ -341,8 +341,6 @@ void    TableView::setColumnsDelegates()
 
 void TableView::hideAllGridSections()
 {
-//    setColumnsHeaders();
-
     foreach (int i, columns.keys())
     {
         horizontalHeader()->hideSection(horizontalHeader()->logicalIndex(i));
@@ -352,8 +350,6 @@ void TableView::hideAllGridSections()
 
 void TableView::hideGridSection(QString columnName)
 {
-//    setColumnsHeaders();
-
     foreach (int i, columns.keys())
     {
         if (fields.at(columns.value(i)).column == columnName)
@@ -367,8 +363,6 @@ void TableView::hideGridSection(QString columnName)
 
 void TableView::showGridSection(QString columnName)
 {
-//    setColumnsHeaders();
-
     foreach (int i, columns.keys())
     {
         if (fields.at(columns.value(i)).column == columnName)
@@ -382,8 +376,6 @@ void TableView::showGridSection(QString columnName)
 
 void TableView::showAllGridSections()
 {
-//    setColumnsHeaders();
-
     foreach (int i, columns.keys())
     {
         horizontalHeader()->showSection(horizontalHeader()->logicalIndex(i));
