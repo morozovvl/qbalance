@@ -55,12 +55,6 @@ void TableView::setFormGrid(FormGrid* par)
 }
 
 
-void TableView::setParentWidget(QWidget* widget)
-{
-    parentWidget = widget;
-}
-
-
 void TableView::setPicture(Picture* pic)
 {
     picture = pic;
@@ -69,7 +63,6 @@ void TableView::setPicture(Picture* pic)
 
 void TableView::open()
 {
-    parentWidget = 0;
     name = "tableView";
     app = 0;
     essence = 0;
@@ -85,6 +78,12 @@ void TableView::open()
     setFocusPolicy(Qt::StrongFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setObjectName(name);
+#if QT_VERSION >= 0x050000
+    horizontalHeader()->setSectionsClickable(false);
+#else
+    horizontalHeader()->setClickable(false);
+#endif
+    setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 
@@ -99,20 +98,13 @@ void TableView::close()
 void TableView::setEssence(Essence* ess)
 {
     essence = ess;
-    if (parent != 0)
-    {
-        app = parent->getApp();
-        fields = essence->returnColumnsProperties();
-        connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
-
-        tableModel = essence->getTableModel();
-
-        QTableView::setModel(tableModel);
-
-        connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
-
-        setReadOnly(essence->isReadOnly());
-    }
+    app = essence->getApp();
+    fields = essence->returnColumnsProperties();
+    connect(essence, SIGNAL(photoLoaded()), this, SLOT(showPhoto()));
+    tableModel = essence->getTableModel();
+    QTableView::setModel(tableModel);
+    connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
+    setReadOnly(essence->isReadOnly());
 }
 
 
@@ -151,7 +143,8 @@ void TableView::setCurrentFocus()
 
 void TableView::cmdView()
 {
-    picture->hide();
+    if (picture != 0)
+        picture->hide();
     essence->view();
 }
 
@@ -544,7 +537,6 @@ void TableView::selectPreviousColumn()
 void TableView::showPhoto()
 {
     QString photoFileName = "";
-//    if (picture != 0 && essence != 0 && essence->isPhotoEnabled() && essence->isVisible())
     if (picture != 0 && essence != 0)
     {
         if (tableModel->rowCount() > 0)
@@ -558,8 +550,8 @@ void TableView::showPhoto()
                     picture->setPhotoWindowTitle(essence->getValue(essence->getPhotoNameField()).toString().trimmed());
             }
         }
+        picture->show(photoFileName);
     }
-    picture->show(photoFileName);
 }
 
 

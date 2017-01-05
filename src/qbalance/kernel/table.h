@@ -74,13 +74,14 @@ public:
 
     Q_INVOKABLE virtual QStringList     getFieldsList();
     Q_INVOKABLE virtual QString         getFieldName(int);
-    Q_INVOKABLE virtual QString                 getTableName();
+    Q_INVOKABLE virtual QString         getTableName();
     virtual QString                     getTagName();
     QString                             getQueryTableName();
     Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE virtual bool            isReadOnly();
     Q_INVOKABLE virtual void            setFullDebugInfo(bool full);
+    virtual TApplication*               getApp();
 
 
 };

@@ -243,3 +243,9 @@ QString Table::defineFieldType(QVariant::Type type)
     }
     return result;
 }
+
+
+TApplication* Table::getApp()
+{
+    return app;
+}

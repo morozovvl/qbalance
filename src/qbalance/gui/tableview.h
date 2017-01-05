@@ -49,7 +49,6 @@ public:
     virtual void                close();
 
     virtual void                setFormGrid(FormGrid* par);
-    virtual void                setParentWidget(QWidget* widget);
     virtual void                setEssence(Essence*);
     virtual void                setPicture(Picture* pic);
     virtual bool                columnIsReadOnly();
@@ -88,7 +87,6 @@ private:
     int                         maxColumn;
     QString                     name;
     FormGrid*                   parent;
-    QWidget*                    parentWidget;
     TApplication*               app;
     Essence*                    essence;
     Picture*                    picture;

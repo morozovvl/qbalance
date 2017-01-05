@@ -196,34 +196,11 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
     }
 
-    if (grdTable != 0)
-    {
-        grdTable->open();
-        grdTable->setFormGrid(this);
-        grdTable->setParentWidget(formWidget);
-        grdTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        if (parent != 0)
-        {
-            parent->setGrdTable(grdTable);
-        }
-
-#if QT_VERSION >= 0x050000
-            grdTable->horizontalHeader()->setSectionsClickable(false);
-#else
-            grdTable->horizontalHeader()->setClickable(false);
-#endif
-            grdTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    }
-
     if (picture != 0)
     {
         picture->setForm(this);
         picture->setApp(app);
         picture->hide();
-        if (grdTable != 0)
-        {
-            grdTable->setPicture(picture);
-        }
     }
 
     // Подключим кнопку "Загрузить"
@@ -636,3 +613,8 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
     }
 }
 
+
+TableView* FormGrid::getGrdTable()
+{
+    return grdTable;
+}

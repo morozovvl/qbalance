@@ -61,6 +61,7 @@ public:
     virtual void keyPressEvent(QKeyEvent*);
     Q_INVOKABLE virtual Picture* getPicture();
     virtual QString getFilter();    // Возвращает фильтр для поиска в справочнике
+    TableView* getGrdTable();
 
 public slots:
     virtual void cmdAdd();

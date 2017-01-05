@@ -870,6 +870,16 @@ bool Essence::open()
         setOrderClause();
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();
+
+        grdTable = form->getGrdTable();
+        if (grdTable != 0)
+        {
+            grdTable->open();
+            grdTable->setEssence(this);
+            grdTable->setFormGrid(form);
+            grdTable->setPicture(form->getPicture());
+        }
+
         openScriptEngine();
         return true;
     }
