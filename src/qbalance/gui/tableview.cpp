@@ -52,6 +52,7 @@ TableView::~TableView()
 void TableView::setFormGrid(FormGrid* par)
 {
     parent = par;
+    setPicture(parent->getPicture());
 }
 
 

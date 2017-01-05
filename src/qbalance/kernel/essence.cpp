@@ -877,7 +877,6 @@ bool Essence::open()
             grdTable->open();
             grdTable->setEssence(this);
             grdTable->setFormGrid(form);
-            grdTable->setPicture(form->getPicture());
         }
 
         openScriptEngine();
