@@ -628,7 +628,6 @@ bool Dictionary::open(QString command, QString tName)
                 tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
             }
         }
-
         return true;
     }
     return false;
