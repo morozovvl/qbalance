@@ -144,7 +144,7 @@ public:
 
 
 // Функции для работы с модулем GUI
-    Q_INVOKABLE FormGrid* getForm();
+    Q_INVOKABLE virtual FormGrid* getForm();
     Q_INVOKABLE TableView* getGrdTable();
     Q_INVOKABLE void setGrdTable(TableView* gt);
     Q_INVOKABLE virtual void cmdOk();                       // Обработка нажатий кнопок "Ok"

@@ -936,7 +936,7 @@ bool Document::setTableModel(int)
             if (dictsList.at(i).isSaldo)
             {
                 Saldo* saldo = dictionaries->getSaldo(dictsList.at(i).acc);
-                SearchParameters* searchParameters = saldo->getForm()->getSearchParameters();
+                SearchParameters* searchParameters = ((FormGridSearch*)(saldo->getForm()))->getSearchParameters();
                 if (searchParameters != 0)
                     searchParameters->setDictionaries(dictionaries);
                 saldo->setAutoLoaded(true);
@@ -948,7 +948,7 @@ bool Document::setTableModel(int)
                 Dictionary* dict = dictionaries->getDictionary(dictsList.at(i).name);
                 if (dictsList.at(i).isConst)
                     dict->setConst(true);
-                SearchParameters* searchParameters = dict->getForm()->getSearchParameters();
+                SearchParameters* searchParameters = ((FormGridSearch*)dict->getForm())->getSearchParameters();
                 if (searchParameters != 0)
                     searchParameters->setDictionaries(dictionaries);
                 dict->setAutoLoaded(true);

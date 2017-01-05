@@ -244,12 +244,6 @@ bool Dictionary::isLocked()
 }
 
 
-FormGridSearch* Dictionary::getForm()
-{
-    return (FormGridSearch*)form;
-}
-
-
 bool Dictionary::isPictureExist()
 {
     return form->getPicture()->isPictureExist();
@@ -545,6 +539,12 @@ void Dictionary::setForm(QString formName)
 {
     if (form != 0 && form->isDefaultForm())
     {
+        if (form->getGrdTable() != 0)
+        {
+            grdTable->close();
+            delete grdTable;
+            grdTable = 0;
+        }
         form->close();
         delete form;
         form = 0;
@@ -562,6 +562,11 @@ void Dictionary::setForm(QString formName)
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
     parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
 
+    grdTable = form->getGrdTable();
+    if (grdTable != 0)
+    {
+        grdTable->setEssence(this);
+    }
 }
 
 

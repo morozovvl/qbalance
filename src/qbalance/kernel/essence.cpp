@@ -874,9 +874,7 @@ bool Essence::open()
         grdTable = form->getGrdTable();
         if (grdTable != 0)
         {
-            grdTable->open();
             grdTable->setEssence(this);
-            grdTable->setFormGrid(form);
         }
 
         openScriptEngine();

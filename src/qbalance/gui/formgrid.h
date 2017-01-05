@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE virtual Picture* getPicture();
     virtual QString getFilter();    // Возвращает фильтр для поиска в справочнике
     TableView* getGrdTable();
+    void setGrdTable(TableView*);
 
 public slots:
     virtual void cmdAdd();

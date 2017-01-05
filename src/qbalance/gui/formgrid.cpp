@@ -66,6 +66,8 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
 
 FormGrid::~FormGrid()
 {
+    if (defaultForm)
+        delete grdTable;
 }
 
 
@@ -617,4 +619,15 @@ void FormGrid::keyPressEvent(QKeyEvent *event)
 TableView* FormGrid::getGrdTable()
 {
     return grdTable;
+}
+
+
+void FormGrid::setGrdTable(TableView* gt)
+{
+    if (gt != 0)
+    {
+        if (defaultForm)
+            delete grdTable;
+        grdTable = gt;
+    }
 }

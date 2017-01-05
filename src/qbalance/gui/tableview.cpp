@@ -98,6 +98,7 @@ void TableView::close()
 
 void TableView::setEssence(Essence* ess)
 {
+    open();
     essence = ess;
     app = essence->getApp();
     fields = essence->returnColumnsProperties();
@@ -106,6 +107,7 @@ void TableView::setEssence(Essence* ess)
     QTableView::setModel(tableModel);
     connect(tableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(setCurrentIndex(QModelIndex)));
     setReadOnly(essence->isReadOnly());
+    setFormGrid(essence->getForm());
 }
 
 

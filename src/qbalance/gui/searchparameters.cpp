@@ -410,7 +410,6 @@ void SearchParameters::setParent(QWidget* parent)
 void SearchParameters::setFormGrid(FormGridSearch* par)
 {
     parentForm = par;
-//    dictionaries = parentForm->getParent()->getDictionaries();
 }
 
 
