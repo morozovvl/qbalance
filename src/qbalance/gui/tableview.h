@@ -55,7 +55,7 @@ public:
     virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
     Q_INVOKABLE virtual void    setReadOnly(bool);
-    virtual bool                setColumnsHeaders();
+    Q_INVOKABLE virtual bool    setColumnsHeaders();
     Q_INVOKABLE virtual void    hideAllGridSections();
     virtual void                hideGridSection(QString);
     Q_INVOKABLE virtual void    showGridSection(QString);
@@ -67,6 +67,7 @@ public:
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     Q_INVOKABLE virtual void    setColumnsDelegates();
+    Q_INVOKABLE virtual int     getColumnsCount();
 
 
 public slots:

@@ -722,3 +722,8 @@ void TableView::clearColumnDefinitions()
     }
 }
 
+
+int TableView::getColumnsCount()
+{
+    return fields.count();
+}
