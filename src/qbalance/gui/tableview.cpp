@@ -256,15 +256,6 @@ bool TableView::setColumnsHeaders()
     {
         if (parent != 0)
         {
-            // Если заголовки столбцов еще не установлены
-            QHeaderView* header = horizontalHeader();
-
-#if QT_VERSION >= 0x050000
-            header->setSectionsMovable(true);
-#else
-            header->setMovable(true);
-#endif
-            header->setSortIndicatorShown(true);
             app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
             if (fields.count() > 0)
             {
