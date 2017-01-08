@@ -66,7 +66,6 @@ public:
     Q_INVOKABLE virtual void    appendColumnDefinition(int number, QString column, QString header = "", bool readOnly = false);
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
-    Q_INVOKABLE virtual void    setColumnsDelegates();
     Q_INVOKABLE virtual int     getColumnsCount();
 
 

@@ -259,7 +259,61 @@ bool TableView::setColumnsHeaders()
             app->getDBFactory()->getColumnsHeaders(essence->getTagName(), &fields);
             if (fields.count() > 0)
             {
-                setColumnsDelegates();
+                QHeaderView* header = horizontalHeader();
+            #if QT_VERSION >= 0x050000
+                header->setSectionsMovable(true);
+            #else
+                header->setMovable(true);
+            #endif
+                header->setSortIndicatorShown(true);
+
+                // Составим список столбцов, у которых поле number в списке fields больше 0
+                for (int i = 0; i < fields.count(); i++)
+                {
+                    if (fields.at(i).number > 0)
+                    {
+                        MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
+                        if (delegate != 0)
+                        {
+                            delegate->setFieldName(fields.at(i).column);
+                            if (!fields.at(i).readOnly)
+                            {
+                                connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+                            }
+                            delegate->setReadOnly(fields.at(i).readOnly);
+                            delete itemDelegateForColumn(i);
+                            setItemDelegateForColumn(i, delegate);              // POSSIBLY MEMORY LEAK
+                        }
+                        columns.insert(fields.at(i).number - 1, i);
+                    }
+                }
+                // Сделаем столбцы из этого списка первыми
+                int i;
+                for (i = 0;; i++)
+                {
+                    if (columns.contains(i))
+                    {
+                        int fldIndex = tableModel->fieldIndex(fields.at(columns.value(i)).column);
+                        int visualIndex = header->visualIndex(fldIndex);
+                        header->moveSection(visualIndex, i);
+                        header->showSection(visualIndex);
+                        tableModel->setHeaderData(fldIndex, Qt::Horizontal, fields.at(columns.value(i)).header);
+                    }
+                    else
+                        break;
+                }
+                // Остальные столбцы скроем
+                for (; i < header->count(); i++)
+                {
+                    header->hideSection(header->logicalIndex(i));
+                }
+                // Найдем индекс крайнего справа столбца
+                for (i = 0;; i++)
+                {
+                    if (horizontalHeader()->logicalIndex(i) < 0)
+                        break;
+                    maxColumn = i;
+                }
             }
             readSettings();
             columnsHeadersSeted = true;
@@ -267,66 +321,6 @@ bool TableView::setColumnsHeaders()
         return true;
     }
     return false;
-}
-
-
-void    TableView::setColumnsDelegates()
-{
-    QHeaderView* header = horizontalHeader();
-#if QT_VERSION >= 0x050000
-    header->setSectionsMovable(true);
-#else
-    header->setMovable(true);
-#endif
-    header->setSortIndicatorShown(true);
-
-    // Составим список столбцов, у которых поле number в списке fields больше 0
-    for (int i = 0; i < fields.count(); i++)
-    {
-        if (fields.at(i).number > 0)
-        {
-            MyItemDelegate* delegate = getColumnDelegate(fields.at(i));
-            if (delegate != 0)
-            {
-                delegate->setFieldName(fields.at(i).column);
-                if (!fields.at(i).readOnly)
-                {
-                    connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-                }
-                delegate->setReadOnly(fields.at(i).readOnly);
-                delete itemDelegateForColumn(i);
-                setItemDelegateForColumn(i, delegate);              // POSSIBLY MEMORY LEAK
-            }
-            columns.insert(fields.at(i).number - 1, i);
-        }
-    }
-    // Сделаем столбцы из этого списка первыми
-    int i;
-    for (i = 0;; i++)
-    {
-        if (columns.contains(i))
-        {
-            int fldIndex = tableModel->fieldIndex(fields.at(columns.value(i)).column);
-            int visualIndex = header->visualIndex(fldIndex);
-            header->moveSection(visualIndex, i);
-            header->showSection(visualIndex);
-            tableModel->setHeaderData(fldIndex, Qt::Horizontal, fields.at(columns.value(i)).header);
-        }
-        else
-            break;
-    }
-    // Остальные столбцы скроем
-    for (; i < header->count(); i++)
-    {
-        header->hideSection(header->logicalIndex(i));
-    }
-    // Найдем индекс крайнего справа столбца
-    for (i = 0;; i++)
-    {
-        if (horizontalHeader()->logicalIndex(i) < 0)
-            break;
-        maxColumn = i;
-    }
 }
 
 
