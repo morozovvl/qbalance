@@ -1357,7 +1357,6 @@ QString ScriptEngine::loadScript(QString scriptFile)
     {
         result = scripts.value(scriptFile);
     }
-//    scriptFileName = scriptFile;
     return result;
 }
 

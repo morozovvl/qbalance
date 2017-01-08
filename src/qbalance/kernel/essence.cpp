@@ -870,14 +870,13 @@ bool Essence::open()
         setOrderClause();
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();
+        openScriptEngine();
 
         grdTable = form->getGrdTable();
         if (grdTable != 0)
         {
             grdTable->setEssence(this);
         }
-
-        openScriptEngine();
         return true;
     }
     return false;

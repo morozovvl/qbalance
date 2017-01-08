@@ -124,8 +124,8 @@ bool Dictionaries::addDictionary(QString dictName)
         if (dict->open())
         {
             dictionariesList.insert(dictName, dict);
-            dictionariesNamesList.append(dictName);
-//            dict->initFormEvent();
+//            dictionariesNamesList.append(dictName);
+            dictionariesNamesList.insert(0, dictName);
             dict->setDictionaries(this);
 
             // Установим прототипы справочников
@@ -176,7 +176,8 @@ bool Dictionaries::addSaldo(QString acc)
     QString alias = "saldo" + acc;
     if (!dictionariesList.contains(alias))
     {
-        dictionariesNamesList.append(alias);
+//        dictionariesNamesList.append(alias);
+        dictionariesNamesList.insert(0, alias);
         // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
         Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
         accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));

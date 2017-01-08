@@ -46,7 +46,7 @@ public:
     TableView();
     ~TableView();
     virtual void                open();
-    virtual void                close();
+    Q_INVOKABLE virtual void    close();
 
     virtual void                setFormGrid(FormGrid* par);
     Q_INVOKABLE virtual void    setEssence(Essence*);
@@ -55,7 +55,7 @@ public:
     virtual void                selectNextColumn();         // Перемещает курсор в следующий столбец, разрешенный к редактированию
     virtual void                selectPreviousColumn();     // Перемещает курсор в предыдущий столбец, разрешенный к редактированию
     Q_INVOKABLE virtual void    setReadOnly(bool);
-    Q_INVOKABLE virtual bool    setColumnsHeaders();
+    Q_INVOKABLE virtual void    setColumnsHeaders();
     Q_INVOKABLE virtual void    hideAllGridSections();
     virtual void                hideGridSection(QString);
     Q_INVOKABLE virtual void    showGridSection(QString);
@@ -67,6 +67,7 @@ public:
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     Q_INVOKABLE virtual int     getColumnsCount();
+    Q_INVOKABLE virtual void    setConfigName(QString);
 
 
 public slots:
@@ -86,6 +87,7 @@ private:
     bool                        columnsHeadersSeted;
     int                         maxColumn;
     QString                     name;
+    QString                     configName;
     FormGrid*                   parent;
     TApplication*               app;
     Essence*                    essence;

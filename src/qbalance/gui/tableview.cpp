@@ -53,6 +53,7 @@ void TableView::setFormGrid(FormGrid* par)
 {
     parent = par;
     setPicture(parent->getPicture());
+    configName = parent->getConfigName();
 }
 
 
@@ -250,7 +251,7 @@ void TableView::restoreCurrentIndex(QModelIndex index)
 }
 
 
-bool TableView::setColumnsHeaders()
+void TableView::setColumnsHeaders()
 {
     if (!columnsHeadersSeted)
     {
@@ -318,9 +319,7 @@ bool TableView::setColumnsHeaders()
             readSettings();
             columnsHeadersSeted = true;
         }
-        return true;
     }
-    return false;
 }
 
 
@@ -584,7 +583,7 @@ void TableView::readSettings()
 
     if (settings.status() == QSettings::NoError)
     {
-        settings.beginGroup(parent->getConfigName());
+        settings.beginGroup(configName);
         int columnCount = settings.beginReadArray("grid");
         if (columnCount > 0)
         {
@@ -609,12 +608,12 @@ void TableView::readSettings()
         QSqlQuery config;
         QHash<QString, int> values;
 
-        app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + parent->getConfigName() + "...");
+        app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + configName + "...");
         config = app->getDBFactory()->getConfig();
         config.first();
         while (config.isValid())
         {
-            if (config.record().value("group").toString() == parent->getConfigName())
+            if (config.record().value("group").toString() == configName)
             {
                 values.insert(config.record().value("name").toString(), config.record().value("value").toInt());
             }
@@ -647,7 +646,7 @@ void TableView::writeSettings()
         int columnCount = tableModel->columnCount();
         if (columnCount > 0)
         {
-            settings.beginGroup(parent->getConfigName());
+            settings.beginGroup(configName);
             settings.beginWriteArray("grid", columnCount);
             for (int i = 0; i < columnCount; i++)
             {
@@ -661,12 +660,12 @@ void TableView::writeSettings()
             // Если работает пользователь SA, то сохраним конфигурацию окна на сервере
             if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
             {
-                app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + parent->getConfigName() + "...");
+                app->showMessageOnStatusBar(tr("Сохранение на сервере ширины столбцов справочника ") + configName + "...");
                 for (int i = 0; i < columnCount; i++)
                 {
                     int width = columnWidth(i);
                     if (width > 0)
-                        app->getDBFactory()->setConfig(parent->getConfigName(), QString("grid/%1/width").arg(i), QString("%1").arg(width));
+                        app->getDBFactory()->setConfig(configName, QString("grid/%1/width").arg(i), QString("%1").arg(width));
                 }
                 app->showMessageOnStatusBar("");
             }
@@ -711,4 +710,10 @@ void TableView::clearColumnDefinitions()
 int TableView::getColumnsCount()
 {
     return fields.count();
+}
+
+
+void TableView::setConfigName(QString confName)
+{
+    configName = confName;
 }
