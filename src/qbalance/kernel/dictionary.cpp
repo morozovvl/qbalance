@@ -561,6 +561,10 @@ void Dictionary::setForm(QString formName)
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
     parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");
+
+    grdTable = form->getGrdTable();
+    if (grdTable != 0)
+        grdTable->setEssence(this);
 }
 
 
