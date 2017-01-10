@@ -115,6 +115,7 @@ void TableView::setEssence(Essence* ess)
 void TableView::cmdAdd()
 {
     essence->add();
+    setCurrentFocus();
 }
 
 
