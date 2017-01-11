@@ -872,10 +872,15 @@ bool Essence::open()
             initForm();
         openScriptEngine();
 
-        grdTable = form->getGrdTable();
-        if (grdTable != 0)
-            grdTable->setEssence(this);
-        return true;
+        if (form != 0)
+        {
+            grdTable = form->getGrdTable();
+            if (grdTable != 0)
+                grdTable->setEssence(this);
+            return true;
+        }
+        else
+            return true;
     }
     return false;
 }
