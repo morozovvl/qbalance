@@ -877,10 +877,8 @@ bool Essence::open()
             grdTable = form->getGrdTable();
             if (grdTable != 0)
                 grdTable->setEssence(this);
-            return true;
         }
-        else
-            return true;
+        return true;
     }
     return false;
 }
