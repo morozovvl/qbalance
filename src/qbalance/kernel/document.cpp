@@ -611,6 +611,54 @@ void Document::loadDocument()
     for (int i = 0; i < topersList->count(); i++)
     {
         int prvNumber = topersList->at(i).number;
+        dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
+        if (getDictionariesList()->contains(dictName) && !processedDictNames.contains(dictName))
+        {   // если этот справочник открыт в локальных справочниках документа...
+            dict = getDictionariesList()->value(dictName);
+            dict->setCanShow(true);
+            processedDictNames.append(dictName);
+            if (dict->isConst())
+            {   // ... и помечен как "постоянный"
+                // то установим его значение, которое актуально для всего документа
+                qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                if (val > 0)
+                {
+                    dict->setId(val);
+                    dict->setMustShow(false);
+                    if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                        showParameterText(dictName);
+                }
+            }
+            // Проверим связанные справочники этого справочника, если он набор
+            foreach (QString dictName, dict->getChildDicts())
+            {
+                if (!processedDictNames.contains(dictName))
+                {
+                    Dictionary* childDict = getDictionariesList()->value(dictName);
+                    childDict->setCanShow(false);
+                    processedDictNames.append(dictName);
+                    if (childDict != 0 && childDict->isConst())
+                    {
+                        // Установим сначала значение основного справочника
+                        qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
+                        if (val > 0)
+                        {
+                            dict->setId(val);
+                            dict->setMustShow(false);
+                            // А затем установим значение связанного справочника
+                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
+                            if (val > 0)
+                            {
+                                childDict->setId(val);
+                                childDict->setMustShow(false);
+                                if (!(dictName.left(9) == "документы" && dictName.size() > 9))
+                                    showParameterText(dictName);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         dictName = topersList->at(i).dbDictAlias;   // Получим имя справочника, который участвует в проводках бух.операции по дебету
         if (getDictionariesList()->contains(dictName) && !processedDictNames.contains(dictName))
         {   // если этот справочник открыт в локальных справочниках документа...
@@ -656,54 +704,6 @@ void Document::loadDocument()
                                     if (!(dictName.left(9) == "документы" && dictName.size() > 9))
                                         showParameterText(dictName);
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        dictName = topersList->at(i).crDictAlias;   // то же самое для справочников по кредиту проводок
-        if (getDictionariesList()->contains(dictName) && !processedDictNames.contains(dictName))
-        {   // если этот справочник открыт в локальных справочниках документа...
-            dict = getDictionariesList()->value(dictName);
-            dict->setCanShow(true);
-            processedDictNames.append(dictName);
-            if (dict->isConst())
-            {   // ... и помечен как "постоянный"
-                // то установим его значение, которое актуально для всего документа
-                qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
-                if (val > 0)
-                {
-                    dict->setId(val);
-                    dict->setMustShow(false);
-                    if (!(dictName.left(9) == "документы" && dictName.size() > 9))
-                        showParameterText(dictName);
-                }
-            }
-            // Проверим связанные справочники этого справочника, если он набор
-            foreach (QString dictName, dict->getChildDicts())
-            {
-                if (!processedDictNames.contains(dictName))
-                {
-                    Dictionary* childDict = getDictionariesList()->value(dictName);
-                    childDict->setCanShow(false);
-                    processedDictNames.append(dictName);
-                    if (childDict != 0 && childDict->isConst())
-                    {
-                        // Установим сначала значение основного справочника
-                        qulonglong val = getValue(QString("P%1__%2").arg(prvNumber).arg(db->getObjectName("проводки.кркод")), 0).toULongLong();
-                        if (val > 0)
-                        {
-                            dict->setId(val);
-                            dict->setMustShow(false);
-                            // А затем установим значение связанного справочника
-                            val = dict->getValue(QString("%1_%2").arg(idFieldName).arg(dictName).toUpper(), 0).toULongLong();
-                            if (val > 0)
-                            {
-                                childDict->setId(val);
-                                childDict->setMustShow(false);
-                                if (!(dictName.left(9) == "документы" && dictName.size() > 9))
-                                    showParameterText(dictName);
                             }
                         }
                     }

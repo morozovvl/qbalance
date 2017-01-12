@@ -29,6 +29,7 @@ private:
     QString account;
     QString dictionaryName;
     bool quan;
+    bool leftOuterJoin;
 
 protected:
     virtual bool    setTableModel(int = 0);

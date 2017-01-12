@@ -114,8 +114,10 @@ void TableView::setEssence(Essence* ess)
 
 void TableView::cmdAdd()
 {
+    QModelIndex index = currentIndex();      // Запомним, где стоял курсор перед удалением записи
     essence->add();
     setCurrentFocus();
+    selectColumn(index.column());
 }
 
 

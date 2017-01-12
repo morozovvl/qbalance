@@ -72,7 +72,8 @@ QString Saldo::objectName()
 
 void Saldo::setQuan(bool q)
 {
-    quan = q; tableModel->selectStatement();
+    quan = q;
+    tableModel->selectStatement();
 }
 
 
@@ -105,7 +106,7 @@ bool Saldo::setTableModel(int)
             }
         }
         selectCommand.replace(" FROM", selectList + " FROM");
-        selectCommand.append(QString(" LEFT OUTER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
+        selectCommand.append(QString(" INNER JOIN \"%1\" ON \"%1\".\"%2\"='%3' AND \"%1\".\"%4\"=\"%5\".\"%6\"").arg(tName)
                                                                                                                 .arg(db->getObjectName(dictionaryName + ".счет"))
                                                                                                                 .arg(account)
                                                                                                                 .arg(db->getObjectName(tName + ".код"))
@@ -207,4 +208,3 @@ void Saldo::setId(qulonglong id)
     tableModel->selectStatement();
     lock(true);
 }
-
