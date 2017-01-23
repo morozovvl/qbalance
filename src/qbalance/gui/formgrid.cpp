@@ -491,6 +491,7 @@ void FormGrid::cmdPrint(bool autoPrint)
     {
         QHBoxLayout* cmdButtonLayout = (QHBoxLayout*)formWidget->findChild("cmdButtonLayout");
         QString fileName = app->getReportFile(getParent()->getTagName(), autoPrint, formWidget, cmdButtonLayout->contentsRect());
+        qDebug() << fileName;
         if (fileName.size() > 0)
             parent->print(fileName);
     }

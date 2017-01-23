@@ -75,6 +75,7 @@ public:
     Q_INVOKABLE virtual QStringList     getFieldsList();
     Q_INVOKABLE virtual QString         getFieldName(int);
     Q_INVOKABLE virtual QString         getTableName();
+    Q_INVOKABLE virtual void            setTagName(QString);
     virtual QString                     getTagName();
     QString                             getQueryTableName();
     Q_INVOKABLE virtual void            setOrderClause(QString);

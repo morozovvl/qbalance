@@ -249,3 +249,9 @@ TApplication* Table::getApp()
 {
     return app;
 }
+
+
+void Table::setTagName(QString name)
+{
+    tagName = name;
+}
