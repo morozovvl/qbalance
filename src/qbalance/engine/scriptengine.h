@@ -59,6 +59,7 @@ public:
     QString getScriptFileName();
     Essence* getParent();
     Document* getDocument();
+//    virtual QScriptValue globalObject();
 // События
     virtual QHash<QString, EventFunction>* getEventsList();
     virtual void    appendEvent(QString, EventFunction*);

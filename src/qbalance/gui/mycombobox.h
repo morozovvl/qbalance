@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class SearchParameters;
 
-class QDESIGNER_WIDGET_EXPORT MyComboBox : public QComboBox {
+class MyComboBox : public QComboBox {
    Q_OBJECT
 public:
     MyComboBox(QWidget* parent = 0);

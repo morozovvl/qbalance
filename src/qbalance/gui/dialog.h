@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class MainWindow;
 
 
-class QDESIGNER_WIDGET_EXPORT Dialog : public QDialog
+class Dialog : public QDialog
 
 {
     Q_OBJECT

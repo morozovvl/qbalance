@@ -41,7 +41,7 @@ enum DelegateTypes
     Date
 };
 
-class QDESIGNER_WIDGET_EXPORT MyItemDelegate : public QItemDelegate {
+class MyItemDelegate : public QItemDelegate {
     Q_OBJECT
 
 public:

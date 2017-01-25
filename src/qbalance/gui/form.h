@@ -49,7 +49,7 @@ public:
     Q_INVOKABLE Dialog* getFormWidget();
     Q_INVOKABLE bool isVisible();
     Q_INVOKABLE virtual Dictionary* getParent() { return (Dictionary*)parent; }
-    Q_INVOKABLE bool isFormSelected();
+    Q_INVOKABLE virtual bool isFormSelected();
     virtual QString getConfigName();
     void appendToolTip(QString name, QString value);
     virtual void keyPressEvent(QKeyEvent*);

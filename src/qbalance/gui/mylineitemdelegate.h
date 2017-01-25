@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtDesigner/QDesignerExportWidget>
 #include "myitemdelegate.h"
 
-class QDESIGNER_WIDGET_EXPORT MyLineItemDelegate : public MyItemDelegate {
+class MyLineItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
     MyLineItemDelegate(QObject*, FormGrid* = 0);

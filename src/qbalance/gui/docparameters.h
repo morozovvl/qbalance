@@ -35,7 +35,7 @@ class FormDocument;
 class Dictionary;
 
 
-class QDESIGNER_WIDGET_EXPORT DocParameters : public QFrame {
+class DocParameters : public QFrame {
     Q_OBJECT
 
 public:

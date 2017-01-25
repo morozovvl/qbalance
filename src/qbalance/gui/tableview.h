@@ -39,7 +39,7 @@ class MySqlRelationalTableModel;
 struct FieldType;
 
 
-class QDESIGNER_WIDGET_EXPORT TableView : public QTableView {
+class TableView : public QTableView {
     Q_OBJECT
 
 public:

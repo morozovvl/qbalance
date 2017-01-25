@@ -608,20 +608,8 @@ void TableView::readSettings()
     if (!readedFromEnv)
     {
         // Если информация о ширине столбца отстутствует в окружении программы, попытаемся прочитать ее из базы
-        QSqlQuery config;
         QHash<QString, int> values;
-
-        app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + configName + "...");
-        config = app->getDBFactory()->getConfig();
-        config.first();
-        while (config.isValid())
-        {
-            if (config.record().value("group").toString() == configName)
-            {
-                values.insert(config.record().value("name").toString(), config.record().value("value").toInt());
-            }
-            config.next();
-        }
+        values = app->getDBFactory()->getConfig(configName);
         int i = 0;
         while (true)
         {

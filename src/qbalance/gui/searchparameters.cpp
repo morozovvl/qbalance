@@ -137,7 +137,7 @@ void SearchParameters::addString(QString name, int strNum)
         connect(button, SIGNAL(clicked()), this, SLOT(dictionaryButtonPressed()));
         if (app != 0)
         {
-            labelName = app->getDBFactory()->getDictionariesProperties(name).value("имя_в_форме").toString();
+            labelName = app->getDBFactory()->getDictionariesProperties(name, "имя_в_форме");
 //            name = name + "." + programNameFieldName;
             if (labelName.size() == 0)
             {

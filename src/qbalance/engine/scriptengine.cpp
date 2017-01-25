@@ -1390,3 +1390,9 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     return result;
 }
 
+/*
+QScriptValue ScriptEngine::globalObject()
+{
+    return QScriptEngine::globalObject();
+}
+*/

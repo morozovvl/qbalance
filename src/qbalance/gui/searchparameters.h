@@ -34,7 +34,7 @@ class FormGridSearch;
 class Dictionaries;
 struct sParam;
 
-class QDESIGNER_WIDGET_EXPORT SearchParameters : public QFrame {
+class SearchParameters : public QFrame {
     Q_OBJECT
 
 public:

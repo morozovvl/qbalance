@@ -119,6 +119,26 @@ QSqlQuery DBFactory::getConfig()
 }
 
 
+QHash<QString, int> DBFactory::getConfig(QString configName)
+{
+    QHash<QString, int> values;
+    QSqlQuery config;
+
+    app->showMessageOnStatusBar(tr("Загрузка с сервера ширины столбцов справочника ") + configName + "...");
+    config = getConfig();
+    config.first();
+    while (config.isValid())
+    {
+        if (config.record().value("group").toString() == configName)
+        {
+            values.insert(config.record().value("name").toString(), config.record().value("value").toInt());
+        }
+        config.next();
+    }
+    return values;
+}
+
+
 QSqlQuery* DBFactory::getDictionaries()
 {
     return &dictionaries;
@@ -547,6 +567,12 @@ QSqlRecord DBFactory::getDictionariesProperties(QString tName)
         } while (dictionariesPermitions.next());
     }
     return result;
+}
+
+
+QString DBFactory::getDictionariesProperties(QString tName, QString nameInForm)
+{
+    return getDictionariesProperties(tName).value(nameInForm).toString();
 }
 
 

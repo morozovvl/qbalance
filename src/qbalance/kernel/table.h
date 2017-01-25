@@ -77,7 +77,7 @@ public:
     Q_INVOKABLE virtual QString         getTableName();
     Q_INVOKABLE virtual void            setTagName(QString);
     virtual QString                     getTagName();
-    QString                             getQueryTableName();
+    virtual QString                     getQueryTableName();
     Q_INVOKABLE virtual void            setOrderClause(QString);
     Q_INVOKABLE void                    setReadOnly(bool);
     Q_INVOKABLE virtual bool            isReadOnly();

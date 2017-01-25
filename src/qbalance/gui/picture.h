@@ -31,7 +31,7 @@ class TApplication;
 class FormGrid;
 
 
-class QDESIGNER_WIDGET_EXPORT Picture: public QFrame {
+class Picture: public QFrame {
     Q_OBJECT
 
 public:

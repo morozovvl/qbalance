@@ -170,8 +170,9 @@ public:
     QSqlDatabase* getDB();
 
     virtual void getColumnsHeaders(QString, QList<FieldType>*);
-    QSqlQuery getDictionariesProperties();
+    virtual QSqlQuery getDictionariesProperties();
     virtual QSqlRecord getDictionariesProperties(QString tableName);
+    virtual QString getDictionariesProperties(QString, QString);
     QSqlQuery getTopersProperties();
     QSqlRecord getTopersProperties(int operNumber);
     QSqlQuery getToper(int operNumber);
@@ -220,6 +221,8 @@ public:
     // Функции для сохранения в базе и восстановления конфигураций объектов
     virtual void setConfig(QString, QString, QString);
     virtual QSqlQuery getConfig();
+    virtual QHash<QString, int> getConfig(QString);
+
 
     // Функции для мастера создания новых (свойств старых) справочников
     bool setTableGuiName(QString tableName, QString menuName, QString formName);

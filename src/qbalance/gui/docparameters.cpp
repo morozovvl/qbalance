@@ -97,7 +97,7 @@ void DocParameters::addString(QString name)
     lineEdit->setObjectName(name);
     if (app != 0)
     {
-        QString labelName = app->getDBFactory()->getDictionariesProperties(name).value(__NAME_IN_FORM__).toString();
+        QString labelName = app->getDBFactory()->getDictionariesProperties(name, __NAME_IN_FORM__);
         if (labelName.size() == 0)
             labelName = name;
         QLabel* label = new QLabel(labelName + ":");

@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QAbstractItemDelegate>
 #include <QtDesigner/QDesignerExportWidget>
 
-class QDESIGNER_WIDGET_EXPORT MyNumericEdit : public QLineEdit {
+class MyNumericEdit : public QLineEdit {
     Q_OBJECT
 public:
     MyNumericEdit(QWidget *parent = 0);
