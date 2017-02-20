@@ -68,7 +68,12 @@ void MainWindow::showDocuments() {
 }
 
 void MainWindow::showProcesses() {
-    TApplication::exemplar()->showProcesses();
+    TApplication* app = TApplication::exemplar();
+    QString fileName = app->getProcessFile("обработка", app->getMainWindow(), reportMenu->contentsRect());
+    if (fileName.size() > 0)
+    {
+        app->runScript(fileName);
+    }
 }
 
 void MainWindow::showReports() {

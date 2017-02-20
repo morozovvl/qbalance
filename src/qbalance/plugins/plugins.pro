@@ -1,4 +1,4 @@
-QT += sql \
+CONFIG += sql \
         core \
         script \
         gui \

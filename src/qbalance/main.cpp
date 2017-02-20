@@ -78,12 +78,6 @@ int main(int argc, char *argv[])
         lStart = TApplication::readParameters(argc, argv);    // прочитаем их
     if (lStart)
     {
-        TApplication::setDebugMode("1");
-        TApplication::setDebugMode("3");
-        TApplication::setDebugMode("4");
-        TApplication::setDebugMode("5");
-        TApplication::setDebugMode("");
-
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
         application.setDebugMode("0");

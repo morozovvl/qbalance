@@ -509,7 +509,14 @@ void TApplication::initConfig()
     setConfig("photo", "GET_PICTURE_FROM_SERVER_IN_DOCUMENT", "Загружать фото с сервера в документе (замедлит работу с документом)", CONFIG_VALUE_BOOLEAN, false);
 
     setConfigTypeName("params", "Параметры");
-    setConfig("params", "PARAMETERS", "Параметры при запуске", CONFIG_VALUE_STRING, "");
+    setConfig("params", "PARAMETERS_D1", "Журнал комманд запросов (файл debug1.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_D2", "Журнал алгоритмов ядра (файл debug2.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_D3", "Журнал скриптов (файл debug3.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_D4", "Журнал устройства COM-порта (файл debug4.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_D5", "Журнал обмена между экземплярами приложения (файл debug5.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_D6", "Журнал банковского терминала (файл debug6.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_UL", "Объединить все включенные журналы отладки в одном файле (debug.log)", CONFIG_VALUE_BOOLEAN, false);
+    setConfig("params", "PARAMETERS_FD", "Выводить полную отладочную информацию", CONFIG_VALUE_BOOLEAN, false);
 }
 
 
@@ -870,7 +877,8 @@ void TApplication::showMessageOnStatusBar(const QString &message, int timeout)
 }
 
 
-void TApplication::showConfigs() {
+void TApplication::showConfigs()
+{
     ConfigForm* form = new ConfigForm();
     if (form->open(getMainWindow())) {
         form->exec();
@@ -880,7 +888,8 @@ void TApplication::showConfigs() {
 }
 
 
-QString TApplication::getLogsPath() {
+QString TApplication::getLogsPath()
+{
     return getAnyPath("/logs");
 }
 
@@ -891,27 +900,32 @@ QString TApplication::getMessagesLogsPath(QString fileName)
 }
 
 
-QString TApplication::getFormsPath(QString fileName) {
+QString TApplication::getFormsPath(QString fileName)
+{
     return getAnyPath("/forms", fileName);
 }
 
 
-QString TApplication::getScriptsPath(QString fileName) {
+QString TApplication::getScriptsPath(QString fileName)
+{
     return getAnyPath("/scripts", fileName);
 }
 
 
-QString TApplication::getReportsPath(QString fileName) {
+QString TApplication::getReportsPath(QString fileName)
+{
     return getAnyPath("/reports", fileName);
 }
 
 
-QString TApplication::getPhotosPath(QString fileName) {
+QString TApplication::getPhotosPath(QString fileName)
+{
     return getAnyPath("/photos", fileName);
 }
 
 
-QString TApplication::getCrashDumpsPath() {
+QString TApplication::getCrashDumpsPath()
+{
     return getAnyPath("/data/crashdumps");
 }
 
@@ -1041,6 +1055,22 @@ void TApplication::setDebugMode(QString value)
 {
     if (!DebugModes.contains(value))
         DebugModes.append(value);
+}
+
+
+void TApplication::setDebugMode(int value, bool active)
+{
+    QString valName = QString("%1").arg(value);
+    if (active)
+    {
+        if (!DebugModes.contains(valName))
+            DebugModes.append(valName);
+    }
+    else
+    {
+        if (DebugModes.contains(valName))
+            DebugModes.removeAll(valName);
+    }
 }
 
 
@@ -1259,35 +1289,12 @@ void TApplication::sleep(int ms)
     } while (timer.elapsed() < ms);
 }
 
-
+/*
 void TApplication::showProcesses()
 {
-/*
-    QDir dir = QDir(getScriptsPath());
-    QString ext = ".qs";
-    QStringList files;
-    // Получим шаблоны с сервера
-    QStringList fs = db->getFilesList("", ScriptFileType, true);
-    foreach (QString f, fs)
-    {
-        if (!files.contains(f))
-            files << f;
-    }
-
-    // Получим список локальных шаблонов отчетов
-    fs = dir.entryList(QStringList("*" + ext), QDir::Files, QDir::Name);
-    foreach (QString f, fs)
-    {
-        if (!files.contains(f))
-        {
-            files << f;
-            Essence::getFile(getScriptsPath(), f, ScriptFileType);
-        }
-    }
-*/
     runScript("analizeBankAccount.js");
 }
-
+*/
 
 int TApplication::runScript(QString scriptName)
 {
@@ -1562,6 +1569,17 @@ void TApplication::readSettings()
     }
 
     settings.endGroup();
+
+// Установим некоторые значения параметров
+    setDebugMode(1, getConfigValue("PARAMETERS_D1").toBool());
+    setDebugMode(2, getConfigValue("PARAMETERS_D2").toBool());
+    setDebugMode(3, getConfigValue("PARAMETERS_D3").toBool());
+    setDebugMode(4, getConfigValue("PARAMETERS_D4").toBool());
+    setDebugMode(5, getConfigValue("PARAMETERS_D5").toBool());
+    setDebugMode(6, getConfigValue("PARAMETERS_D6").toBool());
+    if (getConfigValue("PARAMETERS_UL").toBool())
+        setDebugMode("");
+    fullDebugInfo = getConfigValue("PARAMETERS_FD").toBool();
 }
 
 
@@ -1682,11 +1700,83 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
                                               QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
                                               reportName, &ok);
                 if (ok && !reportName.isEmpty())
-                    result = tagName + "." + reportName + "." + getReportTemplateExt();
+                    result = tagName + "." + reportName + ext;
             }
             else
-                result = tagName + "." + action->text() + "." + getReportTemplateExt();
+                result = tagName + "." + action->text() + ext;
         }
+    }
+    return result;
+}
+
+
+QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect rect)
+{
+    QString result;
+    QDir dir = QDir(getScriptsPath());
+    QString ext = ".js";
+    QStringList files;
+    // Получим шаблоны с сервера
+    QStringList fs = db->getFilesList(tagName, ScriptFileType, true);
+    foreach (QString f, fs)
+    {
+        if (!files.contains(f))
+            files << f;
+    }
+
+    // Получим список локальных шаблонов отчетов
+    fs = dir.entryList(QStringList(tagName + ".*" + ext), QDir::Files, QDir::Name);
+    foreach (QString f, fs)
+    {
+        if (!files.contains(f))
+        {
+            files << f;
+            Essence::getFile(getScriptsPath(), f, ScriptFileType);
+        }
+    }
+
+    QStringList processes;
+    QMenu* menu = new QMenu(formWidget);
+    QAction* newProcessAct = new QAction(QObject::trUtf8("Создать новую обработку..."), this);
+    if (isSA())
+        menu->addAction(newProcessAct);
+    if (files.count() > 0)
+    {
+        if (isSA())
+            menu->addSeparator();
+        for (int i = 0; i < files.size(); i++)
+        {
+            QString file = files.at(i);
+            QString oldFile = file;
+            file.remove(tagName + ".", Qt::CaseInsensitive);      // Уберем префикс файла
+            if (file != oldFile)
+            {
+                file.remove(ext, Qt::CaseInsensitive);                                  // И его суффикс
+                processes << file;                                                        // Оставшуюся часть (название отчета) поместим в меню
+                menu->addAction(file);
+            }
+        }
+    }
+    QAction* action = menu->exec(formWidget->mapToGlobal(formWidget->mapToGlobal(QPoint(rect.x() + 100, rect.y()-menu->height()))));
+    if (action != 0)
+    {
+        if (action == newProcessAct)
+        {
+            QString reportName;                         // Создадим имя отчета по умолчанию
+            int i = 1;
+            do
+            {
+                reportName = QString("Отчет%1").arg(i++);
+            } while (processes.contains(reportName));
+            bool ok;
+            reportName = QInputDialog::getText(formWidget, QObject::trUtf8("Создать новый документ"),
+                                          QObject::trUtf8("Наименование документа:"), QLineEdit::Normal,
+                                          reportName, &ok);
+            if (ok && !reportName.isEmpty())
+                result = tagName + "." + reportName + ext;
+        }
+        else
+            result = tagName + "." + action->text() + ext;
     }
     return result;
 }
@@ -1859,5 +1949,10 @@ bool TApplication::readParameters(int argc, char *argv[])
             }
     }
     return lContinue;
+}
+
+
+void TApplication::showReports()
+{
 }
 

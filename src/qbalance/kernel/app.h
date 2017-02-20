@@ -123,8 +123,8 @@ public:
     virtual GUIFactory* getGUIFactory();
     Q_INVOKABLE QString getLogin();
     Q_INVOKABLE virtual bool isSA();
-    QDate getBeginDate();
-    QDate getEndDate();
+    Q_INVOKABLE QDate getBeginDate();
+    Q_INVOKABLE QDate getEndDate();
     QString getLogsPath();
     QString getMessagesLogsPath(QString = "");
     QString getFormsPath(QString = "");
@@ -140,8 +140,8 @@ public:
 
     void showDictionaries();
     void showDocuments();
-    void showProcesses();
-    void showReports() { ; }
+//    void showProcesses();
+    void showReports();
     void showConfigs();
     void setPeriod();
     void setBeginDate(QDate date);
@@ -162,6 +162,7 @@ public:
     static QString resourcesFile();
     static QString getScriptFileName(int oper);
     static void setDebugMode(QString value);
+    static void setDebugMode(int, bool);
     void    setDebugToBuffer(bool buff);
     int getDebugBufferCount(int mode);
     void clearDebugBuffer(int mode);
@@ -251,6 +252,7 @@ public:
     virtual QMyExtSerialPort* getSerialPort(const QString & name, QMyExtSerialPort::QueryMode mode = QMyExtSerialPort::EventDriven, QObject * parent = 0);
     virtual MyProgressDialog* getMyProgressDialog(QString mess);
     QString         getReportFile(QString, bool, QWidget*, QRect);
+    QString         getProcessFile(QString, QWidget*, QRect);
 
     void    openPlugins();
 

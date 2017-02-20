@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "myprogressdialog.h"
 
 
-MyProgressDialog::MyProgressDialog(QString title, QWidget *parent): QProgressDialog(parent)
+MyProgressDialog::MyProgressDialog(QString title, QWidget *parent): QProgressDialog(parent, Qt::Dialog)
 {
     setWindowTitle(title);
     setModal(true);
@@ -41,3 +41,12 @@ void MyProgressDialog::keyPressEvent(QKeyEvent* event)
     else
         QProgressDialog::keyPressEvent(event);
 }
+
+
+void MyProgressDialog::hide()
+{
+    QProgressDialog::hide();
+    cancel();
+}
+
+
