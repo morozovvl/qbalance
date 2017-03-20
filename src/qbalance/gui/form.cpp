@@ -290,9 +290,13 @@ void Form::show()
     {
         lSelected = false;
         checkVisibility();
-        if (getSubWindow() != 0)
-                subWindow->show();
         formWidget->show();
+        if (getSubWindow() != 0)
+        {
+            subWindow->show();
+            activateSubWindow();
+            activateWidget();
+        }
     }
 }
 

@@ -830,7 +830,6 @@ void ScriptEngine::loadScriptObjects()
 bool ScriptEngine::evaluate()
 {
     bool result = true;
-    scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
     if (script.size() > 0)
     {
         QScriptProgram program(script);
@@ -857,6 +856,8 @@ bool ScriptEngine::evaluate()
                 }
             }
             errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
+            scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
+            result = scriptResult;
         }
     }
     return result;

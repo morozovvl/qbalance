@@ -931,7 +931,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                     result = -1;
             }
         }
-        if ((result < 0 || result == 0x50) && attempts < maxTries)
+        if (((result < 0) || (result == 0x50)) && (attempts < maxTries))
         {
             attempts++;
             app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);

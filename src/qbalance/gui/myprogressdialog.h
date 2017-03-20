@@ -31,7 +31,7 @@ public:
 
 public slots:
       //Slot that is called when cancel Button is Clicked
-    void hide();
+    virtual void hide();
 
 protected:
     void keyPressEvent(QKeyEvent*);

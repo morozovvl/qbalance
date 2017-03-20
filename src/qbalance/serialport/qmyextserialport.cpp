@@ -139,7 +139,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
                 writeLog(QString("*** ЗАДЕРЖКА свыше %1 сек ***").arg(timeOut/1000));
                 break;
             }
-            app->sleep(10);
+            app->sleep(50);
         }
         tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
         appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);

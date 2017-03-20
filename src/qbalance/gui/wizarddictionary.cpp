@@ -385,7 +385,7 @@ bool WizardDictionary::setData()
         for (int i = 0; i < fieldsTable.rowCount(); i++)
         {
             QString tName = fieldsTable.item(i, tableField)->text().trimmed();
-            QString fieldName = fieldsTable.item(i, columnField)->text().trimmed();
+            QString fieldName = fieldsTable.item(i, columnField)->text().trimmed().toUpper();
             QString sType = fieldsTable.item(i, typeField)->text();
             int nLength = fieldsTable.item(i, lengthField)->text().toInt();
             int nPrecision = fieldsTable.item(i, precisionField)->text().toInt();
@@ -490,7 +490,7 @@ void WizardDictionary::addColumn()
 void WizardDictionary::deleteColumn()
 {
     QString tableName = fieldsTable.item(fieldsTable.currentRow(), tableField)->text().trimmed();
-    QString fieldName = fieldsTable.item(fieldsTable.currentRow(), columnField)->text().trimmed();
+    QString fieldName = fieldsTable.item(fieldsTable.currentRow(), columnField)->text().trimmed().toUpper();
     if (fieldName != "КОД")
     {
         if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить столбец? Вы уверены?")) == QMessageBox::Yes)
@@ -575,7 +575,7 @@ void WizardDictionary::frameActivated(int frameNumber)
         oldColumnsList.clear();
         for (int i = 0; i < fields.count(); i++)
         {
-            oldColumnsList.append(fields.at(i).table + "__" + fields.at(i).name);
+            oldColumnsList.append(fields.at(i).table + "__" + fields.at(i).name.toUpper());
         }
     }
     if (frameNumber == 2)
@@ -653,7 +653,7 @@ void WizardDictionary::saveFields()
     {
         FieldType field;
         field.table = fieldsTable.item(i, tableField)->text();
-        field.name = fieldsTable.item(i, columnField)->text();
+        field.name = fieldsTable.item(i, columnField)->text().toUpper();
         field.column = field.name;
         field.type = fieldsTable.item(i, typeField)->text();
         field.length = fieldsTable.item(i, lengthField)->text().toInt();
@@ -679,8 +679,9 @@ void WizardDictionary::saveOrder()
         for (int j = 0; j < fields.count(); j++)
         {
             FieldType field = fields.at(j);
-            if (columnsOrder.contains(field.table + "__" + field.name))
-                field.number = columnsOrder.value(field.table + "__" + field.name);
+            QString column = QString(field.table + "__" + field.name.toUpper());
+            if (columnsOrder.contains(column))
+                field.number = columnsOrder.value(column);
             else
                 field.number = 0;
             fields.removeAt(j);

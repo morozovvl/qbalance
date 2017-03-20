@@ -35,6 +35,10 @@ public:
     Q_INVOKABLE virtual QDate getEndDate();
     Q_INVOKABLE virtual void setBeginDate(QDate);
     Q_INVOKABLE virtual void setEndDate(QDate);
+public slots:
+    Q_INVOKABLE virtual int exec();
+    Q_INVOKABLE virtual void show();
+
 private:
     QCalendarWidget* pBeginCalendar;
     QCalendarWidget* pEndCalendar;

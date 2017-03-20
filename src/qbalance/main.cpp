@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     {
         QStringList paths = application.libraryPaths();
         application.setLibraryPaths(paths);
-        application.setDebugMode("0");
+//        application.setDebugMode("0");
         application.debug(0, "\n");
         application.debug(0, "Program startup.");
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме

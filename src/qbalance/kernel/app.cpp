@@ -283,6 +283,13 @@ QString TApplication::getScriptFileName(int oper)
 void TApplication::setDebugToBuffer(bool buff)
 {
     debugToBuffer = buff;
+    if (!buff)
+    {
+        foreach (QString mode, DebugModes)
+        {
+            debug(mode.toInt(), "");
+        }
+    }
 }
 
 
@@ -466,7 +473,7 @@ void TApplication::initConfig()
     setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
 #endif
     setConfig("fr", "FR_DRIVER_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
-    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 10);
+    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 3);
     setConfig("fr", "FR_LOCAL_DRIVER_TIMEOUT", "Таймаут для локального ФР, мс", CONFIG_VALUE_INTEGER, 100);
     setConfig("fr", "FR_REMOTE_DRIVER_TIMEOUT", "Таймаут для сетевого ФР, мс", CONFIG_VALUE_INTEGER, 150);
     setConfig("fr", "FR_DRIVER_PASSWORD", "Пароль администратора ФР", CONFIG_VALUE_INTEGER, 30);
@@ -1066,11 +1073,13 @@ void TApplication::setDebugMode(int value, bool active)
         if (!DebugModes.contains(valName))
             DebugModes.append(valName);
     }
+/*
     else
     {
         if (DebugModes.contains(valName))
             DebugModes.removeAll(valName);
     }
+*/
 }
 
 
@@ -1091,10 +1100,13 @@ void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
                 }
                 tempDebugBuffer.remove(debugMode);                          // и закроем буфер
             }
-            QString str;                                                    // дальше будем писать в файл
-            if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
-                str = QDateTime::currentDateTime().toString(logTimeFormat()) + " ";
-            writeToDebugFile(debugMode, str + value);
+            if (value.size() > 0)
+            {
+                QString str;                                                    // дальше будем писать в файл
+                if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
+                    str = QDateTime::currentDateTime().toString(logTimeFormat()) + " ";
+                writeToDebugFile(debugMode, str + value);
+            }
         }
         else
         {

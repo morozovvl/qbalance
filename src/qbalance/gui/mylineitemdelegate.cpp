@@ -43,14 +43,12 @@ void MyLineItemDelegate::setMaxLength(int l)
 }
 
 
-QWidget* MyLineItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex&) const
+QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &, const QModelIndex&) const
 {
     editorWidget = new QLineEdit(parent);
     editorWidget->setMaxLength(length);
     if (!readOnly)
     {
-//        if (parentForm != 0)
-//            parentForm->getParent()->saveOldValues();
         if (dictionary != 0)
             dictionary->saveOldValues();
         editorWidget->setReadOnly(false);

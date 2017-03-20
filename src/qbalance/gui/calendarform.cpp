@@ -47,9 +47,8 @@ QDate CalendarForm::getEndDate()
 
 
 bool CalendarForm::open(QWidget* pwgt) {
-    if (Form::open(pwgt)) {
-
-        formWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    if (Form::open(pwgt))
+    {
         formWidget->move(100, 100);
 
         formWidget->setWindowTitle(QObject::trUtf8("Рабочий период"));
@@ -74,6 +73,21 @@ bool CalendarForm::open(QWidget* pwgt) {
     }
     return false;
 }
+
+
+int CalendarForm::exec()
+{
+    formWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    return Form::exec();
+}
+
+
+void CalendarForm::show()
+{
+    formWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    Form::show();
+}
+
 
 void CalendarForm::cmdOk() {
     Form::hide();
