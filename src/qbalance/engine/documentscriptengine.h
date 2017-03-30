@@ -39,6 +39,7 @@ public:
     virtual void eventBeforeTotalPrint();
     virtual QHash<QString, EventFunction>* getEventsList();
     virtual ReportContext* getReportContext();
+    virtual void setReportContext(QHash<QString, QVariant>*);
 
 protected:
     virtual void loadScriptObjects();

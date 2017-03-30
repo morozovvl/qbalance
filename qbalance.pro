@@ -4,6 +4,7 @@
 
 TEMPLATE = subdirs
 SUBDIRS = src/qextserialport \
+#          src/gsl \
 	  src/qbalance/plugins \
           src/qbalance/bankterminal \
           src/qbalance/barcodereader \

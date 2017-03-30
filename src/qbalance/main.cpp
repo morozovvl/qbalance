@@ -42,7 +42,7 @@ int buggyFunc() {
     return 0;
 }
 
-
+/*
 void test() {
     // Процедура для тестирования на "утечки" памяти
     QString dictName("счета");
@@ -55,7 +55,7 @@ void test() {
         }
     }
 }
-
+*/
 
 int main(int argc, char *argv[])
 {

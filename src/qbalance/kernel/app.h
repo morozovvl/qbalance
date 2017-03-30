@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QFileDialog>
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QMessageBox>
+#include <QtSql/QSqlQuery>
 #include "configvars.h"
 #include "../storage/filetype.h"
 #include "../serialport/qmyextserialport.h"
@@ -161,8 +162,7 @@ public:
     static QString logTimeFormat();
     static QString resourcesFile();
     static QString getScriptFileName(int oper);
-    static void setDebugMode(QString value);
-    static void setDebugMode(int, bool);
+    static void setDebugMode(int = 0, bool = true);
     void    setDebugToBuffer(bool buff);
     int getDebugBufferCount(int mode);
     void clearDebugBuffer(int mode);
@@ -228,6 +228,7 @@ public:
     void loadFile();
     void printReportWithoutCleaning();
     Q_INVOKABLE virtual int runScript(QString);
+    Q_INVOKABLE void printReport(QString, QSqlQuery* = 0);
     Q_INVOKABLE QString getScript();                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter();
 

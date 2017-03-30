@@ -54,7 +54,6 @@ void TcpServer::pingClient(QString host)
     app->startTimeOut(2000);                   // Ждем ответа в течение 2 сек
     while (!app->isTimeOut())
     {
-        slotReadClient();
         if (pingOk)
             break;
         app->sleep(10);
@@ -229,7 +228,7 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
     {
         str.replace("setDebugMode(", "");
         str.replace(")", "");
-        app->setDebugMode(str);
+        app->setDebugMode(str.toInt());
         resStr = "Ok";
         sendToClient(pClientSocket, resStr);
     }

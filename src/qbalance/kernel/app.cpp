@@ -48,6 +48,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../driverfr/driverfr.h"
 #include "../barcodereader/barcodereader.h"
 #include "../cardcodereader/cardcodereader.h"
+#include "../engine/documentscriptengine.h"
 
 
 QList<QString>      TApplication::DebugModes;
@@ -1058,37 +1059,33 @@ QTextCodec* TApplication::codec()
 }
 
 
-void TApplication::setDebugMode(QString value)
-{
-    if (!DebugModes.contains(value))
-        DebugModes.append(value);
-}
-
-
 void TApplication::setDebugMode(int value, bool active)
 {
-    QString valName = QString("%1").arg(value);
+    if (value < 0)
+    {
+        active = false;
+        value = -value;
+    }
+    QString valName = value > 0 ? QString("%1").arg(value) : "";
     if (active)
     {
         if (!DebugModes.contains(valName))
             DebugModes.append(valName);
     }
-/*
     else
     {
         if (DebugModes.contains(valName))
             DebugModes.removeAll(valName);
     }
-*/
 }
 
 
 void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
 {
-    if (writeDebug && isDebugMode(mode))
+    if ((writeDebug && isDebugMode(mode)) || mode == 0)
     {
         QString debugMode = QString("%1").arg(mode);
-        if (DebugModes.contains(""))
+        if (DebugModes.contains("") || mode == 0)
             debugMode = "";
         if (!(db == 0 || debugToBuffer))                    // Если база данных открыта, то будем писать отладочную информацию в файл, иначе в буфер
         {
@@ -1308,9 +1305,21 @@ void TApplication::showProcesses()
 }
 */
 
-int TApplication::runScript(QString scriptName)
+int TApplication::runScript(QString scrName)
 {
     int result = 0;
+    QString scriptName = scrName;
+/*
+    if (scriptName.size() == 0 && isSA())
+    {
+        dirName = "scriptLoadDir";
+        scriptName = getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"));
+        if (scriptName.size() == 0)
+        {
+            return result;
+        }
+    }
+*/
     if (!sendCommandMode)
     {
         ScriptEngine* scriptEngine;
@@ -1590,7 +1599,7 @@ void TApplication::readSettings()
     setDebugMode(5, getConfigValue("PARAMETERS_D5").toBool());
     setDebugMode(6, getConfigValue("PARAMETERS_D6").toBool());
     if (getConfigValue("PARAMETERS_UL").toBool())
-        setDebugMode("");
+        setDebugMode(0);
     fullDebugInfo = getConfigValue("PARAMETERS_FD").toBool();
 }
 
@@ -1750,8 +1759,12 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
     QStringList processes;
     QMenu* menu = new QMenu(formWidget);
     QAction* newProcessAct = new QAction(QObject::trUtf8("Создать новую обработку..."), this);
+    QAction* execScriptAct = new QAction(QObject::trUtf8("Выполнить скрипт..."), this);
     if (isSA())
+    {
         menu->addAction(newProcessAct);
+        menu->addAction(execScriptAct);
+    }
     if (files.count() > 0)
     {
         if (isSA())
@@ -1786,6 +1799,11 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
                                           reportName, &ok);
             if (ok && !reportName.isEmpty())
                 result = tagName + "." + reportName + ext;
+        }
+        else if (action == execScriptAct)
+        {
+            dirName = "scriptLoadDir";
+            result = getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"));
         }
         else
             result = tagName + "." + action->text() + ext;
@@ -1871,37 +1889,37 @@ bool TApplication::readParameters(int argc, char *argv[])
         else if (QString(argv[i]).compare("-d1", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--debug1", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("1");
+                setDebugMode(1);
             }
         else if (QString(argv[i]).compare("-d2", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug2", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("2");
+                setDebugMode(2);
             }
         else if (QString(argv[i]).compare("-d3", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug3", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("3");
+                setDebugMode(3);
             }
         else if (QString(argv[i]).compare("-d4", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug4", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("4");
+                setDebugMode(4);
             }
         else if (QString(argv[i]).compare("-d5", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug5", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("5");
+                setDebugMode(5);
             }
         else if (QString(argv[i]).compare("-d6", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--debug6", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("6");
+                setDebugMode(6);
             }
         else if (QString(argv[i]).compare("-ul", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--unitelogs", Qt::CaseInsensitive) == 0)
             {
-                setDebugMode("");
+                setDebugMode(0);
             }
         else if (QString(argv[i]).compare("-h", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--host", Qt::CaseInsensitive) == 0)
@@ -1966,5 +1984,26 @@ bool TApplication::readParameters(int argc, char *argv[])
 
 void TApplication::showReports()
 {
+}
+
+
+void TApplication::printReport(QString fileName, QSqlQuery* query)
+{
+    if (fileName.size() > 0)
+    {
+        Dictionary* dict = Dictionary::create<Dictionary>();
+        if (dict->open("SELECT 0", ""))      // Пустой запрос
+        {
+            QHash<QString, QVariant> printValues;
+            if (query != 0)
+            {
+                dict->getReportScriptEngine()->setReportContext(&printValues);
+                dict->appendPrintValues("данные", query);
+            }
+            dict->print(fileName);
+            dict->close();
+        }
+        delete dict;
+    }
 }
 

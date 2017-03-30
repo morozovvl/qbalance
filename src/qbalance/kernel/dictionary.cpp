@@ -386,12 +386,22 @@ QString Dictionary::getSearchExpression(QString tName)
 
 bool Dictionary::remove(bool noAsk)
 {
+    bool canRemove = true;
     if (lDeleteable)
     {
         if (Essence::remove(noAsk)) {
-            db->removeDictValue(tableName, getValue("КОД").toULongLong());
-            query();
-            return true;
+            if (scriptEngineEnabled && scriptEngine != 0)
+                canRemove = scriptEngine->eventBeforeDeleteString();
+
+            if (canRemove)
+            {
+                if (db->removeDictValue(tableName, getValue("КОД").toULongLong()))
+                {
+                    query();
+                    return true;
+                }
+                app->showError(QString(QObject::trUtf8("Не удалось удалить строку")));
+            }
         }
     }
     else

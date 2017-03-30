@@ -264,7 +264,7 @@ void Essence::showAllGridSections()
 
 bool Essence::isDefaultForm()
 {
-    return form->isDefaultForm();
+    return form != 0 ? form->isDefaultForm() : false;
 }
 
 
@@ -878,6 +878,7 @@ bool Essence::open()
             if (grdTable != 0)
                 grdTable->setEssence(this);
         }
+        reportScriptEngine = new DocumentScriptEngine(0, this);
         return true;
     }
     return false;
@@ -886,6 +887,9 @@ bool Essence::open()
 
 void Essence::close()
 {
+    delete reportScriptEngine;
+    reportScriptEngine = 0;
+
 
     if (m_networkAccessManager != 0)
         delete m_networkAccessManager;
@@ -943,6 +947,12 @@ void Essence::evaluateEngine()
 ScriptEngine* Essence::getScriptEngine()
 {
     return scriptEngine;
+}
+
+
+DocumentScriptEngine* Essence::getReportScriptEngine()
+{
+    return reportScriptEngine;
 }
 
 
@@ -1323,7 +1333,9 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
     // Подготовим контекст для печати
     QHash<QString, QVariant> printValues;
     // Создадим скриптовый обработчик контекста печати
-    reportScriptEngine = new DocumentScriptEngine(&printValues, this);
+//    reportScriptEngine = new DocumentScriptEngine(&printValues, this);
+    if (reportScriptEngine->getReportContext() == 0)
+        reportScriptEngine->setReportContext(&printValues);
 //    reportScriptEngine = scriptEngine;
     // Заполним контекст данными
     preparePrintValues();
@@ -1425,8 +1437,10 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
             }
         }
     }
+/*
     delete reportScriptEngine;
     reportScriptEngine = 0;
+*/
 }
 
 

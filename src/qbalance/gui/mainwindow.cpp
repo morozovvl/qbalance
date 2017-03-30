@@ -85,15 +85,7 @@ void MainWindow::showQueries()
 {
     TApplication* app = TApplication::exemplar();
     QString fileName = app->getReportFile("запросы", false, app->getMainWindow(), reportMenu->contentsRect());
-    if (fileName.size() > 0)
-    {
-        Dictionary* dict = Dictionary::create<Dictionary>();
-        if (dict->open("SELECT 0", ""))      // Пустой запрос
-        {
-            dict->print(fileName);
-            dict->close();
-        }
-    }
+    app->printReport(fileName);
 }
 
 

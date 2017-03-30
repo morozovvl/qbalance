@@ -821,7 +821,8 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("SumToString", newFunction(SumToString));
     globalObject().setProperty("debug", newFunction(debug));
 
-    foreach (const QString &ext, availableExtensions()) {
+    foreach (const QString &ext, availableExtensions())
+    {
         importExtension(ext);
     }
 }
@@ -876,11 +877,9 @@ QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fil
 QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
     QScriptValue result;
-
     TApplication::exemplar()->debug(3, program.fileName());
     result = QScriptEngine::evaluate(program);
     TApplication::exemplar()->debug(3, "/" + program.fileName());
-
     return result;
 }
 
@@ -1381,11 +1380,17 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
         }
+        else if (errorMessage.size() > 0)
+        {
+            app->showError(errorMessage);
+        }
+/*
         if (TApplication::exemplar()->getLastValueInDebugBuffer(3).contains(program))
             TApplication::exemplar()->removeLastValueInDebugBuffer(3);
         else
             TApplication::exemplar()->debug(3, "/" + program);
-
+*/
+        TApplication::exemplar()->debug(3, "/" + program);
         TApplication::exemplar()->setDebugToBuffer(false);
     }
     return result;

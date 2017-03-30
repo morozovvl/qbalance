@@ -59,6 +59,14 @@ DocumentScriptEngine::DocumentScriptEngine(Essence* parent/* = 0*/)
 DocumentScriptEngine::DocumentScriptEngine(QHash<QString, QVariant>* context, Essence *parent/* = 0*/)
 :ScriptEngine(parent)
 {
+    reportContext = 0;
+    if (context != 0)
+        reportContext = new ReportContext(context);
+}
+
+
+void DocumentScriptEngine::setReportContext(QHash<QString, QVariant>* context)
+{
     reportContext = new ReportContext(context);
 }
 

@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 #include <QtGui/QKeyEvent>
+//#include <gsl/gsl_sf_bessel.h>
 
 
 class Form;
@@ -53,7 +54,7 @@ public:
     virtual QScriptValue evaluate(const QString &, const QString &, int);
     virtual QScriptValue evaluate(const QScriptProgram &);
     QString getErrorMessage();
-    void setErrorMessage(QString error = "");
+    virtual void setErrorMessage(QString error = "");
     int getScriptResult();
     void setIsDocumentScript(bool docScr);
     QString getScriptFileName();

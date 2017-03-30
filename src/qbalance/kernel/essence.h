@@ -190,6 +190,7 @@ public:
 // Функции для обеспечения работы скриптов
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
+    DocumentScriptEngine*       getReportScriptEngine();
     void                setScriptEngineEnabled(bool enabled);
     virtual void        evaluateEngine();
     virtual bool        calculate(bool = true);

@@ -205,7 +205,8 @@ void GUIFactory::showMenus()
 }
 
 
-int GUIFactory::showError(QString errorText) {
+int GUIFactory::showError(QString errorText)
+{
     QMdiSubWindow* window = 0;
     if (mainWindow != 0)
         window = mainWindow->getWorkSpace()->activeSubWindow();
