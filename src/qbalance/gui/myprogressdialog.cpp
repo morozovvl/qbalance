@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtGui/QKeyEvent>
 #include "myprogressdialog.h"
+#include "../kernel/app.h"
 
 
 MyProgressDialog::MyProgressDialog(QString title, QWidget *parent): QProgressDialog(parent, Qt::Dialog)
@@ -50,3 +51,7 @@ void MyProgressDialog::hide()
 }
 
 
+void MyProgressDialog::setTitle(QString title)
+{
+    setWindowTitle(title);
+}

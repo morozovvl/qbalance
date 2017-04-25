@@ -625,6 +625,7 @@ void TableView::readSettings()
         }
         app->showMessageOnStatusBar("");
     }
+
     columnsSettingsReaded = true;
 }
 

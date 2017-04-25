@@ -90,30 +90,29 @@ void TcpServer::slotDisconnected()
 void TcpServer::slotReadClient()
 {
     QTcpSocket* pClientSocket = (QTcpSocket*)sender();
-    QDataStream in(pClientSocket);
-    in.setVersion(QDataStream::Qt_4_0);
-    clients.insert(pClientSocket->peerAddress().toString(), pClientSocket);       // Добавим клиента в список обслуживаемых
-    for (;;)
+    if (pClientSocket->isValid())
     {
-        if (!m_nNextBlockSize)
+        QDataStream in(pClientSocket);
+        in.setVersion(QDataStream::Qt_4_0);
+        clients.insert(pClientSocket->peerAddress().toString(), pClientSocket);       // Добавим клиента в список обслуживаемых
+        for (;;)
         {
-            if (pClientSocket->bytesAvailable() < (int)sizeof(quint16))
+            if (!m_nNextBlockSize)
             {
-                break;
+                if (pClientSocket->bytesAvailable() < (int)sizeof(quint16))
+                    break;
+                in >> m_nNextBlockSize;
             }
-            in >> m_nNextBlockSize;
+            if (pClientSocket->bytesAvailable() < m_nNextBlockSize)
+                break;
+
+            m_nNextBlockSize = 0;
+
+            QString str;
+            in >> str;
+
+            processRequest(pClientSocket, str);
         }
-        if (pClientSocket->bytesAvailable() < m_nNextBlockSize)
-        {
-            break;
-        }
-
-        m_nNextBlockSize = 0;
-
-        QString str;
-        in >> str;
-
-        processRequest(pClientSocket, str);
     }
 }
 

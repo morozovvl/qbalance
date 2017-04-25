@@ -879,6 +879,8 @@ bool Essence::open()
                 grdTable->setEssence(this);
         }
         reportScriptEngine = new DocumentScriptEngine(0, this);
+        reportScriptEngine->setReportContext(&printValues);
+
         return true;
     }
     return false;
@@ -953,6 +955,12 @@ ScriptEngine* Essence::getScriptEngine()
 DocumentScriptEngine* Essence::getReportScriptEngine()
 {
     return reportScriptEngine;
+}
+
+
+ReportContext* Essence::getReportContext()
+{
+    return reportScriptEngine->getReportContext();
 }
 
 
@@ -1330,14 +1338,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
 // fileName - файл с шаблоном документа
 {
     bool result = true;                         // По умолчанию документ будет печататься
-    // Подготовим контекст для печати
-    QHash<QString, QVariant> printValues;
-    // Создадим скриптовый обработчик контекста печати
-//    reportScriptEngine = new DocumentScriptEngine(&printValues, this);
-    if (reportScriptEngine->getReportContext() == 0)
-        reportScriptEngine->setReportContext(&printValues);
-//    reportScriptEngine = scriptEngine;
-    // Заполним контекст данными
+
     preparePrintValues();
 
     if (reportScriptEngine->open(fileName + ".js"))    // Если имеются скрипты, то запустим их и получим результат
@@ -1437,10 +1438,8 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
             }
         }
     }
-/*
-    delete reportScriptEngine;
-    reportScriptEngine = 0;
-*/
+    if (reportScriptEngine != 0)
+        reportScriptEngine->getReportContext()->clear();
 }
 
 

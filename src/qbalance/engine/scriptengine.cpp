@@ -361,6 +361,19 @@ void DictionaryFromScriptValue(const QScriptValue &object, Dictionary* &out) {
     out = qobject_cast<Dictionary*>(object.toQObject());
 }
 
+
+// класс ReportContext
+Q_DECLARE_METATYPE(ReportContext*)
+
+QScriptValue ReportContextToScriptValue(QScriptEngine *engine, ReportContext* const &in) {
+    return engine->newQObject(in);
+}
+
+void ReportContextFromScriptValue(const QScriptValue &object, ReportContext* &out) {
+    out = qobject_cast<ReportContext*>(object.toQObject());
+}
+
+
 // класс Saldo
 Q_DECLARE_METATYPE(Saldo*)
 
@@ -759,6 +772,7 @@ void ScriptEngine::loadScriptObjects()
     qScriptRegisterMetaType(this, TableViewToScriptValue, TableViewFromScriptValue);
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
+    qScriptRegisterMetaType(this, ReportContextToScriptValue, ReportContextFromScriptValue);
     qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
     globalObject().setProperty("Picture", newQMetaObject(&QObject::staticMetaObject, newFunction(PictureConstructor)));
     qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);

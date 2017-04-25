@@ -101,13 +101,16 @@ QVariant ReportContext::getValue(QString tag)
 QVariant ReportContext::getValue(QString tag, int strNum)
 {
     QVariant result;
-    QString pref = tag.left(tag.indexOf("."));
-    if (currentRow > 0)
-        strNum = currentRow;
-    tag = tag.toLower();
-    tag.remove(pref.toLower());
-    tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
-    result = data->value(tag);
+//    if (strNum > 0)
+//    {
+        QString pref = tag.left(tag.indexOf("."));
+        if (currentRow > 0)
+            strNum = currentRow;
+        tag = tag.toLower();
+        tag.remove(pref.toLower());
+        tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
+//    }
+    result = data->value(tag.toLower());
     return result;
 }
 
@@ -208,4 +211,11 @@ int ReportContext::getCurrentRow()
 {
     return currentRow;
 }
+
+
+void ReportContext::clear()
+{
+    data->clear();
+}
+
 

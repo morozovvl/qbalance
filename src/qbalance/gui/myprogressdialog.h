@@ -28,6 +28,7 @@ class MyProgressDialog : public QProgressDialog
     Q_OBJECT
 public:
     MyProgressDialog(QString = "", QWidget* = 0);
+    Q_INVOKABLE void setTitle(QString);
 
 public slots:
       //Slot that is called when cancel Button is Clicked

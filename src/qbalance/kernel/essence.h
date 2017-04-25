@@ -39,6 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtNetwork/QNetworkReply>
 #include <QtScript/QScriptValue>
 #include "../storage/filetype.h"
+#include "../engine/reportcontext.h"
 #include "table.h"
 
 class TApplication;
@@ -68,6 +69,8 @@ private:
 
     QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QNetworkAccessManager*  m_networkAccessManager;
+    QHash<QString, QVariant> printValues;
+
 
 private slots:
     void                replyFinished(QNetworkReply*);
@@ -191,6 +194,7 @@ public:
     virtual void        setScriptEngine();
     ScriptEngine*       getScriptEngine();
     DocumentScriptEngine*       getReportScriptEngine();
+    Q_INVOKABLE ReportContext* getReportContext();
     void                setScriptEngineEnabled(bool enabled);
     virtual void        evaluateEngine();
     virtual bool        calculate(bool = true);

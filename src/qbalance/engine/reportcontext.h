@@ -50,6 +50,7 @@ public:
     Q_INVOKABLE virtual void appendPrintValues(QString, QSqlQuery*);
     void        setCurrentRow(int);
     int         getCurrentRow();
+    void        clear();
 
 private:
     QHash<QString, QVariant>*    data;

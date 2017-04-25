@@ -229,6 +229,7 @@ public:
     void printReportWithoutCleaning();
     Q_INVOKABLE virtual int runScript(QString);
     Q_INVOKABLE void printReport(QString, QSqlQuery* = 0);
+    Q_INVOKABLE void printReport(QString, Dictionary*);
     Q_INVOKABLE QString getScript();                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter();
 

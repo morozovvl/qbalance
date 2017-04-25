@@ -1994,10 +1994,8 @@ void TApplication::printReport(QString fileName, QSqlQuery* query)
         Dictionary* dict = Dictionary::create<Dictionary>();
         if (dict->open("SELECT 0", ""))      // Пустой запрос
         {
-            QHash<QString, QVariant> printValues;
             if (query != 0)
             {
-                dict->getReportScriptEngine()->setReportContext(&printValues);
                 dict->appendPrintValues("данные", query);
             }
             dict->print(fileName);
@@ -2007,3 +2005,8 @@ void TApplication::printReport(QString fileName, QSqlQuery* query)
     }
 }
 
+
+void TApplication::printReport(QString fileName, Dictionary* dict)
+{
+    dict->print(fileName);
+}
