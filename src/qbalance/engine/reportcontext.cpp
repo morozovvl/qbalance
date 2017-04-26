@@ -61,7 +61,8 @@ int ReportContext::getRowCount(QString name)
 
 void ReportContext::clearSortOrder()
 {
-    sortOrder.clear(); sortRef.clear();
+    sortOrder.clear();
+    sortRef.clear();
 }
 
 
@@ -101,15 +102,15 @@ QVariant ReportContext::getValue(QString tag)
 QVariant ReportContext::getValue(QString tag, int strNum)
 {
     QVariant result;
-//    if (strNum > 0)
-//    {
+    if (strNum > 0)
+    {
         QString pref = tag.left(tag.indexOf("."));
         if (currentRow > 0)
             strNum = currentRow;
         tag = tag.toLower();
         tag.remove(pref.toLower());
         tag = QString("%1%2%3").arg(pref).arg(sortRef.empty() ? strNum : sortRef.value(strNum)).arg(tag);
-//    }
+    }
     result = data->value(tag.toLower());
     return result;
 }
@@ -216,6 +217,10 @@ int ReportContext::getCurrentRow()
 void ReportContext::clear()
 {
     data->clear();
+    lastStrNum = 0;
+    currentRow = 0;
+    rowCounts.clear();
+    clearSortOrder();
 }
 
 

@@ -1219,7 +1219,7 @@ void Essence::clearPrintValues()
 {
     if (reportScriptEngine != 0)
     {
-        reportScriptEngine->getReportContext()->getData()->clear();
+        reportScriptEngine->getReportContext()->clear();
     }
 }
 
@@ -1438,8 +1438,7 @@ void Essence::print(QString fileName, bool newFile, bool justPrint, int copyCoun
             }
         }
     }
-    if (reportScriptEngine != 0)
-        reportScriptEngine->getReportContext()->clear();
+    clearPrintValues();
 }
 
 
