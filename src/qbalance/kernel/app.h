@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/filetype.h"
 #include "../serialport/qmyextserialport.h"
 #include "../bankterminal/bankterminal.h"
+#include "updates.h"
 
 
 #define FR_NET_DRIVER_TIMEOUT                 "FR_NET_DRIVER_TIMEOUT"
@@ -294,6 +295,7 @@ private:
     CardCodeReader*         cardCodeReader;
     bool                    barCodeReaded;
     MessageWindow*          messagesWindow;
+    Updates*                updates;
     int                     secDiff;                                // Разница в секундах между временем на этой машине и на сервере
                                                                     // Если число положительное, то время на этих часах отстает
                                                                     // Чтобы получить приблизительное время на сервере

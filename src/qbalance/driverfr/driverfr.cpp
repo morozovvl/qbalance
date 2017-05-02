@@ -593,11 +593,12 @@ void DriverFR::setLock(bool lock, QString lockedBy)
 
 int DriverFR::sendENQ()
 {
+    app->sleep(50);
     qint64 result;
     char buff[2];
     buff[0] = ENQ;
     result = serialPort->writeData(buff,1);
-//123    serialPort->writeLog();
+    serialPort->writeLog();
     return result;
 }
 
@@ -608,7 +609,7 @@ int DriverFR::sendNAK()
     char buff[2];
     buff[0] = NAK;
     result = serialPort->writeData(buff, 1);
-//123    serialPort->writeLog();
+    serialPort->writeLog();
     return result;
 }
 
@@ -619,7 +620,7 @@ int DriverFR::sendACK()
     char buff[2];
     buff[0] = ACK;
     result = serialPort->writeData(buff,1);
-//123    serialPort->writeLog();
+    serialPort->writeLog();
     return result;
 }
 

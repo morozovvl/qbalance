@@ -17,43 +17,40 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
-#ifndef TCPSERVER_H
-#define TCPSERVER_H
+#ifndef UPDATES_H
+#define UPDATES_H
 
 #include <QtCore/QObject>
-#include <QtNetwork/QTcpServer>
-#include <QtNetwork/QNetworkSession>
+#include <QtCore/QHash>
+#include <QtNetwork/QFtp>
+#include <QtCore/QFile>
 
 class TApplication;
 
-class TcpServer : public QObject
+class Updates : public QObject
 {
     Q_OBJECT
 
-public:
-    TcpServer(int nPort, QObject *parent = 0);
-    virtual void    pingClient(QString);
-    virtual bool    getPingOk();
-
-public slots:
-    void    sendStringToClient(QString, QString);
-    void    slotDisconnected();
-
-private:
-    QTcpServer* m_ptcpServer;
-    quint16     m_nNextBlockSize;
-
-private slots:
-    void    slotNewConnection();
-    void    slotReadClient();
-
 private:
     TApplication*   app;
-    bool            pingOk;
-    QHash<QString, QTcpSocket*>      clients;           // Список обслуживаемых клиентов
-    void    sendToClient(QTcpSocket*, QString);
-    void    processRequest(QTcpSocket*, QString);
+    QFtp*   ftp;
+    QHash<int, QFile*>  files;
+    QString url;
 
+public:
+    explicit Updates(TApplication*, QObject *parent = 0);
+    void open(QString);
+    void close();
+
+signals:
+
+public slots:
+
+private slots:
+    void testState(int);
+    void readUpdates();
+    void readFile(QString, QString);
+    void processCommand(int, bool);
 };
 
-#endif // TCPSERVER_H
+#endif // UPDATES_H

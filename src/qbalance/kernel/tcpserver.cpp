@@ -50,7 +50,7 @@ bool TcpServer::getPingOk()
 void TcpServer::pingClient(QString host)
 {
     pingOk = false;
-    sendToClient(host, "*ping*");
+    sendStringToClient(host, "*ping*");
     app->startTimeOut(2000);                   // Ждем ответа в течение 2 сек
     while (!app->isTimeOut())
     {
@@ -61,7 +61,7 @@ void TcpServer::pingClient(QString host)
 }
 
 
-void TcpServer::sendToClient(QString host, QString str)
+void TcpServer::sendStringToClient(QString host, QString str)
 {
     if (clients.contains(host))                     // Если клиент находится в списке обслуживаемых
     {
@@ -119,14 +119,17 @@ void TcpServer::slotReadClient()
 
 void TcpServer::sendToClient(QTcpSocket* pSocket, QString str)
 {
-    QByteArray arrBlock;
-    QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << quint16(0) << str;
-    out.device()->seek(0);
-    out << quint16(arrBlock.size() - sizeof(quint16));
-    pSocket->write(arrBlock);
-    app->debug(5, QString("To %1: %2").arg(pSocket->peerAddress().toString()).arg(str));
+    if (pSocket->isValid())
+    {
+        QByteArray arrBlock;
+        QDataStream out(&arrBlock, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_0);
+        out << quint16(0) << str;
+        out.device()->seek(0);
+        out << quint16(arrBlock.size() - sizeof(quint16));
+        pSocket->write(arrBlock);
+        app->debug(5, QString("To %1: %2").arg(pSocket->peerAddress().toString()).arg(str));
+    }
 }
 
 

@@ -90,6 +90,7 @@ TApplication::TApplication(int & argc, char** argv)
     barCodeReaded = false;
     cardCodeReader = 0;
     bankTerminal = 0;
+    updates = 0;
 
     driverFRisValid = false;
     driverFRlocked = false;
@@ -525,6 +526,10 @@ void TApplication::initConfig()
     setConfig("params", "PARAMETERS_D6", "Журнал банковского терминала (файл debug6.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_UL", "Объединить все включенные журналы отладки в одном файле (debug.log)", CONFIG_VALUE_BOOLEAN, false);
     setConfig("params", "PARAMETERS_FD", "Выводить полную отладочную информацию", CONFIG_VALUE_BOOLEAN, false);
+
+    setConfigTypeName("updates", "Обновления");
+    setConfig("updates", "UPDATES_FTP_URL", "FTP сервер", CONFIG_VALUE_STRING, "vm13720.hv8.ru");
+
 }
 
 
@@ -690,12 +695,12 @@ bool TApplication::initApplication()
                 gui->getMainWindow()->showPeriod();
 
                 // Проверим обновления БД, и если надо, применим их
-                int updates = db->updatesCount();
-                if (updates > 0)
+                int updatesCnt = db->updatesCount();
+                if (updatesCnt > 0)
                 {
                     if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                     {
-                        if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updates)) == QMessageBox::Yes)
+                        if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
                             db->loadUpdates();
                     }
                     else
@@ -732,6 +737,10 @@ bool TApplication::initApplication()
                 }
 
                 db->clearLockedDocumentList();
+
+                updates = new Updates(this);
+                updates->open(getConfigValue("UPDATES_FTP_URL").toString());
+
                 lResult = true;     // Приложение удалось открыть
                 break;  // Выйдем из бесконечного цикла открытия БД
             }
@@ -752,6 +761,8 @@ bool TApplication::initApplication()
 
 void TApplication::close()
 {
+    updates->close();
+
     saveMessages();
     writeSettings();
 
