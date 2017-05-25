@@ -39,6 +39,8 @@ void Updates::open(QString u)
         ftp->login();
         connect(ftp, SIGNAL(stateChanged(int)), this, SLOT(testState(int)));
         connect(ftp, SIGNAL(commandFinished(int, bool)), this, SLOT(processCommand(int, bool)));
+
+        prepareFilesList();
     }
 }
 
@@ -94,4 +96,33 @@ void Updates::processCommand(int id, bool error)
     {
         app->showMessageOnStatusBar(QObject::trUtf8("Не удалось загрузить обновление программы с сервера FTP"));
     }
+}
+
+
+void Updates::prepareFilesList()
+{
+    // Составим список файлов
+    QStringList list;
+    list.append("qbalance");
+    list.append("plugins/designer/libplugins.so");
+    list.append("plugins/designer/libplugins.so.1");
+    list.append("plugins/designer/libplugins.so.1.0");
+    list.append("plugins/designer/libplugins.so.1.0.0");
+
+    QDomElement f;
+    foreach (QString fileName, list)
+    {
+        f = filesList.createElement(fileName);
+        QFileInfo fi(fileName);
+        f.setAttribute("size", fi.size());
+        f.setAttribute("date", fi.created().date().toString());
+        f.setAttribute("time", fi.created().time().toString());
+        filesList.appendChild(f);
+    }
+    QFile file("/home/vladimir/backup.xml");
+    if (file.open(QIODevice::WriteOnly))
+    {
+        file.write(filesList.toByteArray());
+    }
+    file.close();
 }

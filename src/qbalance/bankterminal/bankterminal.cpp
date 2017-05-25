@@ -61,6 +61,16 @@ void BankTerminal::getDefaultConfigs(QString configName)
 }
 
 
+void BankTerminal::removeConfigs()
+{
+    app->removeConfig(BANK_TERMINAL_PRINT_WAIT_TIME);
+    app->removeConfig(BANK_TERMINAL_PRINT_WAIT_MESSAGE);
+    app->removeConfig(BANK_TERMINAL_PROGRAM_WAIT_TIME);
+    app->removeConfig(BANK_TERMINAL_INTERVAL_EMPTY_LINES);
+    app->removeConfig(BANK_TERMINAL_PATH);
+}
+
+
 bool BankTerminal::open()
 {
     bool result = false;
@@ -86,7 +96,7 @@ bool BankTerminal::open()
         {
             TcpClient* tcpClient = app->getTcpClient();
             // а теперь поищем на удаленном, если TcpClient исправен
-            if (tcpClient->isValid())
+            if (tcpClient != 0)
             {
                 if (tcpClient->sendToServer(BANK_TERMINAL_IS_READY) && tcpClient->waitResult())
                 {
@@ -158,13 +168,13 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
     {
         TcpClient* tcpClient = app->getTcpClient();
         // а теперь поищем на удаленном, если указан его IP
-        if (tcpClient->isValid())
+        if (tcpClient != 0)
         {
             if (tcpClient->sendToServer(BANK_TERMINAL_IS_LOCKED) && tcpClient->waitResult())
             {
                 QString res = tcpClient->getResult();
                 result = (res == "true" ? true : false);
-                if (result)
+                if (!result)
                 {
                     if (tcpClient->sendToServer(QString("%1 %2 %3 %4 %5 ").arg(BANK_TERMINAL_PROCESS)
                                                                          .arg(oper)

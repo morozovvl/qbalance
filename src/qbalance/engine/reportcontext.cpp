@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QDebug>
 #include <QtCore/qmath.h>
 #include "reportcontext.h"
+#include "documentscriptengine.h"
 
 
 ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*/) :
@@ -32,6 +33,7 @@ ReportContext::ReportContext(QHash<QString, QVariant>* d, QObject *parent/* = 0*
     lastStrNum = 0;
     tableName = "таблица";
     currentRow = 0;
+    scriptEngine = 0;
 }
 
 
@@ -224,3 +226,7 @@ void ReportContext::clear()
 }
 
 
+void ReportContext::setScriptEngine(DocumentScriptEngine* se)
+{
+    scriptEngine = se;
+}

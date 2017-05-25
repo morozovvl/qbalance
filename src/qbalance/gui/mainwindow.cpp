@@ -25,9 +25,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "formgrid.h"
 #include "../kernel/dictionary.h"
 #include "../gui/messagewindow.h"
+#include "../kernel/tcpclient.h"
 
 
-MainWindow::MainWindow(GUIFactory* par) {
+MainWindow::MainWindow(GUIFactory* par)
+{
     parent = par;
     createStatusBar();
     workSpace = new QMdiArea(this);             // POSSIBLY MEMORY LEAK
@@ -35,11 +37,15 @@ MainWindow::MainWindow(GUIFactory* par) {
     workSpace->setAttribute(Qt::WA_DeleteOnClose);
 }
 
-MainWindow::~MainWindow() {
+
+MainWindow::~MainWindow()
+{
     delete workSpace;
 }
 
-void MainWindow::open() {
+
+void MainWindow::open()
+{
     setCentralWidget(workSpace);
     readSettings();
     statusBar()->showMessage("");
@@ -54,20 +60,27 @@ void  MainWindow::showMenus()
 }
 
 
-void MainWindow::closeEvent() {
+void MainWindow::closeEvent()
+{
     writeSettings();
     close();
 }
 
-void MainWindow::showDictionaries() {
+
+void MainWindow::showDictionaries()
+{
     TApplication::exemplar()->showDictionaries();
 }
 
-void MainWindow::showDocuments() {
+
+void MainWindow::showDocuments()
+{
     TApplication::exemplar()->showDocuments();
 }
 
-void MainWindow::showProcesses() {
+
+void MainWindow::showProcesses()
+{
     TApplication* app = TApplication::exemplar();
     QString fileName = app->getProcessFile("обработка", app->getMainWindow(), reportMenu->contentsRect());
     if (fileName.size() > 0)
@@ -76,7 +89,9 @@ void MainWindow::showProcesses() {
     }
 }
 
-void MainWindow::showReports() {
+
+void MainWindow::showReports()
+{
     TApplication::exemplar()->showReports();
 }
 
@@ -89,15 +104,20 @@ void MainWindow::showQueries()
 }
 
 
-void MainWindow::showConfigs() {
+void MainWindow::showConfigs()
+{
     TApplication::exemplar()->showConfigs();
 }
 
-void MainWindow::newRecord() {
+
+void MainWindow::newRecord()
+{
 }
 
-void MainWindow::deleteRecord() {
+void MainWindow::deleteRecord()
+{
 }
+
 
 void MainWindow::about()
 {
@@ -215,6 +235,7 @@ void MainWindow::createMenus()
     connect(exitAct, SIGNAL(triggered()), this, SLOT(closeEvent()));
 }
 
+
 void MainWindow::createToolBars()
 {
       editToolBar = addToolBar(QObject::trUtf8("Edit"));
@@ -224,18 +245,21 @@ void MainWindow::createToolBars()
       editToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 }
 
+
 void MainWindow::createStatusBar()
 {
 //      statusBar()->showMessage(QObject::trUtf8("Готово"));
 }
 
-void MainWindow::setPeriod() {
+void MainWindow::setPeriod()
+{
     TApplication::exemplar()->setPeriod();
     showPeriod();
 }
 
 
-void MainWindow::showPeriod() {
+void MainWindow::showPeriod()
+{
     QString period;
     period = TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy") + " - " + TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy");
     periodAct->setIconText(period);
@@ -257,6 +281,30 @@ void MainWindow::saveCustomization()
 void MainWindow::loadFile()
 {
     TApplication::exemplar()->loadFile();
+/*
+ * Временная отладочная процедура для отладки сетевого обмена
+ *
+    TcpClient* tcpClient = TApplication::exemplar()->getTcpClient();
+    if (tcpClient->isValid())
+    {
+        int i = 0;
+        while (true)
+        {
+            if (tcpClient->sendToServer("test") && tcpClient->waitResult())
+            {
+                qDebug() << tcpClient->getResult();
+            }
+            else
+            {
+                TApplication::exemplar()->print("Сервер не отвечает");
+                break;
+            }
+            TApplication::exemplar()->sleep(100);
+            qDebug() << i;
+            i++;
+        }
+    }
+*/
 }
 
 
@@ -326,7 +374,8 @@ void MainWindow::terminalControlRibbon()
 }
 
 
-void MainWindow::readSettings() {
+void MainWindow::readSettings()
+{
       QSettings settings(TApplication::exemplar()->getConfigFileName(), QSettings::IniFormat);
       if (settings.status() == QSettings::NoError) {
           settings.beginGroup("mainwindow");

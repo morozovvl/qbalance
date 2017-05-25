@@ -48,6 +48,7 @@ private:
     TApplication* app;
     QFrame* frame;
     QHash<QString, ConfigEntry> configs;
+    QString                     currentConfigGroup;
 
     void dictAdd();
     void dictProperties();

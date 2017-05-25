@@ -106,6 +106,7 @@ void QMyExtSerialPort::close()
 
 void QMyExtSerialPort::tryReceive()
 {
+
     QByteArray result = QextSerialPort::readAll();
     if (result.size() > 0)
     {
@@ -139,12 +140,12 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
                 writeLog(QString("*** ЗАДЕРЖКА свыше %1 сек ***").arg(timeOut/1000));
                 break;
             }
-            app->sleep(50);
+            app->sleep(5);
         }
         tryReceiveExit = true;              // Не будем больше постоянно опрашивать COM порт
         appendLog(false, QByteArray(data, maxSize).toHex().data(), fromRemote);
     }
-    else if (tcpClient != 0 && tcpClient->isValid() && !fromRemote)
+    else if (tcpClient != 0  && tcpClient->isValid()&& !fromRemote)
     {
         QString command = QString("=fr=<<%1").arg(maxSize);
         if (tcpClient->sendToServer(command))

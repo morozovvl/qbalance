@@ -677,6 +677,8 @@ ScriptEngine::ScriptEngine(Essence *par) : QScriptEngine()
     }
     isSA = app->isSA();
     script = "";
+    tryEventLoopExit = false;
+    setProcessEventsInterval(10);
 }
 
 
@@ -848,7 +850,10 @@ bool ScriptEngine::evaluate()
     if (script.size() > 0)
     {
         QScriptProgram program(script);
+        tryEventLoopExit = false;
+//        tryEventLoop();
         result = QScriptEngine::evaluate(program).isValid();
+        tryEventLoopExit = true;
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
@@ -882,7 +887,10 @@ bool ScriptEngine::evaluate()
 QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fileName, int lineNumber)
 {
     TApplication::exemplar()->debug(3, program);
+    tryEventLoopExit = false;
+//    tryEventLoop();
     QScriptEngine::evaluate(program, fileName, lineNumber);
+    tryEventLoopExit = true;
     TApplication::exemplar()->debug(3, "/" + program);
     return globalObject().property("scriptResult");
 }
@@ -892,7 +900,10 @@ QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
 {
     QScriptValue result;
     TApplication::exemplar()->debug(3, program.fileName());
+    tryEventLoopExit = false;
+//    tryEventLoop();
     result = QScriptEngine::evaluate(program);
+    tryEventLoopExit = true;
     TApplication::exemplar()->debug(3, "/" + program.fileName());
     return result;
 }
@@ -1416,3 +1427,13 @@ QScriptValue ScriptEngine::globalObject()
     return QScriptEngine::globalObject();
 }
 */
+
+
+void ScriptEngine::tryEventLoop()
+{
+    QCoreApplication::processEvents();
+    if (!tryEventLoopExit)
+        QTimer::singleShot(100, this, SLOT(tryEventLoop()));
+}
+
+

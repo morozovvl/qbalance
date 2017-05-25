@@ -70,6 +70,7 @@ public:
     Q_INVOKABLE virtual bool isLocked();
     virtual QString processRemoteQuery(QString);
     virtual void getDefaultConfigs(QString);
+    virtual void removeConfigs();
 
 private:
     TApplication* app;

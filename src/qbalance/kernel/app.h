@@ -41,6 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 #define FR_NET_DRIVER_TIMEOUT                 "FR_NET_DRIVER_TIMEOUT"
+#define MAX_NET_TIMEOUT                       "MAX_NET_TIMEOUT"
 #define BANK_TERMINAL_PLUGIN_NAME             "bankterminal"
 
 
@@ -267,6 +268,7 @@ public:
     void            setConfigs(QHash<QString, ConfigEntry>* conf);
     QList<QString>     getConfigNames(QString type = "");
     virtual void            setConfig(QString type, QString name, QString label, ConfigEntryType valType, QVariant value);
+    virtual void            removeConfig(QString name);
 
     static bool readParameters(int argc, char *argv[]);
     virtual QString getConfigFileName();

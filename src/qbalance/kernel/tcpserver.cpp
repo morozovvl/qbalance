@@ -234,5 +234,11 @@ void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
         resStr = "Ok";
         sendToClient(pClientSocket, resStr);
     }
+    else if (str.indexOf("test") == 0)
+    {
+        resStr = "Ok";
+        sendToClient(pClientSocket, resStr);
+//        qDebug() << "test Ok";
+    }
 }
 

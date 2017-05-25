@@ -119,6 +119,11 @@ private:
     TApplication*       app;
     Essence*            parent;
     static bool         isSA;
+    bool                tryEventLoopExit;
+
+
+private slots:
+    void        tryEventLoop();
 };
 
 

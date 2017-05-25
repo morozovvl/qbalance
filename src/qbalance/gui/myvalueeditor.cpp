@@ -90,6 +90,10 @@ void MyValueEditor::editingFinished(int val)
     {
         value->value.setValue(((QComboBox*)widget)->currentText());
     }
+    else if (value->valueType == CONFIG_VALUE_INTEGER)
+    {
+        value->value.setValue(((QLineEdit*)widget)->text().toInt());
+    }
 }
 
 

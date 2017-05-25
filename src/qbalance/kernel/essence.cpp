@@ -880,7 +880,7 @@ bool Essence::open()
         }
         reportScriptEngine = new DocumentScriptEngine(0, this);
         reportScriptEngine->setReportContext(&printValues);
-
+        reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
         return true;
     }
     return false;

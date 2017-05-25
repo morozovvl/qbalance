@@ -52,7 +52,7 @@ private:
     QString                     fileName;
     Essence*                    essence;
 
-    void writeVariables(int);                                              // Заполняет поля с переменными в шаблоне
+    void writeVariables(int = 0);                                              // Заполняет поля с переменными в шаблоне
     void writeHeader();
     bool readExpression(int, int);
     QString getTableVariable(QDomElement, QString);

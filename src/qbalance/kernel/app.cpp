@@ -465,7 +465,8 @@ void TApplication::initConfig()
     setConfigTypeName("client", "Клиент(сервер) взаимодействия");
     setConfig("client", "REMOTE_HOST", "Удаленный хост", CONFIG_VALUE_STRING, "192.168.0.1");
     setConfig("client", "REMOTE_PORT", "Удаленный порт (локальный порт сервера)", CONFIG_VALUE_INTEGER, 44444);
-    setConfig("client", FR_NET_DRIVER_TIMEOUT, "Таймаут для обмена по сети, мс", CONFIG_VALUE_INTEGER, 200);
+    setConfig("client", FR_NET_DRIVER_TIMEOUT, "Таймаут для обмена по сети, мс", CONFIG_VALUE_INTEGER, 100);
+    setConfig("client", MAX_NET_TIMEOUT, "Максимальное время ожидания ответа по сети, мс", CONFIG_VALUE_INTEGER, 10000);
 
     setConfigTypeName("fr", "Фискальный регистратор");
     setConfig("fr", "FR_NEEDED", "Использовать ФР", CONFIG_VALUE_BOOLEAN, false);
@@ -544,6 +545,13 @@ void TApplication::setConfig(QString type, QString name, QString label, ConfigEn
     entry.value = value;
     configs.insert(name, entry);
     configNames.append(name);
+}
+
+
+void TApplication::removeConfig(QString name)
+{
+    configs.remove(name);
+    configNames.removeAll(name);
 }
 
 
@@ -672,6 +680,9 @@ bool TApplication::initApplication()
     if (!loadDefaultConfig)
         readSettings();
 
+    updates = new Updates(this);
+    updates->open(getConfigValue("UPDATES_FTP_URL").toString());
+
     db  = new DBFactory();
 
     messagesWindow = new MessageWindow();
@@ -737,9 +748,6 @@ bool TApplication::initApplication()
                 }
 
                 db->clearLockedDocumentList();
-
-                updates = new Updates(this);
-                updates->open(getConfigValue("UPDATES_FTP_URL").toString());
 
                 lResult = true;     // Приложение удалось открыть
                 break;  // Выйдем из бесконечного цикла открытия БД
@@ -828,6 +836,14 @@ void    TApplication::openPlugins()
             }
         }
     }
+    else
+    {
+        if (driverFR != 0)
+        {
+            driverFR->close();
+            driverFR = 0;
+        }
+    }
 
     // Запустим сканер штрих-кодов, если есть его плагин
     if (getConfigValue("BAR_CODE_READER_NEEDED").toBool())
@@ -845,6 +861,15 @@ void    TApplication::openPlugins()
             }
         }
     }
+    else
+    {
+        if (barCodeReader != 0)
+        {
+            barCodeReader->close();
+            barCodeReader = 0;
+        }
+    }
+
 
     // Запустим банковский терминал, если есть плагин
     if (getConfigValue(BANK_TERMINAL_NEEDED).toBool())
@@ -861,6 +886,15 @@ void    TApplication::openPlugins()
             }
         }
     }
+    else
+    {
+        if (bankTerminal != 0)
+        {
+            bankTerminal->removeConfigs();
+            bankTerminal->close();
+            bankTerminal = 0;
+        }
+    }
 
     // Запустим считыватель магнитных карт, если есть его плагин
     if (getConfigValue("CARD_READER_NEEDED").toBool())
@@ -875,7 +909,16 @@ void    TApplication::openPlugins()
                 cardCodeReader = 0;
             }
             else
-                connect (cardCodeReader, SIGNAL(cardCodeReaded(QString)), this, SIGNAL(cardCodeReaded(QString)));
+                connect(cardCodeReader, SIGNAL(cardCodeReaded(QString)), this, SIGNAL(cardCodeReaded(QString)));
+        }
+    }
+    else
+    {
+        if (cardCodeReader != 0)
+        {
+            disconnect(cardCodeReader, SIGNAL(cardCodeReaded(QString)), this, SIGNAL(cardCodeReaded(QString)));
+            cardCodeReader->close();
+            cardCodeReader = 0;
         }
     }
 }
@@ -1359,23 +1402,18 @@ int TApplication::runScript(QString scrName)
 
         TcpClient tcpcl(host, port);
         timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
-        if (tcpcl.isValid())
+        if (tcpcl.sendToServer(script))
         {
-            if (tcpcl.sendToServer(script))
+            if (tcpcl.waitResult())
             {
-                if (tcpcl.waitResult())
-                {
-                    QString res = tcpcl.getResult();
-                    showMessageOnStatusBar(res);
-                }
-                else
-                    showError(QString("Нет ответа от хоста %1").arg(host));
+                QString res = tcpcl.getResult();
+                showMessageOnStatusBar(res);
             }
             else
-                showError(QString("Не удалось послать команду хосту %1").arg(host));
+                showError(QString("Нет ответа от хоста %1").arg(host));
         }
         else
-            showError(QString("Не удалось подключиться к хосту %1").arg(host));
+            showError(QString("Не удалось послать команду хосту %1").arg(host));
     }
     return result;
 }
@@ -1679,14 +1717,17 @@ QString TApplication::getReportFile(QString tagName, bool autoPrint, QWidget* fo
             files << f;
     }
 
-    // Получим список локальных шаблонов отчетов
-    fs = dir.entryList(QStringList(tagName + ".*" + ext), QDir::Files, QDir::Name);
-    foreach (QString f, fs)
+    // Получим список локальных шаблонов отчетов, если мы администратор
+    if (isSA())
     {
-        if (!files.contains(f))
+        fs = dir.entryList(QStringList(tagName + ".*" + ext), QDir::Files, QDir::Name);
+        foreach (QString f, fs)
         {
-            files << f;
-            Essence::getFile(getReportsPath(), f, ReportTemplateFileType);
+            if (!files.contains(f))
+            {
+                files << f;
+                Essence::getFile(getReportsPath(), f, ReportTemplateFileType);
+            }
         }
     }
 

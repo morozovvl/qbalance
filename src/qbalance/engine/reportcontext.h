@@ -27,6 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtSql/QSqlQuery>
 #include <QtCore/QDebug>
 
+class DocumentScriptEngine;
+
 class ReportContext : public QObject
 {
     Q_OBJECT
@@ -51,6 +53,7 @@ public:
     void        setCurrentRow(int);
     int         getCurrentRow();
     void        clear();
+    void        setScriptEngine(DocumentScriptEngine* = 0);
 
 private:
     QHash<QString, QVariant>*    data;
@@ -61,6 +64,7 @@ private:
     bool            showRepeat;
     QString         tableName;
     int             currentRow;
+    DocumentScriptEngine*   scriptEngine;
 };
 
 #endif // REPORTCONTEXT_H

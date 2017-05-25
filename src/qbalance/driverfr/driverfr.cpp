@@ -593,7 +593,6 @@ void DriverFR::setLock(bool lock, QString lockedBy)
 
 int DriverFR::sendENQ()
 {
-    app->sleep(50);
     qint64 result;
     char buff[2];
     buff[0] = ENQ;
@@ -625,7 +624,7 @@ int DriverFR::sendACK()
 }
 
 
-unsigned short int DriverFR::readByte()
+short int DriverFR::readByte()
 {
     unsigned char readbuff[1] = "";
     int result = readBytes(readbuff, 1);
@@ -646,7 +645,7 @@ int DriverFR::readBytes(unsigned char *buff, int len)
         buff[i] = 0;
 
     int result = serialPort->readData((char*)(buff + readed), len - readed);
-    if (result > 0)
+    if (result >= 0)
     {
         return result;      // то выходим
     }
@@ -698,6 +697,10 @@ int DriverFR::readAnswer(answer *ans, short int byte)
             else
                 break;
         }
+    }
+    else
+    {
+        while (readByte() >= 0);                    // Прочитаем остаток предыдущего сообщения
     }
     return result;
 }
@@ -932,7 +935,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                     result = -1;
             }
         }
-        if (((result < 0) || (result == 0x50)) && (attempts < maxTries))
+        if (((result < 0) || (result == 0x50)) && (attempts <= maxTries))
         {
             attempts++;
             app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);

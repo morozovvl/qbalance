@@ -65,7 +65,7 @@ private:
     TcpClient*          tcpClient;
     TApplication*       app;
     QQueue<unsigned char> buffer;
-    int                 tryReceiveExit;
+    bool                tryReceiveExit;
     int                 timeOut;
     static BaudRateType LineSpeedVal[7];
 

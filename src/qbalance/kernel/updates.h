@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QHash>
 #include <QtNetwork/QFtp>
 #include <QtCore/QFile>
+#include <QtXml/QDomDocument>
 
 class TApplication;
 
@@ -32,10 +33,13 @@ class Updates : public QObject
     Q_OBJECT
 
 private:
-    TApplication*   app;
+    TApplication*       app;
     QFtp*   ftp;
     QHash<int, QFile*>  files;
     QString url;
+    QDomDocument        filesList;
+
+    void    prepareFilesList();
 
 public:
     explicit Updates(TApplication*, QObject *parent = 0);

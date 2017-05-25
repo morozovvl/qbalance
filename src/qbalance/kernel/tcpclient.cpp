@@ -109,20 +109,21 @@ void TcpClient::logError()
 
 bool TcpClient::sendToServer(QString str)
 {
-    if (connected)
+    if (!connected)
     {
-        resultReady = false;                    // Результат запроса еще не готов
-        QByteArray arrBlock;
-        QDataStream out(&arrBlock, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_4_0);
-        out << quint16(0) << str;
-        out.device()->seek(0);
-        out << quint16(arrBlock.size() - sizeof(quint16));
-        m_pTcpSocket->write(arrBlock);
-        app->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
-        return m_pTcpSocket->waitForReadyRead(1000);      // Будем ждать ответа от сервера в течение 1 сек
+        m_pTcpSocket->connectToHost(hostName, port);
+        m_pTcpSocket->waitForConnected(app->getConfigValue(MAX_NET_TIMEOUT).toInt());
     }
-    return false;
+    resultReady = false;                    // Результат запроса еще не готов
+    QByteArray arrBlock;
+    QDataStream out(&arrBlock, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << quint16(0) << str;
+    out.device()->seek(0);
+    out << quint16(arrBlock.size() - sizeof(quint16));
+    m_pTcpSocket->write(arrBlock);
+    app->debug(5, QString("To %1: %2").arg(m_pTcpSocket->peerAddress().toString()).arg(str));
+    return m_pTcpSocket->waitForReadyRead(app->getConfigValue(MAX_NET_TIMEOUT).toInt());      // Будем ждать ответа от сервера в течение 1 сек
 }
 
 
@@ -147,7 +148,7 @@ bool    TcpClient::waitResult()
 //    slotReadyRead();
     bool result = false;
     tryReceive();
-    app->startTimeOut(10000);                   // Ждем ответа в течение 10 сек
+    app->startTimeOut(app->getConfigValue(MAX_NET_TIMEOUT).toInt());                   // Ждем ответа в течение 10 сек
     while (true)
     {
         if (resultReady)

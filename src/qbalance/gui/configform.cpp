@@ -35,6 +35,7 @@ ConfigForm::ConfigForm(QObject* parent/* = 0*/): Form(parent)
 {
     app = TApplication::exemplar();
     configName = "ConfigForm";
+    currentConfigGroup = "";
 }
 
 
@@ -153,12 +154,18 @@ void ConfigForm::dictPermissions() {
 void ConfigForm::cmdOk()
 {
     app->setConfigs(&configs);
+//    app->openPlugins();
+//    configs.clear();
+//    configs = *(app->getConfigs());
+//    if (currentConfigGroup.size() > 0)
+//        showConfigGroup(currentConfigGroup);
     Form::cmdOk();
 }
 
 
 void ConfigForm::showConfigGroup(QString type)
 {
+    currentConfigGroup = type;
     QLayout* layout = frame->layout();
     if (layout != 0)
     {

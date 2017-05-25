@@ -800,7 +800,7 @@ public:
 
 private:
 
-    unsigned short int readByte();
+    short int readByte();
     int readBytes(unsigned char *, int);
     int sendENQ();
     int sendNAK();

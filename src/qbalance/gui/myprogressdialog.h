@@ -29,6 +29,7 @@ class MyProgressDialog : public QProgressDialog
 public:
     MyProgressDialog(QString = "", QWidget* = 0);
     Q_INVOKABLE void setTitle(QString);
+    Q_INVOKABLE bool isEscapeKeyPressed();
 
 public slots:
       //Slot that is called when cancel Button is Clicked
@@ -36,6 +37,10 @@ public slots:
 
 protected:
     void keyPressEvent(QKeyEvent*);
+
+private:
+    bool    escapeKeyPressed;
+
 };
 
 #endif // MYPROGRESSDIALOG_H
