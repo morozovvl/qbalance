@@ -81,7 +81,8 @@ enum ConfigEntryType
     CONFIG_VALUE_STRING,
     CONFIG_VALUE_INTEGER,
     CONFIG_VALUE_BOOLEAN,
-    CONFIG_VALUE_LABELSIZE
+    CONFIG_VALUE_LABELSIZE,
+    CONFIG_VALUE_PASSWORD
 };
 
 
@@ -134,6 +135,7 @@ public:
     QString getScriptsPath(QString = "");
     QString getReportsPath(QString = "");
     QString getCrashDumpsPath();
+    QString getUpdatesPath();
     Q_INVOKABLE QString getPhotosPath(QString = "");
     QString getConfigPrefix();
     virtual MainWindow* getMainWindow();
@@ -172,6 +174,8 @@ public:
     QString getLastValueInDebugBuffer(int);
     void removeLastValueInDebugBuffer(int);
     bool    getFullDebugInfo();
+    qulonglong calculateCRC32(QByteArray*);
+
 
     Q_INVOKABLE virtual void debug(int, const QString&, bool = false);
 
@@ -274,6 +278,7 @@ public:
     virtual QString getConfigFileName();
 
     bool initApplication();
+    QString         OSType();
 
 
 signals:

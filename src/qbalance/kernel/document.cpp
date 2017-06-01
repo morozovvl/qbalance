@@ -162,7 +162,8 @@ Saldo* Document::getSaldo(QString acc)
 
 void Document::setDocId(int doc)
 {
-    docId = doc; prepareSelectCurrentRowCommand();
+    docId = doc;
+    prepareSelectCurrentRowCommand();
 }
 
 

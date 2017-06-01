@@ -1768,7 +1768,7 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
 {
     QString fileName = file.replace(app->applicationDirPath(), "~");
     clearError();
-    qulonglong size = calculateCRC32(&fileData);
+    qulonglong size = app->calculateCRC32(&fileData);
     QString text;
     if (isFileExist(fileName, type, extend))
     {
@@ -2732,28 +2732,6 @@ bool DBFactory::execCommands()
         exec(commands.at(0));
     clearCommands();
     return true;
-}
-
-
-qulonglong DBFactory::calculateCRC32(QByteArray* array)
-{
-    unsigned long crc_table[256];
-    unsigned long crc;
-    char *buf = array->data();
-    unsigned long len = array->count();
-
-    for (int i = 0; i < 256; i++)
-    {
-        crc = i;
-        for (int j = 0; j < 8; j++)
-            crc = crc & 1 ? (crc >> 1) ^ 0xEDB88320UL : crc >> 1;
-        crc_table[i] = crc;
-    }
-
-    crc = 0xFFFFFFFFUL;
-    while (len--)
-        crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
-    return crc ^ 0xFFFFFFFFUL;
 }
 
 

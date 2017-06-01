@@ -67,10 +67,12 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 {
     parent = par;
     fileName = fName;
+
     if (fileName.size() == 0)
         createForm("mainform", pwgt);
     else
         createForm(fileName, pwgt);
+
     app->setIcons(formWidget);
     readSettings();
 
@@ -223,8 +225,8 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     formWidget->setFocusPolicy(Qt::StrongFocus);
     freeWindow = !appendToMdi;
 
-    if (parent != 0)
-        formWidget->setForm(this);
+//    if (parent != 0)
+    formWidget->setForm(this);
 }
 
 

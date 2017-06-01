@@ -52,6 +52,12 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
         ((QComboBox*)widget)->setCurrentIndex(values.indexOf(value->value.toString()));
         connect (widget, SIGNAL(activated(int)), this, SLOT(editingFinished(int)));
     }
+    else if (value->valueType == CONFIG_VALUE_PASSWORD)
+    {
+        widget = new QLineEdit(value->value.toString(), this);
+        ((QLineEdit*)widget)->setEchoMode(QLineEdit::Password);
+        connect (widget, SIGNAL(editingFinished()), this, SLOT(editingFinished()));
+    }
     else
     {
         widget = new QLineEdit(value->value.toString(), this);

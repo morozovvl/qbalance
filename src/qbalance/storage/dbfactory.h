@@ -155,7 +155,6 @@ public:
     void removeFile(QString, FileType, bool = false);
     void setFile(QString, FileType, QByteArray, bool = false);
     void copyFile(QString, QString, bool = false);
-    static qulonglong calculateCRC32(QByteArray*);
 
     // Работа с соединением
     int getPort();

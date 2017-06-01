@@ -79,10 +79,14 @@ void BarCodeReader::barCodeReadyRead()
          {
             readedPart = QString::fromLatin1(serialPort->readAll());
             barCodeString.append(readedPart);
-         } while (readedPart.size() > 0);
+            app->sleep(100);
+         } while (serialPort->bytesAvailable());
 
-         app->barCodeReadyRead(barCodeString.trimmed());
-         barCodeString = "";
+         if (barCodeString.size() > 0)
+         {
+            app->barCodeReadyRead(barCodeString.trimmed());
+            barCodeString = "";
+         }
     }
 }
 

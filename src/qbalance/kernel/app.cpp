@@ -76,8 +76,8 @@ TApplication::TApplication(int & argc, char** argv)
     : QApplication(argc, argv)
 {
     setOrganizationName("Enterprise");
-    setApplicationName("QBalance");
-    setApplicationVersion("0.0.1");
+    setApplicationName("qbalance");
+    setApplicationVersion("0.1");
     setWindowIcon(QIcon(":qbalance.ico"));
 
     db  = 0;
@@ -530,7 +530,11 @@ void TApplication::initConfig()
 
     setConfigTypeName("updates", "Обновления");
     setConfig("updates", "UPDATES_FTP_URL", "FTP сервер", CONFIG_VALUE_STRING, "vm13720.hv8.ru");
-
+    setConfig("updates", "UPDATES_FTP_PORT", "Порт", CONFIG_VALUE_INTEGER, 21);
+    setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT", "Логин клиента-администратора", CONFIG_VALUE_STRING, "ftpclient");
+    setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT_PASSWORD", "Пароль клиента-администратора", CONFIG_VALUE_PASSWORD, "");
+    setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
+    setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
 }
 
 
@@ -680,9 +684,6 @@ bool TApplication::initApplication()
     if (!loadDefaultConfig)
         readSettings();
 
-    updates = new Updates(this);
-    updates->open(getConfigValue("UPDATES_FTP_URL").toString());
-
     db  = new DBFactory();
 
     messagesWindow = new MessageWindow();
@@ -699,6 +700,9 @@ bool TApplication::initApplication()
 
             if (dictionaryList->open() && topersList->open())
             {
+                updates = new Updates(this);
+                updates->open(getConfigValue("UPDATES_FTP_URL").toString());
+
                 gui->showMenus();
 
                 // Удалось открыть спосок справочников и типовых операций
@@ -769,7 +773,11 @@ bool TApplication::initApplication()
 
 void TApplication::close()
 {
-    updates->close();
+    if (updates != 0)
+    {
+        updates->close();
+        delete updates;
+    }
 
     saveMessages();
     writeSettings();
@@ -989,6 +997,15 @@ QString TApplication::getPhotosPath(QString fileName)
 QString TApplication::getCrashDumpsPath()
 {
     return getAnyPath("/data/crashdumps");
+}
+
+
+QString TApplication::getUpdatesPath()
+{
+    QString dir = applicationDirPath() + "/updates";
+    if (!QDir().exists(dir))
+        QDir().mkdir(dir);
+    return dir;
 }
 
 
@@ -1426,7 +1443,10 @@ void TApplication::barCodeReadyRead(QString barCodeString)
     if (getActiveSubWindow() != 0)
         dialog = (Dialog*)(getActiveSubWindow()->widget());
     if (dialog != 0)
-        dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
+    {
+        if (QString(dialog->metaObject()->className()).compare("Dialog") == 0)
+            dialog->getForm()->getParent()->barCodeReaded(barCodeString.trimmed());
+    }
     barCodeReaded = false;
 }
 
@@ -1461,7 +1481,7 @@ void TApplication::saveFileToServer(QString file, QString localFile, FileType ty
     if (file1.exists() && file1.open(QIODevice::ReadOnly))
     {
         QByteArray array = file1.readAll();
-        qulonglong localFileCheckSum = db->calculateCRC32(&array);
+        qulonglong localFileCheckSum = calculateCRC32(&array);
         qulonglong remoteFileCheckSum = localFile.size() != 0 ? db->getFileCheckSum(localFile, type, extend) : 0;
         if (remoteFileCheckSum != localFileCheckSum)    // контрольные суммы не совпадают, загрузим локальный файл в базу
                                                         // предполагается, что локальный файл свежее того, который в базе
@@ -1906,7 +1926,7 @@ bool TApplication::readParameters(int argc, char *argv[])
         if (QString(argv[i]).compare("-?", Qt::CaseInsensitive) == 0 ||
             QString(argv[i]).compare("--help", Qt::CaseInsensitive) == 0)
         {
-            out << QObject::trUtf8("Использование программы: qbalance [Параметр]\n");
+            out << QString(QObject::trUtf8("Использование программы: %1 [Параметр]\n")).arg(applicationName());
             out << QObject::trUtf8("Параметры:\n");
             out << QObject::trUtf8("  -? | --help       - Вывести список параметров запуска программы\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
@@ -2061,4 +2081,37 @@ void TApplication::printReport(QString fileName, QSqlQuery* query)
 void TApplication::printReport(QString fileName, Dictionary* dict)
 {
     dict->print(fileName);
+}
+
+
+qulonglong TApplication::calculateCRC32(QByteArray* array)
+{
+    unsigned long crc_table[256];
+    unsigned long crc;
+    char *buf = array->data();
+    unsigned long len = array->count();
+
+    for (int i = 0; i < 256; i++)
+    {
+        crc = i;
+        for (int j = 0; j < 8; j++)
+            crc = crc & 1 ? (crc >> 1) ^ 0xEDB88320UL : crc >> 1;
+        crc_table[i] = crc;
+    }
+
+    crc = 0xFFFFFFFFUL;
+    while (len--)
+        crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
+    return crc ^ 0xFFFFFFFFUL;
+}
+
+
+QString TApplication::OSType()
+{
+#ifdef Q_OS_WIN32
+    return "Windows";
+#endif
+#ifdef Q_OS_LINUX
+    return "Linux";
+#endif
 }

@@ -88,6 +88,13 @@ public:
             return p;
         }
 
+    Q_INVOKABLE virtual bool open();
+    Q_INVOKABLE virtual void close();
+    Q_INVOKABLE virtual bool add();
+    Q_INVOKABLE virtual bool remove(bool = false);
+    Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
+    Q_INVOKABLE virtual void hide();                // Скрыть форму
+
     Q_INVOKABLE int getDocId();
     Q_INVOKABLE int getOperNumber();
     int             getPrvQuan();
@@ -96,18 +103,12 @@ public:
     Dictionaries* getDocDictionaries();
     Q_INVOKABLE Dictionary* getDictionary(QString dictName);
     Q_INVOKABLE Saldo* getSaldo(QString acc);
-    Q_INVOKABLE virtual bool add();
-    Q_INVOKABLE virtual bool remove(bool = false);
-    Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
-    Q_INVOKABLE virtual void hide();                // Скрыть форму
     virtual void             load();
 
     virtual QString transformSelectStatement(QString string);
     void setDocId(int doc);
     Q_INVOKABLE virtual bool calculate(bool = true);
     virtual void setConstDictId(QString, QVariant);
-    Q_INVOKABLE virtual bool open();
-    Q_INVOKABLE virtual void close();
     virtual void setScriptEngine();
     int    addFromQuery(QString);
     DocumentScriptEngine* getScriptEngine();

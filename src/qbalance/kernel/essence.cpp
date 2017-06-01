@@ -1252,7 +1252,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
         {
             QByteArray array = file.readAll();
             file.close();
-            qulonglong localFileCheckSum = db->calculateCRC32(&array);
+            qulonglong localFileCheckSum = app->calculateCRC32(&array);
             if (servFileInfo.size != localFileCheckSum)
             {   // контрольные суммы файлов не совпадают или нужно сохранить принудительно
                 if (app->isSA() && (!servFileInfo.lastModified.isValid() || servFileInfo.lastModified.secsTo(locFileTime) > 5))   // Если не указано время сохранения файла на сервере

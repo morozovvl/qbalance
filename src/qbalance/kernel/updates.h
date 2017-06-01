@@ -28,6 +28,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TApplication;
 
+typedef struct
+{
+    QFile*  file;
+    QString fileName;
+    bool    download;
+} UpdateFileInfo;
+
 class Updates : public QObject
 {
     Q_OBJECT
@@ -35,15 +42,24 @@ class Updates : public QObject
 private:
     TApplication*       app;
     QFtp*   ftp;
-    QHash<int, QFile*>  files;
+    QHash<int, UpdateFileInfo>  files;
     QString url;
     QDomDocument        filesList;
+    QString             updatesPath;
+    QString             serverBackupXMLFile;
+    QString             serverBackupPath;
+    bool                toUpload;
+    bool                updatesFinished;
+    bool                noNeedUpload;
 
     void    prepareFilesList();
+    void    analizeFiles();
+    QStringList         getFilesList();
+    qulonglong calculateCRC32(QString);
 
 public:
     explicit Updates(TApplication*, QObject *parent = 0);
-    void open(QString);
+    bool open(QString, bool = false);
     void close();
 
 signals:
@@ -53,7 +69,9 @@ public slots:
 private slots:
     void testState(int);
     void readUpdates();
+    void putUpdates();
     void readFile(QString, QString);
+    void uploadFile(QString, QString);
     void processCommand(int, bool);
 };
 
