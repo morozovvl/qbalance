@@ -293,8 +293,6 @@ void FormDocument::cmdOk()
     FormGrid::cmdOk();
     if (getParent() != 0)
     {
-        saveDate();
-        saveNumber();
         getParent()->getParent()->getGrdTable()->setFocus();
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {

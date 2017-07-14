@@ -54,7 +54,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "eventloop.h"
 #include "reportcontextfunctions.h"
 #include "reportcontext.h"
-#include "bytearrayfile.h"
 
 
 Q_DECLARE_METATYPE(Dialog*)
@@ -372,28 +371,6 @@ QScriptValue ReportContextToScriptValue(QScriptEngine *engine, ReportContext* co
 
 void ReportContextFromScriptValue(const QScriptValue &object, ReportContext* &out) {
     out = qobject_cast<ReportContext*>(object.toQObject());
-}
-
-
-// класс ByteArrayFile
-Q_DECLARE_METATYPE(ByteArrayFile*)
-
-QScriptValue ByteArrayFileConstructor(QScriptContext *context, QScriptEngine *engine) {
-    QString tableName;
-    if (context->argumentCount() > 0)
-        tableName = context->argument(0).toString();
-
-    ByteArrayFile* file = new ByteArrayFile();
-    return engine->newQObject(file);
-}
-
-
-QScriptValue ByteArrayFileToScriptValue(QScriptEngine *engine, ByteArrayFile* const &in) {
-    return engine->newQObject(in);
-}
-
-void ByteArrayFileFromScriptValue(const QScriptValue &object, ByteArrayFile* &out) {
-    out = qobject_cast<ByteArrayFile*>(object.toQObject());
 }
 
 
@@ -798,8 +775,6 @@ void ScriptEngine::loadScriptObjects()
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
     qScriptRegisterMetaType(this, ReportContextToScriptValue, ReportContextFromScriptValue);
-    qScriptRegisterMetaType(this, ByteArrayFileToScriptValue, ByteArrayFileFromScriptValue);
-    globalObject().setProperty("ByteArrayFile", newQMetaObject(&QObject::staticMetaObject, newFunction(ByteArrayFileConstructor)));
     qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
     globalObject().setProperty("Picture", newQMetaObject(&QObject::staticMetaObject, newFunction(PictureConstructor)));
     qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
