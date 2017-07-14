@@ -96,7 +96,8 @@ bool Form::open(QWidget* pwgt, Essence* par, QString fName)
 
 void Form::close()
 {
-    writeSettings();
+    if (formWidget->isFormWidgetChanged())
+        writeSettings();
     hide();
 }
 
@@ -225,7 +226,6 @@ void Form::createForm(QString fileName, QWidget* pwgt)
     formWidget->setFocusPolicy(Qt::StrongFocus);
     freeWindow = !appendToMdi;
 
-//    if (parent != 0)
     formWidget->setForm(this);
 }
 
@@ -261,25 +261,24 @@ int Form::exec()
     if (formWidget != 0)
     {
         lSelected = false;
-            if (subWindow != 0)
-            {
-                int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
-                int y = (app->getMainWindow()->height() - subWindow->height()) / 2;
-                int w = subWindow->width();
-                int h = subWindow->height();
-                app->getMainWindow()->removeMdiWindow(subWindow);
-                subWindow = 0;
-                formWidget->setGeometry(x, y, w, h);
-                formWidget->setParent(app->getMainWindow());
-                formWidget->setWindowFlags(Qt::Dialog);
-            }
-
-            QWidget* activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
-            formWidget->exec();
-            formWidget->done(0);
-            getSubWindow();
-            if (activeWidget != 0)
-                activeWidget->activateWindow();
+        if (subWindow != 0)
+        {
+            int x = (app->getMainWindow()->width() - subWindow->width()) / 2;
+            int y = (app->getMainWindow()->height() - subWindow->height()) / 2;
+            int w = subWindow->width();
+            int h = subWindow->height();
+            app->getMainWindow()->removeMdiWindow(subWindow);
+            subWindow = 0;
+            formWidget->setGeometry(x, y, w, h);
+            formWidget->setParent(app->getMainWindow());
+            formWidget->setWindowFlags(Qt::Dialog);
+        }
+        QWidget* activeWidget = app->activeWindow();     // Запомним, какой виджет был активен, потом при закрытии этого окна, вернем его
+        formWidget->exec();
+        formWidget->done(0);
+        getSubWindow();
+        if (activeWidget != 0)
+            activeWidget->activateWindow();
         return lSelected;
     }
     return 0;
@@ -297,7 +296,6 @@ void Form::show()
         {
             subWindow->show();
             activateSubWindow();
-            activateWidget();
         }
     }
 }

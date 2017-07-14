@@ -82,6 +82,7 @@ public:
     virtual void eventCloseForm(Form*);
     virtual void eventImport(Form*);
     virtual void eventExport(Form*);
+    virtual void eventQuery();
     virtual void eventCalcTable();
     virtual void eventSetEnabled(bool);
     virtual void eventAfterRowChanged();

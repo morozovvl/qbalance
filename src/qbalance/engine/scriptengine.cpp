@@ -54,6 +54,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "eventloop.h"
 #include "reportcontextfunctions.h"
 #include "reportcontext.h"
+#include "bytearrayfile.h"
 
 
 Q_DECLARE_METATYPE(Dialog*)
@@ -371,6 +372,28 @@ QScriptValue ReportContextToScriptValue(QScriptEngine *engine, ReportContext* co
 
 void ReportContextFromScriptValue(const QScriptValue &object, ReportContext* &out) {
     out = qobject_cast<ReportContext*>(object.toQObject());
+}
+
+
+// класс ByteArrayFile
+Q_DECLARE_METATYPE(ByteArrayFile*)
+
+QScriptValue ByteArrayFileConstructor(QScriptContext *context, QScriptEngine *engine) {
+    QString tableName;
+    if (context->argumentCount() > 0)
+        tableName = context->argument(0).toString();
+
+    ByteArrayFile* file = new ByteArrayFile();
+    return engine->newQObject(file);
+}
+
+
+QScriptValue ByteArrayFileToScriptValue(QScriptEngine *engine, ByteArrayFile* const &in) {
+    return engine->newQObject(in);
+}
+
+void ByteArrayFileFromScriptValue(const QScriptValue &object, ByteArrayFile* &out) {
+    out = qobject_cast<ByteArrayFile*>(object.toQObject());
 }
 
 
@@ -775,6 +798,8 @@ void ScriptEngine::loadScriptObjects()
     qScriptRegisterMetaType(this, DictionaryToScriptValue, DictionaryFromScriptValue);
     globalObject().setProperty("Dictionary", newQMetaObject(&QObject::staticMetaObject, newFunction(DictionaryConstructor)));
     qScriptRegisterMetaType(this, ReportContextToScriptValue, ReportContextFromScriptValue);
+    qScriptRegisterMetaType(this, ByteArrayFileToScriptValue, ByteArrayFileFromScriptValue);
+    globalObject().setProperty("ByteArrayFile", newQMetaObject(&QObject::staticMetaObject, newFunction(ByteArrayFileConstructor)));
     qScriptRegisterMetaType(this, PictureToScriptValue, PictureFromScriptValue);
     globalObject().setProperty("Picture", newQMetaObject(&QObject::staticMetaObject, newFunction(PictureConstructor)));
     qScriptRegisterMetaType(this, SaldoToScriptValue, SaldoFromScriptValue);
@@ -980,6 +1005,13 @@ void ScriptEngine::eventExport(Form* form)
     QScriptValueList args;
     args << newQObject((FormGrid*)form);
     scriptCall(eventName, currentContext()->thisObject(), args);
+}
+
+
+void ScriptEngine::eventQuery()
+{
+    QString eventName = "EventQuery";
+    scriptCall(eventName, currentContext()->thisObject());
 }
 
 
@@ -1307,6 +1339,9 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
     appendEvent("EventAfterAddString()", &func);
 
+    func.comment = QObject::trUtf8("Событие происходит при нажатии на кнопку Запрос");
+    appendEvent("EventQuery()", &func);
+
     func.comment = QObject::trUtf8("Событие происходит перед удалением документа");
     func.body = "return true;";
     appendEvent("EventBeforeDeleteDocument()", &func);
@@ -1394,6 +1429,8 @@ void ScriptEngine::removeScript(QString scriptFile)
 
 QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thisObject, const QScriptValueList &args)
 {
+//    errorMessage = "";
+//    scriptResult = true;
     QScriptValue result("undefined");
     if (globalObject().property(eventName).isFunction())
     {
@@ -1401,6 +1438,8 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         TApplication::exemplar()->setDebugToBuffer(true);
         TApplication::exemplar()->debug(3, program);
         result = globalObject().property(eventName).call(thisObject, args);
+//        errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
+//        scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);

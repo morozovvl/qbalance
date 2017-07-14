@@ -356,29 +356,25 @@ int Document::addFromQuery(QString queryName)
             progressDialog->show();
 
             int i = 0;
-            db->beginTransaction();
             do {
                 record = queryData.record();
                 ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
                 i++;
                 progressDialog->setValue(i);
             } while (queryData.next());
-            query();
+            Dictionary::query();
             calcItog();
             saveChanges();
-            db->commitTransaction();
             progressDialog->hide();
             delete progressDialog;
             addingFromQuery = false;
             return queryData.size();
         }
         else
-            db->beginTransaction();
             ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
-            query();
+            Dictionary::query();
             calcItog();
             saveChanges();
-            db->commitTransaction();
     }
     return 0;
 }
@@ -430,7 +426,7 @@ bool Document::remove(bool noAsk)
                 saveChanges();     // Принудительно обновим перед удалением строки
                 if (db->removeDocStr(docId, strNum))
                 {
-                    query();
+                    Dictionary::query();
                     calcItog();
                     if (scriptEngineEnabled && scriptEngine != 0)
                         scriptEngine->eventAfterDeleteString();
@@ -568,6 +564,24 @@ void Document::setCurrentRow(int row)
 
 void Document::show()
 {
+/*
+    app->debug(1, "");
+    app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
+    locked = false;
+    bool lock = db->lockDocument(docId);        // Попытаемся заблокировать документ
+    if (!lock)
+        setEnabled(false);                      // Если заблокировать не удалось
+    locked = !lock;
+    docModified = false;
+*/
+    query();
+    Essence::show();
+}
+
+
+void Document::query()
+{
+    parent->setCurrentDocument(parent->getId());
     app->debug(1, "");
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
     locked = false;
@@ -578,7 +592,6 @@ void Document::show()
     docModified = false;
     prepareSelectCurrentRowCommand();
     loadDocument();
-    Essence::show();
 }
 
 
@@ -600,7 +613,7 @@ void Document::loadDocument()
     {
         localDictsOpened = true;
     }
-    query();
+    Dictionary::query();
     Dictionary* dict;
     QString dictName;
     QString idFieldName = db->getObjectName("код");
@@ -824,7 +837,7 @@ void Document::setConstDictId(QString dName, QVariant id)
         }
         db->execCommands();
         doSubmit = submit;
-        query();
+        Dictionary::query();
         grdTable->selectRow(currentRow);
         grdTable->setFocus();
         saveOldValues();

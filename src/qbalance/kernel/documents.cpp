@@ -110,15 +110,17 @@ bool Documents::add()
             }
             else
             {
-                int column = getCurrentColumn();
+//                int column = getCurrentColumn();
                 tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
                 grdTable->reset();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
+                setCurrentRow(newRow);
+//                setCurrentColumn(column);
                 updateCurrentRow(strNum);
-                grdTable->selectionModel()->setCurrentIndex(getCurrentIndex().sibling(newRow, column), QItemSelectionModel::Select);
+//                grdTable->selectionModel()->setCurrentIndex(getCurrentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             }
             setCurrentDocument(strNum);
-            currentRow = tableModel->rowCount() - 1;
+//            currentRow = tableModel->rowCount() - 1;
             saveOldValues();
             form->setButtons();
             grdTable->setFocus();
@@ -159,8 +161,10 @@ bool Documents::remove(bool noAsk)
 
 void Documents::view()
 {
+/*
     setCurrentDocument(getId());
     currentRow = getCurrentRow();
+*/
     currentDocument->show();
 }
 
@@ -238,7 +242,7 @@ void Documents::setValue(QString n, QVariant value)
     {
         if (n.toUpper() == columnsProperties.at(i).column)
         {
-            Essence::setValue(n, value, currentRow);
+            Essence::setValue(n, value, getCurrentRow());
             return;
         }
     }
@@ -246,7 +250,7 @@ void Documents::setValue(QString n, QVariant value)
     {
         if ((n.toUpper() == attrFields.at(i).column) || (n.toUpper() == prefix + attrFields.at(i).column))
         {
-            Essence::setValue(prefix + n, value, currentRow);
+            Essence::setValue(prefix + n, value, getCurrentRow());
             return;
         }
     }

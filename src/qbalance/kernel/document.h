@@ -94,6 +94,8 @@ public:
     Q_INVOKABLE virtual bool remove(bool = false);
     Q_INVOKABLE virtual void show();                // Показать форму в немодальном режиме
     Q_INVOKABLE virtual void hide();                // Скрыть форму
+    Q_INVOKABLE virtual void query();
+
 
     Q_INVOKABLE int getDocId();
     Q_INVOKABLE int getOperNumber();

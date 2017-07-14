@@ -31,8 +31,6 @@ public:
     MyDateItemDelegate(QObject*, FormGrid* = 0);
     ~MyDateItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
-private:
-    mutable QPointer<QLineEdit>  editorWidget;
 };
 
 #endif // MYDATEITEMDELEGATE_H

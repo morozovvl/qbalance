@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QModelIndex>
 #include <QtGui/QPalette>
 #include <QtCore/QVariant>
+#include <QtCore/QPointer>
 #include <QtDesigner/QDesignerExportWidget>
 
 class FormGrid;
@@ -54,6 +55,7 @@ public:
     virtual bool        isReadOnly();
     virtual void        setFieldName(QString name);
     virtual QString     getFieldName();
+    virtual QWidget*    getEditorWidget();
 
 protected:
 //    FormGrid*               parentForm;
@@ -62,6 +64,8 @@ protected:
     DelegateTypes           delegateType;
     bool                    readOnly;
     QStyleOptionViewItemV2 setElementColor(QStyleOptionViewItem) const;
+    mutable QPointer<QLineEdit>  editorWidget;
+
 private:
     QString                 fieldName;
 };

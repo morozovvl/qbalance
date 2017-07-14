@@ -31,6 +31,8 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f):
     buttonOk = 0;
     buttonCancel = 0;
     isSelected = false;
+    formChanged = false;
+    moveCount = 1;
 }
 
 
@@ -142,4 +144,34 @@ void Dialog::keyPressEvent(QKeyEvent *event)
     }
 }
 
+
+void Dialog::moveEvent(QMoveEvent* event)
+{
+    QWidget::moveEvent(event);
+    if (event->pos() != event->oldPos())
+    {
+        if (moveCount > 0)
+            moveCount--;
+        else
+        {
+            formChanged = true;
+        }
+    }
+}
+
+
+void Dialog::resizeEvent(QResizeEvent* event)
+{
+    QWidget::resizeEvent(event);
+    if (event->oldSize().isValid() && event->size() != event->oldSize())
+    {
+        formChanged = true;
+    }
+}
+
+
+bool Dialog::isFormWidgetChanged()
+{
+    return formChanged;
+}
 

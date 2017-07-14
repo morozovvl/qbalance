@@ -123,18 +123,16 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         if (buttonQueryAdd != 0)
         {
             connect(buttonQueryAdd, SIGNAL(clicked()), this, SLOT(cmdQueryAdd()));
-            // Если для этой типовой операции имеются запросы к БД, позволяющие автоматически заполнять документ
+
+            queriesMenu = new QMenu(formWidget);    // Создадим меню со списком возможных запросов
+
             QSqlQuery queries = db->getDocumentAddQueriesList(getParent()->getOperNumber());
             if (queries.size() > 0)
             {
-                queriesMenu = new QMenu(formWidget);    // то создадим меню со списком возможных запросов
                 while (queries.next())
                 {
-                    QAction* action = new QAction(queries.value(2).toString(), queriesMenu);
-                    action->setData(queries.value(0));
-                    queriesMenu->addAction(action);
+                    addQueryMenuAction(queries.value(0).toString(), queries.value(2).toString());
                 }
-                buttonQueryAdd->show();                 // и покажем кнопку заполнения документа из запроса
             }
             else
                 buttonQueryAdd->hide();     // в противном случае скроем ее
@@ -362,3 +360,16 @@ void FormDocument::saveNumber()
     getParent()->getParent()->setValue("НОМЕР", QVariant(getNumberEdit()->text()));
 }
 
+
+void FormDocument::addQueryMenuAction(QString name, QString comment)
+{
+    if (queriesMenu != 0)
+    {
+        QAction* action = new QAction(comment, queriesMenu);
+        action->setData(name);
+        queriesMenu->addAction(action);
+        buttonQueryAdd->show();                 // Покажем кнопку заполнения документа из запроса
+    }
+    else
+        app->showError("На форме документа не найдена кнопка \"Добавить из запроса\"");
+}

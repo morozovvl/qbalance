@@ -44,9 +44,12 @@ public:
     Q_INVOKABLE virtual void setForm(Form* f);
     Q_INVOKABLE virtual Form* getForm();
     virtual void    keyPressEvent(QKeyEvent*);
+    bool            isFormWidgetChanged();
 
 protected:
     virtual void showEvent(QShowEvent*);
+    virtual void moveEvent(QMoveEvent*);
+    virtual void resizeEvent(QResizeEvent*);
 
 private:
     TApplication*               app;
@@ -54,6 +57,8 @@ private:
     QPushButton*                buttonOk;
     QPushButton*                buttonCancel;
     bool                        isSelected;
+    bool                        formChanged;
+    int                         moveCount;
 
 private slots:
     void    cmdOk();

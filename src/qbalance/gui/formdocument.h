@@ -46,6 +46,7 @@ public:
 
     Q_INVOKABLE QPushButton* getButtonQueryAdd();
     Q_INVOKABLE virtual void setEnabled(bool);
+    Q_INVOKABLE void addQueryMenuAction(QString, QString);
 
 public slots:
     virtual void cmdQueryAdd();

@@ -47,7 +47,6 @@ public:
 private:
     int length;
     int precision;
-    mutable QPointer<QLineEdit>  editorWidget;
 };
 
 #endif // MYNUMERICITEMDELEGATE_H

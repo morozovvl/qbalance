@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QMessageBox>
 #include <QtGui/QErrorMessage>
 #include <QtCore/QProcess>
+#include <QtSql/QSqlError>
 
 #include <QtCore/QObject>
 #include <QtCore/QIODevice>
@@ -207,19 +208,22 @@ void GUIFactory::showMenus()
 
 int GUIFactory::showError(QString errorText)
 {
-    QMdiSubWindow* window = 0;
-    if (mainWindow != 0)
-        window = mainWindow->getWorkSpace()->activeSubWindow();
-    QErrorMessage msgBox(window);
-    msgBox.setWindowModality(Qt::ApplicationModal);
+//    QMdiSubWindow* window = 0;
+//    if (mainWindow != 0)
+//        window = mainWindow->getWorkSpace()->activeSubWindow();
+//    QWidget* widget = mainWindow->focusWidget();
+//    qDebug() << widget->metaObject()->className();
+    QErrorMessage msgBox(mainWindow);
+//    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
-    msgBox.show();
-    msgBox.activateWindow();
-    msgBox.raise();
+//    msgBox.show();
+//    msgBox.activateWindow();
+//    msgBox.raise();
     msgBox.exec();
-    if (window != 0)
-        mainWindow->getWorkSpace()->setActiveSubWindow(window);
+//    if (window != 0)
+//        mainWindow->getWorkSpace()->setActiveSubWindow(window);
+//    widget->setFocus();
     return 0;
 }
 

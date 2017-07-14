@@ -193,7 +193,7 @@ public:
     Q_INVOKABLE QString getDictionaryPhotoPath(QString);
 
     // Работа с ошибками
-    Q_INVOKABLE bool exec(QString, bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = 0);
     Q_INVOKABLE bool execQueryFile(QString, bool = true);
     bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
     Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);

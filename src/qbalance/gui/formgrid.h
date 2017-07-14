@@ -48,6 +48,7 @@ public:
     Q_INVOKABLE QPushButton* getButtonDelete();
     Q_INVOKABLE QPushButton* getButtonView();
     Q_INVOKABLE QPushButton* getButtonRequery();
+    Q_INVOKABLE QPushButton* getButtonQuery();
     Q_INVOKABLE QPushButton* getButtonPrint();
     Q_INVOKABLE QPushButton* getButtonLoad();
     Q_INVOKABLE QPushButton* getButtonSave();
@@ -69,6 +70,7 @@ public slots:
     virtual void cmdDelete();
     virtual void cmdView();
     virtual void cmdRequery();
+    virtual void cmdQuery();
     virtual void cmdPrint(bool = false);
     virtual void cmdLoad();
     virtual void cmdSave();
@@ -87,6 +89,7 @@ protected:
     QPushButton*                buttonDelete;
     QPushButton*                buttonView;
     QPushButton*                buttonRequery;
+    QPushButton*                buttonQuery;
     QPushButton*                buttonPrint;
     QPushButton*                buttonLoad;
     QPushButton*                buttonSave;

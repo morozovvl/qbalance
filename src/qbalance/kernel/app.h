@@ -106,7 +106,7 @@ public:
     static int port;
     static QString database;
     static QString script;
-    static QString scriptParameter;
+    static QStringList scriptParameter;
     static bool    serverMode;
     static bool loadDefaultConfig;
 
@@ -237,7 +237,7 @@ public:
     Q_INVOKABLE void printReport(QString, QSqlQuery* = 0);
     Q_INVOKABLE void printReport(QString, Dictionary*);
     Q_INVOKABLE QString getScript();                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
-    Q_INVOKABLE QString getScriptParameter();
+    Q_INVOKABLE QString getScriptParameter(int = 0);
 
     Q_INVOKABLE void sendSMS(QString url, QString number, QString message, QString from = "");                     // Посылка СМС через сервис SMS.RU
     Q_INVOKABLE void sendSMS(QString url, QString number);                               // Посылка СМС через сервис SMS.RU

@@ -151,14 +151,18 @@ bool BankTerminal::process(int oper, int sum, int type, int track)
 
             termProcess->start(command);
             if (!termProcess->waitForFinished(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()))
-                app->showError(QObject::trUtf8("Время ожидания терминала (1 минута) истекло. Нажмите кнопку <ОТМЕНА> на терминале.") + termProcess->errorString());                  // выдадим сообщение об ошибке
-
-            result = testResult();
-
-            if (!result)
-                app->showError(resultParams.value(MESSAGE));
+            {
+                app->showError(QString(QObject::trUtf8("Время ожидания терминала (%1 c) истекло. Нажмите кнопку <ОТМЕНА> на терминале.")).arg(app->getConfigValue(BANK_TERMINAL_PROGRAM_WAIT_TIME).toInt()/1000));                  // выдадим сообщение об ошибке
+                termProcess->kill();
+            }
             else
-                printSlip();
+            {
+                result = testResult();
+                if (!result)
+                    app->showError(resultParams.value(MESSAGE));
+                else
+                    printSlip();
+            }
 
             driverFR->DisConnect();
         }

@@ -63,7 +63,7 @@ public:
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
     virtual void readSettings();
-    virtual QMdiSubWindow*     getSubWindow();
+    Q_INVOKABLE virtual QMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp();
 
 public slots:

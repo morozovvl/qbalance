@@ -119,3 +119,9 @@ void MyItemDelegate::setReadOnly(bool val)
 {
     readOnly = val;
 }
+
+
+QWidget* MyItemDelegate::getEditorWidget()
+{
+    return editorWidget.data();
+}

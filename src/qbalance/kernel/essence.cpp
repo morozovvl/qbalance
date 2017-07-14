@@ -304,9 +304,22 @@ int Essence::getCurrentColumn()
 }
 
 
+void Essence::setCurrentColumn(int column)
+{
+    if (grdTable != 0)
+    {
+        grdTable->selectColumn(column);
+    }
+}
+
+
 void Essence::setCurrentRow(int row)
 {
-    if (grdTable != 0) grdTable->selectRow(row);
+    if (grdTable != 0)
+    {
+        grdTable->selectRow(row);
+    }
+
 }
 
 
@@ -403,11 +416,13 @@ bool Essence::calculate(bool)
     {
         scriptEngine->eventCalcTable();
         scriptEngine->eventAfterCalculate();
+/*
         if (scriptEngine->getErrorMessage().size() > 0)
         {
             app->showError(scriptEngine->getErrorMessage());
             scriptEngine->setErrorMessage("");
         }
+*/
         if (!scriptEngine->getScriptResult())
         {
             isCurrentCalculate = false;
@@ -848,8 +863,7 @@ void Essence::hide()
 {
     if (opened && form != 0)
     {
-        if (isFormVisible())
-            beforeHideFormEvent(form);
+        beforeHideFormEvent(form);
         form->hide();
         afterHideFormEvent(form);
     }
@@ -1170,8 +1184,11 @@ void Essence::updateCurrentRow()
     else
     {
         QString command = preparedSelectCurrentRow.executedQuery();
-        TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
-        TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
+        if (preparedSelectCurrentRow.lastError().isValid())
+        {
+            TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
+            TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
+        }
     }
 }
 
@@ -1261,10 +1278,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
                 else
                 {
                     QByteArray templateFile = db->getFile(fileName, type);
-                    if (templateFile.size() > 0)
-                    {   // Если удалось получить шаблон отчета, то сохраним его локально
-                        app->saveFile(fullFileName, &templateFile);
-                    }
+                    app->saveFile(fullFileName, &templateFile);
                 }
             }
             result = true;

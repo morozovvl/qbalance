@@ -100,6 +100,7 @@ void Updates::readFile(QString remoteFile, QString localFile)
     if (file->open(QFile::WriteOnly))
     {
         int id = ftp->get(remoteFile, file);
+        qDebug() << remoteFile << localFile;
         UpdateFileInfo fi;
         fi.file = file;
         fi.fileName = remoteFile;
@@ -262,7 +263,7 @@ void Updates::analizeFiles()
             {
                 foreach (QString file, filesList)
                 {
-                    readFile(serverBackupPath + file, updatesPath + "/" + file);
+                    readFile(serverBackupPath + "/" + file, updatesPath + "/" + file);
                 }
             }
             else

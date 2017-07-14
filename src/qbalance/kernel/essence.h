@@ -226,7 +226,8 @@ public:
     Q_INVOKABLE QString         getCurrentFieldName();
     Q_INVOKABLE virtual int     getCurrentRow();
     Q_INVOKABLE virtual int     getCurrentColumn();
-    Q_INVOKABLE virtual void    setCurrentRow(int row);
+    Q_INVOKABLE virtual void    setCurrentRow(int);
+    Q_INVOKABLE virtual void    setCurrentColumn(int);
     virtual Dictionaries* getDictionaries();
     void setDictionaries(Dictionaries* dicts);
     bool    isLoading();

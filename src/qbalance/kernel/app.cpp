@@ -59,7 +59,7 @@ QString             TApplication::host             = "";
 int                 TApplication::port                 = 0;
 QString             TApplication::database         = "";
 QString             TApplication::script           = "";
-QString             TApplication::scriptParameter  = "";
+QStringList         TApplication::scriptParameter;
 bool                TApplication::serverMode = false;
 bool                TApplication::sendCommandMode = false;
 GUIFactory*         TApplication::gui          = 0;
@@ -385,9 +385,11 @@ QString TApplication::getScript()
 }                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
 
 
-QString TApplication::getScriptParameter()
+QString TApplication::getScriptParameter(int i)
 {
-    return scriptParameter;
+    if (i < scriptParameter.count())
+        return scriptParameter.at(i);
+    return "";
 }
 
 
@@ -476,7 +478,7 @@ void TApplication::initConfig()
     setConfig("fr", "FR_DRIVER_PORT", "COM порт", CONFIG_VALUE_STRING, "/dev/ttyUSB0");
 #endif
     setConfig("fr", "FR_DRIVER_BOUD_RATE", "Скорость", CONFIG_VALUE_BOUND, 6);
-    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 3);
+    setConfig("fr", "FR_DRIVER_MAX_TIMEOUT", "Максимальное время ожидания ФР, с", CONFIG_VALUE_INTEGER, 60);
     setConfig("fr", "FR_LOCAL_DRIVER_TIMEOUT", "Таймаут для локального ФР, мс", CONFIG_VALUE_INTEGER, 100);
     setConfig("fr", "FR_REMOTE_DRIVER_TIMEOUT", "Таймаут для сетевого ФР, мс", CONFIG_VALUE_INTEGER, 150);
     setConfig("fr", "FR_DRIVER_PASSWORD", "Пароль администратора ФР", CONFIG_VALUE_INTEGER, 30);
@@ -701,7 +703,7 @@ bool TApplication::initApplication()
             if (dictionaryList->open() && topersList->open())
             {
                 updates = new Updates(this);
-                updates->open(getConfigValue("UPDATES_FTP_URL").toString());
+//                updates->open(getConfigValue("UPDATES_FTP_URL").toString());
 
                 gui->showMenus();
 
@@ -710,16 +712,14 @@ bool TApplication::initApplication()
                 gui->getMainWindow()->showPeriod();
 
                 // Проверим обновления БД, и если надо, применим их
-                int updatesCnt = db->updatesCount();
-                if (updatesCnt > 0)
+                if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                 {
-                    if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
+                    int updatesCnt = db->updatesCount();
+                    if (updatesCnt > 0)
                     {
                         if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
                             db->loadUpdates();
                     }
-                    else
-                        db->loadUpdates();
                 }
 
                 // Загрузим константы
@@ -758,11 +758,14 @@ bool TApplication::initApplication()
             }
         }
         else if (result == -2)
-            {   // Произошла ошибка соединения с сервером
+        {   // Произошла ошибка соединения с сервером
+/*
             if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
                                  QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
                 // Попытаемся создать новую БД
                 db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
+*/
+            break;
         }
         else if (result == -1)      // Пользователь нажал кнопку Отмена
             break;  // Выйдем из бесконечного цикла открытия БД
@@ -2026,7 +2029,7 @@ bool TApplication::readParameters(int argc, char *argv[])
         else if (QString(argv[i]).compare("-sp", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--scriptparameter", Qt::CaseInsensitive) == 0)
             {
-                scriptParameter = argv[++i];
+                scriptParameter.append(argv[++i]);
             }
         else if (QString(argv[i]).compare("-sr", Qt::CaseInsensitive) == 0 ||
                  QString(argv[i]).compare("--server", Qt::CaseInsensitive) == 0)

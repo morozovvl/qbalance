@@ -56,6 +56,7 @@ FormGrid::FormGrid(QObject* parent/* = 0*/)
     buttonDelete = 0;
     buttonView = 0;
     buttonRequery = 0;
+    buttonQuery = 0;
     buttonPrint = 0;
     buttonLoad = 0;
     buttonSave = 0;
@@ -115,6 +116,12 @@ QPushButton* FormGrid::getButtonView()
 QPushButton* FormGrid::getButtonRequery()
 {
     return buttonRequery;
+}
+
+
+QPushButton* FormGrid::getButtonQuery()
+{
+    return buttonQuery;
 }
 
 
@@ -290,6 +297,21 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     if (buttonRequery != 0)
     {
         connect(buttonRequery, SIGNAL(clicked()), this, SLOT(cmdRequery()));
+    }
+    // Подключим кнопку "Запрос"
+    if (defaultForm)
+    {
+        buttonQuery = new QPushButton();
+        buttonQuery->setObjectName("buttonQuery");
+        cmdButtonLayout->insertWidget(0, buttonQuery);
+    }
+    else
+    {
+        buttonQuery = (QPushButton*)formWidget->findChild("buttonQuery");
+    }
+    if (buttonQuery != 0)
+    {
+        connect(buttonQuery, SIGNAL(clicked()), this, SLOT(cmdQuery()));
     }
     // Подключим кнопку "Просмотреть"
     if (parent != 0 && parent->isViewable())
@@ -482,6 +504,16 @@ void FormGrid::cmdRequery()
     }
     grdTable->setFocus();
     setButtons();
+}
+
+
+void FormGrid::cmdQuery()
+{
+    if (buttonQuery != 0 && buttonQuery->isVisible() && buttonQuery->isEnabled())
+    {
+        parent->getScriptEngine()->eventQuery();
+    }
+    grdTable->setFocus();
 }
 
 

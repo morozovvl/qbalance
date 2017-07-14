@@ -63,7 +63,7 @@ void MessageWindow::print(QString str)
 
 void MessageWindow::show()
 {
-    if (app->getMainWindow()->isVisible())
+    if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
         if (subWindow == 0)
         {

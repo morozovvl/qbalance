@@ -129,6 +129,9 @@ QList<FieldType> Table::returnColumnsProperties()
 void Table::query(QString filter)
 {
     tableModel->setFilter(filter);
+    if (tableModel->rowCount() == 0)
+        tableModel->select();
+
     tableModel->setFullDebugInfo(fullDebugInfo);
 
     if (!fullDebugInfo)
@@ -141,7 +144,7 @@ void Table::query(QString filter)
         app->debug(1, "Query:(*) " + command);
     }
 
-    if (!tableModel->select())
+    if (tableModel->lastError().isValid())
         app->showError(tableModel->lastError().text());
  }
 

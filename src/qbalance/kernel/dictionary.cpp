@@ -568,6 +568,7 @@ void Dictionary::setForm(QString formName)
     if (isPrintable())
         form->appendToolTip("buttonPrint",      trUtf8("Распечатать выбранные записи из справочника (F4)"));
     form->appendToolTip("buttonRequery",    trUtf8("Обновить справочник (загрузить повторно с сервера) (F3)"));
+    form->appendToolTip("buttonQuery",    trUtf8("Выполнить запрос"));
 
     form->open(parentForm, this, formName.size() == 0 ? getTagName() : formName);
     parameters = (SearchParameters*)form->getFormWidget()->findChild("searchParameters");

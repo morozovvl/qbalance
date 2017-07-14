@@ -32,7 +32,8 @@ public:
     ~MyBooleanItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-private:
+
+protected:
     mutable QPointer<QCheckBox>  editorWidget;
 };
 

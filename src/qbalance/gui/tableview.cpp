@@ -286,7 +286,8 @@ void TableView::setColumnsHeaders()
                             }
                             delegate->setReadOnly(fields.at(i).readOnly);
                             delete itemDelegateForColumn(i);
-                            setItemDelegateForColumn(i, delegate);              // POSSIBLY MEMORY LEAK
+                            setItemDelegateForColumn(i, delegate);
+                            setFocusProxy(delegate->getEditorWidget());
                         }
                         columns.insert(fields.at(i).number - 1, i);
                     }
