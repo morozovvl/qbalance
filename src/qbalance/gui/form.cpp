@@ -235,8 +235,8 @@ void Form::cmdOk()
     lSelected = true;
     if (parent != 0)
     {
-        parent->cmdOk();
         parent->hide();
+        parent->cmdOk();
     }
     else
         hide();

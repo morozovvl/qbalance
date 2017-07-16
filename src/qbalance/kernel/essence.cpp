@@ -120,7 +120,7 @@ void Essence::setDoSubmit(bool submit)
 void Essence::setFilter(const QString &filter)
 {
     defaultFilter = filter;
-    tableModel->setFilter(filter);
+//    tableModel->setFilter(filter);
 }
 
 

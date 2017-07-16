@@ -285,13 +285,6 @@ QString TApplication::getScriptFileName(int oper)
 void TApplication::setDebugToBuffer(bool buff)
 {
     debugToBuffer = buff;
-    if (!buff)
-    {
-        foreach (QString mode, DebugModes)
-        {
-            debug(mode.toInt(), "");
-        }
-    }
 }
 
 
@@ -1171,13 +1164,10 @@ void TApplication::debug(int mode, const QString& value, bool timeIsEnabled)
                 }
                 tempDebugBuffer.remove(debugMode);                          // и закроем буфер
             }
-            if (value.size() > 0)
-            {
-                QString str;                                                    // дальше будем писать в файл
-                if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
-                    str = QDateTime::currentDateTime().toString(logTimeFormat()) + " ";
-                writeToDebugFile(debugMode, str + value);
-            }
+            QString str;                                                    // дальше будем писать в файл
+            if (!timeIsEnabled)         // Если в строке не указано время, то укажем его
+                str = QDateTime::currentDateTime().toString(logTimeFormat()) + " ";
+            writeToDebugFile(debugMode, str + value);
         }
         else
         {

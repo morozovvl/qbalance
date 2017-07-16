@@ -176,12 +176,13 @@ bool Dictionaries::addSaldo(QString acc)
     if (!dictionariesList.contains(alias))
     {
         dictionariesNamesList.insert(0, alias);
+
         // Имя справочника, который используется в бухгалтерском счете acc возьмем из справочника "Счета"
-        Dictionary* accDict = app->getDictionaries()->getDictionary(db->getObjectName("счета"));
-        accDict->query(QString("%1='%2'").arg(db->getObjectNameCom("счета.счет")).arg(acc));
-        QString dictName = accDict->getValue(db->getObjectName("счета.имясправочника")).toString().trimmed().toLower();
+        QString dictName = db->getAccountsValue(acc, "ИМЯСПРАВОЧНИКА").toString().trimmed().toLower();
+
         Saldo* saldo = Saldo::create<Saldo>(acc, dictName);
         saldo->setDictionaries(this);
+
         if (saldo->open())
         {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));

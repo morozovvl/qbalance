@@ -46,17 +46,7 @@ void Saldo::postInitialize(QString cAcc, QString dictName, QObject *parent)
     quan = false;
     lIsSaldo = true;
     getIdRefresh = false;
-    QSqlQuery accounts = db->getAccounts();
-    accounts.first();
-    while (accounts.isValid())
-    {
-        if (accounts.record().value(db->getObjectName("vw_счета.счет")).toString().trimmed().toLower() == cAcc)
-        {
-            quan = accounts.record().value(db->getObjectName("vw_счета.количество")).toBool();
-            break;
-        }
-        accounts.next();
-    }
+    quan = db->getAccountsValue(cAcc, "КОЛИЧЕСТВО").toBool();
     lInsertable = false;
     lDeleteable = false;
     lUpdateable = false;

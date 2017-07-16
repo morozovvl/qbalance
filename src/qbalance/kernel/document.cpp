@@ -481,7 +481,7 @@ void Document::saveVariablesToDB()
         }
         xmlWriter.writeEndElement();
         xmlWriter.writeEndDocument();
-        db->saveDocumentVariables(docId, xml);
+        parent->setValue("ПЕРЕМЕННЫЕ", xml);
     }
 }
 
@@ -489,7 +489,7 @@ void Document::saveVariablesToDB()
 void Document::restoreVariablesFromDB()
 {
     variables.clear();
-    QString xml = db->restoreDocumentVariables(docId);
+    QString xml = parent->getValue("ПЕРЕМЕННЫЕ").toString();
     if (xml.size() > 0)
     {
         QXmlStreamReader xmlReader(xml);
@@ -564,23 +564,6 @@ void Document::setCurrentRow(int row)
 
 void Document::show()
 {
-/*
-    app->debug(1, "");
-    app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
-    locked = false;
-    bool lock = db->lockDocument(docId);        // Попытаемся заблокировать документ
-    if (!lock)
-        setEnabled(false);                      // Если заблокировать не удалось
-    locked = !lock;
-    docModified = false;
-*/
-    query();
-    Essence::show();
-}
-
-
-void Document::query()
-{
     parent->setCurrentDocument(parent->getId());
     app->debug(1, "");
     app->debug(1, QString("Opened document %1 (ОПЕР=%2, НОМЕР=%3)").arg(docId).arg(operNumber).arg(parent->getValue("НОМЕР").toString()));
@@ -590,6 +573,13 @@ void Document::query()
         setEnabled(false);                      // Если заблокировать не удалось
     locked = !lock;
     docModified = false;
+    query();
+    Essence::show();
+}
+
+
+void Document::query()
+{
     prepareSelectCurrentRowCommand();
     loadDocument();
 }

@@ -136,11 +136,11 @@ void Table::query(QString filter)
 
     if (!fullDebugInfo)
     {
-        QString command = QString("SELECT * FROM %1").arg(tableModel->tableName());
+        QString command = QString("SELECT * FROM %1").arg(tableName);
         if (filter.size() > 0)
-            command.append(QString(" WHERE %1;").arg(filter));
+            command.append(QString(" WHERE %1").arg(filter));
         if (tableModel->isTestSelect())
-            command.append(QString(" LIMIT 0;"));
+            command.append(QString(" LIMIT 0"));
         app->debug(1, "Query:(*) " + command);
     }
 

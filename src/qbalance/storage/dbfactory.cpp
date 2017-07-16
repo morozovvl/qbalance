@@ -2564,39 +2564,6 @@ void DBFactory::setToperPermition(int operNumber, QString user, bool menu) {
 }
 
 
-void DBFactory::saveDocumentVariables(int docId, QString xml)
-{
-    QByteArray ba;
-    QSqlQuery query;
-    ba.append(xml);
-    QString command = QString("UPDATE %1 SET %2 = E':value' WHERE %3 = %4;").arg(getObjectNameCom("документы"))
-                                                                           .arg(getObjectNameCom("документы.переменные"))
-                                                                           .arg(getObjectNameCom("документы.код"))
-                                                                           .arg(docId);
-    query.prepare(command);
-    query.bindValue(":value", ba, QSql::In & QSql::Binary);
-    if (!query.exec())
-    {
-        setError(query.lastError().text());
-    }
-}
-
-
-QString DBFactory::restoreDocumentVariables(int docId)
-{
-    QString result;
-    QString command = QString("SELECT %1 FROM %2 WHERE %3 = %4;").arg(getObjectNameCom("документы.переменные"))
-                                                              .arg(getObjectNameCom("документы"))
-                                                              .arg(getObjectNameCom("документы.код"))
-                                                              .arg(docId);
-    QSqlQuery query = execQuery(command);
-    if (query.first())
-        result = QString(query.record().field(0).value().toByteArray());
-    return result;
-
-}
-
-
 void DBFactory::setConfig(QString config, QString name, QString value)
 {
     clearError();
@@ -2888,6 +2855,21 @@ int DBFactory::updatesCount()
 }
 
 
+QVariant DBFactory::getAccountsValue(QString cAcc, QString columnName)
+{
+    QVariant result;
+    accounts.first();
+    while (accounts.isValid())
+    {
+        if (accounts.record().value(getObjectName("vw_счета.счет")).toString().trimmed().toLower() == cAcc)
+        {
+            result = accounts.record().value(columnName);
+            break;
+        }
+        accounts.next();
+    }
+    return result;
+}
 
 
 

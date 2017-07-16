@@ -290,7 +290,6 @@ void FormDocument::hide()
 
 void FormDocument::cmdOk()
 {
-    FormGrid::cmdOk();
     if (getParent() != 0)
     {
         getParent()->getParent()->getGrdTable()->setFocus();
@@ -298,8 +297,11 @@ void FormDocument::cmdOk()
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
+        saveDate();
+        saveNumber();
         getParent()->saveChanges();
     }
+    FormGrid::cmdOk();
 }
 
 
@@ -349,13 +351,13 @@ void FormDocument::setEnabled(bool enabled)
 
 void FormDocument::saveDate()
 {
-    getParent()->getParent()->setValue("ДАТА", QVariant(getDateEdit()->date()));
+    getParent()->setDate(getDateEdit()->text());
 }
 
 
 void FormDocument::saveNumber()
 {
-    getParent()->getParent()->setValue("НОМЕР", QVariant(getNumberEdit()->text()));
+    getParent()->setNumber(getNumberEdit()->text());
 }
 
 

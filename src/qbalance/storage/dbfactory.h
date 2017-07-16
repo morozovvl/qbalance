@@ -142,8 +142,6 @@ public:
     int addDocStr(int, int, QString cParam = "''", int nQuan = 1, int nDocStr = 0);
     bool removeDocStr(int, int);
     void saveDocAttribute(int, int, QString);
-    void saveDocumentVariables(int docId, QString xml);
-    QString restoreDocumentVariables(int docId);
     QSqlQuery getDocumentAddQueriesList(int);
 
     // Работа с файлами (скриптами, формами, картинками и т.п.)
@@ -216,6 +214,7 @@ public:
                                           int * = 0);     // Генерирует текст SQL-запроса для табличной части документа операции oper
     QString getDictionarySqlSelectStatement(QString, QString = "");       // Генерирует текст SQL-запроса для справочника
     QSqlQuery getAccounts();
+    QVariant getAccountsValue(QString, QString);
 
     // Функции для сохранения в базе и восстановления конфигураций объектов
     virtual void setConfig(QString, QString, QString);
