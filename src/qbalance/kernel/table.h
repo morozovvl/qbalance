@@ -48,6 +48,8 @@ protected:
     QList<FieldType>                    columnsProperties;
     virtual bool                        setTableModel(int = 0);
     bool                                fullDebugInfo;
+    QString                             sqlCommand;
+
 
     Table(QString = "", QObject* = 0);
     virtual void postInitialize(QString, QObject*);
@@ -63,7 +65,7 @@ public:
             return p;
         }
 
-    Q_INVOKABLE virtual bool            open();
+    Q_INVOKABLE virtual bool            open(QString = "");
     Q_INVOKABLE virtual void            close();
     Q_INVOKABLE virtual void            query(QString filter = "");
 
@@ -83,8 +85,6 @@ public:
     Q_INVOKABLE virtual bool            isReadOnly();
     Q_INVOKABLE virtual void            setFullDebugInfo(bool full);
     virtual TApplication*               getApp();
-
-
 };
 
 #endif // TABLE_H

@@ -74,7 +74,6 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     getIdRefresh = true;
     parameters = 0;
     doSubmit = true;
-    sqlCommand = "";
     exact = true;
 
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
@@ -601,39 +600,42 @@ bool Dictionary::open(QString command, QString tName)
 
     if (Essence::open())
     {
-        prepareSelectCurrentRowCommand();
-        // Откроем этот справочник
-        fieldList = getFieldsList();
-
-        // Проверим, имеется ли в справочнике полнотекстовый поиск
-        foreach (QString fieldName, fieldList)
+        if (tableName.size() > 0)
         {
-            if (fieldName == "fts")
+            prepareSelectCurrentRowCommand();
+            // Откроем этот справочник
+            fieldList = getFieldsList();
+
+            // Проверим, имеется ли в справочнике полнотекстовый поиск
+            foreach (QString fieldName, fieldList)
             {
-                ftsEnabled = true;
-                break;
+                if (fieldName == "fts")
+                {
+                    ftsEnabled = true;
+                    break;
+                }
             }
-        }
 
-        tableModel->setTestSelect(true);
-        query();
-        tableModel->setTestSelect(false);
+            tableModel->setTestSelect(true);
+            query();
+            tableModel->setTestSelect(false);
 
-        if (isFieldExists(nameFieldName))
-            setPhotoNameField(nameFieldName);
+            if (isFieldExists(nameFieldName))
+                setPhotoNameField(nameFieldName);
 
-        FieldType fld;
-        int keyColumn   = 0;
-        for (int i = 0; i < columnsProperties.count(); i++)
-        {
-            fld = columnsProperties.at(i);
-
-            // Для основной таблицы сохраним информацию для обновления
-            if (fld.table == columnsProperties.at(0).table)
+            FieldType fld;
+            int keyColumn   = 0;
+            for (int i = 0; i < columnsProperties.count(); i++)
             {
-                if (fld.name == idFieldName)
-                    keyColumn = i;
-                tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
+                fld = columnsProperties.at(i);
+
+                // Для основной таблицы сохраним информацию для обновления
+                if (fld.table == columnsProperties.at(0).table)
+                {
+                    if (fld.name == idFieldName)
+                        keyColumn = i;
+                    tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
+                }
             }
         }
         return true;
@@ -892,12 +894,9 @@ void Dictionary::lock(bool toLock)
 
 void Dictionary::setSqlCommand(QString command)
 {
-    if (!opened)
-        open(command);
-    else
-    {
-        tableModel->setSelectStatement(command);
-        sqlCommand = command;
-    }
+    if (opened)
+        close();
+    open(command);
 }
+
 

@@ -423,13 +423,14 @@ bool Document::remove(bool noAsk)
 
             if (canRemove)
             {
-                saveChanges();     // Принудительно обновим перед удалением строки
                 if (db->removeDocStr(docId, strNum))
                 {
                     Dictionary::query();
-                    calcItog();
+                    doSubmit = false;
                     if (scriptEngineEnabled && scriptEngine != 0)
                         scriptEngine->eventAfterDeleteString();
+                    calcItog();
+                    doSubmit = true;
                     saveChanges();     // Принудительно обновим итог после удаления строки
                     return true;
                 }

@@ -31,7 +31,10 @@ class TApplication;
 typedef struct
 {
     QFile*  file;
-    QString fileName;
+    QString remoteDir;
+    QString remoteDirExists;
+    QString remoteFileName;
+    QString localFileName;
     bool    download;
 } UpdateFileInfo;
 
@@ -70,7 +73,7 @@ private slots:
     void testState(int);
     void readUpdates();
     void putUpdates();
-    void readFile(QString, QString);
+    void readFile(QString remoteDir, QString remoteFile, QString localFile);
     void uploadFile(QString, QString);
     void processCommand(int, bool);
 };

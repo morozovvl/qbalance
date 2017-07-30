@@ -27,9 +27,9 @@ Updates::Updates(TApplication* a, QObject *parent): QObject(parent)
     ftp = 0;
     app = a;
     updatesPath = app->getUpdatesPath();
-    serverBackupPath = QString("/%1/%2/%3").arg(app->applicationName()).arg(app->applicationVersion()).arg(app->OSType());
+    serverBackupPath = QString("/%1/%2/%3").arg(app->applicationName()).arg(app->OSType()).arg(app->applicationVersion());
     serverBackupXMLFile = "/backup.xml";
-    toUpload = false;
+    toUpload = true;
     updatesFinished = false;
     noNeedUpload = false;
 }
@@ -41,14 +41,13 @@ bool Updates::open(QString u, bool upload)
     url = u;
     if (url.size() > 0)
     {
+        result = true;
+        toUpload = upload;
         ftp = new QFtp(parent());
         ftp->connectToHost(url);
         ftp->login("ftpclient", "123");
         connect(ftp, SIGNAL(stateChanged(int)), this, SLOT(testState(int)));
         connect(ftp, SIGNAL(commandFinished(int, bool)), this, SLOT(processCommand(int, bool)));
-        result = true;
-        toUpload = upload;
-        toUpload = false;
     }
     return result;
 }
@@ -80,30 +79,32 @@ void Updates::testState(int state)
 
 void Updates::readUpdates()
 {
-    readFile(serverBackupPath + serverBackupXMLFile, updatesPath + serverBackupXMLFile);
+    readFile(serverBackupPath, serverBackupXMLFile, updatesPath + serverBackupXMLFile);
 }
 
 
 void Updates::putUpdates()
 {
     if (!QDir().exists(updatesPath + serverBackupXMLFile))
-        readFile(serverBackupPath + serverBackupXMLFile, updatesPath + serverBackupXMLFile);
+        readFile(serverBackupPath, serverBackupXMLFile, updatesPath + serverBackupXMLFile);
     else
         analizeFiles();
 }
 
 
-void Updates::readFile(QString remoteFile, QString localFile)
+void Updates::readFile(QString remoteDir, QString remoteFile, QString localFile)
 {
 //    QDir().remove(localFile);
     QFile* file = new QFile(localFile);
     if (file->open(QFile::WriteOnly))
     {
         int id = ftp->get(remoteFile, file);
-        qDebug() << remoteFile << localFile;
+        qDebug() << id << localFile << "started";
         UpdateFileInfo fi;
         fi.file = file;
-        fi.fileName = remoteFile;
+        fi.remoteDir = remoteDir;
+        fi.remoteFileName = remoteFile;
+        fi.localFileName = localFile;
         fi.download = true;
 
         files.insert(id, fi);
@@ -120,7 +121,8 @@ void Updates::uploadFile(QString remoteFile, QString localFile)
 
         UpdateFileInfo fi;
         fi.file = file;
-        fi.fileName = remoteFile;
+        fi.remoteFileName = remoteFile;
+        fi.localFileName = localFile;
         fi.download = false;
 
         files.insert(id, fi);
@@ -130,44 +132,57 @@ void Updates::uploadFile(QString remoteFile, QString localFile)
 
 void Updates::processCommand(int id, bool error)
 {
-    if (!error)
-    {
+//    if (!error)
+//    {
+        qDebug() << id << files.value(id).localFileName << "completed";
         if (files.contains(id))
         {
             QFile* file = files.value(id).file;
             file->close();
             delete file;
-
-            QString message;
-            if (files.value(id).download)
-                message += QString(QString(QObject::trUtf8("Загружено с FTP сервера ")));
+            if (QFileInfo(files.value(id).localFileName).size() == 0)
+                QDir().remove(files.value(id).localFileName);
             else
-                message += QString(QString(QObject::trUtf8("Выгружено на FTP сервер ")));
-            message += QString(QString(QObject::trUtf8("обновление файла: %1")).arg(files.value(id).fileName));
-            app->showMessageOnStatusBar(message);
+            {
+                QString message;
+                if (files.value(id).download)
+                    message += QString(QString(QObject::trUtf8("Загружено с FTP сервера ")));
+                else
+                    message += QString(QString(QObject::trUtf8("Выгружено на FTP сервер ")));
+                message += QString(QString(QObject::trUtf8("обновление файла: %1")).arg(files.value(id).remoteFileName));
+//            app->showMessageOnStatusBar(message);
+                app->print(message);
+            }
 
             files.remove(id);
         }
+        if (files.count() == 0)     // Все обновления загружены
+        {
+            if (updatesFinished)
+            {
+                if (!noNeedUpload)
+                {
+                    if (toUpload)
+                    {
+                        if (!QDir().exists(updatesPath + serverBackupXMLFile))
+                            prepareFilesList();
+                        else
+                            app->showMessage("Завершена выгрузка обновлений");
+                    }
+                    else
+                        app->showMessage("Завершена загрузка обновлений");
+                }
+            }
+            analizeFiles();
+        }
+/*
     }
     else
     {
-        app->showMessageOnStatusBar(QObject::trUtf8("Не удалось загрузить обновление программы с сервера FTP"));
+//        app->showMessageOnStatusBar(QObject::trUtf8("Не удалось загрузить обновление программы с сервера FTP"));
         files.clear();
     }
-    if (files.count() == 0)     // Все обновления загружены
-    {
-        if (updatesFinished)
-        {
-            if (!noNeedUpload)
-            {
-                if (toUpload)
-                    app->showMessage("Завершена выгрузка обновлений");
-                else
-                    app->showMessage("Завершена загрузка обновлений");
-            }
-        }
-        analizeFiles();
-    }
+*/
 }
 
 
@@ -234,8 +249,8 @@ void Updates::prepareFilesList()
 
 void Updates::analizeFiles()
 {
-    if (!updatesFinished)
-    {
+//    if (!updatesFinished)
+//    {
         QStringList filesList = getFilesList();
         if (toUpload)
         {
@@ -243,14 +258,12 @@ void Updates::analizeFiles()
             {
                 foreach (QString file, filesList)
                 {
-                    uploadFile(serverBackupPath + file, app->applicationDirPath() + "/" + file);
+                    uploadFile(serverBackupPath + "/" + file, app->applicationDirPath() + "/" + file);
                 }
-                prepareFilesList();
                 uploadFile(serverBackupPath + serverBackupXMLFile, updatesPath + serverBackupXMLFile);
             }
             else if (!QDir().exists(updatesPath + serverBackupXMLFile))
             {
-                prepareFilesList();
                 uploadFile(serverBackupPath + serverBackupXMLFile, updatesPath + serverBackupXMLFile);
             }
             else
@@ -263,14 +276,14 @@ void Updates::analizeFiles()
             {
                 foreach (QString file, filesList)
                 {
-                    readFile(serverBackupPath + "/" + file, updatesPath + "/" + file);
+                    readFile(serverBackupPath, "/" + file, updatesPath + "/" + file);
                 }
             }
             else
                 noNeedUpload = true;
         }
         updatesFinished = true;
-    }
+//    }
 }
 
 
@@ -289,7 +302,7 @@ QStringList Updates::getFilesList()
             {
                  QDomElement e = n.toElement();
                  QFileInfo fi(app->applicationDirPath() + "/" + e.attribute("file"));
-                 if (fi.isFile() && (calculateCRC32(fi.absoluteFilePath()) != e.attribute("crc32").toULongLong()))
+                 if (fi.isFile() && ((calculateCRC32(fi.absoluteFilePath()) != e.attribute("crc32").toULongLong()) || (noNeedUpload == false)))
                  {
                      files.append(e.attribute("file"));
                  }

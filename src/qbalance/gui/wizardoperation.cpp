@@ -375,7 +375,7 @@ bool WizardOperation::setData()
 
 void WizardOperation::getData()
 {
-    operName->setText(db->getTopersProperties(oper).value(db->getObjectName("доступ_к_топер.имя")).toString());
+    operName->setText(db->getTopersProperties(oper, "имя").toString());
 
     // Получим список проводок
     prvs = db->getToper(oper);

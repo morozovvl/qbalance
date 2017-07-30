@@ -696,7 +696,7 @@ bool TApplication::initApplication()
             if (dictionaryList->open() && topersList->open())
             {
                 updates = new Updates(this);
-//                updates->open(getConfigValue("UPDATES_FTP_URL").toString());
+//                updates->open(getConfigValue("UPDATES_FTP_URL").toString(), true);
 
                 gui->showMenus();
 
@@ -2079,23 +2079,27 @@ void TApplication::printReport(QString fileName, Dictionary* dict)
 
 qulonglong TApplication::calculateCRC32(QByteArray* array)
 {
-    unsigned long crc_table[256];
-    unsigned long crc;
-    char *buf = array->data();
-    unsigned long len = array->count();
-
-    for (int i = 0; i < 256; i++)
+    if (array != 0)
     {
-        crc = i;
-        for (int j = 0; j < 8; j++)
-            crc = crc & 1 ? (crc >> 1) ^ 0xEDB88320UL : crc >> 1;
-        crc_table[i] = crc;
-    }
+        unsigned long crc_table[256];
+        unsigned long crc;
+        char *buf = array->data();
+        unsigned long len = array->count();
 
-    crc = 0xFFFFFFFFUL;
-    while (len--)
-        crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
-    return crc ^ 0xFFFFFFFFUL;
+        for (int i = 0; i < 256; i++)
+        {
+            crc = i;
+            for (int j = 0; j < 8; j++)
+                crc = crc & 1 ? (crc >> 1) ^ 0xEDB88320UL : crc >> 1;
+            crc_table[i] = crc;
+        }
+
+        crc = 0xFFFFFFFFUL;
+        while (len--)
+            crc = crc_table[(crc ^ *buf++) & 0xFF] ^ (crc >> 8);
+        return crc ^ 0xFFFFFFFFUL;
+    }
+    return 0;
 }
 
 

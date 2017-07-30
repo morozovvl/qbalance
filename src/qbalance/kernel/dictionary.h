@@ -41,7 +41,6 @@ private:
     bool            lsetIdEnabled;
     bool            isDepend;
     QString         dictTitle;
-    QString         sqlCommand;
 
 protected:
     QString         prototypeName;          // Имя справочника - прототипа
@@ -83,7 +82,6 @@ public:
     Q_INVOKABLE virtual void setSorted(bool sorted);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);
     Q_INVOKABLE virtual void setValue(qulonglong, QString, QVariant);
-    Q_INVOKABLE virtual void setSqlCommand(QString);
 
 
 // Функции для работы справочника в составе документа
@@ -129,6 +127,7 @@ public:
 
     Q_INVOKABLE void setExact(bool e);
     bool getExact();
+    Q_INVOKABLE virtual void            setSqlCommand(QString);
 
 };
 

@@ -44,6 +44,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define OPERATION_DATETIME "ДатаВремяОперации"
 #define LINK_OPERATION_NUMBER "СсылочныйНомерОперации"
 #define CARD_NUMBER_HASH "ХэшНомераКарты"
+#define CARD_HOLDER_NAME "ИмяДержателяКарты"
 
 
 #define BANK_TERMINAL_PREFIX     "bankTerminal_"
@@ -65,8 +66,8 @@ public:
     virtual void close();
     virtual void setApp(TApplication* a) { app = a; }
     Q_INVOKABLE virtual bool process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
-    Q_INVOKABLE virtual QString getCardCode() { return resultParams.value(CARD_NUMBER); }
-    Q_INVOKABLE virtual QHash<QString, QString>* getResultData() { return &resultParams; }
+    Q_INVOKABLE virtual QString getCardCode();
+    Q_INVOKABLE virtual QString getResultData(QString);
     Q_INVOKABLE virtual bool isLocked();
     virtual QString processRemoteQuery(QString);
     virtual void getDefaultConfigs(QString);

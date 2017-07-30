@@ -53,14 +53,15 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     app->debug(1, "");
     app->debug(1, QString("Begin open documents list (ОПЕР=%1)").arg(operNumber));
 
-    QSqlRecord operProperties = db->getTopersProperties(operNumber);
     db->getToperData(operNumber, &topersList);              // Получим список типовых операций
-    operName = operProperties.value(db->getObjectName("имя")).toString().trimmed();
+
+    operName = db->getTopersProperties(operNumber, "имя").toString().trimmed();
+    subFormTitle = operName;
     formTitle  = QString("%1 - %2").arg(operName).arg(QObject::trUtf8("Список документов"));
-    subFormTitle = operProperties.value(db->getObjectName("имя")).toString().trimmed();
-    lInsertable = operProperties.value("insertable").toBool();
-    lDeleteable = operProperties.value("deleteable").toBool();
-    lUpdateable = operProperties.value("updateable").toBool();
+    lInsertable = db->getTopersProperties(operNumber, "insertable").toBool();
+    lDeleteable = db->getTopersProperties(operNumber, "deleteable").toBool();
+    lUpdateable = db->getTopersProperties(operNumber, "updateable").toBool();
+
     scriptEngine = 0;
     scriptEngineEnabled = false;
     doSubmit = false;

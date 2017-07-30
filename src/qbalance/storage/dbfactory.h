@@ -170,9 +170,8 @@ public:
     virtual QSqlQuery getDictionariesProperties();
     virtual QSqlRecord getDictionariesProperties(QString tableName);
     virtual QString getDictionariesProperties(QString, QString);
-    QSqlQuery getTopersProperties();
-    QSqlRecord getTopersProperties(int operNumber);
     QSqlQuery getToper(int operNumber);
+    QVariant getTopersProperties(int, QString);
     int getDictionaryId(QString dictName);
     bool removeDictionary(QString);
     QStringList getFieldsList(QHash<int, FieldType>*);
@@ -294,6 +293,7 @@ private:
     QSqlQuery               columnsHeaders;
     QSqlQuery               config;
     QSqlQuery               accounts;
+    QSqlQuery               topersProperties;
     QSqlQuery               columnsRestrictions;
     QSqlQuery               files;
     QSqlQuery               dictionaries;

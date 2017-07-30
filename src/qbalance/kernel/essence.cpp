@@ -414,15 +414,10 @@ bool Essence::calculate(bool)
 {
     if (scriptEngineEnabled && scriptEngine != 0)
     {
+        doSubmit = false;
         scriptEngine->eventCalcTable();
+        doSubmit = true;
         scriptEngine->eventAfterCalculate();
-/*
-        if (scriptEngine->getErrorMessage().size() > 0)
-        {
-            app->showError(scriptEngine->getErrorMessage());
-            scriptEngine->setErrorMessage("");
-        }
-*/
         if (!scriptEngine->getScriptResult())
         {
             isCurrentCalculate = false;

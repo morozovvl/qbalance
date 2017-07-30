@@ -50,6 +50,7 @@ void Table::postInitialize(QString name, QObject *parent)
     app = TApplication::exemplar();
     db = app->getDBFactory();
     fullDebugInfo = app->getFullDebugInfo();
+    sqlCommand = "";
 }
 
 
@@ -136,12 +137,19 @@ void Table::query(QString filter)
 
     if (!fullDebugInfo)
     {
-        QString command = QString("SELECT * FROM %1").arg(tableName);
-        if (filter.size() > 0)
-            command.append(QString(" WHERE %1").arg(filter));
-        if (tableModel->isTestSelect())
-            command.append(QString(" LIMIT 0"));
-        app->debug(1, "Query:(*) " + command);
+        QString command;
+        if (tableName.size() > 0)
+            command = QString("SELECT * FROM %1").arg(tableName);
+        else if (sqlCommand.size() > 0)
+            command = sqlCommand;
+        if (command.size() > 0)
+        {
+            if (filter.size() > 0)
+                command.append(QString(" WHERE %1").arg(filter));
+            if (tableModel->isTestSelect())
+                command.append(QString(" LIMIT 0"));
+            app->debug(1, "Query:(*) " + command);
+        }
     }
 
     if (tableModel->lastError().isValid())
@@ -149,9 +157,10 @@ void Table::query(QString filter)
  }
 
 
-bool Table::open()
+bool Table::open(QString command)
 {
-    opened = false;
+    if (command.size() > 0)
+        sqlCommand = command;
     opened = setTableModel();
     return opened;
 }
@@ -183,7 +192,8 @@ bool Table::setTableModel(int level)
 
 void Table::setOrderClause(QString sort)
 {
-    tableModel->setOrderClause(sort);
+    if (tableModel != 0)
+        tableModel->setOrderClause(sort);
 }
 
 
@@ -258,3 +268,5 @@ void Table::setTagName(QString name)
 {
     tagName = name;
 }
+
+

@@ -235,6 +235,25 @@ bool BankTerminal::testResult()
                     result = true;
             }
         }
+        fileName = path + "p";
+        if (QFileInfo(fileName).exists())
+        {
+            QFile file(fileName);
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                QTextCodec* codec = QTextCodec::codecForName("KOI8-R");
+                QTextStream stream(&file);
+                stream.setCodec(codec);
+                QString line;
+                for (int i = 0; i < 15; i++)
+                    line = QString(stream.readLine()).trimmed();
+                line = line.split(':').at(1).trimmed();
+                resultParams.insert(CARD_HOLDER_NAME, line);
+                file.close();
+                if (resultParams.value(RESULT_CODE) == "0")
+                    result = true;
+            }
+        }
         locked = false;
     }
     return result;
@@ -318,4 +337,16 @@ QString BankTerminal::processRemoteQuery(QString command)
         result = (process(oper, sum, type, track) ? "true" : "false");
     }
     return result;
+}
+
+
+QString BankTerminal::getCardCode()
+{
+    return resultParams.value(CARD_NUMBER);
+}
+
+
+QString BankTerminal::getResultData(QString key)
+{
+    return resultParams.value(key);
 }

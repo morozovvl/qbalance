@@ -1404,17 +1404,14 @@ void ScriptEngine::removeScript(QString scriptFile)
 
 QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thisObject, const QScriptValueList &args)
 {
-//    errorMessage = "";
-//    scriptResult = true;
+    errorMessage = "";
+    scriptResult = true;
     QScriptValue result("undefined");
     if (globalObject().property(eventName).isFunction())
     {
         QString program = scriptFileName + ":" + eventName;
-        TApplication::exemplar()->setDebugToBuffer(true);
         TApplication::exemplar()->debug(3, program);
         result = globalObject().property(eventName).call(thisObject, args);
-//        errorMessage = globalObject().property("errorMessage").toString();  // Вернем строку с описанием ошибки работы скрипта
-//        scriptResult = globalObject().property("scriptResult").toBool();    // Вернем результаты работы скрипта
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
             showScriptError(eventName);
@@ -1423,14 +1420,7 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         {
             app->showError(errorMessage);
         }
-/*
-        if (TApplication::exemplar()->getLastValueInDebugBuffer(3).contains(program))
-            TApplication::exemplar()->removeLastValueInDebugBuffer(3);
-        else
-            TApplication::exemplar()->debug(3, "/" + program);
-*/
         TApplication::exemplar()->debug(3, "/" + program);
-        TApplication::exemplar()->setDebugToBuffer(false);
     }
     return result;
 }

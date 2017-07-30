@@ -381,6 +381,9 @@ void DBFactory::loadSystemTables()
     accounts.clear();
     accounts = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("vw_счета")));
 
+    topersProperties.clear();
+    topersProperties = execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_топер")));
+
     columnsRestrictions.clear();
     columnsRestrictions = execQuery(QString("SELECT %1 FROM %2 WHERE %3=5 AND (%4 ILIKE '\%'||\"current_user\"()::text||'%' OR %4 ILIKE '\%*\%');")
                                                                .arg(getObjectNameCom("доступ.имя"))
@@ -1046,22 +1049,19 @@ bool DBFactory::dropTableColumn(QString table, QString columnName)
 }
 
 
-QSqlQuery DBFactory::getTopersProperties()
+QVariant DBFactory::getTopersProperties(int operNumber, QString columnName)
 {
-    clearError();
-    return execQuery(QString("SELECT * FROM %1;").arg(getObjectNameCom("доступ_к_топер")));
-}
-
-
-QSqlRecord DBFactory::getTopersProperties(int operNumber)
-{
-    clearError();
-    QSqlRecord result;
-    QSqlQuery query = execQuery(QString("SELECT * FROM %1 WHERE %2 = %3;").arg(getObjectNameCom("доступ_к_топер"))
-                                                                          .arg(getObjectNameCom("доступ_к_топер.опер"))
-                                                                          .arg(operNumber));
-    if (query.first())
-        result = query.record();
+    QVariant result;
+    topersProperties.first();
+    while (topersProperties.isValid())
+    {
+        if (topersProperties.record().value("ОПЕР").toInt() == operNumber)
+        {
+            result = topersProperties.record().value(columnName);
+            break;
+        }
+        topersProperties.next();
+    }
     return result;
 }
 
@@ -2870,6 +2870,4 @@ QVariant DBFactory::getAccountsValue(QString cAcc, QString columnName)
     }
     return result;
 }
-
-
 
