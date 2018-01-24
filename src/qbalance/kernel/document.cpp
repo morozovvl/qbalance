@@ -104,7 +104,7 @@ void Document::postInitialize(int oper, Documents* par)
 
     lInsertable = true;
     lDeleteable = true;
-    lUpdateable = true;
+//    lUpdateable = true;
     isDictionary = false;
     lIsDocument = true;
     addingFromQuery = false;
@@ -1177,7 +1177,10 @@ int Document::appendDocString()
         setCurrentRow(newRow);
         updateCurrentRow(result);
         if (grdTable != 0)
+        {
+            grdTable->repaint();
             grdTable->setCurrentFocus();
+        }
     }
 
     return result;

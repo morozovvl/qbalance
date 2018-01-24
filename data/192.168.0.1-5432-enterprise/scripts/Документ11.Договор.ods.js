@@ -1,0 +1,1 @@
+reportContext.setValue("документ.СУММАПРОПИСЬЮ", SumToString(reportContext.getValue("документ.СУММА")));

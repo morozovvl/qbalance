@@ -64,7 +64,7 @@ public:
     ~BankTerminal();
     virtual bool open();
     virtual void close();
-    virtual void setApp(TApplication* a) { app = a; }
+    virtual void setApp(TApplication* a);
     Q_INVOKABLE virtual bool process(int, int = 0, int = 0, int = 0);              // Обработать операцию с картой
     Q_INVOKABLE virtual QString getCardCode();
     Q_INVOKABLE virtual QString getResultData(QString);

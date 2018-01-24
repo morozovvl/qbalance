@@ -667,7 +667,6 @@ void DBFactory::getColumnsProperties(QList<FieldType>* result, QString table, QS
                 fld.column = fld.name;
             fld.header = fld.column;
             fld.headerExist = false;        // Пока мы не нашли для столбца заголовок
-
             fld.number    = 0;
             if (table == getObjectName("документы"))
             {
@@ -1686,11 +1685,19 @@ QStringList DBFactory::getFilesList(QString fileName, FileType type, bool extend
     QStringList filesList;
     if (extend && extDbExist)
     {
-        QString text = QString("SELECT * FROM %1 WHERE %2 ILIKE '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
-                                                                              .arg(getObjectNameCom("файлы.имя"))
-                                                                              .arg(fileName + ".%")
-                                                                              .arg(getObjectNameCom("файлы.тип"))
-                                                                              .arg(type);
+        QString text;
+        if (app->isSA() || type != ReportTemplateFileType)
+            text = QString("SELECT * FROM %1 WHERE %2 ILIKE '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName + ".%")
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type);
+        else
+            text = QString("SELECT s.* FROM %1 s INNER JOIN доступ_к_отчетам_на_печать d ON s.ИМЯ = d.ИМЯ WHERE s.%2 ILIKE '%3' AND %4 = %5;").arg(getObjectNameCom("файлы"))
+                                                                                  .arg(getObjectNameCom("файлы.имя"))
+                                                                                  .arg(fileName + ".%")
+                                                                                  .arg(getObjectNameCom("файлы.тип"))
+                                                                                  .arg(type);
         QSqlQuery query = execQuery(text, dbExtend);
         query.first();
         while (query.isValid())

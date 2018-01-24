@@ -175,3 +175,8 @@ bool Dialog::isFormWidgetChanged()
     return formChanged;
 }
 
+
+void Dialog::setFormChanged(bool ch)
+{
+    formChanged = ch;
+}

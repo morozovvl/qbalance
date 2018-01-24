@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE virtual Form* getForm();
     virtual void    keyPressEvent(QKeyEvent*);
     bool            isFormWidgetChanged();
+    void            setFormChanged(bool);
 
 protected:
     virtual void showEvent(QShowEvent*);

@@ -272,8 +272,6 @@ int GUIFactory::showYesNo(QString question)
 bool GUIFactory::open() {
     mainWindow = new MainWindow(this);
     mainWindow->open();
-    msgBox.setVisible(false);
-    msgBox.setWindowTitle(QObject::trUtf8("Ошибка!"));
     return true;
 }
 

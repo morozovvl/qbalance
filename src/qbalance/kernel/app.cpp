@@ -1512,7 +1512,8 @@ void TApplication::printToArray(QString array, QString value)
 {
     if (!arraysForPrint.contains(array))
         arraysForPrint.insert(array, QStringList());
-    arraysForPrint[array].append(value);
+    if (!arraysForPrint[array].contains(value))
+        arraysForPrint[array].append(value);
 }
 
 

@@ -73,6 +73,7 @@ void TableView::open()
     columnsHeadersSeted = false;
     columns.clear();
     columnsSettingsReaded = false;
+    currentChangedScripts = true;
 
     if (verticalHeader()->minimumSectionSize() > 0)
         verticalHeader()->setDefaultSectionSize(verticalHeader()->minimumSectionSize());
@@ -114,7 +115,7 @@ void TableView::setEssence(Essence* ess)
 
 void TableView::cmdAdd()
 {
-    QModelIndex index = currentIndex();      // Запомним, где стоял курсор перед удалением записи
+    QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     essence->add();
     setCurrentFocus();
     selectColumn(index.column());
@@ -138,6 +139,7 @@ void TableView::cmdDelete()
 
 void TableView::setCurrentFocus()
 {
+    currentChangedScripts = false;
     QModelIndex index = currentIndex();      // Запомним, где стоял курсор
     int column = index.column() < 0 ? 0 : index.column();
     int row = index.row() < 0 ? 0 : index.row();
@@ -145,6 +147,7 @@ void TableView::setCurrentFocus()
     column = currentIndex().column();
     reset();
     setCurrentIndex(index.sibling(row, column));
+    currentChangedScripts = true;
 }
 
 
@@ -167,14 +170,16 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 {
     QTableView::currentChanged(current, previous);
 
-    if (essence != 0)
-        essence->beforeRowChanged();
+    if (current.row() != previous.row() && currentChangedScripts)
+    {
+        if (essence != 0)
+            essence->beforeRowChanged();
 
-    if (current.row() != previous.row())
         showPhoto();
 
-    if (essence != 0)
-        essence->afterRowChanged();
+        if (essence != 0)
+            essence->afterRowChanged();
+    }
 }
 
 
@@ -709,4 +714,10 @@ int TableView::getColumnsCount()
 void TableView::setConfigName(QString confName)
 {
     configName = confName;
+}
+
+
+void TableView::setCurrentChangedScripts(bool c)
+{
+    currentChangedScripts = c;
 }

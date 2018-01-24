@@ -725,6 +725,9 @@ bool Dictionary::setTableModel(int)
 
 void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 {
+//    if (grdTable != 0)
+//        grdTable->setCurrentChangedScripts(false);
+
     QString resFilter = defaultFilter;
 
     if (form != 0 && !exactlyDefaultFilter)
@@ -750,6 +753,9 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 
     Essence::query(resFilter);
 
+//    if (grdTable != 0)
+//        grdTable->setCurrentChangedScripts(true);
+
     if (tableModel->rowCount() > 0 && grdTable != 0)
     {
         QModelIndex index = getCurrentIndex();
@@ -759,7 +765,9 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
         else
         {
             if (index.row() < 0)
+            {
                 grdTable->selectRow(0);
+            }
             else
                 grdTable->selectRow(index.row());
         }
@@ -770,6 +778,7 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
         if (lAutoSelect)
             form->cmdOk();
     }
+
 }
 
 

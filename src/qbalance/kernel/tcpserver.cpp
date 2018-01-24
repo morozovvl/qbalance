@@ -136,109 +136,112 @@ void TcpServer::sendToClient(QTcpSocket* pSocket, QString str)
 void TcpServer::processRequest(QTcpSocket* pClientSocket, QString str)
 {
     QString resStr;
-    app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
-    if (str.left(4) == "=fr=" && app->drvFRisValid())
-    {   // Если это запрос работы с фискальным регистратором и фискальный регистратор работает
-        int length = str.length() - 4;
-        QString lStr = str.right(length);
-        QByteArray data;
-        QMyExtSerialPort* serialPort = app->getDrvFR()->getSerialPort();
-        if (lStr.left(2) == ">>")   // Если получен запрос на запись данных в ФР
+    if (app != 0 && app->getDrvFR() != 0)
+    {
+        app->debug(5, QString("From %1: %2").arg(pClientSocket->peerAddress().toString()).arg(str));
+        if (str.left(4) == "=fr=" && app->drvFRisValid())
+        {   // Если это запрос работы с фискальным регистратором и фискальный регистратор работает
+            int length = str.length() - 4;
+            QString lStr = str.right(length);
+            QByteArray data;
+            QMyExtSerialPort* serialPort = app->getDrvFR()->getSerialPort();
+            if (lStr.left(2) == ">>")   // Если получен запрос на запись данных в ФР
+            {
+                length -= 2;
+                lStr = lStr.right(length);
+                data.append(lStr);
+                data = data.fromHex(data);
+                qint64 result = serialPort->writeData(data.data(), data.count(), true);
+                resStr = QString("%1").arg(result);
+                sendToClient(pClientSocket, resStr);
+            }
+            else if (lStr.left(2) == "<<")  // Если получен запрос на чтение данных из ФР
+            {
+                length -= 2;
+                lStr = lStr.right(length);
+                int count = lStr.toInt();
+                data.append(QByteArray(count, ' '));
+                qint64 result = serialPort->readData(data.data(), count, true);
+                if (result == 0)
+                    data.clear();
+                resStr = QString("%1<<%2").arg(result).arg(data.toHex().data());
+                sendToClient(pClientSocket, resStr);
+            }
+            else if (lStr.left(9) == "writeLog=")  // Если получен запрос на запись журнала
+            {
+                length -= 9;
+                lStr = lStr.right(length);
+                serialPort->writeLog(lStr, true);
+                resStr = "Ok";
+                sendToClient(pClientSocket, resStr);
+            }
+        }
+        else if (str.indexOf("driverFRisReady") == 0)
         {
-            length -= 2;
-            lStr = lStr.right(length);
-            data.append(lStr);
-            data = data.fromHex(data);
-            qint64 result = serialPort->writeData(data.data(), data.count(), true);
-            resStr = QString("%1").arg(result);
+            bool result = app->getDrvFR()->deviceIsReady();
+            resStr = (result ? "true" : "false");
             sendToClient(pClientSocket, resStr);
         }
-        else if (lStr.left(2) == "<<")  // Если получен запрос на чтение данных из ФР
+        else if (str.indexOf(BANK_TERMINAL_PREFIX) == 0)
         {
-            length -= 2;
-            lStr = lStr.right(length);
-            int count = lStr.toInt();
-            data.append(QByteArray(count, ' '));
-            qint64 result = serialPort->readData(data.data(), count, true);
-            if (result == 0)
-                data.clear();
-            resStr = QString("%1<<%2").arg(result).arg(data.toHex().data());
+            if (str.indexOf(BANK_TERMINAL_IS_READY) == 0)
+            {
+                bool result = app->bankTerminalIsValid();
+                resStr = (result ? "true" : "false");
+            }
+            else
+                resStr = app->getBankTerminal()->processRemoteQuery(str);
             sendToClient(pClientSocket, resStr);
         }
-        else if (lStr.left(9) == "writeLog=")  // Если получен запрос на запись журнала
+        else if (str.indexOf("isLockedDriverFR") == 0)
         {
-            length -= 9;
-            lStr = lStr.right(length);
-            serialPort->writeLog(lStr, true);
+            bool result = false;
+            // Если драйвер ФР заблокировал сам клиент
+            if (pClientSocket->peerAddress().toString() == app->getDrvFR()->getLockedByHost())
+                result = true;
+            else
+                result = app->getDrvFR()->isLocked();
+            resStr = (result ? "true" : "false");
+            sendToClient(pClientSocket, resStr);
+        }
+        else if (str.indexOf("setLockDriverFR(true)") == 0)
+        {
+            app->getDrvFR()->setLock(true, pClientSocket->peerAddress().toString());
             resStr = "Ok";
             sendToClient(pClientSocket, resStr);
         }
-    }
-    else if (str.indexOf("driverFRisReady") == 0)
-    {
-        bool result = app->getDrvFR()->deviceIsReady();
-        resStr = (result ? "true" : "false");
-        sendToClient(pClientSocket, resStr);
-    }
-    else if (str.indexOf(BANK_TERMINAL_PREFIX) == 0)
-    {
-        if (str.indexOf(BANK_TERMINAL_IS_READY) == 0)
+        else if (str.indexOf("setLockDriverFR(false)") == 0)
         {
-            bool result = app->bankTerminalIsValid();
-            resStr = (result ? "true" : "false");
+            app->getDrvFR()->setLock(false);
+            resStr = "Ok";
+            sendToClient(pClientSocket, resStr);
         }
-        else
-            resStr = app->getBankTerminal()->processRemoteQuery(str);
-        sendToClient(pClientSocket, resStr);
-    }
-    else if (str.indexOf("isLockedDriverFR") == 0)
-    {
-        bool result = false;
-        // Если драйвер ФР заблокировал сам клиент
-        if (pClientSocket->peerAddress().toString() == app->getDrvFR()->getLockedByHost())
-            result = true;
-        else
-            result = app->getDrvFR()->isLocked();
-        resStr = (result ? "true" : "false");
-        sendToClient(pClientSocket, resStr);
-    }
-    else if (str.indexOf("setLockDriverFR(true)") == 0)
-    {
-        app->getDrvFR()->setLock(true, pClientSocket->peerAddress().toString());
-        resStr = "Ok";
-        sendToClient(pClientSocket, resStr);
-    }
-    else if (str.indexOf("setLockDriverFR(false)") == 0)
-    {
-        app->getDrvFR()->setLock(false);
-        resStr = "Ok";
-        sendToClient(pClientSocket, resStr);
-    }
-    else if (str.indexOf("app.exit") == 0)
-    {
-        resStr = "Ok";
-        sendToClient(pClientSocket, resStr);
-        app->showMessageOnStatusBar("Получена команда завершить приложение. Приложение закроется через 10 секунд...", 10000);
-        app->timeOut(10000);
-        app->quit();
-    }
-    else if (str.indexOf("*ping*Ok*") == 0)
-    {
-        pingOk = true;
-    }
-    else if (str.indexOf("setDebugMode(") == 0)
-    {
-        str.replace("setDebugMode(", "");
-        str.replace(")", "");
-        app->setDebugMode(str.toInt());
-        resStr = "Ok";
-        sendToClient(pClientSocket, resStr);
-    }
-    else if (str.indexOf("test") == 0)
-    {
-        resStr = "Ok";
-        sendToClient(pClientSocket, resStr);
+        else if (str.indexOf("app.exit") == 0)
+        {
+            resStr = "Ok";
+            sendToClient(pClientSocket, resStr);
+            app->showMessageOnStatusBar("Получена команда завершить приложение. Приложение закроется через 10 секунд...", 10000);
+            app->timeOut(10000);
+            app->quit();
+        }
+        else if (str.indexOf("*ping*Ok*") == 0)
+        {
+            pingOk = true;
+        }
+        else if (str.indexOf("setDebugMode(") == 0)
+        {
+            str.replace("setDebugMode(", "");
+            str.replace(")", "");
+            app->setDebugMode(str.toInt());
+            resStr = "Ok";
+            sendToClient(pClientSocket, resStr);
+        }
+        else if (str.indexOf("test") == 0)
+        {
+            resStr = "Ok";
+            sendToClient(pClientSocket, resStr);
 //        qDebug() << "test Ok";
+        }
     }
 }
 

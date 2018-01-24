@@ -122,6 +122,13 @@ struct UpdateIds
 };
 
 
+struct ColumnProperties
+{
+    QString     type;
+    int         length;
+    int         precision;
+};
+
 class DBFactory : public QObject {
     Q_OBJECT
 

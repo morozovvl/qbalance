@@ -247,8 +247,11 @@ bool BankTerminal::testResult()
                 QString line;
                 for (int i = 0; i < 15; i++)
                     line = QString(stream.readLine()).trimmed();
-                line = line.split(':').at(1).trimmed();
-                resultParams.insert(CARD_HOLDER_NAME, line);
+                if (line.contains(':'))
+                {
+                    line = line.split(':').at(1).trimmed();
+                    resultParams.insert(CARD_HOLDER_NAME, line);
+                }
                 file.close();
                 if (resultParams.value(RESULT_CODE) == "0")
                     result = true;
@@ -349,4 +352,10 @@ QString BankTerminal::getCardCode()
 QString BankTerminal::getResultData(QString key)
 {
     return resultParams.value(key);
+}
+
+
+void BankTerminal::setApp(TApplication* a)
+{
+    app = a;
 }

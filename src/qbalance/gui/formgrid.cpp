@@ -468,6 +468,7 @@ void FormGrid::cmdAdd()
     if (buttonAdd != 0 && buttonAdd->isVisible() && buttonAdd->isEnabled())
     {
         grdTable->cmdAdd();
+        showPhoto();
     }
     grdTable->setFocus();
     setButtons();
@@ -563,6 +564,8 @@ void FormGrid::setButtons()
     {
         if (parent->getTableModel()->rowCount() > 0)
         {
+            if (buttonAdd != 0)
+                buttonAdd->setEnabled(parent->isInsertable());
             if (buttonDelete != 0)
                 buttonDelete->setEnabled(parent->isDeleteable());
             if (buttonView != 0)

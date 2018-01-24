@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ConnectionForm::ConnectionForm(QObject* parent/* = 0*/): Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу
+    configName = "ConnectionForm";
 }
 
 
@@ -115,6 +116,7 @@ int ConnectionForm::exec(DBFactory* d)
     db->setHostName(ptxtHost->text());
     db->setDatabaseName(ptxtDatabase->text());
     db->setPort(ptxtPort->text().toInt());
+    writeSettings();
     return lResult;
 }
 
@@ -123,7 +125,6 @@ void ConnectionForm::buttonSave()
 {
     if (pcmbConnection->currentText().trimmed().size() > 0)
     {
-        writeSettings();
         readConnectionsList();
     }
     else

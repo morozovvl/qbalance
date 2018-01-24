@@ -48,7 +48,7 @@ void MainWindow::open()
 {
     setCentralWidget(workSpace);
     readSettings();
-    statusBar()->showMessage("");
+//    statusBar()->showMessage("");
 }
 
 

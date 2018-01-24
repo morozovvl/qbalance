@@ -292,6 +292,12 @@ QString Essence::getCurrentFieldName()
 }
 
 
+void Essence::setCurrentFieldName(QString fieldName)
+{
+    setCurrentColumn(tableModel->fieldIndex(fieldName));
+}
+
+
 int Essence::getCurrentRow()
 {
     return getCurrentIndex().row();
@@ -877,6 +883,7 @@ bool Essence::open()
     if (Table::open())
     {
         setOrderClause();
+//        if (!app->isScriptMode() && sqlCommand.size() == 0)       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();
         openScriptEngine();
@@ -885,7 +892,10 @@ bool Essence::open()
         {
             grdTable = form->getGrdTable();
             if (grdTable != 0)
+            {
                 grdTable->setEssence(this);
+                grdTable->setReadOnly(!lUpdateable);
+            }
         }
         reportScriptEngine = new DocumentScriptEngine(0, this);
         reportScriptEngine->setReportContext(&printValues);
@@ -1012,6 +1022,8 @@ void Essence::setEnabled(bool en)
         if (!getFormTitle().contains(disabledMessage))
             setFormTitle(form->getFormWidget()->windowTitle().append(disabledMessage));
     }
+    if (form != 0)
+        form->setEnabled(enabled);
 }
 
 
@@ -1251,6 +1263,8 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             result = true;
         }
     }
+    result = true;
+/*
     else
     {   // файл существует локально
         QFile file(fullFileName);
@@ -1279,6 +1293,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             result = true;
         }
     }
+*/
     return result;
 }
 

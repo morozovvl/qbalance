@@ -462,6 +462,7 @@ void Form::readSettings()
                 config.next();
             }
             app->showMessageOnStatusBar("");
+            formWidget->setFormChanged(true);
         }
         settings.endGroup();
 

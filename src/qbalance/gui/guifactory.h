@@ -57,7 +57,6 @@ private:
     QString lastHostName;
     QString lastDbName;
     int lastPort;
-    QErrorMessage msgBox;
 };
 
 #endif // GUIFACTORY_H

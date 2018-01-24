@@ -224,6 +224,7 @@ public:
     virtual QModelIndex getCurrentIndex();
     void setCurrentIndex(QModelIndex);
     Q_INVOKABLE QString         getCurrentFieldName();
+    Q_INVOKABLE virtual void    setCurrentFieldName(QString);
     Q_INVOKABLE virtual int     getCurrentRow();
     Q_INVOKABLE virtual int     getCurrentColumn();
     Q_INVOKABLE virtual void    setCurrentRow(int);

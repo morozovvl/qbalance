@@ -1,0 +1,47 @@
+var firmDict = getDictionary("фирмы");
+var firmId = 0;
+var firmName = "";
+
+
+function procPrice(num)
+{
+  for (var i = 1; i <= reportContext.getRowCount(); i++)
+  {
+    var price = 0;
+    var id = reportContext.getValue("таблица.КОД_ТОВАР", i);
+    if (id > 0)
+    {
+      var command = "SELECT МИНЦЕНА, КОЛ_ПРАЙС, КОЛ_ТОВАР FROM vw_прайс3 WHERE КОД_ФИРМЫ = " + firmId + " AND КОД_ТОВАР = " + id + ";";
+      var priceQuery = db.execQuery(command);
+      if (priceQuery.first())
+      {
+	var priceRecord = priceQuery.record();
+	price = priceRecord.value("МИНЦЕНА");
+	var priceQuan = priceRecord.value("КОЛ_ПРАЙС");
+	var nomQuan = priceRecord.value("КОЛ_ТОВАР");
+	if (nomQuan != 0)
+	  price = price * priceQuan / nomQuan;
+      }
+    }
+    reportContext.setValue("таблица.ПОСТАВЩИК" + num + "__ЦЕНА", price, i);
+  }
+}
+
+
+function setPrice(num, fId)
+{
+  firmId = fId;
+  firmDict.setId(firmId);
+  firmName = firmDict.getName();
+  reportContext.setValue("поставщик" + num, firmName);
+  procPrice(num);
+}
+
+
+setPrice(1, 386);	// Мотомир
+setPrice(2, 420);	// Тис-восток
+setPrice(3, 430);	// SVK-Мото
+
+
+reportContext.appendSortOrder("таблица.ТОВАР__ИМЯ");
+reportContext.sortTable();

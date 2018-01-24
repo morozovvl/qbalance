@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QPrinterInfo>
 #include <QtGui/QPainter>
 #include <QtGui/QPrintEngine>
+//#include <mcheck.h>
 
 
 #ifdef Q_OS_LINUX
@@ -45,6 +46,7 @@ int buggyFunc() {
 
 int main(int argc, char *argv[])
 {
+//    mtrace();
     TApplication application(argc, argv);
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());

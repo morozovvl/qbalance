@@ -68,6 +68,7 @@ public:
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     Q_INVOKABLE virtual int     getColumnsCount();
     Q_INVOKABLE virtual void    setConfigName(QString);
+    virtual void                setCurrentChangedScripts(bool);
 
 
 public slots:
@@ -96,6 +97,7 @@ private:
     QHash<int, int>             columns;            // Список видимых столбцов и их порядок
     QList<FieldType>            fields;
     bool                        columnsSettingsReaded;
+    bool                        currentChangedScripts;
 
     virtual MyItemDelegate*     getColumnDelegate(FieldType);
     virtual void                readSettings();

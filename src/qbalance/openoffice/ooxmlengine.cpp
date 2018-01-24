@@ -265,9 +265,20 @@ QString OOXMLEngine::getCellText(int row, int column)
             result = element.attribute("office:value");
         else
         {
-            element = element.firstChildElement("text:p");
-            if (!element.isNull())
-                result = element.text().trimmed();
+            QDomElement refElement = element;
+            refElement = refElement.elementsByTagName("text:a").at(0).toElement();
+            if (!refElement.isNull())
+            {
+                result = refElement.attribute("xlink:href");
+            }
+            else
+            {
+                element = element.firstChildElement("text:p");
+                if (!element.isNull())
+                {
+                    result = element.text().trimmed();
+                }
+            }
         }
     }
     return result;

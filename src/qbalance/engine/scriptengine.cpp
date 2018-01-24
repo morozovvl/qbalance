@@ -93,6 +93,17 @@ QScriptValue getCurrentFieldName(QScriptContext *, QScriptEngine* engine)
 }
 
 
+QScriptValue setCurrentFieldName(QScriptContext* context, QScriptEngine* engine)
+{
+    if (engine->evaluate("table").isValid())
+    {
+        QString fieldName = context->argument(0).toString();
+        engine->evaluate(QString("table.setCurrentFieldName(%1)").arg(fieldName));
+    }
+    return QScriptValue();
+}
+
+
 QScriptValue getRowCount(QScriptContext*, QScriptEngine* engine)
 {
     if (engine->evaluate("table").isValid())
@@ -1422,6 +1433,8 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         }
         TApplication::exemplar()->debug(3, "/" + program);
     }
+    else
+        TApplication::exemplar()->debug(3, QObject::trUtf8("Не найдена функция ") + eventName);
     return result;
 }
 
