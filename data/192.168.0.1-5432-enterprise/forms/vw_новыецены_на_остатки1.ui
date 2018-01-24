@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dialog</class>
+ <widget class="Dialog" name="dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1105</width>
+    <height>609</height>
+   </rect>
+  </property>
+  <property name="name" stdset="0">
+   <string>vw_прайс</string>
+  </property>
+  <property name="caption" stdset="0">
+   <string>Все прайсы с ценами для поставки по заказу</string>
+  </property>
+  <layout class="QVBoxLayout" name="vbxLayout">
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="SearchParameters" name="searchParameters"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Цена (необходимо поставить знак &gt;, &gt;=, &lt;, &lt;=, =):</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEditPrice">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="inputMask">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="tableLayout">
+     <item>
+      <widget class="TableView" name="tableView">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>640</width>
+         <height>480</height>
+        </rect>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Picture" name="picture"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="cmdButtonLayout">
+     <item>
+      <widget class="QPushButton" name="buttonAdd">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:buttonAdd</normaloff>
+         <normalon>:buttonAdd</normalon>
+         <activeoff>:buttonAdd</activeoff>
+         <activeon>:buttonAdd</activeon>
+         <selectedoff>:buttonAdd</selectedoff>
+         <selectedon>:buttonAdd</selectedon>:buttonAdd</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonDelete">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:buttonDelete</normaloff>
+         <normalon>:buttonDelete</normalon>
+         <activeoff>:buttonDelete</activeoff>
+         <activeon>:buttonDelete</activeon>
+         <selectedoff>:buttonDelete</selectedoff>
+         <selectedon>:buttonDelete</selectedon>:buttonDelete</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonRequery">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:buttonRequery</normaloff>
+         <normalon>:buttonRequery</normalon>
+         <activeoff>:buttonRequery</activeoff>
+         <activeon>:buttonRequery</activeon>
+         <selectedoff>:buttonRequery</selectedoff>
+         <selectedon>:buttonRequery</selectedon>:buttonRequery</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonPrint">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:buttonPrint</normaloff>
+         <normalon>:buttonPrint</normalon>
+         <activeoff>:buttonPrint</activeoff>
+         <activeon>:buttonPrint</activeon>
+         <selectedoff>:buttonPrint</selectedoff>
+         <selectedon>:buttonPrint</selectedon>:buttonPrint</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonOk">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:buttonOk</normaloff>
+         <normalon>:buttonOk</normalon>
+         <activeoff>:buttonOk</activeoff>
+         <activeon>:buttonOk</activeon>
+         <selectedoff>:buttonOk</selectedoff>
+         <selectedon>:buttonOk</selectedon>:buttonOk</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonCancel">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:buttonCancel</normaloff>
+         <normalon>:buttonCancel</normalon>
+         <activeoff>:buttonCancel</activeoff>
+         <activeon>:buttonCancel</activeon>
+         <selectedoff>:buttonCancel</selectedoff>
+         <selectedon>:buttonCancel</selectedon>:buttonCancel</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Dialog</class>
+   <extends>QDialog</extends>
+   <header>dialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Picture</class>
+   <extends>QFrame</extends>
+   <header>picture.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TableView</class>
+   <extends>QTableView</extends>
+   <header>tableview.h</header>
+   <addpagemethod>addPage</addpagemethod>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SearchParameters</class>
+   <extends>QFrame</extends>
+   <header>searchparameters.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>lineEditPrice</tabstop>
+  <tabstop>buttonAdd</tabstop>
+  <tabstop>buttonDelete</tabstop>
+  <tabstop>buttonRequery</tabstop>
+  <tabstop>buttonPrint</tabstop>
+  <tabstop>buttonOk</tabstop>
+  <tabstop>buttonCancel</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../../resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
