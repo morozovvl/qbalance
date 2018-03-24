@@ -20,7 +20,6 @@ var colProizv;
 var nomDict;
 var nomForm;
 var priceDict;
-//var setDict;
 var agentDict;
 
 var url;
@@ -56,7 +55,6 @@ function EventInitForm(form)
 	nomForm = nomDict.getFormWidget();
 	nomForm.findChild("picturePrice").setVisible(false);
 	nomForm.findChild("labelPrice").setVisible(false);
-//	setDict = getDictionary("набор402");
 	getDictionary("документы3").setExact(false);
 	form.addQueryMenuAction("__на_основании_заказа__", "Добавить поступление на основании заказа");
 }
@@ -178,7 +176,6 @@ function prepReports(price)
 
   if (priceInPrice != price)
   {
-//    price = price * priceDict.getValue("КОЛ_ТОВАР") / priceDict.getValue("КОЛ_ПРАЙС")
     var proc = Math.round(1000 *  (priceInPrice - price) / price) / 10;
     if (isFinite(proc))
     {
@@ -186,10 +183,6 @@ function prepReports(price)
 	app.printToArray("ценыповысились", "Цена повысилась на " + (- proc) + "% --- " + nomName);
       if (proc > 0)
 	app.printToArray("ценыпонизились", "Цена понизилась на " + proc + "% --- " + nomName);
-//      if (price > 0)
-//      {
-//	priceDict.setValue("МИНЦЕНА", price);
-//      }
     }
   }
 // Проверим, не превышает ли остаток норму запаса, чтобы избежать накопления запасов
@@ -293,12 +286,9 @@ function OdsFile(fileName)
 		colSum = odsTemp.column(odsTemp.getCellWithAnnotation("СУММА"));
 
 		var agentId = 0;
-//		var agentDict = getDictionary("организации");	// Найдем такого контрагента в нашей БД
 		
 		evaluateScript(dir + "/readDocNumber.js");	// Запустим локальный скрипт, который вытащит из файла номер и дату документа
 
-//		if (agentName.length > 0)
-//            			agentDict.query("организации.ИМЯ ILIKE '%" + agentName + "%'");
          		agentId = agentDict.getId();
 		if (agentId != 0)		// Если такого контрагента не существует в справочнике
 		{

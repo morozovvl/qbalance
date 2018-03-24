@@ -243,10 +243,10 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
 
     if (dateEdit != 0)
-        connect(dateEdit, SIGNAL(textChanged(const QString &)), this, SLOT(saveDate(const QString &)));
+        connect(dateEdit, SIGNAL(dateChanged(QDate)), this, SLOT(saveDate(QDate)));
 
     if (numberEdit != 0)
-        connect(numberEdit, SIGNAL(textChanged(const QString &)), this, SLOT(saveNumber(const QString &)));
+        connect(numberEdit, SIGNAL(textChanged(QString)), this, SLOT(saveNumber(QString)));
 
     // Если в документе должна быть только одна строка, то заблокируем кнопки "Добавить" и "Удалить"
     if (getParent()->getIsSingleString())
@@ -302,8 +302,6 @@ void FormDocument::cmdOk()
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
-//        saveDate();
-//        saveNumber();
         getParent()->saveChanges();
     }
     FormGrid::cmdOk();
@@ -354,13 +352,13 @@ void FormDocument::setEnabled(bool enabled)
 }
 
 
-void FormDocument::saveDate(const QString &text)
+void FormDocument::saveDate(QDate date)
 {
-    getParent()->setDate(text);
+    getParent()->setDate(date.toString("dd.MM.yyyy"));
 }
 
 
-void FormDocument::saveNumber(const QString &text)
+void FormDocument::saveNumber(QString text)
 {
     getParent()->setNumber(text);
 }
