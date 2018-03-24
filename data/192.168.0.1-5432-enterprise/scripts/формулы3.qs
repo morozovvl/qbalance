@@ -94,6 +94,7 @@ return filter;
 function EventParametersChanged()
 { // Событие происходит в момент изменения постоянного справочника документа
 // Здесь Вы можете вставить свой код
+	documents.setValue("КОД_ЛЮДИ", getDictionary("vw_люди").getId());
 }
 
 

@@ -53,7 +53,7 @@ function cmdRequery()
 
 function GetFilter(filter)
 { // Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.
-	filter = filter.replace(/\"прайс\".\"ИМЯ\"/g, "(прайс.ИМЯ || прайс.ШИФР_ПО_КАТАЛОГУ || прайс.АРТИКУЛ || прайс.ПРОИЗВОДИТЕЛЬ)");
+	filter = filter.replace(/\"прайс\".\"ИМЯ\"/g, "(прайс.КОДВПРАЙСЕ || прайс.ИМЯ || прайс.ШИФР_ПО_КАТАЛОГУ || прайс.АРТИКУЛ || прайс.ПРОИЗВОДИТЕЛЬ)");
 	var val = table.getForm().getSearchValue('прайс').toString().trim();
 	var priceId = parseInt(table.getForm().getSearchValue('прайс'));
 	if (!isNaN(priceId) && priceId.toString() == val)

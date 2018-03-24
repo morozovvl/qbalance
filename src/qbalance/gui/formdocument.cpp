@@ -206,12 +206,10 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             dateEdit = new QDateEdit();
             dateEdit->setObjectName("dateEdit");
             dateEdit->setDisplayFormat("dd.MM.yyyy");
-            connect(dateEdit, SIGNAL(editingFinished()), this, SLOT(saveDate()));
             hbxDateLayout->addWidget(dateEdit);
             hbxDateLayout->addWidget(new QLabel(LABEL_NUMBER, formWidget));
             numberEdit = new QLineEdit();
             numberEdit->setObjectName("numberEdit");
-            connect(numberEdit, SIGNAL(editingFinished()), this, SLOT(saveNumber()));
             hbxDateLayout->addWidget(numberEdit);
             hbxDateLayout->addStretch(1);
             vbxLayout->insertLayout(0, hbxDateLayout);
@@ -243,6 +241,13 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             }
         }
     }
+
+    if (dateEdit != 0)
+        connect(dateEdit, SIGNAL(textChanged(const QString &)), this, SLOT(saveDate(const QString &)));
+
+    if (numberEdit != 0)
+        connect(numberEdit, SIGNAL(textChanged(const QString &)), this, SLOT(saveNumber(const QString &)));
+
     // Если в документе должна быть только одна строка, то заблокируем кнопки "Добавить" и "Удалить"
     if (getParent()->getIsSingleString())
     {
@@ -297,8 +302,8 @@ void FormDocument::cmdOk()
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
-        saveDate();
-        saveNumber();
+//        saveDate();
+//        saveNumber();
         getParent()->saveChanges();
     }
     FormGrid::cmdOk();
@@ -349,15 +354,15 @@ void FormDocument::setEnabled(bool enabled)
 }
 
 
-void FormDocument::saveDate()
+void FormDocument::saveDate(const QString &text)
 {
-    getParent()->setDate(getDateEdit()->text());
+    getParent()->setDate(text);
 }
 
 
-void FormDocument::saveNumber()
+void FormDocument::saveNumber(const QString &text)
 {
-    getParent()->setNumber(getNumberEdit()->text());
+    getParent()->setNumber(text);
 }
 
 

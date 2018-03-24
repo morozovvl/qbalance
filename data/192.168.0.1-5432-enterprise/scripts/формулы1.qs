@@ -23,6 +23,7 @@ var tableCards 	= db.getObjectName("карточки");
 var fieldCardId 	= db.getObjectName("карточки.КОД");
 var fieldCardProc 	= db.getObjectName("карточки.СКИДКА");
 var fieldCardName 	= db.getObjectName("карточки.ИМЯ");
+var fieldCardIdPeople 	= db.getObjectName("карточки.КОД_ЛЮДИ");
 var tableGroup	= getDictionary("группы");
 
 var lastMaxDocId = 0;
@@ -152,7 +153,8 @@ function EventBeforeShowForm(form)
 			var menRecord = menQuery.record();
 			menName = menRecord.value(fieldPeopleName).toString().trim();
 			menPhone = menRecord.value(fieldPeoplePhone).toString().trim();
-			процентскидки = menRecord.value(fieldPeopleDiscount).toString();
+			if (menRecord.value(fieldPeopleDiscount) > 0)
+				процентскидки = menRecord.value(fieldPeopleDiscount).toString();
 		}
 	}
 	скидка = getValue("P3__СУММА");
@@ -195,7 +197,8 @@ function SearchMen()
 			menId = menRecord.value(fieldPeopleId);
 			menName = menRecord.value(fieldPeopleName).toString().trim();
 			menPhone = menRecord.value(fieldPeoplePhone).toString().trim();
-			процентскидки = menRecord.value(fieldPeopleDiscount).toString();
+			if (menRecord.value(fieldPeopleDiscount) > 0)
+				процентскидки = menRecord.value(fieldPeopleDiscount).toString();
 		}
 		else
 		{
@@ -216,7 +219,8 @@ function SearchMen()
 			menId = menRecord.value(fieldPeopleId);
 			menName = menRecord.value(fieldPeopleName).toString().trim();
 			menPhone = menRecord.value(fieldPeoplePhone).toString().trim();
-			процентскидки = menRecord.value(fieldPeopleDiscount).toString();
+			if (menRecord.value(fieldPeopleDiscount) > 0)
+				процентскидки = menRecord.value(fieldPeopleDiscount).toString();
 		}
 		else
 		{
@@ -265,6 +269,8 @@ function AddMen()
 		if (menId != 0)
 		{
 			command = "UPDATE " + quotes(tablePeople) + " SET " + quotes(fieldPeopleName) + " = '" + name + "', " + quotes(fieldPeoplePhone) + " = '" + phone + "' WHERE " + quotes(fieldPeopleId) + " = " + menId + ";";
+			db.exec(command); 
+			command = "UPDATE " + quotes(tableCards) + " SET " + quotes(fieldCardIdPeople) + " = " + menId + " WHERE " + quotes(fieldCardId) + " = " + cardId + ";";
 			db.exec(command); 
 		}
 		else

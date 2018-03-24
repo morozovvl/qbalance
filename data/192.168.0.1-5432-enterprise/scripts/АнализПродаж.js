@@ -3,8 +3,9 @@ var modelNumber = 2;		// Номер математической модели п
 var forwardMonths = 1;		// Общий прогноз будет делаться на столько-то месяцев вперед
 var lastYearsQuan = 3;		// Анализ будет проводиться за последние 3 года
 var articulMap = {};
+//var currentDate = new Date(2017, 0, 1);
 var currentDate = new Date();
-var lastYear = new Date();
+var lastYear;
 var progress;
 var currentYear;
 var currentMonth;
@@ -13,7 +14,9 @@ var nomIdMap = {};		// Позиции, проданные за последни�
 var nomNameMap = {};
 var nomZapasMap = {};
 var bestNomIdMap = {};
-var totalLastYearSold;
+var totalLastYearSold = 0;
+var totalLastYearSoldCount = 0;
+var totalLastYearBay = 0;
 var bestTotalSold = 0;
 var salesType = 0;		// Тип продаж
 var progressCounter = 0;
@@ -24,11 +27,13 @@ var nomDict = app.getDictionary("товар");
 nomDict.exec();
 if (nomDict.isFormSelected())
 {
-//  currentDate.setDate(currentDate.getDate()-30);
-  lastYear.setDate(currentDate.getDate() - 365);
-  currentYear = currentDate.getFullYear();
+//  currentDate.setDate(2017, 10, 1);
+  lastYear = new Date(currentDate.getTime());
+  
+  lastYear.setDate(-365);
 
   var pastDateTo = new Date(currentDate);
+  currentYear = currentDate.getFullYear();
   currentDate.setDate(currentDate.getDate() - lastYearsQuan * 365);
   var pastDateFrom = new Date(currentDate);
 
@@ -147,6 +152,8 @@ function AnalyseSales(command, id, groupKey)
       nomZapasMap = {};
       
       totalLastYearSold = 0;
+      totalLastYearSoldCount = 0;
+      totalLastYearBay = 0;
       statInvalid = false;
       var ost = 0;
 	
@@ -178,7 +185,6 @@ function AnalyseSales(command, id, groupKey)
 	  var yearAndMonth = year + "." + month;
 	  ost = ost + query.getValue("ДБКОЛ", i) - query.getValue("КРКОЛ", i);
 	  query.setValue("ОСТАТОК", ost, i);
-//	  print(yearAndMonth, ";", query.getValue("ДБКОЛ", i), ";", query.getValue("КРКОЛ", i), ";", query.getValue("ОСТАТОК", i));
 	  if (query.getValue("ОПЕРНОМЕР", i) == 1 || query.getValue("ОПЕРНОМЕР", i) == 11)
 	  {
 	    var sold = query.getValue("КРКОЛ", i);
@@ -209,12 +215,22 @@ function AnalyseSales(command, id, groupKey)
 		nomZapasMap[code] = query.getValue("ЗАПАС", i);
 	      }
 	      totalLastYearSold = totalLastYearSold + sold;
+	      totalLastYearSoldCount = totalLastYearSoldCount + 1;
+//	      print(yearAndMonth, ";", query.getValue("ДБКОЛ", i), ";", query.getValue("КРКОЛ", i), ";", query.getValue("ОСТАТОК", i));
+	    }
+	  }
+	  else
+	  {
+	    var bay = query.getValue("ДБКОЛ", i);
+	    if ((query.getValue("ДАТА", i) >= lastYear) && (bay > 0))
+	    {
+	      totalLastYearBay = totalLastYearBay + bay;
 	    }
 	  }
 	}
-
+	
 //	if (totalSold >= 24)
-	if (totalLastYearSold > 12)
+	if (totalLastYearSold > 36)
 	{
 	  salesType = 1;					// Это не редкие продажи
 	  var alignmentSalesByMonths = {};
@@ -261,6 +277,7 @@ function AnalyseSales(command, id, groupKey)
 	      alignmentSalesByMonths[month] = alignmentSalesByMonths[month] + alignmentSales3[i];
 	      alignmentTotalSold = alignmentTotalSold + alignmentSales3[i];
 	      lastSale = alignmentSales3[i];
+//	      print(groupKey, year, month, lastSale);
 	      if (year == currentYear && month == lastMonth)
 		break;
 	      i++;
@@ -296,9 +313,9 @@ function AnalyseSales(command, id, groupKey)
 	    app.print(seasonCoefficients[month]);
 	  }
 	  var coef = 1;
-	  if (avgYearSold > 0 &&  seasonCoefficients[lastMonth] > 0 && lastSale > 0)
-	    coef = lastSale * 12 / avgYearSold;
-//	  print(coef, lastSale, avgYearSold, seasonCoefficients[lastMonth]);
+	  if (avgYearSold > 0 &&  lastSale > 0)
+	    coef = lastSale * 12 / totalLastYearSold;
+	  app.print("За последний год продано: " + totalLastYearSold);
 	  app.print("Коэффициент последних продаж: " + coef);
 	  app.print("Прогноз продаж на предстоящие " + forwardMonths + " месяцев:");
 	  for (var i = 0; i < forwardMonths; i++)
@@ -308,10 +325,12 @@ function AnalyseSales(command, id, groupKey)
 	      month = month - 12;
 	    if (seasonCoefficients[month] == undefined)
 	      seasonCoefficients[month] = 0;
+	    if (totalLastYearSold > avgYearSold)
+	      avgYearSold = totalLastYearSold;
 //	    forecastSales[month] = Math.round(avgYearSold * seasonCoefficients[month] / 12);
-	    forecastSales[month] = Math.round(coef * avgYearSold * seasonCoefficients[month] / 12);
-	    if (forecastSales[month] == 0 && salesMonths > 0)
-	      forecastSales[month] = Math.round(totalLastYearSold / 12);
+//	    forecastSales[month] = Math.round(coef * avgYearSold * seasonCoefficients[month] / 12);
+	    forecastSales[month] = Math.round(totalLastYearSold * seasonCoefficients[month] / 12);
+//	    forecastSales[month] = Math.round(coef * totalLastYearSold * seasonCoefficients[month] / 12);
 	    forecastQuan = forecastQuan + forecastSales[month];
 	    app.print("Месяц " + month + ": " + forecastSales[month]);
 	  }
@@ -319,7 +338,7 @@ function AnalyseSales(command, id, groupKey)
 	else		// Если продаж меньше 24 за год, тогда попробуем применить вероятностный подход
 	{
 	  salesType = 2;		// Это редкие продажи
-///*	    
+/*	    
 	  if (totalLastYearSold >= 1)
 	  {
     
@@ -460,11 +479,20 @@ function AnalyseSales(command, id, groupKey)
 		forecastQuan = 1;
 	    }
 	    else
-//*/	      
 	      forecastQuan = 1;
 	   }
 	   else
 	      forecastQuan = 0;
+*/	      
+	  if (totalLastYearSold >= 12)
+	    forecastQuan = 2 * forwardMonths;
+	  else if (totalLastYearSold > 0 && (totalLastYearBay > 0 || totalLastYearSoldCount > 1))
+	    forecastQuan = 1;
+	  else
+	  {
+	    forecastQuan = 0;
+//	    print(id, groupKey, totalLastYearBay, totalLastYearSold, totalLastYearSoldCount);
+	  }
 	}
 	
 	if (forecastQuan > 0)
@@ -562,7 +590,11 @@ function setMostPopularPositions(forecastQuan)
     for(id in nomIdMap)
     {	  
       if (nomIdMap[id] == sortedNomIdMap[i])
+      {
 	app.print(id + " " + nomNameMap[id] + " - " + nomIdMap[id] + " ед");
+	if (nomZapasMap[id] >= 0)
+	  bestNomIdMap[id] = -1;
+      }
     }
   }
 	
@@ -574,7 +606,7 @@ function setMostPopularPositions(forecastQuan)
       if (nomIdMap[id] == sortedNomIdMap[i] && nomZapasMap[id] >= 0)
       {
 	bestNomIdMap[id] = nomIdMap[id];
-	bestTotalSold = bestTotalSold + nomIdMap[id]; 
+	bestTotalSold = bestTotalSold + nomIdMap[id];
 	if (bestTotalSold >= totalLastYearSold * 0.9)
 	{
 	  i = sortedNomIdMap.length;	// Это нужно, чтобы выйти из двойного цикла
@@ -583,16 +615,17 @@ function setMostPopularPositions(forecastQuan)
       }
     }
   }
+  
   for(id in bestNomIdMap)
   {
-    bestNomIdMap[id] = Math.round(bestNomIdMap[id] * forecastQuan / bestTotalSold);
-/*    
-    // Если в результате округления получился ноль, закажем хотя бы одну единицу товара. т.к. прогноз продаж не нулевой
-    if (bestNomIdMap[id] == 0)
-    {
+    if (bestNomIdMap[id] == -1)
       bestNomIdMap[id] = 1;
+    else
+    {
+      bestNomIdMap[id] = Math.round(bestNomIdMap[id] * forecastQuan / bestTotalSold);
+      if (bestNomIdMap[id] == 0)
+	bestNomIdMap[id] = 1;
     }
-*/    
   }
 }
 
@@ -624,7 +657,8 @@ function ViewKompl(query)	// Проверим комплектность
 	  {
 //	    if (!(id in bestNomIdMap))
 //	    {
-		db.exec("UPDATE товар SET ЗАПАС = CASE WHEN ЗАПАС < 0 THEN 0 ELSE ЗАПАС END, АВТЗАПАС = " + kompl + " WHERE КОД = " + id);
+//		db.exec("UPDATE товар SET ЗАПАС = CASE WHEN ЗАПАС < 0 THEN 0 ELSE ЗАПАС END, АВТЗАПАС = " + kompl + " WHERE КОД = " + id);
+		db.exec("UPDATE товар SET АВТЗАПАС = " + kompl + " WHERE КОД = " + id);
 		app.print(record.value("ИМЯ") + " - " + ost + " ед (будет дополнено до " + kompl + ")");
 //	    }
 	  }
@@ -649,8 +683,6 @@ function SetAutoZapas(forecastQuan)
   }
   for(id in bestNomIdMap)
   {
-    if (forecastQuan >= 0)
-    {
       var quan = bestNomIdMap[id];
       if (quan < komplNomIdMap[id])
 	quan = komplNomIdMap[id];
@@ -661,10 +693,6 @@ function SetAutoZapas(forecastQuan)
 	if (quan > 0)
 	  app.print(nomNameMap[id] + " - " + quan + " ед")
       }
-      forecastQuan = forecastQuan - quan;
-    }
-    else
-      break;
   }
 }
 

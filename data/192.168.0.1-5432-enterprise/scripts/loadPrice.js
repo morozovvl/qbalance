@@ -45,6 +45,7 @@ var procent = 0;
 var row = 0;
 var counter = 0;
 var nalichCounter = 0;
+var oldNalichCounter = 0;
 
 scriptResult = false;				// По умолчанию будем считать, что скрипт не загружен
 
@@ -197,6 +198,8 @@ function OdsFile(fileName)
 					  tovarNalich = "-";
 				  else if (tovarNalich == "Нет на складе")
 					  tovarNalich = "-";
+				  else if (tovarNalich == "-")
+					  tovarNalich = "-";
 				  else
 					  tovarNalich = "+";
 			  }
@@ -267,8 +270,9 @@ function OdsFile(fileName)
 		      app.showMessageOnStatusBar("Сохраним прайс в базе данных...\n");
 		      if (db.execCommands())
 		      {
-//			db.exec("SELECT sp_updateprice();");
+			oldNalichCounter = db.getValue("SELECT COUNT(*) FROM прайс WHERE КОД_ФИРМЫ = " + firmId + " AND НАЛИЧИЕ = '+';");
 			nalichCounter = db.getValue("SELECT sp_updateprice();");
+			oldNalichCounter = nalichCounter - oldNalichCounter;
 			app.debug(0, "Прайс " + agentName + " " + fileName + " загружен.");
 		      }
 		      app.showMessageOnStatusBar("");
@@ -277,7 +281,8 @@ function OdsFile(fileName)
 		      var historyQuery = db.execQuery("SELECT t.КОД, t.ИМЯ, s.СТАРОЕЗНАЧЕНИЕ, s.НОВОЕЗНАЧЕНИЕ, s.ДАТАВРЕМЯ \
 							FROM (SELECT p.КОД_ТОВАР, i.СТАРОЕЗНАЧЕНИЕ, i.НОВОЕЗНАЧЕНИЕ, i.ДАТАВРЕМЯ \
 							FROM история i \
-							  INNER JOIN прайс p ON i.ТАБЛИЦА = 'прайс' AND i.КОДСТРОКИ = p.КОД AND p.КОД_ТОВАР > 0 AND p.КОД_ФИРМЫ = " + firmId + ") s \
+							  INNER JOIN прайс p ON i.ТАБЛИЦА = 'прайс' AND i.КОДСТРОКИ = p.КОД AND p.КОД_ТОВАР > 0 AND p.КОД_ФИРМЫ = " + firmId + "\
+						        WHERE i.ДАТАВРЕМЯ::date = current_date) s \
 							  INNER JOIN товар t ON s.КОД_ТОВАР = t.КОД \
 							ORDER BY ИМЯ, s.ДАТАВРЕМЯ ASC;");
 		      if (historyQuery.first())
@@ -288,19 +293,28 @@ function OdsFile(fileName)
 				  do
 				  {
 					  var historyRecord = historyQuery.record();
+					  var oldValue = historyRecord.value("СТАРОЕЗНАЧЕНИЕ").trim();
+					  var newValue = historyRecord.value("НОВОЕЗНАЧЕНИЕ").trim();
 					  if (oldId != historyRecord.value("КОД"))
 					  {
 					    app.showMessageOnStatusBar("Для позиции: " + historyRecord.value("КОД") + " " + historyRecord.value("ИМЯ") + "\n");
 					    oldId = historyRecord.value("КОД");
 					  }
-					  app.showMessageOnStatusBar("      Было: " + historyRecord.value("СТАРОЕЗНАЧЕНИЕ") + "\n");
-					  app.showMessageOnStatusBar("     Стало: " + historyRecord.value("НОВОЕЗНАЧЕНИЕ") + "\n");
+					  app.showMessageOnStatusBar("      Было: " + oldValue + "\n");
+					  app.showMessageOnStatusBar("     Стало: " + newValue + "\n");
 				  } while (historyQuery.next());     
 				  app.showMessageOnStatusBar("\n");
 		      }
 		      
 		      app.showMessageOnStatusBar("Всего " + db.getValue("SELECT COUNT(*) FROM last_price;") + " записей.\n");
-		      app.showMessageOnStatusBar("Из них в наличии " + nalichCounter + " позиций.\n");
+		      var nalichStr = '';
+		      if (oldNalichCounter > 0)
+			nalichStr = " ( +" + oldNalichCounter + " )";
+		      else if (oldNalichCounter < 0)
+			nalichStr = " ( " + oldNalichCounter + " )";
+		      else
+			nalichStr = "";
+		      app.showMessageOnStatusBar("Из них в наличии " + nalichCounter + " позиций" + nalichStr + ".\n");
 		      
 		      db.exec("DELETE FROM история WHERE ТАБЛИЦА = 'прайс' AND КОДСТРОКИ IN (SELECT КОД FROM прайс WHERE COALESCE(КОД_ТОВАР, 0) = 0 AND КОД_ФИРМЫ = " + firmId + ");");
 		    }

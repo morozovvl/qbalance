@@ -171,7 +171,7 @@ void ReportContext::sortTable(QString table)        // сортировка ко
         key = "";
         for (int j = 0; j < sortOrder.count(); j++)
             key.append(getValue(sortOrder.at(j), i).toString().trimmed() + " ");
-        key = key.trimmed();
+        key = QString("%1_%2").arg(key.trimmed()).arg(i);
         if (key.size() > 0)
             d.insert(key, i);
     }

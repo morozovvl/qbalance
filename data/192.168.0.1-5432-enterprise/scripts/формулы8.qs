@@ -123,3 +123,35 @@ function EventCalcTable()
 }
 
 
+function EventKeyPressed(key, modifiers)
+{  // Событие происходит при нажатии кнопки на форме. Должно вернуть ИСТИНА, если нажатие обработано
+//	if (key == Qt.Key_F5 && modifiers == Qt.ControlModifier)
+	print(key, modifiers);
+	if (key == Qt.Key_F5 && modifiers == 0)
+	{
+//		table.printLabel("Ценник", 1);
+		labelQuan = table.getValue("P1__КОЛ");
+		print(labelQuan);
+		if (labelQuan > 0)
+		{
+			evaluateScript("печать_этикеток.js");
+			return true;
+		}
+	}
+	return false;
+}
+
+
+function beforeShowForm()
+{
+	if (!app.isSA())
+	{
+		document.setEnabled(false);
+	}
+	else
+	{
+		document.setEnabled(true);
+	}
+}
+
+

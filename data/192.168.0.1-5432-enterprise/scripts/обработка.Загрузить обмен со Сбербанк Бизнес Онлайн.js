@@ -82,7 +82,7 @@ else
 function toDate(dateStr) 
 {
   var numbers = dateStr.match(/\d+/g); 
-  return new Date(numbers[2], numbers[1] - 1, numbers[0]);
+  return new Date(numbers[2], numbers[1] - 1, numbers[0] - 0);
 }
 
 
@@ -118,68 +118,77 @@ function readHeader()
       if (str.slice(0, section.length) == section)
       {
 	docDate = str.slice(section.length);
-	var currentDate = toDate(docDate);
-	if (minDate == undefined || minDate > currentDate)
-	  minDate = currentDate;
-	if (maxDate == undefined || maxDate < currentDate)
-	  maxDate = currentDate;
       }
       else
       {
-	section = "Сумма=";
+	section = "ДатаСписано=";
 	if (str.slice(0, section.length) == section)
 	{
-	  docSumma = str.slice(section.length);
+	  if (str.slice(section.length).length > 0)
+	    docDate = str.slice(section.length);
+	  var currentDate = toDate(docDate);
+	  if (minDate == undefined || minDate > currentDate)
+	    minDate = currentDate;
+	  if (maxDate == undefined || maxDate < currentDate)
+	    maxDate = currentDate;
 	}
 	else
 	{
-	  section = "Плательщик=";
+	  section = "Сумма=";
 	  if (str.slice(0, section.length) == section)
 	  {
-	    docPlat = str.slice(section.length);
+	    docSumma = str.slice(section.length);
 	  }
 	  else
 	  {
-	    section = "ПлательщикИНН=";
+	    section = "Плательщик=";
 	    if (str.slice(0, section.length) == section)
 	    {
-	      docPlatINN = str.slice(section.length);
+	      docPlat = str.slice(section.length);
 	    }
 	    else
 	    {
-	      section = "Получатель=";
+	      section = "ПлательщикИНН=";
 	      if (str.slice(0, section.length) == section)
 	      {
-		docPoluch = str.slice(section.length);
+		docPlatINN = str.slice(section.length);
 	      }
 	      else
 	      {
-		section = "ПолучательИНН=";
+		section = "Получатель=";
 		if (str.slice(0, section.length) == section)
 		{
-		  docPoluchINN = str.slice(section.length);
+		  docPoluch = str.slice(section.length);
 		}
 		else
 		{
-		  section = "НазначениеПлатежа=";
+		  section = "ПолучательИНН=";
 		  if (str.slice(0, section.length) == section)
 		  {
-		    docNaznach = str.slice(section.length);
-		    docNaznach = docNaznach.replace(/\'/g, "''");
+		    docPoluchINN = str.slice(section.length);
 		  }
 		  else
 		  {
-		    section = "ПлательщикСчет=";
+		    section = "НазначениеПлатежа=";
 		    if (str.slice(0, section.length) == section)
 		    {
-		      docPlatSchet = str.slice(section.length);
+		      docNaznach = str.slice(section.length);
+		      docNaznach = docNaznach.replace(/\'/g, "''");
 		    }
 		    else
 		    {
-		      section = "ПолучательСчет=";
+		      section = "ПлательщикСчет=";
 		      if (str.slice(0, section.length) == section)
 		      {
-			docPoluchSchet = str.slice(section.length);
+			docPlatSchet = str.slice(section.length);
+		      }
+		      else
+		      {
+			section = "ПолучательСчет=";
+			if (str.slice(0, section.length) == section)
+			{
+			  docPoluchSchet = str.slice(section.length);
+			}
 		      }
 		    }
 		  }
@@ -360,28 +369,5 @@ function RemoveOldDocs(oper, oldDate, newDate)
       rec.next();
     }
   }
-  
-/*  
-  else
-  {
-    var command = "SELECT КОД FROM документы WHERE ОПЕР = " + oper + " AND ДАТА = '" + date + "' AND trim(НОМЕР) = '" + number + "' AND СУММА = " + sum + ";";
-    var rec = db.execQuery(command);
-    if (rec.first())
-    {
-      result = true;
-    }
-  }
-*/  
-    
-/*  
-  var command = "SELECT КОД FROM документы WHERE ОПЕР = " + oper + " AND ДАТА = '" + date + "' AND trim(НОМЕР) = '" + number + "' AND СУММА = " + sum + ";";
-  var rec = db.execQuery(command);
-  if (rec.first())
-  {
-    processed = true;
-    return true;
-  }
-  return false;
-*/  
 }  
       

@@ -146,7 +146,7 @@ int GUIFactory::openDB()
                     if (db->open(login, password))
                     {
                         TApplication::exemplar()->password = password;
-                        if (connForm->connectionName().size() > 0)
+//                        if (connForm->connectionName().size() > 0)
                             mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + login + " " + userName);
                     }
                     else

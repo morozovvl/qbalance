@@ -172,6 +172,7 @@ function EventAfterLinePrint(strNum)
  
 function EventBeforeTotalPrint()
 {
+  totDocSum = Math.round(totDocSum * 100) / 100;
   reportContext.setValue("СУММА", totBay + totDiscount);  
   reportContext.setValue("СКИДКА", Math.round(totDiscount * 100) / 100 + " (" + Math.round(totDiscount * 10000 / totBay) / 100 + "%)");  
   reportContext.setValue("ВОЗСУММА", totRev);  
@@ -190,5 +191,7 @@ function EventBeforeTotalPrint()
     if (checkNums[i] == undefined)
       app.print("Чек № " + i + " отсутствует");
   }
+  if (!app.isSA())
+    app.sendSMS(app.getConst("ТелефонДляСлужебныхСМС"), "Выручка за " + currentDate.toLocaleDateString() + ": " + totDocSum);
 }
 

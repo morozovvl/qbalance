@@ -2,8 +2,6 @@ var firmDict = getDictionary("фирмы");
 var searchExpression = table.getSearchExpression("фирмы");
   firmDict.queryName(searchExpression);
   
-db.exec("DELETE FROM заявка WHERE КОД IN (SELECT z.КОД FROM заявка z LEFT OUTER JOIN vw_прайс p ON z.КОД_ПРАЙС = p.КОД WHERE COALESCE(z.КОД_ТОВАР, 0) = 0 AND p.КОД IS NULL);");  
-
 if (firmDict.getRowCount() == 1)
 {
   var firmId = firmDict.getId();
@@ -21,7 +19,7 @@ if (firmDict.getRowCount() == 1)
 		  UNION \
 		  SELECT 'Заказ' AS ЗАКАЗ, '' AS КОД, z.КОДВПРАЙСЕ, z.НАЛИЧИЕ, ИМЯВПРАЙСЕ AS ИМЯ, ЕДИЗМВПРАЙСЕ AS ЕДИЗМ, 0 AS ЗАПАС, p.МИНЦЕНА AS ЦЕНА, 0 AS РОСТЦЕНЫ, (z.КОЛ - COALESCE(z1.КОЛ, 0)) AS КОЛ, 0 AS ОСТАТОК \
 		  FROM заявка z \
-				  INNER JOIN vw_прайс p ON p.КОД_ФИРМЫ = " + firmId + " AND z.КОДВПРАЙСЕ = p.КОДВПРАЙСЕ \
+				  INNER JOIN vw_прайс p ON p.КОД = z.КОД_ПРАЙС \
 				  LEFT OUTER JOIN vw_заказы z1 ON z.КОД_ПРАЙС = z1.КОД_ПРАЙС \
 		  WHERE z.КОД_ФИРМЫ = " + firmId + " AND z.КОД_ТОВАР IS NULL AND МОДИФИЦИРОВАНО AND (z.КОЛ - COALESCE(z1.КОЛ, 0)) > 0 \
 		  UNION \

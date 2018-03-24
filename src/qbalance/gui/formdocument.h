@@ -67,8 +67,8 @@ private:
 //    virtual QDomElement createWidgetsStructure();
 
 private slots:
-    void    saveDate();
-    void    saveNumber();
+    void    saveDate(const QString &);
+    void    saveNumber(const QString &);
 };
 
 #endif // FORMDOCUMENT_H

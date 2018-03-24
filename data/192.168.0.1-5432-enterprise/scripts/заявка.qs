@@ -49,6 +49,7 @@ function EventInitForm()
 	priceSearch = new Dictionary();
 	priceSearch.open("", "аналоги");
 	ostDict = app.getDictionaries().getDictionary("vw_saldo411_1");
+//	ostDict.getForm().clearAllComboBoxes();
 	salesGrdTable = form.findChild("salesTableView");
 	salesGrdTable.setEssence(ostDict);
 	salesGrdTable.setConfigName("salesTableView");
@@ -123,9 +124,9 @@ function ViewOst()
 		var id = table.getValue("ТОВАР__КОД");
 		var articul = table.getValue("ТОВАР__ШИФР_ПО_КАТАЛОГУ").trim();
 		if (articul.length > 0)
-			ostDict.query("товар.ШИФР_ПО_КАТАЛОГУ = '" + articul + "' AND адрес.ИМЯ <> 'Брак'");
+			ostDict.query("товар.ШИФР_ПО_КАТАЛОГУ = '" + articul + "' AND адрес.ИМЯ <> 'Брак'", true);
 		else
-			ostDict.query("товар.КОД = " + id + " AND адрес.ИМЯ <> 'Брак'");
+			ostDict.query("товар.КОД = " + id + " AND адрес.ИМЯ <> 'Брак'", true);
 		currentRowId = rowId;
 	}
 }
@@ -295,4 +296,13 @@ function EventBeforeDeleteString()
 		return false;
 	}
 	return true;
+}
+
+
+function GetFilter(filter)
+{ // Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.
+	if (filter.length > 0)
+                    	filter = filter + " AND ";
+	filter = filter + "КОД_ДОКУМЕНТЫ129 = 0";
+	return filter;
 }

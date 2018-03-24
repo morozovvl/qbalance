@@ -211,6 +211,7 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
         command = QString("ALTER DATABASE %1 OWNER TO %2;").arg(dbName).arg("sa");
         lResult = execPSql(QStringList() << QString("-c \"%1\"").arg(command), "postgres", password);
     }
+//    app->saveMessages();
     app->getMessageWindow()->hide();
     return lResult;
 }
@@ -292,7 +293,8 @@ bool DBFactory::open(QString login, QString password)
     db->setPort(port);
     db->setUserName(login);
     db->setPassword(password);
-    if (db->open()) {
+    if (db->open())
+    {
         dbIsOpened = true;
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         exec("set standard_conforming_strings=on;");
@@ -1504,7 +1506,7 @@ QStringList DBFactory::initializationScriptList(QString ext) const
     QStringList result;
     for (int i = 0;; i++)
     {
-        QString fileName(QString("initdb%2%3.sql").arg(ext).arg(i));
+        QString fileName(QString("initdb%1%2.sql").arg(ext).arg(i));
         if (QFileInfo(QCoreApplication::applicationDirPath() + "/" + fileName).exists())
         {
             result.append(fileName);
@@ -1512,18 +1514,6 @@ QStringList DBFactory::initializationScriptList(QString ext) const
         else
             break;
     }
-/*
-    QDir dir(QCoreApplication::applicationDirPath());
-    dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
-    dir.setSorting(QDir::Name | QDir::IgnoreCase);
-    dir.setNameFilters(QStringList() << "initdb" + ext + "*.sql");
-    QFileInfoList files = dir.entryInfoList();
-
-    for (QFileInfoList::const_iterator file = files.constBegin(); file != files.constEnd(); ++file)
-    {
-        result.append(file->canonicalFilePath());
-    }
-*/
     return result;
 }
 

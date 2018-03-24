@@ -76,7 +76,7 @@ TApplication::TApplication(int & argc, char** argv)
     : QApplication(argc, argv)
 {
     setOrganizationName("Enterprise");
-    setApplicationName("qbalance");
+    setApplicationName("QBalance");
     setApplicationVersion("0.1");
     setWindowIcon(QIcon(":qbalance.ico"));
 
@@ -752,12 +752,12 @@ bool TApplication::initApplication()
         }
         else if (result == -2)
         {   // Произошла ошибка соединения с сервером
-/*
+
             if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
                                  QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
                 // Попытаемся создать новую БД
                 db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
-*/
+
             break;
         }
         else if (result == -1)      // Пользователь нажал кнопку Отмена

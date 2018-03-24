@@ -211,7 +211,7 @@ function cmdOk()
 	var radioButtonToShop = zakazForm.findChild("radioButtonToShop");
 	var spinBoxQuan = zakazForm.findChild("spinBox");
 	var checkBoxConst = zakazForm.findChild("checkBox");
-
+/*
 	if (spinBoxQuan.value > 0)
 	{
 	  if (radioButtonToClient.checked)
@@ -234,6 +234,7 @@ function cmdOk()
 	    }
 	  }
 	}
+*/
 	if (appendEnabled)
 	{
 		var fieldsList = "";				// Здесь будем собирать список полей для команды INSERT
@@ -315,6 +316,7 @@ function cmdOk()
 				document.prepareValue("КОД_ФИРМЫ", firmId);
 				document.appendDocString();
 				document.calcItog();
+				documents.setValue("КОД_ЛЮДИ", menId);
 			      	documents.getDocument().show();
 			    }
 			  }	
@@ -451,9 +453,8 @@ function sendSMS()
       AddMen();
       pinCode = "0000" + Math.random() * 10000;
       pinCode = pinCode.slice(-4);
-      pinCode = "4545";
       var message = "Пинкод для подтверждения заказа: " + pinCode;
-//      app.sendSMS(phone, message);
+      app.sendSMS(phone, message);
     }
     else
     {

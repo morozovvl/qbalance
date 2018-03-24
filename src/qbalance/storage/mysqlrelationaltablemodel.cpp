@@ -249,7 +249,7 @@ QString MySqlRelationalTableModel::escapedRelationField(const QString &tableName
 
 void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table, QString field, QString type, int len, int prec, int fieldColumn, int keyFieldColumn)
 {
-    if (!updateInfo.contains(fieldColumn))
+    if (!updateInfo.contains(fieldColumn) && field.toUpper() != "FTS")
     {
         UpdateInfoStruct info;
         info.originField = originField;

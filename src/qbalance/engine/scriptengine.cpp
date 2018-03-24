@@ -1381,7 +1381,7 @@ QString ScriptEngine::loadScript(QString scriptFile)
 {
 //123
     QString result;
-    if (!scripts.contains(scriptFile) || isSA)
+    if (!scripts.contains(scriptFile))
     {
         QString fullScriptFile = scriptFile;
         if (!QFileInfo(scriptFile).exists())
@@ -1433,8 +1433,8 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
         }
         TApplication::exemplar()->debug(3, "/" + program);
     }
-    else
-        TApplication::exemplar()->debug(3, QObject::trUtf8("Не найдена функция ") + eventName);
+//    else
+//        TApplication::exemplar()->debug(3, QObject::trUtf8("Не найдена функция ") + eventName);
     return result;
 }
 

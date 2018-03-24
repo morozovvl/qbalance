@@ -87,6 +87,14 @@ Document* Documents::getDocument()
 }
 
 
+Document* Documents::getDocument(int docId)
+{
+    setCurrentDocument(docId);
+    return currentDocument;
+}
+
+
+
 bool Documents::add()
 {
     QDate date = QDate().currentDate();

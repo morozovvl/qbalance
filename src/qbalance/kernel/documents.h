@@ -71,8 +71,9 @@ public:
     Q_INVOKABLE virtual void  setOrderClause(QString = "");
     Q_INVOKABLE virtual void  setForm(QString = "");
     Q_INVOKABLE Document* getDocument();
+    Q_INVOKABLE Document* getDocument(int);
     Q_INVOKABLE virtual void updateCurrentRow(int = 0);
-    void                setCurrentDocument(int);       // Зафиксировать текущий документ
+    Q_INVOKABLE virtual void setCurrentDocument(int);       // Зафиксировать текущий документ
     virtual void        preparePrintValues();                   // Готовит значения для печати
 };
 

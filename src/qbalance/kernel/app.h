@@ -279,6 +279,7 @@ public:
 
     bool initApplication();
     QString         OSType();
+    void                    saveMessages();
 
 
 signals:
@@ -333,7 +334,6 @@ private:
     QString getAnyPath(QString, QString = "");
     void                    readSettings();
     void                    writeSettings();
-    void                    saveMessages();
     void            setConfigValue(QString name, QVariant value);
     void            setConfigTypeName(QString type, QString name) { configTypes.insert(type, name); }
     void            writeToDebugFile(QString, QString);

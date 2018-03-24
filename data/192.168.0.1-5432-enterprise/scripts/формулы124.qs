@@ -102,6 +102,8 @@ function EventCalcTable()
 			цена = getValue("P2__ЦЕНА");
 			сумма = getValue("P2__КОЛ") * цена;
 			setValue("P2__СУММА", сумма);
+			if (сумма > 0)
+			  sendSMS();
 		}
 		else
 		{
@@ -347,3 +349,19 @@ function EventKeyPressed(key, modifiers)
 	return false;
 }
 
+
+function sendSMS()
+{
+  var doc3Id = getValue("ДОКУМЕНТЫ3__КОД");
+  if (doc3Id > 0)
+  {
+    var command = "SELECT ТЕЛЕФОН FROM люди WHERE КОД = (SELECT КОД_ЛЮДИ FROM докатрибуты3 WHERE КОД = " + doc3Id + ")";
+    var phone = db.getValue(command);
+    if (phone.length > 0)
+    {
+      var message = "Вы можете получить Ваш заказ по адресу: " +app.getConst("НазваниеМагазина");
+      app.print("СМС на телефон " + phone + ": " + message);
+      app.sendSMS(phone, message);
+    }
+  }
+}

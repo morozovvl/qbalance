@@ -20,20 +20,22 @@ var colProizv;
 var nomDict;
 var nomForm;
 var priceDict;
-var setDict;
+//var setDict;
 var agentDict;
 
 var url;
 var id;
 var priceId = 0;
-var nomPrice;
+var priceName;
+var price;
+var priceInPrice;
 var newPosition = false;
-var nomId = 0;
-var nomName = "";
+var nomId;
 var nomQuan = 0;
-var pricePrice = 0;
+var nomPrice = 0;
 var automatedInput = false;
 var zakazDocs = [];
+var headerPrinted = false;
 
 
 function EventInitForm(form)
@@ -54,7 +56,7 @@ function EventInitForm(form)
 	nomForm = nomDict.getFormWidget();
 	nomForm.findChild("picturePrice").setVisible(false);
 	nomForm.findChild("labelPrice").setVisible(false);
-	setDict = getDictionary("набор402");
+//	setDict = getDictionary("набор402");
 	getDictionary("документы3").setExact(false);
 	form.addQueryMenuAction("__на_основании_заказа__", "Добавить поступление на основании заказа");
 }
@@ -69,8 +71,8 @@ function EventBeforeShowForm()
 
 function EventBeforeHideForm()
 {
-    if (!automatedInput)
-	printReports();	// Если накладная вводилась вручную, то покажем отчет при выходе
+	if (!automatedInput)
+		printReports();	// Если накладная вводилась вручную, то покажем отчет при выходе
     if (zakazDocs.length > 0)
     {
       var exitMsg = new QMessageBox(QMessageBox.Question, "Внимание!", "Если не будет больше накладных от этого поставщика, то следует закрыть его заказ(ы). Закрыть?", QMessageBox.StandardButtons(QMessageBox.Yes, QMessageBox.No), form);
@@ -92,8 +94,31 @@ function EventBeforeHideForm()
 
 function EventBeforeAddString()
 {
-	automatedInput = false;
-	var result = WriteTovar();
+	var result = false;
+	newPosition = false;
+	priceId = 0;
+	priceName = "";
+	nomId = 0;
+	nomQuan = 0;
+	priceDict.setMustShow(false);
+	priceDict.exec();
+	if (priceDict.isFormSelected() && priceDict.getRowCount() > 0)
+	{
+	  priceId = priceDict.getId();
+	  priceName = priceDict.getName();
+	  WriteTovar(0, 0);
+	}
+	else
+	{
+		nomDict.exec();
+		if (nomDict.isFormSelected())
+		{
+		    nomId = nomDict.getId();
+		    document.prepareValue("КОД_ТОВАР", nomId);
+		    nomDict.setMustShow(false);
+		    result = true;
+		}
+	}
 	return result;
 }
 
@@ -128,7 +153,7 @@ function EventImport(form)
 }
 
 
-function prepReports()
+function prepReports(price)
 {
   if (agentName.length == 0)
 	agentName = agentDict.getName();
@@ -138,19 +163,33 @@ function prepReports()
   	app.printToArray("заголовок", "");
   	app.printToArray("заголовок", "Приход товара от <" + agentName + "> по накладной № " + document.getNumber() + " от " + document.getDate());
   	app.printToArray("заголовок", "------------------------------------------");
+	headerPrinted = false;
   }
-  var quanPrice = priceDict.getValue("КОЛ_ПРАЙС");
-  var quanTovar = priceDict.getValue("КОЛ_ТОВАР");
-  var quan = nomQuan * quanTovar / quanPrice;
-  if (pricePrice != nomPrice)
+
+  if (priceDict.getId() != priceId)
+    priceDict.setId(priceId);
+  
+  if (nomDict.getId() != nomId)
+    nomDict.setId(nomId);
+  
+  var nomName = nomDict.getName();
+  
+  var priceInPrice = priceDict.getValue("МИНЦЕНА") * priceDict.getValue("КОЛ_ПРАЙС") / priceDict.getValue("КОЛ_ТОВАР");
+
+  if (priceInPrice != price)
   {
-    var proc = Math.round(1000 *  (pricePrice - nomPrice) / nomPrice) / 10;
+//    price = price * priceDict.getValue("КОЛ_ТОВАР") / priceDict.getValue("КОЛ_ПРАЙС")
+    var proc = Math.round(1000 *  (priceInPrice - price) / price) / 10;
     if (isFinite(proc))
     {
       if (proc < 0)
 	app.printToArray("ценыповысились", "Цена повысилась на " + (- proc) + "% --- " + nomName);
       if (proc > 0)
 	app.printToArray("ценыпонизились", "Цена понизилась на " + proc + "% --- " + nomName);
+//      if (price > 0)
+//      {
+//	priceDict.setValue("МИНЦЕНА", price);
+//      }
     }
   }
 // Проверим, не превышает ли остаток норму запаса, чтобы избежать накопления запасов
@@ -163,17 +202,17 @@ function prepReports()
     zap = parseInt(nomDict.getValue("ЗАПАС"));
     if (zap > 0)
     {
-      if (ost + parseInt(quan) > zap)
+      if ((ost + nomQuan) > zap)
      {
-	app.printToArray("запас", "Превышена норма запаса: <" + nomName + ">. Запас - " + zap + ", остаток - " + ost + ", поступило - " + quan);
+	app.printToArray("запас", "Превышена норма запаса: <" + nomName + ">. Запас - " + zap + ", остаток - " + ost + ", поступило - " + nomQuan);
       }
     }
     else
     {
       if (newPosition)
-	app.printToArray("запас1", "Новая позиция: <" + nomName + ">. Поступило - " + quan);
+	app.printToArray("запас1", "Новая позиция: <" + nomName + ">. Поступило - " + nomQuan);
       else
-	app.printToArray("запас2", "НЕ ДОЛЖНА БЫЛА БЫТЬ ЗАКАЗАНА: <" + nomName + ">. Поступило - " + quan);
+	app.printToArray("запас2", "НЕ ДОЛЖНА БЫЛА БЫТЬ ЗАКАЗАНА: <" + nomName + ">. Поступило - " + nomQuan);
     }
   }
 // Проверим, нет ли этой позиции в неразобранном товаре
@@ -192,13 +231,25 @@ function prepReports()
 
 function printReports()
 {
-  app.printArray("заголовок");
+  if (!headerPrinted)
+  {
+    if (app.printArrayCount("запас") > 0 ||
+        app.printArrayCount("запас1") > 0 ||
+        app.printArrayCount("запас2") > 0 ||
+        app.printArrayCount("ценыповысились") > 0 ||
+        app.printArrayCount("ценыпонизились") > 0 ||
+        app.printArrayCount("новыепозиции") > 0 ||
+        app.printArrayCount("нетзаказа") > 0 ||
+        app.printArrayCount("закрытыезаказы") > 0)
+    {
+      app.printArray("заголовок");
+      headerPrinted = true;
+    }
+  }
   app.printArray("запас");
   app.printArray(" ");
   app.printArray("запас1");
   app.printArray(" ");
-//  app.printArray("запас2");
-//  app.printArray(" ");
   app.printArray("запас3");
   app.printArray(" ");
   app.printArray("ценыповысились");
@@ -343,10 +394,24 @@ function OdsFile(fileName)
 				{	
 					// Значит нам попалась строка с описанием позиции товара
 					tovarPrice = tovarSum / tovarQuan;
-					nomPrice = tovarPrice;
-					nomQuan = tovarQuan;
-					WriteTovar(tovarId, tovarName, tovarArticul, tovarProizv, tovarUnit, tovarQuan, tovarSum, docDate);
-                                 				app.showMessageOnStatusBar("Загружено " + Math.round(i * 100 / rowCount)+ "%");	
+					tovarId = tovarId.replace(/^[0]+/g,"");	// удалим первые 0
+					tovarId = tovarId.replace(/\s+/g, "");	// удалим пробелы
+					tovarName = tovarName.replace("'", "''");
+					
+					if (tovarId > 0)
+					  priceDict.query("прайс.КОД_ФИРМЫ = " + firmId + " AND прайс.КОДВПРАЙСЕ = '" + tovarId + "'");
+					else
+					  priceDict.query("прайс.КОД_ФИРМЫ = " + firmId + " AND прайс.ИМЯ = '" + tovarName + "'");
+					priceId = priceDict.getId();
+					priceName = priceDict.getName();
+					var result = WriteTovar(tovarQuan, tovarPrice);
+					if (result.length > 0)
+					  app.print(tovarId + " " + tovarName + ": " + result);
+					else
+					{
+					  WriteZakaz(tovarName, tovarQuan);
+					  prepReports(tovarPrice);
+					}
 				}
 				i++;
 				row++;
@@ -385,6 +450,7 @@ function findFieldData(row, column, name, exact)
 
 function XmlFile(fileName)
 {  // Функция производит чтение и разбор файлов CommerceML
+/*  
     var file = new QFile(fileName);
     if (file.open(QIODevice.OpenMode(QIODevice.ReadOnly, QIODevice.Text))) 
     {
@@ -461,7 +527,7 @@ function XmlFile(fileName)
 		var tovarPrice = tovar.at(i).firstChildElement("ЦенаЗаЕдиницу").text();
 		var tovarSum = tovar.at(i).firstChildElement("Сумма").text();
 		var tovarProizv = "";
-		WriteTovar(tovarId, tovarName, tovarArticul, tovarProizv, tovarUnit, tovarQuan, tovarPrice, tovarSum, docDate);
+		WriteTovar(firmId, tovarId, tovarName, tovarArticul, tovarProizv, tovarUnit, tovarQuan, tovarPrice, tovarSum, docDate);
 		app.showMessageOnStatusBar("Загружено " + Math.round(i * 100 / tovar.count())+ "%");
 		row++;
 	      }
@@ -491,200 +557,125 @@ function XmlFile(fileName)
     }
     else
       QMessageBox.warning(form, "Документ CommerceML", "Не могу открыть файл " + fileName + ":\n" + file.errorString());
+*/    
 }
 
 
-function WriteTovar(id, name, articul, proizv, unit, quan, sum, date)
+function WriteTovar(quan, price)
 // Запишем позицию в документ, предварительно выяснив соответствие в таблице прайсов
 {
-  var result = true;
-  var addNewPosition = false;
-  nomQuan = quan;
-  pricePrice = nomPrice;
-  rowPrice = nomPrice;
-  nomPrice = 0;
-  nomId = 0;
-  if (date == '')
-  	date = (new Date).toISOString().substr(0,10);
+  var result = "";
+  newPosition = false;
 
-  if (automatedInput)	// Если указан поставщик, значит товар приходуется автоматически
+  if (priceDict.getId() != priceId)
+    priceDict.setId(priceId);
+  
+  if (priceDict.rowCount() == 1 || !automatedInput)
   {
-    var priceRec;
-    id = id.replace(/^[0]+/g,"");	// удалим первые 0
-    id = id.replace(/\s+/g, "");	// удалим пробелы
-    name = name.replace("'", "''");
-    
-    var command = "SELECT * FROM прайс WHERE КОД_ФИРМЫ = " + firmId + " AND ";
-    if (id.length > 0)
-      command = command + "КОДВПРАЙСЕ = '" + id + "';";
-    else
-      command = command + "ИМЯ = '" + name + "';";
-
-    priceRec = db.execQuery(command);
-
-    if (priceRec.first())
-    {
-      nomId = priceRec.record().value("КОД_ТОВАР");	// Посмотрим, какой нашей позиции соответствует это название в прайсе
-      priceId = priceRec.record().value("КОД");
-      name = priceRec.record().value("ИМЯ");
-      name = name.replace("'", "''");    
-      articul = priceRec.record().value("АРТИКУЛ");
-      proizv = priceRec.record().value("ПРОИЗВОДИТЕЛЬ");
-      var quan_price = priceRec.record().value("КОЛ_ПРАЙС");
-      var quan_tovar = priceRec.record().value("КОЛ_ТОВАР");
-      pricePrice = priceRec.record().value("МИНЦЕНА");
-      if (pricePrice != rowPrice)
+    var priceArticul = priceDict.getValue("ШИФР_ПО_КАТАЛОГУ") + " " + priceDict.getValue("АРТИКУЛ");
+    var priceProizv = priceDict.getValue("ПРОИЗВОДИТЕЛЬ");
+    nomId = priceDict.getValue("КОД_ТОВАР");	// Посмотрим, какой нашей позиции соответствует это название в прайсе
+    firmId = priceDict.getValue("КОД_ФИРМЫ");
+    priceInPrice = priceDict.getValue("МИНЦЕНА") * priceDict.getValue("КОЛ_ПРАЙС") / priceDict.getValue("КОЛ_ТОВАР");
+    quan = quan * priceDict.getValue("КОЛ_ТОВАР") / priceDict.getValue("КОЛ_ПРАЙС");
+    price = price * priceDict.getValue("КОЛ_ПРАЙС") / priceDict.getValue("КОЛ_ТОВАР");
+    if (price == 0 && priceInPrice != 0)
+      price = priceInPrice;
+    if (nomId == 0)			// Если мы не знаем, какой нашей позиции соотстветствует это наименование
+    {					// тогда спросим это у пользователя
+      var formTitle = nomDict.getFormTitle();
+      nomDict.setFormTitle("Укажите позицию аналогичную: " + priceName + " (" + priceArticul + ") " + priceProizv);		// Установим в заголовке окна подсказку для пользователя
+      nomDict.getForm().setParameter("товар", priceName);
+      nomDict.exec();
+      nomDict.setFormTitle(formTitle);					// Вернем прежнее название окна
+      if (nomDict.isFormSelected())	// если пользователь нажал кнопку Ok
       {
-	if (priceId > 0)
-	  db.exec("UPDATE прайс SET МИНЦЕНА = " + rowPrice + " WHERE КОД = " + priceId + ";");
-       }
-      pricePrice = pricePrice * quan_price / quan_tovar;
-      if (quan_price > 0)
-      {
-	quan = quan * quan_tovar / quan_price;
-	if (quan > 0)
-	  nomPrice = sum / quan;
+	nomId = nomDict.getId();
+	db.exec("UPDATE прайс SET КОД_ТОВАР = " + nomId + " WHERE КОД = " + priceId + ";");
+	newPosition = true;
       }
     }
     else
-      addNewPosition = true;
+      nomDict.setId(nomId);
+
+    if (nomId != 0)
+    {
+      // Запишем кол-во, цену, сумму в проводку
+      document.prepareValue("P1__КОЛ", quan);
+      document.prepareValue("P1__ЦЕНА", price);
+      document.prepareValue("P1__СУММА", quan * price);
+      document.prepareValue("КОД_ПРАЙС", priceId);
+      document.prepareValue("КОД_ТОВАР", nomId);
+      document.prepareValue("ЦЕНА_В_ПРАЙСЕ", priceInPrice);
+      // Сохраним проводку на сервере
+      var row = document.appendDocString();
+    
+      // скопируем фотографию
+      var toFileName = nomDict.getPhotoPath() + "/" + nomId + ".jpg";
+      priceDict.getPhotoFile(toFileName);
+    }
+  }
+  else if (priceDict.rowCount() > 1)
+  {
+    result = "В прайсе найдено больше одной позиции с таким кодом или наименованием";
   }
   else
   {
-    nomDict.setMustShow(false);
-    priceDict.setMustShow(false);
-    priceDict.exec();
-    if (priceDict.isFormSelected())
-    {
-      if (priceDict.getRowCount() > 0)
-      {
-	nomId = priceDict.getValue("КОД_ТОВАР");	// Посмотрим, какой нашей позиции соответствует это название в прайсе
-	priceId = priceDict.getValue("КОД");
-	name = priceDict.getValue("ИМЯ");
-	name = name.replace("'", "''");    
-	articul = priceDict.getValue("АРТИКУЛ");
-	proizv = priceDict.getValue("ПРОИЗВОДИТЕЛЬ");
-	var quan_price = priceDict.getValue("КОЛ_ПРАЙС");
-	var quan_tovar = priceDict.getValue("КОЛ_ТОВАР");
-	pricePrice = priceDict.getValue("МИНЦЕНА") * quan_price / quan_tovar;
-	nomPrice = pricePrice;
-      }
-      else
-	addNewPosition = true;
-    }
-  }
-  if (nomId > 0)
-    nomDict.setId(nomId);
-  else  
-  {
-    var formTitle = nomDict.getFormTitle();
-    if (name != undefined)
-    {
-      nomDict.setFormTitle("Укажите позицию аналогичную: " + name + " (" + articul + ") " + proizv);		// Установим в заголовке окна подсказку для пользователя
-      nomDict.getForm().setParameter("товар", name);
-    }
-    nomDict.exec();
-    if (name != undefined)
-      nomDict.setFormTitle(formTitle);					// Вернем прежнее название окна
-    if (nomDict.isFormSelected())	// если пользователь нажал кнопку Ok
-    {
-      nomId = nomDict.getId();
-      if (addNewPosition)
-      {
-	db.exec("INSERT INTO прайс (КОДВПРАЙСЕ, ИМЯ, ШИФР_ПО_КАТАЛОГУ, ЕДИЗМ, МИНЦЕНА, КОД_ФИРМЫ, КОД_ТОВАР, ДАТА, НАЛИЧИЕ) VALUES ('" + id + "','" + name + "','" + articul + "','" + unit + "'," + rowPrice + "," + firmId + "," + nomId + ",'" + date + "', '+');");
-	app.printToArray("новыепозиции", "Позиция <" + name + "> в прайсе не найдена. Была создана вновь.");
-      }
-      else
-      {
-	if (priceId > 0)
-	  db.exec("UPDATE прайс SET КОД_ТОВАР = " + nomId + " WHERE КОД = " + priceId + ";");
-      }
-    }
-    else
-    {
-/*	
-	var exitMsg = new QMessageBox(QMessageBox.Question, "Внимание!", "Документ полностью не загружен. Прервать загрузку?", QMessageBox.StandardButtons(QMessageBox.Yes, QMessageBox.No), form);
-	if (exitMsg.exec() == QMessageBox.Yes)
-	  exitKeyPressed = true;
-*/	
-      result = false;
-    }
-  }
-
-  document.prepareValue("P1__ЦЕНА", nomPrice);
-  document.prepareValue("КОД_ТОВАР", nomId);
-  if (priceId > 0)
-  {
-    document.prepareValue("ЦЕНА_В_ПРАЙСЕ", pricePrice);
-    document.prepareValue("КОД_ПРАЙС", priceId);
-  }
-  if (automatedInput)
-  {
-    // Запишем кол-во, цену, сумму в проводку
-    document.prepareValue("P1__КОЛ", quan);
-    document.prepareValue("P1__СУММА", sum);
-    nomDict.setId(nomId);
-    // Сохраним проводку на сервере
-    var row = document.appendDocString();
-    if (priceId > 0)
-    {
-	// скопируем фотографию
-	var toFileName = nomDict.getPhotoPath() + "/" + nomId + ".jpg";
-	priceDict.getPhotoFile(toFileName);
-    }
-    // Запишем в заказы те позиции, которые пришли
-    nomName = getValue("ТОВАР__ИМЯ");
-    nomQuan = quan;
-    WriteZakaz();
+    result = "В прайсе не найдено позиций с таким кодом или наименованием";
   }
   return result;
 }
 
 
-function WriteZakaz()
+function WriteZakaz(name, nomQuan)
 {
-  var zakazRec;
-  zakazRec = db.execQuery("SELECT КОДВПРАЙСЕ, КОЛ, ПОСТОЯННО FROM заявка WHERE КОД_ПРАЙС = " + priceId + ";");
-	
-  if (zakazRec.first())
+  var zakazRec = db.getRecord("SELECT * FROM vw_заказы WHERE КОД_ПРАЙС = " + priceId, 0);
+  if (!zakazRec.isEmpty())
   {
-    var constantly = zakazRec.record().value("ПОСТОЯННО");
-    var zakQuan = zakazRec.record().value("КОЛ");
-    if (constantly)
-      db.exec("UPDATE товар SET ЗАПАС=" + zakQuan + " WHERE КОД=" + nomId + ";");
-    if (zakQuan > nomQuan)
-      db.exec("UPDATE заявка SET КОЛ = " + (zakQuan - nomQuan) + " WHERE КОД_ПРАЙС = " + priceId + ";");
-    else
-      db.exec("DELETE FROM заявка WHERE КОД_ПРАЙС = " + priceId + ";");
-  }	
-  
-  zakazRec = db.execQuery("SELECT * FROM vw_заказы WHERE КОД_ПРАЙС = " + priceId);
-  if (zakazRec.first())
-  {
-    var docId = zakazRec.record().value("ДОККОД");
-    var strNum = zakazRec.record().value("СТР");
-    var docZakazId = zakazRec.record().value("КОДДОКЗАКАЗ");
-    var strZakazId = zakazRec.record().value("СТРДОКЗАКАЗ");
+    var docId = zakazRec.value("ДОККОД");
+    var strNum = zakazRec.value("СТР");
+    var docZakazId = zakazRec.value("КОДДОКЗАКАЗ");
+    var strZakazId = zakazRec.value("СТРДОКЗАКАЗ");
+    var zakazId = zakazRec.value("КОДЗАКАЗ");
     if (docZakazId > 0)
     {
-      db.exec("UPDATE атрибуты3 SET ВЫПОЛНЕН = TRUE, ОТМЕНЕН = FALSE WHERE ДОККОД = " + docZakazId + " AND СТР = " + strZakazId);
-      db.exec("UPDATE атрибуты3 SET ОТМЕНЕН = TRUE WHERE ДОККОД = " + docZakazId + " AND КОД_ФИРМЫ = " + firmId + " AND ВЫПОЛНЕН = FALSE");
+      var command = "UPDATE набор402 SET КОД_ДОКУМЕНТЫ3 = " + docZakazId + " WHERE КОД = " + document.getValue("P1__ДБКОД");
+      print(command);
+      db.exec(command);
+      command = "UPDATE атрибуты3 SET ВЫПОЛНЕН = TRUE, ОТМЕНЕН = FALSE WHERE ДОККОД = " + docZakazId + " AND СТР = " + strZakazId;
+      db.exec(command);
       // Посчитаем не выполненные заказы
-/*      
       var notProcessed = db.getValue("SELECT COUNT(*) FROM атрибуты3 WHERE ДОККОД = " + docZakazId + " AND NOT (ВЫПОЛНЕН OR ОТМЕНЕН);");
       if (notProcessed == 0)
       {
-	db.exec("UPDATE докатрибуты3 SET ВЫПОЛНЕН = TRUE WHERE КОД = " + docZakazId);
+	command = "UPDATE докатрибуты3 SET ВЫПОЛНЕН = TRUE WHERE КОД = " + docZakazId;
+	db.exec(command);
       }
-*/      
     }
-    db.exec("UPDATE атрибуты129 SET ВЫПОЛНЕН = TRUE WHERE ДОККОД = " + docId + " AND СТР = " + strNum);
+    var command = "UPDATE атрибуты129 SET ВЫПОЛНЕН = TRUE WHERE ДОККОД = " + docId + " AND СТР = " + strNum;
+    db.exec(command);
+    
+    if (zakazId > 0)
+    {
+      zakazRec = db.getRecord("SELECT КОЛ, ПОСТОЯННО FROM заявка WHERE КОД = " + zakazId, 0);
+      if (!zakazRec.isEmpty())
+      {
+	var constantly = zakazRec.value("ПОСТОЯННО");
+	var zakQuan = zakazRec.value("КОЛ");
+	if (constantly)
+	  db.exec("UPDATE товар SET ЗАПАС=" + nomQuan + " WHERE КОД=" + nomId);
+	if (zakQuan > nomQuan)
+	  db.exec("UPDATE заявка SET КОЛ = " + (zakQuan - nomQuan) + " WHERE КОД = " + zakazId);
+	else
+	db.exec("DELETE FROM заявка WHERE КОД = " + zakazId + ";");
+      }
+    }
+    
     if (zakazDocs.indexOf(docId) < 0)
 	zakazDocs.push(docId);
   }
   else
-    app.printToArray("нетзаказа", "Не найден заказ для позиции: <" + nomName + "> в количестве " + nomQuan);     
-  prepReports();
+    app.printToArray("нетзаказа", "Не найден заказ для позиции: <" + name + "> в количестве " + nomQuan);     
 }
 
 
@@ -704,24 +695,24 @@ function EventCalcTable()
 	цена = getValue("P1__ЦЕНА");
 	сумма = getValue("P1__СУММА");
 
-	if (кол != 0 && !automatedInput)
+	if (getCurrentFieldName() == "P1__СУММА" && кол != 0) 
 	{
-	  if (getCurrentFieldName() == "P1__СУММА") 
-	    цена = сумма / кол;
-	  else 
-	    сумма = кол * цена;
-
-	  nomPrice = цена;
-	  nomQuan = кол;
-	  pricePrice = getValue("ЦЕНА_В_ПРАЙСЕ");
-	  nomName = getValue("ТОВАР__ИМЯ");
-	  
-	  WriteZakaz();
+		цена = сумма / кол;
 	}
-
+	else 
+	{
+		сумма = кол * цена;
+	}
 	setValue("P1__КОЛ", кол);
 	setValue("P1__ЦЕНА", цена);
 	setValue("P1__СУММА", сумма);
+	if (getCurrentFieldName() == "P1__КОЛ" && !automatedInput)
+	{
+	  priceId = getValue("КОД_ПРАЙС");
+	  WriteZakaz(getValue("ТОВАР__ИМЯ"), getValue("P1__КОЛ"));
+	  nomId = getValue("ТОВАР__КОД");
+	  prepReports(getValue("P1__ЦЕНА"));
+	}
 }
 
 
@@ -788,9 +779,9 @@ function sendSMS(docId)
 		if (zakPos > 0)
 			message = "По вашему заказу ожидается поступление позиций: " + zakPos + ".";
 		else
-			message = "К сожалению, ваш заказ не будет выполнен."
+			message = "К сожалению, товар из вашего заказа у поставщика отсутствует."
 		app.print("СМС на телефон " + phone + ": " + message);
-//		app.sendSMS(phone, message);
+		app.sendSMS(phone, message);
 	} while (zakQuery.next());
 
   }
@@ -826,31 +817,12 @@ function EventAppendFromQuery(id, record)
 	{
 		var docs = app.getDocuments(129);
 		docs.exec();
-		if (docs.isFormSelected())
+		if (docs.isFormSelected() && !docs.getValue("ЗАКРЫТ"))
 		{
-			var doc = docs.getDocument();
-//			var docs3 = app.getDocuments(3);
+			var doc = docs.getDocument(docs.getId());
 			doc.query();
-//			print(doc.getRowCount());
-//			var firmDict = doc.getDictionary("фирмы");
 			firmId = doc.getDictionary("фирмы").getId();
-/*
-			if (firmId == 0)
-			{
-				var formTitle = firmDict.getFormTitle();	// Сохраним старый заголовок окна
-				firmDict.setFormTitle("Поставщик не указан. Укажите, пожалуйста, поставщика");		// Установим в заголовке окна подсказку для пользователя
-    				firmDict.exec();
-    				firmDict.setFormTitle(formTitle);		// Вернем прежнее название окна
-			}
-			else
-			{
-				firmDict.setId(firmId);
-    				firmDict.exec();
-			}
-*/
 			var tovarDict = getDictionary("товар");
-			var priceDict = getDictionary("прайс");
-			var setDict = getDictionary("набор402");
 			var orgDict = getDictionary("организации");
 			var progress = ProgressDialog("Заполнение на основании заказа. Ожидайте...");
 			progress.show();
@@ -859,18 +831,16 @@ function EventAppendFromQuery(id, record)
 			{
 				doc.setCurrentRow(rowCount);
 				progress.setValue(rowCount);
-				
-				if (!doc.getValue("ВЫПОЛНЕН"))
+				priceId = doc.getValue("ПРАЙС__КОД");
+				priceName = doc.getValue("ПРАЙС__ИМЯ");
+				var quan = doc.getValue("P1__КОЛ");
+				var result = WriteTovar(quan, doc.getValue("P1__ЦЕНА"));
+				if (result.length > 0)
+				  app.print(doc.getValue("ПРАЙС__ИМЯВПРАЙСЕ") + " " + priceName + ": " + result);
+				else
 				{
-					var tovarId = doc.getValue("ПРАЙС__КОДВПРАЙСЕ");
-					var tovarName = doc.getValue("ПРАЙС__ИМЯ");
-					var tovarArticul = doc.getValue("ПРАЙС__ШИФР_ПО_КАТАЛОГУ");
-					var tovarProizv = doc.getValue("ПРАЙС__ПРОИЗВОДИТЕЛЬ");
-					var tovarUnit = doc.getValue("ПРАЙС__ЕДИЗМ");
-					var tovarQuan = doc.getValue("P1__КОЛ");
-					var tovarPrice = doc.getValue("P1__ЦЕНА");
-					var tovarSum = doc.getValue("P1__СУММА");
-					WriteTovar(firmId, tovarId, tovarName, tovarArticul, tovarProizv, tovarUnit, tovarQuan, tovarPrice, tovarSum, docDate);
+				  WriteZakaz(priceName, quan);
+				  prepReports(doc.getValue("P1__ЦЕНА"));
 				}
 				app.showMessageOnStatusBar("Загружено " + Math.round(rowCount * 100 / doc.getRowCount())+ "%");	
 			}

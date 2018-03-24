@@ -1263,8 +1263,6 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             result = true;
         }
     }
-    result = true;
-/*
     else
     {   // файл существует локально
         QFile file(fullFileName);
@@ -1293,7 +1291,6 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             result = true;
         }
     }
-*/
     return result;
 }
 

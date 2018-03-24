@@ -491,8 +491,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
                         {
                             if (filter.size() > 0)
                                 filter.append(" AND ");
-                            filter.append(field + "=");
-                            filter.append(QString("%1").arg(id));
+                            filter.append(QString("%1.%2=%3").arg(db->getObjectNameCom(tableName)).arg(field).arg(id));
                             values.insert(field, QVariant(id));
                         }
                         else
@@ -725,16 +724,11 @@ bool Dictionary::setTableModel(int)
 
 void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 {
-//    if (grdTable != 0)
-//        grdTable->setCurrentChangedScripts(false);
-
     QString resFilter = defaultFilter;
 
     if (form != 0 && !exactlyDefaultFilter)
     {
-        QString filter;
-        if (form->getFormWidget()->isVisible())
-            filter = form->getFilter();
+        QString filter = form->getFilter();
         if (filter.size() > 0)
         {
             if (resFilter.size() > 0)
@@ -752,9 +746,6 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
     }
 
     Essence::query(resFilter);
-
-//    if (grdTable != 0)
-//        grdTable->setCurrentChangedScripts(true);
 
     if (tableModel->rowCount() > 0 && grdTable != 0)
     {
