@@ -1071,6 +1071,7 @@ Dialog* TApplication::createForm(QString fileName)
                     return 0;
                 }
                 formWidget->setApp(this);
+//                getMainWindow()->appendMdiWindow(formWidget);
             }
         }
     }

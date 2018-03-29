@@ -127,12 +127,20 @@ function EventBeforeAddString()
 { // Событие происходит перед добавлением строки в документ
 // Здесь Вы можете вставить свой код
 	var result = false;
-	priceDict.exec();
-	if (priceDict.isFormSelected())
+	if (document.isVisible())
+	{
+		priceDict.exec();
+		if (priceDict.isFormSelected())
+		{
+			getDictionary("прайс").setId(priceDict.getId());
+			getDictionary("прайс").setMustShow(false);
+			document.prepareValue("КОД_ФИРМЫ", priceDict.getValue("КОД_ФИРМЫ"));
+			result = true;
+		}
+	}
+	else
 	{
 		getDictionary("прайс").setId(priceDict.getId());
-		getDictionary("прайс").setMustShow(false);
-		document.prepareValue("КОД_ФИРМЫ", priceDict.getValue("КОД_ФИРМЫ"));
 		result = true;
 	}
 	return result;

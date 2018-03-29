@@ -208,22 +208,25 @@ void GUIFactory::showMenus()
 
 int GUIFactory::showError(QString errorText)
 {
-//    QMdiSubWindow* window = 0;
-//    if (mainWindow != 0)
-//        window = mainWindow->getWorkSpace()->activeSubWindow();
-//    QWidget* widget = mainWindow->focusWidget();
-//    qDebug() << widget->metaObject()->className();
+    Qt::WindowModality WidgetModality;
+    QWidget* widget = TApplication::exemplar()->activeWindow();
+    if (widget == 0)
+        widget = TApplication::exemplar()->getMainWindow()->getWorkSpace()->activeSubWindow();
+
+    if (widget != 0)
+    {
+        WidgetModality = widget->windowModality();
+        widget->setWindowModality(Qt::NonModal);
+    }
+
     QErrorMessage msgBox(mainWindow);
-//    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
-//    msgBox.show();
-//    msgBox.activateWindow();
-//    msgBox.raise();
     msgBox.exec();
-//    if (window != 0)
-//        mainWindow->getWorkSpace()->setActiveSubWindow(window);
-//    widget->setFocus();
+
+    if (widget != 0)
+        widget->setWindowModality(WidgetModality);
+
     return 0;
 }
 

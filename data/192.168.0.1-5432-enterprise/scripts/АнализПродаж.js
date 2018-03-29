@@ -315,21 +315,24 @@ function AnalyseSales(command, id, groupKey)
 	  var coef = 1;
 	  if (avgYearSold > 0 &&  lastSale > 0)
 	    coef = lastSale * 12 / totalLastYearSold;
+	  app.print("Количество месяцев продаж: " + salesMonths);
 	  app.print("За последний год продано: " + totalLastYearSold);
 	  app.print("Коэффициент последних продаж: " + coef);
 	  app.print("Прогноз продаж на предстоящие " + forwardMonths + " месяцев:");
+	  if (salesMonths > 12)
+	    salesMonths = 12;
 	  for (var i = 0; i < forwardMonths; i++)
 	  {
 	    var month = currentMonth + i;
 	    if (month > 12)
 	      month = month - 12;
-	    if (seasonCoefficients[month] == undefined)
-	      seasonCoefficients[month] = 0;
+	    if (seasonCoefficients[month] == undefined || seasonCoefficients[month] == 0)
+	      seasonCoefficients[month] = 1;
 	    if (totalLastYearSold > avgYearSold)
 	      avgYearSold = totalLastYearSold;
 //	    forecastSales[month] = Math.round(avgYearSold * seasonCoefficients[month] / 12);
 //	    forecastSales[month] = Math.round(coef * avgYearSold * seasonCoefficients[month] / 12);
-	    forecastSales[month] = Math.round(totalLastYearSold * seasonCoefficients[month] / 12);
+	    forecastSales[month] = Math.round(totalLastYearSold * seasonCoefficients[month] / salesMonths);
 //	    forecastSales[month] = Math.round(coef * totalLastYearSold * seasonCoefficients[month] / 12);
 	    forecastQuan = forecastQuan + forecastSales[month];
 	    app.print("Месяц " + month + ": " + forecastSales[month]);

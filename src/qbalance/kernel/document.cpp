@@ -1289,3 +1289,10 @@ void Document::showParameterText(QString dictName)
 {
     getForm()->showParameterText(dictName);
 }
+
+
+void Document::cmdOk()
+{
+    saveChanges();
+    Dictionary::cmdOk();
+}

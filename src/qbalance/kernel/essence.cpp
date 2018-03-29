@@ -496,7 +496,15 @@ QVariant Essence::getValue(QString n, int row)
             }
         }
         else
-            app->showError(QObject::trUtf8("Не существует колонки ") + n);
+        {
+            for (int i = 0; i < record.count(); i++)
+            {
+                qDebug() << tableName << record.field(i).name();
+            }
+
+            app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
+            qDebug() << sqlCommand;
+        }
     }
     return result;
 }
@@ -548,7 +556,10 @@ void Essence::setValue(QString n, QVariant value, int row)
         setCurrentIndex(oldIndex);
     }
     else
+    {
+        qDebug() << sqlCommand;
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
+    }
 }
 
 
@@ -802,10 +813,6 @@ void Essence::replyFinished(QNetworkReply* reply)
                     if (scriptEngineEnabled && scriptEngine != 0)
                         scriptEngine->eventPhotoLoaded();
                 }
-            }
-            else
-            {
-                removePhoto(file);
             }
         }
     }

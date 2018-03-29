@@ -23,6 +23,42 @@ function EventAppendFromQuery(id, record)
 	if (id == "__все__заказы__")
 	{
 		var dictFirm = getDictionary("фирмы");
+		if (dictFirm.getId() > 0)
+		{
+			var zakazDict = getDictionary("vw_заявка");
+			zakazDict.query("КОД_ФИРМЫ = " + dictFirm.getId());
+			zakazDict.exec();
+			if (zakazDict.isFormSelected())
+			{
+				var progress = ProgressDialog("Заполнение заказа. Ожидайте...");
+				progress.show();
+				progress.setMaximum(zakazDict.rowCount());
+				for (var i = 0; i < zakazDict.rowCount(); i++)
+				{
+					var quan = zakazDict.getValue("КОЛ", i);
+					if (quan > 0)
+					{
+						var price = zakazDict.getValue("ЦЕНА", i);
+						var sum = quan * price;
+	    					document.prepareValue("P1__ДБКОД", zakazDict.getValue("КОД", i));
+						document.prepareValue("P1__КРКОД", dictFirm.getId());
+						document.prepareValue("P1__КОЛ", quan);
+    						document.prepareValue("P1__ЦЕНА", price);
+						document.prepareValue("P1__СУММА", sum);
+						document.prepareValue("КОДЗАКАЗ", zakazDict.getValue("КОДЗАКАЗ", i));
+						document.prepareValue("КОДДОКЗАКАЗ", zakazDict.getValue("КОДДОКЗАКАЗ", i));
+						document.prepareValue("СТРДОКЗАКАЗ", zakazDict.getValue("СТРДОКЗАКАЗ", i));
+				 		// Сохраним проводку на сервере
+						document.appendDocString();
+						db.exec("UPDATE заявка SET КОД_ДОКУМЕНТЫ129 = " + documents.getId() + " WHERE КОД = " + zakazDict.getValue("КОДЗАКАЗ", i) + ";");
+						progress.setValue(i);
+					}
+				}
+				progress.hide();
+				documents.setValue("Комментарий", dictFirm.getName());
+			}
+		}
+/*
 		var command = "SELECT * FROM vw_заявка WHERE КОД_ФИРМЫ = " + dictFirm.getId();
 		var zakazQuery = db.execQuery(command);
 		if (zakazQuery.first())
@@ -55,6 +91,7 @@ function EventAppendFromQuery(id, record)
 			progress.hide();
 			documents.setValue("Комментарий", dictFirm.getName());
 		}
+*/
 	}
 }
 

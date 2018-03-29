@@ -609,7 +609,7 @@ function BankTerminal()
 				{
 					documents.setValue("БЕЗНАЛИЧНЫЕ", true);
 					documents.setValue("НОМЕРКАРТЫ", terminal.getCardCode());
-					documents.setValue("ДЕРЖАТЕЛЬКАРТЫ", terminal.getResultData("ИмяДержателяКарты"));
+					documents.setValue("ДЕРЖКАРТЫ", terminal.getResultData("ИмяДержателяКарты"));
 					document.saveChanges();
 					needPrintCheck = true;
 					bankTerminalExit = true;

@@ -10,6 +10,7 @@ var menName = "";
 var zakaz;
 
 var firmId = 0;
+var firmName = "";
 var id;
 var url = "";
 var pinCode = "";
@@ -307,6 +308,8 @@ function cmdOk()
 			    if (documents.add())
 			    {
 				var document = documents.getDocument();
+				document.query();
+/*
 				document.prepareValue("P1__ДБКОД", menId);
 				document.prepareValue("P2__КРКОД", menId);
 				document.prepareValue("P1__КРКОД", priceId);
@@ -314,10 +317,17 @@ function cmdOk()
 				document.prepareValue("P1__ЦЕНА", price);
 				document.prepareValue("P1__СУММА", quan * price);
 				document.prepareValue("КОД_ФИРМЫ", firmId);
-				document.appendDocString();
 				document.calcItog();
 				documents.setValue("КОД_ЛЮДИ", menId);
-			      	documents.getDocument().show();
+*/
+				  document.prepareValue("P1__КОЛ", quan);
+				  document.prepareValue("P1__ЦЕНА", price);
+				  document.prepareValue("P1__СУММА", quan * price);
+				  document.prepareValue("КОД_ФИРМЫ", firmId);
+				  document.getDictionary("vw_люди").setId(menId);
+				  document.add();
+				  document.calcItog();
+				  document.show();
 			    }
 			  }	
 			  else
@@ -475,6 +485,7 @@ function PreparePictureUrl(object)
 // Здесь Вы можете вставить свой код
   // Функция должна вернуть url фотографии.
 	firmId = object.getValue("КОД_ФИРМЫ");
+	firmName = object.getValue("ФИРМЫ__ИМЯ");
 	pictureId = object.getValue("КОДВПРАЙСЕ");
 	table.setPhotoIdField("КОДВПРАЙСЕ");
 	evaluateScript("getPictureUrl.js");	// Запустим локальный скрипт
