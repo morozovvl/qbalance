@@ -169,7 +169,6 @@ function EventExport()
 		for (var i = 0; i < table.getRowCount(); i++)
   		{
 			data = QTextCodec.codecForLocale().fromUnicode(getValue("ПРАЙС__КОДВПРАЙСЕ", i) + " " + getValue("ПРАЙС__ИМЯ", i) + "\r\n" + getValue("P1__КОЛ", i) + "\r\n");
-			print(getValue("ПРАЙС__ИМЯ", i));
 			file.write(data);
 		}
 		file.close();

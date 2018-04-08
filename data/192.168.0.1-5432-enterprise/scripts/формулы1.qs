@@ -169,7 +169,7 @@ function EventBeforeShowForm(form)
 	var currentDate = new Date();
 	var checkPrinted = documents.getValue("ЧЕКОТБИТ");
 	var terminalPrinted = documents.getValue("БЕЗНАЛИЧНЫЕ");
-	if (!app.isSA() && ((documents.getValue('ДАТА').toLocaleDateString() != currentDate.toLocaleDateString()) || checkPrinted || terminalPrinted))
+	if (!app.isSA() && ((documents.getValue("ДАТА").toLocaleDateString() != currentDate.toLocaleDateString()) || checkPrinted || terminalPrinted))
 		document.setEnabled(false);
 	else
 		document.setEnabled(true);
@@ -389,7 +389,8 @@ function EventBeforeAddString()
 {
 	var result = true;
 	var currentDate = new Date();
-	if ((documents.getValue('ДАТА').toLocaleDateString() != currentDate.toLocaleDateString()))
+	var docDate = documents.getValue("ДАТА");
+	if ((docDate.toLocaleDateString() != currentDate.toLocaleDateString()))
 	{
 		QMessageBox.warning(form, "Внимание!", "Дата документа устарела. Начните вводить продажу в новом документе.");
 		result = false;

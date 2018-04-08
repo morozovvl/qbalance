@@ -213,7 +213,7 @@ void Updates::prepareFilesList()
                 f = filesList.createElement(fName.replace("/", "_"));
                 f.setAttribute("file", fileName);
                 f.setAttribute("size", fi.size());
-                f.setAttribute("date", fi.created().date().toString("dd.MM.yyyy"));
+                f.setAttribute("date", fi.created().date().toString(app->dateFormat()));
                 f.setAttribute("time", fi.created().time().toString());
                 f.setAttribute("crc32", calculateCRC32(fi.absoluteFilePath()));
                 root.appendChild(f);
@@ -229,7 +229,7 @@ void Updates::prepareFilesList()
                         f = filesList.createElement(fName.replace("/", "_"));
                         f.setAttribute("file", fName1);
                         f.setAttribute("size", fi.size());
-                        f.setAttribute("date", fi.created().date().toString("dd.MM.yyyy"));
+                        f.setAttribute("date", fi.created().date().toString(app->dateFormat()));
                         f.setAttribute("time", fi.created().time().toString());
                         f.setAttribute("crc32", calculateCRC32(fi.absoluteFilePath()));
                         root.appendChild(f);

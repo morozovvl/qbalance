@@ -1264,7 +1264,7 @@ void Document::setDate(QString date)
 QString Document::getDate()
 {
     QString field = db->getObjectName("документы.дата");
-    return parent->getValue(field).toDate().toString("dd.MM.yyyy");
+    return parent->getValue(field).toDate().toString(app->dateFormat());
 }
 
 

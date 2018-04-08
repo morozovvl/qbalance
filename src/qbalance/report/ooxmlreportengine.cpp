@@ -351,7 +351,7 @@ bool OOXMLReportEngine::writeCell(QDomNode n, QString svar, QVariant var)
     }
     else if (var.type() == QVariant::Date)
     {
-        valueString = var.toDate().toString("dd.MM.yyyy");
+        valueString = var.toDate().toString(app->dateFormat());
     }
     else
     {

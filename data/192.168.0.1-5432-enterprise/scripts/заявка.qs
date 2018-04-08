@@ -112,7 +112,7 @@ function PriceSearch()
 
 function ViewSales()
 {
-	evaluateScript("viewsales.js", getValue("КОД_ТОВАР"));
+	evaluateScript("viewsales.js", getValue("КОД_ТОВАР"), getValue("ТОВАР__ИМЯ"));
 }
 
 
@@ -298,7 +298,7 @@ function EventBeforeDeleteString()
 	return true;
 }
 
-
+/*
 function GetFilter(filter)
 { // Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.
 	if (filter.length > 0)
@@ -306,3 +306,4 @@ function GetFilter(filter)
 	filter = filter + "КОД_ДОКУМЕНТЫ129 = 0";
 	return filter;
 }
+*/

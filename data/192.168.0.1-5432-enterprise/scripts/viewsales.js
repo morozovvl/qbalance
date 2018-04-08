@@ -1,11 +1,12 @@
 var id = argument1;
+var name = argument2;
 if (id > 0)
 {
   var date2 = new Date();
   var date1 = new Date();
   date1.setDate(date2.getDate() - app.getConst("ПросматриватьПродажиДней"));
   var command = "SELECT ДАТА, ОПЕРИМЯ, SUM(ДБКОЛ) AS ДБКОЛ, SUM(КРКОЛ) AS КРКОЛ FROM sp_calctovaroborot(" + id + ", '" + date1.toLocaleDateString() + "', '" + date2.toLocaleDateString() + "') GROUP BY ДАТА, ОПЕРИМЯ ORDER BY ДАТА"
-  sales.setFormTitle("Продажи");
+  sales.setFormTitle(name);
   sales.setSqlCommand(command);
   sales.setTagName("salesTableView");
   sales.query();

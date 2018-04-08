@@ -125,7 +125,8 @@ void ConnectionForm::buttonSave()
 {
     if (pcmbConnection->currentText().trimmed().size() > 0)
     {
-        readConnectionsList();
+        pcmbConnection->addItem(pcmbConnection->currentText().trimmed());
+        writeSettings();
     }
     else
         TApplication::exemplar()->showError(trUtf8("Укажите наименование соединения!"));

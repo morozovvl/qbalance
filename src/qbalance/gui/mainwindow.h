@@ -125,6 +125,8 @@ private:
       QAction* exitAct;
       QMdiArea* workSpace;
 
+      TApplication* app;
+
 /*
       QAction *operAct;
       QAction *reportAct;

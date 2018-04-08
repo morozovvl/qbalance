@@ -270,6 +270,12 @@ QString TApplication::logTimeFormat()
 }
 
 
+QString TApplication::dateFormat()
+{
+    return "dd.MM.yyyy";
+}
+
+
 QString TApplication::resourcesFile()
 {
     return applicationDirPath() + "/resources.qrc";
@@ -710,7 +716,7 @@ bool TApplication::initApplication()
                     int updatesCnt = db->updatesCount();
                     if (updatesCnt > 0)
                     {
-                        if (gui->showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
+                        if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
                             db->loadUpdates();
                     }
                 }
@@ -757,8 +763,8 @@ bool TApplication::initApplication()
                                  QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
                 // Попытаемся создать новую БД
                 db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
-
-            break;
+            else
+                break;
         }
         else if (result == -1)      // Пользователь нажал кнопку Отмена
             break;  // Выйдем из бесконечного цикла открытия БД
@@ -1283,6 +1289,11 @@ int TApplication::showMessage(QString message, QString question,
     return gui->showMessage(message, question, buttons, defButton);
 }
 
+
+int TApplication::showYesNo(QString question)
+{
+    return gui->showYesNo(question);
+}
 
 QVariant TApplication::getConst(QString valueName)
 {

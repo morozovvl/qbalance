@@ -70,6 +70,7 @@ function EventInitForm(form)
 		form.buttonZakaz.clicked.connect(Zakaz);			// Соединим сигнал кнопки "Заказать" с обработчиком - слотом Zakaz
 		form.buttonViewZakaz.clicked.connect(ViewZakaz);
 		form.buttonCatalog.clicked.connect(ViewCatalog);
+		zakazForm.findChild("lineEditMenPhone").editingFinished.connect(SearchMenByPhone);
 		pushButtonMenPhoneSearch.clicked.connect(SearchMenByPhone);
 		pushButtonAddMen.clicked.connect(AddMen);
 		pushButtonSendSMS.clicked.connect(sendSMS);
@@ -305,30 +306,22 @@ function cmdOk()
 			  if (menId > 0)
 			  {
 			    var documents = app.getDocuments(3);
-			    if (documents.add())
+			    var document = documents.getDocument();
+			    if (documents.getValue("ПРИНЯТ") || documents.getValue("КОД_ЛЮДИ") != menId)
 			    {
-				var document = documents.getDocument();
-				document.query();
-/*
-				document.prepareValue("P1__ДБКОД", menId);
-				document.prepareValue("P2__КРКОД", menId);
-				document.prepareValue("P1__КРКОД", priceId);
-				document.prepareValue("P1__КОЛ", quan);
-				document.prepareValue("P1__ЦЕНА", price);
-				document.prepareValue("P1__СУММА", quan * price);
-				document.prepareValue("КОД_ФИРМЫ", firmId);
-				document.calcItog();
-				documents.setValue("КОД_ЛЮДИ", menId);
-*/
-				  document.prepareValue("P1__КОЛ", quan);
-				  document.prepareValue("P1__ЦЕНА", price);
-				  document.prepareValue("P1__СУММА", quan * price);
-				  document.prepareValue("КОД_ФИРМЫ", firmId);
-				  document.getDictionary("vw_люди").setId(menId);
-				  document.add();
-				  document.calcItog();
-				  document.show();
+			      document.getDictionary("vw_люди").setId(menId);
+			      documents.add();
+			      document.query();
 			    }
+			    document.prepareValue("P1__КОЛ", quan);
+			    document.prepareValue("P1__ЦЕНА", price);
+			    document.prepareValue("P1__СУММА", quan * price);
+			    document.prepareValue("КОД_ФИРМЫ", firmId);
+			    document.add();
+			    document.calcItog();
+			    documents.setValue("КОД_ЛЮДИ", menId);
+			    document.saveChanges();
+			    document.show();
 			  }	
 			  else
 			  {
@@ -389,10 +382,13 @@ function cmdCancel()
 
 function SearchMenByPhone()
 { // Поиск человека в базе данных по телефону
+	var lineEditMenName =  zakazForm.findChild("lineEditMenName");
+	menId = 0;
+	menName = "";
+	lineEditMenName.setText(menName);
 	var phone = zakazForm.findChild("lineEditMenPhone").text.replace(/-/g, "");	// Получим номер телефона
 	if (phone.length > 0)
 	{
-		var lineEditMenName =  zakazForm.findChild("lineEditMenName");
 		var command = "SELECT * FROM " + tablePeople + " WHERE trim(" + fieldPeoplePhone + ") = '" + phone + "';";
 		var menQuery = db.execQuery(command);
 		if (menQuery.first())
@@ -410,8 +406,6 @@ function SearchMenByPhone()
 		}
 		else
 		{
-			menId = 0;
-			menName = "";
 			var errorMsg = new QMessageBox(QMessageBox.Question, "Внимание!", "Человек с таким номером телефона не найден.");
 			errorMsg.exec();
 		}

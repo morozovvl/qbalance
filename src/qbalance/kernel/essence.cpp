@@ -494,6 +494,11 @@ QVariant Essence::getValue(QString n, int row)
             {
                 result = result.toInt();
             }
+            else if (type == QVariant::Date && result.type() == QVariant::String)
+            {
+                // Пока не понятно почему, но иногда результат получается строкового типа, хотя должен быть типа даты.
+                result = QVariant(QDate().fromString(result.toString(), app->dateFormat()));
+            }
         }
         else
         {
@@ -503,7 +508,6 @@ QVariant Essence::getValue(QString n, int row)
             }
 
             app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
-            qDebug() << sqlCommand;
         }
     }
     return result;
@@ -828,7 +832,7 @@ bool Essence::remove(bool noAsk)
 {
     if (!noAsk)
     {
-        if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить запись? Вы уверены?")) == QMessageBox::Yes)
+        if (app->showYesNo(QObject::trUtf8("Удалить запись? Вы уверены?")) == QMessageBox::Yes)
         {
             return true;
         }
@@ -1212,7 +1216,7 @@ void Essence::preparePrintValues()
     if (reportScriptEngine != 0)
     {
         // Зарядим текущую дату
-        reportScriptEngine->getReportContext()->setValue("сегодня", QDate().currentDate().toString("dd.MM.yyyy"));
+        reportScriptEngine->getReportContext()->setValue("сегодня", QDate().currentDate().toString(app->dateFormat()));
         // Зарядим имя пользователя
         reportScriptEngine->getReportContext()->setValue("пользователь", app->username);
         // Зарядим константы в контекст печати

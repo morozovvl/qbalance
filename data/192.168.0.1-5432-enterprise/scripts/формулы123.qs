@@ -30,7 +30,6 @@ var price;
 var priceInPrice;
 var newPosition = false;
 var nomId;
-var nomQuan = 0;
 var nomPrice = 0;
 var automatedInput = false;
 var zakazDocs = [];
@@ -97,7 +96,6 @@ function EventBeforeAddString()
 	priceId = 0;
 	priceName = "";
 	nomId = 0;
-	nomQuan = 0;
 	priceDict.setMustShow(false);
 	priceDict.exec();
 	if (priceDict.isFormSelected() && priceDict.getRowCount() > 0)
@@ -151,7 +149,7 @@ function EventImport(form)
 }
 
 
-function prepReports(price)
+function prepReports(quan, price)
 {
   if (agentName.length == 0)
 	agentName = agentDict.getName();
@@ -195,17 +193,17 @@ function prepReports(price)
     zap = parseInt(nomDict.getValue("ЗАПАС"));
     if (zap > 0)
     {
-      if ((ost + nomQuan) > zap)
+      if ((ost + quan) > zap)
      {
-	app.printToArray("запас", "Превышена норма запаса: <" + nomName + ">. Запас - " + zap + ", остаток - " + ost + ", поступило - " + nomQuan);
+	app.printToArray("запас", "Превышена норма запаса: <" + nomName + ">. Запас - " + zap + ", остаток - " + ost + ", поступило - " + quan);
       }
     }
     else
     {
       if (newPosition)
-	app.printToArray("запас1", "Новая позиция: <" + nomName + ">. Поступило - " + nomQuan);
+	app.printToArray("запас1", "Новая позиция: <" + nomName + ">. Поступило - " + quan);
       else
-	app.printToArray("запас2", "НЕ ДОЛЖНА БЫЛА БЫТЬ ЗАКАЗАНА: <" + nomName + ">. Поступило - " + nomQuan);
+	app.printToArray("запас2", "НЕ ДОЛЖНА БЫЛА БЫТЬ ЗАКАЗАНА: <" + nomName + ">. Поступило - " + quan);
     }
   }
 // Проверим, нет ли этой позиции в неразобранном товаре
@@ -392,6 +390,11 @@ function OdsFile(fileName)
 					  priceDict.query("прайс.КОД_ФИРМЫ = " + firmId + " AND прайс.КОДВПРАЙСЕ = '" + tovarId + "'");
 					else
 					  priceDict.query("прайс.КОД_ФИРМЫ = " + firmId + " AND прайс.ИМЯ = '" + tovarName + "'");
+					// Если такой позиции нет в прайсе, то добавим её
+					if (priceDict.rowCount() == 0)
+  					{
+						priceDict.setId(db.getValue("INSERT INTO прайс (КОДВПРАЙСЕ, ИМЯ, ШИФР_ПО_КАТАЛОГУ, ЕДИЗМ, МИНЦЕНА, КОД_ФИРМЫ, ДАТА, НАЛИЧИЕ) VALUES ('" + tovarId + "','" + tovarName + "','" + tovarArticul + "','" + tovarUnit + "'," + tovarPrice + "," + firmId + ", current_date, '+') RETURNING КОД;"));
+					}
 					priceId = priceDict.getId();
 					priceName = priceDict.getName();
 					var result = WriteTovar(tovarQuan, tovarPrice);
@@ -400,7 +403,7 @@ function OdsFile(fileName)
 					else
 					{
 					  WriteZakaz(tovarName, tovarQuan);
-					  prepReports(tovarPrice);
+					  prepReports(tovarQuan, tovarPrice);
 					}
 				}
 				i++;
@@ -617,7 +620,7 @@ function WriteTovar(quan, price)
 }
 
 
-function WriteZakaz(name, nomQuan)
+function WriteZakaz(name, quan)
 {
   var zakazRec = db.getRecord("SELECT * FROM vw_заказы WHERE КОД_ПРАЙС = " + priceId, 0);
   if (!zakazRec.isEmpty())
@@ -653,9 +656,9 @@ function WriteZakaz(name, nomQuan)
 	var constantly = zakazRec.value("ПОСТОЯННО");
 	var zakQuan = zakazRec.value("КОЛ");
 	if (constantly)
-	  db.exec("UPDATE товар SET ЗАПАС=" + nomQuan + " WHERE КОД=" + nomId);
-	if (zakQuan > nomQuan)
-	  db.exec("UPDATE заявка SET КОЛ = " + (zakQuan - nomQuan) + " WHERE КОД = " + zakazId);
+	  db.exec("UPDATE товар SET ЗАПАС=" + quan + " WHERE КОД=" + nomId);
+	if (zakQuan > quan)
+	  db.exec("UPDATE заявка SET КОЛ = " + (zakQuan - quan) + " WHERE КОД = " + zakazId);
 	else
 	db.exec("DELETE FROM заявка WHERE КОД = " + zakazId + ";");
       }
@@ -665,7 +668,7 @@ function WriteZakaz(name, nomQuan)
 	zakazDocs.push(docId);
   }
   else
-    app.printToArray("нетзаказа", "Не найден заказ для позиции: <" + name + "> в количестве " + nomQuan);     
+    app.printToArray("нетзаказа", "Не найден заказ для позиции: <" + name + "> в количестве " + quan);     
 }
 
 
@@ -701,7 +704,7 @@ function EventCalcTable()
 	  priceId = getValue("КОД_ПРАЙС");
 	  WriteZakaz(getValue("ТОВАР__ИМЯ"), getValue("P1__КОЛ"));
 	  nomId = getValue("ТОВАР__КОД");
-	  prepReports(getValue("P1__ЦЕНА"));
+	  prepReports(getValue("P1__КОЛ"), getValue("P1__ЦЕНА"));
 	}
 }
 
@@ -830,7 +833,7 @@ function EventAppendFromQuery(id, record)
 				else
 				{
 				  WriteZakaz(priceName, quan);
-				  prepReports(doc.getValue("P1__ЦЕНА"));
+				  prepReports(quan, doc.getValue("P1__ЦЕНА"));
 				}
 				app.showMessageOnStatusBar("Загружено " + Math.round(rowCount * 100 / doc.getRowCount())+ "%");	
 			}

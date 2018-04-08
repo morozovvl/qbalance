@@ -123,10 +123,10 @@ int GUIFactory::openDB()
             {
                 PassWordForm* frm = new PassWordForm();
                 users = db->getUserList();
-                frm->open();
                 foreach (int key, users.keys())
-                    frm->addLogin(users.value(key).loginName + " " + users.value(key).userName);
+                    frm->addLogin(QString(users.value(key).loginName + " " + users.value(key).userName).trimmed());
                 db->close();
+                frm->open();
                 frm->exec();
                 if (frm->isFormSelected())
                 {   // Пользователь нажал кнопку "Ok"

@@ -1405,7 +1405,7 @@ int DBFactory::addDoc(int operNumber, QDate date)
 {
     int result = 0;
     clearError();
-    QString command = QString("SELECT sp_InsertDoc(%1,'%2');").arg(operNumber).arg(date.toString("dd.MM.yyyy"));
+    QString command = QString("SELECT sp_InsertDoc(%1,'%2');").arg(operNumber).arg(date.toString(app->dateFormat()));
     QSqlQuery query = execQuery(command);
     if (query.first())
     {

@@ -172,6 +172,28 @@ QScriptValue getId(QScriptContext* context, QScriptEngine* engine)
 }
 
 
+QScriptValue getName(QScriptContext* context, QScriptEngine* engine)
+{
+    if (engine->evaluate("table").isValid())
+    {
+        QScriptValue value;
+        if (context->argumentCount() > 0)
+        {
+            int row = (context->argument(0).isNumber() ? context->argument(0).toInteger() : -1);
+            value = engine->evaluate(QString("table.getName(%1)").arg(row));
+        }
+        else
+            value = engine->evaluate(QString("table.getName()"));
+
+        if (value.isValid())
+        {
+            return value;
+        }
+    }
+    return QScriptValue();
+}
+
+
 QScriptValue setValue(QScriptContext* context, QScriptEngine* engine)
 {
     QScriptValue fieldName = context->argument(0);
@@ -837,6 +859,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("getRowCount", newFunction(getRowCount));
     globalObject().setProperty("getDictionary", newFunction(getDictionary));
     globalObject().setProperty("getId", newFunction(getId));
+    globalObject().setProperty("getName", newFunction(getName));
     globalObject().setProperty("getValue", newFunction(getValue));
     globalObject().setProperty("getSumValue", newFunction(getSumValue));
     globalObject().setProperty("setValue", newFunction(setValue));

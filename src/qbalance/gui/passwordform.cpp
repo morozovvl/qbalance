@@ -31,6 +31,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 PassWordForm::PassWordForm(QObject* parent/* = 0*/) : Form(parent)
 {
     appendToMdi = false;        // Не добавлять окно к многооконному интерфейсу, т.к. его к этому моменту еще не существует
+
+    LoginSelector = new QComboBox();
+//    LoginSelector->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
+    PasswordEditor = new QLineEdit();
+    PasswordEditor->setEchoMode(QLineEdit::Password);
 }
 
 
@@ -55,16 +60,10 @@ QString PassWordForm::getPassword()
 bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 // Создает форму ввода пароля на основе формы с кнопками "Ок" и "Cancel"
 {
-    LoginSelector = new QComboBox();
-//    LoginSelector->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
-    PasswordEditor = new QLineEdit();
-    PasswordEditor->setEchoMode(QLineEdit::Password);
-
     QFormLayout* layout = new QFormLayout();
 
     layout->addRow(QObject::trUtf8("Пользователь:"), LoginSelector);
     layout->addRow(QObject::trUtf8("Пароль:"), PasswordEditor);
-
     if (Form::open(pwgt))
     {
         connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
@@ -84,7 +83,6 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
 
 int PassWordForm::exec()
 {
-    readSettings();
     PasswordEditor->setFocus();
     return Form::exec();
 }
@@ -93,14 +91,14 @@ int PassWordForm::exec()
 void PassWordForm::addLogin(QString login)
 {
     LoginSelector->addItem(login);
-    LoginSelector->setCurrentIndex(LoginSelector->findText(login));
+    LoginSelector->itemText(LoginSelector->currentIndex());
 }
 
 
 void PassWordForm::addLogin(QStringList list)
 {
     LoginSelector->addItems(list);
-    LoginSelector->setCurrentIndex(0);
+    LoginSelector->itemText(LoginSelector->currentIndex());
 }
 
 
@@ -120,7 +118,9 @@ void PassWordForm::readSettings()
     {
         QString user = settings.value("defaultUser").toString();
         if (user.size() > 0)
+        {
             LoginSelector->setCurrentIndex(LoginSelector->findText(user));
+        }
     }
 }
 
@@ -128,5 +128,7 @@ void PassWordForm::writeSettings()
 {
     QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
-        settings.setValue("defaultUser", login);
+    {
+        settings.setValue("defaultUser", LoginSelector->currentText());
+    }
 }

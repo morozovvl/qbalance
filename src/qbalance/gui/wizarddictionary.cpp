@@ -493,7 +493,7 @@ void WizardDictionary::deleteColumn()
     QString fieldName = fieldsTable.item(fieldsTable.currentRow(), columnField)->text().trimmed().toUpper();
     if (fieldName != "КОД")
     {
-        if (app->getGUIFactory()->showYesNo(QObject::trUtf8("Удалить столбец? Вы уверены?")) == QMessageBox::Yes)
+        if (app->showYesNo(QObject::trUtf8("Удалить столбец? Вы уверены?")) == QMessageBox::Yes)
         {
             fieldsTable.removeRow(fieldsTable.currentRow());
             for (int i = 0; i < fields.count(); i++)

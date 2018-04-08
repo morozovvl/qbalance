@@ -164,6 +164,7 @@ public:
     QString debugFileName(QString debugMode);
     static QString errorFileName();
     static QString logTimeFormat();
+    static QString dateFormat();
     static QString resourcesFile();
     static QString getScriptFileName(int oper);
     static void setDebugMode(int = 0, bool = true);
@@ -202,6 +203,7 @@ public:
     Q_INVOKABLE int virtual showMessage(QString message, QString question = "",
                     QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::StandardButton defButton = QMessageBox::No);      // Вывести сообщение пользователю и возможно задать вопрос
+    Q_INVOKABLE int showYesNo(QString question);
 
     Q_INVOKABLE QProcess* runProcess(QString, QString = "", bool = true);
     Q_INVOKABLE bool waitProcessEnd(QProcess *);

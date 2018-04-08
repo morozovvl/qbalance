@@ -205,7 +205,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
             hbxDateLayout->addWidget(new QLabel(LABEL_DATE, formWidget));
             dateEdit = new QDateEdit();
             dateEdit->setObjectName("dateEdit");
-            dateEdit->setDisplayFormat("dd.MM.yyyy");
+            dateEdit->setDisplayFormat(app->dateFormat());
             hbxDateLayout->addWidget(dateEdit);
             hbxDateLayout->addWidget(new QLabel(LABEL_NUMBER, formWidget));
             numberEdit = new QLineEdit();
@@ -354,7 +354,7 @@ void FormDocument::setEnabled(bool enabled)
 
 void FormDocument::saveDate(QDate date)
 {
-    getParent()->setDate(date.toString("dd.MM.yyyy"));
+    getParent()->setDate(date.toString(app->dateFormat()));
 }
 
 

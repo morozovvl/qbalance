@@ -32,7 +32,7 @@ function GetFilter(filter)
 
 function ViewSales()
 {
-  evaluateScript("viewsales.js", getValue("КОД_ТОВАР"));
+  evaluateScript("viewsales.js", getValue("ТОВАР__КОД"), getValue("ТОВАР__ИМЯ"));
 }
 
 

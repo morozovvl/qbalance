@@ -115,7 +115,7 @@ function RecalcAll()
 
 function ViewSales()
 {
-  evaluateScript("viewsales.js", getId());
+  evaluateScript("viewsales.js", getId(), getName());
 }
 
 

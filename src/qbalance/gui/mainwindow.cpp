@@ -35,6 +35,7 @@ MainWindow::MainWindow(GUIFactory* par)
     workSpace = new QMdiArea(this);             // POSSIBLY MEMORY LEAK
     workSpace->setActivationOrder(QMdiArea::ActivationHistoryOrder);
     workSpace->setAttribute(Qt::WA_DeleteOnClose);
+    app = TApplication::exemplar();
 }
 
 
@@ -69,19 +70,18 @@ void MainWindow::closeEvent()
 
 void MainWindow::showDictionaries()
 {
-    TApplication::exemplar()->showDictionaries();
+    app->showDictionaries();
 }
 
 
 void MainWindow::showDocuments()
 {
-    TApplication::exemplar()->showDocuments();
+    app->showDocuments();
 }
 
 
 void MainWindow::showProcesses()
 {
-    TApplication* app = TApplication::exemplar();
     QString fileName = app->getProcessFile("обработка", app->getMainWindow(), reportMenu->contentsRect());
     if (fileName.size() > 0)
     {
@@ -92,13 +92,12 @@ void MainWindow::showProcesses()
 
 void MainWindow::showReports()
 {
-    TApplication::exemplar()->showReports();
+    app->showReports();
 }
 
 
 void MainWindow::showQueries()
 {
-    TApplication* app = TApplication::exemplar();
     QString fileName = app->getReportFile("запросы", false, app->getMainWindow(), reportMenu->contentsRect());
     app->printReport(fileName);
 }
@@ -106,7 +105,7 @@ void MainWindow::showQueries()
 
 void MainWindow::showConfigs()
 {
-    TApplication::exemplar()->showConfigs();
+    app->showConfigs();
 }
 
 
@@ -253,7 +252,7 @@ void MainWindow::createStatusBar()
 
 void MainWindow::setPeriod()
 {
-    TApplication::exemplar()->setPeriod();
+    app->setPeriod();
     showPeriod();
 }
 
@@ -261,30 +260,30 @@ void MainWindow::setPeriod()
 void MainWindow::showPeriod()
 {
     QString period;
-    period = TApplication::exemplar()->getBeginDate().toString("dd.MM.yyyy") + " - " + TApplication::exemplar()->getEndDate().toString("dd.MM.yyyy");
+    period = app->getBeginDate().toString(app->dateFormat()) + " - " + app->getEndDate().toString(app->dateFormat());
     periodAct->setIconText(period);
 }
 
 
 void MainWindow::showMessagesWindow()
 {
-    TApplication::exemplar()->getMessageWindow()->show();
+    app->getMessageWindow()->show();
 }
 
 
 void MainWindow::saveCustomization()
 {
-     TApplication::exemplar()->saveCustomization();
+     app->saveCustomization();
 }
 
 
 void MainWindow::loadFile()
 {
-    TApplication::exemplar()->loadFile();
+    app->loadFile();
 /*
  * Временная отладочная процедура для отладки сетевого обмена
  *
-    TcpClient* tcpClient = TApplication::exemplar()->getTcpClient();
+    TcpClient* tcpClient = app->getTcpClient();
     if (tcpClient->isValid())
     {
         int i = 0;
@@ -296,10 +295,10 @@ void MainWindow::loadFile()
             }
             else
             {
-                TApplication::exemplar()->print("Сервер не отвечает");
+                app->print("Сервер не отвечает");
                 break;
             }
-            TApplication::exemplar()->sleep(100);
+            app->sleep(100);
             qDebug() << i;
             i++;
         }
@@ -310,77 +309,77 @@ void MainWindow::loadFile()
 
 void MainWindow::beep()
 {
-    TApplication::exemplar()->runScript("beep.js");
+    app->runScript("beep.js");
 }
 
 
 void MainWindow::printReportWithoutCleaning()
 {
-    TApplication::exemplar()->runScript("printReportWithoutCleaning.js");
+    app->runScript("printReportWithoutCleaning.js");
 }
 
 
 void MainWindow::printReportWithCleaning()
 {
-    TApplication::exemplar()->runScript("printReportWithCleaning.js");
+    app->runScript("printReportWithCleaning.js");
 }
 
 
 void MainWindow::continuePrint()
 {
-    TApplication::exemplar()->runScript("continuePrint.js");
+    app->runScript("continuePrint.js");
 }
 
 
 void MainWindow::cancelCheck()
 {
-    TApplication::exemplar()->runScript("cancelCheck.js");
+    app->runScript("cancelCheck.js");
 }
 
 
 void MainWindow::printEKLZReport()
 {
-    TApplication::exemplar()->runScript("printEKLZReport.js");
+    app->runScript("printEKLZReport.js");
 }
 
 
 void MainWindow::printProcessedEKLZReport()
 {
-    TApplication::exemplar()->runScript("printEKLZReportProcessed.js");
+    app->runScript("printEKLZReportProcessed.js");
 }
 
 
 void MainWindow::EKLZinterrupt()
 {
-    TApplication::exemplar()->runScript("EKLZinterrupt.js");
+    app->runScript("EKLZinterrupt.js");
 }
 
 
 void MainWindow::printReturnSaleCheck()
 {
-    TApplication::exemplar()->runScript("printReturnSaleCheck.js");
+    app->runScript("printReturnSaleCheck.js");
 }
 
 
 void MainWindow::terminalVerificationResults()
 {
-    TApplication::exemplar()->runScript("verificateResults.js");
+    app->runScript("verificateResults.js");
 }
 
 
 void MainWindow::terminalControlRibbon()
 {
-    TApplication::exemplar()->runScript("controlRibbon.js");
+    app->runScript("controlRibbon.js");
 }
 
 
 void MainWindow::readSettings()
 {
-      QSettings settings(TApplication::exemplar()->getConfigFileName(), QSettings::IniFormat);
+      QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
       if (settings.status() == QSettings::NoError) {
           settings.beginGroup("mainwindow");
-          move(settings.value("x", 100).toInt(), settings.value("y", 100).toInt());
-          resize(settings.value("width", 400).toInt(), settings.value("height", 200).toInt());
+          move(settings.value("x", app->desktop()->screenGeometry().x()).toInt(), settings.value("y", app->desktop()->screenGeometry().y()).toInt());
+          resize(settings.value("width", app->desktop()->screenGeometry().width()).toInt(), settings.value("height", app->desktop()->screenGeometry().height()).toInt());
           settings.endGroup();
       }
 }
@@ -388,7 +387,7 @@ void MainWindow::readSettings()
 
 void MainWindow::writeSettings()
 {
-      QSettings settings(TApplication::exemplar()->getConfigFileName(), QSettings::IniFormat);
+      QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
       settings.beginGroup("mainwindow");
       settings.setValue("x", pos().x());
       settings.setValue("y", pos().y());
