@@ -502,11 +502,6 @@ QVariant Essence::getValue(QString n, int row)
         }
         else
         {
-            for (int i = 0; i < record.count(); i++)
-            {
-                qDebug() << tableName << record.field(i).name();
-            }
-
             app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
         }
     }
@@ -561,7 +556,6 @@ void Essence::setValue(QString n, QVariant value, int row)
     }
     else
     {
-        qDebug() << sqlCommand;
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
     }
 }
@@ -703,7 +697,7 @@ QString Essence::getPhotoFile(QString copyTo)
             if (localFile.size() > 0 && photoEnabled)
             {
                 file = getLocalPhotoFile();
-                if (isDictionary)
+                if (isDictionary && file.size() > 0)
                 {
                     if (!QFile(file).exists() && phEnabled)
                     {   // Локальный файл с фотографией не найден, попробуем получить фотографию с нашего сервера. Будем делать это только для справочника, а не для документа

@@ -41,6 +41,7 @@ GUIFactory::GUIFactory()
 {
     db = 0;
     mainWindow = 0;
+    app = TApplication::exemplar();
 }
 
 
@@ -80,7 +81,8 @@ int GUIFactory::openDB()
     QHash<int, UserInfo> users;
     int key = 0;
 
-    db = TApplication::exemplar()->getDBFactory();
+
+    db = app->getDBFactory();
     if (TApplication::host.size() > 0 &&
         TApplication::port != 0 &&
         TApplication::database.size() > 0 &&
@@ -101,7 +103,6 @@ int GUIFactory::openDB()
                 {
                     if (db->open(users.value(key).loginName, TApplication::password))
                     {
-                        mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + users.value(key).loginName + " " + users.value(key).userName);
                         returnCode = 0;
                         break;
                     }
@@ -134,20 +135,18 @@ int GUIFactory::openDB()
                     QString userName;
                     foreach (key, users.keys())
                     {
-                        if (users.value(key).loginName + " " + users.value(key).userName == frm->getLogin())
+                        if (QString("%1 %2").arg(users.value(key).loginName).arg(users.value(key).userName).trimmed() == frm->getLogin())
                         {
                             login = users.value(key).loginName.trimmed();
                             userName = users.value(key).userName.trimmed();
-                            TApplication::exemplar()->username = userName;
+                            app->username = userName;
                             break;
                         }
                     }
                     QString password = frm->getPassword();
                     if (db->open(login, password))
                     {
-                        TApplication::exemplar()->password = password;
-//                        if (connForm->connectionName().size() > 0)
-                            mainWindow->setWindowTitle(TApplication::exemplar()->applicationName() + " - " + connForm->connectionName() + "(" + TApplication::exemplar()->getConfigPrefix() + ") - " + login + " " + userName);
+                        app->password = password;
                     }
                     else
                     {
@@ -183,13 +182,13 @@ void GUIFactory::closeDB() {
 void GUIFactory::setPeriod() {
     CalendarForm* calendar = new CalendarForm();
     calendar->open(mainWindow->centralWidget());
-    calendar->setBeginDate(TApplication::exemplar()->getBeginDate());
-    calendar->setEndDate(TApplication::exemplar()->getEndDate());
+    calendar->setBeginDate(app->getBeginDate());
+    calendar->setEndDate(app->getEndDate());
     calendar->exec();
     if (calendar->isFormSelected()) {
-        TApplication::exemplar()->setBeginDate(calendar->getBeginDate());
-        TApplication::exemplar()->setEndDate(calendar->getEndDate());
-        TApplication::exemplar()->getDBFactory()->setPeriod(calendar->getBeginDate(), calendar->getEndDate());
+        app->setBeginDate(calendar->getBeginDate());
+        app->setEndDate(calendar->getEndDate());
+        app->getDBFactory()->setPeriod(calendar->getBeginDate(), calendar->getEndDate());
     }
     delete calendar;
 }
@@ -209,9 +208,9 @@ void GUIFactory::showMenus()
 int GUIFactory::showError(QString errorText)
 {
     Qt::WindowModality WidgetModality;
-    QWidget* widget = TApplication::exemplar()->activeWindow();
+    QWidget* widget = app->activeWindow();
     if (widget == 0)
-        widget = TApplication::exemplar()->getMainWindow()->getWorkSpace()->activeSubWindow();
+        widget = app->getMainWindow()->getWorkSpace()->activeSubWindow();
 
     if (widget != 0)
     {
@@ -220,7 +219,7 @@ int GUIFactory::showError(QString errorText)
     }
 
     QErrorMessage msgBox(mainWindow);
-    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
+    msgBox.setParent(app->getMainWindow(), Qt::Dialog);
     msgBox.showMessage(errorText);
     msgBox.exec();
 
@@ -238,7 +237,7 @@ int GUIFactory::showMessage(QString message, QString question, QMessageBox::Stan
         window = mainWindow->getWorkSpace()->activeSubWindow();
     QMessageBox msgBox(window);
     msgBox.setWindowModality(Qt::ApplicationModal);
-    msgBox.setParent(TApplication::exemplar()->getMainWindow(), Qt::Dialog);
+    msgBox.setParent(app->getMainWindow(), Qt::Dialog);
     msgBox.setWindowTitle(QObject::trUtf8("Внимание!"));
     msgBox.setText(message);
     if (question.size() > 0) {          // Если пользователю задан вопрос, то предусмотреть варианты ответа

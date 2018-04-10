@@ -172,6 +172,7 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     if (defaultForm)
     {   // Если форма создана автоматически
         grdTable = new TableView();
+        grdTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         tableLayout = new QVBoxLayout();
         tableLayout->setObjectName("tableLayout");
         tableLayout->addWidget(grdTable);

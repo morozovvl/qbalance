@@ -105,6 +105,7 @@ function EventBarCodeReaded(barCode)
 	{
 		form.findChild("lineEditBarCode").setText(barCode);
 		cmdRequery();
+		cmdOk();
 	}
 }
 

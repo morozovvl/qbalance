@@ -38,6 +38,7 @@ MessageWindow::MessageWindow() :
 
 MessageWindow::~MessageWindow()
 {
+    writeSettings();
     if (subWindow != 0)
     {
         app->getMainWindow()->removeMdiWindow(subWindow);
@@ -66,16 +67,14 @@ void MessageWindow::show()
     if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
         if (subWindow == 0)
-        {
             subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
-            readSettings();
-        }
 
         if (subWindow != 0)
         {
             textEditor->show();
             subWindow->show();
         }
+        readSettings();
     }
     else
         textEditor->show();
@@ -86,7 +85,6 @@ void MessageWindow::hide()
 {
     if (subWindow != 0)
     {
-        writeSettings();
         subWindow->hide();
     }
     textEditor->hide();
@@ -97,6 +95,17 @@ void MessageWindow::readSettings()
 {
     QString configName = "messagesWindow";
     QHash<QString, int> settingValues;
+
+    // Загрузим значения по умолчанию
+    int defY = app->getMainWindow()->centralWidget()->height() * 0.6;
+    int defHeight = app->getMainWindow()->centralWidget()->height() - defY;
+
+    settingValues.insert("x", 0);
+    settingValues.insert("y", defY);
+    settingValues.insert("width", app->getMainWindow()->centralWidget()->width());
+    settingValues.insert("height", defHeight);
+
+
     QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     if (settings.status() == QSettings::NoError)
     {
@@ -108,9 +117,13 @@ void MessageWindow::readSettings()
             settings.value("width", 0).toInt() > 0 &&
             settings.value("height", 0).toInt() > 0)
         {
+            settingValues.remove("x");
             settingValues.insert("x", settings.value("x").toInt());
+            settingValues.remove("y");
             settingValues.insert("y", settings.value("y").toInt());
+            settingValues.remove("width");
             settingValues.insert("width", settings.value("width").toInt());
+            settingValues.remove("height");
             settingValues.insert("height", settings.value("height").toInt());
         }
         else
@@ -132,10 +145,10 @@ void MessageWindow::readSettings()
         }
         settings.endGroup();
 
-        int x = settingValues.value("x", 0);
-        int y = settingValues.value("y", 0);
-        int w = settingValues.value("width", 400);
-        int h = settingValues.value("height", 200);
+        int x = settingValues.value("x");
+        int y = settingValues.value("y");
+        int w = settingValues.value("width");
+        int h = settingValues.value("height");
 
         if (subWindow != 0)
             subWindow->setGeometry(x, y, w, h);
@@ -171,10 +184,20 @@ void MessageWindow::writeSettings()
     if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
     {
         app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
-        app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(subWindow->geometry().x()));
-        app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(subWindow->geometry().y()));
-        app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(subWindow->geometry().width()));
-        app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(subWindow->geometry().height()));
+        if (subWindow != 0)
+        {
+            app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(subWindow->geometry().x()));
+            app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(subWindow->geometry().y()));
+            app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(subWindow->geometry().width()));
+            app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(subWindow->geometry().height()));
+        }
+        else
+        {
+            app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(textEditor->geometry().x()));
+            app->getDBFactory()->setConfig(configName, "y", QString("%1").arg(textEditor->geometry().y()));
+            app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(textEditor->geometry().width()));
+            app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(textEditor->geometry().height()));
+        }
         app->showMessageOnStatusBar("");
     }
 }

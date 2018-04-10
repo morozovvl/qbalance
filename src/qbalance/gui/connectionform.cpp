@@ -138,6 +138,7 @@ void ConnectionForm::buttonDelete()
     deleteSettings(pcmbConnection->currentText());
 }
 
+
 void ConnectionForm::cmdOk()
 {
     db->setHostName(ptxtHost->text());
@@ -147,16 +148,19 @@ void ConnectionForm::cmdOk()
     Form::cmdOk();
 }
 
+
 void ConnectionForm::cmdCancel()
 {
     db->close();
     Form::cmdCancel();
 }
 
+
 void ConnectionForm::connectionChanged(int index)
 {
     readSettings(pcmbConnection->itemText(index));
 }
+
 
 void ConnectionForm::readConnectionsList()
 {
@@ -171,6 +175,7 @@ void ConnectionForm::readConnectionsList()
     }
 }
 
+
 void ConnectionForm::readDefaultSettings()
 {
     QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
@@ -181,6 +186,7 @@ void ConnectionForm::readDefaultSettings()
             pcmbConnection->setCurrentIndex(pcmbConnection->findText(connection));
     }
 }
+
 
 void ConnectionForm::writeDefaultSettings()
 {
@@ -206,6 +212,7 @@ void ConnectionForm::readSettings(QString connectionName)
     }
 }
 
+
 void ConnectionForm::writeSettings()
 {
     Form::writeSettings();
@@ -222,6 +229,7 @@ void ConnectionForm::writeSettings()
         settings.endGroup();
     }
 }
+
 
 void ConnectionForm::deleteSettings(QString connectionName)
 {

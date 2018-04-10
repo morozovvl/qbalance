@@ -79,9 +79,9 @@ function EventBeforeHideForm()
        {
 	  var number = db.getValue("SELECT НОМЕР FROM документы WHERE КОД = " + zakazDocs[i]);
 	  db.exec("UPDATE докатрибуты129 SET ЗАКРЫТ = TRUE WHERE КОД = " + zakazDocs[i]);
-	db.exec("UPDATE заявка SET КОД_ДОКУМЕНТЫ129 = 0 WHERE КОД_ДОКУМЕНТЫ129 = " + zakazDocs[i]);	
+	  db.exec("UPDATE заявка SET КОД_ДОКУМЕНТЫ129 = 0 WHERE КОД_ДОКУМЕНТЫ129 = " + zakazDocs[i]);	
 	  app.printToArray("закрытыезаказы", "Закрыт заказ № " + number);
-	  sendSMS(zakazDocs[i]);
+	  prepareSMS(zakazDocs[i]);
        }
        zakazDocs = [];
      }
@@ -170,7 +170,8 @@ function prepReports(quan, price)
   
   var nomName = nomDict.getName();
   
-  var priceInPrice = priceDict.getValue("МИНЦЕНА") * priceDict.getValue("КОЛ_ПРАЙС") / priceDict.getValue("КОЛ_ТОВАР");
+  var priceInPrice = priceDict.getValue("МИНЦЕНА");
+  price = price * priceDict.getValue("КОЛ_ТОВАР") / priceDict.getValue("КОЛ_ПРАЙС");
 
   if (priceInPrice != price)
   {
@@ -755,31 +756,56 @@ function EventPreparePrintValues()
 }
 
 
-function sendSMS(docId)
+function prepareSMS(docId)
 {
-  var command = "SELECT КОДДОКЗАКАЗ, SUM(CASE WHEN ВЫПОЛНЕН THEN 1 ELSE 0 END) AS ВЫПОЛНЕНО FROM атрибуты129 WHERE ДОККОД = " + docId + " AND КОДДОКЗАКАЗ > 0 GROUP BY КОДДОКЗАКАЗ;";
-  var zakQuery = db.execQuery(command);
-  if (zakQuery.first())
-  {
-	do
+	var command = "SELECT КОДДОКЗАКАЗ, SUM(CASE WHEN ВЫПОЛНЕН THEN 1 ELSE 0 END) AS ВЫПОЛНЕНО FROM атрибуты129 WHERE ДОККОД = " + docId + " AND КОДДОКЗАКАЗ > 0 GROUP BY КОДДОКЗАКАЗ;";
+	var zakQuery = db.execQuery(command);
+	if (zakQuery.first())
 	{
-		var zakRec = zakQuery.record();
-		var message = "";
-		var zakDocId = zakRec.value("КОДДОКЗАКАЗ");
-		var zakPos = zakRec.value("ВЫПОЛНЕНО");
-		command = "SELECT ТЕЛЕФОН FROM люди WHERE КОД = (SELECT ДБКОД FROM проводки WHERE ДОККОД = " + zakDocId + " AND ОПЕР = 3 AND НОМЕРОПЕР =  1 LIMIT 1);";
-		var phone = db.getValue(command);
-		if (zakPos > 0)
-			message = "По вашему заказу ожидается поступление позиций: " + zakPos + ".";
-		else
-			message = "К сожалению, товар из вашего заказа у поставщика отсутствует."
-		app.print("СМС на телефон " + phone + ": " + message);
-		app.sendSMS(phone, message);
-	} while (zakQuery.next());
-
-  }
+		var totPos = 0;
+		var zakPos = 0;
+		var oldZakDocId = 0;
+		do
+		{
+			var zakRec = zakQuery.record();
+			var zakDocId = zakRec.value("КОДДОКЗАКАЗ");
+			if (zakDocId != oldZakDocId)
+			{
+			  if (totPos > 0)
+			  {
+			    sendSMS(oldZakDocId, zakPos, totPos);
+			    zakPos = 0;
+			    totPos = 0;
+			  }
+			  oldZakDocId = zakDocId;
+			}
+			if (zakRec.value("ВЫПОЛНЕНО"))
+			  zakPos = zakPos + 1;
+			totPos = totPos + 1;
+		} while (zakQuery.next());
+		if (totPos > 0)
+		  sendSMS(oldZakDocId, zakPos, totPos);
+	}
 }
 
+
+function sendSMS(zakDocId, zakPos, totPos)
+{
+  var message = "";
+  var command = "SELECT ТЕЛЕФОН FROM люди WHERE КОД = (SELECT ДБКОД FROM проводки WHERE ДОККОД = " + zakDocId + " AND ОПЕР = 3 AND НОМЕРОПЕР =  1 LIMIT 1);";
+  var phone = db.getValue(command);
+  if (zakPos > 0)
+  {
+    if (zakPos < totPos)
+      message = "По вашему заказу ожидается поступление " + zakPos + " поз. из " + totPos + ".";
+    else
+      message = "Ожидается поступление вашего заказа.";
+  }
+  else
+    message = "К сожалению, товар из вашего заказа у поставщика отсутствует."
+  app.print("СМС на телефон " + phone + ": " + message);
+  app.sendSMS(phone, message);
+}
 
 function ShowDebt()
 {

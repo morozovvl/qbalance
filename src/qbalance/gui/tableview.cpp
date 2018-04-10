@@ -587,7 +587,6 @@ void TableView::readSettings()
 {
     QSettings settings(app->getConfigFileName(), QSettings::IniFormat);
     bool readedFromEnv = true;  // Предположим, что удастся прочитать конфигурацию из окружения
-    parent->readSettings();
 
     if (settings.status() == QSettings::NoError)
     {
@@ -612,25 +611,16 @@ void TableView::readSettings()
 
     if (!readedFromEnv)
     {
-        // Если информация о ширине столбца отстутствует в окружении программы, попытаемся прочитать ее из базы
+        // Если информация о ширине столбца отсутствует в окружении программы, попытаемся прочитать ее из базы
         QHash<QString, int> values;
         values = app->getDBFactory()->getConfig(configName);
-        int i = 0;
-        while (true)
+        for (int i = 0; i < values.count(); i++)
         {
-            QString name = QString("grid/%1/width").arg(i);
-            if (values.contains(name))
-            {
-                int width = values.value(name);
-                setColumnWidth(i, width);
-            }
-            else
-                break;
-            i++;
+            int width = values.value(QString("grid/%1/width").arg(i));
+            setColumnWidth(i, width);
         }
         app->showMessageOnStatusBar("");
     }
-
     columnsSettingsReaded = true;
 }
 
@@ -644,6 +634,7 @@ void TableView::writeSettings()
         if (columnCount > 0)
         {
             settings.beginGroup(configName);
+
             settings.beginWriteArray("grid", columnCount);
             for (int i = 0; i < columnCount; i++)
             {
@@ -661,8 +652,7 @@ void TableView::writeSettings()
                 for (int i = 0; i < columnCount; i++)
                 {
                     int width = columnWidth(i);
-                    if (width > 0)
-                        app->getDBFactory()->setConfig(configName, QString("grid/%1/width").arg(i), QString("%1").arg(width));
+                    app->getDBFactory()->setConfig(configName, QString("grid/%1/width").arg(i), QString("%1").arg(width));
                 }
                 app->showMessageOnStatusBar("");
             }
@@ -707,12 +697,6 @@ void TableView::clearColumnDefinitions()
 int TableView::getColumnsCount()
 {
     return fields.count();
-}
-
-
-void TableView::setConfigName(QString confName)
-{
-    configName = confName;
 }
 
 

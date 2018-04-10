@@ -67,7 +67,6 @@ public:
     virtual void                setCurrentFocus();
     virtual void                keyPressEvent(QKeyEvent*);     // Обработка нажатий клавиш
     Q_INVOKABLE virtual int     getColumnsCount();
-    Q_INVOKABLE virtual void    setConfigName(QString);
     virtual void                setCurrentChangedScripts(bool);
 
 

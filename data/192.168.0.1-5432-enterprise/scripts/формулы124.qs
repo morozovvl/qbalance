@@ -361,7 +361,7 @@ function sendSMS()
     {
       var message = "Вы можете получить Ваш заказ по адресу: " +app.getConst("НазваниеМагазина");
       app.print("СМС на телефон " + phone + ": " + message);
-      app.sendSMS(phone, message);
+      app.sendSMS(phone, message);	// Если такое сообщение уже было, то повторно не будет выслано
     }
   }
 }

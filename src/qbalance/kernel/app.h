@@ -241,8 +241,8 @@ public:
     Q_INVOKABLE QString getScript();                                  // Вернуть название скрипта, заданного в параметрах при запуске программы
     Q_INVOKABLE QString getScriptParameter(int = 0);
 
-    Q_INVOKABLE void sendSMS(QString url, QString number, QString message, QString from = "");                     // Посылка СМС через сервис SMS.RU
-    Q_INVOKABLE void sendSMS(QString url, QString number);                               // Посылка СМС через сервис SMS.RU
+    Q_INVOKABLE void sendSMS(QString url, QString number, QString message, QString from = "", bool = false);                     // Посылка СМС через сервис SMS.RU
+    Q_INVOKABLE void sendSMS(QString url, QString number, bool = false);                               // Посылка СМС через сервис SMS.RU
 
     void    setScriptMode(bool mode);
     bool    isScriptMode();

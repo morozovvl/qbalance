@@ -66,6 +66,9 @@ public:
     Q_INVOKABLE virtual QMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp();
 
+    Q_INVOKABLE QString getFormTitle();
+    Q_INVOKABLE void setFormTitle(QString);
+
 public slots:
     Q_INVOKABLE virtual int exec();
     Q_INVOKABLE virtual void show();

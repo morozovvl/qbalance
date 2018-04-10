@@ -66,14 +66,16 @@ bool PassWordForm::open(QWidget* pwgt/* = 0*/)
     layout->addRow(QObject::trUtf8("Пароль:"), PasswordEditor);
     if (Form::open(pwgt))
     {
+        setFormTitle(QObject::trUtf8("Логин и пароль"));
+
         connect(PasswordEditor, SIGNAL(returnPressed()), this, SLOT(cmdOk()));
         QVBoxLayout* vbxLayout = (QVBoxLayout*)formWidget->findChild("vbxLayout");
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, layout);
         formWidget->setMinimumHeight(100);
-        formWidget->setMinimumWidth(400);
+        formWidget->setMinimumWidth(500);
         formWidget->setMaximumHeight(100);
-        formWidget->setMaximumWidth(400);
+        formWidget->setMaximumWidth(500);
         gotoCenter();
         return true;
     }

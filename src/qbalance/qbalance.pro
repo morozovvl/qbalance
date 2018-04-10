@@ -10,6 +10,8 @@
 
 include(../qextserialport/src/qextserialport.pri)
 
+QT_DEBUG_PLUGINS=1
+
 QT += sql \
       xml \
       core \

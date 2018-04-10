@@ -465,28 +465,39 @@ function EventBarCodeReaded(barCode)
 		prepBarCode = prepBarCode.replace(/^0+/,'').replace(/.$/,'');
 		saldo.setQuan(true);
 		if (prepBarCode.length > 5)
-			saldo.query("товар.ШТРИХКОД = '" + barCode + "' AND сальдо.КОНКОЛ > 0", false);
+			saldo.query("товар.ШТРИХКОД = '" + barCode + "' AND сальдо.КОНКОЛ > 0", true);
 		else
-			saldo.query("товар.КОД = '" + prepBarCode + "' AND сальдо.КОНКОЛ > 0", false);
+			saldo.query("товар.КОД = '" + prepBarCode + "' AND сальдо.КОНКОЛ > 0", true);
 		saldo.setQuan(true);
 	
 		if (saldo.getRowCount() == 1)
+		{
 			saldo.lock(true);		// Если оказалась только одна позиция в остатках с таким штрих-кодом, то выберем ее
+			saldo.getFormWidget().hide();
+		}
 		else
 		{				// Иначе откроем окно с остатками и предложим пользователю уточнить позицию
 			if (saldo.getRowCount() == 0)
+			{
 				app.showMessageOnStatusBar("В остатках не найдена позиция с таким штрих-кодом.");
-			saldo.exec();
-			if (!saldo.isFormSelected())
-				addStr = false;	// Пользователь отказался от выбора позиции, добавлять строку не будем
+				addStr = false;
+			}
+/*
 			else
 			{
-				var tovarId = saldo.getValue("КОД_ТОВАР");
-//	    		var barCodeMessage = new QMessageBox(form, "Внимание!", "Присвоить этот штрихкод выбранной позиции?", QMessageBox.StandardButtons(QMessageBox.Yes, QMessageBox.No), form);
-//	    		if (barCodeMessage.exec() == QMessageBox.Yes)
-				db.exec("UPDATE товар SET ШТРИХКОД = '" + barCode + "' WHERE КОД = " + tovarId);			
-				saldo.lock(true);
+				saldo.exec();
+				if (!saldo.isFormSelected())
+					addStr = false;	// Пользователь отказался от выбора позиции, добавлять строку не будем
+				else
+				{
+					var tovarId = saldo.getValue("КОД_ТОВАР");
+//		    		var barCodeMessage = new QMessageBox(form, "Внимание!", "Присвоить этот штрихкод выбранной позиции?", QMessageBox.StandardButtons(QMessageBox.Yes, QMessageBox.No), form);
+//	    			if (barCodeMessage.exec() == QMessageBox.Yes)
+					db.exec("UPDATE товар SET ШТРИХКОД = '" + barCode + "' WHERE КОД = " + tovarId);			
+					saldo.lock(true);
+				}
 			}
+*/
 		}
 		if (addStr)
 		{

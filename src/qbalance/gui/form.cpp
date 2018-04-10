@@ -215,6 +215,7 @@ void Form::createForm(QString fileName, QWidget* pwgt)
             connect(buttonOk, SIGNAL(clicked()), this, SLOT(cmdOk()));
         }
     }
+
     if (buttonOk != 0)
     {
         connect(buttonOk, SIGNAL(clicked()), SLOT(cmdOk()));
@@ -504,3 +505,14 @@ void Form::writeSettings()
     }
 }
 
+
+QString Form::getFormTitle()
+{
+    return getFormWidget()->windowTitle();
+}
+
+
+void Form::setFormTitle(QString title)
+{
+    getFormWidget()->setWindowTitle(title);
+}

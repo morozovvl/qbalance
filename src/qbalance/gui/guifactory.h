@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class MainWindow;
 class DBFactory;
+class TApplication;
 
 struct UserInfo;
 
@@ -57,6 +58,7 @@ private:
     QString lastHostName;
     QString lastDbName;
     int lastPort;
+    TApplication* app;
 };
 
 #endif // GUIFACTORY_H

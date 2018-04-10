@@ -77,7 +77,7 @@ TApplication::TApplication(int & argc, char** argv)
 {
     setOrganizationName("Enterprise");
     setApplicationName("QBalance");
-    setApplicationVersion("0.1");
+    setApplicationVersion("0.11");
     setWindowIcon(QIcon(":qbalance.ico"));
 
     db  = 0;
@@ -689,6 +689,8 @@ bool TApplication::initApplication()
 
     messagesWindow = new MessageWindow();
 
+    getMainWindow()->setWindowTitle(QString("%1 %2").arg(applicationName()).arg(applicationVersion()));
+
     forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
     {
         int result = gui->openDB(); // Попытаемся открыть базу данных
@@ -753,6 +755,11 @@ bool TApplication::initApplication()
                 db->clearLockedDocumentList();
 
                 lResult = true;     // Приложение удалось открыть
+
+                getMainWindow()->setWindowTitle(getMainWindow()->windowTitle().append(QString(" - (%1) - %2 %3").arg(getConfigPrefix())
+                                                                                                                .arg(getLogin())
+                                                                                                                .arg(username)));
+
                 break;  // Выйдем из бесконечного цикла открытия БД
             }
         }
@@ -783,6 +790,7 @@ void TApplication::close()
 
     saveMessages();
     writeSettings();
+    delete messagesWindow;
 
     if (driverFR)
     {
@@ -795,8 +803,6 @@ void TApplication::close()
 
     if (tcpClient != 0)
         delete tcpClient;
-
-    delete messagesWindow;
 
     if (documents.count() > 0)
     {
@@ -1625,11 +1631,16 @@ QString TApplication::getOpenFileName(QWidget* parent, QString caption, QString 
 }
 
 
-void TApplication::sendSMS(QString url, QString number, QString message, QString from)
+void TApplication::sendSMS(QString url, QString number, QString message, QString from, bool repeat)
 {
     QEventLoop loop;
     QNetworkAccessManager manager(this);
     QNetworkReply* reply;
+    if (!repeat)
+    {   // Если такое сообщение уже было отправлено адресату, то повторно не высылае
+        if (QString(db->getValue(QString("SELECT ТЕКСТ FROM смс_отправленные WHERE ИМЯ = '%1' AND ДАТАВРЕМЯ::date = current_date;").arg(number)).toString()).compare(message) == 0)
+            return;
+    }
     QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);
     reply = manager.get(QNetworkRequest(QUrl(command)));
     connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
@@ -1641,9 +1652,9 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
 }
 
 
-void TApplication::sendSMS(QString number, QString message)
+void TApplication::sendSMS(QString number, QString message, bool repeat)
 {
-    sendSMS(getConst("СМС_URL").toString(), number, message, getConst("ОтправительСМС").toString());
+    sendSMS(getConst("СМС_URL").toString(), number, message, getConst("ОтправительСМС").toString(), repeat);
 }
 
 
