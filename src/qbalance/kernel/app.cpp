@@ -77,7 +77,7 @@ TApplication::TApplication(int & argc, char** argv)
 {
     setOrganizationName("Enterprise");
     setApplicationName("QBalance");
-    setApplicationVersion("0.11");
+    setApplicationVersion("0.12");
     setWindowIcon(QIcon(":qbalance.ico"));
 
     db  = 0;
@@ -1637,8 +1637,8 @@ void TApplication::sendSMS(QString url, QString number, QString message, QString
     QNetworkAccessManager manager(this);
     QNetworkReply* reply;
     if (!repeat)
-    {   // Если такое сообщение уже было отправлено адресату, то повторно не высылае
-        if (QString(db->getValue(QString("SELECT ТЕКСТ FROM смс_отправленные WHERE ИМЯ = '%1' AND ДАТАВРЕМЯ::date = current_date;").arg(number)).toString()).compare(message) == 0)
+    {   // Если такое сообщение уже было отправлено адресату, то повторно не высылаем
+        if (db->getValue(QString("SELECT COUNT(*) FROM смс_отправленные WHERE ИМЯ = '%1' AND ТЕКСТ = '%2' AND ДАТАВРЕМЯ::date = current_date;").arg(number).arg(message)).toInt() > 0)
             return;
     }
     QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);

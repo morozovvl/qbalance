@@ -1303,26 +1303,6 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Вызов этой функции происходит перед печатью штрих-кода. Функция должна вернуть значение штрих-кода.");
     appendEvent("PrepareBarCodeData(object)", &func);
 
-    func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
-    func.body = "return filter;";
-    appendEvent("GetFilter(filter)", &func);
-
-    func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
-    if (document != 0 && document->isQuanAccount() && document->getPrvQuan() == 1)
-    {
-        func.body = "var кол = getValue(\"P1__КОЛ\");\n"
-                    "var цена = getValue(\"P1__ЦЕНА\");\n"
-                    "var сумма = getValue(\"P1__СУММА\");\n"
-                    "if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0)\n"
-                    "  цена = сумма / кол;\n"
-                    "else\n"
-                    "   сумма = кол * цена;\n"
-                    "setValue(\"P1__КОЛ\", кол);\n"
-                    "setValue(\"P1__ЦЕНА\", цена);\n"
-                    "setValue(\"P1__СУММА\", сумма);\n";
-    }
-    appendEvent("EventCalcTable()", &func);
-
     func.comment = QObject::trUtf8("Событие предназначено для изменения возможности доступа к элементам пользовательской формы");
     appendEvent("EventSetEnabled(enabled)", &func);
 
@@ -1341,22 +1321,47 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после прочтения магнитной карты");
     appendEvent("EventCardCodeReaded(cardCode)", &func);
 
-    func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
-    func.body = "return true;";
-    appendEvent("EventBeforeAddString()", &func);
-
     func.comment = QObject::trUtf8("Событие происходит после добавления строки в документ");
     appendEvent("EventAfterAddString()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит при нажатии на кнопку Запрос");
     appendEvent("EventQuery()", &func);
 
+    func.comment = QObject::trUtf8("Событие происходит после удаления документа");
+    appendEvent("EventAfterDeleteDocument()", &func);
+
+    func.comment = QObject::trUtf8("Событие происходит перед созданием документа печати и предназначено для создания новых данных для документа");
+    appendEvent("EventPreparePrintValues()", &func);
+
+    func.comment = QObject::trUtf8("Вызов этой функции происходит перед запросом к БД. Функция должна вернуть дополнительный фильтр к запросу.");
+    func.body = "return filter;";
+    appendEvent("GetFilter(filter)", &func);
+    func.body = "";
+
+    func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
+    if (document != 0 && document->isQuanAccount() && document->getPrvQuan() == 1)
+    {
+        func.body = "var кол = getValue(\"P1__КОЛ\");\n"
+                    "var цена = getValue(\"P1__ЦЕНА\");\n"
+                    "var сумма = getValue(\"P1__СУММА\");\n"
+                    "if (getCurrentFieldName() == \"P1__СУММА\" && кол != 0)\n"
+                    "  цена = сумма / кол;\n"
+                    "else\n"
+                    "   сумма = кол * цена;\n"
+                    "setValue(\"P1__КОЛ\", кол);\n"
+                    "setValue(\"P1__ЦЕНА\", цена);\n"
+                    "setValue(\"P1__СУММА\", сумма);";
+    }
+    appendEvent("EventCalcTable()", &func);
+    func.body = "";
+
+    func.comment = QObject::trUtf8("Событие происходит перед добавлением строки в документ");
+    func.body = "return true;";
+    appendEvent("EventBeforeAddString()", &func);
+
     func.comment = QObject::trUtf8("Событие происходит перед удалением документа");
     func.body = "return true;";
     appendEvent("EventBeforeDeleteDocument()", &func);
-
-    func.comment = QObject::trUtf8("Событие происходит после удаления документа");
-    appendEvent("EventAfterDeleteDocument()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит перед удалением строки из документа");
     func.body = "return true;";
@@ -1368,9 +1373,6 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.comment = QObject::trUtf8("Событие происходит после показа всех необходимых справочников при добавлении строки в документ");
     func.body = "return true;";
     appendEvent("EventAfterShowNextDicts()", &func);
-
-    func.comment = QObject::trUtf8("Событие происходит перед созданием документа печати и предназначено для создания новых данных для документа");
-    appendEvent("EventPreparePrintValues()", &func);
 
     func.comment = QObject::trUtf8("Событие происходит при нажатии кнопки на форме. Должно вернуть ИСТИНА, если нажатие обработано");
     func.body = "return false;";

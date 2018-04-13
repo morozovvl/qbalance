@@ -157,7 +157,7 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
     bool    lResult = true;
     QString defaultDatabase = getDatabaseName();
     setHostName(hostName);
-    setDatabaseName("postgres");
+    setDatabaseName(dbName);
     setPort(port);
     PassWordForm* frm = new PassWordForm();
     frm->open();
@@ -166,8 +166,10 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
     {
         const QString login = frm->getLogin();
         const QString password = frm->getPassword();
+/*
         if (open(login, password))
         {
+*/
             const QStringList scripts = initializationScriptList();
             if (scripts.size() > 0)
             {
@@ -181,11 +183,14 @@ bool DBFactory::createNewDBs(QString hostName, QString dbName, int port)
             else
                 app->showError(QString(QObject::trUtf8("Не найден файл(ы) инициализации БД (initdb*.sql).")));
             close();
+/*
        }
        else
           app->showError(QObject::trUtf8("Не удалось создать соединение с сервером."));
+*/
     }
     delete frm;
+
     setDatabaseName(defaultDatabase);
     return lResult;
 }
@@ -220,7 +225,7 @@ bool DBFactory::createNewDB(QString dbName, QString password, QStringList script
 bool DBFactory::execPSql(QStringList comm, QString user, QString password)
 {
     bool result = false;
-    QStringList parameters = QStringList() << QString("-h %1").arg(hostName) << QString("-p %1").arg(port) << QString("-U %1").arg(user) << comm;
+    QStringList parameters;
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("PGPASSWORD", password);
@@ -230,6 +235,16 @@ bool DBFactory::execPSql(QStringList comm, QString user, QString password)
     proc->setProcessEnvironment(env);
 
     QString command;
+
+#ifdef Q_OS_LINUX
+    if (hostName == "localhost" || hostName == "127.0.0.1")
+        command.append(QString("sudo -u %1 ").arg(user));
+#endif
+
+    parameters.append(QString("-h %1").arg(hostName));
+    parameters.append(QString("-p %1").arg(port));
+    parameters.append(comm);
+
     command.append("psql ").append(parameters.join(" "));
 
     connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(showPSqlMessage()));
@@ -237,6 +252,9 @@ bool DBFactory::execPSql(QStringList comm, QString user, QString password)
     app->print(command);
     app->print("Ждите...");
     app->sleep(100);
+
+    app->debug(1, "Init command: " + command);
+
     proc->start(command);
     if (proc->waitForFinished(-1))
         result = true;
@@ -306,7 +324,8 @@ bool DBFactory::open(QString login, QString password)
     }
     else
     {
-        setError(db->lastError().text());
+        if (login != "test")
+            setError(db->lastError().text());
     }
     return false;
 }

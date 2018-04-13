@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 CalendarForm::CalendarForm(QObject* parent/* = 0*/): Form(parent)
 {
+    configName = "calendar";
 }
 
 
@@ -49,8 +50,6 @@ QDate CalendarForm::getEndDate()
 bool CalendarForm::open(QWidget* pwgt) {
     if (Form::open(pwgt))
     {
-        formWidget->move(100, 100);
-
         formWidget->setWindowTitle(QObject::trUtf8("Рабочий период"));
 
         QLabel* plblBegin = new QLabel(QObject::trUtf8("Начало периода"));
@@ -69,6 +68,7 @@ bool CalendarForm::open(QWidget* pwgt) {
         if (vbxLayout != 0)
             vbxLayout->insertLayout(0, ptopLayout);
         app->setIcons(formWidget);
+        formWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
         return true;
     }
     return false;
@@ -77,14 +77,12 @@ bool CalendarForm::open(QWidget* pwgt) {
 
 int CalendarForm::exec()
 {
-    formWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     return Form::exec();
 }
 
 
 void CalendarForm::show()
 {
-    formWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     Form::show();
 }
 

@@ -66,8 +66,10 @@ int main(int argc, char *argv[])
         lStart = TApplication::readParameters(argc, argv);    // прочитаем их
     if (lStart)
     {
-        QStringList paths = application.libraryPaths();
-        application.setLibraryPaths(paths);
+//        QStringList paths = application.libraryPaths();
+//        paths.append(TApplication::applicationDirPath() + "/lib64");
+//        application.setLibraryPaths(paths);
+        TApplication::addLibraryPath(TApplication::applicationDirPath() + "/lib64");
 //        application.setDebugMode("0");
         application.debug(0, "\n");
         application.debug(0, "Program startup.");

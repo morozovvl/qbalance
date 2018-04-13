@@ -57,6 +57,12 @@ void TableView::setFormGrid(FormGrid* par)
 }
 
 
+void TableView::setConfigName(QString config)
+{
+    configName = config;
+}
+
+
 void TableView::setPicture(Picture* pic)
 {
     picture = pic;

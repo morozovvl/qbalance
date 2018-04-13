@@ -509,11 +509,10 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
         {
             query(filter);
             if (tableModel->rowCount() == 0)
-            {
-                db->insertDictDefault(tableName, &values);
-                query(filter);
-            }
-            result = Essence::getId(0);
+                result = db->insertDictDefault(tableName, &values);
+            else
+                result = Essence::getId(0);
+
         }
     }
     return result;
@@ -736,12 +735,13 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
             else
                 resFilter = filter;
         }
-        if (!isDocumentLoading())
+    }
+
+    if (!isDocumentLoading())
+    {
+        if (scriptEngine != 0)
         {
-            if (scriptEngine != 0)
-            {
-                resFilter = scriptEngine->getFilter(resFilter);
-            }
+            resFilter = scriptEngine->getFilter(resFilter);
         }
     }
 
