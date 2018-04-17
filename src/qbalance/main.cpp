@@ -51,6 +51,11 @@ int main(int argc, char *argv[])
 {
 //    mtrace();
     TApplication application(argc, argv);
+
+    application.setOrganizationName("Enterprise");
+    application.setApplicationName("QBalance");
+    application.setApplicationVersion("0.13");
+
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());
     QTextCodec::setCodecForCStrings(application.codec());
@@ -69,11 +74,7 @@ int main(int argc, char *argv[])
         lStart = TApplication::readParameters(argc, argv);    // прочитаем их
     if (lStart)
     {
-//        QStringList paths = application.libraryPaths();
-//        paths.append(TApplication::applicationDirPath() + "/lib64");
-//        application.setLibraryPaths(paths);
         TApplication::addLibraryPath(TApplication::applicationDirPath() + "/lib64");
-//        application.setDebugMode("0");
         application.debug(0, "\n");
         application.debug(0, "Program startup.");
         // Если в качестве параметра задан скрипт, то приложение работает в скриптовом режиме

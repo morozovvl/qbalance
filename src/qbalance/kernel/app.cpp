@@ -75,9 +75,6 @@ bool                TApplication::fullDebugInfo = false;                  // ÐŸÐ
 TApplication::TApplication(int & argc, char** argv)
     : QApplication(argc, argv)
 {
-    setOrganizationName("Enterprise");
-    setApplicationName("QBalance");
-    setApplicationVersion("0.12");
     setWindowIcon(QIcon(":qbalance.ico"));
 
     db  = 0;
