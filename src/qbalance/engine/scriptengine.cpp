@@ -1404,12 +1404,11 @@ void ScriptEngine::appendEvent(QString funcName, EventFunction* func)
 
 QString ScriptEngine::loadScript(QString scriptFile)
 {
-//123
     QString result;
     if (!scripts.contains(scriptFile))
     {
         QString fullScriptFile = scriptFile;
-        if (!QFileInfo(scriptFile).exists())
+        if (!QDir().exists(scriptFile))
         {
             QString scriptPath = TApplication::exemplar()->getScriptsPath();
             Essence::getFile(scriptPath, scriptFile, ScriptFileType);   // Получим скрипт с сервера, при необходимости обновим его

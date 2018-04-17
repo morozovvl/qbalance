@@ -33,6 +33,14 @@ MessageWindow::MessageWindow() :
     textEditor = new QTextEdit();
     textEditor->setParent(subWindow);
     textEditor->setWindowTitle(QObject::trUtf8("Сообщения"));
+
+    if (app->getMainWindow()->isVisible() && !app->isScriptMode())
+    {
+        if (subWindow == 0)
+            subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
+    }
+
+    readSettings();
 }
 
 
@@ -66,15 +74,11 @@ void MessageWindow::show()
 {
     if (app->getMainWindow()->isVisible() && !app->isScriptMode())
     {
-        if (subWindow == 0)
-            subWindow = app->getMainWindow()->appendMdiWindow(textEditor);
-
         if (subWindow != 0)
         {
             textEditor->show();
             subWindow->show();
         }
-        readSettings();
     }
     else
         textEditor->show();
@@ -125,11 +129,12 @@ void MessageWindow::readSettings()
             settingValues.insert("width", settings.value("width").toInt());
             settingValues.remove("height");
             settingValues.insert("height", settings.value("height").toInt());
+
         }
         else
         {
             // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
-            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
+//            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
             QSqlQuery config = app->getDBFactory()->getConfig();
             config.first();
             while (config.isValid())
@@ -141,7 +146,7 @@ void MessageWindow::readSettings()
                 }
                 config.next();
             }
-            app->showMessageOnStatusBar("");
+//            app->showMessageOnStatusBar("");
         }
         settings.endGroup();
 
@@ -183,7 +188,7 @@ void MessageWindow::writeSettings()
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
     if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
     {
-        app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
+//        app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
         if (subWindow != 0)
         {
             app->getDBFactory()->setConfig(configName, "x", QString("%1").arg(subWindow->geometry().x()));
@@ -198,7 +203,7 @@ void MessageWindow::writeSettings()
             app->getDBFactory()->setConfig(configName, "width", QString("%1").arg(textEditor->geometry().width()));
             app->getDBFactory()->setConfig(configName, "height", QString("%1").arg(textEditor->geometry().height()));
         }
-        app->showMessageOnStatusBar("");
+//        app->showMessageOnStatusBar("");
     }
 }
 

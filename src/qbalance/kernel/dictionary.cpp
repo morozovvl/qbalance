@@ -508,11 +508,10 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
         if (filter.size() > 0)
         {
             query(filter);
-            if (tableModel->rowCount() == 0)
+            if (tableModel->rowCount() == 0 && isSet())
                 result = db->insertDictDefault(tableName, &values);
             else
                 result = Essence::getId(0);
-
         }
     }
     return result;

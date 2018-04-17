@@ -22,13 +22,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 #include <QtCore/QResource>
-#include "kernel/app.h"
-#include "kernel/dictionaries.h"
-#include "crashhandler/crashhandler.h"
 #include <QtGui/QPrinter>
 #include <QtGui/QPrinterInfo>
 #include <QtGui/QPainter>
 #include <QtGui/QPrintEngine>
+#include <QtGui/QStyleFactory>
+
+#include "kernel/app.h"
+#include "kernel/dictionaries.h"
+#include "crashhandler/crashhandler.h"
+
 //#include <mcheck.h>
 
 
@@ -79,6 +82,7 @@ int main(int argc, char *argv[])
 
         if (!TApplication::isSendCommandMode())
         {
+            TApplication::setStyle(QStyleFactory::create("plastique"));
             if (application.open())
             {       // Если приложение удалось создать
                 if (application.isScriptMode())

@@ -236,11 +236,7 @@ bool DBFactory::execPSql(QStringList comm, QString user, QString password)
 
     QString command;
 
-#ifdef Q_OS_LINUX
-    if (hostName == "localhost" || hostName == "127.0.0.1")
-        command.append(QString("sudo -u %1 ").arg(user));
-#endif
-
+    parameters.append(QString("-U %1").arg(user));
     parameters.append(QString("-h %1").arg(hostName));
     parameters.append(QString("-p %1").arg(port));
     parameters.append(comm);
@@ -1789,10 +1785,8 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
     if (isFileExist(fileName, type, extend))
     {
         // Если в базе уже есть такой файл
-        if (getFileCheckSum(fileName, type, extend) != size)
-        {
-            if (!extend)
-                text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+        if (!extend)
+            text = QString("UPDATE %1 SET %2 = decode('%10', 'hex'), %3 = %4, %9 = now() WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1802,8 +1796,8 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(type)
                                                                                   .arg(getObjectNameCom("файлы.датавремя"))
                                                                                   .arg(QString(fileData.toHex()));
-            else
-                text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
+         else
+            text = QString("UPDATE %1 SET %2 = decode('%9', 'hex'), %3 = %4 WHERE %5 = '%6' AND %7 = %8;").arg(getObjectNameCom("файлы"))
                                                                                   .arg(getObjectNameCom("файлы.значение"))
                                                                                   .arg(getObjectNameCom("файлы.контрсумма"))
                                                                                   .arg(size)
@@ -1812,7 +1806,6 @@ void DBFactory::setFile(QString file, FileType type, QByteArray fileData, bool e
                                                                                   .arg(getObjectNameCom("файлы.тип"))
                                                                                   .arg(type)
                                                                                   .arg(QString(fileData.toHex()));
-        }
     }
     else
     {

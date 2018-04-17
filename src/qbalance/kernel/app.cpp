@@ -1404,15 +1404,20 @@ int TApplication::runScript(QString scrName)
 */
     if (!sendCommandMode)
     {
+        QFileInfo fi(scriptName);
+        saveFileToServer(scriptName, fi.fileName(), ScriptFileType);
+
         ScriptEngine* scriptEngine;
         scriptEngine = new ScriptEngine();
         if (scriptEngine->open())
         {
+            scriptEngine->removeScript(scriptName);
             scriptEngine->evaluate(QString("evaluateScript(\"%1\")").arg(scriptName)).toInteger();
             result = scriptEngine->evaluate(QString("scriptResult")).toInteger();
             scriptEngine->close();
         }
         delete scriptEngine;
+
         QString message = QString(trUtf8("Скрипт %1 %2")).arg(scriptName).arg(result ? "выполнен" : "не выполнен");
         if (isScriptMode())
         {
@@ -1892,7 +1897,7 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
         else if (action == execScriptAct)
         {
             dirName = "scriptLoadDir";
-            result = getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"));
+            result = QFileInfo(getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"))).fileName();
         }
         else
             result = tagName + "." + action->text() + ext;

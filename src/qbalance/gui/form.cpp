@@ -450,7 +450,7 @@ void Form::readSettings()
         else
         {
             // Если локальные значения координат и размеров окна прочитать не удалось, попытаемся загрузить их с сервера
-            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
+//            app->showMessageOnStatusBar(tr("Загрузка с сервера геометрии окна справочника ") + configName + "...");
             QSqlQuery config = db->getConfig();
             config.first();
             while (config.isValid())
@@ -462,7 +462,7 @@ void Form::readSettings()
                 }
                 config.next();
             }
-            app->showMessageOnStatusBar("");
+//            app->showMessageOnStatusBar("");
             formWidget->setFormChanged(true);
         }
         settings.endGroup();
@@ -496,12 +496,12 @@ void Form::writeSettings()
     // И если работает пользователь SA, то сохраним конфигурацию окна на сервере
     if (app->isSA() && app->getConfigValue("SAVE_FORM_CONFIG_TO_DB").toBool())
     {
-        app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
+//        app->showMessageOnStatusBar(tr("Сохранение на сервере геометрии окна справочника ") + configName + "...");
         db->setConfig(configName, "x", QString("%1").arg(widget->geometry().x()));
         db->setConfig(configName, "y", QString("%1").arg(widget->geometry().y()));
         db->setConfig(configName, "width", QString("%1").arg(widget->geometry().width()));
         db->setConfig(configName, "height", QString("%1").arg(widget->geometry().height()));
-        app->showMessageOnStatusBar("");
+//        app->showMessageOnStatusBar("");
     }
 }
 
