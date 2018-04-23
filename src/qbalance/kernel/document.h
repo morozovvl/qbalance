@@ -123,6 +123,7 @@ public:
     Q_INVOKABLE QString getNumber();
     Q_INVOKABLE void showParameterText(QString);
     Q_INVOKABLE int appendDocString();
+    Q_INVOKABLE int appendDocStrings(int);
     bool prepareValue(QString, Dictionary*);
     Q_INVOKABLE bool prepareValue(QString, QVariant);
     Q_INVOKABLE virtual void setValue(QString name, QVariant value, int row = -1);

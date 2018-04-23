@@ -426,7 +426,6 @@ bool Essence::calculate(bool)
         scriptEngine->eventAfterCalculate();
         if (!scriptEngine->getScriptResult())
         {
-            isCurrentCalculate = false;
             return false;
         }
     }
@@ -456,7 +455,7 @@ QScriptValue Essence::evaluateScript(QString script)
             result = scriptEngine->globalObject().property(script);
         if (scriptEngine->hasUncaughtException())
         {   // Если в скриптах произошла ошибка
-            scriptEngine->showScriptError(script);
+            scriptEngine->showScriptError();
         }
     }
     return result;
@@ -503,6 +502,7 @@ QVariant Essence::getValue(QString n, int row)
         else
         {
             app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
+            scriptEngine->setScriptError();
         }
     }
     return result;
@@ -526,7 +526,8 @@ void Essence::setValue(QString n, QVariant value, int row)
         {
             if (columnsProperties.at(i).column == n)
             {
-                if (columnsProperties.at(i).type.toUpper() == "NUMERIC" && (value.toDouble() - value.toInt()) != 0)
+//                if ((columnsProperties.at(i).type.toUpper() == "NUMERIC" || columnsProperties.at(i).type.toUpper() == "INTEGER") && (value.toDouble() - value.toInt()) != 0)
+                if (columnsProperties.at(i).type.toUpper() == "NUMERIC")
                 {
 
                     // Вся эта фигня ...
@@ -1281,12 +1282,21 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
         {
             QByteArray array = file.readAll();
             file.close();
-            qulonglong localFileCheckSum = app->calculateCRC32(&array);
-            if (servFileInfo.size != localFileCheckSum || (!servFileInfo.lastModified.isValid() || servFileInfo.lastModified.secsTo(locFileTime) > 5))
-            {   // контрольные суммы файлов не совпадают или локальный файл свежее серверного более чем на 5 секунд
-                if (app->isSA())   // Если не указано время сохранения файла на сервере
 
-                    db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
+            qulonglong localFileCheckSum = app->calculateCRC32(&array);
+
+            if (servFileInfo.size != localFileCheckSum) // Если локальный и серверный файлы различаются по контрольной сумме
+            {
+                if (app->isSA())   // Если не указано время сохранения файла на сервере
+                {
+                    if (locFileTime.secsTo(servFileInfo.lastModified) < 120)   // Если локальный файл новее серверного на 120 секунд
+                        db->setFile(fileName, type, array);      // Сохранить копию файла на сервере, если мы работаем как SA
+                    else if (locFileTime.secsTo(servFileInfo.lastModified) > 120)   // Если локальный файл старее серверного на 120 секунд
+                    {
+                        QByteArray templateFile = db->getFile(fileName, type);
+                        app->saveFile(fullFileName, &templateFile);
+                    }
+                }
                 else
                 {
                     QByteArray templateFile = db->getFile(fileName, type);

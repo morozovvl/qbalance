@@ -489,6 +489,7 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
         query = new QSqlQuery();
 
     bool lResult = query->exec(str);
+
     if (!lResult && showError)
     {
         QString errorText = query->lastError().text().trimmed();
@@ -497,6 +498,13 @@ bool DBFactory::exec(QString str, bool showError, QSqlDatabase* db)
     }
     delete query;
     return lResult;
+}
+
+
+void DBFactory::exec(QStringList commList)
+{
+    foreach (QString command, commList)
+        exec(command);
 }
 
 
@@ -2598,6 +2606,7 @@ void DBFactory::setConfig(QString config, QString name, QString value)
 
 void DBFactory::appendCommand(QString command)
 {
+    prepareCommands();
     if (!commands.contains(command))
         commands.append(command);
 }
@@ -2607,7 +2616,7 @@ void DBFactory::appendCommand(UpdateValues value)
 {
     for (int i = updateValues.count() - 1; i >= 0; i--)
     {
-        if (value.recId == updateValues.at(i).recId && value.field == updateValues.at(i).field)
+        if (value.table == updateValues.at(i).table && value.recId == updateValues.at(i).recId && value.field == updateValues.at(i).field)
         {
             updateValues.removeAt(i);
         }
@@ -2631,7 +2640,7 @@ bool DBFactory::isExistsCommands()
 }
 
 
-bool DBFactory::execCommands()
+void DBFactory::prepareCommands()
 {
     // Соберем команды, скомпоновав вместе все данные для обновления отдельной записи
     QList<UpdateIds> ids;
@@ -2673,7 +2682,7 @@ bool DBFactory::execCommands()
             if (table.size() > 0)
             {
                 command = QString("UPDATE %1 SET %2 WHERE %3=%4;").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
-                appendCommand(command);     // Добавим команду к списку готовых команд
+                commands.append(command);     // Добавим команду к списку готовых команд
                 if (sysTables.contains(table))
                     saveUpdate(command);
             }
@@ -2681,7 +2690,12 @@ bool DBFactory::execCommands()
     }
 
     updateValues.clear();
+}
 
+
+bool DBFactory::execCommands()
+{
+    prepareCommands();
     // Выполним все команды
     if (commands.count() > 1)                           // Если команд больше одной
     {
@@ -2708,6 +2722,12 @@ bool DBFactory::execCommands()
         exec(commands.at(0));
     clearCommands();
     return true;
+}
+
+
+QStringList DBFactory::getCommands()
+{
+    return commands;
 }
 
 
@@ -2878,5 +2898,13 @@ QVariant DBFactory::getAccountsValue(QString cAcc, QString columnName)
         accounts.next();
     }
     return result;
+}
+
+
+void DBFactory::changePassword(QString password)
+{
+    app->setWriteDebug(false);         // Не будем записывать в журнал команду смены пароля
+    exec(QString("ALTER USER %1 WITH PASSWORD '%2';").arg(currentLogin).arg(password));
+    app->setWriteDebug(true);
 }
 

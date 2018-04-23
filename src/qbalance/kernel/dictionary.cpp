@@ -427,7 +427,7 @@ void Dictionary::setValue(qulonglong id, QString name, QVariant value)
 bool Dictionary::calculate(bool update) {
     if (!isCurrentCalculate)
     {
-        isCurrentCalculate = true;
+        isCurrentCalculate = false;
         if (Essence::calculate())
         {   // Если в вычислениях не было ошибки
 
@@ -458,10 +458,10 @@ bool Dictionary::calculate(bool update) {
                     restoreOldValues();
                 }
             }
+            isCurrentCalculate = true;
         }
-        isCurrentCalculate = false;
     }
-    return true;
+    return isCurrentCalculate;
 }
 
 

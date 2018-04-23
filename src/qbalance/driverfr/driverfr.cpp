@@ -912,7 +912,7 @@ void DriverFR::DefineECRModeDescription(void)
 
 int DriverFR::processCommand(int command, parameter* p, answer* a)
 {
-    int result;
+    int result = -1;
     int attempts = 1;
     while (true)
     {
@@ -944,7 +944,9 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
             serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
         }
         else
+        {
             break;
+        }
     }
     if (result > 0)
     {

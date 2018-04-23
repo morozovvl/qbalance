@@ -69,6 +69,27 @@ void FormDocuments::createForm(QString fileName, QWidget* pwgt/* = 0*/)
  }
 
 
+void FormDocuments::cmdAdd()
+{
+    FormGrid::cmdAdd();
+    showItog();
+}
+
+
+void FormDocuments::cmdDelete()
+{
+    FormGrid::cmdDelete();
+    showItog();
+}
+
+
+void FormDocuments::cmdView()
+{
+    FormGrid::cmdView();
+    showItog();
+}
+
+
 void FormDocuments::show()
 {
     FormGrid::show();

@@ -40,6 +40,7 @@ public:
 
 public slots:
     virtual void cmdOk();
+    virtual void changePassword();
 
 private slots:
     void dispatch(QTreeWidgetItem*, int);

@@ -97,6 +97,7 @@ private:
 
 // Прочие свойства
     QString                 tableAlias;
+    QString                 tableName;
     bool                    readOnly;
     TApplication*           app;
     DBFactory*              db;

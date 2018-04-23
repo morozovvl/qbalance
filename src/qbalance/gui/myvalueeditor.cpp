@@ -20,13 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QLineEdit>
 #include <QtGui/QComboBox>
 #include <QtGui/QCheckBox>
+#include <QtGui/QPushButton>
 #include "myvalueeditor.h"
 #include "../kernel/app.h"
 
-MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
+MyValueEditor::MyValueEditor(ConfigEntry& val, ConfigForm* confForm, QWidget *parent): QWidget(parent)
 {
     value = &val;
     widget = 0;
+    configForm = confForm;
 
     if (value->valueType == CONFIG_VALUE_BOUND)
     {
@@ -57,6 +59,11 @@ MyValueEditor::MyValueEditor(ConfigEntry& val, QWidget *parent): QWidget(parent)
         widget = new QLineEdit(value->value.toString(), this);
         ((QLineEdit*)widget)->setEchoMode(QLineEdit::Password);
         connect (widget, SIGNAL(editingFinished()), this, SLOT(editingFinished()));
+    }
+    else if (value->valueType == CONFIG_VALUE_PUSHBUTTON)
+    {
+        widget = new QPushButton("Сменить пароль", this);
+        connect (widget, SIGNAL(pressed()), configForm, SLOT(changePassword()));
     }
     else
     {
@@ -99,6 +106,10 @@ void MyValueEditor::editingFinished(int val)
     else if (value->valueType == CONFIG_VALUE_INTEGER)
     {
         value->value.setValue(((QLineEdit*)widget)->text().toInt());
+    }
+    else if (value->valueType == CONFIG_VALUE_PASSWORD)
+    {
+        value->value.setValue(((QLineEdit*)widget)->text());
     }
 }
 

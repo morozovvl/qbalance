@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QGridLayout>
 #include "configform.h"
 #include "../kernel/app.h"
+#include "../storage/dbfactory.h"
 #include "guifactory.h"
 #include "mainwindow.h"
 #include "myvalueeditor.h"
@@ -153,12 +154,10 @@ void ConfigForm::dictPermissions() {
 
 void ConfigForm::cmdOk()
 {
+    configs["PASSWORD1"].value = "";    // Сотрем пароли, чтобы они не запомнились в конфигурации
+    configs["PASSWORD2"].value = "";
+
     app->setConfigs(&configs);
-//    app->openPlugins();
-//    configs.clear();
-//    configs = *(app->getConfigs());
-//    if (currentConfigGroup.size() > 0)
-//        showConfigGroup(currentConfigGroup);
     Form::cmdOk();
 }
 
@@ -184,8 +183,9 @@ void ConfigForm::showConfigGroup(QString type)
     {
         if (type.size() == 0 || type == configs.value(name).type)
         {
-            QLabel* label = new QLabel(configs[name].label.trimmed() + ":");
-            MyValueEditor* line = new MyValueEditor(configs[name]);
+            QString labelStr = configs[name].label.trimmed();
+            QLabel* label = new QLabel(labelStr + (labelStr.size() > 0 ? ":" : ""));
+            MyValueEditor* line = new MyValueEditor(configs[name], this);
             label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
             line->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
             vLayout->addWidget(label, row, 0, Qt::AlignRight);
@@ -196,4 +196,18 @@ void ConfigForm::showConfigGroup(QString type)
     vLayout->setRowStretch(row, 1);
     vLayout->setColumnStretch(1, 1);
     frame->setLayout(vLayout);
+}
+
+
+void ConfigForm::changePassword()
+{
+    QString password1 = configs["PASSWORD1"].value.toString();
+    QString password2 = configs["PASSWORD2"].value.toString();
+
+    if (password1 == password2)
+    {
+        app->getDBFactory()->changePassword(password1);
+    }
+    else
+        app->showError("Пароли не совпадают!");
 }

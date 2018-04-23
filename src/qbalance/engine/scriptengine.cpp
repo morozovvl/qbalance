@@ -697,6 +697,7 @@ ScriptEngine::ScriptEngine(Essence *par) : QScriptEngine()
     sqlRecordClass = new SqlRecordClass(this, sqlFieldClass);
     sqlQueryClass = new SqlQueryClass(this, sqlRecordClass);
     errorMessage = "";
+    lastErrorMessage = "";
     app = TApplication::exemplar();
     document = 0;
     documents = 0;
@@ -738,6 +739,18 @@ void ScriptEngine::setErrorMessage(QString error)
 int ScriptEngine::getScriptResult()
 {
     return scriptResult;
+}
+
+
+void ScriptEngine::setScriptError()
+{
+    scriptError = true;
+}
+
+
+bool ScriptEngine::getScriptError()
+{
+    return scriptError;
 }
 
 
@@ -1235,10 +1248,14 @@ bool ScriptEngine::eventKeyPressed(int key, int modifiers)
 
 // Конец списка событий
 
-void ScriptEngine::showScriptError(QString eventName)
+void ScriptEngine::showScriptError()
 {
-    errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 события %2 скрипта %3: [%4]")).arg(uncaughtExceptionLineNumber()).arg(eventName).arg(scriptFileName).arg(uncaughtException().toString());
-    app->showError(errorMessage);
+    errorMessage = QString(QObject::trUtf8("Ошибка в строке %1 скрипта %2: [%3]")).arg(uncaughtExceptionLineNumber()).arg(scriptFileName).arg(uncaughtException().toString());
+    if (errorMessage != lastErrorMessage)
+    {   // Не будем повторно выводить одни и те же сообщения об ошибках
+        lastErrorMessage = errorMessage;
+        app->showError(errorMessage);
+    }
 }
 
 
@@ -1348,7 +1365,6 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
                     "  цена = сумма / кол;\n"
                     "else\n"
                     "   сумма = кол * цена;\n"
-                    "setValue(\"P1__КОЛ\", кол);\n"
                     "setValue(\"P1__ЦЕНА\", цена);\n"
                     "setValue(\"P1__СУММА\", сумма);";
     }
@@ -1446,10 +1462,11 @@ QScriptValue ScriptEngine::scriptCall(QString eventName, const QScriptValue &thi
     {
         QString program = scriptFileName + ":" + eventName;
         TApplication::exemplar()->debug(3, program);
+        scriptError = false;
         result = globalObject().property(eventName).call(thisObject, args);
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
-            showScriptError(eventName);
+            showScriptError();
         }
         else if (errorMessage.size() > 0)
         {

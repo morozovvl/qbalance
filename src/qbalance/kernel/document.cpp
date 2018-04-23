@@ -199,13 +199,15 @@ bool Document::isQuanAccount()
 
 bool Document::calculate(bool)
 {
+    isCurrentCalculate = false;
     if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
         if (Dictionary::calculate(false))           // Если во время вычислений все прошло нормально
         {   // Если в вычислениях не было ошибки
             calcItog();                             // то посчитаем итоги
-            saveChanges();                          // сохраним изменения
-            docModified = true;                     // поставим флаг, что документ изменен
+            saveChanges();            // сохраним изменения
+            docModified = true;
+            isCurrentCalculate = true;
         }
         else
         {
@@ -213,7 +215,7 @@ bool Document::calculate(bool)
             restoreOldValues();                     // и восстановим старые значения
         }
     }
-    return true;
+    return isCurrentCalculate;
 }
 
 
@@ -1096,8 +1098,6 @@ int Document::appendDocString()
 {
     int result = 0;
     QString dictName, parameter;
-    qulonglong dbId, crId;
-    float quan = 0, price = 0, sum = 0;
 
     foreach (QString dictName, getDictionariesList()->keys())
     {
@@ -1111,8 +1111,9 @@ int Document::appendDocString()
     {
         QString prefix = QString("P%1__").arg(i + 1);
         QString fldName;
-        dbId = 0;                                   // эти параметры могут быть заданы заранее в скриптах
-        crId = 0;                                   // если скрипты решают, какие коды позиций справочников задавать
+        qulonglong dbId = 0, crId = 0;
+        float quan = 0, price = 0, sum = 0;
+
         fldName = prefix + "ДБКОД";
         if (prvValues.keys().contains(fldName))
             dbId = prvValues.value(fldName).toInt();
@@ -1294,5 +1295,12 @@ void Document::showParameterText(QString dictName)
 void Document::cmdOk()
 {
     saveChanges();
+    parent->showItog();
     Dictionary::cmdOk();
+}
+
+
+int Document::appendDocStrings(int rowCount)
+{
+    return db->addDocStr(operNumber, docId, "", rowCount);
 }

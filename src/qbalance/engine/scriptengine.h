@@ -56,6 +56,8 @@ public:
     QString getErrorMessage();
     virtual void setErrorMessage(QString error = "");
     int getScriptResult();
+    virtual void    setScriptError();
+    virtual bool    getScriptError();
     void setIsDocumentScript(bool docScr);
     QString getScriptFileName();
     Essence* getParent();
@@ -98,7 +100,7 @@ public:
     friend bool isNumeric(ScriptEngine engine, QString field);
     static QString loadScript(QString);
     static void removeScript(QString);
-    void   showScriptError(QString);
+    void   showScriptError();
 
 protected:
     QHash<QString, EventFunction> eventsList;          // Список доступных в скриптах событий с комментариями
@@ -113,6 +115,8 @@ private:
     static QHash<QString, QString> scripts;
     int                 scriptResult;
     QString             errorMessage;
+    bool                scriptError;
+    QString             lastErrorMessage;
     QString             scriptFileName;
     SqlQueryClass*      sqlQueryClass;
     SqlRecordClass*     sqlRecordClass;

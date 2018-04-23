@@ -23,13 +23,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QWidget>
 //#include "../kernel/app.h"
 
+#include "configform.h"
+
 struct ConfigEntry;
 
 class MyValueEditor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MyValueEditor(ConfigEntry&, QWidget *parent = 0);
+    explicit MyValueEditor(ConfigEntry&, ConfigForm*, QWidget *parent = 0);
     ~MyValueEditor();
     QWidget* getEditor();
 
@@ -42,6 +44,7 @@ private:
     ConfigEntry* value;
     QWidget* widget;
     QString stringValue;
+    ConfigForm* configForm;
 };
 
 #endif // MYVALUEEDITOR_H

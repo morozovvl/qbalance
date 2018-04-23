@@ -34,6 +34,10 @@ public:
      ~FormDocuments();
 
 public slots:
+    virtual void cmdAdd();
+    virtual void cmdDelete();
+    virtual void cmdView();
+
     void showItog();
     Q_INVOKABLE virtual void show();
 

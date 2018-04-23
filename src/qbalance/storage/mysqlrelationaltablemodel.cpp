@@ -38,13 +38,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../storage/dbfactory.h"
 
 
-MySqlRelationalTableModel::MySqlRelationalTableModel(QString tableName, Table* par) : QSqlRelationalTableModel()
+MySqlRelationalTableModel::MySqlRelationalTableModel(QString tName, Table* par) : QSqlRelationalTableModel()
 {
     parent = par;
+    tableName = tName;
     setTable(tableName);
+    setEditStrategy(QSqlTableModel::OnManualSubmit);
     sortClause = "";
     readOnly = false;
-    setEditStrategy(QSqlTableModel::OnManualSubmit);
     app = TApplication::exemplar();
     db = app->getDBFactory();
     selectCommand = "";

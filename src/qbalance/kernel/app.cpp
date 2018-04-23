@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtGui/QMessageBox>
 #include <QtCore/QObject>
 #include <QtCore/QTextCodec>
+#include <QtCore/QVariant>
 #include <QtGui/QFileDialog>
 #include <QtGui/QPushButton>
 #include <QtGui/QPaintEngine>
@@ -533,6 +534,11 @@ void TApplication::initConfig()
     setConfig("updates", "UPDATES_FTP_ADMIN_CLIENT_PASSWORD", "Пароль клиента-администратора", CONFIG_VALUE_PASSWORD, "");
     setConfig("updates", "UPDATES_FTP_CLIENT", "Логин клиента", CONFIG_VALUE_STRING, "ftp");
     setConfig("updates", "UPDATES_FTP_CLIENT_PASSWORD", "Пароль клиента", CONFIG_VALUE_PASSWORD, "");
+
+    setConfigTypeName("password", "Пароль");
+    setConfig("password", "PASSWORD1", "Новый пароль", CONFIG_VALUE_PASSWORD, "");
+    setConfig("password", "PASSWORD2", "Повторите новый пароль", CONFIG_VALUE_PASSWORD, "");
+    setConfig("password", "", "", CONFIG_VALUE_PUSHBUTTON, "");
 }
 
 
@@ -1706,7 +1712,8 @@ void TApplication::writeSettings()
     }
     foreach (QString name, getConfigNames())
     {
-        settings.setValue(name, getConfigValue(name));
+        if (getConfigValue(name).toString().size() > 0)
+            settings.setValue(name, getConfigValue(name));
     }
 
     settings.endGroup();

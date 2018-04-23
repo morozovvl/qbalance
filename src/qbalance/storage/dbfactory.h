@@ -198,6 +198,7 @@ public:
 
     // Работа с ошибками
     Q_INVOKABLE bool exec(QString = "", bool = true, QSqlDatabase* = 0);
+    Q_INVOKABLE void exec(QStringList);
     Q_INVOKABLE bool execQueryFile(QString, bool = true);
     bool execSystem(QString command, QString tableName);       // Будет вызываться там, где необходима проверка изменения системных таблиц
     Q_INVOKABLE QSqlQuery execQuery(QString, bool = true, QSqlDatabase* = 0);
@@ -205,9 +206,9 @@ public:
     Q_INVOKABLE virtual QString getObjectName(const QString&);       // транслирует имена объектов БД из "внутренних" в реальные наименования
     Q_INVOKABLE virtual QString getObjectNameCom(const QString&);                        // то же самое, только результат возвращает в кавычках (применяется при генерации SQL команд)
 
-    bool beginTransaction();
-    void commitTransaction();
-    void rollbackTransaction();
+    Q_INVOKABLE bool beginTransaction();
+    Q_INVOKABLE void commitTransaction();
+    Q_INVOKABLE void rollbackTransaction();
 
     void loadSystemTables();
 
@@ -274,11 +275,16 @@ public:
     bool    isExistsCommands();
     Q_INVOKABLE void    appendCommand(QString);
     void    appendCommand(UpdateValues);
+    Q_INVOKABLE void    prepareCommands();
+    Q_INVOKABLE QStringList getCommands();
+
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, int column);
     Q_INVOKABLE virtual QVariant getValue(QString command, int row, QString column);
     Q_INVOKABLE virtual QVariant getValue(QString command);
     Q_INVOKABLE virtual QSqlRecord getRecord(QString command, int row);
     Q_INVOKABLE virtual QVariant getOstSum(QString acc, int id = 0);     // Получить сумму остатка на счете для объекта
+
+    void changePassword(QString);
 
     bool    lockDocument(int);
     void    unlockDocument(int);

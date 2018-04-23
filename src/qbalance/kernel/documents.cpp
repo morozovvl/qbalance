@@ -119,17 +119,13 @@ bool Documents::add()
             }
             else
             {
-//                int column = getCurrentColumn();
                 tableModel->insertRow(newRow);          // POSSIBLY MEMORY LEAK
                 grdTable->reset();
                 grdTable->selectRow(newRow);            // Установить фокус таблицы на последнюю, только что добавленную, запись
                 setCurrentRow(newRow);
-//                setCurrentColumn(column);
                 updateCurrentRow(strNum);
-//                grdTable->selectionModel()->setCurrentIndex(getCurrentIndex().sibling(newRow, column), QItemSelectionModel::Select);
             }
             setCurrentDocument(strNum);
-//            currentRow = tableModel->rowCount() - 1;
             saveOldValues();
             form->setButtons();
             grdTable->setFocus();
@@ -378,3 +374,8 @@ void Documents::preparePrintValues()
 }
 
 
+void Documents::showItog()
+{
+    if (form != 0)
+        ((FormDocuments*)form)->showItog();
+}
