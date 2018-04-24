@@ -44,8 +44,8 @@ QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
 {
 //    if (parentForm != 0)
 //        parentForm->getParent()->saveOldValues();
-    if (dictionary != 0)
-        dictionary->saveOldValues();
+    if (essence != 0)
+        essence->saveOldValues();
     editorWidget = new QCheckBox(parent);
     if (!readOnly)
         editorWidget->setDisabled(false);

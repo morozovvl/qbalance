@@ -290,12 +290,8 @@ void TableView::setColumnsHeaders()
                         if (delegate != 0)
                         {
                             delegate->setFieldName(fields.at(i).column);
-                            if (!fields.at(i).readOnly)
-                            {
-                                connect(delegate, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
-                            }
                             delegate->setReadOnly(fields.at(i).readOnly);
-                            delete itemDelegateForColumn(i);
+//                            delete itemDelegateForColumn(i);
                             setItemDelegateForColumn(i, delegate);
                             setFocusProxy(delegate->getEditorWidget());
                         }
@@ -388,31 +384,35 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
         fld.type.toUpper() == "INTEGER")
     {     // для числовых полей зададим свой самодельный делегат
         MyNumericItemDelegate* numericDelegate = new MyNumericItemDelegate(this, parent, fld.length, fld.precision);
-        return (MyItemDelegate*)numericDelegate;
+        result = (MyItemDelegate*)numericDelegate;
     } else if (fld.type.toUpper() == "BOOLEAN")
-           {
-                MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(this, parent);
-                result = (MyItemDelegate*)booleanDelegate;
-           } else
-           {
-                if (fld.type.toUpper() == "CHARACTER" ||
-                    fld.type.toUpper() == "CHARACTER VARYING" ||
-                    fld.type.toUpper() == "TEXT")
-                {
-                    MyLineItemDelegate* textDelegate = new MyLineItemDelegate(this, parent);
-                    textDelegate->setMaxLength(fld.length);
-                    result = (MyItemDelegate*)textDelegate;
-                }
-                else
-                {
-                    if (fld.type.toUpper() == "DATE" ||
-                        fld.type.toUpper().left(9) == "TIMESTAMP")
-                    {
-                        MyDateItemDelegate* dateDelegate = new MyDateItemDelegate(this, parent);
-                        result = (MyItemDelegate*)dateDelegate;
-                    }
-                }
-           }
+    {
+        MyBooleanItemDelegate* booleanDelegate = new MyBooleanItemDelegate(this, parent);
+        result = (MyItemDelegate*)booleanDelegate;
+    } else
+    {
+        if (fld.type.toUpper() == "CHARACTER" ||
+            fld.type.toUpper() == "CHARACTER VARYING" ||
+            fld.type.toUpper() == "TEXT")
+        {
+            MyLineItemDelegate* textDelegate = new MyLineItemDelegate(this, parent);
+            textDelegate->setMaxLength(fld.length);
+            result = (MyItemDelegate*)textDelegate;
+        }
+        else
+        {
+            if (fld.type.toUpper() == "DATE" ||
+                fld.type.toUpper().left(9) == "TIMESTAMP")
+            {
+                MyDateItemDelegate* dateDelegate = new MyDateItemDelegate(this, parent);
+                result = (MyItemDelegate*)dateDelegate;
+            }
+        }
+    }
+    if (result != 0)
+    {
+        result->setEssence(essence);
+    }
     return result;
 }
 
@@ -547,7 +547,7 @@ void TableView::showPhoto()
     }
 }
 
-
+/*
 void TableView::calculate()
 {
     setUpdatesEnabled(false);
@@ -557,7 +557,7 @@ void TableView::calculate()
         repaint();
     setUpdatesEnabled(true);
 }
-
+*/
 
 void TableView::setReadOnly(bool ro)
 {

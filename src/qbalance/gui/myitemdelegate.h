@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtDesigner/QDesignerExportWidget>
 
 class FormGrid;
-class Dictionary;
+class Essence;
 
 enum DelegateTypes
 {
@@ -56,10 +56,14 @@ public:
     virtual void        setFieldName(QString name);
     virtual QString     getFieldName();
     virtual QWidget*    getEditorWidget();
+    virtual void setEssence(Essence*);
+
+public slots:
+    virtual void            calculate();
 
 protected:
 //    FormGrid*               parentForm;
-    Dictionary*             dictionary;
+    Essence*                essence;
     QString                 columnMask;
     DelegateTypes           delegateType;
     bool                    readOnly;

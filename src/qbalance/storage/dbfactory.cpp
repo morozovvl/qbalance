@@ -420,13 +420,20 @@ void DBFactory::loadSystemTables()
 
     reloadColumnHeaders();
 
-    query = execQuery(QString("SELECT tablename FROM pg_tables UNION SELECT viewname FROM pg_views;"));
+    query = execQuery(QString("SELECT tablename, 'table' AS type FROM pg_tables UNION SELECT viewname AS tableName, 'view' AS type FROM pg_views;"));
     while (query.next())
     {
             QString tableName = query.value(0).toString();
+            QString type = query.value(1).toString();
             if (!tables.contains(tableName))
-                tables.append(tableName);
+                tables.insert(tableName, type);
     }
+}
+
+
+bool DBFactory::isView(QString tableName)
+{
+    return (tables.value(tableName) == "view" ? true : false);
 }
 
 
@@ -891,12 +898,6 @@ int DBFactory::getDictionaryId(QString dictionaryName)
 
 bool DBFactory::isTableExists(QString tName)
 {
-/*
-    QString command = QString("SELECT tablename AS name, tableowner as owner FROM pg_tables WHERE tablename = '%1' " \
-                              "UNION " \
-                              "SELECT viewname AS name, viewowner as owner FROM pg_views WHERE viewname = '%1';").arg(tName);
-    return execQuery(command).size() > 0 ? true : false;
-*/
     return tables.contains(tName);
 }
 
@@ -2439,7 +2440,6 @@ QString DBFactory::getDictionarySqlSelectStatement(QString tableName, QString pr
                                                                                                              .arg(oldFld.table)
                                                                                                              .arg(oldFld.name));
                             tables.append(docAttr);
-//                            getColumnsProperties(&columnsProperties, tableName, docAttr);
                         }
                     }
                 }

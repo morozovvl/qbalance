@@ -49,9 +49,10 @@ QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionVie
     editorWidget->setMaxLength(length);
     if (!readOnly)
     {
-        if (dictionary != 0)
-            dictionary->saveOldValues();
+        if (essence != 0)
+            essence->saveOldValues();
         editorWidget->setReadOnly(false);
+        connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
     }
     else
         editorWidget->setReadOnly(true);

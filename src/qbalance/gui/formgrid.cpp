@@ -315,31 +315,34 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         connect(buttonQuery, SIGNAL(clicked()), this, SLOT(cmdQuery()));
     }
     // Подключим кнопку "Просмотреть"
-    if (parent != 0 && parent->isViewable())
+    if (parent != 0)
     {
-        if (defaultForm)
+        if (parent->isViewable())
         {
-            buttonView = new QPushButton();
-            buttonView->setObjectName("buttonView");
-            cmdButtonLayout->insertWidget(0, buttonView);
+            if (defaultForm)
+            {
+                buttonView = new QPushButton();
+                buttonView->setObjectName("buttonView");
+                cmdButtonLayout->insertWidget(0, buttonView);
+            }
+            else
+            {
+                buttonView = (QPushButton*)formWidget->findChild("buttonView");
+            }
+            if (buttonView != 0)
+            {
+                connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
+            }
+            else
+            {
+                parent->setViewable(false);
+            }
         }
-        else
-        {
-            buttonView = (QPushButton*)formWidget->findChild("buttonView");
-        }
-        if (buttonView != 0)
-        {
-            connect(buttonView, SIGNAL(clicked()), this, SLOT(cmdView()));
-        }
-        else
-        {
-            parent->setViewable(false);
-        }
+        // Подключим кнопку "Удалить"
+        parent->setDeleteable(parent->isDeleteable());
+        // Подключим кнопку "Добавить"
+        parent->setInsertable(parent->isInsertable());
     }
-    // Подключим кнопку "Удалить"
-    parent->setDeleteable(true);
-    // Подключим кнопку "Добавить"
-    parent->setInsertable(true);
 
     grdTables.append(grdTable);
 }

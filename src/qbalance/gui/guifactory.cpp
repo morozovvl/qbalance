@@ -220,12 +220,15 @@ int GUIFactory::showError(QString errorText)
 
     QErrorMessage msgBox(mainWindow);
     msgBox.setParent(app->getMainWindow(), Qt::Dialog);
+    msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.showMessage(errorText);
     msgBox.exec();
 
     if (widget != 0)
+    {
         widget->setWindowModality(WidgetModality);
-
+        widget->activateWindow();
+    }
     return 0;
 }
 

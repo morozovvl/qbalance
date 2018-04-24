@@ -81,7 +81,6 @@ void Essence::postInitialize(QString name, QObject* parent)
     lPrintable  = false;
     isDictionary = true;
     enabled     = true;
-    isCurrentCalculate = false;
     sortedTable = true;
     idFieldName = db->getObjectName("код");
     nameFieldName = db->getObjectName("имя");
@@ -120,7 +119,6 @@ void Essence::setDoSubmit(bool submit)
 void Essence::setFilter(const QString &filter)
 {
     defaultFilter = filter;
-//    tableModel->setFilter(filter);
 }
 
 
@@ -187,7 +185,7 @@ QString Essence::getPhotoNameField()
 bool Essence::isInsertable()
 {
     return lInsertable;
-}         // Получить/установить ...
+}
 
 
 bool Essence::isDeleteable()
@@ -338,7 +336,7 @@ Dictionaries* Essence::getDictionaries()
 void Essence::setDictionaries(Dictionaries* dicts)
 {
     dictionaries = dicts;
-}     // Устанавливает указатель на список справочников
+}
 
 
 bool Essence::isLoading()
@@ -418,18 +416,25 @@ bool Essence::isVisible()
 
 bool Essence::calculate(bool)
 {
+    bool lResult = false;
     if (scriptEngineEnabled && scriptEngine != 0)
     {
         doSubmit = false;
         scriptEngine->eventCalcTable();
         doSubmit = true;
-        scriptEngine->eventAfterCalculate();
-        if (!scriptEngine->getScriptResult())
+        if (!scriptEngine->getScriptError())
         {
-            return false;
+            scriptEngine->eventAfterCalculate();
+            if (!scriptEngine->getScriptError())
+            {
+                if (scriptEngine->getScriptResult())
+                {
+                    lResult = true;
+                }
+            }
         }
     }
-    return true;
+    return lResult;
 }
 
 
@@ -502,7 +507,8 @@ QVariant Essence::getValue(QString n, int row)
         else
         {
             app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
-            scriptEngine->setScriptError();
+//            app->print(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
+//            scriptEngine->setScriptError();
         }
     }
     return result;
@@ -517,7 +523,6 @@ void Essence::setValue(QString n, QVariant value, int row)
     {
         if (row < 0)
             row = getCurrentRow();
-
         QModelIndex index, oldIndex;
         oldIndex = getCurrentIndex();
         index = tableModel->index(row, fieldColumn);
@@ -530,7 +535,7 @@ void Essence::setValue(QString n, QVariant value, int row)
                 if (columnsProperties.at(i).type.toUpper() == "NUMERIC")
                 {
 
-                    // Вся эта фигня ...
+                // Вся эта фигня ...
                     int precision = columnsProperties.at(i).precision;
                     double val = value.toDouble();
                     if (val > 0)
@@ -547,7 +552,6 @@ void Essence::setValue(QString n, QVariant value, int row)
                 break;
             }
         }
-
         tableModel->submit(index);
 
         if (doSubmit)
@@ -889,9 +893,9 @@ bool Essence::open()
     if (Table::open())
     {
         setOrderClause();
-//        if (!app->isScriptMode() && sqlCommand.size() == 0)       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();
+
         openScriptEngine();
 
         if (form != 0)
@@ -1260,15 +1264,16 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
     TApplication* app = TApplication::exemplar();
     DBFactory* db = app->getDBFactory();
     QString fullFileName = path + fileName;
-    if (!QDir().exists(fullFileName))
-    {   // Если файл не существует, то попытаемся получить его с сервера
+//    if (!QDir().exists(fullFileName))
+//    {   // Если файл не существует, то попытаемся получить его с сервера
         QByteArray templateFile = db->getFile(fileName, type);
         if (templateFile.size() > 0)
         {   // Если удалось получить шаблон отчета, то сохраним его локально
             app->saveFile(fullFileName, &templateFile);
             result = true;
         }
-    }
+//    }
+/*
     else
     {   // файл существует локально
         QFile file(fullFileName);
@@ -1306,6 +1311,7 @@ bool Essence::getFile(QString path, QString fileName, FileType type)
             result = true;
         }
     }
+*/
     return result;
 }
 

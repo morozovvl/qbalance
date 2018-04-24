@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QtCore/QObject>
 #include <QtGui/QLineEdit>
 #include "../storage/mysqlrelationaltablemodel.h"
+#include "../kernel/essence.h"
 #include "myitemdelegate.h"
 #include "formgrid.h"
 
@@ -31,9 +32,9 @@ MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
     delegateType = String;
     setReadOnly(false);
 //    parentForm = form;
-    dictionary = 0;
+    essence = 0;
     if (form != 0)
-        dictionary = form->getParent();
+        essence = (Essence*)(form->getParent());
 }
 
 
@@ -124,4 +125,19 @@ void MyItemDelegate::setReadOnly(bool val)
 QWidget* MyItemDelegate::getEditorWidget()
 {
     return editorWidget.data();
+}
+
+
+void MyItemDelegate::calculate()
+{
+    if (essence != 0)
+    {
+        essence->calculate();  //123
+    }
+}
+
+
+void MyItemDelegate::setEssence(Essence* dict)
+{
+    essence = dict;
 }

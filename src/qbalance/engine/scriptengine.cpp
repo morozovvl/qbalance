@@ -125,8 +125,6 @@ QScriptValue getValue(QScriptContext* context, QScriptEngine* engine)
         QScriptValue value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
         if (value.toVariant().type() == QVariant::Double)
             value = engine->evaluate(QString("parseFloat(%1)").arg(value.toVariant().toFloat()));
-        else
-            value = engine->evaluate(QString("table.getValue('%1', %2)").arg(fieldName).arg(row));
         if (value.isValid())
             return value;
     }

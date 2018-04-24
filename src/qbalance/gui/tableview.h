@@ -77,7 +77,7 @@ public slots:
     virtual void                cmdView();
     virtual void                cmdRequery();
 
-    virtual void                calculate();
+//    virtual void                calculate();
     virtual void                showPhoto();
 
 protected:

@@ -245,6 +245,7 @@ public:
     // Функции для мастера работы со справочниками
     bool createNewDictionary(QString, QString = "", bool = true);
     Q_INVOKABLE bool isTableExists(QString);
+    bool isView(QString);
 
 
     // Функции для мастера создания новый (редактирования старых) типовых операций
@@ -320,7 +321,7 @@ private:
     QHash<QString, QString>  ObjectNames;        // таблица для трансляции имен полей, таблиц, просмотров, функций из наименований ядра в наименования БД
     QStringList             commands;
     QStringList             sysTables;
-    QStringList             tables;
+    QHash<QString, QString> tables;
     QStringList             dbUpdatesList;
     QList<UpdateValues>     updateValues;
     bool                    dbIsOpened;

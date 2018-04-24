@@ -44,8 +44,8 @@ QWidget* MyDateItemDelegate::createEditor(QWidget*parent, const QStyleOptionView
     {
 //        if (parentForm != 0)
 //            parentForm->getParent()->saveOldValues();
-        if (dictionary != 0)
-            dictionary->saveOldValues();
+        if (essence != 0)
+            essence->saveOldValues();
         editorWidget->setReadOnly(false);
     }
     else

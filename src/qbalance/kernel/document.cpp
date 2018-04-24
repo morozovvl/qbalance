@@ -199,23 +199,24 @@ bool Document::isQuanAccount()
 
 bool Document::calculate(bool)
 {
-    isCurrentCalculate = false;
-    if (!isCurrentCalculate && enabled)             // Если это не повторный вход в функцию и разрешено редактирование документа
+    bool lResult = false;
+    if (enabled && !scriptEngine->getScriptError())             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
         if (Dictionary::calculate(false))           // Если во время вычислений все прошло нормально
         {   // Если в вычислениях не было ошибки
             calcItog();                             // то посчитаем итоги
             saveChanges();            // сохраним изменения
             docModified = true;
-            isCurrentCalculate = true;
+            lResult = true;
         }
         else
         {
             db->clearCommands();                    // была ошибка вычислений, поэтому забудем все изменения
             restoreOldValues();                     // и восстановим старые значения
+            docModified = false;
         }
     }
-    return isCurrentCalculate;
+    return lResult;
 }
 
 

@@ -200,7 +200,6 @@ public:
     virtual TcpServer* getTcpServer();
     virtual TcpClient* getTcpClient();
 
-    Q_INVOKABLE void virtual showError(QString);
     Q_INVOKABLE int virtual showMessage(QString message, QString question = "",
                     QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::StandardButton defButton = QMessageBox::No);      // Вывести сообщение пользователю и возможно задать вопрос
@@ -284,6 +283,7 @@ public:
     QString         OSType();
     void                    saveMessages();
 
+    Q_INVOKABLE virtual void showError(QString);
 
 signals:
     void cardCodeReaded(QString);

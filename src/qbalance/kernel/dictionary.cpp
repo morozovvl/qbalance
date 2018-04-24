@@ -75,6 +75,7 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     parameters = 0;
     doSubmit = true;
     exact = true;
+    isView = db->isView(tableName);
 
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
@@ -95,7 +96,13 @@ void Dictionary::postInitialize(QString name, QObject *parent)
             lUpdateable = tableProperties.value("updateable").toBool();
         }
     }
-    lIsSet = db->isSet(tableName);
+    if (isView)
+    {
+        lInsertable = false;
+        lDeleteable = false;
+        lUpdateable = false;
+    }
+    lIsSet = db->isSet(tableName) && !isView;
 }
 
 
@@ -303,7 +310,6 @@ bool Dictionary::add()
                             if (dictName.size() > 0)
                             {
                                 dictName = dict->getName();
-//                                dict->query(QString("%1='%2'").arg(db->getObjectNameCom(searchParameters[i].table + "." + nameFieldName)).arg(dictName));
                                 dict->query(parameters->getFilter(searchParameters[i].table));
                                 if (dict->getTableModel()->rowCount() == 1)
                                 {
@@ -425,43 +431,38 @@ void Dictionary::setValue(qulonglong id, QString name, QVariant value)
 
 
 bool Dictionary::calculate(bool update) {
-    if (!isCurrentCalculate)
-    {
-        isCurrentCalculate = false;
-        if (Essence::calculate())
-        {   // Если в вычислениях не было ошибки
+    bool lResult = false;
+    if (Essence::calculate())
+    {   // Если в вычислениях не было ошибки
 
-            // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-            int row = getCurrentRow();
+        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+        int row = getCurrentRow();
 
-            for (int i = 0; i < tableModel->record().count(); i++)
-            {
-                QString fieldName = tableModel->record().fieldName(i);
-                QVariant oldValue = getOldValue(fieldName);
-                QVariant newValue = getValue(fieldName);
-                if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                {
-                    tableModel->submit(tableModel->index(row, i));
-                }
-            }
-
-            if (update)
-            {
-                if (db->execCommands())
-                {   // Если во время работы скриптов ошибки не произошло
-                    // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-                    updateCurrentRow();
-                    saveOldValues();
-                }
-                else
-                {   // Во время работы скриптов произошла ошибка
-                    restoreOldValues();
-                }
-            }
-            isCurrentCalculate = true;
+        for (int i = 0; i < tableModel->record().count(); i++)
+        {
+            QString fieldName = tableModel->record().fieldName(i);
+            QVariant oldValue = getOldValue(fieldName);
+            QVariant newValue = getValue(fieldName);
+            if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+                tableModel->submit(tableModel->index(row, i));
         }
+
+        if (update)
+        {
+            if (db->execCommands())
+            {   // Если во время работы скриптов ошибки не произошло
+                // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
+                updateCurrentRow();
+                saveOldValues();
+            }
+            else
+            {   // Во время работы скриптов произошла ошибка
+                restoreOldValues();
+            }
+        }
+        lResult = true;
     }
-    return isCurrentCalculate;
+    return lResult;
 }
 
 
@@ -496,7 +497,6 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
                         }
                         else
                         {
-//                        app->showError(QString(QObject::trUtf8("Не определено значение справочника \"%1\"")).arg(name));
                             return result;
                         }
                     }

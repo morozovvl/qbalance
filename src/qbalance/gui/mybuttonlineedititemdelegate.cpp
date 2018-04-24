@@ -45,8 +45,8 @@ QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyl
     {
 //        if (parentForm != 0)
 //            parentForm->getParent()->saveOldValues();
-        if (dictionary != 0)
-            dictionary->saveOldValues();
+        if (essence != 0)
+            essence->saveOldValues();
         MyButtonLineEdit* editor = new MyButtonLineEdit(parent);
         editor->setFormOnPushButton(buttonForm);
         return editor;

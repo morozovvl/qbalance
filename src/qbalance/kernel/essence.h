@@ -96,7 +96,6 @@ protected:
     bool                isDictionary;
     bool                enabled;
     bool                doSubmit;
-    bool                isCurrentCalculate;                     // Переменная, не позволяющая во время работы функции Calculate, войти в нее второй раз
     bool                photoEnabled;
     QHash<QString, QVariant>             oldValues;              // Старые значения для текущей строки
     DocumentScriptEngine* reportScriptEngine;
@@ -243,6 +242,7 @@ public:
 
 signals:
     void                photoLoaded();
+    void                showError(QString);
 
 public slots:
     void                cardCodeReaded(QString);
