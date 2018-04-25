@@ -64,7 +64,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
 
     scriptEngine = 0;
     scriptEngineEnabled = false;
-    doSubmit = false;
+    doSubmit = true;
     lPrintable = true;
 }
 

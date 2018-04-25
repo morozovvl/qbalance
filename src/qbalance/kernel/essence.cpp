@@ -191,7 +191,7 @@ bool Essence::isInsertable()
 bool Essence::isDeleteable()
 {
     return lDeleteable;
-}         // ... свойства отображения ...
+}
 
 
 bool Essence::isViewable()
@@ -419,7 +419,6 @@ bool Essence::calculate(bool)
     bool lResult = false;
     if (scriptEngineEnabled && scriptEngine != 0)
     {
-        doSubmit = false;
         scriptEngine->eventCalcTable();
         if (!scriptEngine->getScriptError())
         {
@@ -432,7 +431,6 @@ bool Essence::calculate(bool)
                 }
             }
         }
-        doSubmit = true;
     }
     return lResult;
 }
@@ -552,11 +550,6 @@ void Essence::setValue(QString n, QVariant value, int row)
                 break;
             }
         }
-        tableModel->submit(index);
-
-        if (doSubmit)
-            db->execCommands();
-
         setCurrentIndex(oldIndex);
     }
     else
@@ -1182,17 +1175,18 @@ void Essence::prepareSelectCurrentRowCommand()
 }
 
 
-void Essence::updateCurrentRow()
+void Essence::updateCurrentRow(int strNum)
 {
     if (preparedSelectCurrentRow.exec() && preparedSelectCurrentRow.first())
     {
         QModelIndex index = getCurrentIndex();
+        int str = strNum == 0 ? index.row() : strNum;
         for (int i = 0; i < preparedSelectCurrentRow.record().count(); i++)
         {
             QString fieldName = preparedSelectCurrentRow.record().fieldName(i);
             QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-            if (value != tableModel->record(index.row()).value(fieldName))
-                tableModel->setData(tableModel->index(index.row(), i), value, true);
+            if (value != tableModel->record(str).value(fieldName))
+                tableModel->setData(tableModel->index(str, i), value, true);
         }
         setCurrentIndex(index);
     }
@@ -1330,14 +1324,11 @@ void Essence::saveOldValues()
 
 void Essence::restoreOldValues()
 {
-    bool oldDoSubmit = doSubmit;
-    doSubmit = false;
     foreach (QString fieldName, oldValues.keys())
     {
         if (getValue(fieldName) != oldValues.value(fieldName))
             setValue(fieldName, oldValues.value(fieldName));
     }
-    doSubmit = oldDoSubmit;
     db->clearCommands();
 }
 
@@ -1358,7 +1349,9 @@ void Essence::barCodeReaded(QString barCode)
 void Essence::cardCodeReaded(QString cardCode)
 {
     if (scriptEngineEnabled && scriptEngine != 0 && enabled && cardReaderEnabled)
+    {
         scriptEngine->eventCardCodeReaded(cardCode);
+    }
 }
 
 
@@ -1540,6 +1533,8 @@ bool Essence::saveChanges()
         restoreOldValues();
         lResult = false;
     }
+    else
+        updateCurrentRow();
     return lResult;
 }
 

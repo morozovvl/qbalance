@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *************************************************************************************************************/
 
+#include <QtCore/QDebug>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtScript/QScriptValueIterator>
@@ -195,11 +196,14 @@ QScriptValue getName(QScriptContext* context, QScriptEngine* engine)
 QScriptValue setValue(QScriptContext* context, QScriptEngine* engine)
 {
     QScriptValue fieldName = context->argument(0);
-    int row = (context->argument(2).isNumber() ? context->argument(2).toInteger() : -1);
     if (fieldName.isString() && engine->evaluate("table").isValid())
     {
+        int row = (context->argument(2).isNumber() ? context->argument(2).toInteger() : -1);
+        QString strValue = context->argument(1).toString();
+        if (strValue == "NaN")
+            strValue = "0";
         QScriptValue value = engine->evaluate(QString("table.setValue('%1', %2, %3)").arg(fieldName.toString())
-                                                                                .arg(context->argument(1).toString())
+                                                                                .arg(strValue)
                                                                                 .arg(row));
         if (value.isValid())
             return value;

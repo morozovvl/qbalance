@@ -414,11 +414,9 @@ bool Document::remove(bool noAsk)
                 if (db->removeDocStr(docId, strNum))
                 {
                     Dictionary::query();
-                    doSubmit = false;
                     if (scriptEngineEnabled && scriptEngine != 0)
                         scriptEngine->eventAfterDeleteString();
                     calcItog();
-                    doSubmit = true;
                     saveChanges();     // Принудительно обновим итог после удаления строки
                     return true;
                 }
@@ -735,8 +733,6 @@ void Document::setConstDictId(QString dName, QVariant id)
     if (tableModel->rowCount() > 0)
     {
         int currentRow = getCurrentRow();
-        bool submit = doSubmit;
-        doSubmit = true;
         Dictionary* dict;
         QString dictName;
         for (int i = 0; i < topersList->count(); i++)
@@ -815,7 +811,6 @@ void Document::setConstDictId(QString dName, QVariant id)
             }
         }
         db->execCommands();
-        doSubmit = submit;
         Dictionary::query();
         grdTable->selectRow(currentRow);
         grdTable->setFocus();
