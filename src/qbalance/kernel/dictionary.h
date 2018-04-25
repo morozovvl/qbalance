@@ -42,6 +42,7 @@ private:
     bool            isDepend;
     QString         dictTitle;
     bool            isView;
+    bool            lNameExist;
 
 protected:
     QString         prototypeName;          // Имя справочника - прототипа

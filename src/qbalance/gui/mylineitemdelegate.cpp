@@ -52,7 +52,6 @@ QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionVie
         if (essence != 0)
             essence->saveOldValues();
         editorWidget->setReadOnly(false);
-        connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
     }
     else
         editorWidget->setReadOnly(true);

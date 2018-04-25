@@ -166,10 +166,6 @@ bool Documents::remove(bool noAsk)
 
 void Documents::view()
 {
-/*
-    setCurrentDocument(getId());
-    currentRow = getCurrentRow();
-*/
     currentDocument->show();
 }
 
@@ -196,7 +192,7 @@ bool Documents::open()
     bool result = false;
     if (operNumber > 0 && Essence::open())
     {     // Откроем этот справочник
-//        initFormEvent();
+        setOrderClause();
         prepareSelectCurrentRowCommand();
 
         tableModel->setTestSelect(true);
@@ -378,4 +374,12 @@ void Documents::showItog()
 {
     if (form != 0)
         ((FormDocuments*)form)->showItog();
+}
+
+
+bool Documents::calculate(bool)
+{
+    bool lResult = true;
+    saveChanges();            // сохраним изменения
+    return lResult;
 }

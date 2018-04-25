@@ -412,6 +412,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
     if (result != 0)
     {
         result->setEssence(essence);
+        connect(result, SIGNAL(closeEditor(QWidget*)), result, SLOT(calculate()));
     }
     return result;
 }
@@ -575,7 +576,7 @@ void TableView::setReadOnly(bool ro)
                     delegate->setReadOnly(fields.at(i).readOnly);
             }
         }
-        repaint();
+//        repaint();
     }
 }
 

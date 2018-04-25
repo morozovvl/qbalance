@@ -202,7 +202,7 @@ bool Document::calculate(bool)
     bool lResult = false;
     if (enabled && !scriptEngine->getScriptError())             // Если это не повторный вход в функцию и разрешено редактирование документа
     {
-        if (Dictionary::calculate(false))           // Если во время вычислений все прошло нормально
+        if (Dictionary::calculate(false))           // После вычисление не сохранять
         {   // Если в вычислениях не было ошибки
             calcItog();                             // то посчитаем итоги
             saveChanges();            // сохраним изменения
@@ -217,21 +217,6 @@ bool Document::calculate(bool)
         }
     }
     return lResult;
-}
-
-
-void Document::saveChanges()
-{
-    if (!db->execCommands())
-    {   // Во время сохранения результатов произошла ошибка
-        restoreOldValues();
-        parent->restoreOldValues();
-    }
-    else
-    {
-        updateCurrentRow();
-        parent->updateCurrentRow();
-    }
 }
 
 
@@ -860,7 +845,10 @@ void Document::prepareSelectCurrentRowCommand()
 bool Document::open()
 {
     if (operNumber > 0 && Essence::open())
+    {
+        setOrderClause();
         return true;
+    }
     return false;
 }
 
@@ -1305,3 +1293,4 @@ int Document::appendDocStrings(int rowCount)
 {
     return db->addDocStr(operNumber, docId, "", rowCount);
 }
+

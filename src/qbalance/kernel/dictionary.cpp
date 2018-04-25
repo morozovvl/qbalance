@@ -75,7 +75,9 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     parameters = 0;
     doSubmit = true;
     exact = true;
+    lNameExist = false;
     isView = db->isView(tableName);
+    lIsSet = db->isSet(tableName);
 
     QSqlRecord tableProperties = db->getDictionariesProperties(tableName);
     if (!tableProperties.isEmpty())
@@ -102,7 +104,6 @@ void Dictionary::postInitialize(QString name, QObject *parent)
         lDeleteable = false;
         lUpdateable = false;
     }
-    lIsSet = db->isSet(tableName) && !isView;
 }
 
 
@@ -434,7 +435,7 @@ bool Dictionary::calculate(bool update) {
     bool lResult = false;
     if (Essence::calculate())
     {   // Если в вычислениях не было ошибки
-
+/*
         // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
         int row = getCurrentRow();
 
@@ -446,19 +447,23 @@ bool Dictionary::calculate(bool update) {
             if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
                 tableModel->submit(tableModel->index(row, i));
         }
-
+*/
+//        submit();
         if (update)
         {
+/*
             if (db->execCommands())
             {   // Если во время работы скриптов ошибки не произошло
                 // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-                updateCurrentRow();
+//                updateCurrentRow();
                 saveOldValues();
             }
             else
             {   // Во время работы скриптов произошла ошибка
                 restoreOldValues();
             }
+*/
+            saveChanges();
         }
         lResult = true;
     }
@@ -508,7 +513,7 @@ qulonglong Dictionary::getId(int row, bool forceToRefresh)
         if (filter.size() > 0)
         {
             query(filter);
-            if (tableModel->rowCount() == 0 && isSet())
+            if (tableModel->rowCount() == 0 && isSet() && !isView)
                 result = db->insertDictDefault(tableName, &values);
             else
                 result = Essence::getId(0);
@@ -599,19 +604,24 @@ bool Dictionary::open(QString command, QString tName)
     {
         if (tableName.size() > 0)
         {
-            prepareSelectCurrentRowCommand();
             // Откроем этот справочник
             fieldList = getFieldsList();
-
             // Проверим, имеется ли в справочнике полнотекстовый поиск
             foreach (QString fieldName, fieldList)
             {
                 if (fieldName == "fts")
                 {
                     ftsEnabled = true;
-                    break;
+                }
+                if (fieldName.toUpper() == "ИМЯ")
+                {
+                    lNameExist = true;
                 }
             }
+
+            setOrderClause();
+
+            prepareSelectCurrentRowCommand();
 
             tableModel->setTestSelect(true);
             query();
@@ -634,6 +644,10 @@ bool Dictionary::open(QString command, QString tName)
                     tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
                 }
             }
+
+            reportScriptEngine = new DocumentScriptEngine(0, this);
+            reportScriptEngine->setReportContext(&printValues);
+            reportScriptEngine->getReportContext()->setScriptEngine(reportScriptEngine);
         }
         return true;
     }
@@ -804,7 +818,7 @@ void Dictionary::setOrderClause(QString sOrder)
     }
     else
     {
-        if (tableName.left(9) != "документы" && tableName.size() > 0)
+        if (tableName.left(9) != "документы" && tableName.size() > 0 && lNameExist)
             Table::setOrderClause(QString("\"%1\".%2").arg(tableName)
                                                      .arg(db->getObjectNameCom(tableName + ".имя")));
     }

@@ -421,7 +421,6 @@ bool Essence::calculate(bool)
     {
         doSubmit = false;
         scriptEngine->eventCalcTable();
-        doSubmit = true;
         if (!scriptEngine->getScriptError())
         {
             scriptEngine->eventAfterCalculate();
@@ -433,6 +432,7 @@ bool Essence::calculate(bool)
                 }
             }
         }
+        doSubmit = true;
     }
     return lResult;
 }
@@ -892,7 +892,6 @@ bool Essence::open()
 {
     if (Table::open())
     {
-        setOrderClause();
         if (!app->isScriptMode())       // Если мы работаем не в скриптовом режиме, то создадим форму для этой сущности
             initForm();
 
@@ -995,7 +994,6 @@ ReportContext* Essence::getReportContext()
 
 void Essence::openScriptEngine()
 {
-//    if (scriptEngineEnabled && db->isFileExist(scriptFileName, ScriptFileType))
     if (scriptEngineEnabled && scriptFileName.size() > 0)
     {
         setScriptEngine();
@@ -1530,4 +1528,33 @@ QVariant Essence::getSumValue(QString name)
 void Essence::setCardReaderEnabled(bool enabled)
 {
     cardReaderEnabled = enabled;
+}
+
+
+bool Essence::saveChanges()
+{
+    bool lResult = true;
+    submit();
+    if (!db->execCommands())
+    {   // Во время сохранения результатов произошла ошибка
+        restoreOldValues();
+        lResult = false;
+    }
+    return lResult;
+}
+
+
+void Essence::submit()
+{
+    // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
+    int row = getCurrentRow();
+
+    for (int i = 0; i < tableModel->record().count(); i++)
+    {
+        QString fieldName = tableModel->record().fieldName(i);
+        QVariant oldValue = getOldValue(fieldName);
+        QVariant newValue = getValue(fieldName);
+        if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+            tableModel->submit(tableModel->index(row, i));
+    }
 }

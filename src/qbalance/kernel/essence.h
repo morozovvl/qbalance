@@ -69,7 +69,6 @@ private:
 
     QHash<QString, urlId>  urls;                               // URL картинок в интернете и их локальные идентификаторы
     QNetworkAccessManager*  m_networkAccessManager;
-    QHash<QString, QVariant> printValues;
 
 
 private slots:
@@ -102,6 +101,7 @@ protected:
     bool                lIsDocument;
     bool                sortedTable;
     bool                cardReaderEnabled;
+    QHash<QString, QVariant> printValues;
 
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void        prepareSelectCurrentRowCommand();
@@ -111,6 +111,7 @@ protected:
 
     Essence(QString = "", QObject* = 0);
     virtual void postInitialize(QString, QObject*);
+    virtual void    submit();
 
 public:
     ~Essence();
@@ -143,6 +144,7 @@ public:
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }
     Q_INVOKABLE int                     getRowCount();
     Q_INVOKABLE int                     rowCount();
+    Q_INVOKABLE bool saveChanges();
 
 
 // Функции для работы с модулем GUI

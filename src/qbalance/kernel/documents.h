@@ -76,6 +76,7 @@ public:
     Q_INVOKABLE virtual void setCurrentDocument(int);       // Зафиксировать текущий документ
     virtual void        preparePrintValues();                   // Готовит значения для печати
     virtual void showItog();
+    virtual bool calculate(bool update = true);
 };
 
 #endif // DOCUMENTS_H

@@ -130,7 +130,6 @@ public:
     Q_INVOKABLE virtual QVariant getValue(QString, int row = -1);
     Q_INVOKABLE void saveVariable(QString, QVariant);
     Q_INVOKABLE QVariant restoreVariable(QString);
-    Q_INVOKABLE void saveChanges();
     void saveVariablesToDB();
     void restoreVariablesFromDB();
     Q_INVOKABLE virtual void setEnabled(bool);
@@ -143,7 +142,6 @@ public:
     bool isSinglePrv();
     bool isQuanAccount();
     Q_INVOKABLE virtual void    setCurrentRow(int row);
-
 };
 
 #endif // DOCUMENT_H
