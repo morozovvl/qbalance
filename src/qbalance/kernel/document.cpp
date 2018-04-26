@@ -309,6 +309,7 @@ bool Document::add()
 
 int Document::addFromQuery(QString queryName)
 {
+    int result = 0;
     if (queryName.size() > 0 && checkConstDicts())
     {
         QSqlRecord record;
@@ -350,21 +351,18 @@ int Document::addFromQuery(QString queryName)
                 i++;
                 progressDialog->setValue(i);
             } while (queryData.next());
-            Dictionary::query();
-            calcItog();
-            saveChanges();
             progressDialog->hide();
             delete progressDialog;
             addingFromQuery = false;
-            return queryData.size();
+            result = queryData.size();;
         }
         else
             ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
-            Dictionary::query();
-            calcItog();
-            saveChanges();
+        Dictionary::query();
+        calcItog();
+        saveChanges();
     }
-    return 0;
+    return result;
 }
 
 

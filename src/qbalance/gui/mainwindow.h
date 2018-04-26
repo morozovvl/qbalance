@@ -54,6 +54,7 @@ private slots:
       void showMessagesWindow();
       void saveCustomization();
       void loadFile();
+      void saveFile();
       void beep();
       void printReportWithoutCleaning();
       void printReportWithCleaning();
@@ -111,6 +112,7 @@ private:
       QAction* showMessageWindow;
       QAction* saveCustomAct;
       QAction* loadFileAct;
+      QAction* saveFileAct;
       QAction* beepAct;
       QAction* printReportWithoutCleaningAct;
       QAction* printReportWithCleaningAct;

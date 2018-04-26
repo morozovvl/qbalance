@@ -342,7 +342,7 @@ private:
     void            writeToDebugFile(QString, QString);
 
 private slots:
-    void                    setTimeIsOut() { timeIsOut = true; }
+    void                    setTimeIsOut();
 };
 
 #endif

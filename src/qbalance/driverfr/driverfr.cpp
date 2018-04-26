@@ -422,6 +422,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
     locked = false;
     // Установление связи с ккм
     app->showMessageOnStatusBar("Подключаемся к ФР", -1);
+
     fr.BaudRate      = rate;
     fr.Timeout       = timeout;
     fr.Password      = password;
@@ -433,6 +434,18 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
         {
             remote = true;
             serialPort->setRemote(remote);
+
+//            fr.PortNumber = 0;
+//            fr.BaudRate = app->getConfigValue("FR_DRIVER_BOUD_RATE").toInt();
+//            if (remote)
+//                fr.Timeout = app->getConfigValue("FR_REMOTE_DRIVER_TIMEOUT").toInt();
+//            else
+//                fr.Timeout = app->getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt();
+
+            serialPort->writeLog(QString("Порт: %1").arg(fr.PortNumber));
+            serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
+            serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
+
             if (Connect(false))
             {
                 if (app->getConfigValue("FR_CONNECT_SIGNAL").toBool())
@@ -502,14 +515,6 @@ bool DriverFR::Connect(bool showError)
         {
             connected = true;
 
-            fr.PortNumber = 0;
-            fr.BaudRate = app->getConfigValue("FR_DRIVER_BOUD_RATE").toInt();
-            if (remote)
-                fr.Timeout = app->getConfigValue("FR_REMOTE_DRIVER_TIMEOUT").toInt();
-            else
-                fr.Timeout = app->getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt();
-            serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
-            serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
             if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             {
                 result = true;
@@ -522,7 +527,10 @@ bool DriverFR::Connect(bool showError)
                     progressDialog->show();
             }
             else
+            {
                 connected = false;
+                serialPort->writeLog(QString("Ошибка соединения"));
+            }
         }
     }
     if (!result && showError)
@@ -626,85 +634,79 @@ int DriverFR::sendACK()
 
 short int DriverFR::readByte()
 {
+    unsigned short int result = -1;
     unsigned char readbuff[1] = "";
-    int result = readBytes(readbuff, 1);
+    result = readBytes(readbuff, 1);
     if (result >= 0)
     {
-        unsigned short int result = (unsigned int) readbuff[0];
-        return result;
+        result = (unsigned int) readbuff[0];
     }
-    return -1;
+    return result;
 }
 
 
 
 int DriverFR::readBytes(unsigned char *buff, int len)
 {
+    int result = -1;
     int readed = 0;
     for (int i = 0; i < len; i++)
         buff[i] = 0;
 
-    int result = serialPort->readData((char*)(buff + readed), len - readed);
-    if (result >= 0)
-    {
-        return result;      // то выходим
-    }
-    serialPort->writeLog();
-    return -1;
+    result = serialPort->readData((char*)(buff + readed), len - readed);
+    return result;
 }
 
 
 int DriverFR::readAnswer(answer *ans, short int byte)
 {
-    int result;
-    short int  len, crc, repl;
-    result = -1;
-    repl = byte > 0 ? byte : readByte();
+    int result = -1;
+    short int  repl = byte > 0 ? byte : readByte();
     if (repl == STX)
     {
-        for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
-        {
-            len = readByte();
-            if (len > 0)
-            {
-                int readedLen = readBytes(ans->buff, len);
-                if (readedLen == len)
-                {
-                    crc = readByte();
-                    if (crc == (LRC(ans->buff, len, 0) ^ len))
-                    {
-                        sendACK();
-                        ans->len = len;
-                        result = len;
-                        return result;
-                    }
-                    else
-                    {
-                        serialPort->writeLog();
-                        app->debug(4, QString("Не сходится контрольная сумма"));
-                    }
-                }
-                else
-                {
-                    serialPort->writeLog();
-                    app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
-                }
-                sendNAK();
-                break;
-            }
-            else if (len == 0)
-                app->timeOut(200);      // Повторим попытку прочитать длину сообщения через 200мс
-            else
-                break;
-        }
+        result = readMessage(ans);
     }
-    else
+    else if (repl == ACK)
     {
-        while (readByte() >= 0);                    // Прочитаем остаток предыдущего сообщения
+        result = readMessage(ans);
     }
     return result;
 }
 
+
+int DriverFR::readMessage(answer *ans)
+{
+    int result = -1;
+    short int crc;
+    short int len = readByte();
+    if (len > 0)
+    {
+        int readedLen = readBytes(ans->buff, len);
+        if (readedLen == len)
+        {
+            crc = readByte();
+            if (crc == (LRC(ans->buff, len, 0) ^ len))
+            {
+                sendACK();
+                ans->len = len;
+                result = len;
+                return result;
+            }
+            else
+            {
+                serialPort->writeLog();
+                app->debug(4, QString("Не сходится контрольная сумма"));
+            }
+        }
+        else
+        {
+            serialPort->writeLog();
+            app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
+        }
+        sendNAK();
+      }
+    return result;
+}
 
 unsigned short int DriverFR::LRC(unsigned char *str, int len, int offset)
 {
@@ -748,25 +750,23 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
     command cmd;
     int result = -1;
     composeComm(&cmd, comm, pass, param);
-    if (deviceIsReady())
+
+    if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
     {
-        if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
+        serialPort->writeLog();
+        for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
         {
-            serialPort->writeLog();
-            for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
+            short int repl = readByte();
+            if (repl == ACK)                // Если сообщение получено
             {
-                short int repl = readByte();
-                if (repl == ACK)                // Если сообщение получено
-                {
-                    serialPort->writeLog();     // Запишем в журнал сообщение
-                    result = 1;                 // установим положительный результат
-                    break;                      // и выйдем из цикла
-                }
-                else if (repl == NAK)
-                    break;
-                else if (repl == -1)
-                    break;
+                serialPort->writeLog();     // Запишем в журнал сообщение
+                result = 1;                 // установим положительный результат
+                break;                      // и выйдем из цикла
             }
+            else if (repl == NAK)
+                break;
+            else if (repl == -1)
+                break;
         }
     }
     return result;
@@ -788,13 +788,6 @@ bool DriverFR::deviceIsReady()
             serialPort->writeLog();
             answer     a;
             readAnswer(&a);
-            sendENQ();
-        }
-        else
-        {                                       // от предыдущей команды
-            serialPort->writeLog();
-            answer     a;
-            readAnswer(&a, repl);
             sendENQ();
         }
     }
@@ -914,38 +907,39 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
 {
     int result = -1;
     int attempts = 1;
-    while (true)
+    if (deviceIsReady())
     {
-        result = sendCommand(command, fr.Password, p);
-        if (result >= 0)
+        sendCommand(command, fr.Password, p);
+        while (true)
         {
             result = readAnswer(a);
-            if (result >= 0)
+            if (result > 0)
             {
                 if (a->buff[0] == command)
                 {
                     if (errHand(a) != 0)
                     {
                         result = fr.ResultCode;
+                        break;
                     }
                     else
                         result = 0;
                 }
                 else
-                    result = -1;
+                   result = -1;
             }
-        }
-        if (((result < 0) || (result == 0x50)) && (attempts <= maxTries))
-        {
-            attempts++;
-            app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);
-            serialPort->writeLog();
-            app->sleep(500);
-            serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
-        }
-        else
-        {
-            break;
+            if (((result < 0) || (result == 0x50)) && (attempts <= maxTries))
+            {
+                attempts++;
+                app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);
+                serialPort->writeLog();
+                app->sleep(1000);
+                serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
+            }
+            else
+            {
+                break;
+            }
         }
     }
     if (result > 0)

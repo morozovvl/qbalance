@@ -26,6 +26,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/dictionary.h"
 #include "../gui/messagewindow.h"
 #include "../kernel/tcpclient.h"
+#include "../storage/filetype.h"
+#include "../storage/dbfactory.h"
 
 
 MainWindow::MainWindow(GUIFactory* par)
@@ -216,8 +218,11 @@ void MainWindow::createMenus()
     saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
     connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
 
-    loadFileAct = serviceMenu->addAction(QObject::trUtf8("Загрузить файл со скриптом"));
+    loadFileAct = serviceMenu->addAction(QObject::trUtf8("Загрузить файл со скриптом на сервер"));
     connect(loadFileAct, SIGNAL(triggered()), this, SLOT(loadFile()));
+
+    saveFileAct = serviceMenu->addAction(QObject::trUtf8("Выгрузить файл со скриптом с сервера"));
+    connect(saveFileAct, SIGNAL(triggered()), this, SLOT(saveFile()));
 
     configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
     connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
@@ -280,32 +285,21 @@ void MainWindow::saveCustomization()
 void MainWindow::loadFile()
 {
     app->loadFile();
-/*
- * Временная отладочная процедура для отладки сетевого обмена
- *
-    TcpClient* tcpClient = app->getTcpClient();
-    if (tcpClient->isValid())
-    {
-        int i = 0;
-        while (true)
-        {
-            if (tcpClient->sendToServer("test") && tcpClient->waitResult())
-            {
-                qDebug() << tcpClient->getResult();
-            }
-            else
-            {
-                app->print("Сервер не отвечает");
-                break;
-            }
-            app->sleep(100);
-            qDebug() << i;
-            i++;
-        }
-    }
-*/
 }
 
+
+void MainWindow::saveFile()
+{
+    Dictionary* dict = app->getDictionary("файлы");
+    dict->query("ТИП = 0");
+    dict->exec();
+    if (dict->isFormSelected())
+    {
+        QString fileName = dict->getName();
+        QByteArray templateFile = app->getDBFactory()->getFile(fileName, ScriptFileType);
+        app->saveFile(app->getScriptsPath(fileName), &templateFile);
+    }
+}
 
 void MainWindow::beep()
 {

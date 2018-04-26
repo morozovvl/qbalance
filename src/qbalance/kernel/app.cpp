@@ -100,7 +100,6 @@ TApplication::TApplication(int & argc, char** argv)
     {
         Exemplar = this;
     }
-    connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
     timeIsOut = false;
     tcpServer = 0;
     scriptMode = false;
@@ -1370,18 +1369,24 @@ void TApplication::startTimeOut(int ms)
 {
     timeIsOut = false;
     timer.start(ms);
+    connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
 }
 
+
+void TApplication::setTimeIsOut()
+{
+    timeIsOut = true;
+    timer.stop();
+    disconnect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
+}
 
 void TApplication::sleep(int ms)
 {
-    QTime timer;
-    timer.start();
-    do
-    {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, ms);
-    } while (timer.elapsed() < ms);
+    QTime dieTime= QTime::currentTime().addMSecs(ms);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
 }
+
 
 /*
 void TApplication::showProcesses()
@@ -1390,21 +1395,11 @@ void TApplication::showProcesses()
 }
 */
 
+
 int TApplication::runScript(QString scrName)
 {
     int result = 0;
     QString scriptName = scrName;
-/*
-    if (scriptName.size() == 0 && isSA())
-    {
-        dirName = "scriptLoadDir";
-        scriptName = getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"));
-        if (scriptName.size() == 0)
-        {
-            return result;
-        }
-    }
-*/
     if (!sendCommandMode)
     {
         QFileInfo fi(scriptName);
