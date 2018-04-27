@@ -801,7 +801,7 @@ public:
 private:
 
     short int readByte();
-    int readBytes(unsigned char *, int);
+    short int readBytes(unsigned char *, int);
     int readMessage(answer *);
     int sendENQ();
     int sendNAK();

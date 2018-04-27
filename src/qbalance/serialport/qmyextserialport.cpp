@@ -115,7 +115,7 @@ void QMyExtSerialPort::tryReceive()
     }
     if (!tryReceiveExit)
     {
-        QTimer::singleShot(10, this, SLOT(tryReceive()));
+        QTimer::singleShot(5, this, SLOT(tryReceive()));
     }
 }
 
@@ -138,7 +138,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
                 break;
             }
 
-            app->sleep(50);
+            app->sleep(10);
 
             if (app->isTimeOut())
             {

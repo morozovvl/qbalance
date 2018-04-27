@@ -58,6 +58,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     operName = db->getTopersProperties(operNumber, "имя").toString().trimmed();
     subFormTitle = operName;
     formTitle  = QString("%1 - %2").arg(operName).arg(QObject::trUtf8("Список документов"));
+
     lInsertable = db->getTopersProperties(operNumber, "insertable").toBool();
     lDeleteable = db->getTopersProperties(operNumber, "deleteable").toBool();
     lUpdateable = db->getTopersProperties(operNumber, "updateable").toBool();
@@ -66,6 +67,7 @@ void Documents::postInitialize(int opNumber, QObject *parent)
     scriptEngineEnabled = false;
     doSubmit = true;
     lPrintable = true;
+    photoEnabled = false;
 }
 
 

@@ -435,34 +435,8 @@ bool Dictionary::calculate(bool update) {
     bool lResult = false;
     if (Essence::calculate())
     {   // Если в вычислениях не было ошибки
-/*
-        // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
-        int row = getCurrentRow();
-
-        for (int i = 0; i < tableModel->record().count(); i++)
-        {
-            QString fieldName = tableModel->record().fieldName(i);
-            QVariant oldValue = getOldValue(fieldName);
-            QVariant newValue = getValue(fieldName);
-            if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
-                tableModel->submit(tableModel->index(row, i));
-        }
-*/
-//        submit();
         if (update)
         {
-/*
-            if (db->execCommands())
-            {   // Если во время работы скриптов ошибки не произошло
-                // Запросим в БД содержимое текущей строки в документе и обновим содержимое строки в форме (на экране)
-//                updateCurrentRow();
-                saveOldValues();
-            }
-            else
-            {   // Во время работы скриптов произошла ошибка
-                restoreOldValues();
-            }
-*/
             saveChanges();
         }
         lResult = true;

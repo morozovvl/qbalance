@@ -600,7 +600,7 @@ QList<QString> TApplication::getConfigNames(QString type)
     QList<QString> result;
     foreach (QString name, configNames)
     {
-        if (type.size() == 0 || type == configs.value(name).type)
+        if (name.size() > 0 && (type.size() == 0 || type == configs.value(name).type))
             result.append(name);
     }
     return result;
@@ -706,7 +706,6 @@ bool TApplication::initApplication()
             if (dictionaryList->open() && topersList->open())
             {
                 updates = new Updates(this);
-//                updates->open(getConfigValue("UPDATES_FTP_URL").toString(), true);
 
                 gui->showMenus();
 
@@ -1636,22 +1635,25 @@ QString TApplication::getOpenFileName(QWidget* parent, QString caption, QString 
 
 void TApplication::sendSMS(QString url, QString number, QString message, QString from, bool repeat)
 {
-    QEventLoop loop;
-    QNetworkAccessManager manager(this);
-    QNetworkReply* reply;
-    if (!repeat)
-    {   // Если такое сообщение уже было отправлено адресату, то повторно не высылаем
-        if (db->getValue(QString("SELECT COUNT(*) FROM смс_отправленные WHERE ИМЯ = '%1' AND ТЕКСТ = '%2' AND ДАТАВРЕМЯ::date = current_date;").arg(number).arg(message)).toInt() > 0)
-            return;
+    if (getConst("ОтправлятьСМС").toString() == "да")
+    {
+        QEventLoop loop;
+        QNetworkAccessManager manager(this);
+        QNetworkReply* reply;
+        if (!repeat)
+        {   // Если такое сообщение уже было отправлено адресату, то повторно не высылаем
+            if (db->getValue(QString("SELECT COUNT(*) FROM смс_отправленные WHERE ИМЯ = '%1' AND ТЕКСТ = '%2' AND ДАТАВРЕМЯ::date = current_date;").arg(number).arg(message)).toInt() > 0)
+                return;
+        }
+        QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);
+        reply = manager.get(QNetworkRequest(QUrl(command)));
+        connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
+        loop.exec();
+        if (reply->error() != QNetworkReply::NoError)
+            debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
+        else
+            db->exec(QString("INSERT INTO смс_отправленные (ИМЯ, ТЕКСТ) VALUES ('%1', '%2');").arg(number).arg(message));
     }
-    QString command = QString("%1%2&to=%3&text=%4").arg(url).arg(from.size() > 0 ? "&from=" + from : "").arg(number).arg(message);
-    reply = manager.get(QNetworkRequest(QUrl(command)));
-    connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
-    loop.exec();
-    if (reply->error() != QNetworkReply::NoError)
-        debug(0, QString("Ошибка SMS: %1 %2").arg(reply->error()).arg(reply->errorString()));
-    else
-        db->exec(QString("INSERT INTO смс_отправленные (ИМЯ, ТЕКСТ) VALUES ('%1', '%2');").arg(number).arg(message));
 }
 
 

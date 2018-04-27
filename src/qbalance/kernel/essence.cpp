@@ -91,7 +91,7 @@ void Essence::postInitialize(QString name, QObject* parent)
     photoPath = "";
     photoPathVerified = false;
     photoIdField = "";
-    photoEnabled = false;
+    photoEnabled = true;
     m_networkAccessManager = 0;
     doSubmit = false;                           // По умолчанию не обновлять записи автоматически
     defaultFilter = "";
@@ -647,9 +647,7 @@ QString Essence::getPhotoPath()
         photoPathVerified = true;           // Чтоб больше не спрашивала
     }
     else
-    {
         path = photoPath;
-    }
     return path;
 }
 
@@ -1188,6 +1186,7 @@ void Essence::updateCurrentRow(int strNum)
             if (value != tableModel->record(str).value(fieldName))
                 tableModel->setData(tableModel->index(str, i), value, true);
         }
+        saveOldValues();
         setCurrentIndex(index);
     }
     else

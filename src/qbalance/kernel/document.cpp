@@ -1287,3 +1287,17 @@ int Document::appendDocStrings(int rowCount)
     return db->addDocStr(operNumber, docId, "", rowCount);
 }
 
+
+bool Document::saveChanges()
+{
+    bool lResult = false;
+    parent->submit();
+    if (Essence::saveChanges())
+    {
+        parent->updateCurrentRow();
+        lResult = true;
+    }
+    else
+        parent->restoreOldValues();
+    return lResult;
+}

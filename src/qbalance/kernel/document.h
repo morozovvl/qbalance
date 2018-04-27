@@ -142,6 +142,7 @@ public:
     bool isSinglePrv();
     bool isQuanAccount();
     Q_INVOKABLE virtual void    setCurrentRow(int row);
+    Q_INVOKABLE bool saveChanges();
 };
 
 #endif // DOCUMENT_H

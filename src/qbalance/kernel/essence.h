@@ -111,7 +111,6 @@ protected:
 
     Essence(QString = "", QObject* = 0);
     virtual void postInitialize(QString, QObject*);
-    virtual void    submit();
 
 public:
     ~Essence();
@@ -200,6 +199,7 @@ public:
     virtual void        evaluateEngine();
     virtual bool        calculate(bool = true);
     virtual void        saveOldValues();                // Сохраняет значения полей текущей строки перед вычислениями
+    virtual void        submit();
     Q_INVOKABLE virtual void restoreOldValues();
     Q_INVOKABLE virtual QScriptValue evaluateScript(QString);
 

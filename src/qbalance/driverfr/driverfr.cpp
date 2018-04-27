@@ -634,7 +634,7 @@ int DriverFR::sendACK()
 
 short int DriverFR::readByte()
 {
-    unsigned short int result = -1;
+    short int result = -1;
     unsigned char readbuff[1] = "";
     result = readBytes(readbuff, 1);
     if (result >= 0)
@@ -646,9 +646,9 @@ short int DriverFR::readByte()
 
 
 
-int DriverFR::readBytes(unsigned char *buff, int len)
+short int DriverFR::readBytes(unsigned char *buff, int len)
 {
-    int result = -1;
+    short int result = -1;
     int readed = 0;
     for (int i = 0; i < len; i++)
         buff[i] = 0;
@@ -681,7 +681,7 @@ int DriverFR::readMessage(answer *ans)
     short int len = readByte();
     if (len > 0)
     {
-        int readedLen = readBytes(ans->buff, len);
+        short int readedLen = readBytes(ans->buff, len);
         if (readedLen == len)
         {
             crc = readByte();
@@ -909,9 +909,9 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
     int attempts = 1;
     if (deviceIsReady())
     {
-        sendCommand(command, fr.Password, p);
         while (true)
         {
+            sendCommand(command, fr.Password, p);
             result = readAnswer(a);
             if (result > 0)
             {
@@ -920,7 +920,6 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                     if (errHand(a) != 0)
                     {
                         result = fr.ResultCode;
-                        break;
                     }
                     else
                         result = 0;
@@ -933,7 +932,7 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                 attempts++;
                 app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);
                 serialPort->writeLog();
-                app->sleep(1000);
+                app->sleep(500);
                 serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
             }
             else

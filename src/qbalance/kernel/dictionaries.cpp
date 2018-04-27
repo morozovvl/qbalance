@@ -53,6 +53,7 @@ void Dictionaries::postInitialize(QObject* parent)
     formTitle = QObject::trUtf8("Справочники");
     scriptEngine = 0;
     scriptEngineEnabled = false;
+    photoEnabled = false;
 }
 
 
@@ -119,7 +120,6 @@ bool Dictionaries::addDictionary(QString dictName)
         Dictionary* dict = Dictionary::create<Dictionary>(dictName, this);
 
         dict->setDictionaries(this);
-        dict->setPhotoEnabled(true);
 
         if (dict->open())
         {
@@ -187,7 +187,6 @@ bool Dictionaries::addSaldo(QString acc)
         {
             saldo->getFormWidget()->setWindowTitle(QString(QObject::trUtf8("Остаток на счете %1")).arg(acc));
             dictionariesList.insert(alias, saldo);
-            saldo->setPhotoEnabled(true);
             saldo->setQuan(true);
             return true;
         }
