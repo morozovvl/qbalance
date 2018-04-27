@@ -225,7 +225,7 @@ public:
     void    initConfig();
     QString     findFileFromEnv(QString);
     Q_INVOKABLE virtual void timeOut(int);
-    Q_INVOKABLE void startTimeOut(int);
+//    Q_INVOKABLE void startTimeOut(int);
     Q_INVOKABLE bool isTimeOut();
     Q_INVOKABLE virtual void sleep(int);
 

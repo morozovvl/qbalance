@@ -148,7 +148,8 @@ bool    TcpClient::waitResult()
 //    slotReadyRead();
     bool result = false;
     tryReceive();
-    app->startTimeOut(app->getConfigValue(MAX_NET_TIMEOUT).toInt());                   // Ждем ответа в течение 10 сек
+//    app->startTimeOut(app->getConfigValue(MAX_NET_TIMEOUT).toInt());                   // Ждем ответа в течение 10 сек
+    QTime dieTime= QTime::currentTime().addMSecs(app->getConfigValue(MAX_NET_TIMEOUT).toInt());
     while (true)
     {
         if (resultReady)
@@ -158,7 +159,7 @@ bool    TcpClient::waitResult()
         }
         if (!m_pTcpSocket->isValid())
             break;
-        if (app->isTimeOut())
+        if (QTime::currentTime() >= dieTime)
         {
             app->debug(5, "*** ЗАДЕРЖКА свыше 10 сек ***");
             break;

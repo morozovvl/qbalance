@@ -845,20 +845,9 @@ void    TApplication::openPlugins()
                                getConfigValue("FR_DRIVER_BOUD_RATE").toInt(),
                                getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt(),
                                getConfigValue("FR_DRIVER_PASSWORD").toInt()))
-                    driverFRisValid = true;
-            else
             {
-                driverFR->close();
-                driverFR = 0;
+                    driverFRisValid = true;
             }
-        }
-    }
-    else
-    {
-        if (driverFR != 0)
-        {
-            driverFR->close();
-            driverFR = 0;
         }
     }
 
@@ -1364,13 +1353,14 @@ void TApplication::timeOut(int ms)
 }
 
 
+/*
 void TApplication::startTimeOut(int ms)
 {
     timeIsOut = false;
     timer.start(ms);
     connect(&timer, SIGNAL(timeout()), this, SLOT(setTimeIsOut()));
 }
-
+*/
 
 void TApplication::setTimeIsOut()
 {
@@ -1383,7 +1373,7 @@ void TApplication::sleep(int ms)
 {
     QTime dieTime= QTime::currentTime().addMSecs(ms);
     while (QTime::currentTime() < dieTime)
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 2);
 }
 
 

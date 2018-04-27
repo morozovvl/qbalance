@@ -604,6 +604,8 @@ int DriverFR::sendENQ()
     qint64 result;
     char buff[2];
     buff[0] = ENQ;
+    app->sleep(10);
+    serialPort->writeLog();
     result = serialPort->writeData(buff,1);
     serialPort->writeLog();
     return result;
@@ -615,6 +617,8 @@ int DriverFR::sendNAK()
     qint64 result;
     char buff[2];
     buff[0] = NAK;
+    app->sleep(10);
+    serialPort->writeLog();
     result = serialPort->writeData(buff, 1);
     serialPort->writeLog();
     return result;
@@ -626,6 +630,8 @@ int DriverFR::sendACK()
     qint64 result;
     char buff[2];
     buff[0] = ACK;
+    app->sleep(10);
+    serialPort->writeLog();
     result = serialPort->writeData(buff,1);
     serialPort->writeLog();
     return result;
@@ -652,7 +658,6 @@ short int DriverFR::readBytes(unsigned char *buff, int len)
     int readed = 0;
     for (int i = 0; i < len; i++)
         buff[i] = 0;
-
     result = serialPort->readData((char*)(buff + readed), len - readed);
     return result;
 }
@@ -661,6 +666,8 @@ short int DriverFR::readBytes(unsigned char *buff, int len)
 int DriverFR::readAnswer(answer *ans, short int byte)
 {
     int result = -1;
+    app->sleep(10);
+    serialPort->writeLog();
     short int  repl = byte > 0 ? byte : readByte();
     if (repl == STX)
     {
@@ -670,6 +677,7 @@ int DriverFR::readAnswer(answer *ans, short int byte)
     {
         result = readMessage(ans);
     }
+    serialPort->writeLog();
     return result;
 }
 
@@ -694,14 +702,12 @@ int DriverFR::readMessage(answer *ans)
             }
             else
             {
-                serialPort->writeLog();
-                app->debug(4, QString("Не сходится контрольная сумма"));
+                serialPort->writeLog("Не сходится контрольная сумма");
             }
         }
         else
         {
-            serialPort->writeLog();
-            app->debug(4, QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
+            serialPort->writeLog(QString("Прочитано %1 вместо %2 байт").arg(readedLen).arg(len));
         }
         sendNAK();
       }
@@ -753,13 +759,11 @@ int DriverFR::sendCommand(int comm, int pass, parameter *param)
 
     if (serialPort->writeData((char *)cmd.buff, cmd.len) != -1)
     {
-        serialPort->writeLog();
         for (int tries = 1; tries <= maxTries; tries++)    // будем в цикле передавать сообщение
         {
             short int repl = readByte();
             if (repl == ACK)                // Если сообщение получено
             {
-                serialPort->writeLog();     // Запишем в журнал сообщение
                 result = 1;                 // установим положительный результат
                 break;                      // и выйдем из цикла
             }
@@ -785,7 +789,6 @@ bool DriverFR::deviceIsReady()
         }
         else if (repl == ACK)                   // В случае, если устройство все еще пытается передать ответ
         {                                       // от предыдущей команды
-            serialPort->writeLog();
             answer     a;
             readAnswer(&a);
             sendENQ();
@@ -1138,6 +1141,8 @@ int DriverFR::SetExchangeParam()
         p.buff[0] = fr.PortNumber;
         p.buff[1] = fr.BaudRate;
         p.buff[2] = fr.Timeout;
+
+        serialPort->writeLog(QString("Порт: %1, Скорость: %2, Таймаут: %3").arg(fr.PortNumber).arg(fr.BaudRate).arg(fr.Timeout));
 
         result = processCommand(SET_EXCHANGE_PARAM, &p, &a);
     }

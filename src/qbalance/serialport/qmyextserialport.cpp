@@ -126,7 +126,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
     if (!remote)
     {
         tryReceiveExit = false;                     // Запустим цикл опроса данных в процедуре tryReceive() по таймауту
-        app->startTimeOut(timeOut);                    // Ждем ответа в течение ...
+        QTime dieTime= QTime::currentTime().addMSecs(timeOut);
         tryReceive();
         while (true)
         {
@@ -140,7 +140,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
 
             app->sleep(10);
 
-            if (app->isTimeOut())
+            if (QTime::currentTime() >= dieTime)
             {
                 writeLog(QString("*** ЗАДЕРЖКА свыше %1 сек ***").arg(timeOut/1000));
                 break;
@@ -178,6 +178,8 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
 qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromRemote)
 {
     qint64 result = -1;
+    writeLog();
+    app->sleep(10);
     if (!remote)
     {
         result = QextSerialPort::writeData(data, maxSize);
@@ -195,6 +197,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
             }
         }
     }
+    writeLog();
     return result;
 }
 

@@ -355,12 +355,6 @@ bool Documents::setTableModel(int)
 }
 
 
-void Documents::updateCurrentRow(int strNum)
-{
-    Dictionary::updateCurrentRow(strNum);
-}
-
-
 void Documents::preparePrintValues()
 {
     if (reportScriptEngine != 0)

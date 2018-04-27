@@ -51,8 +51,9 @@ void TcpServer::pingClient(QString host)
 {
     pingOk = false;
     sendStringToClient(host, "*ping*");
-    app->startTimeOut(2000);                   // Ждем ответа в течение 2 сек
-    while (!app->isTimeOut())
+//    app->startTimeOut(2000);                   // Ждем ответа в течение 2 сек
+    QTime dieTime= QTime::currentTime().addMSecs(2000);
+    while (QTime::currentTime() < dieTime)
     {
         if (pingOk)
             break;

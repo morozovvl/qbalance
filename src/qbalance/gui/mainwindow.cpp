@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "../kernel/tcpclient.h"
 #include "../storage/filetype.h"
 #include "../storage/dbfactory.h"
+#include "../driverfr/driverfr.h"
 
 
 MainWindow::MainWindow(GUIFactory* par)

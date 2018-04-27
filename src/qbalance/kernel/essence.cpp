@@ -1197,6 +1197,7 @@ void Essence::updateCurrentRow(int strNum)
             TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
             TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
         }
+        saveOldValues();
     }
 }
 
