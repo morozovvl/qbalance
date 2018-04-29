@@ -515,6 +515,7 @@ QVariant Essence::getValue(QString n, int row)
 
 void Essence::setValue(QString n, QVariant value, int row)
 {
+    qDebug() << "***" << tableName << n << value << row;
     n = n.toUpper();
     int fieldColumn = tableModel->fieldIndex(n);
     if (fieldColumn >= 0)
@@ -524,6 +525,7 @@ void Essence::setValue(QString n, QVariant value, int row)
         QModelIndex index, oldIndex;
         oldIndex = getCurrentIndex();
         index = tableModel->index(row, fieldColumn);
+        qDebug() << tableName << n << value << index.row() << index.column();
 
         for (int i = 0; i < columnsProperties.count(); i++)
         {
@@ -1549,7 +1551,10 @@ void Essence::submit()
         QString fieldName = tableModel->record().fieldName(i);
         QVariant oldValue = getOldValue(fieldName);
         QVariant newValue = getValue(fieldName);
+        qDebug() << tableName << fieldName << oldValue << newValue << row << i;
         if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
+        {
             tableModel->submit(tableModel->index(row, i));
+        }
     }
 }

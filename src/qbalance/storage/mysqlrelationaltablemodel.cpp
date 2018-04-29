@@ -329,6 +329,7 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
                 value = QString("%1").arg(recValue.toString().trimmed());
             }
             // Сгенерируем для сервера команду сохранения значения из модели
+            qDebug() << updateInfo.value(index.column()).table << updateInfo.value(index.column()).field << value;
             if (write)
             {
                 int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();
@@ -340,6 +341,7 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
                     values.value = value;
                     values.recId = id;
                     db->appendCommand(values);
+                    qDebug() << values.recId << values.table << values.value << values.field;
                 }
             }
         }

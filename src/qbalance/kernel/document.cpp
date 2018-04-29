@@ -502,7 +502,7 @@ void Document::setValue(QString name, QVariant value, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим сохранить значение в свободной проводке
         {
-            Essence::setValue(name, value, findFreePrv());
+            Essence::setValue(name, value, (row < 0 ? findFreePrv() : row));
             return;
         }
     }
@@ -519,7 +519,7 @@ QVariant Document::getValue(QString name, int row)
         int operNum = name.mid(1, __pos - 1).toInt();
         if (operNum == freePrv)     // Если мы хотим получить значение из свободной проводки
         {
-            result = Essence::getValue(name, findFreePrv());
+            result = Essence::getValue(name, (row < 0 ? findFreePrv() : row));
             return result;
         }
     }
@@ -1299,5 +1299,6 @@ bool Document::saveChanges()
     }
     else
         parent->restoreOldValues();
+    parent->getFormWidget()->repaint();
     return lResult;
 }

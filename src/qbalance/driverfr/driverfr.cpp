@@ -604,10 +604,7 @@ int DriverFR::sendENQ()
     qint64 result;
     char buff[2];
     buff[0] = ENQ;
-    app->sleep(10);
-    serialPort->writeLog();
     result = serialPort->writeData(buff,1);
-    serialPort->writeLog();
     return result;
 }
 
@@ -617,10 +614,7 @@ int DriverFR::sendNAK()
     qint64 result;
     char buff[2];
     buff[0] = NAK;
-    app->sleep(10);
-    serialPort->writeLog();
     result = serialPort->writeData(buff, 1);
-    serialPort->writeLog();
     return result;
 }
 
@@ -630,10 +624,7 @@ int DriverFR::sendACK()
     qint64 result;
     char buff[2];
     buff[0] = ACK;
-    app->sleep(10);
-    serialPort->writeLog();
     result = serialPort->writeData(buff,1);
-    serialPort->writeLog();
     return result;
 }
 
@@ -666,8 +657,6 @@ short int DriverFR::readBytes(unsigned char *buff, int len)
 int DriverFR::readAnswer(answer *ans, short int byte)
 {
     int result = -1;
-    app->sleep(10);
-    serialPort->writeLog();
     short int  repl = byte > 0 ? byte : readByte();
     if (repl == STX)
     {
@@ -677,7 +666,6 @@ int DriverFR::readAnswer(answer *ans, short int byte)
     {
         result = readMessage(ans);
     }
-    serialPort->writeLog();
     return result;
 }
 
@@ -1820,6 +1808,7 @@ int DriverFR::CloseCheck()
             fr.Change = evalint64((unsigned char*)&a.buff+3, 5);
             fr.Change /= 100;
         }
+        app->sleep(400);
     }
     return result;
 }
