@@ -211,7 +211,6 @@ bool Document::calculate(bool)
         }
         else
         {
-            db->clearCommands();                    // была ошибка вычислений, поэтому забудем все изменения
             restoreOldValues();                     // и восстановим старые значения
             docModified = false;
         }
@@ -301,7 +300,7 @@ bool Document::add()
         {
             getScriptEngine()->eventAfterAddString();
         }
-        saveChanges();
+//        saveChanges();
     }
     return result;
 }
@@ -1299,6 +1298,5 @@ bool Document::saveChanges()
     }
     else
         parent->restoreOldValues();
-    parent->getFormWidget()->repaint();
     return lResult;
 }

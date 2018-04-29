@@ -145,6 +145,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
             lResult = QSqlRelationalTableModel::setData(index, value, role);  // QSqlQuery::value: not positioned on a valid record  // POSSIBLY MEMORY LEAK
+            submit(index);
         }
         else
         {
@@ -305,6 +306,14 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
                 else
                     value = QString("'%1'").arg(value);
             }
+            else if (type.left(9) == "TIMESTAMP")
+            {
+                value = recValue.toString();
+                if (value.size() == 0)
+                    write = false;
+                else
+                    value = QString("'%1'").arg(value);
+            }
             else if (type == "BYTEA")
             {
                 value = recValue.toByteArray().toHex();
@@ -329,7 +338,6 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
                 value = QString("%1").arg(recValue.toString().trimmed());
             }
             // Сгенерируем для сервера команду сохранения значения из модели
-            qDebug() << updateInfo.value(index.column()).table << updateInfo.value(index.column()).field << value;
             if (write)
             {
                 int id = record(index.row()).value(updateInfo.value(index.column()).keyFieldColumn).toInt();
@@ -341,7 +349,6 @@ bool MySqlRelationalTableModel::submit(const QModelIndex& index)
                     values.value = value;
                     values.recId = id;
                     db->appendCommand(values);
-                    qDebug() << values.recId << values.table << values.value << values.field;
                 }
             }
         }

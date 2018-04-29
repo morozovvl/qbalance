@@ -515,7 +515,6 @@ QVariant Essence::getValue(QString n, int row)
 
 void Essence::setValue(QString n, QVariant value, int row)
 {
-    qDebug() << "***" << tableName << n << value << row;
     n = n.toUpper();
     int fieldColumn = tableModel->fieldIndex(n);
     if (fieldColumn >= 0)
@@ -525,13 +524,11 @@ void Essence::setValue(QString n, QVariant value, int row)
         QModelIndex index, oldIndex;
         oldIndex = getCurrentIndex();
         index = tableModel->index(row, fieldColumn);
-        qDebug() << tableName << n << value << index.row() << index.column();
 
         for (int i = 0; i < columnsProperties.count(); i++)
         {
             if (columnsProperties.at(i).column == n)
             {
-//                if ((columnsProperties.at(i).type.toUpper() == "NUMERIC" || columnsProperties.at(i).type.toUpper() == "INTEGER") && (value.toDouble() - value.toInt()) != 0)
                 if (columnsProperties.at(i).type.toUpper() == "NUMERIC")
                 {
 
@@ -1331,7 +1328,8 @@ void Essence::restoreOldValues()
         if (getValue(fieldName) != oldValues.value(fieldName))
             setValue(fieldName, oldValues.value(fieldName));
     }
-    db->clearCommands();
+    db->clearCommands();    // Забудем команды, которые приготовили для сохранения изменений
+    grdTable->repaint();
 }
 
 
@@ -1526,21 +1524,6 @@ void Essence::setCardReaderEnabled(bool enabled)
 }
 
 
-bool Essence::saveChanges()
-{
-    bool lResult = true;
-    submit();
-    if (!db->execCommands())
-    {   // Во время сохранения результатов произошла ошибка
-        restoreOldValues();
-        lResult = false;
-    }
-    else
-        updateCurrentRow();
-    return lResult;
-}
-
-
 void Essence::submit()
 {
     // Сохраним в БД все столбцы. Будут сохраняться только те, в которых произошли изменения
@@ -1551,10 +1534,25 @@ void Essence::submit()
         QString fieldName = tableModel->record().fieldName(i);
         QVariant oldValue = getOldValue(fieldName);
         QVariant newValue = getValue(fieldName);
-        qDebug() << tableName << fieldName << oldValue << newValue << row << i;
         if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
         {
             tableModel->submit(tableModel->index(row, i));
         }
     }
 }
+
+
+bool Essence::saveChanges()
+{
+    bool lResult = false;
+    submit();
+    if (db->execCommands())
+    {   // Во время сохранения результатов произошла ошибка
+        updateCurrentRow();
+        lResult = true;
+    }
+    else
+        restoreOldValues();
+    return lResult;
+}
+

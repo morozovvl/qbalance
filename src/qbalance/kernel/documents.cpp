@@ -305,14 +305,18 @@ bool Documents::setTableModel(int)
 {
     if (Essence::setTableModel(0))
     {
+        FieldType fld;
         int keyColumn   = 0;
         for (int i = 0; i < columnsProperties.count(); i++)
         {
-            QString name = columnsProperties.at(i).column;
-            if (name == idFieldName)
-                keyColumn = i;
-
-            tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, columnsProperties.at(i).precision, i, keyColumn);
+            fld = columnsProperties.at(i);
+            if (fld.table == columnsProperties.at(0).table)
+            {
+                QString name = columnsProperties.at(i).column;
+                if (name == idFieldName)
+                    keyColumn = i;
+                tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, columnsProperties.at(i).precision, i, keyColumn);
+            }
         }
 
         QString selectStatement = db->getDictionarySqlSelectStatement(tableName);

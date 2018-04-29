@@ -46,6 +46,7 @@ struct UpdateInfoStruct {
 
 class MySqlRelationalTableModel : public QSqlRelationalTableModel {
     Q_OBJECT
+
 public:
     MySqlRelationalTableModel(QString, Table* = 0);
     ~MySqlRelationalTableModel();
@@ -70,9 +71,9 @@ public:
     virtual void setReadOnly(bool ro);
     virtual bool isReadOnly();
     virtual bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
-    virtual bool submit(const QModelIndex&);
     virtual bool updateRowInTable(int, const QSqlRecord&);
     virtual void setUpdateInfo(QString originField, QString table, QString field, QString type, int length, int prec, int fieldColumn, int keyFieldColumn);
+    virtual bool submit(const QModelIndex&);
 
 // Прочие функции
     virtual QStringList getFieldsList() const;
