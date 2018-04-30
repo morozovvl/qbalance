@@ -302,7 +302,7 @@ void FormDocument::cmdOk()
         {
             app->showError(QObject::trUtf8("Документ сохранен на пределами рабочего периода"));
         }
-        getParent()->saveChanges();
+//        getParent()->saveChanges();
     }
     FormGrid::cmdOk();
 }
