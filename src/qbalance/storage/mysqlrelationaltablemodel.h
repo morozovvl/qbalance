@@ -73,7 +73,7 @@ public:
     virtual bool setData(const QModelIndex &, const QVariant &, bool = false, int role = Qt::EditRole);
     virtual bool updateRowInTable(int, const QSqlRecord&);
     virtual void setUpdateInfo(QString originField, QString table, QString field, QString type, int length, int prec, int fieldColumn, int keyFieldColumn);
-    virtual bool submit(const QModelIndex&);        // Готовит SQL команды для сохранения изменений
+    virtual bool prepareCommand(const QModelIndex&);        // Готовит SQL команды для сохранения изменений
 
 // Прочие функции
     virtual QStringList getFieldsList() const;

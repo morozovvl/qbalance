@@ -145,7 +145,7 @@ bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
             lResult = QSqlRelationalTableModel::setData(index, value, role);  // QSqlQuery::value: not positioned on a valid record  // POSSIBLY MEMORY LEAK
-            submit(index);
+            prepareCommand(index);
         }
         else
         {
@@ -266,7 +266,7 @@ void MySqlRelationalTableModel::setUpdateInfo(QString originField, QString table
 }
 
 
-bool MySqlRelationalTableModel::submit(const QModelIndex& index)
+bool MySqlRelationalTableModel::prepareCommand(const QModelIndex& index)
 {
     bool write = true;
     if (editStrategy() == QSqlTableModel::OnManualSubmit)

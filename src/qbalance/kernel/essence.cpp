@@ -1536,7 +1536,7 @@ void Essence::submit()
         QVariant newValue = getValue(fieldName);
         if (newValue != oldValue)    // Для экономии трафика и времени посылать обновленные данные на сервер будем в случае, если данные различаются
         {
-            tableModel->submit(tableModel->index(row, i));
+            tableModel->prepareCommand(tableModel->index(row, i));
         }
     }
 }

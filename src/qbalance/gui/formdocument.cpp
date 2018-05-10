@@ -246,7 +246,7 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         connect(dateEdit, SIGNAL(dateChanged(QDate)), this, SLOT(saveDate(QDate)));
 
     if (numberEdit != 0)
-        connect(numberEdit, SIGNAL(textChanged(QString)), this, SLOT(saveNumber(QString)));
+        connect(numberEdit, SIGNAL(textEdited(QString)), this, SLOT(saveNumber(QString)));
 
     // Если в документе должна быть только одна строка, то заблокируем кнопки "Добавить" и "Удалить"
     if (getParent()->getIsSingleString())

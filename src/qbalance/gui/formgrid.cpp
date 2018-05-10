@@ -345,6 +345,9 @@ void FormGrid::createForm(QString fileName, QWidget* pwgt/* = 0*/)
     }
 
     grdTables.append(grdTable);
+
+    if (vbxLayout != 0)
+        vbxLayout->setSpacing(1);
 }
 
 

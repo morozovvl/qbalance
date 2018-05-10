@@ -91,6 +91,7 @@ void SearchParameters::setFieldsList(QStringList fldList)
     if (gridLayout == 0)
     {
         gridLayout = new QGridLayout(this);
+        gridLayout->setVerticalSpacing(1);
         setLayout(gridLayout);
     }
     else
