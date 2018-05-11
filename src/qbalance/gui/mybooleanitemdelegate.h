@@ -29,12 +29,8 @@ class MyBooleanItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
     MyBooleanItemDelegate(QObject*, FormGrid* = 0);
-    ~MyBooleanItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-
-protected:
-    mutable QPointer<QCheckBox>  editorWidget;
 };
 
 #endif // MYBOOLEANITEMDELEGATE_H

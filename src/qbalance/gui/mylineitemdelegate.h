@@ -30,12 +30,10 @@ class MyLineItemDelegate : public MyItemDelegate {
     Q_OBJECT
 public:
     MyLineItemDelegate(QObject*, FormGrid* = 0);
-    ~MyLineItemDelegate();
     virtual void    setMaxLength(int l);
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
 private:
     int length;
-    mutable QPointer<QLineEdit>  editorWidget;
 };
 
 #endif // MYLINEITEMDELEGATE_H

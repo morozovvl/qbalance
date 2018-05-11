@@ -29,28 +29,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyBooleanItemDelegate::MyBooleanItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
 {
     delegateType = Boolean;
-    editorWidget = 0;
 }
 
 
-MyBooleanItemDelegate::~MyBooleanItemDelegate()
+QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    if (editorWidget != 0)
-        delete editorWidget;
-}
-
-
-QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex &) const
-{
-//    if (parentForm != 0)
-//        parentForm->getParent()->saveOldValues();
-    if (essence != 0)
-        essence->saveOldValues();
-    editorWidget = new QCheckBox(parent);
+    QCheckBox* editorWidget = new QCheckBox(parent);
     if (!readOnly)
+    {
         editorWidget->setDisabled(false);
+        if (essence != 0)
+        {
+            essence->saveOldValues();
+            disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+            connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+        }
+    }
     else
         editorWidget->setDisabled(true);
+
     return editorWidget;
 }
 

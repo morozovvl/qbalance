@@ -31,7 +31,6 @@ MyItemDelegate::MyItemDelegate(QObject* par, FormGrid* form)
     columnMask = "";
     delegateType = String;
     setReadOnly(false);
-//    parentForm = form;
     essence = 0;
     if (form != 0)
         essence = (Essence*)(form->getParent());
@@ -122,12 +121,6 @@ void MyItemDelegate::setReadOnly(bool val)
 }
 
 
-QWidget* MyItemDelegate::getEditorWidget()
-{
-    return editorWidget.data();
-}
-
-
 void MyItemDelegate::calculate()
 {
     if (essence != 0)
@@ -141,3 +134,4 @@ void MyItemDelegate::setEssence(Essence* dict)
 {
     essence = dict;
 }
+

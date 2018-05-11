@@ -36,7 +36,6 @@ class MyNumericItemDelegate : public MyItemDelegate
     Q_OBJECT
 public:
     MyNumericItemDelegate(QObject*, FormGrid*, int len = 10, int prec = 0);
-    ~MyNumericItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setLength(int);
     virtual int getLength();

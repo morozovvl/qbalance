@@ -290,10 +290,9 @@ void TableView::setColumnsHeaders()
                         if (delegate != 0)
                         {
                             delegate->setFieldName(fields.at(i).column);
-                            delegate->setReadOnly(fields.at(i).readOnly);
+//                            delegate->setReadOnly(fields.at(i).readOnly);
 //                            delete itemDelegateForColumn(i);
                             setItemDelegateForColumn(i, delegate);
-                            setFocusProxy(delegate->getEditorWidget());
                         }
                         columns.insert(fields.at(i).number - 1, i);
                     }
@@ -412,7 +411,7 @@ MyItemDelegate* TableView::getColumnDelegate(FieldType fld)
     if (result != 0)
     {
         result->setEssence(essence);
-        connect(result, SIGNAL(closeEditor(QWidget*)), result, SLOT(calculate()));
+        result->setReadOnly(fld.readOnly);
     }
     return result;
 }

@@ -26,30 +26,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 MyDateItemDelegate::MyDateItemDelegate(QObject* parent, FormGrid* form): MyItemDelegate(parent, form)
 {
     delegateType = Date;
-    editorWidget = 0;
 }
 
 
-MyDateItemDelegate::~MyDateItemDelegate()
+QWidget* MyDateItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
-    if (editorWidget != 0)
-        delete editorWidget;
-}
-
-
-QWidget* MyDateItemDelegate::createEditor(QWidget*parent, const QStyleOptionViewItem &, const QModelIndex &) const
-{
-    editorWidget = new QLineEdit(parent);
+    QLineEdit* editorWidget = new QLineEdit(parent);
     if (!readOnly)
     {
-//        if (parentForm != 0)
-//            parentForm->getParent()->saveOldValues();
         if (essence != 0)
+        {
             essence->saveOldValues();
+            disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+            connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+        }
         editorWidget->setReadOnly(false);
     }
     else
         editorWidget->setReadOnly(true);
+
     return editorWidget;
 }
 

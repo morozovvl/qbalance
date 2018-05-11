@@ -32,7 +32,6 @@ class MyButtonLineEditItemDelegate : public MyItemDelegate
     Q_OBJECT
 public:
     MyButtonLineEditItemDelegate(QObject*, FormGrid* = 0);
-    ~MyButtonLineEditItemDelegate();
     virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem &, const QModelIndex &) const;
     virtual void setEditorData(QWidget* editor, const QModelIndex &index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const;

@@ -55,20 +55,17 @@ public:
     virtual bool        isReadOnly();
     virtual void        setFieldName(QString name);
     virtual QString     getFieldName();
-    virtual QWidget*    getEditorWidget();
     virtual void setEssence(Essence*);
 
 public slots:
     virtual void            calculate();
 
 protected:
-//    FormGrid*               parentForm;
     Essence*                essence;
     QString                 columnMask;
     DelegateTypes           delegateType;
     bool                    readOnly;
     QStyleOptionViewItemV2 setElementColor(QStyleOptionViewItem) const;
-    mutable QPointer<QLineEdit>  editorWidget;
 
 private:
     QString                 fieldName;

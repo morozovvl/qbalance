@@ -28,30 +28,26 @@ MyButtonLineEditItemDelegate::MyButtonLineEditItemDelegate(QObject* parent, Form
 }
 
 
-MyButtonLineEditItemDelegate::~MyButtonLineEditItemDelegate()
-{
-}
-
-
 void MyButtonLineEditItemDelegate::setFormOnPushButton(QString (*form)())
 {
     buttonForm = form;
 }
 
 
-QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &, const QModelIndex &) const
+QWidget* MyButtonLineEditItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
+    MyButtonLineEdit* editorWidget = new MyButtonLineEdit(parent);
     if (!readOnly)
     {
-//        if (parentForm != 0)
-//            parentForm->getParent()->saveOldValues();
         if (essence != 0)
+        {
             essence->saveOldValues();
-        MyButtonLineEdit* editor = new MyButtonLineEdit(parent);
-        editor->setFormOnPushButton(buttonForm);
-        return editor;
+            disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+            connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+        }
+        editorWidget->setFormOnPushButton(buttonForm);
     }
-    return 0;
+    return editorWidget;
 }
 
 
