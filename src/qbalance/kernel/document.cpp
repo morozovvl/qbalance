@@ -300,7 +300,6 @@ bool Document::add()
         {
             getScriptEngine()->eventAfterAddString();
         }
-//        saveChanges();
     }
     return result;
 }

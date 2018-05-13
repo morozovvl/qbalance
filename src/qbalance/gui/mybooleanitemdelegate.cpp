@@ -37,16 +37,18 @@ QWidget* MyBooleanItemDelegate::createEditor(QWidget*parent, const QStyleOptionV
     QCheckBox* editorWidget = new QCheckBox(parent);
     if (!readOnly)
     {
-        editorWidget->setDisabled(false);
         if (essence != 0)
         {
             essence->saveOldValues();
             disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
             connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
+            editorWidget->setDisabled(false);
         }
     }
     else
+    {
         editorWidget->setDisabled(true);
+    }
 
     return editorWidget;
 }

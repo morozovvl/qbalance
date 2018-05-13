@@ -1584,17 +1584,38 @@ void TApplication::saveCustomization()
 }
 
 
-void TApplication::loadFile()
+void TApplication::loadScriptFile()
 {
-    if (isSA())
+    dirName = "scriptLoadDir";
+    QString fileName = getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", "", "Scripts (*.js *.qs)");
+    if (fileName.size() > 0)
     {
-        dirName = "scriptLoadDir";
-        QString fileName = getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", "", tr("Scripts (*.js *.qs)"));
-        if (fileName.size() > 0)
-        {
-            QFileInfo fi(fileName);
-            saveFileToServer(fileName, fi.fileName(), ScriptFileType);
-        }
+        QFileInfo fi(fileName);
+        saveFileToServer(fileName, fi.fileName(), ScriptFileType);
+    }
+}
+
+
+void TApplication::loadReportFile()
+{
+    dirName = "reportLoadDir";
+    QString fileName = getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", "", "Reports (*.ods)");
+    if (fileName.size() > 0)
+    {
+        QFileInfo fi(fileName);
+        saveFileToServer(fileName, fi.fileName(), ReportTemplateFileType);
+    }
+}
+
+
+void TApplication::loadFormFile()
+{
+    dirName = "formLoadDir";
+    QString fileName = getOpenFileName(gui->getMainWindow(), "Откройте файл для загрузки", "", "Forms (*.ui)");
+    if (fileName.size() > 0)
+    {
+        QFileInfo fi(fileName);
+        saveFileToServer(fileName, fi.fileName(), FormFileType);
     }
 }
 

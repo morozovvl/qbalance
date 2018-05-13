@@ -53,7 +53,6 @@ private slots:
       void showConfigs();
       void showMessagesWindow();
       void saveCustomization();
-      void loadFile();
       void saveFile();
       void beep();
       void printReportWithoutCleaning();
@@ -94,6 +93,7 @@ private:
       QMenu* frMenu;
       QMenu* terminalMenu;
       QMenu* infoMenu;
+      QMenu* loadFileMenu;
 
       QToolBar* editToolBar;
 
@@ -111,7 +111,9 @@ private:
       QAction* periodAct;
       QAction* showMessageWindow;
       QAction* saveCustomAct;
-      QAction* loadFileAct;
+      QAction* loadScriptFileAct;
+      QAction* loadReportFileAct;
+      QAction* loadFormFileAct;
       QAction* saveFileAct;
       QAction* beepAct;
       QAction* printReportWithoutCleaningAct;
@@ -125,6 +127,8 @@ private:
       QAction* verificationResultsAct;
       QAction* controlRibbonAct;
       QAction* exitAct;
+
+
       QMdiArea* workSpace;
 
       TApplication* app;

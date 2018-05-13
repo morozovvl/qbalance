@@ -855,27 +855,22 @@ void Dictionary::setMustShow(bool must)
 void Dictionary::lock(bool toLock)
 // Заблокировать все связанные справочники
 {
-    if (toLock)
+    if (isSet())
     {
-        if (isSet())
+        if (rowCount() == 0)
+            getId();
+        foreach (QString dictName, getChildDicts())
         {
-            if (rowCount() == 0)
-                getId();
-            foreach (QString dictName, getChildDicts())
+            Dictionary* dict = dictionaries->getDictionary(dictName);
+            if (toLock)
             {
-                Dictionary* dict = dictionaries->getDictionary(dictName);
                 qlonglong id = getValue(idFieldName + "_" + dictName).toLongLong();
-                if (id > 0)
-                {
-                    dict->setId(id);
-                    dict->lock();
-                }
+                dict->setId(id);
             }
+            dict->lock(toLock);
         }
-        locked = true;
     }
-    else
-        locked = false;
+    locked = toLock;
 }
 
 

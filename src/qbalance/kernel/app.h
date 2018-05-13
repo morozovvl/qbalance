@@ -233,7 +233,6 @@ public:
     Q_INVOKABLE QString getOpenFileName(QWidget* parent = 0, const QString caption = QString(), const QString dir = QString(), const QString filter = QString(), QString* selectedFilter = 0, QFileDialog::Options options = 0);
 
     void saveCustomization();
-    void loadFile();
     void printReportWithoutCleaning();
     Q_INVOKABLE virtual int runScript(QString);
     Q_INVOKABLE void printReport(QString, QSqlQuery* = 0);
@@ -284,6 +283,11 @@ public:
     void                    saveMessages();
 
     Q_INVOKABLE virtual void showError(QString);
+
+public slots:
+    void loadScriptFile();
+    void loadReportFile();
+    void loadFormFile();
 
 signals:
     void cardCodeReaded(QString);

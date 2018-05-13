@@ -216,14 +216,25 @@ void MainWindow::createMenus()
     showMessageWindow = serviceMenu->addAction(QObject::trUtf8("Показать окно сообщений"));
     connect(showMessageWindow, SIGNAL(triggered()), this, SLOT(showMessagesWindow()));
 
-    saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
-    connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
+    if (app->isSA())
+    {
+        saveCustomAct = serviceMenu->addAction(QObject::trUtf8("Сохранить кастомизацию"));
+        connect(saveCustomAct, SIGNAL(triggered()), this, SLOT(saveCustomization()));
 
-    loadFileAct = serviceMenu->addAction(QObject::trUtf8("Загрузить файл со скриптом на сервер"));
-    connect(loadFileAct, SIGNAL(triggered()), this, SLOT(loadFile()));
+        loadFileMenu = serviceMenu->addMenu(QObject::trUtf8("Загрузить файл на сервер"));
 
-    saveFileAct = serviceMenu->addAction(QObject::trUtf8("Выгрузить файл со скриптом с сервера"));
-    connect(saveFileAct, SIGNAL(triggered()), this, SLOT(saveFile()));
+        loadScriptFileAct = loadFileMenu->addAction(QObject::trUtf8("Загрузить файл со скриптами"));
+        connect(loadScriptFileAct, SIGNAL(triggered()), app, SLOT(loadScriptFile()));
+
+        loadReportFileAct = loadFileMenu->addAction(QObject::trUtf8("Загрузить файл с шаблоном отчета"));
+        connect(loadReportFileAct, SIGNAL(triggered()), app, SLOT(loadReportFile()));
+
+        loadFormFileAct = loadFileMenu->addAction(QObject::trUtf8("Загрузить файл с пользовательской формой"));
+        connect(loadFormFileAct, SIGNAL(triggered()), app, SLOT(loadFormFile()));
+
+        saveFileAct = serviceMenu->addAction(QObject::trUtf8("Выгрузить файл с сервера"));
+        connect(saveFileAct, SIGNAL(triggered()), this, SLOT(saveFile()));
+    }
 
     configAct = menuBar()->addAction(QObject::trUtf8("&Настройки"));
     connect(configAct, SIGNAL(triggered()), this, SLOT(showConfigs()));
@@ -280,12 +291,6 @@ void MainWindow::showMessagesWindow()
 void MainWindow::saveCustomization()
 {
      app->saveCustomization();
-}
-
-
-void MainWindow::loadFile()
-{
-    app->loadFile();
 }
 
 
