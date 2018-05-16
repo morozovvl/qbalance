@@ -684,9 +684,6 @@ bool TApplication::initApplication()
     if (!isScriptMode())
         openPlugins();
 
-    if (!loadDefaultConfig)
-        readSettings();
-
     db  = new DBFactory();
 
     messagesWindow = new MessageWindow();
@@ -698,6 +695,9 @@ bool TApplication::initApplication()
         int result = gui->openDB(); // Попытаемся открыть базу данных
         if (result == 0)
         {   // БД открыть удалось
+
+            if (!loadDefaultConfig)
+                readSettings();
 
             secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
             dictionaryList = Dictionaries::create<Dictionaries>();

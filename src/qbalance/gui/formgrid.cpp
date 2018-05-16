@@ -456,7 +456,6 @@ void FormGrid::show()
         grdTable->setCurrentFocus();
     }
     setButtons();
-    showPhoto();
     Form::show();
 }
 
