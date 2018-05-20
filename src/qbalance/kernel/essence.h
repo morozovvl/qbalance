@@ -208,7 +208,7 @@ public:
     void                initFormEvent();
     void                beforeShowFormEvent(Form *);
     void                afterShowFormEvent(Form *);
-    void                beforeHideFormEvent(Form *);
+    bool                beforeHideFormEvent(Form *);
     void                afterHideFormEvent(Form *);
     void                closeFormEvent(Form *);
     QString             preparePictureUrl();

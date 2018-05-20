@@ -987,12 +987,17 @@ void ScriptEngine::eventAfterShowForm(Form* form)
 
 
 
-void ScriptEngine::eventBeforeHideForm(Form* form)
+bool ScriptEngine::eventBeforeHideForm(Form* form)
 {
+    bool result = true;
+    QScriptValue res;
     QString eventName = "EventBeforeHideForm";
     QScriptValueList args;
     args << newQObject((FormGrid*)form);
-    scriptCall(eventName, currentContext()->thisObject(), args);
+    res = scriptCall(eventName, currentContext()->thisObject(), args);
+    if (res.toString() != "undefined")
+        result = res.toBool();
+    return result;
 }
 
 

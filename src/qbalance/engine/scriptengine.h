@@ -79,7 +79,7 @@ public:
     virtual void eventInitForm(Form*);
     virtual void eventBeforeShowForm(Form*);
     virtual void eventAfterShowForm(Form*);
-    virtual void eventBeforeHideForm(Form*);
+    virtual bool eventBeforeHideForm(Form*);
     virtual void eventAfterHideForm(Form*);
     virtual void eventCloseForm(Form*);
     virtual void eventImport(Form*);

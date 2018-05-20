@@ -864,9 +864,11 @@ void Essence::hide()
 {
     if (opened && form != 0)
     {
-        beforeHideFormEvent(form);
-        form->hide();
-        afterHideFormEvent(form);
+        if (beforeHideFormEvent(form))
+        {
+            form->hide();
+            afterHideFormEvent(form);
+        }
     }
 }
 
@@ -1109,10 +1111,12 @@ void Essence::afterShowFormEvent(Form* form)
 }
 
 
-void Essence::beforeHideFormEvent(Form* form)
+bool Essence::beforeHideFormEvent(Form* form)
 {
+    bool result = true;
     if (scriptEngineEnabled && getScriptEngine() != 0)
-        getScriptEngine()->eventBeforeHideForm(form);
+        result = getScriptEngine()->eventBeforeHideForm(form);
+    return result;
 }
 
 
