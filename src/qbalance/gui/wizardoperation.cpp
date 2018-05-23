@@ -882,6 +882,7 @@ void WizardOperation::generateScripts()
                 constDictName = topersList.at(i).crDict;
             }
         }
+/*
         if (constDict == 1)
         {
             stream.reset();
@@ -890,7 +891,7 @@ void WizardOperation::generateScripts()
                                                                                                        .arg(db->getObjectName(constDictName + ".имя"));
             engine.appendEvent("EventParametersChanged()", &func);
         }
-
+*/
         scripts = engine.getBlankScripts();
         textEditor->setText(scripts);
     }

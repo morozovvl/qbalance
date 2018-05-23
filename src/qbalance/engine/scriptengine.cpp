@@ -1363,7 +1363,7 @@ QHash<QString, EventFunction>* ScriptEngine::getEventsList()
     func.body = "";
 
     func.comment = QObject::trUtf8("Событие происходит после изменения ячейки в таблице");
-    if (document != 0 && document->isQuanAccount() && document->getPrvQuan() == 1)
+    if (document != 0 && document->isQuanAccount())
     {
         func.body = "var кол = getValue(\"P1__КОЛ\");\n"
                     "var цена = getValue(\"P1__ЦЕНА\");\n"

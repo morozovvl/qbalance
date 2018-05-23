@@ -712,23 +712,26 @@ void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 {
     QString resFilter = defaultFilter;
 
-    if (form != 0 && !exactlyDefaultFilter)
+    if (!exactlyDefaultFilter)
     {
-        QString filter = form->getFilter();
-        if (filter.size() > 0)
+        if (form != 0)
         {
-            if (resFilter.size() > 0)
-                resFilter.append(" AND " + filter);
-            else
-                resFilter = filter;
+            QString filter = form->getFilter();
+            if (filter.size() > 0)
+            {
+                if (resFilter.size() > 0)
+                    resFilter.append(" AND " + filter);
+                else
+                    resFilter = filter;
+            }
         }
-    }
 
-    if (!isDocumentLoading())
-    {
-        if (scriptEngine != 0)
+        if (!isDocumentLoading())
         {
-            resFilter = scriptEngine->getFilter(resFilter);
+            if (scriptEngine != 0)
+            {
+                resFilter = scriptEngine->getFilter(resFilter);
+            }
         }
     }
 
