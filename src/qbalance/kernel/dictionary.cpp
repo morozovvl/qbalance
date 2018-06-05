@@ -884,4 +884,13 @@ void Dictionary::setSqlCommand(QString command)
     open(command);
 }
 
+/*
+void Dictionary::cmdOk()
+{
+    if (form != 0)
+        form->cmdOk();
+}
+*/
+
+
 

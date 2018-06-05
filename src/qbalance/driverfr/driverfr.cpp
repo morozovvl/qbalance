@@ -430,7 +430,7 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
     if (serialPort != 0)
     {
         // Сначала поищем на удаленном компьютере, т.к. это быстрее
-        if (serialPort->getTcpClient()->isValid())
+        if (serialPort->getTcpClient()->isValid() && app->getConfigValue("FR_USE_REMOTE").toBool())
         {
             remote = true;
             serialPort->setRemote(remote);
@@ -716,7 +716,6 @@ unsigned short int DriverFR::LRC(unsigned char *str, int len, int offset)
 
 int DriverFR::composeComm(command *cmd, int comm, int pass, parameter *param)
 {
-
     int len;
     for (unsigned int i = 0; i < sizeof(cmd->buff); i++)
         cmd->buff[i] = 0;
@@ -898,6 +897,8 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
 {
     int result = -1;
     int attempts = 1;
+    QTime dieTime= QTime::currentTime().addMSecs(app->getConfigValue("FR_DRIVER_MAX_TIMEOUT").toInt() * 1000);
+
     if (deviceIsReady())
     {
         while (true)
@@ -918,13 +919,21 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
                 else
                    result = -1;
             }
-            if (((result < 0) || (result == 0x50)) && (attempts <= maxTries))
+            if (QTime::currentTime() >= dieTime)    // Время ожидания вышло, прекратим попытки
+            {
+                break;
+            }
+            if (((result < 0) || (result == 0x50)))
             {
                 attempts++;
                 app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);
                 serialPort->writeLog();
                 app->sleep(500);
                 serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
+                if (!deviceIsReady())
+                {
+                    break;
+                }
             }
             else
             {
@@ -1018,41 +1027,36 @@ int DriverFR::CutCheck()
 }
 
 
-
-//-----------------------------------------------------------------------------
-int DriverFR::PrintString()
-{
-    parameter  p;
-    answer     a;
-    p.len	  = 41;
-    int result = -1;
-
-    if (connected)
-    {
-        logCommand(PRINT_STRING, "Печать строки");
-
-        p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
-        p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
-        memcpy((char*)&p.buff+1, (char*)fr.StringForPrinting, 40);
-
-        result = processCommand(PRINT_STRING, &p, &a);
-    }
-    return result;
-}
-
-
 //-----------------------------------------------------------------------------
 int DriverFR::PrintString(QString str, int count)
 {
-    int result = -1;
-    setProperty("UseReceiptRibbon", 1);
-    setProperty("UseJournalRibbon", 0);
-    setProperty("StringForPrinting", str);
-    for (int i = 1; i <= count; i++)
+    int result = 0;
+    if (str.length() > 0)
     {
-        result = PrintString();
-        if (result == -1)
-            return result;
+        result = -1;
+        if (connected)
+        {
+            parameter  p;
+            answer     a;
+            p.len	  = str.length() + 1;
+
+            logCommand(PRINT_STRING, "Печать строки");
+
+            setProperty("UseReceiptRibbon", 1);
+            setProperty("UseJournalRibbon", 0);
+            setProperty("StringForPrinting", str);
+
+            p.buff[0]  = (fr.UseJournalRibbon == true) ? 1 : 0;
+            p.buff[0] |= (fr.UseReceiptRibbon == true) ? 2 : 0;
+            memcpy((char*)&p.buff+1, (char*)fr.StringForPrinting, str.length());
+
+            for (int i = 1; i <= count; i++)
+            {
+                result = processCommand(PRINT_STRING, &p, &a);
+                if (result == -1)
+                    return result;
+            }
+        }
     }
     return result;
 }
@@ -1847,44 +1851,53 @@ int DriverFR::Storno()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::PrintReportWithCleaning()
 {
-  parameter  p;
-  answer     a;
+  int result = -1;
 
-  if (!connected) return -1;
+  if (connected)
+  {
+      parameter  p;
+      answer     a;
 
-  if (sendCommand(PRINT_REPORT_WITH_CLEANING, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != PRINT_REPORT_WITH_CLEANING) return -1;
+      logCommand(PRINT_REPORT_WITH_CLEANING, "Снять отчет с гашением");
 
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-  fr.SessionNumber = evalint((unsigned char*)&a.buff+3, 2);
-
-  return 0;
+      result = processCommand(PRINT_REPORT_WITH_CLEANING, &p, &a);
+      if (result == 0)
+      {
+          fr.OperatorNumber = a.buff[2];
+          fr.SessionNumber = evalint((unsigned char*)&a.buff+3, 2);
+      }
+  }
+  return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::PrintReportWithoutCleaning()
 {
   parameter  p;
   answer     a;
+  int result = -1;
 
-  if (!connected) return -1;
+  if (connected)
+  {
+      logCommand(PRINT_REPORT_WITHOUT_CLEANING, "Снять отчет без гашения");
 
-  if (sendCommand(PRINT_REPORT_WITHOUT_CLEANING, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != PRINT_REPORT_WITHOUT_CLEANING) return -1;
-
-  if (errHand(&a) != 0) return fr.ResultCode;
-
-  fr.OperatorNumber = a.buff[2];
-  fr.SessionNumber = evalint((unsigned char*)&a.buff+3, 2);
-
-  return 0;
+      result = processCommand(PRINT_REPORT_WITHOUT_CLEANING, &p, &a);
+      if (result == 0)
+      {
+          fr.OperatorNumber = a.buff[2];
+          fr.SessionNumber = evalint((unsigned char*)&a.buff+3, 2);
+      }
+  }
+  return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::PrintOperationReg()
 {
@@ -1899,6 +1912,8 @@ int DriverFR::PrintOperationReg()
 
   return errHand(&a);
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::DampRequest()
 {
@@ -1919,6 +1934,8 @@ int DriverFR::DampRequest()
 
   return a.buff[2];  			//number of data blocks to return
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetData()
 {
@@ -1940,6 +1957,8 @@ int DriverFR::GetData()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::InterruptDataStream()
 {
@@ -1954,6 +1973,8 @@ int DriverFR::InterruptDataStream()
 
   return errHand(&a);
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetCashReg()
 {
@@ -1978,6 +1999,8 @@ int DriverFR::GetCashReg()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetOperationReg()
 {
@@ -2010,6 +2033,8 @@ int DriverFR::GetOperationReg()
     }
     return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::SetSerialNumber()
 {

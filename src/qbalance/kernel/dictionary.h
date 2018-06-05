@@ -103,6 +103,8 @@ public:
     Q_INVOKABLE void setIsSaldo(bool s);
     Q_INVOKABLE void setConst(bool);
     Q_INVOKABLE void setAutoSelect(bool autoSelect);
+//    Q_INVOKABLE virtual void cmdOk();
+
 
     virtual QString objectName();
     bool isDependent();

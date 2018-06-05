@@ -766,8 +766,7 @@ public:
     Q_INVOKABLE virtual int PrintOperationReg();
     Q_INVOKABLE virtual int PrintReportWithCleaning();
     Q_INVOKABLE virtual int PrintReportWithoutCleaning();
-    Q_INVOKABLE virtual int PrintString();
-    Q_INVOKABLE virtual int PrintString(QString, int = 1);
+    Q_INVOKABLE virtual int PrintString(QString = "", int = 1);
     Q_INVOKABLE virtual int PrintWideString();
     Q_INVOKABLE virtual int ReadEKLZDocumentOnKPK();
     Q_INVOKABLE virtual int ReadEKLZSessionTotal();

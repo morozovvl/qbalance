@@ -479,6 +479,7 @@ void TApplication::initConfig()
     setConfig("fr", "FR_REMOTE_DRIVER_TIMEOUT", "Таймаут для сетевого ФР, мс", CONFIG_VALUE_INTEGER, 150);
     setConfig("fr", "FR_DRIVER_PASSWORD", "Пароль администратора ФР", CONFIG_VALUE_INTEGER, 30);
     setConfig("fr", "FR_CONNECT_SIGNAL", "Подавать сигнал на ФР при подключении", CONFIG_VALUE_BOOLEAN, true);
+    setConfig("fr", "FR_USE_REMOTE", "Искать ФР в локальной сети", CONFIG_VALUE_BOOLEAN, true);
 
     setConfigTypeName("cReader", "Ридер магнитных карт");
     setConfig("cReader", "CARD_READER_NEEDED", "Использовать считыватель магнитных карт", CONFIG_VALUE_BOOLEAN, false);
