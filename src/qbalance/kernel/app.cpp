@@ -1909,7 +1909,7 @@ QString TApplication::getProcessFile(QString tagName, QWidget* formWidget, QRect
         }
         else if (action == execScriptAct)
         {
-            dirName = "scriptLoadDir";
+            dirName = "processScriptDir";
             result = QFileInfo(getOpenFileName(gui->getMainWindow(), "Укажите файл скрипта для выполнения", "", tr("Scripts (*.js *.qs)"))).fileName();
         }
         else

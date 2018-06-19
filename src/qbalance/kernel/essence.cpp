@@ -502,12 +502,14 @@ QVariant Essence::getValue(QString n, int row)
                 result = QVariant(QDate().fromString(result.toString(), app->dateFormat()));
             }
         }
+/*
         else
         {
             app->showError(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
 //            app->print(QObject::trUtf8("Не существует колонки ") + n + QObject::trUtf8(" в таблице ") + tableName);
 //            scriptEngine->setScriptError();
         }
+*/
     }
     return result;
 }
@@ -551,10 +553,12 @@ void Essence::setValue(QString n, QVariant value, int row)
         }
         setCurrentIndex(oldIndex);
     }
+/*
     else
     {
         app->showError(QObject::trUtf8("Не существует колонки ") + n);
     }
+*/
 }
 
 
@@ -1186,7 +1190,8 @@ void Essence::updateCurrentRow(int strNum)
         {
             QString fieldName = preparedSelectCurrentRow.record().fieldName(i);
             QVariant value = preparedSelectCurrentRow.record().value(fieldName);
-            if (value != tableModel->record(str).value(fieldName))
+            QVariant recValue = tableModel->record(str).value(fieldName);
+            if (value != recValue)
                 tableModel->setData(tableModel->index(str, i), value, true);
         }
         saveOldValues();

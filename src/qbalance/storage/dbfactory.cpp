@@ -2606,7 +2606,6 @@ void DBFactory::setConfig(QString config, QString name, QString value)
 
 void DBFactory::appendCommand(QString command)
 {
-    prepareCommands();
     if (!commands.contains(command))
         commands.append(command);
 }
@@ -2614,11 +2613,13 @@ void DBFactory::appendCommand(QString command)
 
 void DBFactory::appendCommand(UpdateValues value)
 {
-    for (int i = updateValues.count() - 1; i >= 0; i--)
+    for (int i = 0; i < updateValues.count(); i++)
     {
-        if (value.table == updateValues.at(i).table && value.recId == updateValues.at(i).recId && value.field == updateValues.at(i).field)
+        if (value.table == updateValues.at(i).table &&
+            value.recId == updateValues.at(i).recId &&
+            value.field == updateValues.at(i).field)
         {
-            updateValues.removeAt(i);
+            return;
         }
     }
     updateValues.append(value);
@@ -2682,9 +2683,12 @@ void DBFactory::prepareCommands()
             if (table.size() > 0)
             {
                 command = QString("UPDATE %1 SET %2 WHERE %3=%4;").arg(table).arg(command).arg(getObjectNameCom(table + ".код")).arg(id.id);
-                commands.append(command);     // Добавим команду к списку готовых команд
-                if (sysTables.contains(table))
-                    saveUpdate(command);
+                if (!commands.contains(command))
+                {
+                    commands.append(command);     // Добавим команду к списку готовых команд
+                    if (sysTables.contains(table))
+                        saveUpdate(command);
+                }
             }
         }
     }

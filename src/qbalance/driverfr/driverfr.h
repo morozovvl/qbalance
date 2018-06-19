@@ -151,6 +151,7 @@ class TApplication;
 #define PRINT_BARCODE			0xc2
 #define GET_DEVICE_METRICS		0xfc
 #define CTRL_ADD_DEVICE			0xfd
+#define OPEN_SESSION			0xe0
 
 
 typedef struct
@@ -271,6 +272,7 @@ public:
     int    PortNumber;
     double Price;
     double Quantity;
+    int    QuantityOfOperations;
     int    ReceiptRibbonIsPresent;
     int    ReceiptRibbonOpticalSensor;
     int    ReceiptRibbonLever;
@@ -454,7 +456,7 @@ public:
     Q_PROPERTY(int    UCodePage READ getUCodePage)
     Q_PROPERTY(QString  UDescription READ getUDescription)
     Q_PROPERTY(int    ValueOfFieldInteger READ getValueOfFieldInteger WRITE setValueOfFieldInteger)
-    Q_PROPERTY(char*  ValueOfFieldString READ getValueOfFieldString WRITE setValueOfFieldString)
+    Q_PROPERTY(QString  ValueOfFieldString READ getValueOfFieldString WRITE setValueOfFieldString)
 
 
     frProp() { ; }
@@ -593,7 +595,7 @@ public:
     int    getUCodePage() { return UCodePage; }
     QString  getUDescription() { return UDescription; }
     int    getValueOfFieldInteger() { return ValueOfFieldInteger; }
-    char*  getValueOfFieldString() { return ValueOfFieldString; }
+    QString  getValueOfFieldString() { return ValueOfFieldString; }
 
     void setBaudRate(int a) { BaudRate = a; }
     void setBarCode(QString a) { memcpy(BarCode, a.toLocal8Bit().data(), 13); }
@@ -674,7 +676,13 @@ public:
     void setUseReceiptRibbon(int a) { UseReceiptRibbon = a; }
     void setUseSlipDocument(int a) { UseSlipDocument = a; }
     void setValueOfFieldInteger(int a) { ValueOfFieldInteger = a; }
-    void setValueOfFieldString(char* a) { strncpy((char*)ValueOfFieldString, (char*)a, 41); }
+    void setValueOfFieldString(QString a)
+    {
+        if (a.size() > 0)
+            memcpy(ValueOfFieldString, a.toLocal8Bit().data(), 41);
+        else
+            ValueOfFieldString[0] = 0;
+    }
 };
 
 
@@ -740,6 +748,7 @@ public:
     Q_INVOKABLE virtual int GetFieldStruct();
     Q_INVOKABLE virtual int GetFiscalizationParameters();
     Q_INVOKABLE virtual int GetFMRecordsSum();
+    Q_INVOKABLE virtual int GetShortECRStatus();
     Q_INVOKABLE virtual int GetECRStatus();
     Q_INVOKABLE virtual int GetEKLZData();
     Q_INVOKABLE virtual int GetEKLZJournal();
@@ -796,6 +805,7 @@ public:
     Q_INVOKABLE virtual int Test();
     Q_INVOKABLE virtual int WriteLicense();
     Q_INVOKABLE virtual int WriteTable();
+    Q_INVOKABLE virtual int OpenSession();
 
 private:
 

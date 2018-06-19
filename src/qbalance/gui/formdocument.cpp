@@ -242,12 +242,6 @@ void FormDocument::createForm(QString fileName, QWidget* pwgt/* = 0*/)
         }
     }
 
-    if (dateEdit != 0)
-        connect(dateEdit, SIGNAL(dateChanged(QDate)), this, SLOT(saveDate(QDate)));
-
-    if (numberEdit != 0)
-        connect(numberEdit, SIGNAL(textEdited(QString)), this, SLOT(saveNumber(QString)));
-
     // Если в документе должна быть только одна строка, то заблокируем кнопки "Добавить" и "Удалить"
     if (getParent()->getIsSingleString())
     {
@@ -297,6 +291,8 @@ void FormDocument::cmdOk()
 {
     if (getParent() != 0)
     {
+        saveDate(dateEdit->date());
+        saveNumber(numberEdit->text());
         getParent()->getParent()->getGrdTable()->setFocus();
         if (dateEdit->date() < app->getBeginDate() || dateEdit->date() > app->getEndDate())
         {

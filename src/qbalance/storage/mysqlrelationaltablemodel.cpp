@@ -333,6 +333,12 @@ bool MySqlRelationalTableModel::prepareCommand(const QModelIndex& index)
                     value = QString("%1").arg(value.toDouble(), 0, 'f', prec);
                 }
             }
+            else if (type == "INTEGER")
+            {
+                value = recValue.toString();
+                if (value.size() == 0)
+                    write = false;
+            }
             else
             {
                 value = QString("%1").arg(recValue.toString().trimmed());

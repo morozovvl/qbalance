@@ -353,8 +353,8 @@ bool WizardOperation::setData()
                }
             }
         }
-        // Установим доступ к операции
-        db->setToperPermition(oper, TApplication::exemplar()->getLogin().toLower(), true);
+//        // Установим доступ к операции
+//        db->setToperPermition(oper, TApplication::exemplar()->getLogin().toLower(), true);
     }
 
     // Сохраним скрипты

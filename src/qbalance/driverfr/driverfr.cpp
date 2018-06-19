@@ -45,7 +45,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 unsigned DriverFR::commlen[0x100] =
 {
    0,  6,  5,  5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0x00 - 0x0f
-   0,  5, 26,  5,  8,  6,  1, 46, 37,  6,  6,  6, 10,  5,  255,  9, // 0x10 - 0x1f
+   5,  5, 26,  5,  8,  6,  1, 46, 37,  6,  6,  6, 10,  5,  10,  9, // 0x10 - 0x1f
    6,  8,  8,  8,  5,  6,  0,  5,  6,  7,  5,  5,  5,  6,  7,  0, // 0x20 - 0x2f
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0x30 - 0x3f
    5,  5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0x40 - 0x4f
@@ -58,7 +58,7 @@ unsigned DriverFR::commlen[0x100] =
    5,  0,  0,  5,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xb0 - 0xbf
   46,  7, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xc0 - 0xcf
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xd0 - 0xdf
-   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xe0 - 0xef
+   5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 0xe0 - 0xef
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,255,  0,  0  // 0xf0 - 0xff
 };
 
@@ -99,7 +99,7 @@ const char* DriverFR::errmsg[] =
   "Register memory is not present",											//1f
   "Money register overflow while adding data",										//20
   "Register value is less",												//21
-  "Invalid date",													//22
+  "Invalid date",	     												//22
   "",															//23
   "",															//24
   "",															//25
@@ -125,12 +125,12 @@ const char* DriverFR::errmsg[] =
   "Internal software error",												//39
   "",															//3a
   "",															//3b
-  "Operation is not completed. Shift is opened",									//3c
-  "Operation is not completed. Shift is not opened",									//3d
+  "Operation is not completed. Shift is opened",				//3c
+  "Operation is not completed. Shift is not opened",			//3d
   "",															//3e
-  "",															//3f
-  "",															//40
-  "",															//41
+  "Переполнение накопления по скидкам в смене",					//3f
+  "Переполнение диапазона скидок",								//40
+  "Переполнение диапазона оплаты наличными",    				//41
   "",															//42
   "",															//43
   "",															//44
@@ -361,6 +361,7 @@ const char* DriverFR::ecrmodedesc[] =
   "EKLZ report printing"												//11
 };
 
+
 const char* DriverFR::ecrmode8desc[] =
 {
   "Sale check is opened",
@@ -368,6 +369,7 @@ const char* DriverFR::ecrmode8desc[] =
   "Sale return check is opened",
   "Buy return check is opened"
 };
+
 
 const char* DriverFR::ecrsubmodedesc[] =
 {
@@ -378,6 +380,7 @@ const char* DriverFR::ecrsubmodedesc[] =
   "Printing operation",
   "Full printing operation"
 };
+
 
 const char* DriverFR::devcodedesc[] =
 {
@@ -517,7 +520,6 @@ bool DriverFR::Connect(bool showError)
 
             if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             {
-                result = true;
                 if (app->isDebugMode(4))
                 {
                     serialPort->writeLog(QString("Режим: %1 %2").arg(fr.ECRMode).arg(fr.ECRModeDescription));
@@ -525,6 +527,7 @@ bool DriverFR::Connect(bool showError)
                 }
                 if (showProgressBar)
                     progressDialog->show();
+                result = true;
             }
             else
             {
@@ -721,8 +724,10 @@ int DriverFR::composeComm(command *cmd, int comm, int pass, parameter *param)
         cmd->buff[i] = 0;
 
     len = commlen[comm];
-    if (len >= 5 && param->len > (len - 5))
+    if (param->len == 0 && len >= 5)
         param->len = len - 5;
+    else
+        len = param->len + 5;
     cmd->buff[0] = STX;
     cmd->buff[1] = len;
     cmd->buff[2] = comm;
@@ -776,7 +781,7 @@ bool DriverFR::deviceIsReady()
         }
         else if (repl == ACK)                   // В случае, если устройство все еще пытается передать ответ
         {                                       // от предыдущей команды
-            answer     a;
+            answer     a = {0, {0}};
             readAnswer(&a);
             sendENQ();
         }
@@ -788,10 +793,15 @@ bool DriverFR::deviceIsReady()
 QVariant DriverFR::getProperty(QString name)
 {
     QVariant result;
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
+//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     const char* propName = name.toAscii().data();
     result = fr.property(propName);
-    QTextCodec::setCodecForLocale(app->codec());
+    if (result.type() == QVariant::String)
+    {
+        qDebug() << result << result.type();
+//        result = QTextCodec::toUnicode(result.data());
+    }
+//    QTextCodec::setCodecForLocale(app->codec());
     return result;
 }
 
@@ -799,10 +809,10 @@ QVariant DriverFR::getProperty(QString name)
 bool DriverFR::setProperty(QString name, QVariant value)
 {
     bool result;
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
+//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
     const char* propName = name.toAscii().data();
     result = fr.setProperty(propName, value);
-    QTextCodec::setCodecForLocale(app->codec());
+//    QTextCodec::setCodecForLocale(app->codec());
     return result;
 }
 
@@ -923,12 +933,12 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
             {
                 break;
             }
-            if (((result < 0) || (result == 0x50)))
+            if ((/*(result < 0) || */(result == 0x50)))
             {
                 attempts++;
                 app->showMessageOnStatusBar(QString("Попытка %1%2/%3").arg(remote ? "удаленного соединения " : "").arg(attempts).arg(maxTries), -1);
                 serialPort->writeLog();
-                app->sleep(500);
+                app->sleep(1000);
                 serialPort->writeLog(QString("Result:%1. Повтор команды").arg(result));
                 if (!deviceIsReady())
                 {
@@ -966,8 +976,8 @@ int DriverFR::processCommand(int command, parameter* p, answer* a)
 //-----------------------------------------------------------------------------
 int DriverFR::Beep()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -982,8 +992,8 @@ int DriverFR::Beep()
 //-----------------------------------------------------------------------------
 int DriverFR::Buy()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
     p.len   = 55;
 
@@ -1011,8 +1021,8 @@ int DriverFR::Buy()
 //-----------------------------------------------------------------------------
 int DriverFR::CutCheck()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 1;
     int result = -1;
 
@@ -1036,8 +1046,8 @@ int DriverFR::PrintString(QString str, int count)
         result = -1;
         if (connected)
         {
-            parameter  p;
-            answer     a;
+            parameter  p = {0, {0}};
+            answer     a = {0, {0}};
             p.len	  = str.length() + 1;
 
             logCommand(PRINT_STRING, "Печать строки");
@@ -1065,8 +1075,8 @@ int DriverFR::PrintString(QString str, int count)
 //-----------------------------------------------------------------------------
 int DriverFR::PrintWideString()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len	  = 21;
     int result = -1;
 
@@ -1087,8 +1097,8 @@ int DriverFR::PrintWideString()
 //-----------------------------------------------------------------------------
 int DriverFR::FeedDocument()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 2;
     int result = -1;
 
@@ -1121,9 +1131,9 @@ int DriverFR::FeedDocument(int count)
 //-----------------------------------------------------------------------------
 int DriverFR::SetExchangeParam()
 {
-    parameter  p;
-    answer     a;
-    p.len = 3;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
+//    p.len = 3;
     int result = -1;
 
     if (connected)
@@ -1145,8 +1155,8 @@ int DriverFR::SetExchangeParam()
 //-----------------------------------------------------------------------------
 int DriverFR::GetExchangeParam()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len = 1;
     int result = -1;
 
@@ -1168,10 +1178,70 @@ int DriverFR::GetExchangeParam()
 
 
 //-----------------------------------------------------------------------------
+int DriverFR::GetShortECRStatus()
+{
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
+  int result = -1;
+
+  if (connected)
+  {
+    logCommand(GET_SHORT_ECR_STATUS, "Короткий запрос состояния ФР");
+
+    result = processCommand(GET_SHORT_ECR_STATUS, &p, &a);
+    if (result == 0)
+    {
+        fr.OperatorNumber = a.buff[2];
+        fr.ReceiptRibbonIsPresent     = (a.buff[3] &   1)  ==   1; //0
+        fr.JournalRibbonIsPresent     = (a.buff[3] &   2)  ==   2; //1
+        fr.SlipDocumentIsPresent      = (a.buff[3] &   4)  ==   4; //2
+        fr.SlipDocumentIsMoving       = (a.buff[3] &   8)  ==   8; //3
+        fr.PointPosition              = (a.buff[3] &  16)  ==  16; //4
+        fr.EKLZIsPresent              = (a.buff[3] &  32)  ==  32; //5
+        fr.JournalRibbonOpticalSensor = (a.buff[3] &  64)  ==  64; //6
+        fr.ReceiptRibbonOpticalSensor = (a.buff[3] & 128)  == 128; //6
+        fr.JournalRibbonLever         = (a.buff[4] &   1)  ==   1; //0
+        fr.ReceiptRibbonLever         = (a.buff[4] &   2)  ==   2; //1
+        fr.LidPositionSensor          = (a.buff[4] &   4)  ==   4; //2
+        fr.ECRMode  = evalint((unsigned char*)&a.buff + 5, 1);
+        DefineECRModeDescription();
+        fr.ECRAdvancedMode = evalint((unsigned char*)&a.buff + 6, 1);
+        fr.ECRAdvancedModeDescription = (char*)ecrsubmodedesc[fr.ECRAdvancedMode];
+        fr.QuantityOfOperations = a.buff[7];
+/*
+        fr.PortNumber  = evalint((unsigned char*)&a.buff + 17, 1);
+        fr.FMSoftVersion[0] = a.buff[18];
+        fr.FMSoftVersion[1] = 0x2e;
+        fr.FMSoftVersion[2] = a.buff[19];
+        fr.FMSoftVersion[3] = 0;
+        fr.FMBuild = evalint((unsigned char*)&a.buff + 20, 2);
+        evaldate((unsigned char*)&a.buff + 22, &fr.FMSoftDate);
+        evaldate((unsigned char*)&a.buff + 25, &fr.Date);
+        evaltime((unsigned char*)&a.buff + 28, &fr.Time);
+        fr.FM1IsPresent = (a.buff[31] & 1) == 1;
+        fr.FM2IsPresent = (a.buff[31] & 2) == 2;
+        fr.LicenseIsPresent = (a.buff[31] & 4) == 4;
+        fr.FMOverflow = (a.buff[31] & 8) == 8;
+        fr.BatteryCondition = (a.buff[31] & 16) == 16;
+        sprintf(fr.SerialNumber, "%d", evalint((unsigned char*)&a.buff + 32, 4));
+        fr.SessionNumber = evalint((unsigned char*)&a.buff + 36, 2);
+        fr.FreeRecordInFM = evalint((unsigned char*)&a.buff + 38, 2);
+        fr.RegistrationNumber = evalint((unsigned char*)&a.buff + 40, 1);
+        fr.FreeRegistration = evalint((unsigned char*)&a.buff + 41, 1);
+        sprintf(fr.INN, "%.0lg", (double)evalint64((unsigned char*)&a.buff + 42, 6));
+*/
+    }
+  }
+  return result;
+}
+
+
+
+//-----------------------------------------------------------------------------
 int DriverFR::GetECRStatus()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
   int result = -1;
 
   if (connected)
@@ -1234,8 +1304,8 @@ int DriverFR::GetECRStatus()
 //-----------------------------------------------------------------------------
 int DriverFR::GetDeviceMetrics()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 1;
     int result = -1;
 
@@ -1264,8 +1334,8 @@ int DriverFR::GetDeviceMetrics()
 //-----------------------------------------------------------------------------
 int DriverFR::Test()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 1;
     int result = -1;
 
@@ -1281,8 +1351,8 @@ int DriverFR::Test()
 //-----------------------------------------------------------------------------
 int DriverFR::InterruptTest()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 1;
     int result = -1;
 
@@ -1298,8 +1368,8 @@ int DriverFR::InterruptTest()
 //-----------------------------------------------------------------------------
 int DriverFR::ContinuePrint()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1314,8 +1384,8 @@ int DriverFR::ContinuePrint()
 //-----------------------------------------------------------------------------
 int DriverFR::OpenDrawer()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 1;
     int result = -1;
 
@@ -1334,8 +1404,8 @@ int DriverFR::OpenDrawer()
 //-----------------------------------------------------------------------------
 int DriverFR::PrintDocumentTitle()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len	  = 32;
     int result = -1;
 
@@ -1355,8 +1425,8 @@ int DriverFR::PrintDocumentTitle()
 //-----------------------------------------------------------------------------
 int DriverFR::ResetSettings()
 {
-    answer     a;
-    parameter  p;
+    answer     a = {0, {0}};
+    parameter  p = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1371,8 +1441,8 @@ int DriverFR::ResetSettings()
 //-----------------------------------------------------------------------------
 int DriverFR::ResetSummary()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
   int result = -1;
 
   if (connected)
@@ -1387,8 +1457,8 @@ int DriverFR::ResetSummary()
 //-----------------------------------------------------------------------------
 int DriverFR::ReturnBuy()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len   = 55;
     int result = -1;
 
@@ -1415,8 +1485,8 @@ int DriverFR::ReturnBuy()
 //-----------------------------------------------------------------------------
 int DriverFR::Sale()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
     p.len   = 55;
 
@@ -1444,8 +1514,8 @@ int DriverFR::Sale()
 //-----------------------------------------------------------------------------
 int DriverFR::ReturnSale()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
     p.len   = 55;
 
@@ -1473,8 +1543,8 @@ int DriverFR::ReturnSale()
 //-----------------------------------------------------------------------------
 int DriverFR::CancelCheck()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1489,8 +1559,8 @@ int DriverFR::CancelCheck()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZJournal()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len = 2;
     int result = -1;
 
@@ -1515,8 +1585,8 @@ int DriverFR::GetEKLZJournal()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZData()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1537,8 +1607,8 @@ int DriverFR::GetEKLZData()
 //-----------------------------------------------------------------------------
 int DriverFR::GetEKLZCode1Report()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1575,8 +1645,8 @@ int DriverFR::GetEKLZCode1Report()
 
 int DriverFR::EKLZInterrupt()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1591,8 +1661,8 @@ int DriverFR::EKLZInterrupt()
 //-----------------------------------------------------------------------------
 int DriverFR::CashIncome()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 5;
     int result = -1;
 
@@ -1616,8 +1686,8 @@ int DriverFR::CashIncome()
 //-----------------------------------------------------------------------------
 int DriverFR::CashOutcome()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len    = 5;
     int result = -1;
 
@@ -1641,8 +1711,8 @@ int DriverFR::CashOutcome()
 //-----------------------------------------------------------------------------
 int DriverFR::Charge()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
   p.len   = 49;
 
   if (!connected) return -1;
@@ -1671,8 +1741,8 @@ int DriverFR::Charge()
 //-----------------------------------------------------------------------------
 int DriverFR::StornoCharge()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
   p.len   = 49;
 
   if (!connected) return -1;
@@ -1703,8 +1773,8 @@ int DriverFR::StornoCharge()
 //-----------------------------------------------------------------------------
 int DriverFR::Discount()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     p.len   = 49;
     int result = -1;
 
@@ -1729,8 +1799,8 @@ int DriverFR::Discount()
 //-----------------------------------------------------------------------------
 int DriverFR::StornoDiscount()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
   p.len   = 49;
 
   if (!connected) return -1;
@@ -1759,8 +1829,8 @@ int DriverFR::StornoDiscount()
 //-----------------------------------------------------------------------------
 int DriverFR::CheckSubTotal()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -1780,8 +1850,8 @@ int DriverFR::CheckSubTotal()
 //-----------------------------------------------------------------------------
 int DriverFR::CloseCheck()
 {
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -1821,8 +1891,8 @@ int DriverFR::CloseCheck()
 //-----------------------------------------------------------------------------
 int DriverFR::Storno()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -1860,8 +1930,8 @@ int DriverFR::PrintReportWithCleaning()
 
   if (connected)
   {
-      parameter  p;
-      answer     a;
+      parameter  p = {0, {0}};
+      answer     a = {0, {0}};
 
       logCommand(PRINT_REPORT_WITH_CLEANING, "Снять отчет с гашением");
 
@@ -1879,8 +1949,8 @@ int DriverFR::PrintReportWithCleaning()
 //-----------------------------------------------------------------------------
 int DriverFR::PrintReportWithoutCleaning()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
   int result = -1;
 
   if (connected)
@@ -1899,10 +1969,27 @@ int DriverFR::PrintReportWithoutCleaning()
 
 
 //-----------------------------------------------------------------------------
+int DriverFR::OpenSession()
+{
+    int result = -1;
+
+    if (connected)
+    {
+        parameter  p = {0, {0}};
+        answer     a = {0, {0}};
+        logCommand(OPEN_SESSION, "Открыть сессию");
+
+        result = processCommand(OPEN_SESSION, &p, &a);
+    }
+    return result;
+}
+
+
+//-----------------------------------------------------------------------------
 int DriverFR::PrintOperationReg()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -1917,8 +2004,8 @@ int DriverFR::PrintOperationReg()
 //-----------------------------------------------------------------------------
 int DriverFR::DampRequest()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -1939,8 +2026,8 @@ int DriverFR::DampRequest()
 //-----------------------------------------------------------------------------
 int DriverFR::GetData()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -1962,8 +2049,8 @@ int DriverFR::GetData()
 //-----------------------------------------------------------------------------
 int DriverFR::InterruptDataStream()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -1978,8 +2065,8 @@ int DriverFR::InterruptDataStream()
 //-----------------------------------------------------------------------------
 int DriverFR::GetCashReg()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2005,8 +2092,8 @@ int DriverFR::GetCashReg()
 int DriverFR::GetOperationReg()
 {
     logCommand(GET_OPERATION_REG, "Получить операционный регистр");
-    parameter  p;
-    answer     a;
+    parameter  p = {0, {0}};
+    answer     a = {0, {0}};
     int result = -1;
 
     if (connected)
@@ -2038,8 +2125,8 @@ int DriverFR::GetOperationReg()
 //-----------------------------------------------------------------------------
 int DriverFR::SetSerialNumber()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2057,8 +2144,8 @@ int DriverFR::SetSerialNumber()
 //-----------------------------------------------------------------------------
 int DriverFR::SetPointPosition()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2075,8 +2162,8 @@ int DriverFR::SetPointPosition()
 //-----------------------------------------------------------------------------
 int DriverFR::SetTime()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2095,8 +2182,8 @@ int DriverFR::SetTime()
 //-----------------------------------------------------------------------------
 int DriverFR::SetDate()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2115,8 +2202,8 @@ int DriverFR::SetDate()
 //-----------------------------------------------------------------------------
 int DriverFR::ConfirmDate()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2135,125 +2222,142 @@ int DriverFR::ConfirmDate()
 //-----------------------------------------------------------------------------
 int DriverFR::InitTable()
 {
-  parameter  p;
+  parameter  p = {0, {0}};
 
   if (!connected) return -1;
 
   if (sendCommand(INIT_TABLE, fr.Password, &p) < 0) return -1;
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::WriteTable()
 {
-  parameter  p;
-  answer     a;
-  int      len;
-  char    *tmp;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        int      len;
+        void    *tmp;
 
-  GetFieldStruct();
-  if (fr.FieldType == 1)
-  {
-    len = strlen(fr.ValueOfFieldString);
-    tmp = fr.ValueOfFieldString;
-  }
-  else
-  {
-    len = fr.FieldSize;
-    tmp = (char*)&fr.ValueOfFieldInteger;
-  }
-  p.len = 4 + len;
+        GetFieldStruct();
+        if (fr.FieldType == 1)
+        {
+           len = fr.FieldSize;
+           tmp = fr.ValueOfFieldString;
+        }
+        else
+        {
+            len = fr.FieldSize;
+            tmp = (void*)(&fr.ValueOfFieldInteger);
+        }
 
-  p.buff[0] = fr.TableNumber;
-  memcpy(p.buff+1, &fr.FieldNumber, 2);
-  p.buff[3] = fr.RowNumber;
-  memcpy(p.buff+4, &tmp, len);
+        parameter  p = {0, {0}};
+        answer     a = {0, {0}};
 
-  if (sendCommand(WRITE_TABLE, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != WRITE_TABLE) return -1;
+        logCommand(WRITE_TABLE, "Запись таблицы");
 
-  return errHand(&a);
+        p.len   = 4 + len;
+        p.buff[0] = fr.TableNumber;
+        memcpy(p.buff+1, &fr.RowNumber, 2);
+        p.buff[3] = fr.FieldNumber;
+        memcpy(p.buff+4, tmp, len);
+
+        result = processCommand(WRITE_TABLE, &p, &a);
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::ReadTable()
 {
-  parameter  p;
-  answer     a;
-  int      len;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(READ_TABLE, "Чтение таблицы");
 
-  p.len    = 4;
+        parameter  p = {0, {0}};
+        answer     a = {0, {0}};
 
-  p.buff[0] = fr.TableNumber;
-  memcpy(p.buff+1, &fr.FieldNumber, 2);
-  p.buff[3] = fr.RowNumber;
+        p.len   = 4;
+        p.buff[0] = fr.TableNumber;
+        memcpy(p.buff+1, &fr.RowNumber, 2);
+        p.buff[3] = fr.FieldNumber;
 
-  if (sendCommand(READ_TABLE, fr.Password, &p) < 0) return -1;
-  if ((len = errHand(&a)) < 0) return -1;
-  if (a.buff[0] != READ_TABLE) return -1;
+        result = processCommand(READ_TABLE, &p, &a);
+        GetFieldStruct();
 
-  GetFieldStruct();
-
-  if (fr.FieldType == 1) memcpy(fr.ValueOfFieldString, (char*)a.buff, len - 2);
-  else fr.ValueOfFieldInteger = evalint64((unsigned char*)&a.buff+2, fr.FieldSize);
-
-  return 0;
+        if (fr.FieldType == 1)
+            memcpy(fr.ValueOfFieldString, (char*)a.buff+2, 40);
+        else
+            fr.ValueOfFieldInteger = evalint64((unsigned char*)&a.buff+2, fr.FieldSize);
+    }
+    return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetFieldStruct()
 {
-  parameter  p;
-  answer     a;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(GET_FIELD_STRUCT, "Получить структуру поля");
 
-  p.len    = 2;
+        parameter  p = {0, {0}};
+        answer     a = {0, {0}};
 
-  p.buff[0] = fr.TableNumber;
-  p.buff[1] = fr.FieldNumber;
+        p.len    = 2;
+        p.buff[0] = fr.TableNumber;
+        p.buff[1] = fr.FieldNumber;
 
-  if (sendCommand(GET_FIELD_STRUCT, fr.Password, &p) < 0) return -1;
-  if (readAnswer(&a) < 0) return -1;
-  if (a.buff[0] != GET_FIELD_STRUCT) return -1;
+        result = processCommand(GET_FIELD_STRUCT, &p, &a);
 
-  memcpy(fr.FieldName, (char*)&a.buff+1, 40);
-  fr.FieldType = a.buff[41];
-  fr.FieldSize = a.buff[42];
-  fr.MINValueOfField = evalint64((unsigned char*)&a.buff+43, fr.FieldSize);
-  fr.MAXValueOfField = evalint64((unsigned char*)&a.buff+43 + fr.FieldSize, fr.FieldSize);
+        memcpy(fr.FieldName, (char*)&a.buff+2, 40);
+        fr.FieldType = a.buff[42];
+        fr.FieldSize = a.buff[43];
+        fr.MINValueOfField = evalint64((unsigned char*)&a.buff+44, fr.FieldSize);
+        fr.MAXValueOfField = evalint64((unsigned char*)&a.buff+44 + fr.FieldSize, fr.FieldSize);
+    }
 
-  return 0;
+  return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::GetTableStruct()
 {
-  parameter  p;
-  answer     a;
+    int result = -1;
 
-  if (!connected) return -1;
+    if (connected)
+    {
+        logCommand(GET_TABLE_STRUCT, "Получить структуру таблицы");
 
-  p.len    = 1;
+        parameter  p = {0, {0}};
+        answer     a = {0, {0}};
+        p.len    = 1;
 
-  p.buff[0] = fr.TableNumber;
+        p.buff[0] = fr.TableNumber;
+        result = processCommand(GET_TABLE_STRUCT, &p, &a);
 
-  if (sendCommand(GET_TABLE_STRUCT, fr.Password, &p) < 0) return -1;
-  if ((errHand(&a)) < 0) return -1;
-  if (a.buff[0] != GET_TABLE_STRUCT) return -1;
+        memcpy(fr.TableName, (char*)&a.buff+2, 40);
+        fr.RowNumber   = evalint((unsigned char*)&a.buff+42, 2);;
+        fr.FieldNumber = a.buff[44];
+    }
 
-  memcpy(fr.TableName, (char*)&a.buff+1, 40);
-  fr.RowNumber   = evalint((unsigned char*)&a.buff+41, 2);;
-  fr.FieldNumber = a.buff[43];
-
-  return 0;
+  return result;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::WriteLicense()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2271,8 +2375,8 @@ int DriverFR::WriteLicense()
 //-----------------------------------------------------------------------------
 int DriverFR::ReadLicense()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2289,8 +2393,8 @@ int DriverFR::ReadLicense()
 //-----------------------------------------------------------------------------
 int DriverFR::InitFM()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2303,7 +2407,7 @@ int DriverFR::InitFM()
 //-----------------------------------------------------------------------------
 int DriverFR::Fiscalization()
 {
-  parameter  p;
+  parameter  p = {0, {0}};
   answer 	   a;
 
   if (!connected) return -1;
@@ -2333,8 +2437,8 @@ int DriverFR::Fiscalization()
 //-----------------------------------------------------------------------------
 int DriverFR::FiscalReportForDatesRange()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2366,8 +2470,8 @@ int DriverFR::FiscalReportForDatesRange()
 //-----------------------------------------------------------------------------
 int DriverFR::FiscalReportForSessionRange()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2394,8 +2498,8 @@ int DriverFR::FiscalReportForSessionRange()
 //-----------------------------------------------------------------------------
 int DriverFR::InterruptFullReport()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2408,8 +2512,8 @@ int DriverFR::InterruptFullReport()
 //-----------------------------------------------------------------------------
 int DriverFR::GetFiscalizationParameters()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2434,8 +2538,8 @@ int DriverFR::GetFiscalizationParameters()
 //-----------------------------------------------------------------------------
 int DriverFR::GetFMRecordsSum()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2464,8 +2568,8 @@ int DriverFR::GetFMRecordsSum()
 //-----------------------------------------------------------------------------
 int DriverFR::GetLastFMRecordDate()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2484,8 +2588,8 @@ int DriverFR::GetLastFMRecordDate()
 //-----------------------------------------------------------------------------
 int DriverFR::GetRangeDatesAndSessions()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2549,8 +2653,8 @@ int DriverFR::EjectSlipDocument(){return 0;}
 //-----------------------------------------------------------------------------
 int DriverFR::LoadLineData()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2572,8 +2676,8 @@ int DriverFR::LoadLineData()
 //-----------------------------------------------------------------------------
 int DriverFR::Draw()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2592,11 +2696,13 @@ int DriverFR::Draw()
 
   return 0;
 }
+
+
 //-----------------------------------------------------------------------------
 int DriverFR::PrintBarCode()
 {
-  parameter  p;
-  answer     a;
+  parameter  p = {0, {0}};
+  answer     a = {0, {0}};
 
   if (!connected) return -1;
 
@@ -2615,4 +2721,3 @@ int DriverFR::PrintBarCode()
 
   return 0;
 }
-//-----------------------------------------------------------------------------
