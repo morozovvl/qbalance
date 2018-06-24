@@ -862,7 +862,7 @@ void ScriptEngine::loadScriptObjects()
     }
     else
     {
-        globalObject().setProperty("form", 0);
+        globalObject().setProperty("form", newQObject(app->getMainWindow()));
         globalObject().setProperty("table", 0);
     }
     globalObject().setProperty("isDocumentScript", false);   // скрипт выполняется в документе или в приложении

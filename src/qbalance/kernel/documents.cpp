@@ -315,7 +315,8 @@ bool Documents::setTableModel(int)
                 QString name = columnsProperties.at(i).column;
                 if (name == idFieldName)
                     keyColumn = i;
-                tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, columnsProperties.at(i).precision, i, keyColumn);
+                else
+                    tableModel->setUpdateInfo(name, tableName, name, columnsProperties.at(i).type, columnsProperties.at(i).length, columnsProperties.at(i).precision, i, keyColumn);
             }
         }
 
@@ -343,7 +344,8 @@ bool Documents::setTableModel(int)
                     {
                         if (fld.name == db->getObjectName(attrName + ".код"))
                             keyColumn = columnCount;
-                        tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, columnCount, keyColumn);
+                        else
+                            tableModel->setUpdateInfo(prefix + fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, columnCount, keyColumn);
                     }
                     fld.column = prefix + fld.column;
                     columnsProperties.append(fld);

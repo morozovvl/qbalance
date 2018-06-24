@@ -64,9 +64,12 @@ QTextEdit* MessageWindow::getTextEditor()
 
 void MessageWindow::print(QString str)
 {
-    textEditor->append(str);
-    if (str.size() > 0)
-        show();
+    if (!app->isScriptMode())
+    {
+        textEditor->append(str);
+        if (str.size() > 0)
+            show();
+    }
 }
 
 

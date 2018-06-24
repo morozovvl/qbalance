@@ -310,6 +310,7 @@ bool DBFactory::open(QString login, QString password)
     if (db->open())
     {
         dbIsOpened = true;
+        exec("SET search_path TO system, public;");
         exec(QString("set client_encoding='%1';").arg(TApplication::encoding()));
         exec("set standard_conforming_strings=on;");
         currentLogin = login;
@@ -450,7 +451,6 @@ void DBFactory::reloadColumnProperties()
     columnsProperties.clear();
     columnsProperties = execQuery("SELECT DISTINCT lower(trim(table_name)) AS table_name, ins.ordinal_position::integer - 1 AS \"order\", ins.column_name AS column_name, ins.data_type AS type, COALESCE(ins.character_maximum_length::integer, 0) + COALESCE(ins.numeric_precision::integer, 0) AS length, COALESCE(ins.numeric_scale::integer, 0) AS \"precision\", ins.is_updatable AS updateable " \
                                   "FROM information_schema.columns ins " \
-                                  "WHERE ins.table_schema = 'public' " \
                                   "ORDER BY table_name;");
 }
 
@@ -1381,7 +1381,13 @@ int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* va
                 valuesList.append(',');
             valuesList.append(str);
         }
-        command = QString("INSERT INTO %1 (%4, %2) VALUES ((SELECT MAX(%4)+1 FROM %1),%3) RETURNING %4;").arg(getObjectNameCom(tableName))
+/*
+        command = QString("INSERT INTO %1 (%4, %2) VALUES ((SELECT MAX(%4)+1 FROM %1),%3) RETURNING %4;").arg(getNameCom(tableName))
+                                                                          .arg(fieldsList)
+                                                                          .arg(valuesList)
+                                                                          .arg(getNameCom(tableName + ".КОД"));
+*/
+        command = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4;").arg(getObjectNameCom(tableName))
                                                                           .arg(fieldsList)
                                                                           .arg(valuesList)
                                                                           .arg(getObjectNameCom(tableName + ".КОД"));
@@ -2617,7 +2623,8 @@ void DBFactory::appendCommand(UpdateValues value)
     {
         if (value.table == updateValues.at(i).table &&
             value.recId == updateValues.at(i).recId &&
-            value.field == updateValues.at(i).field)
+            value.field == updateValues.at(i).field &&
+            value.value == updateValues.at(i).value)
         {
             return;
         }

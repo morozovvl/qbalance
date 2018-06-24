@@ -345,7 +345,8 @@ int Document::addFromQuery(QString queryName)
             int i = 0;
             do {
                 record = queryData.record();
-                ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+                if (record.count() > 0)
+                    ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
                 i++;
                 progressDialog->setValue(i);
             } while (queryData.next());
@@ -356,6 +357,7 @@ int Document::addFromQuery(QString queryName)
         }
         else
             ((DocumentScriptEngine*)scriptEngine)->eventAppendFromQuery(queryName, &record);
+
         Dictionary::query();
         calcItog();
         saveChanges();
@@ -537,13 +539,13 @@ int Document::findFreePrv()
     return 0;
 }
 
-
+/*
 void Document::setCurrentRow(int row)
 {
     Essence::setCurrentRow(row);
     saveOldValues();
 }
-
+*/
 
 void Document::show()
 {

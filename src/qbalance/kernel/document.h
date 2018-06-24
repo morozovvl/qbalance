@@ -141,7 +141,7 @@ public:
     Q_INVOKABLE void calcItog();
     bool isSinglePrv();
     bool isQuanAccount();
-    Q_INVOKABLE virtual void    setCurrentRow(int row);
+//    Q_INVOKABLE virtual void    setCurrentRow(int row);
     Q_INVOKABLE bool saveChanges();
 };
 

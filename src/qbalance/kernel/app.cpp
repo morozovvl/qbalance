@@ -1035,7 +1035,12 @@ QString TApplication::getAnyPath(QString subPath, QString fName)
 
 QString TApplication::getConfigFileName()
 {
-    return applicationDirPath() + "/configs";
+    QString prefix = getConfigPrefix();
+    QString result = applicationDirPath();
+    if (prefix.size() > 0)
+        result = result + "/data/" + prefix;
+    result = result + "/configs";
+    return result;
 }
 
 
@@ -1515,6 +1520,10 @@ void TApplication::saveFile(QString file, QByteArray* array)
 
 void TApplication::print(QString str)
 {
+    if (scriptMode)
+    {
+        QTextStream(stdout) << str << "\r\n";
+    }
     messagesWindow->print(str);
 }
 

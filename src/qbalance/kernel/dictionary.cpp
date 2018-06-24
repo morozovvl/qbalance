@@ -109,7 +109,9 @@ void Dictionary::postInitialize(QString name, QObject *parent)
 
 void Dictionary::queryName(QString filter)
 {
+//    int id = getId();
     query(QString("\"%1\".\"ИМЯ\" ILIKE '%" + filter + "%'").arg(tableName));
+//    locateId(id);
 }
 
 
@@ -615,7 +617,8 @@ bool Dictionary::open(QString command, QString tName)
                 {
                     if (fld.name == idFieldName)
                         keyColumn = i;
-                    tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
+                    else
+                        tableModel->setUpdateInfo(fld.name, fld.table, fld.name, fld.type, fld.length, fld.precision, i, keyColumn);
                 }
             }
 

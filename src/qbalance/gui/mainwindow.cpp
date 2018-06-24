@@ -35,7 +35,7 @@ MainWindow::MainWindow(GUIFactory* par)
 {
     parent = par;
     createStatusBar();
-    workSpace = new QMdiArea(this);             // POSSIBLY MEMORY LEAK
+    workSpace = new QMdiArea(this);
     workSpace->setActivationOrder(QMdiArea::ActivationHistoryOrder);
     workSpace->setAttribute(Qt::WA_DeleteOnClose);
     app = TApplication::exemplar();
@@ -52,7 +52,6 @@ void MainWindow::open()
 {
     setCentralWidget(workSpace);
     readSettings();
-//    statusBar()->showMessage("");
 }
 
 

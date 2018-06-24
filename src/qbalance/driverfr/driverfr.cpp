@@ -162,7 +162,7 @@ const char* DriverFR::errmsg[] =
   "",															//5e
   "",															//5f
   "",															//60
-  "",															//61
+  "Переполнение диапазона цены",															//61
   "",															//62
   "",															//63
   "Fiscal memory is not present",											//64

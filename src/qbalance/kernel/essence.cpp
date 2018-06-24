@@ -323,7 +323,7 @@ void Essence::setCurrentRow(int row)
     {
         grdTable->selectRow(row);
     }
-
+    saveOldValues();
 }
 
 
@@ -1194,7 +1194,6 @@ void Essence::updateCurrentRow(int strNum)
             if (value != recValue)
                 tableModel->setData(tableModel->index(str, i), value, true);
         }
-        saveOldValues();
         setCurrentIndex(index);
     }
     else
@@ -1205,8 +1204,8 @@ void Essence::updateCurrentRow(int strNum)
             TApplication::exemplar()->debug(1, QString("PreparedQuery Error: %1").arg(preparedSelectCurrentRow.lastError().text()));
             TApplication::exemplar()->debug(1, QString("PreparedQuery Expression: %1").arg(command));
         }
-        saveOldValues();
     }
+    saveOldValues();
 }
 
 

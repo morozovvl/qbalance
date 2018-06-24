@@ -43,7 +43,7 @@ QWidget* MyLineItemDelegate::createEditor(QWidget* parent, const QStyleOptionVie
     {
         if (essence != 0)
         {
-            essence->saveOldValues();
+//            essence->saveOldValues();
             disconnect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
             connect(this, SIGNAL(closeEditor(QWidget*)), this, SLOT(calculate()));
         }

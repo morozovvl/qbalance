@@ -136,16 +136,17 @@ int MySqlRelationalTableModel::fieldIndex(const QString &fieldName) const
 
 
 
-bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool force, int role)
+bool MySqlRelationalTableModel::setData(const QModelIndex &index, const QVariant &value, bool readOnly, int role)
 {
     bool lResult = false;
-    if ((index.isValid() || force) && rowCount() > 0)
+    if (index.isValid() && rowCount() > 0)
     {  // Если столбец не числится среди добавленных столбцов, для добавленных столбцов ничего не будем делать
-        if (!readOnly && value != data(index))
+        if (value != data(index))
         {   // Если данные разрешено модифицировать
             // и новые данные не равны старым
             lResult = QSqlRelationalTableModel::setData(index, value, role);  // QSqlQuery::value: not positioned on a valid record  // POSSIBLY MEMORY LEAK
-            prepareCommand(index);
+            if (!readOnly)
+                prepareCommand(index);
         }
         else
         {
