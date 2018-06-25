@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <QtGui/QMenuBar>
 #include <QtCore/QDebug>
+#include <QtGui/QDesktopServices>
 #include "../kernel/app.h"
 #include "mainwindow.h"
 #include "dialog.h"
@@ -243,6 +244,12 @@ void MainWindow::createMenus()
 //    aboutAct = infoMenu->addAction(QObject::trUtf8("О &программе..."));
 //    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
+    wikiQtAct = infoMenu->addAction(QObject::trUtf8("Wiki проекта"));
+    connect(wikiQtAct, SIGNAL(triggered()), this, SLOT(wikiQt()));
+
+    vkQtAct = infoMenu->addAction(QObject::trUtf8("Страница ВКонтакте"));
+    connect(vkQtAct, SIGNAL(triggered()), this, SLOT(vkQt()));
+
     aboutQtAct = infoMenu->addAction(QObject::trUtf8("О &библиотеке Qt..."));
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
@@ -444,3 +451,13 @@ void MainWindow::removeMdiWindow(QMdiSubWindow* subWindow)
 }
 
 
+void MainWindow::wikiQt()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/morozovvl/qbalance/wiki"));
+}
+
+
+void MainWindow::vkQt()
+{
+    QDesktopServices::openUrl(QUrl("https://vk.com/club164675831"));
+}

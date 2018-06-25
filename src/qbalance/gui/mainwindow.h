@@ -70,6 +70,9 @@ private slots:
       void about();
       void setPeriod();
       void closeEvent();
+      void wikiQt();
+      void vkQt();
+
 
 private:
       void createActions();
@@ -108,6 +111,8 @@ private:
       QAction* deleteAct;
       QAction* aboutAct;
       QAction* aboutQtAct;
+      QAction* wikiQtAct;
+      QAction* vkQtAct;
       QAction* periodAct;
       QAction* showMessageWindow;
       QAction* saveCustomAct;
