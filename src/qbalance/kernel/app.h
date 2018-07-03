@@ -244,7 +244,7 @@ public:
     Q_INVOKABLE void sendSMS(QString url, QString number, bool = false);                               // Посылка СМС через сервис SMS.RU
 
     void    setScriptMode(bool mode);
-    bool    isScriptMode();
+    Q_INVOKABLE bool    isScriptMode();
 
     void    setServerMode(bool mode);
     bool    isServerMode();

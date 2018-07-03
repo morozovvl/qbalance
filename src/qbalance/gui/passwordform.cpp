@@ -106,10 +106,19 @@ void PassWordForm::addLogin(QStringList list)
 
 void PassWordForm::cmdOk()
 {
-    Form::cmdOk();
     login = LoginSelector->currentText();
     password = PasswordEditor->text();
     writeSettings();
+    Form::cmdOk();
+}
+
+
+void PassWordForm::cmdCancel()
+{
+    login = LoginSelector->currentText();
+    password = PasswordEditor->text();
+    writeSettings();
+    Form::cmdCancel();
 }
 
 

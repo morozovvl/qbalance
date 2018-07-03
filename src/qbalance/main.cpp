@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     application.setOrganizationName("Enterprise");
     application.setApplicationName("QBalance");
-    application.setApplicationVersion("0.13");
+    application.setApplicationVersion("0.14");
 
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(application.codec());

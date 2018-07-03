@@ -40,6 +40,7 @@ public:
 public slots:
         int exec();
         void cmdOk();
+        void cmdCancel();
 
 protected:
         void readSettings();

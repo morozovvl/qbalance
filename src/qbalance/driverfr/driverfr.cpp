@@ -518,7 +518,8 @@ bool DriverFR::Connect(bool showError)
         {
             connected = true;
 
-            if (SetExchangeParam() > -1 && GetECRStatus() == 0)
+//            if (SetExchangeParam() > -1 && GetECRStatus() == 0)
+            if (GetECRStatus() == 0)
             {
                 if (app->isDebugMode(4))
                 {
@@ -669,6 +670,9 @@ int DriverFR::readAnswer(answer *ans, short int byte)
     {
         result = readMessage(ans);
     }
+#ifdef Q_OS_WIN
+        serialPort->purgeComm(0x0f);
+#endif
     return result;
 }
 
@@ -793,15 +797,16 @@ bool DriverFR::deviceIsReady()
 QVariant DriverFR::getProperty(QString name)
 {
     QVariant result;
-//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     const char* propName = name.toAscii().data();
     result = fr.property(propName);
+/*
     if (result.type() == QVariant::String)
     {
-        qDebug() << result << result.type();
-//        result = QTextCodec::toUnicode(result.data());
+        result = QTextCodec::toUnicode(result.data());
     }
-//    QTextCodec::setCodecForLocale(app->codec());
+*/
+    QTextCodec::setCodecForLocale(app->codec());
     return result;
 }
 
@@ -809,10 +814,10 @@ QVariant DriverFR::getProperty(QString name)
 bool DriverFR::setProperty(QString name, QVariant value)
 {
     bool result;
-//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
     const char* propName = name.toAscii().data();
     result = fr.setProperty(propName, value);
-//    QTextCodec::setCodecForLocale(app->codec());
+    QTextCodec::setCodecForLocale(app->codec());
     return result;
 }
 

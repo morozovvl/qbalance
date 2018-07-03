@@ -115,7 +115,7 @@ void QMyExtSerialPort::tryReceive()
     }
     if (!tryReceiveExit)
     {
-        QTimer::singleShot(5, this, SLOT(tryReceive()));
+        QTimer::singleShot(1, this, SLOT(tryReceive()));
     }
 }
 
@@ -138,7 +138,7 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
                 break;
             }
 
-            app->sleep(10);
+            app->sleep(1);
 
             if (QTime::currentTime() >= dieTime)
             {
@@ -179,7 +179,6 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
 {
     qint64 result = -1;
     writeLog();
-    app->sleep(10);
     if (!remote)
     {
         result = QextSerialPort::writeData(data, maxSize);

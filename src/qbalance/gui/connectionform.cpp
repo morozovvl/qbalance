@@ -151,6 +151,7 @@ void ConnectionForm::cmdOk()
 
 void ConnectionForm::cmdCancel()
 {
+    writeDefaultSettings();
     db->close();
     Form::cmdCancel();
 }

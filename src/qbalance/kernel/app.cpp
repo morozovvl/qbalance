@@ -682,9 +682,6 @@ bool TApplication::initApplication()
     tcpClient = new TcpClient(getConfigValue("REMOTE_HOST").toString(), getConfigValue("REMOTE_PORT").toInt(), this);
     timeOut(getConfigValue(FR_NET_DRIVER_TIMEOUT).toInt());                                  // Подеждем, пока произойдет соенинение с сервером приложения
 
-    if (!isScriptMode())
-        openPlugins();
-
     db  = new DBFactory();
 
     messagesWindow = new MessageWindow();
@@ -697,15 +694,18 @@ bool TApplication::initApplication()
         if (result == 0)
         {   // БД открыть удалось
 
-            if (!loadDefaultConfig)
-                readSettings();
-
             secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
             dictionaryList = Dictionaries::create<Dictionaries>();
             topersList = Topers::create<Topers>();
 
             if (dictionaryList->open() && topersList->open())
             {
+                if (!loadDefaultConfig)
+                    readSettings();
+
+                if (!isScriptMode())
+                    openPlugins();
+
                 updates = new Updates(this);
 
                 gui->showMenus();
@@ -886,6 +886,7 @@ void    TApplication::openPlugins()
         {
             bankTerminal->setApp(this);
             bankTerminal->getDefaultConfigs(BANK_TERMINAL_PLUGIN_NAME);
+            readSettings();
             if (!bankTerminal->open())
             {
                 bankTerminal->close();
