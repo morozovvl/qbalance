@@ -1397,6 +1397,8 @@ int DBFactory::insertDictDefault(QString tableName, QHash<QString, QVariant>* va
     {
         result = query.record().field(0).value().toInt();
     }
+    if (sysTables.contains(tableName))
+        saveUpdate(command);
     return result;
 }
 

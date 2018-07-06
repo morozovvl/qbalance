@@ -715,7 +715,7 @@ bool TApplication::initApplication()
                 gui->getMainWindow()->showPeriod();
 
                 // Проверим обновления БД, и если надо, применим их
-                if (getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
+                if (!isScriptMode() && getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                 {
                     int updatesCnt = db->updatesCount();
                     if (updatesCnt > 0)
