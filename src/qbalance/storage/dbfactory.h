@@ -294,6 +294,8 @@ public:
     virtual void saveUpdate(QString);
     virtual void loadUpdates();
     virtual int updatesCount();
+    virtual int getErrorNumber();
+
 
 private:
     TApplication*           app;
@@ -327,6 +329,7 @@ private:
     bool                    dbIsOpened;
     int                     updateNum;
     QPointer<QProcess>      proc;
+    int                     errorNumber;
 
     void setError(QString);
     void initObjectNames();

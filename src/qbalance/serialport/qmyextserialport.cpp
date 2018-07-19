@@ -127,9 +127,9 @@ qint64 QMyExtSerialPort::readData(char* data, qint64 maxSize, bool fromRemote)
     {
         tryReceiveExit = false;                     // Запустим цикл опроса данных в процедуре tryReceive() по таймауту
         QTime dieTime= QTime::currentTime().addMSecs(timeOut);
-        tryReceive();
         while (true)
         {
+            tryReceive();
             if (buffer.size() >= maxSize)
             {
                 for (int i = 0; i < maxSize; i++)
@@ -196,7 +196,7 @@ qint64 QMyExtSerialPort::writeData(const char * data, qint64 maxSize, bool fromR
             }
         }
     }
-    writeLog();
+    writeLog("", fromRemote);
     return result;
 }
 

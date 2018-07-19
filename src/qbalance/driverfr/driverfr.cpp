@@ -445,9 +445,9 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
 //            else
 //                fr.Timeout = app->getConfigValue("FR_LOCAL_DRIVER_TIMEOUT").toInt();
 
-            serialPort->writeLog(QString("Порт: %1").arg(fr.PortNumber));
-            serialPort->writeLog(QString("Скорость: %1").arg(fr.BaudRate));
-            serialPort->writeLog(QString("Таймаут: %1").arg(fr.Timeout));
+            serialPort->writeLog(QString("Порт: %1").arg(port));
+            serialPort->writeLog(QString("Скорость: %1").arg(rate));
+            serialPort->writeLog(QString("Таймаут: %1").arg(timeout));
 
             if (Connect(false))
             {
@@ -467,7 +467,11 @@ bool DriverFR::open(QString port, int rate, int timeout, int password)
             serialPort->setRemote(remote);
             serialPort->setBaudRate(rate);
             serialPort->setTimeout(timeout);
+#if   (defined Q_OS_WIN)
+            if (serialPort->open(QIODevice::ReadWrite | QIODevice::Unbuffered) && serialPort->isOpen())
+#else
             if (serialPort->open(QIODevice::ReadWrite) && serialPort->isOpen())
+#endif
             {
                 if (Connect(false))
                 {
@@ -518,7 +522,6 @@ bool DriverFR::Connect(bool showError)
         {
             connected = true;
 
-//            if (SetExchangeParam() > -1 && GetECRStatus() == 0)
             if (GetECRStatus() == 0)
             {
                 if (app->isDebugMode(4))
@@ -670,9 +673,6 @@ int DriverFR::readAnswer(answer *ans, short int byte)
     {
         result = readMessage(ans);
     }
-#ifdef Q_OS_WIN
-        serialPort->purgeComm(0x0f);
-#endif
     return result;
 }
 
@@ -1149,7 +1149,7 @@ int DriverFR::SetExchangeParam()
         p.buff[1] = fr.BaudRate;
         p.buff[2] = fr.Timeout;
 
-        serialPort->writeLog(QString("Порт: %1, Скорость: %2, Таймаут: %3").arg(fr.PortNumber).arg(fr.BaudRate).arg(fr.Timeout));
+//        serialPort->writeLog(QString("Порт: %1, Скорость: %2, Таймаут: %3").arg(fr.PortNumber).arg(fr.BaudRate).arg(fr.Timeout));
 
         result = processCommand(SET_EXCHANGE_PARAM, &p, &a);
     }

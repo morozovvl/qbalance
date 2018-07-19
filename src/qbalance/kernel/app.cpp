@@ -539,6 +539,9 @@ void TApplication::initConfig()
     setConfig("password", "PASSWORD1", "Новый пароль", CONFIG_VALUE_PASSWORD, "");
     setConfig("password", "PASSWORD2", "Повторите новый пароль", CONFIG_VALUE_PASSWORD, "");
     setConfig("password", "", "", CONFIG_VALUE_PUSHBUTTON, "");
+
+    setConfigTypeName("openoffice", "OpenOffice");
+    setConfig("openoffice", "OO_PATH", "Каталог OpenOffice", CONFIG_VALUE_STRING, "");
 }
 
 
@@ -684,100 +687,106 @@ bool TApplication::initApplication()
 
     db  = new DBFactory();
 
-    messagesWindow = new MessageWindow();
-
-    getMainWindow()->setWindowTitle(QString("%1 %2").arg(applicationName()).arg(applicationVersion()));
-
-    forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
+    if (db->getDB()->isValid())
     {
-        int result = gui->openDB(); // Попытаемся открыть базу данных
-        if (result == 0)
-        {   // БД открыть удалось
+        messagesWindow = new MessageWindow();
 
-            secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
-            dictionaryList = Dictionaries::create<Dictionaries>();
-            topersList = Topers::create<Topers>();
+        getMainWindow()->setWindowTitle(QString("%1 %2").arg(applicationName()).arg(applicationVersion()));
 
-            if (dictionaryList->open() && topersList->open())
-            {
-                if (!loadDefaultConfig)
-                    readSettings();
+        forever         // Будем бесконечно пытаться открыть базу, пока пользователь не откажется
+        {
+            int result = gui->openDB(); // Попытаемся открыть базу данных
+            if (result == 0)
+            {   // БД открыть удалось
 
-                if (!isScriptMode())
-                    openPlugins();
+                secDiff = QDateTime::currentDateTime().secsTo(db->getValue("SELECT now();", 0, 0).toDateTime());
+                dictionaryList = Dictionaries::create<Dictionaries>();
+                topersList = Topers::create<Topers>();
 
-                updates = new Updates(this);
-
-                gui->showMenus();
-
-                // Удалось открыть спосок справочников и типовых операций
-                db->getPeriod(beginDate, endDate);
-                gui->getMainWindow()->showPeriod();
-
-                // Проверим обновления БД, и если надо, применим их
-                if (!isScriptMode() && getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
+                if (dictionaryList->open() && topersList->open())
                 {
-                    int updatesCnt = db->updatesCount();
-                    if (updatesCnt > 0)
+                    if (!loadDefaultConfig)
+                        readSettings();
+
+                    if (!isScriptMode())
+                        openPlugins();
+
+                    updates = new Updates(this);
+
+                    gui->showMenus();
+
+                    // Удалось открыть спосок справочников и типовых операций
+                    db->getPeriod(beginDate, endDate);
+                    gui->getMainWindow()->showPeriod();
+
+                    // Проверим обновления БД, и если надо, применим их
+                    if (!isScriptMode() && getConfigValue("ASK_LOAD_UPDATES_TO_DB").toBool())
                     {
-                        if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
-                            db->loadUpdates();
+                        int updatesCnt = db->updatesCount();
+                        if (updatesCnt > 0)
+                        {
+                            if (showYesNo(QString(QObject::trUtf8("Найдено обновлений базы данных: %1. Применить их?")).arg(updatesCnt)) == QMessageBox::Yes)
+                                db->loadUpdates();
+                        }
                     }
-                }
 
-                // Загрузим константы
+                    // Загрузим константы
 
-                Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
-                if (constDict != 0)
-                {
-                    constDict->setPhotoEnabled(false);
-                    constDict->query();
-                }
-
-                // Загрузим счета
-                Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
-                if (accDict != 0)
-                {
-                    accDict->setPhotoEnabled(false);
-                }
-
-                if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
-                {
-                    if (driverFRisValid)
-                        showMessageOnStatusBar("Найден фискальный регистратор.\n");
-                    else
+                    Dictionary* constDict = dictionaryList->getDictionary(db->getObjectName("константы"));
+                    if (constDict != 0)
                     {
-                        if (driverFR != 0 && driverFR->isLocked())
-                            showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
+                        constDict->setPhotoEnabled(false);
+                        constDict->query();
+                    }
+
+                    // Загрузим счета
+                    Dictionary* accDict = dictionaryList->getDictionary(db->getObjectName("счета"));
+                    if (accDict != 0)
+                    {
+                        accDict->setPhotoEnabled(false);
+                    }
+
+                    if (getConfigValue("FR_NEEDED").toBool() && !isScriptMode())
+                    {
+                        if (driverFRisValid)
+                            showMessageOnStatusBar("Найден фискальный регистратор.\n");
                         else
-                            showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                        {
+                            if (driverFR != 0 && driverFR->isLocked())
+                                showMessageOnStatusBar("Фискальный регистратор занят. Не удалось соединиться.\n");
+                            else
+                                showMessageOnStatusBar("Фискальный регистратор не найден.\n");
+                        }
                     }
+
+                    db->clearLockedDocumentList();
+
+                    lResult = true;     // Приложение удалось открыть
+
+                    getMainWindow()->setWindowTitle(getMainWindow()->windowTitle().append(QString(" - (%1) - %2 %3").arg(getConfigPrefix())
+                                                                                                                    .arg(getLogin())
+                                                                                                                    .arg(username)));
+
+                    break;  // Выйдем из бесконечного цикла открытия БД
                 }
-
-                db->clearLockedDocumentList();
-
-                lResult = true;     // Приложение удалось открыть
-
-                getMainWindow()->setWindowTitle(getMainWindow()->windowTitle().append(QString(" - (%1) - %2 %3").arg(getConfigPrefix())
-                                                                                                                .arg(getLogin())
-                                                                                                                .arg(username)));
-
-                break;  // Выйдем из бесконечного цикла открытия БД
             }
+            else if (result == -2)
+            {   // Произошла ошибка соединения с сервером
+                if (db->getErrorNumber() == 1)  // Сервер работает, но БД отсутствует
+                {
+                    if (gui->showMessage(QObject::trUtf8("База данных отсутствует."),
+                                     QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
+                        // Попытаемся создать новую БД
+                        db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
+                }
+            }
+            else if (result == -1)      // Пользователь нажал кнопку Отмена
+                break;  // Выйдем из бесконечного цикла открытия БД
         }
-        else if (result == -2)
-        {   // Произошла ошибка соединения с сервером
-
-            if (gui->showMessage(QObject::trUtf8("Не удалось соединиться с базой данных (БД). Возможно БД отсутствует."),
-                                 QObject::trUtf8("Попытаться создать новую БД?")) == QMessageBox::Yes)
-                // Попытаемся создать новую БД
-                db->createNewDBs(gui->getLastHostName(), gui->getLastDbName(), gui->getLastPort());
-            else
-                break;
-        }
-        else if (result == -1)      // Пользователь нажал кнопку Отмена
-            break;  // Выйдем из бесконечного цикла открытия БД
     }
+    else
+        showError(QObject::trUtf8("Драйвер БД не найден."));
+
     return lResult;
 }
 
@@ -932,7 +941,7 @@ void    TApplication::openPlugins()
 }
 
 
-void TApplication::showMessageOnStatusBar(const QString &message, int timeout)
+void TApplication::showMessageOnStatusBar(QString message, int timeout)
 {
     if (scriptMode)
     {
@@ -1300,6 +1309,7 @@ int TApplication::showYesNo(QString question)
 
 QVariant TApplication::getConst(QString valueName)
 {
+    QVariant result;
     QString constDictionaryName = db->getObjectName("константы");
     QString constNameField = db->getObjectName(constDictionaryName + ".имя");
     QString constValueField = db->getObjectName(constDictionaryName + ".значение");
@@ -1314,10 +1324,17 @@ QVariant TApplication::getConst(QString valueName)
         {
             QSqlRecord rec = model->record(i);
             if (QString().compare(rec.value(constNameField).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
-                return rec.value(constValueField);
+            {
+                result = rec.value(constValueField);
+                QString res = result.toString().trimmed().toLower();
+                if (res == "yes" || res == "да")
+                    result = true;
+                else if (res == "no" || res == "нет")
+                    result = false;
+            }
         }
     }
-    return QVariant();
+    return result;
 }
 
 
@@ -1529,6 +1546,15 @@ void TApplication::print(QString str)
 }
 
 
+void TApplication::print(QStringList strList)
+{
+    QString str;
+    foreach (QString s, strList)
+        str.append(" " + s);
+    print(str.trimmed());
+}
+
+
 void TApplication::printToArray(QString array, QString value)
 {
     if (!arraysForPrint.contains(array))
@@ -1657,7 +1683,7 @@ QString TApplication::getOpenFileName(QWidget* parent, QString caption, QString 
 
 void TApplication::sendSMS(QString url, QString number, QString message, QString from, bool repeat)
 {
-    if (getConst("ОтправлятьСМС").toString() == "да")
+    if (getConst("ОтправлятьСМС").toBool())
     {
         QEventLoop loop;
         QNetworkAccessManager manager(this);
@@ -1975,6 +2001,7 @@ bool TApplication::readParameters(int argc, char *argv[])
             out << QObject::trUtf8("Параметры:\n");
             out << QObject::trUtf8("  -? | --help       - Вывести список параметров запуска программы\n");
             out << QObject::trUtf8("  -v | --version    - Вывести номер версии программы\n");
+            out << QObject::trUtf8("  -dp| --debug_plug - Вывести сообщения о загрузке плугинов\n");
             out << QObject::trUtf8("  -d1| --debug1     - Включить журнал комманд запросов (файл debug1.log)\n");
             out << QObject::trUtf8("  -d2| --debug2     - Включить журнал алгоритмов ядра (файл debug2.log)\n");
             out << QObject::trUtf8("  -d3| --debug3     - Включить журнал скриптов (файл debug3.log)\n");
@@ -2000,9 +2027,14 @@ bool TApplication::readParameters(int argc, char *argv[])
         {
             out << QString(QObject::trUtf8("Название программы: %1\n")).arg(applicationName());
             out << QString(QObject::trUtf8("Версия: %1\n")).arg(applicationVersion());
-            out << QString(QObject::trUtf8("Авторы: %1\n")).arg(authors());
+            out << QString(QObject::trUtf8("Автор: %1\n")).arg(authors());
             lContinue = false;
         }
+        else if (QString(argv[i]).compare("-dp", Qt::CaseInsensitive) == 0 ||
+                QString(argv[i]).compare("--debug_plug", Qt::CaseInsensitive) == 0)
+            {
+                qputenv("QT_DEBUG_PLUGINS","1");
+            }
         else if (QString(argv[i]).compare("-d1", Qt::CaseInsensitive) == 0 ||
                 QString(argv[i]).compare("--debug1", Qt::CaseInsensitive) == 0)
             {
@@ -2094,6 +2126,11 @@ bool TApplication::readParameters(int argc, char *argv[])
             {
                 fullDebugInfo = true;
             }
+        else
+        {
+            out << QString(QObject::trUtf8("Неверный параметр. По команде \"%1 -?\" можно получить список правильных параметров.\n")).arg(applicationName());
+            lContinue = false;
+        }
     }
     return lContinue;
 }

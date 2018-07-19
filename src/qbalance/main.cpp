@@ -50,10 +50,11 @@ int buggyFunc() {
 int main(int argc, char *argv[])
 {
 //    mtrace();
+
     TApplication application(argc, argv);
 
     application.setOrganizationName("Enterprise");
-    application.setApplicationName("QBalance");
+    application.setApplicationName("qbalance");
     application.setApplicationVersion("0.14");
 
 #if QT_VERSION < 0x050000

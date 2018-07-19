@@ -112,10 +112,17 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
         // Запустим OpenOffice
         if (ooPath.size() == 0)
         {
+            ooPath = app->getConfigValue("OO_PATH").toString();
 #ifdef Q_OS_WIN32
-            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
+//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
+            if (ooPath.size() > 0)
+                ooPath = ooPath.append("\");
+            ooPath += "soffice.exe";
 #else
-            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
+//            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");
+            if (ooPath.size() > 0)
+                ooPath = ooPath.append("/");
+            ooPath += "soffice";
 #endif
         }
         QProcess* ooProcess = new QProcess();

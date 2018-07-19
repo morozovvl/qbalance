@@ -49,3 +49,8 @@ void MyNumericEdit::setDecimals(int dec)
     decimals = dec;
 }
 
+
+void MyNumericEdit::setReadOnly(bool ro)
+{
+    QLineEdit::setReadOnly(ro);
+}

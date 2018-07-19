@@ -272,6 +272,7 @@ void DBFactory::showPSqlMessage()
 void DBFactory::clearError()
 {
     wasError = false;
+    errorNumber = 0;
     errorText.clear();
 }
 
@@ -321,8 +322,19 @@ bool DBFactory::open(QString login, QString password)
     }
     else
     {
-        if (login != "test")
-            setError(db->lastError().text());
+        setError(db->lastError().text());
+        db->setHostName(hostName);
+        db->setDatabaseName("postgres");
+        db->setPort(port);
+        db->setUserName(login);
+        db->setPassword(password);
+        if (db->open())
+        {
+            errorNumber = 1;
+            db->close();
+        }
+        else
+            errorNumber = 2;
     }
     return false;
 }
@@ -2921,3 +2933,8 @@ void DBFactory::changePassword(QString password)
     app->setWriteDebug(true);
 }
 
+
+int DBFactory::getErrorNumber()
+{
+    return errorNumber;
+}

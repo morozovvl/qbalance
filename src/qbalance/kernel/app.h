@@ -123,7 +123,7 @@ public:
     void removeDocuments(int opNumber);
     Q_INVOKABLE virtual DBFactory* getDBFactory();
     Q_INVOKABLE virtual void clearMessageOnStatusBar();
-    Q_INVOKABLE virtual void showMessageOnStatusBar(const QString &message = "", int timeout = 5000 );
+    Q_INVOKABLE virtual void showMessageOnStatusBar(QString message = "", int timeout = 5000 );
     Q_INVOKABLE QVariant getConst(QString);
     virtual GUIFactory* getGUIFactory();
     Q_INVOKABLE QString getLogin();
@@ -216,6 +216,7 @@ public:
     Q_INVOKABLE void savePhotoToServer(QString file, QString localFile);
     Q_INVOKABLE void saveFile(QString, QByteArray*);
     Q_INVOKABLE void print(QString = "");
+    Q_INVOKABLE void print(QStringList);
     Q_INVOKABLE void printToArray(QString, QString);
     Q_INVOKABLE void printArray(QString);
     Q_INVOKABLE void clearPrintArrays();

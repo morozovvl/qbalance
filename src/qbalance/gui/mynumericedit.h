@@ -33,6 +33,7 @@ public:
     Q_INVOKABLE virtual void setValue(QVariant);
 //    Q_INVOKABLE virtual QVariant getValue();
     Q_INVOKABLE virtual void setDecimals(int);
+    Q_INVOKABLE virtual void setReadOnly(bool);
 private:
     QVariant value;
     int     decimals;
