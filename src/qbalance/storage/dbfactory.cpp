@@ -2867,14 +2867,18 @@ void DBFactory::loadUpdates()
         QString fileName = QString("%1.sql").arg(updateNum);
         QString fullFileName = templateString;
         fullFileName.append(fileName);
-        app->showMessageOnStatusBar(QString(QObject::trUtf8("Загрузка обновления %1 на сервер...")).arg(fileName));
-        if (!execQueryFile(fullFileName))
+
+        QString reportStr = QString(QObject::trUtf8("Загрузка обновления %1 на сервер...")).arg(fileName);
+        if (QDir().exists(fullFileName))
         {
-            app->showMessageOnStatusBar("");
-            return;
+            if (execQueryFile(fullFileName))
+                app->print(reportStr + "Ok");
+            else
+                app->print(reportStr + "Ошибка!");
         }
         dbUpdatesList.removeOne(fileName);
     } while (!dbUpdatesList.empty());
+    app->print("");
     exec(QString("UPDATE константы SET \"ЗНАЧЕНИЕ\" = '%1' WHERE \"ИМЯ\" = 'Last_DB_Update';").arg(updateNum));
 }
 

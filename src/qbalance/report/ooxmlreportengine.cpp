@@ -116,7 +116,7 @@ bool OOXMLReportEngine::open(QString fileName, ReportContext* cont, bool justPri
 #ifdef Q_OS_WIN32
 //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice.exe");
             if (ooPath.size() > 0)
-                ooPath = ooPath.append("\");
+                ooPath = ooPath.append("\\");
             ooPath += "soffice.exe";
 #else
 //            ooPath = TApplication::exemplar()->findFileFromEnv("soffice");

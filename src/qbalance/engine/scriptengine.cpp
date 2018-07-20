@@ -312,6 +312,17 @@ QScriptValue debug(QScriptContext* context, QScriptEngine*)
 }
 
 
+QScriptValue DateString(QScriptContext* context, QScriptEngine*)
+{
+    QScriptValue result("");
+    if (context->argument(0).isDate())
+    {
+        result = context->argument(0).toDateTime().toString("dd.MM.yyyy");
+    }
+    return result;
+}
+
+
 // класс DriverFR
 Q_DECLARE_METATYPE(DriverFR*)
 
@@ -885,6 +896,7 @@ void ScriptEngine::loadScriptObjects()
     globalObject().setProperty("evaluateScript", newFunction(evaluateScript));
     globalObject().setProperty("SumToString", newFunction(SumToString));
     globalObject().setProperty("debug", newFunction(debug));
+    globalObject().setProperty("DateString", newFunction(DateString));
 
     foreach (const QString &ext, availableExtensions())
     {
