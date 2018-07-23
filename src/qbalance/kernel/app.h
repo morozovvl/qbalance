@@ -125,6 +125,7 @@ public:
     Q_INVOKABLE virtual void clearMessageOnStatusBar();
     Q_INVOKABLE virtual void showMessageOnStatusBar(QString message = "", int timeout = 5000 );
     Q_INVOKABLE QVariant getConst(QString);
+    Q_INVOKABLE void setConst(QString, QVariant);
     virtual GUIFactory* getGUIFactory();
     Q_INVOKABLE QString getLogin();
     Q_INVOKABLE virtual bool isSA();

@@ -51,8 +51,7 @@ public:
     virtual bool open(QString fileName = "");
     virtual void close();
     virtual bool evaluate();
-    virtual QScriptValue evaluate(const QString &, const QString &, int);
-    virtual QScriptValue evaluate(const QScriptProgram &);
+    virtual QScriptValue evaluate(QString);
     QString getErrorMessage();
     virtual void setErrorMessage(QString error = "");
     int getScriptResult();

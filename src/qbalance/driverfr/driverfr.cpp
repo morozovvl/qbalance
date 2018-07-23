@@ -120,7 +120,7 @@ const char* DriverFR::errmsg[] =
   "There is no queried data",												//34
   "Invalid command parameter for the current settings",									//35
   "Invalid command parameters for the particular device",								//36
-  "Invalid command for the particular device",										//37
+  "Команда не поддерживается в данной реализации ФР",										//37
   "User memory error",													//38
   "Internal software error",												//39
   "",															//3a

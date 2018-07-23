@@ -87,6 +87,7 @@ protected:
     QString             scriptFileName;                     // Имя файла со скриптами
     QSqlQuery           preparedSelectCurrentRow;           // Содержит подготовленный запрос для обновления текущей строки при вычислениях
     QString             defaultFilter;
+    bool                filterEnabled;
     bool                lInsertable;
     bool                lDeleteable;
     bool                lViewable;
@@ -138,6 +139,7 @@ public:
     Q_INVOKABLE virtual void            setValue(QString, QVariant, int row = -1);           // Устанавливает значение заданного поля в текущей записи
     Q_INVOKABLE QVariant                getSumValue(QString name);
     Q_INVOKABLE void                    setDoSubmit(bool submit);
+    Q_INVOKABLE void                    setFilterEnabled(bool);
     Q_INVOKABLE void                    setFilter(const QString &filter);
     Q_INVOKABLE virtual void query(QString = "", bool = false);
     Q_INVOKABLE virtual void            setOrderClause(QString = "") { ; }

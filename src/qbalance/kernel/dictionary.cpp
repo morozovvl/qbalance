@@ -76,6 +76,7 @@ void Dictionary::postInitialize(QString name, QObject *parent)
     doSubmit = true;
     exact = true;
     lNameExist = false;
+    filterEnabled = true;
     isView = db->isView(tableName);
     lIsSet = db->isSet(tableName);
 
@@ -714,8 +715,7 @@ bool Dictionary::setTableModel(int)
 void Dictionary::query(QString defaultFilter, bool exactlyDefaultFilter)
 {
     QString resFilter = defaultFilter;
-
-    if (!exactlyDefaultFilter)
+    if (!exactlyDefaultFilter && filterEnabled)
     {
         if (form != 0)
         {

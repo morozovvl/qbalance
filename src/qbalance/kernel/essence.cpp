@@ -116,6 +116,12 @@ void Essence::setDoSubmit(bool submit)
 }
 
 
+void Essence::setFilterEnabled(bool enabled)
+{
+    filterEnabled = enabled;
+}
+
+
 void Essence::setFilter(const QString &filter)
 {
     defaultFilter = filter;

@@ -910,10 +910,8 @@ bool ScriptEngine::evaluate()
     bool result = true;
     if (script.size() > 0)
     {
-        QScriptProgram program(script);
         tryEventLoopExit = false;
-//        tryEventLoop();
-        result = QScriptEngine::evaluate(program).isValid();
+        result = QScriptEngine::evaluate(script).isValid();
         tryEventLoopExit = true;
         if (hasUncaughtException())
         {   // Если в скриптах произошла ошибка
@@ -945,28 +943,14 @@ bool ScriptEngine::evaluate()
 }
 
 
-QScriptValue ScriptEngine::evaluate(const QString & program, const QString & fileName, int lineNumber)
+QScriptValue ScriptEngine::evaluate(QString program)
 {
     TApplication::exemplar()->debug(3, program);
     tryEventLoopExit = false;
-//    tryEventLoop();
-    QScriptEngine::evaluate(program, fileName, lineNumber);
+    QScriptEngine::evaluate(program);
     tryEventLoopExit = true;
     TApplication::exemplar()->debug(3, "/" + program);
     return globalObject().property("scriptResult");
-}
-
-
-QScriptValue ScriptEngine::evaluate(const QScriptProgram &program)
-{
-    QScriptValue result;
-    TApplication::exemplar()->debug(3, program.fileName());
-    tryEventLoopExit = false;
-//    tryEventLoop();
-    result = QScriptEngine::evaluate(program);
-    tryEventLoopExit = true;
-    TApplication::exemplar()->debug(3, "/" + program.fileName());
-    return result;
 }
 
 

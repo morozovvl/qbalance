@@ -1338,6 +1338,44 @@ QVariant TApplication::getConst(QString valueName)
 }
 
 
+void TApplication::setConst(QString valueName, QVariant value)
+{
+    QString constDictionaryName = db->getObjectName("константы");
+    QString constNameField = db->getObjectName(constDictionaryName + ".имя");
+    QString constValueField = db->getObjectName(constDictionaryName + ".значение");
+    QString valName = valueName.trimmed();
+
+    // Откроем справочник констант
+    Dictionary* dict = getDictionary(constDictionaryName);
+    if (dict != 0)
+    {
+//        dict->setFilterEnabled(false);
+//        dict->query();
+        for (int i = 0; i < dict->rowCount(); i++)
+        {
+            if (QString().compare(dict->getValue(constNameField, i).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
+            {
+                if (value.type() == QVariant::Bool)
+                {
+                    if (value.toBool())
+                        dict->setValue(constValueField, "да", i);
+                    else
+                        dict->setValue(constValueField, "нет", i);
+                }
+                else
+                {
+                    dict->setValue(constValueField, value, i);
+                }
+                dict->saveChanges();
+                break;
+            }
+        }
+//        dict->setFilterEnabled(true);
+//        dict->query();
+    }
+}
+
+
 QProcess* TApplication::runProcess(QString command, QString progName, bool show_Error)
 {
     QProcess* ooProcess = new QProcess();
