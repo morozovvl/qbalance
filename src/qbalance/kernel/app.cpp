@@ -1307,7 +1307,7 @@ int TApplication::showYesNo(QString question)
     return gui->showYesNo(question);
 }
 
-QVariant TApplication::getConst(QString valueName)
+QVariant TApplication::getConst(QString valueName, bool refresh)
 {
     QVariant result;
     QString constDictionaryName = db->getObjectName("константы");
@@ -1319,13 +1319,13 @@ QVariant TApplication::getConst(QString valueName)
     Dictionary* dict = dictionaryList->getDictionary(constDictionaryName);
     if (dict != 0)
     {
-        MySqlRelationalTableModel* model = dict->getTableModel();
-        for (int i = 0; i < model->rowCount(); i++)
+        for (int i = 0; i < dict->rowCount(); i++)
         {
-            QSqlRecord rec = model->record(i);
-            if (QString().compare(rec.value(constNameField).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
+            if (QString().compare(dict->getValue(constNameField, i).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
             {
-                result = rec.value(constValueField);
+                if (refresh)
+                    dict->updateCurrentRow(i);
+                result = dict->getValue(constValueField, i);
                 QString res = result.toString().trimmed().toLower();
                 if (res == "yes" || res == "да")
                     result = true;
@@ -1349,8 +1349,6 @@ void TApplication::setConst(QString valueName, QVariant value)
     Dictionary* dict = getDictionary(constDictionaryName);
     if (dict != 0)
     {
-//        dict->setFilterEnabled(false);
-//        dict->query();
         for (int i = 0; i < dict->rowCount(); i++)
         {
             if (QString().compare(dict->getValue(constNameField, i).toString().trimmed(), valName, Qt::CaseInsensitive) == 0)
@@ -1370,8 +1368,6 @@ void TApplication::setConst(QString valueName, QVariant value)
                 break;
             }
         }
-//        dict->setFilterEnabled(true);
-//        dict->query();
     }
 }
 

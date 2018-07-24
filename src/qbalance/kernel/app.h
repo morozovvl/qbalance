@@ -124,7 +124,7 @@ public:
     Q_INVOKABLE virtual DBFactory* getDBFactory();
     Q_INVOKABLE virtual void clearMessageOnStatusBar();
     Q_INVOKABLE virtual void showMessageOnStatusBar(QString message = "", int timeout = 5000 );
-    Q_INVOKABLE QVariant getConst(QString);
+    Q_INVOKABLE QVariant getConst(QString, bool = false);
     Q_INVOKABLE void setConst(QString, QVariant);
     virtual GUIFactory* getGUIFactory();
     Q_INVOKABLE QString getLogin();
