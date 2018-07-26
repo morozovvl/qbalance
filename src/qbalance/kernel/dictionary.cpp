@@ -570,8 +570,8 @@ bool Dictionary::open(QString command, QString tName)
     if (tagName.size() == 0)
     {
         tagName = tName;
-        if (sqlCommand.size() == 0)
-            return true;
+//        if (sqlCommand.size() == 0)
+//            return true;
     }
 
     if (dictTitle.size() == 0)

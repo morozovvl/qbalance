@@ -62,7 +62,8 @@ public:
     Q_INVOKABLE virtual void setEnabled(bool) { ; }
     virtual void activateWidget() { ; }
     virtual void activateSubWindow();
-    virtual void readSettings();
+    Q_INVOKABLE virtual void readSettings();
+    Q_INVOKABLE virtual void writeSettings();
     Q_INVOKABLE virtual QMdiSubWindow*     getSubWindow();
     virtual TApplication*      getApp();
 
@@ -104,7 +105,6 @@ protected:
     QPushButton*    buttonCancel;
 
     virtual void    createForm(QString, QWidget* pwgt = 0);
-    void            writeSettings();
 
 private:
     bool                    uiCreated;
